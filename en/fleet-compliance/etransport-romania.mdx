@@ -1,0 +1,116 @@
+---
+title: "e-Transport Romania"
+description: "How Druma automates ANAF e-Transport declarations, UIT code generation, and GPS logging for qualifying goods transport in and through Romania."
+icon: "truck-fast"
+---
+
+e-Transport is Romania's mandatory electronic declaration and GPS tracking system for the road transport of goods, administered by ANAF (Agenția Națională de Administrare Fiscală). Druma automates the declaration process, generates UIT codes, and handles GPS position reporting — removing the manual burden and reducing the risk of fines.
+
+---
+
+## What Is e-Transport?
+
+e-Transport requires transport operators to:
+
+1. **Declare the transport** to ANAF before the truck moves, receiving a unique UIT code
+2. **Log GPS positions** every 30 seconds during the transport
+3. **Carry the UIT code** in the truck (printed or visible on the driver's phone)
+
+The system allows ANAF and Poliția Rutieră to verify in real time that a transport has been declared, who is carrying the goods, and whether the truck is on the declared route.
+
+---
+
+## When e-Transport Applies
+
+e-Transport applies to the transport of goods **within Romania or in transit through Romania** when the cargo exceeds certain weight and value thresholds. These thresholds are set by ANAF and updated periodically by government ordinance.
+
+<Warning>
+Always check the current ANAF thresholds before concluding that a shipment does not require e-Transport declaration. The rules have been updated several times since the system launched. The authoritative source is [mfinante.gov.ro](https://www.mfinante.gov.ro) and the ANAF e-Transport portal.
+</Warning>
+
+Categories that have required declaration include: goods with fiscal risk (food, alcohol, tobacco, textiles, construction materials, electronics), goods above a value threshold, and all international transit through Romania above certain tonnage. Your accountant or transport legal advisor can confirm the current applicable categories for your cargo types.
+
+---
+
+## How Druma Handles e-Transport
+
+### Automatic UIT Declaration
+
+For Romanian domestic orders or orders in transit through Romania, Druma automatically generates and submits the e-Transport declaration to ANAF via the ANAF e-Transport API when the order is confirmed.
+
+You do not need to log in to the ANAF portal, fill in forms, or manually submit anything. Druma does it for you.
+
+<Steps>
+  <Step title="Create the order">
+    Enter all order details in Druma: cargo type, weight, value, pickup address, delivery address, truck plate, driver.
+  </Step>
+  <Step title="Confirm the order">
+    When you click **Confirm Order**, Druma detects that the order involves Romania and submits the declaration to ANAF.
+  </Step>
+  <Step title="UIT code generated">
+    ANAF responds with a UIT (Cod Unic de Identificare a Transportului) code. Druma stores this on the order and displays it prominently on the order detail page.
+  </Step>
+  <Step title="Driver sees the UIT code">
+    The UIT code appears in the driver's Druma app on their phone. If requested by a road inspector, the driver shows the code on their phone or presents the printed order document.
+  </Step>
+</Steps>
+
+![UIT code displayed on order detail page](/images/placeholder.png)
+
+---
+
+## GPS Position Logging
+
+e-Transport requires GPS positions to be transmitted to ANAF every **30 seconds** during active transport. Druma handles this automatically via the ANAF e-Transport API — separate from the driver's manual status updates.
+
+**Important:** GPS logging only works when the driver has the Druma app **open on their phone** during transit. If the driver closes the app or the phone screen locks without the app running in the background, position logging may be interrupted.
+
+<Steps>
+  <Step title="Instruct drivers before departure">
+    Before the truck departs, confirm with the driver that the Druma app is open and showing the active order. On Android, confirm the app has background location permission.
+  </Step>
+  <Step title="App runs during transit">
+    The app transmits GPS coordinates to Druma every 30 seconds. Druma forwards these to the ANAF e-Transport API automatically.
+  </Step>
+  <Step title="Transport completion">
+    When the driver marks the order as delivered, GPS logging for that UIT code stops.
+  </Step>
+</Steps>
+
+<Note>
+GPS logging for e-Transport uses mobile data. Ensure drivers have an active SIM with data. On routes through areas with poor signal, Druma buffers positions and transmits them when connectivity is restored.
+</Note>
+
+---
+
+## What the Driver Needs to Do
+
+The driver's responsibilities for e-Transport compliance are minimal when using Druma:
+
+1. **Keep the app open** on their phone during transit
+2. **Show the UIT code** if asked by a road inspector (it is visible on the active order in the app)
+3. **Do not deviate significantly from the declared route** — major route deviations may require an amended declaration, which the dispatcher handles from the Druma web interface
+
+---
+
+## Penalties for Non-Compliance
+
+ANAF fines for e-Transport violations are significant — penalties apply to both the carrier and the beneficiary of the transport (the client or shipper). Common violations include:
+
+- Transporting goods without a valid UIT code
+- GPS position logging gaps during transport
+- Declared cargo not matching what is being transported
+
+Druma's automation eliminates the most common compliance failures: missing declarations and GPS logging gaps. However, the responsibility for accurate cargo information (weight, value, type) remains with the dispatcher entering order data.
+
+---
+
+## Related articles
+
+<Card title="e-Transport Declaration Settings" icon="gear" href="/en/admin/etransport-settings">
+  Configure your ANAF API credentials and e-Transport defaults in Druma.
+</Card>
+
+<Card title="Fleet Documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+  Vehicle document compliance, including operating licenses required for Romanian transport.
+</Card>

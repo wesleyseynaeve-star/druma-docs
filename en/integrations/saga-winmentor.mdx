@@ -1,0 +1,107 @@
+---
+title: "SAGA C and WinMENTOR Integration"
+description: "Export Druma invoices to SAGA C or WinMENTOR Classic using DBF files, or push to WinMENTOR Enterprise automatically via REST API."
+icon: "calculator"
+---
+
+Most Romanian transport companies handle their accounting in SAGA C or WinMENTOR. Druma integrates with both, letting you move invoices from Druma into your accounting software without re-entering data manually.
+
+## SAGA C
+
+SAGA C is the most widely used accounting software for Romanian SMEs. Druma exports invoices in the DBF format that SAGA C expects.
+
+### Exporting from Druma
+
+<Steps>
+  <Step title="Open the export menu">
+    In Druma, go to **Invoicing → Export → SAGA C**.
+  </Step>
+  <Step title="Select date range">
+    Choose the period you want to export — typically the current month or the previous month. All issued invoices in that period will be included.
+  </Step>
+  <Step title="Download the ZIP file">
+    Click **Download ZIP**. The file contains two DBF files:
+    - `Clienti.dbf` — client master data (name, CUI, address, contact)
+    - `Facturi.dbf` — invoice records with line items and VAT breakdown
+  </Step>
+</Steps>
+
+### Importing into SAGA C
+
+<Steps>
+  <Step title="Open SAGA C">
+    Log in to SAGA C for your company.
+  </Step>
+  <Step title="Navigate to import">
+    Go to **Fișier → Import**.
+  </Step>
+  <Step title="Select the DBF file">
+    Browse to the unzipped DBF files. Import `Clienti.dbf` first to ensure client records exist before importing invoices. Then import `Facturi.dbf`.
+  </Step>
+  <Step title="Verify and confirm">
+    SAGA C shows a preview of records to be imported. Check the totals match your Druma export. Click **Confirmare** to complete the import.
+  </Step>
+</Steps>
+
+![SAGA C import screen showing preview of invoice records from Druma DBF export](/images/placeholder.png)
+
+### BNR Exchange Rates
+
+For invoices issued in currencies other than RON, Druma automatically includes the BNR (National Bank of Romania) exchange rate valid on the invoice date. This is embedded in the DBF file and imported into SAGA C automatically — no manual rate entry needed.
+
+## WinMENTOR Classic
+
+WinMENTOR Classic uses the same DBF-based import process as SAGA C, but the field mapping is different. Druma handles this automatically.
+
+### Exporting for WinMENTOR Classic
+
+Follow the same steps as SAGA C, but at step 2 select **WinMENTOR Classic** from the export dropdown instead of SAGA C. The ZIP file will contain DBF files formatted for WinMENTOR's expected structure. The import process in WinMENTOR Classic follows the same steps as SAGA C (Fișier → Import → select DBF → verify → confirm).
+
+## WinMENTOR Enterprise
+
+WinMENTOR Enterprise uses a REST API rather than file import, enabling automatic invoice pushing without manual exports.
+
+### Setting Up the API Integration
+
+<Steps>
+  <Step title="Find your WinMENTOR Enterprise API URL">
+    In WinMENTOR Enterprise, navigate to Administration → API Settings. Copy your API URL and generate credentials.
+  </Step>
+  <Step title="Enter credentials in Druma">
+    Go to **Settings → Integrations → WinMENTOR Enterprise**. Enter your API URL, username, and password.
+  </Step>
+  <Step title="Test the connection">
+    Click **Test Connection**. Druma will verify that it can authenticate and reach your WinMENTOR Enterprise instance.
+  </Step>
+</Steps>
+
+### How Automatic Pushing Works
+
+Once the API integration is active, every invoice you generate in Druma is automatically pushed to WinMENTOR Enterprise as a draft invoice. This happens within a few seconds of the invoice being generated — no manual export needed.
+
+You review and post the invoice in WinMENTOR Enterprise as part of your normal accounting workflow.
+
+<Note>
+If a push fails (for example, because WinMENTOR Enterprise is offline for maintenance), Druma queues the invoice and retries automatically. Failed pushes are visible in **Settings → Integrations → WinMENTOR Enterprise → Push Log**.
+</Note>
+
+## Automatic Nightly Export (SAGA C and WinMENTOR Classic)
+
+If you want a fresh export file available every morning without logging in to trigger it manually:
+
+**Settings → Integrations → SAGA C → Enable Nightly Export**
+
+When enabled, Druma runs the export at **06:00 UTC** each night and makes the file available in **Invoicing → Export → Export History**. Each morning you will find yesterday's file ready to download and import into your accounting software.
+
+<Warning>
+The nightly export includes all invoices issued up to midnight UTC. Invoices generated after midnight will appear in the following night's export file. If you need a same-day export, use the manual export process.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Generating Invoices" icon="file-invoice" href="/en/invoicing/generating-invoices">
+    How to generate invoices from completed orders in Druma.
+  </Card>
+  <Card title="ANAF e-Factura" icon="building-columns" href="/en/invoicing/efactura-anaf">
+    Submitting invoices to ANAF electronically via the e-Factura system.
+  </Card>
+</CardGroup>

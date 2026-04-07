@@ -1,0 +1,96 @@
+---
+title: "Lane Profitability Report"
+description: "See the real margin on every origin-destination pair you run, with revenue, estimated costs, and trend versus the prior period."
+icon: "route"
+---
+
+Many operators know their revenue per lane but not their actual margin once fuel, tolls, and driver costs are counted. The Lane Profitability report does the maths for every country-pair combination you operate, so you can see at a glance which lanes are working and which are eating into your profit.
+
+## Opening the Report
+
+Go to **Reports → Lane Profitability**.
+
+Select your date range at the top. The report defaults to the current month. For a meaningful comparison you generally want at least a full month of data, ideally a quarter.
+
+![Lane profitability report table showing RO to DE, RO to NL, and RO to FR with margin percentages highlighted in red and green](/images/placeholder.png)
+
+## What the Report Shows
+
+Each row in the table is one origin-destination country pair. For each lane you see:
+
+| Column | What It Means |
+|---|---|
+| **Revenue** | Total invoiced amount for orders on this lane in the period |
+| **Fuel Cost** | Estimated: distance × average consumption × fuel price |
+| **Toll Cost** | HERE toll data for the route |
+| **Driver Cost** | Daily cost × trip days, based on the per-driver rate you configure |
+| **Total Costs** | Sum of fuel + tolls + driver cost |
+| **Margin €** | Revenue minus total costs |
+| **Margin %** | Margin as a percentage of revenue |
+| **Trips** | Number of completed orders on this lane in the period |
+| **Avg Price/Trip** | Average revenue per order |
+| **Trend** | Arrow indicating whether margin % improved or declined vs the prior period |
+
+Rows below your target margin threshold are highlighted in red. The default threshold is 15% — change it in **Settings → Reports → Lane Profitability → Target Margin %**.
+
+## How Cost Estimates Work
+
+<Note>
+Cost estimates in this report are approximations based on your configured parameters. They are useful for identifying relative performance between lanes, but actual costs may differ — especially for toll costs on routes with variable toll roads.
+</Note>
+
+**Fuel cost calculation:**
+Distance (from HERE routing) × fleet average consumption (litres/100km, set in Settings → Fleet → Default Consumption) × your fuel price (set in Settings → Fleet → Fuel Price, or imported from fuel card data if you use fuel card import).
+
+**Toll cost calculation:**
+HERE Maps toll data for the route. Covers most European motorway toll systems. Less accurate for routes through countries with complex vignette systems.
+
+**Driver cost calculation:**
+Number of trip days × the daily cost rate you have set for each driver in their profile (Fleet → Drivers → [driver] → Daily Cost Rate). If no driver is assigned, Druma uses your global default driver daily cost.
+
+You can update all these inputs in Settings to improve accuracy. The report recalculates immediately when you save new values.
+
+## Identifying Unprofitable Lanes
+
+Sort the table by **Margin %** ascending — the worst-performing lanes rise to the top.
+
+Red rows are lanes below your target margin. Common reasons:
+
+- **Long-distance lanes** — look profitable on revenue but have high fuel and driver costs
+- **Lanes with heavy tolls** — certain routes through France, Austria, or Switzerland have significantly higher tolls than alternatives
+- **Under-priced legacy clients** — rates agreed years ago that haven't been renegotiated
+- **Low-volume lanes** — fewer trips means fixed costs hit harder
+
+## Drilling Down Into a Lane
+
+Click any lane row to see the individual orders that make up that lane's numbers. You can see each order's revenue, estimated cost, and margin — and identify specific orders that are outliers (for example, a single order at a much lower rate than the rest).
+
+From the order list you can click through to the full order detail. Useful when investigating why a specific lane underperformed in a given month.
+
+## Filtering the Report
+
+Use the filters at the top of the page:
+
+- **Origin country** — filter to one or more specific origin countries
+- **Destination country** — filter to one or more specific destination countries
+- **Client** — see lane profitability for a single client
+- **Truck** — see which trucks are operating which lanes most profitably
+
+## Exporting
+
+Click **Export → CSV** to download the full report as a spreadsheet. The CSV includes all columns and all orders in the drilled-down view if you have applied filters.
+
+The CSV is the best format for doing further analysis in Excel — for example, building your own pivot tables by client or by truck.
+
+<Warning>
+Do not make pricing decisions based solely on this report without considering other factors: return loads, strategic client relationships, and seasonal volume variation all affect the real value of a lane.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Reports Overview" icon="chart-bar" href="/en/reports/reports-overview">
+    All available reports in Druma and how to schedule them.
+  </Card>
+  <Card title="Rate Cards" icon="tag" href="/en/pricing/rate-cards">
+    Set up per-lane rate cards that feed into anomalous pricing detection and margin targets.
+  </Card>
+</CardGroup>

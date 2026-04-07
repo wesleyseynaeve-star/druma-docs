@@ -1,0 +1,101 @@
+---
+title: "Fuel Card Import"
+description: "Import monthly fuel transaction data from DKV, UTA, AS24, Shell Card, and SmartDiesel to track real fuel costs per vehicle."
+icon: "gas-pump"
+---
+
+Fuel is typically the largest variable cost in road freight. Druma lets you import transaction data from the major fuel card providers used by Romanian operators, linking each fill-up to the correct vehicle so your cost reports reflect real fuel spend rather than estimates.
+
+## Supported Providers
+
+Druma supports CSV import from these fuel card providers:
+
+- **DKV** (DKV Mobility)
+- **UTA** (UTA Edenred)
+- **AS24**
+- **Shell Card**
+- **SmartDiesel**
+
+If you use multiple cards across your fleet, you can import from each provider separately. Druma handles the different file formats automatically.
+
+## How to Import
+
+<Steps>
+  <Step title="Download your CSV from the provider">
+    Log in to your fuel card provider's online portal and navigate to the transaction history or statement export section. Download the monthly transaction file as a CSV. Each provider's portal is different, but this option is typically under Reports or Statements.
+  </Step>
+  <Step title="Open Druma fuel card import">
+    In Druma, go to **Integrations → Fuel Cards → Import CSV**.
+  </Step>
+  <Step title="Select your provider">
+    Choose your provider from the dropdown. This tells Druma which column mapping to apply — the CSV format differs significantly between providers.
+  </Step>
+  <Step title="Upload the file">
+    Click **Choose File**, select the CSV you downloaded, and click **Import**. Druma processes the file and shows a preview of the records it found before saving.
+  </Step>
+  <Step title="Review and confirm">
+    Check the preview — Druma shows you the number of transactions found, the date range, and a sample of records. If everything looks correct, click **Confirm Import**.
+  </Step>
+</Steps>
+
+![Fuel card import screen showing provider dropdown, file upload, and transaction preview](/images/placeholder.png)
+
+## What Gets Imported
+
+For each transaction, Druma extracts:
+
+| Field | Source |
+|---|---|
+| Date and time | Transaction timestamp from CSV |
+| Vehicle | Matched by licence plate number |
+| Fuel station name | Location field from CSV |
+| Litres filled | Quantity field from CSV |
+| Amount (EUR or RON) | Value field from CSV |
+| Transaction ID | Provider's unique transaction reference |
+
+## Matching Transactions to Vehicles
+
+Druma matches each transaction to a vehicle using the **licence plate number**. The plate on the transaction must match the plate recorded in Fleet → Vehicles exactly (including format — spaces, hyphens).
+
+If a plate does not match any vehicle in your fleet, the transaction is flagged as **Unmatched** and shown in a separate list. Common reasons:
+
+- The vehicle was recently added and not yet in Druma
+- The plate format in the CSV uses different spacing than what's in Druma (e.g., "B123ABC" vs "B 123 ABC")
+- A driver used their card in a hired or subcontracted vehicle
+
+You can manually link unmatched transactions to a vehicle from the Unmatched list, or update the vehicle plate format in your Fleet records.
+
+## Duplicate Detection
+
+If you accidentally import the same CSV twice, Druma detects duplicates by comparing the provider's transaction ID. Duplicate transactions are skipped automatically. You will see a message: "X transactions imported, Y duplicates skipped."
+
+This makes it safe to re-import a file if you are unsure whether you already imported it.
+
+<Note>
+Always import the complete monthly file rather than a partial export. Partial imports can cause gaps in your fuel cost data that affect lane profitability calculations.
+</Note>
+
+## Where Imported Fuel Data Appears
+
+After import, transactions appear in:
+
+- **Fleet → Fuel Costs** — full transaction history per vehicle, filterable by date range
+- **Fleet → Vehicles → [vehicle] → Fuel History** — all fill-ups for a specific truck
+- **Lane Profitability report** — imported fuel costs replace the estimated fuel calculation for orders where actual fuel data is available
+
+<Note>
+When actual fuel import data exists for a period, the Lane Profitability report uses it instead of the estimate. This makes the report significantly more accurate. The report labels whether costs are "Actual" or "Estimated" in the cost breakdown.
+</Note>
+
+## Why CSV Import Instead of Live API?
+
+Fuel card providers across Europe have inconsistent and often restricted API access. Some provide APIs only to enterprise customers, others have country-specific portals that do not offer API access, and API formats vary considerably. CSV export is available universally across all providers and all account types, making it the most reliable approach for a mixed-fleet Romanian operator (ADR-016).
+
+<CardGroup cols={2}>
+  <Card title="Lane Profitability Report" icon="route" href="/en/reports/lane-profitability">
+    How imported fuel costs feed into margin calculations per route.
+  </Card>
+  <Card title="Fleet Management" icon="truck" href="/en/fleet/fleet-management">
+    Managing vehicle records, including licence plates used for fuel transaction matching.
+  </Card>
+</CardGroup>

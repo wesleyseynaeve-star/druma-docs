@@ -1,0 +1,118 @@
+---
+title: "Paper CMR Fallback"
+description: "How to switch an order from eCMR to paper CMR when digital signing is not possible, and how to record the reason."
+icon: "file-alt"
+---
+
+eCMR is not always possible. Consignees can refuse, phones run out of battery, internet connections fail, or the driver may simply encounter a situation where paper is the only practical option. Druma handles this through a per-order fallback process that keeps your records clean and your compliance intact.
+
+---
+
+## When to Fall Back to Paper CMR
+
+You should switch to paper CMR when:
+
+- The consignee **refuses to sign digitally** — they have the right to insist on paper
+- **No internet connection** is available at pickup or delivery (the eCMR signing process requires connectivity)
+- The **driver's phone battery is dead** or the device is damaged
+- The **consignee insists on paper** for internal or company policy reasons
+- A **Druma or TransFollow system outage** prevents eCMR from functioning
+- Any other situation where completing the digital signing flow is not practical
+
+<Note>
+Falling back to paper for one order has no effect on other orders. The decision is made per order, not per driver or per route.
+</Note>
+
+---
+
+## How to Switch an Order to Paper CMR
+
+<Steps>
+  <Step title="Open the order">
+    In the Druma app (driver) or web interface (dispatcher), open the order detail page.
+  </Step>
+  <Step title="Open the eCMR tab">
+    Tap or click the **eCMR** tab.
+  </Step>
+  <Step title="Tap Switch to Paper CMR">
+    Tap the **Switch to Paper CMR** button.
+  </Step>
+  <Step title="Select a reason">
+    Choose the reason from the dropdown:
+    - Signature refused
+    - Technical failure
+    - Consignee preference
+    - No internet connection
+    - Other
+  </Step>
+  <Step title="Confirm">
+    Tap **Confirm**. The order's eCMR status changes to "Paper CMR — [reason]". If an eCMR had already been registered with TransFollow, it is cancelled at this point. The cancellation is recorded in the TransFollow audit trail.
+  </Step>
+</Steps>
+
+![Paper CMR fallback confirmation dialog](/images/placeholder.png)
+
+---
+
+## Recording the Exception
+
+The reason you selected is stored on the order and visible to dispatchers in the eCMR tab. This is important for:
+
+- **Audit purposes** — if a client or insurer queries why no eCMR exists for a particular shipment
+- **Pattern spotting** — if the same consignee repeatedly refuses digital signing, you can discuss paper CMR as a default for that client
+- **Driver protection** — the recorded reason shows the driver acted correctly and switched for a documented reason, not arbitrarily
+
+---
+
+## Uploading the Paper CMR Scan
+
+Once you have the signed paper CMR in hand, photograph or scan it and upload it to the order.
+
+<Steps>
+  <Step title="Open the order documents">
+    On the order detail page, go to the **Documents** tab.
+  </Step>
+  <Step title="Upload the scan">
+    Tap or click **Upload Document**, select **Paper CMR** as the document type, and attach the photo or PDF of the signed form.
+  </Step>
+  <Step title="Save">
+    The scanned CMR is now attached to the order and visible to dispatchers, clients (if you share via the client portal), and auditors.
+  </Step>
+</Steps>
+
+---
+
+## Cross-Border Detection and Fail-Open Behaviour
+
+Druma detects cross-border orders by comparing pickup and delivery countries. When the country pair is **undetermined** — for example, if the delivery country was not filled in — Druma defaults to **"eCMR not required"** rather than blocking the driver.
+
+This is an intentional fail-open design: it is better to let a driver depart without an eCMR than to block them because of incomplete data entry. The dispatcher should correct the order as soon as possible.
+
+<Warning>
+If eCMR is legally required for a route and Druma did not create one due to missing country data, the dispatcher must create the eCMR manually from the eCMR tab once the data is corrected. Do not let drivers depart on cross-border routes with incomplete order records.
+</Warning>
+
+---
+
+## What Happens to a Cancelled eCMR
+
+If you switch to paper CMR **after** an eCMR was already registered with TransFollow:
+
+- Druma sends a cancellation request to TransFollow
+- The document is marked as cancelled in TransFollow's registry
+- The document number is preserved in Druma's records for audit purposes
+- The certified PDF is not issued
+
+The cancellation is recorded with the reason you selected. This chain of evidence — creation, cancellation, reason, paper CMR upload — gives you a defensible audit trail if the shipment is ever questioned.
+
+---
+
+## Related articles
+
+<Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+  Understand the legal basis for eCMR and when it applies.
+</Card>
+
+<Card title="Uploading Documents" icon="upload" href="/en/ecmr/uploading-documents">
+  How to attach scanned documents — including paper CMR — to any order.
+</Card>

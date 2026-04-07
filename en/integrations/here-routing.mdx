@@ -1,0 +1,79 @@
+---
+title: "HERE Maps Routing"
+description: "HERE Maps powers address autocomplete, truck-optimised routing, toll cost estimation, and ETA calculation across all of Druma."
+icon: "map"
+---
+
+Druma uses HERE Maps for three core functions: finding and validating addresses, calculating truck-safe routes, and estimating toll costs. This integration works automatically in the background — no setup is required from operators or dispatchers.
+
+## No Setup Required
+
+HERE is configured at the Druma platform level. Unlike integrations such as TransFollow or SmartBill, there is no API key to enter and no settings to configure. Every Druma account has full access to HERE routing from day one.
+
+## Address Autocomplete
+
+When entering a pickup or delivery address on an order, start typing the street name or city and HERE suggests matching addresses in a dropdown. Select the correct address and all fields — street, number, city, postal code, and country — are populated automatically.
+
+This prevents address entry errors that cause driver navigation problems. An address confirmed through HERE autocomplete always has valid coordinates, so the driver's navigation app can route directly to it.
+
+![Address autocomplete showing suggestions as the user types a street name](/images/placeholder.png)
+
+<Note>
+For rural or industrial addresses that do not appear in autocomplete, you can enter the address manually and then drag the map pin to the correct location. The coordinates are stored with the order and used for routing.
+</Note>
+
+## Truck-Optimised Routing
+
+Standard car navigation routes are not safe for heavy trucks. Low bridges, weight-restricted roads, narrow village streets, and hazmat restrictions all need to be avoided. Druma passes your vehicle's dimensions to HERE when calculating routes:
+
+- Vehicle height (from the vehicle record)
+- Total weight (from the vehicle record)
+- Number of axles (from the vehicle record)
+- Hazmat class if applicable (set per order)
+
+HERE returns a route that avoids restrictions your specific vehicle cannot comply with. This is especially important on routes through Central and Western Europe where low-clearance restrictions are common.
+
+**Where to set vehicle dimensions:** Fleet → Vehicles → [vehicle] → Technical Details. If dimensions are not filled in, HERE uses default heavy truck parameters, which may be less accurate for your specific vehicle.
+
+## Estimated Distance
+
+Every order shows an estimated distance in kilometres calculated by HERE using the truck route. This distance is used in three places:
+
+- **Per-km pricing** — if your rate card is set as a per-km rate, the price is calculated from this distance
+- **CO2 calculation** — emissions are calculated as distance × emission factor for the assigned truck
+- **Lane profitability costs** — fuel cost estimate is distance × consumption × fuel price
+
+The distance is calculated when the order is created or when addresses are updated. It uses the truck routing profile, so it is typically 5–15% longer than a car route distance.
+
+## ETA Calculation
+
+Druma estimates the delivery ETA based on:
+
+- HERE routing distance
+- Average truck speed (configurable per lane in Settings → Routing → Average Speed)
+- Loading time at pickup
+- Driver rest stops for long-distance routes (following EU driving time rules)
+
+The ETA updates automatically when the driver reports delays through the app or when a stop takes longer than expected.
+
+## Toll Cost Estimation
+
+HERE provides toll data for major European toll systems. When an order is created, Druma shows an estimated toll cost on the order's Financials section.
+
+Toll data covers: France (péage), Italy (autostrada), Austria (motorway vignette + ASFINAG), Czech Republic, Slovakia, Hungary, Poland, Germany (LKW-Maut), and others.
+
+<Warning>
+Toll cost estimates are approximations. Actual tolls depend on the specific route taken, which axle configuration your truck is registered under in each country's toll system, and whether toll rates have changed since HERE's last data update. Use these figures as a guide, not a precise invoice input.
+</Warning>
+
+## Why Routing Accuracy Matters for Costs
+
+The distance HERE calculates becomes the basis for fuel cost estimates in the lane profitability report. If vehicle dimensions are not entered correctly and HERE routes the truck via a shorter but restricted road, the distance will be underestimated and your cost calculations will be too optimistic.
+
+Keeping vehicle technical details up to date in Druma is the single most effective step to improve routing and cost accuracy.
+
+<CardGroup cols={1}>
+  <Card title="Fleet Management" icon="truck" href="/en/fleet/fleet-management">
+    How to manage your vehicle records, including the dimensions that feed into HERE routing.
+  </Card>
+</CardGroup>

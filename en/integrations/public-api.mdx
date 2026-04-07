@@ -1,0 +1,97 @@
+---
+title: "Public API & Webhooks"
+description: "Connect Druma to your own systems using the REST API and webhook event notifications."
+icon: "code"
+---
+
+The Druma Public API lets you integrate the platform with your ERP, custom customer portals, or other internal tools.
+
+<Note>
+The Public API is feature-flagged and available on request. Contact support@druma.io to have it enabled for your account.
+</Note>
+
+## API key management
+
+<Steps>
+  <Step title="Generate an API key">
+    Go to **Settings → API → Generate API Key** → give it a name (e.g., "ERP Integration") → click Generate.
+  </Step>
+  <Step title="Copy and store securely">
+    The key is shown only once — copy it immediately and store it in a secure secrets manager. It cannot be retrieved again.
+  </Step>
+  <Step title="Use in requests">
+    Include the key in every API request as a Bearer token:
+    ```
+    Authorization: Bearer YOUR_API_KEY
+    ```
+  </Step>
+</Steps>
+
+## Available endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /v1/orders | List orders (filterable by status, date) |
+| POST | /v1/orders | Create a new order |
+| GET | /v1/orders/:id | Get a single order |
+| GET | /v1/clients | List clients |
+| POST | /v1/clients | Create a client |
+| GET | /v1/vehicles | List vehicles |
+| GET | /v1/invoices | List invoices |
+
+Full OpenAPI specification available at docs.druma.io/api.
+
+## Webhooks
+
+Webhooks notify your system in real time when events happen in Druma — no polling needed.
+
+### Setting up a webhook
+
+<Steps>
+  <Step title="Add an endpoint">
+    **Settings → API → Webhooks → Add Endpoint** → enter your HTTPS URL → select the events to subscribe to.
+  </Step>
+  <Step title="Select events">
+    Available events:
+    - `order.created`
+    - `order.status_changed`
+    - `order.delivered`
+    - `invoice.generated`
+    - `invoice.paid`
+    - `payment.recorded`
+  </Step>
+  <Step title="Verify delivery">
+    Druma sends a test payload to your endpoint on save. Your endpoint must return HTTP 200 within 5 seconds.
+  </Step>
+</Steps>
+
+### Webhook delivery
+
+- **Format:** HTTPS POST with JSON payload
+- **Timeout:** 5 seconds
+- **Retry policy:** failed deliveries are retried with exponential backoff (10s, 30s, 5min, 30min, 2h)
+- **Dead letter queue:** after 10 consecutive failures, the event is moved to the dead letter queue — visible in Settings → API → Webhooks → Failed Events
+
+### Example payload
+
+```json
+{
+  "event": "order.status_changed",
+  "timestamp": "2025-01-15T09:42:00Z",
+  "data": {
+    "order_id": "ord_abc123",
+    "status": "delivered",
+    "updated_at": "2025-01-15T09:42:00Z"
+  }
+}
+```
+
+## Rate limits
+
+- 1,000 requests per hour per API key
+- Rate limit headers included in every response: `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- If exceeded: HTTP 429 response — wait for the reset time before retrying
+
+<Card title="Integration setup" icon="plug" href="/en/admin/integration-setup">
+  Overview of all Druma integrations and how to configure them.
+</Card>
