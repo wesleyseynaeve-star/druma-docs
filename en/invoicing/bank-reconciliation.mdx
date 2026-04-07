@@ -1,0 +1,97 @@
+---
+title: "Bank Reconciliation"
+description: "Automatically match incoming bank payment emails to open invoices in Druma by forwarding notification emails from your Romanian bank."
+icon: "building-columns"
+---
+
+## Overview
+
+Manually matching bank transfers to invoices is tedious and error-prone. Druma's bank reconciliation feature automates most of this by parsing the payment notification emails that Romanian banks send for every incoming transfer. You forward those emails to a special Druma inbox, and Druma does the matching.
+
+No bank API access required. No new software to install. Just email forwarding.
+
+## How It Works
+
+When money arrives in your bank account, your bank sends you an automatic notification email. Druma can read these emails and extract the key details:
+
+- Amount received
+- Payer name
+- Payment reference number
+- Transfer date
+
+Druma then searches your open invoices for a match. If the amount and reference number align, the invoice is marked as paid automatically. If there is no clear match, the payment goes into a review queue for you to handle manually.
+
+## Supported Banks
+
+The following Romanian banks are supported for email parsing:
+
+- BRD – Groupe Société Générale
+- BCR – Banca Comercială Română
+- Raiffeisen Bank
+- UniCredit Bank
+- ING Bank
+
+<Note>
+If your bank is not on this list, you can still use Druma for manual payment recording — just record payments via the Record Payment button on each invoice. Manual reconciliation is always available regardless of bank setup.
+</Note>
+
+## Setting Up Email Forwarding
+
+<Steps>
+  <Step title="Find your Druma reconciliation inbox address">
+    Go to **Settings** → **Integrations** → **Bank Reconciliation**. Your unique Druma reconciliation email address is shown here — it looks something like `reconcile-yourcompany@inbox.druma.io`.
+  </Step>
+  <Step title="Copy the email address">
+    Copy the full address. You will need it in your email client or bank notification settings.
+  </Step>
+  <Step title="Set up forwarding in your email client">
+    In the email account where your bank sends payment notifications, create a forwarding rule:
+
+    - **Condition:** emails from your bank's notification address (for example, `notificari@brd.ro`)
+    - **Action:** forward to your Druma reconciliation address
+
+    The exact steps depend on your email provider. In Gmail, go to Settings → Filters and Blocked Addresses → Create a new filter. In Outlook, use Rules → New Rule.
+  </Step>
+  <Step title="Test with a real payment">
+    Wait for the next incoming payment. Once your bank sends the notification email, it will be forwarded to Druma automatically. Check **Invoicing** → **Reconciliation** within a few minutes to see if it was matched.
+  </Step>
+</Steps>
+
+![Reconciliation settings page showing the unique inbox address and matched payments list](/images/placeholder.png)
+
+## Automatic Matching
+
+When a forwarded email arrives, Druma attempts to match it to an open invoice using:
+
+1. **Amount** — the received amount matches the invoice outstanding balance
+2. **Reference number** — the payment reference in the email matches an invoice number in Druma (clients are prompted to use the invoice number as their payment reference)
+
+If both match, the invoice is marked as **Paid** automatically. No action needed from you.
+
+## Unmatched Payments
+
+Some payments will not match automatically — for example, if the client did not include the invoice number in the transfer reference, or if the amount is slightly different. These appear in the review queue:
+
+Go to **Invoicing** → **Reconciliation** → **Unmatched Payments**. Each unmatched payment shows the amount, payer name, and reference. You can:
+
+- **Link to invoice** — search for the correct invoice and connect this payment to it
+- **Ignore** — mark the payment as unrelated to Druma invoices (for example, a payment for something outside Druma)
+
+Once you link a payment to an invoice, the invoice status updates just as if you had recorded the payment manually.
+
+## Deduplication
+
+If you accidentally forward the same notification email twice, Druma will not create a duplicate payment. It detects duplicates using the bank reference number. The second email is silently ignored.
+
+<Note>
+Encourage your clients to use the invoice number as their bank transfer reference. This single habit dramatically increases the automatic match rate — most payments will be reconciled without any manual work on your side.
+</Note>
+
+<Warning>
+Bank notification emails sometimes contain confidential financial information. Make sure your Druma reconciliation inbox address is kept private — do not share it publicly. It is unique to your company and cannot be guessed, but treat it like a password.
+</Warning>
+
+---
+
+<Card title="Payment Tracking" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
+How to record payments manually, handle partial payments, and export payment data.</Card>

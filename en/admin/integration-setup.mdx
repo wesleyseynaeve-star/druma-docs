@@ -1,0 +1,157 @@
+---
+title: "Integration Setup"
+description: "Connect Druma to TransFollow, HERE Maps, fuel card providers, accounting software, and SmartBill from the Settings → Integrations page."
+icon: "plug"
+---
+
+Every integration your company uses is configured in one place: **Settings → Integrations**. You do not need a developer — all setups are form-based and take less than five minutes each.
+
+![Integrations page overview](/images/placeholder.png)
+
+---
+
+## 1. TransFollow (eCMR)
+
+TransFollow is the certified eCMR provider that Druma uses to issue, sign, and archive electronic consignment notes. Without this integration, eCMR is unavailable — orders can still be dispatched, but you will need paper CMR documents.
+
+**What you need:** An active TransFollow account. Register at [transfollow.org](https://transfollow.org) if you do not have one yet.
+
+<Steps>
+  <Step title="Open the TransFollow card">
+    Go to **Settings → Integrations** and click the TransFollow card.
+  </Step>
+  <Step title="Paste your API key">
+    Copy the API key from your TransFollow account dashboard and paste it into the **API Key** field.
+  </Step>
+  <Step title="Enable mock mode (optional)">
+    Toggle **Mock Mode** on if you want to test the eCMR workflow without issuing real, legally registered documents. Use this during driver training or onboarding. Turn it off before going live.
+  </Step>
+  <Step title="Test the connection">
+    Click **Test Connection**. Druma will call the TransFollow API and confirm your key is valid. You will see a green success banner or a specific error message if something is wrong.
+  </Step>
+  <Step title="Save">
+    Click **Save**. eCMR creation is now active for cross-border orders.
+  </Step>
+</Steps>
+
+<Warning>
+Mock mode eCMR documents are **not legally valid**. Make sure mock mode is off before dispatching real shipments.
+</Warning>
+
+---
+
+## 2. HERE Maps
+
+HERE Maps powers two features in Druma: address autocomplete when creating orders, and truck-optimised route calculation (distance, estimated drive time, and CO2 figures).
+
+**No setup required.** The HERE Maps API key is managed at the platform level by Druma. There is nothing to configure, and you will not be billed separately for HERE usage — it is included in your subscription.
+
+<Note>
+If address autocomplete stops working, this is a platform-level issue. Contact Druma support rather than trying to reconfigure HERE yourself.
+</Note>
+
+---
+
+## 3. Fuel Card Import
+
+Druma does not connect directly to fuel card provider APIs. Instead, you download a CSV export from your provider's web portal and upload it into Druma. This keeps fuel costs linked to vehicles and orders automatically.
+
+**Supported providers:** DKV, UTA, AS24, Shell Card, SmartDiesel.
+
+<Steps>
+  <Step title="Export from your provider portal">
+    Log in to your DKV, UTA, AS24, Shell, or SmartDiesel web portal and export transactions as CSV. Most portals offer this under **Reports → Transaction Export**.
+  </Step>
+  <Step title="Open the Fuel Card Import card">
+    In **Settings → Integrations**, click the Fuel Card Import card.
+  </Step>
+  <Step title="Select your provider">
+    Choose your provider from the dropdown so Druma knows which CSV column format to expect.
+  </Step>
+  <Step title="Upload the CSV">
+    Click **Upload CSV**, select your file, and click **Import**. Druma will match transactions to vehicles by plate number.
+  </Step>
+</Steps>
+
+<Note>
+If a transaction's plate number does not match a vehicle in your fleet, Druma will list it as **unmatched**. You can manually assign it or leave it. Regularly check the unmatched list — it often catches fuel card fraud or incorrect plate entries.
+</Note>
+
+---
+
+## 4. SAGA / WinMENTOR Accounting
+
+Druma exports invoice and order data in formats compatible with SAGA and WinMENTOR, the two most common Romanian accounting packages.
+
+### SAGA Classic and WinMENTOR Classic
+
+No API key is needed. Druma generates a structured export file (XML or CSV depending on the package) that you import directly into your accounting software.
+
+Go to **Reports → Accounting Export**, select the date range and accounting format, and download the file. Import it into SAGA or WinMENTOR using that software's standard import wizard.
+
+### WinMENTOR Enterprise (REST API)
+
+WinMENTOR Enterprise supports direct API integration.
+
+<Steps>
+  <Step title="Open the WinMENTOR Enterprise card">
+    In **Settings → Integrations**, click **WinMENTOR Enterprise**.
+  </Step>
+  <Step title="Enter the REST endpoint">
+    Enter the REST API endpoint URL provided by your WinMENTOR Enterprise administrator. It typically looks like `https://yourcompany.winmentor.ro/api/`.
+  </Step>
+  <Step title="Enter credentials">
+    Enter the API username and password configured in WinMENTOR Enterprise.
+  </Step>
+  <Step title="Test and save">
+    Click **Test Connection**, then **Save**.
+  </Step>
+</Steps>
+
+---
+
+## 5. SmartBill
+
+SmartBill is a Romanian cloud invoicing platform. With this integration active, Druma pushes confirmed invoices to SmartBill automatically — no manual re-entry.
+
+<Steps>
+  <Step title="Get your SmartBill API key">
+    In your SmartBill account, go to **Cont → API** and copy your API key.
+  </Step>
+  <Step title="Open the SmartBill card in Druma">
+    Go to **Settings → Integrations → SmartBill**.
+  </Step>
+  <Step title="Enter your API key and CIF">
+    Paste the API key and enter your company's CIF (fiscal registration number). SmartBill uses the CIF to route invoices to the correct company account.
+  </Step>
+  <Step title="Test the connection">
+    Click **Test Connection**. Druma will attempt a handshake with SmartBill and confirm the credentials are valid.
+  </Step>
+  <Step title="Save">
+    Click **Save**. From this point, every invoice you mark as confirmed in Druma will be pushed to SmartBill automatically.
+  </Step>
+</Steps>
+
+<Warning>
+If your SmartBill subscription lapses or your API key is regenerated, the integration will stop working silently. Check **Settings → Integrations** periodically to confirm the SmartBill status is green.
+</Warning>
+
+---
+
+## Deep-dive articles
+
+<Card title="TransFollow & eCMR" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+  Understand how eCMR works, who signs, and when it applies.
+</Card>
+
+<Card title="Creating an eCMR" icon="file-plus" href="/en/ecmr/creating-ecmr">
+  Step-by-step guide to issuing eCMR documents from an order.
+</Card>
+
+<Card title="Fuel Card Import Details" icon="gas-pump" href="/en/fleet-compliance/fleet-documents">
+  How fuel costs link to vehicles and orders.
+</Card>
+
+<Card title="CO2 Reporting" icon="leaf" href="/en/fleet-compliance/co2-reporting">
+  How HERE routing distances feed into your CO2 calculations.
+</Card>

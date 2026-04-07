@@ -1,0 +1,93 @@
+---
+title: "Email Order Ingestion"
+description: "Let Druma read inbound emails from clients and brokers and automatically create draft orders for your planners to review."
+icon: "envelope-open-text"
+---
+
+Instead of manually re-typing load orders that arrive by email, Druma can read them for you. Clients and brokers send their rate confirmations, load lists, or plain-text instructions to your unique Druma inbox address, and the AI extracts the key details into a draft order ready for your planner to check and confirm.
+
+## Your Druma Inbox Address
+
+Every company gets a unique email address in the format `yourcompany@in.druma.io`. Find yours at:
+
+**Settings → Automation → Email Ingestion → Inbox Address**
+
+Share this address with the clients and brokers you want to send orders from. You can also set it as a forwarding destination from your existing logistics inbox if you prefer to keep one primary address externally.
+
+## What the AI Extracts
+
+When an email arrives, Druma reads both the email body and any attachments. It attempts to extract:
+
+- Pickup address (street, city, country, postal code)
+- Delivery address
+- Requested pickup date and time window
+- Requested delivery date
+- Cargo description (goods type, weight, dimensions, pallets)
+- Reference numbers (client PO number, broker reference)
+- Price or rate if mentioned
+
+Supported attachment formats:
+
+- **PDF** — rate confirmations, CMR copies, load orders
+- **Excel / CSV** — load lists with multiple stops
+- **Plain email body** — unstructured text emails from brokers
+
+![Email ingestion inbox showing extracted draft orders](/images/placeholder.png)
+
+## Reviewing Draft Orders
+
+Extracted orders land in **Orders → Inbox** tab, not directly in your active order list. This is intentional — you must review each draft before it enters your system.
+
+<Steps>
+  <Step title="Open Orders → Inbox">
+    You will see all newly extracted orders with a "Draft" badge. The AI confidence score is shown for each field — lower confidence fields are highlighted in yellow.
+  </Step>
+  <Step title="Check every field">
+    Click the draft to open it. Verify the pickup and delivery addresses on the map, confirm the dates make sense, and check the cargo details. Correct anything the AI misread or missed.
+  </Step>
+  <Step title="Assign truck and driver">
+    Use the assignment panel on the right to pick an available vehicle and driver for this load.
+  </Step>
+  <Step title="Confirm the order">
+    Click **Confirm Order**. The draft moves into your active orders and the driver receives a notification.
+  </Step>
+</Steps>
+
+<Warning>
+AI extraction is not 100% accurate. Addresses written in unusual formats, scanned PDFs with low image quality, and emails mixing multiple languages all increase the chance of errors. Always verify the extracted fields before confirming.
+</Warning>
+
+## Whitelisting Senders
+
+To prevent random emails from creating junk draft orders, Druma only processes emails from approved senders.
+
+**Settings → Automation → Email Ingestion → Allowed Senders**
+
+Add your clients' and brokers' email domains (e.g. `@acme-logistics.de`, `@broker-example.com`). Emails from unlisted domains are quarantined and shown separately in the Blocked tab — you can review them and whitelist the sender from there if needed.
+
+<Note>
+Add your own company domain to the whitelist if you forward emails from your main inbox to the Druma address.
+</Note>
+
+## Tips for Better Extraction
+
+- Ask your brokers to send structured PDFs rather than scanned images where possible
+- Rate confirmations with clear section headers (Pickup, Delivery, Cargo) extract most accurately
+- If a specific broker's format consistently extracts poorly, contact support@druma.io — format-specific extraction rules can be added
+
+## Common Questions
+
+**What if an email has multiple loads?** Druma creates one draft order per detected load. A single email with a load list of 10 shipments will generate 10 drafts.
+
+**Can I manually trigger re-extraction?** Yes — open the draft, click the three-dot menu, and select Re-extract. Useful if you updated the email format with your broker.
+
+**What happens to the original email?** It is stored and linked to the draft order. You can view it at any time from the order detail page.
+
+<CardGroup cols={2}>
+  <Card title="Creating Orders Manually" icon="plus" href="/en/orders/creating-orders">
+    Learn how to create orders directly in Druma when you don't use email ingestion.
+  </Card>
+  <Card title="Working with Brokers" icon="handshake" href="/en/orders/brokers">
+    Manage broker relationships, rate confirmations, and commission tracking.
+  </Card>
+</CardGroup>

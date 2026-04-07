@@ -1,0 +1,99 @@
+---
+title: "e-Factura / ANAF Submission"
+description: "How Druma automatically submits invoices to Romania's mandatory e-Factura system via the ANAF SPV API, with status tracking and retry handling."
+icon: "landmark"
+---
+
+## What e-Factura Is
+
+e-Factura is Romania's mandatory electronic invoicing system, operated by ANAF (the Romanian National Tax Authority). Since 2024, all B2B transactions between Romanian VAT-registered companies must be reported to ANAF in UBL XML format — the standard electronic invoice format used across Europe.
+
+In plain terms: every invoice you issue to a Romanian company with a CIF (VAT registration number) must be sent to ANAF electronically, not just to your client. Druma handles this automatically after you generate the invoice.
+
+## How Druma Handles e-Factura
+
+You do not need to log into the ANAF portal, generate XML files, or do anything manually. Here is what happens automatically:
+
+1. You generate an invoice for a Romanian client that has a CIF on their client record
+2. Druma creates the UBL XML file in the correct ANAF format
+3. Druma submits the XML to ANAF via the SPV (Spatiul Privat Virtual) API
+4. ANAF returns a submission ID and, after processing, an acceptance or rejection status
+5. The invoice record in Druma updates to show the current e-Factura status
+
+## e-Factura Status Tracking
+
+Each invoice that requires e-Factura submission shows a status badge on the invoice detail page under the **e-Factura** tab:
+
+| Status | What it means |
+|---|---|
+| **Pending** | Waiting to be submitted (usually submits within a few minutes of invoice generation) |
+| **Submitted** | XML sent to ANAF — waiting for ANAF to process it |
+| **Accepted** | ANAF has validated and accepted the invoice |
+| **Rejected** | ANAF found an error — see the error code for details |
+
+<Note>
+ANAF's system experiences downtime regularly, especially on weekday mornings and at month-end. If your invoice shows "Submitted" for more than a few hours, this is usually ANAF on their side, not an error in Druma. The retry queue handles this automatically.
+</Note>
+
+## Automatic Retry Queue
+
+If a submission fails because ANAF is unavailable, Druma retries automatically:
+
+- First retry: **1 hour** after the failure
+- Second retry: **4 hours** after the first retry
+- Third retry: **24 hours** after the second retry
+
+If all automatic retries are exhausted, the invoice shows a **Failed** status with the last error message. You can then trigger a **Manual Resubmit** from the e-Factura tab on the invoice page.
+
+## Viewing e-Factura Status
+
+<Steps>
+  <Step title="Open the invoice">
+    Go to **Invoicing** and click on the invoice you want to check.
+  </Step>
+  <Step title="Click the e-Factura tab">
+    The e-Factura tab shows the current status, the submission timestamp, the ANAF submission ID (once received), and any error messages.
+  </Step>
+  <Step title="If rejected, read the error code">
+    Rejection messages come from ANAF and include an error code and description. Common ones are listed below.
+  </Step>
+</Steps>
+
+![Invoice e-Factura tab showing Accepted status and ANAF submission ID](/images/placeholder.png)
+
+## Common Rejection Errors
+
+| Error | Likely cause | How to fix |
+|---|---|---|
+| **Invalid CIF** | The client's VAT number on their record is wrong or not VAT-registered | Go to **Clients** → edit the client → correct the CIF field |
+| **Invalid address format** | Street, city, or county field does not match ANAF's expected format | Edit the client's address — make sure County is set and uses the correct Romanian county name |
+| **Missing mandatory field** | A required XML field is empty | Check the invoice for missing client details — usually CIF, address, or client name |
+| **Duplicate invoice** | ANAF already has a submission with the same invoice number | This usually means a previous submission succeeded but Druma did not receive the confirmation — check the ANAF SPV portal directly |
+
+## Manual Resubmit
+
+If automatic retries fail or you have corrected an error and want to try again immediately:
+
+Go to **Invoicing** → open the invoice → **e-Factura tab** → click **Resubmit to ANAF**. Druma sends the XML again immediately.
+
+## When e-Factura Does NOT Apply
+
+e-Factura submission is only required for Romanian VAT-registered clients. It does **not** apply to:
+
+- EU cross-border invoices (clients based outside Romania)
+- Clients without a Romanian CIF
+- Invoices to private individuals (non-business)
+
+For these invoices, Druma generates a standard PDF invoice without the UBL XML submission step. The e-Factura tab will not appear on those invoices.
+
+<Warning>
+Make sure every Romanian B2B client in Druma has their correct CIF entered on the client record. Without a CIF, Druma cannot submit to e-Factura and you may be non-compliant. You can check and update CIF numbers under Clients → select the client → Details tab.
+</Warning>
+
+---
+
+<Card title="Generating Invoices" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
+How to create invoices in Druma, including multi-currency and batch invoicing.</Card>
+
+<Card title="SAGA & WinMENTOR Export" icon="database" href="/en/invoicing/saga-export">
+How to export invoice data to Romanian accounting software for your accountant.</Card>

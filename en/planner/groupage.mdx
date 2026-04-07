@@ -1,0 +1,153 @@
+---
+title: "Groupage (LTL)"
+description: "Consolidate multiple small loads from different clients onto one truck with per-leg tracking, per-client invoicing, and a printable multi-stop manifest."
+icon: "boxes-stacked"
+---
+
+## What Is Groupage?
+
+Groupage — also called LTL (less-than-truckload) or consolidation — is when you load multiple small shipments from different clients onto the same truck going in the same direction. Each client only pays for their portion of the truck space, and you fill the truck with combined loads to make the run profitable.
+
+In Druma, a **Groupage order** is a container order that holds multiple child orders. The container tracks the truck, driver, and route. Each child order has its own client, cargo, pickup, delivery address, and price — and generates its own invoice.
+
+---
+
+## Creating a Groupage Container
+
+<Steps>
+  <Step title="Start a new order">
+    Go to **Orders → New Order**.
+  </Step>
+  <Step title="Set the type to Groupage">
+    In the **Order Type** field, select **Groupage**. The form adjusts to show the groupage container fields.
+  </Step>
+  <Step title="Set up the container">
+    Fill in:
+    - **Truck and driver** — the vehicle and driver doing the run
+    - **Departure date** — when the truck sets off
+    - **General route description** — e.g., "Bucharest → Vienna direction"
+    - **Notes** — any general instructions for the driver
+  </Step>
+  <Step title="Save the container">
+    Click **Save**. The groupage container is created. Now you can start adding child orders.
+  </Step>
+</Steps>
+
+---
+
+## Adding Child Orders to a Groupage
+
+Each child order represents one client's shipment on the truck. You can add as many as the truck can physically carry.
+
+<Steps>
+  <Step title="Open the groupage container">
+    Go to **Orders** and open the groupage container you just created.
+  </Step>
+  <Step title="Click Add Child Order">
+    Click the **+ Add Shipment** button inside the container.
+  </Step>
+  <Step title="Fill in the child order details">
+    For each child order, enter:
+    - **Client** — which client this shipment belongs to
+    - **Pickup address** — where the driver collects this shipment
+    - **Delivery address** — where this shipment is dropped off
+    - **Cargo description** — what's being transported (e.g., "6 pallets, automotive parts")
+    - **Weight and volume** — for manifest accuracy
+    - **Price** — what you're charging this client for their portion
+    - **Currency** — per client if needed
+  </Step>
+  <Step title="Save the child order">
+    Click **Save**. The child order appears in the container's stop list.
+  </Step>
+  <Step title="Repeat for each shipment">
+    Add all remaining child orders until the truck is fully planned.
+  </Step>
+</Steps>
+
+![Groupage container showing multiple child orders](/images/placeholder.png)
+
+<Note>
+The order of stops in the container is set automatically by Druma based on route optimisation, but you can drag and reorder them manually if you have specific pickup/delivery sequences to follow.
+</Note>
+
+---
+
+## Per-Leg Status Tracking
+
+Each child order has its own status flow, independent of the other shipments on the truck. When the driver updates their status for a specific stop:
+
+- That child order updates to the new status
+- The relevant client sees the update in their portal (if enabled)
+- The container overview shows which stops are complete and which are pending
+
+For example: if the truck has four deliveries and the driver completes stops 1 and 2, those child orders show **Delivered** while stops 3 and 4 still show **En Route to Delivery**. Each client sees only their own shipment status.
+
+---
+
+## Multi-Stop ETA
+
+Druma uses HERE routing to calculate the ETA for each stop in sequence, taking into account the order of stops and driving time between them. ETAs update automatically when the driver completes a stop or reports a delay.
+
+Client portals show the ETA for their specific delivery — not the entire route, just their stop.
+
+---
+
+## Per-Client Invoicing
+
+Each child order is invoiced separately. When you're ready to invoice:
+
+1. Open the child order (not the container)
+2. Click **Generate Invoice**
+3. The invoice is for that client's shipment only, with their specific cargo, price, and reference
+
+Clients on the same truck never see each other's invoices or prices. Each one gets a clean, separate document.
+
+<Warning>
+Always invoice from the child order, not the groupage container. The container itself doesn't have invoice details — those live on each child order.
+</Warning>
+
+---
+
+## Groupage Manifest
+
+Before the driver sets off, print or send them the groupage manifest — a complete list of all stops and cargo for the run.
+
+<Steps>
+  <Step title="Open the groupage container">
+    Go to **Orders** and open the container.
+  </Step>
+  <Step title="Generate the manifest">
+    Click **Print Manifest** or **Download Manifest PDF**.
+  </Step>
+  <Step title="Share with the driver">
+    Print it and hand it over, or share the PDF via the driver app message thread.
+  </Step>
+</Steps>
+
+The manifest includes: stop number, pickup/delivery address, client reference, cargo description, weight, and any special instructions per stop.
+
+![Sample groupage manifest PDF](/images/placeholder.png)
+
+---
+
+## A Typical Use Case
+
+You have four clients needing loads moved from Bucharest towards Vienna this Thursday. Individually, none of them fills a truck. Together, they do:
+
+- Client A: 8 pallets to Bratislava
+- Client B: 4 pallets to Budapest
+- Client C: 10 pallets to Vienna
+- Client D: 6 pallets to Linz
+
+You create one groupage container, add four child orders, assign your driver, and print the manifest. Each client pays for their portion, each gets their own invoice and status updates, and you run a full truck.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Creating Orders" icon="plus" href="/en/planner/creating-orders">
+    Learn how standard (FTL) orders work in Druma before adding groupage to your workflow.
+  </Card>
+  <Card title="Planning Board" icon="calendar" href="/en/planner/planning-board">
+    See all your groupage containers and standard orders in the weekly planning view.
+  </Card>
+</CardGroup>

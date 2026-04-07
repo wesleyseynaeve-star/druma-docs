@@ -1,0 +1,94 @@
+---
+title: "Waiting Time Charge Alerts"
+description: "Druma automatically tracks how long drivers wait at pickup and delivery locations and helps you notify clients and generate waiting charges."
+icon: "bell"
+---
+
+Waiting time is one of the most common sources of lost revenue in road freight. Drivers arrive on time, then sit for hours while the client loads or unloads — and the charge never makes it onto the invoice. Druma's waiting time alerts make sure every waiting hour is tracked, documented, and billed.
+
+## How the Clock Starts
+
+When a driver updates their status in the Druma driver app to **Arrived at Pickup** or **Arrived at Delivery**, the waiting clock starts automatically. The arrival is timestamped using the driver's GPS location, which is recorded and stored as evidence.
+
+No manual action from the planner is needed. The system watches the clock and alerts you when the free period runs out.
+
+![Waiting time alert shown on the Today view with red badge](/images/placeholder.png)
+
+## What Happens When the Free Period Expires
+
+The default free waiting period is **2 hours**. After that:
+
+1. The planner receives a **push notification**: "Driver has been waiting 2h at [location] — [client name]"
+2. A **red alert badge** appears on the order card in the Today view
+3. The order detail page shows the live waiting counter in red
+
+The alert stays active and updates every hour until the driver sets their status to Loading Started or Unloading Started.
+
+## Notifying the Client
+
+From the alert, click **Notify Client**. Druma pre-fills a formal notification email to the client's logistics contact. The email contains:
+
+- The driver's GPS-stamped arrival time with a map link
+- How long the driver has been waiting at the time of sending
+- The estimated charge calculated at your configured hourly rate (default €45/h)
+- Your company's bank details for reference
+
+<Note>
+This email acts as a formal written notification, which is important if you need to support a waiting time claim under the transport contract. Send it as early as possible — ideally at the moment the free period expires.
+</Note>
+
+You can review and edit the email text before sending. The client's email address is pulled from their contact record. If it is missing, Druma prompts you to add it before sending.
+
+## The Charge on the Invoice
+
+When you generate the invoice for the order, the waiting time charge is automatically added as a separate line item:
+
+- Description: "Waiting time — [location] — [date] — [X hours Y minutes]"
+- Rate: your configured hourly rate
+- Amount: calculated to the nearest 15 minutes
+
+You can edit or remove this line item on the invoice before issuing it if you have agreed otherwise with the client.
+
+## Configuring Waiting Time Settings
+
+<Steps>
+  <Step title="Global settings">
+    Go to **Settings → Waiting Time**. Set the default free period (hours) and the hourly charge rate (€/hour). These apply to all clients unless overridden.
+  </Step>
+  <Step title="Per-client settings">
+    Open a client record → **Commercial Terms** tab. Override the free period and rate for this client specifically. Useful when you have contracts with different waiting terms per client.
+  </Step>
+  <Step title="Per-order settings">
+    On an individual order, open the **Financials** section and edit the waiting time parameters. Useful for one-off situations or spot loads with special terms.
+  </Step>
+</Steps>
+
+<Warning>
+If you change the global rate, it only affects future alerts. Waiting charges already added to open invoices are not updated automatically.
+</Warning>
+
+## Viewing Waiting History
+
+All waiting events are stored permanently on the order. To review them:
+
+- **Order detail page → Activity tab** — shows every status change with timestamp and GPS coordinates
+- **Reports → Waiting Time Summary** (available to Planner role and above) — see total waiting hours and charges by client or by time period
+
+This data is useful when negotiating contract terms. If a client consistently causes 3+ hours of waiting per delivery, you have the numbers to back a rate renegotiation.
+
+## Common Questions
+
+**What if the driver forgot to set "Arrived" status?** The planner can manually log an arrival time on the order — enter the actual time and a note explaining the manual entry. This time is used for the waiting calculation.
+
+**What if the client disputes the charge?** Share the order activity log from Druma, which shows the GPS-stamped arrival time. The PDF export includes the map link and coordinates.
+
+**Can I disable waiting time tracking for a specific client?** Yes — in the client record's Commercial Terms tab, set the free period to "No limit" to effectively disable automatic alerts for that client.
+
+<CardGroup cols={2}>
+  <Card title="Waiting Time in Orders" icon="clock" href="/en/orders/waiting-time">
+    How planners manage waiting time manually within the order workflow.
+  </Card>
+  <Card title="Generating Invoices" icon="file-invoice" href="/en/invoicing/generating-invoices">
+    How waiting charges appear and can be edited on invoices.
+  </Card>
+</CardGroup>

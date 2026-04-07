@@ -1,0 +1,105 @@
+---
+title: "Creating an eCMR"
+description: "How Druma generates eCMR documents automatically for cross-border orders and how to create one manually when needed."
+icon: "file-plus"
+---
+
+Druma creates eCMR documents via TransFollow. The process is largely automatic for qualifying orders, but you can also trigger creation manually from the order detail page.
+
+---
+
+## When Druma Creates an eCMR Automatically
+
+Druma creates an eCMR automatically when **both** of the following conditions are met:
+
+1. **TransFollow integration is active** — your API key is saved and the connection is healthy in Settings → Integrations.
+2. **The order is cross-border** — the pickup country and the delivery country are different.
+
+When a confirmed order meets both conditions, Druma registers the eCMR with TransFollow immediately upon order confirmation. You will see the eCMR tab on the order detail page populate with the document number and status "Awaiting sender signature."
+
+<Note>
+Domestic orders (same country pickup and delivery) do not trigger automatic eCMR creation, since the CMR Convention applies to international transport. You can still create an eCMR manually on a domestic order if your client or route requires it.
+</Note>
+
+---
+
+## Creating an eCMR Manually
+
+If automatic creation did not trigger, or if you need to create an eCMR on a domestic order, do it manually:
+
+<Steps>
+  <Step title="Open the order">
+    Go to **Orders**, find the order, and click to open the detail page.
+  </Step>
+  <Step title="Open the eCMR tab">
+    Click the **eCMR** tab near the top of the order detail page.
+  </Step>
+  <Step title="Click Create eCMR">
+    Click the **Create eCMR** button. Druma will show you a preview of the data that will be submitted to TransFollow.
+  </Step>
+  <Step title="Review all fields">
+    Check every field carefully before confirming. Once registered with TransFollow, the eCMR document number cannot be deleted or changed.
+  </Step>
+  <Step title="Confirm creation">
+    Click **Confirm & Create**. Druma registers the document with TransFollow and the eCMR status changes to "Awaiting sender signature."
+  </Step>
+</Steps>
+
+![eCMR tab on order detail page](/images/placeholder.png)
+
+---
+
+## Data Pre-filled from the Order
+
+Druma populates the eCMR fields from the order data you already entered. Here is what comes from where:
+
+| eCMR field | Source in Druma |
+|---|---|
+| Shipper (sender) name and address | Your company details from Settings → Company |
+| Consignee name and address | Client record on the order |
+| Pickup address | Order pickup location |
+| Delivery address | Order delivery location |
+| Goods description | Cargo description field on the order |
+| Truck registration plate | Vehicle assigned to the order |
+| Driver name | Driver assigned to the order |
+| Special conditions (ADR, temperature) | Order flags and notes |
+
+If any of this data is missing or incorrect on the order, the eCMR preview will show the problem before you confirm. Fix the order first, then create the eCMR.
+
+---
+
+## Before You Confirm: What Cannot Be Changed
+
+<Warning>
+Once you click **Confirm & Create**, the eCMR document number is registered with TransFollow. You **cannot**:
+- Delete the eCMR
+- Change the document number
+- Modify the shipper, consignee, or goods description after registration
+
+If you need to correct a registered eCMR, you must cancel it (via the Paper CMR Fallback process) and, if appropriate, create a new one. A cancellation is recorded in the TransFollow audit trail.
+</Warning>
+
+---
+
+## Mock Mode
+
+If TransFollow is set to **mock mode** in Settings → Integrations, eCMR documents will appear to be created normally — you will see a document number and the signing workflow will function — but the document is **not registered with TransFollow** and has no legal validity.
+
+Mock mode is intended for:
+- Driver training sessions
+- Testing the signing workflow before going live
+- Demonstrating the feature to clients
+
+You can identify mock eCMRs by the **"MOCK"** badge on the eCMR tab. Always disable mock mode before dispatching real shipments.
+
+---
+
+## Next steps
+
+<Card title="The Signing Flow" icon="pen-to-square" href="/en/ecmr/signing-flow">
+  How the driver collects all three signatures on their phone.
+</Card>
+
+<Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+  Background on eCMR, its legal basis, and why operators use it.
+</Card>

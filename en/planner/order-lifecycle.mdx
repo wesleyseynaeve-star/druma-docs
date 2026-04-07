@@ -1,0 +1,220 @@
+---
+title: "Order Lifecycle"
+description: "How an order moves from Draft to Invoiced in Druma — every status, who triggers it, and what happens at each step."
+icon: "circle-dot"
+---
+
+## Overview
+
+Every order in Druma follows a defined journey. Understanding the lifecycle helps you know what to expect at each stage, when to step in, and how to handle exceptions like late deliveries or forgotten status updates.
+
+Here is the full flow:
+
+**Draft → Confirmed → In Transit → Arrived at Pickup → Loading → En Route to Delivery → Arrived at Delivery → Unloading → Delivered → Invoiced**
+
+There is also a separate **Cancelled** status covered at the end.
+
+![Order status flow diagram](/images/placeholder.png)
+
+---
+
+## Draft
+
+**Triggered by:** Planner saves a new order without confirming it.
+
+**Who can trigger it:** Planner only.
+
+The order exists in the system but is not yet active. The driver does not see it in their app. It appears grey on the planning board.
+
+**Actions available from Draft:**
+- Edit any field
+- Confirm the order (moves to Confirmed)
+- Delete the order
+- Cancel the order
+
+Use Draft when a client has made a tentative booking but hasn't confirmed yet, or when you're building the order but still waiting on details.
+
+---
+
+## Confirmed
+
+**Triggered by:** Planner clicks **Confirm Order** (from the order page or planning board).
+
+**Who can trigger it:** Planner only.
+
+The order is now live. The assigned driver receives a push notification in their app showing the job details — pickup address, delivery address, date, and the driver notes you added.
+
+The order appears blue on the planning board.
+
+**Notifications sent:**
+- Push notification to the assigned driver (and second driver, if double-manned)
+- Optional: automatic email confirmation to the client (if enabled in your account settings)
+
+**Actions available from Confirmed:**
+- Edit most fields (changes trigger a new notification to the driver)
+- Cancel the order
+- Move to In Transit (driver action, or planner override)
+
+---
+
+## In Transit
+
+**Triggered by:** Driver taps **En Route** in their app when they depart for the pickup location.
+
+**Who can trigger it:** Driver (primary action) or Planner (manual override).
+
+This status means the driver is on the move toward the pickup point. The order turns green on the planning board.
+
+<Note>
+If a driver forgets to tap En Route, you can set the status manually from the order page. Open the order, click **Override Status**, and select In Transit. Always note the reason in the comment box so you have a record.
+</Note>
+
+---
+
+## Arrived at Pickup
+
+**Triggered by:** Driver taps **Arrived at Pickup** when they reach the loading address.
+
+**Who can trigger it:** Driver or Planner.
+
+The driver has arrived at the loading site and is waiting to be processed. This status starts the **waiting time clock** automatically — useful for documenting any delays at the loading dock.
+
+**Notifications sent:**
+- Optional: automatic notification to the client or their contact at the loading site (configurable per client)
+
+---
+
+## Loading
+
+**Triggered by:** Driver taps **Loading Started** when goods are being loaded onto the truck.
+
+**Who can trigger it:** Driver or Planner.
+
+The waiting time clock stops when loading begins. Any waiting time recorded is saved to the order and can be used for surcharge calculations.
+
+---
+
+## En Route to Delivery
+
+**Triggered by:** Driver taps **Departed from Pickup** after loading is complete and the CMR is signed.
+
+**Who can trigger it:** Driver or Planner.
+
+The truck is now heading to the delivery address. The order shows an estimated arrival time on the planning board based on the HERE route calculation.
+
+<Note>
+This is a good point to send a proactive delay notification to the consignee if the driver is running behind schedule. Use the **Send ETA** button on the order page to send an SMS or email with the current estimated arrival.
+</Note>
+
+---
+
+## Arrived at Delivery
+
+**Triggered by:** Driver taps **Arrived at Delivery** when they reach the delivery address.
+
+**Who can trigger it:** Driver or Planner.
+
+The waiting time clock starts again at the delivery point. Any unloading delays are recorded from this moment.
+
+---
+
+## Unloading
+
+**Triggered by:** Driver taps **Unloading Started** when goods are being removed from the truck.
+
+**Who can trigger it:** Driver or Planner.
+
+Waiting time at delivery stops. The driver can now prepare the signed delivery documents.
+
+---
+
+## Delivered
+
+**Triggered by:** Driver taps **Delivered** and optionally uploads a photo of the signed CMR or delivery note.
+
+**Who can trigger it:** Driver (primary action) or Planner.
+
+The transport is complete. The order turns dark green on the planning board and moves to the **Completed** tab in the order list.
+
+**Notifications sent:**
+- Optional: delivery confirmation email to the client with timestamp and any uploaded documents.
+
+**Actions available from Delivered:**
+- Generate invoice (moves to Invoiced)
+- Upload or view delivery documents (CMR photo, POD)
+- Add a dispute or damage note
+
+---
+
+## Invoiced
+
+**Triggered by:** Planner generates an invoice for the order (from the order page or the Invoicing module).
+
+**Who can trigger it:** Planner only.
+
+The order is fully closed. It is read-only and linked to the invoice record. No further status changes are possible.
+
+---
+
+## Cancelled
+
+**Triggered by:** Planner cancels the order.
+
+**Who can trigger it:** Planner only.
+
+<Warning>
+You can cancel an order that is in **Draft** or **Confirmed** status without any special steps. However, you **cannot** cancel an order that is In Transit or later without going through a manual process. Contact your account administrator if you need to cancel an active order — this requires logging the reason and may affect driver payments.
+</Warning>
+
+Cancelled orders are kept in the system for audit purposes. They are visible in the order list under the **Cancelled** filter.
+
+---
+
+## Manual status overrides
+
+Drivers sometimes forget to tap status updates — it happens. As a planner, you can always override the status manually:
+
+<Steps>
+  <Step title="Open the order">
+    Go to Planner → Orders and find the order. Click it to open the detail page.
+  </Step>
+  <Step title="Click Override Status">
+    Find the **Override Status** button near the current status indicator at the top of the page.
+  </Step>
+  <Step title="Select the correct status">
+    Choose the status the order should be at now.
+  </Step>
+  <Step title="Add a note">
+    Type a brief explanation (e.g., "Driver forgot to update — confirmed by phone"). This is saved in the order history.
+  </Step>
+  <Step title="Save">
+    Click **Apply Override**. The status updates immediately and the change is logged with your name and a timestamp.
+  </Step>
+</Steps>
+
+---
+
+## Automatic vs manual transitions
+
+| Status | Automatic | Manual (driver) | Manual (planner) |
+|---|---|---|---|
+| Draft | — | — | Yes |
+| Confirmed | — | — | Yes |
+| In Transit | — | Yes | Yes (override) |
+| Arrived at Pickup | — | Yes | Yes (override) |
+| Loading | — | Yes | Yes (override) |
+| En Route to Delivery | — | Yes | Yes (override) |
+| Arrived at Delivery | — | Yes | Yes (override) |
+| Unloading | — | Yes | Yes (override) |
+| Delivered | — | Yes | Yes (override) |
+| Invoiced | — | — | Yes |
+
+---
+
+<Card title="Today View" icon="sun" href="/en/planner/today-view">
+  Monitor all active orders for today, see live driver positions, and handle alerts from your daily dashboard.
+</Card>
+
+<Card title="Generating Invoices" icon="file-invoice" href="/en/finances/generating-invoices">
+  Once an order is Delivered, learn how to create and send the invoice to your client.
+</Card>

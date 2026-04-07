@@ -1,0 +1,110 @@
+---
+title: "Cabotage Tracking"
+description: "Monitor cabotage operations per truck to stay within EU limits and avoid heavy fines at roadside inspections."
+icon: "flag"
+---
+
+## What Is Cabotage?
+
+Cabotage is when a truck registered in one country performs domestic transport inside a different country — meaning both the pickup and the delivery are within the same foreign country.
+
+**Example:** A Romanian-registered truck delivers a load from Bucharest to Munich (international). After that delivery, the truck picks up a load in Munich and delivers it to Frankfurt. That Munich → Frankfurt movement, performed by a Romanian truck entirely within Germany, is a **cabotage operation**.
+
+Cabotage is legal in the EU — but strictly limited.
+
+---
+
+## The EU Cabotage Rules
+
+Under EU Regulation 1072/2009, after completing an international delivery into a member state:
+
+- A foreign truck may perform **up to 3 cabotage operations** in that country
+- All 3 operations must be completed **within 7 days** of the international delivery
+- After those 3 operations (or 7 days, whichever comes first), the truck must leave that country
+- There is a mandatory **4-day cooldown** before the truck can return to that country and do cabotage again
+
+**Why it matters:** Roadside inspection authorities in countries like Germany, France, and the Netherlands actively check for cabotage violations. Fines can reach several thousand euros per violation. Repeat violations can result in operating licence issues.
+
+<Warning>
+Cabotage rules were tightened further under the EU Mobility Package. The 4-day cooling-off period is strictly enforced in western EU countries. Always verify current rules apply — regulations can be updated.
+</Warning>
+
+---
+
+## How Druma Tracks Cabotage
+
+Druma monitors cabotage automatically based on the order data you enter. Here's what it looks for:
+
+1. **Country detection** — on every order, Druma checks the country of the pickup address and the country of the delivery address
+2. **Non-resident flag** — if the truck is registered in a different country from both the pickup and delivery countries, and both pickup and delivery are in the same country, the order is flagged as a cabotage operation
+3. **Counter per truck** — Druma counts cabotage operations per country, per vehicle, per rolling 7-day window after the last qualifying international delivery
+4. **Cooldown monitoring** — Druma tracks when the 7-day window expires and when the 4-day cooldown begins and ends
+
+![Cabotage log showing operations per truck and country](/images/placeholder.png)
+
+---
+
+## Viewing the Cabotage Log
+
+To see the full cabotage history for your fleet:
+
+<Steps>
+  <Step title="Go to Fleet">
+    Click **Fleet** in the top navigation.
+  </Step>
+  <Step title="Open Cabotage Log">
+    Click **Cabotage Log** in the Fleet section.
+  </Step>
+  <Step title="Filter by truck or country">
+    Use the filters to view a specific truck's cabotage history, or see all operations in a specific country.
+  </Step>
+</Steps>
+
+The log shows:
+- Each cabotage operation (order reference, country, dates)
+- Operation count within the 7-day window per truck
+- Cooldown status: active cooldown, cooldown expired, or eligible for new operations
+- Any alerts triggered
+
+---
+
+## Cabotage Alerts
+
+Druma warns you before you cross the limit, not after. Alerts appear in the planner dashboard and by email in two situations:
+
+**Approaching limit alert** — when a truck has completed **2 out of 3** allowed operations in a country within the 7-day window, Druma flags the next potential order as a warning.
+
+**Limit reached alert** — when a truck has used all 3 operations, any further orders in that country for that truck show a red warning until the cooldown expires.
+
+These alerts appear when you're assigning a driver to an order, so you can catch the issue before the truck is dispatched.
+
+---
+
+## What Druma Tracks vs. What You Still Need to Manage
+
+Druma's cabotage tracking is based entirely on the order data you enter into the system. It is accurate as long as your orders are entered correctly and promptly.
+
+<Note>
+Druma's cabotage tracking is a planning assistance tool — it does not replace a dedicated cabotage compliance system or legal advice. Always ensure drivers carry the correct documentation at the roadside: the original international CMR, the three cabotage CMRs (if applicable), and the dates clearly visible. Inspection authorities check paper documentation, not your TMS.
+</Note>
+
+**Druma tracks:**
+- Operations count per truck per country per 7-day window
+- Cooldown periods
+- Order-level cabotage flags
+
+**You still need to manage:**
+- Driver documentation at the roadside
+- Legal updates if EU regulations change
+- Operations carried out outside Druma (e.g., loads not entered into the system)
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Fleet Management" icon="truck" href="/en/fleet/fleet-management">
+    Manage your vehicles, registration countries, and truck profiles.
+  </Card>
+  <Card title="EU Driving Hours" icon="clock" href="/en/fleet/eu-driving-hours">
+    Track driver hours and rest periods to stay compliant with EU tachograph rules.
+  </Card>
+</CardGroup>
