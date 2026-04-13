@@ -1,0 +1,135 @@
+---
+title: "Switch Truck (Tractor Relay)"
+description: "How to swap the tractor unit mid-trip while keeping the trailer and cargo on the same order — for relay operations, breakdowns, and driver swaps."
+icon: "arrow-right-arrow-left"
+---
+
+## What is a tractor relay?
+
+A tractor relay (also called a truck switch) is when you change the tractor unit pulling a trailer **during an active order**. The trailer and its cargo stay on the same order — only the cab and driver change.
+
+Common scenarios:
+
+- **Relay driving** — Driver A takes the load from origin to a midpoint, then Driver B picks up the trailer and continues to the destination. This extends your effective range without breaking driving time regulations.
+- **Breakdown** — The original truck has a mechanical issue and a replacement tractor is sent to collect the trailer.
+- **Driver hours limit** — The current driver is running out of legal driving time and a fresh driver with a different truck takes over.
+- **Scheduled handover** — At a depot or hub, trailers are routinely swapped between tractors.
+
+<Note>
+The key principle: **the trailer stays with the cargo**. When you switch the truck on an order, Druma detaches the old tractor but keeps the trailer attached. This preserves the chain of custody for the goods.
+</Note>
+
+---
+
+## When can you switch the truck?
+
+You can switch the truck on any order that is in one of these active statuses:
+
+- Assigned
+- Departed
+- At Pickup
+- Loading
+- In Transit
+- At Delivery
+
+The order must be of type **Own Truck**. Subcontracted and capacity sale orders do not support truck switching — those are managed by the external carrier.
+
+---
+
+## How to switch the truck
+
+<Steps>
+  <Step title="Open the order detail">
+    Go to **Planner → Orders** and click the active order. The order detail panel opens on the right.
+  </Step>
+  <Step title="Click Switch Truck">
+    Find the **Switch Truck** button in the order actions area. This button only appears for Own Truck orders in an active status.
+  </Step>
+  <Step title="Select the target stop">
+    Choose the stop where the switch happens. For example, if the switch occurs at the second stop, select stop 2. All stops from this point onwards will be handled by the new truck.
+  </Step>
+  <Step title="Select the new truck">
+    Search for the replacement truck by plate number. Only active, available trucks from your fleet are shown. The new truck's assigned driver is automatically selected.
+  </Step>
+  <Step title="Enter a reason and confirm">
+    Add a brief reason for the switch (e.g., "Driver hours limit", "Breakdown at Timisoara"). Click **Confirm Switch**.
+  </Step>
+</Steps>
+
+---
+
+## What happens after a switch
+
+When you confirm a truck switch, Druma performs several actions automatically:
+
+1. **A truck segment is created** for the original truck, recording which stops it handled (from the first stop to the switch point).
+2. **A new segment is created** for the replacement truck, covering from the switch point to the end of the order (open-ended until delivery).
+3. **All stops from the switch point onwards** are updated with the new truck and driver.
+4. **The order's main truck and driver fields** are updated to reflect the new assignment.
+5. **The trailer remains unchanged** — it stays attached to the order regardless of which tractor is pulling it.
+
+---
+
+## Viewing truck segment history
+
+After a switch, the order detail panel shows a **Truck Segments** section listing every tractor that has been involved in the order:
+
+| Truck | Driver | Stops | Reason | Switched at |
+|---|---|---|---|---|
+| B-201-TCL (Volvo FH) | Ion Ionescu | Stop 1 → Stop 2 | Driver hours limit | 12 Apr 2026, 14:30 |
+| B-215-TCL (Scania R450) | Vasile Popa | Stop 2 → (ongoing) | — | — |
+
+Each segment records:
+- The truck name and plate
+- The driver who was driving
+- The stop range (from → to)
+- The reason for the switch
+- The timestamp of the handover
+
+---
+
+## Per-stop truck and driver overrides
+
+After a truck switch, individual stops in the order may show a different truck and driver than the order's main assignment. This is normal — it means the stop was handled by the previous tractor before the switch happened.
+
+When viewing the order's stop timeline, each stop shows which truck and driver were assigned to it. If a stop has no override, it inherits the order's current truck and driver.
+
+---
+
+## Multiple switches
+
+You can switch the truck more than once on the same order. Each switch creates a new segment. This is useful for long-distance international routes where the load passes through multiple relay points.
+
+For example, a Bucharest → Duisburg load might use three tractors:
+
+1. Truck A: Bucharest → Budapest (Stop 1 → Stop 2)
+2. Truck B: Budapest → Wien (Stop 2 → Stop 3)
+3. Truck C: Wien → Duisburg (Stop 3 → Stop 4)
+
+Each segment is tracked independently with its own driver, reason, and timestamps.
+
+---
+
+## Important notes
+
+<Warning>
+Switching a truck does **not** create a new order. The original order number, client, pricing, and all commercial terms remain the same. Only the operational assignment (which truck and driver) changes.
+</Warning>
+
+- The **trailer always stays with the cargo**. If you need to change the trailer as well, that is a different operation — see [Trailer Management](/en/planner/trailer-management).
+- Truck switches are **logged in the order's audit history** with the planner's name, timestamp, and reason.
+- The driver app automatically updates — the outgoing driver sees the order disappear from their active loads, and the incoming driver receives a push notification with the job details.
+
+---
+
+<Card title="Fleet Management" icon="truck" href="/en/planner/fleet-management">
+  Manage your tractor fleet — add vehicles, track availability, and handle maintenance blocks.
+</Card>
+
+<Card title="Trailer Management" icon="trailer" href="/en/planner/trailer-management">
+  Manage trailers independently from tractors — assignment, detachment, and location tracking.
+</Card>
+
+<Card title="Planning Board" icon="calendar" href="/en/planner/planning-board">
+  See all your orders and trucks on the visual dispatch board — the truck switch button is also accessible from here.
+</Card>
