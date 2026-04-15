@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-04-13 05:56 UTC
+Generated: 2026-04-15 11:18 UTC
 
 ---
 
@@ -63,16 +63,18 @@ Save your standard lane prices as rate cards. When you create an order on a rout
 
 Druma handles repetitive tasks: sending status updates to clients, generating invoice numbers, tracking document expiry, and flagging issues before they become problems.
 
-## The six user roles
+## The eight user roles
 
-Different people in your company need different levels of access. Druma has six roles:
+Different people in your company need different levels of access. Druma has eight roles:
 
 | Role | Who uses it |
 |------|-------------|
 | **Admin** | Full system access, including billing. Usually the business owner. |
-| **Company Admin** | Manages company setup, users, and settings — but not billing. |
-| **Planner** | Creates and manages orders, assigns drivers and trucks, handles invoicing. |
-| **Customer Service** | Views orders and manages the client portal. Cannot edit orders. |
+| **Company Admin** | Full access to everything except billing — orders, invoices, fleet, settings, integrations, users, reports. |
+| **Planner** | Creates and manages orders, assigns drivers and trucks, handles invoicing and reports. |
+| **Dispatcher** | Monitors dashboard, live map, driver hours, and fleet (read-only). Cannot create orders or invoices. |
+| **Fleet Manager** | Full fleet management — vehicles, trailers, drivers, documents, fuel, cabotage, rate cards, driver hours. |
+| **Customer Service** | Creates and edits orders, generates invoices, manages clients, and accesses reports. Can invite users. |
 | **Driver** | Uses the mobile app only. Updates delivery status, signs eCMR. |
 | **Client** | Uses the client portal only. Tracks shipments, downloads documents. |
 
@@ -251,7 +253,7 @@ You are now set up and running. Here are some useful next steps:
 
 ## Who needs access to Druma?
 
-Before you start inviting people, think about what each person in your company needs to do. Druma has six distinct roles, and giving someone the right role from the start means they only see what is relevant to their job — nothing more, nothing less.
+Before you start inviting people, think about what each person in your company needs to do. Druma has eight distinct roles, and giving someone the right role from the start means they only see what is relevant to their job — nothing more, nothing less.
 
 You do not need to create accounts for drivers or clients. Drivers use a special app link (no login needed), and clients use a portal link. Only your internal staff need user invitations.
 
@@ -279,24 +281,33 @@ You do not need to create accounts for drivers or clients. Drivers use a special
 If someone has not accepted their invitation after 48 hours, go to **Settings → Users**, find their name (shown as "Pending"), and click **Resend Invite**. Check with them that the email has not gone to their spam folder.
 
 
-## The six roles explained
+## The eight roles explained
 
 ### Admin
 
-**Full access to everything, including billing.**
+**Full system access, including billing.**
 
-The Admin role is for the business owner or the person responsible for the Druma subscription. Admins can see and change everything: company settings, users, orders, invoicing, fleet, and billing. There is usually only one or two Admins in a company.
+The Admin has unrestricted access to every feature in Druma, including billing, subscription management, and payment methods. This is the role for the business owner.
 
-*Example: Ion, the owner of a 12-truck carrier, is the Admin. He manages the subscription and can see all financial data.*
+*Example: Vasile owns the company. He is the Admin — he controls billing and has full visibility over everything.*
 
 
 ### Planner
 
-**Orders, fleet, drivers, and invoicing.**
+**Orders, planning board, invoicing, and reports.**
 
-Planners are your dispatchers. They create and manage transport orders, assign vehicles and drivers, track deliveries, and generate invoices. This is the most commonly used role in day-to-day operations.
+Planners are your dispatchers. They create and manage transport orders, assign vehicles and drivers on the planning board, generate invoices, and access reports. They have read-only access to fleet.
 
 *Example: Andrei creates all orders, assigns trucks, monitors the planning board, and sends invoices when deliveries are confirmed.*
+
+
+### Fleet Manager
+
+**Full fleet management, rate cards, and driver hours.**
+
+Fleet Managers have full control over vehicles, trailers, drivers, documents, fuel card imports, and cabotage tracking. They also manage rate cards and view driver hours. They cannot access orders, invoicing, the planning board, or reports.
+
+*Example: Ion handles vehicle inspections, insurance renewals, driver licence tracking, and fuel card imports. He does not need to see orders or invoices.*
 
 
 ### Driver
@@ -319,24 +330,31 @@ Drivers do not need an invitation email. Do not try to invite them through Setti
 
 ## Role permissions at a glance
 
-| Permission | Admin | Company Admin | Planner | Customer Service | Driver | Client |
-|---|---|---|---|---|---|---|
-| Billing and subscription | Yes | No | No | No | No | No |
-| Company settings | Yes | Yes | No | No | No | No |
-| Manage users | Yes | Yes | No | No | No | No |
-| Create/edit orders | Yes | Yes | Yes | No | No | No |
-| View orders | Yes | Yes | Yes | Yes | No | No |
-| Assign vehicles and drivers | Yes | Yes | Yes | No | No | No |
-| Generate invoices | Yes | Yes | Yes | No | No | No |
-| Fleet management | Yes | Yes | Yes | No | No | No |
-| Driver app | No | No | No | No | Yes | No |
-| Client portal | No | No | No | No | No | Yes |
+| Permission | Admin | Company Admin | Planner | Dispatcher | Fleet Manager | CS | Driver | Client |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Billing and subscription | Yes | - | - | - | - | - | - | - |
+| Company settings | Yes | Yes | - | - | - | - | - | - |
+| Manage users and invitations | Yes | Yes | - | - | - | Invite | - | - |
+| Integrations and API settings | Yes | Yes | - | - | - | - | - | - |
+| Rate cards | Yes | Yes | - | - | Yes | - | - | - |
+| Create and edit orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| View all orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| Assign vehicles and drivers | Yes | Yes | Yes | - | - | - | - | - |
+| Dashboard / Today | Yes | Yes | Yes | Yes | - | - | - | - |
+| Live map | Yes | Yes | Yes | Yes | - | - | - | - |
+| Fleet management (vehicles) | Yes | Yes | Read | Read | Full | - | - | - |
+| Fleet management (drivers) | Yes | Yes | Read | Read | Full | - | - | - |
+| Driver hours | Yes | Yes | Yes | Yes | Yes | - | - | - |
+| Generate and send invoices | Yes | Yes | Yes | - | - | Yes | - | - |
+| Reports and exports | Yes | Yes | Yes | - | - | Yes | - | - |
+| Driver app | - | - | - | - | - | - | Yes | - |
+| Client portal | - | - | - | - | - | - | - | Yes |
 
 ## Assigning multiple roles to one person
 
 Druma allows a single user to hold more than one role. This is useful in smaller companies where one person does several jobs.
 
-*Example: Gheorghe is a small-carrier owner who also dispatches. He can be both Admin and Planner — he manages the billing and also creates and tracks orders himself.*
+*Example: Gheorghe is a small-carrier owner who also dispatches. He can be both Company Admin and Planner — he manages the platform settings and also creates and tracks orders himself.*
 
 To assign multiple roles, select them both when sending the invitation or when editing an existing user's profile.
 
@@ -570,57 +588,78 @@ Giving every team member the right role means:
 - Accidental changes to orders or settings are less likely
 - You have a clear audit trail of who did what
 
-Druma has **six roles**. Some are for your internal team (web platform), and two are for external users (drivers and clients) who access Druma through dedicated links rather than the web platform.
+Druma has **eight roles**. Six are for your internal team (web platform), and two are for external users (drivers and clients) who access Druma through dedicated links rather than the web platform.
 
 ## Role permissions at a glance
 
-| Permission | Admin | Company Admin | Planner | Customer Service | Driver | Client |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| Billing and subscription | Yes | No | No | No | No | No |
-| Company settings | Yes | Yes | No | No | No | No |
-| Manage users and invitations | Yes | Yes | No | No | No | No |
-| Integrations and API settings | Yes | Yes | No | No | No | No |
-| Rate cards | Yes | Yes | Yes | No | No | No |
-| Create and edit orders | Yes | Yes | Yes | No | No | No |
-| View all orders | Yes | Yes | Yes | Yes | No | No |
-| Assign vehicles and drivers | Yes | Yes | Yes | No | No | No |
-| Fleet management (vehicles) | Yes | Yes | Yes | No | No | No |
-| Fleet management (drivers) | Yes | Yes | Yes | No | No | No |
-| Generate and send invoices | Yes | Yes | Yes | No | No | No |
-| View invoices | Yes | Yes | Yes | Yes | No | No |
-| Client portal management | Yes | Yes | Yes | Yes | No | No |
-| Reports and exports | Yes | Yes | Yes | Yes | No | No |
-| Driver app (order updates, eCMR) | No | No | No | No | Yes | No |
-| Client portal (track shipments) | No | No | No | No | No | Yes |
+| Permission | Admin | Company Admin | Planner | Dispatcher | Fleet Manager | CS | Driver | Client |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Billing and subscription | Yes | - | - | - | - | - | - | - |
+| Company settings | Yes | Yes | - | - | - | - | - | - |
+| Manage users and invitations | Yes | Yes | - | - | - | Invite | - | - |
+| Integrations and API settings | Yes | Yes | - | - | - | - | - | - |
+| Rate cards | Yes | Yes | - | - | Yes | - | - | - |
+| Create and edit orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| View all orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| Assign vehicles and drivers | Yes | Yes | Yes | - | - | - | - | - |
+| Dashboard / Today | Yes | Yes | Yes | Yes | - | - | - | - |
+| Live map | Yes | Yes | Yes | Yes | - | - | - | - |
+| Fleet management (vehicles) | Yes | Yes | Read | Read | Full | - | - | - |
+| Fleet management (drivers) | Yes | Yes | Read | Read | Full | - | - | - |
+| Driver hours | Yes | Yes | Yes | Yes | Yes | - | - | - |
+| Generate and send invoices | Yes | Yes | Yes | - | - | Yes | - | - |
+| Reports and exports | Yes | Yes | Yes | - | - | Yes | - | - |
+| Driver app (order updates, eCMR) | - | - | - | - | - | - | Yes | - |
+| Client portal (track shipments) | - | - | - | - | - | - | - | Yes |
 
 ## Detailed role descriptions
 
 ### Admin
 
-The Admin has **full access to every part of Druma**, including billing and subscription management. This role is intended for the business owner or the person who is commercially responsible for the Druma account.
+The Admin has **full system access**, including billing and subscription management. This is the role for the business owner or the person ultimately responsible for the Druma account.
 
-Admins can:
-- View and change the Stripe billing portal
-- Add or remove vehicle and user seats
-- Cancel or reactivate the subscription
-- Do everything a Company Admin, Planner, and Customer Service user can do
+Admins can do everything a Company Admin can, plus:
+- Manage billing, subscription plans, and payment methods
+- View and change seat counts and pricing tiers
 
-*Real-world example: Vasile owns a 15-truck carrier. He is the only Admin. He set up the account, manages the billing, and occasionally checks on orders when his dispatcher is unavailable.*
+*Real-world example: Vasile owns the transport company. He is the Admin. He controls the subscription, manages billing, and has visibility over everything in the platform.*
 
 
 ### Planner
 
-The Planner is the core operational role — the dispatcher who runs the day-to-day freight work. Planners have full access to orders, fleet, drivers, and invoicing, but they cannot change company-level settings or manage users.
+The Planner is the core operational role — the dispatcher who runs the day-to-day freight work. Planners have full access to orders, the planning board, and invoicing, with read-only access to fleet, but they cannot change company-level settings or manage users.
 
 Planners can:
 - Create, edit, and delete transport orders
-- Assign vehicles and drivers
-- Manage the planning board
+- Assign vehicles and drivers on the planning board
 - Generate and send invoices
-- View and manage the fleet
-- Work with rate cards to price orders
+- View fleet vehicles and drivers (read-only)
+- Access dashboard, live map, and driver hours
+- Work with reports and exports
 
 *Real-world example: Radu is a dispatcher. He creates all orders, assigns trucks, monitors deliveries, and sends invoices when orders are completed. He does not need to change company settings or manage user access.*
+
+
+### Fleet Manager
+
+The Fleet Manager has **full control over fleet operations** — vehicles, trailers, drivers, documents, fuel card imports, cabotage tracking, and rate cards. They also see driver hours. They do not have access to orders, invoicing, the planning board, or reports.
+
+Fleet Managers can:
+- Add, edit, and remove vehicles, trailers, and drivers
+- Manage fleet documents (ITP, insurance, CEMT, ADR certificates)
+- Import fuel card data (DKV, UTA, AS24)
+- Track cabotage compliance
+- Manage rate cards
+- View driver hours
+
+Fleet Managers cannot:
+- Create, edit, or view orders
+- Access the planning board
+- Generate or view invoices
+- View reports or exports
+- Change company settings or manage users
+
+*Real-world example: Ion is responsible for the fleet. He handles vehicle inspections, insurance renewals, driver licence tracking, and fuel card imports. He does not need to see orders or invoices — that is the planner's job.*
 
 
 ### Driver
@@ -2195,73 +2234,57 @@ Each segment is tracked independently with its own driver, reason, and timestamp
 
 ## What Kind of App Is It?
 
-The Druma driver app is a **PWA (Progressive Web App)**. This means it looks and works like a regular app on your phone — it has an icon on your home screen, works when your signal is weak, and loads fast — but you don't download it from the App Store or Google Play.
+It depends on your phone:
 
-Your dispatcher sends you a link. You add it to your home screen. Done.
-
-This is good for you because:
-- No waiting for app store approvals or updates
-- No storage space wasted
-- Works on any modern Android or iOS phone
+- **Android**: Druma has a native Android app available on **Google Play**. You download and install it like any other app.
+- **iPhone / iPad (iOS)**: Druma uses a **PWA (Progressive Web App)**. It looks and works like a regular app — it has an icon on your home screen and works when your signal is weak — but you install it directly from Safari, not the App Store.
 
 
-## Installing on Android (Chrome)
+## Installing on Android
 
 
-  ### Open Chrome
-    Make sure you're using **Google Chrome** — not Samsung Internet, Firefox, or another browser. Chrome is required for Android installation.
+  ### Open Google Play
+    On your Android phone, open the **Google Play Store**.
   
-  ### Open the link your dispatcher sent
-    Tap the link your dispatcher sent you. The Druma driver app will open in Chrome.
+  ### Search for Druma
+    Search for **"Druma"** and tap the app in the results.
   
-  ### Open the browser menu
-    Tap the three-dot menu icon in the top-right corner of Chrome.
+  ### Tap Install
+    Tap **"Install"** and wait for the download to complete.
   
-  ### Tap Add to Home Screen
-    Select **"Add to Home Screen"** from the menu.
+  ### Open the app
+    Tap **"Open"** or find the Druma icon on your home screen.
   
-  ### Confirm
-    A dialog box appears with the app name. Tap **"Add"**. The Druma icon will appear on your home screen like any other app.
-  
-
-
 
 
 > **Note:** 
-If you don't see "Add to Home Screen" in the menu, look for an **Install App** banner that sometimes appears at the bottom of the screen instead. Tap it to install.
+Make sure Chrome and the Druma app are allowed to run in the background. Go to **Settings → Apps → Druma → Battery** and set it to Unrestricted (or turn off battery optimisation for the app).
 
 
 
-## Logging In for the First Time
+## Registering and Activating Your Account
+
+You register as a driver the same way any user registers in Druma — there is no special one-time token link required.
 
 
-  ### Open the app from your home screen
-    Tap the Druma icon you just added.
+  ### Open the app
+    Tap the Druma icon on your home screen.
   
-  ### Enter your phone number
-    Type your mobile number, including the country code (e.g., +40 for Romania).
+  ### Create your account
+    Enter your mobile number or email address and follow the on-screen steps to set up your account.
   
-  ### Enter the SMS code
-    Druma sends a 6-digit verification code to your number by SMS. Enter the code in the app.
+  ### Verify your account
+    Druma sends a verification code by SMS or email. Enter it to activate your account.
   
   ### You're in
-    Your orders and active loads appear immediately. No username or password to remember — your phone number is your login.
+    Your account is active. Your dispatcher will assign loads to your driver profile once you're registered.
   
 
 
 > **Warning:** 
-Your phone number must match exactly what your dispatcher entered in your driver profile. If the SMS code doesn't arrive or the number isn't recognised, ask your dispatcher to check your profile.
+Make sure you register with the same phone number or email address your dispatcher has on file for you. If they can't find your account, ask them to check the details in your driver profile.
 
 
-
-
-  
-    Learn how to update your order status throughout the delivery journey.
-  
-  
-    Understand how your location is (and isn't) tracked by Druma.
-  
-</CardGroup>
 
 ---
 
@@ -2469,44 +2492,44 @@ You can view your own uploads by staying on the Documents tab. You'll see each u
 
 ## How GPS Works in Druma
 
-When you tap a status update in the app — "En Route to Pickup", "Arrived at Delivery", or any other status — the app captures your phone's GPS position at that exact moment. This position is attached to the status update and is visible to your planner on the Today View map.
+Druma uses two different tracking modes depending on whether you have an active load:
 
-That's it. That's the only time your location is recorded.
+| Your status | How tracking works |
+|---|---|
+| **Loaded** (carrying goods) | Continuous GPS tracking in the background |
+| **Empty** (no active load) | Location captured only when you tap a status update |
 
-**Druma does not track your location continuously.** There is no background GPS running, no location history being stored, and no live dot moving across a map between status updates.
+
+## When You're Empty: Event-Based Tracking
+
+When you have no active load, continuous tracking is off. Your location is only recorded at the moment you tap a status update in the app — for example, "Arrived at Pickup" or "En Route".
+
+If you haven't tapped a status in two hours, your planner sees where you were two hours ago — your **last reported position**, not your current location.
 
 
 ## What Your Client Sees
 
-If your company has the client portal enabled, clients can see a similar map with your last reported position for their specific order. Again, this is your position at the time of the most recent status tap — not a live moving dot.
+If your company has the client portal enabled, clients can track their specific order while it's in transit. During the loaded leg, they see your live position. Once the delivery is confirmed, tracking stops.
 
 
-## GPS Accuracy
+## Phone Settings for Continuous Tracking
 
-Druma uses your phone's built-in GPS chip for location. Typical accuracy:
+Because Druma tracks continuously during loaded runs, you need to allow background location access:
 
-| Condition | Accuracy |
-|---|---|
-| Outdoors with clear sky | ~5–10 metres |
-| Urban areas (buildings around) | ~15–30 metres |
-| Covered loading bays, underground | Network-based fallback (less precise) |
-| No GPS signal at all | Network location (city-level accuracy) |
+**Android:**
+- Go to **Settings → Apps → Druma → Permissions → Location**
+- Set to **"Allow all the time"**
+- Go to **Settings → Apps → Druma → Battery** and set to **Unrestricted** (turn off battery optimisation)
 
-For the purpose of proving arrival at an address, outdoor accuracy is more than sufficient. The GPS coordinates will clearly show you were at or immediately adjacent to the correct address.
+**iOS:**
+- Go to **Settings → Druma → Location**
+- Set to **"Always"**
 
-> **Note:** 
-If your phone's GPS is switched off, Druma uses your mobile network location as a fallback. This is less precise but still records your approximate area. For best results — especially for arrival evidence used in waiting time disputes — keep GPS turned on.
-
+Without these settings, tracking may pause when your screen is off or the app is in the background.
 
 
-## Location Permission
 
-The first time you update a status, the app will ask for permission to access your location. You'll see a system prompt from Android or iOS:
-
-- **Android:** Allow location access "Only while using the app" — this is sufficient
-- **iOS:** Choose "Allow While Using App" — this is sufficient
-
-You do **not** need to choose "Always Allow" — Druma only reads your GPS at the moment you tap a status button, which is while you're actively using the app.
+  Learn the full status flow and when each tap captures your position.
 
 
 ---
