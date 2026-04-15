@@ -1,6 +1,6 @@
 ---
 title: "User roles and permissions"
-description: "A full breakdown of all six Druma user roles, what each can access, and how to assign them."
+description: "A full breakdown of all eight Druma user roles, what each can access, and how to assign them."
 icon: "shield-halved"
 ---
 
@@ -12,54 +12,55 @@ Giving every team member the right role means:
 - Accidental changes to orders or settings are less likely
 - You have a clear audit trail of who did what
 
-Druma has **six roles**. Some are for your internal team (web platform), and two are for external users (drivers and clients) who access Druma through dedicated links rather than the web platform.
+Druma has **eight roles**. Six are for your internal team (web platform), and two are for external users (drivers and clients) who access Druma through dedicated links rather than the web platform.
 
 ## Role permissions at a glance
 
-| Permission | Admin | Company Admin | Planner | Customer Service | Driver | Client |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| Billing and subscription | Yes | No | No | No | No | No |
-| Company settings | Yes | Yes | No | No | No | No |
-| Manage users and invitations | Yes | Yes | No | No | No | No |
-| Integrations and API settings | Yes | Yes | No | No | No | No |
-| Rate cards | Yes | Yes | Yes | No | No | No |
-| Create and edit orders | Yes | Yes | Yes | No | No | No |
-| View all orders | Yes | Yes | Yes | Yes | No | No |
-| Assign vehicles and drivers | Yes | Yes | Yes | No | No | No |
-| Fleet management (vehicles) | Yes | Yes | Yes | No | No | No |
-| Fleet management (drivers) | Yes | Yes | Yes | No | No | No |
-| Generate and send invoices | Yes | Yes | Yes | No | No | No |
-| View invoices | Yes | Yes | Yes | Yes | No | No |
-| Client portal management | Yes | Yes | Yes | Yes | No | No |
-| Reports and exports | Yes | Yes | Yes | Yes | No | No |
-| Driver app (order updates, eCMR) | No | No | No | No | Yes | No |
-| Client portal (track shipments) | No | No | No | No | No | Yes |
+| Permission | Admin | Company Admin | Planner | Dispatcher | Fleet Manager | CS | Driver | Client |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Billing and subscription | Yes | - | - | - | - | - | - | - |
+| Company settings | Yes | Yes | - | - | - | - | - | - |
+| Manage users and invitations | Yes | Yes | - | - | - | Invite | - | - |
+| Integrations and API settings | Yes | Yes | - | - | - | - | - | - |
+| Rate cards | Yes | Yes | - | - | Yes | - | - | - |
+| Create and edit orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| View all orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| Assign vehicles and drivers | Yes | Yes | Yes | - | - | - | - | - |
+| Dashboard / Today | Yes | Yes | Yes | Yes | - | - | - | - |
+| Live map | Yes | Yes | Yes | Yes | - | - | - | - |
+| Fleet management (vehicles) | Yes | Yes | Read | Read | Full | - | - | - |
+| Fleet management (drivers) | Yes | Yes | Read | Read | Full | - | - | - |
+| Driver hours | Yes | Yes | Yes | Yes | Yes | - | - | - |
+| Generate and send invoices | Yes | Yes | Yes | - | - | Yes | - | - |
+| Reports and exports | Yes | Yes | Yes | - | - | Yes | - | - |
+| Driver app (order updates, eCMR) | - | - | - | - | - | - | Yes | - |
+| Client portal (track shipments) | - | - | - | - | - | - | - | Yes |
 
 ## Detailed role descriptions
 
 ### Admin
 
-The Admin has **full access to every part of Druma**, including billing and subscription management. This role is intended for the business owner or the person who is commercially responsible for the Druma account.
+The Admin has **full system access**, including billing and subscription management. This is the role for the business owner or the person ultimately responsible for the Druma account.
 
-Admins can:
-- View and change the Stripe billing portal
-- Add or remove vehicle and user seats
-- Cancel or reactivate the subscription
-- Do everything a Company Admin, Planner, and Customer Service user can do
+Admins can do everything a Company Admin can, plus:
+- Manage billing, subscription plans, and payment methods
+- View and change seat counts and pricing tiers
 
-*Real-world example: Vasile owns a 15-truck carrier. He is the only Admin. He set up the account, manages the billing, and occasionally checks on orders when his dispatcher is unavailable.*
+*Real-world example: Vasile owns the transport company. He is the Admin. He controls the subscription, manages billing, and has visibility over everything in the platform.*
 
 ---
 
 ### Company Admin
 
-The Company Admin has full operational access **but cannot see billing**. This is the right role for a trusted operations manager or senior dispatcher who runs the day-to-day setup of the platform — adding users, configuring integrations, editing company details — without having access to your payment information.
+The Company Admin has full access to everything **except billing**. This is the right role for a trusted operations manager or senior dispatcher who runs the day-to-day setup of the platform — adding users, configuring integrations, editing company details — without having access to your payment information.
 
 Company Admins can:
 - Configure everything in Settings (except billing)
 - Invite and manage other users
-- Set up integrations (SmartBill, SAGA, TransFollow, etc.)
+- Set up integrations (SmartBill, SAGA, TransFollow, ANAF, Timocom, etc.)
 - Manage company profile, rate cards, and default settings
+- Create and manage orders, invoices, fleet, and reports
+- View audit logs
 
 *Real-world example: Mihaela is Vasile's operations manager. She is a Company Admin. She adds new drivers, updates vehicle documents, invites new dispatchers, and keeps the company profile up to date — but Vasile keeps the billing details to himself.*
 
@@ -67,37 +68,82 @@ Company Admins can:
 
 ### Planner
 
-The Planner is the core operational role — the dispatcher who runs the day-to-day freight work. Planners have full access to orders, fleet, drivers, and invoicing, but they cannot change company-level settings or manage users.
+The Planner is the core operational role — the dispatcher who runs the day-to-day freight work. Planners have full access to orders, the planning board, and invoicing, with read-only access to fleet, but they cannot change company-level settings or manage users.
 
 Planners can:
 - Create, edit, and delete transport orders
-- Assign vehicles and drivers
-- Manage the planning board
+- Assign vehicles and drivers on the planning board
 - Generate and send invoices
-- View and manage the fleet
-- Work with rate cards to price orders
+- View fleet vehicles and drivers (read-only)
+- Access dashboard, live map, and driver hours
+- Work with reports and exports
 
 *Real-world example: Radu is a dispatcher. He creates all orders, assigns trucks, monitors deliveries, and sends invoices when orders are completed. He does not need to change company settings or manage user access.*
 
 ---
 
-### Customer Service
+### Dispatcher
 
-The Customer Service role gives **read-only access** to orders and invoices, plus the ability to manage what appears in the client portal. This is ideal for someone who handles client calls and needs to look things up — but should not be able to change or delete operational data.
+The Dispatcher is a **monitoring-focused role** for people who need to watch operations in real time but do not create or edit orders. Dispatchers see the dashboard, live map, driver hours, and fleet (read-only) — nothing else.
 
-Customer Service users can:
-- View all orders and their current status
-- View invoices
-- Manage client portal settings and access
-- Generate reports
+Dispatchers can:
+- View the dashboard and today's operations overview
+- Monitor the live map with truck positions
+- Check driver hours and compliance
+- View fleet vehicles and drivers (read-only)
 
-Customer Service users cannot:
+Dispatchers cannot:
 - Create, edit, or delete orders
-- Assign vehicles or drivers
-- Generate invoices
+- Access the planning board
+- Generate or view invoices
+- View reports or exports
 - Change any settings
 
-*Real-world example: Elena answers the phone when clients call asking about their shipments. She can look up any order in seconds and give accurate status updates, but she cannot accidentally change a delivery address or delete an order.*
+*Real-world example: Bogdan works the night shift. He watches the live map and driver hours dashboard to make sure all drivers are on schedule and compliant. If something goes wrong, he calls the day-shift planner — he does not need to touch orders or invoices.*
+
+---
+
+### Fleet Manager
+
+The Fleet Manager has **full control over fleet operations** — vehicles, trailers, drivers, documents, fuel card imports, cabotage tracking, and rate cards. They also see driver hours. They do not have access to orders, invoicing, the planning board, or reports.
+
+Fleet Managers can:
+- Add, edit, and remove vehicles, trailers, and drivers
+- Manage fleet documents (ITP, insurance, CEMT, ADR certificates)
+- Import fuel card data (DKV, UTA, AS24)
+- Track cabotage compliance
+- Manage rate cards
+- View driver hours
+
+Fleet Managers cannot:
+- Create, edit, or view orders
+- Access the planning board
+- Generate or view invoices
+- View reports or exports
+- Change company settings or manage users
+
+*Real-world example: Ion is responsible for the fleet. He handles vehicle inspections, insurance renewals, driver licence tracking, and fuel card imports. He does not need to see orders or invoices — that is the planner's job.*
+
+---
+
+### Customer Service
+
+The Customer Service role gives **operational access to orders, invoicing, clients, and reports**. CS users can create and edit orders, generate invoices, manage client relationships, and invite new users. They cannot assign vehicles on the planning board or manage fleet.
+
+Customer Service users can:
+- Create, edit, and view all orders
+- Generate and send invoices
+- Manage clients and client portal settings
+- Access reports and exports
+- Invite new users
+
+Customer Service users cannot:
+- Assign vehicles or drivers on the planning board
+- Manage fleet (vehicles, trailers, drivers)
+- View the live map or dashboard
+- Change company settings or integrations
+
+*Real-world example: Elena handles client relationships end to end. She creates orders when clients call in, generates invoices after delivery, and sends reports. When a new team member joins, she can send them an invitation — but she leaves fleet management and planning to the operations team.*
 
 ---
 
@@ -141,8 +187,7 @@ Clients cannot see other clients' data, your internal order notes, your costs, o
 One user can hold more than one role. You set this when you invite the user or when you edit their profile later.
 
 Common multi-role combinations:
-- **Admin + Planner** — owner who also dispatches
-- **Company Admin + Planner** — senior dispatcher who also manages the platform
+- **Company Admin + Planner** — owner or senior dispatcher who also manages the platform
 - **Planner + Customer Service** — small-team dispatcher who also handles client queries
 
 <Note>

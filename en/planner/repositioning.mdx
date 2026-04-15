@@ -1,0 +1,114 @@
+---
+title: "Repositioning Orders"
+description: "How to create and manage repositioning orders — non-revenue moves to get a truck where it needs to be for the next job."
+icon: "route"
+---
+
+## What is a repositioning order?
+
+A repositioning order tracks a **non-revenue move** — when you send a truck from one location to another without carrying cargo for a paying client. Common scenarios include:
+
+- Sending an empty truck from a delivery point to a different city where a pickup is waiting.
+- Moving a truck back to the home depot at the end of a working week.
+- Relocating a vehicle to cover a driver swap or maintenance appointment.
+
+Repositioning orders are not invoiced to clients. They exist to give you full visibility of your fleet's movements, track dead kilometres, and calculate the true cost of your operations.
+
+---
+
+## Creating a repositioning order
+
+<Steps>
+  <Step title="Open the new order form">
+    Go to **Planner → Orders → New Order**.
+  </Step>
+  <Step title="Select Repositioning as the order type">
+    In the **Order Type** field, choose **Repositioning**. This is the fourth option alongside Own Truck, Subcontracted, and Capacity Sale.
+  </Step>
+  <Step title="Select the reason">
+    Choose a **Repositioning Reason** from the dropdown. Your company can configure up to 6 reason codes in Settings. Common examples:
+    - Return to depot
+    - Pre-position for next load
+    - Driver swap
+    - Maintenance appointment
+    - Client request (no charge)
+    - Cross-border compliance
+  </Step>
+  <Step title="Fill in the route">
+    Enter the pickup address (where the truck is now) and the delivery address (where it needs to go). The HERE routing engine calculates the distance automatically.
+  </Step>
+  <Step title="Add notes (optional)">
+    Use the **Repositioning Notes** field to explain why this move is happening. This is visible to planners only, not to the driver.
+  </Step>
+  <Step title="Assign a truck and save">
+    Select the truck and driver as you would for any order. Save as Draft or Confirm immediately.
+  </Step>
+</Steps>
+
+---
+
+## How repositioning orders differ
+
+| Feature | Regular order | Repositioning order |
+|---|---|---|
+| Invoiced to client | Yes | No |
+| Appears on planning board | Yes | Yes (with **Repo** badge) |
+| Counts in revenue reports | Yes | No |
+| Distance tracked | `distance_km` | `distance_km_internal` |
+| Driver sees in app | Yes | Yes |
+| Status flow | Full lifecycle | Full lifecycle |
+
+<Note>
+Repositioning orders follow the same status lifecycle as regular orders (Draft → Delivered). The driver taps statuses in their app as normal. The only difference is that no client or price is attached.
+</Note>
+
+---
+
+## Internal stops
+
+During a repositioning move (or any order), you can add **internal stops** — unplanned stops for fuel, rest, maintenance, or other operational needs.
+
+Internal stops are tracked separately from loading and offloading stops. Each internal stop has:
+
+- **Address** — where the stop was made.
+- **Reason code** — selected from a company-configured list (up to 6 codes, e.g., Fuel, Rest, Maintenance, Border Check, Weighbridge, Other).
+- **Notes** — free text explanation.
+
+Internal stops appear in the order's stop timeline but are visually distinguished from cargo stops. They do not affect delivery ETA calculations.
+
+---
+
+## Configuring reason codes
+
+### Repositioning reasons
+
+Go to **Settings → Company** to manage the list of repositioning reason codes. You can have up to 6 active codes at a time.
+
+### Internal stop reasons
+
+Internal stop reason codes are configured in the same settings area. These apply to all order types, not just repositioning orders.
+
+---
+
+## Repositioning on the planning board
+
+Repositioning orders appear on the planning board with a **Repo** badge in violet, making them easy to distinguish from revenue-generating loads. They are included in fleet utilisation calculations (the truck is in use) but excluded from revenue KPIs.
+
+---
+
+## Reporting
+
+Repositioning kilometres are tracked via the `distance_km_internal` field and appear in:
+
+- **Lane Profitability Report** — as a separate "dead km" column so you can see the true cost of serving each lane.
+- **CO2 Report** — repositioning moves contribute to emissions and are reported separately from loaded journeys.
+
+---
+
+<Card title="Planning Board" icon="calendar" href="/en/planner/planning-board">
+  See how repositioning orders appear on the dispatch board alongside regular loads.
+</Card>
+
+<Card title="Creating an Order" icon="plus" href="/en/planner/creating-orders">
+  Full guide to creating orders of all types — Own Truck, Subcontracted, Capacity Sale, and Repositioning.
+</Card>

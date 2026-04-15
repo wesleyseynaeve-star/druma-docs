@@ -6,7 +6,7 @@ icon: "users"
 
 ## Who needs access to Druma?
 
-Before you start inviting people, think about what each person in your company needs to do. Druma has six distinct roles, and giving someone the right role from the start means they only see what is relevant to their job — nothing more, nothing less.
+Before you start inviting people, think about what each person in your company needs to do. Druma has eight distinct roles, and giving someone the right role from the start means they only see what is relevant to their job — nothing more, nothing less.
 
 You do not need to create accounts for drivers or clients. Drivers use a special app link (no login needed), and clients use a portal link. Only your internal staff need user invitations.
 
@@ -34,15 +34,15 @@ You do not need to create accounts for drivers or clients. Drivers use a special
 If someone has not accepted their invitation after 48 hours, go to **Settings → Users**, find their name (shown as "Pending"), and click **Resend Invite**. Check with them that the email has not gone to their spam folder.
 </Note>
 
-## The six roles explained
+## The eight roles explained
 
 ### Admin
 
-**Full access to everything, including billing.**
+**Full system access, including billing.**
 
-The Admin role is for the business owner or the person responsible for the Druma subscription. Admins can see and change everything: company settings, users, orders, invoicing, fleet, and billing. There is usually only one or two Admins in a company.
+The Admin has unrestricted access to every feature in Druma, including billing, subscription management, and payment methods. This is the role for the business owner.
 
-*Example: Ion, the owner of a 12-truck carrier, is the Admin. He manages the subscription and can see all financial data.*
+*Example: Vasile owns the company. He is the Admin — he controls billing and has full visibility over everything.*
 
 ---
 
@@ -50,29 +50,49 @@ The Admin role is for the business owner or the person responsible for the Druma
 
 **Full access except billing.**
 
-Company Admins can set up the company, manage users, configure integrations, and handle day-to-day operations. They cannot see or change billing information. This role is useful for an operations manager or a trusted senior dispatcher.
+Company Admins can set up the company, manage users, configure integrations, and handle all day-to-day operations including orders, invoicing, fleet, reports, and audit logs. They cannot see or change billing information.
 
-*Example: Maria, the operations manager, is a Company Admin. She can add new drivers, update company settings, and invite team members — but she cannot see the Stripe invoices.*
+*Example: Maria, the operations manager, is a Company Admin. She adds new drivers, updates company settings, and invites team members — but she cannot see the Stripe invoices.*
 
 ---
 
 ### Planner
 
-**Orders, fleet, drivers, and invoicing.**
+**Orders, planning board, invoicing, and reports.**
 
-Planners are your dispatchers. They create and manage transport orders, assign vehicles and drivers, track deliveries, and generate invoices. This is the most commonly used role in day-to-day operations.
+Planners are your dispatchers. They create and manage transport orders, assign vehicles and drivers on the planning board, generate invoices, and access reports. They have read-only access to fleet.
 
 *Example: Andrei creates all orders, assigns trucks, monitors the planning board, and sends invoices when deliveries are confirmed.*
 
 ---
 
+### Dispatcher
+
+**Dashboard, live map, driver hours, and fleet (read-only).**
+
+Dispatchers monitor operations in real time but cannot create or edit orders. They see the dashboard, live map, driver hours, and fleet vehicles/drivers in read-only mode. They cannot access the planning board, invoicing, or reports.
+
+*Example: Bogdan works the night shift. He watches the live map and checks driver hours compliance — if something goes wrong, he calls the day-shift planner.*
+
+---
+
+### Fleet Manager
+
+**Full fleet management, rate cards, and driver hours.**
+
+Fleet Managers have full control over vehicles, trailers, drivers, documents, fuel card imports, and cabotage tracking. They also manage rate cards and view driver hours. They cannot access orders, invoicing, the planning board, or reports.
+
+*Example: Ion handles vehicle inspections, insurance renewals, driver licence tracking, and fuel card imports. He does not need to see orders or invoices.*
+
+---
+
 ### Customer Service
 
-**Read-only access to orders, plus client portal management.**
+**Orders, invoicing, clients, and reports. Can invite users.**
 
-Customer Service users can see all orders and their status, but they cannot create or edit orders. They can manage what clients see in their portal and respond to client queries. This role is ideal for someone who answers client calls but should not be able to change operational data.
+Customer Service users can create and edit orders, generate invoices, manage clients, and access reports. They can also invite new users. They cannot assign vehicles on the planning board or manage fleet.
 
-*Example: Elena handles calls from clients asking where their shipment is. She can look up any order but cannot accidentally change or delete anything.*
+*Example: Elena creates orders when clients call in, generates invoices after delivery, and sends reports. She can invite new team members but leaves fleet management to the operations team.*
 
 ---
 
@@ -111,24 +131,31 @@ You manage client portal access through **Clients** — open any client's profil
 
 ## Role permissions at a glance
 
-| Permission | Admin | Company Admin | Planner | Customer Service | Driver | Client |
-|---|---|---|---|---|---|---|
-| Billing and subscription | Yes | No | No | No | No | No |
-| Company settings | Yes | Yes | No | No | No | No |
-| Manage users | Yes | Yes | No | No | No | No |
-| Create/edit orders | Yes | Yes | Yes | No | No | No |
-| View orders | Yes | Yes | Yes | Yes | No | No |
-| Assign vehicles and drivers | Yes | Yes | Yes | No | No | No |
-| Generate invoices | Yes | Yes | Yes | No | No | No |
-| Fleet management | Yes | Yes | Yes | No | No | No |
-| Driver app | No | No | No | No | Yes | No |
-| Client portal | No | No | No | No | No | Yes |
+| Permission | Admin | Company Admin | Planner | Dispatcher | Fleet Manager | CS | Driver | Client |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Billing and subscription | Yes | - | - | - | - | - | - | - |
+| Company settings | Yes | Yes | - | - | - | - | - | - |
+| Manage users and invitations | Yes | Yes | - | - | - | Invite | - | - |
+| Integrations and API settings | Yes | Yes | - | - | - | - | - | - |
+| Rate cards | Yes | Yes | - | - | Yes | - | - | - |
+| Create and edit orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| View all orders | Yes | Yes | Yes | - | - | Yes | - | - |
+| Assign vehicles and drivers | Yes | Yes | Yes | - | - | - | - | - |
+| Dashboard / Today | Yes | Yes | Yes | Yes | - | - | - | - |
+| Live map | Yes | Yes | Yes | Yes | - | - | - | - |
+| Fleet management (vehicles) | Yes | Yes | Read | Read | Full | - | - | - |
+| Fleet management (drivers) | Yes | Yes | Read | Read | Full | - | - | - |
+| Driver hours | Yes | Yes | Yes | Yes | Yes | - | - | - |
+| Generate and send invoices | Yes | Yes | Yes | - | - | Yes | - | - |
+| Reports and exports | Yes | Yes | Yes | - | - | Yes | - | - |
+| Driver app | - | - | - | - | - | - | Yes | - |
+| Client portal | - | - | - | - | - | - | - | Yes |
 
 ## Assigning multiple roles to one person
 
 Druma allows a single user to hold more than one role. This is useful in smaller companies where one person does several jobs.
 
-*Example: Gheorghe is a small-carrier owner who also dispatches. He can be both Admin and Planner — he manages the billing and also creates and tracks orders himself.*
+*Example: Gheorghe is a small-carrier owner who also dispatches. He can be both Company Admin and Planner — he manages the platform settings and also creates and tracks orders himself.*
 
 To assign multiple roles, select them both when sending the invitation or when editing an existing user's profile.
 
