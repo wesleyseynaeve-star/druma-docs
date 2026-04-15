@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-04-15 11:18 UTC
+Generated: 2026-04-15 11:38 UTC
 
 ---
 
@@ -861,7 +861,7 @@ WinMENTOR Enterprise supports direct API integration.
 ## Billing & Subscription
 
 
-Druma uses a seat-based subscription model billed monthly. There are two types of seats — vehicle seats and user seats — priced on volume tiers. You manage everything through the Stripe Customer Portal, accessible directly from Druma.
+Druma uses a seat-based subscription model with two types of seats — vehicle seats and user seats — priced on volume tiers. You can choose monthly or annual billing. You manage everything through the Stripe Customer Portal, accessible directly from Druma.
 
 
 ## Free Trial
@@ -893,9 +893,11 @@ Reducing seats below the number of currently active vehicles or users is not all
 
 
 
-## Monthly Billing Only
+## Monthly vs Annual Billing
 
-Druma is **monthly billing only** — there is no annual plan or upfront annual payment option at this time. Invoices are generated on the same date each month (your subscription anniversary date).
+Druma offers both **monthly** and **annual** billing. Annual billing gives you **2 months free** — you pay for 10 months and get 12 months of access.
+
+You can switch between monthly and annual billing from the **Settings → Billing** page using the Monthly / Annual toggle. Invoices are generated on the same date each cycle (your subscription anniversary date).
 
 
 ---
