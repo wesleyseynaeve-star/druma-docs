@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-04-27 09:08 UTC
+Generated: 2026-04-27 10:55 UTC
 
 ---
 
@@ -6873,7 +6873,7 @@ Subcontractors are carriers you send loads **to**. Brokers are companies that gi
 ## Privacy Policy
 
 
-*Last updated: January 2025*
+*Last updated: April 2026*
 
 ## Data controller
 
@@ -6936,7 +6936,7 @@ We use the following third-party services to operate the platform:
 | HERE Technologies | Map routing and address search | EU |
 | TransFollow | eCMR issuance and archiving | Netherlands |
 | Stripe | Subscription billing | EU |
-| Anthropic | AI-powered order extraction | USA (SCCs applied) |
+| Google Gemini (Enterprise API) | AI-powered order & invoice extraction | EU (GDPR — data not used for model training) |
 | Mailgun | Inbound email parsing | EU |
 | Cloudflare | CDN and hosting | EU |
 | Sentry | Error monitoring | EU |
@@ -6959,7 +6959,7 @@ To exercise any right: Settings → Data & Privacy, or email privacy@druma.io. W
 
 ## Data transfers outside the EU
 
-Anthropic (AI features) is based in the USA. Transfers are covered by Standard Contractual Clauses (SCCs) approved by the European Commission.
+All AI processing is performed within the EU via Google Gemini Enterprise API. No personal data is transferred to the USA for AI features. All other sub-processors listed above operate within the EU or under GDPR-compliant data processing agreements.
 
 ## Complaints
 
