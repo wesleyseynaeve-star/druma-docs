@@ -1,0 +1,168 @@
+---
+title: "Integracja API klienta (CAPI)"
+description: "Pozwól klientom przesyłać zlecenia bezpośrednio do Druma lub odbierać zdarzenia dostawy w czasie rzeczywistym przez webhook — konfigurowane per klient, bez zmian kodu w Druma."
+icon: "plug"
+---
+
+Integracja API klienta (CAPI) tworzy bezpośredni kanał danych między konkretnym klientem a Twoim kontem Druma. Ma dwie niezależne połówki:
+
+- **Przychodząca**: system klienta automatycznie wysyła zlecenia do Druma. Nie jest wymagane ręczne wprowadzanie zleceń.
+- **Wychodząca**: Druma przesyła zdarzenia statusu (wyjazd, dostawa, zafakturowanie itd.) do systemu klienta w czasie rzeczywistym.
+
+Możesz włączyć którąkolwiek połówkę niezależnie lub obie razem. Każdy klient otrzymuje własny token i endpoint, więc dane uwierzytelniające są w pełni izolowane.
+
+---
+
+## Kiedy używać tej integracji
+
+CAPI jest odpowiednie, gdy klient:
+
+- Posiada WMS, ERP lub system zarządzania zleceniami, który może wykonywać wywołania HTTP
+- Często zamawia przesyłki i chce unikać logowania do portalu klienta w celu tworzenia zleceń
+- Potrzebuje automatycznego potwierdzenia dostawy wysyłanego do jego systemu dla dalszych przepływów pracy (rezerwacja magazynu, fakturowanie, aktualizacje stanów)
+
+Dla klientów zamawiających sporadycznie lub preferujących portal, CAPI dodaje niepotrzebną złożoność. Zamiast tego użyj standardowego portalu klienta.
+
+---
+
+## Gdzie znaleźć ustawienia
+
+1. Przejdź do **Klienci** w lewej nawigacji.
+2. Otwórz rekord klienta.
+3. Kliknij zakładkę **API**.
+
+Zarówno ustawienia przychodząca, jak i wychodząca znajdują się na tej zakładce.
+
+---
+
+## Przychodząca — klient przesyła zlecenia do Druma
+
+<Steps>
+  <Step title="Włącz przychodząca">
+    Na zakładce **API** włącz **Włącz API przychodzące**.
+  </Step>
+  <Step title="Wygeneruj token">
+    Kliknij **Generuj token**. Pełny token jest pokazywany **raz** — natychmiast skopiuj go i przechowuj bezpiecznie (menedżer haseł sprawdza się dobrze). Druma przechowuje tylko skrót tokenu; pełna wartość jest nieodwracalna. Po tym ekranie wyświetlane są tylko pierwsze 20 znaków jako odniesienie.
+  </Step>
+  <Step title="Udostępnij URL endpointu">
+    Skopiuj **URL endpointu** wyświetlony poniżej pola tokenu. Podaj ten URL i token zespołowi technicznemu klienta.
+  </Step>
+  <Step title="Skonfiguruj mapowania pól (opcjonalnie)">
+    Jeśli system klienta używa innych nazw pól niż Druma (na przykład `shipment_id` zamiast `reference`), dodaj wiersze do tabeli **Mapowanie pól**, klikając **+ Dodaj mapowanie**. Każdy wiersz mapuje jedną nazwę pola klienta (lewa kolumna) na odpowiadającą jej nazwę pola Druma (prawa kolumna).
+  </Step>
+</Steps>
+
+System klienta wysyła żądanie `POST` do URL endpointu z nagłówkiem `Authorization: Bearer <token>` i treścią JSON. Druma tworzy zlecenie w statusie **Wersja robocza** z flagą źródłową `booked_via: client_api`. Planista może przeglądać i potwierdzać wersje robocze zleceń z tablicy planowania.
+
+<Note>
+Zlecenia utworzone przez CAPI przychodzą jako wersje robocze. Nie pojawiają się na tablicy jako przypisane, dopóki planista (lub reguła automatyzacji, jeśli skonfigurowana) nie przeniesie ich do następnego statusu. Jest to celowe — pozwala walidować i wyceniać zlecenie przed wejściem do przepływu pracy.
+</Note>
+
+---
+
+## Wychodząca — Druma przesyła zdarzenia do klienta
+
+<Steps>
+  <Step title="Włącz wychodząca">
+    Włącz **Włącz webhook wychodzący**.
+  </Step>
+  <Step title="Wprowadź URL webhooka">
+    Wklej **URL webhooka** klienta — endpoint w jego systemie, który będzie odbierać zdarzenia.
+  </Step>
+  <Step title="Wybierz typ uwierzytelniania">
+    Wybierz jedną z czterech opcji **Typ uwierzytelniania**:
+
+    - **Brak** — brak nagłówka uwierzytelniania (używaj tylko w zaufanych sieciach prywatnych)
+    - **Token Bearer** — Druma dodaje `Authorization: Bearer <wartość>` do każdego żądania
+    - **Uwierzytelnianie podstawowe** — Druma dodaje nagłówek `Authorization: Basic` z zakodowaną w base64 nazwą użytkownika i hasłem
+    - **Podpis HMAC** — Druma podpisuje każdą treść żądania wspólnym sekretem i dołącza podpis w nagłówku; klient weryfikuje go przed przetworzeniem
+
+    Wypełnij dane uwierzytelniające dla wybranego typu.
+  </Step>
+  <Step title="Wybierz zdarzenia do wysłania">
+    Zaznacz zdarzenia, które Druma ma przesyłać:
+
+    - **Zlecenie utworzone** — wyzwalane po potwierdzeniu nowego zlecenia w Druma
+    - **Status zaktualizowany** — wyzwalane przy każdej zmianie statusu (przypisane, przy odbiorze, w transporcie itd.)
+    - **Dostarczone** — wyzwalane gdy zlecenie osiąga status Dostarczone
+    - **Faktura wysłana** — wyzwalane gdy faktura sprzedaży jest wysłana do klienta
+  </Step>
+  <Step title="Skonfiguruj mapowania pól wychodzących (opcjonalnie)">
+    Jeśli system klienta oczekuje innych nazw pól w ładunku, użyj tabeli **Mapowanie pól** po stronie wychodzącej (identyczny UX jak przychodzący) do zmiany nazw pól wyjściowych Druma przed ich wysłaniem.
+  </Step>
+  <Step title="Zapisz">
+    Kliknij **Zapisz**. Druma zacznie dostarczać zdarzenia dla wybranych wyzwalaczy od tego momentu.
+  </Step>
+</Steps>
+
+---
+
+## Mapowanie pól — wyjaśnienie
+
+Mapowanie pól to tabela translacji klucz-wartość. Nie zmienia danych — tylko nazwy pól w ładunku.
+
+**Przykład — mapowanie przychodząca:**
+
+| Pole klienta | Pole Druma |
+|-------------|-----------|
+| `shipment_id` | `reference` |
+| `pickup_city` | `loading_address` |
+| `drop_city` | `delivery_address` |
+| `cargo_weight_kg` | `weight_kg` |
+
+Z tym mapowaniem klient może POSTować swoją natywną strukturę JSON, a Druma zinterpretuje ją poprawnie bez konieczności reformatowania ładunku przez klienta.
+
+**Przykład — mapowanie wychodzące:**
+
+| Pole Druma | Pole klienta |
+|-----------|-------------|
+| `order_id` | `druma_ref` |
+| `status` | `shipment_status` |
+| `delivered_at` | `actual_delivery_datetime` |
+
+Niemapowane pola są przekazywane przy użyciu domyślnych nazw pól Druma.
+
+---
+
+## Rotacja tokenu
+
+Jeśli token zostanie skompromitowany lub kluczowa osoba opuści zespół klienta:
+
+1. Na zakładce **API** kliknij **Rotuj token**.
+2. Stary token jest natychmiast unieważniany.
+3. Nowy token jest wyświetlany raz — skopiuj i przekaż go przed opuszczeniem strony.
+
+Zaktualizuj token w systemie klienta jak najszybciej. Żądania używające starego tokenu będą odrzucane z `401 Unauthorized` od momentu zakończenia rotacji.
+
+---
+
+## Znaczniki czasu aktywności
+
+Gdy API zostało użyte, zakładka pokazuje:
+
+- **Ostatnie przychodzące** — znacznik czasu ostatniego zlecenia otrzymanego od klienta
+- **Ostatnie wychodzące** — znacznik czasu ostatniego zdarzenia dostarczonego do webhooka klienta
+
+Te znaczniki czasu są przydatne do potwierdzenia, że integracja jest aktywna i do diagnozowania luk w komunikacji.
+
+---
+
+## Limity zapytań
+
+Druma egzekwuje limit **200 wywołań API na godzinę per konfigurację klienta**. Żądania przekraczające ten limit otrzymują odpowiedź `429 Too Many Requests`. Limit resetuje się w kroczącym jednogodzinnym oknie.
+
+Jeśli klient rzeczywiście potrzebuje wyższej przepustowości, skontaktuj się z pomocą techniczną Druma.
+
+<Warning>
+Nie udostępniaj tokenu Bearer klienta innym klientom ani nie osadzaj go w publicznie dostępnym kodzie. Każdy token przyznaje pełne prawa do tworzenia przychodzących zleceń w zakresie firmy tego klienta.
+</Warning>
+
+---
+
+<Card title="Portal klienta" icon="users" href="/pl/client-portal/tracking-shipments">
+  Alternatywa bez kodu: pozwól klientom śledzić przesyłki i pobierać dokumenty bez integracji API.
+</Card>
+
+<Card title="Konfiguracja integracji" icon="plug" href="/pl/admin/integration-setup">
+  Przegląd wszystkich integracji dostępnych w Ustawienia → Integracje.
+</Card>

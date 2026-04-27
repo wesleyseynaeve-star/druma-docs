@@ -1,6 +1,43 @@
 ---
-title: "Bank Reconciliation"
-description: "Translation coming soon"
+title: "Banki egyeztetés"
+description: "Beérkező banki fizetési e-mailek automatikus egyeztetése a Druma nyitott számláival a román bank értesítő e-mailjének továbbításával."
+icon: "building-columns"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/bank-reconciliation).
+## Hogyan működik a banki egyeztetés?
+
+Sok román bank (BRD, BCR, Raiffeisen, UniCredit, ING) e-mailes értesítőt küld minden bejövő átutalásról. A Druma ezeket az e-maileket feldolgozza és automatikusan megpróbálja egyeztetni a befizetést a nyitott számlával.
+
+## Beállítás
+
+<Steps>
+  <Step title="Lépj a Beállítások → Vállalat → Banki egyeztetés menüpontra">
+    Ez az oldal mutatja a vállalat banki e-mail aliaszát.
+  </Step>
+  <Step title="Másold ki a Druma e-mail aliaszt">
+    Minden vállalat egyedi e-mail aliaszt kap, pl. `abc-transport-12345@invoices.druma.io`.
+  </Step>
+  <Step title="Állítsd be az automatikus továbbítást a bankodnál">
+    A bankod online banki felületén állíts be automatikus továbbítást: minden bejövő átutalási értesítőt küldjön a Druma aliasz e-mail-címre.
+
+    Ha ez nem lehetséges, a feladó-whitelist-be be kell venni a bank feladói e-mail-tartományát (lásd az oldal Engedélyezett küldők részét).
+  </Step>
+</Steps>
+
+## Egyeztetési folyamat
+
+Amikor a Druma megkapja a bank e-mailját:
+1. Elemzi az összeget, a dátumot és a hivatkozást
+2. Megkeresi az egyező nyitott számlát az összeg és az ügyfél neve alapján
+3. Ha egyezést talál: automatikusan rögzíti a befizetést és **Kifizetve** állapotra frissíti a számlát
+4. Ha nem talál egyezést: az e-mail a **Nem egyeztetett** sorba kerül manuális feldolgozáshoz
+
+## Nem egyeztetett fizetések kezelése
+
+Lépj a **Számlázás → Egyeztetés** menüpontra a nem egyeztetett befizetések megtekintéséhez. Minden tételnél:
+- Manuálisan hozzárendelhetod egy számlához
+- Elutasíthatod (ha nem vonatkozik a Drumára)
+
+<Card title="Bankiállapot-import" icon="file-up" href="/en/invoicing/bank-statement-import">
+  CAMT.053 vagy MT940 bankikivonatok feltöltése tömeges egyeztetéshez.
+</Card>

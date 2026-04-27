@@ -1,6 +1,66 @@
 ---
-title: "Creating an eCMR"
-description: "Translation coming soon"
+title: "Vytvorenie eCMR"
+description: "Ako Druma generuje eCMR dokumenty automaticky pre cezhraničné zákazky a ako ich vytvoriť manuálne."
+icon: "file-plus"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/ecmr/creating-ecmr).
+## Kedy Druma vytvorí eCMR automaticky
+
+Druma vytvorí eCMR automaticky keď sú splnené **obe** nasledujúce podmienky:
+
+1. **Integrácia TransFollow je aktívna** — váš API kľúč je uložený a pripojenie je funkčné v Nastavenia → Integrácie.
+2. **Zákazka je cezhraničná** — krajina vyzdvihnutia a krajina doručenia sú rôzne.
+
+Keď potvrdená zákazka spĺňa obe podmienky, Druma okamžite zaregistruje eCMR v TransFollow. Na záložke eCMR stránky detailov zákazky sa zobrazí číslo dokumentu a stav „Čakanie na podpis odosielateľa".
+
+<Note>
+Domáce zákazky (rovnaká krajina vyzdvihnutia a doručenia) nespúšťajú automatické vytvorenie eCMR, keďže Dohovor CMR sa vzťahuje na medzinárodné prepravy. Stále môžete vytvoriť eCMR manuálne na domácej zákazke, ak to vyžaduje váš klient.
+</Note>
+
+---
+
+## Manuálne vytvorenie eCMR
+
+<Steps>
+  <Step title="Otvorte zákazku">
+    Prejdite na **Zákazky**, nájdite zákazku a kliknite pre otvorenie stránky detailov.
+  </Step>
+  <Step title="Otvorte záložku eCMR">
+    Kliknite na záložku **eCMR** v blízkosti vrcholu stránky detailov zákazky.
+  </Step>
+  <Step title="Kliknite na Vytvoriť eCMR">
+    Kliknite na tlačidlo **Vytvoriť eCMR**. Druma zobrazí náhľad dát, ktoré budú odoslané do TransFollow.
+  </Step>
+  <Step title="Skontrolujte všetky polia">
+    Starostlivo skontrolujte každé pole pred potvrdením. Akonáhle je zaregistrovaný v TransFollow, číslo eCMR dokumentu nemožno vymazať ani zmeniť.
+  </Step>
+  <Step title="Potvrďte vytvorenie">
+    Kliknite na **Potvrdiť a vytvoriť**. Druma zaregistruje dokument v TransFollow a stav eCMR sa zmení na „Čakanie na podpis odosielateľa".
+  </Step>
+</Steps>
+
+---
+
+## Dáta predvyplnené zo zákazky
+
+| Pole eCMR | Zdroj v Druma |
+|---|---|
+| Odosielateľ (meno a adresa) | Vaše podrobnosti spoločnosti z Nastavenia → Spoločnosť |
+| Príjemca (meno a adresa) | Záznam klienta zákazky |
+| Adresa vyzdvihnutia | Miesto vyzdvihnutia zákazky |
+| Adresa doručenia | Miesto doručenia zákazky |
+| Popis tovaru | Pole popisu nákladu zákazky |
+| Evidenčné číslo vozidla | Vozidlo priradené k zákazke |
+| Meno vodiča | Vodič priradený k zákazke |
+
+---
+
+## Testovací (mock) režim
+
+Ak je TransFollow nastavený na **testovací (mock) režim** v Nastavenia → Integrácie, eCMR dokumenty sa zdanlivo vytvárajú normálne, ale dokument **nie je zaregistrovaný v TransFollow** a nemá žiadnu právnu platnosť.
+
+Testovací (mock) eCMRy môžete identifikovať podľa odznaku **„MOCK"** na záložke eCMR. Pred odoslaním reálnych zákaziek vždy vypnite testovací (mock) režim.
+
+<Card title="Podpisový postup eCMR" icon="pen-to-square" href="/en/ecmr/signing-flow">
+  Ako vodič zbiera všetky tri podpisy na telefóne.
+</Card>

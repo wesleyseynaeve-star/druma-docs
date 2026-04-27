@@ -1,6 +1,72 @@
 ---
-title: "Nightly Data Quality Scan"
-description: "Translation coming soon"
+title: "Nocne skanowanie jakości danych"
+description: "Każdej nocy Druma sprawdza Twoje dane pod kątem dziewięciu typów typowych problemów i wysyła podsumowanie e-mailem, abyś mógł naprawić problemy zanim spowodują opóźnienia lub utratę przychodów."
+icon: "magnifying-glass-chart"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/automation/data-quality-scan).
+Złe dane są kosztowne. Klient bez numeru VAT blokuje składanie e-Faktury. Dostarczone zlecenie bez faktury przez dwa tygodnie to pieniądze których nie zebrałeś. Nocne skanowanie jakości danych wykrywa te problemy zanim Cię kosztują.
+
+Każdej nocy Druma przeprowadza dziewięć automatycznych kontroli w całym zestawie danych i wysyła podsumowanie e-mailem do wszystkich Administratorów firmy.
+
+## Dziewięć kontroli
+
+### 1. Brakujące numery VAT
+Klienci bez ważnego numeru VAT. Rumuńskie składanie e-Factura wymaga ważnego CUI/CIF dla każdego klienta.
+
+### 2. Zlecenia bez faktur
+Dostarczone zlecenia, które nie zostały zafakturowane i mają więcej niż 7 dni. To przychód, który zarobiłeś, ale jeszcze nie wystawiłeś. Próg 7 dni jest konfigurowalny.
+
+### 3. Wygasłe dokumenty
+Pojazdy lub kierowcy z certyfikatami, licencjami lub zezwoleniami, które już wygasły lub wygasną w ciągu następnych 14 dni.
+
+### 4. Duplikaty zleceń
+Zlecenia wykryte jako potencjalne duplikaty — ta sama kombinacja klienta, daty odbioru i trasy pojawiająca się więcej niż raz.
+
+### 5. Niekompletne adresy
+Zlecenia, w których adres odbioru lub dostawy nie ma właściwego adresu ulicy — wprowadzono tylko miasto lub kraj.
+
+### 6. Brak przypisania kierowcy
+Potwierdzone zlecenia (status: Potwierdzone lub Zdysponowane), które nadal nie mają przypisanego kierowcy.
+
+### 7. Zaległe projekty zleceń
+Projekty zleceń starsze niż 14 dni bez aktywności. Zazwyczaj zlecenia z pobierania z e-maili, które planista otworzył, ale nigdy nie potwierdził ani nie usunął.
+
+### 8. Niedopasowane płatności
+Elementy uzgodnienia bankowego (zaimportowane transakcje bankowe) czekające niepowiązane z fakturą przez ponad 7 dni.
+
+### 9. Anomalie cenowe
+Zlecenia wycenione znacznie poniżej skonfigurowanych kart stawek. Druma porównuje stawkę zlecenia z kartą stawek i oflagowuje zlecenia poniżej konfigurowalnego progu (domyślnie: 20% poniżej karty stawek).
+
+## Przeglądanie wyników
+
+Przejdź do **Raporty — Jakość danych**.
+
+Strona pokazuje:
+- **Bieżące problemy** — wszystkie otwarte problemy teraz, pogrupowane według kategorii
+- **Historia** — ile problemów istniało każdego dnia przez ostatnie 30 dni
+- **Szczegóły problemu** — kliknij dowolną kategorię, aby zobaczyć listę konkretnych rekordów
+
+<Note>
+Skan jakości danych działa o 02:00 UTC każdej nocy. Problemy naprawione w ciągu dnia wyczyścią się przy następnym porannym skanie.
+</Note>
+
+## Konfigurowanie skanu
+
+**Ustawienia — Automatyzacja — Jakość danych**
+
+| Kontrola | Konfigurowalne opcje |
+|---|---|
+| Zlecenia bez faktur | Próg dni (domyślnie 7) |
+| Wygasłe dokumenty | Czas ostrzegania w dniach (domyślnie 14) |
+| Zaległe projekty | Próg dni (domyślnie 14) |
+| Niedopasowane płatności | Próg dni (domyślnie 7) |
+| Anomalie cenowe | Procent poniżej karty stawek (domyślnie 20%) |
+| Duplikaty zleceń | Włącz/wyłącz |
+
+---
+
+<CardGroup cols={1}>
+  <Card title="Przegląd raportów" icon="chart-bar" href="/en/reports/reports-overview">
+    Zobacz wszystkie dostępne raporty w Druma i jak zaplanować ich regularne dostarczanie e-mailem.
+  </Card>
+</CardGroup>

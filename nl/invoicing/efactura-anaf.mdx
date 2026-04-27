@@ -1,6 +1,38 @@
 ---
-title: "e-Factura / ANAF Submission"
-description: "Translation coming soon"
+title: "e-Factura / ANAF-indiening"
+description: "Hoe Druma automatisch facturen indient bij het verplichte Roemeense e-Factura-systeem via de ANAF SPV API, met statustracking en herhandelingsbeheer."
+icon: "landmark"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/efactura-anaf).
+## Wat is e-Factura?
+
+e-Factura is het verplichte elektronische factureringssysteem van Roemenië, beheerd door ANAF. Sinds 2024 moeten alle B2B-transacties tussen Roemens BTW-geregistreerde bedrijven aan ANAF worden gerapporteerd in UBL XML-formaat.
+
+Elke factuur die u uitreikt aan een Roemeens bedrijf met een CIF (BTW-registratienummer) moet elektronisch naar ANAF worden verzonden. Druma regelt dit automatisch.
+
+## Hoe Druma e-Factura verwerkt
+
+U hoeft niet in te loggen op het ANAF-portaal, XML-bestanden te genereren of iets handmatig te doen. Hier is wat er automatisch gebeurt:
+
+1. U genereert een factuur in Druma
+2. Druma detecteert of de klant een Roemens CIF heeft
+3. Druma genereert het UBL XML-bestand en dient dit in bij ANAF
+4. ANAF retourneert een indienings-ID en een verwerkingsstatus
+5. Druma slaat de ANAF-status op en toont deze naast de factuur
+
+## Factuurstatussen
+
+| Status | Betekenis |
+|---|---|
+| Ingediend | Ingediend bij ANAF, wacht op verwerking |
+| Geaccepteerd | ANAF heeft de factuur geaccepteerd |
+| Geweigerd | ANAF heeft de factuur geweigerd — zie de foutmelding |
+| Fout | Technische fout — Druma zal automatisch opnieuw proberen |
+
+## Herhandelingslogica
+
+Als een indiening mislukt, plaatst Druma de factuur in een herhandelingswachtrij met exponentieel uitstel (1 uur → 4 uur → 24 uur). U ziet een deadline-waarschuwing op de factuurlijstpagina voor facturen die de deadline naderen.
+
+<Card title="Facturen genereren" icon="file-invoice-dollar" href="/nl/invoicing/generating-invoices">
+  Hoe facturen worden aangemaakt van afgeleverde orders.
+</Card>

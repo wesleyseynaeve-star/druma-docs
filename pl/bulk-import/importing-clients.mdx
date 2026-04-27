@@ -1,6 +1,57 @@
 ---
-title: "Importing Clients"
-description: "Translation coming soon"
+title: "Import klientów"
+description: "Masowo dodaj firmy klientów do Druma przy użyciu szablonu CSV."
+icon: "file-import"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/bulk-import/importing-clients).
+Jeśli masz istniejącą listę klientów w Excelu lub innym systemie, import masowy pozwala uniknąć ręcznego wprowadzania każdego klienta.
+
+## Pobierz szablon
+
+<Steps>
+  <Step title="Otwórz stronę importu">
+    Przejdź do **Klienci → Importuj** i kliknij **Pobierz szablon**.
+  </Step>
+  <Step title="Wypełnij CSV">
+    Jeden klient per wiersz:
+
+    | Kolumna | Wymagana | Przykład |
+    |---------|----------|---------|
+    | company_name | Tak | Acme Logistics SRL |
+    | vat_number | Tak | RO12345678 |
+    | country | Tak | RO |
+    | address | Tak | Str. Victoriei 1, București |
+    | contact_name | Nie | Ion Popescu |
+    | contact_email | Nie | ion@acme.ro |
+    | contact_phone | Nie | +40721000000 |
+    | payment_terms_days | Nie | 30 |
+    | currency | Nie | EUR |
+    | notes | Nie | Preferuje komunikację e-mailową |
+  </Step>
+  <Step title="Prześlij i przejrzyj">
+    Prześlij CSV. Druma wyświetla podgląd wszystkich wierszy — czerwone wiersze mają błędy (zazwyczaj nieprawidłowy format numeru VAT lub brakujące wymagane pola). Popraw i prześlij ponownie.
+  </Step>
+  <Step title="Potwierdź import">
+    Kliknij **Importuj [X] klientów**. Klienci są natychmiast dostępni do użycia w zleceniach.
+  </Step>
+</Steps>
+
+## Format numeru VAT
+
+Druma weryfikuje format numeru VAT podczas importu. Rumuńskie numery VAT zaczynają się od `RO`, po którym następują cyfry. Numery VAT UE używają formatu prefiksu kraju (np. `DE123456789`, `FR12345678901`). Klienci spoza UE mogą używać dowolnego identyfikatora podatkowego — dodaj prefiks `XX`, jeśli nie obowiązuje standardowy format.
+
+<Note>
+Klienci bez numerów VAT nie mogą otrzymywać zgłoszeń e-Factura. Dodaj numer VAT przed wygenerowaniem pierwszej faktury dla tego klienta.
+</Note>
+
+## Aktualizowanie istniejących klientów
+
+Wyeksportuj aktualną listę klientów z **Klienci → Eksportuj CSV**, wprowadź zmiany i ponownie zaimportuj. Druma dopasowuje po numerze VAT — istniejący klienci są aktualizowani, nowi są tworzeni.
+
+<Card title="Import kierowców" icon="id-card" href="/pl/bulk-import/importing-drivers">
+  Masowo dodaj swoją listę kierowców w ten sam sposób.
+</Card>
+
+<Card title="Rozliczenia i subskrypcja" icon="credit-card" href="/pl/admin/billing-and-subscription">
+  Dowiedz się, jak liczba miejsc użytkowników i pojazdów wpływa na miesięczny rachunek.
+</Card>

@@ -1,0 +1,68 @@
+---
+title: "Import wyciągów bankowych"
+description: "Prześlij pliki wyciągów bankowych CAMT.053 lub MT940, aby automatycznie dopasować płatności do otwartych faktur — bez ręcznego wprowadzania danych."
+icon: "file-up"
+---
+
+## Przegląd
+
+Zamiast rejestrować płatności jedna po jednej, możesz przesłać wyciąg bankowy bezpośrednio do Druma. Druma parsuje każdą transakcję kredytową w pliku, uruchamia logikę dopasowania wobec otwartych faktur i automatycznie stosuje pewne dopasowania. Niedopasowane transakcje trafiają do kolejki Uzgodnienia do szybkiego ręcznego przeglądu.
+
+## Obsługiwane formaty i banki
+
+| Format | Opis |
+|--------|------|
+| **CAMT.053 XML** | ISO 20022 — eksportowany przez większość banków UE przez bankowość internetową |
+| **MT940 SWIFT** | Format starszego SWIFT — nadal powszechny dla korporacyjnych API bankowych |
+
+Oba formaty są obsługiwane przez BRD, BCR, Raiffeisen Bank, UniCredit i ING Romania.
+
+**Maksymalny rozmiar pliku:** 10 MB per przesłanie.
+
+<Note>
+Ponowne przesyłanie tego samego pliku wyciągu jest bezpieczne. Druma identyfikuje każdą transakcję i cicho pomija duplikaty.
+</Note>
+
+## Jak importować wyciąg
+
+<Steps>
+  <Step title="Otwórz okno dialogowe importu">
+    Przejdź do **Finanse — Uzgodnienie — Karta Płatności**. Kliknij przycisk **Importuj wyciąg** w prawym górnym rogu strony.
+  </Step>
+  <Step title="Wybierz plik">
+    Kliknij **Wybierz plik** i wybierz wyeksportowany wyciąg bankowy. Akceptowane rozszerzenia to `.xml` (CAMT.053) i `.sta` lub `.txt` (MT940).
+  </Step>
+  <Step title="Potwierdź format">
+    Druma auto-wykrywa format. Jeśli etykieta jest nieprawidłowa, otwórz listę rozwijaną **Format** i wybierz właściwy format ręcznie.
+  </Step>
+  <Step title="Uruchom import">
+    Kliknij **Importuj**. Druma parsuje wszystkie transakcje kredytowe i uruchamia logikę dopasowania.
+  </Step>
+  <Step title="Przejrzyj podsumowanie wyników">
+    Po zakończeniu przetwarzania wyświetla się modal podsumowania.
+  </Step>
+</Steps>
+
+## Rozumienie podsumowania wyników
+
+| Pole | Co oznacza |
+|------|-----------|
+| **Sparsowane** | Całkowita liczba transakcji kredytowych w pliku |
+| **Auto-dopasowane** | Transakcje dopasowane do faktury z wysoką pewnością — płatność zastosowana automatycznie |
+| **Wymagają przeglądu** | Transakcje gdzie znaleziono potencjalne dopasowanie, ale pewność była poniżej progu |
+| **Pominięte duplikaty** | Transakcje już zarejestrowane z poprzedniego przesłania tego samego pliku |
+| **Błędy** | Transakcje które nie mogły być sparsowane |
+
+## Logika dopasowania
+
+Druma dopasowuje każdą transakcję bankową do faktury używając następujących sygnałów, w kolejności priorytetu:
+
+1. **Numer faktury w referencji transakcji** — dokładne lub częściowe dopasowanie
+2. **Dopasowanie kwoty** — w tolerancji ±2%
+3. **Nazwa klienta lub numer VAT** — skrzyżowane z danymi głównymi klienta
+
+---
+
+<Card title="Śledzenie płatności" icon="circle-check" href="/en/invoicing/payment-tracking">
+Rejestruj i śledź płatności ręcznie lub przeglądaj pełną historię płatności per faktura.
+</Card>

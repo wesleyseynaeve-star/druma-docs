@@ -1,0 +1,113 @@
+---
+title: "Transport intermodalny i multimodalny"
+description: "Planuj zlecenia łączące etapy drogowe, morskie, kolejowe, lotnicze lub barek — z przypisaniem przewoźnika per etap, śledzeniem kosztów, eCMR i obsługą PWA kierowcy."
+icon: "git-merge"
+---
+
+## Przegląd
+
+Transport intermodalny przewozi ładunek przez wiele środków transportu w sekwencji — na przykład ciężarówka przewozi naczepę z rumuńskiej fabryki do Calais, następnie przeprawia się do Folkestone promem RoRo przez tunel Channel, a druga ciężarówka obsługuje ostatni odcinek do miejsca dostawy w Wielkiej Brytanii. Każdy segment to **etap**. Jedno zlecenie Druma zarządza całą podróżą: harmonogramem, przypisaniem przewoźnika, kosztami, eCMR i widocznością kierowcy per etap.
+
+<Note>
+Zlecenia grupowania nie mogą być intermodalne. Przełącznik intermodalny jest ukryty dla zleceń grupowania.
+</Note>
+
+---
+
+## Praktyczny przykład: Rumunia — Wielka Brytania przez tunel Channel
+
+| Etap | Tryb | Trasa | Przewoźnik |
+|---|---|---|---|
+| 1 | Drogowy | Bucharest — Calais | Własna flota — ciężarówka RO-01 |
+| 2 | Morski | Calais — Folkestone (Eurotunnel Le Shuttle) | Podwykonawca: Eurotunnel |
+| 3 | Drogowy | Folkestone — Birmingham | Podwykonawca: przewoźnik z UK |
+
+Druma śledzi numer rezerwacji i numer kontenera dla etapu 2, generuje oddzielne eCMR dla etapów 1 i 3 (oba przekraczają granice) i pokazuje przewoźnikowi z UK tylko przystanki istotne dla etapu 3.
+
+---
+
+## Tworzenie zlecenia intermodalnego
+
+<Steps>
+  <Step title="Otwórz modal Nowe zlecenie lub edytuj istniejące">
+    Przejdź do **Operacje — Zlecenia** i kliknij **Nowe zlecenie**.
+  </Step>
+  <Step title="Włącz przełącznik Intermodalny">
+    W nagłówku sekcji **Przystanki** znajdź przełącznik **Intermodalny** i włącz go. Pojawia się sekcja **Etapy**.
+  </Step>
+  <Step title="Dodaj etapy">
+    Kliknij **+ Dodaj etap**, aby utworzyć pierwszy etap. Dodaj tyle etapów, ile wymaga podróż.
+  </Step>
+  <Step title="Dodaj przystanki normalnie">
+    Przystanki (odbiór, dostawa, wewnętrzne) są dodawane w sekcji Przystanki jak zwykle. Każdy przystanek jest powiązany z etapem, do którego należy.
+  </Step>
+</Steps>
+
+---
+
+## Zarządzanie etapami
+
+Każda karta etapu ma następujące pola:
+
+| Pole | Uwagi |
+|---|---|
+| **Tryb** | Drogowy, Morski, Kolejowy, Lotniczy lub Barka |
+| **Źródło** | Wolny tekst lub autouzupełnianie adresów |
+| **Cel** | Wolny tekst lub autouzupełnianie adresów |
+| **Planowany start** | Data i czas rozpoczęcia etapu |
+| **Planowane zakończenie** | Oczekiwana data i czas zakończenia etapu |
+| **Przewoźnik** | Własna flota (tylko drogowy) lub podwykonawca |
+| **Cena zakupu** | Koszt który płacisz za ten etap |
+
+### Etapy niedrogowe (Morskie, Kolejowe, Lotnicze, Barka)
+
+Etapy niedrogowe mogą być przypisane tylko do podwykonawcy. Dla etapów morskich dostępne są dodatkowe pola:
+
+| Pole | Format |
+|---|---|
+| Numer rezerwacji | Wolny tekst |
+| Numer kontenera | Wolny tekst |
+| Nazwa statku/pociągu | Wolny tekst |
+| Numer rejsu | Wolny tekst |
+| SCAC przewoźnika | 4 znaki |
+| Port załadunku | 5-znakowy LOCODE |
+| Port rozładunku | 5-znakowy LOCODE |
+| Termin graniczny | Data + czas |
+| ETD | Szacowany czas wyjścia |
+| ETA w porcie docelowym | Szacowany czas przybycia |
+
+<Warning>
+Jeśli termin graniczny jest w ciągu 48 godzin od planowanego końca etapu, Druma pokazuje bursztynowy baner ostrzegawczy. Sprawdź harmonogram, aby upewnić się, że ciężarówka dotrze do portu na czas.
+</Warning>
+
+---
+
+## eCMR per etap drogowy
+
+Każdy etap drogowy przekraczający granicę międzynarodową otrzymuje własne eCMR. Otwórz kartę etapu i kliknij **Utwórz eCMR**.
+
+---
+
+## PWA kierowcy — widok scoped per etap
+
+Kierowcy widzą tylko przystanki należące do ich przypisanego etapu drogowego. Jeśli zlecenie ma trzy etapy i kierowca obsługuje etap 1, widzi tylko odbiór i wewnętrzne przystanki dla etapu 1.
+
+Informacyjny baner na górze szczegółów ładunku brzmi:
+
+> **Etap 1 z 3 — Drogowy: Bucharest — Calais**
+
+---
+
+## Śledzenie kosztów i marży
+
+Każdy etap ma własną **Cenę zakupu** i **Podział kosztów**. Łączny koszt zlecenia to suma wszystkich etapów. Obliczenie marży w panelu szczegółów zlecenia porównuje uzgodnioną cenę sprzedaży z łącznym kosztem wieloetapowym.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/en/planner/ecmr">
+  Jak działają tworzenie eCMR przez TransFollow, podpisy trójstronne i certyfikowane PDF.
+</Card>
+
+<Card title="Podwykonawcy" icon="truck" href="/en/forwarding/subcontractors">
+  Zarządzaj listą podwykonawców — ci sami przewoźnicy pojawiają się przy przypisaniu do etapu intermodalnego.
+</Card>

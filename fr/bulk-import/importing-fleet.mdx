@@ -1,6 +1,71 @@
 ---
-title: "Importing Your Fleet"
-description: "Translation coming soon"
+title: "Importer votre flotte"
+description: "Comment importer plusieurs véhicules à la fois dans Druma via un fichier CSV ou XLSX — téléchargez le modèle, remplissez-le et importez."
+icon: "truck"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/bulk-import/importing-fleet).
+## Vue d'ensemble
+
+Si vous configurez Druma pour la première fois et avez une grande flotte, l'import en masse vous fait gagner beaucoup de temps par rapport à la saisie manuelle de chaque véhicule.
+
+Accédez à **Flotte → Véhicules → Importer** pour commencer.
+
+---
+
+## Télécharger le modèle
+
+Cliquez sur **Télécharger le modèle** pour obtenir un fichier CSV ou XLSX avec toutes les colonnes correctes pré-configurées.
+
+---
+
+## Colonnes du modèle
+
+| Colonne | Obligatoire | Description |
+|---|---|---|
+| `plate` | Oui | Plaque d'immatriculation du véhicule |
+| `vehicle_type` | Oui | tractor, rigid, van, flatbed |
+| `trailer_type` | Oui | curtainsider, reefer, flatbed, tanker, container, mega, other |
+| `euro_standard` | Non | euro3, euro4, euro5, euro6 |
+| `height_m` | Non | Hauteur en mètres |
+| `weight_tonnes` | Non | Poids total autorisé en tonnes |
+| `max_payload_kg` | Non | Charge utile maximale en kg |
+| `axle_count` | Non | Nombre d'essieux |
+| `daily_cost_eur` | Non | Coût fixe journalier en EUR |
+| `adr_cert_expiry` | Non | Date d'expiration ADR (YYYY-MM-DD) |
+
+---
+
+## Validation à l'import
+
+Druma valide chaque ligne avant l'import :
+
+- Les plaques doublons dans Druma sont ignorées (avec notification)
+- Les valeurs invalides pour `vehicle_type` ou `trailer_type` bloquent la ligne
+- Les dates doivent être au format `YYYY-MM-DD`
+
+---
+
+## Effectuer l'import
+
+<Steps>
+  <Step title="Remplissez le modèle">
+    Ouvrez le modèle CSV ou XLSX dans Excel ou Google Sheets. Ajoutez un véhicule par ligne.
+  </Step>
+  <Step title="Téléchargez le fichier">
+    Dans Druma, cliquez sur **Télécharger CSV**, sélectionnez votre fichier et cliquez sur **Importer**.
+  </Step>
+  <Step title="Vérifiez les erreurs">
+    Si des lignes ont des erreurs, Druma les liste avec les problèmes spécifiques.
+  </Step>
+  <Step title="Confirmez l'import">
+    Après correction, confirmez l'import des lignes valides.
+  </Step>
+</Steps>
+
+<Warning>
+L'import ne met pas à jour les véhicules existants. Les plaques déjà dans Druma seront ignorées avec un avertissement.
+</Warning>
+
+<Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+  Gérer manuellement les véhicules après import.
+</Card>

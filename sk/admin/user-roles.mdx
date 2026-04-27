@@ -1,6 +1,136 @@
 ---
-title: "User roles and permissions"
-description: "Translation coming soon"
+title: "Roly a oprávnenia používateľov"
+description: "Úplný prehľad všetkých ôsmich rolí Druma, k čomu má každá prístup a ako ich priradiť."
+icon: "shield-halved"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/user-roles).
+## Prečo sú roly dôležité
+
+Správne priradenie roly každému členovi tímu znamená:
+- Ľudia vidia iba to, čo je relevantné pre ich prácu
+- Citlivé údaje (fakturácia, financie klientov) sú chránené
+- Náhodné zmeny objednávok alebo nastavení sú menej pravdepodobné
+- Máte jasný auditný záznám toho, kto čo urobil
+
+Druma má **osem rolí**. Šesť je pre váš interný tím (webová platforma) a dve sú pre externých používateľov (vodiči a klienti), ktorí pristupujú k Druma cez dedikované odkazy.
+
+## Prehľad oprávnení podľa rolí
+
+| Oprávnenie | Admin | Správca spoloč. | Plánovač | Dispečer | Správca flotily | ZS | Vodič | Klient |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Fakturácia a predplatné | Áno | - | - | - | - | - | - | - |
+| Nastavenia spoločnosti | Áno | Áno | - | - | - | - | - | - |
+| Správa používateľov a pozvánok | Áno | Áno | - | - | - | Pozvať | - | - |
+| Integrácie a API nastavenia | Áno | Áno | - | - | - | - | - | - |
+| Cenníky | Áno | Áno | - | - | Áno | - | - | - |
+| Vytváranie a úprava objednávok | Áno | Áno | Áno | - | - | Áno | - | - |
+| Zobrazenie všetkých objednávok | Áno | Áno | Áno | - | - | Áno | - | - |
+| Priraďovanie vozidiel a vodičov | Áno | Áno | Áno | - | - | - | - | - |
+| Dashboard / Dnes | Áno | Áno | Áno | Áno | - | - | - | - |
+| Živá mapa | Áno | Áno | Áno | Áno | - | - | - | - |
+| Správa flotily (vozidlá) | Áno | Áno | Čítať | Čítať | Plný | - | - | - |
+| Správa flotily (vodiči) | Áno | Áno | Čítať | Čítať | Plný | - | - | - |
+| Hodiny vodičov | Áno | Áno | Áno | Áno | Áno | - | - | - |
+| Generovanie a odosielanie faktúr | Áno | Áno | Áno | - | - | Áno | - | - |
+| Správy a exporty | Áno | Áno | Áno | - | - | Áno | - | - |
+| Aplikácia vodiča (aktualizácie objednávok, eCMR) | - | - | - | - | - | - | Áno | - |
+| Klientský portál (sledovanie zásielok) | - | - | - | - | - | - | - | Áno |
+
+## Podrobné popisy rolí
+
+### Administrátor
+
+Administrátor má **úplný prístup k systému** vrátane fakturácie a správy predplatného. Toto je rola pre majiteľa firmy alebo osobu, ktorá je v konečnom dôsledku zodpovedná za účet Druma.
+
+---
+
+### Správca spoločnosti
+
+Správca spoločnosti má plný prístup ku všetkému **okrem fakturácie**. Toto je správna rola pre dôveryhodného operačného manažéra alebo senior dispečera.
+
+Správcovia spoločnosti môžu:
+- Konfigurovať všetko v Nastaveniach (okrem fakturácie)
+- Pozývať a spravovať ostatných používateľov
+- Nastavovať integrácie (SmartBill, SAGA, TransFollow, ANAF, Timocom atď.)
+- Vytvárať a spravovať objednávky, faktúry, flotilu a správy
+
+---
+
+### Plánovač
+
+Plánovač je základnou operačnou rolou — dispečer, ktorý riadi každodennú nákladnú prácu. Plánovači majú plný prístup k objednávkam, plánovacej tabuli a fakturácii, s prístupom iba na čítanie k flotile.
+
+---
+
+### Dispečer
+
+Dispečer je **rola zameraná na monitorovanie** pre ľudí, ktorí potrebujú sledovať prevádzku v reálnom čase, ale nevytvárajú ani neupravujú objednávky.
+
+Dispečeri nemôžu:
+- Vytvárať, upravovať ani mazať objednávky
+- Pristupovať k plánovacej tabuli
+- Generovať ani zobrazovať faktúry
+- Zobrazovať správy alebo exporty
+
+---
+
+### Správca flotily
+
+Správca flotily má **plnú kontrolu nad operáciami flotily** — vozidlá, prívesy, vodiči, doklady, import palivových kariet a sledovanie kabotáže.
+
+Správcovia flotily nemôžu:
+- Vytvárať, upravovať ani zobrazovať objednávky
+- Pristupovať k plánovacej tabuli
+- Generovať ani zobrazovať faktúry
+- Meniť nastavenia spoločnosti ani spravovať používateľov
+
+---
+
+### Zákaznícky servis
+
+Rola zákazníckeho servisu poskytuje **operačný prístup k objednávkam, fakturácii, klientom a správam**. Používatelia ZS môžu vytvárať a upravovať objednávky, generovať faktúry, spravovať klientské vzťahy a pozývať nových používateľov.
+
+Používatelia zákazníckeho servisu nemôžu:
+- Priraďovať vozidlá alebo vodičov na plánovacej tabuli
+- Spravovať flotilu
+- Meniť nastavenia spoločnosti ani integrácie
+
+---
+
+### Vodič
+
+Rola Vodiča sa líši od všetkých ostatných — **vodiči nikdy nepristupujú k webovej platforme Druma**. Namiesto toho má každý vodič jedinečný osobný odkaz (odkaz PWA), ktorý otvára aplikáciu Druma pre vodičov na smartfóne.
+
+<Warning>
+Nesnažte sa pozývať vodičov cez Nastavenia → Používatelia. Vodiči nepotrebujú pozývací e-mail. Prejdite na Flotila → Vodiči, otvorte profil vodiča a skopírujte jeho osobný odkaz PWA. Pošlite tento odkaz vodičovi cez WhatsApp, SMS alebo akúkoľvek inú aplikáciu na odosielanie správ.
+</Warning>
+
+---
+
+### Klient
+
+Rovnako ako vodiči, ani klienti nepristupujú k webovej platforme Druma. Každá klientská spoločnosť má **súkromný odkaz na portál** s prehľadom ich zásielok u vašej spoločnosti.
+
+## Priradenie viacerých rolí
+
+Jeden používateľ môže mať viac ako jednu rolu. Nastavíte to pri posielaní pozvánky alebo pri úprave profilu existujúceho používateľa.
+
+Bežné kombinácie viacerých rolí:
+- **Správca spoločnosti + Plánovač** — majiteľ alebo senior dispečer, ktorý tiež spravuje platformu
+- **Plánovač + Zákaznícky servis** — dispečer v malej spoločnosti, ktorý tiež vybavuje otázky klientov
+
+<Note>
+Priradenia viacerých rolí používajte striedmo. Začnite s najobmedzenejšou rolou, ktorá pokrýva to, čo osoba potrebuje.
+</Note>
+
+## Podpora viacerých spoločností
+
+Jedna e-mailová adresa môže patriť do **viacerých účtov spoločností Druma**. Na prepínanie medzi spoločnosťami kliknite na názov vašej spoločnosti v pravom hornom rohu platformy a vyberte inú spoločnosť z rozbaľovacieho zoznamu.
+
+<Card title="Pozvite svoj tím" icon="users" href="/en/getting-started/invite-your-team">
+  Podrobné pokyny na pozývanie používateľov a odosielanie odkazu na aplikáciu vodiča.
+</Card>
+
+<Card title="Nastavenie spoločnosti" icon="building" href="/en/admin/company-setup">
+  Nakonfigurujte právne údaje, logo a nastavenia fakturácie.
+</Card>

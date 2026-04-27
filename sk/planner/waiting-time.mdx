@@ -1,6 +1,72 @@
 ---
-title: "Waiting Time Charges"
-description: "Translation coming soon"
+title: "Čakacia doba"
+description: "Automatické sledovanie, výpočet a fakturácia čakacej doby klientom s GPS-stamped dôkazom o príchode."
+icon: "hourglass"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/waiting-time).
+## Prehľad
+
+Čakacia doba vzniká, keď vodič dorazí na miesto nakladania alebo vykladania a musí čakať, kým klient spracuje zákazku. Druma automaticky sleduje čakaciu dobu a pomáha vám ju fakturovať klientom.
+
+## Ako funguje časovač čakacej doby
+
+Keď vodič aktualizuje stav na **Príchod na vyzdvihnutie** alebo **Príchod na doručenie**, Druma automaticky spustí čakací časovač. Príchod je označený časovou pečiatkou s GPS polohou vodiča.
+
+Časovač zastaví keď vodič aktualizuje stav na:
+- **Nakladanie spustené** (na vyzdvihnutí)
+- **Vykladanie spustené** (na doručení)
+
+## Voľné obdobie
+
+Predvolené voľné čakacie obdobie sú **2 hodiny**. Po skončení tohto obdobia:
+
+1. Plánovač dostane **push notifikáciu**: „Vodič čaká 2h na [miesto] — [meno klienta]"
+2. Na karte objednávky v pohľade Dnes sa objaví **červený varovný odznak**
+3. Stránka detailov objednávky zobrazuje živý počítač čakacej doby červenou farbou
+
+## Nastavenie parametrov čakacej doby
+
+### Globálne nastavenia
+
+Prejdite na **Nastavenia → Čakacia doba**. Nastavte predvolené voľné obdobie (hodiny) a hodinovú sadzbu poplatku (€/hodinu). Tieto sa vzťahujú na všetkých klientov, ak nie sú prepísané.
+
+### Nastavenia pre konkrétneho klienta
+
+Otvorte záznam klienta → záložka **Obchodné podmienky**. Prepíšte voľné obdobie a sadzbu pre tohto konkrétneho klienta.
+
+### Nastavenia pre konkrétnu objednávku
+
+Na jednotlivej objednávke otvorte sekciu **Financie** a upravte parametre čakacej doby.
+
+## Notifikácia klienta
+
+Z upozornenia kliknite na **Notifikovať klienta**. Druma predvypĺňa formálny notifikačný e-mail kontaktu logistiky klienta obsahujúci:
+- Príchod vodiča overený GPS s odkazom na mapu
+- Čas čakania od odoslania
+- Odhadovaný poplatok vypočítaný pri konfigurovanej hodinovej sadzbe
+- Bankové údaje vašej spoločnosti
+
+## Poplatok na faktúre
+
+Pri generovaní faktúry pre objednávku sa poplatok za čakaciu dobu automaticky pridá ako samostatná položka:
+
+- Popis: „Čakacia doba — [miesto] — [dátum] — [X hodín Y minút]"
+- Sadzba: vaša nakonfigurovaná hodinová sadzba
+- Suma: vypočítaná na najbližších 15 minút
+
+Túto položku môžete upraviť alebo odstrániť na faktúre pred jej vydaním.
+
+## Zobrazenie histórie čakania
+
+Všetky čakacie udalosti sú trvalo uložené na objednávke. Na ich kontrolu:
+
+- **Stránka detailov objednávky → záložka Aktivita** — zobrazuje každú zmenu stavu s časovou pečiatkou a GPS súradnicami
+- **Správy → Zhrnutie čakacej doby** — celkové hodiny čakania a poplatky podľa klienta alebo časového obdobia
+
+<Card title="Upozornenia na čakaciu dobu" icon="bell" href="/en/automation/waiting-charge-alerts">
+  Ako Druma automaticky sleduje čakacie doby a odosiela upozornenia.
+</Card>
+
+<Card title="Generovanie faktúr" icon="file-invoice" href="/en/invoicing/generating-invoices">
+  Ako sa poplatky za čakaciu dobu zobrazujú a môžu byť upravené na faktúrach.
+</Card>

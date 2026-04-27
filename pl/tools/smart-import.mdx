@@ -1,0 +1,176 @@
+---
+title: "Smart Import (masowy onboarding z AI)"
+description: "Prześlij nieustrukturyzowane dokumenty — pliki PDF, obrazy, arkusze kalkulacyjne — i pozwól AI Druma wyodrębnić, przejrzeć i masowo zaimportować dane floty, kierowców, klientów i firmy w kilka minut."
+icon: "brain"
+---
+
+## Przegląd
+
+Smart Import to narzędzie do onboardingu z pomocą AI, które odczytuje dokumenty, które już posiadasz — listy floty przewoźnika, pliki praw jazdy kierowców, katalogi klientów, certyfikaty ubezpieczeniowe — i przekształca je w ustrukturyzowane rekordy Druma. Zamiast przepisywać dane z dokumentów lub reformatować arkusze kalkulacyjne do szablonu importu, podajesz surowy dokument Druma i przeglądasz to, co AI wyodrębnił, zanim trafi do bazy danych.
+
+Przejdź do **Narzędzia → Smart Import**, aby go otworzyć.
+
+<Note>
+Smart Import używa Google Gemini do wyodrębniania danych. Pliki są przetwarzane po stronie serwera i nie są przechowywane na stałe po wyodrębnieniu — tylko ustrukturyzowane rekordy, które zdecydujesz się zaimportować, są zapisywane.
+</Note>
+
+---
+
+## Kiedy używać Smart Import vs. zwykłego importu masowego
+
+Druma ma dwie ścieżki masowego onboardingu. Wybierz odpowiednią dla swojej sytuacji:
+
+| Sytuacja | Użyj |
+|----------|------|
+| Masz PDF, skan dokumentu lub obraz | **Smart Import** |
+| Masz zdjęcie dokumentu lub odręczną listę | **Smart Import** |
+| Otrzymałeś listę floty od przewoźnika w Wordzie lub niestandardowym Excelu | **Smart Import** |
+| Eksportujesz z innego TMS ze znany formatem CSV | **Zwykły masowy import CSV** |
+| Masz czysty arkusz kalkulacyjny pasujący już do struktury kolumn Druma | **Zwykły masowy import CSV** |
+
+Smart Import obsługuje dokumenty zbyt chaotyczne lub nieustrukturyzowane dla bezpośredniego importu CSV. Nie zastąpi dobrze ustrukturyzowanego eksportu — zwykły import jest szybszy, gdy dane są już czyste.
+
+---
+
+## Obsługiwane typy dokumentów
+
+- **PDF** — listy floty, profile przewoźników, certyfikaty ubezpieczeniowe, teczki kierowców
+- **Obrazy** — JPEG, PNG, WebP, HEIC/HEIF — skany, zdjęcia telefoniczne, zrzuty ekranu
+- **Excel** — pliki `.xlsx` w dowolnym układzie (Smart Import czyta zawartość, nie tylko standardowe szablony)
+- **CSV** — pliki z separatorem przecinkowym lub średnikowym
+
+---
+
+## Przepływ pracy krok po kroku
+
+<Steps>
+  <Step title="Otwórz Smart Import">
+    Przejdź do **Narzędzia → Smart Import**. Zobaczysz strefę przesyłania i poniżej niej karty kategorii (puste przy pierwszej wizycie).
+  </Step>
+  <Step title="Prześlij dokumenty">
+    Kliknij **Prześlij dokumenty** lub przeciągnij pliki bezpośrednio na strefę upuszczania. Możesz przesłać wiele plików naraz — na przykład listę floty w PDF i obraz certyfikatu ubezpieczeniowego razem.
+
+    <Note>
+    Maksymalny rozmiar pliku to 10 MB per plik. Jeśli dokument jest większy, podziel go na sekcje przed przesłaniem.
+    </Note>
+  </Step>
+  <Step title="Poczekaj na wyodrębnianie przez AI">
+    Druma wysyła każdy plik do usługi wyodrębniania AI. Zazwyczaj zajmuje to kilka sekund per plik. Wskaźnik postępu pokazuje status dla każdego dokumentu. Nie zamykaj karty podczas wyodrębniania.
+  </Step>
+  <Step title="Przejrzyj wyniki wyodrębniania">
+    Po zakończeniu wyodrębniania pojawia się **Panel przeglądu**. Pokazuje karty kategorii na górze — **Firmy**, **Flota**, **Kierowcy**, **Klienci**, **Ubezpieczenie** — z liczbą wyodrębnionych rekordów w każdej kategorii.
+  </Step>
+  <Step title="Otwórz kategorię do przeglądu">
+    Kliknij dowolną kartę kategorii, aby zobaczyć wyodrębnione rekordy w edytowalnej tabeli. Każdy wiersz to jeden wyodrębniony rekord (jeden pojazd, jeden kierowca, jeden klient itd.).
+  </Step>
+  <Step title="Edytuj nieprawidłowe pola">
+    Kliknij dowolną komórkę w tabeli, aby edytować ją inline. AI jest dokładne w wyraźnie wydrukowanym tekście, ale może błędnie odczytać odręczne pismo, skróty lub niestandardowe formatowanie. Popraw wszelkie błędy przed importem.
+  </Step>
+  <Step title="Sprawdź wyniki pewności i duplikaty">
+    Przejrzyj wskaźniki pewności i flagi duplikatów w każdym wierszu — patrz sekcje poniżej, aby uzyskać szczegóły.
+  </Step>
+  <Step title="Zaimportuj kategorię">
+    Gdy kategoria wygląda poprawnie, kliknij **Importuj [Kategorię]** — na przykład **Importuj flotę** lub **Importuj klientów**. Druma wsadowo wstawia wszystkie niepominięte wiersze i potwierdza zaimportowaną liczbę.
+  </Step>
+</Steps>
+
+---
+
+## Panel przeglądu
+
+Panel przeglądu to centralne miejsce pracy po wyodrębnianiu. Ma dwa poziomy:
+
+**Karty kategorii (poziom górny)** — jedna karta na typ danych znaleziony w dokumentach. Każda karta pokazuje:
+- Nazwę kategorii
+- Liczbę wyodrębnionych rekordów
+- Podsumowanie ostrzeżenia, jeśli jakiekolwiek rekordy mają flagi Niskiej pewności lub Duplikatu
+
+**Tabela rekordów (drążenie)** — kliknij kartę, aby otworzyć edytowalną tabelę dla tej kategorii. Tabela pokazuje jedną kolumnę na pole (np. Numer rejestracyjny, Typ naczepy, Pojemność, Rok dla Floty) z wskaźnikami pewności i flagami duplikatów w każdym wierszu.
+
+Możesz swobodnie przełączać się między kategoriami — Twoje edycje są zachowywane do momentu importu lub zamknięcia sesji.
+
+---
+
+## Ocenianie pewności
+
+Każde wyodrębnione pole otrzymuje wynik pewności w oparciu o to, jak wyraźnie AI mogło odczytać i zinterpretować tekst źródłowy. Wyniki są wyświetlane jako kodowane kolorami wskaźniki na każdej komórce:
+
+| Wskaźnik | Znaczenie |
+|----------|-----------|
+| Zielony — **Wysoka** | AI jest pewne. Pole było wyraźnie wydrukowane lub ustrukturyzowane. |
+| Bursztynowy — **Średnia** | AI wykonało rozsądne wnioskowanie, ale źródło było niejednoznaczne (np. skrót, częściowo widoczne słowo). Przejrzyj przed importem. |
+| Czerwony — **Niska** | AI nie mogło wyodrębnić wiarygodnej wartości. Komórka może zawierać najlepsze domysły lub być pusta. Zawsze ręcznie sprawdzaj pola Niskiej pewności. |
+
+<Warning>
+Pola niskiej pewności nie są zablokowane przed importem — możesz je zaimportować tak jak są — ale jesteś odpowiedzialny za weryfikację ich dokładności. Nieprawidłowe dane (zły numer rejestracyjny, zły numer VAT) mogą powodować problemy w dalszym fakturowaniu, zgodności i komunikacji z przewoźnikami.
+</Warning>
+
+Aby szybko znaleźć wszystkie pola niskiej pewności w kategorii, szukaj bursztynowych i czerwonych podświetleń komórek w tabeli.
+
+---
+
+## Wykrywanie duplikatów
+
+Przed wyświetleniem Panelu przeglądu Druma porównuje wyodrębnione rekordy z istniejącymi danymi firmy:
+
+- **Flota**: dopasowuje po numerze rejestracyjnym
+- **Kierowcy**: dopasowuje po imieniu i nazwisku + dacie urodzenia (jeśli dostępna)
+- **Klienci**: dopasowuje po numerze VAT
+- **Firmy / Podwykonawcy**: dopasowuje po numerze VAT
+- **Ubezpieczenie**: dopasowuje po numerze certyfikatu (jeśli dostępny)
+
+Rekordy pasujące do istniejących danych są oznaczane odznaką **Duplikat** w wierszu. Masz dwie opcje dla każdego duplikatu:
+
+- **Pomiń** (domyślnie) — wiersz nie zostanie zaimportowany. Użyj, gdy istniejący rekord jest już poprawny.
+- **Nadpisz** — import zaktualizuje istniejący rekord wyodrębnionymi danymi. Używaj ostrożnie — zastępuje przechowywane wartości.
+
+Wiersze bez flagi Duplikatu to nowe rekordy, które zostaną wstawione przy imporcie.
+
+---
+
+## Po imporcie
+
+Zaimportowane rekordy pojawiają się natychmiast w odpowiednim module:
+
+- Rekordy **Floty** pojawiają się w **Flota → Ciężarówki** lub **Flota → Naczepy**
+- **Kierowcy** pojawiają się w **Flota → Kierowcy**
+- **Klienci** pojawiają się w **Klienci**
+- **Firmy / Podwykonawcy** pojawiają się w **Spedycja → Podwykonawcy**
+- Dane **Ubezpieczenia** są dołączone do odpowiedniego rekordu pojazdu lub firmy
+
+Nie ma opcji cofnięcia importu. Jeśli nieprawidłowe dane zostały zaimportowane, edytuj rekordy indywidualnie w ich odpowiednich modułach.
+
+---
+
+## Ograniczenia
+
+Smart Import jest przeznaczony dla danych firmy, floty, kierowców, klientów i ubezpieczenia. Nie obsługuje:
+
+- **Zleceń** — użyj formularza zlecenia lub funkcji pobierania zleceń z przychodzących e-maili do tworzenia zleceń
+- **Faktur** — faktury są generowane automatycznie z dostarczonych zleceń lub przez przepływ pracy pobierania faktur przewoźnika
+- **Migracji danych historycznych** — dla dużych zbiorów danych historycznych (tysiące rekordów) skontaktuj się z pomocą techniczną w celu uzyskania wspomaganej migracji
+
+Smart Import działa najlepiej z dokumentami opartymi głównie na tekście. Może przetwarzać odręczne pismo na obrazach, ale dokładność znacznie spada w porównaniu z wydrukowanym tekstem.
+
+---
+
+## Praktyczny przykład
+
+Twój nowy podwykonawca przesyła Ci 3-stronicowy PDF z całą swoją flotą — 12 pojazdów z numerem rejestracyjnym, typem, maksymalną masą i rokiem. Zamiast wprowadzać każdy ręcznie:
+
+1. Prześlij PDF do **Narzędzia → Smart Import**
+2. Poczekaj kilka sekund na wyodrębnianie
+3. Kliknij kartę **Flota** — pojawia się 12 wierszy, większość z wysoką pewnością
+4. Dwa wiersze mają średnią pewność w polu Typ naczepy — popraw je inline
+5. Jeden wiersz jest oznaczony jako Duplikat (ciężarówka dodana w zeszłym tygodniu) — pozostaw jako Pomiń
+6. Kliknij **Importuj flotę** — 11 nowych pojazdów jest natychmiast dodanych do floty
+
+---
+
+<Card title="Zarządzanie flotą" icon="truck" href="/pl/planner/fleet-management">
+  Zarządzaj ciężarówkami, naczepami i kierowcami — i weryfikuj zaimportowane rekordy floty po Smart Import.
+</Card>
+
+<Card title="Klienci" icon="building-2" href="/pl/client-portal/managing-contacts">
+  Przeglądaj i edytuj rekordy klientów utworzone przez Smart Import oraz dodawaj kontakty i stałe instrukcje.
+</Card>

@@ -1,6 +1,81 @@
 ---
-title: "Public API and Webhooks"
-description: "Translation coming soon"
+title: "Verejné API"
+description: "Použite verejné REST API Druma pre integráciu zákaziek, klientov a dát zákaziek do vašich interných systémov."
+icon: "code"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/public-api).
+## Prehľad
+
+Druma poskytuje REST API, ktoré vám umožňuje programovo interagovať s vašimi dátami Druma. Použite ho pre:
+- Integráciu Druma s vašim ERP alebo WMS systémom
+- Automatické vytváranie zákaziek z externých zdrojov
+- Načítanie stavu zákazky a polohy pre interné dashboardy
+
+## Základná URL
+
+```
+https://api.druma.io/v1/
+```
+
+## Autentifikácia
+
+Všetky API požiadavky musia obsahovať API kľúč v hlavičke:
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+Generujte API kľúče v **Nastavenia → Integrácie → Verejné API → Generovať kľúč**.
+
+## Hlavné endpointy
+
+| Endpoint | Metóda | Popis |
+|----------|--------|-------|
+| `/orders` | GET | Zoznam zákaziek s filtrovaním |
+| `/orders` | POST | Vytvorenie novej zákazky |
+| `/orders/{id}` | GET | Získanie detailov jednej zákazky |
+| `/orders/{id}/status` | GET | Aktuálny stav zákazky |
+| `/clients` | GET | Zoznam klientov |
+| `/fleet/vehicles` | GET | Zoznam vozidiel |
+| `/fleet/drivers` | GET | Zoznam vodičov |
+
+## Obmedzenie rýchlosti
+
+- **100 požiadaviek za minútu** pre štandardné API kľúče
+- Vráti HTTP 429 keď je limit prekročený
+- Záhlavie `X-RateLimit-Remaining` ukazuje zostatok
+
+## Príklad: Vytvorenie zákazky
+
+```json
+POST /v1/orders
+{
+  "client_id": "uuid-klienta",
+  "order_type": "own_truck",
+  "pickup": {
+    "address": "Str. Victoriei 1, București, România",
+    "date": "2025-03-15",
+    "time_from": "08:00",
+    "time_to": "10:00"
+  },
+  "delivery": {
+    "address": "Münchener Str. 5, München, Deutschland",
+    "date": "2025-03-16"
+  },
+  "cargo": {
+    "description": "Elektronika",
+    "weight_kg": 5000
+  },
+  "price_eur": 1200
+}
+```
+
+## Dokumentácia
+
+Kompletná referencia API s príkladmi požiadaviek a odpovedí je dostupná na:
+
+**docs.druma.io/api-reference**
+
+<Card title="Integrácia klientského API" icon="plug" href="/en/integrations/client-api">
+  Ako dať konkrétnym klientom priamy API prístup pre odosielanie zákaziek.
+</Card>

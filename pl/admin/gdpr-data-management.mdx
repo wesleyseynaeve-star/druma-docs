@@ -1,6 +1,144 @@
 ---
-title: "GDPR & Data Management"
-description: "Translation coming soon"
+title: "RODO i zarządzanie danymi"
+description: "Jakie dane przechowuje Druma, jak długo są przechowywane, Twoje prawa jako podmiotu danych oraz jak eksportować lub usunąć dane firmy."
+icon: "lock"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/gdpr-data-management).
+Druma jest administratorem danych przechowywanych przez Twoją firmę na platformie. W tym artykule wyjaśniono dokładnie, co jest przechowywane, jak długo jest zatrzymywane, kto je przetwarza i jakie działania możesz podjąć zgodnie z RODO.
+
+---
+
+## Jakie dane przechowuje Druma
+
+### Dane firmy i konta
+- Nazwa firmy, CIF, adres, dane kontaktowe
+- Konta użytkowników: imię i nazwisko, adres e-mail, rola, znaczniki czasu logowania
+
+### Dane operacyjne
+- Zlecenia: szczegóły trasy, opisy ładunków, adresy odbioru i dostawy, historia statusów, przypisany kierowca i pojazd, znaczniki czasu
+- Rekordy klientów: nazwa firmy, adres, osoba kontaktowa, CIF
+- Dane kierowców: imię i nazwisko, numer telefonu, numer prawa jazdy, szczegóły certyfikatu ADR, daty ważności dokumentów
+- Rekordy pojazdów: numer rejestracyjny, marka/model, norma Euro, daty ważności dokumentów
+
+### Dane finansowe
+- Rekordy faktur, pozycje, kwoty, status płatności
+- Dane importu kart paliwowych powiązane z pojazdami
+
+### Dokumenty eCMR
+- Elektroniczne listy przewozowe wydane przez TransFollow, w tym dane podpisów i certyfikowane PDF
+
+### Dane pozycji GPS
+- Druma przechowuje **tylko bieżącą pozycję GPS** — ostatnią znana lokalizację wysłaną przez aplikację kierowcy. **Nie jest przechowywana ani dostępna żadna historia pozycji.** W momencie otrzymania nowej pozycji poprzednia jest nadpisywana.
+
+### Dzienniki audytu
+- Dziennik znaczących działań użytkownika: zdarzenia logowania, zmiany statusu zleceń, zmiany ról użytkowników, przesyłanie dokumentów i zdarzenia rozliczeniowe
+
+<Note>
+Druma nie przechowuje danych tachografu, nagrań rozmów, danych biometrycznych kierowców ani informacji o ich zdrowiu.
+</Note>
+
+---
+
+## Okresy przechowywania danych
+
+| Kategoria danych | Okres przechowywania |
+|---|---|
+| Dane operacyjne (zlecenia, klienci, kierowcy, pojazdy) | Czas trwania subskrypcji + 90 dni po anulowaniu |
+| Dane kont użytkowników | Czas trwania subskrypcji + 90 dni po anulowaniu |
+| Dzienniki audytu | 2 lata od daty zarejestrowanego zdarzenia |
+| Dokumenty eCMR | 10 lat (wymóg prawny zgodnie z Protokołem e-CMR) |
+| Dane pozycji GPS | Nadpisywane w czasie rzeczywistym — brak zachowanej historii |
+| Rekordy rozliczeń | 7 lat (wymóg rumuńskiego prawa rachunkowego) |
+
+Po upływie okresu przechowywania dane są trwale usuwane ze wszystkich systemów, w tym kopii zapasowych.
+
+---
+
+## Żądanie eksportu danych
+
+Możesz w dowolnym momencie zażądać pełnego eksportu danych swojej firmy.
+
+<Steps>
+  <Step title="Przejdź do Ustawienia — Dane i prywatność">
+    Dostęp do tej sekcji mają tylko role Admin i Administrator firmy.
+  </Step>
+  <Step title="Kliknij Żądaj eksportu">
+    Kliknij przycisk **Żądaj eksportu**. Druma przygotuje archiwum ZIP ze wszystkimi danymi Twojej firmy w formacie czytelnym maszynowo (JSON i CSV).
+  </Step>
+  <Step title="Odbierz eksport">
+    Otrzymasz e-mail z linkiem do pobierania w ciągu **24 godzin**. Link wygasa po 7 dniach.
+  </Step>
+</Steps>
+
+Eksport zawiera: zlecenia, klientów, kierowców, pojazdy, faktury, listę użytkowników i dzienniki audytu. Nie zawiera certyfikowanych PDF eCMR — te można pobrać indywidualnie z karty eCMR każdego zlecenia.
+
+---
+
+## Usuwanie konta
+
+<Warning>
+Usunięcie konta jest trwałe i nieodwracalne po 90-dniowym okresie przechowywania. Pobierz wszystkie potrzebne dane przed złożeniem wniosku o usunięcie.
+</Warning>
+
+<Steps>
+  <Step title="Przejdź do Ustawienia — Dane i prywatność">
+    Przewiń do sekcji **Usuń konto**.
+  </Step>
+  <Step title="Kliknij Usuń konto">
+    Zostaniesz poproszony o wpisanie nazwy firmy, aby potwierdzić zrozumienie działania.
+  </Step>
+  <Step title="Rozpoczyna się 90-dniowy okres przechowywania">
+    Twoje konto jest natychmiast dezaktywowane — nikt nie może się zalogować. Druma przechowuje dane przez 90 dni na wypadek potrzeby regulacyjnej lub prawnej.
+  </Step>
+  <Step title="Trwałe usunięcie">
+    Po 90 dniach wszystkie dane operacyjne są trwale usuwane ze wszystkich systemów i kopii zapasowych. Dokumenty eCMR są przechowywane przez pełny 10-letni okres prawny nawet po usunięciu konta, zgodnie z wymogami prawnymi.
+  </Step>
+</Steps>
+
+---
+
+## Podmioty przetwarzające
+
+Druma udostępnia dane następującym zewnętrznym podmiotom przetwarzającym w celu świadczenia usługi:
+
+| Podmiot przetwarzający | Cel |
+|---|---|
+| Supabase | Hosting bazy danych i uwierzytelnianie |
+| Resend | Dostarczanie e-maili transakcyjnych |
+| HERE Technologies | Geokodowanie adresów i obliczanie tras |
+| TransFollow | Wydawanie, podpisywanie i archiwizowanie eCMR |
+| Stripe | Przetwarzanie płatności i zarządzanie subskrypcją |
+| Anthropic | Funkcje wspomagane przez AI (np. przetwarzanie dokumentów) |
+| Mailgun | Masowe powiadomienia e-mail |
+| Cloudflare | CDN, ochrona DDoS i DNS |
+| Sentry | Monitorowanie błędów i raportowanie awarii |
+| Tawk.to | Czat na żywo i wsparcie w aplikacji |
+
+Wszystkie podmioty przetwarzające są zobowiązane umownie do przetwarzania danych wyłącznie zgodnie z instrukcjami i zgodnie z RODO.
+
+---
+
+## Twoje prawa wynikające z RODO
+
+Jako podmiot danych lub jako administrator w imieniu swoich pracowników masz następujące prawa:
+
+- **Prawo dostępu** — żądanie kopii danych osobowych, które są o Tobie przechowywane
+- **Prawo do sprostowania** — poprawianie nieprawidłowych danych osobowych
+- **Prawo do usunięcia** — żądanie usunięcia (z zastrzeżeniem obowiązków przechowywania wynikających z prawa)
+- **Prawo do przenoszenia danych** — otrzymanie danych w ustrukturyzowanym, czytelnym maszynowo formacie (użyj funkcji Eksport danych)
+- **Prawo do ograniczenia** — prośba o ograniczenie przetwarzania w określonych okolicznościach
+- **Prawo do sprzeciwu** — sprzeciw wobec przetwarzania opartego na uzasadnionych interesach
+
+Aby skorzystać z któregokolwiek z tych praw, wyślij e-mail na adres **privacy@druma.io** z nazwą firmy, CIF i opisem wniosku. Druma odpowie w ciągu 30 dni.
+
+---
+
+## Dalsze informacje
+
+<Card title="Polityka prywatności" icon="shield" href="/en/legal/privacy-policy">
+  Pełna polityka prywatności, w tym podstawy prawne przetwarzania.
+</Card>
+
+<Card title="Szczegóły okresu przechowywania danych RODO" icon="database" href="/en/legal/gdpr-data-retention">
+  Szczegółowy podział okresów przechowywania i procedur usuwania.
+</Card>

@@ -1,6 +1,192 @@
 ---
-title: "Integration Setup"
-description: "Translation coming soon"
+title: "Nastavení integrace"
+description: "Připojte Druma k TransFollow, HERE Maps, poskytovatelům palivových karet, účetnímu softwaru a SmartBill ze stránky Nastavení → Integrace."
+icon: "plug"
+---
+
+Všechny integrace, které vaše společnost používá, jsou konfigurovány na jednom místě: **Nastavení → Integrace**. Není potřeba vývojář — všechna nastavení jsou formulářová a trvají méně než pět minut každé.
+
+![Přehled stránky Integrace](/images/placeholder.png)
+
+---
+
+## 1. TransFollow (eCMR)
+
+TransFollow je certifikovaný poskytovatel eCMR, který Druma používá pro vydávání, podepisování a archivaci elektronických nákladních listů. Bez této integrace není eCMR k dispozici — objednávky lze stále odesílat, ale budete potřebovat papírové dokumenty CMR.
+
+**Co potřebujete:** Aktivní účet TransFollow. Zaregistrujte se na [transfollow.org](https://transfollow.org), pokud jej ještě nemáte.
+
+<Steps>
+  <Step title="Otevřete kartu TransFollow">
+    Přejděte do **Nastavení → Integrace** a klikněte na kartu TransFollow.
+  </Step>
+  <Step title="Vložte svůj API klíč">
+    Zkopírujte API klíč z přehledové plochy vašeho účtu TransFollow a vložte ho do pole **API klíč**.
+  </Step>
+  <Step title="Povolte zkušební režim (volitelné)">
+    Zapněte **Zkušební režim**, pokud chcete testovat workflow eCMR bez vydávání skutečných, právně registrovaných dokumentů. Používejte to při školení nebo onboardingu řidičů. Před ostrým provozem vypněte.
+  </Step>
+  <Step title="Otestujte připojení">
+    Klikněte na **Otestovat připojení**. Druma zavolá API TransFollow a potvrdí platnost klíče. Zobrazí se zelený banner úspěchu nebo konkrétní chybová zpráva, pokud je něco špatně.
+  </Step>
+  <Step title="Uložit">
+    Klikněte na **Uložit**. Vytváření eCMR je nyní aktivní pro přeshraniční objednávky.
+  </Step>
+</Steps>
+
+<Warning>
+Dokumenty eCMR ve zkušebním režimu **nejsou právně platné**. Před odesíláním skutečných zásilek zkontrolujte, že je zkušební režim vypnutý.
+</Warning>
+
+---
+
+## 2. HERE Maps
+
+HERE Maps poskytuje dvě funkce v Druma: automatické doplňování adres při vytváření objednávek a výpočet tras optimalizovaných pro kamiony (vzdálenost, odhadovaná doba jízdy a údaje CO2).
+
+**Není potřeba žádné nastavení.** API klíč HERE Maps je spravován na úrovni platformy Druma. Není co konfigurovat a nebudete fakturováni samostatně za využití HERE — je zahrnuto v předplatném.
+
+<Note>
+Pokud automatické doplňování adres přestane fungovat, jde o problém na úrovni platformy. Kontaktujte podporu Druma, místo abyste se pokoušeli HERE sami překonfigurovat.
+</Note>
+
+---
+
+## 3. Import palivových karet
+
+Druma se přímo nepřipojuje k API poskytovatelů palivových karet. Místo toho stáhnete CSV export z webového portálu poskytovatele a nahrajete ho do Druma. Tím se náklady na palivo automaticky propojí s vozidly a objednávkami.
+
+**Podporovaní poskytovatelé:** DKV, UTA, AS24, Shell Card, SmartDiesel.
+
+<Steps>
+  <Step title="Export z portálu poskytovatele">
+    Přihlaste se do webového portálu DKV, UTA, AS24, Shell nebo SmartDiesel a exportujte transakce jako CSV. Většina portálů to nabízí pod **Reporty → Export transakcí**.
+  </Step>
+  <Step title="Otevřete kartu Import palivových karet">
+    V **Nastavení → Integrace** klikněte na kartu Import palivových karet.
+  </Step>
+  <Step title="Vyberte poskytovatele">
+    Vyberte svého poskytovatele z rozbalovací nabídky, aby Druma věděla, jaký formát sloupců CSV očekávat.
+  </Step>
+  <Step title="Nahrajte CSV">
+    Klikněte na **Nahrát CSV**, vyberte soubor a klikněte na **Importovat**. Druma spáruje transakce s vozidly podle registrační značky.
+  </Step>
+</Steps>
+
+<Note>
+Pokud registrační značka transakce neodpovídá žádnému vozidlu ve vašem parku, Druma ji uvede jako **nespárovanou**. Můžete ji ručně přiřadit nebo nechat být. Pravidelně kontrolujte seznam nespárovaných — často odhalí podvody s palivovými kartami nebo nesprávné zadání registrační značky.
+</Note>
+
+---
+
+## 4. Účetnictví SAGA / WinMENTOR
+
+Druma exportuje data faktur a objednávek ve formátech kompatibilních se SAGA a WinMENTOR, dvěma nejrozšířenějšími rumunsko-orientovanými účetními programy.
+
+### SAGA Classic a WinMENTOR Classic
+
+Není potřeba API klíč. Druma generuje strukturovaný exportní soubor (XML nebo CSV podle programu), který přímo importujete do účetního softwaru.
+
+Přejděte do **Reporty → Export účetnictví**, vyberte rozsah dat a formát účetnictví a stáhněte soubor. Importujte ho do SAGA nebo WinMENTOR pomocí standardního průvodce importem tohoto softwaru.
+
+### WinMENTOR Enterprise (REST API)
+
+WinMENTOR Enterprise podporuje přímou integraci API.
+
+<Steps>
+  <Step title="Otevřete kartu WinMENTOR Enterprise">
+    V **Nastavení → Integrace** klikněte na **WinMENTOR Enterprise**.
+  </Step>
+  <Step title="Zadejte REST endpoint">
+    Zadejte URL REST API endpointu poskytnutou správcem WinMENTOR Enterprise. Obvykle vypadá jako `https://vasespolecnost.winmentor.ro/api/`.
+  </Step>
+  <Step title="Zadejte přihlašovací údaje">
+    Zadejte API uživatelské jméno a heslo nakonfigurované ve WinMENTOR Enterprise.
+  </Step>
+  <Step title="Otestujte a uložte">
+    Klikněte na **Otestovat připojení**, poté na **Uložit**.
+  </Step>
+</Steps>
+
+---
+
+## 5. SmartBill
+
+SmartBill je rumunská cloudová fakturační platforma. S aktivní integrací Druma automaticky odesílá potvrzené faktury do SmartBill — bez ručního zadávání.
+
+<Steps>
+  <Step title="Získejte svůj API klíč SmartBill">
+    Ve svém účtu SmartBill přejděte do **Účet → API** a zkopírujte API klíč.
+  </Step>
+  <Step title="Otevřete kartu SmartBill v Druma">
+    Přejděte do **Nastavení → Integrace → SmartBill**.
+  </Step>
+  <Step title="Zadejte API klíč a CIF">
+    Vložte API klíč a zadejte CIF vaší společnosti (daňové identifikační číslo). SmartBill používá CIF k směrování faktur na správný firemní účet.
+  </Step>
+  <Step title="Otestujte připojení">
+    Klikněte na **Otestovat připojení**. Druma se pokusí navázat spojení se SmartBill a potvrdí platnost přihlašovacích údajů.
+  </Step>
+  <Step title="Uložit">
+    Klikněte na **Uložit**. Od tohoto okamžiku bude každá faktura, kterou označíte jako potvrzenou v Druma, automaticky odeslána do SmartBill.
+  </Step>
+</Steps>
+
+<Warning>
+Pokud vyprší vaše předplatné SmartBill nebo dojde k regeneraci API klíče, integrace tiše přestane fungovat. Pravidelně kontrolujte **Nastavení → Integrace** a ověřte, že stav SmartBill je zelený.
+</Warning>
+
+---
+
+## 6. Peppol e-fakturace (Belgie)
+
+Peppol je celoevropská síť pro elektronické faktury. Belgické společnosti (registrované v KBO) jsou povinny odesílat faktury ostatním belgickým firmám přes Peppol — toto je povinné od ledna 2026.
+
+**Vyžadováno pro:** Belgické společnosti odesílající B2B faktury jiným belgickým firmám.
+
+<Steps>
+  <Step title="Najděte kartu Peppol e-fakturace">
+    Přejděte do **Nastavení → Integrace** a klikněte na kartu **Peppol e-fakturace**.
+  </Step>
+  <Step title="Zadejte registrační údaje">
+    Zadejte své **číslo KBO** (belgické číslo obchodní registrace) a **DIČ**.
+  </Step>
+  <Step title="Registrace do sítě Peppol">
+    Klikněte na **Registrovat do sítě Peppol**. Druma odešle vaši registraci přístupovému bodu e-invoice.be. Obvykle se dokončí během několika minut.
+  </Step>
+  <Step title="Potvrďte aktivaci">
+    Po aktivaci karta zobrazí zelený stav **Aktivní**. Směrování Peppol je nyní automatické pro způsobilé belgické klienty.
+  </Step>
+</Steps>
+
+---
+
+## 7. E-mailová schránka pro faktury dodavatelů
+
+To vaší společnosti poskytne vyhrazenou e-mailovou adresu pro přijímání faktur od dodavatelů — od poskytovatelů palivových karet, autoservisů, operátorů mýtného nebo jakéhokoli jiného dodavatele. Přijaté faktury jsou AI klasifikovány a směrovány do fronty pro kontrolu.
+
+<Steps>
+  <Step title="Přejděte do Nastavení společnosti">
+    Přejděte do **Nastavení → Společnost** a sjeďte dolů do sekce **E-mail pro faktury dodavatelů**.
+  </Step>
+  <Step title="Povolte schránku">
+    Zapněte **Povolit schránku pro faktury dodavatelů**. Druma vygeneruje vyhrazenou příchozí e-mailovou adresu pro vaši společnost.
+  </Step>
+  <Step title="Přidejte e-mailové adresy odesílatelů na bílou listinu">
+    Do pole **Bílá listina odesílatelů** přidejte e-mailové adresy nebo domény, od kterých očekáváte faktury. E-maily od odesílatelů, kteří nejsou na bílé listině, jsou odmítnuty.
+  </Step>
+  <Step title="Sdílejte adresu s dodavateli">
+    Zkopírujte vygenerovanou e-mailovou adresu a dejte ji každému dodavateli jako adresu pro odesílání faktur.
+  </Step>
+</Steps>
+
+<Card title="TransFollow a eCMR" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+  Pochopte, jak eCMR funguje, kdo podepisuje a kdy se používá.
+</Card>
+
+<Card title="Import palivových karet" icon="gas-pump" href="/en/fleet-compliance/fleet-documents">
+  Jak se náklady na palivo propojují s vozidly a objednávkami.
+</Card>
 ---
 
 This page is being translated. In the meantime, please refer to the [English version](/en/admin/integration-setup).

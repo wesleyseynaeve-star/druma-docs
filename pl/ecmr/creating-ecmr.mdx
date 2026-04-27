@@ -1,6 +1,85 @@
 ---
-title: "Creating an eCMR"
-description: "Translation coming soon"
+title: "Tworzenie eCMR"
+description: "Jak Druma generuje dokumenty eCMR automatycznie dla zleceń transgranicznych i jak tworzyć je ręcznie w razie potrzeby."
+icon: "file-plus"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/ecmr/creating-ecmr).
+Druma tworzy dokumenty eCMR przez TransFollow. Proces jest w dużej mierze automatyczny dla kwalifikujących się zleceń, ale możesz również ręcznie wyzwolić tworzenie ze strony szczegółów zlecenia.
+
+---
+
+## Kiedy Druma tworzy eCMR automatycznie
+
+Druma tworzy eCMR automatycznie gdy spełnione są **obie** następujące warunki:
+
+1. **Integracja TransFollow jest aktywna** — Twój klucz API jest zapisany i połączenie jest prawidłowe w Ustawienia — Integracje.
+2. **Zlecenie jest transgraniczne** — kraj odbioru i kraj dostawy są różne.
+
+Gdy potwierdzone zlecenie spełnia oba warunki, Druma rejestruje eCMR w TransFollow natychmiast po potwierdzeniu zlecenia.
+
+<Note>
+Zlecenia krajowe (ten sam kraj odbioru i dostawy) nie uruchamiają automatycznego tworzenia eCMR, ponieważ Konwencja CMR dotyczy transportu międzynarodowego. Możesz nadal tworzyć eCMR ręcznie dla zlecenia krajowego, jeśli Twój klient lub trasa tego wymaga.
+</Note>
+
+---
+
+## Ręczne tworzenie eCMR
+
+<Steps>
+  <Step title="Otwórz zlecenie">
+    Przejdź do **Zlecenia**, znajdź zlecenie i kliknij, aby otworzyć stronę szczegółów.
+  </Step>
+  <Step title="Otwórz kartę eCMR">
+    Kliknij kartę **eCMR** w pobliżu górnej części strony szczegółów zlecenia.
+  </Step>
+  <Step title="Kliknij Utwórz eCMR">
+    Kliknij przycisk **Utwórz eCMR**. Druma pokaże Ci podgląd danych, które zostaną przesłane do TransFollow.
+  </Step>
+  <Step title="Przejrzyj wszystkie pola">
+    Sprawdź dokładnie każde pole przed potwierdzeniem. Po rejestracji w TransFollow numer dokumentu eCMR nie może być usunięty ani zmieniony.
+  </Step>
+  <Step title="Potwierdź tworzenie">
+    Kliknij **Potwierdź i utwórz**. Druma rejestruje dokument w TransFollow a status eCMR zmienia się na "Oczekuje na podpis nadawcy."
+  </Step>
+</Steps>
+
+---
+
+## Dane wstępnie wypełnione ze zlecenia
+
+| Pole eCMR | Źródło w Druma |
+|---|---|
+| Nazwa i adres nadawcy | Dane Twojej firmy z Ustawienia — Firma |
+| Nazwa i adres odbiorcy | Rekord klienta w zleceniu |
+| Adres odbioru | Lokalizacja odbioru zlecenia |
+| Adres dostawy | Lokalizacja dostawy zlecenia |
+| Opis towarów | Pole opisu ładunku w zleceniu |
+| Numer rejestracyjny ciężarówki | Pojazd przypisany do zlecenia |
+| Imię i nazwisko kierowcy | Kierowca przypisany do zlecenia |
+
+---
+
+## Czego nie można zmienić po potwierdzeniu
+
+<Warning>
+Po kliknięciu **Potwierdź i utwórz** numer dokumentu eCMR jest rejestrowany w TransFollow. Nie możesz:
+- Usunąć eCMR
+- Zmienić numeru dokumentu
+- Zmodyfikować nadawcy, odbiorcy ani opisu towarów po rejestracji
+
+Jeśli potrzebujesz poprawić zarejestrowany eCMR, musisz go anulować (poprzez proces Papierowego CMR jako alternatywy) i ewentualnie stworzyć nowy.
+</Warning>
+
+---
+
+## Tryb testowy
+
+Jeśli TransFollow jest ustawiony na **tryb testowy** w Ustawienia — Integracje, dokumenty eCMR będą wyglądać na prawidłowo tworzone, ale dokument **nie jest rejestrowany w TransFollow** i nie ma mocy prawnej.
+
+Tryb testowy jest przeznaczony dla szkoleń kierowców, testowania przepływu podpisywania i demonstrowania funkcji klientom.
+
+---
+
+<Card title="Przepływ podpisywania" icon="pen-to-square" href="/en/ecmr/signing-flow">
+  Jak kierowca zbiera wszystkie trzy podpisy na telefonie.
+</Card>

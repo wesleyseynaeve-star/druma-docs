@@ -1,6 +1,99 @@
 ---
-title: "User roles and permissions"
-description: "Translation coming soon"
+title: "Felhasználói szerepkörök és jogosultságok"
+description: "A Druma mind a nyolc felhasználói szerepkörének teljes leírása, elérési jogosultságaik, és hogyan rendeld hozzá azokat."
+icon: "shield-halved"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/user-roles).
+## A nyolc szerepkör
+
+A Druma nyolc különálló szerepkörrel rendelkezik. Minden szerepkör pontosan azokhoz a funkciókhoz biztosít hozzáférést, amelyekre az adott szerepkörnek szüksége van — nincs több, nincs kevesebb.
+
+### Admin
+
+A szervezet legmagasabb szintű hozzáférése. Az Adminok hozzáférnek mindenhez, beleértve a számlázást, az előfizetés-kezelést, az ÁFA-számok módosítását, a naplót és az összes többi funkciót.
+
+**Kinek add:** Az üzlettulajdonosnak vagy a számvitelért felelős személynek.
+
+### Vállalati admin
+
+Megegyezik az Admin hozzáférésével, kivéve a számlázást. A Vállalati adminok módosíthatják a vállalati beállításokat, meghívhatják a felhasználókat, konfigurálhatják az integrációkat, és teljes körűen kezelhetik a műveleteket.
+
+**Kinek adja:** Az operatív vezetőknek vagy a megbízható senior munkatársaknak.
+
+### Tervező
+
+Rendelések létrehozása és kezelése, tervezőtáblán való munkavégzés, számlák generálása, jelentések lekérése. Csak olvasható flottahozzáféréssel rendelkezik.
+
+**Kinek adja:** A diszpécsereknek és a napi műveletek koordinálóinak.
+
+### Diszpécser
+
+Csak megfigyelési jogosultság. Látja az irányítópultot, az élő térképet, a sofőrórákat és a flottát — de nem szerkeszthet semmit és nem hozhat létre rendeléseket.
+
+**Kinek adja:** Az éjszakai műszak operátoroknak vagy a nem szerkesztési jogú felügyelőknek.
+
+### Flottakezelő
+
+Teljes flottakezelés: járművek, pótkocsik, sofőrök, dokumentumok, üzemanyag, kabotázs és díjszabási sablonok. Nem fér hozzá a rendelésekhez, számlázáshoz vagy az ügyfélpanelekhez.
+
+**Kinek adja:** A járműfelelős vagy flottakoordinátori pozícióban lévő személyeknek.
+
+### Ügyfélszolgálat
+
+Rendelések, számlázás és ügyfelek kezelése, jelentések megtekintése. Meghívhat új felhasználókat, de nem rendelhet hozzá járműveket a tervezőtáblán.
+
+**Kinek adja:** A belső ügyfélszolgálatos munkatársaknak vagy az értékesítési csapatnak.
+
+### Sofőr
+
+Kizárólag a mobilalkalmazáshoz fér hozzá. Nem jelentkezik be a webalkalmazásba. A sofőrök rendelnek állapotot frissítenek, eCMR-t írnak alá, és fotókat töltenek fel.
+
+**Hogyan adjuk hozzá:** Nem meghívón keresztül. Lépj a Flotta → Sofőrök menüpontra, és másold ki a személyes PWA-linket.
+
+### Ügyfél
+
+Kizárólag az ügyfélportálhoz fér hozzá. Megtekintheti a szállítmányokat, nyomon követheti a szállításokat, és letöltheti a dokumentumokat.
+
+**Hogyan adjuk hozzá:** Nem meghívón keresztül. Az Ügyfelek oldalon másold ki az ügyfél portál-linkjét.
+
+---
+
+## Jogosultsági mátrix
+
+| Funkció | Admin | Váll. admin | Tervező | Diszpécser | Flottakez. | Ügyfélszolg. | Sofőr | Ügyfél |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Számlázás | Igen | - | - | - | - | - | - | - |
+| Vállalati beállítások | Igen | Igen | - | - | - | - | - | - |
+| Felhasználók kezelése | Igen | Igen | - | - | - | Meghív | - | - |
+| Integrációk | Igen | Igen | - | - | - | - | - | - |
+| Díjszabási sablonok | Igen | Igen | - | - | Igen | - | - | - |
+| Rendelések létrehozása | Igen | Igen | Igen | - | - | Igen | - | - |
+| Rendelések megtekintése | Igen | Igen | Igen | - | - | Igen | - | - |
+| Jármű/sofőr hozzárendelése | Igen | Igen | Igen | - | - | - | - | - |
+| Irányítópult / Ma | Igen | Igen | Igen | Igen | - | - | - | - |
+| Élő térkép | Igen | Igen | Igen | Igen | - | - | - | - |
+| Flotta (járművek) | Igen | Igen | Olvasás | Olvasás | Teljes | - | - | - |
+| Flotta (sofőrök) | Igen | Igen | Olvasás | Olvasás | Teljes | - | - | - |
+| Sofőrórák | Igen | Igen | Igen | Igen | Igen | - | - | - |
+| Számlák generálása/küldése | Igen | Igen | Igen | - | - | Igen | - | - |
+| Jelentések | Igen | Igen | Igen | - | - | Igen | - | - |
+| Sofőr alkalmazás | - | - | - | - | - | - | Igen | - |
+| Ügyfélportál | - | - | - | - | - | - | - | Igen |
+
+---
+
+## Több szerepkör hozzárendelése
+
+Egy személy több szerepkört is kaphat. Ez kisebb cégekben hasznos, ahol egy személy több feladatot lát el.
+
+**Példa:** A diszpécseri és tervezői feladatokat ellátó személy kaphat egyszerre Tervező és Diszpécser szerepkört.
+
+A több szerepkör a meghíváskor, vagy a **Beállítások → Felhasználók** oldalon egy meglévő felhasználó profiljának szerkesztésekor rendelhető hozzá.
+
+<Note>
+A több szerepkör körültekintő használata javasolt. A minimálisan szükséges hozzáférési szinttel kezdj — a szükség esetén bővíteni könnyebb, mint a már kiosztott jogosultságokat visszavonni.
+</Note>
+
+<Card title="Csapat meghívása" icon="users" href="/en/getting-started/invite-your-team">
+  Lépésről lépésre útmutató a csapattagok meghívásához és a megfelelő szerepkör kiválasztásához.
+</Card>

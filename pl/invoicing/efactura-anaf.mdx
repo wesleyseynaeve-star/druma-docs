@@ -1,6 +1,62 @@
 ---
-title: "e-Factura / ANAF Submission"
-description: "Translation coming soon"
+title: "e-Factura / Składanie do ANAF"
+description: "Jak Druma automatycznie składa faktury do rumuńskiego obowiązkowego systemu e-Factura przez API SPV ANAF, ze śledzeniem statusu i obsługą ponowień."
+icon: "landmark"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/efactura-anaf).
+## Czym jest e-Factura
+
+e-Factura to rumuński obowiązkowy system fakturowania elektronicznego, obsługiwany przez ANAF (Rumuński Krajowy Urząd Podatkowy). Od 2024 roku wszystkie transakcje B2B między rumuńskimi firmami zarejestrowanymi do VAT muszą być raportowane do ANAF w formacie UBL XML.
+
+Każda faktura wystawiona dla rumuńskiej firmy z CIF musi być wysłana do ANAF elektronicznie, nie tylko do klienta. Druma obsługuje to automatycznie po wygenerowaniu faktury.
+
+## Jak Druma obsługuje e-Factura
+
+Nie musisz logować się do portalu ANAF, generować plików XML ani nic robić ręcznie. Oto co dzieje się automatycznie:
+
+1. Generujesz fakturę dla rumuńskiego klienta posiadającego CIF na rekordzie klienta
+2. Druma tworzy plik UBL XML w prawidłowym formacie ANAF
+3. Druma składa XML do ANAF przez API SPV
+4. ANAF zwraca identyfikator składania i status akceptacji lub odrzucenia
+5. Rekord faktury w Druma aktualizuje się, pokazując bieżący status e-Factura
+
+## Śledzenie statusu e-Factura
+
+| Status | Co oznacza |
+|---|---|
+| **Oczekujące** | Czeka na złożenie (zwykle składa się w ciągu kilku minut) |
+| **Złożone** | XML wysłany do ANAF — czeka na przetworzenie |
+| **Zaakceptowane** | ANAF zweryfikował i zaakceptował fakturę |
+| **Odrzucone** | ANAF znalazł błąd — sprawdź kod błędu po szczegóły |
+
+## Automatyczna kolejka ponowień
+
+Jeśli składanie się nie powiedzie z powodu niedostępności ANAF, Druma ponawia automatycznie:
+- Pierwsze ponowienie: **1 godzinę** po niepowodzeniu
+- Drugie ponowienie: **4 godziny** po pierwszym ponowieniu
+- Trzecie ponowienie: **24 godziny** po drugim ponowieniu
+
+## Typowe błędy odrzucenia
+
+| Błąd | Prawdopodobna przyczyna | Jak naprawić |
+|---|---|---|
+| **Nieprawidłowy CIF** | Numer VAT klienta jest błędny | Przejdź do **Klienci** — edytuj klienta — popraw pole CIF |
+| **Nieprawidłowy format adresu** | Pole ulicy, miasta lub województwa nie pasuje do oczekiwanego formatu ANAF | Edytuj adres klienta |
+| **Brakujące obowiązkowe pole** | Wymagane pole XML jest puste | Sprawdź fakturę pod kątem brakujących danych klienta |
+
+## Kiedy e-Factura NIE MA zastosowania
+
+Składanie e-Factura jest wymagane tylko dla rumuńskich klientów zarejestrowanych do VAT. Nie dotyczy:
+- Faktur transgranicznych w UE (klienci spoza Rumunii)
+- Klientów bez rumuńskiego CIF
+- Faktur dla osób prywatnych (niekomercyjnych)
+
+<Warning>
+Upewnij się, że każdy rumuński klient B2B w Druma ma wpisany prawidłowy CIF na rekordzie klienta. Bez CIF Druma nie może składać do e-Factura i możesz być niezgodny z przepisami.
+</Warning>
+
+---
+
+<Card title="Generowanie faktur" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
+Jak tworzyć faktury w Druma, w tym wielowalutowe i zbiorcze.
+</Card>

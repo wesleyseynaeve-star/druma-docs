@@ -1,6 +1,90 @@
 ---
-title: "TransFollow eCMR Integration"
-description: "Translation coming soon"
+title: "Integracja TransFollow eCMR"
+description: "TransFollow to dostawca eCMR, którego Druma używa do wystawiania, certyfikowania i archiwizowania elektronicznych listów przewozowych CMR z pełną ważnością prawną."
+icon: "file-signature"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/transfollow-ecmr).
+Druma używa TransFollow jako dostawcy usług eCMR (elektroniczny CMR). TransFollow obsługuje prawną certyfikację, przepływ podpisywania i długoterminowe archiwizowanie elektronicznych listów CMR. Ta strona wyjaśnia, jak połączyć konto TransFollow z Druma i co obejmuje integracja.
+
+## Co robi TransFollow
+
+List przewozowy CMR to prawny dokument transportowy wymagany dla międzynarodowego transportu drogowego. TransFollow zapewnia platformę, która sprawia, że listy CMR są w pełni elektroniczne — prawnie równoważne papierowym na mocy Protokołu e-CMR do Konwencji CMR (obowiązującego w 30+ krajach europejskich).
+
+Gdy wystawiasz eCMR przez Druma, TransFollow:
+
+- Przypisuje unikalny identyfikator do dokumentu
+- Rejestruje podpisy cyfrowe kierowcy, nadawcy i odbiorcy
+- Oznacza datą i certyfikuje każdy podpis kwalifikowanym znacznikiem czasu
+- Archiwizuje ukończony dokument przez 10 lat zgodnie z wymogami prawa
+- Udostępnia dokument wszystkim stronom (przewoźnik, nadawca, odbiorca)
+
+## Łączenie konta TransFollow
+
+<Steps>
+  <Step title="Pobierz klucz API TransFollow">
+    Zaloguj się na [transfollow.com](https://transfollow.com). Przejdź do ustawień konta i przejdź do **Klucze API**. Wygeneruj nowy klucz API dla Druma. Skopiuj go — zostanie wyświetlony tylko raz.
+  </Step>
+  <Step title="Wprowadź klucz w Druma">
+    W Druma przejdź do **Ustawienia → Integracje → TransFollow**. Wklej swój klucz API w polu i kliknij **Zapisz**.
+  </Step>
+  <Step title="Przetestuj połączenie">
+    Kliknij **Testuj połączenie**. Druma wywołuje API TransFollow w celu weryfikacji, że klucz jest prawidłowy i Twoje konto jest aktywne. Zobaczysz zielone potwierdzenie, jeśli wszystko działa.
+  </Step>
+</Steps>
+
+<Note>
+Twój klucz API jest natychmiast szyfrowany po zapisaniu i nigdy nie jest ponownie wyświetlany w postaci zwykłego tekstu. Jeśli musisz go wymienić (na przykład jeśli klucz jest rotowany), po prostu wklej nowy klucz w istniejące pole.
+</Note>
+
+## Tryb testowy do szkoleń i onboardingu
+
+Podczas pierwszej konfiguracji lub szkolenia nowego personelu możesz włączyć **tryb testowy**.
+
+**Ustawienia → Integracje → TransFollow → Włącz tryb testowy**
+
+W trybie testowym:
+
+- Rekordy eCMR są tworzone normalnie w Druma i przechodzą przez cały przepływ pracy
+- TransFollow otrzymuje żądania, ale oznacza wszystkie dokumenty jako rekordy testowe — nie mają one mocy prawnej
+- Za dokumenty w trybie testowym nie są naliczane opłaty
+- Dokumenty utworzone w trybie testowym są wyraźnie oznaczone jako "TEST" w Druma i nie mogą być przekształcone w dokumenty produkcyjne
+
+Wyłącz tryb testowy przed pierwszą produkcyjną przesyłką.
+
+## Koszty
+
+Użycie eCMR jest rozliczane w wysokości **0,25 EUR za podpisany dokument eCMR**. Jest to koszt TransFollow, przekazywany przez Druma bez marży. Opłata pojawia się na Twoim miesięcznym rachunku Druma jako osobna pozycja pokazująca liczbę eCMR wystawionych w danym okresie.
+
+Nie ma miesięcznej opłaty ani minimalnego wolumenu. Płacisz tylko za to, co używasz.
+
+## Przeglądanie i pobieranie dokumentów eCMR
+
+Wszystkie podpisane dokumenty eCMR są przechowywane na stałe w odpowiednim zleceniu w Druma.
+
+**Strona szczegółów zlecenia → Zakładka Dokumenty → Sekcja eCMR**
+
+Stąd możesz:
+
+- Przeglądać eCMR jako PDF w przeglądarce
+- Pobierać podpisany PDF
+- Widzieć pełny łańcuch podpisów (nadawca podpisał o godzinie X, kierowca o Y, odbiorca o Z)
+- Udostępniać link do dokumentu klientowi (link jest dostępny bez logowania do Druma)
+
+Dokumenty pozostają dostępne bezterminowo — Druma przechowuje je przez 10 lat zgodnie z wymogami prawnymi archiwizacji.
+
+<Warning>
+Jeśli zamkniesz konto TransFollow lub klucz API wygaśnie, Druma nie może wystawiać nowych eCMR do momentu podania prawidłowego klucza. Dokumenty już zarchiwizowane pozostają dostępne. Ustaw przypomnienie o odnowieniu klucza TransFollow przed jego wygaśnięciem.
+</Warning>
+
+## Zasięg geograficzny
+
+eCMR jest prawnie ważny w krajach, które ratyfikowały protokół e-CMR. Na rok 2025 obejmuje to większość państw członkowskich UE oraz Szwajcarię, Białoruś, Gruzję i inne. Sprawdź aktualną listę na [unece.org](https://unece.org). Dla krajów, które nie ratyfikowały protokołu, nadal wymagany jest papierowy CMR — Druma może wydrukować sformatowany list CMR dla takich przesyłek.
+
+<CardGroup cols={2}>
+  <Card title="Czym jest eCMR?" icon="circle-question" href="/pl/ecmr/what-is-ecmr">
+    Wprowadzenie do elektronicznych listów CMR i kiedy ich potrzebujesz.
+  </Card>
+  <Card title="Tworzenie eCMR" icon="pen-to-square" href="/pl/ecmr/creating-ecmr">
+    Przewodnik krok po kroku do wystawiania eCMR w zleceniu Druma.
+  </Card>
+</CardGroup>

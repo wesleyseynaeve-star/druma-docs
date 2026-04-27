@@ -1,0 +1,44 @@
+---
+title: "Ügyfél API"
+description: "A Druma Ügyfél API-ja, amely lehetővé teszi az ügyfelek számára a szállítmány-adatok lekérdezését saját rendszereikbe való integráláshoz."
+icon: "link"
+---
+
+## Az ügyfél API-ról
+
+Az Ügyfél API lehetővé teszi az ügyfeleidnek, hogy a Druma szállítmány-adatait programozottan lekérdezzék, és integrálják saját belső rendszereikbe (ERP, WMS, ügyfél-portál).
+
+Ez különösen hasznos nagyobb ügyfelek számára, akik automatizálni szeretnék a rendelés-követést és a dokumentum-letöltést anélkül, hogy az ügyfélportálra kellene bejelentkezniük.
+
+## Hitelesítés
+
+Az ügyfél API az ügyfél portál-tokenét használja hitelesítéshez. Minden portál-token egyben API tokenként is funkcionál.
+
+```
+Authorization: Bearer <portál_token>
+```
+
+## Elérhető végpontok
+
+### Szállítmányok
+- `GET /client-api/shipments` — az összes szállítmány listája szűrőkkel
+- `GET /client-api/shipments/{id}` — egy szállítmány adatai az élő pozícióval és ETA-val
+
+### Dokumentumok
+- `GET /client-api/shipments/{id}/documents` — egy szállítmány dokumentumainak listája
+- `GET /client-api/documents/{id}/download` — dokumentum letöltési link generálása
+
+### Nyomkövetés
+- `GET /client-api/shipments/{id}/tracking` — valós idejű GPS-pozíció és ETA
+
+## Token igénylés
+
+Az ügyfél API token azonos a portál-tokennel. Lépj az **Ügyfelek** oldalra, nyisd meg az ügyfél profilját, és másold ki a portál-linket — a linkben lévő token az API tokenként is használható.
+
+<Note>
+Az ügyfél API hozzáférés csak a saját szállítmányaik adataira korlátozódik — az ügyfél nem láthatja más ügyfelek adatait.
+</Note>
+
+<Card title="Nyilvános API és webhookok" icon="code" href="/en/integrations/public-api">
+  Belső rendszer-integráció a Druma REST API-jával.
+</Card>

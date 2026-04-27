@@ -1,6 +1,143 @@
 ---
-title: "Integration Setup"
-description: "Translation coming soon"
+title: "Configuration des intégrations"
+description: "Connectez Druma à TransFollow, HERE Maps, les fournisseurs de cartes carburant, les logiciels de comptabilité et SmartBill depuis Paramètres → Intégrations."
+icon: "plug"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/integration-setup).
+Chaque intégration est configurée en un seul endroit : **Paramètres → Intégrations**.
+
+---
+
+## 1. TransFollow (eCMR)
+
+TransFollow est le fournisseur d'eCMR certifié que Druma utilise pour émettre, signer et archiver les lettres de voiture électroniques.
+
+**Ce dont vous avez besoin :** Un compte TransFollow actif. Inscrivez-vous sur [transfollow.org](https://transfollow.org).
+
+<Steps>
+  <Step title="Ouvrez la carte TransFollow">
+    Accédez à **Paramètres → Intégrations** et cliquez sur la carte TransFollow.
+  </Step>
+  <Step title="Collez votre clé API">
+    Copiez la clé API de votre tableau de bord TransFollow et collez-la dans le champ **Clé API**.
+  </Step>
+  <Step title="Activez le mode simulation (optionnel)">
+    Activez le **Mode simulation** pour tester sans émettre de vrais documents légaux. Désactivez-le avant de passer en production.
+  </Step>
+  <Step title="Testez la connexion">
+    Cliquez sur **Tester la connexion**.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**.
+  </Step>
+</Steps>
+
+<Warning>
+Les documents eCMR en mode simulation **ne sont pas légalement valables**. Assurez-vous que le mode simulation est désactivé avant d'envoyer de vraies expéditions.
+</Warning>
+
+---
+
+## 2. HERE Maps
+
+HERE Maps alimente l'autocomplétion des adresses et le calcul d'itinéraires optimisés pour les camions.
+
+**Aucune configuration requise.** La clé API HERE Maps est gérée au niveau de la plateforme par Druma.
+
+---
+
+## 3. Import de cartes carburant
+
+Druma ne se connecte pas directement aux API des fournisseurs. Vous téléchargez un export CSV depuis votre portail fournisseur et le chargez dans Druma.
+
+**Fournisseurs pris en charge :** DKV, UTA, AS24, Shell Card, SmartDiesel.
+
+<Steps>
+  <Step title="Exportez depuis votre portail fournisseur">
+    Exportez les transactions en CSV depuis votre portail DKV, UTA, AS24, Shell ou SmartDiesel.
+  </Step>
+  <Step title="Ouvrez la carte Import de cartes carburant">
+    Dans **Paramètres → Intégrations**, cliquez sur la carte Import de cartes carburant.
+  </Step>
+  <Step title="Sélectionnez votre fournisseur">
+    Choisissez votre fournisseur dans la liste déroulante.
+  </Step>
+  <Step title="Téléchargez le CSV">
+    Cliquez sur **Télécharger CSV**, sélectionnez votre fichier et cliquez sur **Importer**.
+  </Step>
+</Steps>
+
+---
+
+## 4. Comptabilité SAGA / WinMENTOR
+
+Druma exporte les données en formats compatibles avec SAGA et WinMENTOR.
+
+Accédez à **Rapports → Export comptable**, sélectionnez la plage de dates et le format, et téléchargez le fichier.
+
+---
+
+## 5. SmartBill
+
+SmartBill est une plateforme de facturation cloud roumaine. Avec cette intégration, Druma pousse les factures confirmées vers SmartBill automatiquement.
+
+<Steps>
+  <Step title="Obtenez votre clé API SmartBill">
+    Dans votre compte SmartBill, accédez à **Compte → API**.
+  </Step>
+  <Step title="Ouvrez la carte SmartBill dans Druma">
+    Accédez à **Paramètres → Intégrations → SmartBill**.
+  </Step>
+  <Step title="Saisissez votre clé API et CIF">
+    Collez la clé API et saisissez le CIF de votre entreprise.
+  </Step>
+  <Step title="Testez la connexion et enregistrez">
+    Cliquez sur **Tester la connexion**, puis **Enregistrer**.
+  </Step>
+</Steps>
+
+---
+
+## 6. Facturation électronique Peppol (Belgique)
+
+Peppol est le réseau de facturation électronique pan-européen. Les entreprises belges (enregistrées au KBO) sont tenues d'envoyer des factures via Peppol depuis janvier 2026.
+
+<Steps>
+  <Step title="Trouvez la carte Peppol">
+    Accédez à **Paramètres → Intégrations → Facturation électronique Peppol**.
+  </Step>
+  <Step title="Saisissez vos coordonnées">
+    Saisissez votre **numéro KBO** et votre **numéro de TVA**.
+  </Step>
+  <Step title="Enregistrez-vous sur le réseau Peppol">
+    Cliquez sur **S'enregistrer sur le réseau Peppol**.
+  </Step>
+  <Step title="Confirmez l'activation">
+    Une fois actif, la carte affiche un statut **Actif** vert.
+  </Step>
+</Steps>
+
+---
+
+## 7. Boîte de réception des factures fournisseurs
+
+Donnez à votre entreprise une adresse email dédiée pour recevoir les factures fournisseurs. Les factures reçues sont classées par IA et acheminées vers une file de révision.
+
+<Steps>
+  <Step title="Accédez aux Paramètres entreprise">
+    Naviguez vers **Paramètres → Entreprise** et faites défiler jusqu'à la section **Email factures fournisseurs**.
+  </Step>
+  <Step title="Activez la boîte de réception">
+    Activez **Activer la boîte de réception des factures fournisseurs**.
+  </Step>
+  <Step title="Ajoutez les expéditeurs à la liste blanche">
+    Ajoutez les adresses email ou domaines dont vous attendez des factures.
+  </Step>
+  <Step title="Partagez l'adresse avec vos fournisseurs">
+    Copiez l'adresse email générée et donnez-la à chaque fournisseur.
+  </Step>
+</Steps>
+
+<Card title="TransFollow et eCMR" icon="file-contract" href="/fr/ecmr/what-is-ecmr">
+  Comprendre comment fonctionne l'eCMR, qui signe et quand il s'applique.
+</Card>

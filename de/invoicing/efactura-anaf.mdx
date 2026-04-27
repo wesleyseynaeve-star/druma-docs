@@ -1,6 +1,62 @@
 ---
-title: "e-Factura / ANAF Submission"
-description: "Translation coming soon"
+title: "e-Factura / ANAF-Einreichung"
+description: "Wie Druma Rechnungen automatisch an Rumäniens obligatorisches e-Factura-System über die ANAF SPV API einreicht, mit Statusverfolgung und Wiederholungsbehandlung."
+icon: "landmark"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/efactura-anaf).
+## Was ist e-Factura?
+
+e-Factura ist Rumäniens obligatorisches elektronisches Rechnungsstellungssystem. Ab 2024 müssen alle B2B-Rechnungen zwischen rumänischen Unternehmen elektronisch über die ANAF SPV-Plattform eingereicht werden.
+
+Druma automatisiert diesen Prozess vollständig — Sie müssen keine manuellen Einreichungen vornehmen.
+
+---
+
+## Wie Druma e-Factura handhabt
+
+1. Wenn Sie eine Rechnung in Druma senden, erkennt das System automatisch, ob der Kunde für e-Factura qualifiziert ist (rumänischer CIF).
+2. Druma sendet die Rechnung im erforderlichen XML-Format an den ANAF SPV.
+3. ANAF verarbeitet die Einreichung und gibt entweder eine Validierungs-ID zurück oder ein Fehlerprotokoll.
+4. Druma zeigt den ANAF-Status direkt in der Rechnung an.
+
+---
+
+## ANAF-Einreichungsstatus
+
+| Status | Bedeutung |
+|---|---|
+| Ausstehend | Noch nicht bei ANAF eingereicht |
+| Eingereicht | An ANAF gesendet, Antwort ausstehend |
+| Bestätigt | Von ANAF validiert |
+| Fehler | ANAF hat die Einreichung abgelehnt |
+| Wiederholung geplant | Automatische Wiederholung nach einem Fehler |
+
+---
+
+## ANAF-Anmeldedaten konfigurieren
+
+<Steps>
+  <Step title="Zu Einstellungen → Integrationen gehen">
+    Öffnen Sie die ANAF e-Factura-Karte.
+  </Step>
+  <Step title="CIF und Zugangsdaten eingeben">
+    Geben Sie Ihren CIF und Ihre ANAF SPV-API-Zugangsdaten ein.
+  </Step>
+  <Step title="Verbindung testen">
+    Klicken Sie auf **Verbindung testen**, um zu bestätigen, dass die Zugangsdaten korrekt sind.
+  </Step>
+</Steps>
+
+---
+
+## Fehlerbehandlung und Wiederholung
+
+Wenn ANAF eine Einreichung ablehnt, zeigt Druma die spezifische Fehlermeldung an. Häufige Fehler:
+
+- **Ungültige CIF des Empfängers** — Überprüfen Sie die USt-IdNr. des Kunden
+- **Fehlende Pflichtfelder** — Überprüfen Sie die Rechnung auf vollständige Details
+- **Technischer Fehler auf ANAF-Seite** — Druma wiederholt automatisch nach 1h, 4h und 24h
+
+<Card title="Rechnungen erstellen" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
+  Erfahren Sie, wie Sie Rechnungen erstellen, die e-Factura-konform sind.
+</Card>

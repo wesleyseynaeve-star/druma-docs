@@ -1,0 +1,128 @@
+---
+title: "Arculat és dokumentumformátumok"
+description: "A céglogó, márkajelzés-színek és a számlák, jóváírások és rendelések sorszámozási formátumának testreszabása az összes Druma-dokumentumban."
+icon: "palette"
+---
+
+Az **Arculat és formátumok** beállítások szabályozzák, hogyan jelenik meg a cége a Druma által generált összes dokumentumon: számla PDF-eken, jóváírási PDF-eken és e-mail fejlécekben. Meghatározza a számlák, jóváírások és rendelési referenciák sorszámozási mintáját is.
+
+Ezek a beállítások vállalat-specifikusak. Ha több céget kezel a Drumában, minden cégnek saját arculata és formátumkonfigurációja van.
+
+**Ki szerkesztheti:** Csak az Admin és Vállalati admin szerepkörök.
+
+![Arculat és formátumok beállítási oldala három lappal](/images/placeholder.png)
+
+---
+
+## A beállítások elérése
+
+Lépj a **Beállítások → Arculat és formátumok** menüpontra. Az oldal három lapból áll: **Arculat**, **Számlaformátum** és **Rendelési formátum**.
+
+---
+
+## Arculat lap
+
+Az Arculat lap a PDF-eken és e-mail-sablonokon megjelenő vizuális elemeket szabályozza.
+
+### Logó
+
+Kattints a **Logó feltöltése** gombra, hogy kiválassz egy képfájlt. A Druma PNG, JPG és SVG formátumokat fogad el. A logó a számla és jóváírási PDF-ek bal felső sarkában, valamint a kimenő számla e-mailek fejlécében jelenik meg.
+
+### Elsődleges szín
+
+Kattints az **Elsődleges szín** hexadecimális kiválasztóra, és add meg vagy válaszd ki a márka elsődleges színét. Ez a szín kerül alkalmazásra a fejlécsávon és a hangsúlyos elemeken a számla PDF-eken és e-mail sablonokon.
+
+### Kiegészítő szín
+
+A **Kiegészítő szín** másodlagos elemeken, például táblázatfejléc sorokon és kiemelési szegélyeken jelenik meg.
+
+### Mentés
+
+Kattints az **Arculat mentése** gombra a változtatások alkalmazásához. Az új arculat azonnal életbe lép az ezen pont után generált összes dokumentumra.
+
+<Note>
+Az arculatváltoztatások csak az **új** dokumentumokra vonatkoznak. A már generált és elküldött számlákat nem frissíti visszamenőleg.
+</Note>
+
+---
+
+## Számlaformátum lap
+
+A Számlaformátum lap szabályozza, hogyan generálja a Druma a számla- és jóváírási hivatkozásszámokat.
+
+### Formátumjelek
+
+A számsablonok rövid sablonsztringekből épülnek fel, amelyek fix szöveget és kapcsos zárójelbe tett dinamikus jeleket kombinálnak.
+
+| Jel | Mit illeszt be |
+|---|---|
+| `{PREFIX}` | Egy általad megadott fix szöveges előtag (pl. `DR`, `SZLA`, a cég rövidítése) |
+| `{YYYY}` | Négy számjegyű év (pl. `2026`) |
+| `{YY}` | Két számjegyű év (pl. `26`) |
+| `{MM}` | Két számjegyű hónap (pl. `04`) |
+| `{NNN}` | Három számjegyű szekvenciális szám, nullával kiegészítve (pl. `007`) |
+| `{NNNN}` | Négy számjegyű szekvenciális szám, nullával kiegészítve (pl. `0007`) |
+
+A szekvenciális számláló (`{NNN}` / `{NNNN}`) minden naptári év elején `001` / `0001`-re nullázódik.
+
+### Számlaszám formátuma
+
+Add meg a kívánt sablont a **Számlaszám formátuma** mezőben. A jobb oldalon egy **élő előnézet** frissül a gépelés közben.
+
+**Alapértelmezett formátum:** `DR-{YYYY}-{NNN}` → `DR-2026-001`, `DR-2026-002`, …
+
+**Példa testreszabásokra:**
+
+| Sablon | Minta kimenet |
+|---|---|
+| `SZLA-{YYYY}-{NNNN}` | `SZLA-2026-0001` |
+| `{PREFIX}/{YY}/{NNN}` | `ABC/26/001` (ahol PREFIX = `ABC`) |
+| `{YYYY}{MM}-{NNN}` | `202604-001` |
+
+### Jóváírási szám formátuma
+
+A jóváírások külön számlálót és külön formátum-sablont használnak. Ugyanazok a jelek állnak rendelkezésre.
+
+**Alapértelmezett formátum:** `JJ-{YYYY}-{NNN}` → `JJ-2026-001`, `JJ-2026-002`, …
+
+### Visszaállítás alapértelmezettekre
+
+Kattints az **Alapértelmezések visszaállítása** gombra a mezők visszaállításához. Ez nem érinti a már kiadott dokumentumokat.
+
+<Warning>
+A számlaszám-formátum év közben történő módosítása nem számozza át a meglévő számlákat. Ha tiszta sorozat-újraindításra van szükség, vedd fel a kapcsolatot a Druma ügyfélszolgálatával.
+</Warning>
+
+---
+
+## Rendelési formátum lap
+
+A Rendelési formátum lap a rendelési referenciaszámok sorszámozási mintáját határozza meg.
+
+**Alapértelmezett formátum:** `DR-{YYYY}-{NNN}` → `DR-2026-001`, `DR-2026-002`, …
+
+**Példa:** Egy belga fuvarozó cég használhatja a `BE-{YYYY}-{NNNN}` sablont a `BE-2026-0042` formátumú hivatkozásokhoz.
+
+---
+
+## Gyakorlati példa: számlaszámozás testreszabása
+
+Tegyük fel, hogy a cége **Acme Fuvar**, és a könyvelője `AF-2026-001`, `AF-2026-002` stb. számozású számlákat szeretne.
+
+<Steps>
+  <Step title="Nyisd meg a Számlaformátum lapot">
+    Lépj a **Beállítások → Arculat és formátumok** menüpontra, és kattints a **Számlaformátum** lapra.
+  </Step>
+  <Step title="Állítsd be a számlaszám formátumát">
+    A **Számlaszám formátuma** mezőbe írd be: `AF-{YYYY}-{NNN}`
+
+    Az előnézet `AF-2026-001`-et fog mutatni.
+  </Step>
+  <Step title="Mentsd el">
+    Kattints a **Számlaformátum mentése** gombra. A következő számlatól kezdve a Druma az új formátumot fogja használni.
+  </Step>
+</Steps>
+
+<Card title="Peppol E-Számlázás (Belgium)" icon="file-check-2" href="/en/integrations/peppol-invoicing">
+  Számlák automatikus továbbítása a belga Peppol-hálózaton keresztül.
+</Card>

@@ -1,6 +1,88 @@
 ---
-title: "Integration Setup"
-description: "Translation coming soon"
+title: "Nastavenie integrácií"
+description: "Ako pripojiť Druma k SmartBill, SAGA, WinMENTOR, TransFollow, ANAF a ďalším externým systémom."
+icon: "plug"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/integration-setup).
+## Prehľad
+
+Druma sa integruje s externými systémami, aby eliminovala duplicitné zadávanie údajov a automatizovala bežné úlohy. Všetky integrácie sa konfigurujú v **Nastavenia → Integrácie**.
+
+Každá integrácia je nezávislá — môžete aktivovať iba tie, ktoré potrebujete.
+
+## Dostupné integrácie
+
+### SmartBill
+
+SmartBill je populárny rumunský fakturačný softvér. Keď je prepojený:
+- Môžete tlačiť faktúry z Druma priamo do SmartBill jedným kliknutím
+- Čísla faktúr sa synchronizujú medzi oboma systémami
+- Faktúry sa objavujú v SmartBill okamžite
+
+**Nastavenie:**
+1. Prejdite na **Nastavenia → Integrácie → SmartBill**
+2. Zadajte vaše API prihlasovacie údaje SmartBill (nájdete ich v nastaveniach SmartBill účtu)
+3. Kliknite na **Test** pre overenie pripojenia
+4. Kliknite na **Uložiť**
+
+### SAGA a WinMENTOR
+
+SAGA a WinMENTOR sú rumunský účtovný softvér. Druma exportuje:
+- Súbor SAGA (Intrari.dbf) pre nákupné faktúry
+- XML platobné súbory kompatibilné s SAGA
+- Exporty kompatibilné s WinMENTOR
+
+Toto sú exporty súborov, nie živé prepojenia — stiahnete súbor z Druma a importujete ho do SAGA/WinMENTOR manuálne alebo automaticky cez automatický export SAGA.
+
+### TransFollow (eCMR)
+
+TransFollow je provider eCMR Druma. Táto integrácia je potrebná pre generovanie a podpisovanie elektronických nákladných listov.
+
+**Nastavenie:**
+1. Prejdite na **Nastavenia → Integrácie → TransFollow**
+2. Zadajte váš TransFollow API kľúč
+3. Vyberte, či chcete používať **produkčný** alebo **testovací** (mock) režim
+4. Kliknite na **Test** a **Uložiť**
+
+<Warning>
+Testovací (mock) režim produkuje eCMR dokumenty, ktoré vyzerajú reálne, ale nie sú zaregistrované v TransFollow a nemajú žiadnu právnu platnosť. Pred odoslaním reálnych zásielok vždy vypnite testovací režim.
+</Warning>
+
+### ANAF e-Factura
+
+ANAF e-Factura je rumunský systém pre povinné elektronické podávanie faktúr B2B. Keď je prepojený, Druma automaticky odosiela faktúry do systému ANAF po ich odoslaní.
+
+**Požiadavky:**
+- Digitálny certifikát vydaný ANAF
+- Certifikát nahratý v Nastavenia → Integrácie → ANAF → Sekcia certifikátu
+
+### Timocom
+
+Timocom je burza nákladov a poskytovateľ informácií o cenách nákladnej dopravy. Keď je prepojený:
+- Druma vyhľadáva záťaže pri doručení na spätné záťaže (automaticky)
+- Cenové indexy Timocom informujú o navrhovaných cenách v ponukách
+
+### HERE Routing
+
+HERE Technologies poskytuje mapovanie a smerovanie v Druma. Toto je nakonfigurované na úrovni platformy — pre štandardné použitie nie je potrebná žiadna akcia.
+
+## Testovanie pripojenia integrácie
+
+Každá integrácia má tlačidlo **Test pripojenia**. Použite ho po uložení nových prihlasovacích údajov na overenie, že Druma sa môže úspešne spojiť so systémom.
+
+Ak test zlyhá:
+1. Overte prihlasovacie údaje (API kľúč, heslo atď.)
+2. Skontrolujte, či externá platforma nemá výpadok
+3. Skontrolujte, či prihlasovacie údaje nie sú expirované (niektoré API kľúče majú životnosť)
+
+## Oprávnenia
+
+Iba **Administrátori** a **Správcovia spoločnosti** môžu konfigurovať integrácie. Plánovači a iné roly videli integrácie ako len na čítanie.
+
+<Card title="SmartBill" icon="receipt" href="/en/integrations/smartbill">
+  Podrobný sprievodca pripojením a používaním integrácie SmartBill.
+</Card>
+
+<Card title="TransFollow eCMR" icon="file-signature" href="/en/integrations/transfollow-ecmr">
+  Ako funguje integrácia TransFollow a ako generovať eCMR dokumenty.
+</Card>

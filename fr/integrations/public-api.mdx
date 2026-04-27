@@ -1,6 +1,58 @@
 ---
-title: "Public API and Webhooks"
-description: "Translation coming soon"
+title: "API publique"
+description: "Comment utiliser l'API REST publique de Druma pour intégrer vos systèmes tiers — authentification, endpoints disponibles et limites de taux."
+icon: "code"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/public-api).
+## Vue d'ensemble
+
+Druma expose une API REST publique qui permet aux développeurs d'intégrer des systèmes tiers — ERP, TMS clients, plateformes de suivi, systèmes de reporting personnalisés.
+
+---
+
+## Authentification
+
+L'API utilise des tokens Bearer JWT. Pour obtenir un token :
+
+<Steps>
+  <Step title="Créez une clé API">
+    Accédez à **Paramètres → Intégrations → API publique** et cliquez sur **Créer une clé API**.
+  </Step>
+  <Step title="Copiez la clé">
+    La clé est affichée une seule fois. Copiez-la et stockez-la de manière sécurisée.
+  </Step>
+  <Step title="Incluez dans les requêtes">
+    Ajoutez l'en-tête `Authorization: Bearer {votre-clé-api}` à chaque requête.
+  </Step>
+</Steps>
+
+---
+
+## Endpoints disponibles
+
+| Endpoint | Description |
+|---|---|
+| `GET /orders` | Lister les commandes avec filtres |
+| `GET /orders/{id}` | Détails d'une commande |
+| `POST /orders` | Créer une nouvelle commande |
+| `PATCH /orders/{id}` | Mettre à jour une commande |
+| `GET /clients` | Lister les clients |
+| `GET /invoices` | Lister les factures |
+| `GET /fleet/vehicles` | Lister les véhicules |
+| `GET /fleet/drivers` | Lister les chauffeurs |
+
+---
+
+## Limites de taux
+
+L'API est limitée à **100 requêtes par minute** par clé API. Les requêtes dépassant cette limite retournent un code HTTP 429.
+
+---
+
+## Documentation complète de l'API
+
+La documentation Swagger interactive est disponible à `/api/docs` sur votre compte Druma.
+
+<Card title="API client" icon="globe" href="/fr/integrations/client-api">
+  API dédiée pour les intégrations client (portail embarqué, tracking).
+</Card>

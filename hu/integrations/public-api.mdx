@@ -1,6 +1,56 @@
 ---
-title: "Public API and Webhooks"
-description: "Translation coming soon"
+title: "Nyilvános API és webhookok"
+description: "A Druma REST API-ja és webhook rendszere külső rendszerek, ERP-k és testreszabott integrációk csatlakoztatásához."
+icon: "code"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/public-api).
+## A Druma API-ról
+
+A Druma REST API-t biztosít, amely lehetővé teszi külső rendszerek — ERP-k, ügyfél-megrendelő rendszerek, telemátika platformok — integrálását. Az API JWT hitelesítést használ.
+
+<Note>
+A nyilvános API jelenleg korlátozott hozzáféréssel érhető el. Az API hozzáférés igényléséhez lépj kapcsolatba a support@druma.io e-mail-címen.
+</Note>
+
+## Hitelesítés
+
+Az API JWT (JSON Web Token) alapú hitelesítést használ. Az API kulcsot a **Beállítások → Integrációk → API** oldalon generálhatod.
+
+Minden kéréshez tartalmazza a következő fejlécet:
+```
+Authorization: Bearer <az_api_kulcsod>
+```
+
+## Elérhető végpontok
+
+### Rendelések
+- `GET /orders` — rendelések listája szűrőkkel
+- `GET /orders/{id}` — egy rendelés adatai
+- `POST /orders` — új rendelés létrehozása
+- `PATCH /orders/{id}` — rendelés frissítése
+
+### Ügyfelek
+- `GET /clients` — ügyfelek listája
+- `GET /clients/{id}` — egy ügyfél adatai
+- `POST /clients` — új ügyfél létrehozása
+
+### Számlák
+- `GET /invoices` — számlák listája
+- `GET /invoices/{id}` — egy számla adatai
+
+## Webhookok
+
+Webhookok segítségével a Druma valós idejű értesítéseket küldhet, amikor esemény történik:
+- `order.status_changed` — rendelési állapot változásakor
+- `invoice.created` — új számla generálásakor
+- `invoice.paid` — számla kifizetésekor
+
+Webhook URL konfigurálásához lépj a **Beállítások → Integrációk → Webhookok** menüpontra.
+
+## Sebesség-korlátok
+
+Az API hívások korlátja: **100 kérés percenként** vállalatonként. A korlát átlépésekor `429 Too Many Requests` választ kapsz.
+
+<Card title="Integráció beállítása" icon="plug" href="/en/admin/integration-setup">
+  Visszatérés az összes integráció áttekintéséhez.
+</Card>

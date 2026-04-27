@@ -1,6 +1,52 @@
 ---
-title: "e-Factura / ANAF Submission"
-description: "Translation coming soon"
+title: "e-Factura ANAF (Roumanie)"
+description: "Comment soumettre des factures B2B au système e-Factura roumain via ANAF et gérer les statuts de soumission dans Druma."
+icon: "building-columns"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/efactura-anaf).
+## Vue d'ensemble
+
+e-Factura est le système national roumain de facturation électronique B2B. Depuis janvier 2024, toutes les entreprises roumaines sont tenues de soumettre les factures B2B (transactions entre entreprises) au système e-Factura de l'ANAF.
+
+Druma prend en charge la soumission automatique des factures à l'ANAF directement depuis l'interface de facturation.
+
+---
+
+## Configuration
+
+<Steps>
+  <Step title="Configurez vos identifiants ANAF">
+    Accédez à **Paramètres → Intégrations → ANAF e-Factura** et saisissez votre certificat numérique et vos identifiants ANAF.
+  </Step>
+  <Step title="Activez la soumission automatique">
+    Activez l'option **Soumettre automatiquement les factures à l'ANAF** dans les paramètres de l'intégration.
+  </Step>
+</Steps>
+
+---
+
+## Soumettre une facture à l'ANAF
+
+Lorsque la soumission automatique est activée, Druma soumet automatiquement chaque facture générée au système e-Factura de l'ANAF. Vous pouvez également déclencher manuellement la soumission depuis la page de détails de la facture.
+
+---
+
+## Statuts e-Factura
+
+| Statut | Signification |
+|---|---|
+| **En attente** | Facture générée, soumission non encore tentée |
+| **Soumise** | Envoyée à l'ANAF, en attente de confirmation |
+| **Acceptée** | ANAF a accepté la facture |
+| **Rejetée** | ANAF a rejeté la facture — voir les détails de l'erreur |
+| **Échec** | Erreur technique lors de la soumission |
+
+---
+
+## File d'attente de nouvelles tentatives
+
+Si une soumission échoue ou est rejetée, Druma l'ajoute automatiquement à la file d'attente de nouvelles tentatives avec un backoff exponentiel (1h → 4h → 24h). Vous pouvez également déclencher manuellement une nouvelle tentative depuis la page de détails de la facture.
+
+<Card title="Export SAGA" icon="download" href="/fr/invoicing/saga-export">
+  Exporter les données de facturation vers SAGA et WinMENTOR.
+</Card>

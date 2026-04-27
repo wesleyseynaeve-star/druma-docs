@@ -1,6 +1,56 @@
 ---
-title: "e-Factura / ANAF Submission"
-description: "Translation coming soon"
+title: "e-Factura ANAF"
+description: "Automatické odosielanie faktúr do rumunského systému ANAF e-Factura — nastavenie, sledovanie stavu a riešenie chýb."
+icon: "building-columns"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/efactura-anaf).
+## Čo je ANAF e-Factura
+
+ANAF e-Factura je rumunský systém povinného elektronického podávania faktúr B2B. Od januára 2024 musia rumunské spoločnosti odosielať faktúry vydané iným rumunským spoločnostiam elektronicky prostredníctvom systému ANAF e-Factura.
+
+## Nastavenie e-Factura
+
+<Steps>
+  <Step title="Nakonfigurujte prihlásenie ANAF">
+    Prejdite na **Nastavenia → Integrácie → ANAF e-Factura** a nahrajte váš digitálny certifikát.
+  </Step>
+  <Step title="Pridajte IČ DPH klienta">
+    Uistite sa, že každý klient, ktorý dostáva faktúry prostredníctvom e-Factura, má platné rumunské IČ DPH zaznamenané v ich zázname v Druma.
+  </Step>
+  <Step title="Aktivujte automatické podávanie">
+    Prepnite na **Automaticky odosielať do e-Factura po odoslaní**. Druma odošle faktúru ANAF v XML formáte v UBL 2.1 ihneď po kliknutí na Odoslať.
+  </Step>
+</Steps>
+
+## Stav podávania
+
+Každá faktúra odoslaná cez e-Factura zobrazuje stĺpec stavu:
+
+| Stav | Popis |
+|------|-------|
+| **Neuplatňuje sa** | Klient nie je rumunská spoločnosť alebo e-Factura nie je aktívna |
+| **Odoslané** | XML odoslané do ANAF, čaká na odpoveď |
+| **Prijaté** | ANAF potvrdila prijatie |
+| **Odmietnuté** | ANAF odmietla faktúru (skontrolujte chybovú správu) |
+| **Chyba** | Technická chyba pri odoslaní |
+
+## Opakované odosielanie odmietnutých faktúr
+
+Ak ANAF odmietne faktúru:
+1. Kliknite na faktúru
+2. Zobrazí sa kód odmietnutia a dôvod
+3. Opravte problém (zvyčajne chýbajúci alebo nesprávny klientský RO IČ DPH)
+4. Kliknite na **Znovu odoslať do e-Factura**
+
+## Automatická fronta opakovaných odoslaní
+
+Druma automaticky opakuje neúspešné podania:
+- 1. pokus: 1 hodina po pôvodnom odoslaní
+- 2. pokus: 4 hodiny
+- 3. pokus: 24 hodín
+
+Po troch neúspešných pokusoch je faktúra označená ako vyžadujúca manuálny zásah.
+
+<Card title="Nastavenie integrácií" icon="plug" href="/en/admin/integration-setup">
+  Ako nakonfigurovať ANAF prihlasovacie údaje v Druma.
+</Card>

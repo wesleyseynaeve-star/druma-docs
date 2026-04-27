@@ -1,6 +1,207 @@
 ---
-title: "Integration Setup"
-description: "Translation coming soon"
+title: "Konfiguracja integracji"
+description: "Połącz Druma z TransFollow, HERE Maps, dostawcami kart paliwowych, oprogramowaniem księgowym i SmartBill na stronie Ustawienia — Integracje."
+icon: "plug"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/integration-setup).
+Każda integracja, z której korzysta Twoja firma, jest konfigurowana w jednym miejscu: **Ustawienia — Integracje**. Nie potrzebujesz programisty — wszystkie konfiguracje są formularzowe i zajmują mniej niż pięć minut każda.
+
+![Przegląd strony integracji](/images/placeholder.png)
+
+---
+
+## 1. TransFollow (eCMR)
+
+TransFollow to certyfikowany dostawca eCMR, którego Druma używa do wydawania, podpisywania i archiwizowania elektronicznych listów przewozowych. Bez tej integracji eCMR jest niedostępne — zlecenia nadal mogą być realizowane, ale będziesz potrzebować papierowych dokumentów CMR.
+
+**Czego potrzebujesz:** Aktywne konto TransFollow. Zarejestruj się na [transfollow.org](https://transfollow.org), jeśli jeszcze go nie masz.
+
+<Steps>
+  <Step title="Otwórz kartę TransFollow">
+    Przejdź do **Ustawienia — Integracje** i kliknij kartę TransFollow.
+  </Step>
+  <Step title="Wklej klucz API">
+    Skopiuj klucz API z panelu konta TransFollow i wklej go w polu **Klucz API**.
+  </Step>
+  <Step title="Włącz tryb testowy (opcjonalnie)">
+    Włącz **Tryb testowy**, jeśli chcesz przetestować przepływ pracy eCMR bez wydawania rzeczywistych, prawnie zarejestrowanych dokumentów. Używaj go podczas szkolenia lub wdrażania kierowców. Wyłącz przed uruchomieniem produkcyjnym.
+  </Step>
+  <Step title="Przetestuj połączenie">
+    Kliknij **Testuj połączenie**. Druma wywoła API TransFollow i potwierdzi ważność klucza. Zobaczysz zielony baner sukcesu lub konkretny komunikat o błędzie.
+  </Step>
+  <Step title="Zapisz">
+    Kliknij **Zapisz**. Tworzenie eCMR jest teraz aktywne dla zleceń transgranicznych.
+  </Step>
+</Steps>
+
+<Warning>
+Dokumenty eCMR w trybie testowym **nie mają mocy prawnej**. Upewnij się, że tryb testowy jest wyłączony przed wysyłką rzeczywistych przesyłek.
+</Warning>
+
+---
+
+## 2. HERE Maps
+
+HERE Maps obsługuje dwie funkcje w Druma: autouzupełnianie adresów przy tworzeniu zleceń i obliczanie tras zoptymalizowanych dla ciężarówek (odległość, szacowany czas jazdy i dane CO2).
+
+**Konfiguracja nie jest wymagana.** Klucz API HERE Maps jest zarządzany na poziomie platformy przez Druma. Nie ma nic do konfigurowania i nie będziesz oddzielnie rozliczany za użycie HERE — jest ono wliczone w Twoją subskrypcję.
+
+<Note>
+Jeśli autouzupełnianie adresów przestanie działać, jest to problem na poziomie platformy. Skontaktuj się z pomocą techniczną Druma zamiast próbować samodzielnie rekonfigurować HERE.
+</Note>
+
+---
+
+## 3. Import kart paliwowych
+
+Druma nie łączy się bezpośrednio z API dostawców kart paliwowych. Zamiast tego pobierasz eksport CSV z portalu internetowego swojego dostawcy i przesyłasz go do Druma. To automatycznie łączy koszty paliwa z pojazdami i zleceniami.
+
+**Obsługiwani dostawcy:** DKV, UTA, AS24, Shell Card, SmartDiesel.
+
+<Steps>
+  <Step title="Eksportuj z portalu dostawcy">
+    Zaloguj się do portalu internetowego DKV, UTA, AS24, Shell lub SmartDiesel i wyeksportuj transakcje jako CSV. Większość portali oferuje to w sekcji **Raporty — Eksport transakcji**.
+  </Step>
+  <Step title="Otwórz kartę Import kart paliwowych">
+    W **Ustawienia — Integracje** kliknij kartę Import kart paliwowych.
+  </Step>
+  <Step title="Wybierz dostawcę">
+    Wybierz dostawcę z listy rozwijanej, aby Druma wiedziała, jakiego formatu kolumn CSV oczekiwać.
+  </Step>
+  <Step title="Prześlij CSV">
+    Kliknij **Prześlij CSV**, wybierz plik i kliknij **Importuj**. Druma dopasuje transakcje do pojazdów według numeru rejestracyjnego.
+  </Step>
+</Steps>
+
+<Note>
+Jeśli numer rejestracyjny transakcji nie pasuje do pojazdu w Twojej flocie, Druma wylistuje ją jako **niedopasowaną**. Możesz ją ręcznie przypisać lub zostawić. Regularnie sprawdzaj listę niedopasowanych — często wykrywa oszustwa kartą paliwową lub nieprawidłowe wpisy numerów rejestracyjnych.
+</Note>
+
+---
+
+## 4. Księgowość SAGA / WinMENTOR
+
+Druma eksportuje dane faktur i zleceń w formatach zgodnych z SAGA i WinMENTOR, dwoma najpopularniejszymi rumuńskimi pakietami księgowymi.
+
+### SAGA Classic i WinMENTOR Classic
+
+Klucz API nie jest wymagany. Druma generuje ustrukturyzowany plik eksportu (XML lub CSV zależnie od pakietu), który importujesz bezpośrednio do oprogramowania księgowego.
+
+Przejdź do **Raporty — Eksport księgowy**, wybierz zakres dat i format księgowy, a następnie pobierz plik. Zaimportuj go do SAGA lub WinMENTOR używając standardowego kreatora importu w tym oprogramowaniu.
+
+### WinMENTOR Enterprise (REST API)
+
+WinMENTOR Enterprise obsługuje bezpośrednią integrację API.
+
+<Steps>
+  <Step title="Otwórz kartę WinMENTOR Enterprise">
+    W **Ustawienia — Integracje** kliknij **WinMENTOR Enterprise**.
+  </Step>
+  <Step title="Wprowadź adres REST">
+    Wpisz adres URL REST API podany przez administratora WinMENTOR Enterprise. Zazwyczaj wygląda jak `https://twojafirma.winmentor.ro/api/`.
+  </Step>
+  <Step title="Wprowadź dane uwierzytelniające">
+    Wpisz nazwę użytkownika i hasło API skonfigurowane w WinMENTOR Enterprise.
+  </Step>
+  <Step title="Przetestuj i zapisz">
+    Kliknij **Testuj połączenie**, następnie **Zapisz**.
+  </Step>
+</Steps>
+
+---
+
+## 5. SmartBill
+
+SmartBill to rumuńska platforma fakturowania w chmurze. Po aktywacji tej integracji Druma automatycznie przesyła potwierdzone faktury do SmartBill — bez ręcznego ponownego wprowadzania danych.
+
+<Steps>
+  <Step title="Pobierz klucz API SmartBill">
+    W koncie SmartBill przejdź do **Konto — API** i skopiuj klucz API.
+  </Step>
+  <Step title="Otwórz kartę SmartBill w Druma">
+    Przejdź do **Ustawienia — Integracje — SmartBill**.
+  </Step>
+  <Step title="Wprowadź klucz API i CIF">
+    Wklej klucz API i wpisz CIF swojej firmy (numer rejestracji podatkowej). SmartBill używa CIF do kierowania faktur do właściwego konta firmowego.
+  </Step>
+  <Step title="Przetestuj połączenie">
+    Kliknij **Testuj połączenie**. Druma spróbuje nawiązać połączenie ze SmartBill i potwierdzi ważność danych uwierzytelniających.
+  </Step>
+  <Step title="Zapisz">
+    Kliknij **Zapisz**. Od tej chwili każda faktura, którą oznaczysz jako potwierdzoną w Druma, zostanie automatycznie przesłana do SmartBill.
+  </Step>
+</Steps>
+
+<Warning>
+Jeśli Twoja subskrypcja SmartBill wygaśnie lub Twój klucz API zostanie zregenerowany, integracja przestanie działać bez powiadomienia. Regularnie sprawdzaj **Ustawienia — Integracje**, aby potwierdzić, że status SmartBill jest zielony.
+</Warning>
+
+---
+
+## 6. Fakturowanie elektroniczne Peppol (Belgia)
+
+Peppol to ogólnoeuropejska sieć e-fakturowania. Belgijskie firmy (zarejestrowane w KBO) są zobowiązane do wysyłania faktur do innych belgijskich firm przez Peppol — jest to obowiązkowe od stycznia 2026.
+
+**Wymagane dla:** Belgijskich firm wysyłających faktury B2B do innych belgijskich firm.
+
+<Steps>
+  <Step title="Znajdź kartę Peppol E-Invoicing">
+    Przejdź do **Ustawienia — Integracje** i kliknij kartę **Peppol E-Invoicing**.
+  </Step>
+  <Step title="Wprowadź dane rejestracyjne">
+    Wpisz swój **numer KBO** (belgijski numer rejestracji firmy) i **numer VAT**.
+  </Step>
+  <Step title="Zarejestruj się w sieci Peppol">
+    Kliknij **Zarejestruj się w sieci Peppol**. Druma przesyła Twoją rejestrację do punktu dostępu e-invoice.be. Zazwyczaj kończy się to w ciągu kilku minut.
+  </Step>
+  <Step title="Potwierdź aktywację">
+    Po aktywacji karta pokazuje zielony status **Aktywny**. Routing Peppol jest teraz automatyczny dla uprawnionych belgijskich klientów.
+  </Step>
+</Steps>
+
+<Note>
+Zobacz [Fakturowanie Peppol](/en/integrations/peppol-invoicing) aby uzyskać pełne szczegóły dotyczące działania routingu.
+</Note>
+
+---
+
+## 7. Skrzynka e-mail dla faktur dostawców
+
+Daje Twojej firmie dedykowany adres e-mail do odbierania faktur od dostawców. Otrzymane faktury są klasyfikowane przez AI i kierowane do kolejki do przeglądu.
+
+<Steps>
+  <Step title="Przejdź do Ustawień firmy">
+    Przejdź do **Ustawienia — Firma** i przewiń do sekcji **E-mail faktur dostawców**.
+  </Step>
+  <Step title="Włącz skrzynkę">
+    Włącz **Włącz skrzynkę faktur dostawców**. Druma generuje dedykowany przychodzący adres e-mail dla Twojej firmy.
+  </Step>
+  <Step title="Dodaj adresy nadawców do białej listy">
+    W polu **Biała lista nadawców** dodaj adresy e-mail lub domeny, od których oczekujesz faktur (na przykład `faktury@dkv.com` lub `@uta.eu`). E-maile od nadawców spoza białej listy są odrzucane.
+  </Step>
+  <Step title="Udostępnij adres dostawcom">
+    Skopiuj wygenerowany adres e-mail i podaj go każdemu dostawcy jako adres do przesyłania faktur.
+  </Step>
+</Steps>
+
+Otrzymane faktury pojawiają się w **Finanse — Spedycja — Kolejka faktur** do przeglądu, dopasowania i zatwierdzenia.
+
+---
+
+## Artykuły szczegółowe
+
+<Card title="TransFollow i eCMR" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+  Zrozum, jak działa eCMR, kto podpisuje i kiedy ma zastosowanie.
+</Card>
+
+<Card title="Tworzenie eCMR" icon="file-plus" href="/en/ecmr/creating-ecmr">
+  Przewodnik krok po kroku do wydawania dokumentów eCMR ze zlecenia.
+</Card>
+
+<Card title="Szczegóły importu kart paliwowych" icon="gas-pump" href="/en/fleet-compliance/fleet-documents">
+  Jak koszty paliwa są powiązane z pojazdami i zleceniami.
+</Card>
+
+<Card title="Raportowanie CO2" icon="leaf" href="/en/fleet-compliance/co2-reporting">
+  Jak odległości tras HERE zasilają obliczenia CO2.
+</Card>

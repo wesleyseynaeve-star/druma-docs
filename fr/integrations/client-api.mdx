@@ -1,0 +1,48 @@
+---
+title: "API client"
+description: "Comment utiliser l'API client de Druma pour intégrer le suivi des expéditions et les informations de livraison dans vos propres systèmes clients."
+icon: "globe"
+---
+
+## Vue d'ensemble
+
+L'API client est une API en lecture seule destinée aux clients des transporteurs qui souhaitent intégrer le suivi des expéditions Druma dans leurs propres systèmes (ERP, portail client personnalisé, app mobile).
+
+---
+
+## Authentification
+
+L'API client utilise des tokens de portail client. Chaque token donne accès uniquement aux données de l'entreprise cliente concernée.
+
+Pour obtenir un token, contactez votre transporteur — il peut générer un token API client depuis votre profil dans Druma.
+
+---
+
+## Endpoints disponibles
+
+| Endpoint | Description |
+|---|---|
+| `GET /shipments` | Lister les expéditions de votre entreprise |
+| `GET /shipments/{id}` | Détails et statut d'une expédition |
+| `GET /shipments/{id}/tracking` | Position GPS en temps réel |
+| `GET /shipments/{id}/documents` | Liste des documents disponibles |
+| `GET /invoices` | Vos factures |
+
+---
+
+## Exemple de requête
+
+```bash
+curl -H "Authorization: Bearer {votre-token}" \
+     https://api.druma.io/client/v1/shipments
+```
+
+---
+
+## Limites de taux
+
+100 requêtes par minute par token client.
+
+<Card title="API publique" icon="code" href="/fr/integrations/public-api">
+  API complète pour les intégrations système avancées.
+</Card>

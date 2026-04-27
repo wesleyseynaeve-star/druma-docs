@@ -1,6 +1,161 @@
 ---
-title: "Order Lifecycle"
-description: "Translation coming soon"
+title: "Cykl życia zlecenia"
+description: "Jak zlecenie przechodzi od wersji roboczej do zafakturowania w Druma — każdy status, kto go uruchamia i co się dzieje na każdym etapie."
+icon: "circle-dot"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/order-lifecycle).
+## Przegląd
+
+Każde zlecenie w Druma podąża określoną ścieżką. Zrozumienie cyklu życia pomaga wiedzieć, czego się spodziewać na każdym etapie, kiedy interweniować i jak obsługiwać wyjątki, takie jak opóźnione dostawy lub zapomniane aktualizacje statusu.
+
+Oto pełny przepływ:
+
+**Wersja robocza — Potwierdzone — W drodze — Dotarł do odbioru — Załadunek — W drodze do dostawy — Dotarł do dostawy — Rozładunek — Dostarczone — Zafakturowane**
+
+Na końcu omówiono też oddzielny status **Anulowane**.
+
+![Diagram przepływu statusów zleceń](/images/placeholder.png)
+
+---
+
+## Wersja robocza
+
+**Uruchamia:** Planista zapisuje nowe zlecenie bez potwierdzania go.
+
+Zlecenie istnieje w systemie, ale nie jest jeszcze aktywne. Kierowca nie widzi go w swojej aplikacji. Na tablicy planowania wyświetla się w kolorze szarym.
+
+**Dostępne akcje z wersji roboczej:**
+- Edytowanie dowolnego pola
+- Potwierdzenie zlecenia (przejście do Potwierdzone)
+- Usunięcie zlecenia
+- Anulowanie zlecenia
+
+---
+
+## Potwierdzone
+
+**Uruchamia:** Planista klika **Potwierdź zlecenie**.
+
+Zlecenie jest teraz aktywne. Przypisany kierowca otrzymuje powiadomienie push z danymi zadania. Zlecenie pojawia się na tablicy planowania w kolorze niebieskim.
+
+---
+
+## W drodze
+
+**Uruchamia:** Kierowca klika **W trasie** w swojej aplikacji, gdy wyrusza do miejsca odbioru.
+
+Ten status oznacza, że kierowca jest w drodze do miejsca odbioru. Zlecenie zmienia kolor na zielony na tablicy planowania.
+
+<Note>
+Jeśli kierowca zapomni kliknąć "W trasie", możesz ręcznie ustawić status ze strony zlecenia. Otwórz zlecenie, kliknij **Zastąp status** i wybierz "W drodze".
+</Note>
+
+---
+
+## Dotarł do odbioru
+
+**Uruchamia:** Kierowca klika **Dotarł do odbioru** po dotarciu na adres załadunku.
+
+Kierowca dotarł na miejsce załadunku i czeka na obsługę. Ten status automatycznie uruchamia **licznik czasu oczekiwania**.
+
+---
+
+## Załadunek
+
+**Uruchamia:** Kierowca klika **Rozpoczęto załadunek**.
+
+Licznik czasu oczekiwania zatrzymuje się, gdy załadunek się rozpoczyna. Zarejestrowany czas oczekiwania może być używany do obliczania dopłat.
+
+---
+
+## W drodze do dostawy
+
+**Uruchamia:** Kierowca klika **Wyjechał z odbioru** po zakończeniu załadunku i podpisaniu CMR.
+
+Ciężarówka jedzie teraz do miejsca dostawy. Zlecenie pokazuje szacowany czas przybycia na tablicy planowania.
+
+---
+
+## Dotarł do dostawy
+
+**Uruchamia:** Kierowca klika **Dotarł do dostawy**.
+
+Licznik czasu oczekiwania uruchamia się ponownie w miejscu dostawy.
+
+---
+
+## Rozładunek
+
+**Uruchamia:** Kierowca klika **Rozpoczęto rozładunek**.
+
+Czas oczekiwania przy dostawie zatrzymuje się. Kierowca może teraz przygotować podpisane dokumenty dostawy.
+
+---
+
+## Dostarczone
+
+**Uruchamia:** Kierowca klika **Dostarczone** i opcjonalnie przesyła zdjęcie podpisanego CMR.
+
+Transport jest zakończony. Zlecenie zmienia kolor na ciemnozielony i przechodzi do karty **Zakończone** na liście zleceń.
+
+**Dostępne akcje od stanu Dostarczone:**
+- Generowanie faktury (przejście do Zafakturowane)
+- Przesyłanie lub przeglądanie dokumentów dostawy (CMR, POD)
+- Dodawanie notatki o sporze lub uszkodzeniu
+
+---
+
+## Zafakturowane
+
+**Uruchamia:** Planista generuje fakturę dla zlecenia.
+
+Zlecenie jest całkowicie zamknięte. Jest tylko do odczytu i powiązane z rekordem faktury.
+
+---
+
+## Anulowane
+
+**Uruchamia:** Planista anuluje zlecenie.
+
+<Warning>
+Możesz anulować zlecenie w statusie **Wersja robocza** lub **Potwierdzone** bez specjalnych kroków. Jednak nie możesz anulować zlecenia będącego w trasie lub później bez przejścia przez ręczny proces. Skontaktuj się z administratorem konta, jeśli musisz anulować aktywne zlecenie.
+</Warning>
+
+---
+
+## Zmarnowany kurs
+
+Zmarnowany kurs dotyczy zleceń, w których kierowca już wyjechał, ale podróż musi zostać przerwana — z powodu anulowania przez klienta, siły wyższej lub decyzji firmy.
+
+<Warning>
+Deklaracja zmarnowanego kursu nie może być cofnięta. Zlecenie trwale przechodzi do statusu Zmarnowany kurs.
+</Warning>
+
+---
+
+## Ręczne zastępowanie statusów
+
+<Steps>
+  <Step title="Otwórz zlecenie">
+    Przejdź do Planner — Zlecenia i znajdź zlecenie. Kliknij je, aby otworzyć stronę szczegółów.
+  </Step>
+  <Step title="Kliknij Zastąp status">
+    Znajdź przycisk **Zastąp status** przy bieżącym wskaźniku statusu.
+  </Step>
+  <Step title="Wybierz właściwy status">
+    Wybierz status, w którym zlecenie powinno teraz być.
+  </Step>
+  <Step title="Dodaj notatkę i zapisz">
+    Wpisz krótkie wyjaśnienie i kliknij **Zastosuj zastąpienie**.
+  </Step>
+</Steps>
+
+---
+
+<Card title="Widok dziś" icon="sun" href="/en/planner/today-view">
+  Monitoruj wszystkie aktywne zlecenia na dziś, obserwuj pozycje kierowców na żywo i obsługuj alerty z codziennego panelu.
+</Card>
+
+<Card title="Generowanie faktur" icon="file-invoice" href="/en/finances/generating-invoices">
+  Po dostarczeniu zlecenia dowiedz się, jak tworzyć i wysyłać faktury do klienta.
+</Card>

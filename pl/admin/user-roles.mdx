@@ -1,6 +1,164 @@
 ---
-title: "User roles and permissions"
-description: "Translation coming soon"
+title: "Role użytkowników i uprawnienia"
+description: "Pełny opis wszystkich ośmiu ról użytkowników Druma, co każda może robić i jak je przypisywać."
+icon: "shield-halved"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/user-roles).
+## Dlaczego role są ważne
+
+Przypisanie każdemu członkowi zespołu właściwej roli oznacza:
+- Ludzie widzą tylko to, co jest istotne dla ich pracy
+- Wrażliwe dane (rozliczenia, finanse klientów) są chronione
+- Przypadkowe zmiany w zleceniach lub ustawieniach są mniej prawdopodobne
+- Masz przejrzysty dziennik audytu, kto co zrobił
+
+Druma ma **osiem ról**. Sześć jest dla Twojego wewnętrznego zespołu (platforma internetowa), a dwie dla użytkowników zewnętrznych (kierowcy i klienci), którzy uzyskują dostęp do Druma przez dedykowane linki zamiast platformy internetowej.
+
+## Uprawnienia ról w skrócie
+
+| Uprawnienie | Admin | Administrator firmy | Planista | Dyspozytor | Kierownik floty | Obsługa klienta | Kierowca | Klient |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Rozliczenia i subskrypcja | Tak | - | - | - | - | - | - | - |
+| Ustawienia firmy | Tak | Tak | - | - | - | - | - | - |
+| Zarządzanie użytkownikami i zaproszeniami | Tak | Tak | - | - | - | Zapraszanie | - | - |
+| Integracje i ustawienia API | Tak | Tak | - | - | - | - | - | - |
+| Karty stawek | Tak | Tak | - | - | Tak | - | - | - |
+| Tworzenie i edytowanie zleceń | Tak | Tak | Tak | - | - | Tak | - | - |
+| Podgląd wszystkich zleceń | Tak | Tak | Tak | - | - | Tak | - | - |
+| Przydzielanie pojazdów i kierowców | Tak | Tak | Tak | - | - | - | - | - |
+| Panel / Dziś | Tak | Tak | Tak | Tak | - | - | - | - |
+| Mapa na żywo | Tak | Tak | Tak | Tak | - | - | - | - |
+| Zarządzanie flotą (pojazdy) | Tak | Tak | Odczyt | Odczyt | Pełny | - | - | - |
+| Zarządzanie flotą (kierowcy) | Tak | Tak | Odczyt | Odczyt | Pełny | - | - | - |
+| Godziny kierowców | Tak | Tak | Tak | Tak | Tak | - | - | - |
+| Generowanie i wysyłanie faktur | Tak | Tak | Tak | - | - | Tak | - | - |
+| Raporty i eksport | Tak | Tak | Tak | - | - | Tak | - | - |
+| Aplikacja kierowcy (aktualizacje zleceń, eCMR) | - | - | - | - | - | - | Tak | - |
+| Portal klienta (śledzenie przesyłek) | - | - | - | - | - | - | - | Tak |
+
+## Szczegółowe opisy ról
+
+### Admin
+
+Admin ma **pełny dostęp do systemu**, w tym do zarządzania rozliczeniami i subskrypcją. To rola dla właściciela firmy lub osoby ostatecznie odpowiedzialnej za konto Druma.
+
+Admini mogą robić wszystko, co Administrator firmy, plus:
+- Zarządzać rozliczeniami, planami subskrypcji i metodami płatności
+- Przeglądać i zmieniać liczbę miejsc i poziomy cenowe
+
+*Przykład: Vasile jest właścicielem firmy transportowej. Jest Adminem. Kontroluje subskrypcję, zarządza rozliczeniami i ma wgląd we wszystko na platformie.*
+
+---
+
+### Administrator firmy
+
+Administrator firmy ma pełny dostęp do wszystkiego **z wyjątkiem rozliczeń**. To właściwa rola dla zaufanego kierownika operacyjnego lub starszego dyspozytora.
+
+Administratorzy firmy mogą:
+- Konfigurować wszystko w Ustawieniach (z wyjątkiem rozliczeń)
+- Zapraszać i zarządzać innymi użytkownikami
+- Konfigurować integracje (SmartBill, SAGA, TransFollow, ANAF, Timocom itp.)
+- Zarządzać profilem firmy, kartami stawek i domyślnymi ustawieniami
+- Tworzyć i zarządzać zleceniami, fakturami, flotą i raportami
+- Przeglądać dzienniki audytu
+
+---
+
+### Planista
+
+Planista to kluczowa rola operacyjna — dyspozytor wykonujący codzienną pracę frachtową. Planiści mają pełny dostęp do zleceń, tablicy planowania i fakturowania, z dostępem tylko do odczytu do floty.
+
+Planiści mogą:
+- Tworzyć, edytować i usuwać zlecenia transportowe
+- Przydzielać pojazdy i kierowców na tablicy planowania
+- Generować i wysyłać faktury
+- Przeglądać pojazdy i kierowców floty (tylko do odczytu)
+- Uzyskiwać dostęp do panelu, mapy na żywo i godzin kierowców
+- Pracować z raportami i eksportami
+
+---
+
+### Dyspozytor
+
+Dyspozytor to **rola skoncentrowana na monitorowaniu** — obserwuje operacje w czasie rzeczywistym, ale nie tworzy ani nie edytuje zleceń.
+
+Dyspozytorzy mogą:
+- Przeglądać panel i przegląd dzisiejszych operacji
+- Monitorować mapę na żywo z pozycjami ciężarówek
+- Sprawdzać godziny pracy kierowców i zgodność przepisów
+- Przeglądać pojazdy i kierowców floty (tylko do odczytu)
+
+---
+
+### Kierownik floty
+
+Kierownik floty ma **pełną kontrolę nad operacjami flotowymi** — pojazdy, naczepy, kierowcy, dokumenty, importy kart paliwowych, śledzenie kabotażu i karty stawek.
+
+Kierownicy floty mogą:
+- Dodawać, edytować i usuwać pojazdy, naczepy i kierowców
+- Zarządzać dokumentami floty (ITP, ubezpieczenie, CEMT, certyfikaty ADR)
+- Importować dane kart paliwowych (DKV, UTA, AS24)
+- Śledzić zgodność z przepisami o kabotażu
+- Zarządzać kartami stawek
+- Przeglądać godziny pracy kierowców
+
+---
+
+### Obsługa klienta
+
+Rola Obsługi klienta daje **operacyjny dostęp do zleceń, fakturowania, klientów i raportów**.
+
+Użytkownicy Obsługi klienta mogą:
+- Tworzyć, edytować i przeglądać wszystkie zlecenia
+- Generować i wysyłać faktury
+- Zarządzać klientami i ustawieniami portalu klienta
+- Uzyskiwać dostęp do raportów i eksportów
+- Zapraszać nowych użytkowników
+
+---
+
+### Kierowca
+
+**Kierowcy nigdy nie uzyskują dostępu do platformy internetowej Druma.** Każdy kierowca ma unikalny osobisty link (link PWA) otwierający Aplikację kierowcy Druma na smartfonie.
+
+Przez aplikację kierowcy kierowca może:
+- Widzieć przypisane zlecenia
+- Aktualizować status zlecenia: Załadowany, Wyjechał, Na miejscu dostawy, Dostarczony
+- Przesyłać zdjęcia i podpisywać dokumenty eCMR
+
+<Warning>
+Nie próbuj zapraszać kierowców przez Ustawienia — Użytkownicy. Przejdź do Flota — Kierowcy, otwórz profil kierowcy i skopiuj jego osobisty link PWA. Wyślij to kierowcy przez WhatsApp lub SMS.
+</Warning>
+
+---
+
+### Klient
+
+Klienci nigdy nie uzyskują dostępu do platformy internetowej Druma. Każda firma klienta ma **prywatny link do portalu**.
+
+Przez portal klienta klient może:
+- Przeglądać wszystkie bieżące i minione zlecenia
+- Śledzić status dostawy na żywo
+- Pobierać dokumenty eCMR, potwierdzenia dostawy i faktury
+
+## Przypisywanie wielu ról
+
+Jeden użytkownik może posiadać więcej niż jedną rolę. Popularne kombinacje:
+- **Administrator firmy + Planista** — właściciel lub starszy dyspozytor, który również zarządza platformą
+- **Planista + Obsługa klienta** — dyspozytor w małym zespole
+
+<Note>
+Używaj wielu ról oszczędnie. Dawanie wszystkim szerokiego dostępu utrudnia śledzenie zmian i zwiększa ryzyko błędów.
+</Note>
+
+## Obsługa wielu firm
+
+Jeden adres e-mail może należeć do **więcej niż jednego konta firmowego Druma**. Aby przełączyć się między firmami, kliknij nazwę swojej firmy w prawym górnym rogu platformy i wybierz inną z listy rozwijanej.
+
+<Card title="Zaproś swój zespół" icon="users" href="/en/getting-started/invite-your-team">
+  Instrukcje krok po kroku dotyczące zapraszania użytkowników i wysyłania linku do aplikacji kierowcy.
+</Card>
+
+<Card title="Konfiguracja firmy" icon="building" href="/en/admin/company-setup">
+  Skonfiguruj swoje dane prawne, logo i ustawienia faktur.
+</Card>

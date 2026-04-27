@@ -1,0 +1,64 @@
+---
+title: "Integrácia klientského API (CAPI)"
+description: "Nechajte klientov posielať zákazky priamo do Druma alebo prijímajte udalosti doručenia v reálnom čase na webhook — nakonfigurované pre každého klienta zvlášť."
+icon: "plug"
+---
+
+## Prehľad
+
+Integrácia klientského API (CAPI) vytvára priamy dátový kanál medzi konkrétnym klientom a vaším účtom Druma. Má dve nezávislé časti:
+
+- **Prichádzajúce (Inbound)**: systém klienta odosiela zákazky do Druma automaticky.
+- **Odchádzajúce (Outbound)**: Druma posiela stavové udalosti (odídený, doručený, fakturovaný atď.) do systému klienta v reálnom čase.
+
+Každú časť môžete aktivovať nezávisle, alebo obidve spolu. Každý klient dostane vlastný token a endpoint.
+
+## Kde nájsť nastavenia
+
+1. Prejdite na **Klienti** v ľavom menu.
+2. Otvorte záznam klienta.
+3. Kliknite na záložku **API**.
+
+## Prichádzajúce — klient posiela zákazky do Druma
+
+<Steps>
+  <Step title="Aktivujte prichádzajúce">
+    Na záložke **API** prepnite na **Aktivovať prichádzajúce API**.
+  </Step>
+  <Step title="Vygenerujte token">
+    Kliknite na **Generovať token**. Celý token je zobrazený **raz** — okamžite ho skopírujte a bezpečne uložte.
+  </Step>
+  <Step title="Zdieľajte endpoint a token s klientom">
+    Klient bude posielať POST požiadavky na váš endpoint s tokenom v hlavičke Autorizácia.
+  </Step>
+</Steps>
+
+## Odchádzajúce — Druma posiela udalosti klientovi
+
+<Steps>
+  <Step title="Aktivujte odchádzajúce">
+    Prepnite na **Aktivovať odchádzajúce webhook**.
+  </Step>
+  <Step title="Zadajte URL webhooku klienta">
+    Zadajte HTTPS URL, na ktorú má Druma odosielať udalosti.
+  </Step>
+  <Step title="Vyberte udalosti">
+    Zaškrtnite, ktoré udalosti chcete odosielať: Zákazka potvrdená, Odídený, Doručený, Fakturovaný atď.
+  </Step>
+  <Step title="Uložte">
+    Druma okamžite začne odosielať udalosti na endpoint klienta.
+  </Step>
+</Steps>
+
+## Kedy použiť CAPI
+
+CAPI je vhodné keď klient:
+- Má WMS, ERP alebo systém správy zákaziek s možnosťou HTTP
+- Rezervuje zásielky často a chce automatizovať vytváranie zákaziek
+- Potrebuje automatické potvrdenie doručenia pre následné pracovné postupy
+
+Pre klientov, ktorí rezervujú príležitostne alebo uprednostňujú portál, použite štandardný klientský portál.
+
+<Card title="Verejné API" icon="code" href="/en/integrations/public-api">
+  Referencia REST API Druma pre programatickú integráciu.
+</Card>

@@ -1,6 +1,158 @@
 ---
-title: "Order Lifecycle"
-description: "Translation coming soon"
+title: "Životný cyklus objednávky"
+description: "Ako sa objednávka pohybuje od Konceptu po Fakturovanú v Druma — každý stav, kto ho spúšťa a čo sa stane v každom kroku."
+icon: "circle-dot"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/order-lifecycle).
+## Prehľad
+
+Každá objednávka v Druma sleduje definovanú cestu. Pochopenie životného cyklu vám pomôže vedieť, čo očakávať v každej fáze, kedy zasiahnuť a ako zvládať výnimky.
+
+Celý tok:
+
+**Koncept → Potvrdená → V preprave → Na mieste vyzdvihnutia → Nakladanie → Na ceste na doručenie → Na mieste doručenia → Vykladanie → Doručená → Fakturovaná**
+
+Na konci je tiež samostatný stav **Zrušená**.
+
+![Diagram toku stavov objednávky](/images/placeholder.png)
+
+---
+
+## Koncept
+
+**Spúšťa:** Plánovač uloží novú objednávku bez potvrdenia.
+
+Objednávka existuje v systéme, ale ešte nie je aktívna. Vodič ju nevidí v aplikácii. Na plánovacej tabuli sa zobrazuje sivou farbou.
+
+**Dostupné akcie z Konceptu:**
+- Úprava akéhokoľvek poľa
+- Potvrdenie objednávky (prechod na Potvrdená)
+- Vymazanie objednávky
+- Zrušenie objednávky
+
+---
+
+## Potvrdená
+
+**Spúšťa:** Plánovač klikne na **Potvrdiť objednávku**.
+
+Objednávka je teraz aktívna. Priradený vodič dostane upozornenie v aplikácii s podrobnosťami zákazky. Objednávka sa zobrazuje modrou farbou na plánovacej tabuli.
+
+**Odoslané notifikácie:**
+- Push notifikácia priradenému vodičovi (a druhému vodičovi, ak ide o dvojčlenné obsadenie)
+- Voliteľné: automatický e-mail s potvrdením klientovi
+
+---
+
+## V preprave
+
+**Spúšťa:** Vodič klepne na **Na ceste** v aplikácii pri odchode na miesto vyzdvihnutia.
+
+Vodič je na cestě k miestu nakladania. Objednávka sa zobrazuje zelenou farbou na plánovacej tabuli.
+
+<Note>
+Ak vodič zabudne klepnúť na Na ceste, stav môžete nastaviť manuálne na stránke objednávky cez **Prepísať stav**.
+</Note>
+
+---
+
+## Na mieste vyzdvihnutia
+
+**Spúšťa:** Vodič klepne na **Príchod na vyzdvihnutie** keď dorazí na adresu nakladania.
+
+Vodič dorazil na nakladacie miesto a čaká na spracovanie. Tento stav automaticky spustí **hodiny čakacej doby**.
+
+---
+
+## Nakladanie
+
+**Spúšťa:** Vodič klepne na **Nakladanie spustené** keď sa tovar nakladá na vozidlo.
+
+Hodiny čakacej doby zastavia, keď začne nakladanie. Akákoľvek zaznamenaná čakacia doba sa uloží k objednávke.
+
+---
+
+## Na ceste na doručenie
+
+**Spúšťa:** Vodič klepne na **Odchod z vyzdvihnutia** po dokončení nakladania.
+
+Vozidlo sa teraz poháňa na adresu doručenia. Objednávka zobrazuje odhadovaný čas príchodu na plánovacej tabuli.
+
+---
+
+## Na mieste doručenia
+
+**Spúšťa:** Vodič klepne na **Príchod na doručenie** keď dorazí na adresu doručenia.
+
+Hodiny čakacej doby sa znova spustia na mieste doručenia.
+
+---
+
+## Vykladanie
+
+**Spúšťa:** Vodič klepne na **Vykladanie spustené** keď sa tovar vykladá z vozidla.
+
+Čakacia doba pri doručení sa zastaví.
+
+---
+
+## Doručená
+
+**Spúšťa:** Vodič klepne na **Doručené** a voliteľne nahrá fotografiu podpísaného CMR.
+
+Preprava je dokončená. Objednávka sa zobrazuje tmavozeleno na plánovacej tabuli a presunie sa na záložku **Dokončené** v zozname objednávok.
+
+**Odoslané notifikácie:**
+- Voliteľné: e-mail s potvrdením doručenia klientovi s časovou pečiatkou a nahratými dokumentmi.
+
+---
+
+## Fakturovaná
+
+**Spúšťa:** Plánovač vygeneruje faktúru pre objednávku.
+
+Objednávka je úplne uzavretá. Je iba na čítanie a prepojená so záznamom faktúry.
+
+---
+
+## Zrušená
+
+**Spúšťa:** Plánovač zruší objednávku.
+
+<Warning>
+Objednávku v stave **Koncept** alebo **Potvrdená** môžete zrušiť bez špeciálnych krokov. Avšak objednávku, ktorá je V preprave alebo neskôr, **nemôžete** zrušiť bez manuálneho procesu. Kontaktujte správcu účtu, ak potrebujete zrušiť aktívnu objednávku.
+</Warning>
+
+---
+
+## Manuálne prepísanie stavu
+
+Vodiči niekedy zabudnú klepnúť na aktualizácie stavu. Ako plánovač môžete vždy manuálne prepísať stav:
+
+<Steps>
+  <Step title="Otvorte objednávku">
+    Prejdite na Plánovač → Objednávky a nájdite objednávku.
+  </Step>
+  <Step title="Kliknite na Prepísať stav">
+    Nájdite tlačidlo **Prepísať stav** v blízkosti indikátora aktuálneho stavu.
+  </Step>
+  <Step title="Vyberte správny stav">
+    Vyberte stav, v ktorom by objednávka teraz mala byť.
+  </Step>
+  <Step title="Pridajte poznámku">
+    Napíšte stručné vysvetlenie. Toto sa uloží v histórii objednávky.
+  </Step>
+  <Step title="Uložte">
+    Kliknite na **Použiť prepísanie**. Stav sa okamžite aktualizuje.
+  </Step>
+</Steps>
+
+---
+
+<Card title="Pohľad dnes" icon="sun" href="/en/planner/today-view">
+  Monitorujte všetky aktívne objednávky na dnešok, sledujte živé polohy vodičov a riešte upozornenia z denného dashboardu.
+</Card>
+
+<Card title="Generovanie faktúr" icon="file-invoice" href="/en/invoicing/generating-invoices">
+  Po doručení objednávky sa dozviete, ako vytvoriť a odoslať faktúru klientovi.
+</Card>

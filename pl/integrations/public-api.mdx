@@ -1,6 +1,135 @@
 ---
-title: "Public API and Webhooks"
-description: "Translation coming soon"
+title: "Publiczne API i webhooki"
+description: "Połącz Druma z własnym systemem ERP, portalem klienta lub niestandardowymi aplikacjami przy użyciu REST API i powiadomień o zdarzeniach przez webhook."
+icon: "code"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/public-api).
+Publiczne API Druma pozwala budować niestandardowe integracje między Druma a Twoimi własnymi systemami — niezależnie od tego, czy jest to ERP, portal samoobsługowy klienta, narzędzie do analizy biznesowej czy wewnętrzne narzędzia zbudowane przez Twój zespół.
+
+<Warning>
+Publiczne API to funkcja wymagająca aktywacji i domyślnie nie jest włączona. Skontaktuj się z **support@druma.io**, aby zażądać dostępu dla swojego konta. Dołącz krótki opis planowanego przypadku użycia.
+</Warning>
+
+## Zarządzanie kluczem API
+
+Po włączeniu Publicznego API dla Twojego konta:
+
+1. Przejdź do **Ustawienia → API → Generuj klucz API**
+2. Nadaj kluczowi nazwę (np. "Integracja ERP", "Portal klienta")
+3. Kliknij **Generuj**
+4. Natychmiast skopiuj klucz — jest wyświetlany tylko raz
+
+Przechowuj klucz API bezpiecznie (użyj menedżera haseł lub zmiennej środowiskowej, nigdy nie koduj go na stałe). Jeśli klucz zostanie zgubiony lub skompromitowany, unieważnij go z tej samej strony i wygeneruj nowy.
+
+Możesz tworzyć wiele kluczy API dla różnych integracji, co ułatwia odwoływanie dostępu dla jednej integracji bez wpływu na inne.
+
+## Uwierzytelnianie
+
+Wszystkie żądania API muszą zawierać klucz API jako token Bearer w nagłówku Authorization:
+
+```
+Authorization: Bearer TWÓJ_KLUCZ_API
+```
+
+Żądania bez prawidłowego klucza zwracają odpowiedź `401 Unauthorized`.
+
+## Dostępne endpointy
+
+Dostępne są następujące endpointy. Wszystkie zwracają i akceptują JSON.
+
+| Metoda | Endpoint | Opis |
+|--------|----------|------|
+| `GET` | `/orders` | Lista zleceń z opcjonalnymi filtrami (zakres dat, status, klient) |
+| `POST` | `/orders` | Utwórz nowe zlecenie |
+| `GET` | `/clients` | Lista wszystkich klientów |
+| `POST` | `/clients` | Utwórz nowego klienta |
+| `GET` | `/vehicles` | Lista wszystkich pojazdów |
+| `GET` | `/invoices` | Lista faktur z opcjonalnymi filtrami |
+
+<Note>
+Dostępne endpointy mogą się zmieniać wraz z rozwojem API. Sprawdź pełną specyfikację OpenAPI na **docs.druma.io/api** w celu uzyskania aktualnej listy endpointów, schematów żądań/odpowiedzi i przykładowych wywołań. Specyfikacja jest zawsze aktualna.
+</Note>
+
+## Limity zapytań
+
+- **1 000 żądań na godzinę** per klucz API
+- Nagłówki limitu zapytań są dołączone do każdej odpowiedzi: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- Jeśli przekroczysz limit, otrzymasz odpowiedź `429 Too Many Requests`
+- Limit resetuje się w kroczącym oknie godzinowym
+
+W celu uzyskania wyższych limitów skontaktuj się z support@druma.io podając swój przypadek użycia.
+
+## Webhooki
+
+Zamiast odpytywać API o zmiany, możesz rejestrować webhooki, aby otrzymywać powiadomienia w czasie rzeczywistym o zdarzeniach zachodzących w Druma.
+
+### Konfiguracja webhooka
+
+<Steps>
+  <Step title="Otwórz ustawienia webhooków">
+    Przejdź do **Ustawienia → API → Webhooki → Dodaj endpoint**.
+  </Step>
+  <Step title="Wprowadź URL endpointu">
+    Podaj URL HTTPS serwera, który będzie odbierać zdarzenia webhook. URL musi używać HTTPS — proste endpointy HTTP nie są akceptowane.
+  </Step>
+  <Step title="Wybierz zdarzenia">
+    Wybierz zdarzenia, które chcesz otrzymywać. Dostępne zdarzenia:
+    - `order.created` — nowe zlecenie zostało utworzone (ręcznie lub przez pobieranie z e-maili)
+    - `order.status_changed` — status zlecenia zmienił się (np. Potwierdzone → W transporcie → Dostarczone)
+    - `invoice.generated` — faktura została wygenerowana ze zlecenia
+    - `payment.recorded` — płatność została dopasowana do faktury
+  </Step>
+  <Step title="Zapisz i przetestuj">
+    Kliknij **Zapisz**. Użyj przycisku **Wyślij zdarzenie testowe**, aby wysłać przykładowy ładunek do endpointu i potwierdzić, że odbiera poprawnie.
+  </Step>
+</Steps>
+
+### Format ładunku webhooka
+
+Każde zdarzenie webhook jest dostarczane jako żądanie HTTPS POST z treścią JSON:
+
+```json
+{
+  "event": "order.status_changed",
+  "timestamp": "2025-06-15T14:32:00Z",
+  "data": {
+    "order_id": "ORD-2025-04821",
+    "previous_status": "confirmed",
+    "new_status": "in_transit",
+    "driver_id": "DRV-112",
+    "vehicle_plate": "B123ABC"
+  }
+}
+```
+
+Struktura obiektu `data` różni się w zależności od typu zdarzenia. Pełne schematy ładunku są udokumentowane na docs.druma.io/api.
+
+### Bezpieczeństwo webhooków
+
+Każde żądanie webhook zawiera nagłówek podpisu `X-Druma-Signature`. Jest to skrót HMAC-SHA256 treści żądania przy użyciu Twojego tajnego klucza webhooka (pokazanego podczas tworzenia endpointu). Zweryfikuj ten podpis na swoim serwerze przed przetworzeniem zdarzenia, aby potwierdzić, że żądanie pochodzi z Druma.
+
+### Polityka dostarczania i ponowień
+
+Druma oczekuje, że Twój endpoint odpowie kodem HTTP `2xx` w ciągu 10 sekund. Jeśli nie:
+
+- Druma ponawia próbę z **wykładniczym wycofaniem**: 30 sekund, 2 minuty, 10 minut, 1 godzina, 6 godzin
+- Po 10 nieudanych próbach dostarczenia zdarzenie jest przenoszone do **kolejki utraconych wiadomości**
+- Możesz przeglądać i odtwarzać zdarzenia utracone z **Ustawienia → API → Webhooki → Kolejka utraconych wiadomości**
+
+<Warning>
+Uczyń endpoint webhooka idempotentnym — zaprojektuj go tak, aby obsługiwał dwukrotne otrzymanie tego samego zdarzenia bez efektów ubocznych. Warunki sieciowe mogą czasami powodować duplikaty dostarczeń nawet wtedy, gdy serwer odpowiedział pomyślnie.
+</Warning>
+
+## Pełna dokumentacja API
+
+Pełne odniesienie API, w tym pełne schematy żądań/odpowiedzi, przykłady uwierzytelniania i kody błędów, jest dostępne pod adresem:
+
+**[docs.druma.io/api](https://docs.druma.io/api)**
+
+Odniesienie jest generowane ze specyfikacji OpenAPI i jest zawsze aktualne.
+
+<CardGroup cols={1}>
+  <Card title="Konfiguracja integracji" icon="plug" href="/pl/admin/integration-setup">
+    Przegląd wszystkich integracji Druma i jak nimi zarządzać z panelu Ustawienia.
+  </Card>
+</CardGroup>

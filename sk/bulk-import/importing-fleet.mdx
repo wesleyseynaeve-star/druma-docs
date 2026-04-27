@@ -1,6 +1,59 @@
 ---
-title: "Importing Your Fleet"
-description: "Translation coming soon"
+title: "Import flotily"
+description: "Hromadné nahrávanie vozidiel do Druma pomocou CSV šablóny namiesto ich pridávania jednotlivo."
+icon: "file-import"
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/bulk-import/importing-fleet).
+Použite hromadný import pre pridanie všetkých vozidiel naraz — ideálne pri prvotnom nastavení alebo migrácii z iného systému.
+
+![Obrazovka importu flotily](/images/placeholder.png)
+
+## Stiahnutie šablóny
+
+<Steps>
+  <Step title="Otvorte stránku importu">
+    Prejdite na **Flotila → Vozidlá → Import** a kliknite na **Stiahnuť šablónu**.
+  </Step>
+  <Step title="Vyplňte CSV">
+    Otvorte súbor v Exceli alebo Google Sheets. Vyplňte jedno vozidlo na riadok:
+
+    | Stĺpec | Povinný | Príklad |
+    |--------|---------|---------|
+    | plate | Áno | B 123 ABC |
+    | type | Áno | tractor, rigid, van |
+    | trailer_type | Nie | curtainsider, reefer, flatbed |
+    | euro_standard | Áno | Euro 3 – Euro 6 |
+    | height_m | Nie | 4.0 |
+    | weight_tonnes | Nie | 24 |
+    | axle_count | Nie | 3 |
+    | payload_kg | Nie | 24000 |
+    | daily_cost_eur | Nie | 120 |
+    | adr_expiry | Nie | 2025-12-31 |
+    | active | Áno | true or false |
+  </Step>
+  <Step title="Nahrajte súbor">
+    Uložte ako CSV. V Druma kliknite na **Nahrať CSV** a vyberte súbor.
+  </Step>
+  <Step title="Skontrolujte mapované záznamy">
+    Druma zobrazí náhľadovú tabuľku. Riadky s chybami sú zvýraznené červenou — opravte v CSV a znova nahrajte, alebo upravte priamo.
+  </Step>
+  <Step title="Potvrďte import">
+    Kliknite na **Importovať [X] vozidiel**. Vozidlá sú okamžite vytvorené.
+  </Step>
+</Steps>
+
+## Okruhová úprava
+
+Rovnaká šablóna funguje pre aktualizácie. Prejdite na **Flotila → Vozidlá → Exportovať CSV**, upravte exportovaný súbor a znova importujte. Druma páre podľa evidenčného čísla.
+
+<Note>
+Evidenčné čísla musia byť jedinečné. Ak znova importujete existujúce evidenčné číslo, Druma aktualizuje vozidlo namiesto vytvorenia duplikátu.
+</Note>
+
+<Warning>
+Nastavenie `active = false` označí vozidlo ako neaktívne — zmizne z rozbaľovacích menu priradenia. Pred importom si túto kolónku dvakrát skontrolujte.
+</Warning>
+
+<Card title="Správa flotily" icon="truck" href="/en/planner/fleet-management">
+  Manuálne pridávanie vozidiel a správa nastavení jednotlivých vozidiel.
+</Card>
