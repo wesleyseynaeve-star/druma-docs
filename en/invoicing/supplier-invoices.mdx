@@ -1,0 +1,171 @@
+---
+title: "Supplier Invoices (Accounts Payable)"
+description: "Manage what your company owes — subcontractor carriers, fuel cards, workshops, tolls, insurance, and leasing — with AI-assisted invoice ingestion and an aged creditors dashboard."
+icon: "building-2"
+---
+
+## Overview
+
+The Accounts Payable (AP) module tracks every purchase invoice your company receives from external suppliers. This includes subcontractor carriers you forward loads to, fuel card providers (DKV, UTA, AS24), workshop and tyre suppliers, toll operators (ASFINAG, HU-GO), insurance companies, leasing companies, and any other business expense.
+
+Druma reduces manual entry through two mechanisms: **carrier subcontractors are automatically mirrored into your supplier list** (no double entry), and an **AI-powered email inbox** can extract and draft purchase invoices directly from supplier emails. What does not match automatically lands in a **Review Queue** for a quick human decision.
+
+## Supplier Master
+
+The supplier master is the registry of all companies you buy from. It is the foundation for invoice matching and aged creditor reporting.
+
+**Where:** Finance → Forwarding → **Suppliers** tab
+
+Each supplier record contains:
+
+| Field | Description |
+|-------|-------------|
+| **Name** | Supplier company name |
+| **VAT number** | Used for matching against extracted invoice data |
+| **Email** | Supplier contact email — also used for sender whitelist matching |
+| **Supplier type** | Carrier / Fuel / Workshop / Toll / Insurance / Leasing / Other |
+| **Country** | Supplier country of registration |
+
+### Managing Suppliers
+
+- **Add a supplier:** Click **+ Add Supplier**, fill in the form, and save.
+- **Edit a supplier:** Click **Edit** on any supplier row to update its details.
+- **Delete a supplier:** Click **Delete**. Deletion is blocked if the supplier has linked purchase invoices.
+
+<Note>
+Subcontractor carriers you add under the Subcontractors section are automatically mirrored into the Suppliers list with type **Carrier**. You do not need to add them again here. Changes to the subcontractor record (name, VAT, email) sync to the supplier record automatically.
+</Note>
+
+![Supplier master list showing name, VAT, type, and action buttons](/images/placeholder.png)
+
+## Supplier Invoice Email Inbox
+
+Druma can receive supplier invoices by email, extract the key fields using AI, and either auto-create a draft purchase invoice or route the document to the Review Queue.
+
+### Setup
+
+<Steps>
+  <Step title="Open company settings">
+    Go to **Settings** → **Company** and scroll to the **Supplier Invoice Email** section.
+  </Step>
+  <Step title="Enable the inbox">
+    Toggle **Enable supplier invoice inbox** on. Druma provisions a dedicated inbound email address for your company (for example, `invoices-acme@in.druma.app`). The address is shown immediately after enabling.
+  </Step>
+  <Step title="Copy the email address">
+    Click the copy icon next to the address. Share this address with your suppliers and ask them to send PDF invoices to it. You can also forward invoices from your own inbox to this address.
+  </Step>
+  <Step title="Add sender addresses to the whitelist">
+    In the **Sender Whitelist** section directly below, click **+ Add Sender** and enter each supplier's sending email address. Only whitelisted senders are processed — emails from unknown addresses are silently dropped as a spam and spoofing safeguard.
+  </Step>
+</Steps>
+
+<Warning>
+Keep the supplier invoice email address confidential. Do not publish it on your website or in external documents. Anyone who knows the address and is not on the whitelist is blocked, but the address itself should be treated as a private routing address.
+</Warning>
+
+### What Happens When an Invoice Arrives
+
+When a supplier sends a PDF (or image) to your inbox address from a whitelisted sender:
+
+1. Druma downloads the attachment and stores it securely.
+2. AI extracts: supplier name, VAT number, invoice number, invoice date, total amount, currency, and expense category (fuel / workshop / toll / insurance / leasing / other).
+3. Druma attempts to match the extracted data against your supplier master using VAT number and email address.
+
+The outcome depends on match confidence:
+
+| Outcome | What happens |
+|---------|-------------|
+| **High-confidence carrier invoice** | Routed to the carrier invoice queue (matched against a purchase invoice from a specific subcontracted order) |
+| **High-confidence supplier match** | Draft purchase invoice created automatically and linked to the supplier |
+| **Low confidence or unrecognised supplier** | Appears in the **Review Queue** for manual matching |
+
+<Note>
+AI extraction reads the PDF text layer. Scanned images with low resolution or handwritten text may result in lower confidence scores and land in the Review Queue more often. Ask suppliers to send native PDF exports from their accounting software where possible.
+</Note>
+
+## Review Queue
+
+The Review Queue is where all invoices — both carrier invoices and general supplier invoices — that could not be automatically applied are held for a human decision.
+
+**Where:** Finance → Forwarding → **Invoice Queue** tab
+
+### Reading the Queue
+
+Each row in the queue shows:
+
+- **Source badge** — **Carrier** (from the carrier invoice inbox) or **Supplier** (from the supplier invoice inbox)
+- **Supplier name** — extracted by AI or matched from the supplier master
+- **Amount** and **Currency**
+- **Status** — Pending / Applied / Rejected
+- **Received date**
+
+Use the filter tabs at the top to switch between **Pending**, **Applied**, and **Rejected** views. You can also filter by supplier type to focus on a specific category (for example, show only Fuel invoices).
+
+### Processing a Queue Item
+
+<Steps>
+  <Step title="Expand the row">
+    Click anywhere on a queue row to expand it. The expanded view shows all AI-extracted fields, the matched (or suggested) supplier, and the matched purchase invoice if one was found.
+  </Step>
+  <Step title="Review the extracted data">
+    Check the extracted supplier name, VAT number, invoice number, amount, and date against the PDF. Corrections cannot be made inline — if data is wrong, you will fix it after approving, on the purchase invoice record.
+  </Step>
+  <Step title="Choose an action">
+
+    | Action | When to use |
+    |--------|------------|
+    | **Approve** | Data looks correct and the match is right — creates or confirms the purchase invoice |
+    | **Reject** | Invoice is not valid, a duplicate, or belongs to a different company — removes it from the queue |
+    | **Re-assign** | The suggested purchase invoice is wrong — opens a search to pick the correct one |
+    | **View PDF** | Opens the original attached file in a new tab for manual verification |
+
+  </Step>
+</Steps>
+
+![Review queue showing expanded row with extracted fields, source badge, and action buttons](/images/placeholder.png)
+
+## Aged Creditors Dashboard
+
+The Aged Creditors dashboard shows everything your company owes across all suppliers, grouped by how long the debt has been outstanding.
+
+**Where:** Finance → Analytics → **Aged Creditors** tab
+
+### Reading the Dashboard
+
+The top of the page shows three summary cards:
+
+- **Total outstanding** — sum of all unpaid purchase invoices
+- **Invoices by aging bucket** — count in each bucket
+- **Number of suppliers** — distinct suppliers with outstanding balances
+
+Below the summary, a sortable table lists each supplier with a row per invoice. Click any column header to sort. Click a supplier row to expand it and see individual invoices.
+
+Aging buckets follow standard AP convention:
+
+| Bucket | Definition |
+|--------|-----------|
+| **0–30 days** | Current — within standard payment terms |
+| **31–60 days** | Slightly overdue |
+| **61–90 days** | Overdue — follow up recommended |
+| **90+ days** | Significantly overdue — escalate |
+
+<Note>
+The Aged Creditors view is capped at 500 rows. If your company has more than 500 outstanding purchase invoices, a truncation warning banner appears at the top of the table. Use the **Export CSV** button to download the full dataset for analysis in Excel.
+</Note>
+
+### Exporting
+
+Click **Export CSV** to download the full aged creditors report as a CSV file. The export includes all supplier rows regardless of the 500-row display cap, making it suitable for AP reconciliation in your accounting system.
+
+![Aged creditors dashboard with summary cards, aging buckets, and supplier table](/images/placeholder.png)
+
+---
+
+<Card title="Bank Statement Import" icon="file-up" href="/en/invoicing/bank-statement-import">
+Upload CAMT.053 or MT940 files to auto-match incoming payments against open invoices.</Card>
+
+<Card title="Payment Tracking" icon="circle-check" href="/en/invoicing/payment-tracking">
+Record and track payments against sales invoices and view outstanding balances.</Card>
+
+<Card title="Overdue Dashboard" icon="triangle-alert" href="/en/invoicing/overdue-dashboard">
+Monitor aged receivables and send payment reminders to overdue clients.</Card>

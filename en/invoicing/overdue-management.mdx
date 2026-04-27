@@ -96,6 +96,41 @@ If you do not want to manually send reminders every week, Druma can do it for yo
 Auto-reminders go to the client's finance contact on record. Make sure each client has a finance contact set up with the correct email address before enabling this feature — otherwise reminders may go to the wrong person or not send at all. Check under Clients → Contacts.
 </Warning>
 
+## Dunning Schedule — How Automatic Reminders Work
+
+Automatic reminders run on a **4-stage dunning schedule**, configured per company.
+
+- **Stage 1–3**: emails are sent to the client's finance contacts at configured intervals (for example, 7 days / 14 days / 30 days overdue). Each stage uses a separate email template so the tone can escalate appropriately from polite reminder to firm notice.
+- **Stage 4**: no email is sent automatically. Instead, an escalation notification is sent to your planners and admins — this is a signal to take manual action (legal, factoring, a phone call). Stage 4 never emails the client without human sign-off.
+
+To configure the schedule, go to **Settings → Dunning Policies**:
+
+- Set the **days offset** per stage (when each reminder fires relative to the due date)
+- Edit the **email subject and body** per stage, or use the default i18n templates
+- Click **Preview** on any stage to run a **dry-run preview** and see the email before it goes live
+
+## Pausing and Exempting Clients
+
+Not every client should receive automated reminders. Druma gives you three levels of control:
+
+- **Pause reminders for a client**: go to **Clients** → open the client → set a **Pause reminders until** date. No dunning emails are sent to this client until that date passes. Useful after a client commits to a payment plan.
+- **Exempt a client permanently**: in the same client form, enable the **Dunning exempt** toggle. This client is never chased automatically — useful for key accounts where you prefer to manage the relationship manually.
+- **Suppress a single invoice**: in the invoice editor, enable the **Suppress dunning** toggle on the specific invoice. That invoice is skipped by the dunning schedule even if the client is not exempt. Useful for disputed invoices or invoices under credit note review.
+
+## Manual Send
+
+To send a reminder immediately, outside the automatic schedule:
+
+1. Go to **Invoicing → Overdue**
+2. Select the invoice or invoices
+3. Click **Send Reminder**
+
+This triggers the stage-appropriate template right now, regardless of whether the scheduled send date has been reached.
+
+<Note>
+Rate limit: 50 manual sends per hour per company. This prevents accidental bulk-sends to large client lists.
+</Note>
+
 ## Payment Terms Per Client
 
 Different clients may have different payment terms — some pay on net 15, others on net 45. Druma stores the payment terms per client so the due date is calculated correctly on every invoice.

@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-04-15 11:54 UTC
+Generated: 2026-04-27 06:16 UTC
 
 ---
 
@@ -838,6 +838,32 @@ WinMENTOR Enterprise supports direct API integration.
 
 
 
+## 6. Peppol E-Invoicing (Belgium)
+
+Peppol is the pan-European e-invoicing network. Belgian companies (KBO-registered) are required to send invoices to other Belgian businesses via Peppol — this has been mandatory since January 2026.
+
+**Required for:** Belgian companies sending B2B invoices to other Belgian businesses.
+
+
+  ### Find the Peppol E-Invoicing card
+    Go to **Settings → Integrations** and click the **Peppol E-Invoicing** card.
+  
+  ### Enter your registration details
+    Enter your **KBO number** (Belgian company registration number) and your **VAT number**.
+  
+  ### Register on the Peppol Network
+    Click **Register on Peppol Network**. Druma submits your registration to the e-invoice.be access point. This typically completes within a few minutes.
+  
+  ### Confirm activation
+    Once active, the card shows a green **Active** status. Peppol routing is now automatic for eligible Belgian clients — no extra steps are needed when sending invoices to Belgian recipients.
+  
+
+
+> **Note:** 
+See [Peppol E-Invoicing](/en/integrations/peppol-invoicing) for full details on how the routing works, what happens when a recipient is not on the Peppol network, and how to handle rejections.
+
+
+
 ## Deep-dive articles
 
 
@@ -863,41 +889,149 @@ WinMENTOR Enterprise supports direct API integration.
 
 Druma uses a seat-based subscription model with two types of seats — vehicle seats and user seats — priced on volume tiers. You can choose monthly or annual billing. You manage everything through the Stripe Customer Portal, accessible directly from Druma.
 
-
-## Free Trial
-
-Every new company gets a **30-day free trial**. No credit card is required to start. All features — including eCMR (in mock mode) — are fully available during the trial. At the end of the trial period, you will be prompted to add a payment method and choose your seat counts.
+> **Note:** 
+For current pricing, visit [druma.io](https://druma.io) or contact support@druma.io.
 
 
-## Adding or Removing Seats
 
-You can adjust seat counts at any time. Changes take effect at the start of the next billing cycle.
+## Viewing Your Bill
 
 
-  ### Go to Settings → Billing
-    Click **Manage Seats**.
+  ### Open the Billing page
+    Go to **Settings → Billing**.
   
-  ### Adjust vehicle seats
-    Use the + and – controls to set the number of vehicle seats you need.
+  ### Open the Stripe Customer Portal
+    Click **Open Billing Portal**. You will be redirected to Stripe's hosted customer portal, where Druma never stores your card details directly.
   
-  ### Adjust user seats
-    Set the number of user seats. If you have more active users than seats, Druma will prompt you to add seats before allowing new user invitations.
-  
-  ### Confirm changes
-    Click **Save Changes**. Your updated invoice amount is shown before you confirm.
+  ### View invoices
+    In the Stripe portal, click **Invoice History** to download PDF invoices for any past month.
   
 
+
+
+
+
+## Trial End, Grace Period, and Suspension
+
+### What happens when the trial ends
+
+On day 31 after signup, Druma sends an email asking you to add a payment method. If no payment method is added within **7 days**, your account enters a grace period.
+
+### Grace period (7 days)
+
+During the 7-day grace period:
+- All existing data is preserved.
+- You can still log in and view data.
+- Dispatching new orders and issuing eCMR documents is **blocked**.
+
+You will see a banner at the top of every page during the grace period with a link to add your payment method.
+
+### Suspension (read-only mode)
+
+After the grace period expires with no payment, the account is suspended:
+- Login still works — your data is not deleted.
+- The account is **read-only**: no edits, no new orders, no exports.
+- Drivers cannot receive new dispatches via the mobile app.
 
 > **Warning:** 
-Reducing seats below the number of currently active vehicles or users is not allowed. Archive vehicles or deactivate users first, then reduce the seat count.
+Suspension does not mean your data is deleted. You have time to reactivate. However, do not let suspension persist — drivers will not be able to receive order updates.
+
+
+### How to reactivate
+
+Go to **Settings → Billing** and click **Reactivate Subscription**. Add a payment method if one is not already on file. Your account is restored immediately to full access. Outstanding eCMR charges from the trial period (if any) will appear on the first invoice.
+
+
+## Activating a Paid Subscription
+
+When your trial ends, go to **Settings → Billing** and click **Subscribe now**. You are taken to the Stripe checkout page to enter your payment details and confirm your seat counts.
+
+After completing checkout:
+
+1. Druma polls for subscription activation for up to 30 seconds and shows a blue **"Activating subscription…"** banner while it waits.
+2. Once active, the billing page updates to show your plan, seat counts, and next invoice date.
+3. If the page times out before activation is confirmed, a notification tells you to check back in a few minutes — your subscription is still processing on Stripe's side and will activate shortly.
+
+
+## eCMR Metered Billing
+
+eCMR usage is billed monthly as a metered add-on. You are only charged when all three parties have signed and a certified PDF has been issued — failed or cancelled eCMR documents are not charged.
+
+Usage is reported to Stripe nightly. Your monthly invoice includes the eCMR count from the previous calendar month.
+
+To view your eCMR usage for the current billing period, go to **Settings → Billing** and scroll to the **Usage** section.
+
+
+---
+
+## Branding & Document Formats
+
+
+The **Branding & Formats** settings control how your company appears on every document Druma generates: invoice PDFs, credit note PDFs, and email headers. They also define the numbering pattern used for invoices, credit notes, and order references.
+
+These settings are company-specific. If you manage multiple companies in Druma, each company has its own branding and format configuration.
+
+**Who can edit:** Admin and Company Admin roles only.
 
 
 
-## Monthly vs Annual Billing
 
-Druma offers both **monthly** and **annual** billing. Annual billing gives you **2 months free** — you pay for 10 months and get 12 months of access.
+## Branding tab
 
-You can switch between monthly and annual billing from the **Settings → Billing** page using the Monthly / Annual toggle. Invoices are generated on the same date each cycle (your subscription anniversary date).
+The Branding tab controls the visual elements that appear on PDFs and email templates.
+
+### Logo
+
+Click **Upload Logo** to select an image file from your computer. Druma accepts PNG, JPG, and SVG formats. The logo appears in the top-left corner of invoice and credit note PDFs, and in the header of outbound invoice emails.
+
+For best results, use a logo with a transparent background (PNG or SVG) at a minimum width of 300 px.
+
+### Primary colour
+
+Click the **Primary colour** hex picker and enter or select your brand's primary colour. This colour is applied to the header bar and accent elements on invoice PDFs and email templates.
+
+### Accent colour
+
+The **Accent colour** is used for secondary elements such as table header rows and highlight borders on PDFs.
+
+### Saving
+
+Click **Save Branding** to apply your changes. The new branding takes effect immediately for all documents generated after this point.
+
+> **Note:** 
+Branding changes apply to **new** documents only. Invoices that were already generated and sent are not retroactively updated — the PDF stored for each invoice reflects the branding at the time it was created.
+
+
+
+## Order Format tab
+
+The Order Format tab defines the numbering pattern for order reference numbers — the identifier displayed on the planning board, order detail panel, and any driver or client communications.
+
+### Order number format
+
+The same token system applies as for invoices. Enter your template in the **Order number format** field and watch the live preview update on the right.
+
+**Default format:** `DR-{YYYY}-{NNN}` → produces `DR-2026-001`, `DR-2026-002`, …
+
+**Example:** a haulage company operating in Belgium might use `BE-{YYYY}-{NNNN}` to produce references like `BE-2026-0042`.
+
+### Saving
+
+Click **Save Order Format**. The new format applies to all orders created after saving. Existing orders keep their original reference numbers.
+
+
+## Related pages
+
+
+  Connect TransFollow, SmartBill, fuel card providers, and accounting software.
+
+
+
+  Automatically route invoices to Belgian business clients via the Peppol network.
+
+
+
+  How to generate, send, and track sales invoices in Druma.
 
 
 ---
@@ -1243,11 +1377,20 @@ These badges help you distinguish at a glance between revenue-generating loads a
 
 
 
-  For your daily morning workflow — active orders, live truck positions, and status alerts all in one screen.
+## Cancel a truck switch (Undo)
 
+If you switched a truck mid-order but the new truck hasn't done any work yet, you can undo the switch and restore the original assignment.
 
+On the order row (in the board or the orders list), look for the **Undo Switch** button — it appears only when a cancellable switch exists (i.e. a relay stop is present and no activity has been recorded on the new truck).
 
-  New to Druma? Start here to learn how to create your first order.
+Alternatively, drag the original truck back onto the order on the planning board — Druma will attempt to auto-cancel the switch first before re-assigning.
+
+**The undo is blocked if any of the following are true:**
+- Any stop at or after the relay point has an actual arrival or departure timestamp recorded
+- Any driver status events were captured after the switch
+- The original truck is now assigned to another active order
+
+For multi-switch orders (A → B → C), undoing cancels only the most recent switch (B → C, reverting back to B) — not the entire chain back to the beginning.
 
 
 ---
@@ -1891,19 +2034,37 @@ If you don't want certain carrier-uploaded documents visible to your client auto
 
 
 
-## When to Use Subcontracted Orders
+## Carrier Updates
 
-Use a Subcontracted order type whenever:
+Once a subcontracted order is assigned to a carrier and they begin providing updates via the carrier portal, Druma surfaces their real-time data on the forwarding board and in the order detail panel — no manual relay needed on your side.
 
-- You've taken a load but your own trucks are full
-- You're acting purely as a forwarder and don't carry loads yourself
-- You're using a spot carrier for a one-off load
-- You need to track the margin between what you charge the client and what you pay the carrier
+### On the forwarding board (In Transit cards)
 
-> **Warning:** 
-If you use your own driver and truck, use a standard order type — not Subcontracted. Subcontracted orders are specifically for loads carried by external carriers.
+- **Carrier ETA** — the carrier's own ETA for delivery, labelled "Carrier ETA" to distinguish it from Druma's HERE-calculated ETA
+- **Carrier truck plate** badge — the actual plate the carrier is using on this load
+- **Missing buy rate warning** — an amber badge appears on any card where no buy rate has been set. This signals a margin data gap — open the order and enter the buy rate before invoicing
+
+### In the order detail pane
+
+For subcontracted orders, a **Carrier Updates** section appears in the order detail pane showing:
+
+- Carrier truck plate and driver name
+- Driver phone number (tap to call)
+- Carrier ETA
+- Loading actuals: carrier-reported arrival and departure at the pickup point
+- Delivery actuals: carrier-reported arrival and departure at the delivery point
+
+These fields are populated by the carrier via their portal — no manual entry is needed on your side. If a carrier hasn't sent updates yet, the section shows placeholders.
 
 
+
+  
+    Add carrier companies to your registry before you can assign them to subcontracted orders.
+  
+  
+    Learn how to generate sell and purchase invoices from your orders.
+  
+</CardGroup>
 
 ---
 
@@ -1960,35 +2121,46 @@ Druma uses HERE routing to calculate the ETA for each stop in sequence, taking i
 Client portals show the ETA for their specific delivery — not the entire route, just their stop.
 
 
-## Groupage Manifest
+## Loading Metres (LDM) and Capacity Tracking
 
-Before the driver sets off, print or send them the groupage manifest — a complete list of all stops and cargo for the run.
+Each child order can have a **Loading Metres (LDM)** value entered in the child order form. LDM represents the linear length of trailer floor space the shipment occupies — the standard measure for groupage planning across Europe.
+
+The groupage container shows fill-rate progress bars across three dimensions:
+
+| Dimension | What it measures |
+|---|---|
+| **Weight** | Total weight of all child orders vs the truck's max payload |
+| **Volume (CBM)** | Total cubic metres vs the trailer's volume capacity |
+| **LDM** | Total loading metres vs the trailer's max loading metres |
+
+Colour coding: **Green** = under 80%, **Amber** = 80–99%, **Red** = at or over capacity. Keep an eye on amber and red bars before confirming a groupage container — adding more child orders past capacity creates a compliance risk.
+
+### Cost split mode
+
+The **cost split mode** controls how shared costs (such as the base transport fee) are divided between child orders. Three modes are available: **CBM**, **Weight**, and **LDM**. Click the **Split Mode** toggle on the groupage container to switch between them. The switch triggers an automatic recalculation of each child order's cost share.
+
+Choose the mode that matches your commercial agreement with the clients on that run. CBM is most common for general cargo, LDM for floor-space-critical loads, and weight for dense goods.
+
+### Overload warning
+
+When adding a child order that would push the container over the trailer's capacity (in weight, volume, or LDM), Druma shows an **overload warning**. You can still proceed — the warning doesn't block the action — but the conflict is flagged so you can decide whether to split the load or use a larger trailer.
+
+### Remaining space on the planning board
+
+Groupage cards on the planning board show an **"X.X LDM free"** badge so dispatchers can see remaining trailer space at a glance without opening the container.
 
 
-  ### Open the groupage container
-    Go to **Orders** and open the container.
-  
-  ### Generate the manifest
-    Click **Print Manifest** or **Download Manifest PDF**.
-  
-  ### Share with the driver
-    Print it and hand it over, or share the PDF via the driver app message thread.
-  
+## A Typical Use Case
 
+You have four clients needing loads moved from Bucharest towards Vienna this Thursday. Individually, none of them fills a truck. Together, they do:
 
-The manifest includes: stop number, pickup/delivery address, client reference, cargo description, weight, and any special instructions per stop.
+- Client A: 8 pallets to Bratislava
+- Client B: 4 pallets to Budapest
+- Client C: 10 pallets to Vienna
+- Client D: 6 pallets to Linz
 
+You create one groupage container, add four child orders, assign your driver, and print the manifest. Each client pays for their portion, each gets their own invoice and status updates, and you run a full truck.
 
-
-
-
-  
-    Learn how standard (FTL) orders work in Druma before adding groupage to your workflow.
-  
-  
-    See all your groupage containers and standard orders in the weekly planning view.
-  
-</CardGroup>
 
 ---
 
@@ -2217,16 +2389,233 @@ For example, a Bucharest → Duisburg load might use three tractors:
 Each segment is tracked independently with its own driver, reason, and timestamps.
 
 
+## Important notes
 
-  Manage your tractor fleet — add vehicles, track availability, and handle maintenance blocks.
-
-
-
-  Manage trailers independently from tractors — assignment, detachment, and location tracking.
+> **Warning:** 
+Switching a truck does **not** create a new order. The original order number, client, pricing, and all commercial terms remain the same. Only the operational assignment (which truck and driver) changes.
 
 
+- The **trailer always stays with the cargo**. If you need to change the trailer as well, that is a different operation — see [Trailer Management](/en/planner/trailer-management).
+- Truck switches are **logged in the order's audit history** with the planner's name, timestamp, and reason.
+- The driver app automatically updates — the outgoing driver sees the order disappear from their active loads, and the incoming driver receives a push notification with the job details.
 
-  See all your orders and trucks on the visual dispatch board — the truck switch button is also accessible from here.
+
+---
+
+## Pallet Exchange Ledger
+
+
+## Overview
+
+When you transport goods on EUR-pallets, CHEP, or other exchange pallets, you enter into a running balance with every client and subcontractor — pallets sent out must come back, or a fee is owed. Druma's pallet exchange ledger tracks every movement as an immutable record and gives you a live balance per counterparty so nothing falls through the cracks.
+
+The ledger is **append-only**: movements are added on each order stop, and the running balance is calculated automatically. You can record corrections and adjustments without deleting history.
+
+
+
+
+## Recording pallet movements on an order
+
+Pallet movements are logged at the stop level — pickup, delivery, and offloading stops all have their own **Pallet Movements** section.
+
+
+  ### Open the order detail pane
+    Click the order on the Planning Board or in the Orders list to open its detail pane on the right.
+  
+  ### Navigate to the stop card
+    Scroll to the stop where pallets are being exchanged — typically the pickup (pallets out) or delivery (pallets returned). Each stop card shows a **Pallet Movements** section.
+  
+  ### Add a movement
+    Click **+ Add Movement** on the stop card. A small form appears with:
+    - **Pallet type** — select from EUR, CHEP, EPAL, LPR, IPP, Euro Pool
+    - **Movement type** — Sent (positive), Returned (negative), Adjustment, Correction, or Opening Balance
+    - **Quantity** — number of pallets
+    - **Notes** (optional) — reference number or driver comment
+  
+  ### Save
+    Click **Save** to commit the movement. It is added to the ledger immediately and the counterparty's running balance updates.
+  
+
+
+To remove a mistaken entry, click the **trash icon** next to the movement. Deletion is allowed until the order reaches **Delivered** status — after that, use a **Correction** entry to reverse it.
+
+> **Note:** 
+Use **Opening Balance** once per counterparty to seed their starting balance if you are migrating from a spreadsheet or a previous system. Subsequent movements build on top of it.
+
+
+
+## Fee threshold and automatic fee creation
+
+If a client's pallet balance grows beyond a configured threshold, Druma can automatically prompt you to raise a pallet exchange fee.
+
+When a movement causes the balance to exceed the threshold, a **Pallet Fee Confirmation** modal appears:
+
+- **Confirm** — adds a fee line to the order's extras (visible in the invoice editor as a pallet exchange charge)
+- **Skip** — dismisses the prompt without creating a fee; the balance remains as-is
+
+> **Warning:** 
+Clicking **Skip** does not reset the threshold counter. The modal will appear again on the next movement that exceeds the threshold unless you reduce the balance first by logging returned pallets.
+
+
+
+## Provider sync (optional)
+
+If you use CHEP Connect, Druma can reconcile your in-app ledger against the provider's official balance. Go to **Settings → Integrations → Pallet Exchange**.
+
+**CHEP Connect** is live. Enter your CHEP account credentials, then:
+
+- Click **Test Connection** to verify the credentials are accepted
+- Click **Sync Balance** to pull the provider's current balance and compare it against Druma's running total
+
+Any discrepancy is shown as a reconciliation row — you can accept it as a **Correction** entry to align the two ledgers.
+
+> **Note:** 
+EPAL, LPR, IPP, and Euro Pool provider integrations are coming soon. In the meantime, those pallet types are tracked manually in the ledger. The core ledger works fully without any provider configured.
+
+
+
+---
+
+## Toll Receipts & Reconciliation
+
+
+## Overview
+
+Toll costs are a significant and often opaque part of road freight. HERE's routing API gives you a per-country toll estimate when an order is created, but the actual amount paid on the road routinely differs — different vehicle categories, missing vignettes, seasonal rates, and border crossing variations all cause drift.
+
+Druma closes this gap by letting drivers log toll receipts directly from the PWA, then presents a colour-coded reconciliation panel in the order detail so planners can spot large variances before they affect margins or client invoices.
+
+
+
+
+## The reconciliation panel (planner view)
+
+Open any order's detail pane and scroll to the **Toll Reconciliation** section. The panel shows a table with one row per country where either a HERE estimate or a logged actual exists.
+
+### Delta colour coding
+
+| Colour | Condition | What it means |
+|---|---|---|
+| Green | Delta ≤ 5% | Actual is within the expected range |
+| Amber | Delta 6–15% | Moderate variance — worth reviewing |
+| Red | Delta > 15% | Significant variance — check receipts |
+| Grey | No HERE estimate | HERE had no toll data for this country segment |
+
+The delta is calculated as `(actual − estimate) / estimate`. A positive delta means the driver paid more than estimated; a negative delta means less.
+
+### Receipt list
+
+Below the summary table, each individual receipt is listed with:
+- Date and time logged
+- Country and amount
+- Notes (if any)
+- A thumbnail if a photo was attached — click to open the full image
+
+Planners can add receipts manually using the **Add Receipt** button at the bottom of the section — useful when the driver forgot to log a toll but has the paper receipt.
+
+
+
+
+## Per-country pass-through policy
+
+Not every toll is billed to the client. Some companies absorb tolls for certain corridors as part of their rate; others pass them through in full. Druma lets you configure this at the rate card level.
+
+Go to **Settings → Rate Cards** and open any rate card. There is a **Per-country toll policy** override table at the bottom. For each country:
+
+| Policy | Behaviour |
+|---|---|
+| Pass through | Actual toll appears as an order extras line on the invoice |
+| Absorb | Toll is tracked internally but does not appear on the client invoice |
+| (blank) | Falls back to the rate card's top-level toll policy |
+
+Countries not listed in the override table inherit the rate card default.
+
+### Auto invoice line
+
+When a country is set to **Pass through**, logged toll receipts for that country are automatically summed and added as an order extras line on the invoice during generation. The line is labelled with the country name.
+
+If you need to exclude a specific receipt from the invoice — for example, because it is covered by a separate surcharge agreement — open the invoice editor and toggle **Exclude from invoice** on that extras line.
+
+
+
+  Configure toll pass-through policy, base surcharges, and per-country overrides.
+
+
+
+  Import DKV, UTA, and AS24 statements to automatically populate fuel and toll records.
+
+
+---
+
+## Intermodal & Multimodal Transport
+
+
+## Overview
+
+Intermodal transport moves cargo across multiple transport modes in sequence — for example, a truck pre-hauls a trailer from a Romanian factory to Calais, it crosses to Folkestone on a Channel Tunnel RoRo ferry, and a second truck handles the on-haul to the UK delivery address. Each segment is a **leg**. A single Druma order manages the whole journey: scheduling, carrier assignment, costs, eCMR, and driver visibility per leg.
+
+This is different from a standard order with internal stops. Internal stops are waypoints on a single continuous road journey with one truck. Intermodal legs are distinct transport events that may use different modes, different carriers, and even different countries of jurisdiction.
+
+> **Note:** 
+Groupage orders cannot be made intermodal. The intermodal toggle is hidden on groupage orders.
+
+
+
+## Creating an intermodal order
+
+
+  ### Open the New Order modal or edit an existing order
+    Go to **Operations → Orders** and click **New Order**, or open an existing draft order.
+  
+  ### Enable the Intermodal toggle
+    In the **Stops** section header, find the **Intermodal** toggle and switch it on. A **Legs** section appears above the stops list.
+  
+  ### Add legs
+    Click **+ Add Leg** to create the first leg. Add as many legs as the journey requires — there is no limit.
+  
+  ### Add stops as normal
+    Stops (pickup, delivery, internal) are added in the Stops section as usual. Each stop is associated with the leg it belongs to.
+  
+
+
+
+## Sea / intermodal leg details
+
+For any leg with mode **Sea**, **Rail**, **Air**, or **Barge**, a collapsible **Sea / intermodal details** section appears on the leg card. All fields are optional.
+
+| Field | Format | Notes |
+|---|---|---|
+| Booking Reference | Free text | Carrier's booking confirmation number |
+| Container Number | Free text | ISO container ID |
+| Seal Number | Free text | |
+| Vessel Name | Free text | Ship or train service name |
+| Voyage Number | Free text | |
+| Carrier SCAC | 4 characters | Standard Carrier Alpha Code |
+| Port of Loading | 5-character LOCODE | e.g. `FRXXX` for Calais |
+| Port of Discharge | 5-character LOCODE | e.g. `GBFXT` for Folkestone |
+| Cut-off date/time | Date + time | Cargo acceptance deadline at Port of Loading |
+| ETD | Date + time | Estimated time of departure from Port of Loading |
+| ETA at POD | Date + time | Estimated time of arrival at Port of Discharge |
+
+> **Warning:** 
+If the cut-off date is within 48 hours of the leg's planned end, Druma shows an amber warning banner on the leg card. Review the timeline to make sure the truck reaches the port in time.
+
+
+Switching a leg's mode back to **Road** clears the sea/intermodal detail fields automatically.
+
+
+## eCMR per road leg
+
+Each road leg that crosses an international border gets its own eCMR. To create one, open the leg card and click **Create eCMR**. The eCMR is generated via TransFollow with the leg's origin, destination, and assigned carrier pre-filled.
+
+Legs that stay within a single country do not require an eCMR (unless your company policy mandates one). The **Create eCMR** button is always available if you need to override this.
+
+Three-party signature flow and certified PDF download work identically to standard eCMR — see the [eCMR documentation](/en/planner/ecmr) for details.
+
+
+## Cost and margin tracking
+
+Each leg has its own **Buy rate** and **Cost breakdown**. The order's total cost is the sum across all legs. The margin calculation in the order detail pane compares the agreed sell price against the total multi-leg cost, giving you a consolidated margin figure for the whole intermodal journey.
 
 
 ---
@@ -2652,6 +3041,67 @@ For dangerous goods loads, the checklist may include:
 
 ---
 
+## Post-Trip Vehicle Inspection (DVIR)
+
+
+## Overview
+
+After a driver taps **Delivered**, Druma automatically presents a **Post-Trip Inspection** overlay. This is a Driver Vehicle Inspection Report (DVIR) — a structured walkthrough of the truck's condition at the end of each trip. It replaces informal verbal reports and gives your fleet manager a complete, timestamped record of every defect.
+
+> **Note:** 
+Post-trip inspection is only triggered for single-order trips. It does not appear at intermediate stops during groupage (multi-stop) runs.
+
+
+
+
+
+## Defect severity levels
+
+### OK
+No action required. The item is logged as inspected and clear.
+
+### Advisory
+The defect is noted and the planner receives an alert. The truck is not blocked — it can continue to be assigned to orders. The advisory is visible in the order detail panel and in the Fleet → **Defects** tab.
+
+### Safety Critical
+A serious defect that may make the vehicle unsafe or non-compliant to operate.
+
+- The planner and fleet manager are notified immediately.
+- If the **Auto-block truck for safety-critical defects** company toggle is enabled, the truck is automatically marked unavailable and disappears from the assignable list on the planning board until the defect is resolved via a work order.
+- The driver is shown a clear warning on submission explaining that the vehicle may be taken out of service.
+
+> **Warning:** 
+If the auto-block toggle is enabled, a safety-critical defect will remove the truck from dispatch immediately — even if there are future orders already assigned to it. Review the Fleet → Defects tab as soon as you receive a safety-critical alert.
+
+
+
+## Fleet manager: tracking open defects
+
+Go to **Fleet → Defects** to see all defects across your entire fleet. The page has three filter tabs:
+
+| Tab | What it shows |
+|---|---|
+| **Open** | Defects not yet linked to a completed or cancelled work order |
+| **Acknowledged** | Defects that a fleet manager has reviewed |
+| **All** | Full history |
+
+Each row shows the truck, defect item name, severity badge, date reported, and the driver who submitted it.
+
+For **Safety Critical** rows, a **Create Work Order** button is available directly on the row. Clicking it opens the work order form pre-filled with the defect description and severity — no copy-pasting required.
+
+
+
+
+
+  The pre-trip checklist runs before departure. Learn how drivers complete it and how admins configure hard and soft blocks.
+
+
+
+  How to create work orders from safety-critical defects and manage maintenance schedules across your fleet.
+
+
+---
+
 ## Tracking Shipments
 
 
@@ -3025,6 +3475,26 @@ Go to **Invoicing** → **New Invoice** → search for the client → select the
 
 
 
+
+## Automatic Surcharge Lines (Order Extras)
+
+In addition to the main transport fee, Druma automatically adds surcharge lines to the invoice based on what happened during the order:
+
+| Surcharge | When it's added |
+|---|---|
+| **Waiting charge** | When the driver logged waiting time beyond the free period |
+| **Toll (pass-through)** | When driver-logged toll receipts exist and your rate card policy is pass-through for that country |
+| **Wasted journey fee** | When a wasted journey was recorded on the order |
+| **ADR surcharge** | When the order was flagged as ADR/hazardous cargo |
+
+These lines appear automatically in the invoice editor — no manual entry needed.
+
+**You can:**
+- **Exclude a line from the invoice** — click the **Exclude** toggle on the line row. The charge disappears from the invoice but remains on the order record for internal cost tracking.
+- **Restore excluded lines** — click **Restore hidden charges** at the bottom of the line items section to bring back any excluded auto-lines.
+- **Add custom lines** — use the **+ Add Line** button to add palette exchange fees, customs clearance charges, handling fees, or any other extra. Pick from your company's **extras catalog** or enter a custom description and amount.
+
+To manage the extras catalog (company-wide line item templates): **Settings → Extras Catalog**.
 
 ## Invoice Numbering
 
@@ -3523,6 +3993,41 @@ If you do not want to manually send reminders every week, Druma can do it for yo
 Auto-reminders go to the client's finance contact on record. Make sure each client has a finance contact set up with the correct email address before enabling this feature — otherwise reminders may go to the wrong person or not send at all. Check under Clients → Contacts.
 
 
+## Dunning Schedule — How Automatic Reminders Work
+
+Automatic reminders run on a **4-stage dunning schedule**, configured per company.
+
+- **Stage 1–3**: emails are sent to the client's finance contacts at configured intervals (for example, 7 days / 14 days / 30 days overdue). Each stage uses a separate email template so the tone can escalate appropriately from polite reminder to firm notice.
+- **Stage 4**: no email is sent automatically. Instead, an escalation notification is sent to your planners and admins — this is a signal to take manual action (legal, factoring, a phone call). Stage 4 never emails the client without human sign-off.
+
+To configure the schedule, go to **Settings → Dunning Policies**:
+
+- Set the **days offset** per stage (when each reminder fires relative to the due date)
+- Edit the **email subject and body** per stage, or use the default i18n templates
+- Click **Preview** on any stage to run a **dry-run preview** and see the email before it goes live
+
+## Pausing and Exempting Clients
+
+Not every client should receive automated reminders. Druma gives you three levels of control:
+
+- **Pause reminders for a client**: go to **Clients** → open the client → set a **Pause reminders until** date. No dunning emails are sent to this client until that date passes. Useful after a client commits to a payment plan.
+- **Exempt a client permanently**: in the same client form, enable the **Dunning exempt** toggle. This client is never chased automatically — useful for key accounts where you prefer to manage the relationship manually.
+- **Suppress a single invoice**: in the invoice editor, enable the **Suppress dunning** toggle on the specific invoice. That invoice is skipped by the dunning schedule even if the client is not exempt. Useful for disputed invoices or invoices under credit note review.
+
+## Manual Send
+
+To send a reminder immediately, outside the automatic schedule:
+
+1. Go to **Invoicing → Overdue**
+2. Select the invoice or invoices
+3. Click **Send Reminder**
+
+This triggers the stage-appropriate template right now, regardless of whether the scheduled send date has been reached.
+
+> **Note:** 
+Rate limit: 50 manual sends per hour per company. This prevents accidental bulk-sends to large client lists.
+
+
 ## Payment Terms Per Client
 
 Different clients may have different payment terms — some pay on net 15, others on net 45. Druma stores the payment terms per client so the due date is calculated correctly on every invoice.
@@ -3620,6 +4125,273 @@ Encourage your clients to use the invoice number as their bank transfer referenc
 
 > **Warning:** 
 Bank notification emails sometimes contain confidential financial information. Make sure your Druma reconciliation inbox address is kept private — do not share it publicly. It is unique to your company and cannot be guessed, but treat it like a password.
+
+
+
+---
+
+## Bank Statement Import
+
+
+## Overview
+
+Instead of recording payments one by one, you can upload your bank statement directly into Druma. Druma parses every credit transaction in the file, runs matching logic against your open invoices, and automatically applies any confident matches. Unmatched transactions drop into the Reconciliation queue for a quick manual review.
+
+This is the fastest way to reconcile a high volume of incoming payments at once — ideal at end of week or end of month.
+
+## Supported Formats and Banks
+
+Druma accepts two standard formats:
+
+| Format | Description |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — exported by most EU banks via online banking |
+| **MT940 SWIFT** | SWIFT legacy format — still common for corporate banking APIs |
+
+Both formats are supported by BRD, BCR, Raiffeisen Bank, UniCredit, and ING Romania, as well as the majority of EU banks. Druma auto-detects the format on upload. If detection fails, select the correct format from the **Format** dropdown inside the import modal.
+
+**Maximum file size:** 10 MB per upload.
+
+> **Note:** 
+Re-uploading the same statement file is safe. Druma fingerprints each transaction and silently skips any duplicates — you will never double-record a payment.
+
+
+## How to Import a Statement
+
+
+  ### Open the import dialog
+    Go to **Finance** → **Reconciliation** → **Payments** tab. Click the **Import Statement** button in the top-right corner of the page.
+  
+  ### Select your file
+    Click **Choose file** and select your exported bank statement. Accepted extensions are `.xml` (CAMT.053) and `.sta` or `.txt` (MT940). The file must be 10 MB or smaller.
+  
+  ### Confirm the format
+    Druma auto-detects the format and shows a label below the file name. If the label is wrong, open the **Format** dropdown and select the correct format manually before proceeding.
+  
+  ### Run the import
+    Click **Import**. Druma parses all credit transactions in the file and runs matching logic against every open invoice in your company. This typically completes in a few seconds.
+  
+  ### Review the result summary
+    When processing finishes, a summary modal displays the outcome. Review each category before closing — see the breakdown below.
+  
+
+
+
+
+## Understanding the Result Summary
+
+After every import, Druma shows a result summary with the following counters:
+
+| Field | What it means |
+|-------|---------------|
+| **Parsed** | Total credit transactions found in the file |
+| **Auto-matched** | Transactions matched to an invoice with high confidence — payment applied automatically |
+| **Need review** | Transactions where a potential match was found but confidence was below the threshold — appear in the Reconciliation queue |
+| **Duplicates skipped** | Transactions already recorded from a previous upload of the same file — ignored silently |
+| **Errors** | Transactions that could not be parsed (malformed rows, unsupported currency, missing reference) |
+
+A healthy import has a high **Auto-matched** count and a low **Need review** count. If you see many rows needing review, it usually means invoice references are not included in payment descriptions — ask clients to include their invoice number in the bank transfer reference field.
+
+
+
+## Matching Logic
+
+Druma matches each bank transaction to an invoice using the following signals, in order of priority:
+
+1. **Invoice number in transaction reference** — exact or partial match (e.g. `DR-2024-047` in the payment description)
+2. **Amount match** — within ±2% tolerance to account for bank fees or rounding differences
+3. **Client name or VAT number** — cross-referenced against your client master
+
+All three signals agreeing → auto-applied. Partial signals → queued for review. No signals → queued as unmatched.
+
+## Handling Unmatched Transactions
+
+Any transaction that could not be confidently matched appears in the **Reconciliation** queue on the same **Payments** tab. Each row shows a **Statement** source badge (distinguishing it from transactions that arrived via email parsing, which show an **Email** badge).
+
+
+  ### Open the Reconciliation queue
+    Stay on **Finance** → **Reconciliation** → **Payments** tab. Unmatched rows appear below the summary with a **Pending** status.
+  
+  ### Expand the transaction
+    Click a row to expand it. Druma shows the full transaction details: date, amount, bank reference text, and any candidate invoices it considered.
+  
+  ### Match manually
+    Click **Match** next to the correct invoice. Druma applies the payment and moves the transaction to **Applied** status.
+  
+  ### Discard if not relevant
+    If the transaction is not a client payment (for example, an internal transfer or a bank fee), click **Discard**. The row moves to **Rejected** status and does not affect any invoice.
+  
+
+
+> **Warning:** 
+Discarding a transaction is a soft action — it only marks the row as rejected in Druma. It does not affect your actual bank account or accounting system. If you discard by mistake, contact support — there is currently no self-service undo for rejected reconciliation rows.
+
+
+## Tips for Higher Auto-Match Rates
+
+- **Ask clients to include the invoice number** in the payment reference field of their bank transfer. A reference like `DR-2024-047` gives Druma an exact match on the first signal.
+- **Keep client VAT numbers up to date** in your client master — Druma uses them as a secondary matching signal when the reference is missing.
+- **Use net payment terms** consistently. Payments that arrive with deducted fees (banking or factoring) fall within the ±2% tolerance for amounts under ~€5,000. For larger invoices, confirm with clients that they send the full amount.
+
+
+---
+
+## Supplier Invoices (Accounts Payable)
+
+
+## Overview
+
+The Accounts Payable (AP) module tracks every purchase invoice your company receives from external suppliers. This includes subcontractor carriers you forward loads to, fuel card providers (DKV, UTA, AS24), workshop and tyre suppliers, toll operators (ASFINAG, HU-GO), insurance companies, leasing companies, and any other business expense.
+
+Druma reduces manual entry through two mechanisms: **carrier subcontractors are automatically mirrored into your supplier list** (no double entry), and an **AI-powered email inbox** can extract and draft purchase invoices directly from supplier emails. What does not match automatically lands in a **Review Queue** for a quick human decision.
+
+## Supplier Master
+
+The supplier master is the registry of all companies you buy from. It is the foundation for invoice matching and aged creditor reporting.
+
+**Where:** Finance → Forwarding → **Suppliers** tab
+
+Each supplier record contains:
+
+| Field | Description |
+|-------|-------------|
+| **Name** | Supplier company name |
+| **VAT number** | Used for matching against extracted invoice data |
+| **Email** | Supplier contact email — also used for sender whitelist matching |
+| **Supplier type** | Carrier / Fuel / Workshop / Toll / Insurance / Leasing / Other |
+| **Country** | Supplier country of registration |
+
+### Managing Suppliers
+
+- **Add a supplier:** Click **+ Add Supplier**, fill in the form, and save.
+- **Edit a supplier:** Click **Edit** on any supplier row to update its details.
+- **Delete a supplier:** Click **Delete**. Deletion is blocked if the supplier has linked purchase invoices.
+
+> **Note:** 
+Subcontractor carriers you add under the Subcontractors section are automatically mirrored into the Suppliers list with type **Carrier**. You do not need to add them again here. Changes to the subcontractor record (name, VAT, email) sync to the supplier record automatically.
+
+
+
+
+## Supplier Invoice Email Inbox
+
+Druma can receive supplier invoices by email, extract the key fields using AI, and either auto-create a draft purchase invoice or route the document to the Review Queue.
+
+### Setup
+
+
+  ### Open company settings
+    Go to **Settings** → **Company** and scroll to the **Supplier Invoice Email** section.
+  
+  ### Enable the inbox
+    Toggle **Enable supplier invoice inbox** on. Druma provisions a dedicated inbound email address for your company (for example, `invoices-acme@in.druma.app`). The address is shown immediately after enabling.
+  
+  ### Copy the email address
+    Click the copy icon next to the address. Share this address with your suppliers and ask them to send PDF invoices to it. You can also forward invoices from your own inbox to this address.
+  
+  ### Add sender addresses to the whitelist
+    In the **Sender Whitelist** section directly below, click **+ Add Sender** and enter each supplier's sending email address. Only whitelisted senders are processed — emails from unknown addresses are silently dropped as a spam and spoofing safeguard.
+  
+
+
+> **Warning:** 
+Keep the supplier invoice email address confidential. Do not publish it on your website or in external documents. Anyone who knows the address and is not on the whitelist is blocked, but the address itself should be treated as a private routing address.
+
+
+### What Happens When an Invoice Arrives
+
+When a supplier sends a PDF (or image) to your inbox address from a whitelisted sender:
+
+1. Druma downloads the attachment and stores it securely.
+2. AI extracts: supplier name, VAT number, invoice number, invoice date, total amount, currency, and expense category (fuel / workshop / toll / insurance / leasing / other).
+3. Druma attempts to match the extracted data against your supplier master using VAT number and email address.
+
+The outcome depends on match confidence:
+
+| Outcome | What happens |
+|---------|-------------|
+| **High-confidence carrier invoice** | Routed to the carrier invoice queue (matched against a purchase invoice from a specific subcontracted order) |
+| **High-confidence supplier match** | Draft purchase invoice created automatically and linked to the supplier |
+| **Low confidence or unrecognised supplier** | Appears in the **Review Queue** for manual matching |
+
+> **Note:** 
+AI extraction reads the PDF text layer. Scanned images with low resolution or handwritten text may result in lower confidence scores and land in the Review Queue more often. Ask suppliers to send native PDF exports from their accounting software where possible.
+
+
+## Review Queue
+
+The Review Queue is where all invoices — both carrier invoices and general supplier invoices — that could not be automatically applied are held for a human decision.
+
+**Where:** Finance → Forwarding → **Invoice Queue** tab
+
+### Reading the Queue
+
+Each row in the queue shows:
+
+- **Source badge** — **Carrier** (from the carrier invoice inbox) or **Supplier** (from the supplier invoice inbox)
+- **Supplier name** — extracted by AI or matched from the supplier master
+- **Amount** and **Currency**
+- **Status** — Pending / Applied / Rejected
+- **Received date**
+
+Use the filter tabs at the top to switch between **Pending**, **Applied**, and **Rejected** views. You can also filter by supplier type to focus on a specific category (for example, show only Fuel invoices).
+
+### Processing a Queue Item
+
+
+  ### Expand the row
+    Click anywhere on a queue row to expand it. The expanded view shows all AI-extracted fields, the matched (or suggested) supplier, and the matched purchase invoice if one was found.
+  
+  ### Review the extracted data
+    Check the extracted supplier name, VAT number, invoice number, amount, and date against the PDF. Corrections cannot be made inline — if data is wrong, you will fix it after approving, on the purchase invoice record.
+  
+  ### Choose an action
+
+    | Action | When to use |
+    |--------|------------|
+    | **Approve** | Data looks correct and the match is right — creates or confirms the purchase invoice |
+    | **Reject** | Invoice is not valid, a duplicate, or belongs to a different company — removes it from the queue |
+    | **Re-assign** | The suggested purchase invoice is wrong — opens a search to pick the correct one |
+    | **View PDF** | Opens the original attached file in a new tab for manual verification |
+
+  
+
+
+
+
+## Aged Creditors Dashboard
+
+The Aged Creditors dashboard shows everything your company owes across all suppliers, grouped by how long the debt has been outstanding.
+
+**Where:** Finance → Analytics → **Aged Creditors** tab
+
+### Reading the Dashboard
+
+The top of the page shows three summary cards:
+
+- **Total outstanding** — sum of all unpaid purchase invoices
+- **Invoices by aging bucket** — count in each bucket
+- **Number of suppliers** — distinct suppliers with outstanding balances
+
+Below the summary, a sortable table lists each supplier with a row per invoice. Click any column header to sort. Click a supplier row to expand it and see individual invoices.
+
+Aging buckets follow standard AP convention:
+
+| Bucket | Definition |
+|--------|-----------|
+| **0–30 days** | Current — within standard payment terms |
+| **31–60 days** | Slightly overdue |
+| **61–90 days** | Overdue — follow up recommended |
+| **90+ days** | Significantly overdue — escalate |
+
+> **Note:** 
+The Aged Creditors view is capped at 500 rows. If your company has more than 500 outstanding purchase invoices, a truncation warning banner appears at the top of the table. Use the **Export CSV** button to download the full dataset for analysis in Excel.
+
+
+### Exporting
+
+Click **Export CSV** to download the full aged creditors report as a CSV file. The export includes all supplier rows regardless of the 500-row display cap, making it suitable for AP reconciliation in your accounting system.
+
 
 
 
@@ -4186,6 +4958,88 @@ Druma's automation eliminates the most common compliance failures: missing decla
 
 ---
 
+## Workshop & Maintenance
+
+
+## Overview
+
+The Workshop & Maintenance module gives fleet managers a structured way to track every maintenance job — from routine oil changes to safety-critical defect repairs. Work orders tie directly into the planning board (blocking trucks when needed) and into the post-trip inspection flow (safety-critical defects can create work orders automatically or with one click).
+
+Find the module under **Fleet → Work Orders** and **Fleet → Maintenance**.
+
+
+## Creating a work order from a defect
+
+When a driver submits a post-trip inspection with a **Safety Critical** defect, the defect appears in **Fleet → Defects**. Each safety-critical row has a **Create Work Order** button.
+
+Clicking it opens the work order form pre-filled with:
+- The truck that was inspected
+- The defect item name and description as the work order description
+- Type set to **Safety Critical**
+
+You only need to add line items and a scheduled date, then save.
+
+
+## Planning board: the wrench badge
+
+When a truck has one or more **Open** or **In Progress** work orders, an amber wrench badge appears on that truck's card on the planning board. The badge is a quick signal to dispatchers that the vehicle has outstanding maintenance.
+
+### Workshop Quick Resolve
+
+Click the wrench badge to open the **Workshop Quick Resolve** modal. From here you can:
+
+- **Mark Complete** — closes the work order and removes the block without leaving the planning board
+- **Cancel** — cancels the work order and removes the block
+
+This is designed for situations where you just need to clear a block quickly (e.g., the repair is finished and you need to reassign the truck) without navigating to the full Work Orders tab.
+
+
+
+
+
+  How drivers report defects at the end of a trip, and how severity levels are classified.
+
+
+
+  Track ITP, insurance, CEMT, and ADR certificate expiry — with planning board warnings when documents are close to expiring.
+
+
+---
+
+## Actual Mileage Tracking
+
+
+## Overview
+
+Druma records the odometer value at the start and end of each trip, then calculates how many kilometres the truck actually drove — separate from the HERE-planned route distance. This lets you spot route deviations, identify drivers who consistently exceed planned distances, and reconcile fuel costs against actual km.
+
+
+## Supported telematics providers
+
+Odometer data comes exclusively from telematics integrations. The driver PWA does not capture odometer readings manually.
+
+| Provider | Notes |
+|---|---|
+| **Geotab** | Full odometer feed via MyGeotab SDK |
+| **Webfleet** | TOMS API odometer field |
+| **VDO** | RoadLog / Fleet telematics |
+| **Aberg Connect** | Position normaliser integration |
+
+All four providers feed through Druma's `position-normaliser` Edge Function, which writes a single-row record per truck on each position ping (GDPR single-row overwrite pattern).
+
+
+## Planned vs actual distance
+
+The order detail panel shows both figures side by side:
+
+- **Planned distance** — calculated by HERE Routing at the time the order was created, based on the route between all stops
+- **Actual distance** — derived from the telematics odometer delta
+
+A significant gap between the two (more than ~15%) may indicate a detour, a routing error, or a stop not recorded in the order. Use this comparison as a prompt to investigate, not as an automatic flag.
+
+
+---
+
 ## Email Order Ingestion
 
 
@@ -4561,6 +5415,169 @@ With notifications disabled, assignments are still recorded, but no push notific
     Step-by-step guide for installing the Druma PWA on Android and iOS.
   
 </CardGroup>
+
+---
+
+## Smart Import (AI Bulk Onboarding)
+
+
+## Overview
+
+Smart Import is an AI-powered onboarding tool that reads documents you already have — carrier fleet lists, driver licence files, client directories, insurance certificates — and turns them into structured Druma records. Instead of re-typing data from paperwork or reformatting spreadsheets to match an import template, you hand the raw document to Druma and review what the AI extracted before it goes into the database.
+
+Go to **Tools → Smart Import** to open it.
+
+> **Note:** 
+Smart Import uses Google Gemini to extract data. Files are processed server-side and are not stored permanently after extraction — only the structured records you choose to import are saved.
+
+
+
+
+
+## Supported document types
+
+- **PDF** — fleet lists, carrier profiles, insurance certificates, driver dossiers
+- **Images** — JPEG, PNG, WebP, HEIC/HEIF — scans, phone photos, screenshots
+- **Excel** — `.xlsx` files in any layout (Smart Import reads content, not just standard templates)
+- **CSV** — comma- or semicolon-delimited files
+
+
+## The Review Dashboard
+
+The Review Dashboard is the central workspace after extraction. It has two levels:
+
+**Category cards (top level)** — one card per data type found in your documents. Each card shows:
+- The category name
+- Number of records extracted
+- A summary warning if any records have Low confidence or Duplicate flags
+
+**Record table (drill-down)** — click a card to open the editable table for that category. The table shows one column per field (e.g., Plate, Trailer Type, Capacity, Year for Fleet), with confidence indicators and duplicate flags on each row.
+
+
+
+You can switch between categories freely — your edits are preserved until you import or close the session.
+
+
+## Duplicate detection
+
+Before showing the Review Dashboard, Druma compares extracted records against your existing company data:
+
+- **Fleet**: matches on licence plate
+- **Drivers**: matches on name + date of birth (when available)
+- **Clients**: matches on VAT number
+- **Companies / Subcontractors**: matches on VAT number
+- **Insurance**: matches on certificate number (when available)
+
+Records that match existing data are flagged with a **Duplicate** badge on the row. You have two options for each duplicate:
+
+- **Skip** (default) — the row will not be imported. Use this when the existing record is already correct.
+- **Overwrite** — the import will update the existing record with the extracted data. Use this carefully — it replaces the stored values.
+
+Rows without a Duplicate flag are new records and will be inserted on import.
+
+
+## Limitations
+
+Smart Import is designed for company, fleet, driver, client, and insurance data. It does not handle:
+
+- **Orders** — use the order form or the inbound order email feature for order creation
+- **Invoices** — invoices are generated automatically from delivered orders or via the carrier invoice ingestion workflow
+- **Historical data migration** — for large historical datasets (thousands of records), contact support for an assisted migration
+
+Smart Import works best with documents that are primarily text-based. It can process handwriting in images but accuracy drops significantly compared to printed text.
+
+
+
+  Manage trucks, trailers, and drivers — and verify imported fleet records here after a Smart Import.
+
+
+
+  View and edit client records created by Smart Import, and add contacts and standing instructions.
+
+
+---
+
+## Truck Parking Map
+
+
+## Overview
+
+The Truck Parking Map layer adds verified truck parking locations to your Live Map. For each active truck, Druma calculates which parking areas are within a configurable detour distance of the truck's current route and shows them colour-coded by security level — so you can find a safe, legal rest stop in seconds rather than asking the driver to search on their phone.
+
+This matters for EU road transport compliance. Drivers operating under Regulation (EC) No 561/2006 must take mandatory 45-minute breaks after 4.5 hours of driving, and daily rest periods of at least 11 hours in a suitable facility. Having parking options visible on the dispatch map means you can plan rest stops proactively, especially on long international routes through areas you are less familiar with.
+
+Go to **Dispatching → Live Map** and enable the **Parking Layer** toggle to use this feature.
+
+
+
+
+## Reading parking markers
+
+Each marker on the map represents one truck parking location. Markers are colour-coded by security level:
+
+| Colour | Security level | Meaning |
+|---|---|---|
+| Green | **High** | CCTV coverage and on-site security guards. Suitable for high-value cargo. |
+| Amber | **Medium** | Some security measures — typically fenced with CCTV but no on-site guards. |
+| Red | **Basic** | Unsecured — no fencing, CCTV, or guards. Acceptable for short stops; not recommended for overnight rest with valuable cargo. |
+
+Click any marker to open the parking popup. The popup shows:
+
+- **Name** and full address
+- **Security level** badge
+- **Capacity** — total spaces available at this location
+- **Amenities** — fuel, showers, food, toilets, WiFi (shown as icons)
+- **Detour** — estimated extra distance (km) and time (minutes) from the selected truck's route to reach this parking
+
+The detour calculation uses real driving distances on HGV-permitted roads, not straight-line distance — so a parking that is 3 km away on the map may show a 7-minute detour if the route requires a turn-around.
+
+
+## Finding parking for a specific truck
+
+
+  ### Select the truck on the Live Map
+    Click a truck marker on the Live Map. The truck is highlighted and its current route polyline appears on the map — a coloured line showing the planned path from current position to the delivery stop.
+  
+  ### Enable the Parking Layer
+    Click the **Parking Layer** toggle in the top-right controls. Markers appear filtered to your configured max detour distance from the truck's route.
+  
+  ### Apply filters if needed
+    Open the Filter panel and set your minimum security level and required amenities. Markers update immediately.
+  
+  ### Review the options
+    Click individual markers to see the popup with full details, capacity, and detour time. Markers closer to the truck's route (smaller detour) are preferred — there is no automatic sort on the map, but the detour figure in the popup lets you compare options quickly.
+  
+  ### Propose a stop (optional)
+    From the parking popup, click **Propose Stop** to send a rest stop suggestion to the driver — see the section below for details.
+  
+
+
+
+## Parking data sources
+
+Druma combines two sources of parking data:
+
+**OpenStreetMap (OSM)**
+Public truck parking data contributed to OpenStreetMap and automatically ingested by Druma. Covers the majority of formal truck parking areas across Europe — motorway service areas, dedicated HGV parks, border crossing facilities. OSM data is refreshed periodically. Coverage is strongest in Western and Central Europe; Eastern Europe and remote areas may have gaps.
+
+**Company-uploaded parking**
+Parking locations added by your own company — trusted stops your drivers use regularly, private yards that accept overnight parking, partner facilities. Company-uploaded locations are only visible to users in your company. They appear on the map alongside OSM data with no visual distinction — filtering and security ratings work the same way.
+
+
+## EU driving hours context
+
+The parking layer is most useful when planning compliance with EU Regulation (EC) No 561/2006 rest requirements:
+
+| Requirement | Rule |
+|---|---|
+| Break after driving | 45-minute break after 4.5 hours continuous driving (can split as 15 + 30 min) |
+| Daily rest | Minimum 11 hours (reducible to 9 hours max 3 times per week) |
+| Weekly rest | Minimum 45 hours every two weeks (one can be reduced to 24 hours) |
+
+When you know a driver's departure time and destination, you can estimate when they will need a break and use the parking map to identify suitable locations before they need to stop — rather than reacting after the driver calls asking where to park.
+
+Druma's ETA engine accounts for mandatory EU break time in estimated arrival calculations. The parking layer gives you the ground-level information to match a break requirement to a concrete, safe location.
+
 
 ---
 
@@ -5462,6 +6479,152 @@ The reference is generated from the OpenAPI specification and is always current.
     Overview of all Druma integrations and how to manage them from the Settings panel.
   
 </CardGroup>
+
+---
+
+## Peppol E-Invoicing (Belgium)
+
+
+Peppol (Pan-European Public Procurement On-Line) is the EU standard network for exchanging structured electronic invoices between businesses. In Belgium, sending invoices via Peppol is **mandatory for all KBO-registered companies** issuing B2B invoices as of January 2026.
+
+Druma connects to the Peppol network through **e-invoice.be**, an accredited Belgian Peppol Access Point. Once configured, Druma detects which of your clients are reachable on Peppol and routes invoices to them automatically — you do not need to change how you create or send invoices.
+
+
+
+
+## Setup
+
+
+  ### Open the Peppol card
+    Go to **Settings → Integrations**. Locate the **Peppol E-Invoicing** card. Its status will show **Not configured**.
+  
+  ### Click Configure
+    Click **Configure** on the card. A settings panel opens.
+  
+  ### Enter your KBO and VAT numbers
+    Enter your company's **KBO number** (10-digit Belgian company registration number) and **VAT number** (BE followed by 10 digits) in the respective fields.
+  
+  ### Register on the Peppol network
+    Click **Register on Peppol Network**. Druma submits your registration to e-invoice.be. This typically completes in a few seconds.
+  
+  ### Confirm activation
+    Once registration succeeds, the card status changes to **Active**. Your company is now a Peppol participant and can both send and receive structured invoices on the network.
+  
+
+
+> **Warning:** 
+Only **Admin** and **Company Admin** users can configure integrations. If you do not see the Configure button, ask your account administrator.
+
+
+
+## Tracking invoice status
+
+The invoices list includes a **Peppol** status column with the following states:
+
+| Status | Meaning |
+|---|---|
+| **Sent** | Invoice delivered successfully to the recipient's Peppol inbox |
+| **Pending** | Submitted to e-invoice.be and awaiting delivery confirmation |
+| **Failed** | Delivery failed — see the error detail on the invoice row |
+| **Not applicable** | Client is not a Peppol participant; invoice was sent by email |
+
+Status updates are pushed to Druma automatically via a webhook from e-invoice.be. You do not need to refresh or poll manually.
+
+
+## Manually triggering Peppol delivery
+
+For invoices where auto-send did not trigger — for example, invoices created before the integration was activated — you can manually submit via Peppol:
+
+1. Open the **Invoices** list.
+2. Find the invoice row and click the row action menu (**···**).
+3. Click **Send via Peppol**.
+
+This is also useful after correcting a client's VAT number or KBO number.
+
+
+---
+
+## Client API Integration (CAPI)
+
+
+The Client API Integration (CAPI) creates a direct data channel between a specific client and your Druma account. It has two independent halves:
+
+- **Inbound**: the client's system sends orders to Druma automatically. No manual order entry required.
+- **Outbound**: Druma pushes status events (departed, delivered, invoiced, and so on) to the client's system in real time.
+
+You can enable either half independently, or both together. Each client gets their own token and endpoint, so credentials are fully isolated.
+
+
+
+
+## Where to find the settings
+
+1. Go to **Clients** in the left navigation.
+2. Open the client record.
+3. Click the **API** tab.
+
+Both inbound and outbound settings are on this tab.
+
+
+## Outbound — Druma pushes events to the client
+
+
+  ### Enable outbound
+    Toggle on **Enable Outbound Webhook**.
+  
+  ### Enter the webhook URL
+    Paste the client's **Webhook URL** — the endpoint in their system that will receive events.
+  
+  ### Choose an authentication type
+    Select one of the four **Auth type** options:
+
+    - **None** — no authentication header (use only on trusted private networks)
+    - **Bearer token** — Druma adds `Authorization: Bearer <value>` to every request
+    - **Basic auth** — Druma adds an `Authorization: Basic` header with a base64-encoded username and password
+    - **HMAC signature** — Druma signs each request body with a shared secret and includes the signature in a header; the client verifies it before processing
+
+    Fill in the credentials for whichever type you choose.
+  
+  ### Select events to send
+    Tick the events you want Druma to push:
+
+    - **Order Created** — fired when a new order is confirmed in Druma
+    - **Status Updated** — fired on any status change (assigned, at pickup, in transit, and so on)
+    - **Delivered** — fired when the order reaches Delivered status
+    - **Invoice Sent** — fired when a sales invoice is sent to the client
+  
+  ### Configure outbound field mappings (optional)
+    If the client's system expects different field names in the payload, use the **Field Mapping** table on the outbound side (identical UX to inbound) to rename Druma's output fields before they are sent.
+  
+  ### Save
+    Click **Save**. Druma will begin delivering events for the selected triggers from this point forward.
+  
+
+
+
+
+
+## Rotating a token
+
+If a token is compromised or a key person leaves the client's team:
+
+1. On the **API** tab, click **Rotate Token**.
+2. The old token is immediately invalidated.
+3. The new token is shown once — copy and distribute it before navigating away.
+
+Update the token in the client's system as soon as possible. Requests using the old token will be rejected with `401 Unauthorized` from the moment the rotation completes.
+
+
+## Rate limits
+
+Druma enforces a limit of **200 API calls per hour per client configuration**. Requests that exceed this limit receive a `429 Too Many Requests` response. The limit resets on a rolling one-hour window.
+
+If a client legitimately needs a higher throughput, contact Druma support.
+
+> **Warning:** 
+Do not share a client's bearer token with other clients or embed it in publicly accessible code. Each token grants full inbound order creation rights for that client's company scope.
+
+
 
 ---
 

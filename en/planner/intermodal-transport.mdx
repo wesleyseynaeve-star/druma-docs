@@ -1,0 +1,171 @@
+---
+title: "Intermodal & Multimodal Transport"
+description: "Plan orders that combine road, sea, rail, air, or barge legs — with per-leg carrier assignment, cost tracking, eCMR, and driver PWA support."
+icon: "git-merge"
+---
+
+## Overview
+
+Intermodal transport moves cargo across multiple transport modes in sequence — for example, a truck pre-hauls a trailer from a Romanian factory to Calais, it crosses to Folkestone on a Channel Tunnel RoRo ferry, and a second truck handles the on-haul to the UK delivery address. Each segment is a **leg**. A single Druma order manages the whole journey: scheduling, carrier assignment, costs, eCMR, and driver visibility per leg.
+
+This is different from a standard order with internal stops. Internal stops are waypoints on a single continuous road journey with one truck. Intermodal legs are distinct transport events that may use different modes, different carriers, and even different countries of jurisdiction.
+
+<Note>
+Groupage orders cannot be made intermodal. The intermodal toggle is hidden on groupage orders.
+</Note>
+
+---
+
+## Practical example: Romania → UK via Channel Tunnel
+
+| Leg | Mode | Route | Carrier |
+|---|---|---|---|
+| 1 | Road | Bucharest → Calais | Own fleet — truck RO-01 |
+| 2 | Sea | Calais → Folkestone (Eurotunnel Le Shuttle) | Subcontractor: Eurotunnel |
+| 3 | Road | Folkestone → Birmingham | Subcontractor: UK haulier |
+
+Druma tracks the booking reference and container number for leg 2, generates a separate eCMR for legs 1 and 3 (both cross borders), and shows the UK haulier only the stops relevant to leg 3.
+
+---
+
+## Creating an intermodal order
+
+<Steps>
+  <Step title="Open the New Order modal or edit an existing order">
+    Go to **Operations → Orders** and click **New Order**, or open an existing draft order.
+  </Step>
+  <Step title="Enable the Intermodal toggle">
+    In the **Stops** section header, find the **Intermodal** toggle and switch it on. A **Legs** section appears above the stops list.
+  </Step>
+  <Step title="Add legs">
+    Click **+ Add Leg** to create the first leg. Add as many legs as the journey requires — there is no limit.
+  </Step>
+  <Step title="Add stops as normal">
+    Stops (pickup, delivery, internal) are added in the Stops section as usual. Each stop is associated with the leg it belongs to.
+  </Step>
+</Steps>
+
+---
+
+## Managing legs
+
+Each leg card has the following fields:
+
+| Field | Notes |
+|---|---|
+| **Mode** | Road, Sea, Rail, Air, or Barge |
+| **Origin** | Free-text or address autocomplete |
+| **Destination** | Free-text or address autocomplete |
+| **Planned start** | Date and time the leg begins |
+| **Planned end** | Expected date and time the leg finishes |
+| **Carrier** | Own fleet (road only) or subcontractor |
+| **Buy rate** | Cost you pay for this leg |
+| **Cost breakdown** | Fuel, tolls, ferry, or other line items |
+
+### Road legs
+
+Road legs can be assigned to your own fleet (truck, driver, second driver, and trailer) or to a subcontractor carrier. Click the truck or carrier field to search and assign.
+
+### Non-road legs (Sea, Rail, Air, Barge)
+
+Non-road legs can only be assigned to a subcontractor carrier — your own fleet trucks and drivers cannot be assigned to a sea or rail leg. The carrier field searches your subcontractors list.
+
+### Leg controls
+
+- **Up/down arrows** — reorder legs. The leg timeline strip (see below) updates as you drag.
+- **Trash icon** — delete a leg. Only available when the leg has not started. Legs that are in progress or completed cannot be deleted.
+- **Complete Leg** button — marks the leg as done. Available once the leg's planned start date has passed.
+
+### Leg timeline strip
+
+A compact horizontal strip appears above the legs accordion. It shows all legs in sequence with a mode badge (road, sea, rail, etc.) and the city names for origin and destination. Use it to quickly verify the journey sequence makes sense before saving.
+
+![Leg timeline strip showing three legs: Road Bucharest→Calais, Sea Calais→Folkestone, Road Folkestone→Birmingham](/images/placeholder.png)
+
+---
+
+## Sea / intermodal leg details
+
+For any leg with mode **Sea**, **Rail**, **Air**, or **Barge**, a collapsible **Sea / intermodal details** section appears on the leg card. All fields are optional.
+
+| Field | Format | Notes |
+|---|---|---|
+| Booking Reference | Free text | Carrier's booking confirmation number |
+| Container Number | Free text | ISO container ID |
+| Seal Number | Free text | |
+| Vessel Name | Free text | Ship or train service name |
+| Voyage Number | Free text | |
+| Carrier SCAC | 4 characters | Standard Carrier Alpha Code |
+| Port of Loading | 5-character LOCODE | e.g. `FRXXX` for Calais |
+| Port of Discharge | 5-character LOCODE | e.g. `GBFXT` for Folkestone |
+| Cut-off date/time | Date + time | Cargo acceptance deadline at Port of Loading |
+| ETD | Date + time | Estimated time of departure from Port of Loading |
+| ETA at POD | Date + time | Estimated time of arrival at Port of Discharge |
+
+<Warning>
+If the cut-off date is within 48 hours of the leg's planned end, Druma shows an amber warning banner on the leg card. Review the timeline to make sure the truck reaches the port in time.
+</Warning>
+
+Switching a leg's mode back to **Road** clears the sea/intermodal detail fields automatically.
+
+---
+
+## Planning board behaviour
+
+### Truck availability
+
+The planning board calculates truck availability based on the **road leg end date**, not the final delivery date of the order. This means a truck assigned to leg 1 (road) is shown as free from the moment that leg ends — even if the order's last delivery is days later on leg 3 with a different carrier.
+
+### Assigning a truck to an intermodal order
+
+Dragging a truck block onto an intermodal order from the unassigned sidebar opens an **Assign to Leg** modal instead of the standard confirmation popup. The modal lists all unassigned road legs and asks you to select which leg this truck covers. Click **Assign** to confirm.
+
+<Note>
+A truck can only be assigned to one road leg per intermodal order. To cover multiple road legs with different trucks, repeat the drag-and-drop process for each leg.
+</Note>
+
+---
+
+## eCMR per road leg
+
+Each road leg that crosses an international border gets its own eCMR. To create one, open the leg card and click **Create eCMR**. The eCMR is generated via TransFollow with the leg's origin, destination, and assigned carrier pre-filled.
+
+Legs that stay within a single country do not require an eCMR (unless your company policy mandates one). The **Create eCMR** button is always available if you need to override this.
+
+Three-party signature flow and certified PDF download work identically to standard eCMR — see the [eCMR documentation](/en/planner/ecmr) for details.
+
+---
+
+## Driver PWA — leg-scoped view
+
+Drivers only see the stops that belong to their assigned road leg. If the order has three legs and the driver covers leg 1, they see only the pickup and any internal stops for leg 1 — not the delivery address in the UK.
+
+An info banner at the top of the load detail reads:
+
+> **Leg 1 of 3 — Road: Bucharest → Calais**
+
+This keeps the driver's view clean and avoids confusion about stops that belong to a different carrier.
+
+Status taps (at_pickup, loading, in_transit, at_delivery, etc.) work exactly as on a standard order, but they only advance the status for the driver's road leg. The planner sees per-leg progress in the order detail pane.
+
+![Driver PWA showing leg info banner and stops for Leg 1 only](/images/placeholder.png)
+
+---
+
+## Cost and margin tracking
+
+Each leg has its own **Buy rate** and **Cost breakdown**. The order's total cost is the sum across all legs. The margin calculation in the order detail pane compares the agreed sell price against the total multi-leg cost, giving you a consolidated margin figure for the whole intermodal journey.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/en/planner/ecmr">
+  How TransFollow eCMR creation, three-party signatures, and certified PDFs work.
+</Card>
+
+<Card title="Subcontractors" icon="truck" href="/en/forwarding/subcontractors">
+  Manage your subcontractor carrier list — the same carriers appear in intermodal leg assignment.
+</Card>
+
+<Card title="Planning Board" icon="calendar" href="/en/planner/planning-board">
+  How truck availability and intermodal order blocks appear on the dispatch timeline.
+</Card>

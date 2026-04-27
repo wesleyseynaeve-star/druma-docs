@@ -1,0 +1,116 @@
+---
+title: "Bank Statement Import"
+description: "Upload CAMT.053 or MT940 bank statement files to auto-match payments against open invoices — no manual data entry required."
+icon: "file-up"
+---
+
+## Overview
+
+Instead of recording payments one by one, you can upload your bank statement directly into Druma. Druma parses every credit transaction in the file, runs matching logic against your open invoices, and automatically applies any confident matches. Unmatched transactions drop into the Reconciliation queue for a quick manual review.
+
+This is the fastest way to reconcile a high volume of incoming payments at once — ideal at end of week or end of month.
+
+## Supported Formats and Banks
+
+Druma accepts two standard formats:
+
+| Format | Description |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — exported by most EU banks via online banking |
+| **MT940 SWIFT** | SWIFT legacy format — still common for corporate banking APIs |
+
+Both formats are supported by BRD, BCR, Raiffeisen Bank, UniCredit, and ING Romania, as well as the majority of EU banks. Druma auto-detects the format on upload. If detection fails, select the correct format from the **Format** dropdown inside the import modal.
+
+**Maximum file size:** 10 MB per upload.
+
+<Note>
+Re-uploading the same statement file is safe. Druma fingerprints each transaction and silently skips any duplicates — you will never double-record a payment.
+</Note>
+
+## How to Import a Statement
+
+<Steps>
+  <Step title="Open the import dialog">
+    Go to **Finance** → **Reconciliation** → **Payments** tab. Click the **Import Statement** button in the top-right corner of the page.
+  </Step>
+  <Step title="Select your file">
+    Click **Choose file** and select your exported bank statement. Accepted extensions are `.xml` (CAMT.053) and `.sta` or `.txt` (MT940). The file must be 10 MB or smaller.
+  </Step>
+  <Step title="Confirm the format">
+    Druma auto-detects the format and shows a label below the file name. If the label is wrong, open the **Format** dropdown and select the correct format manually before proceeding.
+  </Step>
+  <Step title="Run the import">
+    Click **Import**. Druma parses all credit transactions in the file and runs matching logic against every open invoice in your company. This typically completes in a few seconds.
+  </Step>
+  <Step title="Review the result summary">
+    When processing finishes, a summary modal displays the outcome. Review each category before closing — see the breakdown below.
+  </Step>
+</Steps>
+
+![Bank statement import modal showing file selection, format dropdown, and Import button](/images/placeholder.png)
+
+## Understanding the Result Summary
+
+After every import, Druma shows a result summary with the following counters:
+
+| Field | What it means |
+|-------|---------------|
+| **Parsed** | Total credit transactions found in the file |
+| **Auto-matched** | Transactions matched to an invoice with high confidence — payment applied automatically |
+| **Need review** | Transactions where a potential match was found but confidence was below the threshold — appear in the Reconciliation queue |
+| **Duplicates skipped** | Transactions already recorded from a previous upload of the same file — ignored silently |
+| **Errors** | Transactions that could not be parsed (malformed rows, unsupported currency, missing reference) |
+
+A healthy import has a high **Auto-matched** count and a low **Need review** count. If you see many rows needing review, it usually means invoice references are not included in payment descriptions — ask clients to include their invoice number in the bank transfer reference field.
+
+![Import result summary showing parsed, matched, review, duplicate, and error counts](/images/placeholder.png)
+
+## Matching Logic
+
+Druma matches each bank transaction to an invoice using the following signals, in order of priority:
+
+1. **Invoice number in transaction reference** — exact or partial match (e.g. `DR-2024-047` in the payment description)
+2. **Amount match** — within ±2% tolerance to account for bank fees or rounding differences
+3. **Client name or VAT number** — cross-referenced against your client master
+
+All three signals agreeing → auto-applied. Partial signals → queued for review. No signals → queued as unmatched.
+
+## Handling Unmatched Transactions
+
+Any transaction that could not be confidently matched appears in the **Reconciliation** queue on the same **Payments** tab. Each row shows a **Statement** source badge (distinguishing it from transactions that arrived via email parsing, which show an **Email** badge).
+
+<Steps>
+  <Step title="Open the Reconciliation queue">
+    Stay on **Finance** → **Reconciliation** → **Payments** tab. Unmatched rows appear below the summary with a **Pending** status.
+  </Step>
+  <Step title="Expand the transaction">
+    Click a row to expand it. Druma shows the full transaction details: date, amount, bank reference text, and any candidate invoices it considered.
+  </Step>
+  <Step title="Match manually">
+    Click **Match** next to the correct invoice. Druma applies the payment and moves the transaction to **Applied** status.
+  </Step>
+  <Step title="Discard if not relevant">
+    If the transaction is not a client payment (for example, an internal transfer or a bank fee), click **Discard**. The row moves to **Rejected** status and does not affect any invoice.
+  </Step>
+</Steps>
+
+<Warning>
+Discarding a transaction is a soft action — it only marks the row as rejected in Druma. It does not affect your actual bank account or accounting system. If you discard by mistake, contact support — there is currently no self-service undo for rejected reconciliation rows.
+</Warning>
+
+## Tips for Higher Auto-Match Rates
+
+- **Ask clients to include the invoice number** in the payment reference field of their bank transfer. A reference like `DR-2024-047` gives Druma an exact match on the first signal.
+- **Keep client VAT numbers up to date** in your client master — Druma uses them as a secondary matching signal when the reference is missing.
+- **Use net payment terms** consistently. Payments that arrive with deducted fees (banking or factoring) fall within the ±2% tolerance for amounts under ~€5,000. For larger invoices, confirm with clients that they send the full amount.
+
+---
+
+<Card title="Payment Tracking" icon="circle-check" href="/en/invoicing/payment-tracking">
+Record and track payments manually, or view the full payment history per invoice.</Card>
+
+<Card title="Overdue Dashboard" icon="triangle-alert" href="/en/invoicing/overdue-dashboard">
+View aged debtors and send payment reminders for invoices past their due date.</Card>
+
+<Card title="Credit Notes" icon="file-minus" href="/en/invoicing/credit-notes">
+Issue a credit note to reverse or partially correct a sent invoice.</Card>

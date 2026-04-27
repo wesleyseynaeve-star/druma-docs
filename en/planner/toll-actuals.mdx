@@ -1,0 +1,125 @@
+---
+title: "Toll Receipts & Reconciliation"
+description: "Compare HERE-estimated tolls against driver-logged actuals per country, import fuel card toll lines, and configure client pass-through policy."
+icon: "receipt"
+---
+
+## Overview
+
+Toll costs are a significant and often opaque part of road freight. HERE's routing API gives you a per-country toll estimate when an order is created, but the actual amount paid on the road routinely differs — different vehicle categories, missing vignettes, seasonal rates, and border crossing variations all cause drift.
+
+Druma closes this gap by letting drivers log toll receipts directly from the PWA, then presents a colour-coded reconciliation panel in the order detail so planners can spot large variances before they affect margins or client invoices.
+
+![Toll reconciliation panel showing HERE estimates vs driver actuals per country with colour-coded deltas](/images/placeholder.png)
+
+---
+
+## How drivers log toll receipts
+
+During an active load, the driver's PWA shows a **Log toll** button on the load detail screen. Tapping it opens the **Toll Receipt** sheet.
+
+<Steps>
+  <Step title="Tap Log toll">
+    The button is visible whenever the load status is at_pickup, loading, in_transit, at_delivery, or offloading — any status where the truck is on the road.
+  </Step>
+  <Step title="Enter the toll details">
+    Fill in:
+    - **Amount** — the toll paid, in the local currency
+    - **Country** — pre-filled based on current GPS position, but editable
+    - **Notes** (optional) — motorway reference, booth number, or any driver comment
+  </Step>
+  <Step title="Attach a receipt photo (optional)">
+    Tap the camera or file icon to attach a photo of the receipt. Accepted formats: JPEG, PNG, WebP, HEIC, PDF. Maximum file size: 5 MB.
+  </Step>
+  <Step title="Confirm">
+    Tap **Save**. The receipt is stored immediately.
+  </Step>
+</Steps>
+
+### Offline support
+
+Toll receipts work offline. If the driver is in an area without connectivity, the receipt is queued locally and synced automatically as soon as the device reconnects. The planner sees it arrive in the reconciliation panel once sync completes.
+
+---
+
+## The reconciliation panel (planner view)
+
+Open any order's detail pane and scroll to the **Toll Reconciliation** section. The panel shows a table with one row per country where either a HERE estimate or a logged actual exists.
+
+### Delta colour coding
+
+| Colour | Condition | What it means |
+|---|---|---|
+| Green | Delta ≤ 5% | Actual is within the expected range |
+| Amber | Delta 6–15% | Moderate variance — worth reviewing |
+| Red | Delta > 15% | Significant variance — check receipts |
+| Grey | No HERE estimate | HERE had no toll data for this country segment |
+
+The delta is calculated as `(actual − estimate) / estimate`. A positive delta means the driver paid more than estimated; a negative delta means less.
+
+### Receipt list
+
+Below the summary table, each individual receipt is listed with:
+- Date and time logged
+- Country and amount
+- Notes (if any)
+- A thumbnail if a photo was attached — click to open the full image
+
+Planners can add receipts manually using the **Add Receipt** button at the bottom of the section — useful when the driver forgot to log a toll but has the paper receipt.
+
+![Individual receipt cards with photo thumbnails inside the reconciliation panel](/images/placeholder.png)
+
+---
+
+## Fuel card import — automatic toll splitting
+
+DKV, UTA, and AS24 fuel card statements often bundle fuel and toll transactions in the same export file. When you import a fuel card file in **Fleet → Fuel Cards**, Druma automatically separates toll lines from fuel lines:
+
+- **Fuel lines** are added to the truck's fuel ledger as normal
+- **Toll lines** are routed into toll receipts and matched to the order active on that date for that truck
+
+Re-importing the same file is safe — duplicate entries (matched by transaction reference and amount) are skipped automatically.
+
+<Note>
+Toll matching from fuel card imports uses the truck and date to find the active order. If a truck had more than one order on the same date, the import attaches the receipt to the first matching order and flags the row for manual review in the import summary.
+</Note>
+
+---
+
+## Per-country pass-through policy
+
+Not every toll is billed to the client. Some companies absorb tolls for certain corridors as part of their rate; others pass them through in full. Druma lets you configure this at the rate card level.
+
+Go to **Settings → Rate Cards** and open any rate card. There is a **Per-country toll policy** override table at the bottom. For each country:
+
+| Policy | Behaviour |
+|---|---|
+| Pass through | Actual toll appears as an order extras line on the invoice |
+| Absorb | Toll is tracked internally but does not appear on the client invoice |
+| (blank) | Falls back to the rate card's top-level toll policy |
+
+Countries not listed in the override table inherit the rate card default.
+
+### Auto invoice line
+
+When a country is set to **Pass through**, logged toll receipts for that country are automatically summed and added as an order extras line on the invoice during generation. The line is labelled with the country name.
+
+If you need to exclude a specific receipt from the invoice — for example, because it is covered by a separate surcharge agreement — open the invoice editor and toggle **Exclude from invoice** on that extras line.
+
+---
+
+## Tips for accurate reconciliation
+
+- Ask drivers to log tolls immediately after each payment, not at the end of the trip, so receipts stay matched to the correct day and country.
+- If HERE shows grey (no estimate) for a country your trucks frequently cross, raise this in **Settings → Rate Cards** with a manual country surcharge so margins are protected even without HERE data.
+- Large amber or red deltas on the same country repeatedly are a signal to adjust the base toll estimate in your rate card.
+
+---
+
+<Card title="Rate Cards" icon="sliders-horizontal" href="/en/settings/rate-cards">
+  Configure toll pass-through policy, base surcharges, and per-country overrides.
+</Card>
+
+<Card title="Fuel Cards & Imports" icon="fuel" href="/en/planner/fuel-cards">
+  Import DKV, UTA, and AS24 statements to automatically populate fuel and toll records.
+</Card>

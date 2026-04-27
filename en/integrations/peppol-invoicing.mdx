@@ -1,0 +1,125 @@
+---
+title: "Peppol E-Invoicing (Belgium)"
+description: "Connect Druma to the Peppol network via e-invoice.be and automatically route invoices to Belgian business clients — no manual steps required."
+icon: "file-check-2"
+---
+
+Peppol (Pan-European Public Procurement On-Line) is the EU standard network for exchanging structured electronic invoices between businesses. In Belgium, sending invoices via Peppol is **mandatory for all KBO-registered companies** issuing B2B invoices as of January 2026.
+
+Druma connects to the Peppol network through **e-invoice.be**, an accredited Belgian Peppol Access Point. Once configured, Druma detects which of your clients are reachable on Peppol and routes invoices to them automatically — you do not need to change how you create or send invoices.
+
+![Peppol integration card in Settings → Integrations](/images/placeholder.png)
+
+---
+
+## Who needs this
+
+You need the Peppol integration if:
+
+- Your company is registered in Belgium (has a KBO number), **and**
+- You issue invoices to other Belgian businesses
+
+If your company operates outside Belgium, or if your clients are consumers or foreign businesses, Peppol does not apply to you. Druma will continue to send invoices by email for all non-Peppol recipients regardless of whether the integration is active.
+
+<Note>
+Belgian companies that do not activate this integration risk non-compliance penalties from January 2026 onward. The setup takes under five minutes.
+</Note>
+
+---
+
+## Setup
+
+<Steps>
+  <Step title="Open the Peppol card">
+    Go to **Settings → Integrations**. Locate the **Peppol E-Invoicing** card. Its status will show **Not configured**.
+  </Step>
+  <Step title="Click Configure">
+    Click **Configure** on the card. A settings panel opens.
+  </Step>
+  <Step title="Enter your KBO and VAT numbers">
+    Enter your company's **KBO number** (10-digit Belgian company registration number) and **VAT number** (BE followed by 10 digits) in the respective fields.
+  </Step>
+  <Step title="Register on the Peppol network">
+    Click **Register on Peppol Network**. Druma submits your registration to e-invoice.be. This typically completes in a few seconds.
+  </Step>
+  <Step title="Confirm activation">
+    Once registration succeeds, the card status changes to **Active**. Your company is now a Peppol participant and can both send and receive structured invoices on the network.
+  </Step>
+</Steps>
+
+<Warning>
+Only **Admin** and **Company Admin** users can configure integrations. If you do not see the Configure button, ask your account administrator.
+</Warning>
+
+---
+
+## How invoice routing works
+
+After activation, Druma adds a Peppol routing check whenever you send an invoice:
+
+1. Druma looks up the client's VAT number against the Peppol participant directory.
+2. If the client is registered on Peppol, the invoice is submitted electronically via e-invoice.be — **no extra steps required on your part**.
+3. If the client is not on Peppol (foreign company, consumer, or simply not registered), Druma falls back to sending the invoice by email as normal.
+
+You do not need to choose a delivery method per invoice. The routing is fully automatic.
+
+![Invoice list showing Peppol status column](/images/placeholder.png)
+
+---
+
+## Tracking invoice status
+
+The invoices list includes a **Peppol** status column with the following states:
+
+| Status | Meaning |
+|---|---|
+| **Sent** | Invoice delivered successfully to the recipient's Peppol inbox |
+| **Pending** | Submitted to e-invoice.be and awaiting delivery confirmation |
+| **Failed** | Delivery failed — see the error detail on the invoice row |
+| **Not applicable** | Client is not a Peppol participant; invoice was sent by email |
+
+Status updates are pushed to Druma automatically via a webhook from e-invoice.be. You do not need to refresh or poll manually.
+
+---
+
+## Handling failures
+
+If an invoice shows **Failed**:
+
+1. Hover over or click the **Failed** badge to read the error detail.
+2. Correct any issue indicated (for example, an invalid VAT number on the client record).
+3. Click **Send via Peppol** on the invoice row to retry the Peppol submission.
+
+If the issue cannot be resolved through Peppol (for example, the recipient's Access Point is temporarily unreachable), click **Send by Email** to deliver the invoice through the standard email channel while you investigate.
+
+<Note>
+Peppol delivery failures do not affect the invoice's internal status in Druma. The invoice remains confirmed and will still appear in your accounting exports.
+</Note>
+
+---
+
+## Manually triggering Peppol delivery
+
+For invoices where auto-send did not trigger — for example, invoices created before the integration was activated — you can manually submit via Peppol:
+
+1. Open the **Invoices** list.
+2. Find the invoice row and click the row action menu (**···**).
+3. Click **Send via Peppol**.
+
+This is also useful after correcting a client's VAT number or KBO number.
+
+---
+
+## Related pages
+
+<Card title="Integration Setup" icon="plug" href="/en/admin/integration-setup">
+  Overview of all integrations available in Settings → Integrations.
+</Card>
+
+<Card title="Sending Invoices" icon="send" href="/en/finance/sending-invoices">
+  How to send invoices by email and track delivery status.
+</Card>
+
+<Card title="Branding & Document Formats" icon="palette" href="/en/admin/branding-formats">
+  Customise invoice numbering, logo, and colours on PDF invoices.
+</Card>

@@ -1,0 +1,180 @@
+---
+title: "Smart Import (AI Bulk Onboarding)"
+description: "Upload unstructured documents — PDFs, images, spreadsheets — and let Druma's AI extract, review, and bulk-import your fleet, driver, client, and company data in minutes."
+icon: "brain"
+---
+
+## Overview
+
+Smart Import is an AI-powered onboarding tool that reads documents you already have — carrier fleet lists, driver licence files, client directories, insurance certificates — and turns them into structured Druma records. Instead of re-typing data from paperwork or reformatting spreadsheets to match an import template, you hand the raw document to Druma and review what the AI extracted before it goes into the database.
+
+Go to **Tools → Smart Import** to open it.
+
+<Note>
+Smart Import uses Google Gemini to extract data. Files are processed server-side and are not stored permanently after extraction — only the structured records you choose to import are saved.
+</Note>
+
+![Smart Import upload screen with drag-and-drop zone and category cards](/images/placeholder.png)
+
+---
+
+## When to use Smart Import vs. regular bulk import
+
+Druma has two bulk onboarding paths. Choose the right one for your situation:
+
+| Situation | Use |
+|---|---|
+| You have a PDF, scanned document, or image | **Smart Import** |
+| You have a photo of a document or handwritten list | **Smart Import** |
+| You received a fleet list from a carrier in Word or a non-standard Excel | **Smart Import** |
+| You're exporting from another TMS with a known CSV format | **Regular CSV bulk import** |
+| You have a clean spreadsheet that already matches Druma's column structure | **Regular CSV bulk import** |
+
+Smart Import handles documents that are too messy or unstructured for a direct CSV import. It will not replace a well-structured export — the regular import is faster when your data is already clean.
+
+---
+
+## Supported document types
+
+- **PDF** — fleet lists, carrier profiles, insurance certificates, driver dossiers
+- **Images** — JPEG, PNG, WebP, HEIC/HEIF — scans, phone photos, screenshots
+- **Excel** — `.xlsx` files in any layout (Smart Import reads content, not just standard templates)
+- **CSV** — comma- or semicolon-delimited files
+
+---
+
+## Step-by-step workflow
+
+<Steps>
+  <Step title="Open Smart Import">
+    Go to **Tools → Smart Import**. You will see the upload zone and, below it, the category cards (empty on first visit).
+  </Step>
+  <Step title="Upload your documents">
+    Click **Upload Documents** or drag files directly onto the drop zone. You can upload multiple files at once — for example, a PDF fleet list and an image of an insurance certificate together.
+
+    <Note>
+    Maximum file size is 10 MB per file. If a document is larger, split it into sections before uploading.
+    </Note>
+  </Step>
+  <Step title="Wait for AI extraction">
+    Druma sends each file to the AI extraction service. This typically takes a few seconds per file. A progress indicator shows the status for each document. Do not close the tab during extraction.
+  </Step>
+  <Step title="Review the extraction results">
+    When extraction is complete, the **Review Dashboard** appears. It shows category cards across the top — **Companies**, **Fleet**, **Drivers**, **Clients**, **Insurance** — with a count of extracted records in each category.
+  </Step>
+  <Step title="Open a category to review">
+    Click any category card to see the extracted records in an editable table. Each row is one extracted record (one vehicle, one driver, one client, etc.).
+  </Step>
+  <Step title="Edit any incorrect fields">
+    Click any cell in the table to edit it inline. The AI is accurate on clearly printed text, but may misread handwriting, abbreviations, or non-standard formatting. Correct any errors before importing.
+  </Step>
+  <Step title="Check confidence scores and duplicates">
+    Review the confidence indicators and duplicate flags on each row — see the sections below for details.
+  </Step>
+  <Step title="Import the category">
+    When a category looks correct, click **Import [Category]** — for example, **Import Fleet** or **Import Clients**. Druma batch-inserts all non-skipped rows and confirms the count imported.
+  </Step>
+</Steps>
+
+---
+
+## The Review Dashboard
+
+The Review Dashboard is the central workspace after extraction. It has two levels:
+
+**Category cards (top level)** — one card per data type found in your documents. Each card shows:
+- The category name
+- Number of records extracted
+- A summary warning if any records have Low confidence or Duplicate flags
+
+**Record table (drill-down)** — click a card to open the editable table for that category. The table shows one column per field (e.g., Plate, Trailer Type, Capacity, Year for Fleet), with confidence indicators and duplicate flags on each row.
+
+![Review Dashboard showing category cards with record counts and an open Fleet table](/images/placeholder.png)
+
+You can switch between categories freely — your edits are preserved until you import or close the session.
+
+---
+
+## Confidence scoring
+
+Every extracted field receives a confidence score based on how clearly the AI could read and interpret the source text. Scores are shown as colour-coded indicators on each cell:
+
+| Indicator | Meaning |
+|---|---|
+| Green — **High** | The AI is confident. The field was clearly printed or structured. |
+| Amber — **Medium** | The AI made a reasonable inference but the source was ambiguous (e.g., an abbreviation, a partially visible word). Review before importing. |
+| Red — **Low** | The AI could not extract a reliable value. The cell may contain a best guess or be empty. Always review Low fields manually. |
+
+<Warning>
+Low-confidence fields are not blocked from import — you can import them as-is — but you are responsible for verifying their accuracy. Incorrect data (wrong licence plate, wrong VAT number) can cause problems downstream in invoicing, compliance, and carrier communications.
+</Warning>
+
+To quickly find all Low-confidence fields across a category, look for the amber and red cell highlights in the table. There is no separate filter — scan column by column or row by row.
+
+---
+
+## Duplicate detection
+
+Before showing the Review Dashboard, Druma compares extracted records against your existing company data:
+
+- **Fleet**: matches on licence plate
+- **Drivers**: matches on name + date of birth (when available)
+- **Clients**: matches on VAT number
+- **Companies / Subcontractors**: matches on VAT number
+- **Insurance**: matches on certificate number (when available)
+
+Records that match existing data are flagged with a **Duplicate** badge on the row. You have two options for each duplicate:
+
+- **Skip** (default) — the row will not be imported. Use this when the existing record is already correct.
+- **Overwrite** — the import will update the existing record with the extracted data. Use this carefully — it replaces the stored values.
+
+Rows without a Duplicate flag are new records and will be inserted on import.
+
+---
+
+## After import
+
+Imported records appear immediately in the relevant module:
+
+- **Fleet** records appear in **Fleet → Trucks** or **Fleet → Trailers**
+- **Drivers** appear in **Fleet → Drivers**
+- **Clients** appear in **Clients**
+- **Companies / Subcontractors** appear in **Forwarding → Subcontractors**
+- **Insurance** data is attached to the relevant vehicle or company record
+
+There is no undo for an import. If incorrect data was imported, edit the records individually in their respective modules.
+
+---
+
+## Limitations
+
+Smart Import is designed for company, fleet, driver, client, and insurance data. It does not handle:
+
+- **Orders** — use the order form or the inbound order email feature for order creation
+- **Invoices** — invoices are generated automatically from delivered orders or via the carrier invoice ingestion workflow
+- **Historical data migration** — for large historical datasets (thousands of records), contact support for an assisted migration
+
+Smart Import works best with documents that are primarily text-based. It can process handwriting in images but accuracy drops significantly compared to printed text.
+
+---
+
+## Practical example
+
+Your new subcontractor sends you a 3-page PDF listing their entire fleet — 12 vehicles with plate, type, max weight, and year. Instead of entering each one manually:
+
+1. Upload the PDF to **Tools → Smart Import**
+2. Wait a few seconds for extraction
+3. Click the **Fleet** card — 12 rows appear, most with High confidence
+4. Two rows have Medium confidence on the Trailer Type field — correct them inline
+5. One row is flagged as Duplicate (a truck you already added last week) — leave it as Skip
+6. Click **Import Fleet** — 11 new vehicles are added to your fleet instantly
+
+---
+
+<Card title="Fleet Management" icon="truck" href="/en/fleet/fleet-overview">
+  Manage trucks, trailers, and drivers — and verify imported fleet records here after a Smart Import.
+</Card>
+
+<Card title="Clients" icon="building-2" href="/en/clients/clients-overview">
+  View and edit client records created by Smart Import, and add contacts and standing instructions.
+</Card>

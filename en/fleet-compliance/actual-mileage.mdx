@@ -1,0 +1,73 @@
+---
+title: "Actual Mileage Tracking"
+description: "How Druma captures real odometer readings from telematics integrations and compares actual trip distance against the HERE-planned route."
+icon: "route"
+---
+
+## Overview
+
+Druma records the odometer value at the start and end of each trip, then calculates how many kilometres the truck actually drove — separate from the HERE-planned route distance. This lets you spot route deviations, identify drivers who consistently exceed planned distances, and reconcile fuel costs against actual km.
+
+---
+
+## How it works
+
+When an order transitions to **In Transit** (driver has departed the pickup), Druma records `odometer_start_km` from the truck's telematics feed. When the order transitions to **Delivered**, it records `odometer_end_km`.
+
+```
+actual_distance_km = odometer_end_km − odometer_start_km
+```
+
+Both values and the calculated `actual_distance_km` are shown in the **order detail panel** under the route section, alongside the planned HERE distance.
+
+---
+
+## Supported telematics providers
+
+Odometer data comes exclusively from telematics integrations. The driver PWA does not capture odometer readings manually.
+
+| Provider | Notes |
+|---|---|
+| **Geotab** | Full odometer feed via MyGeotab SDK |
+| **Webfleet** | TOMS API odometer field |
+| **VDO** | RoadLog / Fleet telematics |
+| **Aberg Connect** | Position normaliser integration |
+
+All four providers feed through Druma's `position-normaliser` Edge Function, which writes a single-row record per truck on each position ping (GDPR single-row overwrite pattern).
+
+---
+
+## If the field is blank
+
+`actual_distance_km` is empty when:
+
+- No telematics integration is configured for the company or for that specific truck
+- The telematics feed did not return an odometer value at departure or delivery time (connectivity gap, provider outage)
+- The truck was switched mid-order via **Switch Truck** — in this case the delta may be approximate because the odometer start was recorded against the original truck
+
+To connect a telematics provider, go to **Settings → Integrations** and configure the credentials for your provider. Once connected, all subsequent orders will capture odometer data automatically.
+
+<Note>
+Historical orders created before a telematics integration was connected will not have odometer data backfilled. Actual mileage is only captured in real time at the moment of status transition.
+</Note>
+
+---
+
+## Planned vs actual distance
+
+The order detail panel shows both figures side by side:
+
+- **Planned distance** — calculated by HERE Routing at the time the order was created, based on the route between all stops
+- **Actual distance** — derived from the telematics odometer delta
+
+A significant gap between the two (more than ~15%) may indicate a detour, a routing error, or a stop not recorded in the order. Use this comparison as a prompt to investigate, not as an automatic flag.
+
+---
+
+<Card title="GPS Tracking" icon="map-pin" href="/en/driver/gps-tracking">
+  How live truck positions are transmitted and displayed on the planning board map.
+</Card>
+
+<Card title="CO2 Reporting" icon="leaf" href="/en/fleet-compliance/co2-reporting">
+  How Druma calculates per-order CO2 emissions using actual and planned distance data.
+</Card>

@@ -1,0 +1,159 @@
+---
+title: "Branding & Document Formats"
+description: "Customise your company logo, brand colours, and the numbering format for invoices, credit notes, and orders across all Druma-generated documents."
+icon: "palette"
+---
+
+The **Branding & Formats** settings control how your company appears on every document Druma generates: invoice PDFs, credit note PDFs, and email headers. They also define the numbering pattern used for invoices, credit notes, and order references.
+
+These settings are company-specific. If you manage multiple companies in Druma, each company has its own branding and format configuration.
+
+**Who can edit:** Admin and Company Admin roles only.
+
+![Branding & Formats settings page with three tabs](/images/placeholder.png)
+
+---
+
+## Accessing the settings
+
+Go to **Settings → Branding & Formats**. The page has three tabs: **Branding**, **Invoice Format**, and **Order Format**.
+
+---
+
+## Branding tab
+
+The Branding tab controls the visual elements that appear on PDFs and email templates.
+
+### Logo
+
+Click **Upload Logo** to select an image file from your computer. Druma accepts PNG, JPG, and SVG formats. The logo appears in the top-left corner of invoice and credit note PDFs, and in the header of outbound invoice emails.
+
+For best results, use a logo with a transparent background (PNG or SVG) at a minimum width of 300 px.
+
+### Primary colour
+
+Click the **Primary colour** hex picker and enter or select your brand's primary colour. This colour is applied to the header bar and accent elements on invoice PDFs and email templates.
+
+### Accent colour
+
+The **Accent colour** is used for secondary elements such as table header rows and highlight borders on PDFs.
+
+### Saving
+
+Click **Save Branding** to apply your changes. The new branding takes effect immediately for all documents generated after this point.
+
+<Note>
+Branding changes apply to **new** documents only. Invoices that were already generated and sent are not retroactively updated — the PDF stored for each invoice reflects the branding at the time it was created.
+</Note>
+
+---
+
+## Invoice Format tab
+
+The Invoice Format tab controls how Druma generates invoice and credit note reference numbers.
+
+### Format tokens
+
+Number formats are built from a short template string that combines fixed text with dynamic tokens wrapped in curly braces. Druma substitutes each token with a live value when a document is created.
+
+| Token | What it inserts |
+|---|---|
+| `{PREFIX}` | A fixed text prefix you define (e.g. `DR`, `INV`, your company abbreviation) |
+| `{YYYY}` | Four-digit year (e.g. `2026`) |
+| `{YY}` | Two-digit year (e.g. `26`) |
+| `{MM}` | Two-digit month (e.g. `04`) |
+| `{NNN}` | Three-digit sequential number, zero-padded (e.g. `007`) |
+| `{NNNN}` | Four-digit sequential number, zero-padded (e.g. `0007`) |
+
+The sequential counter (`{NNN}` / `{NNNN}`) resets to `001` / `0001` at the start of each calendar year. You can combine tokens freely with separator characters such as `-` or `/`.
+
+### Invoice number format
+
+Enter your desired template in the **Invoice number format** field. A **live preview** panel on the right updates as you type, showing a sample number with today's date and the next available sequence number.
+
+**Default format:** `DR-{YYYY}-{NNN}` → produces `DR-2026-001`, `DR-2026-002`, …
+
+**Example customisations:**
+
+| Template | Sample output |
+|---|---|
+| `INV-{YYYY}-{NNNN}` | `INV-2026-0001` |
+| `{PREFIX}/{YY}/{NNN}` | `ABC/26/001` (where PREFIX = `ABC`) |
+| `{YYYY}{MM}-{NNN}` | `202604-001` |
+
+### Credit note number format
+
+Credit notes use a separate counter and a separate format template. The same tokens are available.
+
+**Default format:** `CN-{YYYY}-{NNN}` → produces `CN-2026-001`, `CN-2026-002`, …
+
+### Resetting to defaults
+
+Click **Reset to defaults** to restore both fields to `DR-{YYYY}-{NNN}` and `CN-{YYYY}-{NNN}`. This does not affect documents already issued — only future documents.
+
+### Saving
+
+Click **Save Invoice Format**. The new format applies to the next invoice or credit note created after saving.
+
+<Warning>
+Changing the invoice number format mid-year will not renumber existing invoices. Druma continues the sequential counter from where it left off, using the new template for all subsequent documents. If you need a clean sequence restart, contact Druma support.
+</Warning>
+
+---
+
+## Order Format tab
+
+The Order Format tab defines the numbering pattern for order reference numbers — the identifier displayed on the planning board, order detail panel, and any driver or client communications.
+
+### Order number format
+
+The same token system applies as for invoices. Enter your template in the **Order number format** field and watch the live preview update on the right.
+
+**Default format:** `DR-{YYYY}-{NNN}` → produces `DR-2026-001`, `DR-2026-002`, …
+
+**Example:** a haulage company operating in Belgium might use `BE-{YYYY}-{NNNN}` to produce references like `BE-2026-0042`.
+
+### Saving
+
+Click **Save Order Format**. The new format applies to all orders created after saving. Existing orders keep their original reference numbers.
+
+---
+
+## Practical example: customising invoice numbering
+
+Suppose your company is **Acme Freight** and your accountant wants invoices numbered `AF-2026-001`, `AF-2026-002`, and so on, with credit notes as `AF-CN-2026-001`.
+
+<Steps>
+  <Step title="Open Invoice Format">
+    Go to **Settings → Branding & Formats** and click the **Invoice Format** tab.
+  </Step>
+  <Step title="Set the invoice format">
+    In the **Invoice number format** field, enter: `AF-{YYYY}-{NNN}`
+
+    The live preview on the right will show a sample number like `AF-2026-001`.
+  </Step>
+  <Step title="Set the credit note format">
+    In the **Credit note number format** field, enter: `AF-CN-{YYYY}-{NNN}`
+
+    The preview will show `AF-CN-2026-001`.
+  </Step>
+  <Step title="Save">
+    Click **Save Invoice Format**. From the next invoice onward, Druma will use the new format.
+  </Step>
+</Steps>
+
+---
+
+## Related pages
+
+<Card title="Integration Setup" icon="plug" href="/en/admin/integration-setup">
+  Connect TransFollow, SmartBill, fuel card providers, and accounting software.
+</Card>
+
+<Card title="Peppol E-Invoicing (Belgium)" icon="file-check-2" href="/en/integrations/peppol-invoicing">
+  Automatically route invoices to Belgian business clients via the Peppol network.
+</Card>
+
+<Card title="Sending Invoices" icon="send" href="/en/finance/sending-invoices">
+  How to generate, send, and track sales invoices in Druma.
+</Card>

@@ -1,0 +1,138 @@
+---
+title: "Pallet Exchange Ledger"
+description: "Track EUR, CHEP, and other pallet balances per counterparty with an append-only ledger, fee automation, and optional provider sync."
+icon: "package"
+---
+
+## Overview
+
+When you transport goods on EUR-pallets, CHEP, or other exchange pallets, you enter into a running balance with every client and subcontractor — pallets sent out must come back, or a fee is owed. Druma's pallet exchange ledger tracks every movement as an immutable record and gives you a live balance per counterparty so nothing falls through the cracks.
+
+The ledger is **append-only**: movements are added on each order stop, and the running balance is calculated automatically. You can record corrections and adjustments without deleting history.
+
+![Pallet exchange ledger showing per-counterparty balances with EUR and CHEP columns](/images/placeholder.png)
+
+---
+
+## Supported pallet types
+
+| Type | Full name |
+|---|---|
+| EUR | EUR-pallet (EPAL) |
+| CHEP | CHEP pallet |
+| EPAL | EPAL-certified exchange pallet |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+
+Each pallet type has its own balance column. A counterparty can owe you EUR-pallets while you owe them CHEP pallets simultaneously.
+
+---
+
+## Recording pallet movements on an order
+
+Pallet movements are logged at the stop level — pickup, delivery, and offloading stops all have their own **Pallet Movements** section.
+
+<Steps>
+  <Step title="Open the order detail pane">
+    Click the order on the Planning Board or in the Orders list to open its detail pane on the right.
+  </Step>
+  <Step title="Navigate to the stop card">
+    Scroll to the stop where pallets are being exchanged — typically the pickup (pallets out) or delivery (pallets returned). Each stop card shows a **Pallet Movements** section.
+  </Step>
+  <Step title="Add a movement">
+    Click **+ Add Movement** on the stop card. A small form appears with:
+    - **Pallet type** — select from EUR, CHEP, EPAL, LPR, IPP, Euro Pool
+    - **Movement type** — Sent (positive), Returned (negative), Adjustment, Correction, or Opening Balance
+    - **Quantity** — number of pallets
+    - **Notes** (optional) — reference number or driver comment
+  </Step>
+  <Step title="Save">
+    Click **Save** to commit the movement. It is added to the ledger immediately and the counterparty's running balance updates.
+  </Step>
+</Steps>
+
+To remove a mistaken entry, click the **trash icon** next to the movement. Deletion is allowed until the order reaches **Delivered** status — after that, use a **Correction** entry to reverse it.
+
+<Note>
+Use **Opening Balance** once per counterparty to seed their starting balance if you are migrating from a spreadsheet or a previous system. Subsequent movements build on top of it.
+</Note>
+
+---
+
+## Viewing balances
+
+### Clients list balance column
+
+The **Clients** list (Commercial → Clients) includes a **Pallet Balance** column. The indicator uses colour coding at a glance:
+
+| Colour | Meaning |
+|---|---|
+| Amber | The client owes you pallets |
+| Blue | You owe the client pallets |
+| Neutral (grey) | Balance is even |
+
+Hover over the balance indicator to see a per-type tooltip breaking down the balance across all pallet types — for example, +12 EUR, −4 CHEP.
+
+### Movement history per counterparty
+
+Click a client row to open the client detail panel, then go to the **Pallets** tab. This shows the full ledger for that counterparty: every movement, date, order reference, and running total.
+
+![Client pallet ledger showing movement history with running balance column](/images/placeholder.png)
+
+---
+
+## Fee threshold and automatic fee creation
+
+If a client's pallet balance grows beyond a configured threshold, Druma can automatically prompt you to raise a pallet exchange fee.
+
+When a movement causes the balance to exceed the threshold, a **Pallet Fee Confirmation** modal appears:
+
+- **Confirm** — adds a fee line to the order's extras (visible in the invoice editor as a pallet exchange charge)
+- **Skip** — dismisses the prompt without creating a fee; the balance remains as-is
+
+<Warning>
+Clicking **Skip** does not reset the threshold counter. The modal will appear again on the next movement that exceeds the threshold unless you reduce the balance first by logging returned pallets.
+</Warning>
+
+---
+
+## Configuring thresholds and fee rates
+
+Go to **Settings → Pallet Configuration** to set the fee rules. This section is only accessible to **admin** and **company_admin** roles.
+
+For each pallet type you can configure:
+
+| Setting | Description |
+|---|---|
+| Fee threshold | Number of pallets at which the fee modal triggers |
+| Fee rate | Price per pallet (in your company currency) applied to the auto-generated fee line |
+
+Leave the threshold blank to disable the fee modal for that pallet type — movements are still tracked, but no fee is ever suggested.
+
+---
+
+## Provider sync (optional)
+
+If you use CHEP Connect, Druma can reconcile your in-app ledger against the provider's official balance. Go to **Settings → Integrations → Pallet Exchange**.
+
+**CHEP Connect** is live. Enter your CHEP account credentials, then:
+
+- Click **Test Connection** to verify the credentials are accepted
+- Click **Sync Balance** to pull the provider's current balance and compare it against Druma's running total
+
+Any discrepancy is shown as a reconciliation row — you can accept it as a **Correction** entry to align the two ledgers.
+
+<Note>
+EPAL, LPR, IPP, and Euro Pool provider integrations are coming soon. In the meantime, those pallet types are tracked manually in the ledger. The core ledger works fully without any provider configured.
+</Note>
+
+---
+
+<Card title="Order Extras & Surcharges" icon="circle-plus" href="/en/planner/order-extras">
+  Learn how pallet fee lines appear in the invoice editor alongside other order surcharges.
+</Card>
+
+<Card title="Clients" icon="building-2" href="/en/planner/clients">
+  Manage client profiles, standing instructions, and view pallet balance history per client.
+</Card>

@@ -1,0 +1,138 @@
+---
+title: "Workshop & Maintenance"
+description: "Create and manage vehicle work orders, set maintenance schedules, resolve defects from the planning board, and automatically block trucks with safety-critical faults."
+icon: "wrench"
+---
+
+## Overview
+
+The Workshop & Maintenance module gives fleet managers a structured way to track every maintenance job — from routine oil changes to safety-critical defect repairs. Work orders tie directly into the planning board (blocking trucks when needed) and into the post-trip inspection flow (safety-critical defects can create work orders automatically or with one click).
+
+Find the module under **Fleet → Work Orders** and **Fleet → Maintenance**.
+
+---
+
+## Work orders
+
+### What a work order is
+
+A work order is a record of a maintenance job on a specific truck. It captures what needs to be done, the parts and labour costs, and the current status of the job. Every safety-critical vehicle defect should have a corresponding work order before the truck goes back into service.
+
+### Creating a work order
+
+<Steps>
+  <Step title="Open the Work Orders tab">
+    Go to **Fleet → Work Orders** and click **Create Work Order**.
+  </Step>
+  <Step title="Fill in the details">
+    Select the truck and fill in:
+
+    - **Type** — choose one of: Routine, Corrective, Safety Critical, Recall, or Statutory
+    - **Description** — what needs to be done
+    - **Assigned to** — the workshop or technician responsible (free text)
+    - **Scheduled date** — when the work is planned
+  </Step>
+  <Step title="Add line items">
+    Add one or more line items for parts and labour. Each line item has a description, quantity, unit cost, and type (Parts / Labour). The **total cost** is calculated automatically from all line items.
+  </Step>
+  <Step title="Save">
+    Click **Save**. The work order is created in **Open** status.
+  </Step>
+</Steps>
+
+### Status machine
+
+| Status | Meaning | Next actions |
+|---|---|---|
+| **Open** | Job created, not yet started | Start Work Order, Cancel |
+| **In Progress** | Work has begun | Mark Complete, Cancel |
+| **Completed** | Work is done, truck cleared | — |
+| **Cancelled** | Job will not be completed | — |
+
+Click **Start Work Order** to move from Open → In Progress. Click **Mark Complete** when the job is done. A completed or cancelled work order lifts any auto-block on the truck.
+
+<Note>
+Only work orders in **Open** or **In Progress** status keep a truck blocked on the planning board. Completing or cancelling the work order restores the truck to the assignable list immediately.
+</Note>
+
+![Work orders list with status badges and cost totals](/images/placeholder.png)
+
+---
+
+## Creating a work order from a defect
+
+When a driver submits a post-trip inspection with a **Safety Critical** defect, the defect appears in **Fleet → Defects**. Each safety-critical row has a **Create Work Order** button.
+
+Clicking it opens the work order form pre-filled with:
+- The truck that was inspected
+- The defect item name and description as the work order description
+- Type set to **Safety Critical**
+
+You only need to add line items and a scheduled date, then save.
+
+---
+
+## Maintenance schedules
+
+Maintenance schedules let you track recurring service intervals per truck — so you always know when the next oil change, belt replacement, or statutory inspection is due.
+
+Go to **Fleet → Maintenance** to manage schedules.
+
+### Adding a schedule
+
+Click **Add Schedule** and configure:
+
+| Field | Description |
+|---|---|
+| **Truck** | Which vehicle this schedule applies to |
+| **Service type** | Free text description (e.g., "Oil change", "Tyre rotation") |
+| **Interval type** | **km** (distance-based), **days** (calendar-based), or **engine hours** |
+| **Interval value** | The numeric interval (e.g., 15,000 km, 90 days, 500 hours) |
+| **Last performed** | Date and odometer/hours reading of the last service |
+
+Druma calculates the **Next Due** date or km from the last performed values and the interval. The schedule list sorts by next due date so overdue items appear at the top.
+
+You can edit or delete any schedule. Druma does not automatically create work orders from schedules — the schedule is a planning tool; you create the work order manually when the service is due.
+
+---
+
+## Planning board: the wrench badge
+
+When a truck has one or more **Open** or **In Progress** work orders, an amber wrench badge appears on that truck's card on the planning board. The badge is a quick signal to dispatchers that the vehicle has outstanding maintenance.
+
+### Workshop Quick Resolve
+
+Click the wrench badge to open the **Workshop Quick Resolve** modal. From here you can:
+
+- **Mark Complete** — closes the work order and removes the block without leaving the planning board
+- **Cancel** — cancels the work order and removes the block
+
+This is designed for situations where you just need to clear a block quickly (e.g., the repair is finished and you need to reassign the truck) without navigating to the full Work Orders tab.
+
+![Planning board truck card with amber wrench badge](/images/placeholder.png)
+
+---
+
+## Auto-unavailability for safety-critical defects
+
+If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled in **Settings → Post-Trip Checklist**, submitting a safety-critical defect automatically:
+
+1. Creates a vehicle unavailability record for the truck
+2. Removes the truck from the assignable list on the planning board
+3. Shows the amber wrench badge on the truck's card
+
+The truck remains unavailable until the linked work order is marked **Completed** or **Cancelled**. Future orders already assigned to the truck are not automatically unassigned — the dispatcher receives a notification and needs to review them manually.
+
+<Warning>
+If a driver submits a safety-critical defect at the end of a shift and no one checks the planning board before the morning, the truck will not appear as assignable. Build a habit of checking **Fleet → Defects** as part of the daily morning review.
+</Warning>
+
+---
+
+<Card title="Post-Trip Vehicle Inspection (DVIR)" icon="clipboard-check" href="/en/driver/post-trip-inspection">
+  How drivers report defects at the end of a trip, and how severity levels are classified.
+</Card>
+
+<Card title="Fleet Documents" icon="file-text" href="/en/fleet-compliance/fleet-documents">
+  Track ITP, insurance, CEMT, and ADR certificate expiry — with planning board warnings when documents are close to expiring.
+</Card>
