@@ -1,0 +1,70 @@
+---
+title: "AI Chat Escalations"
+description: "How unresolved Ask Druma conversations escalate to your team, and how planners handle live sessions."
+icon: "messages"
+---
+
+## Overview
+
+Ask Druma is an AI assistant available to planners, drivers, and clients. For straightforward questions it resolves entirely without human involvement. When a conversation reaches 6 messages without a clear resolution, Ask Druma offers the user a **Request human help** button. This triggers an escalation — a live chat session your team can pick up immediately.
+
+---
+
+## How escalation works
+
+1. **User hits 6 messages** without a satisfactory answer.
+2. Ask Druma displays: *"I haven't been able to resolve this. Would you like to speak with your team?"*
+3. The user taps **Request human help**.
+4. A chat session is created and its status is set to **waiting**.
+5. A Resend email notification is sent to all admin and company_admin users in the company.
+6. The session appears under **Tools → Live Sessions** with an orange badge on the Tools nav item.
+
+Duplicate escalations are deduplicated — if the same user already has an open session, a second tap does not create another one or send another email.
+
+---
+
+## Live Sessions (planner view)
+
+Go to **Tools → Live Sessions** to see all escalated conversations. The list is split by status:
+
+| Status | Meaning |
+|---|---|
+| Waiting | Escalated, not yet picked up by a planner |
+| Active | Planner has replied at least once |
+| Closed | Conversation ended |
+
+### Handling a session
+
+1. Click a **Waiting** session to open it.
+2. Read the full AI transcript — every message the user sent and every AI response is visible.
+3. Type your reply in the input box and press **Send**. This moves the session to **Active** and the user sees your reply in real time.
+4. Continue the conversation until the issue is resolved.
+5. Click **Close session** when done.
+
+Updates appear in real time on both sides via Supabase Realtime channels — you do not need to refresh the page.
+
+---
+
+## Roles with access
+
+Only **admin** and **company_admin** roles can view and reply in Live Sessions. The Tools nav section is gated to these roles; planners and dispatchers do not see it.
+
+---
+
+## Notification email
+
+When a new escalation arrives, Druma sends an email via Resend to all admin/company_admin users. The email includes:
+
+- The user's name and role
+- The full AI transcript of the conversation so far
+- A direct link to the Live Sessions page
+
+---
+
+<Note>
+The escalation threshold is fixed at 6 messages. It cannot currently be changed per company.
+</Note>
+
+<Card title="Ask Druma" icon="sparkles" href="/en/tools/smart-import">
+  Ask Druma can also help with data extraction and import — see Smart Import.
+</Card>
