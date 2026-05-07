@@ -1,0 +1,84 @@
+---
+title: "Driver Payroll"
+description: "Generate automated payroll calculations per driver based on km driven, active days, and waiting hours."
+icon: "money-bill-wave"
+---
+
+## Overview
+
+Druma calculates driver pay from the operational data it already captures — kilometres driven, days worked, and waiting hours logged. There is no separate time-tracking system; the data flows from orders and status taps.
+
+Driver Payroll is found under the **Finance** section. Accessible to admin, company_admin, and fleet_manager roles.
+
+---
+
+## Pay components
+
+Each payroll run calculates four components:
+
+| Component | Basis |
+|---|---|
+| **Km pay** | Loaded km × rate per km |
+| **Empty km pay** | Empty/deadhead km × empty km rate |
+| **Day pay** | Active working days × day rate |
+| **Waiting pay** | Total waiting hours × hourly waiting rate |
+
+The total is the sum of all four components in EUR.
+
+---
+
+## Generating a payroll run
+
+<Steps>
+  <Step title="Select driver and period">
+    Choose the driver from the dropdown and set the start and end date for the period. Typical periods are a calendar month or a two-week pay cycle.
+  </Step>
+  <Step title="Click Generate">
+    Druma calculates all four pay components from the orders and waiting logs within the selected period.
+  </Step>
+  <Step title="Review the breakdown">
+    The result shows each component separately so you can verify the numbers before exporting.
+  </Step>
+  <Step title="Export to CSV">
+    Click **Export CSV** to download the payroll summary for use in your accounting or payroll system.
+  </Step>
+</Steps>
+
+---
+
+## Configuring rates
+
+Pay rates are set per driver. Go to **Fleet → Drivers**, open the driver record, and set:
+
+- Rate per km (loaded)
+- Rate per km (empty)
+- Day rate
+- Waiting hourly rate
+
+If a rate is not set, that component is calculated as zero and a warning is shown on the payroll result.
+
+---
+
+## Historical runs
+
+Every generated payroll run is stored and listed under the driver's record. You can re-open any previous run to review or re-export it.
+
+---
+
+## Monthly totals chart
+
+A bar chart below the driver selector shows total monthly payroll amounts for the selected driver over the trailing 12 months. Useful for spotting seasonal patterns or months with unusually high waiting charges.
+
+---
+
+<Note>
+Payroll figures in Druma are advisory — Druma does not integrate with payroll processors or tax authorities. The CSV export is intended for import into your payroll system or for manual review by an accountant.
+</Note>
+
+<Card title="Waiting Time" icon="clock" href="/en/planner/waiting-time">
+  Learn how waiting time is logged and how it feeds into payroll calculations.
+</Card>
+
+<Card title="Wasted Journey" icon="triangle-exclamation" href="/en/planner/wasted-journey">
+  Dead kilometres from wasted journeys also appear in driver payroll records.
+</Card>

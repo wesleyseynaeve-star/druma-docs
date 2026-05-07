@@ -1,0 +1,75 @@
+---
+title: "Fuel Tax Refund"
+description: "Track and generate EU fuel tax refund claims for Belgium and Romania based on imported fuel card data."
+icon: "gas-pump"
+---
+
+## What is the fuel tax refund?
+
+Several EU member states allow professional road transport operators to reclaim part of the excise duty paid on diesel. Druma supports two schemes:
+
+- **Belgium — Gasoil professionnel (TICAD)**: Belgian carriers can reclaim a portion of the TICAD excise duty on diesel used for professional transport. Claims are submitted quarterly to the SPF Finances.
+- **Romania — TICAD diesel refund**: Romanian carriers can reclaim a portion of accise duties on diesel used in international and national road transport. Claims are submitted to ANAF.
+
+Fuel Tax Refund is found under the **Finance** section. Accessible to admin, company_admin, and fleet_manager roles.
+
+---
+
+## Prerequisites
+
+This report requires fuel card data to be imported first. Without fill records, there are no litres to calculate against.
+
+<Card title="Fuel Card Import" icon="credit-card" href="/en/integrations/fuel-card-import">
+  Import fuel fills from DKV, UTA, AS24, and other providers.
+</Card>
+
+---
+
+## Generating a refund claim
+
+<Steps>
+  <Step title="Select country and period">
+    Choose **Belgium** or **Romania** from the country dropdown, then set the claim period (typically a quarter for Belgium, a month or quarter for Romania).
+  </Step>
+  <Step title="Click Generate">
+    Druma pulls all fuel fill records for the period that are eligible under the selected scheme, calculates total eligible litres, and multiplies by the current refund rate for that country.
+  </Step>
+  <Step title="Review the claim">
+    The result shows eligible litres, refund rate per litre, and total refund amount in EUR. Review before submitting.
+  </Step>
+  <Step title="Set status and reference">
+    Change the status to **Submitted** and enter the government reference number you receive after submission. This links the Druma record to your official filing.
+  </Step>
+</Steps>
+
+---
+
+## Claim status lifecycle
+
+```
+Draft → Submitted → Reimbursed
+                  → Rejected
+```
+
+- **Draft** — calculated but not yet submitted to the authority
+- **Submitted** — sent to SPF Finances (BE) or ANAF (RO); reference number recorded
+- **Reimbursed** — payment received; enter the reimbursement date
+- **Rejected** — claim was rejected; add a note with the reason for follow-up
+
+---
+
+## Refund amounts chart
+
+An area chart shows refund amounts by period over the trailing 12 months. Useful for spotting seasonal fuel consumption patterns and for cash flow planning.
+
+---
+
+## CSV export
+
+Click **Export CSV** to download the claim details — fill-by-fill breakdown, eligible litres, rate, and calculated refund — for submission or audit purposes.
+
+---
+
+<Warning>
+Druma calculates eligible litres from your imported fuel card data. It is your responsibility to verify that all fills are correctly imported and that the refund rate matches the current published rate from the relevant tax authority before submitting a claim.
+</Warning>
