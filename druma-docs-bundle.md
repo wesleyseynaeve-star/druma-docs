@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-05-07 19:51 UTC
+Generated: 2026-05-09 08:20 UTC
 
 ---
 
@@ -7289,219 +7289,30 @@ Subcontractors are carriers you send loads **to**. Brokers are companies that gi
 ## Privacy Policy
 
 
-*Last updated: April 2026*
+The full Privacy Policy for Druma is published on our website. It covers the data controller (WESLEY DATA CONSULTING S.R.L., Romania), legal bases for processing, sub-processors, your rights under GDPR, and the lead supervisory authority (Romanian ANSPDCP).
 
-## Data controller
-
-**Druma SRL**, a company incorporated in Romania, is the data controller for all personal data processed through the Druma platform.
-
-Contact: privacy@druma.io
-
-## What data we collect
-
-### Account and company data
-- Company legal name, VAT number, registered address
-- User names, email addresses, phone numbers, and passwords (hashed)
-- Billing information (processed by Stripe — we do not store card numbers)
-
-### Operational data
-- Transport orders: pickup/delivery addresses, cargo descriptions, prices, dates
-- Driver information: names, phone numbers, driving license numbers, tachograph card numbers
-- Client data: company details, contact persons, invoice history
-- Documents: CMR scans, proof of delivery photos, fleet certificates
-
-### Location data
-- **GPS position is captured only at the moment a driver taps a status update button.** We store a single timestamped coordinate per status change. We do not track driver location continuously and do not maintain a location history.
-
-### Technical data
-- Browser type and version, IP address, session cookies, error logs
-
-## How we use your data
-
-- To provide the Druma transport management service
-- To generate invoices and submit to ANAF e-Factura (where required)
-- To send order status notifications to clients and drivers
-- To calculate CO2 emissions and compliance reports
-- To improve the platform (aggregated, anonymised analytics only)
-
-## Legal bases for processing
-
-- **Contract performance:** processing necessary to deliver the service you have subscribed to
-- **Legal obligation:** e-Factura submission, eCMR archiving (10 years), audit log retention
-- **Legitimate interests:** fraud prevention, security monitoring, service improvement
-- **Consent:** marketing communications (you can withdraw at any time)
-
-## Data retention
-
-| Data type | Retention period |
-|-----------|-----------------|
-| Operational data (orders, invoices, clients) | Duration of subscription + 90 days after cancellation |
-| Audit logs | 2 years |
-| eCMR documents | 10 years (legal requirement under the e-CMR Protocol) |
-| GPS position stamps | 90 days |
-| Billing records | 7 years (Romanian accounting law) |
-
-## Sub-processors
-
-We use the following third-party services to operate the platform:
-
-| Provider | Purpose | Location |
-|----------|---------|----------|
-| Supabase | Database and authentication | EU (Frankfurt) |
-| Resend | Transactional email delivery | EU |
-| HERE Technologies | Map routing and address search | EU |
-| TransFollow | eCMR issuance and archiving | Netherlands |
-| Stripe | Subscription billing | EU |
-| Google Gemini (Enterprise API) | AI-powered order & invoice extraction | EU (GDPR — data not used for model training) |
-| Mailgun | Inbound email parsing | EU |
-| Cloudflare | CDN and hosting | EU |
-| Sentry | Error monitoring | EU |
-| Tawk.to | Live chat support | EU |
-
-All sub-processors are bound by data processing agreements in accordance with GDPR Article 28.
-
-## Your rights
-
-Under GDPR, you have the right to:
-
-- **Access** — request a copy of your personal data
-- **Rectification** — correct inaccurate data
-- **Erasure** — request deletion (subject to legal retention obligations)
-- **Portability** — receive your data in a machine-readable format
-- **Objection** — object to processing based on legitimate interests
-- **Restriction** — request that we limit processing in certain circumstances
-
-To exercise any right: Settings → Data & Privacy, or email privacy@druma.io. We respond within 30 days.
-
-## Data transfers outside the EU
-
-All AI processing is performed within the EU via Google Gemini Enterprise API. No personal data is transferred to the USA for AI features. All other sub-processors listed above operate within the EU or under GDPR-compliant data processing agreements.
-
-## Complaints
-
-You have the right to lodge a complaint with the Romanian Data Protection Authority (ANSPDCP) at anspdcp.ro, or with the supervisory authority in your EU member state.
-
-## Changes to this policy
-
-We will notify you by email and in-app notification of any material changes. Continued use of the platform after the effective date constitutes acceptance.
+[Read the full Privacy Policy →](https://druma.io/legal/privacy)
 
 
-  Detailed breakdown of what data is stored and for how long.
-
-
-
-  How to export your data or request account deletion.
-
+  
+    Detailed breakdown of what data is stored and for how long.
+  
+  
+    How to export your data or request account deletion.
+  
+</CardGroup>
 
 ---
 
 ## Terms of Service
 
 
-*Last updated: January 2025*
+The full Terms of Service for Druma are published on our website. They cover subscription terms, acceptable use, data ownership, limitation of liability, and governing law (Romanian law, courts of Bucharest).
 
-## 1. Parties
-
-These Terms of Service ("Terms") are a legal agreement between **Druma SRL** ("Druma", "we", "us") and the company or individual ("Customer", "you") accessing the Druma platform at druma.io.
-
-By creating an account or using the service, you agree to these Terms.
-
-## 2. The service
-
-Druma provides a cloud-based transport management system (TMS) accessible via web browser and mobile PWA. The service includes order management, fleet tracking, eCMR, invoicing, client portal, driver app, and related features as described in the documentation at docs.druma.io.
-
-We reserve the right to modify, suspend, or discontinue features with reasonable notice.
-
-## 3. Account registration
-
-You must provide accurate company and contact information during registration. You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account.
-
-You must be at least 18 years old and have legal authority to bind your organisation to these Terms.
-
-## 4. Subscription and billing
-
-### Trial period
-New accounts receive a 30-day free trial with no credit card required. Full platform access is available during the trial.
-
-### Paid subscription
-After the trial, continued use requires a paid subscription. Pricing is based on vehicle seats and user seats as described at druma.io/pricing and in the billing settings of your account.
-
-### Payment
-Subscriptions are billed monthly. Payment is processed by Stripe. By providing payment details, you authorise Druma to charge your payment method on the monthly renewal date.
-
-### Grace period
-If a payment fails, you have a 7-day grace period to update your payment method before the account is suspended. Data is preserved during suspension.
-
-### Cancellation
-You may cancel your subscription at any time from Settings → Billing. Access continues until the end of the current billing period. No refunds are issued for partial months.
-
-## 5. Acceptable use
-
-You agree not to:
-
-- Use the platform for any unlawful purpose
-- Attempt to gain unauthorised access to any part of the platform
-- Reverse-engineer, decompile, or copy any part of the platform
-- Use the platform to transmit malware or malicious content
-- Resell or sublicense the platform without written permission
-- Submit false, fraudulent, or misleading transport or company data
-
-## 6. Data ownership
-
-You retain ownership of all data you input into Druma (orders, clients, drivers, invoices, etc.). You grant Druma a limited licence to process this data solely to provide the service.
-
-We do not sell your data to third parties. See our Privacy Policy for full details.
-
-## 7. eCMR and legal documents
-
-Druma integrates with TransFollow to issue eCMR notes. **Druma is a technology intermediary only.** The legal validity of eCMR documents is governed by the CMR Convention and applicable national law. You are responsible for ensuring eCMR is appropriate for your specific transport routes and counterparties.
-
-## 8. Availability and uptime
-
-We target 99.5% monthly uptime. Planned maintenance is announced in advance. We are not liable for downtime caused by factors outside our control (internet outages, third-party service failures, force majeure).
-
-## 9. Limitation of liability
-
-To the maximum extent permitted by applicable law:
-
-- Druma's total liability for any claim arising from these Terms or use of the service is limited to the subscription fees paid in the 3 months preceding the claim.
-- Druma is not liable for indirect, consequential, or special damages, including loss of profit or data.
-- Druma is not liable for decisions made by you based on data or calculations provided by the platform (driver hours, CO2 estimates, toll estimates, etc.).
-
-## 10. Indemnification
-
-You agree to indemnify Druma against any claims, damages, and costs arising from your breach of these Terms or your use of the platform in violation of applicable law.
-
-## 11. Intellectual property
-
-The Druma platform, including all software, design, trademarks, and documentation, is owned by Druma SRL. These Terms do not grant you any ownership rights.
-
-## 12. Termination
-
-Either party may terminate the agreement with 30 days' written notice. Druma may terminate immediately for material breach of these Terms.
-
-Upon termination: your access is revoked, data is retained for 90 days then deleted (except legally required retention periods), and final invoices are generated for the period used.
-
-## 13. Governing law
-
-These Terms are governed by Romanian law. Disputes shall be subject to the exclusive jurisdiction of the courts of Bucharest, Romania.
-
-## 14. Changes to these Terms
-
-We will notify you by email of material changes at least 14 days before they take effect. Continued use after the effective date constitutes acceptance.
-
-## 15. Contact
-
-Druma SRL  
-support@druma.io  
-druma.io
+[Read the full Terms of Service →](https://druma.io/legal/tos)
 
 
   How we handle your personal data under GDPR.
-
-
-
-  Data retention periods and your deletion rights.
 
 
 ---
@@ -7581,7 +7392,7 @@ Alternatively, email privacy@druma.io from your account owner's email address.
 | Cloudflare | Request logs | EU |
 | TransFollow | eCMR document archive | Netherlands |
 | Stripe | Billing data | EU |
-| Anthropic | Email content (AI extraction) | USA (SCCs) |
+| Google Vertex AI (Gemini Enterprise) | Email and document AI extraction | EU (no model training) |
 
 ## Your rights under GDPR
 
