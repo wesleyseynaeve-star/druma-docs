@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-05-09 08:20 UTC
+Generated: 2026-06-12 07:34 UTC
 
 ---
 
@@ -1378,6 +1378,55 @@ Alternatively, drag the original truck back onto the order on the planning board
 
 For multi-switch orders (A → B → C), undoing cancels only the most recent switch (B → C, reverting back to B) — not the entire chain back to the beginning.
 
+
+
+  For your daily morning workflow — active orders, live truck positions, and status alerts all in one screen.
+
+
+
+  New to Druma? Start here to learn how to create your first order.
+
+
+---
+
+## Home Dashboard
+
+
+## Overview
+
+The **Home** page (`/home`) is your live operational dashboard. It is the first thing you see after logging in. Unlike the Analytics section — which runs historical reports — the Home dashboard runs real-time queries against live data throughout the working day, giving you an always-current view of what is happening right now.
+
+Every operator at your company can configure their own layout independently. The dashboard remembers your arrangement per user.
+
+
+## Role Templates
+
+If you are setting up your dashboard for the first time, or want to reset to a sensible default, click **Templates** at the top of the dashboard and choose a preset layout:
+
+| Template | Best for | What it includes |
+|---|---|---|
+| **Dispatcher** | Day-to-day dispatch operations | In transit, Unassigned orders, Delayed loads, Driver-hours alerts |
+| **Planner** | Scheduling and capacity planning | Today's pickups, Unassigned orders, Revenue KPIs, On-time % |
+| **Finance** | Invoice and revenue monitoring | Overdue invoices, Revenue this month, Revenue trend chart |
+| **Fleet** | Vehicle and driver management | Fleet utilisation, Active trucks, Driver-hours alerts |
+| **Overview** | Managers wanting a broad view | A balanced mix across all categories |
+
+> **Warning:** 
+Choosing a template **replaces your current layout** immediately. Your previous arrangement is not recoverable. If you have a custom layout you want to keep, note down which widgets you have before applying a template.
+
+
+
+
+  
+    Assign and reassign orders across your fleet on a visual dispatch board.
+  
+  
+    Active orders, live truck positions, and status alerts for your current working day.
+  
+  
+    Historical analytics and scheduled reports — the complement to the live dashboard.
+  
+</CardGroup>
 
 ---
 
@@ -4464,6 +4513,90 @@ Click **Export CSV** to download the full aged creditors report as a CSV file. T
 
 ---
 
+## KSeF — Polish e-Invoicing
+
+
+## What is KSeF?
+
+KSeF (Krajowy System e-Faktur) is Poland's national structured e-invoicing system, operated by the Polish tax authority (KAS — Krajowa Administracja Skarbowa). It is mandatory for Polish VAT-registered companies. Every invoice issued by a PL-VAT company must be sent to KSeF in the official FA(3) XML format — the KAS portal alone is not sufficient.
+
+KSeF only applies if your company has a **Polish VAT number** (format: `PL` followed by 10 digits, e.g. `PL1234567890`). Companies registered in Romania, Belgium, or any other non-Polish country are not subject to KSeF. If Druma does not detect a PL VAT number on your company record, the KSeF integration card will remain inactive.
+
+## How Druma Handles KSeF
+
+You do not need to log into the KAS portal, produce XML files, or submit anything manually. Here is what happens automatically when you generate an invoice and KSeF is enabled:
+
+1. Druma converts the invoice into the official **FA(3) XML** format required by KAS.
+2. Druma authenticates with the KSeF API using your **operator token**, stored securely in Supabase Vault — the token is never visible in plain text after you paste it.
+3. Druma submits the XML to KSeF and receives a **KSeF number** (the official reference from KAS).
+4. Druma downloads the **UPO** (Urzędowe Poświadczenie Odbioru — official receipt of receipt) and stores it against the invoice record.
+
+The entire process runs in the background. You will see the result on the invoice as a coloured status badge.
+
+## KSeF Status Badges
+
+Each invoice subject to KSeF shows a status badge on the invoice detail page under the **KSeF** section:
+
+| Badge | Meaning |
+|---|---|
+| **Pending** | Invoice generated; KSeF submission is queued. |
+| **Submitted** | XML sent to KSeF; waiting for KAS to process it (usually 1–5 minutes). |
+| **Accepted** | KAS accepted the invoice. The KSeF number is stored and the UPO is available. |
+| **Failed** | KSeF rejected the invoice due to a validation error. See the error message on the invoice. |
+| **Rejected** | KAS returned a formal rejection. Check the UPO for the reason code. |
+
+> **Note:** 
+Failed invoices are automatically retried every 30 minutes for up to 24 hours. If the invoice is still in **Failed** status after 24 hours, it will not retry automatically — trigger a manual retry from the invoice detail panel once you have resolved the underlying error.
+
+
+## Setting Up KSeF
+
+
+  ### Go to Settings → Integrations
+    Open the **Settings** menu from the top navigation bar and select **Integrations**.
+  
+  ### Find the KSeF card and click Connect
+    Locate the **KSeF (Polish e-invoicing)** card. Click **Connect**.
+  
+  ### Paste your operator token
+    Enter your KSeF operator token. This is the authentication token issued by KAS for your company's API access. Your accountant or IT team can generate one from the KSeF portal at [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  
+  ### Save
+    Click **Save**. Druma validates that your company record has a Polish VAT number before activating. If validation fails, check that the VAT number on your company details is in the `PL` + 10-digit format.
+  
+
+
+Once connected, all new invoices generated by your company are submitted to KSeF automatically. Existing invoices already in Druma are **not** retroactively submitted.
+
+## Disconnecting KSeF
+
+Go to **Settings → Integrations → KSeF → Disconnect**. This removes the operator token from Vault and stops new submissions immediately. Invoices that have already been accepted retain their KSeF numbers — disconnecting does not affect accepted records.
+
+## Reverse-Charge Invoices
+
+Druma correctly handles reverse-charge VAT in the FA(3) XML format. When an invoice carries reverse-charge VAT treatment, Druma omits the VAT amount and sets the correct **P_12** field in the XML. No manual adjustment is needed — the VAT treatment is derived from the invoice line items as configured in Druma.
+
+## Downloading the UPO
+
+The UPO (official receipt from KAS) is downloaded automatically once the invoice reaches **Accepted** status and is stored against the invoice record. To download it manually:
+
+1. Open the invoice from **Invoicing**.
+2. Scroll to the **KSeF** section.
+3. Click **Download UPO**.
+
+> **Warning:** 
+The UPO is the legal proof that KAS received your invoice. Keep a copy for your records — Polish tax law requires you to be able to produce it during a tax audit.
+
+
+## Manual Retry
+
+If automatic retries are exhausted or you have corrected an error and want to resubmit immediately:
+
+Go to **Invoicing** → open the invoice → **KSeF section** → click **Retry submission**. Druma sends the FA(3) XML again immediately.
+
+
+---
+
 ## What Is eCMR?
 
 
@@ -4480,7 +4613,7 @@ The name comes from the **CMR Convention** — the Convention on the Contract fo
 
 **No.** eCMR is not legally mandatory anywhere in the European Union or in any ratifying country. It is an operator's choice.
 
-Any transport company can continue to use paper CMR notes for every shipment. Druma supports both: eCMR via TransFollow for companies that want it, and paper CMR with document upload for those who do not.
+Any transport company can continue to use paper CMR notes for every shipment. Druma supports both: eCMR issued natively in-house for companies that want it, and paper CMR with document upload for those who do not.
 
 > **Note:** 
 Choosing to use eCMR for some orders and paper CMR for others is perfectly valid. The choice is made per order in Druma.
@@ -4493,27 +4626,34 @@ Three parties must sign every eCMR document. Each signature has a specific momen
 
 1. **Sender** — signs at the pickup location, confirming the goods were handed over to the carrier in the described condition
 2. **Carrier / Driver** — signs at the pickup location, immediately after the sender, confirming receipt of the goods
-3. **Consignee** — signs at the delivery location, confirming the goods were received
+3. **Consignee** — signs at the delivery location via a **share link or QR code** on their own phone — no Druma account required
 
-All three signatures must be completed for the certified PDF to be issued by TransFollow. A partially signed eCMR has no legal finality — it is still in progress.
+All three signatures must be completed before the certified PDF is issued. A partially signed eCMR has no legal finality — it is still in progress.
 
 
 ## Next steps
 
 
-  How Druma creates eCMR documents automatically and manually.
-
-
-
-  Step-by-step guide to collecting all three signatures on a mobile device.
-
+  
+    How Druma creates eCMR documents automatically and manually.
+  
+  
+    Step-by-step guide to collecting all three signatures.
+  
+  
+    The e-CMR Protocol, PAdES seal, and country coverage.
+  
+  
+    Native default vs TransFollow fallback — and how to switch.
+  
+</CardGroup>
 
 ---
 
 ## Creating an eCMR
 
 
-Druma creates eCMR documents via TransFollow. The process is largely automatic for qualifying orders, but you can also trigger creation manually from the order detail page.
+Druma creates eCMR documents **in-house using the native Druma provider** by default. No external service account is needed. The process is largely automatic for qualifying orders, but you can also trigger creation manually from the order detail page.
 
 
 ## Creating an eCMR Manually
@@ -4528,38 +4668,32 @@ If automatic creation did not trigger, or if you need to create an eCMR on a dom
     Click the **eCMR** tab near the top of the order detail page.
   
   ### Click Create eCMR
-    Click the **Create eCMR** button. Druma will show you a preview of the data that will be submitted to TransFollow.
+    Click the **Create eCMR** button. Druma will show you a preview of all pre-filled CMR fields.
   
   ### Review all fields
-    Check every field carefully before confirming. Once registered with TransFollow, the eCMR document number cannot be deleted or changed.
+    Check every field carefully before confirming. Once registered, the eCMR document number cannot be deleted or changed.
   
   ### Confirm creation
-    Click **Confirm & Create**. Druma registers the document with TransFollow and the eCMR status changes to "Awaiting sender signature."
+    Click **Confirm & Create**. Druma registers the document internally and the eCMR status changes to "Awaiting sender signature."
   
-
 
 
 
 ## Before You Confirm: What Cannot Be Changed
 
 > **Warning:** 
-Once you click **Confirm & Create**, the eCMR document number is registered with TransFollow. You **cannot**:
+Once you click **Confirm & Create**, the eCMR document number is registered. You **cannot**:
 - Delete the eCMR
 - Change the document number
 - Modify the shipper, consignee, or goods description after registration
 
-If you need to correct a registered eCMR, you must cancel it (via the Paper CMR Fallback process) and, if appropriate, create a new one. A cancellation is recorded in the TransFollow audit trail.
+If you need to correct a registered eCMR, you must cancel it (via the Paper CMR Fallback process) and, if appropriate, create a new one. A cancellation is recorded in the audit trail.
 
 
 
-## Next steps
+## Billing
 
-
-  How the driver collects all three signatures on their phone.
-
-
-
-  Background on eCMR, its legal basis, and why operators use it.
+eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap. You can view usage statistics under **Settings → Billing → Usage**.
 
 
 ---
@@ -4567,7 +4701,7 @@ If you need to correct a registered eCMR, you must cancel it (via the Paper CMR 
 ## eCMR Signing Flow
 
 
-An eCMR requires three signatures to be legally complete: the sender signs at pickup, the driver/carrier signs at pickup, and the consignee signs at delivery. The entire process happens on the driver's phone. Here is how each step works in practice.
+An eCMR requires three signatures to be legally complete: the sender signs at pickup, the driver/carrier signs at pickup, and the consignee signs at delivery. Here is how each step works in practice with the Druma native provider.
 
 
 ## Step 1 — Sender Signs at Pickup
@@ -4590,20 +4724,32 @@ An eCMR requires three signatures to be legally complete: the sender signs at pi
 
 ## Step 3 — Consignee Signs at Delivery
 
+With the Druma native provider, the consignee signs on their **own device** via a share link or QR code — there is no need to hand over the driver's phone.
 
-  ### Driver arrives at delivery
-    At the delivery location, the driver opens the order in the Druma app and taps the **eCMR** section. The document now shows the two locked pickup signatures.
+
+  ### Driver opens the eCMR tab at delivery
+    At the delivery location, the driver opens the order in the Druma app and taps the **eCMR** section. The document shows the two locked pickup signatures and a share link with a QR code.
   
-  ### Driver hands phone to consignee
-    The consignee representative takes the driver's phone.
+  ### Consignee scans the QR or receives the link
+    The driver shows the QR code on screen. The consignee scans it with their phone camera — no Druma account or app download needed. Alternatively, the driver can copy and send the link via WhatsApp or SMS.
   
-  ### Consignee reviews and signs
-    The consignee reviews the document — paying attention to goods condition, any discrepancies, and delivery address — then taps **Sign as Consignee**, draws their signature, enters their name and role, and taps **Confirm**.
+  ### Consignee reviews the document
+    On their own phone, the consignee sees a read-only view of the CMR — goods, addresses, weight, and the two pickup signatures already locked.
+  
+  ### Consignee signs (and optionally adds reservations)
+    The consignee draws their signature on screen and enters their name. If there are any issues with the delivery — damage, shortage, or discrepancy — they can add a note in the **Reservations / observations** field (CMR box 24) before tapping **Confirm**.
   
   ### Certified PDF issued
-    All three signatures are complete. TransFollow immediately generates the certified eCMR PDF. The driver receives a confirmation on screen. The certified PDF is accessible from the order detail page in Druma and can be sent to the client.
+    All three signatures are complete. Druma builds the certified eCMR PDF and applies the **PAdES digital seal**. The driver receives a confirmation on screen. The certified PDF is stored in the order automatically and is accessible from the order detail page.
   
 
+
+> **Note:** 
+The QR code link expires after 30 minutes. If the consignee does not sign within that time, the driver can generate a new QR code.
+
+
+> **Note:** 
+If your company uses **TransFollow** as the eCMR provider, the consignee signs by handing the driver's phone to them at the delivery point — the TransFollow signing flow differs from the native QR link approach.
 
 
 
@@ -4692,7 +4838,7 @@ Understanding the legal basis for eCMR helps you know when you can rely on it wi
 
 ## Which Countries Recognise eCMR?
 
-As of 2024, the e-CMR Protocol has been ratified by most EU member states plus several non-EU countries. The ratification list changes as new countries join.
+As of 2025, the e-CMR Protocol has been ratified by most EU member states plus several non-EU countries, including Switzerland, Belarus, and Georgia. The ratification list changes as new countries join.
 
 > **Note:** 
 Always check the current UNECE ratification status before relying on eCMR for a new route. The official list is maintained at [unece.org/transport/legal-instruments](https://unece.org/transport/legal-instruments). Search for "Additional Protocol to CMR."
@@ -4719,7 +4865,7 @@ To access an archived eCMR:
 2. Go to the **eCMR** tab
 3. Click **Download Certified PDF**
 
-The PDF is retrieved from TransFollow's archive in real time. There is no separate archiving action required from your side.
+There is no separate archiving action required from your side.
 
 
 ## eCMR Is Not Mandatory
@@ -4728,6 +4874,125 @@ To be clear: **eCMR is optional everywhere.** No EU regulation or national law r
 
 Carriers who continue to use paper CMR are fully compliant. The choice to use eCMR is a business decision based on efficiency, client preference, and the desire to eliminate paper from operations.
 
+
+---
+
+## eCMR Providers
+
+
+Druma supports two eCMR providers. The **Druma native provider** is the default and is recommended for all new companies — it issues and seals eCMRs entirely in-house at no per-document cost. **TransFollow** remains available as an optional fallback for companies that were already using it before the native provider was introduced.
+
+To switch providers, go to **Settings → Integrations → eCMR provider** (company admin access required).
+
+
+## TransFollow (Optional Fallback)
+
+TransFollow is a third-party eCMR platform that Druma continues to support for companies already using it. New companies should use the Druma native provider instead.
+
+### Connecting your TransFollow account
+
+
+  ### Get your TransFollow API key
+    Log in at [transfollow.com](https://transfollow.com). Go to your account settings and navigate to **API Keys**. Generate a new API key for Druma. Copy it — you will only be shown it once.
+  
+  ### Enter the key in Druma
+    In Druma, go to **Settings → Integrations → eCMR provider → TransFollow**. Paste your API key into the field and click **Save**.
+  
+  ### Test the connection
+    Click **Test Connection**. Druma calls the TransFollow API to verify the key is valid and your account is active. You will see a green confirmation if everything is working.
+  
+
+
+> **Note:** 
+Your API key is encrypted immediately upon saving and is never displayed in plain text again. If you need to replace it (for example, if the key is rotated), simply paste the new key over the existing field.
+
+
+### Mock Mode for training and onboarding
+
+During initial setup or when training new staff, you can enable **Mock Mode**.
+
+**Settings → Integrations → eCMR provider → TransFollow → Enable Mock Mode**
+
+In mock mode:
+
+- eCMR records are created normally in Druma and go through the full workflow
+- TransFollow receives the requests but marks all documents as test records — they have no legal effect
+- No cost is incurred for mock-mode documents
+- Documents created in mock mode are clearly labelled "TEST" in Druma and cannot be converted to live documents
+
+Disable mock mode before your first live shipment.
+
+### Costs (TransFollow)
+
+eCMR is included in your Druma subscription at no extra cost, also when using the TransFollow fallback — there is no per-document charge on your Druma invoice.
+
+> **Warning:** 
+If you close your TransFollow account or your API key expires, Druma cannot issue new eCMRs until a valid key is provided. Documents already archived in TransFollow remain accessible. Set a reminder to renew your TransFollow key before it expires.
+
+
+
+## Related articles
+
+
+  
+    An introduction to electronic CMR notes and when you need them.
+  
+  
+    The e-CMR Protocol, PAdES seal, and eIDAS AdES explained.
+  
+  
+    Step-by-step guide to issuing an eCMR on a Druma order.
+  
+  
+    How the driver and consignee collect signatures.
+  
+</CardGroup>
+
+---
+
+## eFTI Roadside Inspection (Authority Check)
+
+
+EU Regulation (EU) 2020/1056 on electronic freight transport information (**eFTI**) requires that from **9 July 2027**, EU member-state authorities must accept electronic freight transport information instead of demanding paper documents during roadside inspections. Druma is built to meet this requirement.
+
+
+## What Drivers See
+
+Every order has a unique **eFTI identifier**. In the driver app, on the order detail screen, there is an **"Authority check (eFTI)"** card. It shows:
+
+- A **QR code** the driver can present at a roadside inspection
+- A copyable eFTI link (UIL — Unique Item Identifier Link)
+- A link to open the eCMR view on the driver's own device
+
+The driver does not need to do anything to activate this — the card is always present on assigned orders.
+
+> **Note:** 
+The driver never needs to navigate menus or search for the eFTI card. It is prominently displayed on the active order screen so it is immediately accessible when an inspector approaches the vehicle.
+
+
+
+## Certification Status
+
+> **Warning:** 
+Druma's eFTI platform certification under **Art. 10** of Regulation (EU) 2020/1056 is in progress. The inspector view is fully usable today as a courtesy and voluntary disclosure for companies that want to go paperless ahead of the 2027 deadline.
+
+The certified machine-to-machine authority interface (via EU Member State eFTI Gates) is pending the availability of live national Gates, which were not yet operational as of mid-2026. When national Gates come online, Druma will complete the certification process and update this page.
+
+
+
+## Related articles
+
+
+  
+    The electronic CMR note that underpins the eFTI data set.
+  
+  
+    How the three-party eCMR signing process works in Druma.
+  
+  
+    The legal framework behind eCMR and the PAdES digital seal.
+  
+</CardGroup>
 
 ---
 
@@ -4983,39 +5248,72 @@ Always check the current ANAF thresholds before concluding that a shipment does 
 Categories that have required declaration include: goods with fiscal risk (food, alcohol, tobacco, textiles, construction materials, electronics), goods above a value threshold, and all international transit through Romania above certain tonnage. Your accountant or transport legal advisor can confirm the current applicable categories for your cargo types.
 
 
-## GPS Position Logging
+## How Druma Handles e-Transport
 
-e-Transport requires GPS positions to be transmitted to ANAF every **30 seconds** during active transport. Druma handles this automatically via the ANAF e-Transport API — separate from the driver's manual status updates.
+### Carrier flow (the default): your client declares
 
-**Important:** GPS logging only works when the driver has the Druma app **open on their phone** during transit. If the driver closes the app or the phone screen locks without the app running in the background, position logging may be interrupted.
+When your client holds the declaration obligation, Druma nudges the process along automatically so the UIT reaches you before the truck departs.
 
 
-  ### Instruct drivers before departure
-    Before the truck departs, confirm with the driver that the Druma app is open and showing the active order. On Android, confirm the app has background location permission.
+  ### Confirmation email nudge
+    When Druma sends the order confirmation to the client, it detects that the route touches Romania and includes a prominent notice asking the client to enter the UIT code in their portal.
   
-  ### App runs during transit
-    The app transmits GPS coordinates to Druma every 30 seconds. Druma forwards these to the ANAF e-Transport API automatically.
+  ### Client portal entry
+    The client opens the shipment in the Druma client portal. An **e-Transport (Romania)** card explains the requirement and provides an input field. The client enters the UIT code received from ANAF — Druma validates the format (8–30 uppercase alphanumeric characters) before saving.
   
-  ### Transport completion
-    When the driver marks the order as delivered, GPS logging for that UIT code stops.
+  ### Planner manual entry
+    If the client provides the UIT by phone or email, the planner can enter it directly on the order detail pane under the **cargo tab**. The same **e-Transport (Romania)** section shows an input field when no UIT is recorded and the order status allows editing.
+  
+  ### GPS transmission activates automatically
+    Once a UIT code is on file, Druma's GPS forwarding pipeline picks up the order and begins transmitting positions to ANAF at the required 30-second interval — no additional action required from the planner.
+  
+  ### Driver sees the UIT code
+    The UIT code appears in the driver's Druma app on the active order screen, confirming to the driver that the declaration is in place before departure. If a road inspector asks, the driver shows the code on their phone or presents the printed order document.
   
 
+
+### Declarant flow: your company declares
+
+Enable this only if your company is the Romanian trading party that legally declares to ANAF. Go to **Settings → Integrations → ANAF e-Transport** and enable the declarant setting.
+
+Once enabled:
+
+- When you create an order with a pickup or delivery stop in Romania, the order form shows a **Goods value (RON)** field. This value is required for the declaration. Saving without it shows a warning — you can still save and add the value later by editing the order.
+- When you assign a truck to the order, Druma checks whether the order is in scope: the goods value must be at or above the declaration threshold (default **10 000 RON**, configurable per company) and the order must not be subcontracted.
+- If all conditions are met, Druma **submits the declaration automatically** as soon as the truck assignment is saved, and stores the resulting UIT on the order.
+
+**If the declaration fails** — for example, due to a missing goods value, a stop address error, or a temporary ANAF API issue — the order detail page shows a **Declaration failed** warning. Fix the underlying data and retry using the **Declare / Retry e-Transport** option in the order's action menu.
 
 > **Note:** 
-GPS logging for e-Transport uses mobile data. Ensure drivers have an active SIM with data. On routes through areas with poor signal, Druma buffers positions and transmits them when connectivity is restored.
+Companies without the declarant setting enabled never see the Goods value (RON) prompt and will not trigger auto-declarations. The carrier flow is always available to both declarant and non-declarant companies for orders where the client holds the obligation.
 
 
 
-## Penalties for Non-Compliance
+## What the Driver Needs to Do
 
-ANAF fines for e-Transport violations are significant — penalties apply to both the carrier and the beneficiary of the transport (the client or shipper). Common violations include:
+The driver's responsibilities for e-Transport compliance are minimal when using Druma:
 
-- Transporting goods without a valid UIT code
-- GPS position logging gaps during transport
-- Declared cargo not matching what is being transported
+1. **Keep the app open** on their phone during transit
+2. **Show the UIT code** if asked by a road inspector (it is visible on the active order in the app)
+3. **Do not deviate significantly from the declared route** — major route deviations may require an amended declaration, which the dispatcher handles from the Druma web interface
 
-Druma's automation eliminates the most common compliance failures: missing declarations and GPS logging gaps. However, the responsibility for accurate cargo information (weight, value, type) remains with the dispatcher entering order data.
 
+## Related articles
+
+
+  
+    Configure your ANAF API credentials, goods-value threshold, and e-Transport defaults in Druma.
+  
+  
+    Vehicle document compliance, including operating licences required for Romanian transport.
+  
+  
+    Regulation 561/2006 driving limits and how Druma tracks them.
+  
+  
+    Vehicle and driver return obligations and IMI posting declarations.
+  
+</CardGroup>
 
 ---
 
@@ -5260,6 +5558,207 @@ Click **Export CSV** to download the filtered list for insurance reviews or safe
   
   
     Track insurance policies alongside incident records.
+  
+</CardGroup>
+
+---
+
+## Driver Working Time (WTD)
+
+
+Directive 2002/15/EC (the Working Time Directive for mobile workers, commonly called the WTD) sets limits on **total working time** for professional drivers — not just driving time. Working time includes driving, loading, unloading, waiting at loading points, and administrative tasks. It is a separate legal instrument from EU Regulation 561/2006, which governs pure driving time and rest periods.
+
+> **Note:** 
+Druma's WTD monitoring is based on tachograph data synced from your connected telematics provider. If tachograph sync is not enabled, WTD columns will show as unavailable. WTD data is a monitoring aid — always verify compliance using the raw tachograph files for any formal audit response.
+
+
+
+## How WTD Differs from Regulation 561/2006
+
+| | Directive 2002/15/EC (WTD) | Regulation 561/2006 (Driving Hours) |
+|---|---|---|
+| What it covers | All working time (driving + loading + waiting + admin) | Driving time only |
+| Daily limit | No daily working-time cap (night work rules apply instead) | 9h standard, 10h extended |
+| Weekly limit | 60 hours absolute; 48h average over 17 weeks | 56 hours |
+| Fortnightly limit | None (rolling 17-week average applies) | 90 hours |
+| Tracked by | Activity codes on tachograph | Tachograph driving mode |
+
+Both sets of rules apply simultaneously. A driver can be compliant with 561/2006 driving limits whilst in breach of the WTD weekly cap — for example, if total working time (including loading duties) pushes the week above 60 hours.
+
+
+## Warning and Breach Thresholds
+
+| Status | This week | 17-week average |
+|---|---|---|
+| **OK** | Under 48 hours | Under 44 hours |
+| **Warning** | 48 – 60 hours | 44 – 48 hours |
+| **Breach** | Over 60 hours | Over 48 hours |
+
+A **Breach** badge means a driver has exceeded a WTD legal limit. Repeated breaches are a significant audit risk and can result in penalties for both the driver and the transport company during roadside inspections or authority audits.
+
+The **Warning** band gives dispatchers early visibility before a driver is at legal risk. A driver in the Warning band for the weekly limit still has headroom up to 60 hours, but should not be assigned further work that same week without careful review of total working hours.
+
+
+## Related articles
+
+
+  
+    Regulation 561/2006 driving time limits, break requirements, and rest periods.
+  
+  
+    Downloading and storing DDD/TGD files to meet the EU Reg 165/2014 retention requirement.
+  
+  
+    Vehicle and driver return obligations and IMI posting declarations.
+  
+  
+    Vehicle document compliance and expiry tracking.
+  
+</CardGroup>
+
+---
+
+## Tachograph Archive
+
+
+EU Regulation 165/2014 requires transport operators to download tachograph data from vehicle units and driver cards at defined intervals, and to retain that data for at least 12 months. Druma stores these files in the Tacho Archive so you can prove compliance during a roadside inspection or authority audit without maintaining a separate filing system.
+
+
+## Where to Find the Tacho Archive
+
+Go to **Fleet → Tacho Archive**. The page lists all stored tachograph files sorted by upload date. Each row shows:
+
+- Driver or vehicle name
+- File type (VU or DDC)
+- Date range covered by the file
+- Days since last download
+- Status badge
+
+### Status Badges
+
+| Badge | Meaning |
+|---|---|
+| **OK** | Within the download deadline |
+| **Due soon** | Within 7 days of the deadline |
+| **Overdue** | Deadline has passed |
+
+Files marked **Overdue** require immediate action — download the file from the vehicle or driver card and upload it to clear the overdue status.
+
+
+## Manual Upload
+
+For vehicles and drivers not covered by an automatic integration, upload files directly from a tachograph download tool (e.g. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+
+  ### Open the Tacho Archive
+    Go to **Fleet → Tacho Archive**.
+  
+  ### Click Upload file
+    Click the **Upload file** button in the top-right corner.
+  
+  ### Select the driver or vehicle
+    Choose whether the file is a driver card file (DDC) or a vehicle unit file (VU), then select the driver or vehicle from the list.
+  
+  ### Choose the file
+    Select the `.ddd` or `.tgd` file from your computer. Maximum file size is **10 MB**.
+  
+  ### Confirm upload
+    Click **Upload**. Druma parses the file header to extract the date range and stores the file in the archive. The overdue clock resets for the selected driver or vehicle.
+  
+
+
+> **Warning:** 
+Only `.ddd` and `.tgd` files are accepted. Files exported in other formats (CSV, PDF) cannot be uploaded and do not satisfy the EU data retention requirement. Always retain the original binary file.
+
+
+
+## Related articles
+
+
+  
+    Regulation 561/2006 daily and weekly driving limits tracked from tachograph data.
+  
+  
+    Directive 2002/15/EC working time limits and how Druma monitors them.
+  
+  
+    Vehicle document compliance and expiry tracking.
+  
+  
+    Vehicle and driver return obligations and IMI posting declarations.
+  
+</CardGroup>
+
+---
+
+## Mobility Package Compliance
+
+
+The EU Mobility Package, in force since February 2022, introduced three binding obligations for cross-border road transport operators. Non-compliance is checked during roadside inspections and can result in fines in any EU member state where the truck is stopped.
+
+
+## Where to Find the Mobility Package Dashboard
+
+Go to **Analytics → Mobility Package**. The page is divided into three sections: Vehicle Returns, Driver Returns, and IMI Declarations.
+
+
+## Driver Returns
+
+The Driver Returns table shows one row per driver with the last recorded return date, days elapsed, and a status badge.
+
+| Status | Condition |
+|---|---|
+| **OK** | Fewer than 3 weeks since last return |
+| **Warning** | 3–4 weeks since last return |
+| **Overdue** | More than 4 weeks since last return |
+
+Driver return data is derived from the last recorded regular weekly rest location in the tachograph data. A regular weekly rest (≥ 45 consecutive hours) taken at the driver's home or chosen location counts as a qualifying return. Rest taken in the vehicle or at a truck stop does not count.
+
+If tachograph sync is not enabled, log returns manually by editing the driver record.
+
+
+## Creating a Posting Declaration
+
+
+  ### Open IMI Declarations
+    Go to **Analytics → Mobility Package** and select the **IMI Declarations** tab.
+  
+  ### Click New declaration
+    Click the **New declaration** button.
+  
+  ### Fill in the details
+    Enter the driver, the host country where the driver is being posted, and the start and end dates of the posting period.
+  
+  ### Submit on the IMI portal
+    Druma does **not** submit directly to IMI — you must do that separately via the [IMI system](https://ec.europa.eu/imi-net/). Once you have submitted and received your IMI reference number, return to Druma to enter it.
+  
+  ### Add the IMI reference number
+    Edit the declaration in Druma and enter the IMI reference number. This links your Druma record to the official submission.
+  
+  ### Save
+    Click **Save**. Druma will track the expiry and flag the declaration as **Expiring** when the end date approaches.
+  
+
+
+> **Note:** 
+A posting declaration is required each time a driver works in a host member state, not once per driver. If a driver regularly runs into Germany, a new declaration is required for each posting period. Declarations cannot overlap for the same driver and host country.
+
+
+
+## Related articles
+
+
+  
+    Regulation 561/2006 driving limits — separate from but enforced alongside the Mobility Package.
+  
+  
+    Directive 2002/15/EC 60-hour and 48-hour average working time limits.
+  
+  
+    Storing DDD/TGD files to meet the Reg 165/2014 download-frequency requirement.
+  
+  
+    Vehicle document compliance and operating licence tracking.
   
 </CardGroup>
 
@@ -6314,19 +6813,12 @@ Having annual CSRD-aligned emissions data ready — with a recognised methodolog
 ## TransFollow eCMR Integration
 
 
-Druma uses TransFollow as its eCMR (electronic CMR) service provider. TransFollow handles the legal certification, signing workflow, and long-term archiving of electronic CMR notes. This page explains how to connect your TransFollow account to Druma and what the integration covers.
+> **Note:** 
+**The Druma native eCMR provider is the default** for all new companies — no external account or API key required. TransFollow is for companies that were already using it before the native provider was introduced. If you are setting up eCMR for the first time, you do not need this page.
 
-## What TransFollow Does
 
-A CMR consignment note is a legal transport document required for international road freight. TransFollow provides a platform that makes CMR notes fully electronic — legally equivalent to paper under the e-CMR Protocol to the CMR Convention (applicable in 30+ European countries).
+Druma supports TransFollow as an optional fallback eCMR provider. TransFollow handles legal certification, signing workflow, and long-term archiving for companies that prefer to continue using it. To switch between providers, go to **Settings → Integrations → eCMR provider** (company admin access required).
 
-When you issue an eCMR through Druma, TransFollow:
-
-- Assigns a unique identifier to the document
-- Records the digital signatures from driver, sender, and recipient
-- Timestamps and certifies each signature with a qualified timestamp
-- Archives the completed document for 10 years as required by law
-- Makes the document accessible to all parties (carrier, sender, recipient)
 
 ## Connecting Your TransFollow Account
 
@@ -6334,71 +6826,28 @@ When you issue an eCMR through Druma, TransFollow:
   ### Get your TransFollow API key
     Log in at [transfollow.com](https://transfollow.com). Go to your account settings and navigate to **API Keys**. Generate a new API key for Druma. Copy it — you will only be shown it once.
   
-  ### Enter the key in Druma
-    In Druma, go to **Settings → Integrations → TransFollow**. Paste your API key into the field and click **Save**.
+  ### Switch the provider in Druma
+    In Druma, go to **Settings → Integrations → eCMR provider → TransFollow**. Paste your API key into the field and click **Save**.
   
   ### Test the connection
     Click **Test Connection**. Druma calls the TransFollow API to verify the key is valid and your account is active. You will see a green confirmation if everything is working.
   
 
 
-
 > **Note:** 
 Your API key is encrypted immediately upon saving and is never displayed in plain text again. If you need to replace it (for example, if the key is rotated), simply paste the new key over the existing field.
 
 
-## Mock Mode for Training and Onboarding
-
-During initial setup or when training new staff, you can enable **Mock Mode**.
-
-**Settings → Integrations → TransFollow → Enable Mock Mode**
-
-In mock mode:
-
-- eCMR records are created normally in Druma and go through the full workflow
-- TransFollow receives the requests but marks all documents as test records — they have no legal effect
-- No cost is incurred for mock-mode documents
-- Documents created in mock mode are clearly labelled "TEST" in Druma and cannot be converted to live documents
-
-Disable mock mode before your first live shipment.
 
 ## Costs
 
-eCMR usage is billed at **€0.25 per signed eCMR document**. This is TransFollow's cost, passed through at zero margin by Druma. The charge appears on your Druma monthly invoice as a separate line item showing the number of eCMRs issued in the period.
-
-There is no monthly fee or minimum volume. You pay only for what you use.
-
-## Viewing and Downloading eCMR Documents
-
-All signed eCMR documents are stored permanently on their corresponding order in Druma.
-
-**Order detail page → Documents tab → eCMR section**
-
-From here you can:
-
-- View the eCMR as a PDF in your browser
-- Download the signed PDF
-- See the full signature chain (sender signed at X time, driver signed at Y time, recipient signed at Z time)
-- Share a link to the document with your client (the link is accessible without a Druma login)
-
-Documents remain accessible indefinitely — Druma retains them for 10 years in line with legal archiving requirements.
-
-> **Warning:** 
-If you close your TransFollow account or your API key expires, Druma cannot issue new eCMRs until a valid key is provided. Documents already archived remain accessible. Set a reminder to renew your TransFollow key before it expires.
+eCMR is included in your Druma subscription at no extra cost, also when using the TransFollow fallback — there is no per-document charge on your Druma invoice.
 
 
 ## Country Coverage
 
 eCMR is legally valid in countries that have ratified the e-CMR protocol. As of 2025, this includes most EU member states plus Switzerland, Belarus, Georgia, and others. Check the current list at [unece.org](https://unece.org). For countries that have not ratified, paper CMR is still required — Druma can print a formatted CMR note for those shipments.
 
-
-  
-    An introduction to electronic CMR notes and when you need them.
-  
-  
-    Step-by-step guide to issuing an eCMR on a Druma order.
-  
-</CardGroup>
 
 ---
 
