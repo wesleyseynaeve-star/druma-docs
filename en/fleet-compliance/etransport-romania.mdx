@@ -32,29 +32,59 @@ Categories that have required declaration include: goods with fiscal risk (food,
 
 ---
 
+## Who Declares: Your Client, or You?
+
+Under OUG 41/2022 Art. 8, the legal obligation to declare a transport to ANAF rests with the **Romanian trading party** — the Romanian-registered sender or recipient of the goods, never with the carrier as such. For most transport companies this means: **your client declares and provides you with the UIT code** (the carrier flow — Druma's default). Only if your company is itself the Romanian trading party — because you sell or move your own goods — do you declare yourself (the declarant flow, enabled per company in Settings → Integrations → ANAF e-Transport).
+
+### When to use which flow
+
+| Situation | Flow |
+|---|---|
+| Your company is the Romanian trading party (shipper or consignee) | **Declarant flow** — assign a truck and Druma auto-submits to ANAF |
+| You are a carrier and your Romanian client is the trading party | **Carrier flow** — client provides the UIT via portal or phone |
+| Subcontracted order (you forward to another carrier) | Neither — the subcontractor or their client handles declaration |
+
+---
+
 ## How Druma Handles e-Transport
 
-### Automatic UIT Declaration
+### Carrier flow (the default): your client declares
 
-For Romanian domestic orders or orders in transit through Romania, Druma automatically generates and submits the e-Transport declaration to ANAF via the ANAF e-Transport API when the order is confirmed.
-
-You do not need to log in to the ANAF portal, fill in forms, or manually submit anything. Druma does it for you.
+When your client holds the declaration obligation, Druma nudges the process along automatically so the UIT reaches you before the truck departs.
 
 <Steps>
-  <Step title="Create the order">
-    Enter all order details in Druma: cargo type, weight, value, pickup address, delivery address, truck plate, driver.
+  <Step title="Confirmation email nudge">
+    When Druma sends the order confirmation to the client, it detects that the route touches Romania and includes a prominent notice asking the client to enter the UIT code in their portal.
   </Step>
-  <Step title="Confirm the order">
-    When you click **Confirm Order**, Druma detects that the order involves Romania and submits the declaration to ANAF.
+  <Step title="Client portal entry">
+    The client opens the shipment in the Druma client portal. An **e-Transport (Romania)** card explains the requirement and provides an input field. The client enters the UIT code received from ANAF — Druma validates the format (8–30 uppercase alphanumeric characters) before saving.
   </Step>
-  <Step title="UIT code generated">
-    ANAF responds with a UIT (Cod Unic de Identificare a Transportului) code. Druma stores this on the order and displays it prominently on the order detail page.
+  <Step title="Planner manual entry">
+    If the client provides the UIT by phone or email, the planner can enter it directly on the order detail pane under the **cargo tab**. The same **e-Transport (Romania)** section shows an input field when no UIT is recorded and the order status allows editing.
+  </Step>
+  <Step title="GPS transmission activates automatically">
+    Once a UIT code is on file, Druma's GPS forwarding pipeline picks up the order and begins transmitting positions to ANAF at the required 30-second interval — no additional action required from the planner.
   </Step>
   <Step title="Driver sees the UIT code">
-    The UIT code appears in the driver's Druma app on their phone. If requested by a road inspector, the driver shows the code on their phone or presents the printed order document.
+    The UIT code appears in the driver's Druma app on the active order screen, confirming to the driver that the declaration is in place before departure. If a road inspector asks, the driver shows the code on their phone or presents the printed order document.
   </Step>
 </Steps>
 
+### Declarant flow: your company declares
+
+Enable this only if your company is the Romanian trading party that legally declares to ANAF. Go to **Settings → Integrations → ANAF e-Transport** and enable the declarant setting.
+
+Once enabled:
+
+- When you create an order with a pickup or delivery stop in Romania, the order form shows a **Goods value (RON)** field. This value is required for the declaration. Saving without it shows a warning — you can still save and add the value later by editing the order.
+- When you assign a truck to the order, Druma checks whether the order is in scope: the goods value must be at or above the declaration threshold (default **10 000 RON**, configurable per company) and the order must not be subcontracted.
+- If all conditions are met, Druma **submits the declaration automatically** as soon as the truck assignment is saved, and stores the resulting UIT on the order.
+
+**If the declaration fails** — for example, due to a missing goods value, a stop address error, or a temporary ANAF API issue — the order detail page shows a **Declaration failed** warning. Fix the underlying data and retry using the **Declare / Retry e-Transport** option in the order's action menu.
+
+<Note>
+Companies without the declarant setting enabled never see the Goods value (RON) prompt and will not trigger auto-declarations. The carrier flow is always available to both declarant and non-declarant companies for orders where the client holds the obligation.
+</Note>
 
 ---
 
@@ -106,10 +136,17 @@ Druma's automation eliminates the most common compliance failures: missing decla
 
 ## Related articles
 
-<Card title="e-Transport Declaration Settings" icon="gear" href="/en/admin/etransport-settings">
-  Configure your ANAF API credentials and e-Transport defaults in Druma.
-</Card>
-
-<Card title="Fleet Documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
-  Vehicle document compliance, including operating licenses required for Romanian transport.
-</Card>
+<CardGroup cols={2}>
+  <Card title="e-Transport Declaration Settings" icon="gear" href="/en/admin/etransport-settings">
+    Configure your ANAF API credentials, goods-value threshold, and e-Transport defaults in Druma.
+  </Card>
+  <Card title="Fleet Documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    Vehicle document compliance, including operating licences required for Romanian transport.
+  </Card>
+  <Card title="EU Driving Hours Rules" icon="clock" href="/en/fleet-compliance/eu-driving-hours">
+    Regulation 561/2006 driving limits and how Druma tracks them.
+  </Card>
+  <Card title="Mobility Package" icon="globe" href="/en/fleet-compliance/mobility-package">
+    Vehicle and driver return obligations and IMI posting declarations.
+  </Card>
+</CardGroup>

@@ -1,6 +1,6 @@
 ---
 title: "eCMR Legal Validity"
-description: "The legal framework that makes eCMR equivalent to paper CMR, which countries recognise it, and how TransFollow certification works."
+description: "The legal framework that makes eCMR equivalent to paper CMR, how Druma's PAdES digital seal works under eIDAS, and which countries recognise it."
 icon: "scale-balanced"
 ---
 
@@ -22,15 +22,26 @@ The **Additional Protocol to the CMR Convention on the Electronic Consignment No
 
 - An electronic consignment note issued in accordance with the Protocol carries **the same legal status as a paper CMR note**
 - The electronic note must be authenticated by all three parties and secured against subsequent alteration
-- An accredited eCMR service provider must manage the issuance and certification
+- The document must be issued by a technically reliable system that guarantees integrity
 
 Countries that have ratified the e-CMR Protocol have incorporated these provisions into their domestic legal framework.
+
+### eIDAS Regulation (EU) 910/2014
+
+Druma's native eCMR provider applies a **PAdES digital seal** — a PDF Advanced Electronic Signature (PAdES) format producing an **Advanced Electronic Signature (AdES)** as defined in **eIDAS Regulation (EU) No 910/2014**. This seal:
+
+- Is applied to the completed CMR PDF after all three parties have signed
+- Cryptographically binds the document content to Druma's signing certificate
+- Produces a tamper-evident record: any modification to the PDF after sealing breaks the signature verification
+- Is applied entirely in-house — no third-party certification service is contacted at signing time
+
+The combination of the e-CMR Protocol (transport law) and the eIDAS AdES seal (electronic signature law) gives Druma-issued eCMRs their dual legal foundation.
 
 ---
 
 ## Which Countries Recognise eCMR?
 
-As of 2024, the e-CMR Protocol has been ratified by most EU member states plus several non-EU countries. The ratification list changes as new countries join.
+As of 2025, the e-CMR Protocol has been ratified by most EU member states plus several non-EU countries, including Switzerland, Belarus, and Georgia. The ratification list changes as new countries join.
 
 <Note>
 Always check the current UNECE ratification status before relying on eCMR for a new route. The official list is maintained at [unece.org/transport/legal-instruments](https://unece.org/transport/legal-instruments). Search for "Additional Protocol to CMR."
@@ -48,21 +59,21 @@ When in doubt, consult your transport lawyer or freight association (ARR — Aut
 
 ---
 
-## TransFollow Certification
+## How the PAdES Seal Works
 
-TransFollow is an **accredited eCMR service provider** operating under the e-CMR Protocol. Accreditation means:
+When all three parties have signed, Druma:
 
-- TransFollow is formally recognised as a trusted third party for eCMR issuance
-- Documents issued through TransFollow carry the authentication required by the Protocol
-- The TransFollow-issued certified PDF is the legally recognised version of the eCMR
+1. Builds the complete CMR PDF including all mandatory boxes (1–24), locked pickup signatures, consignee signature, and any reservations
+2. Applies the PAdES digital seal using Druma's signing certificate
+3. Stores the sealed PDF in the order archive
 
-When all three parties have signed through Druma, TransFollow generates the certified PDF with:
+The sealed PDF contains:
 - A unique, unalterable document number
 - Timestamp of each signature
-- Cryptographic hash of the document content
-- TransFollow's certification stamp
+- Cryptographic hash of the document content bound to the seal
+- Druma's signing certificate details, verifiable by any standard PDF viewer
 
-This certified PDF is what you present to customs authorities, insurers, courts, or clients — not just a simple export from Druma.
+This sealed PDF is what you present to customs authorities, insurers, courts, or clients — not just a simple export. Any standard PDF reader (Adobe Acrobat, etc.) can verify the seal has not been tampered with.
 
 ---
 
@@ -76,13 +87,13 @@ To access an archived eCMR:
 2. Go to the **eCMR** tab
 3. Click **Download Certified PDF**
 
-The PDF is retrieved from TransFollow's archive in real time. There is no separate archiving action required from your side.
+There is no separate archiving action required from your side.
 
 ---
 
 ## Legal Admissibility
 
-A certified eCMR PDF issued by TransFollow is admissible as evidence in:
+A certified eCMR PDF sealed by Druma is admissible as evidence in:
 
 - **Commercial disputes** between shipper, carrier, and consignee
 - **Insurance claims** where proof of receipt or condition of goods is required
@@ -101,6 +112,11 @@ Carriers who continue to use paper CMR are fully compliant. The choice to use eC
 
 ---
 
-<Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
-  Introduction to eCMR, who signs, and how Druma uses TransFollow.
-</Card>
+<CardGroup cols={2}>
+  <Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+    Introduction to eCMR, who signs, and how Druma issues it in-house.
+  </Card>
+  <Card title="eCMR Providers" icon="right-left" href="/en/ecmr/ecmr-providers">
+    Native default vs TransFollow fallback — and how to switch.
+  </Card>
+</CardGroup>

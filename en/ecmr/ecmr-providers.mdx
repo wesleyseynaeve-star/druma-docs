@@ -1,0 +1,115 @@
+---
+title: "eCMR Providers"
+description: "Druma's native in-house eCMR provider is the default. TransFollow is an optional fallback for companies already using it. Learn how to switch."
+icon: "right-left"
+---
+
+Druma supports two eCMR providers. The **Druma native provider** is the default and is recommended for all new companies — it issues and seals eCMRs entirely in-house at no per-document cost. **TransFollow** remains available as an optional fallback for companies that were already using it before the native provider was introduced.
+
+To switch providers, go to **Settings → Integrations → eCMR provider** (company admin access required).
+
+---
+
+## Druma Native eCMR (Default)
+
+The Druma native provider issues CMR documents internally, collects signatures, builds the PDF, and applies a **PAdES digital seal** — an Advanced Electronic Signature (AdES) under eIDAS — without contacting any external service.
+
+### How it works
+
+- **No setup needed** — the native provider is active by default. You do not need to enter any API key or connect an external account.
+- **Three-party signing:** the sender and driver sign on-glass at pickup (via the driver app); the consignee signs via a **share link or QR code** on their own phone at delivery — no Druma account required.
+- **Certified PDF:** once all three parties have signed, Druma builds the complete CMR PDF and applies the PAdES seal. The sealed document contains all mandatory CMR boxes (1–24), including the "subject to CMR" statement, place and date of issue, and any carrier reservations.
+- **Consignee reservations (box 24):** when signing, the consignee may add freetext observations (damage, shortage, discrepancy). These remarks are stamped into the sealed PDF and an amber "Consignee reservations" banner appears on the order in Druma.
+
+### Checking the provider is ready
+
+Go to **Settings → Integrations → eCMR provider** and click **Test connection** to verify that Druma's signing certificate is configured and the provider is ready.
+
+### Costs
+
+eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap.
+
+### Viewing and downloading eCMR documents
+
+All signed eCMR documents are stored in Druma for 10 years in line with legal archiving requirements.
+
+**Order detail page → eCMR tab → Download Certified PDF**
+
+From here you can:
+
+- View the sealed PDF in your browser
+- Download the signed PDF
+- See the full signature chain (sender signed at X time, driver signed at Y time, consignee signed at Z time)
+- Share a link to the document with your client (accessible without a Druma login)
+
+---
+
+## TransFollow (Optional Fallback)
+
+TransFollow is a third-party eCMR platform that Druma continues to support for companies already using it. New companies should use the Druma native provider instead.
+
+### Connecting your TransFollow account
+
+<Steps>
+  <Step title="Get your TransFollow API key">
+    Log in at [transfollow.com](https://transfollow.com). Go to your account settings and navigate to **API Keys**. Generate a new API key for Druma. Copy it — you will only be shown it once.
+  </Step>
+  <Step title="Enter the key in Druma">
+    In Druma, go to **Settings → Integrations → eCMR provider → TransFollow**. Paste your API key into the field and click **Save**.
+  </Step>
+  <Step title="Test the connection">
+    Click **Test Connection**. Druma calls the TransFollow API to verify the key is valid and your account is active. You will see a green confirmation if everything is working.
+  </Step>
+</Steps>
+
+<Note>
+Your API key is encrypted immediately upon saving and is never displayed in plain text again. If you need to replace it (for example, if the key is rotated), simply paste the new key over the existing field.
+</Note>
+
+### Mock Mode for training and onboarding
+
+During initial setup or when training new staff, you can enable **Mock Mode**.
+
+**Settings → Integrations → eCMR provider → TransFollow → Enable Mock Mode**
+
+In mock mode:
+
+- eCMR records are created normally in Druma and go through the full workflow
+- TransFollow receives the requests but marks all documents as test records — they have no legal effect
+- No cost is incurred for mock-mode documents
+- Documents created in mock mode are clearly labelled "TEST" in Druma and cannot be converted to live documents
+
+Disable mock mode before your first live shipment.
+
+### Costs (TransFollow)
+
+eCMR is included in your Druma subscription at no extra cost, also when using the TransFollow fallback — there is no per-document charge on your Druma invoice.
+
+<Warning>
+If you close your TransFollow account or your API key expires, Druma cannot issue new eCMRs until a valid key is provided. Documents already archived in TransFollow remain accessible. Set a reminder to renew your TransFollow key before it expires.
+</Warning>
+
+---
+
+## Country Coverage
+
+eCMR is legally valid in countries that have ratified the e-CMR protocol. As of 2025, this includes most EU member states plus Switzerland, Belarus, Georgia, and others. Check the current list at [unece.org](https://unece.org). For countries that have not ratified, paper CMR is still required — Druma can print a formatted CMR note for those shipments.
+
+---
+
+## Related articles
+
+<CardGroup cols={2}>
+  <Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+    An introduction to electronic CMR notes and when you need them.
+  </Card>
+  <Card title="eCMR Legal Validity" icon="scale-balanced" href="/en/ecmr/ecmr-legal-validity">
+    The e-CMR Protocol, PAdES seal, and eIDAS AdES explained.
+  </Card>
+  <Card title="Creating an eCMR" icon="file-plus" href="/en/ecmr/creating-ecmr">
+    Step-by-step guide to issuing an eCMR on a Druma order.
+  </Card>
+  <Card title="The Signing Flow" icon="pen-to-square" href="/en/ecmr/signing-flow">
+    How the driver and consignee collect signatures.
+  </Card>
+</CardGroup>

@@ -4,7 +4,7 @@ description: "How the driver collects all three required signatures — sender, 
 icon: "pen-to-square"
 ---
 
-An eCMR requires three signatures to be legally complete: the sender signs at pickup, the driver/carrier signs at pickup, and the consignee signs at delivery. The entire process happens on the driver's phone. Here is how each step works in practice.
+An eCMR requires three signatures to be legally complete: the sender signs at pickup, the driver/carrier signs at pickup, and the consignee signs at delivery. Here is how each step works in practice with the Druma native provider.
 
 ---
 
@@ -13,12 +13,13 @@ An eCMR requires three signatures to be legally complete: the sender signs at pi
 ```
 Pickup location                    Delivery location
 ─────────────────────────────      ──────────────────────────
-1. Sender signs       →            3. Consignee signs
+1. Sender signs       →            3. Consignee signs (own device)
 2. Driver signs       →               ↓
+                                    PAdES seal applied
                                     Certified PDF issued
 ```
 
-Steps 1 and 2 happen at the same time and place (pickup). Step 3 happens later at the delivery location. All three must be completed before TransFollow issues the certified PDF.
+Steps 1 and 2 happen at the same time and place (pickup). Step 3 happens later at the delivery location. All three must be completed before Druma issues the certified PDF.
 
 ---
 
@@ -50,7 +51,7 @@ Immediately after the sender signs, the driver takes back the phone.
     The app automatically advances to the carrier signature screen. The driver draws their signature, confirms their name, and taps **Confirm**.
   </Step>
   <Step title="Pickup signatures locked">
-    Both pickup signatures are now transmitted to TransFollow and locked. Neither can be modified. The eCMR status changes to "Awaiting consignee signature."
+    Both pickup signatures are now saved and locked. Neither can be modified. The eCMR status changes to "Awaiting consignee signature."
   </Step>
 </Steps>
 
@@ -62,45 +63,48 @@ The driver must sign immediately after the sender. The app will not allow the dr
 
 ## Step 3 — Consignee Signs at Delivery
 
+With the Druma native provider, the consignee signs on their **own device** via a share link or QR code — there is no need to hand over the driver's phone.
+
 <Steps>
-  <Step title="Driver arrives at delivery">
-    At the delivery location, the driver opens the order in the Druma app and taps the **eCMR** section. The document now shows the two locked pickup signatures.
+  <Step title="Driver opens the eCMR tab at delivery">
+    At the delivery location, the driver opens the order in the Druma app and taps the **eCMR** section. The document shows the two locked pickup signatures and a share link with a QR code.
   </Step>
-  <Step title="Driver hands phone to consignee">
-    The consignee representative takes the driver's phone.
+  <Step title="Consignee scans the QR or receives the link">
+    The driver shows the QR code on screen. The consignee scans it with their phone camera — no Druma account or app download needed. Alternatively, the driver can copy and send the link via WhatsApp or SMS.
   </Step>
-  <Step title="Consignee reviews and signs">
-    The consignee reviews the document — paying attention to goods condition, any discrepancies, and delivery address — then taps **Sign as Consignee**, draws their signature, enters their name and role, and taps **Confirm**.
+  <Step title="Consignee reviews the document">
+    On their own phone, the consignee sees a read-only view of the CMR — goods, addresses, weight, and the two pickup signatures already locked.
+  </Step>
+  <Step title="Consignee signs (and optionally adds reservations)">
+    The consignee draws their signature on screen and enters their name. If there are any issues with the delivery — damage, shortage, or discrepancy — they can add a note in the **Reservations / observations** field (CMR box 24) before tapping **Confirm**.
   </Step>
   <Step title="Certified PDF issued">
-    All three signatures are complete. TransFollow immediately generates the certified eCMR PDF. The driver receives a confirmation on screen. The certified PDF is accessible from the order detail page in Druma and can be sent to the client.
-  </Step>
-</Steps>
-
-
----
-
-## QR Code Option: Consignee Signs on Their Own Device
-
-If the consignee prefers not to sign on the driver's phone — for hygiene reasons, company policy, or simply preference — they can sign on their own device.
-
-<Steps>
-  <Step title="Tap QR Code">
-    On the consignee signature screen, the driver taps **Show QR Code**.
-  </Step>
-  <Step title="Consignee scans">
-    The consignee scans the QR code with their own phone's camera. This opens a secure, one-time-use web page with the eCMR document.
-  </Step>
-  <Step title="Consignee signs on their own phone">
-    The consignee reviews, signs, enters their name, and confirms. The signature is transmitted directly to TransFollow.
-  </Step>
-  <Step title="Driver sees confirmation">
-    The driver's app refreshes and shows the completed signature. The certified PDF is issued.
+    All three signatures are complete. Druma builds the certified eCMR PDF and applies the **PAdES digital seal**. The driver receives a confirmation on screen. The certified PDF is stored in the order automatically and is accessible from the order detail page.
   </Step>
 </Steps>
 
 <Note>
 The QR code link expires after 30 minutes. If the consignee does not sign within that time, the driver can generate a new QR code.
+</Note>
+
+<Note>
+If your company uses **TransFollow** as the eCMR provider, the consignee signs by handing the driver's phone to them at the delivery point — the TransFollow signing flow differs from the native QR link approach.
+</Note>
+
+---
+
+## Accepting with Reservations (CMR Box 24)
+
+The consignee does not have to refuse delivery if goods arrive damaged or incomplete. The correct legal path is to **accept with reservations**: the consignee accepts the delivery but records their observations in CMR box 24. This protects the consignee's right to make a claim later under CMR Article 30.
+
+When a consignee adds reservations:
+
+- The remarks are stamped into the sealed PDF under box 24 ("Reservations and observations of the consignee"), making them part of the tamper-evident legal record.
+- The order detail page in Druma shows an **amber "Consignee reservations" banner** so your team is immediately aware.
+- The order still advances to Delivered — accepting with reservations is not the same as a refusal.
+
+<Note>
+If the consignee refuses to sign at all, use the Paper CMR Fallback process instead. Refusal is a separate path from accepting with reservations.
 </Note>
 
 ---
@@ -121,10 +125,11 @@ Dispatchers in the office can monitor signature status in real time without call
 
 If the sender or consignee refuses to sign, is not present, or a technical problem prevents signing:
 
-<Card title="Paper CMR Fallback" icon="file-alt" href="/en/ecmr/paper-cmr-fallback">
-  How to switch an order from eCMR to paper CMR mid-process, and how to record the reason.
-</Card>
-
-<Card title="Uploading Documents" icon="upload" href="/en/ecmr/uploading-documents">
-  How to upload a scanned paper CMR or other delivery document to an order.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Paper CMR Fallback" icon="file-alt" href="/en/ecmr/paper-cmr-fallback">
+    How to switch an order from eCMR to paper CMR mid-process, and how to record the reason.
+  </Card>
+  <Card title="Uploading Documents" icon="upload" href="/en/ecmr/uploading-documents">
+    How to upload a scanned paper CMR or other delivery document to an order.
+  </Card>
+</CardGroup>

@@ -1,0 +1,113 @@
+---
+title: "Tachograph Archive"
+description: "How Druma stores DDD and TGD tachograph files to meet the EU Regulation 165/2014 download-frequency and retention requirements — automatic nightly download and manual upload."
+icon: "hard-drive"
+---
+
+EU Regulation 165/2014 requires transport operators to download tachograph data from vehicle units and driver cards at defined intervals, and to retain that data for at least 12 months. Druma stores these files in the Tacho Archive so you can prove compliance during a roadside inspection or authority audit without maintaining a separate filing system.
+
+---
+
+## Download Frequency Requirements
+
+| File type | Required download frequency |
+|---|---|
+| Vehicle unit data (VU / `.ddd`) | At least every **90 days** |
+| Driver card data (DDC / `.tgd`) | At least every **28 days** |
+
+Missing a download deadline is a direct regulatory violation, regardless of whether the driver caused an infringement during the period. Inspectors check that the data was downloaded on time, not just that it was eventually retrieved.
+
+---
+
+## Where to Find the Tacho Archive
+
+Go to **Fleet → Tacho Archive**. The page lists all stored tachograph files sorted by upload date. Each row shows:
+
+- Driver or vehicle name
+- File type (VU or DDC)
+- Date range covered by the file
+- Days since last download
+- Status badge
+
+### Status Badges
+
+| Badge | Meaning |
+|---|---|
+| **OK** | Within the download deadline |
+| **Due soon** | Within 7 days of the deadline |
+| **Overdue** | Deadline has passed |
+
+Files marked **Overdue** require immediate action — download the file from the vehicle or driver card and upload it to clear the overdue status.
+
+---
+
+## Automatic Download
+
+If your telematics provider supports remote tachograph file retrieval, Druma pulls new DDD and TGD files automatically every night. No manual action is required for connected vehicles and drivers.
+
+Supported automatic download integrations:
+
+| Provider | Integration name |
+|---|---|
+| Webfleet | TachoShare |
+| VDO | VDO Connect |
+| Geotab | Geotab tacho download |
+
+To enable automatic download, go to **Settings → Integrations** and connect your telematics provider. Once connected, Druma retrieves available files during the nightly sync window and updates the status badges accordingly.
+
+<Note>
+Automatic download depends on the telematics provider making the file available remotely. Some older vehicle unit models or driver cards may not support remote retrieval — for these, manual upload is required.
+</Note>
+
+---
+
+## Manual Upload
+
+For vehicles and drivers not covered by an automatic integration, upload files directly from a tachograph download tool (e.g. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+<Steps>
+  <Step title="Open the Tacho Archive">
+    Go to **Fleet → Tacho Archive**.
+  </Step>
+  <Step title="Click Upload file">
+    Click the **Upload file** button in the top-right corner.
+  </Step>
+  <Step title="Select the driver or vehicle">
+    Choose whether the file is a driver card file (DDC) or a vehicle unit file (VU), then select the driver or vehicle from the list.
+  </Step>
+  <Step title="Choose the file">
+    Select the `.ddd` or `.tgd` file from your computer. Maximum file size is **10 MB**.
+  </Step>
+  <Step title="Confirm upload">
+    Click **Upload**. Druma parses the file header to extract the date range and stores the file in the archive. The overdue clock resets for the selected driver or vehicle.
+  </Step>
+</Steps>
+
+<Warning>
+Only `.ddd` and `.tgd` files are accepted. Files exported in other formats (CSV, PDF) cannot be uploaded and do not satisfy the EU data retention requirement. Always retain the original binary file.
+</Warning>
+
+---
+
+## Retention
+
+Druma retains all uploaded and automatically downloaded tachograph files for the legally required 12-month minimum. Files older than 12 months are subject to automated archival. Contact support if you need to retrieve files beyond the standard retention window.
+
+---
+
+## Related articles
+
+<CardGroup cols={2}>
+  <Card title="EU Driving Hours Rules" icon="clock" href="/en/fleet-compliance/eu-driving-hours">
+    Regulation 561/2006 daily and weekly driving limits tracked from tachograph data.
+  </Card>
+  <Card title="Driver Working Time (WTD)" icon="clock" href="/en/fleet-compliance/driver-working-time">
+    Directive 2002/15/EC working time limits and how Druma monitors them.
+  </Card>
+  <Card title="Fleet Documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    Vehicle document compliance and expiry tracking.
+  </Card>
+  <Card title="Mobility Package" icon="globe" href="/en/fleet-compliance/mobility-package">
+    Vehicle and driver return obligations and IMI posting declarations.
+  </Card>
+</CardGroup>
