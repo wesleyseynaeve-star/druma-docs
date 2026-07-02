@@ -1,6 +1,6 @@
 ---
 title: "Nastavenie integrácií"
-description: "Ako pripojiť Druma k SmartBill, SAGA, WinMENTOR, TransFollow, ANAF a ďalším externým systémom."
+description: "Ako pripojiť Druma k poskytovateľovi eCMR, HERE Maps, poskytovateľom palivových kariet, účtovnému softvéru a SmartBill zo stránky Nastavenia → Integrácie."
 icon: "plug"
 ---
 
@@ -34,18 +34,36 @@ SAGA a WinMENTOR sú rumunský účtovný softvér. Druma exportuje:
 
 Toto sú exporty súborov, nie živé prepojenia — stiahnete súbor z Druma a importujete ho do SAGA/WinMENTOR manuálne alebo automaticky cez automatický export SAGA.
 
-### TransFollow (eCMR)
+### 1. Poskytovateľ eCMR
 
-TransFollow je provider eCMR Druma. Táto integrácia je potrebná pre generovanie a podpisovanie elektronických nákladných listov.
+Druma vydáva elektronické nákladné listy **interne pomocou natívneho poskytovateľa Druma predvolene** — nie je potrebný žiadny externý účet, API kľúč ani nastavenie. eCMR je dostupné ihneď pre cezhraničné zákazky a Druma každý dokončený dokument zapečatí digitálnym podpisom PAdES.
 
-**Nastavenie:**
-1. Prejdite na **Nastavenia → Integrácie → TransFollow**
-2. Zadajte váš TransFollow API kľúč
-3. Vyberte, či chcete používať **produkčný** alebo **testovací** (mock) režim
-4. Kliknite na **Test** a **Uložiť**
+**TransFollow** zostáva k dispozícii ako voliteľná záložná možnosť pre spoločnosti, ktoré ho používali pred zavedením natívneho poskytovateľa. Nové spoločnosti by mali zostať u natívneho poskytovateľa.
+
+<Steps>
+  <Step title="Otvorte kartu poskytovateľa eCMR">
+    Prejdite na **Nastavenia → Integrácie** a otvorte kartu **Poskytovateľ eCMR**. Natívny poskytovateľ Druma je vybraný predvolene.
+  </Step>
+  <Step title="(Voliteľné) Prepnúť na TransFollow">
+    Ak chcete namiesto toho používať TransFollow, vyberte ho a vložte API kľúč z vášho dashboardu účtu TransFollow do poľa **API kľúč**. Zaregistrujte sa na [transfollow.org](https://transfollow.org), ak ešte nemáte účet.
+  </Step>
+  <Step title="Aktivovať testovací (mock) režim (voliteľné)">
+    Pri používaní TransFollow zapnite **Testovací režim** pre testovanie postupu eCMR bez vydávania reálnych, právne registrovaných dokumentov. Používajte to počas školenia vodičov alebo zaškoľovania. Pred spustením do produkcie ho vypnite.
+  </Step>
+  <Step title="Otestujte pripojenie">
+    Kliknite na **Test pripojenia**. Druma overí natívny podpisový certifikát — alebo, ak je vybraný TransFollow, zavolá TransFollow API pre potvrdenie platnosti kľúča.
+  </Step>
+  <Step title="Uložte">
+    Kliknite na **Uložiť**. Vytváranie eCMR je aktívne pre cezhraničné zákazky.
+  </Step>
+</Steps>
+
+<Note>
+Väčšina spoločností toto nikdy nemusí meniť — natívny poskytovateľ je odporúčané predvolené nastavenie. Pozrite si [Poskytovatelia eCMR](/en/ecmr/ecmr-providers) pre úplné porovnanie.
+</Note>
 
 <Warning>
-Testovací (mock) režim produkuje eCMR dokumenty, ktoré vyzerajú reálne, ale nie sú zaregistrované v TransFollow a nemajú žiadnu právnu platnosť. Pred odoslaním reálnych zásielok vždy vypnite testovací režim.
+eCMR dokumenty v testovacom (mock) režime TransFollow **nie sú právne platné**. Pred odoslaním reálnych zásielok sa uistite, že testovací režim je vypnutý.
 </Warning>
 
 ### ANAF e-Factura
@@ -83,6 +101,6 @@ Iba **Administrátori** a **Správcovia spoločnosti** môžu konfigurovať inte
   Podrobný sprievodca pripojením a používaním integrácie SmartBill.
 </Card>
 
-<Card title="TransFollow eCMR" icon="file-signature" href="/en/integrations/transfollow-ecmr">
-  Ako funguje integrácia TransFollow a ako generovať eCMR dokumenty.
+<Card title="Poskytovatelia eCMR" icon="file-signature" href="/en/ecmr/ecmr-providers">
+  Ako funguje natívny poskytovateľ Druma a kedy použiť TransFollow ako záložnú možnosť.
 </Card>

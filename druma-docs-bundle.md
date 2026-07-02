@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-06-12 07:34 UTC
+Generated: 2026-07-02 06:53 UTC
 
 ---
 
@@ -37,7 +37,7 @@ Create and manage transport orders from pickup to delivery. Assign trucks and dr
 
 ### eCMR (electronic consignment note)
 
-Druma integrates with TransFollow to generate and sign digital CMR documents. Drivers sign on their phone, clients sign on arrival, and the signed PDF is stored automatically. No more lost paper CMRs.
+Druma issues and digitally seals eCMR documents entirely in-house — no external service required. The driver and sender sign on a phone at pickup; the consignee signs via a private share link or QR code on their own device at delivery. Once all three parties have signed, Druma builds the certified PDF and applies a PAdES digital seal (an Advanced Electronic Signature under eIDAS). The sealed PDF is legally equivalent to a paper CMR in countries that have ratified the e-CMR Additional Protocol. For companies already using TransFollow, it remains available as a selectable fallback. No more lost paper CMRs.
 
 ### Invoicing
 
@@ -943,13 +943,11 @@ After completing checkout:
 3. If the page times out before activation is confirmed, a notification tells you to check back in a few minutes — your subscription is still processing on Stripe's side and will activate shortly.
 
 
-## eCMR Metered Billing
+## eCMR Billing
 
-eCMR usage is billed monthly as a metered add-on. You are only charged when all three parties have signed and a certified PDF has been issued — failed or cancelled eCMR documents are not charged.
+eCMR is included in your Druma subscription at no extra cost. There is no per-document charge and no usage cap — sign as many eCMRs as your operation needs.
 
-Usage is reported to Stripe nightly. Your monthly invoice includes the eCMR count from the previous calendar month.
-
-To view your eCMR usage for the current billing period, go to **Settings → Billing** and scroll to the **Usage** section.
+You can still view your eCMR usage statistics for the current period under **Settings → Billing** in the **Usage** section.
 
 
 ---
@@ -1012,7 +1010,7 @@ Click **Save Order Format**. The new format applies to all orders created after 
 ## Related pages
 
 
-  Connect TransFollow, SmartBill, fuel card providers, and accounting software.
+  Connect your eCMR provider (Druma native eCMR, or TransFollow as an optional fallback), SmartBill, fuel card providers, and accounting software.
 
 
 
@@ -1669,7 +1667,7 @@ Dispatchers can update the trailer's location at any time from the trailer profi
 
 ### GPS tracking
 
-If you have a GPS tracker fitted to a trailer and it is connected to Druma via a supported integration (such as Webfleet or Teltonika), the trailer's current location is updated automatically in real time. The **Current location** field on the trailer profile shows the last GPS position with a timestamp.
+If you have a GPS tracker fitted to a trailer and it is connected to Druma via a supported integration (such as Webfleet, Geotab, Frotcom, Webeye/Eurowag, or an rFMS-capable telematics system), the trailer's current location is updated automatically in real time. The **Current location** field on the trailer profile shows the last GPS position with a timestamp.
 
 ### Location column in the trailer list
 
@@ -2743,7 +2741,7 @@ Switching a leg's mode back to **Road** clears the sea/intermodal detail fields 
 
 ## eCMR per road leg
 
-Each road leg that crosses an international border gets its own eCMR. To create one, open the leg card and click **Create eCMR**. The eCMR is generated via TransFollow with the leg's origin, destination, and assigned carrier pre-filled.
+Each road leg that crosses an international border gets its own eCMR. To create one, open the leg card and click **Create eCMR**. Druma registers the document using the Druma native provider (default), or TransFollow if that is your company's selected provider, with the leg's origin, destination, and assigned carrier pre-filled.
 
 Legs that stay within a single country do not require an eCMR (unless your company policy mandates one). The **Create eCMR** button is always available if you need to override this.
 
@@ -2876,7 +2874,7 @@ Your dispatcher can update statuses on your behalf from the Druma web platform. 
 
 ## What Is an eCMR?
 
-An eCMR is a digital CMR (Consignment Note) — the same document as a paper CMR, but signed electronically on a phone or tablet. When all three parties have signed, Druma (via the TransFollow network) issues a certified PDF that is legally equivalent to a signed paper CMR in countries that have ratified the e-CMR protocol.
+An eCMR is a digital CMR (Consignment Note) — the same document as a paper CMR, but signed electronically on a phone or tablet. When all three parties have signed, Druma builds and digitally seals the certified PDF — applying a PAdES Advanced Electronic Signature (AdES) that is legally equivalent to a signed paper CMR in countries that have ratified the e-CMR protocol. This is the default Druma native provider. If your company has selected TransFollow as the eCMR provider in Settings, the certified PDF is issued through TransFollow instead.
 
 The advantage for you as a driver: no more chasing signatures on paper, no lost documents, and no arguments about whether the CMR was signed correctly. Everything is timestamped and stored automatically.
 
@@ -2933,13 +2931,13 @@ At the delivery address, the process continues:
 
 
   ### Open the eCMR tab again
-    Open the order in the app at the delivery point and tap the **eCMR** tab. You'll see the pickup signatures already recorded.
+    Open the order in the app at the delivery point and tap the **eCMR** tab. You'll see the pickup signatures already recorded, plus a QR code and a share link.
   
-  ### Hand the phone to the consignee
-    Give your phone to the consignee representative (the person accepting the delivery).
+  ### Show the QR code to the consignee
+    The consignee scans the QR code with their own phone — or you can copy the link and send it via WhatsApp. The consignee opens the link on their own device (no Druma account needed).
   
-  ### Consignee signs and enters their name
-    They sign on screen with their finger and type their full name.
+  ### Consignee signs (and may add reservations)
+    The consignee reviews the document, draws their signature, and enters their name. If there are any issues (damage, shortage), they can add a note in the **Reservations** field (CMR box 24) before confirming.
   
   ### Tap Confirm
     The consignee taps **Confirm**. All three signatures are now complete.
@@ -2947,7 +2945,7 @@ At the delivery address, the process continues:
 
 
 After the third signature is confirmed:
-- TransFollow issues a **certified eCMR PDF**
+- Druma builds and seals a **certified eCMR PDF** using the Druma native provider (or TransFollow, if that is your company's selected provider)
 - The certified PDF is stored in the order automatically
 - Your dispatcher can see it immediately
 - The client portal shows the certified document (if enabled)
@@ -4402,7 +4400,7 @@ Druma can receive supplier invoices by email, extract the key fields using AI, a
     Go to **Settings** → **Company** and scroll to the **Supplier Invoice Email** section.
   
   ### Enable the inbox
-    Toggle **Enable supplier invoice inbox** on. Druma provisions a dedicated inbound email address for your company (for example, `invoices-acme@in.druma.app`). The address is shown immediately after enabling.
+    Toggle **Enable supplier invoice inbox** on. Druma provisions a dedicated inbound email address for your company (for example, `invoices-acme@in.druma.io`). The address is shown immediately after enabling.
   
   ### Copy the email address
     Click the copy icon next to the address. Share this address with your suppliers and ask them to send PDF invoices to it. You can also forward invoices from your own inbox to this address.
@@ -4793,7 +4791,7 @@ eCMR is not always possible. Consignees can refuse, phones run out of battery, i
     - Other
   
   ### Confirm
-    Tap **Confirm**. The order's eCMR status changes to "Paper CMR — [reason]". If an eCMR had already been registered with TransFollow, it is cancelled at this point. The cancellation is recorded in the TransFollow audit trail.
+    Tap **Confirm**. The order's eCMR status changes to "Paper CMR — [reason]". If an eCMR had already been registered (whether Druma native or TransFollow), it is cancelled at this point. The cancellation is recorded in the eCMR audit trail.
   
 
 
@@ -4818,12 +4816,11 @@ Once you have the signed paper CMR in hand, photograph or scan it and upload it 
 
 ## What Happens to a Cancelled eCMR
 
-If you switch to paper CMR **after** an eCMR was already registered with TransFollow:
+If you switch to paper CMR **after** an eCMR was already registered:
 
-- Druma sends a cancellation request to TransFollow
-- The document is marked as cancelled in TransFollow's registry
-- The document number is preserved in Druma's records for audit purposes
-- The certified PDF is not issued
+- For the Druma native provider: the eCMR is marked as cancelled in Druma's records.
+- For TransFollow: Druma sends a cancellation request to TransFollow, and the document is marked as cancelled in their registry.
+- In both cases, the document number is preserved in Druma's records for audit purposes and the certified PDF is not issued.
 
 The cancellation is recorded with the reason you selected. This chain of evidence — creation, cancellation, reason, paper CMR upload — gives you a defensible audit trail if the shipment is ever questioned.
 
@@ -5165,9 +5162,9 @@ Planners can log driving hours for each driver from tachograph printouts:
 2. Click **Add Entry** and enter the date and driving time for the day
 3. Druma calculates weekly and fortnightly totals automatically
 
-### Integration (VDO / Webfleet)
+### Integration (VDO, Webfleet, Frotcom, Webeye/Eurowag, rFMS)
 
-If your fleet uses VDO or Webfleet tachograph telematics and you have enabled the sync integration, driving time data flows into Druma automatically. Check **Settings → Integrations** for available tachograph integrations.
+If your fleet uses a connected tachograph telematics provider — VDO, Webfleet, Frotcom, Webeye/Eurowag, or any rFMS-capable truck brand (Scania, Volvo, DAF, MAN, Mercedes-Benz, IVECO, Renault) — and you have enabled the sync integration, driving time data flows into Druma automatically. Check **Settings → Integrations** for available tachograph integrations.
 
 ### Alerts
 
@@ -5385,11 +5382,13 @@ Odometer data comes exclusively from telematics integrations. The driver PWA doe
 | Provider | Notes |
 |---|---|
 | **Geotab** | Full odometer feed via MyGeotab SDK |
-| **Webfleet** | TOMS API odometer field |
-| **VDO** | RoadLog / Fleet telematics |
-| **Aberg Connect** | Position normaliser integration |
+| **Webfleet** | WEBFLEET.connect API odometer field |
+| **VDO** | Fleet telematics via provider API |
+| **Frotcom** | Via provider API (beta) |
+| **Webeye / Eurowag** | Via provider API (beta) |
+| **rFMS (Scania, Volvo, DAF, MAN, Mercedes-Benz, IVECO, Renault)** | Total vehicle distance via rFMS standard adapter |
 
-All four providers feed through Druma's `position-normaliser` Edge Function, which writes a single-row record per truck on each position ping (GDPR single-row overwrite pattern).
+All providers feed through Druma's `position-normaliser` Edge Function, which writes a single-row record per truck on each position ping (GDPR single-row overwrite pattern).
 
 
 ## Planned vs actual distance
