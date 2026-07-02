@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-02 07:19 UTC
+Generated: 2026-07-02 10:02 UTC
 
 ---
 
@@ -7493,6 +7493,167 @@ If a client legitimately needs a higher throughput, contact Druma support.
 Do not share a client's bearer token with other clients or embed it in publicly accessible code. Each token grants full inbound order creation rights for that client's company scope.
 
 
+
+---
+
+## Connect your AI (MCP)
+
+
+Druma runs a remote **MCP (Model Context Protocol)** server, so you can connect your own AI client — Claude Code, Claude Desktop, GitHub Copilot (agent mode), OpenAI Codex CLI, Gemini CLI, or Cursor — directly to your Druma data. Ask it about your orders, fleet, drivers and invoices in natural language, and — with an opt-in scope — let it **propose** truck assignments that you approve.
+
+> **Warning:** 
+The MCP connector is a feature-flagged capability and is off by default. Contact **support@druma.io** to enable it for your account.
+
+
+## How it stays safe
+
+- **Everything the AI can see respects your role and company** — it only ever has the access you already have in Druma. There is no way for it to read another company's data.
+- **It cannot change anything on its own.** The only action it can take is *proposing* a truck assignment; nothing is applied until you explicitly confirm it. There are no delete, bulk, or free-form database actions.
+- **Your token is secret.** Druma stores only a one-way hash of it — the full token is shown once, at creation, and never again.
+- Every request is rate-limited and logged for your administrators.
+
+## 1. Create a Personal Access Token
+
+1. Go to **Settings → Connected AI (MCP)**.
+2. Under **Create a token**, give it a name (e.g. "Claude Code — laptop").
+3. Choose the **scopes**:
+   - `read` (always on) — read orders, fleet, drivers, invoices and KPIs.
+   - `write:planning` (optional) — additionally let the AI *propose* truck assignments. Even with this on, nothing is applied without your explicit confirmation.
+4. Pick an expiry (30 / 90 / 365 days) and click **Create token**.
+5. **Copy the token now** — it is shown only once. It looks like `druma_pat_…`.
+
+You can revoke any token at any time from the same screen; company administrators can revoke any token in the company.
+
+## 2. Your server URL
+
+```
+https://<your-project>.supabase.co/functions/v1/mcp-server
+```
+
+The exact URL for your account is shown on the **Settings → Connected AI (MCP)** page with a copy button.
+
+## 3. Connect your client
+
+Replace `<url>` with your server URL and `<token>` with your Personal Access Token.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Create `.vscode/mcp.json`. Using an `input` keeps the token out of the committed file:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Add to `~/.codex/config.toml`:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Add to `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Add to `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. What you can ask
+
+- "Which orders are unassigned for tomorrow?"
+- "Show me late orders this week and which trucks are free."
+- "What's my overdue receivables total by client?"
+- With `write:planning`: "Propose truck RO-123-ABC for order 4021." — the AI creates a proposal and shows you a summary; you then tell it to confirm, and only then is the assignment applied.
+
+## Web chat connectors (ChatGPT, claude.ai)
+
+Connecting the **web** chat apps at chatgpt.com or claude.ai (rather than a desktop/CLI client) requires OAuth and is **coming later**. For now, use one of the clients above.
+
+## Token rotation
+
+Prefer short-lived tokens. To rotate: create a new token, update your client's configuration, then revoke the old one. Revoke any token whose "Last used" is blank — it means nothing has ever connected with it.
+
+## Related
+
+If you'd rather chat with an AI **inside Druma** (using your own OpenAI, Anthropic, or Gemini key) instead of connecting an external client, see [Druma Copilot](/en/integrations/copilot).
+
+---
+
+## Druma Copilot (your own AI)
+
+
+Druma Copilot is an AI assistant built **into** Druma. Unlike [connecting an external client over MCP](/en/integrations/mcp-connect), Copilot lives on its own screen in the app — you just chat with it. It uses **your own AI provider account** (Anthropic, OpenAI, or Google Gemini), so you control the model and the cost.
+
+> **Warning:** 
+Druma Copilot is a feature-flagged capability and is off by default. Contact **support@druma.io** to enable it for your account.
+
+
+## How it stays safe
+
+- **It can only do what you can.** Every question runs with your role and company scope — it cannot see another company's data.
+- **It never changes anything by itself.** When it wants to reassign an order to a truck, it shows you an **Approve / Reject** card. The change is applied only when you click **Approve**. There are no delete or bulk actions.
+- **Your API key is protected.** It is encrypted and used only on Druma's server when the Copilot calls your provider. It is never shown in the browser again after you save it, and never appears in logs.
+- **You pay your provider directly** for the AI usage — Druma does not mark it up.
+
+## 1. Add your provider key (administrators)
+
+1. Go to **Settings → Druma Copilot**.
+2. Choose your **provider** — Anthropic (Claude), OpenAI, or Google Gemini.
+3. Optionally set a **model** (leave blank to use the provider's default).
+4. Paste your provider **API key** and click **Save credentials**.
+5. Click **Test connection** to validate the key — a green *Validated* badge appears.
+
+After saving, the key is shown only as `••••` plus its last 4 characters. To change it, paste a new key and save again; to disconnect, click **Remove key**.
+
+## 2. Use the Copilot
+
+Open **Copilot** from the main navigation. Ask things like:
+
+- "Which of tomorrow's orders still have no truck?"
+- "Summarise this week's late deliveries and why."
+- "Propose a truck for order 4021." → the Copilot shows a proposal card with the order, route and truck; click **Approve** to apply it or **Reject** to discard.
+
+Your conversations are saved as threads in the sidebar so you can pick them up later.
+
+## Who can use it
+
+- **Configuring the provider key:** company administrators only.
+- **Using the Copilot screen:** planners, dispatchers and administrators.
+
+## Related
+
+To connect an external AI client (Claude Code, Copilot, Codex, Gemini CLI, Cursor) to your Druma data instead, see [Connect your AI (MCP)](/en/integrations/mcp-connect).
 
 ---
 
