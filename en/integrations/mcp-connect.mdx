@@ -1,0 +1,114 @@
+---
+title: "Connect your AI (MCP)"
+description: "Connect Claude Code, GitHub Copilot, Codex CLI, Gemini CLI, or Cursor to your Druma data using the Model Context Protocol (MCP)."
+icon: "bot"
+---
+
+Druma runs a remote **MCP (Model Context Protocol)** server, so you can connect your own AI client — Claude Code, Claude Desktop, GitHub Copilot (agent mode), OpenAI Codex CLI, Gemini CLI, or Cursor — directly to your Druma data. Ask it about your orders, fleet, drivers and invoices in natural language, and — with an opt-in scope — let it **propose** truck assignments that you approve.
+
+<Warning>
+The MCP connector is a feature-flagged capability and is off by default. Contact **support@druma.io** to enable it for your account.
+</Warning>
+
+## How it stays safe
+
+- **Everything the AI can see respects your role and company** — it only ever has the access you already have in Druma. There is no way for it to read another company's data.
+- **It cannot change anything on its own.** The only action it can take is *proposing* a truck assignment; nothing is applied until you explicitly confirm it. There are no delete, bulk, or free-form database actions.
+- **Your token is secret.** Druma stores only a one-way hash of it — the full token is shown once, at creation, and never again.
+- Every request is rate-limited and logged for your administrators.
+
+## 1. Create a Personal Access Token
+
+1. Go to **Settings → Connected AI (MCP)**.
+2. Under **Create a token**, give it a name (e.g. "Claude Code — laptop").
+3. Choose the **scopes**:
+   - `read` (always on) — read orders, fleet, drivers, invoices and KPIs.
+   - `write:planning` (optional) — additionally let the AI *propose* truck assignments. Even with this on, nothing is applied without your explicit confirmation.
+4. Pick an expiry (30 / 90 / 365 days) and click **Create token**.
+5. **Copy the token now** — it is shown only once. It looks like `druma_pat_…`.
+
+You can revoke any token at any time from the same screen; company administrators can revoke any token in the company.
+
+## 2. Your server URL
+
+```
+https://<your-project>.supabase.co/functions/v1/mcp-server
+```
+
+The exact URL for your account is shown on the **Settings → Connected AI (MCP)** page with a copy button.
+
+## 3. Connect your client
+
+Replace `<url>` with your server URL and `<token>` with your Personal Access Token.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Create `.vscode/mcp.json`. Using an `input` keeps the token out of the committed file:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Add to `~/.codex/config.toml`:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Add to `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Add to `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. What you can ask
+
+- "Which orders are unassigned for tomorrow?"
+- "Show me late orders this week and which trucks are free."
+- "What's my overdue receivables total by client?"
+- With `write:planning`: "Propose truck RO-123-ABC for order 4021." — the AI creates a proposal and shows you a summary; you then tell it to confirm, and only then is the assignment applied.
+
+## Web chat connectors (ChatGPT, claude.ai)
+
+Connecting the **web** chat apps at chatgpt.com or claude.ai (rather than a desktop/CLI client) requires OAuth and is **coming later**. For now, use one of the clients above.
+
+## Token rotation
+
+Prefer short-lived tokens. To rotate: create a new token, update your client's configuration, then revoke the old one. Revoke any token whose "Last used" is blank — it means nothing has ever connected with it.
+
+## Related
+
+If you'd rather chat with an AI **inside Druma** (using your own OpenAI, Anthropic, or Gemini key) instead of connecting an external client, see [Druma Copilot](/en/integrations/copilot).
