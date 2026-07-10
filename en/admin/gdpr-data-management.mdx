@@ -4,7 +4,9 @@ description: "What data Druma stores, how long it is kept, your rights as a data
 icon: "lock"
 ---
 
-Druma is a data controller for the data your company stores on the platform. This article explains exactly what is stored, how long it is retained, who processes it, and what actions you can take under GDPR.
+_Last updated: 10 July 2026._
+
+For your **operational data** (orders, clients, drivers, documents, and related records your company stores on the platform), Druma acts as a **data processor** — your company is the data controller, and processing is governed by a Data Processing Agreement (DPA) between your company and Druma. For your **account and billing data** (the details of your Druma subscription and the users who administer it), Druma acts as a **data controller** in its own right. This article explains exactly what is stored, how long it is retained, who processes it, and what actions you can take under GDPR.
 
 ---
 
@@ -25,7 +27,7 @@ Druma is a data controller for the data your company stores on the platform. Thi
 - Fuel card import data linked to vehicles
 
 ### eCMR documents
-- Electronic consignment notes issued via TransFollow, including signature data and certified PDFs
+- Electronic consignment notes issued and PAdES-sealed **in-house by Druma's native provider**, including signature data and certified PDFs. TransFollow remains available as a legacy fallback for companies that were already using it before the native provider was introduced.
 
 ### GPS position data
 - Druma stores the **current GPS position only** — the last known location sent by the driver's app. **No position history is stored or accessible.** The moment a new position is received, the previous one is overwritten.
@@ -45,7 +47,7 @@ Druma does not store tachograph data, call recordings, driver biometric data, or
 |---|---|
 | Operational data (orders, clients, drivers, vehicles) | Duration of subscription + 90 days after cancellation |
 | User account data | Duration of subscription + 90 days after cancellation |
-| Audit logs | 2 years from the date of the logged event |
+| Audit logs | 18 months from the date of the logged event |
 | eCMR documents | 10 years (legal requirement under the e-CMR Protocol) |
 | GPS position data | Overwritten in real time — no history retained |
 | Billing records | 7 years (Romanian accounting law requirement) |
@@ -103,18 +105,25 @@ Druma shares data with the following third-party sub-processors to deliver the s
 
 | Sub-processor | Purpose |
 |---|---|
-| Supabase | Database hosting and authentication |
-| Resend | Transactional email delivery |
-| HERE Technologies | Address geocoding and route calculation |
-| TransFollow | eCMR issuance, signing, and archiving |
-| Stripe | Payment processing and subscription management |
-| Google Vertex AI (Gemini Enterprise) | AI-assisted features (document parsing, email extraction) — EU, no model training |
-| Mailgun | Bulk email notifications |
+| Supabase | Database hosting and authentication (EU — Frankfurt) |
 | Cloudflare | CDN, DDoS protection, and DNS |
+| Resend | Outbound transactional email delivery |
+| Mailgun | Inbound email ingestion (order, invoice, and payment emails parsed into Druma) |
+| Stripe | Payment processing and subscription management |
+| PTV Group | Route, distance, and ETA calculation — receives pickup/delivery coordinates |
+| HERE Technologies | Address geocoding and autocomplete |
+| Google Vertex AI (europe-west1) | AI-assisted features (document parsing, email extraction) — no model training |
+| Google Cloud Translation | On-demand translation of UI and document content |
 | Sentry | Error monitoring and crash reporting |
-| Tawk.to | In-app live chat and support |
+| Google Firebase Cloud Messaging | Push notifications to the driver app |
+| WhatsApp Business Cloud API (Meta) | Driver messaging — only if your company enables WhatsApp notifications |
+| Telematics providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS and tachograph data — only the provider your company connects |
+| Reefer telematics providers (Mapon, Orbcomm, Thermo King) | Reefer temperature data — only the provider your company connects |
+| TransFollow | Legacy eCMR fallback only — the native in-house Druma provider is the default for issuance, signing, and archiving |
 
 All sub-processors are contractually bound to process data only as instructed and in compliance with GDPR.
+
+If your company enables the optional **Druma Copilot** feature with your own AI provider API key ("bring your own AI"), your prompts and the data you query are sent directly to your chosen AI provider (OpenAI, Anthropic, or Google) under your company's own agreement with that provider — this may transfer data outside the EU. Druma Copilot is **off by default** and only activates once your company supplies its own key.
 
 ---
 

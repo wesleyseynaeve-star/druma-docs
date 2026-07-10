@@ -4,6 +4,8 @@ description: "What data Druma stores, how long it is retained, and how to reques
 icon: "clock"
 ---
 
+_Last updated: 10 July 2026._
+
 This page explains exactly what data Druma holds about your company, how long we keep it, and your rights to access or delete it.
 
 ## Data retention periods
@@ -17,8 +19,8 @@ This page explains exactly what data Druma holds about your company, how long we
 | Driver records | Duration of subscription + 90 days | Contract |
 | Invoices and financial records | 7 years from invoice date | Romanian Accounting Law |
 | eCMR documents (signed) | 10 years from signing date | e-CMR Protocol (legal requirement) |
-| Audit logs | 2 years | Legitimate interests |
-| GPS position stamps | 90 days | Contract |
+| Audit logs | 18 months | Legitimate interests |
+| GPS position (current only) | Overwritten in real time — no history retained | Contract |
 | Error and security logs | 90 days | Legitimate interests |
 | Billing records (Stripe) | 7 years | Tax law |
 
@@ -28,17 +30,15 @@ eCMR documents have a 10-year retention requirement under the Additional Protoco
 
 ## GPS data: what we store
 
-Druma captures GPS position **only when a driver taps a status update button** in the app. We store one timestamped coordinate per status change. We do **not**:
+Druma captures GPS position from the driver's device **while the driver is on an active assigned trip, after they have granted location permission** in the app. Each new position **overwrites the previous one** — Druma stores only the current position, not a history. We do **not**:
 
-- Track driver location continuously
+- Track driver location outside of an active assigned trip
 - Store any location history or movement trails
-- Share GPS data with any third party except as required for e-Transport reporting to ANAF
-
-GPS position stamps are deleted after 90 days.
+- Share GPS data with any third party except as required for e-Transport reporting to ANAF, which uses a rolling 30-day buffer before deletion
 
 ## Audit log
 
-Every significant action in Druma (order created, invoice sent, user login, settings changed) is recorded in an audit log with timestamp, user, and action details. Audit logs are retained for 2 years and cannot be modified or deleted — they exist to protect both you and Druma in case of disputes.
+Every significant action in Druma (order created, invoice sent, user login, settings changed) is recorded in an audit log with timestamp, user, and action details. Audit logs are retained for 18 months and cannot be modified or deleted — they exist to protect both you and Druma in case of disputes.
 
 ## After account cancellation
 
@@ -72,11 +72,20 @@ Alternatively, email privacy@druma.io from your account owner's email address.
 | Provider | Data they process | Location |
 |----------|------------------|----------|
 | Supabase | Database (all data) | EU (Frankfurt) |
-| Resend | Email content | EU |
-| Cloudflare | Request logs | EU |
-| TransFollow | eCMR document archive | Netherlands |
-| Stripe | Billing data | EU |
-| Google Vertex AI (Gemini Enterprise) | Email and document AI extraction | EU (no model training) |
+| Cloudflare | CDN, DDoS protection, DNS, request logs | EU |
+| Resend | Outbound transactional email content | EU |
+| Mailgun | Inbound email ingestion (order, invoice, payment emails) | EU |
+| Stripe | Billing and payment data | EU |
+| PTV Group | Route, distance, and ETA data (pickup/delivery coordinates) | EU |
+| HERE Technologies | Geocoding and address autocomplete | EU |
+| Google Vertex AI | Email and document AI extraction | europe-west1 (no model training) |
+| Google Cloud Translation | On-demand translation of UI/document content | Google Cloud |
+| Sentry | Error monitoring and crash reporting | EU |
+| Google Firebase Cloud Messaging | Driver app push notifications | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Driver messaging (only if enabled) | Meta (US/EU) |
+| Telematics providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS and tachograph data (only the connected provider) | Varies by provider |
+| Reefer telematics providers (Mapon, Orbcomm, Thermo King) | Reefer temperature data (only the connected provider) | Varies by provider |
+| TransFollow | Legacy eCMR fallback only — native in-house Druma provider is the default | Netherlands |
 
 ## Your rights under GDPR
 
