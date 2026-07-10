@@ -4,6 +4,8 @@ description: "Welke gegevens Druma opslaat, hoe lang ze worden bewaard en hoe u 
 icon: "clock"
 ---
 
+_Laatst bijgewerkt: 10 juli 2026._
+
 Deze pagina legt precies uit welke gegevens Druma over uw bedrijf bewaard, hoe lang we ze bewaren en uw rechten op toegang of verwijdering.
 
 ## Bewaartermijnen
@@ -17,8 +19,8 @@ Deze pagina legt precies uit welke gegevens Druma over uw bedrijf bewaard, hoe l
 | Chauffeursrecords | Duur abonnement + 90 dagen | Overeenkomst |
 | Facturen en financiële records | 7 jaar vanaf factuurdatum | Roemeense boekhoudwetgeving |
 | eCMR-documenten (ondertekend) | 10 jaar vanaf ondertekeningsdatum | e-CMR Protocol (wettelijke vereiste) |
-| Auditlogs | 2 jaar | Gerechtvaardigde belangen |
-| GPS-positiestempels | 90 dagen | Overeenkomst |
+| Auditlogs | 18 maanden | Gerechtvaardigde belangen |
+| GPS-positie (alleen actueel) | Realtime overschreven — geen geschiedenis bewaard | Overeenkomst |
 | Fout- en beveiligingslogs | 90 dagen | Gerechtvaardigde belangen |
 | Factureringsrecords (Stripe) | 7 jaar | Belastingwetgeving |
 
@@ -28,11 +30,31 @@ eCMR-documenten hebben een bewaarverplichting van 10 jaar onder het Aanvullend P
 
 ## GPS-gegevens: wat we opslaan
 
-GPS-positie wordt alleen vastgelegd op het moment dat een chauffeur een statusupdateknop tikt. We slaan een enkel tijdgestempeld coördinaat op per statuswijziging. We volgen de locatie van de chauffeur niet continu.
+Druma slaat **alleen de huidige GPS-positie** op — de laatst bekende locatie die vanuit de chauffeursapp is verzonden. Elke nieuwe positie **overschrijft de vorige**; er wordt geen locatiegeschiedenis of rittenspoor bewaard. Uitzondering: de e-Transport-rapportage naar ANAF gebruikt een rollende buffer van **30 dagen** voordat de gegevens worden verwijderd.
 
 ## Uw gegevens verwijderen
 
 Zie [GDPR & Gegevensbeheer](/nl/admin/gdpr-data-management) voor instructies over het aanvragen van gegevensexport of accountverwijdering.
+
+## Subverwerkers en gegevenslocaties
+
+| Aanbieder | Verwerkte gegevens | Locatie |
+|----------|------------------|----------|
+| Supabase | Database (alle gegevens) | EU (Frankfurt) |
+| Cloudflare | CDN, DDoS-bescherming, DNS, verzoeklogs | EU |
+| Resend | Uitgaande transactionele e-mailinhoud | EU |
+| Mailgun | Verwerking van inkomende e-mail (order-, factuur- en betalingsmails) | EU |
+| Stripe | Facturerings- en betaalgegevens | EU |
+| PTV Group | Route-, afstands- en ETA-gegevens (ophaal-/afleverlocaties) | EU |
+| HERE Technologies | Geocodering en adres-autocomplete | EU |
+| Google Vertex AI | AI-extractie van e-mail en documenten | europe-west1 (geen modeltraining) |
+| Google Cloud Translation | On-demand vertaling van UI-/documentinhoud | Google Cloud |
+| Sentry | Foutbewaking en crashrapportage | EU |
+| Google Firebase Cloud Messaging | Pushmeldingen chauffeursapp | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Chauffeurscommunicatie (alleen indien ingeschakeld) | Meta (VS/EU) |
+| Telematica-providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- en tachograafgegevens (alleen de gekoppelde provider) | Verschilt per provider |
+| Reefer-telematica-providers (Mapon, Orbcomm, Thermo King) | Reefer-temperatuurgegevens (alleen de gekoppelde provider) | Verschilt per provider |
+| TransFollow | Alleen als legacy fallback — de native in-house Druma-provider is de standaard | Nederland |
 
 <Card title="Privacybeleid" icon="shield" href="/nl/legal/privacy-policy">
   Hoe Druma uw persoonlijke gegevens verzamelt, gebruikt en beschermt.

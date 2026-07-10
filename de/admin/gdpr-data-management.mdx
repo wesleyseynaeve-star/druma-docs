@@ -4,7 +4,9 @@ description: "Welche Daten Druma speichert, wie lange sie aufbewahrt werden, Ihr
 icon: "lock"
 ---
 
-Druma ist Verantwortlicher für die Daten, die Ihr Unternehmen auf der Plattform speichert.
+_Zuletzt aktualisiert: 10. Juli 2026._
+
+Für Ihre **Betriebsdaten** (Aufträge, Kunden, Fahrer, Dokumente und verwandte Datensätze, die Ihr Unternehmen auf der Plattform speichert) ist Druma **Auftragsverarbeiter** — Ihr Unternehmen ist der Verantwortliche, und die Verarbeitung erfolgt auf Grundlage eines Auftragsverarbeitungsvertrags (AVV) zwischen Ihrem Unternehmen und Druma. Für Ihre **Konto- und Abrechnungsdaten** (die Details Ihres Druma-Abonnements und der Nutzer, die es verwalten) handelt Druma selbst als **Verantwortlicher**.
 
 ---
 
@@ -22,7 +24,7 @@ Druma ist Verantwortlicher für die Daten, die Ihr Unternehmen auf der Plattform
 - Rechnungsdatensätze, Positionen, Beträge, Zahlungsstatus
 
 ### eCMR-Dokumente
-- Über TransFollow ausgestellte elektronische Frachtbriefe einschließlich Signaturdaten und zertifizierter PDFs
+- Elektronische Frachtbriefe, ausgestellt und **PAdES-versiegelt in-house von Drumas nativem Anbieter**, einschließlich Signaturdaten und zertifizierter PDFs. TransFollow bleibt als **Legacy-Fallback** für Unternehmen verfügbar, die es bereits vor Einführung des nativen Anbieters genutzt haben.
 
 ### GPS-Positionsdaten
 - Druma speichert nur die **aktuelle GPS-Position**. **Es wird kein Positionsverlauf gespeichert** — jede neue Position überschreibt die vorherige.
@@ -42,7 +44,7 @@ Druma speichert keine Tachographendaten, Anrufaufzeichnungen oder biometrische F
 |---|---|
 | Betriebliche Daten | Dauer des Abonnements + 90 Tage nach Kündigung |
 | Benutzerkontodaten | Dauer des Abonnements + 90 Tage nach Kündigung |
-| Audit-Protokolle | 2 Jahre ab Datum des Ereignisses |
+| Audit-Protokolle | 18 Monate ab Datum des Ereignisses |
 | eCMR-Dokumente | 10 Jahre (gesetzliche Anforderung) |
 | GPS-Positionsdaten | In Echtzeit überschrieben |
 | Abrechnungsunterlagen | 7 Jahre (rumänisches Buchhaltungsrecht) |
@@ -92,16 +94,23 @@ Die Kontolöschung ist nach dem 90-tägigen Aufbewahrungsfenster dauerhaft und u
 
 | Unterauftragsverarbeiter | Zweck |
 |---|---|
-| Supabase | Datenbankhosting und Authentifizierung |
-| Resend | Transaktionale E-Mail-Zustellung |
-| HERE Technologies | Adress-Geocodierung und Routenberechnung |
-| TransFollow | eCMR-Ausstellung, Unterzeichnung und Archivierung |
-| Stripe | Zahlungsabwicklung und Abonnementverwaltung |
-| Google Vertex AI (Gemini Enterprise) | KI-gestützte Funktionen (Dokumente, E-Mails) — EU, kein Modelltraining |
-| Mailgun | E-Mail-Benachrichtigungen |
+| Supabase | Datenbankhosting und Authentifizierung (EU — Frankfurt) |
 | Cloudflare | CDN, DDoS-Schutz und DNS |
+| Resend | Transaktionale E-Mail-Zustellung |
+| Mailgun | Eingehende E-Mail-Verarbeitung (Auftrags-, Rechnungs- und Zahlungsmails) |
+| Stripe | Zahlungsabwicklung und Abonnementverwaltung |
+| PTV Group | Routen-, Distanz- und ETA-Berechnung — erhält Abhol-/Lieferkoordinaten |
+| HERE Technologies | Adress-Geocodierung und Autocomplete |
+| Google Vertex AI (europe-west1) | KI-gestützte Funktionen (Dokumente, E-Mails) — kein Modelltraining |
+| Google Cloud Translation | Bedarfsgesteuerte Übersetzung von UI- und Dokumentinhalten |
 | Sentry | Fehlerüberwachung |
-| Tawk.to | In-App-Live-Chat und Support |
+| Google Firebase Cloud Messaging | Push-Benachrichtigungen der Fahrer-App |
+| WhatsApp Business Cloud API (Meta) | Fahrerkommunikation — nur wenn Ihr Unternehmen WhatsApp-Benachrichtigungen aktiviert |
+| Telematik-Anbieter (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- und Tachographendaten — nur der von Ihrem Unternehmen verbundene Anbieter |
+| Reefer-Telematik-Anbieter (Mapon, Orbcomm, Thermo King) | Kühltemperaturdaten — nur der von Ihrem Unternehmen verbundene Anbieter |
+| TransFollow | Nur als Legacy-eCMR-Fallback — der native In-House-Anbieter von Druma ist der Standard für Ausstellung, Signatur und Archivierung |
+
+Wenn Ihr Unternehmen die optionale Funktion **Druma Copilot** mit einem eigenen KI-Anbieter-API-Schlüssel aktiviert ("Bring your own AI"), werden Ihre Prompts und die abgefragten Daten direkt an den von Ihnen gewählten KI-Anbieter (OpenAI, Anthropic oder Google) im Rahmen Ihrer eigenen Vereinbarung mit diesem Anbieter gesendet — dies kann eine Datenübermittlung außerhalb der EU bedeuten. Druma Copilot ist **standardmäßig deaktiviert** und wird erst aktiv, wenn Ihr Unternehmen einen eigenen Schlüssel hinterlegt.
 
 ---
 

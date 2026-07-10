@@ -1,0 +1,113 @@
+---
+title: "Gestion de la flotte frigorifique"
+description: "Connectez les remorques frigorifiques à leur fournisseur télématique, suivez la température en direct, gérez les alertes et générez des rapports de conformité chaîne du froid."
+icon: "snowflake"
+---
+
+## Vue d'ensemble
+
+Si votre flotte exploite des remorques frigorifiques (reefer), Druma peut récupérer directement la température en direct, les heures moteur et les alarmes depuis le boîtier télématique de la remorque — sans saisie manuelle. Une fois le fournisseur connecté, vous voyez la température actuelle sur la liste des remorques, êtes notifié dès une dérive de consigne ou une alarme, et pouvez générer un PDF de conformité chaîne du froid pour tout trajet terminé.
+
+Les fonctionnalités reefer n'apparaissent qu'une fois le type de flotte **Reefer** activé par un administrateur, dans **Paramètres → Types de flotte**.
+
+<Note>
+Les fournisseurs télématiques frigorifiques varient dans l'ouverture de leur API. Mapon est entièrement public et fonctionne immédiatement. Orbcomm nécessite un jeton de compte. Thermo King TracKing et Carrier Lynx Fleet sont réservés aux partenaires — un accès API doit être demandé auprès du fournisseur avant que Druma puisse récupérer des données réelles, même si le formulaire de connexion est disponible pour les quatre.
+</Note>
+
+---
+
+## Connecter un fournisseur frigorifique
+
+<Steps>
+  <Step title="Activer le type de flotte Reefer">
+    Dans **Paramètres → Types de flotte**, activez **Reefer**.
+  </Step>
+  <Step title="Aller dans Intégrations">
+    Ouvrez **Paramètres → Intégrations**. Les fournisseurs télématiques frigorifiques figurent avec les autres connecteurs GPS/tachygraphe.
+  </Step>
+  <Step title="Choisir votre fournisseur">
+    Trouvez la carte de votre fournisseur — **Mapon**, **Orbcomm**, **Thermo King TracKing** ou **Carrier Lynx Fleet** — et ouvrez-la.
+  </Step>
+  <Step title="Saisir vos identifiants">
+    Remplissez les champs propres à votre fournisseur et cliquez sur **Connecter**. Les identifiants sont stockés de façon sécurisée.
+  </Step>
+  <Step title="Tester la connexion">
+    Cliquez sur **Tester la connexion** pour confirmer que Druma peut joindre l'API du fournisseur.
+  </Step>
+  <Step title="Définir l'identifiant télématique de chaque remorque">
+    Dans **Flotte → Remorques**, onglet **Conformité**, renseignez l'**identifiant du boîtier télématique** — c'est ce qui relie les relevés entrants à la bonne remorque dans Druma.
+  </Step>
+</Steps>
+
+### Champs d'identifiants par fournisseur
+
+| Fournisseur | Champs à saisir | Où les obtenir |
+|---|---|---|
+| **Mapon** | Clé API, URL de base (facultatif) | Générez une clé API dans la plateforme Mapon → Paramètres → API. API publique, fonctionne immédiatement. |
+| **Orbcomm** | Jeton d'accès, ou identifiant + mot de passe | Émis via votre compte ORBCOMM Platform API. |
+| **Thermo King TracKing** | Clé API, ou identifiant + mot de passe | Demandez une clé API TracKing à votre revendeur Thermo King — pas d'auto-inscription publique, intégration réservée aux partenaires. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (ou clé API historique) | Obtenu via Carrier Transicold ou votre revendeur Carrier — pas d'auto-inscription publique. |
+
+<Warning>
+Thermo King et Carrier exigent que le fournisseur vous accorde l'accès API avant que la connexion ne retourne des données réelles — Druma ne peut pas contourner cela.
+</Warning>
+
+---
+
+## Où apparaît la température des remorques
+
+- **Liste des remorques** — une colonne **Temp** affiche la dernière température réelle, un badge moteur En marche/Arrêté, et un signal ambré d'alarme si le dernier relevé en porte un.
+- **Fiche remorque → onglet Température** — relevé détaillé (consigne vs réel, statut portes, heures moteur, codes d'alarme) plus un historique.
+- **Tableau de bord → widget Statut frigorifique** — nombre de remorques en alarme, hors seuil de température, et maintenance frigorifique à venir.
+
+---
+
+## Alertes et acquittement des alarmes
+
+Les seuils d'alerte frigorifique se configurent dans **Paramètres → Types de flotte**, panneau **Alertes de température frigorifique** :
+
+| Champ | Ce qu'il contrôle |
+|---|---|
+| **Activer les alertes reefer** | Interrupteur général |
+| **Seuil d'écart de température (°C)** | Écart toléré avant signalement (3 °C par défaut) |
+| **Seuil de porte ouverte (minutes)** | Durée tolérée porte ouverte (10 min par défaut) |
+| **Alerter sur codes d'alarme** | Déclenchement sur code d'alarme brut du boîtier |
+| **Délai de re-alerte (minutes)** | Écart minimum entre alertes répétées (60 min par défaut) |
+
+En cas de dépassement, Druma notifie **dans l'application** (aux administrateurs) et envoie une **notification push au chauffeur** de la remorque concernée — aucun email pour les alertes reefer.
+
+**Acquitter une alarme :** ouvrez l'onglet **Température** de la remorque — les codes d'alarme non acquittés apparaissent avec un bouton **Acquitter**, créant un enregistrement permanent.
+
+---
+
+## Générer un PDF de conformité température
+
+Pour toute commande transportée sur une remorque frigorifique connectée :
+
+1. Ouvrez la commande dans **Exploitation**, onglet **Documents**.
+2. Cliquez sur **Rapport de température** (visible seulement si un boîtier reefer est configuré).
+3. Druma génère un PDF avec la courbe consigne/réel, les événements d'alarme et de porte ouverte, le temps moteur, la classe ATP de la remorque et la référence de commande.
+
+---
+
+## Certificats ATP et maintenance frigorifique
+
+- **Suivi des certificats ATP** — dans **Flotte → Documents flotte**, un type de document **ATP** permet de choisir la remorque et sa classe ATP (A/B/C/D/F/IN/IR).
+- **Planification de la maintenance frigorifique** — dans **Flotte → Maintenance**, un onglet **Unités frigorifiques** suit les intervalles d'entretien en **heures moteur** plutôt qu'en kilomètres.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Gestion des remorques" icon="trailer" href="/fr/planner/trailer-management">
+    Gérez remorques, affectations, disponibilité et documents.
+  </Card>
+  <Card title="Documents flotte" icon="folder-open" href="/fr/fleet-compliance/fleet-documents">
+    Suivez les certificats ATP avec les autres documents véhicules.
+  </Card>
+  <Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+    Ajoutez et gérez véhicules, types et documents.
+  </Card>
+  <Card title="Tableau de bord" icon="gauge" href="/en/planner/home-dashboard">
+    Ajoutez le widget Statut frigorifique à votre tableau de bord.
+  </Card>
+</CardGroup>

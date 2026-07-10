@@ -1,0 +1,117 @@
+---
+title: "Správa chladiarenskej flotily (Reefer)"
+description: "Pripojte chladené prívesy (reefer) k ich telematickému poskytovateľovi, sledujte teplotu naživo, spravujte upozornenia a generujte správy o dodržiavaní chladiaceho reťazca."
+icon: "snowflake"
+---
+
+## Prehľad
+
+Ak vaša flotila prevádzkuje chladené (reefer) prívesy, Druma dokáže načítať teplotu naživo, motohodiny a alarmy priamo z telematickej jednotky prívesu — bez ručného zapisovania. Po pripojení poskytovateľa uvidíte aktuálnu teplotu prívesu v zozname, dostanete upozornenie pri odchýlke od nastavenej hodnoty alebo pri alarme a môžete vygenerovať jednostranové PDF o chladiacom reťazci pre každú dokončenú prepravu.
+
+Funkcie reefer sa zobrazia až po zapnutí typu flotily **Reefer** vo vašej firme — urobí to admin alebo company admin v **Nastavenia → Typy flotily**. Stĺpec Teplota, karta Teplota, upozornenia aj správa o zhode zostávajú skryté, kým tento prepínač nie je zapnutý.
+
+<Note>
+Poskytovatelia reefer telematiky sa výrazne líšia otvorenosťou svojich API. Mapon je plne verejné a funguje ihneď. Orbcomm vyžaduje účtový token. Thermo King TracKing a Carrier Lynx Fleet sú prístupné len partnerom — o prístup k API musíte požiadať u dodávateľa, aj keď je pripojovací formulár k dispozícii pre všetky štyri.
+</Note>
+
+---
+
+## Pripojenie poskytovateľa reefer
+
+<Steps>
+  <Step title="Zapnite typ flotily Reefer">
+    Otvorte **Nastavenia → Typy flotily** a zapnite **Reefer**. Tým sa odomknú obrazovky špecifické pre reefer v celej sekcii Flotila.
+  </Step>
+  <Step title="Prejdite do Integrácií">
+    Otvorte **Nastavenia → Integrácie**. Poskytovatelia reefer telematiky sú uvedení spolu s ostatnými GPS/tachografovými konektormi.
+  </Step>
+  <Step title="Vyberte poskytovateľa">
+    Nájdite kartu poskytovateľa telematiky vášho prívesu — **Mapon**, **Orbcomm**, **Thermo King TracKing** alebo **Carrier Lynx Fleet** — a otvorte ju. Odkaz „Kde to získam?" na každej karte vysvetľuje, ako získať prihlasovacie údaje (pozri tabuľku nižšie).
+  </Step>
+  <Step title="Zadajte prihlasovacie údaje">
+    Vyplňte polia pre svojho poskytovateľa (líšia sa podľa poskytovateľa — pozri nižšie) a kliknite na **Pripojiť**. Údaje sú uložené bezpečne a nikdy sa už nezobrazia celé; zadaním novej hodnoty neskôr sa kľúč obmení.
+  </Step>
+  <Step title="Otestujte pripojenie">
+    Kliknite na **Test pripojenia**, aby ste potvrdili, že Druma dokáže s vašimi údajmi kontaktovať API poskytovateľa.
+  </Step>
+  <Step title="Nastavte ID telematickej jednotky pre každý príves">
+    Otvorte **Flotila → Prívesy**, vyberte reefer príves, prejdite na kartu **Zhoda** a vyplňte **ID telematickej jednotky** — ID jednotky/aktíva, ktoré váš poskytovateľ používa na identifikáciu daného prívesu. Práve toto prepája prichádzajúce dáta so správnym prívesom v Drume.
+  </Step>
+</Steps>
+
+Po pripojení synchronizačná úloha Drumy automaticky sťahuje nové hodnoty. Netreba nič ručne obnovovať — stĺpec Teplota aj karta Teplota sa priebežne dopĺňajú.
+
+### Polia prihlasovacích údajov poskytovateľa
+
+| Poskytovateľ | Zadávané polia | Kde ich získať |
+|---|---|---|
+| **Mapon** | API Key, Base URL (voliteľné) | Vygenerujte API kľúč v platforme Mapon pod Settings → API. Plne verejné API — funguje okamžite. |
+| **Orbcomm** | Access Token, alebo meno + heslo, Base URL (voliteľné) | Vydáva sa cez váš účet ORBCOMM Platform API. Ak máte len meno/heslo, Druma ho automaticky vymení za token. |
+| **Thermo King TracKing** | API Key, alebo meno + heslo, Base URL (voliteľné) | Vyžiadajte API kľúč TracKing u svojho predajcu Thermo King alebo cez portál TracKing. Bez verejnej samoobslužnej registrácie — integrácia len pre partnerov. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (alebo starší API Key), Base URL (voliteľné) | Získate cez Carrier Transicold alebo svojho predajcu Carrier v rámci sady Lynx Fleet API. Bez verejnej samoobslužnej registrácie. |
+
+<Warning>
+Thermo King a Carrier vyžadujú, aby vám dodávateľ najprv udelil prístup k API, inak pripojenie nevráti reálne dáta — Druma to nedokáže obísť. Kým čakáte na schválenie partnerom, formulár údajov stále umožňuje uložiť a otestovať pripojenie, no synchronizácia sa spustí až po aktivácii účtu.
+</Warning>
+
+---
+
+## Kde sa zobrazuje teplota prívesu
+
+- **Zoznam prívesov** — stĺpec **Teplota** zobrazuje poslednú skutočnú teplotu každého reefer prívesu, odznak Beží/Zastavené pre motor a jantárovú vlajku Alarm, ak posledné čítanie obsahuje alarmový kód.
+- **Detail prívesu → karta Teplota** — zobrazí sa na každom prívese po zapnutí reefer príznaku. Ukazuje podrobne posledné čítanie (nastavená vs. skutočná teplota, stav dverí, motohodiny, alarmové kódy) a históriu. Ak príves ešte nemá nastavené ID telematickej jednotky, karta vás vyzve doplniť ho najprv na karte Zhoda.
+- **Domovský dashboard → widget Stav reefer** — pridajte ho z galérie widgetov pre rýchly prehľad počtu prívesov s aktívnymi alarmami, prívesov mimo teplotného prahu a blížiacej sa údržby reefer, s najbližším termínom v pätičke.
+
+---
+
+## Upozornenia a potvrdzovanie alarmov
+
+Prahy upozornení reefer sa nastavujú v **Nastavenia → Typy flotily**, v paneli **Upozornenia na teplotu reefer**, ktorý sa zobrazí po zapnutí príznaku:
+
+| Pole | Čo ovláda |
+|---|---|
+| **Zapnúť upozornenia reefer** | Hlavný vypínač upozornení pre reefer. |
+| **Prah odchýlky teploty (°C)** | Ako ďaleko sa čítanie môže odchýliť od nastavenej hodnoty, kým sa označí (predvolené 3 °C). |
+| **Prah otvorených dverí (minúty)** | Ako dlho môžu byť dvere otvorené, kým sa to označí (predvolené 10 minút). |
+| **Upozorniť na alarmové kódy jednotky** | Či surový alarmový kód priamo z jednotky spustí notifikáciu. |
+| **Odstup opakovaných upozornení (minúty)** | Minimálny odstup medzi opakovanými upozorneniami pre rovnaký príves/podmienku, aby jeden pretrvávajúci problém nezahltil notifikácie (predvolené 60 minút). |
+
+Pri prekročení prahu Druma upozorní **v aplikácii** (zvončekom pre company adminov) a pošle **push notifikáciu vodičovi**, ktorý daný príves obsluhuje — pre reefer upozornenia neexistuje e-mail, keďže práve vodič dokáže na otvorené dvere alebo alarm jednotky reálne reagovať.
+
+**Potvrdenie alarmu:** otvorte kartu **Teplota** prívesu — nepotvrdené alarmové kódy sa zobrazia vo vyhradenej sekcii s časom posledného výskytu a tlačidlom **Potvrdiť**. Potvrdenie vytvorí trvalý záznam; ak sa rovnaký alarmový kód spustí znova neskôr, znova sa zobrazí ako nepotvrdený.
+
+---
+
+## Generovanie PDF o zhode teploty
+
+Pre každú zákazku prepravovanú na pripojenom reefer prívese môžete vygenerovať jednostranový doklad o chladiacom reťazci:
+
+1. Otvorte zákazku v **Prevádzka** a prejdite na kartu **Dokumenty**.
+2. Kliknite na **Teplotná správa** (zobrazí sa len ak má príves zákazky nakonfigurovanú telematickú jednotku reefer).
+3. Druma vygeneruje a stiahne PDF s priebehom nastavenej vs. skutočnej teploty počas prepravy, udalosťami alarmov a otvorenia dverí, prevádzkovým časom motora, ATP triedou prívesu a referenciou zákazky — pripravené odovzdať odosielateľovi alebo audítorovi ako dôkaz, že chladiaci reťazec bol dodržaný.
+
+---
+
+## ATP certifikáty a údržba reefer
+
+Reefer prívesy po zapnutí príznaku získajú aj dva doplnky zhody:
+
+- **Sledovanie ATP certifikátov** — v **Flotila → Dokumenty flotily** pribudne v rozbaľovacom zozname typov dokumentov možnosť **ATP**; vyberte príves a jeho triedu ATP (A/B/C/D/F/IN/IR podľa Dohody ATP). Certifikát sa potom zobrazí na karte Zhoda prívesu s odznakom platnosti a objaví sa aj vo widgete upozornení na expiráciu na dashboarde ako každý iný dokument flotily.
+- **Plánovanie údržby reefer** — v **Flotila → Údržba** karta **Reefer jednotky** sleduje servisné intervaly v **motohodinách**, nie kilometroch (filter servis, plný servis, kontrola ATP), na základe aktuálnych motohodín reefer jednotky každého prívesu.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Správa prívesov" icon="trailer" href="/sk/planner/trailer-management">
+    Spravujte prívesy, priradenie, dostupnosť a dokumenty — vrátane karty Zhoda, kde sa nastavujú ID reefer telematiky.
+  </Card>
+  <Card title="Dokumenty flotily" icon="folder-open" href="/sk/fleet-compliance/fleet-documents">
+    Sledujte ATP certifikáty spolu s poistením, ITP a ďalšími dokumentmi vozidiel s upozorneniami na expiráciu.
+  </Card>
+  <Card title="Správa flotily" icon="truck" href="/sk/planner/fleet-management">
+    Pridávajte a spravujte vozidlá, typy vozidiel, rozmery a dokumenty.
+  </Card>
+  <Card title="Domovský dashboard" icon="gauge" href="/en/planner/home-dashboard">
+    Pridajte widget Stav reefer na svoj dashboard pre rýchly prehľad alarmov a blížiacej sa údržby.
+  </Card>
+</CardGroup>

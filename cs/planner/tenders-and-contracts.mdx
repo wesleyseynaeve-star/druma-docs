@@ -1,0 +1,115 @@
+---
+title: "Výběrová řízení a smlouvy"
+description: "Sledujte klientská výběrová řízení od zájemce po aktivní smlouvu, přiřaďte sazby tras do ceníku a sledujte skutečný objem a plnění SLA."
+icon: "file-signature"
+---
+
+## Přehled
+
+Východoevropští dopravci často spravují sazbové závazky klientů v excelových tabulkách: odesílatel vypíše výběrové řízení (RFT) na sadu tras, objemů a SLA cílů na dané období, a jakmile ho vyhrajete, tyto sazby řídí každou zakázku zadanou v rámci dané smlouvy. Modul Výběrová řízení a smlouvy dává tomuto procesu v Druma pořádný životní cyklus — od prvního kontaktu až po sledování aktivní smlouvy — místo tabulky, kterou nikdo neaktualizuje.
+
+Výběrové řízení prochází čtyřmi fázemi pipeline — **Zájemce → Nabídka → Podáno → Vyhráno** — a po přiřazení se stává **aktivní** smlouvou. Smlouvy mohou později přejít do stavu **Obnovuje se** (blíží se konec platnosti) nebo **Vypršelo**. Výběrové řízení lze také kdykoli před výhrou označit jako **Prohráno**.
+
+<Note>
+Výběrová řízení a smlouvy jsou volitelný modul. Pokud nevidíte **Výběrová řízení** pod **Ceny a prodej**, požádejte správce společnosti o jeho zapnutí v **Nastavení → Automatizace → Správa výběrových řízení a smluv**.
+</Note>
+
+**Přístup:** Klikněte na **Ceny a prodej → Výběrová řízení** v levém menu. Stránka se otevře na pohledu **Pipeline**, vedle něj jsou záložky **Vše**, **Aktivní smlouvy** a **Výkonnost**.
+
+---
+
+## Vytvoření a přiřazení výběrového řízení
+
+<Steps>
+  <Step title="Otevřete Výběrová řízení">
+    Přejděte na **Ceny a prodej → Výběrová řízení**. Zobrazí se tabule Pipeline se sloupcem pro každou fázi (Zájemce, Nabídka, Podáno, Vyhráno).
+  </Step>
+  <Step title="Klikněte na Nové výběrové řízení">
+    Klikněte na **+ Nové výběrové řízení** vpravo nahoře. Zadejte název (např. „Acme Logistics RFT 2026 — trasy RO→DE"), volitelně jej propojte s existujícím klientem nebo CRM leadem, nastavte měnu, období a celkový závazný objem. Klikněte na **Vytvořit výběrové řízení**.
+  </Step>
+  <Step title="Přidejte závazné trasy">
+    Otevřete kartu nového výběrového řízení a v sekci **Závazné trasy** klikněte na **Přidat trasu**. U každé trasy nastavte zemi původu a určení, typ návěsu, dohodnutou sazbu a režim sazby (za km, paušál nebo pásmová sazba za km), počet závazných zakázek za období, cíl on-time % SLA a případné penalizační podmínky. Opakujte pro každou trasu výběrového řízení. Trasy přidávejte postupně, jak získáváte přehled o celém seznamu tras odesílatele — nemusíte je mít všechny dopředu.
+  </Step>
+  <Step title="Posuňte fázi pipeline">
+    Podle postupu obchodu klikejte v patičce panelu na **Přesunout do Nabídka**, poté **Přesunout do Podáno** a nakonec **Přesunout do Vyhráno**. Pokud obchod v kterékoli fázi padne, klikněte místo toho na **Označit jako prohrané**.
+  </Step>
+  <Step title="Přiřaďte výběrové řízení">
+    Jakmile je výběrové řízení **Vyhráno**, v panelu se zobrazí oranžový panel **Přiřadit výběrové řízení a aktivovat**. Klikněte na **Přiřadit a vygenerovat ceník**, poté na **Potvrdit přiřazení**. Tím se z tras výběrového řízení vytvoří ceník a výběrové řízení přejde do stavu **Aktivní** — tento ceník nyní automaticky předvyplňuje nabídky a ceny pro trasy daného klienta a jakoukoli zakázku zadanou u tohoto klienta lze propojit se smlouvou (`orders.contract_id`), takže se automaticky počítá do závazného objemu.
+  </Step>
+</Steps>
+
+<Note>
+Jakmile je výběrové řízení Aktivní, Vypršelé nebo Prohrané, jeho podrobnosti a trasy se v panelu stanou pouze pro čtení — dohodnuté podmínky jsou uzamčené. Chcete-li upravit přiřazené sazby, upravte přímo vygenerovaný ceník (viz [Ceníky](/en/admin/rate-cards)).
+</Note>
+
+### Co znamenají pole výběrového řízení a trasy
+
+| Pole | Kde | Co znamená |
+|---|---|---|
+| **Název** | Výběrové řízení | Volný text pojmenování výběrového řízení — obvykle jméno klienta + účel |
+| **Propojit s účtem** | Výběrové řízení | Volitelně propojí výběrové řízení s existujícím klientem nebo CRM leadem, aby se zobrazovalo v jeho záznamu |
+| **Měna** | Výběrové řízení | Měna pro všechny dohodnuté sazby v tomto výběrovém řízení (EUR, RON, PLN, CZK, HUF, BGN) |
+| **Období od / do** | Výběrové řízení | Doba platnosti smlouvy. Smlouvy do 60 dnů od konce období jsou označeny „Brzy vyprší" |
+| **Závazný objem** | Výběrové řízení | Celkový počet zakázek, ke kterým se klient zavázal za celé období — číslo, vůči kterému záložka Výkonnost porovnává skutečnost |
+| **Země původu / určení** | Trasa | Dvojice zemí trasy. Ponechte „Kterákoli" pro univerzální trasu |
+| **Typ návěsu** | Trasa | Plachta, mega, valník, chlazený, skříňový, cisterna nebo jiný |
+| **Režim sazby** | Trasa | Jak se dohodnutá sazba uplatňuje: €/km, paušál, nebo pásmová škála €/km |
+| **Dohodnutá sazba** | Trasa | Vyjednaná cena za tuto trasu, v měně výběrového řízení |
+| **Závazné zakázky/období** | Trasa | Kolik zakázek na této konkrétní trase se klient zavázal odebrat za období |
+| **Cíl on-time % SLA** | Trasa | Procento dodávek včas, které tato trasa musí splňovat — porušení se zobrazí jako upozornění, jakmile je smlouva aktivní |
+| **Penalizační podmínky** | Trasa | Volný text popisující, co se stane při nesplnění cíle SLA (např. „5% srážka za každou zmeškanou dodávku SLA") |
+
+---
+
+## Sledování skutečného objemu vs. závazku
+
+Jakmile je výběrové řízení přiřazeno a aktivní (nebo se obnovuje, nebo nedávno vypršelo), zobrazí se v jeho panelu **panel plnění smlouvy**, který odpovídá na otázku „plníme skutečně to, co jsme slíbili?":
+
+- **Doručeno vs. závazek** — ukazatel průběhu porovnávající dokončené zakázky propojené s touto smlouvou proti celkovému závaznému objemu, s procentem plnění
+- **Při současném tempu** — projekce, kolik zakázek doručíte do konce období při aktuálním tempu
+- **Tržby k dnešnímu dni, průměrná marže a SLA on-time** — tři dlaždice shrnující plnění smlouvy dosud
+- Doručené počty a on-time % za jednotlivé trasy se zobrazují i vedle každé trasy v seznamu Závazných tras
+
+Toto se počítá živě ze zakázek propojených se smlouvou (`orders.contract_id`) — není třeba nic nastavovat, aktualizuje se s doručováním zakázek.
+
+---
+
+## Čtení dashboardu SLA / Výkonnost
+
+Klikněte na záložku **Výkonnost** pro zobrazení všech aktivních a obnovujících se smluv v jedné tabulce, místo otevírání jednotlivých panelů.
+
+- Každý řádek zobrazuje doručený vs. závazný objem, on-time SLA %, průměrné tržby, průměrnou marži % a případná aktivní upozornění
+- Červený banner nahoře uvádí všechna upozornění napříč smlouvami, pokud existuje alespoň jedno
+- U smlouvy se mohou objevit čtyři typy upozornění:
+
+| Upozornění | Kdy se spustí |
+|---|---|
+| **Nedoplnění** | Dokončené zakázky klesnou pod 80 % závazného objemu |
+| **Porušení SLA** | On-time doručení % klesne pod cíl SLA dané trasy |
+| **Pokles marže** | Průměrná marže na smlouvě klesne pod 5 % |
+| **Brzy vyprší** | Období smlouvy končí do 60 dnů |
+
+Tato upozornění jsou striktně jen v aplikaci — Druma je neposílá e-mailem. Kontrolujte záložku Výkonnost pravidelně (nebo před jednáním o obnovení), abyste včas zachytili nedoplnění nebo pokles marže.
+
+---
+
+## Import dokumentu výběrového řízení
+
+Pokud má váš správce zapnutý AI import výběrových řízení (**Nastavení → Automatizace → Funkce AI**), objeví se vedle **Nové výběrové řízení** tlačítko **Importovat dokument**. Nahrajte sazebník odesílatele jako PDF nebo Excel soubor (max. 10 MB) a Druma extrahuje název, data a trasy do konceptu, který si před uložením zkontrolujete a upravíte — užitečné u dohod s 20 trasami, které byste jinak přepisovali ručně.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Ceníky" icon="tag" href="/en/admin/rate-cards">
+    Jak fungují ceníky tras po přiřazení výběrového řízení a jak je upravovat přímo.
+  </Card>
+  <Card title="Nabídky" icon="file-text" href="/en/planner/quotes">
+    Cenová nabídka pro jednorázové zakázky — lehčí protějšek plnohodnotného výběrového řízení.
+  </Card>
+  <Card title="CRM" icon="address-book" href="/en/planner/crm">
+    Sledujte zájemce, než se stanou výběrovým řízením, a zobrazte propojená výběrová řízení u účtu.
+  </Card>
+  <Card title="Report ziskovosti tras" icon="route" href="/en/reports/lane-profitability">
+    Ověřte, zda je trasa skutečně zisková, než se zavážete k sazbě výběrového řízení.
+  </Card>
+</CardGroup>

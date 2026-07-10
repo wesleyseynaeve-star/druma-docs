@@ -1,0 +1,84 @@
+---
+title: "Ausschreibungen & Verträge"
+description: "Kunden-Ausschreibungen vom Prospect bis zum aktiven Vertrag verfolgen, Streckenraten in eine Preisliste übernehmen und realisiertes Volumen sowie SLA-Leistung überwachen."
+icon: "file-signature"
+---
+
+## Übersicht
+
+Osteuropäische Frachtführer verwalten Kundenraten-Zusagen oft in Tabellen: ein Verlader schreibt eine Ausschreibung (RFT) für Strecken, Volumen und SLA-Ziele über einen festen Zeitraum aus, und nach dem Gewinn gelten diese Raten für jede Ladung unter dem Vertrag. Ausschreibungen & Verträge gibt diesem Prozess einen richtigen Lebenszyklus in Druma.
+
+Eine Ausschreibung durchläuft vier Pipeline-Stufen — **Prospect → Angebot → Eingereicht → Gewonnen** — und wird nach Zuschlag zu einem **Aktiven** Vertrag. Verträge können später zu **Verlängernd** (nähert sich Ablauf) oder **Abgelaufen** wechseln. Eine Ausschreibung kann auf jeder Stufe als **Verloren** markiert werden.
+
+<Note>
+Ausschreibungen & Verträge ist ein Opt-in-Modul — bitten Sie Ihren Unternehmensadmin, es unter **Einstellungen → Automatisierung → Ausschreibungs- und Vertragsverwaltung** zu aktivieren, falls **Ausschreibungen** unter **Preise & Vertrieb** fehlt.
+</Note>
+
+**Zugriff:** **Preise & Vertrieb → Ausschreibungen** im linken Menü.
+
+---
+
+## Ausschreibung erstellen und zuschlagen
+
+<Steps>
+  <Step title="Ausschreibungen öffnen">
+    Sie landen auf dem Pipeline-Board mit einer Spalte pro Stufe.
+  </Step>
+  <Step title="Neue Ausschreibung anlegen">
+    Titel, optional Kunde/CRM-Lead verknüpfen, Währung, Zeitraum und Gesamtvolumen festlegen.
+  </Step>
+  <Step title="Vereinbarte Strecken hinzufügen">
+    Pro Strecke: Ursprungs-/Zielland, Anhängertyp, vereinbarte Rate und Ratenmodus (pro km, Pauschal, gestaffelt), Ladungen pro Zeitraum, SLA-Pünktlichkeitsziel und Vertragsstrafen.
+  </Step>
+  <Step title="Pipeline-Stufe vorantreiben">
+    **Zu Angebot**, **Zu Eingereicht**, **Zu Gewonnen** klicken — oder **Als verloren markieren**.
+  </Step>
+  <Step title="Ausschreibung zuschlagen">
+    Bei **Gewonnen** erscheint **Zuschlagen & Preisliste generieren** → **Zuschlag bestätigen**. Das erstellt eine Preisliste aus den Streckendaten und setzt die Ausschreibung auf **Aktiv** — Aufträge lassen sich nun über `orders.contract_id` mit dem Vertrag verknüpfen und zählen automatisch zum vereinbarten Volumen.
+  </Step>
+</Steps>
+
+<Note>
+Ist eine Ausschreibung Aktiv, Abgelaufen oder Verloren, sind Details und Strecken schreibgeschützt. Ratenänderungen erfolgen direkt in der generierten Preisliste (siehe [Preislisten](/de/admin/rate-cards)).
+</Note>
+
+---
+
+## Realisiertes Volumen vs. vereinbart
+
+Ein aktiver oder verlängernder Vertrag zeigt ein **Vertragsleistungs**-Panel: gelieferte vs. vereinbarte Ladungen mit Fortschrittsbalken, eine Hochrechnung zum Periodenende, sowie Umsatz, Durchschnittsmarge und SLA-Pünktlichkeit bisher. Alles wird live aus verknüpften Aufträgen berechnet.
+
+---
+
+## SLA-/Leistungs-Dashboard
+
+Der Tab **Leistung** zeigt alle aktiven und verlängernden Verträge in einer Tabelle mit vier möglichen Warnungen:
+
+| Warnung | Auslöser |
+|---|---|
+| **Unterlieferung** | Gelieferte Ladungen unter 80 % des vereinbarten Volumens |
+| **SLA-Verstoß** | Pünktlichkeit unter dem Streckenziel |
+| **Margenverfall** | Durchschnittsmarge unter 5 % |
+| **Läuft bald ab** | Vertragsende innerhalb von 60 Tagen |
+
+Diese Warnungen sind rein appintern — Druma versendet dazu keine E-Mails.
+
+---
+
+## Ausschreibungsdokument importieren
+
+Ist die KI-Ausschreibungsimport-Funktion aktiv (**Einstellungen → Automatisierung → KI-Funktionen**), erscheint **Dokument importieren** neben **Neue Ausschreibung**. PDF- oder Excel-Ratentabellen (max. 10 MB) werden zu einem bearbeitbaren Entwurf extrahiert.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Preislisten" icon="tag" href="/de/admin/rate-cards">
+    Wie Streckenpreislisten nach Zuschlag funktionieren.
+  </Card>
+  <Card title="Angebote" icon="file-text" href="/de/planner/quotes">
+    Spot-Angebote für Einzelladungen.
+  </Card>
+  <Card title="Streckenrentabilitätsbericht" icon="route" href="/de/reports/lane-profitability">
+    Prüfen Sie die Rentabilität, bevor Sie eine Ausschreibungsrate vereinbaren.
+  </Card>
+</CardGroup>

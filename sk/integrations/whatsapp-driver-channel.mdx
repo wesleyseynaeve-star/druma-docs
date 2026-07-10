@@ -1,0 +1,126 @@
+---
+title: "WhatsApp kanál pre vodičov"
+description: "Umožnite vodičom, ktorí uprednostňujú WhatsApp, posielať a prijímať správy, stavy a fotografie tam namiesto aplikácie Druma pre vodičov — odpovede prichádzajú do rovnakého chatu s vodičom, ktorý dispečeri už používajú."
+icon: "message-circle"
+---
+
+## Prehľad
+
+Nie každý vodič chce inštalovať a mať otvorenú vyhradenú aplikáciu. Naprieč Rumunskom, Bulharskom, Maďarskom, Poľskom, Českom a Slovenskom je WhatsApp často nástroj, ktorý subdodávateľský alebo OSVČ vodič už denne používa — Druma ho preto oslovuje tam, namiesto vynucovania druhej aplikácie.
+
+WhatsApp nie je samostatný systém správ pripojený zboku. Je to druhý doručovací kanál pre ten istý chat s vodičom, ktorý dispečeri už používajú: správy a fotografie od vodiča prichádzajú do úplne rovnakého vlákna ako od vodiča v aplikácii a odpoveď dispečera sa automaticky odošle späť cez WhatsApp, keď je daný vodič na kanáli WhatsApp. Dispečeri sa nemusia učiť nič nové — pozri [Dispečing → Karta Chat s vodičom](/sk/planner/dispatching#driver-chat-tab), ako vlákno funguje.
+
+Každý vodič je nastavený buď na aplikáciu Druma, **alebo** na WhatsApp, nikdy na oboje — vodič, ktorý už číta chat v aplikácii zadarmo, by nemal zároveň spúšťať platenú správu WhatsApp pre tú istú aktualizáciu.
+
+---
+
+## Zapnutie WhatsApp pre vašu firmu
+
+WhatsApp správy sa pripájajú raz na firmu, v nastaveniach Integrácií — na rovnakom mieste ako každé iné externé pripojenie (HERE, palivové karty, exporty do účtovníctva).
+
+<Steps>
+  <Step title="Vytvorte Meta App s produktom WhatsApp">
+    V prehliadači prejdite na [business.facebook.com](https://business.facebook.com) a vytvorte (alebo otvorte) Meta App, potom doň pridajte produkt **WhatsApp**. Pridajte telefónne číslo pod **WhatsApp → API Setup** — na toto číslo budú vodiči písať a z neho dostávať správy.
+  </Step>
+  <Step title="Zozbierajte prihlasovacie údaje">
+    Na stránke **WhatsApp → API Setup** poznačte **Phone Number ID** a **WhatsApp Business Account (WABA) ID**. Pod **App Settings → Basic** poznačte **App Secret**. Vygenerujte trvalý **Access Token** systémového používateľa (nie dočasný token — nesmie expirovať). Zvoľte si ľubovoľný reťazec ako **Verify Token** — použijete ho v ďalšom kroku.
+  </Step>
+  <Step title="Otvorte kartu WhatsApp v Drume">
+    Prejdite na **Nastavenia → Integrácie** a otvorte kartu **WhatsApp (kanál pre vodičov)**.
+  </Step>
+  <Step title="Skopírujte webhook URL do Meta">
+    Kliknite na ikonu kopírovania vedľa poľa **Webhook URL** a vložte ju do nastavení **WhatsApp → Configuration → Webhook** vašej Meta App, spolu s rovnakým Verify Tokenom, aký ste zvolili vyššie. Meta tým overí, že URL patrí vám, a doručuje cez ňu prichádzajúce správy od vodičov.
+  </Step>
+  <Step title="Zadajte údaje a uložte">
+    Vyplňte Phone Number ID, WABA ID, Access Token, App Secret a Verify Token, ponechajte zapnuté **Aktívne** a kliknite na **Uložiť a pripojiť**.
+  </Step>
+</Steps>
+
+### Význam polí
+
+| Pole | Čo to je |
+|---|---|
+| **Webhook URL** | Pevná prichádzajúca adresa Drumy — vložte ju do Meta, nie naopak. Len na čítanie, generuje sa automaticky. |
+| **Phone Number ID** | Identifikuje, z ktorého čísla WhatsApp Druma odosiela a prijíma správy. Nájdete na stránke Meta App WhatsApp → API Setup. |
+| **WhatsApp Business Account ID (WABA ID)** | Účet Meta Business, ku ktorému telefónne číslo patrí. Tiež na stránke API Setup. |
+| **Access Token** | Trvalý token systémového používateľa, ktorým Druma volá WhatsApp API vo vašom mene. Uložený šifrovane — zadajte ho znova len pri obmene. |
+| **App Secret** | Slúži na overenie, že prichádzajúce webhook volania skutočne pochádzajú od Meta, nie sú podvrhnuté. Nájdete pod App Settings → Basic. |
+| **Verify Token** | Ľubovoľný reťazec podľa vášho výberu. Musí presne zodpovedať tomu, čo ste zadali v konfigurácii webhooku Meta. |
+| **Aktívne** | Zapína/vypína odosielanie bez zmazania uložených prihlasovacích údajov. |
+
+Po pripojení použite **Odpojiť** na rovnakej karte, ak chcete prihlasovacie údaje úplne odstrániť.
+
+<Note>
+Táto karta sa zobrazí len ak váš plán obsahuje funkciu správ s vodičmi. Ak ju nevidíte v Nastavenia → Integrácie, kontaktujte podporu.
+</Note>
+
+---
+
+## Prepnutie vodiča na WhatsApp
+
+Zapnutie firemného pripojenia automaticky nepresunie žiadnych vodičov — kanál každého vodiča sa nastavuje individuálne, so zaznamenaným súhlasom.
+
+1. Prejdite na **Flotila → Vodiči** a otvorte záznam vodiča.
+2. Pod **Komunikačný kanál** nastavte **Kanál správ** na **Len WhatsApp** (predvolené je **Len aplikácia Druma**).
+3. Zadajte **WhatsApp číslo** vodiča v medzinárodnom formáte (napr. `+40712345678`).
+4. Zaškrtnite políčko súhlasu potvrdzujúce, že vodič súhlasil s prijímaním správ Drumy a zdieľaním aktualizácií stavu/fotografií cez WhatsApp — povinné pri prvom prepnutí vodiča na WhatsApp, podľa pravidiel spracovania dát GDPR. Po zaznamenaní súhlasu záznam vodiča namiesto políčka zobrazuje dátum jeho udelenia.
+5. Kliknite na **Uložiť**.
+
+Odteraz sa každá správa alebo automatická notifikácia, ktorú by Druma za normálnych okolností poslala do aplikácie daného vodiča — priradenie zákazky, príchod, žiadosť o POD, pripomienka meškania — odošle namiesto toho na jeho WhatsApp číslo.
+
+---
+
+## Šablóny správ a prečo WhatsApp vyžaduje schválenie
+
+Business API WhatsApp umožňuje voľný text len počas „otvorenej" konverzácie — 24 hodín od poslednej odpovede vodiča. Po uzavretí tohto okna môže konverzáciu znovu otvoriť len **vopred schválená šablóna správy**; Meta vopred kontroluje a schvaľuje znenie šablón, aby operátori nemohli WhatsApp zneužiť na nevyžiadaný marketing. Ide o pravidlo platformy WhatsApp, nie obmedzenie Drumy.
+
+Druma rozdeľuje každú notifikáciu na dve časti, takže rozdiel väčšinou ani nezaznamenáte:
+
+- **Správa v aplikácii** — voľný text odoslaný počas otvoreného okna konverzácie. Môžete ju ľubovoľne upraviť pre každý jazyk, bez potreby schválenia.
+- **Šablóna na znovuotvorenie** — znenie odoslané pri zatvorenom okne, ktoré musí najprv schváliť Meta, zobrazené s odznakom stavu (**Návrh**, **Čaká sa**, **Schválené** alebo **Zamietnuté**).
+
+Šablóny skontrolujete alebo upravíte na **Nastavenia → Integrácie → WhatsApp (kanál pre vodičov)**, v sekcii **Šablóny správ** (viditeľná po pripojení WhatsApp):
+
+1. Vyberte **Šablónu** (priradenie zákazky, žiadosť o ETA, žiadosť o POD, príchod, meškanie) a **Jazyk** — každá šablóna je predvyplnená vo všetkých 10 jazykoch Drumy.
+2. Upravte **správu v aplikácii** a kliknite na **Uložiť správu v aplikácii** — platí okamžite.
+3. Upravte **šablónu na znovuotvorenie** a kliknite na **Odoslať na schválenie** — tým sa znenie odošle na kontrolu Meta. Odznak stavu sa aktualizuje na **Čaká sa**, potom na **Schválené** alebo **Zamietnuté** (s dôvodom) po odpovedi Meta.
+
+Kým šablóna na znovuotvorenie nie je schválená, Druma stále doručí každú správu — len počká na opätovné otvorenie okna (ďalšiu odpoveď vodiča), namiesto odoslania zamietnutej alebo neschválenej šablóny.
+
+---
+
+## Ako sa odpovede vodičov dostanú k dispečerom
+
+Prichádzajúca WhatsApp správa — text, fotografia, dokument alebo poloha — prichádza do rovnakého chatu s vodičom, ktorý dispečeri už používajú, označená odznakom **Odoslané cez WhatsApp** na bubline správy, aby bolo jasné, z akého kanála prišla. Pozri [Dispečing → Karta Chat s vodičom](/sk/planner/dispatching#driver-chat-tab), ako otvoriť vlákno, odpovedať a pripájať súbory — postup je rovnaký bez ohľadu na kanál vodiča. Keď dispečer odpovie z daného vlákna vodičovi na WhatsApp, Druma to automaticky odošle späť cez WhatsApp; netreba žiadny ďalší krok.
+
+<Note>
+Prílohy vo forme fotografií/dokumentov odosielané **z** Drumy **k** vodičovi na WhatsApp zatiaľ nie sú podporované — cez WhatsApp dnes odchádza len text a šablóny. Prílohy, ktoré vodič na WhatsApp posiela **dovnútra** (fotografie POD, fotografie poškodenia), fungujú normálne a objavia sa vo vlákne ako každá iná správa.
+</Note>
+
+---
+
+## Keď vodič neodpovie hneď
+
+Ak je vodič offline alebo sa okno konverzácie zatvorilo, Druma správu nezahodí ani nezlyhá potichu. Automatické notifikácie (napr. žiadosť o POD) sa zaraďujú do fronty a automaticky odosielajú každých pár minút:
+
+- Ak je okno konverzácie vodiča stále otvorené, každá zaradená správa sa odošle ako voľný text — bez dodatočných nákladov.
+- Ak sa okno zatvorilo, Druma pošle za daného vodiča presne jednu schválenú šablónu na cyklus, aby znovu otvorila konverzáciu, a zvyšné správy vo fronte ponechá na ďalší cyklus namiesto odosielania (a platenia za) viacerých šablón za sebou.
+
+Každá správa je nakoniec doručená — nič vo fronte sa potichu nezahodí.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Dispečing" icon="satellite-dish" href="/sk/planner/dispatching">
+    Karta Chat s vodičom, kde dispečeri čítajú a odpovedajú na správy vodičov, cez WhatsApp aj v aplikácii.
+  </Card>
+  <Card title="Správa vodičov" icon="id-card" href="/sk/planner/driver-management">
+    Pridajte vodičov do Drumy a spravujte ich profil vrátane komunikačného kanála.
+  </Card>
+  <Card title="Nastavenie integrácií" icon="plug" href="/sk/admin/integration-setup">
+    Celá stránka Nastavenia → Integrácie a spôsob konfigurácie ostatných pripojení.
+  </Card>
+  <Card title="Notifikácie o priradení vodičov" icon="bell-concierge" href="/sk/automation/driver-assignment-notifications">
+    Automatické notifikácie o priradení zákazky, ktoré možno doručiť cez WhatsApp.
+  </Card>
+</CardGroup>

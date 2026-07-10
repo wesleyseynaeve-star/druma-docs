@@ -4,7 +4,9 @@ description: "Quelles données Druma stocke, combien de temps elles sont conserv
 icon: "lock"
 ---
 
-Druma est responsable du traitement des données que votre entreprise stocke sur la plateforme.
+_Dernière mise à jour : 10 juillet 2026._
+
+Pour vos **données opérationnelles** (commandes, clients, chauffeurs, documents et enregistrements associés que votre entreprise stocke sur la plateforme), Druma agit en tant que **sous-traitant** — votre entreprise est le responsable du traitement, encadré par un accord de traitement des données (DPA) entre votre entreprise et Druma. Pour vos **données de compte et de facturation** (les informations de votre abonnement Druma et les utilisateurs qui l'administrent), Druma agit en tant que **responsable du traitement** de plein droit. Cet article détaille précisément ce qui est stocké, combien de temps c'est conservé, qui le traite, et quelles actions vous pouvez entreprendre au titre du RGPD.
 
 ---
 
@@ -25,7 +27,7 @@ Druma est responsable du traitement des données que votre entreprise stocke sur
 - Données d'import de cartes carburant
 
 ### Documents eCMR
-- Lettres de voiture électroniques émises via TransFollow
+- Lettres de voiture électroniques émises et **scellées PAdES en interne par le fournisseur natif de Druma** (in-house). TransFollow reste disponible uniquement comme **solution de secours historique (legacy fallback)** pour les entreprises qui l'utilisaient déjà avant l'introduction du fournisseur natif.
 
 ### Données de position GPS
 - Druma stocke **uniquement la position GPS actuelle**. **Aucun historique de position n'est stocké.** La précédente est écrasée dès qu'une nouvelle est reçue.
@@ -45,7 +47,7 @@ Druma ne stocke pas les données de tachographe, les enregistrements d'appels, l
 |---|---|
 | Données opérationnelles | Durée de l'abonnement + 90 jours |
 | Données de compte utilisateur | Durée de l'abonnement + 90 jours |
-| Journaux d'audit | 2 ans |
+| Journaux d'audit | 18 mois |
 | Documents eCMR | 10 ans (exigence légale du Protocole e-CMR) |
 | Données de position GPS | Écrasées en temps réel — aucun historique |
 | Dossiers de facturation | 7 ans (loi comptable) |
@@ -80,15 +82,25 @@ La suppression du compte est permanente et irréversible après la fenêtre de c
 
 | Sous-traitant | Finalité |
 |---|---|
-| Supabase | Hébergement de base de données et authentification |
-| Resend | Envoi d'emails transactionnels |
-| HERE Technologies | Géocodage d'adresses et calcul d'itinéraires |
-| TransFollow | Émission, signature et archivage eCMR |
-| Stripe | Traitement des paiements et gestion des abonnements |
-| Google Vertex AI (Gemini Enterprise) | Fonctionnalités d'IA (analyse de documents, extraction d'e-mails) — UE, sans entraînement de modèle |
-| Mailgun | Notifications email en masse |
+| Supabase | Hébergement de base de données et authentification (UE — Francfort) |
 | Cloudflare | CDN, protection DDoS et DNS |
+| Resend | Envoi d'emails transactionnels |
+| Mailgun | Ingestion des emails entrants (commandes, factures, paiements) |
+| Stripe | Traitement des paiements et gestion des abonnements |
+| PTV Group | Itinéraire, distance et ETA — reçoit les coordonnées d'enlèvement/livraison |
+| HERE Technologies | Géocodage d'adresses et autocomplétion |
+| Google Vertex AI (europe-west1) | Fonctionnalités d'IA (analyse de documents, extraction d'e-mails) — sans entraînement de modèle |
+| Google Cloud Translation | Traduction à la demande du contenu UI et des documents |
 | Sentry | Surveillance des erreurs |
+| Google Firebase Cloud Messaging | Notifications push de l'application chauffeur |
+| WhatsApp Business Cloud API (Meta) | Messagerie chauffeur — uniquement si votre entreprise active les notifications WhatsApp |
+| Fournisseurs télématiques (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Données GPS et tachygraphe — uniquement le fournisseur connecté par votre entreprise |
+| Fournisseurs télématiques frigorifiques (Mapon, Orbcomm, Thermo King) | Données de température frigorifique — uniquement le fournisseur connecté par votre entreprise |
+| TransFollow | Solution de secours historique pour l'eCMR uniquement — le fournisseur natif in-house de Druma est la valeur par défaut pour l'émission, la signature et l'archivage |
+
+Tous les sous-traitants sont contractuellement tenus de ne traiter les données que selon vos instructions et conformément au RGPD.
+
+Si votre entreprise active la fonctionnalité optionnelle **Druma Copilot** avec sa propre clé API de fournisseur IA (« bring your own AI »), vos prompts et les données interrogées sont envoyés directement au fournisseur IA de votre choix (OpenAI, Anthropic ou Google) sous l'accord propre à votre entreprise avec ce fournisseur — cela peut entraîner un transfert de données hors UE. Druma Copilot est **désactivé par défaut** et ne s'active que lorsque votre entreprise fournit sa propre clé.
 
 ---
 

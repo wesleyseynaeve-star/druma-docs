@@ -1,0 +1,117 @@
+---
+title: "Správa chlazeného vozového parku"
+description: "Připojte teplotně řízené návěsy k jejich poskytovateli telematiky, sledujte teplotu v reálném čase, spravujte upozornění a generujte reporty o dodržení chladicího řetězce."
+icon: "snowflake"
+---
+
+## Přehled
+
+Pokud váš vozový park provozuje teplotně řízené (chlazené) návěsy, dokáže Druma stáhnout teplotu, motohodiny a alarmy přímo z telematické jednotky návěsu — bez ručního zapisování. Jakmile je poskytovatel návěsu připojen, uvidíte jeho aktuální teplotu v seznamu návěsů, dostanete upozornění ve chvíli, kdy se odchýlí od nastavené hodnoty nebo spustí alarm, a pro každou dokončenou jízdu můžete vygenerovat jednostránkové PDF o chladicím řetězci.
+
+Funkce pro chlazená vozidla se zobrazí až po zapnutí typu vozového parku **Chlazené** ve vaší společnosti. Provádí to jednorázově správce nebo správce společnosti v **Nastavení → Typy vozového parku**. Vše níže — sloupec Teplota, záložka Teplota, upozornění a compliance report — je do zapnutí tohoto přepínače skryté.
+
+<Note>
+Poskytovatelé telematiky pro chlazená vozidla se výrazně liší v otevřenosti svých API. Mapon je plně veřejný a funguje ihned. Orbcomm vyžaduje účtový token. Thermo King TracKing a Carrier Lynx Fleet jsou pouze pro partnery — o API přístup musíte požádat přímo u dodavatele, i když formulář pro připojení je dostupný pro všechny čtyři poskytovatele.
+</Note>
+
+---
+
+## Připojení poskytovatele chlazení
+
+<Steps>
+  <Step title="Zapněte typ vozového parku Chlazené">
+    Otevřete **Nastavení → Typy vozového parku** a zapněte **Chlazené**. Tím se odemknou obrazovky specifické pro chlazená vozidla v sekci Vozový park.
+  </Step>
+  <Step title="Přejděte do Integrace">
+    Otevřete **Nastavení → Integrace**. Poskytovatelé telematiky pro chlazená vozidla jsou uvedeni vedle ostatních GPS/tachografových konektorů.
+  </Step>
+  <Step title="Vyberte svého poskytovatele">
+    Najděte kartu poskytovatele telematiky vašeho návěsu — **Mapon**, **Orbcomm**, **Thermo King TracKing** nebo **Carrier Lynx Fleet** — a otevřete ji. Odkaz „Kde tyto údaje získám?" na každé kartě vysvětluje, jak získat přihlašovací údaje pro daného poskytovatele (viz tabulka níže).
+  </Step>
+  <Step title="Zadejte přihlašovací údaje">
+    Vyplňte pole pro svého poskytovatele (u každého jsou jiná — viz níže) a klikněte na **Připojit**. Přihlašovací údaje jsou uloženy bezpečně a už se v plném znění nikdy nezobrazí; zadání nové hodnoty klíč otočí.
+  </Step>
+  <Step title="Otestujte připojení">
+    Klikněte na **Test připojení**, čímž ověříte, že se Druma může s vámi zadanými údaji připojit k API poskytovatele.
+  </Step>
+  <Step title="Nastavte ID telematické jednotky u každého návěsu">
+    Otevřete **Vozový park → Návěsy**, vyberte chlazený návěs, přejděte na jeho záložku **Compliance** a vyplňte **ID telematické jednotky** — ID jednotky/zařízení, kterým váš poskytovatel identifikuje daný konkrétní návěs. Tím se propojí příchozí data se správným návěsem v Druma.
+  </Step>
+</Steps>
+
+Po připojení stahuje synchronizační úloha Druma nové hodnoty automaticky. Ruční obnovení není potřeba — sloupec Teplota a záložka Teplota se doplňují s příchodem nových hodnot.
+
+### Pole s přihlašovacími údaji podle poskytovatele
+
+| Poskytovatel | Pole k vyplnění | Kde je získat |
+|---|---|---|
+| **Mapon** | API klíč, základní URL (volitelně) | Vygenerujte API klíč v platformě Mapon pod Nastavení → API. Plně veřejné API — funguje okamžitě. |
+| **Orbcomm** | Přístupový token, nebo uživatelské jméno + heslo, základní URL (volitelně) | Vydává se přes účet ORBCOMM Platform API. Pokud máte pouze uživatelské jméno/heslo, Druma je automaticky vymění za token. |
+| **Thermo King TracKing** | API klíč, nebo uživatelské jméno + heslo, základní URL (volitelně) | Vyžádejte si API klíč TracKing u svého prodejce Thermo King nebo přes portál TracKing. Bez veřejné samoobslužné registrace — jde o integraci pouze pro partnery. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (nebo starší API klíč), základní URL (volitelně) | Získáte přes Carrier Transicold nebo svého prodejce Carrier v rámci sady API Lynx Fleet. Bez veřejné samoobslužné registrace. |
+
+<Warning>
+Thermo King a Carrier vyžadují, aby vám dodavatel nejprve udělil přístup k API, než připojení začne vracet skutečná data — Druma to nemůže obejít. Pokud čekáte na schválení od partnera, formulář s přihlašovacími údaji vám i tak umožní údaje uložit a otestovat, ale synchronizace nezačne, dokud nebude účet aktivní.
+</Warning>
+
+---
+
+## Kde se zobrazuje teplota návěsu
+
+- **Seznam návěsů** — sloupec **Teplota** ukazuje poslední skutečnou teplotu každého chlazeného návěsu, odznak motoru Běží/Zastaveno a oranžový příznak alarmu, pokud poslední hodnota obsahuje kód alarmu.
+- **Detail návěsu → záložka Teplota** — objeví se u jakéhokoli návěsu po zapnutí příznaku chlazení. Zobrazuje poslední hodnotu podrobně (nastavená vs. skutečná teplota, stav dveří, motohodiny, kódy alarmů) a tabulku historie. Pokud návěs ještě nemá nastavené ID telematické jednotky, záložka vás vyzve, ať jej nejprve doplníte v záložce Compliance.
+- **Domovský dashboard → widget Stav chlazení** — přidejte jej z galerie widgetů pro rychlý přehled počtu návěsů s aktivními alarmy, návěsů mimo teplotní práh a blížící se údržby chlazení, s nejbližším termínem uvedeným v patičce.
+
+---
+
+## Upozornění a potvrzení alarmů
+
+Prahy upozornění pro chlazení najdete v **Nastavení → Typy vozového parku**, v panelu **Upozornění na teplotu chlazení**, který se zobrazí po zapnutí příznaku:
+
+| Pole | Co ovlivňuje |
+|---|---|
+| **Zapnout upozornění na chlazení** | Hlavní vypínač upozornění pro chlazení. |
+| **Práh odchylky teploty (°C)** | Jak moc se hodnota může odchýlit od nastavené, než je označena (výchozí 3 °C). |
+| **Práh otevřených dveří (minuty)** | Jak dlouho mohou dveře zůstat otevřené, než jsou označeny (výchozí 10 minut). |
+| **Upozornit na kódy alarmu jednotky** | Zda samotný kód alarmu z jednotky spouští oznámení. |
+| **Prodleva opakovaného upozornění (minuty)** | Minimální mezera mezi opakovanými upozorněními pro stejný návěs/stav, aby jeden trvající problém nezahltil oznámeními (výchozí 60 minut). |
+
+Při překročení prahu Druma upozorní **v aplikaci** (zvonkové oznámení správcům společnosti) a odešle **push oznámení řidiči** obsluhujícímu daný návěs — pro upozornění na chlazení neexistuje e-mail, protože právě řidič může na otevřené dveře nebo alarm jednotky skutečně reagovat.
+
+**Potvrzení alarmu:** otevřete záložku **Teplota** návěsu — nepotvrzené kódy alarmů se zobrazí ve vyhrazené sekci s časem posledního výskytu a tlačítkem **Potvrdit**. Potvrzení vytvoří trvalý záznam; pokud stejný kód alarmu vznikne znovu, opět se zobrazí jako nepotvrzený.
+
+---
+
+## Generování PDF o dodržení teploty
+
+Pro jakoukoli zakázku přepravovanou na připojeném chlazeném návěsu můžete vygenerovat jednostránkový důkazní dokument o chladicím řetězci:
+
+1. Otevřete zakázku v **Provozu** a přejděte na záložku **Dokumenty**.
+2. Klikněte na **Teplotní report** (zobrazí se pouze pokud má návěs zakázky nastavenou telematickou jednotku pro chlazení).
+3. Druma sestaví a stáhne PDF pokrývající průběh nastavené vs. skutečné teploty pro danou jízdu, alarmy a otevření dveří, dobu chodu motoru, ATP třídu návěsu a referenci zakázky — připravené k předání odesílateli nebo auditorovi jako důkaz, že chladicí řetězec vydržel.
+
+---
+
+## Certifikáty ATP a údržba chlazení
+
+Chlazené návěsy po zapnutí příznaku získávají dvě compliance funkce navíc:
+
+- **Sledování certifikátů ATP** — v **Vozový park → Dokumenty vozového parku** přibude v rozbalovací nabídce typu dokumentu možnost **ATP**; vyberte návěs a jeho třídu ATP (A/B/C/D/F/IN/IR podle Dohody ATP). Certifikát se poté zobrazí v záložce Compliance návěsu s odznakem platnosti a objeví se i ve widgetu upozornění na vypršení na dashboardu jako kterýkoli jiný dokument vozového parku.
+- **Plánování údržby chlazení** — v **Vozový park → Údržba** sleduje záložka **Chladicí jednotky** intervaly servisu v **motohodinách** místo kilometrů (filtrační servis, kompletní servis, kontrola ATP), pomocí aktuálních motohodin chlazení daného návěsu.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Správa návěsů" icon="trailer" href="/en/planner/trailer-management">
+    Spravujte návěsy, přiřazení, dostupnost a dokumenty — včetně záložky Compliance, kde se nastavují ID telematiky pro chlazení.
+  </Card>
+  <Card title="Dokumenty vozového parku" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    Sledujte certifikáty ATP spolu s pojištěním, STK a dalšími dokumenty vozidel s upozorněním na vypršení.
+  </Card>
+  <Card title="Správa vozového parku" icon="truck" href="/en/planner/fleet-management">
+    Přidávejte a spravujte vozidla, typy vozidel, rozměry a dokumenty.
+  </Card>
+  <Card title="Domovský dashboard" icon="gauge" href="/en/planner/home-dashboard">
+    Přidejte na dashboard widget Stav chlazení pro rychlý přehled alarmů a blížící se údržby.
+  </Card>
+</CardGroup>

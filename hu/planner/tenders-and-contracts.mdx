@@ -1,0 +1,115 @@
+---
+title: "Pályázatok és szerződések"
+description: "Kövesd nyomon az ügyfél-beszerzési pályázatokat a jelölttől az aktív szerződésig, rögzítsd az elnyert útvonaldíjakat egy díjszabási sablonban, és figyeld a teljesített volument és az SLA-teljesítményt."
+icon: "file-signature"
+---
+
+## Áttekintés
+
+A kelet-európai fuvarozók gyakran táblázatokban kezelik az ügyféldíj-kötelezettségeket: a megrendelő pályázatot (RFT) ír ki útvonalakra, volumenekre és SLA-célokra egy fix időszakra, és ha megnyered, ezek a díjak irányítanak minden, az adott szerződés alatt foglalt fuvart. A Pályázatok és szerződések modul rendes életciklust ad ennek a folyamatnak a Drumán belül — az első kapcsolattól az aktív szerződés-monitorozásig.
+
+Egy pályázat négy szakaszon halad át — **Jelölt → Ajánlattétel → Beadva → Megnyerve** —, majd elnyerés után **Aktív** szerződéssé válik. A szerződések később **Megújítás alatt** (lejárat közeledtével) vagy **Lejárt** állapotba kerülhetnek. Egy pályázat bármely szakaszban jelölhető **Elveszett** státusszal is.
+
+<Note>
+A Pályázatok és szerződések egy opcionális modul. Ha nem látod a **Pályázatok** menüpontot az **Árazás és értékesítés** alatt, kérd meg a cég adminisztrátorát, hogy engedélyezze a **Beállítások → Automatizálás → Pályázat- és szerződéskezelés** menüben.
+</Note>
+
+**Elérés:** Kattints az **Árazás és értékesítés → Pályázatok** menüpontra a bal oldali navigációban. Az oldal a **Pipeline** nézetben nyílik meg, mellette **Összes**, **Aktív szerződések** és **Teljesítmény** fülekkel.
+
+---
+
+## Pályázat létrehozása és elnyerése
+
+<Steps>
+  <Step title="Nyisd meg a Pályázatokat">
+    Lépj az **Árazás és értékesítés → Pályázatok** menüpontra. A Pipeline táblára jutsz, egy oszloppal minden szakaszhoz.
+  </Step>
+  <Step title="Kattints az Új pályázat gombra">
+    Adj neki címet, opcionálisan kösd össze egy meglévő ügyféllel vagy CRM-jelölttel, állítsd be a pénznemet, a pályázati időszakot és a teljes vállalt volument.
+  </Step>
+  <Step title="Add hozzá a vállalt útvonalakat">
+    Nyisd meg a pályázatkártyát, és a **Vállalt útvonalak** részben kattints az **Útvonal hozzáadása** gombra. Minden útvonalhoz add meg az eredet/célállomás országot, a pótkocsi típusát, a megállapodott díjat és díjmódot (km-enkénti, fix, vagy sávos km-enkénti), az időszakonkénti vállalt fuvarszámot, egy SLA időben-teljesítés % célt, és a büntetési feltételeket.
+  </Step>
+  <Step title="Léptesd a pipeline szakaszt">
+    Ahogy az üzlet halad, kattints az **Áthelyezés Ajánlattételre**, majd **Áthelyezés Beadva**-ra, majd **Áthelyezés Megnyerve**-re. Ha az üzlet meghiúsul, kattints az **Elveszettnek jelölés** gombra.
+  </Step>
+  <Step title="Nyerd el a pályázatot">
+    Amint egy pályázat **Megnyerve** állapotba kerül, egy borostyánszínű **Pályázat elnyerése és aktiválása** panel jelenik meg. Kattints az **Elnyerés és díjszabás generálása** gombra, majd **Elnyerés megerősítése**. Ez létrehoz egy díjszabási sablont a pályázat útvonalaiból, és Aktívra állítja a pályázatot.
+  </Step>
+</Steps>
+
+<Note>
+Ha egy pályázat Aktív, Lejárt vagy Elveszett állapotba kerül, a részletei és útvonalai csak olvashatóvá válnak — a megállapodott feltételek rögzülnek. Az elnyert díjak módosításához közvetlenül a generált díjszabási sablont szerkeszd (lásd [Díjszabási sablonok](/en/admin/rate-cards)).
+</Note>
+
+### Mit jelentenek a pályázat- és útvonalmezők
+
+| Mező | Hol | Jelentés |
+|---|---|---|
+| **Cím** | Pályázat | Szabad szöveges név a pályázathoz |
+| **Fiókhoz kötés** | Pályázat | Opcionálisan összeköti a pályázatot egy meglévő ügyféllel vagy CRM-jelölttel |
+| **Pénznem** | Pályázat | Az összes megállapodott díj pénzneme (EUR, RON, PLN, CZK, HUF, BGN) |
+| **Időszak -tól / -ig** | Pályázat | A szerződés érvényességi ablaka. A `Időszak vége` előtt 60 napon belüli szerződések "Hamarosan lejár" jelzést kapnak |
+| **Vállalt volumen** | Pályázat | Az ügyfél által vállalt összes fuvar a teljes időszakra |
+| **Eredet/célállomás ország** | Útvonal | Az útvonal országpárja. Hagyd "Bármely"-en a joker útvonalhoz |
+| **Pótkocsi típusa** | Útvonal | Ponyva, mega, platós, hűtős, dobozos, tartály vagy egyéb |
+| **Díjmód** | Útvonal | Hogyan alkalmazzák a megállapodott díjat: €/km, fix ár, vagy sávos €/km skála |
+| **Megállapodott díj** | Útvonal | Az adott útvonalra alkudott ár |
+| **Vállalt fuvar/időszak** | Útvonal | Hány fuvart vállalt az ügyfél erre az útvonalra időszakonként |
+| **SLA időben-teljesítés % cél** | Útvonal | Az az időben-teljesítés százalék, amit ennek az útvonalnak el kell érnie |
+| **Büntetési feltételek** | Útvonal | Szabad szöveges megjegyzés arról, mi történik, ha az SLA-célt nem érik el |
+
+---
+
+## Teljesített volumen nyomon követése a vállalthoz képest
+
+Egy elnyert és aktív (vagy megújítás alatti, vagy nemrég lejárt) pályázat kártyája mutat egy **Szerződés-teljesítmény** panelt:
+
+- **Teljesítve a vállalthoz képest** — folyamatsáv, amely a szerződéshez kötött befejezett rendeléseket hasonlítja össze a vállalt volumennel
+- **A jelenlegi ütem alapján** — előrejelzés arról, hány fuvart teljesítesz az időszak végéig a jelenlegi ütemben
+- **Bevétel eddig, átlagos árrés és időben-teljesítés SLA** — három csempe a szerződés eddigi teljesítményéről
+- Útvonalankénti teljesített darabszám és időben-teljesítés % is megjelenik minden útvonal mellett
+
+Ez élőben, a szerződéshez kötött rendelésekből kerül kiszámításra — nincs mit beállítani.
+
+---
+
+## Az SLA / Teljesítmény irányítópult olvasása
+
+Kattints a **Teljesítmény** fülre, hogy egy táblázatban lásd az összes aktív és megújítás alatti szerződést.
+
+- Minden sor mutatja a teljesített vs. vállalt volument, az időben-teljesítés SLA %-ot, az átlagos bevételt, az átlagos árrés %-ot és az aktív riasztásokat
+- Egy piros sáv a tetején felsorolja az összes riasztást az összes szerződésen át, ha van legalább egy
+- Négyféle riasztás jelenhet meg egy szerződésen:
+
+| Riasztás | Mikor jelentkezik |
+|---|---|
+| **Alulteljesítés** | A teljesített fuvarok a vállalt volumen 80%-a alá esnek |
+| **SLA-sértés** | Az időben-teljesítés % az útvonal SLA-célja alá esik |
+| **Árréscsökkenés** | A szerződés átlagos árrése 5% alá esik |
+| **Hamarosan lejár** | A szerződés időszaka 60 napon belül véget ér |
+
+Ezek a riasztások kizárólag az alkalmazáson belül jelennek meg — a Druma nem küld róluk e-mailt.
+
+---
+
+## Pályázati dokumentum importálása
+
+Ha az adminisztrátorod engedélyezte az AI pályázat-importálást (**Beállítások → Automatizálás → AI funkciók**), egy **Dokumentum importálása** gomb jelenik meg. Töltsd fel a megrendelő díjtáblázatát PDF vagy Excel formátumban (max 10 MB), és a Druma kinyeri a címet, dátumokat és útvonalakat egy áttekinthető, szerkeszthető piszkozatba.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Díjszabási sablonok" icon="tag" href="/en/admin/rate-cards">
+    Hogyan működnek az útvonal-díjszabási sablonok egy pályázat elnyerése után.
+  </Card>
+  <Card title="Árajánlatok" icon="file-text" href="/en/planner/quotes">
+    Egyszeri fuvarok gyors árazása — a teljes pályázat könnyebb súlyú megfelelője.
+  </Card>
+  <Card title="CRM" icon="address-book" href="/en/planner/crm">
+    Kövesd a jelölteket, mielőtt pályázattá válnak.
+  </Card>
+  <Card title="Útvonal-jövedelmezőségi jelentés" icon="route" href="/en/reports/lane-profitability">
+    Ellenőrizd, hogy egy útvonal valóban jövedelmező-e, mielőtt pályázati díjat vállalsz rá.
+  </Card>
+</CardGroup>

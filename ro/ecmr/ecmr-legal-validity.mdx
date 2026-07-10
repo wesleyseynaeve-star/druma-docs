@@ -1,30 +1,124 @@
 ---
 title: "Valabilitatea legala a eCMR"
-description: "De ce un eCMR emis prin TransFollow este legal echivalent cu un CMR pe hartie si in ce tari."
+description: "Cadrul legal care face eCMR echivalent cu CMR pe hartie, cum functioneaza sigiliul digital PAdES al Druma conform eIDAS si ce tari il recunosc."
 icon: "scale-balanced"
 ---
 
-## Temeiul legal
+_Ultima actualizare: 10 iulie 2026._
 
-Valabilitatea legala a eCMR se bazeaza pe **Protocolul Aditional la Conventia CMR privind Scrisoarea de Trasura Electronica** (Geneva, 2008). Tarile care au ratificat acest protocol au convenit ca un eCMR emis corespunzator are aceeasi valoare juridica ca un CMR pe hartie.
+Intelegerea temeiului legal al eCMR te ajuta sa stii cand te poti baza pe el cu incredere si cand ar trebui sa revii la hartie.
 
-## Ce face un eCMR legal valid
+---
 
-Un eCMR este legal valid cand:
+## Cadrul legal
 
-1. **Toate cele trei semnaturi** sunt obtinute (expeditor, transportator/sofer, destinatar)
-2. **Fiecare semnatura** este certificata cu un timestamp calificat
-3. **Documentul** este emis de un furnizor acreditat de eCMR (TransFollow)
-4. **Ambele tari** (de origine si de destinatie) au ratificat Protocolul e-CMR
+### Conventia CMR 1956
 
-## Tarile semnatare
+**Conventia referitoare la Contractul de Transport International de Marfuri pe Sosele** (CMR), adoptata la Geneva in 1956, este tratatul international fundamental care reglementeaza contractele de transport rutier de marfa in Europa si nu numai. Ea defineste drepturile si obligatiile expeditorului, transportatorului si destinatarului, si stabileste scrisoarea de trasura (nota CMR) ca document probator principal.
 
-Verifica lista actualizata la unece.org. Majoritatea statelor membre UE plus Elvetia, Belarus, Georgia si altele au ratificat protocolul.
+Conventia CMR insasi precede tehnologia digitala si se refera la documente pe hartie. Pentru a o actualiza pentru era moderna, statele semnatare au adoptat un protocol aditional.
 
-## TransFollow ca furnizor acreditat
+### Protocolul e-CMR 2008
 
-Druma utilizeaza TransFollow, unul dintre cele mai vechi si mai stabilite platforme de eCMR din Europa. TransFollow este acceptat de autoritatile vamale, asiguratori si instante in toate tarile semnatare.
+**Protocolul Aditional la Conventia CMR privind Scrisoarea de Trasura Electronica** - denumit uzual Protocolul e-CMR - a fost adoptat la Geneva in 2008. Acesta prevede in mod specific ca:
 
-## Retentia documentelor
+- O scrisoare de trasura electronica emisa conform Protocolului are **acelasi statut legal ca o nota CMR pe hartie**
+- Nota electronica trebuie autentificata de toate cele trei parti si securizata impotriva alterarii ulterioare
+- Documentul trebuie emis de un sistem tehnic fiabil care garanteaza integritatea
 
-TransFollow arhiveaza documentele eCMR timp de 10 ani, conform cerintelor legale ale Protocolului e-CMR. Druma retine, de asemenea, documentele in inregistrarile comenzii pentru aceleasi 10 ani.
+Tarile care au ratificat Protocolul e-CMR au incorporat aceste prevederi in cadrul lor legal national.
+
+### Regulamentul eIDAS (UE) 910/2014
+
+Furnizorul nativ eCMR al Druma aplica un **sigiliu digital PAdES** - format PDF Advanced Electronic Signature (PAdES) care produce o **semnatura electronica avansata (AdES)** conform definitiei din **Regulamentul eIDAS (UE) nr. 910/2014**. Acest sigiliu:
+
+- Este aplicat pe PDF-ul CMR complet, dupa ce toate cele trei parti au semnat
+- Leaga criptografic continutul documentului de certificatul de semnare al Druma
+- Produce o inregistrare care evidentiaza orice modificare: orice alterare a PDF-ului dupa sigilare invalideaza verificarea semnaturii
+- Este aplicat integral intern - niciun serviciu de certificare tert nu este contactat in momentul semnarii
+
+Combinatia dintre Protocolul e-CMR (drept al transporturilor) si sigiliul AdES eIDAS (drept al semnaturii electronice) confera eCMR-urilor emise de Druma un temei legal dublu.
+
+---
+
+## Ce tari recunosc eCMR?
+
+Incepand cu 2025, Protocolul e-CMR a fost ratificat de majoritatea statelor membre UE, plus mai multe tari din afara UE, printre care Elvetia, Belarus si Georgia. Lista de ratificare se schimba pe masura ce noi tari adera.
+
+<Note>
+Verifica intotdeauna statusul curent de ratificare UNECE inainte de a te baza pe eCMR pentru o ruta noua. Lista oficiala este mentinuta la [unece.org/transport/legal-instruments](https://unece.org/transport/legal-instruments). Cauta "Additional Protocol to CMR."
+</Note>
+
+### Ce inseamna statusul de ratificare in practica
+
+**Transport intre doua tari care au ratificat:** eCMR are valabilitate legala deplina, egala cu CMR pe hartie. Nu trebuie sa transporti o copie pe hartie.
+
+**Transport care implica o tara care nu a ratificat:** Tara respectiva poate sa nu recunoasca eCMR ca echivalent legal cu hartia. In acest caz, Druma recomanda fie:
+- Folosirea unui CMR pe hartie pentru intreaga cursa, fie
+- Transportarea atat a PDF-ului eCMR certificat printat, cat si a CMR-ului original pe hartie
+
+In caz de indoiala, consulta avocatul de transport sau asociatia de transportatori (ARR - Autoritatea Rutiera Romana, sau UNTRR) pentru indrumari privind perechi specifice de tari.
+
+---
+
+## Cum functioneaza sigiliul PAdES
+
+Cand toate cele trei parti au semnat, Druma:
+
+1. Construieste PDF-ul CMR complet, incluzand toate casetele obligatorii (1-24), semnaturile de ridicare blocate, semnatura destinatarului si orice rezerve
+2. Aplica sigiliul digital PAdES folosind certificatul de semnare al Druma
+3. Stocheaza PDF-ul sigilat in arhiva comenzii
+
+PDF-ul sigilat contine:
+- Un numar de document unic si nemodificabil
+- Marca temporala a fiecarei semnaturi
+- Hash criptografic al continutului documentului, legat de sigiliu
+- Detaliile certificatului de semnare al Druma, verificabile in orice cititor PDF standard
+
+Acest PDF sigilat este cel pe care il prezinti autoritatilor vamale, asiguratorilor, instantelor sau clientilor - nu doar un export simplu. Orice cititor PDF standard (Adobe Acrobat etc.) poate verifica faptul ca sigiliul nu a fost falsificat.
+
+---
+
+## Arhivare pe 10 ani
+
+Toate documentele eCMR create prin Druma sunt arhivate timp de **10 ani** de la data emiterii. Aceasta satisface cerintele de retentie documentara atat conform Conventiei CMR, cat si legii comerciale romane.
+
+Pentru a accesa un eCMR arhivat:
+
+1. Deschide comanda in Druma (ramane accesibila chiar si pentru comenzile finalizate)
+2. Mergi la fila **eCMR**
+3. Apasa **Descarca PDF certificat**
+
+Nu este necesara nicio actiune separata de arhivare din partea ta.
+
+---
+
+## Admisibilitate legala
+
+Un PDF eCMR certificat, sigilat de Druma, este admisibil ca proba in:
+
+- **Litigii comerciale** intre expeditor, transportator si destinatar
+- **Cereri de despagubire** in care este necesara dovada primirii sau starii marfii
+- **Proceduri vamale** in tarile care au ratificat protocolul
+- **Proceduri judiciare** in jurisdictiile care au ratificat protocolul
+
+Integritatea criptografica a documentului inseamna ca poate fi verificat ca nealterat de la momentul semnarii. Aceasta este adesea o dovada mai puternica decat un CMR pe hartie, care poate fi alterat fizic sau contestat in privinta autenticitatii.
+
+---
+
+## eCMR nu este obligatoriu
+
+Pentru claritate: **eCMR este optional peste tot.** Nicio reglementare UE sau lege nationala nu obliga transportatorii sa foloseasca eCMR. Protocolul e-CMR permite eCMR, dar nu il impune.
+
+Transportatorii care continua sa foloseasca CMR pe hartie sunt pe deplin conformi. Alegerea de a folosi eCMR este o decizie de business bazata pe eficienta, preferinta clientului si dorinta de a elimina hartia din operatiuni.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Ce este eCMR?" icon="file-contract" href="/ro/ecmr/what-is-ecmr">
+    Introducere in eCMR, cine semneaza si cum il emite Druma intern.
+  </Card>
+  <Card title="Furnizori eCMR" icon="right-left" href="/en/ecmr/ecmr-providers">
+    Furnizorul nativ implicit vs. fallback-ul TransFollow - si cum sa comuti.
+  </Card>
+</CardGroup>

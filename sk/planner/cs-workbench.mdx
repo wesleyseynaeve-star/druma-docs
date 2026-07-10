@@ -1,0 +1,131 @@
+---
+title: "CS Workbench"
+description: "Odpoveď zákazníckeho servisu na otázku „Kde je moja zásielka?" — jedno miesto pre stav naživo, údaje o lokalitách, kontrolné hovory a proaktívne výnimky."
+icon: "headset"
+---
+
+## Prehľad
+
+CS Workbench je miesto, kde pracovníci zákazníckeho servisu odpovedajú na najčastejšiu otázku klientov: *kde je moja zásielka?* Namiesto prepínania medzi zoznamom zákaziek, detailom zákazky a záznamom klienta majú všetko potrebné — stav naživo, ETA, vodiča a vozidlo, otváracie hodiny a kontakty pre každú zastávku a záznam každého kontaktu s klientom — na jednom paneli master-detail.
+
+**Prístup:** kliknite na **Customer Service** v ľavej navigácii. Otvorí sa na karte **Workbench**; vedľa nej je karta **Sites**.
+
+Workbench stojí na dvoch podporných prvkoch:
+
+- **Sites (lokality)** — opakovane použiteľný katalóg miest nakládky/vykládky (sklady, továrne, distribučné centrá, prístavy, terminály, dvory) s otváracími hodinami, kontaktmi, poznámkami o dokoch/prístupe a pokynmi na rezerváciu podľa klienta. Lokalitu vyberiete raz na zastávke zákazky a adresa sa doplní automaticky; Workbench potom pre každú zákazku na danej lokalite čerpá jej hodiny a kontakty.
+- **Výnimky (Exceptions)** — Druma automaticky označí dve situácie, ktoré spôsobujú zmeškané doručenia: ETA, ktoré padne po zatvorení miesta doručenia, a zastávku, ktorá vyžaduje rezerváciu, no žiadna nie je zaznamenaná.
+
+---
+
+## Zaznamenanie kontrolného hovoru na zákazke
+
+<Steps>
+  <Step title="Otvorte Workbench">
+    Prejdite na **Customer Service** — otvorí sa na karte Workbench.
+  </Step>
+  <Step title="Nájdite zákazku">
+    Použite vyhľadávacie pole (číslo zákazky, referencia alebo mesto nakládky/vykládky) alebo najprv zúžte zoznam — pozri filtre nižšie. Kliknutím na kartu zákazky otvoríte jej detail vpravo.
+  </Step>
+  <Step title="Skontrolujte stav zásielky">
+    Hlavička detailu zobrazuje číslo zákazky, stav, priradeného vodiča/vozidlo (alebo subdodávateľa) a ETA, nasleduje stavový ukazovateľ a rozpis po zastávkach — pri každej je dnešná otváracia doba (červeno, ak je práve zatvorené), či je potrebná rezervácia, referencia rezervácie klienta, kontakty lokality a odkaz na rezervačný portál, ak ho lokalita má.
+  </Step>
+  <Step title="Zaznamenajte hovor">
+    Prejdite na **Záznam kontrolných hovorov** v spodnej časti detailu. Zvoľte **Druh**, **Smer** a **Kanál**, voliteľne poznamenajte, s kým ste hovorili, opíšte, čo sa stalo, a kliknite na **Zaznamenať**. Záznam sa okamžite objaví v časovej osi nad formulárom, s vaším menom a časovou pečiatkou.
+  </Step>
+  <Step title="Upovedomte klienta (voliteľné)">
+    Kliknutím na **Upovedomiť klienta** v hlavičke detailu pošlete klientovi brandovaný e-mail so stavovou aktualizáciou. Druma odošle e-mail kontaktom klienta označeným pre prevádzkové/doručovacie notifikácie a odoslanie automaticky zaznamená ako záznam kontrolného hovoru, takže audit trail zostáva úplný.
+  </Step>
+</Steps>
+
+### Význam polí kontrolného hovoru
+
+| Pole | Možnosti / význam |
+|---|---|
+| **Druh** | Kontrolný hovor · Poznámka · Rezervácia · Výnimka · Notifikácia klienta — o aký typ kontaktu ide. |
+| **Smer** | Prichádzajúci (volal klient/lokalita) · Odchádzajúci (volali ste vy) · Interný (poznámka pre váš tím). |
+| **Kanál** | Telefón · E-mail · SMS · Portál · Systém. |
+| **Kontakt** | Voľný text mena osoby, s ktorou ste hovorili, pre vašu potrebu. |
+| **Poznámka** | Čo sa stalo — povinné pred zaznamenaním záznamu. |
+
+---
+
+## Filtrovanie a triedenie zoznamu zákaziek
+
+Ľavý zoznam zákaziek má vlastný panel nástrojov nad kartami:
+
+- **Prepínač rozsahu** — **Aktívne** (predvolené), **Všetky** alebo **Historické**.
+- **Triedenie** — podľa vytvorenia, ETA, doručenia alebo stavu.
+- **Filter stavu**, **filter klienta** a **filter referencie klienta** — ďalšie zúženie; filtre klienta a referencie akceptujú čiastočnú zhodu.
+- **Iba výnimky** — zobrazí len zákazky s aktuálnou výnimkou.
+
+Panel KPI nad zoznamom zobrazuje počty naživo pre Výsledky, Na ceste, Doručené a Výnimky.
+
+---
+
+## Práca s frontou výnimiek
+
+Každá otvorená zákazka sa pri zmene dát automaticky skontroluje na dva typy zlyhania — nemusíte otvárať každú, aby ste našli problém:
+
+- **ETA po zatvorení** — aktuálne ETA zákazky padá po otváracích hodinách miesta doručenia pre daný deň.
+- **Chýbajúca rezervácia** — lokalita zastávky vyžaduje rezerváciu, no zatiaľ nie je zaznamenaná žiadna referencia ani záznam typu `booking`.
+
+<Steps>
+  <Step title="Nájdite označené zákazky">
+    Označené zákazky majú v zozname jantárový odznak výnimky a KPI **Výnimky** vo Workbench ukazuje počet aktuálne dotknutých zákaziek. Prepnite **Iba výnimky**, ak chcete vidieť len tie.
+  </Step>
+  <Step title="Otvorte zákazku a skontrolujte detail">
+    Detail zobrazuje jantárový panel **Výnimky** so zoznamom každej spustenej podmienky a súvisiacej lokality. Predikovaná výnimka (z prediktívneho modelu meškania Drumy) má odznak **Predikované** a úroveň závažnosti, oddelene od pravidlových výnimiek opísaných vyššie.
+  </Step>
+  <Step title="Vyriešte ju">
+    Podľa typu výnimky: zaznamenajte záznam `booking` po potvrdení termínu, alebo aktualizujte referenciu rezervácie lokality pre daného klienta. Pri ETA po zatvorení zavolajte vopred na lokalitu alebo upovedomte klienta, aby sa mohol prispôsobiť.
+  </Step>
+  <Step title="Potvrďte vyriešenie">
+    Výnimky sa počítajú naživo z aktuálnych dát, nezatvárajú sa ručne — hneď ako sa podmienka vyrieši (rezervácia sa zaznamená alebo ETA sa vráti do otváracích hodín), odznak sám zmizne.
+  </Step>
+</Steps>
+
+<Note>
+Výnimky sa zobrazujú aj vo widgete **Feed výnimiek** na domovskom dashboarde, takže proaktívna kontrola nevyžaduje otvorenie sekcie CS vôbec.
+</Note>
+
+---
+
+## Sites — odkiaľ pochádzajú otváracie hodiny a kontakty
+
+Katalóg lokalít spravujte na karte **Sites**. Každá lokalita obsahuje identitu/adresu, týždennú mriežku otváracích hodín (s výnimkami pre konkrétne dátumy, napr. sviatok), nastavenia rezervácií, počet dokov a poznámky o bráne/prístupe, obmedzenia vozidiel, opakovateľný zoznam kontaktov a pokyny na rezerváciu podľa klienta (ten istý sklad môže vyžadovať inú referenciu podľa toho, čí náklad ide).
+
+Dve tlačidlá v sekcii otváracích hodín editora lokality môžu dáta doplniť za vás — obe vyžadujú otvorenie existujúcej lokality (nedostupné pri vytváraní novej):
+
+- **Navrhnúť z histórie** — odvodí otváracie hodiny a typický čas zdržania z minulých príchodov/odchodov vašich vlastných vodičov na danej lokalite. Vždy na kontrolu pred uložením; nič sa nezapisuje automaticky.
+- **Prehľadať web** — požiada AI Drumy o vyhľadanie zverejnených hodín, kontaktov a rezervačného portálu lokality na webe, s citáciou použitých stránok. Ide o ručnú, spoplatnenú akciu (v EUR za volanie), ktorú treba najprv zapnúť v **Nastavenia → Automatizácia → Zákaznícky servis** (nastavenie pre admina/company admina) — predvolene je vypnutá, pretože každé kliknutie má reálne náklady.
+
+### Význam polí lokality
+
+| Pole | Význam |
+|---|---|
+| **Typ** | Sklad, Továreň, Distribučné centrum, Prístav, Terminál, Dvor, Iné. |
+| **Časové pásmo** | Miestne časové pásmo lokality — používa sa na správne vyhodnotenie otváracích hodín bez ohľadu na to, kde bola zákazka vytvorená. |
+| **Otváracie hodiny** | Mriežka otvorených intervalov podľa dňa v týždni, s voliteľnými výnimkami pre konkrétne dátumy (zatvorenia/sviatky). |
+| **Vyžaduje sa rezervácia** | Či treba pred príchodom dohodnúť termín; možno prepísať podľa klienta. |
+| **Počet dokov / Pokyny k bráne / Poznámky k prístupu** | Praktické informácie o príchode pre vodičov a plánovačov. |
+| **URL rezervačného portálu** | Odkaz na vlastný rezervačný systém lokality, ak existuje. |
+| **Obmedzenia vozidiel** | Limity založené na príznakoch (napr. obmedzenia veľkosti/hmotnosti) zaznamenané na lokalite. |
+| **Kontakty** | Pomenované kontakty rezervácie/vrátnice/skladu/bezpečnosti s telefónom/e-mailom. |
+| **Pokyny podľa klienta** | Referencia rezervácie, kód zákazníka a voľný text pokynov špecifický pre jedného klienta na danej lokalite. |
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Vytvorenie zákazky" icon="plus" href="/sk/planner/creating-orders">
+    Vyberte lokalitu na zastávke a automaticky doplňte jej adresu — Workbench potom pre zákazku čerpá detaily danej lokality.
+  </Card>
+  <Card title="Životný cyklus zákazky" icon="circle-dot" href="/sk/planner/order-lifecycle">
+    Každý stav zákazky, ktorý Workbench zobrazuje, a čo spúšťa jednotlivé prechody.
+  </Card>
+  <Card title="Dispečing" icon="route" href="/sk/planner/dispatching">
+    Mapa naživo a chat s vodičom, z ktorých Workbench čerpá riadok pozície naživo a kartu priradenia.
+  </Card>
+  <Card title="Domovský dashboard" icon="gauge" href="/en/planner/home-dashboard">
+    Pridajte widget Feed výnimiek, aby ste videli výnimky CS bez opustenia dashboardu.
+  </Card>
+</CardGroup>

@@ -1,0 +1,115 @@
+---
+title: "Tendre a zmluvy"
+description: "Sledujte tendre klientov od prvého kontaktu po aktívnu zmluvu, priraďte vysúťažené sadzby do cenníka a monitorujte realizovaný objem a plnenie SLA."
+icon: "file-signature"
+---
+
+## Prehľad
+
+Východoeurópski dopravcovia často spravujú zmluvné sadzby klientov v tabuľkách: odosielateľ vypíše tender (RFT) na súbor trás, objemov a cieľov SLA na dané obdobie, a po jeho vyhraní tieto sadzby platia pre každú zákazku rezervovanú v rámci zmluvy. Tendre a zmluvy dávajú tomuto procesu poriadny životný cyklus priamo v Druma — od prvého kontaktu po monitoring aktívnej zmluvy — namiesto tabuľky, ktorú nikto neaktualizuje.
+
+Tender prechádza štyrmi fázami pipeline — **Prospect → Bidding → Submitted → Won** — a po pridelení sa stáva **aktívnou (Active)** zmluvou. Zmluvy neskôr môžu prejsť do stavu **Renewing** (blíži sa expirácia) alebo **Expired**. Tender možno v ktorejkoľvek fáze pred výhrou označiť ako **Lost**.
+
+<Note>
+Tendre a zmluvy sú voliteľný (opt-in) modul. Ak v **Pricing & Sales** nevidíte **Tenders**, požiadajte firemného administrátora o zapnutie v **Settings → Automation → Tender & contract management**.
+</Note>
+
+**Prístup:** Kliknite na **Pricing & Sales → Tenders** v ľavej navigácii. Stránka sa otvorí na zobrazení **Pipeline**, spolu so záložkami **All**, **Active Contracts** a **Performance**.
+
+---
+
+## Vytvorenie a pridelenie tendra
+
+<Steps>
+  <Step title="Otvorte Tenders">
+    Prejdite na **Pricing & Sales → Tenders**. Zobrazí sa tabuľa Pipeline so stĺpcom pre každú fázu (Prospect, Bidding, Submitted, Won).
+  </Step>
+  <Step title="Kliknite na New Tender">
+    Kliknite na **+ New Tender** vpravo hore. Zadajte názov (napr. "Acme Logistics RFT 2026 — trasy RO→DE"), voliteľne prepojte s existujúcim klientom alebo CRM leadom, nastavte menu, obdobie tendra a celkový záväzný objem. Kliknite na **Create tender**.
+  </Step>
+  <Step title="Pridajte záväzné trasy">
+    Otvorte kartu nového tendra a v sekcii **Committed Lanes** kliknite na **Add lane**. Pre každú trasu nastavte krajinu pôvodu a cieľa, typ návesu, dohodnutú sadzbu a jej režim (za km, paušál alebo pásmová sadzba za km), počet zákaziek na trase za obdobie, cieľ SLA na včasnosť (%) a prípadné penalizačné podmienky. Zopakujte pre každú trasu tendra — trasy môžete dopĺňať postupne, ako spoznávate celý zoznam trás odosielateľa.
+  </Step>
+  <Step title="Posúvajte fázu pipeline">
+    Ako sa obchod vyvíja, klikajte v päte panela na **Move to Bidding**, potom **Move to Submitted**, potom **Move to Won**. Ak obchod v ktoromkoľvek bode padne, kliknite namiesto toho na **Mark as Lost**.
+  </Step>
+  <Step title="Pridelenie tendra">
+    Po dosiahnutí stavu **Won** sa v paneli zobrazí oranžový panel **Award tender & activate**. Kliknite na **Award & Generate Rate Card** a potom **Confirm award**. Vytvorí sa cenník z trás tendra a tender prejde do stavu **Active** — cenník odvtedy automaticky predvypĺňa ponuky a ceny pre trasy tohto klienta a každú zákazku rezervovanú pre tohto klienta možno prepojiť so zmluvou (`orders.contract_id`), čím sa automaticky započíta do záväzného objemu.
+  </Step>
+</Steps>
+
+<Note>
+Po prechode tendra do stavu Active, Expired alebo Lost sú jeho detaily a trasy v paneli len na čítanie — dohodnuté podmienky sú uzamknuté. Na zmenu pridelených sadzieb upravte priamo vygenerovaný cenník (pozri [Cenníky](/sk/admin/rate-cards)).
+</Note>
+
+### Význam polí tendra a trasy
+
+| Pole | Kde | Význam |
+|---|---|---|
+| **Title** | Tender | Voľný názov tendra — zvyčajne meno klienta + účel |
+| **Link to account** | Tender | Voliteľné prepojenie s existujúcim klientom alebo CRM leadom, aby sa tender zobrazoval aj v jeho zázname |
+| **Currency** | Tender | Mena všetkých dohodnutých sadzieb v tomto tendri (EUR, RON, PLN, CZK, HUF, BGN) |
+| **Period from / to** | Tender | Obdobie platnosti zmluvy. Zmluvy do 60 dní od `Period to` sa označia "Expiring soon" |
+| **Committed volume** | Tender | Celkový objem zákaziek, ktorý klient prisľúbil za celé obdobie — číslo, voči ktorému záložka Performance meria skutočnosť |
+| **Origin / destination country** | Trasa | Dvojica krajín trasy. Ponechajte "Any" pre univerzálnu trasu |
+| **Trailer type** | Trasa | Plachta, mega, plošina, chladiarenský náves, skriňový, cisterna alebo iný |
+| **Rate mode** | Trasa | Ako sa uplatňuje dohodnutá sadzba: €/km, paušál, alebo pásmová škála €/km |
+| **Agreed rate** | Trasa | Vyjednaná cena pre danú trasu, v mene tendra |
+| **Committed loads/period** | Trasa | Koľko zákaziek na tejto trase klient prisľúbil za dané obdobie |
+| **SLA on-time % target** | Trasa | Percento včasného doručenia, ktoré musí trasa dosiahnuť — porušenie sa po aktivácii zmluvy zobrazí ako upozornenie |
+| **Penalty terms** | Trasa | Voľná poznámka, čo sa stane pri nesplnení cieľa SLA (napr. "5 % zrážka za každú zákazku mimo SLA") |
+
+---
+
+## Sledovanie realizovaného objemu voči záväzku
+
+Po pridelení a aktivácii tendra (alebo v stave renewing či nedávno expirovaného) sa v paneli zobrazuje panel **Contract performance**, ktorý odpovedá na otázku "plníme skutočne, čo sme sľúbili?":
+
+- **Delivered vs committed** — ukazovateľ priebehu porovnávajúci dokončené zákazky prepojené so zmluvou voči celkovému záväznému objemu tendra, vrátane percenta plnenia
+- **On current pace** — projekcia, koľko zákaziek bude doručených do konca obdobia pri súčasnom tempe
+- **Revenue to date, average margin, and on-time SLA** — tri dlaždice zhŕňajúce doterajší výkon zmluvy
+- Počet doručených zákaziek a % včasnosti sa zobrazujú aj pri každej trase v zozname Committed Lanes
+
+Počíta sa naživo zo zákaziek prepojených so zmluvou (`orders.contract_id`) — nič netreba nastavovať, aktualizuje sa priebežne s doručovaním zákaziek.
+
+---
+
+## Čítanie SLA / Performance dashboardu
+
+Kliknutím na záložku **Performance** zobrazíte všetky aktívne a obnovujúce sa zmluvy v jednej tabuľke, bez potreby otvárať každý panel osobitne.
+
+- Každý riadok ukazuje doručený vs. záväzný objem, % SLA včasnosti, priemerný obrat, priemernú maržu a aktívne upozornenia
+- Ak existuje aspoň jedno upozornenie, hore sa zobrazí červený banner so zoznamom všetkých naprieč zmluvami
+- Na zmluve sa môžu objaviť štyri druhy upozornení:
+
+| Upozornenie | Kedy sa spustí |
+|---|---|
+| **Under-delivery** | Dokončené zákazky klesnú pod 80 % záväzného objemu |
+| **SLA breach** | % včasného doručenia klesne pod cieľ SLA danej trasy |
+| **Margin drift** | Priemerná marža zmluvy klesne pod 5 % |
+| **Expiring soon** | Obdobie zmluvy sa končí do 60 dní |
+
+Tieto upozornenia sú výhradne v aplikácii — Druma ich neposiela e-mailom. Záložku Performance kontrolujte priebežne (alebo pred rokovaním o obnovení), aby ste podplnenie objemu či pokles marže zachytili včas.
+
+---
+
+## Import dokumentu tendra
+
+Ak má administrátor zapnutý AI import tendrov (**Settings → Automation → AI features**), vedľa **New Tender** sa zobrazí tlačidlo **Import document**. Nahrajte tabuľku sadzieb odosielateľa ako PDF alebo Excel (max. 10 MB) a Druma z nej extrahuje názov, dátumy a trasy do konceptu, ktorý pred uložením skontrolujete a upravíte — užitočné pri dohodách s 20 trasami, ktoré by ste inak prepisovali ručne.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Cenníky" icon="tag" href="/sk/admin/rate-cards">
+    Ako fungujú cenníky trás po pridelení tendra a ako ich priamo upravovať.
+  </Card>
+  <Card title="Ponuky" icon="file-text" href="/sk/planner/quotes">
+    Spotová tvorba cien pre jednorazové zákazky — odľahčený náprotivok plnohodnotného tendra.
+  </Card>
+  <Card title="CRM" icon="address-book" href="/en/planner/crm">
+    Sledujte potenciálnych klientov ešte pred tendrom a prepojené tendre v zázname klienta.
+  </Card>
+  <Card title="Report ziskovosti trás" icon="route" href="/sk/reports/lane-profitability">
+    Overte, či je trasa skutočne zisková, ešte pred záväzkom na sadzbu tendra.
+  </Card>
+</CardGroup>

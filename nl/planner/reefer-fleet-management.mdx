@@ -1,0 +1,95 @@
+---
+title: "Reefer-vlootbeheer"
+description: "Koppel temperatuurgecontroleerde trailers aan hun telematica-provider, monitor live temperatuur, beheer waarschuwingen en genereer koudeketen-nalevingsrapporten."
+icon: "snowflake"
+---
+
+## Overzicht
+
+Als uw vloot temperatuurgecontroleerde (reefer) trailers rijdt, kan Druma live temperatuur, motoruren en alarmdata rechtstreeks uit de telematica-unit van de trailer halen — geen handmatige registratie nodig. Zodra een trailer's provider is gekoppeld, ziet u de actuele temperatuur op de trailerlijst, wordt u meteen gewaarschuwd bij afwijking van het setpoint of een alarm, en kunt u een koudeketen-PDF genereren per afgeronde rit.
+
+Reefer-functies verschijnen alleen zodra het vloottype **Reefer** is ingeschakeld via **Instellingen → Vloottypen**.
+
+<Note>
+Reefer-telematica-providers verschillen sterk in hoe open hun API's zijn. Mapon is volledig publiek en werkt direct. Orbcomm heeft een accounttoken nodig. Thermo King TracKing en Carrier Lynx Fleet zijn alleen-partner — u moet API-toegang aanvragen bij de leverancier voordat Druma live data kan ophalen.
+</Note>
+
+---
+
+## Een reefer-provider koppelen
+
+<Steps>
+  <Step title="Schakel het vloottype Reefer in">
+    Open **Instellingen → Vloottypen** en schakel **Reefer** in.
+  </Step>
+  <Step title="Ga naar Integraties">
+    Open **Instellingen → Integraties**. Reefer-telematica-providers staan naast de andere GPS/tacho-connectoren.
+  </Step>
+  <Step title="Kies uw provider">
+    Zoek de kaart voor uw provider — **Mapon**, **Orbcomm**, **Thermo King TracKing** of **Carrier Lynx Fleet**.
+  </Step>
+  <Step title="Voer uw inloggegevens in">
+    Vul de velden in voor uw provider en klik op **Verbinden**.
+  </Step>
+  <Step title="Test de verbinding">
+    Klik op **Verbinding testen**.
+  </Step>
+  <Step title="Stel de telematica-unit-ID per trailer in">
+    Open **Vloot → Trailers**, selecteer een reefer-trailer, ga naar het tabblad **Naleving**, en vul **Telematica-unit-ID** in.
+  </Step>
+</Steps>
+
+Eenmaal gekoppeld haalt Druma's synchronisatietaak nieuwe metingen automatisch op — geen handmatige verversing nodig.
+
+### Providervelden
+
+| Provider | Velden | Waar te verkrijgen |
+|---|---|---|
+| **Mapon** | API-sleutel, Base URL (optioneel) | Genereer een API-sleutel in het Mapon-platform onder Instellingen → API. Volledig publieke API. |
+| **Orbcomm** | Toegangstoken, of gebruikersnaam + wachtwoord | Uitgegeven via uw ORBCOMM Platform API-account. |
+| **Thermo King TracKing** | API-sleutel, of gebruikersnaam + wachtwoord | Vraag een TracKing API-sleutel aan bij uw Thermo King-dealer. Geen publieke self-service. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (of legacy API-sleutel) | Via Carrier Transicold of uw Carrier-dealer. Geen publieke self-service. |
+
+<Warning>
+Thermo King en Carrier vereisen dat de leverancier u API-toegang verleent voordat de koppeling echte data teruggeeft — Druma kan dit niet omzeilen.
+</Warning>
+
+---
+
+## Waar trailertemperatuur verschijnt
+
+- **Trailerlijst** — een kolom **Temp** toont de laatste actuele temperatuur, een Draait/Gestopt-badge en een amberkleurige alarmvlag.
+- **Trailerdetail → tabblad Temperatuur** — toont de laatste meting in detail (setpoint vs. actueel, deurstatus, motoruren, alarmcodes) plus een historietabel.
+- **Startpagina → widget Reeferstatus** — telling van trailers met actieve alarmen, buiten temperatuurdrempel, en aankomend onderhoud.
+
+---
+
+## Waarschuwingen en alarmbevestiging
+
+Reefer-alarmdrempels staan in **Instellingen → Vloottypen**, paneel **Reefer-temperatuurwaarschuwingen**: master aan/uit, temperatuurafwijkingsdrempel (standaard 3°C), deur-open-drempel (standaard 10 minuten), alarm op unitalarmcodes, en herwaarschuwingscooldown (standaard 60 minuten).
+
+Bij overschrijding meldt Druma dit **in-app** aan bedrijfsbeheerders en stuurt een **pushmelding naar de chauffeur** — geen e-mail voor reefer-waarschuwingen.
+
+---
+
+## Temperatuur-nalevings-PDF genereren
+
+Open de order in **Operaties → Documenten**, klik op **Temperatuurrapport** (alleen zichtbaar als de trailer een reefer-telematica-unit heeft), en Druma bouwt een PDF met setpoint-vs-actueel temperatuurtraject, alarm- en deur-open-gebeurtenissen, motordraaitijd, ATP-klasse en orderreferentie.
+
+---
+
+## ATP-certificaten en reeferonderhoud
+
+- **ATP-certificaattracking** — in **Vloot → Vlootdocumenten** krijgt het documenttype een **ATP**-optie (klasse A/B/C/D/F/IN/IR).
+- **Reeferonderhoudsplanning** — in **Vloot → Onderhoud** volgt een tabblad **Reefer-units** serviceintervallen in **motoruren** in plaats van kilometers.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Trailerbeheer" icon="trailer" href="/nl/planner/trailer-management">
+    Beheer trailers, toewijzing, beschikbaarheid en documenten.
+  </Card>
+  <Card title="Vlootdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
+    Volg ATP-certificaten naast verzekering, ITP en andere documenten.
+  </Card>
+</CardGroup>

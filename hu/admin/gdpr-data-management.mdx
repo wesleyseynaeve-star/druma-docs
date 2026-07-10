@@ -4,6 +4,12 @@ description: "Milyen adatokat tárol a Druma, mennyi ideig kerülnek megőrzésr
 icon: "lock"
 ---
 
+_Utolsó frissítés: 2026. július 10._
+
+A **működési adatok** (rendelések, ügyfelek, sofőrök, dokumentumok és a céged által a platformon tárolt kapcsolódó adatok) tekintetében a Druma **adatfeldolgozóként** jár el — a te céged az adatkezelő, a feldolgozást pedig a céged és a Druma közötti Adatfeldolgozási Megállapodás (DPA) szabályozza. A **fiók- és számlázási adatok** (a Druma-előfizetésed és az azt adminisztráló felhasználók adatai) tekintetében a Druma saját jogán **adatkezelőként** jár el. Ez a cikk pontosan bemutatja, milyen adatokat tárolunk, meddig, ki dolgozza fel őket, és milyen lépéseket tehetsz a GDPR alapján.
+
+---
+
 ## Milyen adatokat tárol a Druma?
 
 A Druma az alábbi adatokat tárolja a szolgáltatás nyújtásához:
@@ -19,6 +25,7 @@ A Druma az alábbi adatokat tárolja a szolgáltatás nyújtásához:
 - Számlák és fizetési nyilvántartások
 - Sofőrök személyes adatai (név, telefonszám, jogosítvány adatai)
 - Jármű- és flottadokumentumok
+- eCMR-dokumentumok — a Druma saját, belső szolgáltatója által kibocsátott és PAdES-lepecsételt fuvarlevelek; a TransFollow csak elavult (legacy) tartaléklehetőségként érhető el azon cégeknek, akik már a natív szolgáltató bevezetése előtt is használták
 
 **Technikailag szükséges adatok:**
 - Munkamenet-tokenek és hitelesítési naplók
@@ -33,8 +40,8 @@ A Druma az alábbi adatokat tárolja a szolgáltatás nyújtásához:
 | Aktív rendelések | Az utolsó tevékenységtől számított 7 év |
 | Számlák és pénzügyi nyilvántartások | 10 év (törvényi kötelezettség) |
 | Törölt felhasználói fiókok | 90 nap, majd véglegesen törlődnek |
-| Sofőrpozíció-adatok | 30 nap (egysoros, GDPR-kompatibilis) |
-| Auditnaplók | 2 év |
+| Sofőrpozíció-adatok | Valós időben felülíródik — nincs előzmény megőrizve |
+| Auditnaplók | 18 hónap |
 | Munkamenet-tokenek | 30 nap inaktivitás után |
 | Rendelési üzenetek | 90 nap megőrzés (cron törlési feladattal) |
 
@@ -91,9 +98,37 @@ A fiók törlése nem visszavonható. A törvényi megőrzési kötelezettség a
 
 ---
 
+## Adatfeldolgozók
+
+A Druma az alábbi harmadik fél adatfeldolgozókkal osztja meg az adatokat a szolgáltatás nyújtásához:
+
+| Adatfeldolgozó | Cél |
+|---|---|
+| Supabase | Adatbázis-hosting és hitelesítés (EU — Frankfurt) |
+| Cloudflare | CDN, DDoS-védelem és DNS |
+| Resend | Kimenő tranzakciós e-mailek kézbesítése |
+| Mailgun | Bejövő e-mailek feldolgozása (rendelési, számla- és fizetési e-mailek beolvasása a Drumába) |
+| Stripe | Fizetésfeldolgozás és előfizetés-kezelés |
+| PTV Group | Útvonal-, távolság- és ETA-számítás — felvételi/szállítási koordinátákat kap |
+| HERE Technologies | Cím-geokódolás és autokiegészítés |
+| Google Vertex AI (europe-west1) | AI-alapú funkciók (dokumentumfeldolgozás, e-mail kinyerés) — nincs modell-betanítás |
+| Google Cloud Translation | Felület és dokumentum tartalom igény szerinti fordítása — az adatok elhagyhatják az EU-t |
+| Sentry | Hibafigyelés és összeomlás-jelentés |
+| Google Firebase Cloud Messaging (FCM) | Push-értesítések a sofőralkalmazásnak |
+| WhatsApp Business Cloud API (Meta) | Sofőrüzenetek — csak akkor, ha a céged engedélyezi a WhatsApp-értesítéseket |
+| Telematikai szolgáltatók (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- és tachográf-adatok — csak a céged által csatlakoztatott szolgáltató |
+| Hűtős telematikai szolgáltatók (Mapon, Orbcomm, Thermo King) | Hűtős hőmérséklet-adatok — csak a céged által csatlakoztatott szolgáltató |
+| TransFollow | Csak elavult (legacy) eCMR tartaléklehetőség — a natív, belső Druma szolgáltató az alapértelmezett a kibocsátáshoz, aláíráshoz és archiváláshoz |
+
+Minden adatfeldolgozó szerződésben vállalja, hogy az adatokat kizárólag utasítás szerint és a GDPR-nak megfelelően dolgozza fel.
+
+Ha a céged engedélyezi az opcionális **Druma Copilot** funkciót a saját AI-szolgáltatói API-kulcsával ("hozd magaddal az AI-t"), a promptjaid és a lekérdezett adatok közvetlenül a választott AI-szolgáltatóhoz (OpenAI, Anthropic vagy Google) kerülnek, a céged és a szolgáltató közötti saját megállapodás alapján — ez az EU-n kívülre is továbbíthat adatokat. A Druma Copilot **alapértelmezetten kikapcsolva** van, és csak akkor aktiválódik, ha a céged megadja a saját kulcsát.
+
+---
+
 ## Adatvédelmi tisztviselő és adatkezelő
 
-A Druma a 2018/1725 (EU) rendelet értelmében adatkezelőként jár el a vállalati adatok tekintetében. Adatvédelmi kérdésekkel fordulj a support@druma.io e-mail-címre.
+A **működési adatok** tekintetében a Druma **adatfeldolgozóként** jár el — a céged az adatkezelő, a feldolgozást pedig a köztetek fennálló Adatfeldolgozási Megállapodás (DPA) szabályozza. A **fiók- és számlázási adatok** tekintetében a Druma saját jogán **adatkezelőként** jár el. Adatvédelmi kérdésekkel fordulj a support@druma.io e-mail-címre.
 
 <Card title="Adatvédelmi tájékoztató" icon="file-text" href="/en/legal/privacy-policy">
   A Druma adatvédelmi tájékoztatójának teljes szövege.

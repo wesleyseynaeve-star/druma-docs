@@ -1,0 +1,131 @@
+---
+title: "Panou Serviciu Clienti"
+description: "Raspunsul serviciului clienti la intrebarea 'unde este expeditia mea?' - un singur panou pentru status live, detalii site, apeluri de verificare si exceptii proactive."
+icon: "headset"
+---
+
+## Prezentare generala
+
+Panoul Serviciu Clienti raspunde la intrebarea cea mai frecventa a clientilor: *unde este expeditia mea?* In loc sa treaca intre lista de comenzi, detaliul comenzii si fisa clientului, reprezentantul are tot ce ii trebuie - status live, ETA, sofer si camion, orele de deschidere si contactele fiecarei opriri, plus jurnalul interactiunilor cu clientul - intr-un singur panou master-detaliu.
+
+**Acces:** apasa **Serviciu Clienti** in navigarea din stanga. Se deschide implicit pe fila **Panou de Lucru**, cu fila **Site-uri** alaturi.
+
+Panoul de Lucru se bazeaza pe doua componente:
+
+- **Site-uri** - catalog reutilizabil de locatii de ridicare/livrare (depozite, fabrici, centre de distributie, porturi, terminale, curti) cu ore de deschidere, contacte, note de acces si instructiuni de rezervare per client. Alegi un site la o oprire, adresa se completeaza automat, iar Panoul de Lucru preia orele si contactele lui pentru fiecare comanda care il viziteaza.
+- **Exceptii** - Druma semnaleaza automat doua situatii care cauzeaza livrari ratate: un ETA dupa inchiderea site-ului de livrare, si o oprire care necesita rezervare fara nicio inregistrata.
+
+---
+
+## Inregistrarea unui apel de verificare pe o comanda
+
+<Steps>
+  <Step title="Deschide Panoul de Lucru">
+    Mergi la **Serviciu Clienti** - se deschide pe fila Panou de Lucru.
+  </Step>
+  <Step title="Gaseste comanda">
+    Foloseste caseta de cautare (numar comanda, referinta sau oras) sau restrange lista intai - vezi filtrele de mai jos. Apasa pe un card pentru a-i deschide detaliul in dreapta.
+  </Step>
+  <Step title="Revizuieste statusul expeditiei">
+    Antetul arata numarul comenzii, statusul, soferul/camionul (sau subcontractorul) si ETA-ul, urmate de un indicator de status si o descompunere pe oprire - fiecare cu orele de azi (rosu daca e inchisa), necesitatea de programare, referinta de rezervare, contactele site-ului si link catre portalul de rezervare, cand exista.
+  </Step>
+  <Step title="Inregistreaza apelul">
+    Deruleaza la **Jurnalul de apeluri de verificare**. Alege **Tip**, **Directie** si **Canal**, noteaza optional cu cine ai vorbit, scrie ce s-a intamplat si apasa **Inregistreaza intrarea**. Apare imediat in cronologie, cu numele si ora ta.
+  </Step>
+  <Step title="Notifica clientul (optional)">
+    Apasa **Notifica clientul** pentru un email de status personalizat. Druma il trimite contactelor marcate pentru notificari operationale/livrare si inregistreaza automat trimiterea ca apel de verificare, ca sa ramana pista de audit completa.
+  </Step>
+</Steps>
+
+### Ce inseamna campurile apelului de verificare
+
+| Camp | Optiuni / semnificatie |
+|---|---|
+| **Tip** | Apel de verificare · Nota · Rezervare · Exceptie · Notificare client - ce tip de interactiune a fost. |
+| **Directie** | Intrare (clientul/site-ul te-a sunat) · Iesire (i-ai sunat tu) · Interna (o nota pentru echipa ta). |
+| **Canal** | Telefon · Email · SMS · Portal · Sistem. |
+| **Contact** | Numele in text liber al persoanei cu care ai vorbit, pentru referinta proprie. |
+| **Nota** | Ce s-a intamplat - obligatoriu inainte de a putea inregistra intrarea. |
+
+---
+
+## Filtrarea si sortarea listei de comenzi
+
+Lista de comenzi din stanga are propria bara de instrumente deasupra cardurilor:
+
+- **Comutator scop** - **Active** (implicit), **Toate** sau **Istoric**.
+- **Sortare** - dupa Creare, ETA, Livrare sau Status.
+- **Filtru status**, **filtru client** si **filtru referinta client** - restrange mai departe; filtrele de client si referinta accepta potriviri partiale.
+- **Doar exceptii** - arata doar comenzile care poarta momentan o exceptie.
+
+O bara KPI deasupra listei arata numaratori live pentru Rezultate, In tranzit, Livrate si Exceptii.
+
+---
+
+## Lucrul cu coada de exceptii
+
+Fiecare comanda deschisa este verificata automat pentru doua situatii de esec la fiecare schimbare de date - nu trebuie sa deschizi fiecare una:
+
+- **ETA dupa inchidere** - ETA-ul curent al comenzii ajunge dupa orele de deschidere ale site-ului de livrare pentru acea zi.
+- **Programare lipsa** - site-ul unei opriri necesita o rezervare, dar nu exista nici referinta de rezervare, nici apel de verificare de tip `rezervare` inregistrat pentru ea.
+
+<Steps>
+  <Step title="Identifica comenzile semnalate">
+    Comenzile semnalate poarta o eticheta chihlimbarie in lista, iar KPI-ul **Exceptii** arata cate comenzi sunt afectate. Comuta **Doar exceptii** pentru a le vedea doar pe acelea.
+  </Step>
+  <Step title="Deschide comanda si revizuieste detaliul">
+    Panelul chihlimbariu **Exceptii** listeaza fiecare conditie declansata si site-ul aferent. O exceptie prezisa (din modelul predictiv de intarziere) poarta o eticheta **Prezis** si un nivel de severitate, separat de cele bazate pe reguli.
+  </Step>
+  <Step title="Rezolv-o">
+    Inregistreaza un apel de tip `rezervare` odata confirmat un slot, sau actualizeaza referinta de rezervare a site-ului. Pentru ETA dupa inchidere, suna la site sau notifica clientul din timp.
+  </Step>
+  <Step title="Confirma ca se rezolva">
+    Exceptiile se calculeaza live, nu se inchid manual - odata rezolvata conditia (rezervare inregistrata, ETA revenit in program), eticheta dispare singura.
+  </Step>
+</Steps>
+
+<Note>
+Exceptiile alimenteaza si widget-ul **Flux de exceptii** din Panoul Principal, astfel incat o verificare proactiva nu necesita deschiderea sectiunii Serviciu Clienti deloc.
+</Note>
+
+---
+
+## Site-uri - de unde provin orele de deschidere si contactele
+
+Gestioneaza catalogul de site-uri din fila **Site-uri**. Fiecare site contine identitate/adresa, o grila saptamanala de ore (cu exceptii pe date specifice, de ex. o sarbatoare), setari de rezervare, numar docuri si note de acces, restrictii de vehicul, contacte si instructiuni de rezervare per client (acelasi depozit poate cere o referinta diferita in functie de a cui e marfa).
+
+Doua butoane in editorul de site pot completa date pentru tine, disponibile doar pe un site existent:
+
+- **Sugereaza din istoric** - deduce orele si timpul de stationare din sosirile/plecarile trecute ale soferilor tai la acel site. Revizuibil inainte de a salva; nimic nu se scrie automat.
+- **Cerceteaza pe web** - AI-ul Druma cauta pe web orele, contactele si portalul de rezervare, citand sursele. Actiune manuala, platita per apel (EUR), dezactivata implicit - se activeaza in **Setari -> Automatizare -> Serviciu clienti**.
+
+### Ce inseamna campurile site-ului
+
+| Camp | Semnificatie |
+|---|---|
+| **Tip** | Depozit, Fabrica, Centru de distributie, Port, Terminal, Curte, Altul. |
+| **Fus orar** | Fusul orar local al site-ului - folosit pentru a evalua corect orele de deschidere indiferent de unde a fost creata comanda. |
+| **Ore de deschidere** | O grila de ferestre deschise per zi a saptamanii, cu exceptii optionale pe date specifice (inchideri/sarbatori). |
+| **Programare necesara** | Daca trebuie aranjat un slot de rezervare inainte de sosire; poate fi suprascris per client. |
+| **Numar docuri / Instructiuni poarta / Note acces** | Informatii practice de sosire pentru soferi si planificatori. |
+| **URL portal rezervare** | Link catre propriul sistem de rezervare al site-ului, daca are unul. |
+| **Restrictii vehicul** | Limite bazate pe flaguri (de ex. restrictii de dimensiune/greutate) inregistrate pe site. |
+| **Contacte** | Contacte numite de rezervare/poarta/depozit/securitate cu telefon/email. |
+| **Instructiuni per client** | Referinta de rezervare, cod client si instructiuni in text liber specifice unui client la acest site. |
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Crearea unei comenzi" icon="plus" href="/ro/planner/creating-orders">
+    Alege un site pe o oprire pentru a-i completa automat adresa - Panoul de Lucru preia apoi detaliile acelui site pentru comanda.
+  </Card>
+  <Card title="Ciclul de viata al comenzii" icon="circle-dot" href="/ro/planner/order-lifecycle">
+    Fiecare status de comanda afisat de Panoul de Lucru si ce declanseaza fiecare tranzitie.
+  </Card>
+  <Card title="Dispecerizare" icon="route" href="/ro/planner/dispatching">
+    Harta live si chatul soferului din care se trag linia de pozitie live si cardul de atribuire ale Panoului de Lucru.
+  </Card>
+  <Card title="Panou principal" icon="gauge" href="/en/planner/home-dashboard">
+    Adauga widget-ul Flux de exceptii pentru a vedea exceptiile de Serviciu Clienti fara sa parasesti panoul principal.
+  </Card>
+</CardGroup>

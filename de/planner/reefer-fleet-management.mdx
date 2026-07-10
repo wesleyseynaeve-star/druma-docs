@@ -1,0 +1,98 @@
+---
+title: "Kühlfahrzeug-Flottenmanagement"
+description: "Kühlanhänger mit ihrem Telematik-Anbieter verbinden, Live-Temperatur überwachen, Alarme verwalten und Kühlketten-Compliance-Berichte erstellen."
+icon: "snowflake"
+---
+
+## Übersicht
+
+Für Flotten mit Kühlanhängern (Reefer) kann Druma Live-Temperatur, Motorstunden und Alarmdaten direkt aus der Telematikeinheit des Anhängers abrufen — ohne manuelle Erfassung. Sobald ein Anhänger verbunden ist, sehen Sie seine aktuelle Temperatur in der Anhängerliste, werden bei Abweichung vom Sollwert oder Alarm benachrichtigt und können für jede abgeschlossene Fahrt ein einseitiges Kühlketten-PDF erzeugen.
+
+Reefer-Funktionen erscheinen erst, wenn der Flottentyp **Reefer** unter **Einstellungen → Flottentypen** aktiviert wurde.
+
+<Note>
+Die APIs der Reefer-Telematik-Anbieter sind unterschiedlich offen. Mapon ist vollständig öffentlich und funktioniert sofort. Orbcomm benötigt ein Konto-Token. Thermo King TracKing und Carrier Lynx Fleet sind nur über Partnerzugang erreichbar — Sie müssen API-Zugang beim Anbieter beantragen, auch wenn das Verbindungsformular für alle vier verfügbar ist.
+</Note>
+
+---
+
+## Reefer-Anbieter verbinden
+
+<Steps>
+  <Step title="Flottentyp Reefer aktivieren">
+    Unter **Einstellungen → Flottentypen** — schaltet die reefer-spezifischen Ansichten in Fleet frei.
+  </Step>
+  <Step title="Integrationen öffnen">
+    **Einstellungen → Integrationen**, Reefer-Anbieter stehen neben den anderen GPS/Tacho-Konnektoren.
+  </Step>
+  <Step title="Anbieter wählen">
+    Mapon, Orbcomm, Thermo King TracKing oder Carrier Lynx Fleet.
+  </Step>
+  <Step title="Zugangsdaten eingeben">
+    Felder unterscheiden sich je Anbieter (siehe Tabelle) — dann **Verbinden** klicken.
+  </Step>
+  <Step title="Verbindung testen">
+    **Verbindung testen** klicken.
+  </Step>
+  <Step title="Telematik-Einheit-ID je Anhänger setzen">
+    **Fleet → Anhänger** → Anhänger → Tab **Compliance** → **Telematik-Einheit-ID** eintragen. Verknüpft eingehende Messwerte mit dem richtigen Anhänger.
+  </Step>
+</Steps>
+
+### Zugangsdaten je Anbieter
+
+| Anbieter | Felder | Zugang |
+|---|---|---|
+| **Mapon** | API-Schlüssel, Basis-URL (optional) | Öffentliche API, sofort nutzbar |
+| **Orbcomm** | Access Token oder Benutzername + Passwort | Über das ORBCOMM Platform API-Konto |
+| **Thermo King TracKing** | API-Schlüssel oder Benutzername + Passwort | Nur über Thermo-King-Händler oder TracKing-Portal (partnergebunden) |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (oder API-Schlüssel) | Nur über Carrier Transicold/Händler (partnergebunden) |
+
+<Warning>
+Thermo King und Carrier benötigen eine Freigabe des Anbieters, bevor echte Daten fließen — das Formular lässt sich zwar speichern und testen, die Synchronisierung startet aber erst nach Aktivierung durch den Anbieter.
+</Warning>
+
+---
+
+## Wo die Anhängertemperatur erscheint
+
+- **Anhängerliste** — Spalte **Temp** mit aktueller Ist-Temperatur, Motor-Status (läuft/gestoppt) und Alarm-Flag.
+- **Anhängerdetail → Tab Temperatur** — Sollwert vs. Ist, Türstatus, Motorstunden, Alarmcodes plus Verlaufstabelle.
+- **Startseite → Reefer-Status-Widget** — Übersicht über Anhänger mit aktivem Alarm, Temperaturabweichung und anstehender Wartung.
+
+---
+
+## Alarme und Quittierung
+
+Schwellenwerte unter **Einstellungen → Flottentypen → Reefer-Temperaturalarme**: Master-Schalter, Temperaturabweichungsschwelle (Standard 3 °C), Türöffnungs-Schwelle (Standard 10 Min.), Alarm bei Geräte-Alarmcodes, Wiederholungssperre (Standard 60 Min.).
+
+Bei Schwellenüberschreitung benachrichtigt Druma **In-App** (Unternehmensadmins) und per **Push** an den Fahrer des betroffenen Anhängers — kein E-Mail-Alarm, da der Fahrer direkt handeln kann.
+
+**Quittieren:** Im Tab **Temperatur** hat jeder unquittierte Alarmcode einen **Quittieren**-Button. Tritt derselbe Code erneut auf, erscheint er wieder als unquittiert.
+
+---
+
+## Temperatur-Compliance-PDF erstellen
+
+Im Tab **Dokumente** eines Auftrags auf einem verbundenen Reefer-Anhänger: **Temperaturbericht** klicken. Druma erstellt ein PDF mit Soll-/Ist-Temperaturverlauf, Alarm- und Türereignissen, Motorlaufzeit, ATP-Klasse und Auftragsreferenz.
+
+---
+
+## ATP-Zertifikate und Reefer-Wartung
+
+- **ATP-Zertifikate** — unter **Fleet → Flottendokumente**, Dokumenttyp **ATP** mit Klasse (A/B/C/D/F/IN/IR nach dem ATP-Übereinkommen), sichtbar auf dem Compliance-Tab mit Ablaufbadge.
+- **Reefer-Wartung** — unter **Fleet → Wartung**, Tab **Reefer-Einheiten**, Serviceintervalle in **Motorstunden** statt Kilometern.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Anhängermanagement" icon="trailer" href="/de/planner/trailer-management">
+    Anhänger, Zuweisung, Verfügbarkeit und Dokumente verwalten.
+  </Card>
+  <Card title="Flottendokumente" icon="folder-open" href="/de/fleet-compliance/fleet-documents">
+    ATP-Zertifikate neben Versicherung, ITP und anderen Dokumenten verfolgen.
+  </Card>
+  <Card title="Flottenmanagement" icon="truck" href="/de/planner/fleet-management">
+    Fahrzeuge, Typen, Abmessungen und Dokumente verwalten.
+  </Card>
+</CardGroup>

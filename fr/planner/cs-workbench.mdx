@@ -1,0 +1,115 @@
+---
+title: "Espace Service Client"
+description: "La réponse du service client à « où en est mon envoi ? » — un seul écran pour le statut en direct, les détails de site, les appels de suivi et les exceptions proactives."
+icon: "headset"
+---
+
+## Vue d'ensemble
+
+L'Espace Service Client est l'endroit où les agents répondent à la question la plus fréquente des clients : *où en est mon envoi ?* Au lieu de naviguer entre la liste des commandes, le détail de commande et la fiche client, tout ce dont un agent a besoin — statut en direct, ETA, chauffeur et camion, horaires d'ouverture et contacts arrêt par arrêt, et un journal de chaque échange client — vit dans un seul écran maître-détail.
+
+**Accès :** cliquez sur **Service client** dans le menu de gauche. Il s'ouvre sur l'onglet **Espace de travail** ; un onglet **Sites** se trouve à côté.
+
+L'Espace de travail repose sur deux briques :
+
+- **Sites** — un catalogue réutilisable de lieux d'enlèvement/livraison (entrepôts, usines, centres de distribution, ports, terminaux) avec horaires, contacts, notes d'accès et instructions de réservation par client.
+- **Exceptions** — Druma signale automatiquement deux situations à risque : une ETA arrivant après la fermeture du site de livraison, et un arrêt nécessitant une réservation sans référence enregistrée.
+
+---
+
+## Enregistrer un appel de suivi sur une commande
+
+<Steps>
+  <Step title="Ouvrir l'Espace de travail">
+    Allez dans **Service client** — il s'ouvre sur l'onglet Espace de travail.
+  </Step>
+  <Step title="Trouver la commande">
+    Utilisez la recherche (numéro, référence, ville) ou filtrez la liste. Cliquez sur une carte pour ouvrir son détail à droite.
+  </Step>
+  <Step title="Vérifier le statut de l'envoi">
+    L'en-tête du détail affiche numéro, statut, chauffeur/camion (ou sous-traitant) assigné et ETA, suivi d'un indicateur de progression et du détail arrêt par arrêt — horaires du jour (en rouge si fermé), besoin de rendez-vous, référence de réservation client, contacts du site et lien vers le portail de réservation.
+  </Step>
+  <Step title="Enregistrer l'appel">
+    Faites défiler jusqu'au **journal d'appels de suivi** en bas. Choisissez un **type**, une **direction** et un **canal**, notez éventuellement l'interlocuteur, décrivez l'échange et cliquez sur **Enregistrer**.
+  </Step>
+  <Step title="Notifier le client (facultatif)">
+    Cliquez sur **Notifier le client** dans l'en-tête pour envoyer un email de statut à l'image de votre marque. Druma envoie aux contacts marqués pour les notifications opérationnelles et enregistre automatiquement l'envoi dans le journal.
+  </Step>
+</Steps>
+
+### Signification des champs de l'appel de suivi
+
+| Champ | Options / sens |
+|---|---|
+| **Type** | Appel de suivi · Note · Réservation · Exception · Notification client |
+| **Direction** | Entrant (le client/site vous a appelé) · Sortant (vous les avez appelés) · Interne |
+| **Canal** | Téléphone · Email · SMS · Portail · Système |
+| **Contact** | Nom libre de l'interlocuteur |
+| **Note** | Ce qui s'est passé — obligatoire |
+
+---
+
+## Filtrer et trier la liste des commandes
+
+- **Portée** — Actives (par défaut), Toutes, ou Historique
+- **Tri** — Créé, ETA, Livraison, ou Statut
+- **Filtres** statut, client, référence client (correspondances partielles acceptées)
+- **Exceptions seulement** — n'afficher que les commandes avec une exception active
+
+Une barre KPI au-dessus de la liste affiche les compteurs en direct : Résultats, En transit, Livré, Exceptions.
+
+---
+
+## Traiter la file des exceptions
+
+Chaque commande ouverte est vérifiée automatiquement pour deux situations à risque dès que ses données changent :
+
+- **ETA après fermeture** — l'ETA actuelle arrive après les horaires d'ouverture du site de livraison ce jour-là.
+- **Réservation manquante** — un arrêt exige une réservation mais aucune référence ni appel de type « réservation » n'a été enregistré.
+
+<Steps>
+  <Step title="Repérer les commandes signalées">
+    Un badge ambré apparaît dans la liste, et le KPI **Exceptions** affiche le nombre de commandes concernées.
+  </Step>
+  <Step title="Ouvrir la commande et examiner le détail">
+    Un panneau ambré **Exceptions** liste chaque condition déclenchée et le site concerné. Une exception prédictive (modèle prédictif de retard) porte un badge **Prédit** et un niveau de gravité.
+  </Step>
+  <Step title="La résoudre">
+    Selon le cas : enregistrez un appel « réservation » une fois le créneau confirmé, ou mettez à jour la référence de réservation du site. Pour une ETA après fermeture, appelez le site en avance ou notifiez le client.
+  </Step>
+  <Step title="Confirmer la résolution">
+    Les exceptions sont calculées en direct — une fois la condition résolue, le signal disparaît de lui-même.
+  </Step>
+</Steps>
+
+<Note>
+Les exceptions alimentent aussi le widget **Fil des exceptions** du tableau de bord.
+</Note>
+
+---
+
+## Sites — la source des horaires et contacts
+
+Gérez le catalogue de sites depuis l'onglet **Sites**. Chaque site contient identité/adresse, une grille d'horaires hebdomadaire (avec exceptions par date), les paramètres de rendez-vous, le nombre de quais et notes d'accès, les restrictions véhicule, une liste de contacts, et des instructions de réservation par client.
+
+Deux boutons dans l'éditeur de site peuvent pré-remplir les données (uniquement sur un site existant) :
+
+- **Suggérer depuis l'historique** — déduit les horaires et le temps de séjour typique à partir des arrivées/départs passés de vos chauffeurs.
+- **Rechercher sur le web** — demande à l'IA de Druma de rechercher les horaires publiés du site, les contacts et le portail de réservation. Action manuelle, facturée à l'appel en EUR, à activer dans **Paramètres → Automatisation → Service client** — désactivée par défaut.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">
+    Choisissez un site sur un arrêt pour pré-remplir son adresse.
+  </Card>
+  <Card title="Cycle de vie de la commande" icon="circle-dot" href="/fr/planner/order-lifecycle">
+    Chaque statut de commande affiché dans l'Espace de travail.
+  </Card>
+  <Card title="Expédition" icon="route" href="/fr/planner/dispatching">
+    La carte live et le chat chauffeur dont l'Espace de travail s'inspire.
+  </Card>
+  <Card title="Tableau de bord" icon="gauge" href="/en/planner/home-dashboard">
+    Ajoutez le widget Fil des exceptions à votre tableau de bord.
+  </Card>
+</CardGroup>

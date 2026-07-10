@@ -4,35 +4,104 @@ description: "Perioadele detaliate de retentie si procedurile de stergere pentru
 icon: "database"
 ---
 
+_Ultima actualizare: 10 iulie 2026._
+
+Aceasta pagina explica exact ce date pastreaza Druma despre compania ta, cat timp le pastram si care sunt drepturile tale de acces sau stergere.
+
 ## Perioadele de retentie pe categorii
 
 | Categorie de date | Perioada de retentie | Temeiul legal |
 |---|---|---|
-| Date cont utilizator | Durata abonamentului + 90 zile | Contract, interes legitim |
-| Date operationale (comenzi, rute, clienti, soferi, vehicule) | Durata abonamentului + 90 zile | Contract |
-| Date financiare (facturi, plati) | 7 ani | Obligatie legala (legea contabilitatii) |
-| Documente eCMR | 10 ani | Obligatie legala (Protocolul e-CMR) |
-| Jurnale de audit | 18 luni | Interes legitim (securitate) |
-| Date de pozitie GPS | Suprascriere in timp real | GDPR - minimizarea datelor |
-| Date de sesiune | 30 de zile | Interes legitim |
-| Jurnale de erori (Sentry) | 90 de zile | Interes legitim |
+| Profilul si setarile companiei | Durata abonamentului + 90 zile | Contract |
+| Date cont utilizator | Durata abonamentului + 90 zile | Contract |
+| Comenzi de transport si inregistrari de expediere | Durata abonamentului + 90 zile | Contract |
+| Date clienti | Durata abonamentului + 90 zile | Contract |
+| Date soferi | Durata abonamentului + 90 zile | Contract |
+| Facturi si inregistrari financiare | 7 ani de la data facturii | Legea contabilitatii din Romania |
+| Documente eCMR (semnate) | 10 ani de la data semnarii | Protocolul e-CMR (cerinta legala) |
+| Jurnale de audit | 18 luni | Interes legitim |
+| Pozitie GPS (doar curenta) | Suprascrisa in timp real - fara istoric retinut | Contract |
+| Jurnale de erori si securitate | 90 de zile | Interes legitim |
+| Inregistrari de facturare (Stripe) | 7 ani | Legislatie fiscala |
 
-## Procesul de stergere
+<Note>
+Documentele eCMR au o cerinta de retentie de 10 ani conform Protocolului Aditional la Conventia CMR. Aceasta perioada nu poate fi scurtata nici daca inchizi contul.
+</Note>
 
-**Anulare abonament:** Contul se dezactiveaza imediat. Datele sunt retinute 90 de zile (perioada de gratie pentru recuperare), dupa care sunt sterse definitiv din toate sistemele, inclusiv backups.
+## Date GPS: ce stocam
 
-**Exceptii:** Documentele eCMR sunt retinute 10 ani chiar si dupa stergerea contului, conform cerintelor Protocolului CMR. Datele financiare sunt retinute 7 ani conform legii contabilitatii romanesti.
+Druma capteaza pozitia GPS de pe dispozitivul soferului **doar cat timp soferul este intr-o cursa activa atribuita**, dupa ce a acordat permisiunea de localizare in aplicatie. Fiecare pozitie noua **o suprascrie pe cea anterioara** - Druma stocheaza doar pozitia curenta, nu un istoric. Noi NU:
 
-**Stergere imediata la cerere:** Poti solicita stergerea contului oricand prin **Setari -> Date si Confidentialitate -> Sterge Contul**. Stergerea voluntara declanseaza aceeasi perioada de 90 de zile.
+- Urmarim locatia soferului in afara unei curse active atribuite
+- Stocam istoric de locatie sau trasee de deplasare
+- Partajam datele GPS cu terti, cu exceptia raportarii e-Transport catre ANAF, care foloseste un buffer glisant de 30 de zile inainte de stergere
 
-## Unde sunt stocate datele
+## Jurnalul de audit
 
-Datele Druma sunt stocate pe servere Supabase in Europa (Frankfurt, Germania). Datele de pozitie GPS sunt procesate prin Cloudflare Workers (edge computing, UE).
+Fiecare actiune semnificativa in Druma (comanda creata, factura trimisa, autentificare utilizator, setari modificate) este inregistrata intr-un jurnal de audit cu marca temporala, utilizator si detalii despre actiune. Jurnalele de audit sunt pastrate 18 luni si nu pot fi modificate sau sterse - exista pentru a proteja atat compania ta, cat si Druma in caz de litigii.
 
-## Sub-procesatori si transferuri
+## Dupa anularea contului
 
-Toti sub-procesatorii Druma sunt localizati in UE sau opereaza sub Clauze Contractuale Standard (CCS) aprobate de Comisia Europeana.
+Cand anulezi abonamentul:
 
-## Solicitari GDPR
+1. Contul intra intr-o perioada de gratie de 90 de zile - datele sunt pastrate si accesibile
+2. Dupa 90 de zile, toate datele operationale sunt sterse definitiv
+3. Facturile si inregistrarile financiare sunt pastrate 7 ani (cerinta legala)
+4. Documentele eCMR sunt pastrate 10 ani (cerinta legala)
 
-Trimite solicitarile de acces, rectificare, portabilitate sau stergere la privacy@druma.io cu subiectul "GDPR - [tipul solicitarii]". Raspuns in 30 de zile.
+## Solicitarea unui export de date
+
+Poti solicita oricand un export complet al datelor companiei tale:
+
+**Setari -> Date si Confidentialitate -> Solicita Export**
+
+Datele sunt livrate ca fisier ZIP (format JSON si CSV) la adresa de email a contului, in maximum 24 de ore. Exportul include toate comenzile, clientii, soferii, facturile si setarile.
+
+## Solicitarea stergerii contului
+
+<Warning>
+Stergerea contului este ireversibila. Toate datele operationale sunt sterse definitiv dupa perioada de retentie de 90 de zile. Datele obligatorii legal (facturi, eCMR) sunt pastrate conform legii.
+</Warning>
+
+Pentru a sterge contul: **Setari -> Date si Confidentialitate -> Sterge Contul** -> confirma tastand numele companiei.
+
+Alternativ, trimite un email la privacy@druma.io de la adresa de email a proprietarului contului.
+
+## Sub-procesatori si locatii ale datelor
+
+| Furnizor | Ce date proceseaza | Locatie |
+|---|---|---|
+| Supabase | Baza de date (toate datele) | UE (Frankfurt) |
+| Cloudflare | CDN, protectie DDoS, DNS, jurnale de cereri | UE |
+| Resend | Continutul emailurilor tranzactionale trimise | UE |
+| Mailgun | Preluarea emailurilor primite (comenzi, facturi, plati) | UE |
+| Stripe | Date de facturare si plata | UE |
+| PTV Group | Date de ruta, distanta si ETA (coordonate ridicare/livrare) | UE |
+| HERE Technologies | Geocodare si autocompletare adrese | UE |
+| Google Vertex AI | Extragere AI din email si documente | europe-west1 (fara antrenare de model) |
+| Google Cloud Translation | Traducere la cerere a continutului interfetei/documentelor | Google Cloud (fara garantie de rezidenta UE) |
+| Sentry | Monitorizare erori si raportare crash-uri | UE |
+| Google Firebase Cloud Messaging | Notificari push in aplicatia soferului | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Mesagerie soferi (doar daca este activata) | Meta (SUA/UE) |
+| Furnizori de telematica (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Date GPS si tahograf (doar furnizorul conectat) | Variaza dupa furnizor |
+| Furnizori de telematica reefer (Mapon, Orbcomm, Thermo King) | Date de temperatura reefer (doar furnizorul conectat) | Variaza dupa furnizor |
+| TransFollow | Doar fallback eCMR mostenit - furnizorul nativ intern Druma este cel implicit | Olanda |
+
+## Drepturile tale conform GDPR
+
+- **Dreptul de acces** - solicita o copie a datelor tale (foloseste functia de Export de mai sus)
+- **Dreptul la rectificare** - corecteaza date inexacte (editeaza direct in Druma sau contacteaza suportul)
+- **Dreptul la stergere** - solicita stergerea (foloseste functia de Stergere Cont de mai sus)
+- **Dreptul la portabilitate** - primeste datele intr-un format citibil automat (inclus in Export)
+- **Dreptul la opozitie** - opune-te procesarii bazate pe interes legitim
+- **Dreptul la restrictionare** - solicita procesare limitata in anumite circumstante
+
+Pentru a exercita orice drept: privacy@druma.io. Raspundem in 30 de zile.
+
+<Card title="Politica de confidentialitate" icon="shield" href="/ro/legal/privacy-policy">
+  Politica completa de confidentialitate, inclusiv sub-procesatorii si temeiurile legale.
+</Card>
+
+<Card title="Gestionarea datelor GDPR" icon="lock" href="/ro/admin/gdpr-data-management">
+  Cum exporti date sau stergi contul direct din Druma.
+</Card>

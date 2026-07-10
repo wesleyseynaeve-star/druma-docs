@@ -1,0 +1,117 @@
+---
+title: "Zarządzanie flotą chłodni"
+description: "Podłączanie naczep chłodniczych do dostawcy telematyki, monitorowanie temperatury na żywo, zarządzanie alertami i generowanie raportów zgodności łańcucha chłodniczego."
+icon: "snowflake"
+---
+
+## Przegląd
+
+Jeśli Twoja flota obsługuje naczepy chłodnicze (reefer), Druma może pobierać temperaturę na żywo, godziny silnika i dane alarmowe bezpośrednio z jednostki telematycznej naczepy — bez ręcznego logowania. Po podłączeniu dostawcy zobaczysz bieżącą temperaturę na liście naczep, otrzymasz powiadomienie przy odchyleniu od zadanej wartości lub alarmie, i wygenerujesz jednostronicowy PDF łańcucha chłodniczego dla ukończonej trasy.
+
+Funkcje reefer pojawiają się dopiero po włączeniu typu floty **Reefer** przez administratora w **Ustawienia → Typy floty**. Kolumna Temp, zakładka Temperatura, alerty i raport zgodności są ukryte do tego czasu.
+
+<Note>
+Dostawcy telematyki chłodni różnią się otwartością API. Mapon jest w pełni publiczny i działa od razu. Orbcomm wymaga tokenu konta. Thermo King TracKing i Carrier Lynx Fleet są dostępne wyłącznie dla partnerów — trzeba wystąpić o dostęp API u dostawcy, choć formularz połączenia jest dostępny dla wszystkich czterech.
+</Note>
+
+---
+
+## Podłączanie dostawcy chłodni
+
+<Steps>
+  <Step title="Włącz typ floty Reefer">
+    Otwórz **Ustawienia → Typy floty** i włącz **Reefer**. Odblokowuje to ekrany specyficzne dla chłodni w Flocie.
+  </Step>
+  <Step title="Przejdź do Integracji">
+    Otwórz **Ustawienia → Integracje**. Dostawcy telematyki chłodni są wymienieni obok innych konektorów GPS/tachografu.
+  </Step>
+  <Step title="Wybierz dostawcę">
+    Znajdź kartę swojego dostawcy — **Mapon**, **Orbcomm**, **Thermo King TracKing** lub **Carrier Lynx Fleet** — i otwórz ją. Link "Gdzie to zdobyć?" wyjaśnia, jak uzyskać dane dostępowe.
+  </Step>
+  <Step title="Wprowadź dane uwierzytelniające">
+    Wypełnij pola dla swojego dostawcy (różnią się — patrz tabela) i kliknij **Połącz**. Dane są przechowywane bezpiecznie i nigdy nie wyświetlane w pełni ponownie.
+  </Step>
+  <Step title="Przetestuj połączenie">
+    Kliknij **Testuj połączenie**, by potwierdzić, że Druma dociera do API dostawcy.
+  </Step>
+  <Step title="Ustaw ID jednostki telematycznej każdej naczepy">
+    Otwórz **Flota → Naczepy**, wybierz naczepę chłodniczą, przejdź do zakładki **Zgodność** i wypełnij **ID jednostki telematycznej** — identyfikator używany przez dostawcę do rozpoznania tej konkretnej naczepy.
+  </Step>
+</Steps>
+
+Po podłączeniu zadanie synchronizacji Druma automatycznie pobiera nowe odczyty — bez ręcznego odświeżania.
+
+### Pola danych dostawcy
+
+| Dostawca | Pola do wprowadzenia | Gdzie je zdobyć |
+|---|---|---|
+| **Mapon** | Klucz API, Adres bazowy (opcjonalnie) | Wygeneruj klucz API w platformie Mapon pod Ustawienia → API. W pełni publiczne API — działa od razu. |
+| **Orbcomm** | Token dostępu, lub Nazwa użytkownika + Hasło, Adres bazowy (opcjonalnie) | Wydany przez konto ORBCOMM Platform API. Przy loginie/haśle Druma automatycznie wymienia je na token. |
+| **Thermo King TracKing** | Klucz API, lub Nazwa użytkownika + Hasło, Adres bazowy (opcjonalnie) | Poproś o klucz API TracKing u dealera Thermo King lub przez portal TracKing. Brak samodzielnej rejestracji — integracja tylko dla partnerów. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (lub starszy Klucz API), Adres bazowy (opcjonalnie) | Uzyskane przez Carrier Transicold lub dealera Carrier w ramach zestawu Lynx Fleet API. Brak samodzielnej rejestracji. |
+
+<Warning>
+Thermo King i Carrier wymagają przyznania dostępu API przez dostawcę, zanim połączenie zwróci rzeczywiste dane. Formularz danych pozwala zapisać i przetestować, ale synchronizacja nie ruszy, dopóki konto nie będzie aktywne.
+</Warning>
+
+---
+
+## Gdzie widać temperaturę naczepy
+
+- **Lista naczep** — kolumna **Temp** pokazuje ostatnią temperaturę, odznakę silnika Uruchomiony/Zatrzymany i bursztynową flagę alarmu.
+- **Szczegóły naczepy → zakładka Temperatura** — dostępna po włączeniu flagi reefer. Pokazuje ostatni odczyt szczegółowo (zadana vs. rzeczywista, status drzwi, godziny silnika, kody alarmów) i tabelę historii.
+- **Pulpit domowy → widżet statusu chłodni** — dodaj go z galerii widżetów dla podsumowania naczep z aktywnymi alarmami, przekroczonym progiem temperatury i zbliżającym się terminem serwisu.
+
+---
+
+## Alerty i potwierdzanie alarmów
+
+Progi alertów chłodni znajdują się w **Ustawienia → Typy floty**, w panelu **Alerty temperatury chłodni**:
+
+| Pole | Co kontroluje |
+|---|---|
+| **Włącz alerty chłodni** | Główny przełącznik alertowania. |
+| **Próg odchylenia temperatury (°C)** | Odchylenie od zadanej wartości oznaczane jako alert (domyślnie 3°C). |
+| **Próg otwartych drzwi (minuty)** | Czas otwarcia drzwi oznaczany jako alert (domyślnie 10 minut). |
+| **Alert przy kodach alarmowych jednostki** | Czy surowy kod alarmowy uruchamia powiadomienie. |
+| **Cooldown ponownego alertu (minuty)** | Minimalny odstęp między powtórnymi alertami dla tej samej naczepy/warunku (domyślnie 60 minut). |
+
+Po przekroczeniu progu Druma powiadamia **w aplikacji** (dzwonek dla administratorów) i wysyła **powiadomienie push do kierowcy** — nie ma e-maila dla alertów chłodni.
+
+**Potwierdzanie alarmu:** otwórz zakładkę **Temperatura** naczepy — niepotwierdzone kody alarmowe pojawiają się z czasem ostatniego wystąpienia i przyciskiem **Potwierdź**. Potwierdzenie tworzy trwały zapis; jeśli ten sam kod pojawi się ponownie, znów będzie niepotwierdzony.
+
+---
+
+## Generowanie PDF zgodności temperatury
+
+Dla zlecenia realizowanego na podłączonej naczepie chłodniczej:
+
+1. Otwórz zlecenie w **Operacjach** i przejdź do zakładki **Dokumenty**.
+2. Kliknij **Raport temperatury** (widoczny tylko, gdy naczepa ma skonfigurowaną jednostkę telematyczną).
+3. Druma zbuduje i pobierze PDF z przebiegiem temperatury zadanej vs. rzeczywistej, zdarzeniami alarmów i otwartych drzwi, czasem pracy silnika, klasą ATP naczepy i numerem zlecenia.
+
+---
+
+## Certyfikaty ATP i konserwacja chłodni
+
+Po włączeniu flagi naczepy chłodnicze otrzymują dwa dodatki zgodności:
+
+- **Śledzenie certyfikatów ATP** — w **Flota → Dokumenty floty** lista typów dokumentów zyskuje opcję **ATP**; wybierz naczepę i klasę ATP (A/B/C/D/F/IN/IR wg Umowy ATP). Certyfikat pojawia się w zakładce Zgodność naczepy z odznaką ważności.
+- **Harmonogram konserwacji chłodni** — w **Flota → Konserwacja** zakładka **Jednostki chłodnicze** śledzi interwały serwisowe w **godzinach silnika**, a nie kilometrach.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Zarządzanie naczepami" icon="trailer" href="/pl/planner/trailer-management">
+    Zarządzanie naczepami, przypisaniem, dostępnością i dokumentami — w tym zakładka Zgodność.
+  </Card>
+  <Card title="Dokumenty floty" icon="folder-open" href="/pl/fleet-compliance/fleet-documents">
+    Śledzenie certyfikatów ATP obok ubezpieczenia, badań technicznych i innych dokumentów.
+  </Card>
+  <Card title="Zarządzanie flotą" icon="truck" href="/pl/planner/fleet-management">
+    Dodawanie i zarządzanie pojazdami, typami, wymiarami i dokumentami.
+  </Card>
+  <Card title="Pulpit domowy" icon="gauge" href="/en/planner/home-dashboard">
+    Dodaj widżet statusu chłodni dla podglądu alarmów i terminów konserwacji.
+  </Card>
+</CardGroup>

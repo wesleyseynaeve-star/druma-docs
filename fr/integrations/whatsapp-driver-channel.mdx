@@ -1,0 +1,124 @@
+---
+title: "Canal chauffeur WhatsApp"
+description: "Permettez aux chauffeurs qui préfèrent WhatsApp d'envoyer et recevoir messages, statuts et photos là-bas plutôt que dans l'application chauffeur Druma — les réponses arrivent dans le même chat que les répartiteurs utilisent déjà."
+icon: "message-circle"
+---
+
+## Vue d'ensemble
+
+Tous les chauffeurs ne veulent pas installer et garder ouverte une application dédiée. En Roumanie, Bulgarie, Hongrie, Pologne, Tchéquie et Slovaquie, WhatsApp est souvent l'outil qu'un chauffeur sous-traitant ou indépendant utilise déjà tous les jours — Druma vient donc à sa rencontre plutôt que d'imposer une seconde application.
+
+WhatsApp n'est pas un système de messagerie séparé greffé à côté. C'est un second canal de diffusion pour le même chat chauffeur que les répartiteurs utilisent déjà : les messages et photos d'un chauffeur arrivent dans le même fil qu'un chauffeur in-app, et la réponse d'un répartiteur repart automatiquement via WhatsApp quand ce chauffeur est sur ce canal. Rien de nouveau à apprendre pour les répartiteurs — voir [Expédition → Onglet Chat Chauffeur](/fr/planner/dispatching#onglet-chat-chauffeur).
+
+Chaque chauffeur est réglé sur **soit** l'application Druma **soit** WhatsApp, jamais les deux.
+
+---
+
+## Activer WhatsApp pour votre entreprise
+
+La messagerie WhatsApp se connecte une fois par entreprise, depuis les paramètres Intégrations.
+
+<Steps>
+  <Step title="Créer une application Meta avec le produit WhatsApp">
+    Sur [business.facebook.com](https://business.facebook.com), créez ou ouvrez une application Meta, puis ajoutez le produit **WhatsApp**. Ajoutez un numéro de téléphone sous **WhatsApp → Configuration de l'API** — c'est le numéro que vos chauffeurs utiliseront.
+  </Step>
+  <Step title="Récupérer vos identifiants">
+    Sur la page **WhatsApp → Configuration de l'API**, notez le **Phone Number ID** et le **WhatsApp Business Account (WABA) ID**. Sous **Paramètres de l'application → Général**, notez l'**App Secret**. Générez un **jeton d'accès** permanent (utilisateur système, sans expiration). Choisissez une chaîne de caractères comme **jeton de vérification**.
+  </Step>
+  <Step title="Ouvrir la carte WhatsApp dans Druma">
+    Allez dans **Paramètres → Intégrations** et ouvrez la carte **WhatsApp (canal chauffeur)**.
+  </Step>
+  <Step title="Copier l'URL du webhook dans Meta">
+    Cliquez sur l'icône de copie à côté du champ **URL du webhook** et collez-la dans les paramètres **WhatsApp → Configuration → Webhook** de votre application Meta, avec le même jeton de vérification choisi ci-dessus.
+  </Step>
+  <Step title="Saisir vos identifiants et enregistrer">
+    Remplissez Phone Number ID, WABA ID, jeton d'accès, App Secret et jeton de vérification, laissez **Actif** activé, et cliquez sur **Enregistrer et connecter**.
+  </Step>
+</Steps>
+
+### Signification des champs
+
+| Champ | Ce que c'est |
+|---|---|
+| **URL du webhook** | Adresse entrante fixe de Druma — à coller dans Meta, générée automatiquement en lecture seule. |
+| **Phone Number ID** | Identifie le numéro WhatsApp utilisé par Druma. |
+| **WhatsApp Business Account ID (WABA ID)** | Le compte professionnel Meta auquel appartient le numéro. |
+| **Jeton d'accès** | Le jeton permanent que Druma utilise pour appeler l'API WhatsApp en votre nom. |
+| **App Secret** | Sert à vérifier que les appels webhook entrants viennent bien de Meta. |
+| **Jeton de vérification** | Chaîne de votre choix, à faire correspondre exactement avec Meta. |
+| **Actif** | Active ou désactive l'envoi sans supprimer les identifiants enregistrés. |
+
+<Note>
+Cette carte n'apparaît que si votre forfait inclut la messagerie chauffeur. Contactez le support si elle n'apparaît pas.
+</Note>
+
+---
+
+## Basculer un chauffeur vers WhatsApp
+
+Activer la connexion d'entreprise ne bascule aucun chauffeur automatiquement — le canal de chaque chauffeur se règle individuellement, avec son consentement enregistré.
+
+1. Allez dans **Flotte → Chauffeurs** et ouvrez la fiche du chauffeur.
+2. Sous **Canal de communication**, réglez **Canal de messages** sur **WhatsApp uniquement** (par défaut : **application Druma uniquement**).
+3. Saisissez le **numéro WhatsApp** du chauffeur au format international (ex. `+40712345678`).
+4. Cochez la case de consentement confirmant que le chauffeur a accepté de recevoir des messages Druma et de partager statuts/photos par WhatsApp — obligatoire la première fois, conformément au RGPD.
+5. Cliquez sur **Enregistrer**.
+
+Dès lors, tout message ou notification automatique normalement poussé vers l'application du chauffeur est envoyé sur WhatsApp à la place.
+
+---
+
+## Modèles de messages et pourquoi WhatsApp exige une approbation
+
+L'API Business de WhatsApp n'autorise le texte libre que pendant qu'une conversation est « ouverte » — 24 heures après la dernière réponse du chauffeur. Passé ce délai, seul un **modèle de message pré-approuvé** peut rouvrir la conversation ; Meta examine et approuve le contenu des modèles à l'avance. C'est une règle de la plateforme WhatsApp, pas une limitation de Druma.
+
+Druma sépare chaque notification en deux parties :
+
+- **Message in-app** — texte libre envoyé pendant que la fenêtre est ouverte, éditable librement par langue.
+- **Modèle de réouverture** — texte envoyé quand la fenêtre est fermée et nécessite l'approbation de Meta, avec un badge de statut (**Brouillon**, **En attente**, **Approuvé**, **Rejeté**).
+
+Pour réviser les modèles, ouvrez **Paramètres → Intégrations → WhatsApp (canal chauffeur)**, section **Modèles de messages** :
+
+1. Choisissez un **modèle** (commande assignée, demande ETA, demande POD, arrivée, retard) et une **langue** — chaque modèle est pré-rempli dans les 10 langues de Druma.
+2. Éditez le **message in-app** et cliquez sur **Enregistrer le message in-app** — prend effet immédiatement.
+3. Éditez le **modèle de réouverture** et cliquez sur **Soumettre pour approbation**.
+
+Tant qu'un modèle de réouverture n'est pas approuvé, Druma continue de délivrer chaque message — il attend simplement la réouverture de la fenêtre plutôt que d'envoyer un modèle non approuvé.
+
+---
+
+## Comment les réponses des chauffeurs arrivent aux répartiteurs
+
+Un message WhatsApp entrant — texte, photo, document, ou position — arrive dans le même chat chauffeur, avec un badge **Envoyé via WhatsApp**. Quand un répartiteur répond depuis ce fil à un chauffeur WhatsApp, Druma le renvoie automatiquement via WhatsApp.
+
+<Note>
+Les pièces jointes envoyées **depuis** Druma **vers** un chauffeur WhatsApp ne sont pas encore prises en charge — seuls le texte et les modèles partent via WhatsApp aujourd'hui. Les pièces jointes envoyées par un chauffeur WhatsApp fonctionnent normalement.
+</Note>
+
+---
+
+## Quand un chauffeur ne répond pas immédiatement
+
+Si un chauffeur est hors ligne ou que la fenêtre de conversation est fermée, Druma ne perd pas le message :
+
+- Si la fenêtre est encore ouverte, chaque message en attente part en texte libre — sans coût supplémentaire.
+- Si elle est fermée, Druma envoie exactement un modèle approuvé par cycle pour rouvrir la conversation, et conserve le reste pour le cycle suivant.
+
+Chaque message finit par être livré — rien n'est silencieusement abandonné.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Expédition" icon="satellite-dish" href="/fr/planner/dispatching">
+    L'onglet Chat Chauffeur où les répartiteurs lisent et répondent aux messages.
+  </Card>
+  <Card title="Gestion des chauffeurs" icon="id-card" href="/fr/planner/driver-management">
+    Ajoutez des chauffeurs à Druma et gérez leur profil, y compris le canal de communication.
+  </Card>
+  <Card title="Configuration des intégrations" icon="plug" href="/fr/admin/integration-setup">
+    La page Paramètres → Intégrations complète.
+  </Card>
+  <Card title="Notifications d'affectation chauffeur" icon="bell-concierge" href="/fr/automation/driver-assignment-notifications">
+    Les notifications automatiques d'affectation de commande pouvant passer par WhatsApp.
+  </Card>
+</CardGroup>

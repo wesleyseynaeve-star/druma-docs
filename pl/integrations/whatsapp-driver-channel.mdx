@@ -1,0 +1,126 @@
+---
+title: "Kanał WhatsApp dla kierowców"
+description: "Pozwól kierowcom preferującym WhatsApp wysyłać i odbierać wiadomości, statusy i zdjęcia tam zamiast w aplikacji kierowcy Druma — odpowiedzi trafiają do tego samego czatu, którego już używają dyspozytorzy."
+icon: "message-circle"
+---
+
+## Przegląd
+
+Nie każdy kierowca chce instalować i trzymać otwartą osobną aplikację. W Rumunii, Bułgarii, na Węgrzech, w Polsce, Czechach i na Słowacji WhatsApp jest często narzędziem, którego podwykonawca lub kierowca-właściciel już używa codziennie — Druma spotyka go tam zamiast narzucać drugą aplikację.
+
+WhatsApp nie jest osobnym systemem wiadomości doklejonym z boku. To drugi kanał dostarczania tego samego czatu z kierowcą, którego dyspozytorzy już używają: wiadomości i zdjęcia kierowcy trafiają do dokładnie tego samego wątku co kierowcy w aplikacji, a odpowiedź dyspozytora jest automatycznie wysyłana przez WhatsApp, gdy kierowca korzysta z tego kanału. Nic nowego do nauczenia się dla dyspozytorów — zobacz [Dyspozycja → Zakładka czatu z kierowcą](/pl/planner/dispatching).
+
+Każdy kierowca jest ustawiony **albo** na aplikację Druma, **albo** na WhatsApp, nigdy oba naraz — kierowca czytający darmowy czat w aplikacji nie powinien też wywoływać płatnej wiadomości WhatsApp dla tej samej aktualizacji.
+
+---
+
+## Włączanie WhatsApp dla firmy
+
+Wiadomości WhatsApp łączy się raz na firmę, z ustawień Integracji — tam, gdzie konfigurowane jest każde inne połączenie zewnętrzne (HERE, karty paliwowe, eksporty księgowe).
+
+<Steps>
+  <Step title="Utwórz Meta App z produktem WhatsApp">
+    Wejdź na [business.facebook.com](https://business.facebook.com), utwórz (lub otwórz) Meta App, dodaj produkt **WhatsApp**. Dodaj numer telefonu pod **WhatsApp → API Setup** — to numer, na który i z którego będą pisać kierowcy.
+  </Step>
+  <Step title="Zbierz dane uwierzytelniające">
+    Na stronie **WhatsApp → API Setup** zanotuj **Phone Number ID** i **WhatsApp Business Account (WABA) ID**. Pod **App Settings → Basic** zanotuj **App Secret**. Wygeneruj trwały token systemowy **Access Token** (nie tymczasowy — nie może wygasać). Wybierz dowolny ciąg jako **Verify Token**.
+  </Step>
+  <Step title="Otwórz kartę WhatsApp w Druma">
+    Przejdź do **Ustawienia → Integracje** i otwórz kartę **WhatsApp (kanał kierowcy)**.
+  </Step>
+  <Step title="Skopiuj URL webhooka do Meta">
+    Kliknij ikonę kopiowania przy polu **Webhook URL** i wklej w ustawieniach **WhatsApp → Configuration → Webhook** Twojej Meta App, razem z tym samym Verify Token.
+  </Step>
+  <Step title="Wprowadź dane i zapisz">
+    Wypełnij Phone Number ID, WABA ID, Access Token, App Secret i Verify Token, zostaw **Aktywne** włączone i kliknij **Zapisz i połącz**.
+  </Step>
+</Steps>
+
+### Znaczenie pól
+
+| Pole | Co to jest |
+|---|---|
+| **Webhook URL** | Stały adres wejściowy Druma — wklej go w Meta, nie odwrotnie. Tylko do odczytu, generowany automatycznie. |
+| **Phone Number ID** | Identyfikuje numer WhatsApp, z którego Druma wysyła i na który odbiera. Na stronie API Setup Meta App. |
+| **WhatsApp Business Account ID (WABA ID)** | Konto biznesowe Meta, do którego należy numer. |
+| **Access Token** | Trwały token systemowy używany przez Drumę do wywoływania API WhatsApp. Przechowywany zaszyfrowany. |
+| **App Secret** | Weryfikuje, że wywołania webhooka pochodzą naprawdę od Meta. |
+| **Verify Token** | Dowolny wybrany ciąg. Musi dokładnie pasować do konfiguracji webhooka w Meta. |
+| **Aktywne** | Włącza/wyłącza wysyłanie bez usuwania zapisanych danych. |
+
+Po podłączeniu, przycisk **Rozłącz** na tej samej karcie całkowicie usuwa dane, jeśli przestaniesz używać WhatsApp.
+
+<Note>
+Ta karta pojawia się tylko, gdy plan obejmuje funkcję wiadomości do kierowcy. Jeśli jej nie widzisz w Ustawienia → Integracje, skontaktuj się z pomocą techniczną.
+</Note>
+
+---
+
+## Przełączanie kierowcy na WhatsApp
+
+Włączenie połączenia firmowego nie przenosi automatycznie żadnych kierowców — kanał każdego ustawia się indywidualnie, ze zapisaną zgodą.
+
+1. Przejdź do **Flota → Kierowcy** i otwórz rekord kierowcy.
+2. Pod **Kanał komunikacji** ustaw **Kanał wiadomości** na **Tylko WhatsApp** (domyślnie **Tylko aplikacja Druma**).
+3. Wprowadź **Numer WhatsApp** kierowcy w formacie międzynarodowym (np. `+48123456789`).
+4. Zaznacz pole zgody potwierdzające, że kierowca zgodził się otrzymywać wiadomości Druma i udostępniać aktualizacje statusu/zdjęcia przez WhatsApp — wymagane przy pierwszym przełączeniu, zgodnie z zasadami przetwarzania danych RODO. Po zapisaniu zgody rekord pokazuje datę zamiast checkboxa.
+5. Kliknij **Zapisz**.
+
+Od tego momentu każda wiadomość lub automatyczne powiadomienie, które normalnie trafiłoby do aplikacji tego kierowcy — przypisanie zlecenia, przyjazd, prośba o POD, przypomnienie o opóźnieniu — jest wysyłane na jego numer WhatsApp.
+
+---
+
+## Szablony wiadomości i dlaczego WhatsApp wymaga zatwierdzenia
+
+Business API WhatsApp pozwala na dowolny tekst tylko gdy konwersacja jest "otwarta" — przez 24 godziny od ostatniej odpowiedzi kierowcy. Po zamknięciu okna tylko **zatwierdzony wcześniej szablon** może je ponownie otworzyć; Meta z góry recenzuje treść szablonów. To zasada platformy WhatsApp, nie ograniczenie Druma.
+
+Druma dzieli każde powiadomienie na dwie części:
+
+- **Wiadomość w aplikacji** — dowolna treść wysyłana, gdy okno konwersacji jest otwarte. Edytowalna swobodnie per język, bez zatwierdzenia.
+- **Szablon ponownego otwarcia** — treść wysyłana, gdy okno jest zamknięte i wymaga zatwierdzenia Meta, z odznaką statusu (**Szkic**, **Oczekujący**, **Zatwierdzony** lub **Odrzucony**).
+
+Aby przejrzeć lub edytować szablony, otwórz **Ustawienia → Integracje → WhatsApp (kanał kierowcy)** i przewiń do **Szablony wiadomości**:
+
+1. Wybierz **Szablon** (przypisanie zlecenia, prośba o ETA, prośba o POD, przyjazd, opóźnienie) i **Język** — każdy szablon jest gotowy we wszystkich 10 językach Druma.
+2. Edytuj **wiadomość w aplikacji** i kliknij **Zapisz wiadomość w aplikacji** — działa natychmiast.
+3. Edytuj **szablon ponownego otwarcia** i kliknij **Wyślij do zatwierdzenia** — wysyła treść do Meta. Odznaka zmienia się na **Oczekujący**, potem **Zatwierdzony** lub **Odrzucony** (z powodem).
+
+Do czasu zatwierdzenia szablonu Druma nadal dostarcza każdą wiadomość — po prostu czeka na ponowne otwarcie okna (kolejną odpowiedź kierowcy).
+
+---
+
+## Jak odpowiedzi kierowcy trafiają do dyspozytorów
+
+Wiadomość WhatsApp przychodząca — tekst, zdjęcie, dokument lub lokalizacja — trafia do tego samego czatu z kierowcą, oznaczona odznaką **Wysłano przez WhatsApp**. Zobacz [Dyspozycja → Zakładka czatu z kierowcą](/pl/planner/dispatching) — przebieg jest identyczny niezależnie od kanału kierowcy. Gdy dyspozytor odpowiada z tego wątku kierowcy na WhatsApp, Druma automatycznie wysyła to przez WhatsApp.
+
+<Note>
+Załączniki zdjęć/dokumentów wysyłane **z** Druma **do** kierowcy WhatsApp nie są jeszcze obsługiwane — dziś przez WhatsApp wychodzi tylko tekst i szablony. Załączniki, które wysyła kierowca (zdjęcia POD, uszkodzeń), działają normalnie.
+</Note>
+
+---
+
+## Gdy kierowca nie odpowiada od razu
+
+Jeśli kierowca jest offline lub okno konwersacji się zamknęło, Druma nie porzuca wiadomości ani nie zawodzi po cichu. Automatyczne powiadomienia (np. prośba o POD) są kolejkowane i wysyłane automatycznie co kilka minut:
+
+- Jeśli okno konwersacji jest nadal otwarte, każda zakolejkowana wiadomość idzie jako dowolny tekst — bez dodatkowego kosztu.
+- Jeśli okno się zamknęło, Druma wysyła dokładnie jeden zatwierdzony szablon na cykl, by ponownie otworzyć konwersację, a resztę zakolejkowanych wiadomości zatrzymuje na następny cykl.
+
+Każda wiadomość jest ostatecznie dostarczona — nic zakolejkowanego nie jest po cichu porzucane.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Dyspozycja" icon="satellite-dish" href="/pl/planner/dispatching">
+    Zakładka czatu z kierowcą, gdzie dyspozytorzy czytają i odpowiadają na wiadomości, WhatsApp lub w aplikacji.
+  </Card>
+  <Card title="Zarządzanie kierowcami" icon="id-card" href="/pl/planner/driver-management">
+    Dodawanie kierowców do Druma i zarządzanie profilem, w tym kanałem komunikacji.
+  </Card>
+  <Card title="Konfiguracja integracji" icon="plug" href="/pl/admin/integration-setup">
+    Pełna strona Ustawienia → Integracje i konfiguracja pozostałych połączeń.
+  </Card>
+  <Card title="Powiadomienia o przypisaniu kierowcy" icon="bell-concierge" href="/pl/automation/driver-assignment-notifications">
+    Automatyczne powiadomienia o przypisaniu zlecenia, które mogą być dostarczane przez WhatsApp.
+  </Card>
+</CardGroup>

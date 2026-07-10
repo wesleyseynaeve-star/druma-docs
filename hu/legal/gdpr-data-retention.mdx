@@ -4,6 +4,8 @@ description: "Részletes adatmegőrzési időszakok és törlési eljárások a 
 icon: "clock"
 ---
 
+_Utolsó frissítés: 2026. július 10._
+
 ## Adatmegőrzési elvek
 
 A Druma az adatokat csak addig tárolja, ameddig az szükséges a Szolgáltatás nyújtásához, a jogi kötelezettségek teljesítéséhez, és a felhasználók jogos érdekeinek védelméhez.
@@ -26,9 +28,9 @@ A Druma az adatokat csak addig tárolja, ameddig az szükséges a Szolgáltatás
 |---|---|---|
 | Lezárt rendelések | 7 év | Fuvarozási vitás ügyek elévülési ideje |
 | CMR és eCMR dokumentumok | 10 év | CMR egyezmény — törvényi követelmény |
-| Auditnapló | 2 év | Belső biztonsági monitoring |
+| Auditnapló | 18 hónap | Belső biztonsági monitoring |
 | Rendelési üzenetek | 90 nap | Üzembiztonság, majd törölve |
-| GPS-pozíció adatok (státuszfrissítésenként) | 90 nap | Szerződés |
+| GPS-pozíció adatok (jelenlegi pozíció) | Valós időben felülíródik — nincs előzmény megőrizve, kivéve egy 30 napos pufferidőszakot az ANAF e-Transport megfelelőségi jelentés céljából | Szerződés / e-Transport törvényi kötelezettség |
 
 ### Felhasználói adatok
 
@@ -54,11 +56,33 @@ A Druma az adatokat csak addig tárolja, ameddig az szükséges a Szolgáltatás
 A Druma cron feladatokkal automatikusan törli a megőrzési időszak után lejárt adatokat:
 - Rendelési üzenetek: 90 naponta
 - Munkamenet tokenek: 30 napos inaktivitás után
-- Sofőr GPS-pozíció bélyegek (státuszfrissítésenként): 90 nap
+- Sofőr GPS-pozíció: nincs törlési feladat szükséges, mivel minden új pozíció valós időben felülírja az előzőt; kivétel egy 30 napos puffer, amelyet az ANAF e-Transport megfelelőségi jelentés céljából őrzünk meg, majd automatikusan törlünk
 
 ### Kérelemre történő törlés
 
 Ha egy felhasználó vagy cég kéri az adatok törlését (GDPR törlési jog), a Druma 30 munkanapon belül feldolgozza a kérelmet. A törvényi megőrzési kötelezettség alá eső adatokat (pl. számlák) nem törölhetjük — ezeket anonim formában tároljuk, ahol lehetséges.
+
+---
+
+## Adatfeldolgozók és adattárolási helyek
+
+| Szolgáltató | Feldolgozott adat | Helyszín |
+|---|---|---|
+| Supabase | Adatbázis (minden adat) | EU (Frankfurt) |
+| Cloudflare | CDN, DDoS-védelem, DNS, naplók | EU |
+| Resend | Kimenő tranzakciós e-mailek | EU |
+| Mailgun | Bejövő e-mailek feldolgozása (rendelési, számla- és fizetési e-mailek) | EU |
+| Stripe | Számlázási és fizetési adatok | EU |
+| PTV Group | Útvonal-, távolság- és ETA-adatok (felvételi/szállítási koordináták) | EU |
+| HERE Technologies | Geokódolás és cím-autokiegészítés | EU |
+| Google Vertex AI | E-mail és dokumentum AI-feldolgozás | europe-west1 (nincs modell-betanítás) |
+| Google Cloud Translation | Felület/dokumentum tartalom igény szerinti fordítása | Google Cloud — az adatok elhagyhatják az EU-t |
+| Sentry | Hibafigyelés és összeomlás-jelentés | EU |
+| Google Firebase Cloud Messaging (FCM) | Push-értesítések a sofőralkalmazásban | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Sofőrüzenetek (csak ha engedélyezve van) | Meta (US/EU) |
+| Telematikai szolgáltatók (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- és tachográf-adatok (csak a csatlakoztatott szolgáltató) | Szolgáltatónként eltérő |
+| Hűtős telematikai szolgáltatók (Mapon, Orbcomm, Thermo King) | Hűtős hőmérséklet-adatok (csak a csatlakoztatott szolgáltató) | Szolgáltatónként eltérő |
+| TransFollow | Csak elavult (legacy) eCMR tartaléklehetőség — az alapértelmezett a Druma saját, belső szolgáltatója | Hollandia |
 
 ---
 

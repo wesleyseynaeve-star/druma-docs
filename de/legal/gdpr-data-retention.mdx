@@ -4,17 +4,45 @@ description: "Welche Daten Druma speichert, wie lange sie aufbewahrt werden und 
 icon: "clock"
 ---
 
+_Zuletzt aktualisiert: 10. Juli 2026._
+
 ## Aufbewahrungsfristen
 
 | Datenkategorie | Aufbewahrungsfrist | Rechtsgrundlage |
 |---|---|---|
 | Betriebsdaten (Aufträge, Kunden, Fahrer, Fahrzeuge) | Abonnementdauer + 90 Tage | Vertragliche Verpflichtung |
 | Benutzerkontodaten | Abonnementdauer + 90 Tage | Vertragliche Verpflichtung |
-| Audit-Protokolle | 2 Jahre | Sicherheitsanforderungen |
+| Audit-Protokolle | 18 Monate | Sicherheitsanforderungen |
 | eCMR-Dokumente | 10 Jahre | e-CMR-Protokoll |
-| GPS-Positionsdaten | Keine Aufbewahrung (in Echtzeit überschrieben) | Datensparsamkeit |
+| GPS-Positionsdaten | Wird in Echtzeit überschrieben — kein Verlauf gespeichert | Datensparsamkeit |
 | Abrechnungsunterlagen | 7 Jahre | Rumänisches Buchhaltungsrecht |
 | Backup-Daten | 30 Tage | Betriebliche Kontinuität |
+
+<Note>
+Druma speichert nur die aktuelle GPS-Position eines Fahrers während einer aktiven zugewiesenen Fahrt — keine Standorthistorie. Für die e-Transport-Meldung an ANAF wird ein rollierender 30-Tage-Puffer verwendet, bevor die Positionsdaten gelöscht werden.
+</Note>
+
+---
+
+## Unterauftragsverarbeiter und Datenstandorte
+
+| Anbieter | Verarbeitete Daten | Standort |
+|---|---|---|
+| Supabase | Datenbank (alle Daten) | EU (Frankfurt) |
+| Cloudflare | CDN, DDoS-Schutz, DNS, Request-Logs | EU |
+| Resend | Ausgehende Transaktions-E-Mail-Inhalte | EU |
+| Mailgun | Eingehende E-Mail-Verarbeitung (Auftrags-, Rechnungs-, Zahlungsmails) | EU |
+| Stripe | Abrechnungs- und Zahlungsdaten | EU |
+| PTV Group | Routen-, Distanz- und ETA-Daten | EU |
+| HERE Technologies | Geocoding und Adress-Autocomplete | EU |
+| Google Vertex AI | KI-Extraktion aus E-Mails und Dokumenten | europe-west1 (kein Modelltraining) |
+| Google Cloud Translation | Bedarfsgesteuerte Übersetzung von UI-/Dokumentinhalten | Google Cloud |
+| Sentry | Fehlerüberwachung | EU |
+| Google Firebase Cloud Messaging | Push-Benachrichtigungen der Fahrer-App | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Fahrerkommunikation (nur bei Aktivierung) | Meta (US/EU) |
+| Telematik-Anbieter (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- und Tachographendaten (nur der verbundene Anbieter) | je nach Anbieter |
+| Reefer-Telematik-Anbieter (Mapon, Orbcomm, Thermo King) | Kühltemperaturdaten (nur der verbundene Anbieter) | je nach Anbieter |
+| TransFollow | Nur als Legacy-Fallback — der native In-House-Anbieter von Druma ist der Standard | Niederlande |
 
 ---
 
@@ -45,6 +73,6 @@ Bestimmte Daten können länger aufbewahrt werden, wenn:
 - Rechtliche Ansprüche geltend gemacht werden
 - Gesetzliche Aufbewahrungspflichten dies erfordern
 
-<Card title="DSGVO & Datenverwaltung" icon="lock" href="/en/admin/gdpr-data-management">
+<Card title="DSGVO & Datenverwaltung" icon="lock" href="/de/admin/gdpr-data-management">
   Vollständige Informationen zu Datenexport und Kontolöschung.
 </Card>

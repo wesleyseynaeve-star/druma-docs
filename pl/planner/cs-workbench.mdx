@@ -1,0 +1,131 @@
+---
+title: "Stanowisko CS"
+description: "Odpowiedź obsługi klienta na pytanie \"gdzie jest moja przesyłka?\" — jeden panel na status na żywo, dane lokalizacji, check-cally i proaktywne wyjątki."
+icon: "headset"
+---
+
+## Przegląd
+
+Stanowisko CS to miejsce, gdzie przedstawiciele obsługi klienta odpowiadają na najczęstsze pytanie: *gdzie jest moja przesyłka?* Zamiast przełączać się między listą zleceń, szczegółami zlecenia i kartą klienta, wszystko czego potrzebują — status na żywo, ETA, kierowca i pojazd, godziny otwarcia i kontakty przystanków, dziennik kontaktów z klientem — mieszka w jednym panelu master-detail.
+
+**Dostęp:** kliknij **Obsługa klienta** w menu po lewej. Otwiera się domyślnie na zakładce **Stanowisko**, obok niej zakładka **Lokalizacje**.
+
+Stanowisko opiera się na dwóch elementach:
+
+- **Lokalizacje** — katalog wielokrotnego użytku miejsc odbioru/dostawy (magazyny, fabryki, centra dystrybucji, porty, terminale, place) z godzinami otwarcia, kontaktami, uwagami o dostępie i instrukcjami rezerwacji per klient. Wybierz lokalizację raz na przystanku zlecenia, a jej adres wypełni się automatycznie.
+- **Wyjątki** — Druma automatycznie oznacza dwie sytuacje powodujące nieudane dostawy: ETA wypadające po zamknięciu miejsca dostawy oraz przystanek wymagający rezerwacji, dla którego jej brak.
+
+---
+
+## Logowanie check-callu na zleceniu
+
+<Steps>
+  <Step title="Otwórz Stanowisko">
+    Przejdź do **Obsługa klienta** — otwiera się na zakładce Stanowisko.
+  </Step>
+  <Step title="Znajdź zlecenie">
+    Użyj wyszukiwarki (numer zlecenia, referencja, miasto odbioru/dostawy) lub zawęź listę filtrami. Kliknij kartę zlecenia, by otworzyć szczegóły po prawej.
+  </Step>
+  <Step title="Przejrzyj status przesyłki">
+    Nagłówek panelu pokazuje numer zlecenia, status, przypisanego kierowcę/pojazd (lub podwykonawcę) i ETA, dalej pasek statusu i podział na przystanki — każdy z godzinami otwarcia (czerwony, jeśli obecnie zamknięte), wymogiem rezerwacji, referencją klienta, kontaktami lokalizacji i linkiem do portalu rezerwacji.
+  </Step>
+  <Step title="Zaloguj kontakt">
+    Przewiń do **Dziennika check-calli** na dole panelu. Wybierz **Rodzaj**, **Kierunek** i **Kanał**, opcjonalnie zanotuj rozmówcę, opisz co się stało i kliknij **Zapisz wpis**. Pojawia się natychmiast na osi czasu, z Twoim imieniem i czasem.
+  </Step>
+  <Step title="Powiadom klienta (opcjonalnie)">
+    Kliknij **Powiadom klienta** w nagłówku, by wysłać branded e-mail o statusie. Druma wysyła do kontaktów klienta oznaczonych do powiadomień operacyjnych/dostawy i automatycznie loguje wysyłkę jako wpis check-callu.
+  </Step>
+</Steps>
+
+### Znaczenie pól check-callu
+
+| Pole | Opcje / znaczenie |
+|---|---|
+| **Rodzaj** | Check call · Notatka · Rezerwacja · Wyjątek · Powiadomienie klienta. |
+| **Kierunek** | Przychodzący (klient/lokalizacja zadzwonił) · Wychodzący (Ty zadzwoniłeś) · Wewnętrzny (notatka dla zespołu). |
+| **Kanał** | Telefon · E-mail · SMS · Portal · System. |
+| **Kontakt** | Wolny tekst z imieniem rozmówcy, dla własnej referencji. |
+| **Notatka** | Co się stało — wymagane przed zapisaniem wpisu. |
+
+---
+
+## Filtrowanie i sortowanie listy zleceń
+
+Lista zleceń po lewej ma własny pasek narzędzi:
+
+- **Przełącznik zakresu** — **Aktywne** (domyślnie), **Wszystkie** lub **Historyczne**.
+- **Sortowanie** — wg Utworzono, ETA, Dostawa lub Status.
+- **Filtr statusu**, **Filtr klienta** i **Filtr referencji klienta** — dalsze zawężenie; przyjmują częściowe dopasowania.
+- **Tylko wyjątki** — pokazuje tylko zlecenia z aktualnym wyjątkiem.
+
+Pasek KPI nad listą pokazuje liczby na żywo: Wyniki, W drodze, Dostarczone i Wyjątki.
+
+---
+
+## Praca z kolejką wyjątków
+
+Każde otwarte zlecenie jest automatycznie sprawdzane pod kątem dwóch trybów awarii, gdy tylko zmienią się dane:
+
+- **ETA po zamknięciu** — aktualne ETA wypada po godzinach otwarcia miejsca dostawy tego dnia.
+- **Brak rezerwacji** — przystanek wymaga rezerwacji, ale nie ma ani referencji, ani zalogowanego check-callu typu `rezerwacja`.
+
+<Steps>
+  <Step title="Zauważ oznaczone zlecenia">
+    Oznaczone zlecenia mają bursztynową odznakę wyjątku na liście, a KPI **Wyjątki** pokazuje ich liczbę. Przełącz **Tylko wyjątki**, by zobaczyć wyłącznie te.
+  </Step>
+  <Step title="Otwórz zlecenie i przejrzyj szczegóły">
+    Panel szczegółów pokazuje bursztynowy panel **Wyjątki** z każdym wywołanym warunkiem. Wyjątek przewidywany (z modelu predykcyjnego Druma) ma odznakę **Przewidywany** i poziom istotności.
+  </Step>
+  <Step title="Rozwiąż">
+    W zależności od wyjątku: zaloguj check-call `rezerwacja` po potwierdzeniu terminu lub zaktualizuj referencję rezerwacji lokalizacji. Przy ETA po zamknięciu zadzwoń do lokalizacji lub powiadom klienta.
+  </Step>
+  <Step title="Potwierdź, że zniknął">
+    Wyjątki są liczone na żywo z bieżących danych, nie odrzucane ręcznie — po naprawieniu warunku flaga znika sama.
+  </Step>
+</Steps>
+
+<Note>
+Wyjątki zasilają też widżet **Wyjątki** na Pulpicie domowym, więc proaktywna kontrola nie wymaga otwierania sekcji CS.
+</Note>
+
+---
+
+## Lokalizacje — źródło godzin otwarcia i kontaktów
+
+Zarządzaj katalogiem lokalizacji z zakładki **Lokalizacje**. Każda lokalizacja zawiera tożsamość/adres, siatkę godzin otwarcia tygodniowo (z wyjątkami dla konkretnych dat, np. święto), ustawienia rezerwacji, liczbę doków i uwagi o bramach/dostępie, ograniczenia pojazdów, listę kontaktów i instrukcje rezerwacji per klient.
+
+Dwa przyciski w sekcji godzin otwarcia mogą wypełnić dane automatycznie (wymagają otwarcia istniejącej lokalizacji):
+
+- **Zasugeruj z historii** — wywnioskowuje godziny otwarcia i typowy czas postoju z historii przyjazdów/wyjazdów Twoich kierowców. Zawsze do przeglądu przed zapisem.
+- **Zbadaj w internecie** — prosi AI Druma o wyszukanie opublikowanych godzin, kontaktów i portalu rezerwacji, z cytowaniem źródeł. To ręczna, płatna akcja rozliczana w EUR, wymagająca włączenia w **Ustawienia → Automatyzacja → Obsługa klienta** — domyślnie wyłączona.
+
+### Znaczenie pól lokalizacji
+
+| Pole | Znaczenie |
+|---|---|
+| **Typ** | Magazyn, Fabryka, Centrum dystrybucji, Port, Terminal, Plac, Inne. |
+| **Strefa czasowa** | Lokalna strefa czasowa — do prawidłowej oceny godzin otwarcia. |
+| **Godziny otwarcia** | Siatka okien otwarcia per dzień tygodnia, z wyjątkami dla dat (zamknięcia/święta). |
+| **Wymagana rezerwacja** | Czy trzeba umówić termin przed przyjazdem; można nadpisać per klient. |
+| **Liczba doków / Instrukcje bramy / Uwagi dostępu** | Praktyczne informacje dla kierowców i planistów. |
+| **URL portalu rezerwacji** | Link do własnego systemu rezerwacji lokalizacji, jeśli istnieje. |
+| **Ograniczenia pojazdów** | Limity oparte na flagach (np. rozmiar/waga). |
+| **Kontakty** | Nazwani kontakty rezerwacji/bramy/magazynu/ochrony z telefonem/e-mailem. |
+| **Instrukcje per klient** | Referencja rezerwacji, kod klienta i wolny tekst instrukcji dla jednego klienta w tej lokalizacji. |
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Tworzenie zlecenia" icon="plus" href="/pl/planner/creating-orders">
+    Wybierz lokalizację na przystanku, by autouzupełnić adres.
+  </Card>
+  <Card title="Cykl życia zlecenia" icon="circle-dot" href="/pl/planner/order-lifecycle">
+    Każdy status zlecenia pokazywany na Stanowisku i co go wywołuje.
+  </Card>
+  <Card title="Dyspozycja" icon="route" href="/pl/planner/dispatching">
+    Mapa na żywo i czat z kierowcą, z których korzysta Stanowisko.
+  </Card>
+  <Card title="Pulpit domowy" icon="gauge" href="/en/planner/home-dashboard">
+    Dodaj widżet Wyjątków, by widzieć je bez opuszczania pulpitu.
+  </Card>
+</CardGroup>

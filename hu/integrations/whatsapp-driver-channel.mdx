@@ -1,0 +1,124 @@
+---
+title: "WhatsApp sofőrcsatorna"
+description: "Engedd meg a WhatsAppot kedvelő sofőröknek, hogy ott küldjenek és fogadjanak üzeneteket, státuszokat és fotókat a Druma sofőralkalmazás helyett — a válaszok ugyanabba a sofőrcsevegésbe érkeznek, amit a diszpécserek már használnak."
+icon: "message-circle"
+---
+
+## Áttekintés
+
+Nem minden sofőr akar telepíteni és nyitva tartani egy külön alkalmazást. Romániában, Bulgáriában, Magyarországon, Lengyelországban, Csehországban és Szlovákiában a WhatsApp gyakran az az eszköz, amit egy alvállalkozó vagy egyéni vállalkozó sofőr amúgy is naponta használ — így a Druma ott találkozik velük, ahelyett hogy egy második alkalmazást kényszerítene rájuk.
+
+A WhatsApp nem egy külön, hozzácsatolt üzenetküldő rendszer. Ez egy második kézbesítési csatorna ugyanahhoz a sofőrcsevegéshez, amit a diszpécserek már használnak: egy sofőr üzenetei és fotói pontosan ugyanabba a szálba érkeznek, mint egy alkalmazáson belüli sofőré, és a diszpécser válasza automatikusan WhatsAppon keresztül kerül visszaküldésre, ha az adott sofőr a WhatsApp-csatornán van. Lásd [Diszpécselés → Sofőrcsevegés fül](/en/planner/dispatching#driver-chat-tab).
+
+Minden sofőr **vagy** a Druma alkalmazásra, **vagy** a WhatsAppra van beállítva, sosem mindkettőre — egy sofőr, aki már ingyen olvassa az alkalmazáson belüli csevegést, ne váltson ki fizetős WhatsApp-üzenetet is ugyanarra a frissítésre.
+
+---
+
+## WhatsApp bekapcsolása a cégednek
+
+A WhatsApp-üzenetküldés cégenként egyszer kerül csatlakoztatásra, az Integrációk beállításokból — ugyanott, ahol minden más külső kapcsolat (HERE, üzemanyagkártyák, könyvelési exportok) konfigurálva van.
+
+<Steps>
+  <Step title="Hozz létre egy Meta App-ot a WhatsApp termékkel">
+    Menj a [business.facebook.com](https://business.facebook.com) oldalra, és hozz létre (vagy nyiss meg) egy Meta App-ot, majd add hozzá a **WhatsApp** terméket. Adj hozzá egy telefonszámot a **WhatsApp → API Setup** alatt — ez az a szám, amelyen a sofőreid üzennek majd.
+  </Step>
+  <Step title="Gyűjtsd össze a hitelesítő adataidat">
+    Az app **WhatsApp → API Setup** oldalán jegyezd fel a **Phone Number ID**-t és a **WhatsApp Business Account (WABA) ID**-t. Az **App Settings → Basic** alatt jegyezd fel az **App Secret**-et. Generálj egy állandó rendszerfelhasználói **Access Token**-t (nem ideiglenes tokent — nem járhat le). Válassz egy tetszőleges karakterláncot **Verify Token**-ként.
+  </Step>
+  <Step title="Nyisd meg a WhatsApp kártyát a Drumában">
+    Menj a **Beállítások → Integrációk** menübe, és nyisd meg a **WhatsApp (sofőrcsatorna)** kártyát.
+  </Step>
+  <Step title="Másold be a webhook URL-t a Metába">
+    Kattints a másolás ikonra a **Webhook URL** mező mellett, és illeszd be a Meta App **WhatsApp → Configuration → Webhook** beállításaiba, a fent választott Verify Tokennel együtt.
+  </Step>
+  <Step title="Add meg a hitelesítő adataidat és mentsd el">
+    Töltsd ki a Phone Number ID-t, WABA ID-t, Access Tokent, App Secretet és Verify Tokent, hagyd bekapcsolva az **Aktív** kapcsolót, és kattints a **Mentés és csatlakozás** gombra.
+  </Step>
+</Steps>
+
+### Mit jelentenek a mezők
+
+| Mező | Mi ez |
+|---|---|
+| **Webhook URL** | A Druma fix bejövő címe — ezt illeszd be a Metába, nem fordítva. Csak olvasható, automatikusan generált. |
+| **Phone Number ID** | Azonosítja, melyik WhatsApp-számról küld és fogad a Druma. A Meta App WhatsApp → API Setup oldalán található. |
+| **WhatsApp Business Account ID (WABA ID)** | A Meta üzleti fiók, amelyhez a telefonszám tartozik. |
+| **Access Token** | Az állandó rendszerfelhasználói token, amelyet a Druma a WhatsApp API hívásához használ. Titkosítva tárolva. |
+| **App Secret** | Igazolja, hogy a bejövő webhook-hívások valóban a Metától származnak. Az App Settings → Basic alatt található. |
+| **Verify Token** | Bármilyen általad választott karakterlánc. Pontosan egyeznie kell a Meta webhook-konfigurációjában megadottal. |
+| **Aktív** | Be- vagy kikapcsolja a küldést a mentett hitelesítő adatok törlése nélkül. |
+
+<Note>
+Ez a kártya csak akkor jelenik meg, ha az előfizetésed tartalmazza a sofőr-üzenetküldés funkciót. Ha nem látod a Beállítások → Integrációk alatt, fordulj a támogatáshoz.
+</Note>
+
+---
+
+## Sofőr átváltása WhatsAppra
+
+A cégszintű kapcsolat bekapcsolása nem visz át automatikusan egyetlen sofőrt sem — minden sofőr csatornája egyénileg állítható be, a beleegyezésük rögzítésével.
+
+1. Menj a **Flotta → Sofőrök** menübe, és nyisd meg a sofőr rekordját.
+2. A **Kommunikációs csatorna** alatt állítsd az **Üzenetcsatorna** mezőt **Csak WhatsApp**-ra (az alapértelmezett a **Csak Druma app**).
+3. Add meg a sofőr **WhatsApp számát** nemzetközi formátumban (pl. `+40712345678`).
+4. Pipáld be a beleegyezés jelölőnégyzetet, amely megerősíti, hogy a sofőr elfogadta a Druma-üzenetek fogadását és a státuszfrissítések/fotók megosztását WhatsAppon keresztül — ez kötelező az első alkalommal, a GDPR adatfeldolgozási szabályai szerint.
+5. Kattints a **Mentés** gombra.
+
+Ettől a ponttól minden üzenet vagy automatikus értesítés, amit a Druma normál esetben az adott sofőr alkalmazásába küldene — rendelés kiosztva, érkezés, POD-kérés, késési emlékeztető —, WhatsAppon keresztül kerül elküldésre.
+
+---
+
+## Üzenetsablonok és miért igényel jóváhagyást a WhatsApp
+
+A WhatsApp Business API csak akkor engedélyez szabad formátumú szöveget, amíg egy beszélgetés "nyitva" van — a sofőr utolsó válasza után 24 órán át. Ha ez az ablak bezárul, csak egy **előre jóváhagyott üzenetsablon** nyithatja újra; a Meta előre felülvizsgálja és jóváhagyja a sablonok szövegét. Ez WhatsApp platform-szabály, nem Druma-korlátozás.
+
+A Druma minden értesítést két részre bont:
+
+- **Alkalmazáson belüli üzenet** — a szabad formátumú szöveg, amit nyitott beszélgetési ablak alatt küld. Nyelvenként szabadon szerkeszthető, jóváhagyás nélkül.
+- **Újranyitó sablon** — a szöveg, amit zárt ablak esetén küld, és amit a Metának előbb jóvá kell hagynia, státuszjelvénnyel (**Piszkozat**, **Függőben**, **Jóváhagyva**, vagy **Elutasítva**).
+
+A sablonok áttekintéséhez nyisd meg a **Beállítások → Integrációk → WhatsApp (sofőrcsatorna)** menüt, és görgess a **Üzenetsablonok** részhez:
+
+1. Válassz egy **Sablont** (rendelés kiosztva, ETA-kérés, POD-kérés, érkezés, késés) és egy **Nyelvet** — minden sablon előre kitöltve érkezik mind a 10 Druma-nyelven.
+2. Szerkeszd az **alkalmazáson belüli üzenetet**, és kattints az **Alkalmazáson belüli üzenet mentése** gombra — azonnal életbe lép.
+3. Szerkeszd az **újranyitó sablont**, és kattints a **Jóváhagyásra küldés** gombra.
+
+Amíg egy újranyitó sablon nincs jóváhagyva, a Druma továbbra is kézbesít minden üzenetet — egyszerűen megvárja, hogy az ablak újranyíljon (a sofőr következő válasza).
+
+---
+
+## Hogyan érnek el a sofőrválaszok a diszpécserekhez
+
+Egy bejövő WhatsApp-üzenet — szöveg, fotó, dokumentum vagy helyzet — ugyanabba a sofőrcsevegésbe érkezik, amit a diszpécserek már használnak, **WhatsAppon keresztül küldve** jelvénnyel az üzenetbuborékon. Lásd [Diszpécselés → Sofőrcsevegés fül](/en/planner/dispatching#driver-chat-tab). Amikor egy diszpécser válaszol ebből a szálból egy WhatsApp-sofőrnek, a Druma automatikusan WhatsAppon küldi vissza.
+
+<Note>
+A Drumából egy WhatsApp-sofőrnek küldött fotó/dokumentum-mellékletek még nem támogatottak — jelenleg csak szöveg és sablonok mennek ki WhatsAppon. A sofőr által beküldött mellékletek (POD-fotók, kárfotók) normálisan működnek.
+</Note>
+
+---
+
+## Ha egy sofőr nem válaszol azonnal
+
+Ha egy sofőr offline, vagy a beszélgetési ablak lezárult, a Druma nem dobja el az üzenetet. Az automatikus értesítések (mint egy POD-kérés) sorba kerülnek, és pár percenként automatikusan kiürülnek:
+
+- Ha a sofőr beszélgetési ablaka még nyitva van, minden sorban lévő üzenet szabad formátumú szövegként megy ki — extra költség nélkül.
+- Ha az ablak zárva van, a Druma pontosan egy jóváhagyott sablont küld ciklusonként az ablak újranyitásához, és a fennmaradó üzeneteket a következő ciklusra tartja.
+
+Minden üzenet végül kézbesítésre kerül — sorba állított üzenet sosem tűnik el csendben.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Diszpécselés" icon="satellite-dish" href="/en/planner/dispatching">
+    A Sofőrcsevegés fül, ahol a diszpécserek olvassák és megválaszolják a sofőrüzeneteket, WhatsAppon vagy alkalmazáson belül.
+  </Card>
+  <Card title="Sofőrkezelés" icon="id-card" href="/en/planner/driver-management">
+    Sofőrök hozzáadása a Drumához és profiljuk kezelése, beleértve a kommunikációs csatornát.
+  </Card>
+  <Card title="Integrációs beállítások" icon="plug" href="/en/admin/integration-setup">
+    A teljes Beállítások → Integrációk oldal és a többi kapcsolat konfigurálása.
+  </Card>
+  <Card title="Sofőr-hozzárendelési értesítések" icon="bell-concierge" href="/en/automation/driver-assignment-notifications">
+    Az automatikus rendelés-hozzárendelési értesítések, amelyek WhatsAppon is kézbesíthetők.
+  </Card>
+</CardGroup>

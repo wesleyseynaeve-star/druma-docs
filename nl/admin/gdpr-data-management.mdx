@@ -4,7 +4,9 @@ description: "Welke gegevens Druma opslaat, hoe lang ze worden bewaard, uw recht
 icon: "lock"
 ---
 
-Druma is een gegevensbeheerder voor de gegevens die uw bedrijf op het platform opslaat. Dit artikel legt precies uit wat er wordt opgeslagen, hoe lang het wordt bewaard, wie het verwerkt en welke acties u kunt ondernemen onder de AVG.
+_Laatst bijgewerkt: 10 juli 2026._
+
+Voor uw **operationele gegevens** (orders, klanten, chauffeurs, documenten en gerelateerde records die uw bedrijf op het platform opslaat) treedt Druma op als **verwerker** — uw bedrijf is de verwerkingsverantwoordelijke, en de verwerking wordt geregeld via een verwerkersovereenkomst (DPA) tussen uw bedrijf en Druma. Voor uw **account- en factureringsgegevens** (de gegevens van uw Druma-abonnement en de gebruikers die het beheren) treedt Druma op als **verwerkingsverantwoordelijke** in eigen naam. Dit artikel legt precies uit wat er wordt opgeslagen, hoe lang het wordt bewaard, wie het verwerkt en welke acties u kunt ondernemen onder de AVG.
 
 ---
 
@@ -25,7 +27,7 @@ Druma is een gegevensbeheerder voor de gegevens die uw bedrijf op het platform o
 - Brandstofkaartimportgegevens gekoppeld aan voertuigen
 
 ### eCMR-documenten
-- Elektronische vrachtbrieven uitgegeven via TransFollow, inclusief handtekeninggegevens
+- Elektronische vrachtbrieven uitgegeven en **PAdES-verzegeld in-house door Druma's native provider**, inclusief handtekeninggegevens. TransFollow blijft beschikbaar als legacy fallback voor bedrijven die het al gebruikten voordat de native provider werd geïntroduceerd.
 
 ### GPS-positiegegevens
 - Druma slaat **alleen de huidige GPS-positie** op — de laatst bekende locatie. **Er wordt geen positiegeschiedenis opgeslagen.** De vorige positie wordt overschreven bij een nieuwe.
@@ -41,7 +43,7 @@ Druma is een gegevensbeheerder voor de gegevens die uw bedrijf op het platform o
 |---|---|
 | Operationele gegevens (orders, klanten, chauffeurs, voertuigen) | Duur van abonnement + 90 dagen na opzegging |
 | Gebruikersaccountgegevens | Duur van abonnement + 90 dagen na opzegging |
-| Auditlogs | 2 jaar vanaf datum van geregistreerde gebeurtenis |
+| Auditlogs | 18 maanden vanaf datum van geregistreerde gebeurtenis |
 | eCMR-documenten | 10 jaar (wettelijke vereiste onder het e-CMR Protocol) |
 | GPS-positiegegevens | Realtime overschreven — geen geschiedenis bewaard |
 | Factureringsrecords | 7 jaar (Roemeense boekhoudwetgeving) |
@@ -89,17 +91,29 @@ Accountverwijdering is permanent en onomkeerbaar na de bewaartermijn van 90 dage
 
 ## Subverwerkers
 
+Druma deelt gegevens met de volgende subverwerkers om de dienst te leveren:
+
 | Subverwerker | Doel |
 |---|---|
-| Supabase | Database hosting en authenticatie |
-| Resend | Transactionele e-mailbezorging |
-| HERE Technologies | Adresgeocodering en routeberekening |
-| TransFollow | eCMR-uitgifte, ondertekening en archivering |
-| Stripe | Betalingsverwerking en abonnementsbeheer |
-| Google Vertex AI (Gemini Enterprise) | AI-ondersteunde functies (documentverwerking, e-mailextractie) — EU, geen modeltraining |
-| Mailgun | Bulk-e-mailmeldingen |
+| Supabase | Database hosting en authenticatie (EU — Frankfurt) |
 | Cloudflare | CDN, DDoS-bescherming en DNS |
+| Resend | Uitgaande transactionele e-mailbezorging |
+| Mailgun | Verwerking van inkomende e-mail (order-, factuur- en betalingsmails) |
+| Stripe | Betalingsverwerking en abonnementsbeheer |
+| PTV Group | Route-, afstands- en ETA-berekening — ontvangt ophaal-/afleverlocaties |
+| HERE Technologies | Adresgeocodering en autocomplete |
+| Google Vertex AI (europe-west1) | AI-ondersteunde functies (documentverwerking, e-mailextractie) — geen modeltraining |
+| Google Cloud Translation | On-demand vertaling van UI- en documentinhoud |
 | Sentry | Foutbewaking en crashrapportage |
+| Google Firebase Cloud Messaging | Pushmeldingen naar de chauffeursapp |
+| WhatsApp Business Cloud API (Meta) | Chauffeurscommunicatie — alleen indien uw bedrijf WhatsApp-meldingen inschakelt |
+| Telematica-providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- en tachograafgegevens — alleen de provider die uw bedrijf koppelt |
+| Reefer-telematica-providers (Mapon, Orbcomm, Thermo King) | Reefer-temperatuurgegevens — alleen de provider die uw bedrijf koppelt |
+| TransFollow | Alleen als legacy eCMR-fallback — de native in-house Druma-provider is de standaard voor uitgifte, ondertekening en archivering |
+
+Alle subverwerkers zijn contractueel gebonden om gegevens uitsluitend volgens instructie en in overeenstemming met de AVG te verwerken.
+
+Als uw bedrijf de optionele functie **Druma Copilot** inschakelt met een eigen AI-provider-API-sleutel ("bring your own AI"), worden uw prompts en de gegevens die u opvraagt rechtstreeks verzonden naar uw gekozen AI-provider (OpenAI, Anthropic of Google) onder de eigen overeenkomst van uw bedrijf met die provider — dit kan gegevens buiten de EU overdragen. Druma Copilot staat **standaard uit** en activeert pas zodra uw bedrijf zijn eigen sleutel aanlevert.
 
 ---
 

@@ -1,0 +1,115 @@
+---
+title: "Licitatii si contracte"
+description: "Urmareste licitatiile de achizitie ale clientilor de la prospect la contract activ, aloca tarifele de ruta castigate intr-un cartel tarifar si monitorizeaza volumul realizat si performanta SLA."
+icon: "file-signature"
+---
+
+## Prezentare generala
+
+Transportatorii din Europa de Est gestioneaza adesea angajamentele tarifare cu clientii in foi de calcul: un expeditor emite o licitatie (RFT) pentru un set de rute, volume si tinte SLA pe o perioada fixa, iar odata castigata, acele tarife guverneaza fiecare cursa rezervata sub acel contract. Licitatii si Contracte da acestui proces un ciclu de viata propriu in Druma, in loc de o foaie de calcul neactualizata.
+
+O licitatie parcurge patru etape de pipeline - **Prospect -> Ofertare -> Trimisa -> Castigata** - si, odata atribuita, devine un contract **Activ**. Contractele pot trece ulterior in **Reinnoire** (aproape de expirare) sau **Expirat**. O licitatie poate fi marcata si **Pierduta** in orice etapa inainte de a fi castigata.
+
+<Note>
+Licitatii si Contracte este un modul optional. Daca nu vezi **Licitatii** sub **Preturi si Vanzari**, cere administratorului companiei sa il activeze in **Setari -> Automatizare -> Gestionare licitatii si contracte**.
+</Note>
+
+**Acces:** Apasa **Preturi si Vanzari -> Licitatii** in navigarea din stanga. Pagina se deschide pe vizualizarea **Pipeline**, cu filele **Toate**, **Contracte Active** si **Performanta** alaturi.
+
+---
+
+## Crearea si atribuirea unei licitatii
+
+<Steps>
+  <Step title="Deschide Licitatii">
+    Mergi la **Preturi si Vanzari -> Licitatii**. Ajungi pe panoul Pipeline, cu o coloana per etapa (Prospect, Ofertare, Trimisa, Castigata).
+  </Step>
+  <Step title="Apasa Licitatie Noua">
+    Apasa **+ Licitatie Noua** in dreapta sus. Da-i un titlu (de ex. "Acme Logistics RFT 2026 - rute RO->DE"), leag-o optional de un client existent sau de un lead CRM, seteaza moneda, perioada licitatiei si volumul total angajat. Apasa **Creeaza licitatia**.
+  </Step>
+  <Step title="Adauga rute angajate">
+    Deschide cardul noii licitatii si, in sectiunea **Rute Angajate**, apasa **Adauga ruta**. Pentru fiecare ruta, seteaza tara de origine si destinatie, tipul de remorca, tariful agreat si modul de tarifare (pe km, fix sau pe trepte), numarul de curse angajate per perioada, o tinta SLA % si orice conditii de penalizare. Repeta pentru fiecare ruta - adauga-le pe masura ce castigi vizibilitate, nu trebuie sa le ai pe toate de la inceput.
+  </Step>
+  <Step title="Avanseaza etapa de pipeline">
+    Apasa **Muta la Ofertare**, apoi **Muta la Trimisa**, apoi **Muta la Castigata** in subsolul panoului. Daca afacerea cade, apasa **Marcheaza ca Pierduta**.
+  </Step>
+  <Step title="Atribuie licitatia">
+    Odata **Castigata**, apare un panou **Atribuie licitatia si activeaza**. Apasa **Atribuie si Genereaza Cartel Tarifar**, apoi **Confirma atribuirea**. Se creeaza un cartel tarifar din rutele licitatiei si aceasta trece la **Activ** - cartelul precompleteaza acum ofertele si preturile pentru client, iar orice comanda legata de contract (`orders.contract_id`) conteaza automat spre volumul angajat.
+  </Step>
+</Steps>
+
+<Note>
+Odata ce o licitatie este Activa, Expirata sau Pierduta, detaliile si rutele ei devin needitabile in panou - termenii agreati sunt blocati. Pentru a schimba tarifele atribuite, ajusteaza direct cartelul tarifar generat (vezi [Cartele Tarifare](/ro/admin/rate-cards)).
+</Note>
+
+### Ce inseamna campurile licitatiei si ale rutei
+
+| Camp | Unde | Ce inseamna |
+|---|---|---|
+| **Titlu** | Licitatie | Nume liber - de obicei clientul + scopul |
+| **Leaga de cont** | Licitatie | Leaga optional de un client existent sau un lead CRM |
+| **Moneda** | Licitatie | Moneda tarifelor agreate (EUR, RON, PLN, CZK, HUF, BGN) |
+| **Perioada de la / pana la** | Licitatie | Fereastra de valabilitate. Sub 60 de zile pana la sfarsit -> "Expira curand" |
+| **Volum angajat** | Licitatie | Total curse angajate pe perioada - baza de masura a filei Performanta |
+| **Tara origine / destinatie** | Ruta | Perechea de tari. "Oricare" pentru ruta generica |
+| **Tip remorca** | Ruta | Prelata, mega, platforma, reefer, cutie, cisterna sau altul |
+| **Mod tarifare** | Ruta | €/km, pret fix sau scala €/km pe trepte |
+| **Tarif agreat** | Ruta | Pretul negociat, in moneda licitatiei |
+| **Curse angajate/perioada** | Ruta | Curse angajate pe aceasta ruta specifica |
+| **Tinta SLA livrare la timp %** | Ruta | Procentul minim de livrare la timp - incalcarile devin alerta cand contractul e activ |
+| **Conditii de penalizare** | Ruta | Nota libera (de ex. "deducere 5% per cursa cu SLA ratat") |
+
+---
+
+## Urmarirea volumului realizat vs. angajat
+
+Odata atribuita si activa (sau in reinnoire, sau recent expirata), panoul licitatiei arata un panel **Performanta contractului** care raspunde la "livram efectiv ce am promis?":
+
+- **Livrat vs. angajat** - bara de progres intre comenzile finalizate si volumul angajat, cu procentul de atingere
+- **In ritmul curent** - proiectia curselor livrate pana la finalul perioadei, la ritmul actual
+- **Venit pana acum, marja medie si SLA la timp** - trei indicatori de sinteza
+- Livrari per ruta si SLA % apar si langa fiecare ruta din lista de Rute Angajate
+
+Se calculeaza live din comenzile legate de contract (`orders.contract_id`) - nimic de configurat.
+
+---
+
+## Citirea panoului SLA / Performanta
+
+Apasa fila **Performanta** pentru a vedea toate contractele active si in reinnoire intr-un singur tabel, fara sa deschizi fiecare panou.
+
+- Fiecare rand arata volum livrat vs. angajat, SLA la timp %, venit mediu, marja medie % si orice alerte active
+- Un banner rosu in partea de sus listeaza fiecare alerta din toate contractele, cand exista cel putin una
+- Pot aparea patru tipuri de alerte pe un contract:
+
+| Alerta | Se declanseaza cand |
+|---|---|
+| **Sub-livrare** | Cursele finalizate scad sub 80% din volumul angajat |
+| **Incalcare SLA** | Procentul de livrare la timp scade sub tinta SLA a rutei |
+| **Deriva marja** | Marja medie a contractului scade sub 5% |
+| **Expira curand** | Perioada contractului se incheie in urmatoarele 60 de zile |
+
+Aceste alerte sunt strict in aplicatie - Druma nu le trimite prin email. Verifica fila Performanta periodic (sau inainte de o discutie de reinnoire) pentru a prinde din timp sub-livrarea sau eroziunea marjei.
+
+---
+
+## Importul unui document de licitatie
+
+Daca administratorul tau a activat importul cu AI (**Setari -> Automatizare -> Functii AI**), apare un buton **Importa document** langa **Licitatie Noua**. Incarca tabelul de tarife al expeditorului (PDF sau Excel, max. 10 MB) si Druma extrage titlul, datele si rutele intr-un draft revizuibil inainte de salvare - util pentru acorduri cu 20 de rute pe care altfel le-ai transcrie manual.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Cartele Tarifare" icon="tag" href="/ro/admin/rate-cards">
+    Cum functioneaza cartelele tarifare de ruta odata ce o licitatie este atribuita si cum le editezi direct.
+  </Card>
+  <Card title="Oferte" icon="file-text" href="/ro/planner/quotes">
+    Ofertare punctuala pentru curse unice - varianta mai simpla fata de o licitatie completa.
+  </Card>
+  <Card title="CRM" icon="address-book" href="/en/planner/crm">
+    Urmareste prospectii inainte sa devina licitatie si vezi licitatiile legate de un cont.
+  </Card>
+  <Card title="Raport Profitabilitate Rute" icon="route" href="/ro/reports/lane-profitability">
+    Verifica daca o ruta este de fapt profitabila inainte de a te angaja la un tarif de licitatie.
+  </Card>
+</CardGroup>

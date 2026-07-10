@@ -1,0 +1,115 @@
+---
+title: "Przetargi i kontrakty"
+description: "Śledzenie przetargów zakupowych klientów od prospektu do aktywnego kontraktu, przyznawanie stawek trasowych do cennika i monitorowanie realizacji wolumenu i SLA."
+icon: "file-signature"
+---
+
+## Przegląd
+
+Wschodnioeuropejscy przewoźnicy często zarządzają zobowiązaniami cenowymi klientów w arkuszach: nadawca ogłasza przetarg (RFT) na zestaw tras, wolumeny i cele SLA na dany okres, a po wygraniu te stawki obowiązują każde zlecenie w ramach kontraktu. Przetargi i kontrakty nadają temu procesowi właściwy cykl życia w Druma zamiast nieaktualizowanego arkusza.
+
+Przetarg przechodzi przez cztery etapy pipeline'u — **Prospekt → Składanie oferty → Złożony → Wygrany** — i po przyznaniu staje się kontraktem **Aktywnym**. Kontrakty mogą później przejść do **Odnawianego** (zbliża się wygaśnięcie) lub **Wygasłego**. Przetarg można też oznaczyć jako **Przegrany** na dowolnym etapie przed wygraniem.
+
+<Note>
+Przetargi i kontrakty to moduł opt-in. Jeśli nie widzisz **Przetargów** w **Ceny i sprzedaż**, poproś administratora firmy o włączenie go w **Ustawienia → Automatyzacja → Zarządzanie przetargami i kontraktami**.
+</Note>
+
+**Dostęp:** kliknij **Ceny i sprzedaż → Przetargi** w menu po lewej. Strona otwiera się na widoku **Pipeline**, obok zakładki **Wszystkie**, **Aktywne kontrakty** i **Wyniki**.
+
+---
+
+## Tworzenie i przyznawanie przetargu
+
+<Steps>
+  <Step title="Otwórz Przetargi">
+    Przejdź do **Ceny i sprzedaż → Przetargi**. Zobaczysz tablicę pipeline'u z kolumną na każdy etap.
+  </Step>
+  <Step title="Kliknij Nowy przetarg">
+    Kliknij **+ Nowy przetarg**, nadaj tytuł, opcjonalnie połącz z istniejącym klientem lub leadem CRM, ustaw walutę, okres przetargu i całkowity wolumen zobowiązania. Kliknij **Utwórz przetarg**.
+  </Step>
+  <Step title="Dodaj zobowiązane trasy">
+    W sekcji **Zobowiązane trasy** kliknij **Dodaj trasę**. Dla każdej trasy ustaw kraj początkowy i docelowy, typ naczepy, uzgodnioną stawkę i tryb stawki (za km, ryczałt lub progresywnie za km), zobowiązaną liczbę ładunków na okres, cel SLA na czas oraz warunki kar. Nie musisz dodać wszystkich tras od razu.
+  </Step>
+  <Step title="Przesuń etap pipeline'u">
+    W miarę postępu klikaj **Przejdź do Składania oferty**, **Przejdź do Złożony**, **Przejdź do Wygrany** w stopce panelu. Jeśli transakcja upadnie, kliknij **Oznacz jako przegrany**.
+  </Step>
+  <Step title="Przyznaj przetarg">
+    Po **Wygraniu** pojawia się bursztynowy panel **Przyznaj przetarg i aktywuj**. Kliknij **Przyznaj i wygeneruj cennik**, potem **Potwierdź przyznanie**. Tworzy to cennik z tras przetargu i przenosi go do statusu **Aktywny** — od tej pory wypełnia on wyceny automatycznie, a zlecenia dla tego klienta można powiązać z kontraktem (`orders.contract_id`).
+  </Step>
+</Steps>
+
+<Note>
+Po przejściu przetargu do Aktywny, Wygasły lub Przegrany, jego dane i trasy stają się tylko do odczytu. Aby zmienić przyznane stawki, edytuj bezpośrednio wygenerowany cennik (zobacz [Cenniki](/pl/admin/rate-cards)).
+</Note>
+
+### Znaczenie pól przetargu i trasy
+
+| Pole | Gdzie | Znaczenie |
+|---|---|---|
+| **Tytuł** | Przetarg | Nazwa przetargu — zwykle klient + cel |
+| **Powiąż z kontem** | Przetarg | Opcjonalnie łączy przetarg z klientem lub leadem CRM |
+| **Waluta** | Przetarg | Waluta wszystkich stawek (EUR, RON, PLN, CZK, HUF, BGN) |
+| **Okres od / do** | Przetarg | Okno ważności kontraktu. Kontrakty w ciągu 60 dni od "Okresu do" są oznaczane jako "Wkrótce wygasa" |
+| **Zobowiązany wolumen** | Przetarg | Łączna liczba ładunków zobowiązana przez klienta na cały okres |
+| **Kraj początkowy / docelowy** | Trasa | Para krajów trasy. Zostaw "Dowolny" dla trasy uniwersalnej |
+| **Typ naczepy** | Trasa | Firanka, mega, platforma, chłodnia, kontener, cysterna, inne |
+| **Tryb stawki** | Trasa | €/km, cena ryczałtowa lub progresywna skala €/km |
+| **Uzgodniona stawka** | Trasa | Wynegocjowana cena w walucie przetargu |
+| **Zobowiązane ładunki/okres** | Trasa | Liczba ładunków na tej trasie zobowiązana przez klienta na okres |
+| **Cel SLA na czas %** | Trasa | Wymagany procent dostaw na czas — naruszenia pokazują alert |
+| **Warunki kar** | Trasa | Wolny tekst o konsekwencjach niedotrzymania SLA |
+
+---
+
+## Śledzenie zrealizowanego wolumenu vs. zobowiązanego
+
+Panel przetargu aktywnego (lub odnawianego, lub niedawno wygasłego) pokazuje **Wyniki kontraktu**:
+
+- **Dostarczono vs. zobowiązano** — pasek postępu porównujący ukończone zlecenia z zobowiązanym wolumenem
+- **Bieżące tempo** — projekcja dostaw do końca okresu przy aktualnym tempie
+- **Przychód dotychczasowy, średnia marża i SLA na czas** — trzy kafelki podsumowujące
+- Liczby dostarczone i % na czas per trasa widoczne przy każdej trasie na liście
+
+Obliczane na żywo ze zleceń powiązanych z kontraktem (`orders.contract_id`) — nic nie trzeba konfigurować.
+
+---
+
+## Panel SLA / wyników
+
+Zakładka **Wyniki** pokazuje wszystkie aktywne i odnawiane kontrakty w jednej tabeli:
+
+- Każdy wiersz pokazuje dostarczono vs. zobowiązano, SLA na czas %, średni przychód, średnią marżę % i aktywne alerty
+- Czerwony baner u góry wypisuje wszystkie alerty
+- Cztery rodzaje alertów:
+
+| Alert | Wyzwalacz |
+|---|---|
+| **Niedostarczenie** | Ukończone ładunki poniżej 80% zobowiązanego wolumenu |
+| **Naruszenie SLA** | % dostaw na czas poniżej celu SLA trasy |
+| **Spadek marży** | Średnia marża kontraktu poniżej 5% |
+| **Wkrótce wygasa** | Okres kontraktu kończy się w ciągu 60 dni |
+
+Alerty są wyłącznie w aplikacji — Druma ich nie wysyła e-mailem. Sprawdzaj zakładkę Wyniki okresowo.
+
+---
+
+## Import dokumentu przetargu
+
+Jeśli administrator włączył import AI przetargów (**Ustawienia → Automatyzacja → Funkcje AI**), obok **Nowy przetarg** pojawia się przycisk **Importuj dokument**. Wgraj tabelę stawek nadawcy jako PDF lub Excel (max 10 MB), a Druma wyodrębni tytuł, daty i trasy do wersji roboczej do przejrzenia.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Cenniki" icon="tag" href="/pl/admin/rate-cards">
+    Jak działają cenniki tras po przyznaniu przetargu i jak je edytować.
+  </Card>
+  <Card title="Wyceny" icon="file-text" href="/pl/planner/quotes">
+    Wyceny doraźne dla pojedynczych ładunków — lżejszy odpowiednik pełnego przetargu.
+  </Card>
+  <Card title="CRM" icon="address-book" href="/en/planner/crm">
+    Śledzenie prospektów przed przetargiem i powiązanych przetargów na koncie.
+  </Card>
+  <Card title="Raport rentowności tras" icon="route" href="/pl/reports/lane-profitability">
+    Sprawdź rentowność trasy przed zobowiązaniem do stawki przetargu.
+  </Card>
+</CardGroup>

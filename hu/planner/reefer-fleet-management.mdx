@@ -1,0 +1,115 @@
+---
+title: "Hűtős flottakezelés"
+description: "Csatlakoztasd a hőmérséklet-szabályozott pótkocsikat a telematikai szolgáltatójukhoz, kövesd nyomon élőben a hőmérsékletet, kezeld a riasztásokat, és generálj hidegvonal-megfelelőségi jelentéseket."
+icon: "snowflake"
+---
+
+## Áttekintés
+
+Ha a flottád hőmérséklet-szabályozott (hűtős) pótkocsikat üzemeltet, a Druma közvetlenül a pótkocsi telematikai egységéből tudja lehívni az élő hőmérsékletet, motoróra-adatokat és riasztásokat — kézi naplózás nélkül. Miután egy pótkocsi szolgáltatója csatlakoztatva van, láthatod az aktuális hőmérsékletét a pótkocsilistán, azonnal értesülsz, ha eltér a beállított értéktől vagy riasztást ad, és egyoldalas hidegvonal PDF-et generálhatsz bármely befejezett fuvarhoz.
+
+A hűtős funkciók csak akkor jelennek meg, ha a céged **Hűtős** flottatípusa be van kapcsolva (**Beállítások → Flottatípusok**).
+
+<Note>
+A hűtős telematikai szolgáltatók API-nyitottsága nagyon eltérő. A Mapon teljesen publikus, azonnal működik. Az Orbcomm fióktokent igényel. A Thermo King TracKing és a Carrier Lynx Fleet csak partnerek számára elérhető — a szolgáltatón keresztül kell API-hozzáférést igényelned, még akkor is, ha a csatlakozási űrlap mind a négy szolgáltatónál elérhető.
+</Note>
+
+---
+
+## Hűtős szolgáltató csatlakoztatása
+
+<Steps>
+  <Step title="Kapcsold be a Hűtős flottatípust">
+    Nyisd meg a **Beállítások → Flottatípusok** menüt, és engedélyezd a **Hűtős**-t.
+  </Step>
+  <Step title="Lépj az Integrációk menübe">
+    Nyisd meg a **Beállítások → Integrációk** menüt. A hűtős telematikai szolgáltatók a többi GPS/tachográf-csatlakozó mellett szerepelnek.
+  </Step>
+  <Step title="Válaszd ki a szolgáltatódat">
+    Keresd meg a pótkocsid telematikai szolgáltatójának kártyáját — **Mapon**, **Orbcomm**, **Thermo King TracKing**, vagy **Carrier Lynx Fleet** —, és nyisd meg. Minden kártya "Honnan szerezhetem meg ezeket?" linkje elmagyarázza, hogyan szerezhetsz hitelesítő adatokat.
+  </Step>
+  <Step title="Add meg a hitelesítő adataidat">
+    Töltsd ki a szolgáltatódhoz tartozó mezőket, és kattints a **Csatlakozás** gombra.
+  </Step>
+  <Step title="Teszteld a kapcsolatot">
+    Kattints a **Kapcsolat tesztelése** gombra, hogy megerősítsd, a Druma eléri a szolgáltatód API-ját.
+  </Step>
+  <Step title="Állítsd be minden pótkocsi telematikai egység azonosítóját">
+    Nyisd meg a **Flotta → Pótkocsik** menüt, válassz egy hűtős pótkocsit, lépj a **Megfelelőség** fülre, és töltsd ki a **Telematikai egység azonosítója** mezőt.
+  </Step>
+</Steps>
+
+Csatlakoztatás után a Druma szinkronizáló feladata automatikusan lehívja az új méréseket — nincs kézi frissítés.
+
+### Szolgáltatói hitelesítő mezők
+
+| Szolgáltató | Megadandó mezők | Honnan szerezhető |
+|---|---|---|
+| **Mapon** | API-kulcs, Alap URL (opcionális) | Generálj API-kulcsot a Mapon platformon, Beállítások → API alatt. Teljesen publikus API. |
+| **Orbcomm** | Hozzáférési token, vagy Felhasználónév + Jelszó, Alap URL (opcionális) | Az ORBCOMM Platform API fiókodon keresztül. |
+| **Thermo King TracKing** | API-kulcs, vagy Felhasználónév + Jelszó, Alap URL (opcionális) | Kérj TracKing API-kulcsot a Thermo King kereskedődtől. Nincs önkiszolgáló regisztráció — partner-kapus integráció. |
+| **Carrier Lynx Fleet** | Ügyfél-azonosító + Ügyfél-titok (vagy régi API-kulcs), Alap URL (opcionális) | A Carrier Transicold vagy a Carrier kereskedőd útján, a Lynx Fleet API-eszközkészlet részeként. Nincs önkiszolgáló regisztráció. |
+
+<Warning>
+A Thermo King és a Carrier esetén a szolgáltatónak kell API-hozzáférést adnia, mielőtt a kapcsolat valós adatot ad vissza. Amíg a partneri jóváhagyásra vársz, a hitelesítő űrlap menthető és tesztelhető, de a szinkronizálás nem indul el.
+</Warning>
+
+---
+
+## Hol jelenik meg a pótkocsi hőmérséklete
+
+- **Pótkocsilista** — egy **Hőm.** oszlop mutatja minden hűtős pótkocsi legutóbbi tényleges hőmérsékletét, egy Fut/Áll motorjelvényt, és egy borostyán Riasztás jelzést, ha a legutóbbi mérés riasztási kódot tartalmaz.
+- **Pótkocsi részletei → Hőmérséklet fül** — a legutóbbi mérést részletesen mutatja (beállított vs. tényleges, ajtóstátusz, motoróra, riasztási kódok), plusz egy előzménytáblázatot.
+- **Kezdőlap → Hűtős státusz widget** — add hozzá a widget-galériából az aktív riasztású pótkocsik, a hőmérséklet-küszöbön kívül futó pótkocsik és a közelgő hűtős karbantartások áttekintéséhez.
+
+---
+
+## Riasztások és riasztás nyugtázása
+
+A hűtős riasztási küszöbök a **Beállítások → Flottatípusok** menüben, a **Hűtős hőmérséklet-riasztások** panelben találhatók:
+
+| Mező | Mit szabályoz |
+|---|---|
+| **Hűtős riasztások engedélyezése** | Fő be/ki kapcsoló a hűtős riasztáshoz. |
+| **Hőmérséklet-eltérés küszöb (°C)** | Mennyire térhet el a mérés a beállított értéktől, mielőtt jelzésre kerül (alapértelmezés 3°C). |
+| **Ajtónyitási küszöb (perc)** | Meddig maradhat nyitva egy ajtó, mielőtt jelzésre kerül (alapértelmezés 10 perc). |
+| **Riasztás egységriasztási kódokra** | Hogy egy nyers riasztási kód kiváltson-e értesítést. |
+| **Újra-riasztás lehűlési idő (perc)** | Minimum idő ugyanazon pótkocsi/feltétel ismételt riasztásai között (alapértelmezés 60 perc). |
+
+Amikor egy küszöb átlépésre kerül, a Druma **alkalmazáson belül** értesít (harang-értesítés a cégadminoknak), és **push-értesítést** küld a pótkocsit üzemeltető sofőrnek — nincs e-mail hűtős riasztásokhoz.
+
+**Riasztás nyugtázása:** nyisd meg a pótkocsi **Hőmérséklet** fülét — minden nyugtázatlan riasztási kód megjelenik egy külön szakaszban, egy **Nyugtázás** gombbal.
+
+---
+
+## Hőmérséklet-megfelelőségi PDF generálása
+
+Bármely, csatlakoztatott hűtős pótkocsin szállított rendeléshez generálhatsz egyoldalas hidegvonal-bizonyítékot:
+
+1. Nyisd meg a rendelést az **Operáció**ban, és lépj a **Dokumentumok** fülre.
+2. Kattints a **Hőmérséklet-jelentés** gombra (csak akkor jelenik meg, ha a rendelés pótkocsijához hűtős telematikai egység van rendelve).
+3. A Druma összeállít és letölt egy PDF-et, amely tartalmazza a beállított vs. tényleges hőmérséklet-görbét, a riasztási és ajtónyitási eseményeket, a motor futásidejét, a pótkocsi ATP-osztályát és a rendelés-referenciát.
+
+---
+
+## ATP-tanúsítványok és hűtős karbantartás
+
+- **ATP-tanúsítvány nyomon követés** — a **Flotta → Flottadokumentumok** menüben a dokumentumtípus legördülőben megjelenik az **ATP** opció; válaszd ki a pótkocsit és az ATP-osztályát (A/B/C/D/F/IN/IR az ATP Egyezmény szerint).
+- **Hűtős karbantartás ütemezés** — a **Flotta → Karbantartás** menüben egy **Hűtős egységek** fül **motorórákban** követi a szervizintervallumokat kilométer helyett.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Pótkocsikezelés" icon="trailer" href="/en/planner/trailer-management">
+    Pótkocsik kezelése, hozzárendelés, elérhetőség és dokumentumok — beleértve a Megfelelőség fület, ahol a hűtős telematikai azonosítók is beállíthatók.
+  </Card>
+  <Card title="Flottadokumentumok" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    ATP-tanúsítványok nyomon követése biztosítás, ITP és más járműdokumentumok mellett.
+  </Card>
+  <Card title="Flottakezelés" icon="truck" href="/en/planner/fleet-management">
+    Járművek, jármútípusok, méretek és dokumentumok hozzáadása és kezelése.
+  </Card>
+  <Card title="Kezdőlap" icon="gauge" href="/en/planner/home-dashboard">
+    Add hozzá a Hűtős státusz widgetet a kezdőlapodhoz.
+  </Card>
+</CardGroup>

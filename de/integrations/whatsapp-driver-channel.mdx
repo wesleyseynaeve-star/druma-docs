@@ -1,0 +1,106 @@
+---
+title: "WhatsApp-Fahrerkanal"
+description: "Fahrer, die WhatsApp bevorzugen, können darüber statt über die Druma-Fahrer-App Nachrichten, Status und Fotos senden — Antworten landen im selben Fahrer-Chat, den Disponenten bereits nutzen."
+icon: "message-circle"
+---
+
+## Übersicht
+
+Nicht jeder Fahrer möchte eine eigene App installieren und offen halten. In Rumänien, Bulgarien, Ungarn, Polen, Tschechien und der Slowakei ist WhatsApp oft das Werkzeug, das ein Subunternehmer- oder Einzelfahrer bereits täglich nutzt — Druma trifft ihn dort statt eine zweite App zu erzwingen.
+
+WhatsApp ist kein separates System, sondern ein zweiter Übertragungskanal für denselben Fahrer-Chat, den Disponenten bereits nutzen: Nachrichten und Fotos eines Fahrers landen im gleichen Thread wie bei einem In-App-Fahrer, und eine Antwort des Disponenten wird automatisch über WhatsApp zurückgesendet. Siehe [Disposition → Tab Fahrer-Chat](/de/planner/dispatching).
+
+Jeder Fahrer ist **entweder** auf die Druma-App **oder** auf WhatsApp eingestellt, nie beides.
+
+---
+
+## WhatsApp für Ihr Unternehmen aktivieren
+
+Die Verbindung wird einmal je Unternehmen unter **Einstellungen → Integrationen** hergestellt.
+
+<Steps>
+  <Step title="Meta-App mit WhatsApp-Produkt erstellen">
+    Auf [business.facebook.com](https://business.facebook.com) eine Meta-App erstellen, das Produkt **WhatsApp** hinzufügen und unter **WhatsApp → API-Einrichtung** eine Telefonnummer anlegen.
+  </Step>
+  <Step title="Zugangsdaten sammeln">
+    **Phone Number ID** und **WhatsApp Business Account (WABA) ID** auf der API-Einrichtungsseite notieren, das **App Secret** unter **App-Einstellungen → Basis**, einen dauerhaften System-User-**Access Token** generieren (nicht temporär) und einen beliebigen **Verify Token** wählen.
+  </Step>
+  <Step title="WhatsApp-Karte in Druma öffnen">
+    **Einstellungen → Integrationen → WhatsApp (Fahrerkanal)**.
+  </Step>
+  <Step title="Webhook-URL in Meta eintragen">
+    Die **Webhook-URL** aus Druma kopieren und zusammen mit dem gleichen Verify Token in Metas Webhook-Einstellungen einfügen.
+  </Step>
+  <Step title="Zugangsdaten eingeben und speichern">
+    Phone Number ID, WABA ID, Access Token, App Secret und Verify Token eintragen, **Aktiv** lassen, **Speichern & verbinden** klicken.
+  </Step>
+</Steps>
+
+### Bedeutung der Felder
+
+| Feld | Bedeutung |
+|---|---|
+| **Webhook-URL** | Drumas feste eingehende Adresse — wird in Meta eingetragen, nicht umgekehrt |
+| **Phone Number ID** | Identifiziert die WhatsApp-Nummer |
+| **WABA ID** | Das Meta-Geschäftskonto der Nummer |
+| **Access Token** | Dauerhaftes System-User-Token, verschlüsselt gespeichert |
+| **App Secret** | Prüft, dass eingehende Webhook-Aufrufe wirklich von Meta stammen |
+| **Verify Token** | Beliebige Zeichenfolge, muss mit Metas Konfiguration übereinstimmen |
+| **Aktiv** | Versand ein-/ausschalten ohne die Zugangsdaten zu löschen |
+
+<Note>
+Diese Karte erscheint nur, wenn Ihr Plan die Fahrer-Messaging-Funktion enthält.
+</Note>
+
+---
+
+## Einen Fahrer auf WhatsApp umstellen
+
+1. **Fleet → Fahrer** öffnen, Fahrerdatensatz auswählen.
+2. Unter **Kommunikationskanal** → **Nachrichtenkanal** auf **Nur WhatsApp** setzen (Standard: nur Druma-App).
+3. **WhatsApp-Nummer** im internationalen Format eingeben (z. B. `+40712345678`).
+4. Einwilligungs-Checkbox bestätigen — Pflicht beim ersten Umstellen, gemäß DSGVO-Vorgaben zur Datenverarbeitung.
+5. **Speichern** klicken.
+
+Ab diesem Zeitpunkt gehen alle Benachrichtigungen (Auftrag zugewiesen, Ankunft, POD-Anfrage, Verspätungserinnerung) über WhatsApp statt an die App.
+
+---
+
+## Nachrichtenvorlagen und warum WhatsApp Genehmigung braucht
+
+WhatsApps Business API erlaubt Freitext nur, solange ein Gespräch 24 Stunden nach der letzten Fahrerantwort "offen" ist. Danach kann nur eine **vorab genehmigte Vorlage** das Gespräch wieder öffnen — eine WhatsApp-Plattformregel, keine Druma-Einschränkung.
+
+Druma teilt jede Benachrichtigung in zwei Teile:
+- **In-App-Nachricht** — Freitext während das Fenster offen ist, frei editierbar je Sprache.
+- **Wiedereröffnungs-Vorlage** — bei geschlossenem Fenster, mit Statusbadge (**Entwurf**, **Ausstehend**, **Genehmigt**, **Abgelehnt**).
+
+Unter **Einstellungen → Integrationen → WhatsApp (Fahrerkanal) → Nachrichtenvorlagen**: Vorlage und Sprache wählen (jede Vorlage liegt in allen 10 Druma-Sprachen vor), In-App-Nachricht bearbeiten und speichern, Wiedereröffnungs-Vorlage bearbeiten und **Zur Genehmigung einreichen**.
+
+Bis eine Vorlage genehmigt ist, liefert Druma weiterhin jede Nachricht — sie wartet einfach auf die nächste Antwort des Fahrers, statt eine ungenehmigte Vorlage zu senden.
+
+---
+
+## Wie Fahrerantworten Disponenten erreichen
+
+Eine eingehende WhatsApp-Nachricht — Text, Foto, Dokument oder Standort — landet im selben Fahrer-Chat, mit dem Badge **Über WhatsApp gesendet**. Antwortet ein Disponent aus diesem Thread, sendet Druma sie automatisch über WhatsApp zurück.
+
+<Note>
+Anhänge von Druma **an** einen WhatsApp-Fahrer werden noch nicht unterstützt — nur Text und Vorlagen gehen derzeit hinaus. Anhänge, die ein Fahrer **einsendet** (POD-Fotos, Schadenfotos), funktionieren normal.
+</Note>
+
+---
+
+## Wenn ein Fahrer nicht sofort antwortet
+
+Automatisierte Benachrichtigungen werden alle paar Minuten automatisch verarbeitet: bei offenem Gesprächsfenster geht jede Nachricht als Freitext ohne Zusatzkosten hinaus; bei geschlossenem Fenster sendet Druma pro Zyklus genau eine genehmigte Vorlage, um das Gespräch wieder zu öffnen, und hält weitere Nachrichten für den nächsten Zyklus zurück. Nichts geht verloren.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Disposition" icon="satellite-dish" href="/de/planner/dispatching">
+    Der Tab Fahrer-Chat, wo Disponenten Nachrichten lesen und beantworten.
+  </Card>
+  <Card title="Fahrermanagement" icon="id-card" href="/de/planner/driver-management">
+    Fahrer anlegen und ihr Profil verwalten, einschließlich Kommunikationskanal.
+  </Card>
+</CardGroup>

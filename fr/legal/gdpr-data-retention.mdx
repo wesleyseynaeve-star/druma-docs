@@ -4,6 +4,8 @@ description: "Détail des périodes de conservation des données dans Druma et d
 icon: "database"
 ---
 
+_Dernière mise à jour : 10 juillet 2026._
+
 ## Vue d'ensemble
 
 Ce document détaille les périodes de conservation des données appliquées par Druma et les procédures de suppression.
@@ -20,10 +22,20 @@ Ce document détaille les périodes de conservation des données appliquées par
 | **Données véhicules** | Plaques, documents, historique | Durée abonnement + 90 jours | Contrat |
 | **Factures** | Montants, numéros, statuts | 7 ans | Obligation légale (loi comptable) |
 | **eCMR** | Documents certifiés | 10 ans | Obligation légale (Protocole e-CMR) |
-| **Journaux d'audit** | Actions utilisateurs | 2 ans | Intérêt légitime (sécurité) |
-| **Position GPS** | Dernière position connue | Temps réel (écrasée à chaque mise à jour) | Contrat |
+| **Journaux d'audit** | Actions utilisateurs | 18 mois | Intérêt légitime (sécurité) |
+| **Position GPS** | Dernière position connue | Écrasée en temps réel — aucun historique conservé | Contrat |
 | **Messages de commande** | Échanges planificateur-chauffeur | 90 jours | Contrat |
 | **Données de facturation** | Abonnements, paiements | 7 ans | Obligation légale |
+
+---
+
+## Données GPS : ce que nous stockons
+
+Druma stocke uniquement la **position GPS actuelle** du chauffeur, transmise pendant un trajet assigné actif. Chaque nouvelle position **écrase la précédente** — aucun historique de déplacement n'est conservé, sauf exception ci-dessous.
+
+<Note>
+Exception : le pipeline de télédéclaration e-Transport (ANAF) utilise un **tampon glissant de 30 jours** avant suppression des positions transmises à l'administration roumaine. En dehors de ce cas, aucune trace de position n'est conservée.
+</Note>
 
 ---
 
@@ -42,10 +54,32 @@ Lorsqu'un compte est résilié ou qu'une demande de suppression est soumise :
 
 **Suppression automatique :**
 - Les journaux de messages de commande sont purgés après 90 jours via une tâche planifiée (pg_cron).
-- Les données GPS sont écrasées en temps réel à chaque nouvelle position.
+- Les données GPS sont écrasées en temps réel à chaque nouvelle position (à l'exception du tampon e-Transport de 30 jours ci-dessus).
 
 **Suppression sur demande :**
 - Export et suppression de compte disponibles dans **Paramètres → Données et confidentialité**.
+
+---
+
+## Sous-traitants et localisation des données
+
+| Sous-traitant | Données traitées | Localisation |
+|---|---|---|
+| Supabase | Base de données (toutes les données) | UE (Francfort) |
+| Cloudflare | CDN, protection DDoS, DNS, journaux de requêtes | UE |
+| Resend | Envoi d'emails transactionnels | UE |
+| Mailgun | Ingestion des emails entrants (commandes, factures, paiements) | UE |
+| Stripe | Facturation et paiements | UE |
+| PTV Group | Itinéraire, distance et ETA (coordonnées d'enlèvement/livraison) | UE |
+| HERE Technologies | Géocodage et autocomplétion d'adresses | UE |
+| Google Vertex AI | Extraction IA d'emails et de documents | europe-west1 (sans entraînement de modèle) |
+| Google Cloud Translation | Traduction à la demande du contenu UI/documents | Google Cloud |
+| Sentry | Surveillance des erreurs et des incidents | UE |
+| Google Firebase Cloud Messaging | Notifications push de l'application chauffeur | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Messagerie chauffeur (si activée) | Meta (US/UE) |
+| Fournisseurs télématiques (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Données GPS et tachygraphe (uniquement le fournisseur connecté) | Selon le fournisseur |
+| Fournisseurs télématiques frigorifiques (Mapon, Orbcomm, Thermo King) | Données de température frigorifique (uniquement le fournisseur connecté) | Selon le fournisseur |
+| TransFollow | Solution de secours historique pour l'eCMR uniquement — le fournisseur natif in-house de Druma est la valeur par défaut | Pays-Bas |
 
 ---
 

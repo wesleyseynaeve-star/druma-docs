@@ -4,7 +4,9 @@ description: "Jakie dane przechowuje Druma, jak długo są przechowywane, Twoje 
 icon: "lock"
 ---
 
-Druma jest administratorem danych przechowywanych przez Twoją firmę na platformie. W tym artykule wyjaśniono dokładnie, co jest przechowywane, jak długo jest zatrzymywane, kto je przetwarza i jakie działania możesz podjąć zgodnie z RODO.
+_Ostatnia aktualizacja: 10 lipca 2026._
+
+Dla **danych operacyjnych** (zlecenia, klienci, kierowcy, dokumenty i powiązane rekordy przechowywane przez Twoją firmę na platformie) Druma pełni rolę **podmiotu przetwarzającego** ("processor") — administratorem danych ("controller") jest Twoja firma, a przetwarzanie reguluje Umowa Powierzenia Przetwarzania Danych (DPA) między Twoją firmą a Druma. Dla **danych konta i rozliczeń** (szczegóły subskrypcji Druma i administrujących nią użytkowników) Druma pełni rolę **administratora danych** we własnym zakresie. Ten artykuł wyjaśnia dokładnie, co jest przechowywane, jak długo jest zatrzymywane, kto je przetwarza i jakie działania możesz podjąć zgodnie z RODO.
 
 ---
 
@@ -25,7 +27,7 @@ Druma jest administratorem danych przechowywanych przez Twoją firmę na platfor
 - Dane importu kart paliwowych powiązane z pojazdami
 
 ### Dokumenty eCMR
-- Elektroniczne listy przewozowe wydane przez TransFollow, w tym dane podpisów i certyfikowane PDF
+- Elektroniczne listy przewozowe wydawane i pieczętowane PAdES **wewnętrznie przez natywnego providera Druma**, w tym dane podpisów i certyfikowane PDF. TransFollow pozostaje dostępny jako zapasowy (legacy) provider dla firm, które korzystały z niego przed wprowadzeniem natywnego rozwiązania.
 
 ### Dane pozycji GPS
 - Druma przechowuje **tylko bieżącą pozycję GPS** — ostatnią znana lokalizację wysłaną przez aplikację kierowcy. **Nie jest przechowywana ani dostępna żadna historia pozycji.** W momencie otrzymania nowej pozycji poprzednia jest nadpisywana.
@@ -45,7 +47,7 @@ Druma nie przechowuje danych tachografu, nagrań rozmów, danych biometrycznych 
 |---|---|
 | Dane operacyjne (zlecenia, klienci, kierowcy, pojazdy) | Czas trwania subskrypcji + 90 dni po anulowaniu |
 | Dane kont użytkowników | Czas trwania subskrypcji + 90 dni po anulowaniu |
-| Dzienniki audytu | 2 lata od daty zarejestrowanego zdarzenia |
+| Dzienniki audytu | 18 miesięcy od daty zarejestrowanego zdarzenia |
 | Dokumenty eCMR | 10 lat (wymóg prawny zgodnie z Protokołem e-CMR) |
 | Dane pozycji GPS | Nadpisywane w czasie rzeczywistym — brak zachowanej historii |
 | Rekordy rozliczeń | 7 lat (wymóg rumuńskiego prawa rachunkowego) |
@@ -103,18 +105,25 @@ Druma udostępnia dane następującym zewnętrznym podmiotom przetwarzającym w 
 
 | Podmiot przetwarzający | Cel |
 |---|---|
-| Supabase | Hosting bazy danych i uwierzytelnianie |
-| Resend | Dostarczanie e-maili transakcyjnych |
-| HERE Technologies | Geokodowanie adresów i obliczanie tras |
-| TransFollow | Wydawanie, podpisywanie i archiwizowanie eCMR |
-| Stripe | Przetwarzanie płatności i zarządzanie subskrypcją |
-| Google Vertex AI (Gemini Enterprise) | Funkcje wspomagane przez AI (analiza dokumentów, ekstrakcja e-maili) — UE, bez trenowania modeli |
-| Mailgun | Masowe powiadomienia e-mail |
+| Supabase | Hosting bazy danych i uwierzytelnianie (UE — Frankfurt) |
 | Cloudflare | CDN, ochrona DDoS i DNS |
+| Resend | Dostarczanie wychodzących e-maili transakcyjnych |
+| Mailgun | Odbiór e-maili przychodzących (zlecenia, faktury, płatności parsowane do Druma) |
+| Stripe | Przetwarzanie płatności i zarządzanie subskrypcją |
+| PTV Group | Obliczanie trasy, dystansu i ETA — otrzymuje współrzędne odbioru/dostawy |
+| HERE Technologies | Geokodowanie adresów i autouzupełnianie |
+| Google Vertex AI (europe-west1) | Funkcje wspomagane przez AI (analiza dokumentów, ekstrakcja e-maili) — bez trenowania modeli |
+| Google Cloud Translation | Tłumaczenie na żądanie treści UI i dokumentów |
 | Sentry | Monitorowanie błędów i raportowanie awarii |
-| Tawk.to | Czat na żywo i wsparcie w aplikacji |
+| Google Firebase Cloud Messaging | Powiadomienia push do aplikacji kierowcy |
+| WhatsApp Business Cloud API (Meta) | Wiadomości do kierowców — tylko jeśli firma włączy powiadomienia WhatsApp |
+| Dostawcy telematyki (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Dane GPS i tachografu — tylko dostawca podłączony przez firmę |
+| Dostawcy telematyki chłodni (Mapon, Orbcomm, Thermo King) | Dane temperatury chłodni — tylko dostawca podłączony przez firmę |
+| TransFollow | Wyłącznie zapasowy (legacy) provider eCMR — domyślnym providerem wydawania, podpisywania i archiwizacji jest natywne rozwiązanie Druma |
 
 Wszystkie podmioty przetwarzające są zobowiązane umownie do przetwarzania danych wyłącznie zgodnie z instrukcjami i zgodnie z RODO.
+
+Jeśli Twoja firma włączy opcjonalną funkcję **Druma Copilot** z własnym kluczem API dostawcy AI ("bring your own key"), prompty i zapytywane dane są wysyłane bezpośrednio do wybranego dostawcy AI (OpenAI, Anthropic lub Google) na podstawie własnej umowy Twojej firmy z tym dostawcą — może to oznaczać transfer danych poza UE. Druma Copilot jest **domyślnie wyłączony** i aktywuje się dopiero po podaniu własnego klucza przez firmę.
 
 ---
 

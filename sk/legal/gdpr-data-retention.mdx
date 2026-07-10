@@ -4,6 +4,8 @@ description: "Aké dáta Druma uchováva, ako dlho sú uchovávané a ako požia
 icon: "clock"
 ---
 
+_Posledná aktualizácia: 10. júla 2026._
+
 ## Doby uchovávania dát
 
 | Typ dát | Doba uchovávania | Právny základ |
@@ -15,8 +17,8 @@ icon: "clock"
 | Záznamy vodičov | Trvanie predplatného + 90 dní | Zmluva |
 | Faktúry a finančné záznamy | 7 rokov od dátumu faktúry | Zákon o účtovníctve |
 | eCMR dokumenty (podpísané) | 10 rokov od dátumu podpisu | Protokol e-CMR (zákonná požiadavka) |
-| Auditné záznamy | 2 roky | Oprávnené záujmy |
-| GPS záznamy polohy | 90 dní | Zmluva |
+| Auditné záznamy | 18 mesiacov | Oprávnené záujmy |
+| GPS poloha (iba aktuálna) | Prepisovaná v reálnom čase — história sa neuchováva | Zmluva |
 | Záznamy chýb a bezpečnostné záznamy | 90 dní | Oprávnené záujmy |
 | Fakturačné záznamy (Stripe) | 7 rokov | Daňové právo |
 
@@ -26,13 +28,11 @@ eCMR dokumenty majú 10-ročnú požiadavku na uchovávanie podľa Dodatkového 
 
 ## GPS dáta: čo uchovávame
 
-Druma zachytáva GPS polohu **iba keď vodič klepne na tlačidlo aktualizácie stavu** v aplikácii. Uchovávame jeden časovaný súradnicový záber na zmenu stavu. Nesledujeme polohu vodiča nepretržite.
-
-GPS záznamy polohy sú vymazané po 90 dňoch.
+Druma zachytáva GPS polohu z vodičovho zariadenia **len počas aktívnej pridelenej jazdy**, po udelení súhlasu s polohou v aplikácii. Každá nová poloha **prepíše predchádzajúcu** — Druma uchováva iba aktuálnu polohu, nie históriu. Neuchovávame históriu trasy a nezdieľame GPS dáta s tretími stranami, s výnimkou hlásenia e-Transport pre ANAF, ktoré používa priebežný 30-dňový buffer pred vymazaním.
 
 ## Auditný záznam
 
-Každá významná akcia v Druma (vytvorená zákazka, odoslaná faktúra, prihlásenie používateľa, zmenené nastavenia) je zaznamenaná v auditnom zázname. Auditné záznamy sú uchovávané 2 roky a nemožno ich upravovať ani mazať.
+Každá významná akcia v Druma (vytvorená zákazka, odoslaná faktúra, prihlásenie používateľa, zmenené nastavenia) je zaznamenaná v auditnom zázname. Auditné záznamy sú uchovávané 18 mesiacov a nemožno ich upravovať ani mazať.
 
 ## Po zrušení účtu
 
@@ -64,11 +64,20 @@ Alternatívne pošlite e-mail na privacy@druma.io z e-mailovej adresy majiteľa 
 | Poskytovateľ | Čo spracúva | Umiestnenie |
 |----------|------------|-----------|
 | Supabase | Databáza (všetky dáta) | EÚ (Frankfurt) |
-| Resend | Obsah e-mailu | EÚ |
-| Cloudflare | Záznamy požiadaviek | EÚ |
-| TransFollow | Archív eCMR dokumentov | Holandsko |
-| Stripe | Fakturačné dáta | EÚ |
-| Google Vertex AI (Gemini Enterprise) | Extrakcia obsahu e-mailov a dokumentov AI | EÚ (bez tréningu modelov) |
+| Cloudflare | CDN, ochrana pred DDoS, DNS, záznamy požiadaviek | EÚ |
+| Resend | Obsah odchádzajúcich transakčných e-mailov | EÚ |
+| Mailgun | Príjem prichádzajúcich e-mailov (zákazky, faktúry, platby) | EÚ |
+| Stripe | Fakturačné a platobné dáta | EÚ |
+| PTV Group | Trasa, vzdialenosť a ETA (súradnice nakládky/vykládky) | EÚ |
+| HERE Technologies | Geokódovanie a automatické dopĺňanie adries | EÚ |
+| Google Vertex AI | Extrakcia obsahu e-mailov a dokumentov AI | europe-west1 (bez tréningu modelov) |
+| Google Cloud Translation | Preklad obsahu UI/dokumentov na vyžiadanie | Google Cloud |
+| Sentry | Monitorovanie chýb a hlásenie zlyhaní | EÚ |
+| Google Firebase Cloud Messaging | Push notifikácie pre aplikáciu vodiča | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Komunikácia s vodičom (iba ak je zapnutá) | Meta (US/EÚ) |
+| Poskytovatelia telematiky (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS a tachografické dáta (iba pripojený poskytovateľ) | Podľa poskytovateľa |
+| Poskytovatelia reefer telematiky (Mapon, Orbcomm, Thermo King) | Teplotné dáta reefer (iba pripojený poskytovateľ) | Podľa poskytovateľa |
+| TransFollow | Iba záložný (legacy) eCMR — predvolený je natívny poskytovateľ Druma | Holandsko |
 
 ## Vaše práva podľa GDPR
 
