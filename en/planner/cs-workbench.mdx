@@ -1,0 +1,131 @@
+---
+title: "CS Workbench"
+description: "The customer-service answer to \"where's my shipment?\" — one pane for live status, site details, check-calls, and proactive exceptions."
+icon: "headset"
+---
+
+## Overview
+
+The CS Workbench is where customer-service reps answer the question clients ask most: *where's my shipment?* Instead of bouncing between the orders list, the order detail, and the client record, everything a rep needs — live status, ETA, driver and truck, stop-by-stop opening hours and contacts, and a log of every client touch — lives in one master-detail pane.
+
+**How to access:** click **Customer Service** in the left navigation. It opens on the **Workbench** tab by default; a **Sites** tab sits alongside it.
+
+The Workbench is built on two supporting pieces:
+
+- **Sites** — a reusable catalogue of pickup/delivery locations (warehouses, factories, distribution centres, ports, terminals, yards) with opening hours, contacts, dock/access notes, and per-client booking instructions. Pick a site once on an order's stop and its address autofills; the Workbench then pulls that site's hours and contacts for every order that visits it.
+- **Exceptions** — Druma automatically flags two situations that cause missed deliveries: an ETA that lands after the delivery site is closed, and a stop that needs a booking with none recorded.
+
+---
+
+## Logging a Check-Call on an Order
+
+<Steps>
+  <Step title="Open the Workbench">
+    Go to **Customer Service** — it opens on the Workbench tab.
+  </Step>
+  <Step title="Find the order">
+    Use the search box (order number, reference, or pickup/delivery city) or narrow the list first — see the filters below. Click an order card to open its detail pane on the right.
+  </Step>
+  <Step title="Review the shipment status">
+    The detail pane's header shows the order number, status, assigned driver/truck (or subcontractor), and ETA, followed by a status stepper and a stop-by-stop breakdown — each stop shows today's opening hours (in red if currently closed), whether an appointment is required, the client's booking reference, site contacts, and a booking-portal link when the site has one.
+  </Step>
+  <Step title="Log the call">
+    Scroll to the **Check-call log** at the bottom of the detail pane. Choose a **Kind**, **Direction**, and **Channel**, optionally note who you spoke to, write what happened, and click **Log entry**. It appears immediately in the timeline above the composer, with your name and timestamp.
+  </Step>
+  <Step title="Notify the client (optional)">
+    Click **Notify client** in the detail header to send the client a branded status-update email. Druma emails the client's contacts flagged for operational or delivery notifications and automatically logs the send as a check-call entry, so the audit trail stays complete.
+  </Step>
+</Steps>
+
+### What the check-call fields mean
+
+| Field | Options / meaning |
+|---|---|
+| **Kind** | Check call · Note · Booking · Exception · Client notify — what type of touch this was. |
+| **Direction** | Inbound (client/site called you) · Outbound (you called them) · Internal (a note for your team). |
+| **Channel** | Phone · Email · SMS · Portal · System. |
+| **Contact** | Free-text name of who you spoke to, for your own reference. |
+| **Note** | What happened — required before you can log the entry. |
+
+---
+
+## Filtering and Sorting the Order List
+
+The left-hand order list has its own toolbar above the cards:
+
+- **Scope toggle** — **Active** (default), **All**, or **Historical**.
+- **Sort** — by Created, ETA, Delivery, or Status.
+- **Status filter**, **Client filter**, and **Client reference filter** — narrow further; client and reference filters accept partial matches.
+- **Exceptions only** — show only orders currently carrying an exception.
+
+A KPI bar above the list shows live counts for Results, In transit, Delivered, and Exceptions.
+
+---
+
+## Working the Exception Queue
+
+Every open order is automatically checked for two failure modes the moment its data changes — you don't have to open each one to find a problem:
+
+- **ETA after close** — the order's current ETA lands after the delivery site's opening hours for that day.
+- **Appointment missing** — a stop's site requires a booking, but no booking reference and no logged `booking` check-call exist for it yet.
+
+<Steps>
+  <Step title="Spot flagged orders">
+    Flagged orders carry an amber exception badge in the order list, and the Workbench's **Exceptions** KPI shows how many distinct orders are currently affected. Toggle **Exceptions only** to see just those.
+  </Step>
+  <Step title="Open the order and review the detail">
+    The detail pane shows an amber **Exceptions** panel listing each triggered condition and the site it relates to. A predicted exception (from Druma's predictive-delay model) is marked with a **Predicted** badge and a severity level, separately from the rule-based ones described above.
+  </Step>
+  <Step title="Resolve it">
+    Depending on the exception: log a `booking` check-call once you've confirmed a slot, or update the site's booking reference for that client. For an ETA-after-close situation, call ahead to the site or notify the client so they can adjust.
+  </Step>
+  <Step title="Confirm it clears">
+    Exceptions are computed live from current data, not manually dismissed — once the underlying condition is fixed (a booking is logged, or the ETA moves back inside opening hours), the flag disappears on its own.
+  </Step>
+</Steps>
+
+<Note>
+Exceptions also feed the **Exceptions feed** widget on the Home Dashboard, so a proactive check doesn't require opening the CS section at all.
+</Note>
+
+---
+
+## Sites — Where Opening Hours and Contacts Come From
+
+Manage the site catalogue from the **Sites** tab. Each site holds identity/address, a weekly opening-hours grid (with date-specific exceptions, e.g. a public holiday), appointment/booking settings, dock count and gate/access notes, vehicle restrictions, a contacts repeater, and per-client booking instructions (the same warehouse can require a different reference depending on whose cargo it is).
+
+Two buttons in the site editor's opening-hours section can fill in data for you — both require opening an existing site (not available while creating a new one):
+
+- **Suggest from history** — infers opening hours and typical dwell time from your own drivers' past arrival/departure times at that site. Always reviewable before you save; nothing is written automatically.
+- **Research the web** — asks Druma's AI to search the web for the site's published hours, contacts, and booking portal, citing the pages it used. This is a manual, pay-per-call action metered in EUR and must be turned on first in **Settings → Automation → Customer service** (an admin/company-admin setting) — it's off by default because each click has a real cost.
+
+### What the site fields mean
+
+| Field | Meaning |
+|---|---|
+| **Type** | Warehouse, Factory, Distribution centre, Port, Terminal, Yard, Other. |
+| **Timezone** | The site's local timezone — used to evaluate opening hours correctly regardless of where the order was created. |
+| **Opening hours** | A per-weekday grid of open windows, with optional date-specific exceptions (closures/holidays). |
+| **Appointment required** | Whether a booking slot must be arranged before arrival; can be overridden per client. |
+| **Dock count / Gate instructions / Access notes** | Practical arrival info for drivers and planners. |
+| **Booking portal URL** | Link to the site's own booking system, if it has one. |
+| **Vehicle restrictions** | Flag-based limits (e.g. size/weight restrictions) recorded on the site. |
+| **Contacts** | Named booking/gatehouse/warehouse/security contacts with phone/email. |
+| **Per-client instructions** | Booking reference, customer code, and free-text instructions specific to one client at this site. |
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Creating an Order" icon="plus" href="/en/planner/creating-orders">
+    Pick a site on a stop to autofill its address — the Workbench then pulls that site's details for the order.
+  </Card>
+  <Card title="Order Lifecycle" icon="circle-dot" href="/en/planner/order-lifecycle">
+    Every order status the Workbench displays, and what triggers each transition.
+  </Card>
+  <Card title="Dispatching" icon="route" href="/en/planner/dispatching">
+    The live map and driver chat the Workbench's live-position line and assignment card draw from.
+  </Card>
+  <Card title="Home Dashboard" icon="gauge" href="/en/planner/home-dashboard">
+    Add the Exceptions feed widget to see CS exceptions without leaving the dashboard.
+  </Card>
+</CardGroup>

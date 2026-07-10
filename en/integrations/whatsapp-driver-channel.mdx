@@ -1,0 +1,126 @@
+---
+title: "WhatsApp Driver Channel"
+description: "Let drivers who prefer WhatsApp send and receive messages, statuses, and photos there instead of the Druma driver app — replies land in the same driver chat dispatchers already use."
+icon: "message-circle"
+---
+
+## Overview
+
+Not every driver wants to install and keep open a dedicated app. Across Romania, Bulgaria, Hungary, Poland, Czechia, and Slovakia, WhatsApp is often the tool a subcontracted or owner-operator driver already uses every day — so Druma meets them there instead of forcing a second app on them.
+
+WhatsApp is not a separate messaging system bolted on the side. It is a second delivery channel for the same driver chat dispatchers already use: a driver's messages and photos arrive in the exact same thread as an in-app driver, and a dispatcher's reply is sent back over WhatsApp automatically when that driver is on the WhatsApp channel. There is nothing new for dispatchers to learn — see [Dispatching → Driver Chat Tab](/en/planner/dispatching#driver-chat-tab) for how the thread itself works.
+
+Each driver is set to **either** the Druma app **or** WhatsApp, never both — a driver who already reads the in-app chat for free shouldn't also trigger a paid WhatsApp message for the same update.
+
+---
+
+## Turning on WhatsApp for your company
+
+WhatsApp messaging is connected once per company, from the Integrations settings — the same place every other external connection (HERE, fuel cards, accounting exports) is configured.
+
+<Steps>
+  <Step title="Create a Meta App with the WhatsApp product">
+    In a browser, go to [business.facebook.com](https://business.facebook.com) and create (or open) a Meta App, then add the **WhatsApp** product to it. Add a phone number under **WhatsApp → API Setup** — this is the number your drivers will message and receive messages from.
+  </Step>
+  <Step title="Collect your credentials">
+    On the app's **WhatsApp → API Setup** page, note the **Phone Number ID** and **WhatsApp Business Account (WABA) ID**. Under **App Settings → Basic**, note the **App Secret**. Generate a permanent system-user **Access Token** (not a temporary token — it must not expire). Choose any string of your own as a **Verify Token** — you'll reuse it in the next step.
+  </Step>
+  <Step title="Open the WhatsApp card in Druma">
+    Go to **Settings → Integrations** and open the **WhatsApp (driver channel)** card.
+  </Step>
+  <Step title="Copy the webhook URL into Meta">
+    Click the copy icon next to the **Webhook URL** field and paste it into your Meta App's **WhatsApp → Configuration → Webhook** settings, along with the same Verify Token you chose above. Meta uses this to confirm the URL belongs to you and to deliver incoming driver messages.
+  </Step>
+  <Step title="Enter your credentials and save">
+    Fill in the Phone Number ID, WABA ID, Access Token, App Secret, and Verify Token, leave **Active** on, and click **Save & connect**.
+  </Step>
+</Steps>
+
+### What the fields mean
+
+| Field | What it is |
+|---|---|
+| **Webhook URL** | Druma's fixed inbound address — paste this into Meta, not the other way round. Read-only, generated automatically. |
+| **Phone Number ID** | Identifies which WhatsApp number Druma sends from and receives on. Found on the Meta App's WhatsApp → API Setup page. |
+| **WhatsApp Business Account ID (WABA ID)** | The Meta business account the phone number belongs to. Also on the API Setup page. |
+| **Access Token** | The permanent system-user token Druma uses to call the WhatsApp API on your behalf. Stored encrypted — re-enter it only when rotating. |
+| **App Secret** | Used to verify that inbound webhook calls genuinely come from Meta, not a spoofed request. Found under App Settings → Basic. |
+| **Verify Token** | Any string you choose. Must match exactly what you entered in Meta's webhook configuration. |
+| **Active** | Turns sending on or off without deleting your saved credentials. |
+
+Once connected, use **Disconnect** on the same card to remove the credentials entirely if you stop using WhatsApp.
+
+<Note>
+This card only appears once your plan includes the driver-messaging feature. If you don't see it under Settings → Integrations, contact support.
+</Note>
+
+---
+
+## Switching a driver to WhatsApp
+
+Enabling the company connection does not move any drivers over automatically — each driver's channel is set individually, with their consent recorded.
+
+1. Go to **Fleet → Drivers** and open the driver's record.
+2. Under **Communication Channel**, set **Message Channel** to **WhatsApp only** (the default is **Druma app only**).
+3. Enter the driver's **WhatsApp Number** in international format (e.g. `+40712345678`).
+4. Tick the consent checkbox confirming the driver has agreed to receive Druma messages and share status updates/photos over WhatsApp — required the first time you switch a driver to WhatsApp, per GDPR data-processing rules. Once consent is on file, the driver's record shows the date it was given instead of the checkbox.
+5. Click **Save**.
+
+From this point, any message or automated notification Druma would normally push to that driver's app — order assigned, arrival, POD request, running-late reminder — is sent to their WhatsApp number instead.
+
+---
+
+## Message templates and why WhatsApp requires approval
+
+WhatsApp's Business API only allows free-form text while a conversation is "open" — for 24 hours after the driver's last reply. Once that window closes, only a **pre-approved message template** can reopen it; Meta reviews and approves template wording in advance so operators can't use WhatsApp to send unsolicited marketing. This is a WhatsApp platform rule, not a Druma limitation.
+
+Druma splits each notification into two parts so you rarely notice the distinction:
+
+- **In-app message** — the free-form wording sent while the conversation window is open. You can edit this freely per language, no approval needed.
+- **Reopen template** — the wording sent when the window is closed and Meta needs to approve it first, shown with a status badge (**Draft**, **Pending**, **Approved**, or **Rejected**).
+
+To review or edit templates, open **Settings → Integrations → WhatsApp (driver channel)** and scroll to **Message templates** (visible once WhatsApp is connected):
+
+1. Pick a **Template** (order assigned, ETA request, POD request, arrival, running late) and a **Language** — every template ships pre-filled in all 10 Druma languages.
+2. Edit the **in-app message** and click **Save in-app message** — takes effect immediately.
+3. Edit the **reopen template** and click **Submit for approval** — this sends the wording to Meta for review. The status badge updates to **Pending**, then **Approved** or **Rejected** (with a reason) once Meta responds.
+
+Until a reopen template is approved, Druma still delivers every message — it simply waits for the window to reopen (the driver's next reply) rather than sending a rejected or unapproved template.
+
+---
+
+## How driver replies reach dispatchers
+
+An inbound WhatsApp message — text, photo, document, or location — arrives in the same driver chat dispatchers already use, badged **Sent via WhatsApp** on the message bubble so it's clear which channel it came in on. See [Dispatching → Driver Chat Tab](/en/planner/dispatching#driver-chat-tab) for how to open a thread, reply, and attach files — the flow is identical regardless of which channel the driver is on. When a dispatcher replies from that thread to a WhatsApp driver, Druma sends it back over WhatsApp automatically; no extra step is needed.
+
+<Note>
+Photo/document attachments sent **from** Druma **to** a WhatsApp driver are not yet supported — only text and templates go out over WhatsApp today. Attachments a WhatsApp driver sends **in** (POD photos, damage photos) work normally and land in the thread like any other message.
+</Note>
+
+---
+
+## When a driver doesn't reply right away
+
+If a driver is offline or the message conversation window has closed, Druma doesn't drop the message or fail silently. Automated notifications (like a POD request) are queued and flushed automatically every few minutes:
+
+- If the driver's conversation window is still open, every queued message goes out as free-form text — no extra cost.
+- If the window has closed, Druma sends exactly one approved template for that driver per cycle to reopen the conversation, and holds any remaining queued messages for the next cycle rather than sending (and paying for) several templates back to back.
+
+Every message is eventually delivered — nothing queued is ever silently discarded.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Dispatching" icon="satellite-dish" href="/en/planner/dispatching">
+    The Driver Chat tab where dispatchers read and reply to driver messages, WhatsApp or in-app.
+  </Card>
+  <Card title="Driver Management" icon="id-card" href="/en/planner/driver-management">
+    Add drivers to Druma and manage their profile, including the communication channel.
+  </Card>
+  <Card title="Integration Setup" icon="plug" href="/en/admin/integration-setup">
+    The full Settings → Integrations page and how the other connections are configured.
+  </Card>
+  <Card title="Driver Assignment Notifications" icon="bell-concierge" href="/en/automation/driver-assignment-notifications">
+    The automatic order-assignment notifications that can be delivered over WhatsApp.
+  </Card>
+</CardGroup>

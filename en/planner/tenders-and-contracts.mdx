@@ -1,0 +1,115 @@
+---
+title: "Tenders & Contracts"
+description: "Track client procurement tenders from prospect to active contract, award lane rates into a rate card, and monitor realised volume and SLA performance."
+icon: "file-signature"
+---
+
+## Overview
+
+Eastern European hauliers often manage client rate commitments in spreadsheets: a shipper issues a tender (RFT) for a set of lanes, volumes, and SLA targets over a fixed period, and once you win it, those rates govern every load booked under that contract. Tenders & Contracts gives that process a proper lifecycle inside Druma — from first contact through active contract monitoring — instead of a spreadsheet nobody keeps up to date.
+
+A tender moves through four pipeline stages — **Prospect → Bidding → Submitted → Won** — and, once awarded, becomes an **Active** contract. Contracts can later move to **Renewing** (approaching expiry) or **Expired**. A tender can also be marked **Lost** at any stage before it's won.
+
+<Note>
+Tenders & Contracts is an opt-in module. If you don't see **Tenders** under **Pricing & Sales**, ask your company admin to enable it in **Settings → Automation → Tender & contract management**.
+</Note>
+
+**Access:** Click **Pricing & Sales → Tenders** in the left navigation. The page opens on the **Pipeline** view, with **All**, **Active Contracts**, and **Performance** tabs alongside it.
+
+---
+
+## Creating and Awarding a Tender
+
+<Steps>
+  <Step title="Open Tenders">
+    Go to **Pricing & Sales → Tenders**. You land on the Pipeline board, with one column per stage (Prospect, Bidding, Submitted, Won).
+  </Step>
+  <Step title="Click New Tender">
+    Click **+ New Tender** in the top-right. Give it a title (e.g. "Acme Logistics RFT 2026 — RO→DE lanes"), optionally link it to an existing client or a CRM lead, set the currency, the tender period, and the total committed volume. Click **Create tender**.
+  </Step>
+  <Step title="Add committed lanes">
+    Open the new tender card and, in the **Committed Lanes** section, click **Add lane**. For each lane, set the origin and destination country, trailer type, agreed rate and rate mode (per km, flat, or bracketed per km), committed loads per period, an SLA on-time % target, and any penalty terms. Repeat for every lane in the tender. Add lanes as you win visibility into the shipper's full lane list — you don't need them all up front.
+  </Step>
+  <Step title="Advance the pipeline stage">
+    As the deal progresses, click **Move to Bidding**, then **Move to Submitted**, then **Move to Won** in the drawer footer. If the deal falls through at any point, click **Mark as Lost** instead.
+  </Step>
+  <Step title="Award the tender">
+    Once a tender is **Won**, an amber **Award tender & activate** panel appears in the drawer. Click **Award & Generate Rate Card**, then **Confirm award**. This creates a rate card from the tender's lanes and moves the tender to **Active** — that rate card now pre-fills quotes and pricing for that client's lanes, and any order you book against this client can be linked to the contract (`orders.contract_id`), so it counts toward the committed volume automatically.
+  </Step>
+</Steps>
+
+<Note>
+Once a tender is Active, Expired, or Lost, its details and lanes become read-only in the drawer — the agreed terms are locked in. To change awarded rates, adjust the generated rate card directly (see [Rate Cards](/en/admin/rate-cards)).
+</Note>
+
+### What the tender and lane fields mean
+
+| Field | Where | What it means |
+|---|---|---|
+| **Title** | Tender | Free-text name for the tender — usually the client name + purpose |
+| **Link to account** | Tender | Optionally ties the tender to an existing client or a CRM lead, so it shows up in that account's record |
+| **Currency** | Tender | Currency for all agreed rates on this tender (EUR, RON, PLN, CZK, HUF, BGN) |
+| **Period from / to** | Tender | The contract's validity window. Contracts within 60 days of `Period to` are flagged "Expiring soon" |
+| **Committed volume** | Tender | Total loads the client has committed to over the whole period — the number the Performance tab measures actuals against |
+| **Origin / destination country** | Lane | The lane's country pair. Leave as "Any" for a wildcard lane |
+| **Trailer type** | Lane | Tautliner, mega, flatbed, reefer, box, tanker, or other |
+| **Rate mode** | Lane | How the agreed rate is applied: €/km, a flat price, or a bracketed €/km scale |
+| **Agreed rate** | Lane | The negotiated price for this lane, in the tender's currency |
+| **Committed loads/period** | Lane | How many loads on this specific lane the client has committed to per period |
+| **SLA on-time % target** | Lane | The on-time delivery percentage this lane must hit — breaches show as an alert once the contract is active |
+| **Penalty terms** | Lane | Free-text note on what happens if the SLA target is missed (e.g. "5% deduction per missed SLA trip") |
+
+---
+
+## Tracking Realised Volume vs. Committed
+
+Once a tender is awarded and active (or renewing, or recently expired), its drawer shows a **Contract performance** panel that answers "are we actually delivering what we promised?":
+
+- **Delivered vs committed** — a progress bar comparing completed orders linked to this contract against the tender's total committed volume, with the attainment percentage
+- **On current pace** — a projection of how many loads you'll have delivered by the end of the period at the current run rate
+- **Revenue to date, average margin, and on-time SLA** — three tiles summarising contract performance so far
+- Per-lane delivered counts and on-time % also appear next to each lane in the Committed Lanes list
+
+This is calculated live from orders linked to the contract (`orders.contract_id`) — there's nothing to configure, it updates as loads are delivered.
+
+---
+
+## Reading the SLA / Performance Dashboard
+
+Click the **Performance** tab to see every active and renewing contract in one table, rather than opening each drawer individually.
+
+- Each row shows delivered vs. committed volume, on-time SLA %, average revenue, average margin %, and any active alerts
+- A red banner at the top lists every alert across all contracts when at least one exists
+- Four alert kinds can appear on a contract:
+
+| Alert | Triggers when |
+|---|---|
+| **Under-delivery** | Completed loads fall below 80% of the committed volume |
+| **SLA breach** | On-time delivery % drops below the lane's SLA target |
+| **Margin drift** | Average margin on the contract falls below 5% |
+| **Expiring soon** | The contract period ends within 60 days |
+
+These alerts are strictly in-app — Druma doesn't email them. Check the Performance tab periodically (or before a renewal conversation) to catch under-delivery or margin erosion early.
+
+---
+
+## Importing a Tender Document
+
+If your admin has enabled AI tender import (**Settings → Automation → AI features**), an **Import document** button appears next to **New Tender**. Upload the shipper's rate table as a PDF or Excel file (max 10 MB) and Druma extracts the title, dates, and lanes into a draft you can review and edit before saving — useful for 20-lane agreements you'd otherwise transcribe by hand.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Rate Cards" icon="tag" href="/en/admin/rate-cards">
+    How lane rate cards work once a tender is awarded, and how to edit them directly.
+  </Card>
+  <Card title="Quotes" icon="file-text" href="/en/planner/quotes">
+    Spot quoting for one-off loads — the lighter-weight counterpart to a full tender.
+  </Card>
+  <Card title="CRM" icon="address-book" href="/en/planner/crm">
+    Track prospects before they become a tender, and see linked tenders on an account.
+  </Card>
+  <Card title="Lane Profitability Report" icon="route" href="/en/reports/lane-profitability">
+    Check whether a lane is actually profitable before committing to a tender rate.
+  </Card>
+</CardGroup>

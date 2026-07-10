@@ -1,0 +1,117 @@
+---
+title: "Reefer Fleet Management"
+description: "Connect temperature-controlled trailers to their telematics provider, monitor live temperature, manage alerts, and generate cold-chain compliance reports."
+icon: "snowflake"
+---
+
+## Overview
+
+If your fleet runs temperature-controlled (reefer) trailers, Druma can pull live temperature, engine-hours, and alarm data straight from the trailer's telematics unit — no manual logging required. Once a trailer's provider is connected, you'll see its current temperature on the trailer list, get notified the moment it drifts off setpoint or raises an alarm, and can generate a one-page cold-chain PDF for any completed trip.
+
+Reefer features only appear once your company's **Reefer** fleet type is switched on. An admin or company admin does this once, from **Settings → Fleet Types**. Everything below — the Temp column, the Temperature tab, alerts, and the compliance report — is hidden until that flag is on.
+
+<Note>
+Reefer telematics providers vary widely in how open their APIs are. Mapon is fully public and works out of the box. Orbcomm needs an account token. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
+</Note>
+
+---
+
+## Connecting a Reefer Provider
+
+<Steps>
+  <Step title="Turn on the Reefer fleet type">
+    Open **Settings → Fleet Types** and enable **Reefer**. This unlocks the reefer-specific screens across Fleet.
+  </Step>
+  <Step title="Go to Integrations">
+    Open **Settings → Integrations**. Reefer telematics providers are listed alongside the other GPS/tacho connectors.
+  </Step>
+  <Step title="Pick your provider">
+    Find the card for your trailer's telematics provider — **Mapon**, **Orbcomm**, **Thermo King TracKing**, or **Carrier Lynx Fleet** — and open it. Each card's "Where do I get these?" link explains how to obtain credentials for that provider (see the table below).
+  </Step>
+  <Step title="Enter your credentials">
+    Fill in the fields for your provider (they differ per provider — see below) and click **Connect**. Credentials are stored securely and are never shown again in full; entering a new value later rotates the key.
+  </Step>
+  <Step title="Test the connection">
+    Click **Test connection** to confirm Druma can reach your provider's API with the credentials you entered.
+  </Step>
+  <Step title="Set each trailer's telematics unit ID">
+    Open **Fleet → Trailers**, select a reefer trailer, go to its **Compliance** tab, and fill in **Telematics unit ID** — the unit/asset ID your provider uses to identify that specific trailer. This is what links incoming readings to the right trailer in Druma.
+  </Step>
+</Steps>
+
+Once connected, Druma's sync job pulls new readings automatically. There's no manual refresh — the Temp column and Temperature tab fill in as readings arrive.
+
+### Provider credential fields
+
+| Provider | Fields you enter | Where to get them |
+|---|---|---|
+| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — works immediately. |
+| **Orbcomm** | Access Token, or Username + Password, Base URL (optional) | Issued via your ORBCOMM Platform API account. If you only have a username/password, Druma exchanges it for a token automatically. |
+| **Thermo King TracKing** | API Key, or Username + Password, Base URL (optional) | Request a TracKing API key from your Thermo King dealer or via the TracKing portal. No public self-service signup — this is a partner-gated integration. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (or a legacy API Key), Base URL (optional) | Obtained through Carrier Transicold or your Carrier dealer as part of the Lynx Fleet API toolkit. No public self-service signup. |
+
+<Warning>
+Thermo King and Carrier require the vendor to grant you API access before the connection will return real data — Druma cannot bypass that. If you're waiting on partner approval, the credential form still lets you save and test, but syncing won't start until the account is active.
+</Warning>
+
+---
+
+## Where Trailer Temperature Shows Up
+
+- **Trailers list** — a **Temp** column shows each reefer trailer's latest actual temperature, an engine Running/Stopped badge, and an amber Alarm flag if the most recent reading carries an alarm code.
+- **Trailer detail → Temperature tab** — appears on any trailer once the reefer flag is on. Shows the latest reading in detail (setpoint vs. actual, door status, engine hours, alarm codes) plus a history table. If the trailer has no telematics unit ID set yet, this tab tells you to add one in the Compliance tab first.
+- **Home dashboard → Reefer status widget** — add it from the widget gallery for an at-a-glance count of trailers with active alarms, trailers running outside their temperature threshold, and reefer maintenance coming due, with the soonest-due trailer named in the footer.
+
+---
+
+## Alerts and Alarm Acknowledgement
+
+Reefer alert thresholds live in **Settings → Fleet Types**, in the **Reefer temperature alerts** panel that appears once the flag is on:
+
+| Field | What it controls |
+|---|---|
+| **Enable reefer alerts** | Master on/off switch for reefer alerting. |
+| **Temperature deviation threshold (°C)** | How far a reading can drift from setpoint before it's flagged (default 3°C). |
+| **Door-open threshold (minutes)** | How long a door can stay open before it's flagged (default 10 minutes). |
+| **Alert on unit alarm codes** | Whether a raw alarm code from the unit itself triggers a notification. |
+| **Re-alert cooldown (minutes)** | Minimum gap between repeat alerts for the same trailer/condition, so one ongoing issue doesn't spam notifications (default 60 minutes). |
+
+When a threshold is crossed, Druma notifies **in-app** (a bell notification to company admins) and sends a **push notification to the driver** operating that trailer — there is no email for reefer alerts, since the driver is the one who can actually act on a door-open or unit alarm.
+
+**Acknowledging an alarm:** open the trailer's **Temperature tab** — any unacknowledged alarm codes appear in a dedicated section with the last-seen time and an **Acknowledge** button. Acknowledging creates a permanent sign-off record; if the same alarm code fires again later, it resurfaces as unacknowledged.
+
+---
+
+## Generating a Temperature Compliance PDF
+
+For any order carried on a connected reefer trailer, you can generate a one-page cold-chain proof document:
+
+1. Open the order in **Operations** and go to its **Documents** tab.
+2. Click **Temperature report** (only shown when the order's trailer has a reefer telematics unit configured).
+3. Druma builds and downloads a PDF covering the setpoint-vs-actual temperature trace for the trip, alarm and door-open events, engine run time, the trailer's ATP class, and the order reference — ready to hand to a shipper or auditor as proof the cold chain held.
+
+---
+
+## ATP Certificates and Reefer Maintenance
+
+Reefer trailers also get two compliance extras once the flag is on:
+
+- **ATP certificate tracking** — in **Fleet → Fleet Documents**, the document type dropdown gains an **ATP** option; pick the trailer and its ATP class (A/B/C/D/F/IN/IR per the ATP Agreement). The certificate then shows on the trailer's Compliance tab with an expiry badge, and surfaces in the dashboard's expiry-alerts widget like any other fleet document.
+- **Reefer maintenance scheduling** — in **Fleet → Maintenance**, a **Reefer Units** tab tracks service intervals in **engine hours** rather than kilometres (filter service, full service, ATP inspection), using each trailer's current reefer engine hours.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Trailer Management" icon="trailer" href="/en/planner/trailer-management">
+    Manage trailers, assignment, availability, and documents — including the Compliance tab where reefer telematics IDs are set.
+  </Card>
+  <Card title="Fleet Documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    Track ATP certificates alongside insurance, ITP, and other vehicle documents with expiry alerts.
+  </Card>
+  <Card title="Fleet Management" icon="truck" href="/en/planner/fleet-management">
+    Add and manage vehicles, vehicle types, dimensions, and documents.
+  </Card>
+  <Card title="Home Dashboard" icon="gauge" href="/en/planner/home-dashboard">
+    Add the Reefer status widget to your dashboard for an at-a-glance view of alarms and maintenance due.
+  </Card>
+</CardGroup>
