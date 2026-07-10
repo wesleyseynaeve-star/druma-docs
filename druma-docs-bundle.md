@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-10 07:11 UTC
+Generated: 2026-07-10 07:19 UTC
 
 ---
 
@@ -1152,17 +1152,11 @@ Describe what is being transported:
 
 
 
-## Step 7 — Assign a truck and driver
+## Step 7 — Truck and driver assignment
 
-**For Own Truck orders:**
+The New Order modal does not assign a truck or driver — an order saves without either, whatever order type you picked. Assignment happens afterwards on the [Planning Board](/en/planner/planning-board): drag the order onto a truck to assign it, or open the order there to pick a truck, primary driver, and (for double-manning on long-distance international routes) a second driver. Druma shows each truck's availability there — green for free on the loading date, orange for another order nearby, red for a conflict.
 
-- **Truck** — Search by registration plate. Druma shows each truck's availability status. A green indicator means the truck is free on the loading date; orange means it has another order nearby; red means there is a conflict.
-- **Primary driver** — Search by name. Only drivers linked to active accounts appear here.
-- **Second driver (optional)** — Add a second driver for double-manning on long-distance international routes.
-
-**For Subcontracted orders:**
-
-Instead of truck and driver fields, you will see a **Carrier** field. Select the carrier company from your carrier list. You can add a carrier contact name and phone for reference.
+**For Subcontracted orders**, there is a **Carrier** field on the **Financial** tab instead — select the subcontractor company there, and add a carrier contact name and phone for reference. See [Subcontractors](/en/planner/subcontractors) for how the carrier is then notified.
 
 
 ## Saving the order
@@ -1548,32 +1542,30 @@ The Dispatching module is the real-time operations centre. It brings together th
 
 ## Dashboard Tab
 
-The Dashboard is the main live view. It is split into two areas:
+The Dashboard is the default view — it does not include a map. For a spatial view of truck positions, switch to the **Live Map** tab (see below). The Dashboard is built for scanning driver and order status at a glance.
 
-**Left panel — Active Orders list:**
-- All orders currently in an active status (Confirmed through Offloading) are listed in card format
-- Each card shows the driver name, truck plate, cargo summary, current status badge, and HERE ETA
-- Cards are colour-coded by status severity: green for on-track, amber for delayed, red for overdue or waiting
-- Click any card to open the full order detail pane on the right side
+Above the main content sits a toolbar: an order search box, a dispatcher filter, the KPI bar, and the **Needs Attention** button.
 
-**Right panel — Live Map:**
-- All active trucks with GPS positions are shown as pin markers on a HERE map
-- Truck markers display the plate number and current status badge
-- Groupage trucks show an LDM badge if the trailer has space remaining
-- Trailer-only assets (parked trailers) are shown as a distinct marker type
-- Click a marker to highlight that truck's active order in the left panel and vice versa
+**Main area — two columns:**
+- **Active Trucks (left, main column):** one row per active load, showing the truck plate, driver name, a current-activity badge (Driving, Loading, Break, Rest, Waiting), hours-pressure warnings when a driver is close to a driving-time limit, a stuck badge if a truck has shown no GPS movement for 20+ minutes, and a late badge and stale-GPS indicator where they apply. A second line shows the route (origin → destination), remaining daily drive time or elapsed rest time, break-due countdown, current speed, and how old the GPS position is. Click the info icon to open the order detail slide-over; click the chat icon to jump straight to that driver's chat thread.
+- **Delayed (right sidebar):** lists only the loads currently running behind schedule — truck/driver, route, delivery date, and ETA. Click a row's info icon to open the same order detail slide-over.
 
 ### KPI bar
 
-The KPI bar at the top of the Dashboard shows real-time operational metrics:
+The KPI bar sits above the main content and shows:
 
 | KPI | What it shows |
 |---|---|
-| **Active loads** | Number of orders in motion right now |
-| **On time** | Orders where current ETA is within the planned delivery window |
-| **Delayed** | Orders where ETA has slipped past the delivery window |
-| **Waiting** | Drivers waiting at a stop beyond the free waiting period |
-| **Wasted** | Active wasted journey declarations today |
+| **On-Time %** | Share of active loads that aren't currently flagged as delayed |
+| **Active Trucks** | Number of loads currently in an active status |
+| **Delayed** | Active loads whose ETA has slipped past the delivery window |
+| **Completed Today** | Loads marked delivered today |
+| **Break Soon** | Drivers whose next mandatory break is due within 30 minutes |
+| **Stale GPS** | Active loads with no GPS position update in the last 15 minutes |
+
+### Needs Attention
+
+The **Needs Attention** button, top right of the toolbar, opens a dropdown listing everything that needs a dispatcher's eyes right now: driver-reported delays, unread driver chat messages, trucks with under an hour of daily drive time left, trucks that haven't moved in 20+ minutes, idle trucks with no next load, and drivers approaching or overdue for their return-home window.
 
 
 ## Driver Hours Tab
@@ -2015,34 +2007,23 @@ When you outsource a load to another carrier — a partner company, a spot marke
 Druma's subcontractor registry solves this without phone calls. Each carrier gets a lightweight portal link — no app to install, no expensive software — where they can update order status and upload documents. You stay in control without chasing people by phone.
 
 
-## The Carrier Portal Token
+## The Carrier Portal Link
 
-After saving, you'll see a **Carrier Portal Link** on the subcontractor's profile page. This unique URL is the carrier's door into their portal.
+There's no portal account to set up in advance — the link itself is the credential. Druma generates it the first time you subcontract an order to this carrier: open the order, use **Assign Carrier** to pick this subcontractor, and click **Assign & Send Order**. Druma creates a unique portal link for that order and emails it to the carrier's contact.
 
 **What you need to know:**
-- The token is valid for **30 days** by default
-- It's tied to this specific carrier — it doesn't grant access to any other carrier's data
-- After the first sign-up, carriers use their email and password to log back in
-
-**To share the link:**
-
-
-  ### Copy the link
-    On the subcontractor profile page, click **Copy Link**.
-  
-  ### Send it to the carrier
-    Paste the link into an email or WhatsApp to the carrier contact. A simple message works: "Here's your Druma portal link — use this to update status and upload documents for loads you carry for us."
-  
-
+- The link is valid for **30 days** by default, scoped to **that one order**
+- It doesn't grant access to any other order — even other loads from the same carrier arrive as separate links
+- There's no account and no password, ever — whoever holds the link can open the order, update its status, and upload documents for it
 
 > **Note:** 
-The link itself acts as an access credential. Only share it with the intended carrier. If the link is accidentally shared with the wrong person, regenerate it immediately from the subcontractor profile.
+The link itself acts as an access credential. Only share it with the intended carrier. If it's accidentally shared with the wrong person, resend the order from the **Assign Carrier** modal — Druma issues a fresh link and the old one stops working.
 
 
 
 ## What the Carrier Can Do in the Portal
 
-Once logged in, the carrier sees only the orders assigned to them. From the portal they can:
+From their link, the carrier sees only that one order. From the portal they can:
 
 - **Update order status** — Picked Up, In Transit, Delivered
 - **Upload a CMR scan** — photograph or scan of the signed paper CMR
@@ -3476,7 +3457,7 @@ To generate either link: go to **Clients** → select the client → **Portal Ac
     Filter tabs above the table — **All**, **Active**, **Delivered**, **Delayed**, **Cancelled** — narrow the list, each with a live count badge. This is the fastest way for a client with many shipments to find the one they're asking about.
   
   ### Client opens an order for details
-    Clicking a row slides in the order detail panel. It shows a four-step **status timeline** (Ordered → Dispatched → In Transit → Delivered), the full list of route stops with addresses and time windows, and a live-tracking panel that reflects the truck's last confirmed status.
+    Clicking a row slides in the order detail panel. It shows a four-step **status timeline** (Ordered → Dispatched → In Transit → Delivered), the full list of route stops with addresses and time windows, and a tracking card showing whether the shipment is currently en route, based on the order's status — not a live map or GPS pin.
   
   ### Client checks cargo, transport, and e-Transport info
     Below the timeline, the panel shows cargo details (weight, pallets, volume), the assigned driver and truck/trailer plates, and — for shipments touching Romania — an e-Transport card where the client can view or submit the ANAF UIT code.
@@ -3492,7 +3473,7 @@ Once they open the portal, clients land on their order list. Here is everything 
 
 **Order list** — all active and recently completed orders for their company. Each row shows the order reference, route (origin → destination), current status badge (for example, *In Transit*, *Delivered*, *Waiting*), and ETA.
 
-**Live map** — a map showing the truck's last known position for each active order. The pin updates every time the driver taps a status button in the Druma driver app. This is not continuous GPS streaming — the position reflects the last confirmed driver action.
+**Tracking card** — a status card on the order detail view showing whether the shipment is currently en route, based on the order's current status. It is not an interactive map and does not plot a live GPS position — it updates when the order's status changes, for example when the driver marks the load as departed or arrived.
 
 **Status timeline** — click any order to open the detail view. The timeline shows every status event in order: when the truck departed the loading point, when it crossed a border, when it arrived at the delivery address, and so on. Each event has a timestamp and, where available, a location.
 
@@ -3512,7 +3493,7 @@ The filters sit at the top of the order list.
 
 ## Mobile-Friendly
 
-The portal is fully responsive. Clients on a phone or tablet get the same information as on desktop — the map resizes, the timeline stacks vertically, and buttons are touch-sized. No app download needed.
+The portal is fully responsive. Clients on a phone or tablet get the same information as on desktop — cards stack vertically, the timeline adapts, and buttons are touch-sized. No app download needed.
 
 ## What Clients Cannot See
 
@@ -3523,7 +3504,7 @@ The portal is intentionally limited to operational information:
 - **No other clients' data** — each portal link is scoped to one client company only
 
 > **Note:** 
-GPS position only updates when the driver taps a status button in the driver app — it is not continuous real-time tracking. Make sure your drivers tap statuses promptly (Departed, Arrived, Loaded, Unloaded) so clients see timely updates. It helps to brief new drivers on this during onboarding.
+The client portal shows order status, not a live GPS position — the tracking card only updates when the order's status changes. Make sure your drivers tap statuses promptly (Departed, Arrived, Loaded, Unloaded) so clients see timely updates. It helps to brief new drivers on this during onboarding.
 
 
 > **Warning:** 
