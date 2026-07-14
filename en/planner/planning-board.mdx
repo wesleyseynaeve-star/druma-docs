@@ -1,272 +1,153 @@
 ---
 title: "Planning Board"
-description: "Use the visual dispatch board to see all your trucks, assign orders, spot conflicts, and manage your fleet's schedule at a glance."
+description: "The visual dispatch board — match trucks freeing up against loads that need one, assign with a drag, and preplan combinations before they're firm."
 icon: "calendar"
 ---
 
 ## Overview
 
-The Planning Board is your main dispatch tool. It shows every truck in your fleet on a horizontal timeline, with orders displayed as coloured blocks. You can see what every driver is doing, when their current job finishes, and where the gaps are — all without opening a single order form.
+The Planning Board is your main dispatch tool. Go to **Planner → Planning Board** to open it.
 
-Go to **Planner → Planning Board** to open it.
+The board has three modes, switched with the tabs at the top:
+
+| Mode | What it's for |
+|---|---|
+| **Now** | The primary dispatch view — two columns matching capacity against demand. Where you assign and reassign trucks. |
+| **Timeline** | A Gantt-style view of every truck's schedule, for spotting gaps and conflicts across a day, three days, or a week. |
+| **Map** | The same unassigned loads and drivers plotted geographically. |
 
 <Warning>
-The Planning Board is designed for desktop screens of 1280 pixels wide or more. On a laptop or a large monitor you get the full experience including drag-and-drop. On a phone or tablet, the board is available in read-only mode — you can view orders but cannot drag or reassign them.
+The Planning Board is designed for desktop screens of 1280 pixels wide or more. On a phone or tablet, a simplified card feed replaces the two-column layout and drag-and-drop is not available.
 </Warning>
 
-
 ---
 
-## Reading the board
+## Now — the two-column dispatch view
 
-### The timeline
+The **Now** tab is a split, two-column layout:
 
-The horizontal axis is time. Each row represents one truck in your fleet. Orders appear as rectangular blocks spanning from their pickup time to their estimated delivery time.
+- **Incoming** (left) — what's freeing up capacity: trucks that are free right now, and trucks about to free up because their current load is delivering within the visible date range.
+- **Outgoing** (right) — orders that still need a truck (unassigned pickups), plus orders that are already assigned, all grouped the same way as Incoming so a truck freeing up in a zone lines up visually against loads picking up in that same zone.
 
-### Colour coding
+<Frame caption="The Now view — Incoming capacity on the left, Outgoing loads on the right, with the density and Preplan toggles in the toolbar.">
+  <img src="/images/planner/planning-board-split.png" alt="Planning Board Now view showing the Incoming and Outgoing columns" />
+</Frame>
 
-The colour of each block tells you the current status of that order at a glance:
+Assigning a truck is a drag: pick up a row on either side and drop it on the matching row on the other side.
 
-| Colour | Status |
-|---|---|
-| Grey | Draft — not yet confirmed |
-| Blue | Confirmed — driver notified, not yet departed |
-| Green | In Transit or En Route to Delivery |
-| Yellow | Arrived at pickup or delivery — waiting |
-| Red | Overdue — past expected delivery time and not yet Delivered |
-
-Keep an eye on red blocks — these need your attention.
-
-### The unassigned sidebar
-
-On the left side of the board, there is a **Unassigned Orders** panel listing all orders that don't have a truck assigned yet. These are the jobs waiting to be dispatched. Drag one from the sidebar onto a truck row to assign it.
-
----
-
-## Setting the date range
-
-By default, the board shows today plus the next 7 days. You can change this:
-
-- Click the **date range selector** at the top of the board
-- Choose a preset: Today, Next 3 days, This week, Next 2 weeks
-- Or pick a custom start and end date
-
-**Keyboard shortcuts for date navigation:**
-
-| Key | Action |
-|---|---|
-| `←` Left arrow | Move the view one day earlier |
-| `→` Right arrow | Move the view one day forward |
-| `T` | Jump to today |
-| `W` | Switch to week view |
-| `M` | Switch to month overview |
-
----
-
-## Filtering the board
-
-If you have many trucks, the board can get busy. Use the filters at the top to narrow down what you see:
-
-- **Truck type** — Show only vans, only semis, only flatbeds, etc.
-- **Driver** — Show only trucks assigned to a specific driver.
-- **Status** — Show only orders in a particular status (e.g., show only Confirmed orders that haven't departed yet).
-
-Filters combine — you can filter by truck type and status at the same time.
-
----
-
-## Assigning and reassigning orders
-
-### Assigning from the sidebar
-
-<Steps>
-  <Step title="Find the unassigned order">
-    Locate the order in the Unassigned Orders sidebar on the left. Each card shows the pickup date, origin, destination, and client.
-  </Step>
-  <Step title="Drag it onto a truck row">
-    Click and hold the order card, then drag it onto the row of the truck you want to assign it to. Drop it on the correct date slot.
-  </Step>
-  <Step title="Confirm the assignment">
-    A confirmation popup appears showing the truck, driver, and order details. Click **Assign** to confirm. The driver receives a notification automatically.
-  </Step>
-</Steps>
-
-### Reassigning an existing order
-
-To move an order from one truck to another, drag the order block to a different truck row. The same confirmation popup will appear.
+- Dragging a **truck** onto a load opens a confirmation sheet showing the truck, driver, and order details — including any cabotage, trailer, or relay-stop checks that need your input — before the assignment is committed.
+- Dragging a **delivering load** (an Incoming card that isn't free yet, just about to be) onto an Outgoing load doesn't assign a truck yet — there isn't one free to assign — it pencils in a preliminary link between the two, so you can plan a chain of loads for a truck before it's actually free. Use **Assign truck** on that row once you're ready to commit.
 
 <Note>
-Druma will warn you if the reassignment creates a time conflict for either the original truck or the new one. You don't have to cancel a reassignment just because of a warning — use your judgement — but the conflict will be highlighted in red so you don't miss it.
+Dragging works in **both directions** — drag an Incoming card onto an Outgoing load, or drag an Outgoing load onto an Incoming card. Either way lands on the same row.
 </Note>
+
+### Date range
+
+The board shows a rolling 7-day horizon. Use the arrows next to the date label to page a full week earlier or later, or click **Today** to jump back to the current 7-day window.
+
+### Density: Compact vs Comfortable
+
+A toggle in the toolbar switches how much detail each row shows:
+
+- **Compact** (default) — dense, single-line rows with sortable/reorderable columns, closest to a spreadsheet. Best for fast scanning and bulk planning.
+- **Comfortable** — richer cards with more visual detail per truck or order. Best for a closer look at a handful of jobs.
+
+Both densities show the same underlying data and support the same drag-and-drop, filters, and grouping — switching is purely cosmetic.
+
+### Grouping and collapsing
+
+Use the **group-by** control in the toolbar to bucket both columns by zone group, country, city, planning group, or date — Incoming and Outgoing always group on the same axis so matching capacity against demand stays visually aligned. Group headers are collapsible; collapse a section on either side and the matching section on the other side collapses too, keeping the two columns in sync. Click **Expand all** to reset every collapsed group at once.
+
+<Note>
+Zone groups are your own hierarchical postcode groupings (configured in Settings), useful for lining up "which of my depots/regions has a truck freeing up" against "which region has loads to pick up" at a glance.
+</Note>
+
+### Columns
+
+Click **Columns** to choose which fields each side shows and drag to reorder them. Incoming and Outgoing keep independent column sets — a field you add or hide on one side doesn't affect the other. Core fields (Status, identity, ETA) are always shown and can't be hidden or reordered; everything else (postal/city/country breakdowns, driver name, plate, trailer, cabotage status, subcontractor, and more) is opt-in.
+
+### Saved Views
+
+The **Views** menu lets you save the current filter, grouping, and column configuration as a named view, switch between saved views, and mark one as your default — it's then applied automatically the next time you (or anyone on the same view) open the board.
+
+### Filters and search
+
+Click **Filters** to open the filters panel — status, pickup/delivery date range, zone, and load/delivery country, city, or postal code. Active filters show as removable chips under the toolbar; click **Clear all** to reset them. Each column also has its own quick search box for filtering by order number, address, or driver name within that side.
+
+### Triage tiles
+
+Above each column, small tiles summarise what's in it at a glance:
+
+- **Incoming** — how many trucks/loads fall in each capacity bucket.
+- **Outgoing** — **Unplanned**, **Running late**, and **Running on time** counts for loads that already have a preliminary or firm plan.
+
+Click a tile to filter that column down to just that bucket; click it again to clear the filter.
+
+### Assign truck / Remove truck / Put for sale
+
+Every Outgoing row that has a truck (firm or penciled) shows action buttons:
+
+- **Assign truck** — commit a penciled combination as a firm assignment.
+- **Remove truck** — undo the plan and send the order back to unassigned.
+- **Put for sale** — offer the load to a subcontractor/carrier instead of running it on your own fleet. A sold load shows a **For sale** or **Sold · [carrier]** badge; if the carrier is running late, a **Late** badge appears too. You can reclaim a sold load back to your own fleet as long as it hasn't started loading.
+
+### Preplan mode
+
+The **Preplan** toggle in the toolbar switches what a drag-and-drop does:
+
+- **Off** (default) — dragging firmly assigns the truck immediately (opens the confirmation sheet).
+- **On** — dragging pencils in a preliminary combination without committing anything. Penciled combinations show a **Preliminary** badge, an estimated (or, where routing data is available, real PTV-routed) ETA, and an on-time/running-late verdict — so you can sketch out a week's worth of combinations before locking any of them in. Use **Assign truck** on a penciled row when you're ready to make it firm.
+
+### Suggestion chips
+
+Where Druma's auto-planning has a confident recommendation for an unassigned order, a suggestion chip appears inline on that row. Click it to apply the suggested truck directly, or dismiss it if it doesn't fit.
+
+### Cross-column highlighting
+
+Click any row to pin its highlight. If that row is part of a penciled or firm combination, Druma highlights the matching row(s) on the other column and scrolls them into view — so clicking a truck on Incoming shows you exactly which load(s) it's matched to on Outgoing, and vice versa.
+
+### Virtual orders
+
+Click **Virtual** to create a placeholder order that reserves a truck for an expected load that doesn't have a firm booking yet — useful when preplanning ahead of a confirmed order.
 
 ---
 
-## Conflicts
+## Conflicts and blockers
 
-If two orders overlap on the same truck — for example, one order's estimated delivery time overlaps with the next order's pickup time — the board highlights the affected blocks in red with a conflict icon.
-
-Conflicts are common when deliveries run late. You have a few options:
-
-- **Drag and reassign** one of the conflicting orders to another truck.
-- **Edit the later order's pickup time** to give more slack.
-- **Accept the conflict** if you know the driver can make it (e.g., the delivery is actually ahead of schedule).
-
-The conflict indicator does not prevent the order from being dispatched — it's a warning, not a block.
+If a proposed assignment would create a problem — a cabotage limit, a trailer mismatch, an unresolved relay stop — Druma flags it as a blocker in the confirmation sheet rather than letting the assignment through silently. Some blockers require an explicit acknowledgement before you can continue; others are informational only.
 
 ---
 
 ## Viewing order details
 
-**Click** any order block on the board to open a **quick summary panel** on the right side of the screen. This panel shows:
-
-- Pickup and delivery addresses
-- Cargo description and weight
-- Agreed price
-- Current status
-- Driver name and phone number
-
-From the quick summary panel you can:
-
-- Click **Edit Order** to open the full order form
-- Click **Change Status** to override the status
-- Click **Call Driver** to dial the driver's number (opens your phone app)
-
-**Hover** over any block (without clicking) to see a compact tooltip with pickup, delivery, and price — useful when you just want a quick check without opening the full panel.
+**Click** any row to open a detail panel. From there you can edit the order, change its status, or call the driver.
 
 ---
 
-## Return load search
+## Timeline view
 
-When a truck completes a delivery, you want to avoid sending it back empty — every empty kilometre is wasted fuel and lost revenue. Druma helps you find return loads directly from the planning board.
+Switch to the **Timeline** tab for a Gantt-style view: each truck is a row, and its schedule is drawn as time-positioned segments — driving legs, and loading/unloading windows. Planned (not-yet-actual) segments render as a hatched pattern; actual/confirmed segments render solid. A segment with no confirmed timestamp yet is shown at reduced opacity with a dashed border to mark it as estimated.
 
-### How it works
+<Frame caption="Timeline view — each row is one truck; a red line marks the current time.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Planning Board Timeline view showing trucks as rows with time-positioned segments" />
+</Frame>
 
-When an order reaches **Delivered** status, a **Find Return Load** panel becomes available on the order card. Click it to open a slide-out search panel that shows:
-
-- **Internal fleet matches** — orders already in your system with a pickup near the delivery location. Ranked by dead kilometres (lowest first).
-- **Timocom freight exchange results** — available loads from the Timocom marketplace that match the truck's current location, trailer type, and availability. Also ranked by dead kilometres.
-- **Market price comparison** — each result shows the offered rate alongside the current market average for that lane, so you can see whether the load is worth taking.
-
-### Creating an order from a return load
-
-Click **Create Order** on any result to pre-fill a new order modal with the load details — origin, destination, cargo, and price. The order is created in **Draft** status so you can review and adjust before confirming.
-
-### Deadhead kilometres
-
-The dead-km figure shown for each return load option is the distance the truck would need to drive empty to reach the pickup point. Lower is better — Druma sorts results by dead-km by default so the most efficient options appear first.
-
-<Note>
-Return load search requires Timocom credentials to be configured in **Settings → Integrations**. If credentials are not set up, only internal fleet matches are shown.
-</Note>
-
----
-
-## Order type badges
-
-Order cards on the board display a coloured badge indicating the order type:
-
-| Badge | Order type | Meaning |
-|---|---|---|
-| **Repo** (violet) | Repositioning | Non-revenue move — getting a truck into position |
-| **Sub** (orange) | Subcontracted | Outsourced to a third-party carrier |
-| **Cap** (cyan) | Capacity Sale | Selling spare space to a broker |
-| *(no badge)* | Own Truck | Standard own-fleet transport |
-
-These badges help you distinguish at a glance between revenue-generating loads and operational moves.
-
----
-
-## Exporting the planning board
-
-You can export the current board view as a PDF — useful for printing a daily dispatch sheet or sharing with a colleague who doesn't have a Druma account.
-
-<Steps>
-  <Step title="Set your filters and date range">
-    Arrange the board to show exactly what you want to export.
-  </Step>
-  <Step title="Click Export">
-    Find the **Export as PDF** button in the top-right corner of the board.
-  </Step>
-  <Step title="Choose the layout">
-    Select portrait or landscape. Landscape works better for multi-day views.
-  </Step>
-  <Step title="Download">
-    Click **Generate PDF**. The file downloads automatically.
-  </Step>
-</Steps>
-
-The exported PDF is a snapshot of the board at the moment of export. It does not update automatically.
-
----
-
----
-
-## Viewing older unfinished jobs
-
-By default, each truck card on the incoming-drivers panel shows only the newest active job for that truck. If a truck has older orders that are still open — for example, a delivery that ran over into the next day — those jobs are hidden by default to keep the board clean.
-
-Click the **Show previous jobs** button on a truck card to expand the card and see the full list of older unfinished orders still open for that truck.
-
-This is useful when re-planning around delays: older jobs that ran over don't disappear from sight — they're a tap away. The expanded view shows the full unfinished job chain in sequence, oldest first.
-
----
-
-## Cancel a truck switch (Undo)
-
-If you switched a truck mid-order but the new truck hasn't done any work yet, you can undo the switch and restore the original assignment.
-
-On the order row (in the board or the orders list), look for the **Undo Switch** button — it appears only when a cancellable switch exists (i.e. a relay stop is present and no activity has been recorded on the new truck).
-
-Alternatively, drag the original truck back onto the order on the planning board — Druma will attempt to auto-cancel the switch first before re-assigning.
-
-**The undo is blocked if any of the following are true:**
-- Any stop at or after the relay point has an actual arrival or departure timestamp recorded
-- Any driver status events were captured after the switch
-- The original truck is now assigned to another active order
-
-For multi-switch orders (A → B → C), undoing cancels only the most recent switch (B → C, reverting back to B) — not the entire chain back to the beginning.
-
----
-
-## Timeline (Gantt) View
-
-The Planning Board has a **Timeline** tab alongside the existing Table and Plan modes. Switch to it by clicking the **Timeline** tab at the top of the Planning Board.
-
-### What the Timeline view shows
-
-Each truck in your fleet appears as a horizontal row. Orders are displayed as **time-positioned bars** spanning from their pickup time to their estimated delivery time — so you can see at a glance how each truck's day or week is filled.
-
-**Empty-leg gaps** between consecutive orders on the same truck appear as **dashed blocks**, making it easy to spot underutilised windows where you could fit a return load or a repositioning move.
-
-A red **Now** line marks the current time and advances every minute, so you always know where you stand relative to what is in progress.
-
-### Date navigation
-
-Use the date navigation controls above the Timeline to move forward or backward through the schedule. The **span selector** lets you choose between three views:
+Use the date navigation controls to move through the schedule, and the **span selector** to choose how much time is visible:
 
 | Span | Best for |
 |---|---|
 | **1 day** | Detailed intra-day planning — see exact loading and unloading windows |
-| **3 days** | Operational medium-term view — spot gaps and conflicts over the next 72 hours |
-| **1 week** | Capacity overview — understand which trucks are free across the full week |
+| **3 days** | Spotting gaps and conflicts over the next 72 hours |
+| **1 week** | A capacity overview — which trucks are free across the full week |
 
-### Assigning orders from the Timeline view
+Timeline shares the same Filters panel as the Now view, so a status, date, zone, or location filter carries over when you switch tabs.
 
-Unassigned orders appear as **draggable chips** alongside the Timeline. Drag a chip onto a truck row to assign it to that truck. The same confirmation sheet as the regular Planning Board appears — you can review the truck, driver, and order details before confirming the assignment.
+---
 
-<Note>
-Druma will highlight a time conflict if the order overlaps with an existing assignment on that truck row. The conflict is a warning, not a block — you can still confirm the assignment if your operational context makes it work.
-</Note>
+## Map view
 
-### When to use the Timeline view
-
-The Timeline view is most useful when you need to answer questions such as:
-
-- "Which trucks have a free window tomorrow afternoon?"
-- "Is there a gap between these two orders I could fill with a return load?"
-- "Which trucks are completely idle for the next three days?"
-
-For drilling into individual order details, bulk editing, or applying filters across many orders, the **Table view** remains more practical. Use Timeline for spatial, time-based planning; use Table for data-focused work.
+Switch to the **Map** tab to see unassigned loads and available drivers plotted geographically instead of as rows. This is useful for a quick "what's near what" spatial read before switching back to Now to actually assign. The **Auto Suggest** and **Virtual** actions are available here too.
 
 ---
 
