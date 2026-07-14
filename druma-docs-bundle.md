@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-10 20:31 UTC
+Generated: 2026-07-14 16:59 UTC
 
 ---
 
@@ -1295,108 +1295,43 @@ See [Wasted Journey](/en/planner/wasted-journey) for the full guide.
 
 ## Overview
 
-The Planning Board is your main dispatch tool. It shows every truck in your fleet on a horizontal timeline, with orders displayed as coloured blocks. You can see what every driver is doing, when their current job finishes, and where the gaps are — all without opening a single order form.
+The Planning Board is your main dispatch tool. Go to **Planner → Planning Board** to open it.
 
-Go to **Planner → Planning Board** to open it.
+The board has three modes, switched with the tabs at the top:
+
+| Mode | What it's for |
+|---|---|
+| **Now** | The primary dispatch view — two columns matching capacity against demand. Where you assign and reassign trucks. |
+| **Timeline** | A Gantt-style view of every truck's schedule, for spotting gaps and conflicts across a day, three days, or a week. |
+| **Map** | The same unassigned loads and drivers plotted geographically. |
 
 > **Warning:** 
-The Planning Board is designed for desktop screens of 1280 pixels wide or more. On a laptop or a large monitor you get the full experience including drag-and-drop. On a phone or tablet, the board is available in read-only mode — you can view orders but cannot drag or reassign them.
+The Planning Board is designed for desktop screens of 1280 pixels wide or more. On a phone or tablet, a simplified card feed replaces the two-column layout and drag-and-drop is not available.
 
 
 
+## Conflicts and blockers
 
-## Setting the date range
+If a proposed assignment would create a problem — a cabotage limit, a trailer mismatch, an unresolved relay stop — Druma flags it as a blocker in the confirmation sheet rather than letting the assignment through silently. Some blockers require an explicit acknowledgement before you can continue; others are informational only.
 
-By default, the board shows today plus the next 7 days. You can change this:
 
-- Click the **date range selector** at the top of the board
-- Choose a preset: Today, Next 3 days, This week, Next 2 weeks
-- Or pick a custom start and end date
+## Timeline view
 
-**Keyboard shortcuts for date navigation:**
+Switch to the **Timeline** tab for a Gantt-style view: each truck is a row, and its schedule is drawn as time-positioned segments — driving legs, and loading/unloading windows. Planned (not-yet-actual) segments render as a hatched pattern; actual/confirmed segments render solid. A segment with no confirmed timestamp yet is shown at reduced opacity with a dashed border to mark it as estimated.
 
-| Key | Action |
+<Frame caption="Timeline view — each row is one truck; a red line marks the current time.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Planning Board Timeline view showing trucks as rows with time-positioned segments" />
+</Frame>
+
+Use the date navigation controls to move through the schedule, and the **span selector** to choose how much time is visible:
+
+| Span | Best for |
 |---|---|
-| `←` Left arrow | Move the view one day earlier |
-| `→` Right arrow | Move the view one day forward |
-| `T` | Jump to today |
-| `W` | Switch to week view |
-| `M` | Switch to month overview |
+| **1 day** | Detailed intra-day planning — see exact loading and unloading windows |
+| **3 days** | Spotting gaps and conflicts over the next 72 hours |
+| **1 week** | A capacity overview — which trucks are free across the full week |
 
-
-## Assigning and reassigning orders
-
-### Assigning from the sidebar
-
-
-  ### Find the unassigned order
-    Locate the order in the Unassigned Orders sidebar on the left. Each card shows the pickup date, origin, destination, and client.
-  
-  ### Drag it onto a truck row
-    Click and hold the order card, then drag it onto the row of the truck you want to assign it to. Drop it on the correct date slot.
-  
-  ### Confirm the assignment
-    A confirmation popup appears showing the truck, driver, and order details. Click **Assign** to confirm. The driver receives a notification automatically.
-  
-
-
-### Reassigning an existing order
-
-To move an order from one truck to another, drag the order block to a different truck row. The same confirmation popup will appear.
-
-> **Note:** 
-Druma will warn you if the reassignment creates a time conflict for either the original truck or the new one. You don't have to cancel a reassignment just because of a warning — use your judgement — but the conflict will be highlighted in red so you don't miss it.
-
-
-
-## Viewing order details
-
-**Click** any order block on the board to open a **quick summary panel** on the right side of the screen. This panel shows:
-
-- Pickup and delivery addresses
-- Cargo description and weight
-- Agreed price
-- Current status
-- Driver name and phone number
-
-From the quick summary panel you can:
-
-- Click **Edit Order** to open the full order form
-- Click **Change Status** to override the status
-- Click **Call Driver** to dial the driver's number (opens your phone app)
-
-**Hover** over any block (without clicking) to see a compact tooltip with pickup, delivery, and price — useful when you just want a quick check without opening the full panel.
-
-
-## Order type badges
-
-Order cards on the board display a coloured badge indicating the order type:
-
-| Badge | Order type | Meaning |
-|---|---|---|
-| **Repo** (violet) | Repositioning | Non-revenue move — getting a truck into position |
-| **Sub** (orange) | Subcontracted | Outsourced to a third-party carrier |
-| **Cap** (cyan) | Capacity Sale | Selling spare space to a broker |
-| *(no badge)* | Own Truck | Standard own-fleet transport |
-
-These badges help you distinguish at a glance between revenue-generating loads and operational moves.
-
-
-
-## Cancel a truck switch (Undo)
-
-If you switched a truck mid-order but the new truck hasn't done any work yet, you can undo the switch and restore the original assignment.
-
-On the order row (in the board or the orders list), look for the **Undo Switch** button — it appears only when a cancellable switch exists (i.e. a relay stop is present and no activity has been recorded on the new truck).
-
-Alternatively, drag the original truck back onto the order on the planning board — Druma will attempt to auto-cancel the switch first before re-assigning.
-
-**The undo is blocked if any of the following are true:**
-- Any stop at or after the relay point has an actual arrival or departure timestamp recorded
-- Any driver status events were captured after the switch
-- The original truck is now assigned to another active order
-
-For multi-switch orders (A → B → C), undoing cancels only the most recent switch (B → C, reverting back to B) — not the entire chain back to the beginning.
+Timeline shares the same Filters panel as the Now view, so a status, date, zone, or location filter carries over when you switch tabs.
 
 
 
@@ -1521,7 +1456,7 @@ For each pickup it shows whether a truck and driver are assigned (green tick) or
 
 
 
-  The visual timeline for managing tomorrow's assignments, not just today's.
+  The two-column dispatch view for matching trucks against loads and managing tomorrow's assignments, not just today's.
 
 
 
