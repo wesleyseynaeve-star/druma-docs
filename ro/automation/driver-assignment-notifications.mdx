@@ -1,21 +1,46 @@
 ---
 title: "Notificari de atribuire sofer"
-description: "Druma trimite automat notificari push soferilor cand sunt atribuiti la o comanda."
+description: "Druma trimite automat notificari push soferilor cand sunt atribuiti la o comanda, fara ca dispecerul sa mai dea telefon."
 icon: "bell-concierge"
 ---
 
-Cand un planificator atribuie un sofer la o comanda, Druma informeaza automat soferul. Doua notificari push automate sunt trimise per comanda:
+Cand un planificator atribuie un sofer la o comanda, Druma trimite automat doua notificari push per comanda:
 
 | Notificare | Momentul trimiterii |
 |-----------|---------------------|
-| Reminder seara | 18:00 ora locala cu o zi inainte de plecare |
-| Reminder dimineata | 06:00 ora locala in ziua plecarii |
+| Reminder seara | 18:00 ora locala, cu o zi inainte de plecare |
+| Reminder dimineata | 06:00 ora locala, in ziua plecarii |
 
-Mesajele includ: adresa de preluare, data si ora, adresa de livrare, detalii marfa si nota soferului.
+Ambele notificari sunt trimise in **limba configurata a soferului** (campul `language` din profil), cu revenire la engleza daca nu e setata - Druma suporta toate cele **10 limbi ale platformei**, inclusiv romana, bulgara, maghiara, poloneza, ceha si slovaca.
 
-## Cerintele pentru notificari push
+Atingand notificarea, soferul ajunge direct la comanda si vede: adresa completa de preluare (cu buton Navigheaza), contactul de incarcare, fereastra orara solicitata, adresa de livrare, descrierea marfii, greutatea, numarul de paleti, notele planificatorului si documentele CMR/eCMR disponibile.
 
-- Android: notificarile push functioneaza automat prin FCM cand soferul salveaza aplicatia pe ecranul de start
-- iOS: notificarile push sunt disponibile pe iOS 16.4+; soferul trebuie sa salveze aplicatia pe ecranul de start si sa permita notificarile
+## Cerinte pentru functionare
 
-Daca un sofer spune ca nu primeste notificari: verifica ca aplicatia este salvata pe ecranul de start (nu doar marcata ca favorita) si ca notificarile sunt permise in Setari -> Notificari ale telefonului.
+Necesita aplicatia Druma instalata si notificarile browser-ului acceptate.
+
+- **Android (Chrome)**: permisiunea este ceruta automat la prima deschidere - soferul apasa Permite.
+- **iOS (Safari)**: permisiunea se cere abia dupa ce aplicatia este adaugata pe Ecranul de Start si deschisa de acolo. Cea mai frecventa cauza pentru "nu primesc notificari" pe iPhone este ca soferul nu a instalat-o pe ecranul de start.
+
+Daca un sofer nu are un smartphone compatibil, notificarile sunt doar un supliment - dispecerul suna ca de obicei, iar comanda ramane inregistrata normal in Druma.
+
+## Verificarea daca soferul a deschis notificarea
+
+**Comanda -> tab Activitate -> sectiunea Notificari Sofer** arata ora trimiterii fiecarui reminder si daca a fost deschis. Un indicator galben pe cardul comenzii in vederea Astazi semnaleaza "Nedeschis" pana la ora 07:00 in ziua plecarii - context pentru dispecer sa sune direct.
+
+<Note>
+"Nedeschis" poate insemna si ca soferul a deschis comanda direct din aplicatie, nu din notificare - nu e neaparat un semn ca nu stie de cursa.
+</Note>
+
+## Dezactivare per sofer
+
+**Flota -> Soferi -> [nume sofer] -> Preferinte -> Dezactiveaza notificarile push**. Atribuirile raman inregistrate, dar nu se mai trimit notificari - dispecerul preia manual comunicarea.
+
+<CardGroup cols={2}>
+  <Card title="Gestionarea soferilor" icon="id-card" href="/ro/planner/driver-management">
+    Adauga soferi, seteaza profiluri si gestioneaza documente.
+  </Card>
+  <Card title="Instalarea aplicatiei soferului" icon="mobile" href="/ro/driver/installing-the-app">
+    Ghid pas cu pas pentru instalarea aplicatiei Druma pe Android si iOS.
+  </Card>
+</CardGroup>

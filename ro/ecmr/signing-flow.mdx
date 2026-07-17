@@ -1,30 +1,69 @@
 ---
-title: "Fluxul de semnatura eCMR"
-description: "Cum colecteaza soferul cele trei semnaturi necesare — expeditor, transportator si destinatar."
+title: "Fluxul de semnare eCMR"
+description: "Cum colecteaza soferul cele trei semnaturi necesare - expeditor, transportator si destinatar - folosind aplicatia mobila Druma."
 icon: "pen-to-square"
 ---
 
-Un eCMR necesita trei semnaturi pentru a fi legal complet: expeditorul si soferul semneaza la preluare, destinatarul semneaza la livrare.
+Un eCMR necesita trei semnaturi pentru a fi legal complet: expeditorul semneaza la preluare, soferul/transportatorul semneaza la preluare, iar destinatarul semneaza la livrare. Asa functioneaza fiecare pas cu furnizorul nativ Druma.
 
-## La preluare
+Pasii 1 si 2 au loc in acelasi moment si loc (preluarea). Pasul 3 are loc mai tarziu, la livrare. Toate trei trebuie completate inainte ca Druma sa emita PDF-ul certificat.
 
-<Steps>
-  <Step title="Deschide tabul eCMR">Deschide comanda activa in aplicatia soferului si apasa tabul eCMR.</Step>
-  <Step title="Verifica detaliile CMR">Confirma cu expeditorul ca informatiile (expeditor, destinatar, descriere marfa, inmatriculare camion) sunt corecte.</Step>
-  <Step title="Expeditorul semneaza">Preda telefonul. Expeditorul semneaza cu degetul si isi tasteaza numele, apasa Confirma.</Step>
-  <Step title="Soferul semneaza">Preia telefonul, semneaza cu degetul, apasa Confirma.</Step>
-</Steps>
-
-## La livrare
+## Pasul 1 - Expeditorul semneaza la preluare
 
 <Steps>
-  <Step title="Deschide tabul eCMR">Deschide comanda la adresa de livrare.</Step>
-  <Step title="Preda telefonul destinatarului">Destinatarul semneaza cu degetul si isi tasteaza numele.</Step>
-  <Step title="Destinatarul apasa Confirma">Toate cele trei semnaturi sunt complete.</Step>
+  <Step title="Soferul deschide eCMR-ul">La preluare, soferul deschide comanda si apasa sectiunea eCMR - documentul afiseaza campurile precompletate: marfa, adrese, camion, sofer.</Step>
+  <Step title="Soferul preda telefonul expeditorului">Reprezentantul expeditorului (gestionar depozit, responsabil incarcare) preia telefonul.</Step>
+  <Step title="Expeditorul verifica documentul">Confirma ca descrierea marfii, cantitatea si starea corespund incarcaturii.</Step>
+  <Step title="Expeditorul semneaza">Apasa Semneaza ca Expeditor, deseneaza semnatura, introduce numele complet si rolul, apasa Confirma.</Step>
 </Steps>
 
-Dupa a treia semnatura, TransFollow emite un **PDF eCMR certificat** stocat automat in comanda.
+## Pasul 2 - Soferul/transportatorul semneaza la preluare
 
-## Varianta cu cod QR
+Imediat dupa ce expeditorul semneaza, soferul preia telefonul. Aplicatia trece automat la ecranul de semnatura a transportatorului; soferul semneaza, isi confirma numele si apasa Confirma. Ambele semnaturi de preluare sunt acum blocate si nu mai pot fi modificate - statusul eCMR devine "In asteptarea semnaturii destinatarului".
 
-Apasa **Cod QR** pe ecranul de semnatura la livrare. Destinatarul scaneaza codul cu telefonul propriu si semneaza pe propriul dispozitiv.
+<Note>
+Soferul trebuie sa semneze imediat dupa expeditor - aplicatia nu permite trecerea la pasul de livrare pana cand ambele semnaturi de preluare nu sunt complete.
+</Note>
+
+## Pasul 3 - Destinatarul semneaza la livrare
+
+Cu furnizorul nativ Druma, destinatarul semneaza pe **propriul dispozitiv** printr-un link de partajare sau cod QR - nu e nevoie sa predai telefonul soferului.
+
+<Steps>
+  <Step title="Soferul deschide tabul eCMR la livrare">Documentul arata cele doua semnaturi de preluare deja blocate, plus un link de partajare cu cod QR.</Step>
+  <Step title="Destinatarul scaneaza codul QR sau primeste linkul">Scaneaza cu camera telefonului - fara cont Druma sau descarcare de aplicatie necesare. Alternativ, soferul poate trimite linkul prin WhatsApp sau SMS.</Step>
+  <Step title="Destinatarul verifica documentul">Vede o vizualizare read-only a CMR-ului: marfa, adrese, greutate si cele doua semnaturi de preluare deja blocate.</Step>
+  <Step title="Destinatarul semneaza (si poate adauga rezerve)">Daca exista probleme la livrare - daune, lipsuri, discrepante - poate adauga o nota in campul **Rezerve/observatii** (caseta CMR 24) inainte de a apasa Confirma.</Step>
+  <Step title="PDF-ul certificat este emis">Toate cele trei semnaturi sunt complete. Druma construieste PDF-ul eCMR certificat si aplica **sigiliul digital PAdES**. PDF-ul este stocat automat in comanda.</Step>
+</Steps>
+
+<Note>
+Linkul codului QR expira dupa 30 de minute. Daca destinatarul nu semneaza in acest interval, soferul poate genera un cod QR nou.
+</Note>
+
+<Note>
+Daca firma ta ruleaza inca pe o configurare **TransFollow mostenita** (TransFollow nu mai poate fi selectat de nicio companie noua - vezi [Furnizori eCMR](/ro/ecmr/ecmr-providers)), destinatarul semneaza in schimb luand telefonul soferului la livrare - fluxul TransFollow difera de abordarea nativa cu link QR.
+</Note>
+
+## Acceptare cu rezerve (caseta CMR 24)
+
+Destinatarul nu trebuie sa refuze livrarea daca marfa soseste deteriorata sau incompleta - calea legala corecta este **acceptarea cu rezerve**: accepta livrarea, dar isi consemneaza observatiile in caseta CMR 24, pastrandu-si dreptul de a face o reclamatie ulterior conform Articolului 30 CMR.
+
+Rezervele sunt inscrise in PDF-ul sigilat sub caseta 24, iar comanda afiseaza un **banner chihlimbariu "Rezerve destinatar"** in Druma, astfel incat echipa e informata imediat. Comanda avanseaza in continuare la Livrat - acceptarea cu rezerve nu e acelasi lucru cu un refuz.
+
+<Note>
+Daca destinatarul refuza complet sa semneze, foloseste procesul Alternativa CMR pe hartie in schimb - refuzul e o cale separata de acceptarea cu rezerve.
+</Note>
+
+## Urmarirea statusului semnaturilor
+
+Din tabul **eCMR** al oricarei comenzi, panoul de status arata trei randuri - Expeditor, Transportator, Destinatar - fiecare cu "Semnat" si marca temporala, sau "In asteptare". Dispecerii pot monitoriza in timp real, fara sa sune soferul.
+
+<CardGroup cols={2}>
+  <Card title="Alternativa CMR pe hartie" icon="file-alt" href="/ro/ecmr/paper-cmr-fallback">
+    Cum treci o comanda de la eCMR la CMR pe hartie si cum inregistrezi motivul.
+  </Card>
+  <Card title="Incarcarea documentelor" icon="upload" href="/ro/ecmr/uploading-documents">
+    Cum incarci un CMR scanat sau alt document de livrare pe o comanda.
+  </Card>
+</CardGroup>

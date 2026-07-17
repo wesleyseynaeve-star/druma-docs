@@ -1,0 +1,70 @@
+---
+title: "KSeF — Poolse e-facturering"
+description: "Hoe Druma facturen automatisch indient bij KSeF (Krajowy System e-Faktur), Polens verplichte nationale e-facturatiesysteem beheerd door KAS, met statusopvolging, retries en UPO-ontvangstbewijs."
+icon: "file-invoice"
+---
+
+<Warning>
+**Early access — wacht op eerste live-operatorvalidatie.** Druma's KSeF-indiening is functioneel compleet, maar is nog niet end-to-end getest tegen Polens live KSeF-API door een echte PL-BTW-operator. Indiening blijft vergrendeld tot een live operatortoken is gekoppeld. Bent u een van de eerste operators die KSeF koppelt, behandel uw eerste indieningen dan als early access — houd de statusbadges nauwlettend in de gaten en neem snel contact op met support bij twijfel.
+</Warning>
+
+## Wat is KSeF?
+
+KSeF (Krajowy System e-Faktur) is Polens nationale gestructureerde e-facturatiesysteem, beheerd door de Poolse belastingdienst (KAS). Het is verplicht voor Pools BTW-geregistreerde bedrijven — elke factuur moet naar KSeF in het officiële FA(3) XML-formaat.
+
+<Note>
+De KSeF-verplichting wordt gefaseerd ingevoerd tijdens 2026 en de ingangsdatums zijn herhaaldelijk uitgesteld door de Poolse overheid. Bevestig de specifieke ingangsdatum voor uw bedrijf bij uw boekhouder of via [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+</Note>
+
+KSeF geldt alleen bij een **Pools BTW-nummer** (`PL` + 10 cijfers). Andere landen vallen er niet onder — Druma houdt de KSeF-kaart inactief zonder gedetecteerd PL-BTW-nummer.
+
+## Hoe Druma KSeF afhandelt
+
+Volledig automatisch zodra KSeF is ingeschakeld: Druma zet de factuur om naar **FA(3) XML**, authenticeert met uw **operatortoken** (veilig in Supabase Vault), dient de XML in bij KSeF en ontvangt een **KSeF-nummer**, en downloadt de **UPO** (officieel ontvangstbewijs) bij de factuur.
+
+## Statusbadges
+
+| Badge | Betekenis |
+|---|---|
+| **In behandeling** | Factuur aangemaakt, indiening in wachtrij |
+| **Ingediend** | XML verzonden, wacht op verwerking door KAS (meestal 1–5 min) |
+| **Geaccepteerd** | KAS accepteerde de factuur; KSeF-nummer en UPO beschikbaar |
+| **Mislukt** | KSeF wees de factuur af wegens een validatiefout |
+| **Afgewezen** | Formele afwijzing door KAS — controleer de UPO voor de redencode |
+
+<Note>
+Mislukte facturen worden automatisch elke 30 minuten opnieuw geprobeerd, tot 24 uur lang. Blijft de status daarna **Mislukt**, dan moet u handmatig opnieuw indienen vanuit het factuurdetailpaneel.
+</Note>
+
+## KSeF instellen
+
+<Steps>
+  <Step title="Ga naar Instellingen → Integraties">
+    Zoek de kaart **KSeF (Poolse e-facturering)** en klik op **Verbinden**.
+  </Step>
+  <Step title="Plak uw operatortoken">
+    Het authenticatietoken uitgegeven door KAS, te genereren door uw boekhouder via [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  </Step>
+  <Step title="Opslaan">
+    Druma controleert of uw bedrijfsrecord een Pools BTW-nummer heeft (formaat `PL` + 10 cijfers) voordat activering plaatsvindt.
+  </Step>
+</Steps>
+
+Eenmaal verbonden worden alle **nieuwe** facturen automatisch ingediend — bestaande facturen worden niet met terugwerkende kracht ingediend.
+
+## Loskoppelen, terugbetaling en handmatige retry
+
+**Instellingen → Integraties → KSeF → Loskoppelen** verwijdert het operatortoken uit Vault en stopt nieuwe indiening direct; reeds geaccepteerde facturen behouden hun KSeF-nummer. Reverse-charge BTW wordt correct verwerkt in het FA(3)-veld **P_12**, zonder handmatige aanpassing. De UPO wordt automatisch bewaard bij de factuur zodra deze **Geaccepteerd** is; handmatig downloaden via **Facturering → factuur → sectie KSeF → UPO downloaden**. Voor een handmatige retry: **Facturering → factuur → sectie KSeF → Indiening opnieuw proberen**.
+
+<Warning>
+De UPO is het wettelijke bewijs dat KAS uw factuur heeft ontvangen — bewaar een kopie; de Poolse belastingwet vereist dat u deze tijdens een controle kunt tonen.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="e-Factura / ANAF-indiening" icon="landmark" href="/nl/invoicing/efactura-anaf">
+    Roemeniës equivalente verplichte e-facturatiesysteem via de ANAF SPV-API.
+  </Card>
+  <Card title="Peppol-facturering" icon="network-wired" href="/nl/integrations/peppol-invoicing">
+    EU-brede elektronische facturering via het Peppol-netwerk.
+  </Card>
+</CardGroup>

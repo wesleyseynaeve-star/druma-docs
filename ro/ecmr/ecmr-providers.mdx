@@ -1,0 +1,55 @@
+---
+title: "Furnizori eCMR"
+description: "Furnizorul nativ Druma este singurul furnizor eCMR selectabil. TransFollow ramane doar ca ruta mostenita pentru companiile cu o configurare preexistenta."
+icon: "right-left"
+---
+
+Druma emite eCMR-uri cu **furnizorul nativ** - intern, fara cost per document. In **Setari -> Integrari -> Furnizor eCMR** (necesita acces company admin), singurele optiuni sunt **Nativ** si **Dezactivat**. **TransFollow** nu mai poate fi selectat de nicio companie noua - exista doar ca ruta mostenita pentru companiile care il configurasera inainte de introducerea furnizorului nativ.
+
+## Furnizorul nativ Druma (implicit)
+
+Emite documentele CMR intern, colecteaza semnaturile, construieste PDF-ul si aplica un **sigiliu digital PAdES** (Semnatura Electronica Avansata / AdES conform eIDAS), fara a contacta niciun serviciu extern.
+
+- **Fara configurare** - activ implicit, nu necesita cheie API sau cont extern.
+- **Semnare in trei parti**: expeditorul si soferul semneaza pe ecran la preluare (in aplicatia soferului); destinatarul semneaza prin **link de partajare sau cod QR** pe propriul telefon la livrare - fara cont Druma.
+- **PDF certificat**: dupa toate cele trei semnaturi, Druma construieste PDF-ul CMR complet (casetele 1-24) si aplica sigiliul PAdES.
+- **Rezerve destinatar (caseta 24)**: observatiile de tip daune/lipsuri adaugate la semnare sunt inscrise in PDF-ul sigilat, iar comanda afiseaza un banner chihlimbariu "Rezerve destinatar".
+
+Verifici pregatirea furnizorului din **Setari -> Integrari -> Furnizor eCMR -> Testeaza Conexiunea**. eCMR este inclus in abonament, fara cost per document si fara limita de utilizare.
+
+Toate documentele semnate sunt pastrate 10 ani, conform cerintelor legale de arhivare - **Comanda -> tab eCMR -> Descarca PDF Certificat** iti da vizualizarea in browser, descarcarea, lantul complet de semnaturi si un link de partajat clientului (accesibil fara autentificare Druma).
+
+## TransFollow (doar mostenit)
+
+TransFollow a fost o platforma eCMR terta, anterior selectabila. **Nu mai poate fi selectata din nou** - nu exista o intrare TransFollow de ales, camp de cheie API, comutator Mod Simulare sau buton Testeaza Conexiunea pentru el in Setari -> Integrari.
+
+Singurul motiv pentru care mai exista in Druma este sa mentina functionale companiile cu o **configurare TransFollow preexistenta**:
+
+- Fluxul eCMR continua neschimbat - nimic nu se intrerupe si nu e nevoie de nicio actiune.
+- Cardul furnizorului eCMR afiseaza configurarea ca **Nativ**.
+- La urmatoarea salvare a integrarii (chiar fara alte modificari), compania migreaza silentios la furnizorul nativ real.
+
+Daca configurezi eCMR pentru prima data, sau compania ta nu a folosit niciodata TransFollow, nimic din toate acestea nu te priveste - esti deja pe furnizorul nativ.
+
+<Warning>
+Nu exista nicio cale de a configura TransFollow pentru o companie care nu il are deja. Orice referinta la TransFollow descrie acest comportament de continuitate mostenita, nu o optiune disponibila azi in produs.
+</Warning>
+
+## Acoperire pe tari
+
+eCMR este valabil legal in tarile care au ratificat Protocolul e-CMR - in 2025, majoritatea statelor UE plus Elvetia, Belarus, Georgia si altele. Verifica lista actuala pe [unece.org](https://unece.org). Pentru tarile care nu au ratificat, CMR-ul pe hartie ramane necesar - Druma poate tipari o scrisoare CMR formatata pentru acele transporturi.
+
+<CardGroup cols={2}>
+  <Card title="Ce este eCMR?" icon="file-contract" href="/ro/ecmr/what-is-ecmr">
+    Introducere in scrisorile de transport electronice si cand ai nevoie de ele.
+  </Card>
+  <Card title="Valabilitatea legala a eCMR" icon="scale-balanced" href="/ro/ecmr/ecmr-legal-validity">
+    Protocolul e-CMR, sigiliul PAdES si eIDAS AdES explicate.
+  </Card>
+  <Card title="Crearea unui eCMR" icon="file-plus" href="/ro/ecmr/creating-ecmr">
+    Ghid pas cu pas pentru emiterea unui eCMR pe o comanda Druma.
+  </Card>
+  <Card title="Fluxul de semnare" icon="pen-to-square" href="/ro/ecmr/signing-flow">
+    Cum colecteaza soferul si destinatarul semnaturile.
+  </Card>
+</CardGroup>

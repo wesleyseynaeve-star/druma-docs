@@ -20,7 +20,10 @@ Aceasta pagina explica exact ce date pastreaza Druma despre compania ta, cat tim
 | Facturi si inregistrari financiare | 7 ani de la data facturii | Legea contabilitatii din Romania |
 | Documente eCMR (semnate) | 10 ani de la data semnarii | Protocolul e-CMR (cerinta legala) |
 | Jurnale de audit | 18 luni | Interes legitim |
-| Pozitie GPS (doar curenta) | Suprascrisa in timp real - fara istoric retinut | Contract |
+| Pozitie GPS (urmarire live) | Nu se retine - doar pozitia curenta, suprascrisa la fiecare actualizare | Contract |
+| Coordonate GPS asociate unui eveniment de comanda | Retinute impreuna cu comanda (vezi randul de mai sus) | Contract |
+| Date GPS trimise la ANAF e-Transport | 30 de zile, apoi sterse automat | Cerinta legala (Romania) |
+| Fisiere tahograf (DDD/TGD) | Pe termen nedeterminat (12 luni este minimul legal, nu un prag de stergere) | Regulamentul UE 165/2014 |
 | Jurnale de erori si securitate | 90 de zile | Interes legitim |
 | Inregistrari de facturare (Stripe) | 7 ani | Legislatie fiscala |
 
@@ -30,11 +33,20 @@ Documentele eCMR au o cerinta de retentie de 10 ani conform Protocolului Adition
 
 ## Date GPS: ce stocam
 
-Druma capteaza pozitia GPS de pe dispozitivul soferului **doar cat timp soferul este intr-o cursa activa atribuita**, dupa ce a acordat permisiunea de localizare in aplicatie. Fiecare pozitie noua **o suprascrie pe cea anterioara** - Druma stocheaza doar pozitia curenta, nu un istoric. Noi NU:
+Druma capteaza pozitia GPS de pe dispozitivul soferului cat timp o cursa este activa, dupa ce soferul a acordat permisiunea de localizare in aplicatie. Sunt doua fluxuri distincte:
 
-- Urmarim locatia soferului in afara unei curse active atribuite
-- Stocam istoric de locatie sau trasee de deplasare
+- **Urmarirea live** (pozitia afisata pe harta): se stocheaza doar pozitia curenta a camionului - fiecare ping nou o suprascrie pe cea anterioara, fara istoric de pozitii trecute.
+- **Coordonate asociate unui eveniment de comanda**: cand soferul raporteaza o schimbare de status, o intarziere sau un incident, o singura coordonata GPS este capturata si atasata acelui eveniment specific, devenind parte din inregistrarea comenzii (pastrata cat timp comanda insasi - vezi tabelul de mai sus). Este o marca unica pe acel eveniment, nu un jurnal continuu de locatie.
+
+Noi NU:
+
+- Urmarim locatia soferului in afara unei curse active
+- Pastram un istoric al pozitiilor de urmarire live
 - Partajam datele GPS cu terti, cu exceptia raportarii e-Transport catre ANAF, care foloseste un buffer glisant de 30 de zile inainte de stergere
+
+## Date tahograf: ce stocam
+
+Druma mentine o **Arhiva Tahograf** care stocheaza fisierele brute DDD (unitate vehicul) si TGD (card sofer) - descarcate automat printr-un furnizor de telematica conectat sau incarcate manual - pentru a indeplini cerintele de frecventa de descarcare si retentie ale Regulamentului UE 165/2014. Spre deosebire de datele operationale, fisierele tahograf sunt **pastrate pe termen nedeterminat**: 12 luni este minimul legal, nu un prag de stergere, deoarece operatorii pot avea nevoie sa le prezinte mult dupa acest prag, la un control rutier sau audit al autoritatilor. Vezi [Arhiva tahograf](/ro/fleet-compliance/tacho-archive).
 
 ## Jurnalul de audit
 

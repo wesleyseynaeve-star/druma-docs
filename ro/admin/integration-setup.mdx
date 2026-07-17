@@ -1,49 +1,111 @@
 ---
 title: "Configurarea integrarilor"
-description: "Conecteaza Druma la furnizorul eCMR, HERE Maps, furnizori de carduri de combustibil, software de contabilitate si SmartBill din pagina Setari -> Integrarsi."
+description: "Conecteaza Druma la furnizorul eCMR, HERE Maps, carduri de combustibil, contabilitate, SmartBill, Peppol si furnizorii de telematica/reefer din Setari -> Integrari."
 icon: "plug"
 ---
 
-Mergi la **Setari -> Integrarsi** (Admin sau Company Admin).
+Toate integrarile companiei tale se configureaza intr-un singur loc: **Setari -> Integrari**. Nu ai nevoie de un dezvoltator - fiecare configurare se face printr-un formular, in cateva minute.
+
+---
 
 ## 1. Furnizor eCMR
 
-Druma emite scrisori de trăsură electronice **intern, folosind furnizorul nativ Druma în mod implicit** — nu este necesar niciun cont extern, cheie API sau configurare. eCMR este disponibil imediat pentru comenzile transfrontaliere, iar Druma sigilează fiecare document finalizat cu o semnătură digitală PAdES.
+Druma emite scrisori de transport electronice **intern, folosind furnizorul nativ Druma** - fara cont extern, cheie API sau configurare. eCMR este disponibil imediat pentru comenzile transfrontaliere, iar Druma sigileaza fiecare document finalizat cu o semnatura digitala PAdES.
 
-**TransFollow** rămâne disponibil ca alternativă opțională pentru companiile care îl foloseau înainte de introducerea furnizorului nativ. Companiile noi ar trebui să rămână pe furnizorul nativ.
+Cardul are doar doua stari posibile: **Nativ** si **Dezactivat**. TransFollow nu mai poate fi selectat de nicio companie noua - exista doar ca ruta mostenita pentru companiile care aveau deja o configurare TransFollow.
 
 <Steps>
-  <Step title="Deschide cardul furnizorului eCMR">Mergi la **Setări → Integrări** și deschide cardul **Furnizor eCMR**. Furnizorul nativ Druma este selectat implicit.</Step>
-  <Step title="(Opțional) Comutare la TransFollow">Pentru a utiliza TransFollow în schimb, selectează-l și lipește cheia API din tabloul de bord al contului tău TransFollow în câmpul **Cheie API**. Înregistrează-te la [transfollow.org](https://transfollow.org) dacă nu ai cont.</Step>
-  <Step title="Activează modul simulare (opțional)">Când folosești TransFollow, activează **Modul Simulare** pentru a testa fluxul eCMR fără a emite documente reale cu valabilitate legală. Folosește aceasta în timpul instruirii sau onboardingului șoferilor. Dezactivează-l înainte de a începe activitatea reală.</Step>
-  <Step title="Testează conexiunea">Apasă **Testează Conexiunea**. Druma verifică certificatul de semnare nativ — sau, dacă TransFollow este selectat, apelează API-ul TransFollow pentru a confirma că cheia ta este validă.</Step>
-  <Step title="Salvează">Apasă **Salvează**. Crearea eCMR este activă pentru comenzile transfrontaliere.</Step>
+  <Step title="Deschide cardul Furnizor eCMR">Furnizorul Nativ este selectat implicit.</Step>
+  <Step title="Testeaza conexiunea">Druma verifica ca certificatul de semnare este configurat si pregatit.</Step>
+  <Step title="Salveaza">eCMR devine activ pentru comenzile transfrontaliere.</Step>
 </Steps>
 
 <Note>
-Majoritatea companiilor nu trebuie să schimbe niciodată această setare — furnizorul nativ este implicit recomandat. Consultați [Furnizori eCMR](/ro/ecmr/ecmr-providers) pentru o comparație completă.
+Daca o companie are o configurare TransFollow mostenita, aceasta continua sa functioneze si apare aici ca **Nativ** - migreaza automat la furnizorul nativ real la urmatoarea salvare, fara nimic de schimbat manual. Detalii in [Furnizori eCMR](/ro/ecmr/ecmr-providers).
 </Note>
 
+---
+
+## 2. HERE Maps
+
+Alimenteaza autocompletarea adreselor si calculul rutei optimizate pentru camioane (distanta, timp estimat, CO2). **Nu necesita configurare** - cheia API este gestionata la nivel de platforma si inclusa in abonament.
+
+---
+
+## 3. Import carduri de combustibil
+
+Druma nu se conecteaza direct la API-urile furnizorilor - exporti CSV din portalul furnizorului si il incarci in Druma, iar tranzactiile sunt asociate automat cu vehiculele dupa numarul de inmatriculare.
+
+**Furnizori acceptati:** DKV, UTA, AS24, Shell Card, SmartDiesel.
+
+Mergi la **Setari -> Integrari -> Import Card Combustibil**, alege furnizorul din lista (pentru formatul corect de coloane CSV), incarca fisierul. Tranzactiile nepotrivite cu niciun vehicul apar ca **nepotrivite** - verifica-le periodic, deseori indica fraude sau plate gresite.
+
+---
+
+## 4. Contabilitate SAGA / WinMENTOR
+
+Pentru SAGA Classic si WinMENTOR Classic: fara cheie API - generezi un export structurat (XML/CSV) din **Rapoarte -> Export Contabilitate** si il imporți cu wizardul standard al programului tau.
+
+Pentru **WinMENTOR Enterprise** (API REST): introduci URL-ul endpoint-ului, utilizatorul si parola API furnizate de administratorul WinMENTOR, apoi testezi si salvezi.
+
+---
+
+## 5. SmartBill
+
+Platforma romaneasca de facturare in cloud. Cu integrarea activa, facturile confirmate in Druma sunt trimise automat catre SmartBill.
+
+Copiaza cheia API din **Cont -> API** in contul tau SmartBill, introdu cheia si CIF-ul companiei in cardul SmartBill din Druma, testeaza conexiunea si salveaza.
+
 <Warning>
-Documentele eCMR în modul simulare TransFollow **nu sunt valabile din punct de vedere legal**. Asigură-te că modul simulare este dezactivat înainte de a expedia transporturi reale.
+Daca abonamentul SmartBill expira sau cheia API este regenerata, integrarea se opreste silentios. Verifica periodic statusul (verde = activ).
 </Warning>
 
-## SmartBill
+---
 
-Mergi la Setari -> Integrarsi -> SmartBill, introdu email-ul SmartBill si cheia API, apasa Testeaza.
+## 6. Peppol e-Facturare (Belgia)
 
-## SAGA / WinMENTOR
+Reteaua paneuropeana de e-facturare - obligatorie din ianuarie 2026 pentru companiile belgiene (inregistrate KBO) care trimit facturi B2B catre alte companii belgiene.
 
-Fara conexiune directa. Mergi la Facturi -> Export SAGA sau Export WinMENTOR pentru fisierul ZIP contabil.
+Introdu numarul KBO si numarul de TVA in cardul **Peppol e-Facturare**, apoi apasa **Inregistreaza-te in Reteaua Peppol** (Druma trimite inregistrarea catre punctul de acces e-invoice.be). Odata activ, rutarea catre clientii belgieni eligibili este automata.
 
-## Carduri de combustibil
+---
 
-Druma accepta exporturi CSV de la DKV, UTA si AS24. Mergi la Flota -> Combustibil -> Import.
+## 7. Inbox email facturi furnizori
 
-## HERE Maps
+Ofera companiei tale o adresa de email dedicata pentru facturile de la furnizori (carduri combustibil, service, taxe de drum). Facturile primite sunt clasificate automat prin AI si trimise intr-o coada de revizuire.
 
-Configurat la nivel de platforma - nu necesita configurare.
+Activeaza optiunea in **Setari -> Companie -> Email Facturi Furnizori**, adauga adresele/domeniile expeditorilor asteptati in lista alba, apoi distribuie adresa generata furnizorilor tai. Facturile apar in **Finante -> Forwarding -> Coada Facturi**.
 
-## ANAF e-Transport
+---
 
-Mergi la Setari -> Integrarsi -> ANAF e-Transport si introdu credentialele SPV.
+## 8. Telematica, tahograf si reefer
+
+Druma se conecteaza direct la GPS-ul camioanelor, tahograful (ore de conducere EU 561/2006) si senzorii de temperatura ai remorcilor reefer, eliminand introducerea manuala.
+
+**Telematica/tahograf** - deschide cardul furnizorului tau si introdu credentialele:
+
+| Furnizor | Credentiale | Observatii |
+|---|---|---|
+| Scania / Volvo / DAF / MAN / Mercedes-Benz / IVECO / Renault (rFMS) | Client ID, Client Secret | Emise de portalul de dezvoltatori al producatorului. Scania si Volvo sunt cele mai consolidate; celelalte marci rFMS folosesc acelasi API dar sunt inca in validare pe flote live. |
+| Webfleet | Cont, Utilizator, Parola, Cheie API | Necesita profil "expert" cu acces extern activat |
+| Geotab | Baza de date, Utilizator, Parola | Cont de serviciu (View Only) creat in MyGeotab |
+| Samsara | Token API | Doar pozitii GPS - nu ofera date de tahograf |
+| Frotcom | Utilizator, Parola, Furnizor | In **beta** - functioneaza, dar maparea campurilor e in validare |
+| Continental VDO | Client ID, Secret, ID cont | Necesita acord de partener Continental - fara auto-inregistrare publica |
+| Webeye / Eurowag | Utilizator, Secret | Necesita aprobare de partener Eurowag - fara auto-inregistrare publica |
+
+Automatizarea descarcarii tahografului functioneaza in acest moment doar pentru camioanele conectate prin rFMS (marcile OEM de mai sus); Webfleet TachoShare inca nu este implementat.
+
+**Reefer** - Mapon (API public, functioneaza imediat), Orbcomm (token de cont necesar), Thermo King TracKing si Carrier Lynx Fleet (doar prin acord de partener cu furnizorul).
+
+---
+
+## Aprofundare
+
+<Card title="Ce este eCMR?" icon="file-contract" href="/ro/ecmr/what-is-ecmr">
+  Cum functioneaza eCMR, cine semneaza si cand se aplica.
+</Card>
+
+<Card title="Crearea unui eCMR" icon="file-plus" href="/ro/ecmr/creating-ecmr">
+  Ghid pas cu pas pentru emiterea documentelor eCMR dintr-o comanda.
+</Card>

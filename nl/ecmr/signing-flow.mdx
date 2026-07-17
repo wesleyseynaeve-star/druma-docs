@@ -1,44 +1,82 @@
 ---
-title: "eCMR Ondertekeningsproces"
-description: "Hoe de chauffeur alle drie vereiste handtekeningen verzamelt — afzender, vervoerder en ontvanger — met behulp van de Druma mobiele app."
+title: "eCMR-ondertekeningsproces"
+description: "Hoe de chauffeur alle drie vereiste handtekeningen verzamelt — afzender, vervoerder en ontvanger — met de Druma mobiele app."
 icon: "pen-to-square"
 ---
 
-Een eCMR vereist drie handtekeningen: de afzender tekent bij ophaling, de chauffeur/vervoerder tekent bij ophaling en de ontvanger tekent bij aflevering.
-
-## Overzicht
+Een eCMR is pas juridisch compleet na drie handtekeningen: afzender bij ophaling, chauffeur/vervoerder bij ophaling, ontvanger bij aflevering. Zo werkt elke stap met de Druma native provider.
 
 ```
 Ophaallocatie                      Afleverlocatie
 ─────────────────────────────      ──────────────────────────
-1. Afzender tekent       →         3. Ontvanger tekent
+1. Afzender tekent       →         3. Ontvanger tekent (eigen apparaat)
 2. Chauffeur tekent      →              ↓
+                                    PAdES-zegel toegepast
                                     Gecertificeerde PDF uitgegeven
 ```
 
-## Stap 1 — Afzender tekent bij ophaling
+## Stap 1 en 2 — Afzender en chauffeur tekenen bij ophaling
 
-1. Open de order in de app en tik op **eCMR ondertekenen**
-2. Draai de telefoon naar de vertegenwoordiger van de afzender
-3. Zij bekijken de CMR-details en tekenen met hun vinger
-4. Tik op **Bevestig handtekening afzender**
+<Steps>
+  <Step title="Chauffeur opent de eCMR">
+    Bij ophaling opent de chauffeur de order in de app en tikt op **eCMR**. Alle vooraf ingevulde velden (goederen, adressen, kenteken, chauffeur) worden getoond.
+  </Step>
+  <Step title="Afzender tekent">
+    De chauffeur geeft de telefoon aan de afzender, die de gegevens controleert, tekent, naam en functie invult en op **Bevestigen** tikt.
+  </Step>
+  <Step title="Chauffeur tekent">
+    Direct daarna springt de app naar het handtekeningveld van de chauffeur. Na bevestiging zijn beide ophaalhandtekeningen vergrendeld en verandert de status naar "Wacht op handtekening ontvanger."
+  </Step>
+</Steps>
 
-## Stap 2 — Chauffeur tekent bij ophaling
-
-Na de handtekening van de afzender verschijnt uw eigen handtekeningveld. Teken met uw vinger en tik op **Bevestig mijn handtekening**.
+<Note>
+De app laat de chauffeur pas doorgaan naar aflevering zodra beide ophaalhandtekeningen compleet zijn.
+</Note>
 
 ## Stap 3 — Ontvanger tekent bij aflevering
 
-Bij aankomst op het afleveradres:
-1. Tik op **eCMR ondertekenen**
-2. Draai de telefoon naar de ontvanger
-3. Zij tekenen met hun vinger
-4. Na bevestiging wordt de gecertificeerde PDF automatisch gegenereerd en opgeslagen
+Bij de native provider tekent de ontvanger op zijn **eigen apparaat** via een deellink of QR-code — de telefoon van de chauffeur hoeft niet overhandigd te worden.
 
-## Na de derde handtekening
+<Steps>
+  <Step title="Chauffeur opent het eCMR-tabblad bij aflevering">
+    Het document toont de twee vergrendelde ophaalhandtekeningen plus een deellink met QR-code.
+  </Step>
+  <Step title="Ontvanger scant of ontvangt de link">
+    Scannen met de eigen telefooncamera — geen Druma-account of app-download nodig — of de chauffeur stuurt de link via WhatsApp of sms.
+  </Step>
+  <Step title="Ontvanger tekent (en kan voorbehouden toevoegen)">
+    Bij schade, tekort of afwijking kan de ontvanger een opmerking toevoegen in het veld **Voorbehouden** (CMR vak 24) vóór het bevestigen.
+  </Step>
+  <Step title="Gecertificeerde PDF uitgegeven">
+    Na de derde handtekening bouwt Druma de gecertificeerde PDF met PAdES-zegel, automatisch opgeslagen bij de order.
+  </Step>
+</Steps>
 
-De gecertificeerde eCMR PDF is beschikbaar in het tabblad eCMR van de order. De klant kan hem ook downloaden uit het portaal.
+<Note>
+De QR-code verloopt na 30 minuten; de chauffeur kan dan een nieuwe genereren.
+</Note>
 
-<Card title="Papieren CMR als terugvaloptie" icon="file-alt" href="/nl/ecmr/paper-cmr-fallback">
-  Wat te doen wanneer digitale ondertekening niet mogelijk is.
-</Card>
+<Note>
+Zit uw bedrijf nog op een **legacy TransFollow-configuratie** (TransFollow kan niet meer nieuw geselecteerd worden — zie [eCMR-providers](/nl/ecmr/ecmr-providers))? Dan tekent de ontvanger door de telefoon van de chauffeur rechtstreeks over te nemen bij aflevering — anders dan de native QR-linkstroom.
+</Note>
+
+## Accepteren met voorbehoud (CMR vak 24)
+
+Bij schade of een onvolledige levering hoeft de ontvanger de levering niet te weigeren: de juiste weg is **accepteren met voorbehoud** — de opmerkingen worden in vak 24 van de verzegelde PDF vastgelegd (bescherming van het recht op een latere claim onder CMR Art. 30). Op de order verschijnt een oranje **"Voorbehouden ontvanger"**-banner; de order gaat gewoon door naar Afgeleverd.
+
+<Note>
+Weigert de ontvanger volledig te tekenen, gebruik dan de Papieren CMR-terugvalprocedure — dat is een apart pad, los van accepteren met voorbehoud.
+</Note>
+
+## Handtekeningstatus volgen
+
+Order openen → tabblad **eCMR** toont drie rijen (Afzender, Vervoerder, Ontvanger), elk "Getekend ✓" met tijdstempel, of "In behandeling" — dispatchers kunnen dit realtime volgen zonder de chauffeur te bellen.
+
+<CardGroup cols={2}>
+  <Card title="Papieren CMR-terugval" icon="file-alt" href="/nl/ecmr/paper-cmr-fallback">
+    Overschakelen van eCMR naar papier tijdens het proces, en hoe u de reden registreert.
+  </Card>
+  <Card title="Documenten uploaden" icon="upload" href="/nl/driver/uploading-documents">
+    Een gescande papieren CMR of ander leveringsdocument uploaden.
+  </Card>
+</CardGroup>

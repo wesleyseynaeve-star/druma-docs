@@ -10,103 +10,41 @@ Elke order in Druma volgt een gedefinieerd traject:
 
 **Concept → Bevestigd → Onderweg → Aangekomen bij ophaling → Laden → Onderweg naar levering → Aangekomen bij levering → Lossen → Afgeleverd → Gefactureerd**
 
-Er is ook een aparte status **Geannuleerd**.
-
----
-
-## Concept
-
-**Geactiveerd door:** Planner slaat een nieuwe order op zonder deze te bevestigen.
-
-De order bestaat in het systeem maar is nog niet actief. De chauffeur ziet het niet in hun app. Het verschijnt grijs op het planningsbord.
-
----
-
-## Bevestigd
-
-**Geactiveerd door:** Planner klikt op **Order bevestigen**.
-
-De order is nu live. De toegewezen chauffeur ontvangt een pushmelding in hun app. De order verschijnt blauw op het planningsbord.
-
----
-
-## Onderweg
-
-**Geactiveerd door:** Chauffeur tikt op **Onderweg** in hun app bij vertrek naar de ophaallocatie.
-
-**Geactiveerd door:** Chauffeur of Planner.
+Plus een aparte status **Geannuleerd**, en **Verspilde rit** voor afgebroken ritten.
 
 <Note>
-Als een chauffeur vergeet op Onderweg te tikken, kunt u de status handmatig instellen vanuit de orderpagina via **Status overschrijven**.
+Gebruikt uw bedrijf taaktemplates, dan kan een order ook een **taakchecklist** dragen gekoppeld aan diezelfde levenscyclusfasen — zie [Ordertaken & workflowtemplates](/nl/planner/order-tasks).
 </Note>
 
----
+## Concept → Bevestigd
 
-## Aangekomen bij ophaling
+**Concept**: de planner slaat een nieuwe order op zonder te bevestigen — niet zichtbaar voor de chauffeur, grijs op het planningsbord.
 
-**Geactiveerd door:** Chauffeur tikt op **Aangekomen bij ophaling** bij aankomst op het laadadres.
+**Bevestigd**: de planner klikt op **Order bevestigen** — de toegewezen chauffeur (en tweede chauffeur bij dubbelbemanning) krijgt een pushmelding, optioneel een automatische e-mailbevestiging naar de klant. Blauw op het planningsbord.
 
-De wachttijdklok start automatisch — handig voor het documenteren van vertragingen bij het laaddok.
+## Onderweg → Afgeleverd
 
----
-
-## Laden
-
-**Geactiveerd door:** Chauffeur tikt op **Laden gestart** wanneer goederen worden geladen.
-
-De wachttijdklok stopt wanneer het laden begint.
-
----
-
-## Onderweg naar levering
-
-**Geactiveerd door:** Chauffeur tikt op **Vertrokken van ophaling** nadat het laden is voltooid.
-
-De truck rijdt nu naar het afleveradres.
-
----
-
-## Aangekomen bij levering
-
-**Geactiveerd door:** Chauffeur tikt op **Aangekomen bij levering** bij aankomst op het afleveradres.
-
-De wachttijdklok start opnieuw.
-
----
-
-## Lossen
-
-**Geactiveerd door:** Chauffeur tikt op **Lossen gestart**.
-
-Wachttijd bij levering stopt.
-
----
-
-## Afgeleverd
-
-**Geactiveerd door:** Chauffeur tikt op **Afgeleverd** en uploadt optioneel een foto van de ondertekende CMR.
-
-Het transport is voltooid. De order wordt donkergroen op het planningsbord.
-
----
+Elke volgende stap wordt normaal door de **chauffeur** in de app getikt (Onderweg, Aangekomen bij ophaling, Laden gestart, Vertrokken van ophaling, Aangekomen bij levering, Lossen gestart, Afgeleverd), maar een **planner** kan elke stap ook overschrijven. Aankomst bij ophaling en levering start automatisch de **wachttijdklok**, die stopt zodra laden/lossen begint — deze wachttijd kan worden gebruikt voor toeslagberekeningen. Bij Afgeleverd kan de chauffeur een foto van de ondertekende CMR uploaden; de order wordt donkergroen op het planningsbord.
 
 ## Gefactureerd
 
-**Geactiveerd door:** Planner genereert een factuur voor de order.
-
-De order is volledig gesloten. Geen verdere statuswijzigingen zijn mogelijk.
-
----
+De planner genereert een factuur — de order is dan volledig gesloten en alleen-lezen.
 
 ## Geannuleerd
 
-**Geactiveerd door:** Planner annuleert de order.
-
 <Warning>
-U kunt een order in de status **Concept** of **Bevestigd** annuleren zonder speciale stappen. U kunt echter **geen** order annuleren die Onderweg of later is zonder een handmatig proces te doorlopen.
+Een order in **Concept** of **Bevestigd** annuleren kan zonder speciale stappen. Een order die al **Onderweg** is of verder, kan **niet** zomaar geannuleerd worden — neem contact op met uw accountbeheerder; dit vereist het vastleggen van een reden en kan chauffeursbetalingen beïnvloeden.
 </Warning>
 
----
+Geannuleerde orders blijven bewaard voor audits en zijn zichtbaar onder het filter **Geannuleerd**.
+
+## Verspilde rit
+
+Van toepassing wanneer de chauffeur al **vertrokken** is maar de rit moet worden afgebroken (klantannulering, overmacht, bedrijfsbeslissing) — anders dan een gewone annulering omdat er al echte kosten zijn gemaakt. Mogelijk vanaf elke status tussen Vertrokken en Lossen. De planner geeft een redencode, huidige locatie en lege kilometers op, en kan optioneel de klant laten factureren.
+
+<Warning>
+Een verspilde rit declareren kan **niet ongedaan gemaakt worden**. Er worden automatisch een payrollrecord voor de chauffeur en eventueel een klantfactuurrecord aangemaakt.
+</Warning>
 
 ## Handmatige statusoverschrijvingen
 
@@ -115,16 +53,24 @@ U kunt een order in de status **Concept** of **Bevestigd** annuleren zonder spec
     Ga naar Planner → Orders en open de order.
   </Step>
   <Step title="Klik op Status overschrijven">
-    Zoek de knop **Status overschrijven** bovenaan de pagina.
+    Bovenaan de pagina, naast de statusindicator.
   </Step>
-  <Step title="Selecteer de juiste status">
-    Kies de status waar de order nu zou moeten zijn.
+  <Step title="Selecteer de juiste status en voeg een notitie toe">
+    Bijv. "Chauffeur vergat bij te werken — telefonisch bevestigd."
   </Step>
-  <Step title="Voeg een notitie toe">
-    Typ een korte uitleg en klik op **Overschrijving toepassen**.
+  <Step title="Klik op Overschrijving toepassen">
+    De status wordt direct bijgewerkt en gelogd met uw naam en tijdstip.
   </Step>
 </Steps>
 
 <Card title="Vandaag-weergave" icon="sun" href="/nl/planner/today-view">
-  Bewaken van alle actieve orders voor vandaag.
+  Bewaak alle actieve orders van vandaag, live chauffeurposities en meldingen.
+</Card>
+
+<Card title="Ordertaken & workflowtemplates" icon="list-check" href="/nl/planner/order-tasks">
+  Configureerbare taakchecklists gekoppeld aan deze levenscyclusfasen.
+</Card>
+
+<Card title="Facturen genereren" icon="file-invoice" href="/nl/invoicing/generating-invoices">
+  Zodra een order Afgeleverd is: factuur aanmaken en versturen.
 </Card>

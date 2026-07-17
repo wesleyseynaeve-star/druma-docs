@@ -1,0 +1,51 @@
+---
+title: "Sarcini de comanda si sabloane de flux"
+description: "Liste de sarcini configurabile care urmaresc pasii necesari pe o comanda pe masura ce trece prin ciclul de viata - si cum le construiesc adminii."
+icon: "list-check"
+---
+
+## Prezentare generala
+
+Motorul de sarcini ataseaza o **lista de verificare** unei comenzi (sau facturi) care urmareste pasii ceruti de companie la fiecare etapa - trimite o confirmare, genereaza un document, urmareste clientul - si arata cine e responsabil si daca ceva e restant. Adminii construiesc lista o singura data, ca un **sablon de sarcini** reutilizabil; de atunci incolo, se materializeaza automat pe fiecare comanda care se potriveste.
+
+## Ce vezi pe o comanda
+
+Deschide orice comanda (sau factura) cu un sablon de sarcini potrivit si gasesti un panou cu fiecare pas cerut pentru etapa curenta: o iconita de status (in asteptare, in curs, finalizat, sarit, esuat), rolul responsabil (daca e setat), un indicator daca pasul asteapta un pas anterior nefinalizat, si o insigna **Scadent** sau **Restant** cand exista un termen.
+
+Pentru pasii deschisi, poti apasa iconita de bifare pentru a-l **marca finalizat**, sau iconita de omitere pentru a-l **sari** (optional cu un motiv). Ambele sunt dezactivate cat timp pasul e blocat de o dependenta. Daca un pas e configurat sa se finalizeze/sara automat cand comanda atinge un anumit status, il vei vedea pur si simplu schimbandu-se singur.
+
+Randurile din listele de comenzi si facturi au si o pastila-rezumat: un numar chihlimbariu cat timp sarcini raman deschise, sau o bifa verde **toate finalizate** cand totul e complet. Daca niciun sablon nu se potriveste etapei curente, panoul arata "Nicio lista de sarcini configurata pentru aceasta etapa."
+
+<Note>
+Sarcinile sunt legate de **faza ciclului de viata** - aceleasi statusuri din [Ciclul de viata al comenzii](/ro/planner/order-lifecycle). O lista apare (sau se actualizeaza) automat cand comanda sau factura ajunge la o faza vizata de un sablon.
+</Note>
+
+## Cum configureaza adminii sabloanele
+
+**Setari -> Sabloane de Sarcini**. Sabloanele pornesc goale pentru fiecare companie - nimic preconfigurat, constructia listei e complet optionala.
+
+<Steps>
+  <Step title="Creeaza un sablon">Apasa **Adauga sablon**. Alege **tipul de obiect** (Comanda sau Factura), **faza ciclului de viata** care il declanseaza (ex. Confirmata, Livrata) si o eticheta. Il poti activa direct sau salva dezactivat cat timp il construiesti.</Step>
+  <Step title="Restrange-l optional cu conditii">Foloseste **Se aplica cand** pentru a limita sablonul la anumite comenzi (ex. doar incarcaturi ADR, un client anume, doar curse de cabotaj). Lasa gol si sablonul se aplica tuturor comenzilor care ajung la faza tinta.</Step>
+  <Step title="Adauga pasii">Pentru fiecare pas, seteaza o cheie si o eticheta, apoi un **tip de pas**: **Manual** (o persoana il marcheaza finalizat/sarit), sau **Genereaza document**, **Trimite email**, **Ruleaza automatizare** (alege o actiune specifica din lista, ex. Genereaza factura, Trimite confirmare comanda, Genereaza CMR).</Step>
+  <Step title="Seteaza modul de finalizare">**Manual** (cineva il completeaza din lista) sau **Automat** - se finalizeaza/sare singur in momentul in care comanda/factura ajunge la statusul configurat, fara ca cineva sa apese ceva.</Step>
+  <Step title="Adauga responsabilitate si ordine">Optional, un **rol responsabil**, o dependenta de un pas anterior (ramane blocat pana acela e finalizat) si pozitia in lista.</Step>
+  <Step title="Salveaza">Sablonul se materializeaza acum pe fiecare comanda (sau factura) care se potriveste tipului, fazei si conditiilor sale.</Step>
+</Steps>
+
+## Suprascrieri per client
+
+Unii clienti au nevoie de o lista diferita fata de restul portofoliului - un pas suplimentar de document, sau unul de care nu au nevoie. In loc sa construiesti un sablon separat, suprascrii per client: deschide pagina clientului, tabul **Suprascrieri Sarcini**, si dezactiveaza fie un sablon intreg (doar pentru acel client), fie pasi individuali dintr-un sablon. Sablonul la nivel de companie ramane neschimbat pentru toti ceilalti clienti.
+
+## In culise
+
+Un job programat verifica la fiecare cateva minute sarcinile gata de rulat (dependente indeplinite, scadente, configurate pentru auto-rulare) si le dispatch-uieste fara ca cineva sa deschida lista - un detaliu de fiabilitate; in ziua de zi, interactionezi doar cu panoul de sarcini de pe comanda.
+
+<CardGroup cols={2}>
+  <Card title="Ciclul de viata al comenzii" icon="circle-dot" href="/ro/planner/order-lifecycle">
+    Fiecare status al comenzii si ce declanseaza trecerea intre ele.
+  </Card>
+  <Card title="CRM si pipeline de vanzari" icon="user-group" href="/ro/planner/crm">
+    Fisele de client unde traiesc suprascrierile per client, alaturi de interactiuni si etapa ciclului de viata.
+  </Card>
+</CardGroup>

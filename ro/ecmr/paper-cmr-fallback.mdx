@@ -1,23 +1,39 @@
 ---
 title: "Revenirea la CMR pe hartie"
-description: "Ce trebuie facut cand procesul eCMR nu este posibil si trebuie utilizat CMR-ul pe hartie."
-icon: "file"
+description: "Cum treci o comanda de la eCMR la CMR pe hartie cand semnarea digitala nu e posibila si cum inregistrezi motivul."
+icon: "file-alt"
 ---
 
-Uneori expeditorul sau destinatarul refuza sa semneze electronic. In aceste cazuri, utilizeaza CMR-ul pe hartie si incarca o scanare in Druma.
+eCMR nu este intotdeauna posibil: destinatarul poate refuza, telefonul ramane fara baterie, internetul cade, sau soferul intalneste pur si simplu o situatie in care hartia e singura optiune practica. Druma gestioneaza asta printr-un proces de revenire per comanda, care iti pastreaza inregistrarile curate si conformitatea intacta.
+
+## Cand revii la CMR pe hartie
+
+Destinatarul refuza sa semneze digital, nu exista conexiune la internet la preluare/livrare, bateria telefonului soferului e descarcata, destinatarul insista pe hartie din motive proprii, o intrerupere a sistemului Druma (sau, pentru companiile ramase pe o configurare TransFollow mostenita, o intrerupere TransFollow) impiedica functionarea eCMR, sau orice alta situatie in care fluxul digital nu e practic.
+
+<Note>
+Revenirea la hartie pentru o comanda nu afecteaza alte comenzi - decizia se ia per comanda, nu per sofer sau ruta.
+</Note>
 
 ## Procesul de revenire
 
 <Steps>
-  <Step title="Completeaza CMR-ul pe hartie">Utilizeaza formularul standard de CMR si colecteaza semnaturile manuale.</Step>
-  <Step title="Incarca o scanare">In aplicatia soferului: tabul Documente -> butonul + -> fotografiaza CMR-ul semnat -> selecteaza tipul CMR hartie.</Step>
-  <Step title="Anuleaza eCMR-ul (daca a fost creat)">Planificatorul poate marca eCMR-ul ca anulat din tabul eCMR al comenzii in interfata web.</Step>
+  <Step title="Deschide tabul eCMR">In aplicatia soferului sau in interfata web (dispecer), deschide comanda si tabul eCMR.</Step>
+  <Step title="Apasa Treci la CMR pe hartie">Selecteaza un motiv: refuz semnatura, defectiune tehnica, preferinta destinatar, fara conexiune internet, sau altul.</Step>
+  <Step title="Confirma">Statusul eCMR devine "CMR pe hartie - [motiv]". Daca un eCMR fusese deja inregistrat (prin furnizorul nativ, sau prin TransFollow pentru companiile ramase pe configurarea mostenita), este anulat in acest moment, iar anularea ramane in jurnalul de audit.</Step>
 </Steps>
 
-## Inregistrarea refuzului
+## Incarcarea scanarii CMR pe hartie
 
-Planificatorul poate inregistra un refuz de semnatura sau o nota de rezerva in tabul eCMR al comenzii. Aceasta documenteaza situatia in caz de disputa.
+Dupa ce ai CMR-ul semnat pe hartie, fotografiaza-l sau scaneaza-l si incarca-l in comanda: tabul **Documente -> Incarca Document**, selecteaza tipul **CMR pe hartie** si ataseaza fotografia sau PDF-ul. Documentul devine vizibil dispecerilor, clientilor (daca il partajezi prin portal) si auditorilor.
 
-## Tarile care nu au ratificat Protocolul e-CMR
+## Detectarea transfrontalier si comportamentul fail-open
 
-Verifica lista curenta de tari semnatare la unece.org. Pentru tarile care nu au ratificat, CMR-ul pe hartie ramane obligatoriu.
+Druma detecteaza comenzile transfrontaliere comparand tara de preluare cu cea de livrare. Cand perechea de tari e **nedeterminata** (de exemplu tara de livrare necompletata), Druma revine implicit la "eCMR nu este necesar" in loc sa blocheze soferul - un design intentionat fail-open, mai bine sa plece soferul fara eCMR decat sa fie blocat din cauza unor date incomplete. Dispecerul trebuie sa corecteze comanda cat mai curand.
+
+<Warning>
+Daca eCMR e obligatoriu legal pentru o ruta si Druma nu l-a creat din cauza datelor de tara lipsa, dispecerul trebuie sa creeze eCMR-ul manual din tabul eCMR dupa corectarea datelor.
+</Warning>
+
+<Card title="Ce este eCMR?" icon="file-contract" href="/ro/ecmr/what-is-ecmr">
+  Temeiul legal al eCMR si cand se aplica.
+</Card>

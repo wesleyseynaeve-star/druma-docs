@@ -4,41 +4,56 @@ description: "Hoe Druma eCMR-documenten automatisch genereert voor grensoverschr
 icon: "file-plus"
 ---
 
-Druma maakt eCMR-documenten aan via TransFollow. Het proces is grotendeels automatisch voor in aanmerking komende orders.
+Druma maakt eCMR-documenten **standaard in-house aan via de native provider** — geen extern account nodig. Het proces is grotendeels automatisch voor in aanmerking komende orders; u kunt aanmaak ook handmatig starten vanaf de orderdetailpagina.
 
 ## Wanneer Druma automatisch een eCMR aanmaakt
 
-Druma maakt automatisch een eCMR aan wanneer **beide** van de volgende voorwaarden zijn vervuld:
+Zodra een order **grensoverschrijdend** is (ophaal- en afleverland verschillen) en bevestigd wordt, registreert Druma de eCMR intern — het tabblad eCMR toont dan het documentnummer met status "Wacht op handtekening afzender."
 
-1. **TransFollow-integratie is actief** — uw API-sleutel is opgeslagen en de verbinding is gezond in Instellingen → Integraties.
-2. **De order is grensoverschrijdend** — het ophaalland en het afleverland zijn verschillend.
+<Note>
+Binnenlandse orders triggeren geen automatische aanmaak, maar u kunt handmatig een eCMR aanmaken als uw klant of route dit toch vereist.
+</Note>
 
-Wanneer een bevestigde order aan beide voorwaarden voldoet, registreert Druma de eCMR bij TransFollow direct na orderbevestiging.
-
-## Handmatig een eCMR aanmaken
-
-Als u de eCMR voor een interne order wilt aanmaken (zelfde land, maar u wilt toch een elektronisch document):
+## Handmatig aanmaken
 
 <Steps>
-  <Step title="Open de order">
-    Ga naar de orderdetailpagina.
-  </Step>
-  <Step title="Klik op het tabblad eCMR">
-    Klik op het tabblad **eCMR** op de orderdetailpagina.
+  <Step title="Open de order en het tabblad eCMR">
+    Ga naar de orderdetailpagina en klik op het tabblad **eCMR**.
   </Step>
   <Step title="Klik op eCMR aanmaken">
-    Klik op de knop **eCMR aanmaken**.
+    Druma toont een voorbeeld van alle vooraf ingevulde CMR-velden.
+  </Step>
+  <Step title="Controleer alle velden">
+    Eenmaal geregistreerd kan het eCMR-documentnummer niet meer worden verwijderd of gewijzigd.
+  </Step>
+  <Step title="Bevestig aanmaak">
+    Klik op **Bevestigen & aanmaken**. De status verandert naar "Wacht op handtekening afzender."
   </Step>
 </Steps>
 
-## Testmodus
-
-Als TransFollow is geconfigureerd met testmodus ingeschakeld, worden gegenereerde eCMR-documenten niet wettelijk geregistreerd. Ze zijn handig voor chauffeurstraining.
+Velden worden vooraf ingevuld vanuit uw bedrijfsgegevens, het klantrecord, de order zelf (adressen, goederen, kenteken, chauffeur) en eventuele ADR/temperatuurvlaggen. Ontbrekende of onjuiste ordergegevens worden getoond in het voorbeeld — herstel de order eerst.
 
 <Warning>
-Zorg dat testmodus **uit** is voor het dispatchen van echte zendingen.
+Na **Bevestigen & aanmaken** kan de eCMR niet meer worden verwijderd, het documentnummer niet gewijzigd, en afzender/ontvanger/goederen niet meer aangepast. Een fout herstelt u via de Papieren CMR-terugvalprocedure (annuleren + eventueel opnieuw aanmaken); dit wordt vastgelegd in het auditspoor.
 </Warning>
 
-<Card title="Ondertekeningsproces" icon="pen-to-square" href="/nl/ecmr/signing-flow">
-  Hoe de drie handtekeningen worden verzameld.
+## eCMR-provider: Native (TransFollow is legacy-only)
+
+In **Instellingen → Integraties → eCMR-provider** zijn er nog maar twee keuzes: **Native** en **Uitgeschakeld**. TransFollow kan niet meer nieuw geselecteerd worden — bestaat een bedrijf al met een TransFollow-configuratie, dan blijft die werken en migreert stil naar Native bij de volgende keer opslaan.
+
+<Card title="eCMR-providers" icon="right-left" href="/nl/ecmr/ecmr-providers">
+  Wat de native provider doet en wat er met legacy TransFollow-configuraties gebeurt.
 </Card>
+
+## Facturering
+
+eCMR is inbegrepen in uw abonnement — geen kosten per document, geen gebruikslimiet. Gebruiksstatistieken vindt u onder **Instellingen → Facturering → Gebruik**.
+
+<CardGroup cols={2}>
+  <Card title="Het ondertekeningsproces" icon="pen-to-square" href="/nl/ecmr/signing-flow">
+    Hoe de chauffeur alle drie handtekeningen verzamelt.
+  </Card>
+  <Card title="Wat is eCMR?" icon="file-contract" href="/nl/ecmr/what-is-ecmr">
+    Achtergrond over eCMR en hoe Druma het in-house uitgeeft.
+  </Card>
+</CardGroup>

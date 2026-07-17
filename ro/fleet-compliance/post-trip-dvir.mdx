@@ -1,83 +1,56 @@
 ---
-title: "Inspecție Post-Cursă (DVIR)"
-description: "Rapoarte structurate de inspecție a vehiculului la finalul fiecărei curse — cu blocare automată pentru defecte critice de siguranță."
+title: "Inspectie Post-Cursa (DVIR)"
+description: "Cum configurezi lista de verificare post-cursa si unde revizuiesc fleet managerii defectele raportate de soferi."
+icon: "clipboard-check"
 ---
 
-## Prezentare generală
+## Prezentare generala
 
-Inspecția post-cursă — numită și Driver Vehicle Inspection Report (DVIR) — este o verificare structurată de siguranță pe care șoferii o completează la finalul fiecărei curse. Identifică defecte înainte ca vehiculul să reintre în serviciu.
+Dupa ce soferul apasa **Livrat**, Druma afiseaza automat un ecran de **Inspectie Post-Cursa** (Driver Vehicle Inspection Report / DVIR) in aplicatia mobila, care trece prin starea camionului la finalul cursei.
 
-Sistemul DVIR Druma funcționează prin aplicația mobilă a șoferului. Defectele sunt clasificate pe niveluri de gravitate. Defectele critice de siguranță declanșează o blocare automată a vehiculului și notifică imediat managerul de flotă.
+<Note>
+Inspectia post-cursa se declanseaza doar pentru curse cu o singura comanda - nu apare la opririle intermediare in cursele de grupaj (multi-stop).
+</Note>
 
----
+## Cum functioneaza, pe scurt
 
-## Cum completează șoferii un DVIR
+Soferul marcheaza fiecare element din lista cu un comutator cu trei stari - **OK**, **Consultativ** sau **Critic de Siguranta** - introduce citirea curenta a kilometrajului si ataseaza fotografii pentru orice element Critic de Siguranta (maximum **3 fotografii per defect**; JPEG, PNG, WebP, HEIC sau PDF, maximum 10 MB fiecare). Nu exista semnatura pe ecran. Soferul poate trimite imediat sau apasa **Omite Inspectia** pentru a o completa mai tarziu din detaliul comenzii.
 
-<Steps>
-  <Step title="Deschide promptul de inspecție">
-    Apasă promptul **Inspecție Post-Cursă** care apare în partea de jos a comenzii finalizate din aplicație.
-  </Step>
-  <Step title="Parcurge lista de verificare">
-    Se deschide un formular structurat. Pentru fiecare element, selectează: **OK**, **Defect — Minor** sau **Defect — Critic de Siguranță**.
-  </Step>
-  <Step title="Raportează defectele">
-    Pentru orice defect, introdu o descriere și atașează opțional o fotografie (până la 5 fotografii per defect).
-  </Step>
-  <Step title="Semnează inspecția">
-    La finalul listei, semnează cu o semnătură digitală pe ecran.
-  </Step>
-  <Step title="Trimite">
-    Apasă **Trimite Inspecția**. Raportul este transmis imediat în Druma.
-  </Step>
-</Steps>
-
----
-
-## Categorii listă de verificare
-
-| Categorie | Elemente verificate |
-|---|---|
-| **Exterior** | Deteriorări caroserie, lumini, reflectori, oglinzi |
-| **Anvelope și roți** | Adâncime profil, deteriorări vizibile, șuruburi roată |
-| **Frâne** | Presiune aer, deteriorări componente frână |
-| **Compartiment motor** | Niveluri lichide, scurgeri vizibile |
-| **Cabina** | Lumini de avertizare bord, claxon, ștergătoare, centuri |
-| **Cuplare remorcă** | Kingpin, picioare de susținere, conector electric |
-| **Spațiu marfă** | Stare podea, puncte de ancorare, perdele laterale |
-| **Documentație** | CMR, licență transport, discuri tahograf |
-
----
-
-## Niveluri de gravitate
-
-| Nivel | Ce înseamnă | Acțiunea Druma |
+| Gravitate | Inseamna | Efect |
 |---|---|---|
-| **OK** | Niciun defect | Nicio acțiune |
-| **Defect minor** | Vehiculul poate rămâne în serviciu | Badge chihlimbar; managerul de flotă notificat prin email |
-| **Critic de siguranță** | Vehiculul nu este sigur de operat | Badge roșu; vehicul blocat; managerul de flotă notificat imediat |
+| **OK** | Niciun defect | Nicio actiune |
+| **Consultativ** | Defect minor, camionul ramane in serviciu | Planificatorul e notificat; vizibil in detaliul comenzii si Flota -> Defecte |
+| **Critic de Siguranta** | Defect serios | Planificatorul si fleet manager-ul sunt notificati imediat; daca blocarea automata e activata, camionul devine indisponibil pana la rezolvare |
+
+## Configurare admin
+
+**Setari -> Lista de Verificare Post-Cursa** - activeaza/dezactiveaza DVIR pentru toata compania, impune fotografii obligatorii pentru elementele critice, activeaza blocarea automata a camionului pentru defecte critice, si adauga/editeaza/sterge **elementele listei de verificare**.
+
+<Note>
+Elementele listei sunt configurabile de admin, la nivel de companie - nu exista o lista fixa, predefinita, de categorii. Toti soferii companiei vad aceeasi lista. Daca operezi tipuri diferite de vehicule, foloseste nume descriptive (ex. "Unitate frigorifica - verifica garniturile") pentru ca lista sa fie relevanta pentru toata lumea.
+</Note>
+
+## Vizualizarea unei inspectii
+
+In panoul de detaliu al comenzii, sub informatiile de ruta, apare o sectiune **DVIR** dupa trimiterea unei inspectii: statusul (Completata/Omisa/In asteptare), marca temporala si numele soferului, citirea kilometrajului, lista defectelor cu badge de gravitate, si miniaturi ale fotografiilor incarcate.
+
+## Urmarirea defectelor deschise in flota
+
+**Flota -> Defecte** are trei taburi de filtrare: **Deschise** (neasociate inca unui ordin de lucru finalizat/anulat), **Confirmate** (revizuite de un fleet manager) si **Toate** (istoric complet). Fiecare rand arata camionul, elementul defect, badge-ul de gravitate, data si soferul.
+
+## Crearea unui Ordin de Lucru dintr-un defect
+
+Pentru randurile **Critic de Siguranta** din Flota -> Defecte, butonul **Creeaza Ordin de Lucru** deschide formularul precompletat cu camionul, descrierea defectului si gravitatea Critic de Siguranta.
 
 <Warning>
-Un vehicul cu un defect critic de siguranță este blocat automat pe tabloul de planificare până când managerul de flotă șterge blocarea marcând ordinul de lucru ca rezolvat.
+Daca blocarea automata e activata, un defect critic de siguranta scoate camionul din planificare imediat - chiar daca are deja comenzi viitoare atribuite. Verifica Flota -> Defecte imediat ce primesti o alerta critica.
 </Warning>
 
----
-
-## Vizualizarea rezultatelor DVIR
-
-**Flotă → Defecte** afișează toate defectele deschise din întreaga flotă:
-
-- Un rând per defect
-- Badge gravitate (Minor / Critic de Siguranță)
-- Numărul de înmatriculare și numele șoferului
-- Descrierea defectului și fotografiile atașate
-- Data și ora inspecției
-- Buton **Creare Ordin de Lucru** (doar pentru defecte critice de siguranță)
-
 <CardGroup cols={2}>
-  <Card title="Atelier & Mentenanță" href="/ro/fleet-compliance/workshop-maintenance">
-    Creează ordine de lucru din rapoartele de defecte.
+  <Card title="Atelier si mentenanta" icon="wrench" href="/ro/fleet-compliance/workshop-maintenance">
+    Creeaza si gestioneaza ordine de lucru din rapoartele de defecte.
   </Card>
-  <Card title="Documente Flotă" href="/ro/fleet-compliance/fleet-documents">
-    Urmărește certificatele și documentele de conformitate ale vehiculelor.
+  <Card title="Documente Flota" icon="folder-open" href="/ro/fleet-compliance/fleet-documents">
+    Urmareste certificatele si documentele de conformitate ale vehiculelor.
   </Card>
 </CardGroup>

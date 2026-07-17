@@ -1,34 +1,54 @@
 ---
 title: "Crearea unui eCMR"
-description: "Cum genereaza Druma documente eCMR automat si cum sa creezi unul manual."
+description: "Cum genereaza Druma documente eCMR automat pentru comenzile transfrontaliere si cum sa creezi unul manual."
 icon: "file-plus"
 ---
 
+Druma creeaza documente eCMR **intern, folosind furnizorul nativ Druma**, implicit - fara cont extern. Procesul este in mare parte automat pentru comenzile eligibile, dar poti declansa crearea si manual din pagina de detaliu a comenzii.
+
 ## Cand creeaza Druma automat un eCMR
 
-Druma creeaza un eCMR automat cand **ambele** conditii sunt indeplinite:
-
-1. **Integrarea TransFollow este activa** in Setari -> Integrarsi
-2. **Comanda este transfrontaliera** - tara de preluare si tara de livrare sunt diferite
+Automat, cand **comanda este transfrontaliera** - tara de preluare si tara de livrare sunt diferite. Comanda confirmata primeste un eCMR inregistrat intern, iar fila eCMR arata numarul documentului si statusul "In asteptarea semnaturii expeditorului."
 
 <Note>
-Comenzile nationale nu declanseaza crearea automata eCMR. Poti crea un eCMR manual pentru o comanda nationala daca este necesar.
+Comenzile nationale (aceeasi tara la preluare si livrare) nu declanseaza crearea automata, deoarece Conventia CMR se aplica transportului international. Poti totusi crea un eCMR manual pentru o comanda nationala daca clientul sau ruta o cere.
 </Note>
 
 ## Crearea manuala
 
 <Steps>
-  <Step title="Deschide comanda">Mergi la Comenzi, gaseste comanda si apasa pentru detalii.</Step>
+  <Step title="Deschide comanda">Mergi la Comenzi, gaseste comanda si deschide pagina de detaliu.</Step>
   <Step title="Deschide tabul eCMR">Apasa tabul **eCMR** de sus.</Step>
-  <Step title="Apasa Creeaza eCMR">Druma afiseaza o previzualizare a datelor de trimis la TransFollow.</Step>
-  <Step title="Verifica toate campurile">Verifica cu atentie inainte de confirmare.</Step>
-  <Step title="Confirma crearea">Apasa Confirma si Creeaza. Druma inregistreaza documentul la TransFollow.</Step>
+  <Step title="Apasa Creeaza eCMR">Druma afiseaza o previzualizare a tuturor campurilor CMR precompletate.</Step>
+  <Step title="Verifica toate campurile">Verifica cu atentie inainte de confirmare - odata inregistrat, numarul documentului nu mai poate fi sters sau schimbat.</Step>
+  <Step title="Confirma crearea">Apasa Confirma si Creeaza. Statusul devine "In asteptarea semnaturii expeditorului."</Step>
 </Steps>
 
+## Date precompletate din comanda
+
+Expeditorul vine din Setari -> Companie, destinatarul din fisa clientului, adresele de preluare/livrare si descrierea marfii din comanda, numarul de inmatriculare si soferul din atribuire, iar conditiile speciale (ADR, temperatura) din notele si marcajele comenzii. Daca lipseste sau e gresit ceva, previzualizarea eCMR il semnaleaza inainte de confirmare.
+
 <Warning>
-Odata confirmat, numarul eCMR este inregistrat la TransFollow si nu poate fi sters sau modificat. Daca ai nevoie de corectii, trebuie sa anulezi eCMR-ul si sa creezi unul nou.
+Dupa Confirma si Creeaza, eCMR-ul nu mai poate fi sters, iar numarul documentului, expeditorul, destinatarul si descrierea marfii nu mai pot fi modificate. Pentru corectii, trebuie sa anulezi eCMR-ul (proces Alternativa CMR pe hartie) si, daca e cazul, sa creezi unul nou - anularea ramane inregistrata in jurnalul de audit.
 </Warning>
 
-## Modul simulare
+## Furnizor eCMR: Nativ (TransFollow doar mostenit)
 
-In **Setari -> Integrarsi -> TransFollow -> Activeaza Modul Simulare**, documentele eCMR sunt create normal dar nu au valabilitate legala. Ideal pentru antrenament si testare.
+Implicit, Druma foloseste furnizorul nativ - fara cont extern sau cheie API. In **Setari -> Integrari -> Furnizor eCMR**, singurele optiuni sunt **Nativ** si **Dezactivat** - TransFollow nu mai poate fi selectat, nici de o companie noua, nici de una existenta. Companiile cu o configurare TransFollow mostenita continua sa functioneze normal si migreaza silentios la Nativ la urmatoarea salvare a integrarii.
+
+<Card title="Furnizori eCMR" icon="right-left" href="/ro/ecmr/ecmr-providers">
+  Ce face furnizorul nativ si ce se intampla cu configurarile TransFollow mostenite.
+</Card>
+
+## Facturare
+
+eCMR este inclus in abonamentul Druma, fara cost suplimentar per document si fara limita de utilizare. Statisticile de utilizare sunt in **Setari -> Facturare -> Utilizare**.
+
+<CardGroup cols={2}>
+  <Card title="Fluxul de semnare" icon="pen-to-square" href="/ro/ecmr/signing-flow">
+    Cum colecteaza soferul toate cele trei semnaturi.
+  </Card>
+  <Card title="Ce este eCMR?" icon="file-contract" href="/ro/ecmr/what-is-ecmr">
+    Context despre eCMR, temeiul legal si cum il emite Druma.
+  </Card>
+</CardGroup>

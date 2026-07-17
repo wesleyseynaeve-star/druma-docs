@@ -1,40 +1,55 @@
 ---
 title: "Roluri utilizatori"
-description: "Prezentarea detaliata a celor opt roluri Druma."
+description: "Prezentarea detaliata a celor opt roluri Druma si a permisiunilor fiecaruia."
 icon: "shield-halved"
 ---
 
+Druma are **opt roluri**: sase pentru echipa interna (platforma web) si doua pentru utilizatori externi (soferi si clienti), care acceseaza Druma prin linkuri/autentificare dedicate, nu prin platforma web.
+
 | Rol | Descriere |
 |-----|-----------|
-| Admin | Acces complet inclusiv facturare |
-| Company Admin | Acces complet fara facturare |
-| Planner | Comenzi, atribuire, facturare, rapoarte |
-| Dispatcher | Monitorizare (doar citire) |
-| Fleet Manager | Gestionare flota completa |
-| Customer Service | Clienti, comenzi, facturi, invitare utilizatori |
-| Driver | Numai aplicatia mobila |
+| Admin | Acces complet, inclusiv facturare si abonament |
+| Company Admin | Acces complet, fara facturare |
+| Planner | Comenzi, atribuire camioane/soferi, facturare, rapoarte |
+| Dispatcher | Doar monitorizare (dashboard, harta, ore de conducere) - fara editare |
+| Fleet Manager | Gestionare completa flota (vehicule, remorci, soferi, documente, combustibil, cabotaj) |
+| Customer Service | Clienti, comenzi, facturi, rapoarte, invitare utilizatori |
+| Driver | Numai aplicatia mobila a soferului |
 | Client | Numai portalul clientului |
 
 ## Admin
-Acces nerestrictionat la fiecare functie Druma. Rolul pentru proprietarul afacerii.
+Acces nerestrictionat, inclusiv gestionarea abonamentului si a platilor. Rolul proprietarului afacerii.
 
 ## Company Admin
-Identic cu Admin fara accesul la facturare. Ideal pentru directori operatiunii.
+Identic cu Admin, fara facturare. Configureaza integrari, invita utilizatori, gestioneaza profilul companiei si tarifele - ideal pentru un manager de operatiuni de incredere.
 
 ## Planner
-Creeaza comenzi, atribuie soferi si camioane, genereaza facturi, acceseaza rapoarte.
+Rolul operational de baza: creeaza si editeaza comenzi, atribuie vehicule si soferi pe tabla de planificare, genereaza facturi, acces read-only la flota.
 
 ## Dispatcher
-Rol de vizualizare. Vede tabloul de bord, harta, statusurile comenzilor. Nu poate crea sau edita nimic.
+Rol axat pe monitorizare in timp real - vede dashboard-ul, harta live si orele de conducere, dar nu poate crea/edita comenzi, accesa tabla de planificare sau facturi.
 
 ## Fleet Manager
-Acces complet la flota: vehicule, remorci, soferi, documente, combustibil, cabotaj, ore de conducere.
+Control complet asupra flotei: vehicule, remorci, soferi, documente (ITP, asigurare, CEMT, ADR), import carduri combustibil, cabotaj, tarife. Vede orele de conducere, dar nu are acces la comenzi sau facturare.
 
 ## Customer Service
-Similar cu Planner cu accent pe clienti. Poate invita utilizatori noi.
+Acces operational la comenzi, facturare, clienti si rapoarte; poate invita utilizatori noi. Nu poate atribui vehicule pe tabla de planificare si nu gestioneaza flota.
 
 ## Driver
-Acceseaza numai aplicatia mobila PWA: vede comenzile, actualizeaza statusul, semneaza eCMR, incarca documente.
+
+<Warning>
+Soferii nu se autentifica niciodata prin invitatie pe email si nu exista un flux de auto-inregistrare prin SMS sau email. Dispecerul seteaza numarul de telefon al soferului si genereaza un **PIN** din **Flota -> Soferi -> Autentificare Telefon + PIN**; soferul foloseste aceste date pentru a se conecta in aplicatia mobila si isi personalizeaza PIN-ul la prima autentificare.
+</Warning>
+
+Prin aplicatia soferului: vede comenzile atribuite, actualizeaza statusul (Incarcat, Plecat, La destinatie, Livrat), incarca fotografii, semneaza eCMR digital, vede adresele si datele de contact. Nu vede comenzile altor soferi sau datele financiare ale clientilor.
 
 ## Client
-Acceseaza numai portalul clientului: urmareste transporturile, descarca documente.
+Acceseaza doar portalul clientului printr-un link privat: vede comenzile curente si istoricul, urmareste livrarile live, descarca eCMR/POD/facturi. Nu vede datele altor clienti sau costurile interne.
+
+## Roluri multiple si multi-companie
+
+Un utilizator poate avea mai multe roluri simultan (ex. Company Admin + Planner). O singura adresa de email poate apartine mai multor conturi de companie Druma - comutarea se face din numele companiei, in coltul din dreapta sus.
+
+<Card title="Invita echipa" icon="users" href="/ro/getting-started/invite-your-team">
+  Ghid pas cu pas pentru invitarea utilizatorilor si configurarea autentificarii soferilor cu telefon + PIN.
+</Card>

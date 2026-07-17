@@ -4,15 +4,39 @@ description: "Incarca in masa soferii in Druma folosind un template CSV."
 icon: "file-import"
 ---
 
+Adauga toata echipa de soferi deodata prin import CSV - esential la onboarding-ul unei flote de 10+ soferi.
+
 <Steps>
-  <Step title="Deschide pagina de import">Mergi la **Camioane -> Soferi -> Import** si apasa **Descarca Template**.</Step>
-  <Step title="Completeaza CSV-ul">Un sofer per rand: nume complet, telefon (format international), email, numar permis, categorie permis (CE), data expirare permis, data expirare CPC, card tahograf, data expirare ADR, tara, activ (true/false).</Step>
-  <Step title="Incarca si revizuieste">Verifica randurile rosii (de obicei numar telefon lipsa sau format data invalid - AAAA-LL-ZZ).</Step>
-  <Step title="Confirma importul">Apasa **Importa [X] soferi**.</Step>
+  <Step title="Deschide pagina de import">
+    Mergi la **Flota -> Soferi -> Import** si apasa **Descarca Template**.
+  </Step>
+  <Step title="Completeaza CSV-ul">
+    Un sofer per rand: `full_name` (obligatoriu), `phone` (obligatoriu, format international, ex. `+40721000000`), `email`, `license_number`, `license_category`, `license_expiry`, `cpc_expiry`, `tachograph_card`, `adr_expiry`, `country`, `active` (obligatoriu, true/false). Datele trebuie in format `AAAA-LL-ZZ`.
+  </Step>
+  <Step title="Incarca si revizuieste">
+    Verifica randurile rosii in previzualizare (de obicei numar de telefon lipsa sau format de data invalid).
+  </Step>
+  <Step title="Confirma importul">
+    Apasa **Importa [X] soferi**. Soferii apar imediat in lista.
+  </Step>
 </Steps>
 
-Numarul de telefon este critic - soferii se autentifica cu acesta in PWA. Trebuie sa fie in format international (+40...).
+## Numarul de telefon este critic
 
-Dupa import, distribuie linkul PWA fiecarui sofer: **Camioane -> Soferi -> [sofer] -> Copiaza Link PWA**.
+Numarul de telefon este modul in care soferii se autentifica in aplicatie - impreuna cu un PIN pe care il configurezi dupa import. Trebuie sa fie in format international. Fara un numar valid, soferul nu se poate autentifica.
 
-<Card title="Gestionarea soferilor" icon="id-card" href="/en/planner/driver-management">Gestioneaza profiluri individuale si distribuie linkul PWA.</Card>
+<Note>
+Importul seteaza doar numarul de telefon - nu creeaza si PIN-ul de autentificare. Nu exista inca un pas de generare PIN in masa, asa ca dupa import, mergi la **Flota -> Soferi**, deschide profilul fiecarui sofer pe rand si, sub **Autentificare Telefon + PIN**, apasa **Seteaza PIN** (sau **Genereaza** pentru un cod aleatoriu de 6 cifre), apoi **Salveaza PIN**. Comunica PIN-ul direct fiecarui sofer - il va personaliza la prima autentificare.
+</Note>
+
+## Alerte de expirare
+
+Daca completezi datele de expirare a permisului, CPC-ului sau certificatului ADR la import, Druma incepe imediat sa le urmareasca si te alerteaza cu 30 si 60 de zile inainte de expirare.
+
+<Card title="Gestionarea soferilor" icon="id-card" href="/ro/planner/driver-management">
+  Gestioneaza profiluri individuale si configureaza autentificarea telefon + PIN.
+</Card>
+
+<Card title="Instalarea aplicatiei soferului" icon="mobile" href="/ro/driver/installing-the-app">
+  Ghid pas cu pas pentru soferi la instalarea aplicatiei pe telefon.
+</Card>
