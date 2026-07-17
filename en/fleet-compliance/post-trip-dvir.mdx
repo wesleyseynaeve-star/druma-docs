@@ -1,119 +1,99 @@
 ---
 title: "Post-Trip Vehicle Inspection (DVIR)"
-description: "Structured driver vehicle inspection reports at the end of each trip — with automatic blocks for safety-critical defects."
+description: "How to configure the post-trip checklist, and where fleet managers review and act on defects reported by drivers."
+icon: "clipboard-check"
 ---
 
 ## Overview
 
-The Post-Trip Inspection — also called a Driver Vehicle Inspection Report (DVIR) — is a structured safety check that drivers complete at the end of each trip. It identifies defects before the truck goes back into service.
+After a driver taps **Delivered**, Druma automatically presents a **Post-Trip Inspection** overlay on the driver app — a Driver Vehicle Inspection Report (DVIR) that walks through the truck's condition at the end of the trip. This page covers the fleet-manager side: configuring the checklist and reviewing the defects it produces. For the driver-facing flow in full detail, see [Post-Trip Inspection](/en/driver/post-trip-inspection).
 
-Druma's DVIR system works on the mobile driver app. Defects are categorised by severity. Safety-critical defects trigger an automatic block on the vehicle and notify the fleet manager immediately.
-
----
-
-## How Drivers Complete a DVIR
-
-The DVIR is initiated from the driver app when an order reaches **Offloading Complete** or **Delivered** status:
-
-<Steps>
-  <Step title="Open the inspection prompt">
-    Tap the **Post-Trip Inspection** prompt that appears at the bottom of the completed order in the driver app.
-  </Step>
-  <Step title="Work through the checklist">
-    A structured form opens covering the vehicle's key systems. For each item, select: **OK**, **Defect — Minor**, or **Defect — Safety Critical**.
-  </Step>
-  <Step title="Report any defects">
-    For any defect, enter a description and optionally attach a photo (up to 5 photos per defect item).
-  </Step>
-  <Step title="Sign the inspection">
-    At the end of the checklist, sign with a digital signature on-screen.
-  </Step>
-  <Step title="Submit">
-    Tap **Submit Inspection**. The report is sent to Druma immediately.
-  </Step>
-</Steps>
+<Note>
+Post-trip inspection is only triggered for single-order trips. It does not appear at intermediate stops during groupage (multi-stop) runs.
+</Note>
 
 ---
 
-## Inspection Checklist Categories
+## How it works, in brief
 
-| Category | Items covered |
-|---|---|
-| **Exterior** | Bodywork damage, lights (head, tail, indicator, brake), reflectors, mirrors |
-| **Tyres and wheels** | Tread depth, visible damage, wheel nuts secure |
-| **Brakes** | Air pressure, visible brake component damage |
-| **Engine compartment** | Fluid levels (oil, coolant, windscreen wash), visible leaks |
-| **Cab interior** | Dashboard warning lights, horn, wipers, seat belts |
-| **Trailer coupling** | Kingpin, landing legs, electrical connector, airlines |
-| **Cargo area** | Floor condition, lashing points, side curtains/panels |
-| **Documentation** | CMR documents, transport licence, tachograph discs |
+The driver marks each checklist item with a tri-state toggle — **OK**, **Advisory**, or **Safety Critical** — enters the current odometer reading, and attaches photos for any Safety Critical item (up to 3 photos per defect; JPEG, PNG, WebP, HEIC, or PDF, max 10 MB each). The driver can submit immediately or tap **Skip Inspection** to complete it later from the order's load detail.
 
----
-
-## Severity Levels
-
-| Level | What it means | Druma action |
+| Severity | Meaning | Effect |
 |---|---|---|
-| **OK** | No defect — item is in acceptable condition | No action |
-| **Minor defect** | Defect noted but vehicle can remain in service | Amber badge on vehicle; fleet manager notified by email |
-| **Safety Critical** | Defect that makes the vehicle unsafe to operate | Red badge on vehicle; vehicle blocked from new order assignments; fleet manager notified immediately |
-
-<Warning>
-A vehicle with a Safety Critical defect is automatically blocked from assignment on the planning board until a fleet manager explicitly clears the block. This cannot be overridden by dispatchers — only a Fleet Manager, Admin, or Company Admin can clear the block by marking the related work order as resolved.
-</Warning>
+| **OK** | No issues found | No action |
+| **Advisory** | Minor issue, truck stays in service | Planner notified; visible in order detail and Fleet → Defects |
+| **Safety Critical** | Serious defect | Planner and fleet manager notified immediately; if auto-block is enabled, the truck is marked unavailable until resolved |
 
 ---
 
-## Viewing DVIR Results (Planner / Fleet Manager)
+## Admin configuration
 
-**Fleet → Defects** shows all open defects across the fleet:
+Go to **Settings → Post-Trip Checklist** to configure DVIR for your company.
 
-- One row per defect (not per inspection)
-- Severity badge (Minor / Safety Critical)
-- Vehicle plate and driver name
-- Defect description and attached photos
-- Date and time of the inspection
-- **Create Work Order** button (Safety Critical defects only)
+| Setting | Description |
+|---|---|
+| **Enable post-trip DVIR** | Turns the inspection overlay on or off for all drivers |
+| **Require photos for safety-critical items** | Makes uploading at least one photo mandatory before a safety-critical defect can be submitted |
+| **Auto-create vehicle unavailability for safety-critical defects** | Automatically blocks the truck from dispatch when a safety-critical defect is submitted |
+| **Checklist items** | Add, edit, or delete the items that appear in the inspection overlay. Each item has a name and a default severity (OK / Advisory / Safety Critical) |
 
-Click any row to expand the full inspection report — including all items checked, the driver signature, and the linked order.
+<Note>
+Checklist items are company-wide and admin-configurable — there is no fixed, built-in list of categories. All drivers in your company see the same list. If you operate different vehicle types, use descriptive item names (e.g., "Reefer temperature unit — check seals") to keep the list meaningful for everyone.
+</Note>
 
 ---
 
-## Creating a Work Order from a Defect
+## Viewing a single inspection
 
-When a Safety Critical defect appears in **Fleet → Defects**, click **Create Work Order** on that row. The work order form opens pre-filled with:
+In the **order detail panel**, a **DVIR** section appears below the route information once an inspection has been submitted. It shows:
+
+- Inspection status: Completed, Skipped, or Pending
+- Submission timestamp and driver name
+- The odometer reading captured by the driver
+- A list of each defect item with its severity badge (Advisory / Safety Critical)
+- Thumbnail previews of any uploaded photos, which open full-size on click
+
+If the inspection was skipped, the DVIR section shows a "Skipped" badge with the timestamp.
+
+---
+
+## Tracking open defects across the fleet
+
+Go to **Fleet → Defects** to see all defects across your entire fleet. The page has three filter tabs:
+
+| Tab | What it shows |
+|---|---|
+| **Open** | Defects not yet linked to a completed or cancelled work order |
+| **Acknowledged** | Defects that a fleet manager has reviewed |
+| **All** | Full history |
+
+Each row shows the truck, defect item name, severity badge, date reported, and the driver who submitted it.
+
+---
+
+## Creating a Work Order from a defect
+
+For **Safety Critical** rows in **Fleet → Defects**, a **Create Work Order** button is available directly on the row. Clicking it opens the work order form pre-filled with:
 
 - The truck that was inspected
 - The defect item name and description as the work order description
-- Type set to **Safety Critical**
+- Severity set to **Safety Critical**
 
-Add line items and a scheduled date, then save. The work order blocks the truck on the planning board until it is marked as complete.
+Add line items and a scheduled date, then save. If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled, the truck stays blocked on the planning board until the linked work order is marked complete.
+
+<Warning>
+If the auto-block toggle is enabled, a safety-critical defect removes the truck from dispatch immediately — even if there are future orders already assigned to it. Review Fleet → Defects as soon as you receive a safety-critical alert.
+</Warning>
 
 See [Workshop & Maintenance](/en/fleet-compliance/workshop-maintenance) for the full work order workflow.
 
 ---
 
-## Making DVIR Mandatory
-
-DVIR is **not automatically mandatory** — the driver is prompted but can skip it by default.
-
-**To make DVIR mandatory after delivery:**
-
-Go to **Settings → Company → Fleet → Require post-trip inspection after delivery** → enable the toggle.
-
-When this is on, the driver cannot mark an order as **Delivered Complete** until the DVIR checklist is submitted.
-
-<Note>
-DVIR is recorded per order, not per calendar day. If a driver completes two deliveries in one day, they will be prompted to complete a DVIR at the end of each. This may be adjusted to once-per-day in a future release.
-</Note>
-
----
-
 <CardGroup cols={2}>
-  <Card title="Workshop & Maintenance" href="/en/fleet-compliance/workshop-maintenance">
-    Create and manage work orders from defect reports and routine maintenance schedules.
+  <Card title="Post-Trip Inspection (driver view)" icon="mobile" href="/en/driver/post-trip-inspection">
+    The full driver-facing flow: completing the checklist, uploading photos, and skipping/resuming an inspection.
   </Card>
-  <Card title="Fleet Documents" href="/en/fleet-compliance/fleet-documents">
-    Track vehicle certificates, insurance, and compliance documents.
+  <Card title="Workshop & Maintenance" icon="wrench" href="/en/fleet-compliance/workshop-maintenance">
+    Create and manage work orders from defect reports and routine maintenance schedules.
   </Card>
 </CardGroup>

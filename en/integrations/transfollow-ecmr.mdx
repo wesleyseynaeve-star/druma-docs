@@ -1,102 +1,36 @@
 ---
-title: "TransFollow eCMR Integration"
-description: "TransFollow is an optional fallback eCMR provider for companies already using it. The Druma native provider is the default for new companies."
+title: "TransFollow eCMR (Legacy)"
+description: "TransFollow is a legacy-only eCMR path. It cannot be newly selected — this page explains what happens if your company has a pre-existing configuration."
 icon: "file-signature"
 ---
 
 <Note>
-**The Druma native eCMR provider is the default** for all new companies — no external account or API key required. TransFollow is for companies that were already using it before the native provider was introduced. If you are setting up eCMR for the first time, you do not need this page.
-</Note>
-
-Druma supports TransFollow as an optional fallback eCMR provider. TransFollow handles legal certification, signing workflow, and long-term archiving for companies that prefer to continue using it. To switch between providers, go to **Settings → Integrations → eCMR provider** (company admin access required).
-
----
-
-## What TransFollow Does
-
-When your company uses TransFollow as the eCMR provider, Druma routes eCMR issuance through the TransFollow platform. TransFollow:
-
-- Assigns a unique identifier to the document
-- Records the digital signatures from driver, sender, and recipient
-- Timestamps and certifies each signature with a qualified timestamp
-- Archives the completed document for 10 years as required by law
-- Makes the document accessible to all parties (carrier, sender, recipient)
-
----
-
-## Connecting Your TransFollow Account
-
-<Steps>
-  <Step title="Get your TransFollow API key">
-    Log in at [transfollow.com](https://transfollow.com). Go to your account settings and navigate to **API Keys**. Generate a new API key for Druma. Copy it — you will only be shown it once.
-  </Step>
-  <Step title="Switch the provider in Druma">
-    In Druma, go to **Settings → Integrations → eCMR provider → TransFollow**. Paste your API key into the field and click **Save**.
-  </Step>
-  <Step title="Test the connection">
-    Click **Test Connection**. Druma calls the TransFollow API to verify the key is valid and your account is active. You will see a green confirmation if everything is working.
-  </Step>
-</Steps>
-
-<Note>
-Your API key is encrypted immediately upon saving and is never displayed in plain text again. If you need to replace it (for example, if the key is rotated), simply paste the new key over the existing field.
+**TransFollow is not a selectable eCMR provider.** The Druma native provider — issued and PAdES-sealed entirely in-house, no external account or API key required — is now the only real eCMR provider in Druma. In **Settings → Integrations → eCMR provider**, the only choices are **Native** and **Disabled**. If you are setting up eCMR for the first time, you do not need this page.
 </Note>
 
 ---
 
-## Mock Mode for Training and Onboarding
+## Why This Page Still Exists
 
-During initial setup or when training new staff, you can enable **Mock Mode**.
+A small number of companies configured TransFollow as their eCMR provider before the native provider was introduced. Those pre-existing configurations keep working — Druma has not switched anything off under them — but TransFollow can no longer be chosen by any company, new or existing.
 
-**Settings → Integrations → eCMR provider → TransFollow → Enable Mock Mode**
+## What Happens on a Legacy Configuration
 
-In mock mode:
+If your company has a pre-existing `TransFollow` configuration:
 
-- eCMR records are created normally in Druma and go through the full workflow
-- TransFollow receives the requests but marks all documents as test records — they have no legal effect
-- No cost is incurred for mock-mode documents
-- Documents created in mock mode are clearly labelled "TEST" in Druma and cannot be converted to live documents
+- Your eCMR workflow continues to function exactly as before. No action is required.
+- The eCMR provider card in Settings → Integrations displays your configuration as **Native**, not TransFollow.
+- The next time that integration is saved — even without changing anything — your company silently migrates to the true native provider. There is no separate migration step to run yourself.
 
-Disable mock mode before your first live shipment.
-
----
-
-## Costs
-
-eCMR is included in your Druma subscription at no extra cost, also when using the TransFollow fallback — there is no per-document charge on your Druma invoice.
+There is no API key field, Mock Mode toggle, or Test Connection button for TransFollow anywhere in the product. If your company has never used TransFollow, none of this applies — you are already on the native provider.
 
 ---
 
-## Viewing and Downloading eCMR Documents
-
-All signed eCMR documents are stored permanently on their corresponding order in Druma.
-
-**Order detail page → eCMR tab**
-
-From here you can:
-
-- View the eCMR as a PDF in your browser
-- Download the signed PDF
-- See the full signature chain (sender signed at X time, driver signed at Y time, recipient signed at Z time)
-- Share a link to the document with your client (the link is accessible without a Druma login)
-
-Documents remain accessible for 10 years in line with legal archiving requirements.
-
-<Warning>
-If you close your TransFollow account or your API key expires, Druma cannot issue new eCMRs until a valid key is provided. Documents already archived in TransFollow remain accessible. Set a reminder to renew your TransFollow key before it expires.
-</Warning>
-
----
-
-## Country Coverage
-
-eCMR is legally valid in countries that have ratified the e-CMR protocol. As of 2025, this includes most EU member states plus Switzerland, Belarus, Georgia, and others. Check the current list at [unece.org](https://unece.org). For countries that have not ratified, paper CMR is still required — Druma can print a formatted CMR note for those shipments.
-
----
+## Related articles
 
 <CardGroup cols={2}>
   <Card title="eCMR Providers" icon="right-left" href="/en/ecmr/ecmr-providers">
-    Compare the native Druma provider and TransFollow, and learn how to switch.
+    The native Druma provider, and what happens to legacy TransFollow configurations.
   </Card>
   <Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
     An introduction to electronic CMR notes and when you need them.

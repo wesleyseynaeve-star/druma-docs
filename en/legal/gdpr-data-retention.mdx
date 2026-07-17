@@ -20,7 +20,10 @@ This page explains exactly what data Druma holds about your company, how long we
 | Invoices and financial records | 7 years from invoice date | Romanian Accounting Law |
 | eCMR documents (signed) | 10 years from signing date | e-CMR Protocol (legal requirement) |
 | Audit logs | 18 months | Legitimate interests |
-| GPS position (current only) | Overwritten in real time — no history retained | Contract |
+| GPS position (live tracking) | Not retained — current position only, overwritten on each update | Contract |
+| GPS order-event stamps | Retained with the order (see order records above) | Contract |
+| GPS data forwarded to ANAF e-Transport | 30 days, then automatically purged | Legal requirement (Romania) |
+| Tachograph files (DDD/TGD) | Indefinite (12 months is the legal minimum, not a purge target) | EU Regulation 165/2014 |
 | Error and security logs | 90 days | Legitimate interests |
 | Billing records (Stripe) | 7 years | Tax law |
 
@@ -30,11 +33,19 @@ eCMR documents have a 10-year retention requirement under the Additional Protoco
 
 ## GPS data: what we store
 
-Druma captures GPS position from the driver's device **while the driver is on an active assigned trip, after they have granted location permission** in the app. Each new position **overwrites the previous one** — Druma stores only the current position, not a history. We do **not**:
+Druma captures GPS position from the driver's device while a load is active, after the driver has granted location permission in the app. For **live tracking** (the position shown on the map), only the truck's current position is stored — each new ping overwrites the previous one, so no historical trail of past positions is kept.
+
+Separately, when a driver reports a status change, delay, or incident, a single GPS coordinate is captured and attached to that specific order event, becoming part of the order's own record (retained for as long as the order itself — see the table above). This is a one-off stamp on that event, not a continuous location log.
+
+We do **not**:
 
 - Track driver location outside of an active assigned trip
-- Store any location history or movement trails
+- Keep a historical trail of live tracking positions
 - Share GPS data with any third party except as required for e-Transport reporting to ANAF, which uses a rolling 30-day buffer before deletion
+
+## Tachograph data: what we store
+
+Druma maintains a **Tacho Archive** that stores raw DDD (vehicle unit) and TGD (driver card) tachograph files — downloaded automatically via a connected telematics provider or uploaded manually — to meet EU Regulation 165/2014 download-frequency and retention requirements. Unlike operational data, tachograph files are **retained indefinitely**: 12 months is the legal minimum, not a purge target, since operators may need to produce them well beyond that floor for a roadside inspection or authority audit. See [Tachograph Archive](/en/fleet-compliance/tacho-archive) for details.
 
 ## Audit log
 

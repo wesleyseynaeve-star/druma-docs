@@ -1,0 +1,94 @@
+---
+title: "Order Tasks & Workflow Templates"
+description: "Configurable checklists that track required steps on an order as it moves through its lifecycle — and how admins build them."
+icon: "list-check"
+---
+
+## Overview
+
+The task engine attaches a **checklist** to an order (or invoice) that tracks the steps your company requires at each stage — send a confirmation, generate a document, follow up with a client — and shows who's responsible and whether anything is overdue. Admins build the checklist once as a reusable **task template**; from then on it materialises automatically on every matching order.
+
+This page covers both sides: what a planner or dispatcher sees day-to-day, and how an admin configures the templates behind it.
+
+---
+
+## What you see on an order
+
+Open any order (or invoice) that has a matching task template, and you'll find a **task checklist** panel showing every required step for its current stage.
+
+Each row shows:
+
+- A status icon — pending (empty circle), in progress (clock), done (check), skipped, or failed
+- The responsible role, if one is set
+- **Waiting on a prior step**, if the task depends on another step that isn't done yet
+- A **Due** or **Overdue** badge when the step has a due date
+
+For open steps, you can:
+- Click the check icon to **mark it done**
+- Click the skip icon to **skip it** (optionally with a reason)
+
+Both actions are disabled while the step is blocked on a dependency. If a step is configured to complete or skip itself automatically once the order reaches a certain status, you'll simply see it flip to Done or Skipped on its own — no click needed.
+
+Order and invoice list rows also carry a small summary chip: an amber count badge while tasks are still outstanding, or a green **all done** check once every task on that record is complete. If no template matches an order's current stage, the panel simply reads *"No task checklist configured for this stage."*
+
+<Note>
+Tasks are tied to **lifecycle phase** — the same statuses covered in [Order Lifecycle](/en/planner/order-lifecycle). A checklist appears (or updates) automatically whenever the order or invoice reaches a phase a template targets.
+</Note>
+
+---
+
+## How admins configure task templates
+
+Go to **Settings → Task Templates**. Templates ship empty for every company — nothing is pre-configured, so building your checklist is entirely opt-in.
+
+<Steps>
+  <Step title="Create a template">
+    Click **Add template**. Choose the **object type** (Order or Invoice), the **lifecycle phase** it should trigger on (e.g. Confirmed, Delivered), and a label. Leave it enabled so it's live immediately, or save it disabled while you build it out.
+  </Step>
+  <Step title="Optionally scope it with conditions">
+    Use **Applies when** to restrict the template to matching orders only — for example, only ADR loads, only a specific client, or only cabotage moves. Leave it empty and the template applies to every order that reaches the target phase.
+  </Step>
+  <Step title="Add steps">
+    For each step, set a step key and label, then a **step type**:
+    - **Manual** — a person must mark it done or skip it themselves
+    - **Generate document**, **Send email**, or **Run automation** — pick a specific action from the curated list (e.g. Generate invoice, Send order confirmation, Generate CMR)
+  </Step>
+  <Step title="Set completion mode">
+    Choose **Manual** (someone completes it from the checklist) or **Auto** — an auto step completes or skips itself the moment the order/invoice reaches a status you configure, with no one needing to click anything.
+  </Step>
+  <Step title="Add responsibility and ordering">
+    Optionally set a **responsible role**, make the step **depend on** an earlier step (it stays blocked until that one is done), and set its position in the checklist.
+  </Step>
+  <Step title="Save">
+    The template now materialises a checklist on every order (or invoice) that matches its object type, phase, and conditions.
+  </Step>
+</Steps>
+
+---
+
+## Per-client overrides
+
+Some customers need a different checklist than the rest of your book — an extra document step, or one they explicitly don't need. Rather than build a whole separate template, override it per client.
+
+Open the client's detail page and go to the **Task Overrides** tab. There you can toggle off:
+- An entire template, for that client only, or
+- Individual steps within a template
+
+The company-wide template stays untouched for every other client — the override only affects the one client record you're editing.
+
+---
+
+## Behind the scenes
+
+A scheduled job checks every few minutes for tasks that are ready to run — dependencies satisfied, due, and configured to auto-run — and dispatches them without anyone needing to open the checklist. This is purely a reliability detail; day to day, you only interact with the checklist panel on the order itself.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Order Lifecycle" icon="circle-dot" href="/en/planner/order-lifecycle">
+    See every order status and what triggers the transition between them.
+  </Card>
+  <Card title="CRM & Sales Pipeline" icon="user-group" href="/en/planner/crm">
+    Client records where per-client task overrides live, alongside touchpoints and lifecycle stage.
+  </Card>
+</CardGroup>

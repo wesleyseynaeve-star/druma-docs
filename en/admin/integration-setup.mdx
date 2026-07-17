@@ -1,6 +1,6 @@
 ---
 title: "Integration Setup"
-description: "Connect Druma to your eCMR provider, HERE Maps, fuel card providers, accounting software, and SmartBill from the Settings → Integrations page."
+description: "Connect Druma to your eCMR provider, HERE Maps, fuel card providers, accounting software, SmartBill, and telematics/reefer providers from the Settings → Integrations page."
 icon: "plug"
 ---
 
@@ -11,22 +11,16 @@ Every integration your company uses is configured in one place: **Settings → I
 
 ## 1. eCMR Provider
 
-Druma issues electronic consignment notes **in-house using the Druma native provider by default** — no external account, API key, or setup is required. eCMR is available out of the box for cross-border orders, and Druma seals each completed document with a PAdES digital signature.
+Druma issues electronic consignment notes **in-house using the Druma native provider** — no external account, API key, or setup is required. eCMR is available out of the box for cross-border orders, and Druma seals each completed document with a PAdES digital signature.
 
-**TransFollow** remains available as an optional fallback for companies that were already using it before the native provider was introduced. New companies should stay on the native provider.
+The eCMR provider card offers only two states: **Native** and **Disabled**. TransFollow is not a selectable option — it exists only as a legacy path for a small number of companies with a pre-existing configuration (see the note below).
 
 <Steps>
   <Step title="Open the eCMR provider card">
-    Go to **Settings → Integrations** and open the **eCMR provider** card. The Druma native provider is selected by default.
-  </Step>
-  <Step title="(Optional) Switch to TransFollow">
-    To use TransFollow instead, select it and paste the API key from your TransFollow account dashboard into the **API Key** field. Register at [transfollow.org](https://transfollow.org) if you do not have an account.
-  </Step>
-  <Step title="Enable mock mode (optional)">
-    When using TransFollow, toggle **Mock Mode** on to test the eCMR workflow without issuing real, legally registered documents. Use this during driver training or onboarding. Turn it off before going live.
+    Go to **Settings → Integrations** and open the **eCMR provider** card. **Native** is selected by default.
   </Step>
   <Step title="Test the connection">
-    Click **Test Connection**. Druma verifies the native signing certificate — or, if TransFollow is selected, calls the TransFollow API to confirm your key is valid.
+    Click **Test Connection**. Druma verifies that its signing certificate is configured and ready.
   </Step>
   <Step title="Save">
     Click **Save**. eCMR creation is active for cross-border orders.
@@ -34,12 +28,8 @@ Druma issues electronic consignment notes **in-house using the Druma native prov
 </Steps>
 
 <Note>
-Most companies never need to change this — the native provider is the recommended default. See [eCMR Providers](/en/ecmr/ecmr-providers) for a full comparison.
+Most companies never need to change this — Native is the only real option. If your company has a pre-existing TransFollow configuration, it keeps working as before and is shown here as **Native**; it silently migrates to the true native provider the next time you save this card, with nothing for you to switch or configure. See [eCMR Providers](/en/ecmr/ecmr-providers) for details.
 </Note>
-
-<Warning>
-TransFollow mock-mode eCMR documents are **not legally valid**. Make sure mock mode is off before dispatching real shipments.
-</Warning>
 
 ---
 
@@ -195,9 +185,58 @@ See [Supplier Invoices](/en/invoicing/supplier-invoices) for full details on the
 
 ---
 
+## 8. Telematics, Tachograph & Reefer Providers
+
+Druma connects to your trucks' GPS, tachograph (driving-hours), and trailer reefer providers directly from **Settings → Integrations**, so live positions, EU 561/2006 driving-hours data, and cargo temperature readings flow into Druma automatically instead of requiring manual entry.
+
+### GPS & Tachograph (Telematics)
+
+Open the card for your provider under **Settings → Integrations** and enter the credentials below. Each card's "Where do I get these?" link repeats this guidance in-app.
+
+| Provider | Credential fields | Where you get them |
+|---|---|---|
+| **Scania / Volvo / DAF / MAN / Mercedes-Benz / IVECO / Renault (rFMS)** | Client ID, Client Secret, OEM selector | Issued by your truck manufacturer's developer or fleet portal (for example `developer.scania.com` for Scania). Scania additionally requires a Communicator onboard unit plus a Location or Performance subscription. Scania and Volvo are the most established; the other rFMS-standard brands share the same API and are expected to work the same way, but are still being validated against live fleets. |
+| **Webfleet** | Account, Username, Password, API key | From a Webfleet user with an "expert" profile and external access enabled. The API key itself is issued by Webfleet support or through the WEBFLEET.connect partner programme. |
+| **Geotab** | Database, Username, Password | Create a Service Account (View Only) under MyGeotab → Administration → Users. "Database" is the name in your `my.geotab.com/<database>` URL. |
+| **Samsara** | API Token, Base URL (optional) | Generate a token in the Samsara dashboard under Settings → API Tokens, scoped to "Read Vehicle Statistics". Leave Base URL blank for EU fleets; set it if your organisation runs on the US shard. GPS positions only — Samsara does not supply tachograph/driving-hours data. |
+| **Frotcom** | Username, Password, Provider | Your Frotcom account credentials, with API access enabled by Frotcom support or your local reseller. Currently in **beta** — the connection works, but field mapping is still being validated against live accounts. |
+| **Continental VDO** | Client ID, Secret, Account/Company ID | Requires a Continental partner agreement — contact Continental via the `fleet.vdo.com` contact form. **Partner-gated** — there is no public self-service signup. |
+| **Webeye / Eurowag** | Username, Secret | Generated in `selfcare.eurowag.com` → Telematics → Fleet management → System connections. Your company must first be approved as a partner by Eurowag. **Partner-gated** — there is no public self-service signup. |
+
+<Note>
+Scania, Webfleet, Geotab, and Samsara are established integrations. Frotcom is in beta — it works, but its field mapping is still being confirmed. Continental VDO and Webeye/Eurowag require the vendor to approve your company as a partner before the connection returns live data; the credential form still lets you save and test, but syncing won't start until that partner access is active.
+</Note>
+
+### Reefer / Trailer Temperature
+
+<Steps>
+  <Step title="Open the reefer provider card">
+    In **Settings → Integrations**, find the card for your trailer's telematics provider — **Mapon**, **Orbcomm**, **Thermo King TracKing**, or **Carrier Lynx Fleet** — and open it.
+  </Step>
+  <Step title="Enter your credentials">
+    Each card's "Where do I get these?" link explains how to obtain credentials for that provider (see the table below).
+  </Step>
+  <Step title="Test and save">
+    Click **Test Connection**, then **Save**. Temperature readings begin syncing automatically once the connection is confirmed.
+  </Step>
+</Steps>
+
+| Provider | Credential fields | Where you get them |
+|---|---|---|
+| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — works immediately. |
+| **Orbcomm** | Access Token, or Username + Password, Base URL (optional) | Issued via your ORBCOMM Platform API account. If you only have a username/password, Druma exchanges it for a token automatically. |
+| **Thermo King TracKing** | API Key, or Username + Password, Base URL (optional) | Request a TracKing API key from your Thermo King dealer or via the TracKing portal. No public self-service signup — this is a partner-gated integration. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (or a legacy API Key), Base URL (optional) | Obtained through Carrier Transicold or your Carrier dealer as part of the Lynx Fleet API toolkit. No public self-service signup. |
+
+<Note>
+Mapon is fully public and works out of the box. Orbcomm needs an account token from ORBCOMM before it returns live data. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
+</Note>
+
+---
+
 ## Deep-dive articles
 
-<Card title="TransFollow & eCMR" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+<Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
   Understand how eCMR works, who signs, and when it applies.
 </Card>
 

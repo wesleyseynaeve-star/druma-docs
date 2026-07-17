@@ -30,13 +30,18 @@ For your **operational data** (orders, clients, drivers, documents, and related 
 - Electronic consignment notes issued and PAdES-sealed **in-house by Druma's native provider**, including signature data and certified PDFs. TransFollow remains available as a legacy fallback for companies that were already using it before the native provider was introduced.
 
 ### GPS position data
-- Druma stores the **current GPS position only** — the last known location sent by the driver's app. **No position history is stored or accessible.** The moment a new position is received, the previous one is overwritten.
+- **Live truck tracking**: Druma stores only the truck's current position, continuously overwritten as new GPS pings arrive — no historical log of past positions is kept for the live map.
+- **Order-event GPS stamps**: when a driver reports a status change, delay, or incident, a single GPS coordinate may be captured and attached to that specific order event. These stamps are retained as part of the order's own record (see "Operational data" retention below), not as a separate rolling position history.
+- **Romania e-Transport**: for shipments requiring ANAF e-Transport declaration, GPS coordinates forwarded to ANAF are logged separately and purged after **30 days**.
+
+### Tachograph archive data
+- Raw DDD (vehicle unit) and TGD (driver card) tachograph files, downloaded automatically via a connected telematics provider or uploaded manually, stored in the Tacho Archive to meet EU Regulation 165/2014 retention obligations. See [Tachograph Archive](/en/fleet-compliance/tacho-archive).
 
 ### Audit logs
 - A log of significant user actions: login events, order status changes, user role changes, document uploads, and billing events
 
 <Note>
-Druma does not store tachograph data, call recordings, driver biometric data, or driver health information.
+Druma does not store call recordings, driver biometric data, or driver health information.
 </Note>
 
 ---
@@ -49,7 +54,10 @@ Druma does not store tachograph data, call recordings, driver biometric data, or
 | User account data | Duration of subscription + 90 days after cancellation |
 | Audit logs | 18 months from the date of the logged event |
 | eCMR documents | 10 years (legal requirement under the e-CMR Protocol) |
-| GPS position data | Overwritten in real time — no history retained |
+| GPS position data (live tracking) | Not retained — only the current position is stored, overwritten on each update |
+| GPS order-event stamps | Retained with the order (see operational data retention above) |
+| GPS data forwarded to ANAF e-Transport | 30 days, then automatically purged |
+| Tachograph files (DDD/TGD) | Retained indefinitely (12 months is the legal minimum, not a purge target) |
 | Billing records | 7 years (Romanian accounting law requirement) |
 
 After the retention period, data is permanently deleted from all systems, including backups.
