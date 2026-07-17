@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-14 16:59 UTC
+Generated: 2026-07-17 17:42 UTC
 
 ---
 
@@ -37,7 +37,7 @@ Create and manage transport orders from pickup to delivery. Assign trucks and dr
 
 ### eCMR (electronic consignment note)
 
-Druma issues and digitally seals eCMR documents entirely in-house — no external service required. The driver and sender sign on a phone at pickup; the consignee signs via a private share link or QR code on their own device at delivery. Once all three parties have signed, Druma builds the certified PDF and applies a PAdES digital seal (an Advanced Electronic Signature under eIDAS). The sealed PDF is legally equivalent to a paper CMR in countries that have ratified the e-CMR Additional Protocol. For companies already using TransFollow, it remains available as a selectable fallback. No more lost paper CMRs.
+Druma issues and digitally seals eCMR documents entirely in-house — no external service required. The driver and sender sign on a phone at pickup; the consignee signs via a private share link or QR code on their own device at delivery. Once all three parties have signed, Druma builds the certified PDF and applies a PAdES digital seal (an Advanced Electronic Signature under eIDAS). The sealed PDF is legally equivalent to a paper CMR in countries that have ratified the e-CMR Additional Protocol. TransFollow cannot be newly selected by any company — it only continues to work for companies with a pre-existing configuration, which silently migrates to Native on its next save. No more lost paper CMRs.
 
 ### Invoicing
 
@@ -45,7 +45,7 @@ Generate invoices directly from completed orders. Druma pre-fills client details
 
 ### Driver app
 
-Drivers receive a personal link to a mobile-friendly app (PWA — no app store required). They update order status, upload delivery photos, and sign eCMR documents — all from their phone.
+Drivers log in with their phone number and a PIN their dispatcher sets up (no app store required, no personal link). They update order status, upload delivery photos, and sign eCMR documents — all from their phone.
 
 ### Client portal
 
@@ -151,11 +151,11 @@ Your 30-day free trial starts the moment you register. No credit card is needed.
 
     For each driver, enter:
     - **Full name**
-    - **Phone number** — this is what the driver uses to receive their app link
+    - **Phone number** — this is what the driver logs in with, together with a PIN you set up in Step 6
     - **Driving licence number and expiry date**
     - **CPC (Certificate of Professional Competence) expiry date** — Druma will warn you before it expires
 
-    Druma automatically creates a PWA link for each driver when you save their profile. You will share this link in Step 6.
+    Once you save the profile, the driver still needs a PIN before they can log in — you'll set that up in Step 6.
   
 
   ### Add your first client
@@ -185,15 +185,15 @@ Your 30-day free trial starts the moment you register. No credit card is needed.
     Click **Create Order**. The order appears on the planning board and the driver is notified through their app.
   
 
-  ### Share the Driver app link with your driver
+  ### Set up your driver's phone + PIN login
     Go back to **Fleet → Drivers** and open the driver's profile you created in Step 3.
 
-    You will see a **Driver App Link** — a unique URL that gives this driver access to their mobile app. Copy it and send it to the driver by WhatsApp, SMS, or any messaging app you prefer.
+    Under **Phone + PIN login**, click **Set PIN** — type one in yourself, or click **Generate** for a random 6-digit code — then click **Save PIN**. Tell your driver this PIN directly (in person or by a quick message).
 
-    When the driver opens the link on their phone, they see their assigned orders, can update status (loaded, in transit, delivered), upload photos, and sign eCMR documents. No app store download is needed.
+    Your driver installs the Druma driver app on their phone (see [Installing the Driver App](/en/driver/installing-the-app)) and logs in with their phone number and this PIN. On their first login, they're asked to personalize the PIN — choosing their own 6-digit code to replace the one you set. Once logged in, they see their assigned orders, can update status (loaded, in transit, delivered), upload photos, and sign eCMR documents.
 
     > **Note:** 
-    The driver app link is unique to each driver. Do not share one driver's link with another driver — each person should use their own.
+    If a driver loses their phone, don't try to resend a link — open their profile and click **Revoke device sessions** to force a fresh login on any new device.
     
   
 
@@ -220,6 +220,15 @@ Your 30-day free trial starts the moment you register. No credit card is needed.
     If you have SmartBill connected, click **Push to SmartBill** to have the invoice appear in your accounting system automatically.
   
 
+
+## Druma guides you as you go
+
+You don't have to memorise this guide. Druma actively helps you along the way:
+
+- **A guided tour** walks you through the key parts of the planner the first time you log in — the navigation, the planning board's views, your truck panel, Ask Druma, and where to find help. Missed it, or want a refresher? Open your profile menu (top right) and click **Take the tour again** any time.
+- **A "Get started" checklist** lives in the app header and tracks your setup progress — roughly the same steps as this guide — plus a few "learn the product" steps like assigning your first load, sending your first invoice, and inviting a teammate. It updates live as you complete things and quietly gets out of the way once you're done.
+- **Help icons** — small "?" marks — sit next to hundreds of fields, KPIs, columns, and status badges throughout the app. Click one any time you wonder what something means or how it's calculated; some link straight back to these docs.
+- **Druma Copilot**, an AI assistant, is also available if your company connects its own AI provider key — see [Druma Copilot](/en/integrations/copilot) if you're curious.
 
 ## What next?
 
@@ -250,7 +259,7 @@ You are now set up and running. Here are some useful next steps:
 
 Before you start inviting people, think about what each person in your company needs to do. Druma has eight distinct roles, and giving someone the right role from the start means they only see what is relevant to their job — nothing more, nothing less.
 
-You do not need to create accounts for drivers or clients. Drivers use a special app link (no login needed), and clients use a portal link. Only your internal staff need user invitations.
+You do not need to send email invitations to drivers or clients. Drivers log in with a phone number + PIN you set up for them, and clients use a portal link. Only your internal staff need user invitations.
 
 ## How to invite a user
 
@@ -309,7 +318,7 @@ Fleet Managers have full control over vehicles, trailers, drivers, documents, fu
 
 **Mobile app only — no web platform access.**
 
-Drivers never log into the Druma web application. Instead, each driver has a unique personal link that opens the driver app on their phone. Through this app they can:
+Drivers never log into the Druma web application. Instead, they log in to the driver app on their phone with a **phone number and PIN** you set up for them. Through this app they can:
 
 - See their assigned orders
 - Update shipment status (loaded, in transit, at delivery, delivered)
@@ -319,7 +328,7 @@ Drivers never log into the Druma web application. Instead, each driver has a uni
 You manage drivers through **Fleet → Drivers**. The "Driver" role does not consume a user seat — drivers are billed separately as part of your vehicle seats.
 
 > **Warning:** 
-Drivers do not need an invitation email. Do not try to invite them through Settings → Users. Instead, go to Fleet → Drivers, open the driver's profile, and copy their personal PWA link. Send this link to them directly by WhatsApp or SMS.
+Drivers do not need an invitation email. Do not try to invite them through Settings → Users. Instead, go to Fleet → Drivers, open the driver's profile, set their phone number, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give the driver this PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
 
 
 
@@ -422,32 +431,32 @@ The planning board — where you drag and drop orders onto vehicles — is easie
 
 ## Driver app (PWA)
 
-Drivers do not use the web platform. Instead, each driver has a personal link that opens the **Druma Driver App** in their phone's browser. This is a Progressive Web App (PWA) — it works like a normal app but does not need to be downloaded from an app store.
+Drivers do not use the web platform. Instead, they open the **Druma Driver App** — the same driver app address for every driver, not a personal link — in their phone's browser, and log in with their phone number and a PIN their dispatcher set up for them (see [Installing the Driver App](/en/driver/installing-the-app)). This is a Progressive Web App (PWA) — it works like a normal app but does not need to be downloaded from an app store.
 
 ### Android phones
 
-1. Open the driver's personal link in **Google Chrome** on the Android phone.
+1. Open the Druma driver app address in **Google Chrome** on the Android phone, and log in with your phone number and PIN.
 2. Chrome will show a banner saying "Add to Home Screen" — tap it.
 3. The Druma driver app icon appears on the home screen like a regular app.
 4. From now on, the driver opens the app by tapping that icon.
 
 ### iPhone and iPad (iOS)
 
-1. Open the driver's personal link in **Safari** on the iPhone (it must be Safari — Chrome on iOS does not support PWA installation).
+1. Open the Druma driver app address in **Safari** on the iPhone (it must be Safari — Chrome on iOS does not support PWA installation), and log in with your phone number and PIN.
 2. Tap the **Share** button (the square with an arrow pointing up).
 3. Scroll down and tap **Add to Home Screen**.
 4. Tap **Add** in the top right corner.
 5. The Druma driver app icon appears on the home screen.
 
 > **Note:** 
-On iPhone, the driver app must be opened in Safari to install it to the home screen. If the driver normally uses Chrome on their iPhone, they should copy and paste the link into Safari for the initial setup.
+On iPhone, the driver app must be opened in Safari to install it to the home screen. If the driver normally uses Chrome on their iPhone, they should copy and paste the driver app address into Safari for the initial setup.
 
 
 ### What the driver app requires
 
 - Any smartphone running Android 8 or newer, or iOS 14 or newer
 - A working internet connection (mobile data or Wi-Fi)
-- The personal driver link shared by the dispatcher
+- Your phone number set on your driver profile, and the PIN your dispatcher gave you
 
 ## Internet connection
 
@@ -678,7 +687,7 @@ Fleet Managers cannot:
 
 ### Driver
 
-The Driver role is different from all others — **drivers never access the Druma web platform**. Instead, each driver has a unique personal link (PWA link) that opens the Druma Driver App on their smartphone.
+The Driver role is different from all others — **drivers never access the Druma web platform**. Instead, they log in to the Druma Driver App on their smartphone using a **phone number and PIN** that you set up for them in Fleet → Drivers.
 
 Through the driver app, a driver can:
 - See their assigned orders for the day and upcoming days
@@ -690,7 +699,7 @@ Through the driver app, a driver can:
 Drivers cannot see any other driver's orders, client financials, or company settings.
 
 > **Warning:** 
-Do not try to invite drivers through Settings → Users. Drivers do not need an invitation email. Go to Fleet → Drivers, open the driver's profile, and copy their personal PWA link. Send this to the driver by WhatsApp, SMS, or any messaging app you use.
+Do not try to invite drivers through Settings → Users. Drivers do not need an invitation email. Go to Fleet → Drivers, open the driver's profile, set their phone number, and generate a PIN under **Phone + PIN login**. Give the driver this PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
 
 
 *Real-world example: Gheorghe is a long-haul driver. He opens the Druma app on his phone each morning to see his order details, updates his status at each stop, and signs the eCMR digitally at the delivery point.*
@@ -876,22 +885,52 @@ See [Peppol E-Invoicing](/en/integrations/peppol-invoicing) for full details on 
 
 
 
-## Deep-dive articles
+## 8. Telematics, Tachograph & Reefer Providers
+
+Druma connects to your trucks' GPS, tachograph (driving-hours), and trailer reefer providers directly from **Settings → Integrations**, so live positions, EU 561/2006 driving-hours data, and cargo temperature readings flow into Druma automatically instead of requiring manual entry.
+
+### GPS & Tachograph (Telematics)
+
+Open the card for your provider under **Settings → Integrations** and enter the credentials below. Each card's "Where do I get these?" link repeats this guidance in-app.
+
+| Provider | Credential fields | Where you get them |
+|---|---|---|
+| **Scania / Volvo / DAF / MAN / Mercedes-Benz / IVECO / Renault (rFMS)** | Client ID, Client Secret, OEM selector | Issued by your truck manufacturer's developer or fleet portal (for example `developer.scania.com` for Scania). Scania additionally requires a Communicator onboard unit plus a Location or Performance subscription. Scania and Volvo are the most established; the other rFMS-standard brands share the same API and are expected to work the same way, but are still being validated against live fleets. |
+| **Webfleet** | Account, Username, Password, API key | From a Webfleet user with an "expert" profile and external access enabled. The API key itself is issued by Webfleet support or through the WEBFLEET.connect partner programme. |
+| **Geotab** | Database, Username, Password | Create a Service Account (View Only) under MyGeotab → Administration → Users. "Database" is the name in your `my.geotab.com/<database>` URL. |
+| **Samsara** | API Token, Base URL (optional) | Generate a token in the Samsara dashboard under Settings → API Tokens, scoped to "Read Vehicle Statistics". Leave Base URL blank for EU fleets; set it if your organisation runs on the US shard. GPS positions only — Samsara does not supply tachograph/driving-hours data. |
+| **Frotcom** | Username, Password, Provider | Your Frotcom account credentials, with API access enabled by Frotcom support or your local reseller. Currently in **beta** — the connection works, but field mapping is still being validated against live accounts. |
+| **Continental VDO** | Client ID, Secret, Account/Company ID | Requires a Continental partner agreement — contact Continental via the `fleet.vdo.com` contact form. **Partner-gated** — there is no public self-service signup. |
+| **Webeye / Eurowag** | Username, Secret | Generated in `selfcare.eurowag.com` → Telematics → Fleet management → System connections. Your company must first be approved as a partner by Eurowag. **Partner-gated** — there is no public self-service signup. |
+
+> **Note:** 
+Scania, Webfleet, Geotab, and Samsara are established integrations. Frotcom is in beta — it works, but its field mapping is still being confirmed. Continental VDO and Webeye/Eurowag require the vendor to approve your company as a partner before the connection returns live data; the credential form still lets you save and test, but syncing won't start until that partner access is active.
 
 
-  Understand how eCMR works, who signs, and when it applies.
+### Reefer / Trailer Temperature
 
 
+  ### Open the reefer provider card
+    In **Settings → Integrations**, find the card for your trailer's telematics provider — **Mapon**, **Orbcomm**, **Thermo King TracKing**, or **Carrier Lynx Fleet** — and open it.
+  
+  ### Enter your credentials
+    Each card's "Where do I get these?" link explains how to obtain credentials for that provider (see the table below).
+  
+  ### Test and save
+    Click **Test Connection**, then **Save**. Temperature readings begin syncing automatically once the connection is confirmed.
+  
 
-  Step-by-step guide to issuing eCMR documents from an order.
 
+| Provider | Credential fields | Where you get them |
+|---|---|---|
+| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — works immediately. |
+| **Orbcomm** | Access Token, or Username + Password, Base URL (optional) | Issued via your ORBCOMM Platform API account. If you only have a username/password, Druma exchanges it for a token automatically. |
+| **Thermo King TracKing** | API Key, or Username + Password, Base URL (optional) | Request a TracKing API key from your Thermo King dealer or via the TracKing portal. No public self-service signup — this is a partner-gated integration. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (or a legacy API Key), Base URL (optional) | Obtained through Carrier Transicold or your Carrier dealer as part of the Lynx Fleet API toolkit. No public self-service signup. |
 
+> **Note:** 
+Mapon is fully public and works out of the box. Orbcomm needs an account token from ORBCOMM before it returns live data. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
 
-  How fuel costs link to vehicles and orders.
-
-
-
-  How HERE routing distances feed into your CO2 calculations.
 
 
 ---
@@ -1060,7 +1099,10 @@ For your **operational data** (orders, clients, drivers, documents, and related 
 | User account data | Duration of subscription + 90 days after cancellation |
 | Audit logs | 18 months from the date of the logged event |
 | eCMR documents | 10 years (legal requirement under the e-CMR Protocol) |
-| GPS position data | Overwritten in real time — no history retained |
+| GPS position data (live tracking) | Not retained — only the current position is stored, overwritten on each update |
+| GPS order-event stamps | Retained with the order (see operational data retention above) |
+| GPS data forwarded to ANAF e-Transport | 30 days, then automatically purged |
+| Tachograph files (DDD/TGD) | Retained indefinitely (12 months is the legal minimum, not a purge target) |
 | Billing records | 7 years (Romanian accounting law requirement) |
 
 After the retention period, data is permanently deleted from all systems, including backups.
@@ -1181,6 +1223,10 @@ Drivers only receive notifications for Confirmed orders. If you save as Draft, r
 
 Every order in Druma follows a defined journey. Understanding the lifecycle helps you know what to expect at each stage, when to step in, and how to handle exceptions like late deliveries or forgotten status updates.
 
+> **Note:** 
+If your company uses task templates, an order can also carry a **task checklist** tied to these same lifecycle phases — see [Order Tasks & Workflow Templates](/en/planner/order-tasks).
+
+
 Here is the full flow:
 
 **Draft → Confirmed → In Transit → Arrived at Pickup → Loading → En Route to Delivery → Arrived at Delivery → Unloading → Delivered → Invoiced**
@@ -1286,6 +1332,51 @@ See [Wasted Journey](/en/planner/wasted-journey) for the full guide.
 | Delivered | — | Yes | Yes (override) |
 | Invoiced | — | — | Yes |
 | Wasted Journey | — | — | Yes (from active statuses) |
+
+
+---
+
+## Order Tasks & Workflow Templates
+
+
+## Overview
+
+The task engine attaches a **checklist** to an order (or invoice) that tracks the steps your company requires at each stage — send a confirmation, generate a document, follow up with a client — and shows who's responsible and whether anything is overdue. Admins build the checklist once as a reusable **task template**; from then on it materialises automatically on every matching order.
+
+This page covers both sides: what a planner or dispatcher sees day-to-day, and how an admin configures the templates behind it.
+
+
+## How admins configure task templates
+
+Go to **Settings → Task Templates**. Templates ship empty for every company — nothing is pre-configured, so building your checklist is entirely opt-in.
+
+
+  ### Create a template
+    Click **Add template**. Choose the **object type** (Order or Invoice), the **lifecycle phase** it should trigger on (e.g. Confirmed, Delivered), and a label. Leave it enabled so it's live immediately, or save it disabled while you build it out.
+  
+  ### Optionally scope it with conditions
+    Use **Applies when** to restrict the template to matching orders only — for example, only ADR loads, only a specific client, or only cabotage moves. Leave it empty and the template applies to every order that reaches the target phase.
+  
+  ### Add steps
+    For each step, set a step key and label, then a **step type**:
+    - **Manual** — a person must mark it done or skip it themselves
+    - **Generate document**, **Send email**, or **Run automation** — pick a specific action from the curated list (e.g. Generate invoice, Send order confirmation, Generate CMR)
+  
+  ### Set completion mode
+    Choose **Manual** (someone completes it from the checklist) or **Auto** — an auto step completes or skips itself the moment the order/invoice reaches a status you configure, with no one needing to click anything.
+  
+  ### Add responsibility and ordering
+    Optionally set a **responsible role**, make the step **depend on** an earlier step (it stays blocked until that one is done), and set its position in the checklist.
+  
+  ### Save
+    The template now materialises a checklist on every order (or invoice) that matches its object type, phase, and conditions.
+  
+
+
+
+## Behind the scenes
+
+A scheduled job checks every few minutes for tasks that are ready to run — dependencies satisfied, due, and configured to auto-run — and dispatches them without anyone needing to open the checklist. This is purely a reliability detail; day to day, you only interact with the checklist panel on the order itself.
 
 
 ---
@@ -1538,6 +1629,36 @@ Hours shown here are based on order activity and planner-entered tachograph data
 
 ---
 
+## Messages
+
+
+## Overview
+
+**Messages** is a single global hub for every conversation you have inside Druma — colleagues and drivers alike. It replaced two separate chat icons that used to live in the header: one is now gone, and everything lives behind the one **Messages** button instead.
+
+**How to access:** Click the **Messages** icon in the top-right of the page header (it shows your total unread count as a badge). Messages is available to every operator role — admin, company_admin, planner, dispatcher, fleet_manager, and customer_service.
+
+Messages opens as a drawer with two tabs: **Internal** and **Drivers**.
+
+> **Note:** 
+Don't confuse Messages with [AI Chat Escalations](/en/tools/chat-escalations). Messages is person-to-person chat you use every day. Chat Escalations is a separate, narrower feature — it's the admin/company_admin-only **Live Sessions** queue that Ask Druma escalates to when its AI assistant can't resolve a conversation on its own.
+
+
+
+## Drivers tab — driver chat
+
+The **Drivers** tab is real-time chat with your drivers — the same driver chat that also appears standalone under **Dispatching → Driver Chat**. It's the same underlying feature exposed in two places for convenience: use whichever one is closer to your workflow at the time.
+
+- Every driver conversation is threaded separately, with unread badges.
+- Click a driver to open the thread and type a message — delivered instantly to their app.
+- Files and photos can be attached (PDF, JPG, PNG — max 10 MB per file).
+- Drivers see a **Chat** tab in their mobile app and get a push notification for new messages.
+
+See [Dispatching](/en/planner/dispatching#driver-chat-tab) for the full driver-chat reference.
+
+
+---
+
 ## Fleet Management
 
 
@@ -1678,28 +1799,27 @@ Managing drivers in Druma means: adding their details, sharing the app link with
 Go to **Fleet → Drivers** to manage your drivers.
 
 
-## Sharing the driver app (PWA)
+## Setting up the driver app (phone + PIN login)
 
-Once you've saved a driver, you need to send them a link to their personal Druma driver app. The app is a Progressive Web App (PWA) — it opens in the browser but can be saved to the phone's home screen and works like a native app.
+Once you've saved a driver, they need a PIN before they can log in — the driver app is a Progressive Web App (PWA), shared at one common address for every driver, and drivers sign in with their phone number and PIN rather than a personal link.
 
 
   ### Open the driver's profile
     Go to Fleet → Drivers and click the driver's name.
   
-  ### Click Copy PWA Link
-    Find the **Driver App** section and click **Copy PWA Link**. This copies a unique link to your clipboard.
+  ### Set a PIN
+    Find the **Phone + PIN login** section and click **Set PIN** — type one in yourself, or click **Generate** for a random 6-digit code — then click **Save PIN**.
   
-  ### Send the link to the driver
-    Paste the link into a WhatsApp message or SMS and send it to the driver's phone. A message like this works well:
-    *"Hi [Name], here is your Druma app link: [link]. Open it in Chrome or Safari and save it to your home screen. I'll explain when I see you."*
+  ### Tell the driver their PIN
+    Share the PIN directly with the driver (in person or by a quick message) — there is no link to send.
   
-  ### Driver saves to home screen
-    The driver opens the link on their phone. On Android (Chrome), they tap the three-dot menu and choose "Add to Home Screen". On iPhone (Safari), they tap the Share button and choose "Add to Home Screen". The app icon then appears on their home screen like any other app.
+  ### Driver installs and logs in
+    The driver installs the Druma driver app (see [Installing the Driver App](/en/driver/installing-the-app)) and logs in with their phone number and this PIN. On first login, they're prompted to personalize the PIN — choosing their own 6-digit code to replace the one you set.
   
 
 
 > **Note:** 
-Each driver's PWA link is unique and linked to their phone number. Do not share one driver's link with another driver. If a driver changes their phone number, update the number in their Druma profile and generate a new PWA link.
+If a driver loses their phone, don't try to resend anything — open their profile and click **Revoke device sessions** to force a fresh login on any new device.
 
 
 
@@ -2918,27 +3038,35 @@ Make sure Chrome and the Druma app are allowed to run in the background. Go to *
 
 
 
-## Registering and Activating Your Account
+## Logging In: Phone Number + PIN
 
-You register as a driver the same way any user registers in Druma — there is no special one-time token link required.
+Druma drivers don't self-register with an email or SMS code. Instead, your dispatcher or fleet manager sets up your login for you, in **Fleet → Drivers**, before you ever open the app:
 
 
-  ### Open the app
-    Tap the Druma icon on your home screen.
+  ### Your dispatcher sets your phone number
+    In your driver profile, they enter (or confirm) your phone number in international format, e.g. `+40712345678`.
   
-  ### Create your account
-    Enter your mobile number or email address and follow the on-screen steps to set up your account.
+  ### Your dispatcher generates a PIN for you
+    In the same profile, under **Phone + PIN login**, they click **Set PIN** — typing one in or clicking **Generate** for a random 6-digit code — and save it. They'll then tell you this PIN directly (in person or by a quick message).
   
-  ### Verify your account
-    Druma sends a verification code by SMS or email. Enter it to activate your account.
+  ### You log in
+    Tap the Druma icon on your home screen. On the login screen, enter your phone number and the 6-digit PIN you were given, then log in.
   
-  ### You're in
-    Your account is active. Your dispatcher will assign loads to your driver profile once you're registered.
+  ### Personalize your PIN
+    The first time you log in, Druma asks you to choose your own 6-digit PIN to replace the temporary one your dispatcher set. Enter it, confirm it, and you're done — from then on you log in with your phone number and your own PIN.
   
 
 
 > **Warning:** 
-Make sure you register with the same phone number or email address your dispatcher has on file for you. If they can't find your account, ask them to check the details in your driver profile.
+Make sure your dispatcher has the correct phone number on file for you — that's the number your PIN is linked to. If you can't log in, ask them to check the details in your driver profile (Fleet → Drivers).
+
+
+### Lost or stolen phone?
+
+Tell your dispatcher straight away. From your driver profile, under **Phone + PIN login**, they can click **Revoke device sessions** — this forces a fresh phone number + PIN login on every device, including the one that was lost.
+
+> **Note:** 
+Revoking sessions isn't instant: a device that's already logged in can stay signed in for up to about an hour afterwards, since its existing access token remains valid until it naturally expires. Treat a lost phone as urgent and revoke immediately, but know it's not an instant kill switch.
 
 
 
@@ -3004,7 +3132,7 @@ Your dispatcher can update statuses on your behalf from the Druma web platform. 
 
 ## What Is an eCMR?
 
-An eCMR is a digital CMR (Consignment Note) — the same document as a paper CMR, but signed electronically on a phone or tablet. When all three parties have signed, Druma builds and digitally seals the certified PDF — applying a PAdES Advanced Electronic Signature (AdES) that is legally equivalent to a signed paper CMR in countries that have ratified the e-CMR protocol. This is the default Druma native provider. If your company has selected TransFollow as the eCMR provider in Settings, the certified PDF is issued through TransFollow instead.
+An eCMR is a digital CMR (Consignment Note) — the same document as a paper CMR, but signed electronically on a phone or tablet. When all three parties have signed, Druma builds and digitally seals the certified PDF — applying a PAdES Advanced Electronic Signature (AdES) that is legally equivalent to a signed paper CMR in countries that have ratified the e-CMR protocol. This is the Druma native provider, used by every company today. A small number of companies with a **legacy TransFollow configuration** (TransFollow can no longer be newly selected) still have the certified PDF issued through TransFollow instead.
 
 The advantage for you as a driver: no more chasing signatures on paper, no lost documents, and no arguments about whether the CMR was signed correctly. Everything is timestamped and stored automatically.
 
@@ -3075,7 +3203,7 @@ At the delivery address, the process continues:
 
 
 After the third signature is confirmed:
-- Druma builds and seals a **certified eCMR PDF** using the Druma native provider (or TransFollow, if that is your company's selected provider)
+- Druma builds and seals a **certified eCMR PDF** using the Druma native provider (or, for the few companies still on a legacy TransFollow configuration, through TransFollow)
 - The certified PDF is stored in the order automatically
 - Your dispatcher can see it immediately
 - The client portal shows the certified document (if enabled)
@@ -4888,6 +5016,10 @@ Click **Export CSV** to download the full aged creditors report as a CSV file. T
 ## KSeF — Polish e-Invoicing
 
 
+> **Warning:** 
+**Early access — pending first live-operator validation.** Druma's KSeF submission is feature-complete, but as of this writing it has not yet been exercised end-to-end against Poland's live KSeF API by a real Polish-VAT operator. Submission stays gated until a live operator token is connected. If you are among the first operators to connect KSeF, treat your initial submissions as early access — watch the status badges closely and contact support promptly if anything looks off. The setup steps and behaviour described below are the correct instructions; the only open item is a live production track record.
+
+
 ## What is KSeF?
 
 KSeF (Krajowy System e-Faktur) is Poland's national structured e-invoicing system, operated by the Polish tax authority (KAS — Krajowa Administracja Skarbowa). It is mandatory for Polish VAT-registered companies. Every invoice issued by a PL-VAT company must be sent to KSeF in the official FA(3) XML format — the KAS portal alone is not sufficient.
@@ -5020,7 +5152,7 @@ All three signatures must be completed before the certified PDF is issued. A par
     The e-CMR Protocol, PAdES seal, and country coverage.
   
   
-    Native default vs TransFollow fallback — and how to switch.
+    The native provider, and what happens to legacy TransFollow configurations.
   
 </CardGroup>
 
@@ -5125,7 +5257,7 @@ The QR code link expires after 30 minutes. If the consignee does not sign within
 
 
 > **Note:** 
-If your company uses **TransFollow** as the eCMR provider, the consignee signs by handing the driver's phone to them at the delivery point — the TransFollow signing flow differs from the native QR link approach.
+If your company is still on a **legacy TransFollow** configuration (TransFollow can no longer be newly selected — see [eCMR Providers](/en/ecmr/ecmr-providers)), the consignee signs by handing the driver's phone to them at the delivery point instead — the TransFollow signing flow differs from the native QR link approach.
 
 
 
@@ -5169,7 +5301,7 @@ eCMR is not always possible. Consignees can refuse, phones run out of battery, i
     - Other
   
   ### Confirm
-    Tap **Confirm**. The order's eCMR status changes to "Paper CMR — [reason]". If an eCMR had already been registered (whether Druma native or TransFollow), it is cancelled at this point. The cancellation is recorded in the eCMR audit trail.
+    Tap **Confirm**. The order's eCMR status changes to "Paper CMR — [reason]". If an eCMR had already been registered — through the native provider, or, for companies still on a legacy TransFollow configuration, through TransFollow — it is cancelled at this point. The cancellation is recorded in the eCMR audit trail.
   
 
 
@@ -5197,7 +5329,7 @@ Once you have the signed paper CMR in hand, photograph or scan it and upload it 
 If you switch to paper CMR **after** an eCMR was already registered:
 
 - For the Druma native provider: the eCMR is marked as cancelled in Druma's records.
-- For TransFollow: Druma sends a cancellation request to TransFollow, and the document is marked as cancelled in their registry.
+- For companies still on a legacy TransFollow configuration: Druma sends a cancellation request to TransFollow, and the document is marked as cancelled in their registry.
 - In both cases, the document number is preserved in Druma's records for audit purposes and the certified PDF is not issued.
 
 The cancellation is recorded with the reason you selected. This chain of evidence — creation, cancellation, reason, paper CMR upload — gives you a defensible audit trail if the shipment is ever questioned.
@@ -5219,6 +5351,14 @@ As of 2025, the e-CMR Protocol has been ratified by most EU member states plus s
 
 > **Note:** 
 Always check the current UNECE ratification status before relying on eCMR for a new route. The official list is maintained at [unece.org/transport/legal-instruments](https://unece.org/transport/legal-instruments). Search for "Additional Protocol to CMR."
+
+
+### Belgium: a different legal basis, not the Protocol
+
+> **Warning:** 
+**Belgium** — Druma's own operator base — has **signed but not ratified** the e-CMR Protocol, so the Protocol is not yet in force for Belgium in its own right. Belgian eCMR legal validity instead rests on the **Benelux eCMR Arrangement**, a separate pilot framework agreed between Belgium, the Netherlands, and Luxembourg, most recently extended by the Benelux Committee of Ministers to **9 July 2027**.
+
+In practice, this means an eCMR on a Belgium-origin leg is legally recognised today — but through the Benelux pilot, not the Protocol. That basis carries a tracked expiry date rather than the Protocol's indefinite ratification, so it is worth monitoring as 2027 approaches. (The Netherlands, by contrast, has ratified the Protocol individually and does not depend on the Benelux pilot.)
 
 
 ### What the ratification status means in practice
@@ -5257,54 +5397,23 @@ Carriers who continue to use paper CMR are fully compliant. The choice to use eC
 ## eCMR Providers
 
 
-Druma supports two eCMR providers. The **Druma native provider** is the default and is recommended for all new companies — it issues and seals eCMRs entirely in-house at no per-document cost. **TransFollow** remains available as an optional fallback for companies that were already using it before the native provider was introduced.
-
-To switch providers, go to **Settings → Integrations → eCMR provider** (company admin access required).
+Druma issues eCMRs with its **native provider** — it issues and seals eCMRs entirely in-house at no per-document cost. In **Settings → Integrations → eCMR provider** (company admin access required), the only choices are **Native** and **Disabled**. **TransFollow** cannot be newly selected by any company; it exists only as a legacy path for companies that configured it before the native provider was introduced — see below.
 
 
-## TransFollow (Optional Fallback)
+## TransFollow (Legacy Only)
 
-TransFollow is a third-party eCMR platform that Druma continues to support for companies already using it. New companies should use the Druma native provider instead.
+TransFollow is a third-party eCMR platform Druma used to support as a selectable option. It is **no longer something you can newly select** — there is no TransFollow entry to pick, no API key field, no Mock Mode toggle, and no Test Connection button for it in Settings → Integrations.
 
-### Connecting your TransFollow account
+The only reason TransFollow still exists in Druma at all is to keep a small number of companies with a **pre-existing TransFollow configuration** functioning without disruption. If that applies to your company:
 
+- Your eCMR workflow keeps working exactly as it did — nothing breaks and no action is required.
+- The eCMR provider card in Settings → Integrations displays your configuration as **Native**.
+- The next time that integration is saved (even without changing anything), your company silently migrates to the true native provider.
 
-  ### Get your TransFollow API key
-    Log in at [transfollow.com](https://transfollow.com). Go to your account settings and navigate to **API Keys**. Generate a new API key for Druma. Copy it — you will only be shown it once.
-  
-  ### Enter the key in Druma
-    In Druma, go to **Settings → Integrations → eCMR provider → TransFollow**. Paste your API key into the field and click **Save**.
-  
-  ### Test the connection
-    Click **Test Connection**. Druma calls the TransFollow API to verify the key is valid and your account is active. You will see a green confirmation if everything is working.
-  
-
-
-> **Note:** 
-Your API key is encrypted immediately upon saving and is never displayed in plain text again. If you need to replace it (for example, if the key is rotated), simply paste the new key over the existing field.
-
-
-### Mock Mode for training and onboarding
-
-During initial setup or when training new staff, you can enable **Mock Mode**.
-
-**Settings → Integrations → eCMR provider → TransFollow → Enable Mock Mode**
-
-In mock mode:
-
-- eCMR records are created normally in Druma and go through the full workflow
-- TransFollow receives the requests but marks all documents as test records — they have no legal effect
-- No cost is incurred for mock-mode documents
-- Documents created in mock mode are clearly labelled "TEST" in Druma and cannot be converted to live documents
-
-Disable mock mode before your first live shipment.
-
-### Costs (TransFollow)
-
-eCMR is included in your Druma subscription at no extra cost, also when using the TransFollow fallback — there is no per-document charge on your Druma invoice.
+If you are setting up eCMR for the first time, or your company has never configured TransFollow, none of this applies to you — you are already on the native provider.
 
 > **Warning:** 
-If you close your TransFollow account or your API key expires, Druma cannot issue new eCMRs until a valid key is provided. Documents already archived in TransFollow remain accessible. Set a reminder to renew your TransFollow key before it expires.
+There is no path to configure TransFollow for a company that isn't already on it. If you see references to TransFollow elsewhere, they describe this legacy continuity behaviour, not an option available in the product today.
 
 
 
@@ -5338,7 +5447,7 @@ EU Regulation (EU) 2020/1056 on electronic freight transport information (**eFTI
 Every order has a unique **eFTI identifier**. In the driver app, on the order detail screen, there is an **"Authority check (eFTI)"** card. It shows:
 
 - A **QR code** the driver can present at a roadside inspection
-- A copyable eFTI link (UIL — Unique Item Identifier Link)
+- A copyable eFTI link (UIL — Druma's internal shorthand for **Unique Identifying Link**; Regulation (EU) 2020/1056 Art. 9(1)(e) calls this the "unique electronic identifying link")
 - A link to open the eCMR view on the driver's own device
 
 The driver does not need to do anything to activate this — the card is always present on assigned orders.
@@ -5351,9 +5460,9 @@ The driver never needs to navigate menus or search for the eFTI card. It is prom
 ## Certification Status
 
 > **Warning:** 
-Druma's eFTI platform certification under **Art. 10** of Regulation (EU) 2020/1056 is in progress. The inspector view is fully usable today as a courtesy and voluntary disclosure for companies that want to go paperless ahead of the 2027 deadline.
+Druma has built substantial **internal technical readiness** for eFTI — a CDS serialiser, a tamper-evident operation log, the UIL, and this roadside-inspector view. Druma is **not, however, a certified eFTI platform** under **Art. 10** of Regulation (EU) 2020/1056: certification requires assessment by an accredited conformity-assessment body (CAB), and as of mid-2026 no CAB has yet published eFTI scope to assess against — an industry-wide gap, not something specific to Druma. Until then, the inspector view is usable today as a courtesy and voluntary disclosure for companies that want to go paperless ahead of the 2027 deadline.
 
-The certified machine-to-machine authority interface (via EU Member State eFTI Gates) is pending the availability of live national Gates, which were not yet operational as of mid-2026. When national Gates come online, Druma will complete the certification process and update this page.
+The certified machine-to-machine authority interface (via EU Member State eFTI Gates) is separately pending the availability of live national Gates, which were not yet operational as of mid-2026. When CABs publish eFTI scope and national Gates come online, Druma will pursue certification and update this page.
 
 
 
@@ -5788,53 +5897,50 @@ A significant gap between the two (more than ~15%) may indicate a detour, a rout
 
 ## Overview
 
-The Post-Trip Inspection — also called a Driver Vehicle Inspection Report (DVIR) — is a structured safety check that drivers complete at the end of each trip. It identifies defects before the truck goes back into service.
-
-Druma's DVIR system works on the mobile driver app. Defects are categorised by severity. Safety-critical defects trigger an automatic block on the vehicle and notify the fleet manager immediately.
-
-
-## Inspection Checklist Categories
-
-| Category | Items covered |
-|---|---|
-| **Exterior** | Bodywork damage, lights (head, tail, indicator, brake), reflectors, mirrors |
-| **Tyres and wheels** | Tread depth, visible damage, wheel nuts secure |
-| **Brakes** | Air pressure, visible brake component damage |
-| **Engine compartment** | Fluid levels (oil, coolant, windscreen wash), visible leaks |
-| **Cab interior** | Dashboard warning lights, horn, wipers, seat belts |
-| **Trailer coupling** | Kingpin, landing legs, electrical connector, airlines |
-| **Cargo area** | Floor condition, lashing points, side curtains/panels |
-| **Documentation** | CMR documents, transport licence, tachograph discs |
-
-
-## Viewing DVIR Results (Planner / Fleet Manager)
-
-**Fleet → Defects** shows all open defects across the fleet:
-
-- One row per defect (not per inspection)
-- Severity badge (Minor / Safety Critical)
-- Vehicle plate and driver name
-- Defect description and attached photos
-- Date and time of the inspection
-- **Create Work Order** button (Safety Critical defects only)
-
-Click any row to expand the full inspection report — including all items checked, the driver signature, and the linked order.
-
-
-## Making DVIR Mandatory
-
-DVIR is **not automatically mandatory** — the driver is prompted but can skip it by default.
-
-**To make DVIR mandatory after delivery:**
-
-Go to **Settings → Company → Fleet → Require post-trip inspection after delivery** → enable the toggle.
-
-When this is on, the driver cannot mark an order as **Delivered Complete** until the DVIR checklist is submitted.
+After a driver taps **Delivered**, Druma automatically presents a **Post-Trip Inspection** overlay on the driver app — a Driver Vehicle Inspection Report (DVIR) that walks through the truck's condition at the end of the trip. This page covers the fleet-manager side: configuring the checklist and reviewing the defects it produces. For the driver-facing flow in full detail, see [Post-Trip Inspection](/en/driver/post-trip-inspection).
 
 > **Note:** 
-DVIR is recorded per order, not per calendar day. If a driver completes two deliveries in one day, they will be prompted to complete a DVIR at the end of each. This may be adjusted to once-per-day in a future release.
+Post-trip inspection is only triggered for single-order trips. It does not appear at intermediate stops during groupage (multi-stop) runs.
 
 
+
+## Admin configuration
+
+Go to **Settings → Post-Trip Checklist** to configure DVIR for your company.
+
+| Setting | Description |
+|---|---|
+| **Enable post-trip DVIR** | Turns the inspection overlay on or off for all drivers |
+| **Require photos for safety-critical items** | Makes uploading at least one photo mandatory before a safety-critical defect can be submitted |
+| **Auto-create vehicle unavailability for safety-critical defects** | Automatically blocks the truck from dispatch when a safety-critical defect is submitted |
+| **Checklist items** | Add, edit, or delete the items that appear in the inspection overlay. Each item has a name and a default severity (OK / Advisory / Safety Critical) |
+
+> **Note:** 
+Checklist items are company-wide and admin-configurable — there is no fixed, built-in list of categories. All drivers in your company see the same list. If you operate different vehicle types, use descriptive item names (e.g., "Reefer temperature unit — check seals") to keep the list meaningful for everyone.
+
+
+
+## Tracking open defects across the fleet
+
+Go to **Fleet → Defects** to see all defects across your entire fleet. The page has three filter tabs:
+
+| Tab | What it shows |
+|---|---|
+| **Open** | Defects not yet linked to a completed or cancelled work order |
+| **Acknowledged** | Defects that a fleet manager has reviewed |
+| **All** | Full history |
+
+Each row shows the truck, defect item name, severity badge, date reported, and the driver who submitted it.
+
+
+
+  
+    The full driver-facing flow: completing the checklist, uploading photos, and skipping/resuming an inspection.
+  
+  
+    Create and manage work orders from defect reports and routine maintenance schedules.
+  
+</CardGroup>
 
 ---
 
@@ -6429,7 +6535,7 @@ Druma sends two notifications per order:
 | Evening reminder | 18:00 local time the day before departure | "You have a pickup tomorrow at [time] from [city] to [city]. Open the app for details." |
 | Morning reminder | 06:00 local time on the departure day | "You have a pickup today at [time] from [city] to [city]. Open the app for details." |
 
-Both notifications are sent in the driver's app language (Romanian or English, set per driver in their profile).
+Both notifications are sent in the driver's configured language (the `language` field on their profile), falling back to English if not set. Druma supports all 10 platform languages, including Romanian, Bulgarian, Hungarian, Polish, Czech, and Slovak.
 
 ## What the Driver Sees
 
@@ -6594,6 +6700,10 @@ Smart Import works best with documents that are primarily text-based. It can pro
 ## Overview
 
 Ask Druma is an AI assistant available to planners, drivers, and clients. For straightforward questions it resolves entirely without human involvement. When a conversation reaches 6 messages without a clear resolution, Ask Druma offers the user a **Request human help** button. This triggers an escalation — a live chat session your team can pick up immediately.
+
+> **Note:** 
+This is different from [Messages](/en/planner/messages) — the everyday person-to-person and driver chat hub. Chat Escalations is specifically the admin/company_admin-only queue for AI conversations that Ask Druma couldn't resolve.
+
 
 
 ## Live Sessions (planner view)
@@ -7231,44 +7341,27 @@ Having annual CSRD-aligned emissions data ready — with a recognised methodolog
 
 ---
 
-## TransFollow eCMR Integration
+## TransFollow eCMR (Legacy)
 
 
 > **Note:** 
-**The Druma native eCMR provider is the default** for all new companies — no external account or API key required. TransFollow is for companies that were already using it before the native provider was introduced. If you are setting up eCMR for the first time, you do not need this page.
+**TransFollow is not a selectable eCMR provider.** The Druma native provider — issued and PAdES-sealed entirely in-house, no external account or API key required — is now the only real eCMR provider in Druma. In **Settings → Integrations → eCMR provider**, the only choices are **Native** and **Disabled**. If you are setting up eCMR for the first time, you do not need this page.
 
 
-Druma supports TransFollow as an optional fallback eCMR provider. TransFollow handles legal certification, signing workflow, and long-term archiving for companies that prefer to continue using it. To switch between providers, go to **Settings → Integrations → eCMR provider** (company admin access required).
+
+## Related articles
 
 
-## Connecting Your TransFollow Account
-
-
-  ### Get your TransFollow API key
-    Log in at [transfollow.com](https://transfollow.com). Go to your account settings and navigate to **API Keys**. Generate a new API key for Druma. Copy it — you will only be shown it once.
   
-  ### Switch the provider in Druma
-    In Druma, go to **Settings → Integrations → eCMR provider → TransFollow**. Paste your API key into the field and click **Save**.
+    The native Druma provider, and what happens to legacy TransFollow configurations.
   
-  ### Test the connection
-    Click **Test Connection**. Druma calls the TransFollow API to verify the key is valid and your account is active. You will see a green confirmation if everything is working.
   
-
-
-> **Note:** 
-Your API key is encrypted immediately upon saving and is never displayed in plain text again. If you need to replace it (for example, if the key is rotated), simply paste the new key over the existing field.
-
-
-
-## Costs
-
-eCMR is included in your Druma subscription at no extra cost, also when using the TransFollow fallback — there is no per-document charge on your Druma invoice.
-
-
-## Country Coverage
-
-eCMR is legally valid in countries that have ratified the e-CMR protocol. As of 2025, this includes most EU member states plus Switzerland, Belarus, Georgia, and others. Check the current list at [unece.org](https://unece.org). For countries that have not ratified, paper CMR is still required — Druma can print a formatted CMR note for those shipments.
-
+    An introduction to electronic CMR notes and when you need them.
+  
+  
+    Step-by-step guide to issuing an eCMR on a Druma order.
+  
+</CardGroup>
 
 ---
 
@@ -8293,10 +8386,10 @@ Add your entire driver team at once using the CSV import — essential when onbo
 
 ## Phone number is critical
 
-The phone number is how drivers log into the PWA. It must be in international format (`+40...` for Romania). Without a valid phone number, the driver cannot access the app.
+The phone number is how drivers log into the app — together with a PIN you set up after import. It must be in international format (`+40...` for Romania). Without a valid phone number, the driver cannot log in.
 
 > **Note:** 
-After importing, share the PWA link with each driver. Go to **Fleet → Drivers → select driver → Copy PWA Link** and send it by WhatsApp or SMS.
+The import only sets each driver's phone number — it does not create their login PIN. There's no bulk PIN step yet, so after importing, go to **Fleet → Drivers**, open each driver's profile one at a time, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give each driver their PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
 
 
 ## Expiry alerts
@@ -8304,7 +8397,7 @@ After importing, share the PWA link with each driver. Go to **Fleet → Drivers 
 If you fill in license, CPC, or ADR expiry dates during import, Druma will immediately start tracking those dates and alert you 30 and 60 days before expiry.
 
 
-  Manage individual driver profiles and share the PWA link.
+  Manage individual driver profiles and set up phone + PIN logins.
 
 
 
@@ -8418,7 +8511,10 @@ This page explains exactly what data Druma holds about your company, how long we
 | Invoices and financial records | 7 years from invoice date | Romanian Accounting Law |
 | eCMR documents (signed) | 10 years from signing date | e-CMR Protocol (legal requirement) |
 | Audit logs | 18 months | Legitimate interests |
-| GPS position (current only) | Overwritten in real time — no history retained | Contract |
+| GPS position (live tracking) | Not retained — current position only, overwritten on each update | Contract |
+| GPS order-event stamps | Retained with the order (see order records above) | Contract |
+| GPS data forwarded to ANAF e-Transport | 30 days, then automatically purged | Legal requirement (Romania) |
+| Tachograph files (DDD/TGD) | Indefinite (12 months is the legal minimum, not a purge target) | EU Regulation 165/2014 |
 | Error and security logs | 90 days | Legitimate interests |
 | Billing records (Stripe) | 7 years | Tax law |
 
@@ -8428,11 +8524,19 @@ eCMR documents have a 10-year retention requirement under the Additional Protoco
 
 ## GPS data: what we store
 
-Druma captures GPS position from the driver's device **while the driver is on an active assigned trip, after they have granted location permission** in the app. Each new position **overwrites the previous one** — Druma stores only the current position, not a history. We do **not**:
+Druma captures GPS position from the driver's device while a load is active, after the driver has granted location permission in the app. For **live tracking** (the position shown on the map), only the truck's current position is stored — each new ping overwrites the previous one, so no historical trail of past positions is kept.
+
+Separately, when a driver reports a status change, delay, or incident, a single GPS coordinate is captured and attached to that specific order event, becoming part of the order's own record (retained for as long as the order itself — see the table above). This is a one-off stamp on that event, not a continuous location log.
+
+We do **not**:
 
 - Track driver location outside of an active assigned trip
-- Store any location history or movement trails
+- Keep a historical trail of live tracking positions
 - Share GPS data with any third party except as required for e-Transport reporting to ANAF, which uses a rolling 30-day buffer before deletion
+
+## Tachograph data: what we store
+
+Druma maintains a **Tacho Archive** that stores raw DDD (vehicle unit) and TGD (driver card) tachograph files — downloaded automatically via a connected telematics provider or uploaded manually — to meet EU Regulation 165/2014 download-frequency and retention requirements. Unlike operational data, tachograph files are **retained indefinitely**: 12 months is the legal minimum, not a purge target, since operators may need to produce them well beyond that floor for a roadside inspection or authority audit. See [Tachograph Archive](/en/fleet-compliance/tacho-archive) for details.
 
 ## Audit log
 
