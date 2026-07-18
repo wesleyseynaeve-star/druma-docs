@@ -25,7 +25,7 @@ In Druma, this is called a **Subcontracted** order type. You create one order, a
     Enter pickup address, delivery address, cargo description, trailer type, and your agreed price with the client (the sell rate).
   </Step>
   <Step title="Select the carrier">
-    In the **Carrier** field, choose the company from your subcontractor registry who will physically move this load.
+    In the **Subcontractor / Carrier** field, choose the company from your subcontractor registry who will physically move this load.
   </Step>
   <Step title="Enter the carrier cost">
     Enter what you're paying the carrier (the buy rate). This is kept separate from the client price and is only visible to planners — not to the client.
@@ -40,28 +40,14 @@ In Druma, this is called a **Subcontracted** order type. You create one order, a
 
 ## Split Invoicing
 
-A subcontracted order generates two invoices from one set of data:
+A subcontracted order tracks both sides of the money from one set of data — no double entry of route, dates, or cargo:
 
-**Sell invoice** — goes to your client. This is what you charge for the transport. It's generated from the client details and the sell rate you entered.
+**Sell side** — what you charge your client (the agreed price). You generate this invoice the same way as for any other order, from the order's own invoicing action.
 
-**Purchase invoice** — goes to the carrier. This is what you agreed to pay the carrier. It reflects the carrier's company details and the buy rate.
-
-Both invoices are generated from the same order — you never enter the route, dates, or cargo details twice.
-
-<Steps>
-  <Step title="Go to the order's Financials tab">
-    Open the subcontracted order and click the **Financials** tab.
-  </Step>
-  <Step title="Generate the sell invoice">
-    Click **Generate Sell Invoice**. This creates the invoice for your client with your price.
-  </Step>
-  <Step title="Generate the purchase invoice">
-    Click **Generate Purchase Invoice**. This creates the invoice to send to (or expect from) the carrier.
-  </Step>
-</Steps>
+**Buy side** — what you pay the carrier. Open the order's **Carrier & Money** tab to see the **Buy rate** you agreed with the carrier alongside your **Revenue**, with the **Margin** (Revenue − Buy rate) calculated automatically.
 
 <Note>
-The purchase invoice in Druma is your record of what you owe the carrier. If the carrier sends you their own invoice, match it against the purchase invoice in Druma to confirm the amounts align.
+There's no separate "Generate Purchase Invoice" button on the order — when the carrier sends you their own invoice for the load, match it against a subcontractor invoice on the dedicated **Subcontractor Invoices** page, which handles ingestion and matching against the buy rate you recorded here.
 </Note>
 
 ---
@@ -71,8 +57,8 @@ The purchase invoice in Druma is your record of what you owe the carrier. If the
 When the carrier updates the order status in their portal (Picked Up, In Transit, Delivered), that update flows through automatically:
 
 1. The order status in your Druma updates immediately
-2. If you have client portal notifications enabled, your client sees the updated status in their portal
-3. Your planner sees the update on the Today View map and order timeline
+2. Your client sees the updated status in their portal, on their shipment's timeline
+3. Your planners see the update on the order detail pane and, if the truck is live, on the Live Map
 
 You don't need to manually relay status updates from the carrier to your client. The information flows through Druma automatically.
 
@@ -84,12 +70,12 @@ You don't need to manually relay status updates from the carrier to your client.
 When the carrier uploads documents through their portal — CMR scan, proof of delivery, photos — those documents appear in two places at once:
 
 - **Your Druma account** — under the order's Documents tab
-- **Your client's portal** — if you have client portal document sharing enabled
+- **Your client's portal** — in their Documents page, filterable by type (CMR, eCMR, POD, Invoice, CO2)
 
 The client gets access to the CMR and delivery confirmation without you having to manually forward anything. It just arrives.
 
 <Note>
-If you don't want certain carrier-uploaded documents visible to your client automatically, you can change the visibility setting per document in the Documents tab. Toggle the **Client Visible** switch off for any document you want to keep internal.
+There's no per-document visibility toggle — every document attached to an order the client can see is visible to them. If you need to keep a carrier-uploaded file internal, don't attach it to the order's Documents.
 </Note>
 
 ---
@@ -100,7 +86,7 @@ On every subcontracted order, Druma shows you your margin at a glance:
 
 **Margin = Sell price − Carrier cost**
 
-You'll see this on the order's Financials tab and in the order list view. This makes it easy to review profitability across your forwarding loads without building spreadsheets.
+You'll see this on the order's Carrier & Money tab and in the order list view. This makes it easy to review profitability across your forwarding loads without building spreadsheets.
 
 If actual costs change (carrier charges waiting time or extra km), update the buy rate on the order and the margin recalculates automatically.
 
@@ -112,7 +98,7 @@ Once a subcontracted order is assigned to a carrier and they begin providing upd
 
 ### On the forwarding board (In Transit cards)
 
-- **Carrier ETA** — the carrier's own ETA for delivery, labelled "Carrier ETA" to distinguish it from Druma's HERE-calculated ETA
+- **Carrier ETA** — the carrier's own ETA for delivery, labelled "Carrier ETA" to distinguish it from Druma's PTV-calculated ETA
 - **Carrier truck plate** badge — the actual plate the carrier is using on this load
 - **Missing buy rate warning** — an amber badge appears on any card where no buy rate has been set. This signals a margin data gap — open the order and enter the buy rate before invoicing
 
@@ -121,7 +107,7 @@ Once a subcontracted order is assigned to a carrier and they begin providing upd
 For subcontracted orders, a **Carrier Updates** section appears in the order detail pane showing:
 
 - Carrier truck plate and driver name
-- Driver phone number (tap to call)
+- Driver phone number (shown as plain text, not a tap-to-call link)
 - Carrier ETA
 - Loading actuals: carrier-reported arrival and departure at the pickup point
 - Delivery actuals: carrier-reported arrival and departure at the delivery point
@@ -149,7 +135,7 @@ If you use your own driver and truck, use a standard order type — not Subcontr
   <Card title="Subcontractors" icon="handshake" href="/en/planner/subcontractors">
     Add carrier companies to your registry before you can assign them to subcontracted orders.
   </Card>
-  <Card title="Generating Invoices" icon="file-invoice-dollar" href="/en/planner/generating-invoices">
+  <Card title="Generating Invoices" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
     Learn how to generate sell and purchase invoices from your orders.
   </Card>
 </CardGroup>

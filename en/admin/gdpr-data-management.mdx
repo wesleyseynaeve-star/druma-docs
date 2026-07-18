@@ -52,15 +52,17 @@ Druma does not store call recordings, driver biometric data, or driver health in
 |---|---|
 | Operational data (orders, clients, drivers, vehicles) | Duration of subscription + 90 days after cancellation |
 | User account data | Duration of subscription + 90 days after cancellation |
-| Audit logs | 18 months from the date of the logged event |
+| Audit logs | 12 months from the date of the logged event |
 | eCMR documents | 10 years (legal requirement under the e-CMR Protocol) |
 | GPS position data (live tracking) | Not retained — only the current position is stored, overwritten on each update |
 | GPS order-event stamps | Retained with the order (see operational data retention above) |
 | GPS data forwarded to ANAF e-Transport | 30 days, then automatically purged |
 | Tachograph files (DDD/TGD) | Retained indefinitely (12 months is the legal minimum, not a purge target) |
-| Billing records | 7 years (Romanian accounting law requirement) |
+| Billing records | 10 years (EU fiscal law ceiling) |
 
-After the retention period, data is permanently deleted from all systems, including backups.
+<Note>
+At the end of the 90-day retention window described below, Druma's scheduled purge deletes **orders older than 3 years**, order messages, order notes, clients, trucks, and trailers, and removes company integrations and preferences. It deliberately **does not delete invoices or eCMR signatures** — both are retained under the legal retention rules above regardless of account deletion. Orders younger than 3 years old at the time of purge are not deleted by this process either.
+</Note>
 
 ---
 
@@ -69,18 +71,18 @@ After the retention period, data is permanently deleted from all systems, includ
 You can request a full export of your company's data at any time.
 
 <Steps>
-  <Step title="Go to Settings → Data & Privacy">
-    Only Admin and Company Admin roles can access this section.
+  <Step title="Go to Settings → GDPR & Privacy">
+    Any role can open this page and view its content. Only the **Admin** role can request an export, edit the retention policy, or resolve data subject requests — **Company Admin** gets read-only access to the uploaded GDPR documents, and other roles can view the page but can't act on it.
   </Step>
   <Step title="Click Request Export">
     Click the **Request Export** button. Druma will prepare a ZIP archive of all your company's data in machine-readable format (JSON and CSV).
   </Step>
   <Step title="Receive the export">
-    You will receive an email with a download link within **24 hours**. The link expires after 7 days.
+    You will receive an email with a download link **within about 15 minutes** (the export is processed by a background job that runs every 15 minutes). The link expires after 7 days.
   </Step>
 </Steps>
 
-The export includes: orders, clients, drivers, vehicles, invoices, user list, and audit logs. It does not include eCMR certified PDFs — those are downloadable individually from each order's eCMR tab.
+The export includes: orders, clients, invoices, fleet vehicles, in-app order messages, audit log entries, consent records, and eCMR digital signature records. The `drivers.csv` file in the export is filtered to user accounts with the **driver** role only — it is not a full roster of your office users. It does not include eCMR certified PDFs — those are downloadable individually from each order's eCMR tab.
 
 ---
 
@@ -91,17 +93,17 @@ Account deletion is permanent and irreversible after the 90-day retention window
 </Warning>
 
 <Steps>
-  <Step title="Go to Settings → Data & Privacy">
-    Scroll to the **Delete Account** section.
+  <Step title="Go to Settings → GDPR & Privacy">
+    Scroll to the **Delete Account** section. Only the **Admin** role can start this.
   </Step>
   <Step title="Click Delete Account">
     You will be asked to type your company name to confirm you understand the action.
   </Step>
   <Step title="90-day retention period begins">
-    Your account is immediately deactivated — no one can log in. Druma retains the data for 90 days in case of regulatory or legal need.
+    Your account is immediately deactivated — no one can log in. Druma retains the data for 90 days in case of regulatory or legal need. You can cancel the scheduled deletion at any point during this window from the same page.
   </Step>
-  <Step title="Permanent deletion">
-    After 90 days, all operational data is purged from all systems and backups. eCMR documents are retained for the full 10-year legal period even after account deletion, as required by law.
+  <Step title="Scheduled purge">
+    After 90 days, Druma deletes orders older than 3 years, order messages, order notes, clients, trucks, trailers, and company integrations, and removes the company record itself. **Invoices and eCMR digital signatures are not deleted** by this process — they're retained for their full legal retention period (see the retention table above) regardless of account deletion. Orders younger than 3 years at the time of purge are also not deleted by this step.
   </Step>
 </Steps>
 
@@ -125,8 +127,8 @@ Druma shares data with the following third-party sub-processors to deliver the s
 | Sentry | Error monitoring and crash reporting |
 | Google Firebase Cloud Messaging | Push notifications to the driver app |
 | WhatsApp Business Cloud API (Meta) | Driver messaging — only if your company enables WhatsApp notifications |
-| Telematics providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS and tachograph data — only the provider your company connects |
-| Reefer telematics providers (Mapon, Orbcomm, Thermo King) | Reefer temperature data — only the provider your company connects |
+| Telematics providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | GPS and tachograph data — only the provider your company connects |
+| Reefer telematics providers (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Reefer temperature data — only the provider your company connects |
 | TransFollow | Legacy eCMR fallback only — the native in-house Druma provider is the default for issuance, signing, and archiving |
 
 All sub-processors are contractually bound to process data only as instructed and in compliance with GDPR.

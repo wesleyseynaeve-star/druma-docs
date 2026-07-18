@@ -1,6 +1,6 @@
 ---
 title: "Managing Contacts"
-description: "Add multiple contacts at a client company, set notification preferences per person, and give each contact their own portal access link."
+description: "Add multiple contacts at a client company and set notification preferences — some controlled by you, some fine-tuned by the client from their own portal."
 icon: "address-book"
 ---
 
@@ -8,7 +8,7 @@ icon: "address-book"
 
 Most of your clients have more than one person involved in their logistics. The logistics manager wants live status updates. The finance team needs invoices. The warehouse supervisor only cares about delivery confirmation. Sending everything to one email address is messy and creates noise.
 
-Druma lets you add as many contacts as needed per client and configure exactly which notifications each person receives — so the right email goes to the right person, automatically, every time.
+Druma lets you add as many contacts as needed per client. From the Clients page, you control the basics — who's the primary contact, who gets delivery notifications, who's the financial contact — and the client can fine-tune their own notification preferences (invoices, waiting charges, CO2 reports) from their own portal settings.
 
 ## Adding a Contact
 
@@ -28,10 +28,10 @@ Druma lets you add as many contacts as needed per client and configure exactly w
     - **Name** — full name of the person
     - **Email** — where notifications and portal links will be sent
     - **Phone** — optional, useful for your own reference when you need to call them
-    - **Role** — select from Logistics Manager, Finance, Warehouse, Operations, or Other
+    - **Role** — free text (e.g. "Logistics Manager", "Finance", "Warehouse") — there's no fixed list, type whatever fits
   </Step>
   <Step title="Set notification preferences">
-    Tick which notification types this person should receive. See the full list in the next section.
+    From here, you can mark the contact as **Primary**, toggle **Delivery notifications**, and mark them as the **Financial dept** contact. See the next section for what each of these — and the finer-grained preferences the client can set themselves — actually control.
   </Step>
   <Step title="Save the contact">
     Click **Save Contact**. The contact is added immediately and will start receiving notifications from that point forward.
@@ -40,42 +40,35 @@ Druma lets you add as many contacts as needed per client and configure exactly w
 
 ## Notification Types
 
-For each contact, you can enable or disable the following notifications independently:
+Two different places control a contact's notifications:
+
+**From the Clients page, you (the operator) set:**
+
+| Setting | What it controls |
+|---|---|
+| **Primary** | Marks this as the client's main contact |
+| **Delivery notifications** | Whether this contact is included on delivery-related notifications |
+| **Financial dept** | Marks this as the finance/billing contact for the client |
+
+**From their own portal Settings, the client fine-tunes further per contact:**
 
 | Notification | When it is sent |
 |---|---|
-| **Shipment status updates** | Every time the driver taps a status in the driver app — departed, arrived, loaded, unloaded, and so on |
-| **Delay alerts** | When a planner or driver adds a delay report to an active order |
-| **Delivery confirmation** | When the driver marks the delivery as completed |
-| **Invoice sent** | When the planner sends an invoice for this client through Druma |
-| **Waiting time alert** | When waiting time at loading or delivery exceeds the agreed free waiting period |
+| **Delivery confirmations** | When the driver marks the delivery as completed |
+| **Waiting charge alerts** | When waiting time at loading or delivery exceeds the agreed free waiting period |
+| **Invoice delivery** | When the planner sends an invoice for this client through Druma |
+| **CO2 reports** | When a CO2/emissions report is generated for this client |
 
 <Note>
-Mix and match freely. A common setup: the Logistics Manager receives status updates, delay alerts, and delivery confirmations. The Finance contact receives only "Invoice sent". Neither person gets the other's emails.
+There's no separate "delay alert" notification type — a driver-reported delay reaching the client (when your company has that enabled) piggybacks on the general delivery/operational notification settings, not a dedicated toggle.
 </Note>
 
-## Example: Five Contacts on One Client
+## Portal Access Is Per Client, Not Per Contact
 
-Here is a realistic setup for a client with multiple people involved:
-
-| Contact | Role | Notifications enabled |
-|---|---|---|
-| Ana Ionescu | Logistics Manager | Status updates, delay alerts, delivery confirmation |
-| Mihai Pop | Finance | Invoice sent |
-| depozit@client.ro | Warehouse (shared inbox) | Delivery confirmation |
-| Director Operatiuni | Operations Director | Delay alerts only |
-| contact@client.ro | General inbox | None — portal access only |
-
-Each person is a separate contact with their own preferences. You set this up once and Druma handles the routing automatically on every order.
-
-## Portal Access Per Contact
-
-Each contact can have their own magic link generated directly from their contact record. This is useful for larger clients where you want each person to have a personalised link — and where you do not want everyone sharing the same URL.
-
-To send a magic link to a specific contact: go to the **Contacts** tab → click on the contact's name → click **Send Portal Link**. Druma sends the link to that contact's email address.
+Portal access isn't set up per contact — it's a single shared link for the whole client company. From the **Clients** page, click **Generate portal link** to create it, **Resend link** to re-send the existing one, or **Revoke** to kill access immediately. There's no separate link per contact.
 
 <Note>
-Magic links are valid for 30 days. When a link expires, come back to the contact record and click **Send Portal Link** again to issue a fresh one. The client receives a new email with the updated link.
+The portal link is valid for 90 days from when it was generated. If it expires, go back to the Clients page and click **Resend link** (or generate a new one) to issue a fresh one.
 </Note>
 
 
@@ -87,7 +80,7 @@ Both actions are on the **Contacts** tab:
 - **Remove a contact** — click the trash icon next to the contact. A confirmation prompt appears before the contact is deleted.
 
 <Warning>
-Removing a contact stops all future notifications to that person immediately and revokes their portal access. If you need to add them back later, you will need to create the contact again from scratch.
+Removing a contact stops all future notifications to that person immediately. Portal access itself isn't affected — it's shared at the client level, not per contact — so removing one contact doesn't lock out the others. If you need to add them back later, you will need to create the contact again from scratch.
 </Warning>
 
 ---

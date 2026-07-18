@@ -52,7 +52,7 @@ Smart Import handles documents that are too messy or unstructured for a direct C
     Click **Upload Documents** or drag files directly onto the drop zone. You can upload multiple files at once — for example, a PDF fleet list and an image of an insurance certificate together.
 
     <Note>
-    Maximum file size is 10 MB per file. If a document is larger, split it into sections before uploading.
+    Maximum file size is 20 MB per file. If a document is larger, split it into sections before uploading.
     </Note>
   </Step>
   <Step title="Wait for AI extraction">
@@ -113,13 +113,16 @@ To quickly find all Low-confidence fields across a category, look for the amber 
 
 ## Duplicate detection
 
-Before showing the Review Dashboard, Druma compares extracted records against your existing company data:
+Before showing the Review Dashboard, Druma compares extracted records against your existing company data — but only for four categories:
 
-- **Fleet**: matches on licence plate
-- **Drivers**: matches on name + date of birth (when available)
-- **Clients**: matches on VAT number
-- **Companies / Subcontractors**: matches on VAT number
-- **Insurance**: matches on certificate number (when available)
+- **Fleet (trucks)**: matches on licence plate
+- **Fleet (trailers)**: matches on licence plate
+- **Drivers**: matches on full name (case-insensitive)
+- **Clients**: matches on VAT number, falling back to name if no VAT number was extracted
+
+<Note>
+There is no duplicate detection yet for Companies/Subcontractors or Insurance records — every extracted row in those categories is treated as new.
+</Note>
 
 Records that match existing data are flagged with a **Duplicate** badge on the row. You have two options for each duplicate:
 

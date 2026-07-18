@@ -1,59 +1,47 @@
 ---
 title: "Importing Drivers"
-description: "Bulk upload your driver roster into Druma using a CSV template."
+description: "Onboard your driver roster in bulk with Smart Import — Druma's AI document extraction tool — instead of adding drivers one at a time."
 icon: "file-import"
 ---
 
-Add your entire driver team at once using the CSV import — essential when onboarding a fleet of 10 or more drivers.
+Druma does not have a CSV-template bulk import for drivers. Instead, use **Smart Import** — an AI-powered tool that reads whatever driver documents you already have (a PDF roster, a scanned list, photos of licences, an oddly-formatted spreadsheet from your previous system) and turns them into driver records for you to review before saving.
 
+## Where to find it
 
-## Download the template
+Go to **Tools → Smart Import**. It's a shared tool for onboarding company, fleet, driver, client, and insurance data — not a page scoped to Fleet → Drivers.
+
+## Workflow
 
 <Steps>
-  <Step title="Open the import page">
-    Go to **Fleet → Drivers → Import** and click **Download Template**.
+  <Step title="Upload your driver documents">
+    Click **Upload Documents** or drag files onto the drop zone. Supported formats: PDF, images (JPEG, PNG, WebP, HEIC/HEIF), XLSX, and CSV, up to 20 MB per file and up to 20 files per session.
   </Step>
-  <Step title="Fill in the CSV">
-    One driver per row:
-
-    | Column | Required | Example |
-    |--------|----------|---------|
-    | full_name | Yes | Gheorghe Ionescu |
-    | phone | Yes | +40721000000 |
-    | email | No | ghe@example.com |
-    | license_number | No | B-123456 |
-    | license_category | No | CE |
-    | license_expiry | No | 2026-08-15 |
-    | cpc_expiry | No | 2025-09-30 |
-    | tachograph_card | No | RO123456780 |
-    | adr_expiry | No | 2025-12-31 |
-    | country | No | RO |
-    | active | Yes | true or false |
+  <Step title="Wait for AI extraction">
+    Druma sends each file to Gemini for extraction — a few seconds per file. Files are processed server-side and are not stored permanently after extraction; only the records you choose to import are saved.
   </Step>
-  <Step title="Upload and review">
-    Upload the CSV. Check the preview for any red rows (usually missing phone number or invalid date format). Dates must be `YYYY-MM-DD`.
+  <Step title="Open the Drivers category card">
+    The Review Dashboard shows one card per data type found in your documents, including **Drivers** if any were detected. Click it to see the extracted rows in an editable table: full name, phone, email, licence number and expiry, ADR certificate and expiry, CPC number and expiry, tachograph card number, and language.
   </Step>
-  <Step title="Confirm import">
-    Click **Import [X] drivers**. Drivers appear in your roster immediately.
+  <Step title="Review confidence and duplicates">
+    Each field has a colour-coded confidence indicator (green/amber/red) — always double-check amber and red fields. Rows are checked against your existing drivers by **full name (case-insensitive)**; a match is flagged **Duplicate**, defaulting to **Skip** (you can choose **Overwrite** instead if you want the extracted data to replace what's on file).
+  </Step>
+  <Step title="Edit and import">
+    Click any cell to correct it inline, then click **Import Drivers**. Full name is the only required field — rows missing it aren't imported.
   </Step>
 </Steps>
 
-## Phone number is critical
+<Warning>
+There is no undo for an import. If incorrect data was imported, edit the driver records individually afterward.
+</Warning>
 
-The phone number is how drivers log into the app — together with a PIN you set up after import. It must be in international format (`+40...` for Romania). Without a valid phone number, the driver cannot log in.
+## Phone number and app login
 
-<Note>
-The import only sets each driver's phone number — it does not create their login PIN. There's no bulk PIN step yet, so after importing, go to **Fleet → Drivers**, open each driver's profile one at a time, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give each driver their PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
-</Note>
+Smart Import creates the driver's profile record (name, phone, licence/CPC/ADR/tacho details) — it does not create their app login. After importing, go to **Fleet → Drivers**, open each driver's profile one at a time, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give each driver their PIN directly — they can personalize it the first time they log in.
 
-## Expiry alerts
-
-If you fill in license, CPC, or ADR expiry dates during import, Druma will immediately start tracking those dates and alert you 30 and 60 days before expiry.
+<Card title="Onboarding clients and fleet" icon="brain" href="/en/tools/smart-import">
+  Smart Import also handles company, fleet, client, and insurance documents in the same workflow.
+</Card>
 
 <Card title="Driver management" icon="id-card" href="/en/planner/driver-management">
   Manage individual driver profiles and set up phone + PIN logins.
-</Card>
-
-<Card title="Installing the driver app" icon="mobile" href="/en/driver/installing-the-app">
-  Step-by-step guide for drivers installing the PWA on their phone.
 </Card>

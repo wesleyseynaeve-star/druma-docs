@@ -12,8 +12,10 @@ Druma sends two notifications per order:
 
 | Notification | Timing | Message |
 |---|---|---|
-| Evening reminder | 18:00 local time the day before departure | "You have a pickup tomorrow at [time] from [city] to [city]. Open the app for details." |
-| Morning reminder | 06:00 local time on the departure day | "You have a pickup today at [time] from [city] to [city]. Open the app for details." |
+| Evening reminder | 18:00 UTC the day before pickup | "Reminder: pickup tomorrow" / "Tomorrow: — in [pickup city] → [delivery city]" |
+| Morning reminder | 06:00 UTC on the pickup day | "Today's pickup" / "Pickup today at — in [pickup city]" |
+
+Both times are **fixed UTC** — they are not adjusted for the driver's or the order's local timezone. The pickup-time placeholder in the message is not currently filled in (it renders as a literal em dash "—") — the notification only tells the driver the pickup city (and, for the evening reminder, the delivery city), not a specific time.
 
 Both notifications are sent in the driver's configured language (the `language` field on their profile), falling back to English if not set. Druma supports all 10 platform languages, including Romanian, Bulgarian, Hungarian, Polish, Czech, and Slovak.
 
@@ -57,34 +59,9 @@ Push notifications are a supplement to your existing dispatch process, not a rep
 
 The assignment is still recorded in Druma regardless of whether the driver uses the app. The order, route, and documents are all stored and printable from the desktop.
 
-## Checking Whether a Driver Opened the Notification
-
-Planners can see driver notification activity on the order detail page.
-
-**Order → Activity tab → Driver Notifications section**
-
-This shows:
-- Time the evening reminder was sent
-- Time the morning reminder was sent
-- Whether each notification was opened, and when
-
-If a notification shows **"Not opened"** by 07:00 on departure day, the planner knows to make a direct call. This is shown as a yellow indicator on the order card in the Today view.
-
-<Warning>
-"Not opened" can also mean the driver opened the order through the app directly rather than through the notification. It is not necessarily a sign that the driver is unaware of the job — check with them if departure time is approaching.
-</Warning>
-
 ## Notifications for Multi-Stop Orders
 
 For orders with multiple pickup or delivery stops, Druma sends a single notification per order. The notification text references the first pickup city and the final delivery city. The driver sees all stops in the correct sequence when they open the order.
-
-## Turning Off Notifications for a Driver
-
-If a driver explicitly does not want app notifications, go to:
-
-**Fleet → Drivers → [driver name] → Preferences → Disable push notifications**
-
-With notifications disabled, assignments are still recorded, but no push notifications are sent. Manual dispatch remains the responsibility of the planner.
 
 <CardGroup cols={2}>
   <Card title="Driver Management" icon="id-card" href="/en/fleet/driver-management">

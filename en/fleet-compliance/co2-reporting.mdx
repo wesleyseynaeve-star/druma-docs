@@ -10,29 +10,44 @@ Large shippers — retailers, manufacturers, logistics buyers — increasingly r
 
 ## Calculation Methodology
 
-Druma follows the **GLEC Framework v3** (Global Logistics Emissions Council), which is also aligned with **ISO 14083** — the international standard for quantifying and reporting greenhouse gas emissions from transport chains. This is the methodology most large shippers and auditors recognise and accept.
+Druma follows the **GLEC Framework v4.0** (Global Logistics Emissions Council), which is also aligned with **ISO 14083** — the international standard for quantifying and reporting greenhouse gas emissions from transport chains (Tier 1 default-factor calculation). This is the methodology most large shippers and auditors recognise and accept.
 
-The calculation is straightforward:
+Unlike a pure distance-based estimate, the GLEC v4.0 Tier 1 method is **tonne-kilometre** based — it multiplies distance by the actual cargo weight, not just the vehicle type:
 
 ```
-CO2 (kg) = Distance (km) × Emission Factor (gCO2/km) ÷ 1000
+CO2e (kg) = Distance (km) × (Weight (kg) ÷ 1000) × Emission Factor (gCO2e/tonne-km) ÷ 1000
 ```
+
+Weight is a required input to the formula: the same route driven empty and driven at full payload produces very different CO2e figures. Make sure the order's cargo weight is entered accurately — it directly affects the emissions calculation, not just billing.
 
 ---
 
-## Emission Factors by Euro Standard
+## Emission Factors by Vehicle Class and Fuel Type
 
-The emission factor depends on the truck's Euro emission standard, which you set when adding a vehicle to your fleet.
+The emission factor is looked up from a reference table (`co2_emission_factors`, GLEC v4.0 Europe defaults) keyed by **vehicle class** and **fuel type** — not by the truck's Euro emission standard, which is not consulted at all for this calculation. Vehicle class is derived automatically from the truck's payload/weight capacity:
 
-| Euro standard | Emission factor |
+| Truck payload capacity | Vehicle class |
 |---|---|
-| Euro 3 | 115 gCO2/km |
-| Euro 4 | 98 gCO2/km |
-| Euro 5 | 82 gCO2/km |
-| Euro 6 | 62 gCO2/km |
+| Over 30,000 kg | Articulated HGV 34t (typical FTL truck) |
+| 15,000 – 30,000 kg | Rigid truck 16–26t |
+| Under 15,000 kg | Rigid truck 12–16t |
+
+| Vehicle class | Fuel type | Emission factor (gCO2e/tonne-km) |
+|---|---|---|
+| Articulated HGV 34t | Diesel | 62 |
+| Articulated HGV 34t | LNG | 54 |
+| Articulated HGV 34t | Electric | 25 |
+| Articulated HGV 34t | HVO | 12 |
+| Rigid 16–26t | Diesel | 91 |
+| Rigid 16–26t | Electric | 37 |
+| Rigid 12–16t | Diesel | 119 |
+| Rigid 12–16t | Electric | 48 |
+| Articulated HGV 40t (mega trailer) | Diesel | 55 |
+| Articulated HGV 40t (mega trailer) | LNG | 48 |
+| Articulated HGV 40t (mega trailer) | Electric | 22 |
 
 <Note>
-If you have not set the Euro standard on a vehicle, Druma defaults to Euro 5 for calculation purposes. Go to **Fleet → Vehicles → [Vehicle] → Edit** to set the correct standard. Accurate CO2 reporting depends on accurate vehicle data.
+If the truck has no fuel type set, Druma assumes diesel. If no exact vehicle-class/fuel-type factor is found, Druma falls back to the diesel factor for that same vehicle class — there is no "defaults to a specific Euro standard" behaviour, since Euro standard doesn't feature in this lookup at all.
 </Note>
 
 ---
@@ -50,8 +65,8 @@ If you manually override the distance on an order (for example, because the actu
 Every completed order shows its CO2 figure in the order detail page, under the **Financials** or **Summary** section. You can see at a glance:
 
 - Route distance in km
-- Vehicle Euro standard used
-- Total kg CO2 for the order
+- Cargo weight used
+- Total kg CO2e for the order
 
 ---
 
@@ -77,24 +92,18 @@ This is particularly useful for clients who need to report **Scope 3 emissions**
 
 ---
 
-## Downloading the CO2 Report PDF
+## Exporting the CO2 Report
 
-You can generate a PDF version of the CO2 report to send to clients or include in tender documents:
+The CO2 Report page does not have a "Download PDF" button. Instead, from **Reports → CO2 Report** (annual view) you can export in three formats:
 
-<Steps>
-  <Step title="Open the CO2 Report">
-    Go to **Reports → CO2 Report**.
-  </Step>
-  <Step title="Set the filters">
-    Choose the date range, and optionally filter by specific client or vehicle.
-  </Step>
-  <Step title="Download PDF">
-    Click **Download PDF**. The report is formatted for professional use — it includes your company name, logo, the date range, the GLEC v3 methodology reference, and the emissions figures.
-  </Step>
-</Steps>
+- **Annual XLSX** — a spreadsheet workbook of the year's per-order CO2 figures
+- **CSRD Data Package (.csv)** — a data export formatted for feeding into a CSRD / ESRS E1 Scope 3 disclosure
+- **iXBRL (.xhtml)** — an inline XBRL file for the ESRS E1 Scope 3 tag set, with an in-app disclaimer that it must be reviewed by your sustainability auditor before filing
+
+The monthly view instead offers a generic **print** and **export** action on the table, covering whichever columns and date range you currently have selected.
 
 <Note>
-If a client asks for a report covering only their shipments, filter by that client before downloading. The PDF will show only their orders.
+Separately, each client with completed orders automatically receives a monthly CO2 report by email — an HTML summary of their shipments' emissions for the previous month, generated and sent automatically on the 1st of each month. This is not something you trigger from the CO2 Report page; it runs in the background for every client with deliveries in that period.
 </Note>
 
 ---
@@ -108,7 +117,7 @@ Emissions reporting is no longer just for large carriers. The trend is moving do
 - **Tenders and RFQs** increasingly ask for documented CO2 methodology
 - **Green freight programmes** like SmartWay Europe and Clean Cargo give procurement preference to carriers with documented emissions data
 
-Having CO2 reports ready — with a recognised methodology (GLEC v3 / ISO 14083) — differentiates your company in competitive tenders.
+Having CO2 reports ready — with a recognised methodology (GLEC v4.0 / ISO 14083) — differentiates your company in competitive tenders.
 
 ---
 
@@ -119,5 +128,5 @@ Having CO2 reports ready — with a recognised methodology (GLEC v3 / ISO 14083)
 </Card>
 
 <Card title="Fleet Management" icon="truck" href="/en/fleet/fleet-management">
-  How to set vehicle Euro standards and other fleet data that feeds CO2 calculations.
+  How to set vehicle payload capacity and fuel type — the fleet data that feeds CO2 calculations.
 </Card>

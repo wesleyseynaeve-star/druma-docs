@@ -13,7 +13,7 @@ e-Transport is Romania's mandatory electronic declaration and GPS tracking syste
 e-Transport requires transport operators to:
 
 1. **Declare the transport** to ANAF before the truck moves, receiving a unique UIT code
-2. **Log GPS positions** every 30 seconds during the transport
+2. **Log GPS positions** at regular intervals during the transport
 3. **Carry the UIT code** in the truck (printed or visible on the driver's phone)
 
 The system allows ANAF and Poliția Rutieră to verify in real time that a transport has been declared, who is carrying the goods, and whether the truck is on the declared route.
@@ -63,7 +63,7 @@ When your client holds the declaration obligation, Druma nudges the process alon
     If the client provides the UIT by phone or email, the planner can enter it directly on the order detail pane under the **cargo tab**. The same **e-Transport (Romania)** section shows an input field when no UIT is recorded and the order status allows editing.
   </Step>
   <Step title="GPS transmission activates automatically">
-    Once a UIT code is on file, Druma's GPS forwarding pipeline picks up the order and begins transmitting positions to ANAF at the required 30-second interval — no additional action required from the planner.
+    Once a UIT code is on file, Druma's GPS forwarding pipeline picks up the order and begins transmitting positions to ANAF — no additional action required from the planner.
   </Step>
   <Step title="Driver sees the UIT code">
     The UIT code appears in the driver's Druma app on the active order screen, confirming to the driver that the declaration is in place before departure. If a road inspector asks, the driver shows the code on their phone or presents the printed order document.
@@ -90,7 +90,7 @@ Companies without the declarant setting enabled never see the Goods value (RON) 
 
 ## GPS Position Logging
 
-e-Transport requires GPS positions to be transmitted to ANAF every **30 seconds** during active transport. Druma handles this automatically via the ANAF e-Transport API — separate from the driver's manual status updates.
+e-Transport requires GPS positions to be transmitted to ANAF during active transport. Druma handles this automatically via the ANAF e-Transport API — separate from the driver's manual status updates. To avoid flooding ANAF's API with a position update on every GPS ping, Druma debounces outbound transmissions per order to **at most once every 5 minutes**, forwarding the most recent position at that cadence rather than every raw ping received from the driver's phone.
 
 **Important:** GPS logging only works when the driver has the Druma app **open on their phone** during transit. If the driver closes the app or the phone screen locks without the app running in the background, position logging may be interrupted.
 
@@ -99,7 +99,7 @@ e-Transport requires GPS positions to be transmitted to ANAF every **30 seconds*
     Before the truck departs, confirm with the driver that the Druma app is open and showing the active order. On Android, confirm the app has background location permission.
   </Step>
   <Step title="App runs during transit">
-    The app transmits GPS coordinates to Druma every 30 seconds. Druma forwards these to the ANAF e-Transport API automatically.
+    The app transmits GPS coordinates to Druma as it moves. Druma forwards a position to the ANAF e-Transport API at most once every 5 minutes per order.
   </Step>
   <Step title="Transport completion">
     When the driver marks the order as delivered, GPS logging for that UIT code stops.
@@ -141,7 +141,7 @@ Druma's automation eliminates the most common compliance failures: missing decla
     Configure your ANAF API credentials, goods-value threshold, and e-Transport defaults in Druma.
   </Card>
   <Card title="Fleet Documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
-    Vehicle document compliance, including operating licences required for Romanian transport.
+    Vehicle document compliance, including the CEMT permit tracked for international transport.
   </Card>
   <Card title="EU Driving Hours Rules" icon="clock" href="/en/fleet-compliance/eu-driving-hours">
     Regulation 561/2006 driving limits and how Druma tracks them.

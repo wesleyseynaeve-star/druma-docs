@@ -1,10 +1,10 @@
 ---
 title: "Billing & Subscription"
-description: "Manage your Druma subscription, seats, and billing through the Stripe Customer Portal."
+description: "How Druma bills your company — truck-count tiers, the AI usage pool, and native e-Factura invoicing."
 icon: "credit-card"
 ---
 
-Druma uses a seat-based subscription model with two types of seats — vehicle seats and user seats — priced on volume tiers. You can choose monthly or annual billing. You manage everything through the Stripe Customer Portal, accessible directly from Druma.
+Druma is the **issuer of record** for your subscription: every platform charge is billed as a native **Romanian e-Factura** (ANAF/SPV) and paid by **bank transfer** on net terms — there is no card-on-file, no Stripe checkout, and no per-seat pricing for users. Office users, drivers, and client-portal accounts are always free; what you pay for is your active trucks (if you run your own fleet) or your platform usage (if you're a pure forwarder/broker).
 
 <Note>
 For current pricing, visit [druma.io](https://druma.io) or contact support@druma.io.
@@ -14,135 +14,91 @@ For current pricing, visit [druma.io](https://druma.io) or contact support@druma
 
 ## Free Trial
 
-Every new company gets a **30-day free trial**. No credit card is required to start. All features — including eCMR (in mock mode) — are fully available during the trial. At the end of the trial period, you will be prompted to add a payment method and choose your seat counts.
+Every new company gets a **30-day free trial**. No credit card or bank details are required to start, and all features are fully available during the trial.
 
 ---
 
-## Viewing Your Bill
+## Pricing model
 
-<Steps>
-  <Step title="Open the Billing page">
-    Go to **Settings → Billing**.
-  </Step>
-  <Step title="Open the Stripe Customer Portal">
-    Click **Open Billing Portal**. You will be redirected to Stripe's hosted customer portal, where Druma never stores your card details directly.
-  </Step>
-  <Step title="View invoices">
-    In the Stripe portal, click **Invoice History** to download PDF invoices for any past month.
-  </Step>
-</Steps>
+Your company is billed under one of two archetypes:
 
+<Tabs>
+  <Tab title="Asset haulier">
+    If you operate your own trucks, you pay:
+    - A flat **€25/month company base fee**.
+    - A **banded per-active-truck fee**. Parked trucks are always free; billing floors at a minimum of **3 active trucks**. The total number of active trucks picks one band, and **all** active trucks bill at that band's rate (it is not a marginal/cumulative calculation).
+    - A **company-level pooled AI allowance** (see below).
 
----
+    | Band | Active trucks | Monthly / truck | Annual / truck |
+    |------|---------------|------------------|-----------------|
+    | Starter | 3–9 | €41 | €34 |
+    | Growth | 10–24 | €38 | €32 |
+    | Scale | 25–49 | €36 | €30 |
+    | Pro | 50–74 | €34 | €28 |
+    | Enterprise | 75+ | €30 | €25 |
+  </Tab>
+  <Tab title="Forwarder / broker">
+    If you don't run your own fleet, there's no truck pool and no base fee — you pay pure usage: **the greater of €25/month or your metered usage cost × 2.5**.
+  </Tab>
+</Tabs>
 
-## Adding or Removing Seats
-
-You can adjust seat counts at any time. Changes take effect at the start of the next billing cycle.
-
-<Steps>
-  <Step title="Go to Settings → Billing">
-    Click **Manage Seats**.
-  </Step>
-  <Step title="Adjust vehicle seats">
-    Use the + and – controls to set the number of vehicle seats you need.
-  </Step>
-  <Step title="Adjust user seats">
-    Set the number of user seats. If you have more active users than seats, Druma will prompt you to add seats before allowing new user invitations.
-  </Step>
-  <Step title="Confirm changes">
-    Click **Save Changes**. Your updated invoice amount is shown before you confirm.
-  </Step>
-</Steps>
-
-<Warning>
-Reducing seats below the number of currently active vehicles or users is not allowed. Archive vehicles or deactivate users first, then reduce the seat count.
-</Warning>
+Your archetype is set on your account; contact support@druma.io if you believe yours is set incorrectly.
 
 ---
 
-## Trial End, Grace Period, and Suspension
+## The Billing page
 
-### What happens when the trial ends
+Go to **Settings → Billing** to see your plan, cost breakdown, AI usage, and invoice history.
 
-On day 31 after signup, Druma sends an email asking you to add a payment method. If no payment method is added within **7 days**, your account enters a grace period.
+### Plan overview
 
-### Grace period (7 days)
+The top of the page shows your account status (**Active**, **Trial**, **Past Due**, or **Suspended**), your archetype, your billing interval, the number of currently active trucks, your next invoice date, and the amount projected for the current period. If you have an open, unpaid balance on a past invoice, a banner shows the outstanding amount and how many days it's overdue.
 
-During the 7-day grace period:
-- All existing data is preserved.
-- You can still log in and view data.
-- Dispatching new orders and issuing eCMR documents is **blocked**.
+### Monthly vs Annual billing
 
-You will see a banner at the top of every page during the grace period with a link to add your payment method.
+Asset-haulier companies can switch between **Monthly** and **Annual** billing from the interval toggle on the Billing page.
 
-### Suspension (read-only mode)
+- **Annual**: pay 10 months, get 12 — the company base fee and per-truck subscription are prepaid upfront for the year as a single e-Factura. Usage overage (AI pool overage) is still billed monthly in arrears.
+- **Monthly**: the subscription renews every month. If you add trucks mid-cycle, the extra cost is billed in arrears on the next invoice.
 
-After the grace period expires with no payment, the account is suspended:
-- Login still works — your data is not deleted.
-- The account is **read-only**: no edits, no new orders, no exports.
-- Drivers cannot receive new dispatches via the mobile app.
+Forwarder/broker companies are always billed monthly, pay-as-you-go — there's no annual option since there's no truck subscription to prepay.
 
-<Warning>
-Suspension does not mean your data is deleted. You have time to reactivate. However, do not let suspension persist — drivers will not be able to receive order updates.
-</Warning>
+### Cost breakdown
 
-### How to reactivate
+Below the plan overview, a line-item table shows exactly how your projected charge is built: the platform base fee, the truck count × band rate, and (for annual plans) the pay-10-get-12 framing. Prices shown are excl. VAT.
 
-Go to **Settings → Billing** and click **Reactivate Subscription**. Add a payment method if one is not already on file. Your account is restored immediately to full access. Outstanding eCMR charges from the trial period (if any) will appear on the first invoice.
+### Truck billing cap
 
----
+Asset-haulier companies (with billing edit permission) can set an optional **truck billing cap** — a maximum number of active trucks you want to be billed for, between **3 and 500**. If your active truck count reaches or exceeds the cap, the page shows a warning before you activate more trucks. Leave it blank for no cap.
 
-## Monthly vs Annual Billing
+### Usage & allowance (AI pool)
 
-Druma offers both **monthly** and **annual** billing. Annual billing gives you **2 months free** — you pay for 10 months and get 12 months of access.
+Every active-truck company gets a **pooled AI allowance**: `€5 base + €1.00 × active trucks`. All metered AI usage across your account — document extraction, eCMR sealing, Ask Druma, KPI insights — draws down this **single, shared pool**; the truck count only sizes the pool, it doesn't attribute usage to individual trucks. A progress bar shows how much of the current month's pool you've used.
 
-You can switch between monthly and annual billing from the **Settings → Billing** page using the Monthly / Annual toggle. Invoices are generated on the same date each cycle (your subscription anniversary date).
+Usage beyond the pool isn't blocked — Druma never cuts you off mid-month. It's simply billed as overage at **cost × 2.5** on your next invoice.
 
----
+### Per-feature AI caps
 
-## Activating a Paid Subscription
+Below the pool, an **AI features & usage** section lists each opt-in metered AI feature you've enabled, with its usage this month and an editable monthly maximum (in €) to cap runaway spend on that specific feature.
 
-When your trial ends, go to **Settings → Billing** and click **Subscribe now**. You are taken to the Stripe checkout page to enter your payment details and confirm your seat counts.
+### Invoices
 
-After completing checkout:
+An **Invoices** table lists your platform invoices by period, with VAT and total amounts, status (Preview, Issued, Paid, Overdue), due date, and a link to view the invoice where available. Invoices are issued as Romanian e-Factura in EUR, with the VAT line also shown in RON at the National Bank of Romania (BNR) exchange rate.
 
-1. Druma polls for subscription activation for up to 30 seconds and shows a blue **"Activating subscription…"** banner while it waits.
-2. Once active, the billing page updates to show your plan, seat counts, and next invoice date.
-3. If the page times out before activation is confirmed, a notification tells you to check back in a few minutes — your subscription is still processing on Stripe's side and will activate shortly.
+### Payment
+
+A **Payment** section shows the bank details to pay against (beneficiary, IBAN, payment reference) and your net payment terms. There is no card payment option — settle each e-Factura by bank transfer using the reference shown.
 
 ---
 
-## Suspension
+## Suspended accounts
 
-If a subscription lapses — payment failed, trial ended without subscribing, or a card was declined — the account enters a **suspended** state.
-
-**What changes when suspended:**
-- Access to planning, orders, invoicing, and fleet features is blocked
-- Drivers cannot receive new dispatches via the mobile app
-- Login still works — your data is not deleted
-
-**What still works:**
-- **Settings → Billing** remains accessible so you can update payment details and reactivate
-- The **Settings modal** stays open for the same reason
-
-**To reactivate:**
-- Click **Update payment method** on the suspended screen, or
-- Go to **Settings → Billing → Stripe Portal** to manage your payment method directly
-
-After a successful payment, access is restored automatically within a few minutes. No manual step is needed on your side once Stripe confirms the payment.
-
----
-
-## eCMR Billing
-
-eCMR is included in your Druma subscription at no extra cost. There is no per-document charge and no usage cap — sign as many eCMRs as your operation needs.
-
-You can still view your eCMR usage statistics for the current period under **Settings → Billing** in the **Usage** section.
+If your account is suspended, all app access is replaced with a single screen asking you to resolve the outstanding balance; a button opens **Settings → Billing** directly. Signing in still works — only the workspace itself is blocked. If you believe your account was suspended in error, contact support@druma.io.
 
 ---
 
 ## Need help with billing?
 
 <Card title="Contact Support" icon="headset" href="mailto:support@druma.io">
-  For billing questions, disputes, or VAT invoice requests, email support@druma.io. Include your company name and CIF. We respond within one business day.
+  For billing questions, disputes, or invoice requests, email support@druma.io. Include your company name and VAT number. We respond within one business day.
 </Card>

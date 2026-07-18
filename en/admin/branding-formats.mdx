@@ -1,152 +1,126 @@
 ---
 title: "Branding & Document Formats"
-description: "Customise your company logo, brand colours, and the numbering format for invoices, credit notes, and orders across all Druma-generated documents."
+description: "Customise your brand colours and the numbering pattern for invoices, orders, and highlighted rows across Druma."
 icon: "palette"
 ---
 
-The **Branding & Formats** settings control how your company appears on every document Druma generates: invoice PDFs, credit note PDFs, and email headers. They also define the numbering pattern used for invoices, credit notes, and order references.
+The **Branding & Formats** settings control how your company appears on generated documents and how invoice and order reference numbers are built.
 
 These settings are company-specific. If you manage multiple companies in Druma, each company has its own branding and format configuration.
 
 **Who can edit:** Admin and Company Admin roles only.
 
-
 ---
 
 ## Accessing the settings
 
-Go to **Settings → Branding & Formats**. The page has three tabs: **Branding**, **Invoice Format**, and **Order Format**.
+Go to **Settings → Branding & Formats**. The page has four tabs: **Branding**, **Invoice Format**, **Order Format**, and **Row formatting**.
 
 ---
 
 ## Branding tab
 
-The Branding tab controls the visual elements that appear on PDFs and email templates.
-
-### Logo
-
-Click **Upload Logo** to select an image file from your computer. Druma accepts PNG, JPG, and SVG formats. The logo appears in the top-left corner of invoice and credit note PDFs, and in the header of outbound invoice emails.
-
-For best results, use a logo with a transparent background (PNG or SVG) at a minimum width of 300 px.
+The Branding tab controls the two brand colours used on generated PDFs and email templates.
 
 ### Primary colour
 
-Click the **Primary colour** hex picker and enter or select your brand's primary colour. This colour is applied to the header bar and accent elements on invoice PDFs and email templates.
+Used for document borders, labels, and totals on invoice PDFs and email templates.
 
 ### Accent colour
 
-The **Accent colour** is used for secondary elements such as table header rows and highlight borders on PDFs.
+Used for table headers and body text on the same documents.
+
+Each colour has a hex-code field plus a colour-picker swatch, and a live preview shows both swatches side by side.
 
 ### Saving
 
-Click **Save Branding** to apply your changes. The new branding takes effect immediately for all documents generated after this point.
+Click **Save changes** to apply your colours, or **Reset to defaults** to restore the built-in colours.
 
 <Note>
-Branding changes apply to **new** documents only. Invoices that were already generated and sent are not retroactively updated — the PDF stored for each invoice reflects the branding at the time it was created.
+Your company **logo** is not configured on this page — it's uploaded under **Settings → Company**. Druma accepts PNG, JPEG, SVG, or WebP files up to 2 MB; there's no minimum-width requirement or transparent-background guidance enforced.
 </Note>
 
 ---
 
 ## Invoice Format tab
 
-The Invoice Format tab controls how Druma generates invoice and credit note reference numbers.
+The Invoice Format tab controls the invoice number pattern, the invoice header title, late-payment interest, payment instructions, terms & conditions, footer text, and which optional sections appear on the invoice PDF.
 
 ### Format tokens
 
-Number formats are built from a short template string that combines fixed text with dynamic tokens wrapped in curly braces. Druma substitutes each token with a live value when a document is created.
+Number patterns are built from a template string that combines fixed text with dynamic tokens wrapped in curly braces:
 
 | Token | What it inserts |
 |---|---|
-| `{PREFIX}` | A fixed text prefix you define (e.g. `DR`, `INV`, your company abbreviation) |
+| `{PREFIX}` | The prefix you define (e.g. `INV`, `ORD`, your own abbreviation) |
 | `{YYYY}` | Four-digit year (e.g. `2026`) |
 | `{YY}` | Two-digit year (e.g. `26`) |
 | `{MM}` | Two-digit month (e.g. `04`) |
-| `{NNN}` | Three-digit sequential number, zero-padded (e.g. `007`) |
-| `{NNNN}` | Four-digit sequential number, zero-padded (e.g. `0007`) |
+| `{DD}` | Two-digit day (e.g. `07`) |
+| `{YYMMDD}` | Combined two-digit year, month, and day (e.g. `260407`) |
+| `{SEQ3}` | Sequential number, zero-padded to 3 digits (e.g. `042`) |
+| `{SEQ4}` | Sequential number, zero-padded to 4 digits (e.g. `0042`) |
+| `{SEQ5}` | Sequential number, zero-padded to 5 digits |
+| `{SEQ6}` | Sequential number, zero-padded to 6 digits |
 
-The sequential counter (`{NNN}` / `{NNNN}`) resets to `001` / `0001` at the start of each calendar year. You can combine tokens freely with separator characters such as `-` or `/`.
+There is no `{NNN}`/`{NNNN}` token — use one of the `{SEQ3}`–`{SEQ6}` tokens for a zero-padded sequence. You can combine tokens freely with separator characters such as `-` or `/`.
+
+The sequence resets whenever a date token in the pattern (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}`, or `{YYYY}`) changes value — in practice, this means a pattern that includes `{YYMMDD}` resets **daily**, not once a year. A pattern using only `{YYYY}` resets once a year, as you'd expect.
 
 ### Invoice number format
 
-Enter your desired template in the **Invoice number format** field. A **live preview** panel on the right updates as you type, showing a sample number with today's date and the next available sequence number.
+Enter your desired template in the **Invoice number format** field. A live preview below the field updates as you type, showing a sample number using today's date and an example sequence value.
 
-**Default format:** `DR-{YYYY}-{NNN}` → produces `DR-2026-001`, `DR-2026-002`, …
+**Default:** invoice prefix `INV`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produces something like `INV-260407-042`.
 
 **Example customisations:**
 
 | Template | Sample output |
 |---|---|
-| `INV-{YYYY}-{NNNN}` | `INV-2026-0001` |
-| `{PREFIX}/{YY}/{NNN}` | `ABC/26/001` (where PREFIX = `ABC`) |
-| `{YYYY}{MM}-{NNN}` | `202604-001` |
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
 
-### Credit note number format
-
-Credit notes use a separate counter and a separate format template. The same tokens are available.
-
-**Default format:** `CN-{YYYY}-{NNN}` → produces `CN-2026-001`, `CN-2026-002`, …
-
-### Resetting to defaults
-
-Click **Reset to defaults** to restore both fields to `DR-{YYYY}-{NNN}` and `CN-{YYYY}-{NNN}`. This does not affect documents already issued — only future documents.
+<Note>
+Credit notes use their own numbering series (prefix `CN` by default) and their own counter, but do not currently have an editable pattern field on this page.
+</Note>
 
 ### Saving
 
-Click **Save Invoice Format**. The new format applies to the next invoice or credit note created after saving.
-
-<Warning>
-Changing the invoice number format mid-year will not renumber existing invoices. Druma continues the sequential counter from where it left off, using the new template for all subsequent documents. If you need a clean sequence restart, contact Druma support.
-</Warning>
+Click **Save changes**. The new format applies to the next invoice created after saving — existing invoices keep the reference number they were issued with.
 
 ---
 
 ## Order Format tab
 
-The Order Format tab defines the numbering pattern for order reference numbers — the identifier displayed on the planning board, order detail panel, and any driver or client communications.
+The Order Format tab defines the numbering pattern for order reference numbers — the identifier shown on the planning board, order detail panel, and any driver or client communications.
 
 ### Order number format
 
-The same token system applies as for invoices. Enter your template in the **Order number format** field and watch the live preview update on the right.
+The same token system applies as for invoices. Enter a **Prefix** and a **Number pattern**, and watch the live preview update below the fields.
 
-**Default format:** `DR-{YYYY}-{NNN}` → produces `DR-2026-001`, `DR-2026-002`, …
+**Default:** order prefix `ORD`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produces something like `ORD-260407-042`.
 
-**Example:** a haulage company operating in Belgium might use `BE-{YYYY}-{NNNN}` to produce references like `BE-2026-0042`.
+**Example:** a haulier operating in Belgium might use prefix `BE` with pattern `{PREFIX}-{YYYY}-{SEQ4}` to produce references like `BE-2026-0042`.
 
 ### Saving
 
-Click **Save Order Format**. The new format applies to all orders created after saving. Existing orders keep their original reference numbers.
+Click **Save changes**. The new format applies to all orders created after saving. Existing orders keep their original reference numbers.
 
 ---
 
-## Practical example: customising invoice numbering
+## Row formatting tab
 
-Suppose your company is **Acme Freight** and your accountant wants invoices numbered `AF-2026-001`, `AF-2026-002`, and so on, with credit notes as `AF-CN-2026-001`.
+The Row formatting tab lets you highlight table rows across Druma based on simple conditions — for example, colour a row red when its margin drops below a threshold, or when it's overdue.
 
-<Steps>
-  <Step title="Open Invoice Format">
-    Go to **Settings → Branding & Formats** and click the **Invoice Format** tab.
-  </Step>
-  <Step title="Set the invoice format">
-    In the **Invoice number format** field, enter: `AF-{YYYY}-{NNN}`
-
-    The live preview on the right will show a sample number like `AF-2026-001`.
-  </Step>
-  <Step title="Set the credit note format">
-    In the **Credit note number format** field, enter: `AF-CN-{YYYY}-{NNN}`
-
-    The preview will show `AF-CN-2026-001`.
-  </Step>
-  <Step title="Save">
-    Click **Save Invoice Format**. From the next invoice onward, Druma will use the new format.
-  </Step>
-</Steps>
+Each rule has a name, a field to evaluate (margin %, is overdue, status, days since created), a condition (less than, at most, greater than, at least, equals, does not equal), a value to compare against, and a highlight colour. Click **Add rule** to create one, and **Save changes** to apply your rules.
 
 ---
 
 ## Related pages
 
 <Card title="Integration Setup" icon="plug" href="/en/admin/integration-setup">
-  Connect your eCMR provider (Druma native eCMR, or TransFollow as an optional fallback), SmartBill, fuel card providers, and accounting software.
+  Connect your eCMR provider (Druma's native, in-house eCMR — TransFollow is kept alive only for a small number of companies with a pre-existing legacy configuration), fuel card providers, and accounting software.
 </Card>
 
 <Card title="Peppol E-Invoicing (Belgium)" icon="file-check-2" href="/en/integrations/peppol-invoicing">

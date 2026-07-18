@@ -1,90 +1,64 @@
 ---
 title: "Nightly Data Quality Scan"
-description: "Every night Druma checks your data for nine types of common problems and emails a summary so you can fix issues before they cause delays or lost revenue."
+description: "Every night Druma checks your data for nine types of common problems so you can fix issues before they cause delays or lost revenue."
 icon: "magnifying-glass-chart"
 ---
 
-Bad data is expensive. A client missing a VAT number blocks your e-Factura submission. A delivered order sitting uninvoiced for two weeks is cash you haven't collected. An expired driver certificate discovered at a roadside check means a grounded truck. The nightly data quality scan finds these problems before they cost you.
+Bad data is expensive. A client missing a VAT number blocks your e-Factura submission. A delivered order sitting uninvoiced for a week is cash you haven't collected. An overdue invoice with no follow-up is a client relationship going stale. The nightly data quality scan finds these problems before they cost you.
 
-Every night, Druma runs nine automated checks across your entire dataset and sends a summary email to all Company Admins. The email lists the number of issues found in each category and links directly to the Reports page to review them.
+Every night, Druma runs nine automated checks across your entire dataset and writes the results to the **Data Quality** page under **Tools**.
 
 ## The Nine Checks
 
-### 1. Missing VAT Numbers
-Clients without a valid VAT number recorded in Druma. Romanian e-Factura submission requires a valid CUI/CIF for every client. If a client is missing one, invoices cannot be submitted to ANAF automatically.
+### 1. Missing VAT
+Clients used in a recent, non-draft order who have no VAT number recorded. Romanian e-Factura submission requires a valid VAT number for every client — if one is missing, invoices for that client can't be submitted to ANAF automatically.
 
-### 2. Orders Without Invoices
-Delivered orders that have not been invoiced and are more than 7 days old. These are revenue you have earned but not yet billed. The 7-day threshold is configurable.
+### 2. Invoice not submitted to ANAF
+Sent invoices with no e-Factura submission status recorded.
 
-### 3. Expired Documents
-Vehicles or drivers with certificates, licences, or permits that have already expired or will expire within the next 14 days. Covers: driver's licence, CPC card, ADR certificate, vehicle ITP, RCA insurance, CMR insurance, and vehicle licence (licenta de transport).
+### 3. Delivered, uninvoiced for 7+ days
+Orders marked delivered more than 7 days ago that still have no linked invoice. This is revenue you've earned but not yet billed.
 
-### 4. Duplicate Orders
-Orders detected as potential duplicates — same client, same pickup date, and same route combination appearing more than once. Catches accidental double-entries from email ingestion or manual creation.
+### 4. Stale draft order
+Draft orders that have sat untouched for more than 7 days — typically forgotten email-ingested orders a planner never confirmed or deleted.
 
-### 5. Incomplete Addresses
-Orders where the pickup or delivery address is missing a proper street address — only a city or country was entered. Incomplete addresses cause routing problems and make it harder for drivers to navigate.
+### 5. Client has no email
+Clients with no email address on file.
 
-### 6. Missing Driver Assignments
-Confirmed orders (status: Confirmed or Dispatched) that still have no driver assigned. An order confirmed without a driver is at risk of being missed on departure day.
+### 6. Confirmed order, no agreed price
+Orders in **Confirmed** or **Assigned** status where the agreed price is still missing or zero.
 
-### 7. Stale Draft Orders
-Draft orders older than 14 days with no activity. These are typically orders from email ingestion that a planner opened but never confirmed or deleted. They clutter your inbox and may represent forgotten loads.
+### 7. Invoice overdue 60+ days
+Unpaid invoices more than 60 days past their due date.
 
-### 8. Unmatched Payments
-Bank reconciliation items (imported bank transactions) that have been sitting unlinked to an invoice for more than 7 days. Unmatched payments distort your cash position reporting.
+### 8. Completed order, no invoice after 14 days
+Delivered orders still uninvoiced after 14 days — a longer-horizon version of check 3, flagged as informational rather than critical.
 
-### 9. Anomalous Pricing
-Orders priced significantly below your configured rate cards. Druma compares the order rate against your lane rate card and flags orders below a configurable threshold (default: 20% below rate card). Catches pricing errors or loads accepted without checking the rate.
+### 9. Dormant client
+Clients with no orders in the last 90 days.
 
 ## Viewing Results
 
-Go to **Reports → Data Quality**.
-
+Go to **Tools → Data Quality**.
 
 The page shows:
 
-- **Current issues** — all open issues right now, grouped by category
-- **History** — how many issues existed each day over the past 30 days (trend chart)
-- **Issue detail** — click any category to see a list of the specific records affected, each with a direct link to fix them
+- A KPI bar with the total open issue count, plus counts by severity (Critical, Warning, Info)
+- A stacked bar chart of issues by severity over the last 30 days
+- A filterable table (Open / Resolved / Ignored / All) listing every issue with its entity type, reference, description, severity, suggested action, status, and creation date
+- **Resolve** and **Ignore** actions on each open issue
 
 <Note>
-The data quality scan runs at 02:00 UTC each night. Results shown in the report reflect the state of your data as of that time. Issues you fix during the day will clear on the next morning's scan.
+The data quality scan runs at **03:00 UTC** each night. Results shown on the page reflect the state of your data as of that time. Issues you fix during the day will clear on the next night's scan (once you also mark the issue **Resolved**, or it stops matching the underlying query).
 </Note>
 
 ## Fixing Issues
 
-Each issue in the report links directly to the problem record. For example:
+The Data Quality page tells you what's wrong and suggests an action, but it does not deep-link to the underlying record — use the reference shown (client name, order number, invoice number) to find it yourself in Clients, Operations, or Finance, fix the problem, then come back and click **Resolve**.
 
-- **Missing VAT** → links to the client record's Details tab where you can enter the CUI
-- **Uninvoiced order** → links to the order with a shortcut to create the invoice
-- **Expired document** → links to the vehicle or driver record's Documents tab
+There is no bulk-fix tool — each issue is resolved individually. This is by design: data corrections should be deliberate.
 
-There is no bulk-fix tool — each issue must be resolved in its own record. This is by design: data corrections should be deliberate.
-
-## Configuring the Scan
-
-**Settings → Automation → Data Quality**
-
-Options per check:
-
-| Check | Configurable Options |
-|---|---|
-| Orders without invoices | Days threshold (default 7) |
-| Expired documents | Warning lead time in days (default 14) |
-| Stale draft orders | Days threshold (default 14) |
-| Unmatched payments | Days threshold (default 7) |
-| Anomalous pricing | Percentage below rate card (default 20%) |
-| Duplicate orders | Toggle on/off |
-| Missing VAT | Toggle on/off |
-| Incomplete addresses | Toggle on/off |
-| Missing driver assignments | Toggle on/off |
-
-You can also add additional email recipients for the nightly summary — useful if a fleet manager or accountant should receive it alongside the Company Admin.
-
-<Warning>
-Disabling a check does not fix the underlying problem — it just stops Druma from reporting it. Only disable checks that genuinely do not apply to your operation (for example, if you never use bank reconciliation, disabling the unmatched payments check makes sense).
-</Warning>
+Clicking **Ignore** on an issue removes it from the **Open** filter without marking it resolved — use it for issues you've decided not to act on. Ignored and resolved issues are excluded from the next night's re-scan of open issues (each scan replaces the current set of open, non-ignored issues).
 
 <CardGroup cols={1}>
   <Card title="Reports Overview" icon="chart-bar" href="/en/reports/reports-overview">

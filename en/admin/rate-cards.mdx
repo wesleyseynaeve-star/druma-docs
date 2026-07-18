@@ -1,104 +1,85 @@
 ---
 title: "Rate cards"
-description: "How to create and manage rate cards in Druma to save standard lane prices and speed up order creation."
+description: "How to define truck cost profiles in Druma so orders show an accurate estimated cost and margin."
 icon: "tags"
 ---
 
+<Note>
+This page covers **Settings → Rate Cards** — truck **cost profiles** used to estimate an order's cost and margin. If you're looking for per-lane **selling** prices (origin/destination-based quote suggestions, e.g. "Romania → Germany, Curtainsider — €1,450"), that's a separate feature called **Lane Pricing**, under **Pricing → Lane Pricing** in the main app — it isn't covered on this page.
+</Note>
+
 ## What is a rate card?
 
-A rate card is a saved pricing template for a route you run regularly. If you move cargo from Romania to Germany every week, you do not want to work out the price from scratch every time you create an order. Instead, you save a rate card for that lane — and Druma suggests the price automatically when you create a new order on that route.
+A rate card in **Settings → Rate Cards** is a cost profile for a category of truck operation — either your **own fleet** or a **subcontracted** carrier. It captures what it actually costs you to run a truck (fixed cost, driver wage, fuel, ADR/oversize surcharges, tolls) so Druma can estimate the cost and margin of an order alongside the price you charge the client.
 
-Rate cards are a starting point, not a rule. Your planners can always override the suggested price on individual orders.
-
-## How rate cards work in practice
-
-When a planner creates a new order, Druma checks whether any active rate cards match the origin country, destination country, and trailer type selected. If there is a match, Druma shows a prompt:
-
-*"A rate card matches this lane: Romania → Germany, Curtainsider — €1,450 flat rate. Apply?"*
-
-The planner can click **Apply** to use that price, or ignore the suggestion and type in a different price manually.
+**Who can edit:** Admin, Company Admin, and Planner roles.
 
 ## Creating a rate card
 
-Go to **Settings → Rate Cards** and click **Add Rate Card**.
-
-
-Fill in the following fields:
+Go to **Settings → Rate Cards** and click **New Card**.
 
 ### Name
 
-Give the rate card a clear, descriptive name so planners can recognise it at a glance.
+Give the card a clear name, e.g. "Own fleet — standard" or "Subcontractor — RO/BG lanes".
 
-*Examples: "RO→DE Tautliner", "Romania to Netherlands Frigo", "BG to ES Flatbed"*
+### Type
 
-### Origin country and destination country
+Choose **Own Fleet** or **Subcontracted** — this determines which category of order the cost profile applies to.
 
-Select the country where cargo is loaded and the country where it is delivered. Rate cards match at the country level, so one rate card covers all cities within those countries.
+### Rate / km (€)
 
-<Note>
-If you need different prices for different regions within the same country — for example, a different rate for southern Germany versus northern Germany — create two separate rate cards with more specific names. The planner will see both suggestions and can choose the right one.
-</Note>
+An optional flat per-kilometre cost rate.
 
-### Trailer type
+### Cost basis
 
-Select the type of trailer used on this lane. Options include:
+Choose how the fixed operating cost is calculated:
+- **Daily rate** — enter a **Daily fixed cost (€)** and a **Driver wage / day (€)**.
+- **Weekly rent** — enter a **Weekly fixed cost (€)** and a **Driver wage / week (€)**.
 
-- Curtainsider (tautliner)
-- Refrigerated (frigo / reefer)
-- Flatbed
-- Tanker
-- Box truck
-- Mega trailer
-- Low loader
-- Other
+### Waiting time
 
-Druma only suggests a rate card if the trailer type on the order matches the rate card. This prevents a frigo rate being suggested for a flatbed order.
+- **Free waiting hours** — how many hours of waiting time are included before a charge applies.
+- **Waiting rate €/h** — the hourly cost once free waiting hours are exceeded.
 
-### Pricing type
+### Surcharges
 
-Choose how the price is calculated:
+- **ADR fee (€)** — additional cost applied to dangerous-goods shipments.
+- **Oversize fee (€)** — additional cost applied to oversized loads.
 
-- **Flat base price** — a fixed amount for the entire lane, regardless of exact distance. Most common for regular lanes where you have a negotiated rate.
-- **Per kilometre** — a rate multiplied by the distance Druma calculates for the route. Useful for variable routes.
+### Fuel
 
-### Price and currency
+- **Fuel base (€/L)** — the fuel price used in cost calculations.
+- **Fuel consumption (L/100km)** — the truck's expected consumption, used together with the fuel base price and route distance to estimate fuel cost.
 
-Enter the amount and select the currency (EUR, RON, USD, GBP, etc.).
+### Margin targets
 
-### Fuel surcharge %
+- **Target margin %** — the margin you aim for on orders using this cost profile.
+- **Min margin %** — the minimum acceptable margin before Druma should flag the order.
 
-If you add a fuel surcharge on top of your base rate, enter the percentage here. Druma will add this percentage to the base price when calculating the suggested total.
+### Toll policy
 
-*Example: Base price €1,200, fuel surcharge 8% → suggested price €1,296*
+Choose the default toll handling for this cost profile:
+- **Included in rate** — tolls are absorbed into your rate, not billed separately.
+- **Pass-through to client** — tolls are billed to the client as incurred.
+- **Separate line item** — tolls appear as their own line on the order/invoice.
 
-If you do not use fuel surcharges, leave this field at 0.
+You can override this default for specific countries or specific toll operators:
 
-### Notes
+- **Per-country toll policy overrides** — pick a country and a policy (Billed to client / Included in rate / Not charged). Useful when, say, French tolls are pass-through but German ones are included.
+- **Per-operator toll policy overrides** — enter a toll operator name exactly as it appears on receipts (e.g. `ASFINAG`, `HU-GO`, `Viapass`) and a policy. An operator-level override takes priority over the country-level policy.
 
-Add any internal notes about this rate card — for example, "Agreed with client Schmidt GmbH until Dec 2026" or "Requires tail-lift". These notes are visible to planners when the rate card is suggested, but they do not appear on invoices or client-facing documents.
+### Saving
 
-## Editing a rate card
+Click **Save changes** on an existing card, or **Create** when adding a new one.
 
-Go to **Settings → Rate Cards**, find the rate card in the list, and click the **edit icon** (pencil). Change any fields you need and click **Save**. The updated price applies to new orders from that moment — it does not change any previously created orders.
+## Editing or deleting a rate card
 
-## Disabling a rate card
+Expand a card in the list to edit any of its fields inline. Click the **X** next to a card to delete it — you'll be asked to confirm, since this can't be undone.
 
-If a rate is no longer valid — for example, fuel costs have changed and you need to renegotiate — you can disable the rate card without deleting it.
+Rate card cost profiles feed into the order cost/margin estimate shown when creating or pricing an order — that's a separate calculation surface from this settings page, not covered here.
 
-Go to **Settings → Rate Cards**, find the rate card, and toggle the **Active** switch to off. Disabled rate cards are no longer suggested during order creation but remain in your list for reference. You can re-enable them at any time.
-
-<Note>
-Disabling a rate card is better than deleting it, especially if you might reactivate that lane in the future or want to see the historical rate you were using.
-</Note>
-
-## Rate cards are suggestions, not rules
-
-Even with rate cards configured, planners can always enter a different price on any order. The rate card is there to save time and ensure consistency — not to lock prices. If a client negotiates a special rate for a one-off shipment, the planner simply types in that rate instead.
-
-<Card title="Creating orders" icon="file-lines" href="/en/planner/creating-orders">
-  See how rate card suggestions appear when you create a new transport order.
-</Card>
+## Related pages
 
 <Card title="Company setup" icon="building" href="/en/admin/company-setup">
-  Configure your default currency and payment terms, which work alongside rate cards.
+  Configure your company profile, which works alongside rate cards when Druma calculates order costs.
 </Card>

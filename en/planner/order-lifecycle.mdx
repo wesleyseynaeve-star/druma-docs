@@ -1,6 +1,6 @@
 ---
 title: "Order Lifecycle"
-description: "How an order moves from Draft to Invoiced in Druma — every status, who triggers it, and what happens at each step."
+description: "How an order moves from Draft to Delivered in Druma — every status, who triggers it, and what happens at each step."
 icon: "circle-dot"
 ---
 
@@ -14,10 +14,34 @@ If your company uses task templates, an order can also carry a **task checklist*
 
 Here is the full flow:
 
-**Draft → Confirmed → In Transit → Arrived at Pickup → Loading → En Route to Delivery → Arrived at Delivery → Unloading → Delivered → Invoiced**
+**Draft → Pending → Assigned → Departed → At Pickup → Loading → In Transit → At Delivery → Offloading → Delivered**
 
-There is also a separate **Cancelled** status covered at the end.
+There are also two exception statuses — **Cancelled** and **Wasted Journey** — covered near the end.
 
+---
+
+## Status colours at a glance
+
+Every status resolves to a single colour (tone) that's shared identically between the planning board and the driver app — the same status is never a different colour on two screens.
+
+| Status | Colour |
+|---|---|
+| Draft | Grey (slate) |
+| Pending | Grey (slate) |
+| Assigned | Blue |
+| Departed | Indigo |
+| At Pickup | Amber |
+| Loading | Amber |
+| In Transit | Emerald green |
+| At Delivery | Sky blue |
+| Offloading | Sky blue |
+| Delivered | Green |
+| Cancelled | Red |
+| Wasted Journey | Red |
+
+<Note>
+**In Transit** is the truck's post-loading leg to the delivery address — it is the *only* status that renders in green before Delivered. **Departed** (the leg to the pickup address) renders in indigo, a visually distinct colour, so you can tell at a glance whether a truck is heading to load or already loaded and heading to deliver.
+</Note>
 
 ---
 
@@ -31,7 +55,7 @@ The order exists in the system but is not yet active. The driver does not see it
 
 **Actions available from Draft:**
 - Edit any field
-- Confirm the order (moves to Confirmed)
+- Confirm the order (moves to Pending)
 - Delete the order
 - Cancel the order
 
@@ -39,44 +63,59 @@ Use Draft when a client has made a tentative booking but hasn't confirmed yet, o
 
 ---
 
-## Confirmed
+## Pending
 
 **Triggered by:** Planner clicks **Confirm Order** (from the order page or planning board).
 
 **Who can trigger it:** Planner only.
 
-The order is now live. The assigned driver receives a push notification in their app showing the job details — pickup address, delivery address, date, and the driver notes you added.
-
-The order appears blue on the planning board.
+The order is now live and ready to be matched to a truck and driver — it just hasn't been assigned yet. It still appears **grey** on the planning board, the same tone as Draft, since no truck is committed to it yet.
 
 **Notifications sent:**
-- Push notification to the assigned driver (and second driver, if double-manned)
 - Optional: automatic email confirmation to the client (if enabled in your account settings)
 
-**Actions available from Confirmed:**
-- Edit most fields (changes trigger a new notification to the driver)
+**Actions available from Pending:**
+- Edit any field
+- Assign a truck and driver (moves to Assigned)
 - Cancel the order
-- Move to In Transit (driver action, or planner override)
 
 ---
 
-## In Transit
+## Assigned
 
-**Triggered by:** Driver taps **En Route** in their app when they depart for the pickup location.
+**Triggered by:** Planner assigns a truck and driver to the order — from the New Order form, the Planning Board, or the order detail panel.
+
+**Who can trigger it:** Planner only.
+
+The order now has a truck and driver attached. The assigned driver receives a push notification in their app showing the job details — pickup address, delivery address, date, and the driver notes you added.
+
+The order appears **blue** on the planning board.
+
+**Actions available from Assigned:**
+- Edit most fields (changes trigger a new notification to the driver)
+- Reassign the truck or driver
+- Cancel the order
+- Move to Departed (driver action, or planner override)
+
+---
+
+## Departed
+
+**Triggered by:** Driver taps **Departed** in their app when they leave for the pickup location.
 
 **Who can trigger it:** Driver (primary action) or Planner (manual override).
 
-This status means the driver is on the move toward the pickup point. The order turns green on the planning board.
+This status means the driver is on the move toward the pickup point. The order turns **indigo** on the planning board.
 
 <Note>
-If a driver forgets to tap En Route, you can set the status manually from the order page. Open the order, click **Override Status**, and select In Transit. Always note the reason in the comment box so you have a record.
+If a driver forgets to tap Departed, you can set the status manually from the order page. Open the order, click **Override Status**, and select Departed. Always note the reason in the comment box so you have a record.
 </Note>
 
 ---
 
-## Arrived at Pickup
+## At Pickup
 
-**Triggered by:** Driver taps **Arrived at Pickup** when they reach the loading address.
+**Triggered by:** Driver taps **At Pickup** when they reach the loading address.
 
 **Who can trigger it:** Driver or Planner.
 
@@ -89,7 +128,7 @@ The driver has arrived at the loading site and is waiting to be processed. This 
 
 ## Loading
 
-**Triggered by:** Driver taps **Loading Started** when goods are being loaded onto the truck.
+**Triggered by:** Driver taps **Loading** when goods are being loaded onto the truck.
 
 **Who can trigger it:** Driver or Planner.
 
@@ -97,13 +136,13 @@ The waiting time clock stops when loading begins. Any waiting time recorded is s
 
 ---
 
-## En Route to Delivery
+## In Transit
 
-**Triggered by:** Driver taps **Departed from Pickup** after loading is complete and the CMR is signed.
+**Triggered by:** Driver taps **In Transit** once loading is complete (and the CMR is signed, if applicable).
 
 **Who can trigger it:** Driver or Planner.
 
-The truck is now heading to the delivery address. The order shows an estimated arrival time on the planning board based on the HERE route calculation.
+The truck is now heading to the delivery address. The order turns **emerald green** on the planning board — this is the only in-progress status that renders green, so it's easy to spot a truck that's loaded and moving. The order shows an estimated arrival time based on the PTV route calculation.
 
 <Note>
 This is a good point to send a proactive delay notification to the consignee if the driver is running behind schedule. Use the **Send ETA** button on the order page to send an SMS or email with the current estimated arrival.
@@ -111,19 +150,19 @@ This is a good point to send a proactive delay notification to the consignee if 
 
 ---
 
-## Arrived at Delivery
+## At Delivery
 
-**Triggered by:** Driver taps **Arrived at Delivery** when they reach the delivery address.
+**Triggered by:** Driver taps **At Delivery** when they reach the delivery address.
 
 **Who can trigger it:** Driver or Planner.
 
-The waiting time clock starts again at the delivery point. Any unloading delays are recorded from this moment.
+The waiting time clock starts again at the delivery point. Any unloading delays are recorded from this moment. The order appears in a sky-blue tone.
 
 ---
 
-## Unloading
+## Offloading
 
-**Triggered by:** Driver taps **Unloading Started** when goods are being removed from the truck.
+**Triggered by:** Driver taps **Offloading** when goods are being removed from the truck.
 
 **Who can trigger it:** Driver or Planner.
 
@@ -137,25 +176,15 @@ Waiting time at delivery stops. The driver can now prepare the signed delivery d
 
 **Who can trigger it:** Driver (primary action) or Planner.
 
-The transport is complete. The order turns dark green on the planning board and moves to the **Completed** tab in the order list.
+The transport is complete. The order turns green on the planning board and moves to the **Completed** tab in the order list.
 
 **Notifications sent:**
 - Optional: delivery confirmation email to the client with timestamp and any uploaded documents.
 
 **Actions available from Delivered:**
-- Generate invoice (moves to Invoiced)
+- Generate invoice for the order (the order itself stays in Delivered status — generating an invoice does not change it; the invoice is created as its own linked record)
 - Upload or view delivery documents (CMR photo, POD)
 - Add a dispute or damage note
-
----
-
-## Invoiced
-
-**Triggered by:** Planner generates an invoice for the order (from the order page or the Invoicing module).
-
-**Who can trigger it:** Planner only.
-
-The order is fully closed. It is read-only and linked to the invoice record. No further status changes are possible.
 
 ---
 
@@ -166,7 +195,7 @@ The order is fully closed. It is read-only and linked to the invoice record. No 
 **Who can trigger it:** Planner only.
 
 <Warning>
-You can cancel an order that is in **Draft** or **Confirmed** status without any special steps. However, you **cannot** cancel an order that is In Transit or later without going through a manual process. Contact your account administrator if you need to cancel an active order — this requires logging the reason and may affect driver payments.
+You can cancel an order that is in **Draft** or **Pending** status without any special steps. However, you **cannot** cancel an order that is Departed or later without going through a manual process. Contact your account administrator if you need to cancel an active order — this requires logging the reason and may affect driver payments.
 </Warning>
 
 Cancelled orders are kept in the system for audit purposes. They are visible in the order list under the **Cancelled** filter.
@@ -186,7 +215,7 @@ You can declare a wasted journey from any of these statuses: **Departed, At Pick
 The planner must provide a reason code, the driver's current location, dead kilometres driven, and optionally flag the order for client charging.
 
 <Warning>
-Declaring a wasted journey **cannot be undone**. The order moves permanently to Wasted Journey status. A payroll record for the driver and an optional client charge record are created automatically.
+Declaring a wasted journey **cannot be undone**. The order moves permanently to Wasted Journey status, and the reason, driver location, dead kilometres, and (if toggled) a client charge amount are recorded directly on the order for later invoicing — no separate payroll or charge record is generated automatically.
 </Warning>
 
 See [Wasted Journey](/en/planner/wasted-journey) for the full guide.
@@ -222,21 +251,22 @@ Drivers sometimes forget to tap status updates — it happens. As a planner, you
 | Status | Automatic | Manual (driver) | Manual (planner) |
 |---|---|---|---|
 | Draft | — | — | Yes |
-| Confirmed | — | — | Yes |
-| In Transit | — | Yes | Yes (override) |
-| Arrived at Pickup | — | Yes | Yes (override) |
+| Pending | — | — | Yes |
+| Assigned | — | — | Yes |
+| Departed | — | Yes | Yes (override) |
+| At Pickup | — | Yes | Yes (override) |
 | Loading | — | Yes | Yes (override) |
-| En Route to Delivery | — | Yes | Yes (override) |
-| Arrived at Delivery | — | Yes | Yes (override) |
-| Unloading | — | Yes | Yes (override) |
+| In Transit | — | Yes | Yes (override) |
+| At Delivery | — | Yes | Yes (override) |
+| Offloading | — | Yes | Yes (override) |
 | Delivered | — | Yes | Yes (override) |
-| Invoiced | — | — | Yes |
+| Cancelled | — | — | Yes |
 | Wasted Journey | — | — | Yes (from active statuses) |
 
 ---
 
-<Card title="Today View" icon="sun" href="/en/planner/today-view">
-  Monitor all active orders for today, see live driver positions, and handle alerts from your daily dashboard.
+<Card title="Home Dashboard" icon="gauge" href="/en/planner/today-view">
+  Monitor all active orders, see live driver positions, and handle alerts from your live operational dashboard.
 </Card>
 
 <Card title="Order Tasks & Workflow Templates" icon="list-check" href="/en/planner/order-tasks">

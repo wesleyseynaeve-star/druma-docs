@@ -8,9 +8,7 @@ Instead of manually re-typing load orders that arrive by email, Druma can read t
 
 ## Your Druma Inbox Address
 
-Every company gets a unique email address in the format `yourcompany@in.druma.io`. Find yours at:
-
-**Settings → Automation → Email Ingestion → Inbox Address**
+Every company gets a unique inbox email address. Find yours from the **Orders** page — click the **Order inbox** button in the toolbar to reveal it (with a copy button). It isn't configured from a Settings page.
 
 Share this address with the clients and brokers you want to send orders from. You can also set it as a forwarding destination from your existing logistics inbox if you prefer to keep one primary address externally.
 
@@ -28,18 +26,21 @@ When an email arrives, Druma reads both the email body and any attachments. It a
 
 Supported attachment formats:
 
-- **PDF** — rate confirmations, CMR copies, load orders
-- **Excel / CSV** — load lists with multiple stops
-- **Plain email body** — unstructured text emails from brokers
+- **PDF** — rate confirmations, CMR copies, load orders (text-extracted, with a vision fallback for scanned/image-based PDFs)
+- **DOCX** (Word) — rate confirmations sent as Word documents
+- **Plain text (.txt)** and **plain email body** — unstructured text emails from brokers
+- **Images** (JPEG, PNG, WebP, HEIC/HEIF) — a photo of a printed order or rate confirmation is sent to the AI directly
+
+There is currently no Excel/CSV parsing — a spreadsheet attachment is not read by the extraction pipeline.
 
 
 ## Reviewing Draft Orders
 
-Extracted orders land in **Orders → Inbox** tab, not directly in your active order list. This is intentional — you must review each draft before it enters your system.
+Extracted orders land in your **Orders** list with **Draft** status, not directly as active orders. This is intentional — you must review each draft before it enters your system. Emails that couldn't be auto-extracted (low confidence, an unrecognised sender, or a parsing failure) don't create a draft at all — they wait in a collapsible **"N emails pending extraction"** banner at the top of the Orders page instead.
 
 <Steps>
-  <Step title="Open Orders → Inbox">
-    You will see all newly extracted orders with a "Draft" badge. The AI confidence score is shown for each field — lower confidence fields are highlighted in yellow.
+  <Step title="Open the Orders page">
+    Draft orders show up in your normal order list with a "Draft" badge and an AI confidence score. Emails still awaiting extraction appear separately in the pending-extraction banner, where you can click **Extract** to try again or **Discard** to drop them.
   </Step>
   <Step title="Check every field">
     Click the draft to open it. Verify the pickup and delivery addresses on the map, confirm the dates make sense, and check the cargo details. Correct anything the AI misread or missed.
@@ -58,14 +59,10 @@ AI extraction is not 100% accurate. Addresses written in unusual formats, scanne
 
 ## Whitelisting Senders
 
-To prevent random emails from creating junk draft orders, Druma only processes emails from approved senders.
-
-**Settings → Automation → Email Ingestion → Allowed Senders**
-
-Add your clients' and brokers' email domains (e.g. `@acme-logistics.de`, `@broker-example.com`). Emails from unlisted domains are quarantined and shown separately in the Blocked tab — you can review them and whitelist the sender from there if needed.
+Druma can restrict which senders are allowed to create draft orders, but there is currently **no in-app page** to manage that allow-list yourself. If your company has no allow-list entries configured, Druma processes email from **any** sender that reaches your inbox address. If you want inbound orders restricted to specific client/broker domains, contact support@druma.io to have entries added.
 
 <Note>
-Add your own company domain to the whitelist if you forward emails from your main inbox to the Druma address.
+When an allow-list is configured and an email arrives from a sender that isn't on it, that email is queued in the pending-extraction banner (not processed automatically) and your planners are notified, rather than being silently discarded.
 </Note>
 
 ## Tips for Better Extraction
@@ -76,9 +73,9 @@ Add your own company domain to the whitelist if you forward emails from your mai
 
 ## Common Questions
 
-**What if an email has multiple loads?** Druma creates one draft order per detected load. A single email with a load list of 10 shipments will generate 10 drafts.
+**What if an email has multiple loads?** If an email carries two or more PDF/DOCX order attachments, Druma extracts each one independently and creates a separate draft per attachment that's confirmed to be a real transport order (supporting documents like insurance certificates are attached to the first draft instead of spawning their own). This only applies to **multiple document attachments** — a single spreadsheet listing several loads is not split into multiple drafts, since spreadsheet parsing isn't supported.
 
-**Can I manually trigger re-extraction?** Yes — open the draft, click the three-dot menu, and select Re-extract. Useful if you updated the email format with your broker.
+**Can I manually trigger re-extraction?** Only for an email still waiting in the pending-extraction banner — click **Extract** next to it. There's no re-extraction action on a draft that has already been created.
 
 **What happens to the original email?** It is stored and linked to the draft order. You can view it at any time from the order detail page.
 

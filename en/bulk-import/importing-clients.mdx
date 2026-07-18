@@ -1,58 +1,53 @@
 ---
 title: "Importing Clients"
-description: "Bulk upload your client companies into Druma using a CSV template."
+description: "Bulk upload your client companies into Druma using a spreadsheet template."
 icon: "file-import"
 ---
 
 If you have an existing client list in Excel or another system, bulk import saves you from entering each client manually.
 
-
 ## Download the template
 
 <Steps>
-  <Step title="Open the import page">
-    Go to **Clients → Import** and click **Download Template**.
+  <Step title="Open Bulk Import">
+    Go to **Clients** and click **Bulk Import** in the toolbar — this opens the import modal directly on the Clients list page; there's no separate import page.
   </Step>
-  <Step title="Fill in the CSV">
-    One client per row:
+  <Step title="Download the template and fill it in">
+    Click **Download Template** — Druma generates an `.xlsx` file. Fill in one client per row:
 
     | Column | Required | Example |
     |--------|----------|---------|
-    | company_name | Yes | Acme Logistics SRL |
-    | vat_number | Yes | RO12345678 |
-    | country | Yes | RO |
-    | address | Yes | Str. Victoriei 1, București |
-    | contact_name | No | Ion Popescu |
-    | contact_email | No | ion@acme.ro |
-    | contact_phone | No | +40721000000 |
-    | payment_terms_days | No | 30 |
-    | currency | No | EUR |
-    | notes | No | Prefers email communication |
+    | Company name | Yes | Acme Logistics SRL |
+    | VAT number | No | RO12345678 |
+    | Legal name | No | Acme Logistics S.R.L. |
+    | Country | No | Romania |
+    | City | No | Bucharest |
+    | Email | No | billing@acme.ro |
+    | Phone | No | +40 21 000 0000 |
+    | Payment terms (days) | No | 30 |
+    | Currency | No | EUR |
   </Step>
   <Step title="Upload and review">
-    Upload the CSV. Druma previews all rows — red rows have errors (usually invalid VAT format or missing required fields). Fix and re-upload.
+    Drop your filled-in file (CSV or XLSX, up to 5 MB) into the import modal. If your column headers match the template exactly, Druma maps them automatically; otherwise you'll map each column to the right field. A preview then shows the first 5 rows — rows with a missing Company name are flagged in red.
   </Step>
   <Step title="Confirm import">
-    Click **Import [X] clients**. Clients are available immediately for use on orders.
+    Click **Import**. Clients are created immediately and are available for use on orders right away. A result screen shows how many rows were created, skipped, or failed, with row-level error detail for anything that failed.
   </Step>
 </Steps>
 
-## VAT number format
+## Deduplication
 
-Druma validates VAT number format on import. Romanian VAT numbers start with `RO` followed by digits. EU VAT numbers use the country prefix format (e.g., `DE123456789`, `FR12345678901`). Non-EU clients can use any tax ID — prefix with `XX` if no standard format applies.
+Druma checks each row's VAT number against your existing clients (normalised to uppercase, whitespace trimmed). If a match is found, that row is **skipped** — it does not update the existing client. Rows without a VAT number are never skipped on this basis and always create a new client.
 
 <Note>
-Clients without VAT numbers cannot receive e-Factura submissions. Add the VAT number before generating the first invoice for that client.
+Bulk import only ever creates new client records — it never updates an existing one, even if you re-import a file with a matching VAT number. To change details on a client that already exists, edit it directly in Druma.
 </Note>
 
-## Updating existing clients
-
-Export your current client list from **Clients → Export CSV**, make changes, and re-import. Druma matches by VAT number — existing clients are updated, new ones are created.
-
-<Card title="Importing drivers" icon="id-card" href="/en/bulk-import/importing-drivers">
-  Bulk add your driver roster in the same way.
-</Card>
-
-<Card title="Billing and subscription" icon="credit-card" href="/en/admin/billing-and-subscription">
-  Learn how user and vehicle seat counts affect your monthly bill.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Importing your fleet" icon="truck" href="/en/bulk-import/importing-fleet">
+    Bulk add your trucks in the same way.
+  </Card>
+  <Card title="Onboarding drivers with Smart Import" icon="id-card" href="/en/bulk-import/importing-drivers">
+    Druma's AI-driven document upload for onboarding a driver roster.
+  </Card>
+</CardGroup>

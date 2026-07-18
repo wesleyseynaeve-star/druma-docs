@@ -1,6 +1,6 @@
 ---
 title: "CO2 Emissions Report"
-description: "Monthly fleet emissions data calculated to GLEC Framework v3 and ISO 14083 standards, ready to share with clients for their ESG reports."
+description: "Monthly fleet emissions data calculated to GLEC Framework v4.0 and ISO 14083 standards, ready to share with clients for their ESG reports."
 icon: "cloud"
 ---
 
@@ -10,60 +10,56 @@ Clients — particularly large retailers, manufacturers, and logistics companies
 
 Go to **Reports → CO2 Report**.
 
-Select the **month** and **year** you want to report on. The report covers one calendar month at a time. Click **Generate**.
+By default you see the **Monthly** view — the most recent shipments with a calculated CO2 figure, newest first. Switch to **Annual (CSRD)** and pick a **year** to build a full-year dataset for sustainability exports. Optionally narrow either view to one client with the **Client** filter.
 
 ## What the Report Shows
 
-### Total Fleet Emissions
+The page has two view modes, switched at the top: **Monthly** and **Annual (CSRD)**.
 
-The summary at the top shows your total fleet CO2 for the selected month in **tonnes of CO2 equivalent (tCO2e)**. This is the headline number your sustainability team needs.
+### Monthly view
 
-### Per-Truck Breakdown
+A per-shipment table — one row per order, with distance, weight, calculated CO2, calculation method, client, and truck. Filter to a single client with the **Client** dropdown, and use the trend chart above the table to see total tCO2e by month. The KPI bar shows total CO2 for the period, average CO2 per order, and how many orders have a CO2 figure calculated.
 
-A table showing emissions per vehicle, sorted from highest to lowest. Older trucks with lower Euro emission standards naturally appear at the top. This view makes it easy to see which trucks in your fleet are the biggest emitters.
+<Note>
+The monthly view is capped at the first **500 rows** for a given filter (the reporting-page convention used across Druma). If a month is truncated, narrow your date range or client filter for a complete picture — a warning banner appears on the page when this happens.
+</Note>
 
-### Per-Client Breakdown
+### Annual (CSRD) view
 
-Emissions attributable to each client — based on the orders you carried for them during the month. This is the number your clients need for their own scope 3 emissions reporting (their transport-related emissions come from your vehicles).
-
-### Per-Lane Breakdown
-
-Emissions by origin-destination country pair. Identifies which routes generate the most CO2, often due to distance combined with older vehicles being assigned to those lanes.
+The same per-shipment structure, extended with delivery date, full pickup/delivery addresses, and the truck's Euro standard column (for reference — the CO2 figure itself is not calculated from Euro standard, see below). This view is capped at 5,000 shipments per year; a truncation warning appears if the year has more.
 
 ## Emissions Calculation Methodology
 
-Druma follows the **GLEC Framework v3** and **ISO 14083** standards, which are the most widely accepted methods for road freight emissions reporting.
+Druma follows the **GLEC Framework v4.0** default emission factors, aligned with **ISO 14083** (Tier 1 method) — the international standard for quantifying and reporting greenhouse gas emissions from transport chains.
 
-Emission factors by Euro standard:
+CO2 per order is **not** based on the truck's Euro emission standard. It's based on the truck's **weight class** and **fuel type**:
 
-| Euro Standard | Emission Factor |
-|---|---|
-| Euro 3 | 115 g CO2 / km |
-| Euro 4 | 98 g CO2 / km |
-| Euro 5 | 82 g CO2 / km |
-| Euro 6 | 62 g CO2 / km |
+| Vehicle class | Fuel type | Emission factor (gCO2e / tonne-km) |
+|---|---|---|
+| Articulated HGV 32–34t (standard FTL truck) | Diesel | 62 |
+| Articulated HGV 32–34t | LNG | 54 |
+| Articulated HGV 32–34t | Electric | 25 |
+| Articulated HGV 32–34t | HVO | 12 |
+| Rigid truck 16–26t | Diesel | 91 |
+| Rigid truck 16–26t | Electric | 37 |
+| Rigid truck 12–16t | Diesel | 119 |
+| Rigid truck 12–16t | Electric | 48 |
 
-Distance is calculated using HERE truck routing (the same distance shown on each order). The Euro standard for each truck is taken from the vehicle record in Fleet.
+The vehicle class is derived automatically from the truck's recorded max payload/weight (over 30t → articulated 32–34t; over 15t → rigid 16–26t; otherwise rigid 12–16t). Fuel type comes from the truck record and defaults to diesel if not set; if no factor exists yet for an unusual fuel type on that class, Druma falls back to the diesel factor for the same class rather than leaving the order uncalculated.
 
-<Note>
-For accurate emissions calculations, make sure every vehicle in your fleet has the correct Euro emission standard recorded. Go to **Fleet → Vehicles → [vehicle] → Technical Details → Euro Standard**. If this field is blank, Druma uses Euro 5 as a conservative default.
-</Note>
+The formula (Well-to-Wheel, ISO 14083 Tier 1):
 
-The calculation: **distance (km) × emission factor (g/km) = CO2 (grams)**, then converted to tonnes.
+```
+CO2e (kg) = distance (km) × [weight (kg) ÷ 1,000] × emission factor (gCO2e/tkm) ÷ 1,000
+```
+
+Distance comes from PTV truck routing (the same distance shown on the order). Weight is the order's recorded cargo weight; if an order has no weight recorded, Druma estimates half of the truck's max payload as a conservative average load.
 
 ## Sharing CO2 Data with Clients
 
-### The Client CO2 PDF
+Druma automatically emails a monthly CO2 summary to any client contact with **Receives CO2 reports** enabled (set per contact on the client's **Contacts** tab) — no manual export needed for that recipient.
 
-Click **Download Client Report** on any per-client row. This generates a PDF formatted for sharing with your client's sustainability or procurement team. It includes:
-
-- Your company name and logo
-- The client's name and the reporting period
-- Total CO2 for their orders in the period (tCO2e)
-- Breakdown by order (date, route, distance, emissions)
-- Methodology statement (GLEC Framework v3 / ISO 14083)
-
-This PDF can be handed directly to the client — no further formatting needed.
+For anything beyond that automatic email — a full-year ESRS-aligned package, an ad-hoc share with a client's sustainability team, or your own internal record — switch to the **Annual (CSRD)** view and use the export buttons described in [CSRD Emissions Exports](/en/reports/csrd-exports): Annual XLSX, CSRD Data Package (CSV), and iXBRL. The Monthly view also has a generic print/export button for the visible table.
 
 ### What Scope 3 Means
 
@@ -71,15 +67,15 @@ Your clients record emissions from transport they outsource as **scope 3 emissio
 
 ## How to Improve Your CO2 Score
 
-The most effective action is replacing older Euro 3 and Euro 4 trucks with Euro 6 vehicles. The difference is significant:
+Because the calculation is driven by **fuel type** and **vehicle weight class**, not distance alone, the biggest lever is the truck itself. On the most common FTL class (articulated, 32–34t), switching from diesel (62 gCO2e/tkm) to HVO (12 gCO2e/tkm) or electric (25 gCO2e/tkm) cuts the factor by 81% or 60% respectively. For example, a 1,000 km run carrying 24t:
 
-- A Euro 3 truck emits 115 g/km versus 62 g/km for Euro 6 — a **46% reduction per kilometre**
-- On a 1,000 km RO→DE run, that is 53 kg less CO2 per trip, or over 5 tonnes per year on a truck doing 100 such trips
+- Diesel: 1,000 km × 24t × 62 gCO2e/tkm ÷ 1,000 = **1,488 kg CO2**
+- HVO on the same truck class: 1,000 km × 24t × 12 gCO2e/tkm ÷ 1,000 = **288 kg CO2** — a 1,200 kg (81%) reduction per trip
 
 Other improvements Druma can help you track:
 
-- **Route optimisation** — shorter routes from HERE truck routing mean lower total emissions
-- **Load consolidation** — more cargo per trip reduces emissions per tonne-kilometre
+- **Route optimisation** — shorter routes from PTV truck routing mean lower total emissions
+- **Load consolidation** — fewer, fuller trips reduce total tonne-kilometres across the fleet
 - **Reducing empty running** — deadhead kilometres are CO2 with no revenue to offset them
 
 <CardGroup cols={2}>
@@ -87,7 +83,7 @@ Other improvements Druma can help you track:
     Export annual CO2 data in XLSX, CSRD-aligned CSV, and iXBRL formats for sustainability reporting and ESRS E1 compliance.
   </Card>
   <Card title="CO2 Reporting (Fleet Settings)" icon="truck" href="/en/fleet-compliance/co2-reporting">
-    How to configure Euro standards and other fleet parameters that feed the CO2 calculation.
+    How truck fuel type and weight class feed the CO2 calculation, and what to check on your fleet records.
   </Card>
   <Card title="Reports Overview" icon="chart-bar" href="/en/reports/reports-overview">
     All available reports in Druma and how to schedule automated delivery.

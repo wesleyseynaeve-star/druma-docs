@@ -1,19 +1,23 @@
 ---
 title: "SAGA & WinMENTOR Export"
-description: "How to export Druma invoice and client data to SAGA C and WinMENTOR for Romanian accounting, including automatic nightly exports."
+description: "How to export Druma invoice and client data to SAGA C and WinMENTOR Classic for Romanian accounting, including the automatic monthly export emailed to your accountant."
 icon: "database"
 ---
 
 ## Overview
 
-SAGA C and WinMENTOR are the two most common accounting software packages used by Romanian companies. Most small freight operators use SAGA; larger companies often use WinMENTOR Classic or WinMENTOR Enterprise. Druma exports invoice and client data in the formats both packages expect, so your accountant can import directly without manual re-entry.
+SAGA C and WinMENTOR Classic are the two most common accounting software packages used by Romanian companies. Druma exports invoice and client data in the formats both packages expect, so your accountant can import directly without manual re-entry.
 
 ## SAGA C Export
 
-SAGA uses DBF (dBase) files for data import. Druma generates two files per export:
+SAGA uses DBF (dBase) files for data import. Druma generates a full export package, not just client and invoice data:
 
-- **Clienti.dbf** — client master data (name, CIF, address, payment terms)
-- **Facturi.dbf** — invoice data (invoice number, date, amounts, VAT, client reference)
+- **CLI_\<date>.dbf** (Clienti) — client master data (name, CIF, address, payment terms)
+- **ART_\<date>.dbf** (Articole) — the service line item used on sales invoices, included by default
+- **IE_\<date>_\<date>.dbf** (Iesiri) — sales invoice data (invoice number, date, amounts, VAT, client reference)
+- **INT_\<date>.dbf** (Intrari) — purchase invoices, when the period includes subcontracted orders
+- **NC_\<date>_\<date>.xml** (Incasari) — payments recorded in the period (this one file is XML, not DBF)
+- **README.txt** — a plain-text summary of the export plus import instructions for your accountant
 
 ### How to Export for SAGA
 
@@ -31,7 +35,7 @@ SAGA uses DBF (dBase) files for data import. Druma generates two files per expor
     Pick the start and end date for the invoices you want to export. Most accountants want a monthly export.
   </Step>
   <Step title="Download the ZIP">
-    Click **Download**. Druma creates a ZIP file containing Clienti.dbf and Facturi.dbf and downloads it to your computer.
+    Click **Download**. Druma creates a ZIP file containing the DBF files listed above (plus the Incasari XML and README.txt) and downloads it to your computer.
   </Step>
 </Steps>
 
@@ -57,65 +61,55 @@ SAGA uses DBF (dBase) files for data import. Druma generates two files per expor
 
 ## WinMENTOR Classic Export
 
-WinMENTOR Classic uses the same DBF-based import process as SAGA, but with a slightly different field structure.
+WinMENTOR Classic does **not** use DBF files like SAGA — Druma exports it as pipe-delimited (`|`) plain-text files instead, matching WinMENTOR's "Import from text file" format:
+
+- **Iesiri_\<date>_\<date>.txt** — sales invoice data
+- **Clienti_\<date>.txt** — client master data for the clients invoiced in the period
+- **Articole_\<date>.txt** — the service line item used on sales invoices
+- **Incasari_\<date>_\<date>.txt** — payments recorded in the period (included only if there were any)
+- **README.txt** — import instructions for your accountant
 
 <Steps>
   <Step title="Open the Export menu in Invoicing">
     Go to **Invoicing** → **Export**.
   </Step>
   <Step title="Select WinMENTOR Classic">
-    Choose **WinMENTOR Classic** from the format list. This selects the correct field mapping for WinMENTOR's DBF import — do not use the SAGA option for WinMENTOR.
+    Choose **WinMENTOR Classic** from the format list. This produces the pipe-delimited `.txt` files above instead of SAGA's DBF files — do not use the SAGA option for WinMENTOR.
   </Step>
   <Step title="Set the date range and download">
-    Choose your date range and click **Download**. The ZIP contains the same two file types but formatted for WinMENTOR's import structure.
+    Choose your date range and click **Download**.
   </Step>
 </Steps>
 
-Import the files into WinMENTOR using **Import → Documente** and follow the same field verification step as SAGA.
+Import the files into WinMENTOR using **Import/Export → Import din fisier text**, selecting the pipe (`|`) delimiter.
 
-## WinMENTOR Enterprise Integration
+## Automatic Monthly Export (SAGA and WinMENTOR Classic)
 
-WinMENTOR Enterprise supports a REST API, which means Druma can push data directly without any manual file downloads.
-
-<Steps>
-  <Step title="Get your WinMENTOR Enterprise API details">
-    Ask your WinMENTOR administrator for the API endpoint URL and API credentials (username and password or API key).
-  </Step>
-  <Step title="Configure in Druma">
-    Go to **Settings** → **Integrations** → **WinMENTOR Enterprise**. Enter the API endpoint, username, and password. Click **Test Connection** to verify.
-  </Step>
-  <Step title="Enable sync">
-    Toggle on **Auto-sync invoices**. Druma will push new invoices to WinMENTOR as they are generated.
-  </Step>
-</Steps>
-
-## Automatic Nightly Export (SAGA and WinMENTOR Classic)
-
-If you want the export files ready every morning without manual steps, enable the nightly export:
+Rather than a manual nightly download, Druma emails the export to your accountant automatically once a month:
 
 <Steps>
   <Step title="Go to Settings">
-    Navigate to **Settings** → **Integrations** → **SAGA** (or WinMENTOR Classic).
+    Navigate to **Settings** → **Automation** and find the **SAGA Export Config** section.
   </Step>
-  <Step title="Enable Nightly Export">
-    Toggle on **Nightly Export**. Druma will run the export automatically at **06:00 UTC** each morning.
+  <Step title="Set the accountant's email and export day">
+    Enter the **accountant email** (and an optional CC), then choose the **day of month** the export should run (1–28).
   </Step>
-  <Step title="Find the files each morning">
-    Go to **Invoicing** → **Export History** tab. Each night's export appears here as a downloadable ZIP, labelled with the date. Download it and send to your accountant.
+  <Step title="Save">
+    Click **Save SAGA config**. A background job checks daily at **06:00 UTC** whether today matches your configured day — when it does, Druma generates the export for the **previous calendar month** and emails it directly to your accountant, with no manual download step required.
   </Step>
 </Steps>
 
 <Note>
-The nightly export includes all invoices from the previous calendar day. If you need a different date range — for example, a full month for your accountant — use the manual export with a custom date range instead.
+There is no in-app "Export History" list — each month's export arrives as an email with a secure download link to the ZIP, valid for **7 days**. If the link expires, or you need an out-of-cycle or custom-period export, use the manual **Export** flow above (or **Finance** → **Export Builder** for a custom column layout) instead.
 </Note>
 
 ## Multi-Currency Invoices and BNR Exchange Rates
 
-For invoices in EUR, USD, or GBP, Druma includes the BNR (Romanian National Bank) exchange rate for the invoice date in both the DBF export and the WinMENTOR Enterprise API push. This means your accountant's software has the RON-equivalent amounts immediately — no manual rate lookup needed.
+For invoices in EUR, USD, GBP, CHF, or PLN, Druma includes the BNR (Romanian National Bank) exchange rate for the invoice date in the DBF/text export. This means your accountant's software has the RON-equivalent amounts immediately — no manual rate lookup needed.
 
 
 <Warning>
-Always check with your accountant which export format they need — SAGA C, WinMENTOR Classic, or WinMENTOR Enterprise. Using the wrong format will produce import errors or silently incorrect data.
+Always check with your accountant which export format they need — SAGA C or WinMENTOR Classic. Using the wrong format will produce import errors or silently incorrect data.
 </Warning>
 
 ---

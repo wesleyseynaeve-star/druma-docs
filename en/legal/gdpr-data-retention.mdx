@@ -17,8 +17,8 @@ This page explains exactly what data Druma holds about your company, how long we
 | Transport orders and shipment records | Duration of subscription + 90 days | Contract |
 | Client records | Duration of subscription + 90 days | Contract |
 | Driver records | Duration of subscription + 90 days | Contract |
-| Invoices and financial records | 7 years from invoice date | Romanian Accounting Law |
-| eCMR documents (signed) | 10 years from signing date | e-CMR Protocol (legal requirement) |
+| Invoices and financial records | Archived at 3 years, hard-deleted at 10 years from invoice date | EU fiscal law / Romanian Accounting Law |
+| eCMR documents (signed) | Hard-deleted 7 years after the shipment's delivery date, via a standalone yearly purge — independent of your account status | Additional Protocol to the CMR Convention |
 | Audit logs | 18 months | Legitimate interests |
 | GPS position (live tracking) | Not retained — current position only, overwritten on each update | Contract |
 | GPS order-event stamps | Retained with the order (see order records above) | Contract |
@@ -28,7 +28,7 @@ This page explains exactly what data Druma holds about your company, how long we
 | Billing records (Stripe) | 7 years | Tax law |
 
 <Note>
-eCMR documents have a 10-year retention requirement under the Additional Protocol to the CMR Convention. This cannot be shortened even if you close your account.
+eCMR signatures and eCMR documents are hard-deleted automatically **7 years after the shipment's delivery date** by a yearly purge job — this runs regardless of whether your account is open or closed. Separately, if an individual user's account is deleted, any eCMR signature they created within the **last 3 years** is anonymised (not deleted) rather than removed immediately, so it survives — without personal data attached — until the 7-year cutoff above catches up with it.
 </Note>
 
 ## GPS data: what we store
@@ -43,6 +43,10 @@ We do **not**:
 - Keep a historical trail of live tracking positions
 - Share GPS data with any third party except as required for e-Transport reporting to ANAF, which uses a rolling 30-day buffer before deletion
 
+<Note>
+A legacy append-only position table from an earlier version of driver chat still exists with a 90-day rolling purge, but nothing in the current app writes new rows to it — it's a dormant remnant, not an active historical GPS log.
+</Note>
+
 ## Tachograph data: what we store
 
 Druma maintains a **Tacho Archive** that stores raw DDD (vehicle unit) and TGD (driver card) tachograph files — downloaded automatically via a connected telematics provider or uploaded manually — to meet EU Regulation 165/2014 download-frequency and retention requirements. Unlike operational data, tachograph files are **retained indefinitely**: 12 months is the legal minimum, not a purge target, since operators may need to produce them well beyond that floor for a roadside inspection or authority audit. See [Tachograph Archive](/en/fleet-compliance/tacho-archive) for details.
@@ -55,10 +59,14 @@ Every significant action in Druma (order created, invoice sent, user login, sett
 
 When you cancel your subscription:
 
-1. Your account enters a 90-day grace period — data is preserved and accessible
-2. After 90 days, all operational data is permanently deleted
-3. Invoices and financial records are retained for 7 years (legal requirement)
-4. eCMR documents are retained for 10 years (legal requirement)
+1. Your account enters a **90-day grace period** — data is preserved and accessible.
+2. After 90 days, if your whole company account is deleted: order messages and internal notes are deleted immediately, orders **older than 3 years** are deleted, and clients, trucks, and trailers are deleted. Orders **less than 3 years old are not deleted at this step** — they, along with their linked invoices and eCMR signatures, continue to age out under the standalone retention rules below rather than being wiped on day 90.
+3. Invoices and financial records are archived at 3 years and hard-deleted at 10 years from the invoice date — this timeline runs independently of when you cancelled.
+4. eCMR signatures and documents are hard-deleted 7 years after the shipment's delivery date — also independent of your cancellation date.
+
+<Note>
+If an individual team member's account is removed (rather than the whole company), a separate, narrower rule applies: orders and eCMR signatures they created within the last 3 years are anonymised (personal fields stripped, records kept for the business data), and invoices they created within the last 10 years are anonymised. Records outside those windows are deleted along with the user record.
+</Note>
 
 ## Requesting data export
 
@@ -71,7 +79,7 @@ Your data is packaged as a ZIP file (JSON and CSV formats) and delivered to your
 ## Requesting account deletion
 
 <Warning>
-Account deletion is irreversible. All operational data is permanently deleted after the 90-day retention period. Legally required data (invoices, eCMR) is retained as required by law.
+Account deletion is irreversible. Once the 90-day retention period passes, older operational data (orders past 3 years, plus clients/trucks/trailers) is permanently deleted; more recent orders, invoices, and eCMR data are anonymised or retained on their own legally-required timelines rather than deleted immediately — see "After account cancellation" above.
 </Warning>
 
 To delete your account: **Settings → Data & Privacy → Delete Account** → confirm by typing your company name.

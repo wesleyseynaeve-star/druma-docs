@@ -1,66 +1,58 @@
 ---
 title: "Importing Your Fleet"
-description: "Bulk upload your vehicles into Druma using a CSV template instead of adding them one by one."
+description: "Bulk upload your vehicles into Druma using a spreadsheet template instead of adding them one by one."
 icon: "file-import"
 ---
 
 Use bulk import to add all your vehicles at once — ideal when getting started or migrating from another system.
 
-
 ## Download the template
 
 <Steps>
-  <Step title="Open the import page">
-    Go to **Fleet → Vehicles → Import** and click **Download Template**.
+  <Step title="Open Bulk Import">
+    Go to **Fleet → Trucks** and click **Bulk Import** in the toolbar — this opens the import modal directly on the Trucks list page; there's no separate import page.
   </Step>
-  <Step title="Fill in the CSV">
-    Open the file in Excel or Google Sheets. Fill in one vehicle per row:
+  <Step title="Download the template and fill it in">
+    Click **Download Template** — Druma generates an `.xlsx` file. Fill in one truck per row:
 
     | Column | Required | Example |
     |--------|----------|---------|
-    | plate | Yes | B 123 ABC |
-    | type | Yes | tractor, rigid, van |
-    | trailer_type | No | curtainsider, reefer, flatbed |
-    | euro_standard | Yes | Euro 3 – Euro 6 |
-    | height_m | No | 4.0 |
-    | weight_tonnes | No | 24 |
-    | axle_count | No | 3 |
-    | payload_kg | No | 24000 |
-    | daily_cost_eur | No | 120 |
-    | adr_expiry | No | 2025-12-31 |
-    | active | Yes | true or false |
+    | Plate | Yes | B-123-ABC |
+    | Name | No | Truck 1 |
+    | Brand | No | Volvo |
+    | Model | No | FH |
+    | Year | No | 2020 |
+    | Euro class | No | euro6 |
+    | Fuel type | No | diesel |
+    | Trailer type | No | tautliner |
   </Step>
-  <Step title="Upload the file">
-    Save as CSV. Back in Druma, click **Upload CSV** and select your file.
-  </Step>
-  <Step title="Review the mapped records">
-    Druma shows a preview table with all detected rows. Rows with errors are highlighted in red — fix them in the CSV and re-upload, or edit inline.
+  <Step title="Upload and review">
+    Drop your filled-in file (CSV or XLSX, up to 5 MB) into the import modal. If your column headers match the template exactly, Druma maps them automatically; otherwise you'll map each column to the right field. A preview then shows the first 5 rows — rows missing a Plate are flagged in red.
   </Step>
   <Step title="Confirm import">
-    Click **Import [X] vehicles**. Vehicles are created immediately and appear in your fleet list.
+    Click **Import**. Trucks are created immediately and appear in your fleet list. A result screen shows how many rows were created, skipped, or failed, with row-level error detail for anything that failed.
   </Step>
 </Steps>
 
-## Round-trip editing
+## Deduplication
 
-The same template works for updates. Go to **Fleet → Vehicles → Export CSV**, edit the exported file, and re-import. Druma matches by plate number and updates existing records rather than creating duplicates.
+Druma checks each row's plate against your existing trucks (normalised to uppercase, whitespace trimmed). If a match is found, that row is **skipped** — it does not update the existing truck.
 
 <Note>
-Plate numbers must be unique. If you re-import a plate that already exists, Druma updates that vehicle rather than creating a second entry.
+Bulk import only ever creates new truck records — it never updates an existing one, even if you re-import a file with a matching plate. To change details on a truck that already exists, edit it directly in Fleet → Trucks.
 </Note>
 
-<Warning>
-Setting `active = false` marks a vehicle as inactive — it will disappear from assignment dropdowns. Double-check this column before importing.
-</Warning>
+There are no columns for trailer dimensions, weight, axle count, payload, daily cost, ADR expiry, or an active/inactive flag in this import — those are configured on the truck record itself after import (cost profile fields live on the [truck cost profile](/en/admin/rate-cards) in Settings → Rate Cards, not on the truck record).
 
 ## After importing
 
 Verify your fleet list, then add vehicle documents (insurance, ITP) for each truck.
 
-<Card title="Fleet management" icon="truck" href="/en/planner/fleet-management">
-  Add vehicles manually and manage individual vehicle settings.
-</Card>
-
-<Card title="Fleet documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
-  Upload insurance, registration, and compliance documents for each vehicle.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Fleet management" icon="truck" href="/en/planner/fleet-management">
+    Add vehicles manually and manage individual vehicle settings.
+  </Card>
+  <Card title="Fleet documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    Upload insurance, registration, and compliance documents for each vehicle.
+  </Card>
+</CardGroup>

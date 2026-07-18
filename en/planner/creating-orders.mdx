@@ -59,7 +59,7 @@ The client you select here is who gets invoiced. Make sure you're picking the ri
 Choose one of three order types:
 
 - **Own Truck** — You carry the goods yourself with your own vehicle and driver. This is the most common type.
-- **Subcontracted** — You outsource the job to another carrier. You manage the order in Druma, but the actual transport is done by a third-party truck. The truck and driver fields are replaced by a **carrier** selection field.
+- **Subcontracted** — You outsource the job to another carrier. You manage the order in Druma, but the actual transport is done by a third-party truck. The truck and driver fields are replaced by a **Subcontractor / Carrier** section (see Step 7).
 - **Repositioning** — A non-revenue move to get a truck where it needs to be for the next job. No client or price is attached. You select a repositioning reason code and the distance is tracked as internal dead kilometres. See [Repositioning Orders](/en/planner/repositioning) for details.
 
 <Note>
@@ -90,7 +90,7 @@ The delivery section works the same as pickup:
 - Delivery reference number (optional)
 
 <Note>
-If you have multiple pickup or delivery stops, use the **Add Stop** button to insert intermediate points. Each stop has its own address, time, and reference.
+If you have multiple pickup or delivery stops, use **Add loading point**, **Add offloading point**, or **Add internal stop** (rest, refuel, trailer-parking waypoints) on the **Route** tab to insert intermediate points. Each stop has its own address, time, and reference.
 </Note>
 
 ---
@@ -106,8 +106,12 @@ Describe what is being transported:
 
 ### Special flags
 
-- **ADR (Dangerous Goods)** — Tick this if the cargo is classified as dangerous under ADR regulations. Druma will automatically apply any ADR surcharge configured in your rate cards, and the order will be flagged so you know to check the driver holds the correct ADR certificate.
-- **Oversize / Abnormal Load** — Tick this if the cargo exceeds standard dimensions and requires a permit. This is a flag only — you still need to arrange the permit separately.
+- **ADR (Dangerous Goods)** — Tick this if the cargo is classified as dangerous under ADR regulations. Druma will automatically apply any ADR surcharge configured in your rate cards, and the order will be flagged so you know to check the driver holds the correct ADR certificate. Ticking it reveals ADR class, UN number, packing group, tunnel restriction code, proper shipping name, and an ADR notes field.
+- **Reefer (temperature controlled)** — Tick this if the load needs temperature-controlled handling. Ticking it reveals minimum and maximum temperature fields.
+
+<Note>
+There is no separate oversize/abnormal-load flag at the cargo level. If a load requires an oversize permit, handle the extra cost as a surcharge/billable extra line on the **Extras** tab — the cargo tab itself only tracks ADR and reefer.
+</Note>
 
 
 ---
@@ -119,8 +123,10 @@ Enter the commercial terms:
 - **Amount** — The price agreed with the client.
 - **Currency** — EUR, RON, or any other currency configured in your account.
 - **Price type**:
-  - **Lump sum** — A fixed total price regardless of distance.
-  - **Per km** — Price calculated by multiplying the rate by the HERE-calculated route distance.
+  - **Flat rate** — A fixed total price regardless of distance.
+  - **Per km** — Price calculated by multiplying the rate by the PTV-calculated route distance.
+  - **Per pallet** — Price calculated by multiplying the rate by the pallet count.
+  - **Per ton** — Price calculated by multiplying the rate by the cargo weight.
 
 <Note>
 If you have rate cards set up for this client, Druma will suggest a price automatically based on the origin, destination, and order type. You can accept the suggestion or type your own price.
@@ -132,35 +138,33 @@ If you have rate cards set up for this client, Druma will suggest a price automa
 
 The New Order modal does not assign a truck or driver — an order saves without either, whatever order type you picked. Assignment happens afterwards on the [Planning Board](/en/planner/planning-board): drag the order onto a truck to assign it, or open the order there to pick a truck, primary driver, and (for double-manning on long-distance international routes) a second driver. Druma shows each truck's availability there — green for free on the loading date, orange for another order nearby, red for a conflict.
 
-**For Subcontracted orders**, there is a **Carrier** field on the **Financial** tab instead — select the subcontractor company there, and add a carrier contact name and phone for reference. See [Subcontractors](/en/planner/subcontractors) for how the carrier is then notified.
+**For Subcontracted orders**, the **Financial** tab shows a **Subcontractor details** section instead of truck/driver fields: a **Subcontractor / Carrier** search field to pick the carrier company, a buy-rate builder to set what you're paying them, and an internal **Arrangement notes** textarea for anything the client shouldn't see. See [Subcontractors](/en/planner/subcontractors) for how the carrier is then notified.
 
 ---
 
-## Step 8 — Notes for driver
+## Step 8 — Notes per stop
 
-The **Driver notes** field is visible to the driver in their mobile app. Use it for practical instructions: gate codes, special unloading instructions, "call 30 minutes before arrival", or any client-specific requirements.
+Each stop on the **Route** tab has its own **Notes** field. Use it for practical instructions: gate codes, special unloading instructions, "call 30 minutes before arrival", or any client-specific requirements — the driver app shows this same field as "Instructions" on the stop once a truck and driver are assigned.
 
-This is separate from internal notes, which are only visible to planners.
+<Note>
+There is no separate driver-notes vs. internal-notes split. It's a single shared field per stop — anything you type here is visible to whoever plans the order and to the driver assigned to it.
+</Note>
 
 ---
 
 ## Saving the order
 
-You have two options when you finish:
-
-- **Save as Draft** — The order is saved but not yet confirmed. The driver will not see it in their app, and it appears grey on the planning board. Use this when you're still waiting for confirmation from the client.
-- **Confirm Order** — The order is active. The assigned driver receives a notification, and the order appears on the planning board in blue.
-
 <Warning>
-Drivers only receive notifications for Confirmed orders. If you save as Draft, remember to come back and confirm it before the driver's departure time.
+Every order created from this modal is saved as a **Draft** — whether you click **Save draft** or **Save**, both call the same save action and the order is inserted with status **Draft**. There is no "Confirm Order" step in this modal.
 </Warning>
 
+A new order always starts without a truck or driver assigned, and appears grey/unassigned on the Planning Board. Confirming the order — assigning a truck and driver, at which point the driver can see it in their app — happens afterwards, on the [Planning Board](/en/planner/planning-board) or the Orders workbench: drag the order onto a truck to assign it, or open the order there to pick a truck and driver.
 
 ---
 
 ## What happens next
 
-Once confirmed, the order follows a defined journey from dispatch to invoicing. The driver updates statuses from their app as they progress through the trip.
+Once assigned to a truck and driver, the order follows a defined journey from dispatch to invoicing. The driver updates statuses from their app as they progress through the trip.
 
 <Card title="Order Lifecycle" icon="circle-dot" href="/en/planner/order-lifecycle">
   Learn about every status an order goes through, who triggers each step, and what notifications are sent.

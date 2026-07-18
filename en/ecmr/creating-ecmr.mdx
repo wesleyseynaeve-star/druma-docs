@@ -10,37 +10,23 @@ Druma creates eCMR documents **in-house using the native Druma provider** by def
 
 ## When Druma Creates an eCMR Automatically
 
-Druma creates an eCMR automatically when the **order is cross-border** — the pickup country and the delivery country are different.
+Druma creates an eCMR automatically as soon as a road order is **dispatched** — the moment it's assigned a truck and its status moves to "Assigned." There is no comparison of pickup/delivery countries: every dispatched order that isn't subcontracted, and whose company runs the native eCMR provider, gets an eCMR issued as an unsigned draft. This means domestic orders get one too — it simply stays unsigned until you need it.
 
-When a confirmed cross-border order is detected, Druma registers the eCMR internally and you will see the eCMR tab on the order detail page populate with the document number and status "Awaiting sender signature."
+Once issued, the eCMR document appears in the **Documents** tab of the order detail page, where you can view the sealed PDF via the **View eCMR** button once it's ready.
 
 <Note>
-Domestic orders (same country pickup and delivery) do not trigger automatic eCMR creation, since the CMR Convention applies to international transport. You can still create an eCMR manually on a domestic order if your client or route requires it.
+Subcontracted orders are skipped — the subcontractor issues their own CMR, so Druma can't sign on their behalf. Orders that already have an eCMR are never re-issued.
 </Note>
 
 ---
 
 ## Creating an eCMR Manually
 
-If automatic creation did not trigger, or if you need to create an eCMR on a domestic order, do it manually:
+For multi-leg (groupage) orders, each road leg gets its own eCMR. If a leg doesn't have one yet, open the order's **Cargo / Stops** tab and click **Create eCMR** next to that leg — there's no separate "eCMR tab": the button sits directly on the leg row.
 
-<Steps>
-  <Step title="Open the order">
-    Go to **Orders**, find the order, and click to open the detail page.
-  </Step>
-  <Step title="Open the eCMR tab">
-    Click the **eCMR** tab near the top of the order detail page.
-  </Step>
-  <Step title="Click Create eCMR">
-    Click the **Create eCMR** button. Druma will show you a preview of all pre-filled CMR fields.
-  </Step>
-  <Step title="Review all fields">
-    Check every field carefully before confirming. Once registered, the eCMR document number cannot be deleted or changed.
-  </Step>
-  <Step title="Confirm creation">
-    Click **Confirm & Create**. Druma registers the document internally and the eCMR status changes to "Awaiting sender signature."
-  </Step>
-</Steps>
+<Note>
+When you mark a confirmed cross-border road leg complete, Druma also creates its eCMR automatically at that point if one doesn't already exist.
+</Note>
 
 ---
 
@@ -50,28 +36,26 @@ Druma populates the eCMR fields from the order data you already entered. Here is
 
 | eCMR field | Source in Druma |
 |---|---|
-| Shipper (sender) name and address | Your company details from Settings → Company |
-| Consignee name and address | Client record on the order |
+| Shipper (sender) name and address | Client record on the order |
+| Carrier name and address | Your company details |
+| Consignee name and address | Client record on the order (delivery address sourced from the delivery stop) |
 | Pickup address | Order pickup location |
 | Delivery address | Order delivery location |
 | Goods description | Cargo description field on the order |
 | Truck registration plate | Vehicle assigned to the order |
 | Driver name | Driver assigned to the order |
-| Special conditions (ADR, temperature) | Order flags and notes |
+| Special conditions (ADR) | Order's ADR flag and class |
 
-If any of this data is missing or incorrect on the order, the eCMR preview will show the problem before you confirm. Fix the order first, then create the eCMR.
+If any of this data is missing or incorrect on the order, fix the order first, then create the eCMR — there's no pre-fill preview step; the document is written immediately.
 
 ---
 
 ## Before You Confirm: What Cannot Be Changed
 
 <Warning>
-Once you click **Confirm & Create**, the eCMR document number is registered. You **cannot**:
-- Delete the eCMR
-- Change the document number
-- Modify the shipper, consignee, or goods description after registration
+Once an eCMR is issued for an order (or leg), Druma will not issue a second one for it — clicking Create eCMR again, or a leg-completion trigger firing again, simply returns the existing document instead of minting a new one. This is an idempotency safeguard, not a field lock: there's no restriction on editing the underlying order data itself.
 
-If you need to correct a registered eCMR, you must cancel it (via the Paper CMR Fallback process) and, if appropriate, create a new one. A cancellation is recorded in the audit trail.
+If you need to correct a registered eCMR, use the Paper CMR Fallback process and, if appropriate, create a new one.
 </Warning>
 
 ---
@@ -96,7 +80,7 @@ eCMR is included in your Druma subscription at no extra cost — there is no per
 
 <CardGroup cols={2}>
   <Card title="The Signing Flow" icon="pen-to-square" href="/en/ecmr/signing-flow">
-    How the driver collects all three signatures on their phone.
+    How the shipper, driver, and consignee each sign, and on which device.
   </Card>
   <Card title="What Is eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
     Background on eCMR, its legal basis, and how Druma issues it.

@@ -37,13 +37,12 @@ ANAF's system experiences downtime regularly, especially on weekday mornings and
 
 ## Automatic Retry Queue
 
-If a submission fails because ANAF is unavailable, Druma retries automatically:
+If a submission fails because ANAF is unavailable, Druma retries automatically using exponential backoff, up to 3 attempts in total (the original attempt plus 2 retries):
 
-- First retry: **1 hour** after the failure
-- Second retry: **4 hours** after the first retry
-- Third retry: **24 hours** after the second retry
+- First retry: roughly **1 hour** after the failure (±25% jitter)
+- Second retry: roughly **2 hours** after the first retry (±25% jitter)
 
-If all automatic retries are exhausted, the invoice shows a **Failed** status with the last error message. You can then trigger a **Manual Resubmit** from the e-Factura tab on the invoice page.
+If the third attempt also fails, the invoice moves straight to **Failed** status — there is no further automatic retry after that. You can then trigger a **Manual Resubmit** from the e-Factura tab on the invoice page.
 
 ## Viewing e-Factura Status
 

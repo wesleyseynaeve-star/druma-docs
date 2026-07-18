@@ -1,94 +1,96 @@
 ---
 title: "eCMR Signing Flow"
-description: "How the driver collects all three required signatures — sender, carrier, and consignee — using the Druma mobile app."
+description: "How Druma collects all three required signatures — shipper, driver, and consignee — across the planner's web app and the driver's phone."
 icon: "pen-to-square"
 ---
 
-An eCMR requires three signatures to be legally complete: the sender signs at pickup, the driver/carrier signs at pickup, and the consignee signs at delivery. Here is how each step works in practice with the Druma native provider.
+An eCMR requires three signatures to be legally complete: the shipper, the driver/carrier, and the consignee. Here is how each step works in practice with the Druma native provider — note that the shipper and driver do **not** sign on the same device.
 
 ---
 
 ## Overview of the Three-Party Signing Process
 
 ```
-Pickup location                    Delivery location
-─────────────────────────────      ──────────────────────────
-1. Sender signs       →            3. Consignee signs (own device)
-2. Driver signs       →               ↓
-                                    PAdES seal applied
-                                    Certified PDF issued
+Planner's web app (office / desktop)     Driver's phone         Consignee's own device
+─────────────────────────────────────    ──────────────────    ───────────────────────
+1. Shipper signs (Documents tab)          2. Driver signs        3. Consignee signs
+        ↓                                       ↓                       ↓
+                                    PAdES seal applied once all three are done
+                                          Certified PDF issued
 ```
 
-Steps 1 and 2 happen at the same time and place (pickup). Step 3 happens later at the delivery location. All three must be completed before Druma issues the certified PDF.
+The three signatures are independent of each other — there's no enforced sequence. Once all three exist, Druma builds the certified PDF and applies the PAdES seal.
 
 ---
 
-## Step 1 — Sender Signs at Pickup
+## Step 1 — Shipper Signs (Planner's Web App)
+
+The shipper signature is captured in Druma's web app, not on the driver's phone. Whoever has the order open — typically a planner or dispatcher — captures it from the **Documents** tab of the order detail page.
 
 <Steps>
-  <Step title="Driver opens the eCMR">
-    At the pickup location, the driver opens the order in the Druma app and taps the **eCMR** section. The document is displayed showing all pre-filled fields: goods, addresses, truck, driver.
+  <Step title="Open the order's Documents tab">
+    In Druma's web app, open the order and go to the **Documents** tab. The **Shipper / driver signatures** section shows the current status of all three parties.
   </Step>
-  <Step title="Driver hands the phone to the sender">
-    The sender representative (warehouse manager, loading supervisor, or shipper) takes the driver's phone.
+  <Step title="Click Sign as shipper">
+    Click **Sign as shipper**. This opens a signature pad directly in the order detail pane.
   </Step>
-  <Step title="Sender reviews the document">
-    The sender scrolls through the eCMR fields and confirms the goods description, quantity, and condition match what is being loaded.
+  <Step title="Draw the signature and confirm the name">
+    Draw the signature and enter a printed name — it defaults to the name of whoever is logged in, but can be changed to reflect the actual signatory (e.g. a warehouse manager present at pickup, handing over the operator's device, or signing in person if the operator is on-site).
   </Step>
-  <Step title="Sender signs with their finger">
-    The sender taps **Sign as Sender**, draws their signature on the signature pad, enters their full name and role (e.g., "Warehouse Manager"), and taps **Confirm**.
+  <Step title="Submit">
+    Click **Submit signature**. The Shipper badge turns green and shows the signed date.
   </Step>
 </Steps>
 
 ---
 
-## Step 2 — Driver/Carrier Signs at Pickup
+## Step 2 — Driver Signs (Driver's Phone)
 
-Immediately after the sender signs, the driver takes back the phone.
+The driver signs separately, on their own phone, at any point — there's no requirement for the shipper signature to exist first.
 
 <Steps>
-  <Step title="Driver signs">
-    The app automatically advances to the carrier signature screen. The driver draws their signature, confirms their name, and taps **Confirm**.
+  <Step title="Driver opens Sign eCMR">
+    In the driver app, the driver taps **Sign eCMR** on the order.
   </Step>
-  <Step title="Pickup signatures locked">
-    Both pickup signatures are now saved and locked. Neither can be modified. The eCMR status changes to "Awaiting consignee signature."
+  <Step title="Driver signs">
+    The driver draws their signature, confirms their printed name, and taps **Submit signature**. The sheet shows read-only status badges for all three parties, but the driver can only submit their own.
   </Step>
 </Steps>
 
 <Note>
-The driver must sign immediately after the sender. The app will not allow the driver to proceed to the delivery step until both pickup signatures are complete.
+The driver app does not block progress on the shipper's signature status — the driver can move the order forward regardless of whether the shipper has signed yet.
 </Note>
 
 ---
 
 ## Step 3 — Consignee Signs at Delivery
 
-With the Druma native provider, the consignee signs on their **own device** via a share link or QR code — there is no need to hand over the driver's phone.
+The consignee signs on their **own device** via a share link or QR code. This link is generated and shown from the **planner's web app** (Documents tab of the order detail page) — not from the driver's phone.
 
 <Steps>
-  <Step title="Driver opens the eCMR tab at delivery">
-    At the delivery location, the driver opens the order in the Druma app and taps the **eCMR** section. The document shows the two locked pickup signatures and a share link with a QR code.
+  <Step title="Generate the consignee link">
+    In Druma's web app, open the order's Documents tab and click **Consignee signing link** to generate a share link and QR code.
   </Step>
-  <Step title="Consignee scans the QR or receives the link">
-    The driver shows the QR code on screen. The consignee scans it with their phone camera — no Druma account or app download needed. Alternatively, the driver can copy and send the link via WhatsApp or SMS.
+  <Step title="Send it to the consignee">
+    Copy the link and send it to the consignee (e.g. via WhatsApp, SMS, or email) ahead of or at delivery, or display the QR code if a planner happens to be present. No Druma account or app download is needed on their end.
   </Step>
   <Step title="Consignee reviews the document">
-    On their own phone, the consignee sees a read-only view of the CMR — goods, addresses, weight, and the two pickup signatures already locked.
+    On their own device, the consignee sees a read-only view of the CMR — goods, addresses, weight, and any signatures already captured.
   </Step>
   <Step title="Consignee signs (and optionally adds reservations)">
-    The consignee draws their signature on screen and enters their name. If there are any issues with the delivery — damage, shortage, or discrepancy — they can add a note in the **Reservations / observations** field (CMR box 24) before tapping **Confirm**.
+    The consignee draws their signature and enters their name. If there are any issues with the delivery — damage, shortage, or discrepancy — they can add a note in the **Reservations / observations** field (CMR box 24) before confirming.
   </Step>
   <Step title="Certified PDF issued">
-    All three signatures are complete. Druma builds the certified eCMR PDF and applies the **PAdES digital seal**. The driver receives a confirmation on screen. The certified PDF is stored in the order automatically and is accessible from the order detail page.
+    Once all three signatures are complete, Druma builds the certified eCMR PDF and applies the **PAdES digital seal**. It's accessible via the **View eCMR** button in the order's Documents tab.
   </Step>
 </Steps>
 
 <Note>
-The QR code link expires after 30 minutes. If the consignee does not sign within that time, the driver can generate a new QR code.
+The consignee share link expires after 30 days. If it expires before the consignee signs, generate a new one from the Documents tab.
 </Note>
 
 <Note>
-If your company is still on a **legacy TransFollow** configuration (TransFollow can no longer be newly selected — see [eCMR Providers](/en/ecmr/ecmr-providers)), the consignee signs by handing the driver's phone to them at the delivery point instead — the TransFollow signing flow differs from the native QR link approach.
+If your company is still on a **legacy TransFollow** configuration (TransFollow can no longer be newly selected — see [eCMR Providers](/en/ecmr/ecmr-providers)), the consignee signing flow is TransFollow's own QR flow rather than the native share link described here.
 </Note>
 
 ---
@@ -113,9 +115,9 @@ If the consignee refuses to sign at all, use the Paper CMR Fallback process inst
 
 At any time — before, during, or after the signing process — you can check which parties have signed:
 
-1. Open the order in Druma (web or app)
-2. Click or tap the **eCMR** tab
-3. The status panel shows three rows — Sender, Carrier, Consignee — each showing "Signed ✓" with a timestamp, or "Pending"
+1. Open the order in Druma's web app
+2. Go to the **Documents** tab
+3. The **Shipper / driver signatures** section shows a badge for each of Shipper, Driver, and Consignee — green with a checkmark once signed, grey otherwise. Only the Shipper row shows a signed timestamp.
 
 Dispatchers in the office can monitor signature status in real time without calling the driver.
 
@@ -127,7 +129,7 @@ If the sender or consignee refuses to sign, is not present, or a technical probl
 
 <CardGroup cols={2}>
   <Card title="Paper CMR Fallback" icon="file-alt" href="/en/ecmr/paper-cmr-fallback">
-    How to switch an order from eCMR to paper CMR mid-process, and how to record the reason.
+    What to do when eCMR isn't practical for a shipment.
   </Card>
   <Card title="Uploading Documents" icon="upload" href="/en/ecmr/uploading-documents">
     How to upload a scanned paper CMR or other delivery document to an order.

@@ -1,6 +1,6 @@
 ---
 title: "Wasted Journey"
-description: "How to declare a wasted journey when a trip is cancelled after the driver has departed, and how charges and payroll are handled."
+description: "How to declare a wasted journey when a trip is cancelled after the driver has departed, and what gets recorded on the order."
 icon: "triangle-exclamation"
 ---
 
@@ -66,34 +66,20 @@ Once an order is marked as a wasted journey:
 
 1. **The order status changes to Wasted Journey** — it appears with a red badge on the orders list and planning board.
 2. **The driver is released** — the truck becomes available for new assignments on the planning board.
-3. **An audit trail is created** — the system records who declared the wasted journey, when, and the reason.
-4. **Payroll record is generated** — the dead kilometres and hours are logged for driver payroll calculations.
-5. **A charge record is created** (if enabled) — if you toggled "Charge client", a charge record is created that can be invoiced later.
+3. **The event is recorded on the order** — the reason code, who cancelled (client, own decision, or force majeure), the driver's location, dead kilometres, and (if you toggled "Charge client") a client invoice amount are all saved directly on the order record.
 
----
-
-## Payroll impact
-
-When a wasted journey is declared, Druma automatically creates a payroll record containing:
-
-- **Dead kilometres** — the distance the driver travelled before the trip was aborted.
-- **Hours logged** — time spent on the aborted trip.
-- **Status** — tracks whether the payroll entry has been processed or is still pending.
-
-These records appear in the driver's payroll summary and can be exported for your accounting system.
+<Note>
+Declaring a wasted journey does not automatically generate a separate payroll entry or a standalone charge record. What's recorded lives on the order itself — use that information manually for driver payroll and, if you toggled "Charge client", when building the client invoice.
+</Note>
 
 ---
 
 ## Charging the client
 
-If the wasted journey was caused by a client cancellation, you may want to recover costs. When you toggle **Charge client** in the wasted journey modal:
-
-- A charge record is created with the calculated amount based on dead kilometres and your rate card.
-- You can override the charge amount manually if needed.
-- The charge can be converted into an invoice line item from the Invoicing module.
+If the wasted journey was caused by a client cancellation, you may want to recover costs. When you toggle **Charge client** in the wasted journey modal, you enter the client invoice amount directly (pre-filled from the order's agreed price, if one exists). This amount is saved on the order for you to bring into the invoice later — it isn't auto-converted into an invoice line item on its own.
 
 <Note>
-Whether you charge the client depends on your contractual terms. Druma creates the charge record — it's up to you to decide whether to invoice it.
+Whether you charge the client depends on your contractual terms. Druma records the amount — it's up to you to decide whether and how to invoice it.
 </Note>
 
 ---

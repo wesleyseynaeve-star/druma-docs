@@ -5,73 +5,66 @@ description: "Log and track accidents, damage events, and safety incidents acros
 
 ## Overview
 
-The Incidents tab in Fleet is a structured log of any accidents, damage events, or safety incidents involving your vehicles. Logging incidents in Druma creates a permanent record for insurance claims, legal defence, and internal safety analysis.
+Fleet Incidents is a structured log of any accidents, damage events, or safety incidents involving your vehicles. Logging incidents in Druma creates a permanent record for insurance claims, legal defence, and internal safety analysis.
 
-**Access:**
-- Per vehicle: Fleet → Trucks → open a vehicle → **Incidents** tab
-- Fleet-wide: Fleet → **Incidents** (all incidents across all vehicles)
+Incidents are **reported by the driver from the driver app**, not created by a planner or fleet manager from the web app. The web-side **Fleet → Incidents** page is where planners and fleet managers review, filter, and manage incidents that drivers have already reported — there is no "+ New Incident" creation flow on the web side, and there is no per-vehicle Incidents tab on the truck detail view.
 
 ---
 
-## Creating an Incident Record
+## How a Driver Reports an Incident
+
+From the active order screen in the driver app, the driver taps **Report Incident** and works through a short step-by-step form:
 
 <Steps>
-  <Step title="Open the vehicle or fleet incidents view">
-    Either open a specific vehicle and click the **Incidents** tab, or go to **Fleet → Incidents** for the fleet-wide view.
+  <Step title="Severity">
+    Choose **Minor** (no injuries, minor damage), **Serious** (injuries or significant damage), or **Major** (serious injuries or total loss).
   </Step>
-  <Step title="Click New Incident">
-    Click **+ New Incident**. The incident form opens.
+  <Step title="Description">
+    A free-text account of what happened (at least 5 characters).
   </Step>
-  <Step title="Fill in the incident details">
-    Complete the form fields (see table below).
+  <Step title="Location">
+    Capture the current GPS position with one tap, and optionally add a free-text description of the location (street, motorway, landmark).
   </Step>
-  <Step title="Attach documents and photos">
-    Attach damage photos, a police report PDF, insurance correspondence, or a driver statement.
+  <Step title="Photos">
+    Attach up to 5 photos of the damage. If the driver is offline, the text report can still be submitted and queued — photos are not saved offline and must be added once the driver reconnects.
   </Step>
-  <Step title="Save">
-    Click **Save**. The incident is recorded immediately.
+  <Step title="Witness (optional)">
+    Witness name and phone/email, if there was one.
+  </Step>
+  <Step title="Review & submit">
+    A summary screen before submitting. A **Major** incident shows an in-app note that the fleet manager will be notified.
   </Step>
 </Steps>
 
-### Incident form fields
+### Incident record fields
 
 | Field | Description |
 |---|---|
-| **Date and time** | When the incident occurred |
-| **Location** | Address or GPS coordinates of the incident |
-| **Driver** | Which driver was operating the vehicle |
-| **Incident type** | Collision / Damage / Near-miss / Theft / Vandalism / Other |
-| **Description** | Free-text account of what happened |
-| **Third party involved** | Toggle on if another vehicle or party was involved |
-| **Police report number** | Reference if a police report was filed |
-| **Injuries** | Toggle and description if anyone was injured |
+| **Severity** | Minor / Serious / Major |
+| **Occurred at / Reported at** | When the incident happened vs. when it was submitted |
+| **Location** | GPS coordinates and/or free-text address |
+| **Description** | The driver's free-text account |
+| **Witness name / contact** | Optional |
+| **Photos** | Up to 5 images, viewable full-size from the incident detail pane |
+| **Voice memo** | The data model supports an attached audio recording, though the current driver-app flow does not yet include a step to record one |
+| **Status** | Reported / Under Review / Closed |
+| **Linked work order** | Optional link to a Fleet work order created to fix the damage |
+| **Insurance claim reference / status** | See below |
 
----
-
-## Third-Party Details
-
-When **Third party involved** is enabled, additional fields appear:
-
-- Third-party company name or individual name
-- Third-party vehicle plate
-- Third-party insurance company and policy number
-- Third-party contact phone and email
-
-These details are stored on the incident record and can be exported as a PDF for your insurance company.
+There is no incident-type classification (collision/theft/vandalism/etc.), no third-party details section, no police-report-number field, and no separate injuries toggle — severity and the free-text description are how those situations are currently captured.
 
 ---
 
 ## Insurance Claim Tracking
 
-Each incident can be linked to an insurance claim:
+From the incident detail pane on **Fleet → Incidents**, you can track the linked insurance claim:
 
 | Field | Description |
 |---|---|
-| **Claim reference number** | Your insurer's reference |
-| **Claim status** | Open / Under review / Settled / Rejected |
-| **Settlement amount (€)** | Enter when the claim is settled |
+| **Claim reference** | Your insurer's reference |
+| **Claim status** | No claim / Filed / In review / Settled / Rejected |
 
-Update the status and settlement amount as the claim progresses. A **Settled** status with an amount feeds into the vehicle's cost summary.
+Update the status as the claim progresses. There is no settlement-amount field on the incident record — track the financial outcome of a claim through your invoicing/finance workflow instead.
 
 ---
 
@@ -81,13 +74,12 @@ Go to **Fleet → Incidents** to see all incidents across the fleet in one list.
 
 Filter the view by:
 
+- Severity (Minor / Serious / Major)
+- Status (Reported / Under Review / Closed)
 - Date range
-- Vehicle
-- Driver
-- Incident type
-- Insurance claim status
+- Free-text search (matches truck plate, driver name, or description)
 
-Click **Export CSV** to download the filtered list for insurance reviews or safety audits.
+Click **Export to Excel** to download the filtered list for insurance reviews or safety audits.
 
 ---
 
@@ -97,7 +89,7 @@ The fleet-wide view lets you identify patterns:
 
 - **Which vehicles** are involved in the most incidents
 - **Which drivers** have the highest incident rate
-- **Which incident types** are most common (e.g., damage vs. near-miss)
+- **Severity mix** — how many Minor vs. Serious vs. Major incidents your fleet logs
 - **Time patterns** — morning vs. evening, specific routes or countries
 
 Use these insights to target driver training, adjust routing, or flag vehicles that require closer monitoring.

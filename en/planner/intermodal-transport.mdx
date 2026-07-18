@@ -11,7 +11,7 @@ Intermodal transport moves cargo across multiple transport modes in sequence —
 This is different from a standard order with internal stops. Internal stops are waypoints on a single continuous road journey with one truck. Intermodal legs are distinct transport events that may use different modes, different carriers, and even different countries of jurisdiction.
 
 <Note>
-Groupage orders cannot be made intermodal. The intermodal toggle is hidden on groupage orders.
+Groupage runs and intermodal legs are separate concepts — legs belong to a single order, groupage consolidates multiple orders onto one truck. There's no combined "intermodal groupage" flow today.
 </Note>
 
 ---
@@ -30,18 +30,17 @@ Druma tracks the booking reference and container number for leg 2, generates a s
 
 ## Creating an intermodal order
 
+There's no "Intermodal" toggle to switch on — legs are added to an order you've already created, and Druma treats the order as intermodal automatically once it has legs.
+
 <Steps>
-  <Step title="Open the New Order modal or edit an existing order">
-    Go to **Operations → Orders** and click **New Order**, or open an existing draft order.
-  </Step>
-  <Step title="Enable the Intermodal toggle">
-    In the **Stops** section header, find the **Intermodal** toggle and switch it on. A **Legs** section appears above the stops list.
+  <Step title="Create or open the order">
+    Create the order normally (see [Creating an Order](/en/planner/creating-orders)), then open it and go to its **Cargo & Stops** tab.
   </Step>
   <Step title="Add legs">
-    Click **+ Add Leg** to create the first leg. Add as many legs as the journey requires — there is no limit.
+    In the **Transport legs** section, click **Add leg** to create the first leg. Add as many as the journey requires — there is no limit. Each new leg's origin defaults to the previous leg's destination (or the order's pickup, for the first leg), so you're not re-typing the same address.
   </Step>
-  <Step title="Add stops as normal">
-    Stops (pickup, delivery, internal) are added in the Stops section as usual. Each stop is associated with the leg it belongs to.
+  <Step title="Fill in each leg">
+    Expand a leg card to set its mode, origin/destination, planned start/end, and carrier (see below).
   </Step>
 </Steps>
 
@@ -64,7 +63,7 @@ Each leg card has the following fields:
 
 ### Road legs
 
-Road legs can be assigned to your own fleet (truck, driver, second driver, and trailer) or to a subcontractor carrier. Click the truck or carrier field to search and assign.
+Road legs can be assigned to your own fleet (truck and driver) or to a subcontractor carrier — pick which via a radio choice on the leg card, then select the truck/driver or subcontractor from a dropdown.
 
 ### Non-road legs (Sea, Rail, Air, Barge)
 
@@ -73,8 +72,8 @@ Non-road legs can only be assigned to a subcontractor carrier — your own fleet
 ### Leg controls
 
 - **Up/down arrows** — reorder legs. The leg timeline strip (see below) updates as you drag.
-- **Trash icon** — delete a leg. Only available when the leg has not started. Legs that are in progress or completed cannot be deleted.
-- **Complete Leg** button — marks the leg as done. Available once the leg's planned start date has passed.
+- **Remove leg** — delete a leg. There's no status-based restriction on this in the UI, so double-check before removing a leg that's already underway.
+- **Complete leg** button — marks the leg as done. It's shown once the leg's status reaches **In Transit**, **At Delivery**, or **Offloading** — this is gated on status, not on any date.
 
 ### Leg timeline strip
 
@@ -117,7 +116,7 @@ The planning board calculates truck availability based on the **road leg end dat
 
 ### Assigning a truck to an intermodal order
 
-Dragging a truck block onto an intermodal order from the unassigned sidebar opens an **Assign to Leg** modal instead of the standard confirmation popup. The modal lists all unassigned road legs and asks you to select which leg this truck covers. Click **Assign** to confirm.
+Dragging a truck onto an intermodal order shows an **Intermodal leg** section in the assignment confirmation sheet instead of the standard flow. It lists every road leg on the order (sequence, origin → destination, planned dates) — clicking a leg row selects it directly; there's no separate "Assign" button to click afterwards.
 
 <Note>
 A truck can only be assigned to one road leg per intermodal order. To cover multiple road legs with different trucks, repeat the drag-and-drop process for each leg.
@@ -127,7 +126,7 @@ A truck can only be assigned to one road leg per intermodal order. To cover mult
 
 ## eCMR per road leg
 
-Each road leg that crosses an international border gets its own eCMR. To create one, open the leg card and click **Create eCMR**. Druma registers the document using the Druma native provider (default), or TransFollow if that is your company's selected provider, with the leg's origin, destination, and assigned carrier pre-filled.
+Each road leg that crosses an international border gets its own eCMR. To create one, open the leg card and click **Create eCMR**. Druma registers the document using its native, in-house eCMR provider, with the leg's origin, destination, and assigned carrier pre-filled — completing a cross-border leg auto-triggers this the same way. (There's no provider choice to make: Native is the only path for new documents; only pre-existing legacy TransFollow rows still function, unrelated to legs created here.)
 
 Legs that stay within a single country do not require an eCMR (unless your company policy mandates one). The **Create eCMR** button is always available if you need to override this.
 

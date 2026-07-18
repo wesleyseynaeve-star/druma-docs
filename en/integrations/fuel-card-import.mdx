@@ -1,43 +1,45 @@
 ---
 title: "Fuel Card Import"
-description: "Import monthly fuel transaction data from DKV, UTA, AS24, Shell Card, and SmartDiesel to track real fuel costs per vehicle."
+description: "Import fuel transaction data from DKV, UTA, AS24, Shell, and other major European fuel card providers to track real fuel costs per vehicle."
 icon: "gas-pump"
 ---
 
-Fuel is typically the largest variable cost in road freight. Druma lets you import transaction data from the major fuel card providers used by Romanian operators, linking each fill-up to the correct vehicle so your cost reports reflect real fuel spend rather than estimates.
+Fuel is typically the largest variable cost in road freight. Druma lets you import transaction data from the major fuel card providers, linking each fill-up to the correct vehicle so your cost reports reflect real fuel spend rather than estimates.
 
 ## Supported Providers
 
-Druma supports CSV import from these fuel card providers:
+Druma auto-detects the provider from the file's column headers and file name. Supported providers:
 
-- **DKV** (DKV Mobility)
-- **UTA** (UTA Edenred)
+- **DKV**
+- **UTA**
 - **AS24**
-- **Shell Card**
-- **SmartDiesel**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
 
-If you use multiple cards across your fleet, you can import from each provider separately. Druma handles the different file formats automatically.
+Any other CSV or XLSX file with standard column names (date, amount, liters, card/plate) is also accepted, even without a recognised provider match. If you use multiple cards across your fleet, you can import from each provider separately.
 
 ## How to Import
 
 <Steps>
-  <Step title="Download your CSV from the provider">
-    Log in to your fuel card provider's online portal and navigate to the transaction history or statement export section. Download the monthly transaction file as a CSV. Each provider's portal is different, but this option is typically under Reports or Statements.
+  <Step title="Download your file from the provider">
+    Log in to your fuel card provider's online portal and export the transaction history as CSV or XLSX. Each provider's portal is different, but this option is typically under Reports or Statements.
   </Step>
-  <Step title="Open Druma fuel card import">
-    In Druma, go to **Integrations → Fuel Cards → Import CSV**.
-  </Step>
-  <Step title="Select your provider">
-    Choose your provider from the dropdown. This tells Druma which column mapping to apply — the CSV format differs significantly between providers.
+  <Step title="Open Druma's fuel import">
+    In Druma, go to **Fleet → Fuel** and click **Import Fuel**.
   </Step>
   <Step title="Upload the file">
-    Click **Choose File**, select the CSV you downloaded, and click **Import**. Druma processes the file and shows a preview of the records it found before saving.
+    Drop or select the CSV/XLSX file (max 5 MB). Druma detects the provider automatically from the file and shows a preview of the parsed rows — including any toll lines it finds mixed into the same statement.
   </Step>
   <Step title="Review and confirm">
-    Check the preview — Druma shows you the number of transactions found, the date range, and a sample of records. If everything looks correct, click **Confirm Import**.
+    Check the preview — rows without a matching vehicle are flagged and excluded from the import. Click **Import N rows** (showing the actual row count) to confirm.
   </Step>
 </Steps>
-
 
 ## What Gets Imported
 
@@ -45,46 +47,43 @@ For each transaction, Druma extracts:
 
 | Field | Source |
 |---|---|
-| Date and time | Transaction timestamp from CSV |
-| Vehicle | Matched by licence plate number |
-| Fuel station name | Location field from CSV |
-| Litres filled | Quantity field from CSV |
-| Amount (EUR or RON) | Value field from CSV |
-| Transaction ID | Provider's unique transaction reference |
+| Date (no time component) | Transaction date column from the file |
+| Vehicle | Matched by fuel card number, then by licence plate |
+| Fuel station name | Location field from the file |
+| Litres filled | Quantity field from the file |
+| Amount | Value field from the file — assumed EUR unless a currency column is present |
+| Transaction ID | Provider's unique transaction reference, used for duplicate detection |
+
+Manual single-entry fuel fills (via **Add Fill**) only accept an amount in EUR — there's no currency selector on that form. RON amounts are only converted automatically via the separate email/drop-folder auto-ingest path described below.
 
 ## Matching Transactions to Vehicles
 
-Druma matches each transaction to a vehicle using the **licence plate number**. The plate on the transaction must match the plate recorded in Fleet → Vehicles exactly (including format — spaces, hyphens).
+Druma matches each transaction to a vehicle, first by **fuel card number**, then by **licence plate**. Both the card number and the plate are normalised before comparing — uppercased, with all spaces, hyphens, and other non-alphanumeric characters stripped — so "B 123 ABC" and "B123ABC" match the same vehicle.
 
-If a plate does not match any vehicle in your fleet, the transaction is flagged as **Unmatched** and shown in a separate list. Common reasons:
+If a transaction still doesn't match any vehicle, it's flagged as **unmatched** in the preview and excluded from the import. Common reasons:
 
 - The vehicle was recently added and not yet in Druma
-- The plate format in the CSV uses different spacing than what's in Druma (e.g., "B123ABC" vs "B 123 ABC")
+- Neither the card number nor the plate on the transaction match any fleet record
 - A driver used their card in a hired or subcontracted vehicle
-
-You can manually link unmatched transactions to a vehicle from the Unmatched list, or update the vehicle plate format in your Fleet records.
 
 ## Duplicate Detection
 
-If you accidentally import the same CSV twice, Druma detects duplicates by comparing the provider's transaction ID. Duplicate transactions are skipped automatically. You will see a message: "X transactions imported, Y duplicates skipped."
-
-This makes it safe to re-import a file if you are unsure whether you already imported it.
+If you accidentally import the same file twice, Druma detects duplicates using a dedup key built from the transaction date, amount, liters, card, plate, and provider transaction ID — duplicates are skipped automatically at the database level. The success message only reports how many fuel fills (and toll lines) were imported; it does not report a separate duplicates-skipped count.
 
 <Note>
-Always import the complete monthly file rather than a partial export. Partial imports can cause gaps in your fuel cost data that affect lane profitability calculations.
+Always import the complete statement rather than a partial export. Partial imports can cause gaps in your fuel cost data that affect lane profitability calculations.
 </Note>
+
+## Automatic Import via Email
+
+In addition to manual upload, Druma can ingest fuel statements automatically from an inbound email address (with a scheduled sweep as a fallback), reusing the same parser as the manual import modal. Contact Druma support to set this up for your account.
 
 ## Where Imported Fuel Data Appears
 
 After import, transactions appear in:
 
-- **Fleet → Fuel Costs** — full transaction history per vehicle, filterable by date range
-- **Fleet → Vehicles → [vehicle] → Fuel History** — all fill-ups for a specific truck
+- **Fleet → Fuel** — full transaction history across your fleet, filterable and searchable by plate, provider, and location
 - **Lane Profitability report** — imported fuel costs replace the estimated fuel calculation for orders where actual fuel data is available
-
-<Note>
-When actual fuel import data exists for a period, the Lane Profitability report uses it instead of the estimate. This makes the report significantly more accurate. The report labels whether costs are "Actual" or "Estimated" in the cost breakdown.
-</Note>
 
 ## Why CSV Import Instead of Live API?
 

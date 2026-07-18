@@ -27,7 +27,7 @@ Go to **Invoicing** → **New Invoice** → search for the client → select the
 
     - **Transport fee** — pulled from the agreed price set when the order was created
     - **Waiting charge** — auto-calculated if the driver logged waiting time beyond the free period
-    - **ADR surcharge** — flat €75, added automatically if the order was flagged as ADR cargo
+    - **ADR surcharge** — added automatically if the order was flagged as ADR cargo, using your company's configured ADR surcharge rate (default €75 if you have not set one)
     - **Fuel surcharge** — included if you have a fuel surcharge rule configured in Settings
     - **Other surcharges** — add any custom line items as needed (toll reimbursement, ferry, extra stops)
 
@@ -40,7 +40,7 @@ Go to **Invoicing** → **New Invoice** → search for the client → select the
     Click **Preview PDF** to see exactly what the client will receive. Verify the client name, VAT number, addresses, line items, totals, and your bank details. Fix anything before generating — it is much easier to correct now than after.
   </Step>
   <Step title="Generate the invoice">
-    Click **Generate**. Druma assigns a sequential invoice number (for example, DR-2024-047) and locks the document. Once generated, you cannot edit amounts directly — use a credit note for any corrections.
+    Click **Generate**. Druma assigns a sequential invoice number (for example, INV-000047) and locks the document. Once generated, you cannot edit amounts directly — use a credit note for any corrections.
   </Step>
   <Step title="Send the invoice">
     Choose how to send:
@@ -73,17 +73,13 @@ To manage the extras catalog (company-wide line item templates): **Settings → 
 
 ## Invoice Numbering
 
-Invoice numbers are sequential and use a configurable prefix. The default format is `DR-YYYY-NNN` (for example, DR-2024-001, DR-2024-002, DR-2024-003).
+Invoice numbers are sequential and use a configurable prefix. The default format (with no custom pattern configured) is `{prefix}-{6-digit sequence}` — for example, `INV-000001`, `INV-000002`, `INV-000003`. A pattern with a year token (`{YYYY}`) is available if you configure a custom numbering pattern.
 
-To change the prefix: **Settings** → **Invoicing** → **Invoice Number Prefix**.
-
-<Note>
-The sequential number does not reset mid-year by default. If you want a fresh sequence at the start of each calendar year, enable **Reset annually** on the same Settings page. This is common practice in Romania.
-</Note>
+To change the prefix or configure a custom numbering pattern (including a year token): **Settings** → **Branding & Formats** → **Invoice Numbering**.
 
 ## Multi-Currency Invoices
 
-Druma supports invoicing in EUR, RON, USD, and GBP. Select the currency when you create the invoice. For any currency other than RON, Druma automatically fetches the exchange rate from the **BNR (Romanian National Bank)** for the invoice date and includes it on the PDF.
+Druma supports invoicing in EUR, GBP, CHF, USD, RON, and PLN. Select the currency when you create the invoice. For any currency other than RON, Druma automatically fetches the exchange rate from the **BNR (Romanian National Bank)** for the invoice date and includes it on the PDF.
 
 This is important for Romanian accounting compliance and e-Factura submission — the RON equivalent of any foreign currency amount must appear on the invoice.
 

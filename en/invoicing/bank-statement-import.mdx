@@ -12,14 +12,15 @@ This is the fastest way to reconcile a high volume of incoming payments at once 
 
 ## Supported Formats and Banks
 
-Druma accepts two standard formats:
+Druma accepts three standard formats:
 
 | Format | Description |
 |--------|-------------|
 | **CAMT.053 XML** | ISO 20022 — exported by most EU banks via online banking |
 | **MT940 SWIFT** | SWIFT legacy format — still common for corporate banking APIs |
+| **CODA** | Fixed-width format used by Belgian banks |
 
-Both formats are supported by BRD, BCR, Raiffeisen Bank, UniCredit, and ING Romania, as well as the majority of EU banks. Druma auto-detects the format on upload. If detection fails, select the correct format from the **Format** dropdown inside the import modal.
+All three formats are supported by BRD, BCR, Raiffeisen Bank, UniCredit, and ING Romania, as well as the majority of EU banks — CODA specifically covers Belgian bank exports. Druma auto-detects the format on upload. If detection fails, select the correct format from the **Format** dropdown inside the import modal.
 
 **Maximum file size:** 10 MB per upload.
 
@@ -34,7 +35,7 @@ Re-uploading the same statement file is safe. Druma fingerprints each transactio
     Go to **Finance** → **Reconciliation** → **Payments** tab. Click the **Import Statement** button in the top-right corner of the page.
   </Step>
   <Step title="Select your file">
-    Click **Choose file** and select your exported bank statement. Accepted extensions are `.xml` (CAMT.053) and `.sta` or `.txt` (MT940). The file must be 10 MB or smaller.
+    Click **Choose file** and select your exported bank statement. Accepted extensions are `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940), and `.cod`/`.coda` (CODA). The file must be 10 MB or smaller.
   </Step>
   <Step title="Confirm the format">
     Druma auto-detects the format and shows a label below the file name. If the label is wrong, open the **Format** dropdown and select the correct format manually before proceeding.
@@ -67,11 +68,11 @@ A healthy import has a high **Auto-matched** count and a low **Need review** cou
 
 Druma matches each bank transaction to an invoice using the following signals, in order of priority:
 
-1. **Invoice number in transaction reference** — exact or partial match (e.g. `DR-2024-047` in the payment description)
-2. **Amount match** — within ±2% tolerance to account for bank fees or rounding differences
-3. **Client name or VAT number** — cross-referenced against your client master
+1. **Invoice number in transaction reference** — exact or partial (fuzzy-normalised) match against an open invoice number. A match on this signal alone is enough to apply the payment automatically — no other signal is required.
+2. **Amount match** — if no invoice number matches, Druma looks for an open invoice whose outstanding balance falls within your configured tolerance (default ±2%) of the transaction amount, **and** whose due date falls within ±30 days of the transaction date. This keeps a stray amount match from linking to an unrelated invoice months away.
+3. **Client name** — used only as a tie-breaker when the amount match above returns more than one candidate invoice; Druma narrows to the candidate whose client name appears in the transaction's sender name.
 
-All three signals agreeing → auto-applied. Partial signals → queued for review. No signals → queued as unmatched.
+An invoice-number match auto-applies the payment (fully or partially, depending on the amount). An **amount-only match is never auto-applied** — even when it uniquely identifies one invoice — it always lands in the Reconciliation queue for manual confirmation, since there's no reference proving it's genuinely that invoice's payment. No signal at all → queued as unmatched.
 
 ## Handling Unmatched Transactions
 
@@ -98,8 +99,8 @@ Discarding a transaction is a soft action — it only marks the row as rejected 
 
 ## Tips for Higher Auto-Match Rates
 
-- **Ask clients to include the invoice number** in the payment reference field of their bank transfer. A reference like `DR-2024-047` gives Druma an exact match on the first signal.
-- **Keep client VAT numbers up to date** in your client master — Druma uses them as a secondary matching signal when the reference is missing.
+- **Ask clients to include the invoice number** in the payment reference field of their bank transfer. A reference like `INV-000047` gives Druma an exact match on the first signal.
+- **Keep client names consistent** between your client master and how clients identify themselves on bank transfers — Druma falls back to a client-name match only to disambiguate between multiple same-amount invoices, so a close match there can rescue an otherwise-ambiguous amount match.
 - **Use net payment terms** consistently. Payments that arrive with deducted fees (banking or factoring) fall within the ±2% tolerance for amounts under ~€5,000. For larger invoices, confirm with clients that they send the full amount.
 
 ---

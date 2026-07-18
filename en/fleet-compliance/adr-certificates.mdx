@@ -28,36 +28,34 @@ Not all ADR transport requires a vehicle certificate — for many classes, only 
   <Step title="Open the driver record">
     Go to **Fleet → Drivers** and click the driver's name.
   </Step>
-  <Step title="Go to the Certifications tab">
-    Click the **Certifications** tab on the driver detail page.
+  <Step title="Go to the Certificates tab">
+    Click the **Certificates** tab on the driver detail page.
   </Step>
-  <Step title="Add ADR certificate">
-    Click **Add Certificate**, select **ADR** as the certificate type, enter the certificate number, select the covered ADR classes, and enter the expiry date.
-  </Step>
-  <Step title="Upload the scan">
-    Attach a PDF or photo of the certificate.
+  <Step title="Enter the ADR certificate">
+    Under **ADR Certificate**, enter the certificate number in **ADR Certificate #** and set **ADR Expiry**. These are two plain fields — there is no separate "Add Certificate" flow and no selector for which ADR classes the certificate covers.
   </Step>
   <Step title="Save">
-    Click **Save**. The driver's profile now shows ADR certification status and expiry date.
+    Click **Save**. The driver's row and record now show the ADR expiry status via the expiry badge.
   </Step>
 </Steps>
+
+<Note>
+Druma does not currently store a certificate scan upload or a covered-classes list for the driver ADR certificate — only the certificate number and its expiry date.
+</Note>
 
 ---
 
 ## Adding ADR Certification to a Vehicle
 
 <Steps>
-  <Step title="Open the vehicle record">
-    Go to **Fleet → Vehicles** and click the vehicle.
-  </Step>
-  <Step title="Go to the Documents tab">
-    Click the **Documents** tab.
+  <Step title="Open the Documents Overview">
+    Go to **Fleet → Documents Overview** — this is a separate top-level Fleet page, not a tab on the vehicle detail view.
   </Step>
   <Step title="Upload ADR equipment certificate">
-    Click **Upload Document**, select **ADR Certificate (Vehicle)**, enter the expiry date, and upload the certificate scan.
+    Click **Upload Document**, select **ADR** as the document type, choose the vehicle, enter the expiry date, and upload the certificate scan.
   </Step>
   <Step title="Save">
-    The vehicle's ADR status is now tracked alongside its other documents.
+    The vehicle's ADR status is now tracked alongside its other fleet documents on the Documents Overview grid.
   </Step>
 </Steps>
 
@@ -72,31 +70,23 @@ When you create an order and flag it as an ADR shipment, Druma checks compliance
     When creating or editing an order, toggle the **ADR** flag in the cargo details section and select the relevant ADR class.
   </Step>
   <Step title="Assign a driver">
-    When you select a driver for the order, Druma checks whether that driver has a valid ADR certificate that covers the required class. If the certificate is expired or missing, Druma blocks the assignment and shows a clear warning.
+    When you select a driver for the order, Druma checks whether that driver holds the **ADR** skill tag (a simple yes/no flag on the driver's skill record, set independently of the ADR Certificate # / ADR Expiry fields). If the driver does not have the ADR skill tagged, the order shows a **Missing ADR documentation / non-capable resource** exception.
   </Step>
   <Step title="Assign a vehicle">
-    When you select a vehicle, Druma checks whether the vehicle has the required ADR equipment certificate (where applicable for the class). Expired or missing vehicle ADR certificates block assignment with a warning.
+    When you select a vehicle, Druma checks whether the vehicle's assigned **vehicle category** is flagged **ADR-capable** — again a simple yes/no flag on the category, not on the individual vehicle's certificate expiry. A vehicle with no category assigned is treated as unrestricted (not blocked).
   </Step>
 </Steps>
 
-<Warning>
-Druma blocks ADR order assignment when certificates are expired or missing. This is by design — dispatching an ADR shipment with an uncertified driver or vehicle is a serious regulatory violation with significant penalties. Do not look for workarounds; renew the certificate first.
-</Warning>
+<Note>
+This check is a boolean capability flag, not an expiry or per-class check: it does not look at the driver's **ADR Certificate #** / **ADR Expiry** fields or the vehicle's uploaded ADR document at all, and it does not verify that the certificate covers the specific ADR class on the order. Keeping the driver's ADR skill tag and the truck's vehicle category up to date is what keeps this check meaningful — an expired ADR Expiry date alone will not block assignment.
+</Note>
 
 
 ---
 
 ## ADR Surcharge
 
-Orders flagged as ADR automatically include an ADR surcharge as a line item on the invoice. The default rate is **€75 flat fee per order**.
-
-You can change this amount:
-
-1. Go to **Settings → Surcharges**
-2. Find the **ADR Surcharge** line
-3. Change the amount and click **Save**
-
-The surcharge applies to all ADR-flagged orders from that point forward. It does not retroactively change existing orders.
+Orders flagged as ADR automatically include an ADR surcharge as a line item on the invoice. The rate is a fixed **€75 flat fee per order**, configured centrally by Druma — there is currently no per-company setting to change this amount.
 
 <Note>
 If some ADR contracts are priced differently, you can override the surcharge amount on individual orders after the order is created — go to the order's Financials tab and edit the ADR surcharge line item.
@@ -106,15 +96,18 @@ If some ADR contracts are priced differently, you can override the surcharge amo
 
 ## Expiry Alerts
 
-ADR certificates follow the same expiry alert schedule as all other fleet documents:
+ADR certificate expiry alerts run on two separate schedules depending on whether the certificate is on a driver or a vehicle:
 
-| Time before expiry | Action |
-|---|---|
-| 60 days | Yellow warning on the driver or vehicle profile |
-| 30 days | Email alert to Admin and Company Admin users |
-| Expired | Red badge; blocked from ADR order assignments |
+| Document | Critical | Warning |
+|---|---|---|
+| Driver ADR certificate (ADR Expiry field) | Within 7 days, or already expired | Within 30 days |
+| Vehicle ADR document (uploaded via Documents Overview) | Within 14 days, or already expired | Within 60 days |
 
-When a driver's ADR certificate expires, they can still be assigned to non-ADR orders. Only ADR order assignments are blocked.
+<Warning>
+Driver document expiry alerts (which cover the ADR Expiry field) have no visible settings toggle and, for companies created since mid-2026, are not seeded with the enabling flag at all — in practice this notification currently does not fire for most companies. Vehicle document alerts are gated behind **Automations & Features → Fleet document expiry alerts**, which is **off by default** and must be switched on to receive expiry notifications. In both cases, expired/critical badges still display correctly on the driver and vehicle records — only the proactive notification is affected.
+</Warning>
+
+Regardless of whether alerts are enabled, an expired ADR document does not by itself block an order assignment — the assignment check only looks at the driver's ADR skill tag and the vehicle's ADR-capable category flag (see above), not at these expiry dates. Keep expiry dates current for your own visibility, but don't rely on them to stop a non-compliant assignment.
 
 ---
 

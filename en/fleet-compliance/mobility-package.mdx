@@ -34,13 +34,15 @@ The Vehicle Returns table shows one row per truck with the last date the vehicle
 
 | Status | Condition |
 |---|---|
-| **OK** | Fewer than 7 weeks since last return |
-| **Warning** | 7–8 weeks since last return |
+| **OK** | Fewer than 6 weeks since last return |
+| **Warning** | 6–8 weeks since last return (14 days or less remaining before the 8-week deadline) |
 | **Overdue** | More than 8 weeks since last return |
 
-An **Overdue** vehicle must return to the home country immediately to restore compliance. Plan return legs proactively — if a truck is flagged **Warning**, schedule a return run within the week.
+An **Overdue** vehicle must return to the home country immediately to restore compliance. Plan return legs proactively — as soon as a truck is flagged **Warning**, start scheduling a return run.
 
-Return date data comes from GPS telematics (the same feed used for live tracking). If telematics sync is not enabled, you can log a return manually by editing the vehicle record and updating the last return date.
+<Note>
+"Last return" is not derived from a live GPS feed or from any dedicated return-tracking event. It is inferred from **completed order stops**: the most recent loading or offloading stop, on a delivered or invoiced order, that falls in the company's base country (`companies.country`). This is a practical proxy, not a direct observation — a truck that physically drove through the base country without an order stop there (e.g. transiting empty, or a stop the driver didn't record) will not register as having returned. If your vehicles are not consistently picking up or dropping off in the base country as part of normal orders, log returns manually instead.
+</Note>
 
 ---
 
@@ -54,9 +56,9 @@ The Driver Returns table shows one row per driver with the last recorded return 
 | **Warning** | 3–4 weeks since last return |
 | **Overdue** | More than 4 weeks since last return |
 
-Driver return data is derived from the last recorded regular weekly rest location in the tachograph data. A regular weekly rest (≥ 45 consecutive hours) taken at the driver's home or chosen location counts as a qualifying return. Rest taken in the vehicle or at a truck stop does not count.
+Like vehicle returns, driver return data is not derived from tachograph rest-period data — Druma does not distinguish regular vs. reduced rest, or in-vehicle vs. proper-stop rest, for this purpose at all. It uses the same completed-order-stop proxy: the most recent loading or offloading stop, on a delivered or invoiced order for that driver, in the company's base country. There is also no separate "driver home country" field yet — the company's base country is used as the stand-in for the driver's home/operational centre.
 
-If tachograph sync is not enabled, log returns manually by editing the driver record.
+If your drivers' orders don't naturally route them through the base country, this proxy will under-detect qualifying returns — log returns manually by editing the driver record instead.
 
 ---
 
@@ -73,7 +75,7 @@ The IMI Declarations section lists all active and historical posting declaration
 | Status | Meaning |
 |---|---|
 | **Active** | Declaration is valid and current |
-| **Expiring** | Expires within 7 days — action required |
+| **Expiring** | Expires within 30 days — action required |
 | **Expired** | Past end date |
 | **Withdrawn** | Manually withdrawn |
 
@@ -114,11 +116,11 @@ A posting declaration is required each time a driver works in a host member stat
 
 | Data type | Source |
 |---|---|
-| Vehicle return dates | GPS telematics (same feed as live tracking) |
-| Driver return dates | Last regular weekly rest location in tachograph data |
+| Vehicle return dates | Most recent completed order stop (loading or offloading, on a delivered/invoiced order) in the company's base country |
+| Driver return dates | Same completed-order-stop proxy, scoped to that driver's orders |
 | Manual override | Edit the driver or vehicle record directly |
 
-If your vehicles are not connected to a Druma-integrated telematics provider, you must log all return dates manually. The status badges and countdown timers will only be accurate if return data is kept up to date.
+Because both trackers rely on order stops rather than a live position feed, they only see country presence through completed orders — not through GPS tracks or tachograph data. If your operation doesn't naturally route trucks/drivers through the base country as part of normal orders, log return dates manually to keep the status badges and countdown timers accurate.
 
 ---
 
@@ -135,6 +137,6 @@ If your vehicles are not connected to a Druma-integrated telematics provider, yo
     Storing DDD/TGD files to meet the Reg 165/2014 download-frequency requirement.
   </Card>
   <Card title="Fleet Documents" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
-    Vehicle document compliance and operating licence tracking.
+    Vehicle document compliance and expiry tracking.
   </Card>
 </CardGroup>

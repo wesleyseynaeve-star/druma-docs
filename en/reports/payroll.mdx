@@ -19,7 +19,7 @@ Each payroll run calculates four components:
 | Component | Basis |
 |---|---|
 | **Km pay** | Loaded km × rate per km |
-| **Empty km pay** | Empty/deadhead km × empty km rate |
+| **Empty km pay** | Empty/deadhead km × rate per km × empty-km percentage (a configurable share of the loaded rate, not a separate empty-km rate — defaults to 100%, i.e. paid the same as loaded km) |
 | **Day pay** | Active working days × day rate |
 | **Waiting pay** | Total waiting hours × hourly waiting rate |
 
@@ -48,14 +48,11 @@ The total is the sum of all four components in EUR.
 
 ## Configuring rates
 
-Pay rates are set per driver. Go to **Fleet → Drivers**, open the driver record, and set:
+Pay rates (rate per km, day rate, empty-km percentage, waiting hourly rate) are stored per driver — with a company-wide default rule that applies to any driver without one — in the underlying payroll rules table.
 
-- Rate per km (loaded)
-- Rate per km (empty)
-- Day rate
-- Waiting hourly rate
-
-If a rate is not set, that component is calculated as zero and a warning is shown on the payroll result.
+<Note>
+There is currently no in-app screen to view or edit these rates. Rates have to be set directly in the database (or seeded) until a Fleet → Drivers rates UI ships. If a driver has no rule and no company default exists, every component for that driver calculates as zero.
+</Note>
 
 ---
 

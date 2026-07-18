@@ -8,42 +8,31 @@ icon: "truck"
 
 Your fleet is the foundation of everything in Druma. Before you can assign trucks to orders, you need to add each vehicle to the system with its details. This takes a few minutes per truck and you only need to do it once.
 
-Go to **Fleet → Vehicles** to manage your vehicles.
+Go to **Fleet → Trucks** to manage your vehicles.
 
 ---
 
 ## Adding a new vehicle
 
-Click **Add Vehicle** in the top-right corner of the Fleet page to open the vehicle form.
+Click **Add Truck** in the top-right corner of the Fleet page to open the vehicle form.
 
 <Steps>
   <Step title="Enter the registration plate">
     Type the plate number exactly as it appears on the vehicle's documents. This is how you search for and identify the truck throughout Druma.
   </Step>
-  <Step title="Choose the vehicle type">
-    Select the type that best describes this vehicle:
-    - **Tractor / Semi-trailer** — A cab unit designed to pull a trailer. Also known as an artic or articulated lorry.
-    - **Rigid truck** — A fixed-body truck where the cab and cargo area are one unit.
-    - **Van / Sprinter** — Light commercial vehicles for smaller loads.
-    - **Flatbed** — An open flat platform vehicle for oversized or heavy cargo.
+  <Step title="Set the vehicle category (optional)">
+    There's no free-choice "vehicle type" step — instead, **Vehicle Category** is an EU type-approval classification: leave it unset for a standard **HGV** (the default), or choose **N1 — LCV ≤3.5t**, **N2 — LCV 3.5–12t**, or **N3 — HGV >12t** if you need LCV-specific driving-hours or compliance handling. There's a separate free-text **Body Type** field if you want to note "Tractor unit", "Rigid", "Van", etc. for your own reference.
   </Step>
   <Step title="Choose the trailer type">
-    If the vehicle has a permanently attached trailer body (or for rigid trucks and vans), select the appropriate trailer type:
-    - **Curtainsider** — The most common trailer type. Fabric sides that open for side loading.
-    - **Refrigerated / Reefer** — Temperature-controlled trailer for food, pharmaceuticals, etc.
-    - **Flatbed** — Open platform for machinery, steel, timber.
-    - **Tanker** — Cylindrical tank for liquids or bulk solids.
-    - **Container** — Built to carry ISO shipping containers.
-    - **Tautliner** — Similar to curtainsider but with a sliding roof as well.
-    - **Mega** — High-volume curtainsider with a taller internal height (typically 3m+).
+    Select from your company's configured trailer types — by default: **Tautliner, Mega, Box, Reefer, Flatbed, Tanker, Lowboy, Curtainside, Container chassis, Silo, Lowloader**. This list is company-configurable, so yours may differ.
   </Step>
   <Step title="Set the Euro emission standard">
-    Select the vehicle's Euro standard from **Euro 3** through **Euro 6**. This information is used in CO2 emission reporting and may affect routing through low-emission zones. Check the vehicle's registration document if you're unsure.
+    Select the vehicle's **Euro Class** — **Euro 1** through **Euro 6**, plus **Euro 6d** and **EEV**. This information is used in CO2 emission reporting and may affect routing through low-emission zones. Check the vehicle's registration document if you're unsure.
   </Step>
   <Step title="Enter dimensions and weight">
-    - **Height (m)** — Maximum vehicle height including the load. Used by HERE truck routing to avoid low bridges.
-    - **Weight (tonnes)** — Maximum permitted gross vehicle weight. Used for weight-restricted roads in routing.
-    - **Max payload (kg)** — The maximum cargo weight this vehicle can legally carry.
+    - **Height (m)** — Maximum vehicle height including the load. Used by PTV truck routing to avoid low bridges.
+    - **Max Weight kg** — The maximum permitted cargo/payload weight.
+    - **GVW kg** — Gross vehicle weight, used by PTV truck routing for weight-restricted roads.
     - **Axle count** — Total number of axles. Used for routing through roads with axle restrictions.
   </Step>
   <Step title="Enter the daily fixed cost">
@@ -72,24 +61,13 @@ Deactivating a vehicle does not delete its order history. All past orders remain
 
 ---
 
-## Marking a vehicle as unavailable
+## When a vehicle is temporarily unavailable
 
-Sometimes a truck is temporarily out of service — in the workshop for maintenance, waiting for parts, or broken down. Instead of deactivating it, use the **Unavailability** feature to block it for a specific period.
+Druma doesn't have a manual "mark this truck unavailable for a date range" form. Instead, unavailability periods are created automatically from the safety-critical side of fleet operations: a driver's post-trip inspection (DVIR) that flags a defect opens a workshop work order, and an open work order blocks that truck from planning until it's resolved.
 
-<Steps>
-  <Step title="Open the vehicle profile">
-    Go to Fleet → Vehicles and click the truck you need to block.
-  </Step>
-  <Step title="Click Add Unavailability">
-    Find the **Unavailability** section on the vehicle profile and click **Add**.
-  </Step>
-  <Step title="Set the date range and reason">
-    Enter the start date, expected return date, and a reason (e.g. "Annual service", "Engine repair", "Tyre replacement"). The reason appears on the planning board when you hover over the blocked period.
-  </Step>
-  <Step title="Save">
-    Click **Save**. The truck will appear greyed out on the planning board during the blocked dates, and it will be flagged as unavailable in the truck assignment dropdown when creating orders.
-  </Step>
-</Steps>
+<Note>
+If you need a truck out of service for a reason that doesn't go through a DVIR/workshop defect (e.g. a planned service you're scheduling manually), the closest equivalent today is to switch it to **Inactive** for the period and reactivate it afterwards — see below.
+</Note>
 
 ---
 
@@ -100,23 +78,23 @@ Click any vehicle in the list to open its full profile. From here you can see:
 - **Current assignment** — Which order the truck is currently on, if any.
 - **Order history** — A full list of all completed and active orders for this vehicle, filterable by date.
 - **Document expiry status** — A summary of all linked documents and their expiry dates (see Fleet Documents for details).
-- **Unavailability periods** — Past and upcoming maintenance blocks.
+- **Unavailability periods** — Past and upcoming blocks created by workshop work orders (see above).
 
 ---
 
 ## Bulk importing vehicles
 
-If you are setting up Druma for the first time and have a large fleet, you can import all vehicles at once using a CSV file instead of adding them one by one.
+If you are setting up Druma for the first time and have a large fleet, you can import all vehicles at once using an Excel file instead of adding them one by one.
 
 <Steps>
   <Step title="Download the import template">
-    Go to **Fleet → Vehicles → Import** and click **Download Template**. This gives you a CSV file with all the correct column headers.
+    Go to **Fleet → Trucks → Import** and click **Download Template**. This gives you an Excel (.xlsx) file with all the correct column headers: Plate (required), Name, Brand, Model, Year, Euro class, Fuel type, and Trailer type.
   </Step>
   <Step title="Fill in the template">
-    Open the CSV in Excel or Google Sheets. Add one vehicle per row. The required columns are plate, vehicle type, and trailer type. All other columns are optional but recommended.
+    Open it in Excel or Google Sheets. Add one vehicle per row — only **Plate** is required, everything else is optional.
   </Step>
   <Step title="Upload the file">
-    Back in Druma, click **Upload CSV** and select your completed file. Druma will validate each row and show you any errors before importing.
+    Back in Druma, upload your completed file. Druma will validate each row and show you any errors before importing.
   </Step>
   <Step title="Review and confirm">
     Check the preview of the vehicles to be imported. If everything looks correct, click **Import**. Vehicles are added immediately.
@@ -133,13 +111,9 @@ The import process does not update existing vehicles — it only creates new one
 
 Inside the Trucks list, there is a **Map** tab at the top of the page. Click it to switch from the list view to a live map showing all vehicles with GPS positions.
 
-Pin colours show vehicle status:
-- **Blue** — active on a live order
-- **Grey** — parked or not currently assigned
-- **Amber** — truck has an open work order (maintenance pending)
-- **Red** — a vehicle document has expired
+Every truck renders as the same graphite marker with its plate number — there's no colour coding by status. Trailers get their own darker-grey marker, and nearby vehicles cluster into a single numbered marker until you zoom in.
 
-Click any pin to open the vehicle detail panel. See [Truck Parking Map](/en/tools/parking-map) for full details on the map view, layers, and finding safe parking along a route.
+Click any marker to open the vehicle detail panel. See [Truck Parking Map](/en/tools/parking-map) for full details on the map view, layers, and finding safe parking along a route.
 
 ---
 

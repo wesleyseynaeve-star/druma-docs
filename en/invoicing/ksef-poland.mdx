@@ -42,7 +42,7 @@ Each invoice subject to KSeF shows a status badge on the invoice detail page und
 | **Rejected** | KAS returned a formal rejection. Check the UPO for the reason code. |
 
 <Note>
-Failed invoices are automatically retried every 30 minutes for up to 24 hours. If the invoice is still in **Failed** status after 24 hours, it will not retry automatically — trigger a manual retry from the invoice detail panel once you have resolved the underlying error.
+A background job checks for failed submissions every 30 minutes, but each invoice only actually retries on an exponential backoff schedule — roughly 1 hour after the first failure, then roughly 2 hours after that (±25% jitter). If the third attempt (the original submission plus these 2 retries) also fails, the invoice moves straight to **Failed** status, typically within about 3 hours of the first failure — it will not retry automatically after that. Trigger a manual retry from the invoice detail panel once you have resolved the underlying error.
 </Note>
 
 ## Setting Up KSeF

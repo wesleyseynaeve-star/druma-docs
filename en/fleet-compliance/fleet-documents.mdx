@@ -1,6 +1,6 @@
 ---
 title: "Fleet Documents"
-description: "Track insurance certificates, ITP, operating licenses, tachograph calibration, and all other vehicle documents with automatic expiry alerts."
+description: "Track insurance certificates, ITP, CEMT permits, ADR and tachograph calibration certificates, and all other vehicle documents, with an optional expiry-alert notification."
 icon: "folder-open"
 ---
 
@@ -14,13 +14,15 @@ Druma tracks the following document categories for each vehicle:
 
 | Document | Romanian name | Notes |
 |---|---|---|
-| Third-party liability insurance | RCA | Mandatory for all vehicles |
+| Roadworthiness certificate (ITP) | ITP | Periodic technical inspection |
+| Third-party liability insurance (RCA) | RCA | Mandatory for all vehicles |
 | CMR cargo insurance | Asigurare CMR | Required for international transport |
 | Vehicle registration certificate | Talon / Carte de identitate a vehiculului | |
-| Roadworthiness certificate | ITP | Periodic technical inspection |
-| Transport operating license | Licență de transport / Licență de traseu | Issued by ARR |
+| CEMT permit | Autorizație CEMT | Multilateral quota permit, separate from the domestic operating licence |
 | ADR certificate | Certificat ADR vehicul | Only if vehicle carries dangerous goods |
 | Tachograph calibration certificate | Certificat verificare tahograf | Required periodically by law |
+| ATP certificate | Certificat ATP | Reefer/temperature-controlled trailers only |
+| Other | — | Any document type that doesn't fit the categories above |
 
 <Note>
 You can also add custom document types if your operation has documents that do not fit these categories — for example, cold chain calibration certificates or permit documents for oversized loads.
@@ -31,11 +33,8 @@ You can also add custom document types if your operation has documents that do n
 ## Adding a Document to a Vehicle
 
 <Steps>
-  <Step title="Open the vehicle record">
-    Go to **Fleet → Vehicles** and click the vehicle you want to update.
-  </Step>
-  <Step title="Go to the Documents tab">
-    Click the **Documents** tab on the vehicle detail page.
+  <Step title="Open Documents Overview">
+    Go to **Fleet → Documents Overview** — this is a separate top-level Fleet page, not a tab on the vehicle detail view.
   </Step>
   <Step title="Click Upload Document">
     Click **Upload Document**.
@@ -59,13 +58,17 @@ You can also add custom document types if your operation has documents that do n
 
 ## Expiry Tracking and Alerts
 
-Druma checks document expiry dates every day and applies the following alert system:
+Badges (yellow warning / red expired) on the vehicle in the fleet list always reflect the true expiry status of each document, calculated daily. The proactive **notification** on top of those badges, however, is opt-in:
 
-| Time before expiry | What happens |
-|---|---|
-| 60 days | Yellow warning badge appears on the vehicle in the fleet list |
-| 30 days | Email alert sent to all Admin and Company Admin users |
-| Expired | Red badge on the vehicle; vehicle is blocked from new order assignments |
+| Time before expiry | Badge shown | Notification (if enabled) |
+|---|---|---|
+| 60 days | — | Warning notification sent |
+| 14 days | Yellow warning badge | Critical notification sent |
+| Expired | Red badge; vehicle blocked from new order assignments | Notification sent |
+
+<Warning>
+The notification is gated behind **Settings → Automations & Features → Fleet document expiry alerts**, which is **off by default** for every company. Until you switch it on, Druma still shows the correct badges on the vehicle and fleet list, but nobody is proactively notified as a document approaches expiry — you have to notice it in the list. When enabled, in-app notifications go to users with the Fleet Manager, Company Admin, or Admin role (there is no separate email channel for this alert).
+</Warning>
 
 <Warning>
 A vehicle with an expired document **cannot be assigned to new orders** until the expired document is renewed and uploaded. Existing in-progress orders are not interrupted, but dispatchers will see a warning.
@@ -94,7 +97,7 @@ This view is designed for the fleet manager's morning check — a quick scan of 
 - **Maximum file size:** 20 MB per document
 - **Recommended:** Scan at a resolution where the document text is clearly legible — at least 150 DPI for A4 documents
 
-If a roadside inspector or client asks for a document, you can download it directly from the vehicle's Documents tab and send it by email. Drivers can also view documents for their assigned vehicle in the Druma mobile app.
+If a roadside inspector or client asks for a document, you can download it directly from **Fleet → Documents Overview** and send it by email. Drivers can also view documents for their assigned vehicle in the Druma mobile app.
 
 ---
 

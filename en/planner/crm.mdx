@@ -1,85 +1,143 @@
 ---
-title: "CRM & Sales Pipeline"
-description: "Track prospects and existing clients through the full sales lifecycle — from first contact to active customer."
+title: "Sales"
+description: "Track leads and existing accounts through the sales pipeline — from first contact to a converted client, quote, or tender."
 icon: "user-group"
 ---
 
 ## Overview
 
-The CRM module gives you a single place to manage both your existing client relationships and new sales opportunities. It lives under **Commercial → CRM** and is accessible to admin, company_admin, planner, and customer_service roles.
+The **Sales** module (`/operator-crm`, in the main navigation as **Sales**) is where you manage relationship-building separately from the transport orders those relationships lead to. It's built around two kinds of records moving through the same lifecycle stages:
+
+- **Leads** — prospects who aren't yet clients in Druma
+- **Accounts** — your existing clients, tracked through the same pipeline once you want to manage renewals or expansion
+
+Sales is available to **admin, company_admin, planner, dispatcher, and customer_service** roles.
 
 ---
 
-## From lead to logged touchpoint
+## The tab bar
 
 <Steps>
-  <Step title="Capture a prospect">
-    Go to the **Prospects** tab and click **+ Add prospect**. Fill in the company name (required) plus contact, country, email, phone, VAT number, and source, then click **Create**.
+  <Step title="Pipeline">
+    A kanban board of leads and accounts across four stages, with drag-and-drop restaging. This is your default landing tab.
   </Step>
-  <Step title="Qualify and move it through the pipeline">
-    Open the prospect from the Prospects table and use the **Lifecycle stage** dropdown in its detail panel to move it from `lead` through `demo_booked` and `demo_done` as it progresses. The card moves to the matching column on the **Pipeline** board automatically.
+  <Step title="Contacts">
+    A table of all leads, with company, contact, country, source, last touch, and stage columns.
   </Step>
-  <Step title="Log a touchpoint after every interaction">
-    In the same detail panel, scroll to **Touchpoints**. Pick a type (Email, Call, Demo, Meeting, Note, Other), set the date/time, add an optional subject and notes, then click **Log touchpoint**.
+  <Step title="Accounts">
+    A table of your existing clients, each optionally tracked with its own lifecycle stage and last-touchpoint date.
   </Step>
-  <Step title="Track it once it becomes a client">
-    Once a prospect signs up, its row shows a **Linked** badge in the Prospects table. From then on, manage it via the **Companies** tab, which has the same lifecycle-stage and touchpoint controls, plus subscription details and a revenue history chart.
+  <Step title="Quotes">
+    Opens the [Quotes](/en/planner/quotes) page — spot-pricing a specific load for a lead or client.
+  </Step>
+  <Step title="Tenders (if enabled)">
+    Opens [Tenders & Contracts](/en/planner/tenders-and-contracts) — only shown when tender management is enabled for your company.
+  </Step>
+  <Step title="Reporting">
+    Win rate, average deal size, sales-cycle length, weighted pipeline value, and an activity leaderboard.
+  </Step>
+</Steps>
+
+<Note>
+Quotes and Tenders share this tab bar so the whole sales motion — low-commitment to high-commitment — reads as one unit, but each keeps its own page body and its own doc page.
+</Note>
+
+---
+
+## Lifecycle stages
+
+Every lead and every tracked account moves through the same stage set:
+
+| Stage | Meaning |
+|---|---|
+| `lead` | Initial contact, not yet qualified |
+| `qualified` | Confirmed as a real opportunity |
+| `proposal` | A quote or tender has been sent |
+| `won` | Converted to an active client |
+| `lost` | Did not convert |
+| `inactive` | Account has gone quiet |
+
+The **Pipeline** board only shows the `lead` → `qualified` → `proposal` → `won` columns. `lost` and `inactive` are set from the stage dropdown inside a record's detail panel rather than shown as board columns.
+
+---
+
+## Adding a lead
+
+<Steps>
+  <Step title="Click New lead">
+    From the **Pipeline** or **Contacts** tab, click **New lead**.
+  </Step>
+  <Step title="Fill in the details">
+    Enter:
+    - **Company** (required)
+    - **Contact**, **Country**, **Email**, **Phone**, **VAT**
+    - **Source** — free text (e.g. "referral", "load board")
+    - **Stage** — defaults to `lead`
+    - **Notes**
+  </Step>
+  <Step title="Create">
+    Click **Create**. The lead appears on the Pipeline board and in the Contacts table.
+  </Step>
+</Steps>
+
+<Note>
+Leads sourced from an inbound RFQ or an inbound CRM-forwarded email are tagged automatically ("Inbound RFQ" / "Inbound email") in the Contacts table's Source column.
+</Note>
+
+---
+
+## Working a lead or account
+
+Click any card or row to open its detail panel:
+
+- **Stage** — change the lifecycle stage directly.
+- **Notes** — free-form notes about the relationship.
+- **Deal** *(leads only)* — expected value (EUR/RON), probability (%), expected close date, comma-separated tags, and a lost-reason dropdown that appears once the stage is set to `lost`.
+- **People / Contacts** *(leads only)* — add multiple contact persons for the same account and mark one as primary.
+- **Touchpoints** — log an interaction: pick a type (**Call, Email, Meeting, Demo, Note**), an optional summary/outcome, and an optional file attachment, then click **Log touchpoint**. Touchpoints are shared by leads and accounts and shown newest-first.
+
+For leads, the panel header also has:
+
+- **Create quote** — deep-links into [Quotes](/en/planner/quotes) with a new quote pre-filled from this lead.
+- **Create tender** *(if tender management is enabled)* — deep-links into [Tenders & Contracts](/en/planner/tenders-and-contracts) with a new tender pre-linked to this lead.
+- **Convert to client** — see below. Once converted, this button becomes **View client** instead.
+
+---
+
+## Converting a lead to a client
+
+<Steps>
+  <Step title="Open the lead and click Convert to client">
+    Confirm the prompt. Druma creates a new client record from the lead's details — this is idempotent, so re-clicking an already-converted lead just opens the existing client instead of duplicating it.
+  </Step>
+  <Step title="Optionally create a rate card">
+    You're asked whether to create a lane-pricing rate card for the new client. Choosing **Create rate card** takes you to a pre-filled new rate card form; **Not now** leaves nothing behind.
+  </Step>
+  <Step title="Find it under Accounts">
+    The page switches to the **Accounts** tab, filtered to the newly converted client.
   </Step>
 </Steps>
 
 ---
 
-## Three tabs
+## Reporting
 
-### Pipeline
+The **Reporting** tab summarises your pipeline:
 
-A stage-based overview of all your leads and clients. Each record moves through the following stages:
-
-| Stage | Meaning |
-|---|---|
-| `lead` | Initial contact, not yet qualified |
-| `demo_booked` | Demo or intro call scheduled |
-| `demo_done` | Demo completed, evaluating fit |
-| `trialing` | Active trial in progress |
-| `active` | Paying customer |
-| `churned` | Was a customer, has left |
-| `lost` | Prospect who did not convert |
-
-For existing companies (clients already in Druma), the stage auto-derives from their subscription status where possible. You can override the stage manually at any time.
-
-### Companies
-
-A list of your existing clients with their current lifecycle stage and a revenue history bar chart showing billed amounts over the trailing 12 months. Click any company to open the full client record with contact persons, standing instructions, and order history.
-
-### Prospects
-
-Standalone leads that are not yet clients in your system. Prospects have a name, country, contact person, and phone/email fields. Once a prospect converts, you can promote them to a full client record.
+- **Win rate** — share of closed deals (won vs. lost) that were won.
+- **Avg deal size** — mean expected value across deals with a value set.
+- **Sales cycle** — average days from lead creation to close.
+- **Weighted pipeline** — sum of each open deal's expected value × probability, broken down by stage (with a calculation disclosure).
+- **Tender pipeline** *(if tender management is enabled)* — committed volume by tender status.
+- **Activity leaderboard** — touchpoints logged per team member.
 
 ---
 
-## Logging touchpoints
-
-Every CRM record has a **Touchpoints** timeline. You can log:
-
-- **Email** — outbound or inbound email exchanges
-- **Call** — phone or video call
-- **Demo** — product demonstration
-- **Meeting** — in-person or remote meeting
-- **Note** — internal note visible to your team only
-- **Other** — any other interaction type
-
-Each touchpoint has a subject, date, and optional notes field. Touchpoints are ordered newest-first and are visible to all planner-role users within your company.
-
----
-
-## Workflow tips
-
-- Use the **Pipeline** tab to spot which prospects have been stuck in `demo_done` for too long without moving forward.
-- Set a follow-up note after every call so the next person who opens the record has context.
-- When a prospect converts, click **Create Client** on the prospect record — this copies the contact details into the full Clients module without re-keying anything.
-
----
-
-<Card title="Clients" icon="building" href="/en/planner/creating-orders">
-  Once a prospect converts, manage their orders, contacts, and standing instructions from the Clients module.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Quotes" icon="file-invoice" href="/en/planner/quotes">
+    Build and send a freight quote to a lead or client, with one-click accept turning it into a confirmed order.
+  </Card>
+  <Card title="Tenders & Contracts" icon="file-signature" href="/en/planner/tenders-and-contracts">
+    Track client procurement tenders from prospect to active contract and award lane rates into a rate card.
+  </Card>
+</CardGroup>

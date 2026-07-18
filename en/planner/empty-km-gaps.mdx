@@ -1,76 +1,59 @@
 ---
-title: "Empty KM Gaps"
-description: "Identify deadhead distances between consecutive orders and find where return load matching would save the most."
+title: "Gaps"
+description: "Find uncovered loads, deadhead (empty-km) reposition opportunities, and empty trucks that could reload nearby."
 icon: "route"
 ---
 
-## What is the Empty KM Gaps report?
+## What is the Gaps tool?
 
-Every time a truck delivers an order and then drives empty to the next pickup, it burns fuel and driver hours with no revenue attached. The Empty KM Gaps report surfaces exactly these gaps — the distance between a delivered order's drop-off point and the next assigned pickup.
-
-The report is found under the **Operations** tab.
+Every time a truck finishes a delivery with no next load lined up, or an order sits without a truck assigned as its pickup date approaches, you're either burning empty kilometres or risking a missed pickup. The **Gaps** page (`/operations/gaps`, in the Planning tab bar as **Gaps**) surfaces both problems in one place, across three sub-tabs.
 
 ---
 
-## KPI row
+## Coverage
 
-At the top of the report, three summary cards give you the fleet-wide picture for the selected period:
+The default sub-tab lists **uncovered loads** — future orders that don't yet have a truck assigned, ordered by urgency. Each row shows:
 
-- **Total gaps** — number of empty legs identified
-- **Average empty km** — mean gap distance across all identified legs
-- **Total empty km** — cumulative deadhead kilometres in the period
+- **Recommended** — a badge: **Assign** (a nearby truck was matched), **Subcontract** (find a carrier), or **Must self-cover** (no option found)
+- **Empty KM** — the deadhead distance for the recommended match, colour-coded: green ≤150 km, amber 150–300 km, red >300 km
+- **Pickup**, **Pickup Date**, **Delivery**, **Client**
 
----
+Row actions let you assign the suggested truck directly, jump to **Find carrier**, or open the order for detail. A **Triage** menu lets you mark a row **Working**, **Snooze 24h**, or **Accept as subcontract** so it stops competing for attention.
 
-## Color coding
-
-Each gap row is color-coded by distance:
-
-| Color | Distance | Interpretation |
-|---|---|---|
-| Green | < 150 km | Acceptable — within normal repositioning range |
-| Amber | 150–300 km | Elevated — worth reviewing for return load opportunities |
-| Red | > 300 km | High — strong candidate for return load matching |
+The KPI bar shows **≤12h / ≤24h / ≤72h uncovered**, **Auto-resolvable %**, **Need carrier**, and **Missing Coords** (orders whose stops lack coordinates and can't be matched).
 
 ---
 
-## Table view
+## Empty-km optimiser
 
-The table shows one row per gap, with:
+This sub-tab computes reposition opportunities across **all** orders (covered and uncovered) by running a routing matrix over every delivery→pickup pair — it can take a few seconds to load. It's a permanent **split table + map** layout, not a toggle: the table lists gaps on the left, and clicking a row draws a dashed line on the map from that delivery point to the proposed next pickup — only the selected row's line is drawn, not all of them.
 
-- **Truck** — licence plate
-- **Driver** — name
-- **Delivered order** — reference and delivery city
-- **Next pickup** — city and order reference
-- **Gap distance (km)** — color-coded
-- **Gap date** — when the empty leg occurred
-
-Sort by any column. Click a row to open the relevant order in the detail panel.
+Columns: **Recommended**, **Empty KM**, **Pickup**, **Pickup Date**, **Repositions from** (the order and delivery point the truck would be coming from), **Delivery**, **Client**. A **Top 10 / Top 25 / All** filter limits how many rows are computed and shown, and the map has its own severity filter (High / Medium / Low / Uncovered).
 
 ---
 
-## Map view
+## Empty trucks
 
-Toggle to the **Map** view to see the same gaps plotted on a Leaflet map. Each gap appears as a dashed line between the delivery point and the next pickup location, colored green/amber/red by distance. Useful for spotting geographic clusters where a dedicated return load lane might make sense.
+This sub-tab flips the view around: one row per **truck** that finishes a delivery with nothing planned after it, matched to the nearest unassigned load it could reload with. Columns: **Truck** (with driver name), **Ends at** (place and date), **Best reload**, and **Empty km** for that reload. Trucks with no reachable load show no reload suggestion and need a manual reposition or subcontract decision.
+
+KPIs: **Empty trucks**, **Reload found**, **No reload**, **Avg empty km**, **Missing Coords**.
 
 ---
 
-## CSV export
+## Exporting
 
-Click **Export CSV** to download the full gap dataset for the selected date range. The export includes all columns from the table view plus raw GPS coordinates for the endpoints.
+Every sub-tab's toolbar has **Print** and **Export** buttons for the current table — export produces an Excel (.xlsx) file of the visible columns. There's no raw GPS coordinate export.
 
 ---
 
 ## Filters
 
-- **Date range** — filter gaps by the delivery date of the preceding order
-- **Truck** — focus on a specific vehicle
-- **Driver** — filter by driver
+Each sub-tab has a free-text search box (order number, client name, pickup/delivery address). There's no separate date-range, truck, or driver filter — the Coverage and Optimiser tabs already scope to upcoming orders, and the Empty Trucks tab has no per-truck/driver picker since every row already is a truck.
 
 ---
 
-## Using this report to find backhauls
+## Using this tool to find backhauls
 
-Lanes where you consistently see red gaps (>300 km) are exactly where a standing backhaul arrangement — or a manual search on a freight exchange like Timocom or Trans.eu on delivery — would have the highest payback. Druma does not run an automatic load search for general FTL orders; identifying and booking the backhaul is a manual step once the report has pointed you to the lane.
+Lanes where you consistently see red gaps (>300 km) are exactly where a standing backhaul arrangement — or a manual search on a freight exchange like Timocom or Trans.eu on delivery — would have the highest payback. Druma does not run an automatic load search for general FTL orders; identifying and booking the backhaul is a manual step once the tool has pointed you to the lane.
 
 If the gap involves a groupage (multi-stop) lane, check whether Druma's automatic backhaul consolidation suggestions already flagged a matching return load — these surface directly on the groupage consolidation panel and don't require a manual search.

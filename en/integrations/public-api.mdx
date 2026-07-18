@@ -1,133 +1,45 @@
 ---
-title: "Public API and Webhooks"
-description: "Connect Druma to your own ERP, customer portal, or custom applications using the REST API and webhook event notifications."
+title: "Public API"
+description: "Read-only REST access to your orders, connect Druma to your own ERP, customer portal, or reporting tools."
 icon: "code"
 ---
 
-The Druma Public API lets you build custom integrations between Druma and your own systems — whether that is an ERP, a customer self-service portal, a business intelligence tool, or internal tooling your team has built.
+The Druma Public API gives you **read-only** REST access to your orders — useful for a customer self-service portal, a BI/reporting tool, or internal tooling your team has built.
 
 <Warning>
-The Public API is a feature-flagged capability and is not enabled by default. Contact **support@druma.io** to request access for your account. Include a brief description of your intended use case.
+The Public API is a feature-flagged capability and is not enabled by default. Contact **support@druma.io** to request access — API keys are currently provisioned directly by Druma; there is no self-service key-generation screen in the app.
 </Warning>
-
-## API Key Management
-
-Once the Public API is enabled for your account:
-
-1. Go to **Settings → API → Generate API Key**
-2. Give the key a name (e.g., "ERP Integration", "Customer Portal")
-3. Click **Generate**
-4. Copy the key immediately — it is shown only once
-
-Store your API key securely (use a secrets manager or environment variable, never hard-code it). If a key is lost or compromised, revoke it from the same page and generate a new one.
-
-You can create multiple API keys for different integrations, which makes it easy to revoke access for one integration without affecting others.
 
 ## Authentication
 
-All API requests must include your API key as a Bearer token in the Authorization header:
+All API requests must include your API key in the `X-API-Key` header:
 
 ```
-Authorization: Bearer YOUR_API_KEY
+X-API-Key: YOUR_API_KEY
 ```
 
-Requests without a valid key return a `401 Unauthorized` response.
+Requests without a valid key return a `401 Unauthorized` response. Bearer-token authentication (`Authorization: Bearer ...`) is **not** supported and also returns a 401.
 
 ## Available Endpoints
 
-The following endpoints are available. All return and accept JSON.
+The API is read-only — only `GET` requests are accepted. All responses are JSON.
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/orders` | List orders with optional filters (date range, status, client) |
-| `POST` | `/orders` | Create a new order |
-| `GET` | `/clients` | List all clients |
-| `POST` | `/clients` | Create a new client |
-| `GET` | `/vehicles` | List all vehicles |
-| `GET` | `/invoices` | List invoices with optional filters |
+| `GET` | `/orders` | List orders (paginated, optional `status` filter) |
+| `GET` | `/orders/{id}` | Order detail |
+| `GET` | `/orders/{id}/location` | Current truck position and latest ETA |
+| `GET` | `/orders/{id}/documents` | Document list with time-limited signed download URLs |
 
-<Note>
-The available endpoints are subject to change as the API is extended. Check the full OpenAPI specification at **docs.druma.io/api** for the current list of endpoints, request/response schemas, and example calls. The spec is always up to date.
-</Note>
+Any other resource, or any non-GET method, returns a `404`/`405` error.
 
 ## Rate Limits
 
-- **1,000 requests per hour** per API key
-- Rate limit headers are included in every response: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
-- If you exceed the limit, you receive a `429 Too Many Requests` response
-- The limit resets on a rolling hourly window
+- **100 requests per minute** per API key
+- If you exceed the limit, you receive a `429 Too Many Requests` response with a `Retry-After` header telling you how many seconds to wait
+- No other rate-limit headers are returned
 
 For higher limits, contact support@druma.io with your use case.
-
-## Webhooks
-
-Instead of polling the API for changes, you can register webhooks to receive real-time notifications when events happen in Druma.
-
-### Setting Up a Webhook
-
-<Steps>
-  <Step title="Open webhook settings">
-    Go to **Settings → API → Webhooks → Add Endpoint**.
-  </Step>
-  <Step title="Enter your endpoint URL">
-    Provide the HTTPS URL of your server that will receive webhook events. The URL must use HTTPS — plain HTTP endpoints are not accepted.
-  </Step>
-  <Step title="Select events">
-    Choose which events you want to receive. Available events:
-    - `order.created` — a new order was created (manually or via email ingestion)
-    - `order.status_changed` — an order's status changed (e.g., Confirmed → In Transit → Delivered)
-    - `invoice.generated` — an invoice was generated from an order
-    - `payment.recorded` — a payment was matched to an invoice
-  </Step>
-  <Step title="Save and test">
-    Click **Save**. Use the **Send Test Event** button to send a sample payload to your endpoint and confirm it is receiving correctly.
-  </Step>
-</Steps>
-
-
-### Webhook Payload Format
-
-Each webhook event is delivered as an HTTPS POST request with a JSON body:
-
-```json
-{
-  "event": "order.status_changed",
-  "timestamp": "2025-06-15T14:32:00Z",
-  "data": {
-    "order_id": "ORD-2025-04821",
-    "previous_status": "confirmed",
-    "new_status": "in_transit",
-    "driver_id": "DRV-112",
-    "vehicle_plate": "B123ABC"
-  }
-}
-```
-
-The `data` object structure varies by event type. Full payload schemas are documented at docs.druma.io/api.
-
-### Webhook Security
-
-Each webhook request includes a signature header `X-Druma-Signature`. This is an HMAC-SHA256 hash of the request body using your webhook secret (shown when you create the endpoint). Verify this signature on your server before processing the event to confirm the request came from Druma.
-
-### Delivery and Retry Policy
-
-Druma expects your endpoint to respond with an HTTP `2xx` status code within 10 seconds. If it does not:
-
-- Druma retries with **exponential backoff**: 30 seconds, 2 minutes, 10 minutes, 1 hour, 6 hours
-- After 10 failed delivery attempts, the event is moved to the **dead letter queue**
-- You can view and replay dead letter events from **Settings → API → Webhooks → Dead Letter Queue**
-
-<Warning>
-Make your webhook endpoint idempotent — design it to handle receiving the same event twice without side effects. Network conditions can occasionally cause duplicate deliveries even when your server responded successfully.
-</Warning>
-
-## Full API Documentation
-
-The complete API reference, including full request/response schemas, authentication examples, and error codes, is available at:
-
-**[docs.druma.io/api](https://docs.druma.io/api)**
-
-The reference is generated from the OpenAPI specification and is always current.
 
 <CardGroup cols={1}>
   <Card title="Integration Setup Overview" icon="plug" href="/en/integrations/integration-setup">

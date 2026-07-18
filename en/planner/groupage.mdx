@@ -1,6 +1,6 @@
 ---
 title: "Groupage (LTL)"
-description: "Consolidate multiple small loads from different clients onto one truck with per-leg tracking, per-client invoicing, and a printable multi-stop manifest."
+description: "Consolidate multiple small loads from different clients onto one truck with per-leg tracking, per-leg invoicing, and a printable multi-stop manifest."
 icon: "boxes-stacked"
 ---
 
@@ -8,153 +8,129 @@ icon: "boxes-stacked"
 
 Groupage — also called LTL (less-than-truckload) or consolidation — is when you load multiple small shipments from different clients onto the same truck going in the same direction. Each client only pays for their portion of the truck space, and you fill the truck with combined loads to make the run profitable.
 
-In Druma, a **Groupage order** is a container order that holds multiple child orders. The container tracks the truck, driver, and route. Each child order has its own client, cargo, pickup, delivery address, and price — and generates its own invoice.
-
----
-
-## Creating a Groupage Container
-
-<Steps>
-  <Step title="Start a new order">
-    Go to **Orders → New Order**.
-  </Step>
-  <Step title="Set the type to Groupage">
-    In the **Order Type** field, select **Groupage**. The form adjusts to show the groupage container fields.
-  </Step>
-  <Step title="Set up the container">
-    Fill in:
-    - **Truck and driver** — the vehicle and driver doing the run
-    - **Departure date** — when the truck sets off
-    - **General route description** — e.g., "Bucharest → Vienna direction"
-    - **Notes** — any general instructions for the driver
-  </Step>
-  <Step title="Save the container">
-    Click **Save**. The groupage container is created. Now you can start adding child orders.
-  </Step>
-</Steps>
-
----
-
-## Adding Child Orders to a Groupage
-
-Each child order represents one client's shipment on the truck. You can add as many as the truck can physically carry.
-
-<Steps>
-  <Step title="Open the groupage container">
-    Go to **Orders** and open the groupage container you just created.
-  </Step>
-  <Step title="Click Add Child Order">
-    Click the **+ Add Shipment** button inside the container.
-  </Step>
-  <Step title="Fill in the child order details">
-    For each child order, enter:
-    - **Client** — which client this shipment belongs to
-    - **Pickup address** — where the driver collects this shipment
-    - **Delivery address** — where this shipment is dropped off
-    - **Cargo description** — what's being transported (e.g., "6 pallets, automotive parts")
-    - **Weight and volume** — for manifest accuracy
-    - **Price** — what you're charging this client for their portion
-    - **Currency** — per client if needed
-  </Step>
-  <Step title="Save the child order">
-    Click **Save**. The child order appears in the container's stop list.
-  </Step>
-  <Step title="Repeat for each shipment">
-    Add all remaining child orders until the truck is fully planned.
-  </Step>
-</Steps>
-
+In Druma, groupage is its own module (`/groupage`) — a **groupage run** holds multiple existing order **legs**. The run tracks the truck, driver, and route; each leg keeps its own client, cargo, pickup/delivery address, and price.
 
 <Note>
-The order of stops in the container is set automatically by Druma based on route optimisation, but you can drag and reorder them manually if you have specific pickup/delivery sequences to follow.
+Groupage isn't a fourth "order type" alongside Own Truck / Subcontracted / Repositioning — it's a separate module that groups existing orders together.
 </Note>
+
+---
+
+## Creating a Groupage Run
+
+<Steps>
+  <Step title="Go to Groupage">
+    Open the **Groupage** module from the navigation.
+  </Step>
+  <Step title="Click Create Groupage">
+    Click **Create Groupage**. Druma creates an empty run (with an auto-generated reference like `GRP-XXXXX`) and opens its detail panel — there's no truck/driver/date/route form at this step.
+  </Step>
+  <Step title="Add orders to the run">
+    See the next section — you build the run by adding existing eligible orders to it, not by filling in a form.
+  </Step>
+</Steps>
+
+---
+
+## Adding Orders to a Groupage Run
+
+<Steps>
+  <Step title="Open the run and click Add Orders">
+    Open the groupage run and click **Add Orders to Groupage**.
+  </Step>
+  <Step title="Check off eligible orders">
+    The modal lists existing orders eligible to join this run — order number, client, route, LDM, weight, and trailer type — with a checkbox per row. There's no data-entry form here; you're selecting orders that already exist, not typing in new shipment details.
+  </Step>
+  <Step title="Use Auto-fill if you want Druma to pick for you">
+    Click **Auto-fill** to have Druma select the best-fitting combination of eligible orders up to the trailer's remaining loading-metre capacity.
+  </Step>
+  <Step title="Add to Groupage">
+    Click **Add to Groupage**. If your selection would exceed the trailer's LDM capacity, the action is blocked with a validation error — you'll need to deselect something first. A trailer-type mismatch (an order's trailer type differs from the run's) shows as a warning but doesn't block the action.
+  </Step>
+</Steps>
+
+<Note>
+Weight and volume don't block adding orders — only loading metres (LDM) do. Fill-rate bars for weight and volume are still shown for reference (see below), but they're informational, not gating.
+</Note>
+
+---
+
+## Stop Sequencing
+
+New stops are simply appended to the end of the run in the order you add them — Druma doesn't auto-optimise the route as you go.
+
+To optimise the order, click **Auto-sequence** (only shown with 2+ stops): it re-orders the stop list to minimise total distance (pickups before deliveries) and reports how much distance it saved, or that the order was already optimal. You can also drag-and-drop stops manually, or use the up/down arrows on each stop row, at any time.
 
 ---
 
 ## Per-Leg Status Tracking
 
-Each child order has its own status flow, independent of the other shipments on the truck. When the driver updates their status for a specific stop:
+Each order leg has its own status flow, independent of the other shipments on the truck. When the driver updates their status for a specific stop, only that leg's order updates — the run overview shows which stops are complete and which are pending.
 
-- That child order updates to the new status
-- The relevant client sees the update in their portal (if enabled)
-- The container overview shows which stops are complete and which are pending
-
-For example: if the truck has four deliveries and the driver completes stops 1 and 2, those child orders show **Delivered** while stops 3 and 4 still show **En Route to Delivery**. Each client sees only their own shipment status.
+For example: if the truck has four deliveries and the driver completes stops 1 and 2, those legs show **Delivered** while stops 3 and 4 still show **En Route to Delivery**. Each client sees only their own shipment status in their portal.
 
 ---
 
-## Multi-Stop ETA
+## Loading Metres (LDM), Weight, and Volume Tracking
 
-Druma uses HERE routing to calculate the ETA for each stop in sequence, taking into account the order of stops and driving time between them. ETAs update automatically when the driver completes a stop or reports a delay.
+Each leg can have **CBM**, **Weight (kg)**, and **LDM** values entered directly on its stop card. LDM represents the linear length of trailer floor space the shipment occupies — the standard measure for groupage planning across Europe.
 
-Client portals show the ETA for their specific delivery — not the entire route, just their stop.
+The groupage run shows fill-rate progress bars across whichever dimensions the assigned truck/trailer has a known capacity for — **Weight**, **Volume (CBM)**, and **Loading Metres**:
 
----
-
-## Per-Client Invoicing
-
-Each child order is invoiced separately. When you're ready to invoice:
-
-1. Open the child order (not the container)
-2. Click **Generate Invoice**
-3. The invoice is for that client's shipment only, with their specific cargo, price, and reference
-
-Clients on the same truck never see each other's invoices or prices. Each one gets a clean, separate document.
-
-<Warning>
-Always invoice from the child order, not the groupage container. The container itself doesn't have invoice details — those live on each child order.
-</Warning>
-
----
-
-## Loading Metres (LDM) and Capacity Tracking
-
-Each child order can have a **Loading Metres (LDM)** value entered in the child order form. LDM represents the linear length of trailer floor space the shipment occupies — the standard measure for groupage planning across Europe.
-
-The groupage container shows fill-rate progress bars across three dimensions:
-
-| Dimension | What it measures |
+| Colour | Fill level |
 |---|---|
-| **Weight** | Total weight of all child orders vs the truck's max payload |
-| **Volume (CBM)** | Total cubic metres vs the trailer's volume capacity |
-| **LDM** | Total loading metres vs the trailer's max loading metres |
-
-Colour coding: **Green** = under 80%, **Amber** = 80–99%, **Red** = at or over capacity. Keep an eye on amber and red bars before confirming a groupage container — adding more child orders past capacity creates a compliance risk.
+| Green | ≤70% of capacity |
+| Amber | 70–90% of capacity |
+| Red | >90% of capacity (including over 100%, which is shown uncapped) |
 
 ### Cost split mode
 
-The **cost split mode** controls how shared costs (such as the base transport fee) are divided between child orders. Three modes are available: **CBM**, **Weight**, and **LDM**. Click the **Split Mode** toggle on the groupage container to switch between them. The switch triggers an automatic recalculation of each child order's cost share.
+The **cost split mode** controls how shared costs are divided between legs. Four modes are available: **CBM**, **Weight**, **LDM**, and **Chargeable**. Click a mode button on the run's Cost Split tab to switch — it triggers an automatic recalculation of each leg's cost share, split percentage, allocated cost, and margin.
 
-Choose the mode that matches your commercial agreement with the clients on that run. CBM is most common for general cargo, LDM for floor-space-critical loads, and weight for dense goods.
-
-### Overload warning
-
-When adding a child order that would push the container over the trailer's capacity (in weight, volume, or LDM), Druma shows an **overload warning**. You can still proceed — the warning doesn't block the action — but the conflict is flagged so you can decide whether to split the load or use a larger trailer.
-
-### Remaining space on the planning board
-
-Groupage cards on the planning board show an **"X.X LDM free"** badge so dispatchers can see remaining trailer space at a glance without opening the container.
+Choose the mode that matches your commercial agreement with the clients on that run. CBM is most common for general cargo, LDM for floor-space-critical loads, weight for dense goods, and Chargeable when you bill on whichever of weight/volume yields the higher figure.
 
 ---
 
 ## Groupage Manifest
 
-Before the driver sets off, print or send them the groupage manifest — a complete list of all stops and cargo for the run.
+Before the driver sets off, print the groupage manifest — a list of stops and cargo for the run.
 
 <Steps>
-  <Step title="Open the groupage container">
-    Go to **Orders** and open the container.
+  <Step title="Open the groupage run">
+    Open the run's detail panel.
   </Step>
-  <Step title="Generate the manifest">
-    Click **Print Manifest** or **Download Manifest PDF**.
+  <Step title="Print Manifest">
+    Click **Print Manifest**. Druma opens a new browser tab with a printable HTML manifest — there's no separate PDF download.
   </Step>
   <Step title="Share with the driver">
-    Print it and hand it over, or share the PDF via the driver app message thread.
+    Print it and hand it over, or share it via the driver app message thread.
   </Step>
 </Steps>
 
-The manifest includes: stop number, pickup/delivery address, client reference, cargo description, weight, and any special instructions per stop.
+The manifest includes: stop sequence, pickup/delivery address, client, order number, weight, and any notes per stop. It does not include a cargo-description column.
 
+---
+
+## Per-Leg Invoicing
+
+The run has its own **Invoices** tab, listing every leg with its invoice status (**Not invoiced → Generated → Sent → Paid**) and a **Generate invoice** button per leg:
+
+<Steps>
+  <Step title="Open the run's Invoices tab">
+    Open the groupage run and go to the **Invoices** tab.
+  </Step>
+  <Step title="Generate invoice">
+    Click **Generate invoice** next to any not-yet-invoiced leg. The invoice is created for that leg's client only, with their specific cargo, price, and reference.
+  </Step>
+</Steps>
+
+Clients on the same truck never see each other's invoices or prices — each one gets a clean, separate document, and you can generate them one at a time as each leg is ready to bill.
+
+---
+
+## Tracking
+
+Clients tracking a groupage shipment see a static **Expected delivery** date on the public tracking page, not a live, multi-stop-sequenced ETA.
 
 ---
 
@@ -167,15 +143,15 @@ You have four clients needing loads moved from Bucharest towards Vienna this Thu
 - Client C: 10 pallets to Vienna
 - Client D: 6 pallets to Linz
 
-You create one groupage container, add four child orders, assign your driver, and print the manifest. Each client pays for their portion, each gets their own invoice and status updates, and you run a full truck.
+You create the four orders normally, then create a groupage run, add all four orders to it, assign your driver, auto-sequence the stops, and print the manifest. Each client pays for their portion, each gets their own invoice and status updates, and you run a full truck.
 
 ---
 
 <CardGroup cols={2}>
   <Card title="Creating Orders" icon="plus" href="/en/planner/creating-orders">
-    Learn how standard (FTL) orders work in Druma before adding groupage to your workflow.
+    Learn how standard orders work in Druma — you'll create the individual orders first, then group them.
   </Card>
   <Card title="Planning Board" icon="calendar" href="/en/planner/planning-board">
-    See all your groupage containers and standard orders in the weekly planning view.
+    See all your orders in the weekly planning view before grouping them into a run.
   </Card>
 </CardGroup>

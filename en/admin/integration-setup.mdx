@@ -33,14 +33,14 @@ Most companies never need to change this — Native is the only real option. If 
 
 ---
 
-## 2. HERE Maps
+## 2. HERE Maps &amp; PTV Routing
 
-HERE Maps powers two features in Druma: address autocomplete when creating orders, and truck-optimised route calculation (distance, estimated drive time, and CO2 figures).
+HERE Maps powers address autocomplete when creating orders. Truck-optimised route calculation, distance, ETA, and toll estimation are handled by **PTV**, a separate routing provider.
 
-**No setup required.** The HERE Maps API key is managed at the platform level by Druma. There is nothing to configure, and you will not be billed separately for HERE usage — it is included in your subscription.
+**No setup required for either.** Both API keys are managed at the platform level by Druma. There is nothing to configure, and you will not be billed separately for HERE or PTV usage — both are included in your subscription.
 
 <Note>
-If address autocomplete stops working, this is a platform-level issue. Contact Druma support rather than trying to reconfigure HERE yourself.
+If address autocomplete or routing stops working, this is a platform-level issue. Contact Druma support rather than trying to reconfigure HERE or PTV yourself.
 </Note>
 
 ---
@@ -49,14 +49,14 @@ If address autocomplete stops working, this is a platform-level issue. Contact D
 
 Druma does not connect directly to fuel card provider APIs. Instead, you download a CSV export from your provider's web portal and upload it into Druma. This keeps fuel costs linked to vehicles and orders automatically.
 
-**Supported providers:** DKV, UTA, AS24, Shell Card, SmartDiesel.
+**Supported providers:** DKV, UTA, AS24, Shell, TotalEnergies, BP, Circle K, Eurowag, WEG, MOL, E100.
 
 <Steps>
   <Step title="Export from your provider portal">
-    Log in to your DKV, UTA, AS24, Shell, or SmartDiesel web portal and export transactions as CSV. Most portals offer this under **Reports → Transaction Export**.
+    Log in to your fuel card provider's web portal and export transactions as CSV. Most portals offer this under **Reports → Transaction Export**.
   </Step>
-  <Step title="Open the Fuel Card Import card">
-    In **Settings → Integrations**, click the Fuel Card Import card.
+  <Step title="Open Fuel Card Import">
+    Go to **Fleet → Fuel** and open the import dialog.
   </Step>
   <Step title="Select your provider">
     Choose your provider from the dropdown so Druma knows which CSV column format to expect.
@@ -78,56 +78,36 @@ Druma exports invoice and order data in formats compatible with SAGA and WinMENT
 
 ### SAGA Classic and WinMENTOR Classic
 
-No API key is needed. Druma generates a structured export file (XML or CSV depending on the package) that you import directly into your accounting software.
+No API key is needed. SAGA exports as DBF files (`CLI_`, `ART_`, `IE_`, `INT_`, `NC_.xml`); WinMENTOR Classic exports as pipe-delimited `.txt` files. Both formats are generated automatically once a month and emailed to your configured accountant address as a ZIP (Resend, 7-day signed link) — configure the export day in **Settings → Automations &amp; Features → SAGA Export Config**. There is no manual "Export History" list; each month's export only exists as the emailed ZIP.
 
-Go to **Reports → Accounting Export**, select the date range and accounting format, and download the file. Import it into SAGA or WinMENTOR using that software's standard import wizard.
-
-### WinMENTOR Enterprise (REST API)
-
-WinMENTOR Enterprise supports direct API integration.
-
-<Steps>
-  <Step title="Open the WinMENTOR Enterprise card">
-    In **Settings → Integrations**, click **WinMENTOR Enterprise**.
-  </Step>
-  <Step title="Enter the REST endpoint">
-    Enter the REST API endpoint URL provided by your WinMENTOR Enterprise administrator. It typically looks like `https://yourcompany.winmentor.ro/api/`.
-  </Step>
-  <Step title="Enter credentials">
-    Enter the API username and password configured in WinMENTOR Enterprise.
-  </Step>
-  <Step title="Test and save">
-    Click **Test Connection**, then **Save**.
-  </Step>
-</Steps>
+<Note>
+There is currently no direct REST API integration for WinMENTOR Enterprise or any other accounting package — SAGA and WinMENTOR Classic are the only two supported formats, both file-based.
+</Note>
 
 ---
 
 ## 5. SmartBill
 
-SmartBill is a Romanian cloud invoicing platform. With this integration active, Druma pushes confirmed invoices to SmartBill automatically — no manual re-entry.
+SmartBill is a Romanian cloud invoicing platform. With this integration active, Druma pushes an invoice to SmartBill automatically when you **send** it (not when it's created or marked confirmed) — no manual re-entry.
 
 <Steps>
-  <Step title="Get your SmartBill API key">
-    In your SmartBill account, go to **Cont → API** and copy your API key.
+  <Step title="Get your SmartBill credentials">
+    In your SmartBill account, find your account **Email**, **API Token**, **CIF** (fiscal registration number), and **Invoice Series** — all four are required.
   </Step>
   <Step title="Open the SmartBill card in Druma">
     Go to **Settings → Integrations → SmartBill**.
   </Step>
-  <Step title="Enter your API key and CIF">
-    Paste the API key and enter your company's CIF (fiscal registration number). SmartBill uses the CIF to route invoices to the correct company account.
-  </Step>
-  <Step title="Test the connection">
-    Click **Test Connection**. Druma will attempt a handshake with SmartBill and confirm the credentials are valid.
+  <Step title="Enter your credentials">
+    Enter the Email, API Token, CIF, and Invoice Series. SmartBill uses the CIF to route invoices to the correct company account.
   </Step>
   <Step title="Save">
-    Click **Save**. From this point, every invoice you mark as confirmed in Druma will be pushed to SmartBill automatically.
+    Click **Save**. From this point, sending an invoice in Druma also pushes it to SmartBill.
   </Step>
 </Steps>
 
-<Warning>
-If your SmartBill subscription lapses or your API key is regenerated, the integration will stop working silently. Check **Settings → Integrations** periodically to confirm the SmartBill status is green.
-</Warning>
+<Note>
+SmartBill assigns its own invoice number on push — it does not reuse Druma's invoice number. Status is tracked simply as pushed or error; Druma does not track SmartBill's Draft/Issued/Paid state, and there is no webhook keeping the two systems in sync after the push (no client or product records are created in SmartBill either). If your SmartBill subscription lapses or your API key is regenerated, the push will start failing — check **Settings → Integrations** periodically to confirm the SmartBill status is green.
+</Note>
 
 ---
 
@@ -144,11 +124,11 @@ Peppol is the pan-European e-invoicing network. Belgian companies (KBO-registere
   <Step title="Enter your registration details">
     Enter your **KBO number** (Belgian company registration number) and your **VAT number**.
   </Step>
-  <Step title="Register on the Peppol Network">
-    Click **Register on Peppol Network**. Druma submits your registration to the e-invoice.be access point. This typically completes within a few minutes.
+  <Step title="Register on Peppol">
+    Click **Register on Peppol**. Druma submits your registration to the e-invoice.be access point. This typically completes within a few minutes.
   </Step>
   <Step title="Confirm activation">
-    Once active, the card shows a green **Active** status. Peppol routing is now automatic for eligible Belgian clients — no extra steps are needed when sending invoices to Belgian recipients.
+    Once active, the card shows a **Connected** status. Peppol routing is now automatic for eligible Belgian clients — no extra steps are needed when sending invoices to Belgian recipients.
   </Step>
 </Steps>
 
@@ -249,5 +229,5 @@ Mapon is fully public and works out of the box. Orbcomm needs an account token f
 </Card>
 
 <Card title="CO2 Reporting" icon="leaf" href="/en/fleet-compliance/co2-reporting">
-  How HERE routing distances feed into your CO2 calculations.
+  How PTV routing distances feed into your CO2 calculations.
 </Card>
