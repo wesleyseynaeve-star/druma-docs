@@ -79,9 +79,15 @@ for g in nav:
     echo "## $TITLE"
     echo ""
 
-    # Strip frontmatter (between --- delimiters) and Mintlify components
-    sed '
-      /^---$/,/^---$/d
+    # Strip frontmatter (leading --- block only — a plain sed range would
+    # re-trigger on every in-body --- divider and silently eat half the page)
+    # and Mintlify components
+    awk '
+      NR==1 && /^---$/ { infm=1; next }
+      infm && /^---$/ { infm=0; next }
+      infm { next }
+      { print }
+    ' "$FILE" | sed '
       s/<Steps>//g
       s/<\/Steps>//g
       s/<Step title="\([^"]*\)">/### \1/g
@@ -95,7 +101,7 @@ for g in nav:
       s/<Tip>/> **Tip:** /g
       s/<\/Tip>//g
       s/!\[.*\](\/images\/placeholder\.png)//g
-    ' "$FILE"
+    '
 
     echo ""
     echo "---"
@@ -113,7 +119,12 @@ for g in nav:
       TITLE=$(sed -n '/^title:/{ s/^title: *"\{0,1\}//; s/"\{0,1\} *$//; p; q; }' "$FILE")
       echo "## $TITLE"
       echo ""
-      sed '/^---$/,/^---$/d; s/<[^>]*>//g' "$FILE"
+      awk '
+        NR==1 && /^---$/ { infm=1; next }
+        infm && /^---$/ { infm=0; next }
+        infm { next }
+        { print }
+      ' "$FILE" | sed 's/<[^>]*>//g'
       echo ""
       echo "---"
       echo ""
