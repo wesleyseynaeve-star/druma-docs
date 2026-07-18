@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-18 21:25 UTC
+Generated: 2026-07-18 21:31 UTC
 
 ---
 
@@ -6571,21 +6571,6 @@ How clients access the portal and what they see once they are logged in.
 
 ---
 
-## Load Requests
-
-
-## Not Currently Available
-
-Druma's client portal does not currently offer a self-service "Request a Load" form, a per-client toggle to enable it, or an inbox queue for planners to review incoming requests. There is no way for a client to submit a new shipment request through the portal today.
-
-If your client wants to book a new load, they should contact their usual planner or dispatcher contact directly — by phone, email, or however you normally take new business — and the planner creates the order in Druma from there.
-
-
-How planners manually create and manage orders in Druma.
-
-
----
-
 ## Carrier Portal Overview
 
 
@@ -9617,29 +9602,6 @@ If a driver submits a safety-critical defect at the end of a shift and no one ch
     Log accidents, damage events, and insurance claims for your fleet.
   
 </CardGroup>
-
----
-
-## Actual Mileage Tracking
-
-
-## Not currently available
-
-Druma does not currently track per-order actual mileage (a start/end odometer reading captured against a specific order and diffed against the PTV-planned route distance). There is no odometer-at-departure / odometer-at-delivery capture on orders today.
-
-What Druma **does** capture is a single current odometer reading per truck (`vehicle_positions.odometer_km`), refreshed on each telematics position ping as part of the live GPS feed. This value reflects the truck's total odometer at the time of the last ping — it is not scoped to an order and there is no mechanism that diffs it against a start value to produce an actual-distance-per-order figure.
-
-If you need to reconcile planned vs. actual distance for a shipment today, compare the PTV-planned route distance shown on the order to your own odometer or fuel-card records outside Druma.
-
----
-
-
-  How live truck positions (including the current odometer reading) are transmitted and displayed on the planning board map.
-
-
-
-  How Druma calculates per-order CO2 emissions from the PTV-planned distance and cargo weight.
-
 
 ---
 
@@ -12936,33 +12898,6 @@ Smart Import creates the driver's profile record (name, phone, licence/CPC/ADR/t
 
 
   Manage individual driver profiles and set up phone + PIN logins.
-
-
----
-
-## Importing Subcontractors
-
-
-There is currently **no bulk import** for subcontractors — neither a CSV/spreadsheet template nor a Smart Import category. Subcontractors are added one at a time.
-
-## Adding a subcontractor
-
-Go to **Forwarding → Subcontractors** and add each carrier individually. From there you can generate that carrier's portal link so they can update order statuses and upload documents.
-
-> **Note:** 
-If you regularly onboard subcontractors in bulk and this is a pain point, let support@druma.io know — it's useful signal for prioritising a bulk-import path for this data type.
-
-
-## Brokers vs subcontractors
-
-Subcontractors are carriers you send loads **to**. Brokers are companies that give loads **to you**. If a company does both, add them in both registries.
-
-
-  Learn how the carrier portal works and how carriers update order statuses.
-
-
-
-  How to manage subcontracted orders and split invoicing.
 
 
 ---
