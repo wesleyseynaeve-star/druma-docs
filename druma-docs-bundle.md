@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-19 07:18 UTC
+Generated: 2026-07-19 07:26 UTC
 
 ---
 
@@ -6488,10 +6488,12 @@ The portal link is valid for 90 days by default. If a client contact leaves the 
 ---
 
 
-How clients download eCMR, CMR scans, POD photos, and invoices from their portal.
+  How clients download eCMR, CMR scans, POD photos, and invoices from their portal.
 
 
-Add contacts at a client company, set who gets which notifications, and give each person portal access.
+
+  Add contacts at a client company, set who gets which notifications, and give each person portal access.
+
 
 ---
 
@@ -6562,10 +6564,12 @@ Proof of Delivery photos are uploaded by the driver at the delivery point. If a 
 ---
 
 
-How clients access the portal and follow order status, maps, and ETAs.
+  How clients access the portal and follow order status, maps, and ETAs.
 
 
-How planners create and send invoices so they appear in the client portal.
+
+  How planners create and send invoices so they appear in the client portal.
+
 
 ---
 
@@ -6658,7 +6662,8 @@ Removing a contact stops all future notifications to that person immediately. Po
 ---
 
 
-How clients access the portal and what they see once they are logged in.
+  How clients access the portal and what they see once they are logged in.
+
 
 ---
 
@@ -7185,13 +7190,16 @@ Once an invoice is generated (status moves out of Draft), you cannot edit it dir
 ---
 
 
-How to reverse or partially correct a sent invoice using a credit note.
+  How to reverse or partially correct a sent invoice using a credit note.
 
 
-How Druma automatically submits invoices to ANAF's e-Factura system for Romanian clients.
+
+  How Druma automatically submits invoices to ANAF's e-Factura system for Romanian clients.
 
 
-Recording payments against invoices and tracking outstanding balances.
+
+  Recording payments against invoices and tracking outstanding balances.
+
 
 ---
 
@@ -7261,10 +7269,12 @@ Credit notes are legally required documents in Romania. You must never edit or d
 ---
 
 
-How to create invoices from delivered orders, including batch invoicing and multi-currency.
+  How to create invoices from delivered orders, including batch invoicing and multi-currency.
 
 
-Recording payments against invoices and managing outstanding balances.
+
+  Recording payments against invoices and managing outstanding balances.
+
 
 ---
 
@@ -7358,10 +7368,12 @@ Make sure every Romanian B2B client in Druma has their correct CIF entered on th
 ---
 
 
-How to create invoices in Druma, including multi-currency and batch invoicing.
+  How to create invoices in Druma, including multi-currency and batch invoicing.
 
 
-How to export invoice data to Romanian accounting software for your accountant.
+
+  How to export invoice data to Romanian accounting software for your accountant.
+
 
 ---
 
@@ -7483,10 +7495,12 @@ Always check with your accountant which export format they need — SAGA C or Wi
 ---
 
 
-How to configure all Druma integrations, including accounting software and API connections.
+  How to configure all Druma integrations, including accounting software and API connections.
 
 
-How to create invoices in Druma before exporting them to your accounting software.
+
+  How to create invoices in Druma before exporting them to your accounting software.
+
 
 ---
 
@@ -7577,10 +7591,12 @@ Go to **Invoicing** → **Export** → **Payments**. Select the date range and c
 ---
 
 
-Managing overdue invoices, sending payment reminders, and setting up auto-reminder schedules.
+  Managing overdue invoices, sending payment reminders, and setting up auto-reminder schedules.
 
 
-Automatically match bank payment emails to open invoices using Druma's email parsing feature.
+
+  Automatically match bank payment emails to open invoices using Druma's email parsing feature.
+
 
 ---
 
@@ -7726,10 +7742,12 @@ To set or update a client's payment terms: **Clients** → select the client →
 ---
 
 
-How to record payments against invoices and track outstanding balances per client.
+  How to record payments against invoices and track outstanding balances per client.
 
 
-How to create and send invoices from delivered orders in Druma.
+
+  How to create and send invoices from delivered orders in Druma.
+
 
 ---
 
@@ -7829,7 +7847,8 @@ Bank notification emails sometimes contain confidential financial information. M
 ---
 
 
-How to record payments manually, handle partial payments, and export payment data.
+  How to record payments manually, handle partial payments, and export payment data.
+
 
 ---
 
@@ -7938,13 +7957,16 @@ Discarding a transaction is a soft action — it only marks the row as rejected 
 ---
 
 
-Record and track payments manually, or view the full payment history per invoice.
+  Record and track payments manually, or view the full payment history per invoice.
 
 
-View aged debtors and send payment reminders for invoices past their due date.
+
+  View aged debtors and send payment reminders for invoices past their due date.
 
 
-Issue a credit note to reverse or partially correct a sent invoice.
+
+  Issue a credit note to reverse or partially correct a sent invoice.
+
 
 ---
 
@@ -8110,13 +8132,16 @@ Click **Export CSV** to download the full aged creditors report as a CSV file. T
 ---
 
 
-Upload CAMT.053 or MT940 files to auto-match incoming payments against open invoices.
+  Upload CAMT.053 or MT940 files to auto-match incoming payments against open invoices.
 
 
-Record and track payments against sales invoices and view outstanding balances.
+
+  Record and track payments against sales invoices and view outstanding balances.
 
 
-Monitor aged receivables and send payment reminders to overdue clients.
+
+  Monitor aged receivables and send payment reminders to overdue clients.
+
 
 ---
 
