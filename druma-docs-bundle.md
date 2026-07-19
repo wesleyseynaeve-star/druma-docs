@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-19 06:20 UTC
+Generated: 2026-07-19 06:36 UTC
 
 ---
 
@@ -1159,6 +1159,10 @@ Druma is the **issuer of record** for your subscription: every platform charge i
 > **Note:** 
 For current pricing, visit [druma.io](https://druma.io) or contact support@druma.io.
 
+
+<Frame caption="Settings → Billing — truck-count tier pricing, cost breakdown, and the AI usage pool. No Stripe portal, no per-seat pricing.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Billing settings panel showing subscription cost breakdown" />
+</Frame>
 
 ---
 
@@ -2403,6 +2407,10 @@ The Dispatching module is the real-time operations centre. It brings together th
 
 **How to access:** Click **Dispatching** in the left navigation menu. The module opens to the **Dashboard** view by default.
 
+<Frame caption="Dispatching — the Live Map view, showing real-time truck positions from the telematics feed.">
+  <img src="/images/planner/dispatching.png" alt="Dispatching module with live truck map" />
+</Frame>
+
 ---
 
 ## Your first five minutes in Dispatching
@@ -2624,6 +2632,10 @@ See [Dispatching](/en/planner/dispatching#driver-chat-tab) for the full driver-c
 Your fleet is the foundation of everything in Druma. Before you can assign trucks to orders, you need to add each vehicle to the system with its details. This takes a few minutes per truck and you only need to do it once.
 
 Go to **Fleet → Trucks** to manage your vehicles.
+
+<Frame caption="Fleet → Trucks — the vehicle list, with plate, Euro class, and trailer type at a glance.">
+  <img src="/images/planner/fleet-management.png" alt="Fleet Trucks page listing vehicles" />
+</Frame>
 
 ---
 
@@ -2937,6 +2949,10 @@ Your drivers are the people who actually update orders in the field. To do that,
 Managing drivers in Druma means: adding their details, sharing the app link with them, and keeping their licence and document records up to date.
 
 Go to **Fleet → Drivers** to manage your drivers.
+
+<Frame caption="Fleet → Drivers — licence, certificates, compatibility, and pay all live on the driver's profile.">
+  <img src="/images/planner/driver-management.png" alt="Fleet Drivers page listing drivers" />
+</Frame>
 
 ---
 
@@ -9730,6 +9746,10 @@ See [Workshop & Maintenance](/en/fleet-compliance/workshop-maintenance) for the 
 The Fleet → Tyres page tracks tyre fitment, condition, and replacement history for each vehicle. It gives fleet managers visibility of tyre-related costs and wear cycles without relying on paper records.
 
 **Access:** Fleet → **Tyres** — a standalone top-level Fleet page, not a tab on the vehicle detail view.
+
+<Frame caption="Fleet → Tyres — freely-configurable tyre positions per vehicle, with tread-depth tracking.">
+  <img src="/images/fleet-compliance/tyres.png" alt="Fleet Tyres page" />
+</Frame>
 
 ---
 
