@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-18 21:31 UTC
+Generated: 2026-07-19 06:19 UTC
 
 ---
 
@@ -841,6 +841,10 @@ This page covers **Settings → Rate Cards** — truck **cost profiles** used to
 A rate card in **Settings → Rate Cards** is a cost profile for a category of truck operation — either your **own fleet** or a **subcontracted** carrier. It captures what it actually costs you to run a truck (fixed cost, driver wage, fuel, ADR/oversize surcharges, tolls) so Druma can estimate the cost and margin of an order alongside the price you charge the client.
 
 **Who can edit:** Admin, Company Admin, and Planner roles.
+
+<Frame caption="Lane Pricing (Pricing → Lane Pricing) — the separate, origin/destination-based selling-price feature. Settings → Rate Cards (this page) is the cost-profile side.">
+  <img src="/images/admin/rate-cards.png" alt="Lane Pricing page with origin, destination, and trailer-type rate cards" />
+</Frame>
 
 ## Creating a rate card
 
@@ -3369,6 +3373,10 @@ Before a load becomes a confirmed order, most clients want a price. Druma's quot
 
 No copy-pasting between systems. No re-entering the same data twice. The quote becomes the order.
 
+<Frame caption="The Quotes list — status badges track each quote from Draft through Sent, Accepted, or Superseded.">
+  <img src="/images/planner/quotes.png" alt="Quotes list page with status badges" />
+</Frame>
+
 ---
 
 ## Creating a New Quote
@@ -3725,6 +3733,10 @@ The **Sales** module (`/operator-crm`, in the main navigation as **Sales**) is w
 
 Sales is available to **admin, company_admin, planner, dispatcher, and customer_service** roles.
 
+<Frame caption="The Sales Pipeline tab — leads and accounts moving through lead → qualified → proposal → won.">
+  <img src="/images/planner/crm.png" alt="Sales pipeline kanban board with leads and accounts across four stages" />
+</Frame>
+
 ---
 
 ## The tab bar
@@ -4009,6 +4021,10 @@ In Druma, groupage is its own module (`/groupage`) — a **groupage run** holds 
 > **Note:** 
 Groupage isn't a fourth "order type" alongside Own Truck / Subcontracted / Repositioning — it's a separate module that groups existing orders together.
 
+
+<Frame caption="The Groupage module — a run's legs with per-leg client, cargo, and fill-rate tracking.">
+  <img src="/images/planner/groupage.png" alt="Groupage run with multiple legs and fill-rate indicator" />
+</Frame>
 
 ---
 
@@ -4372,6 +4388,10 @@ Wasted journey orders are excluded from fleet utilisation and active load KPI ca
 ## What is the Gaps tool?
 
 Every time a truck finishes a delivery with no next load lined up, or an order sits without a truck assigned as its pickup date approaches, you're either burning empty kilometres or risking a missed pickup. The **Gaps** page (`/operations/gaps`, in the Planning tab bar as **Gaps**) surfaces both problems in one place, across three sub-tabs.
+
+<Frame caption="The Gaps tool — coverage gaps with a recommended action, empty km, pickup, delivery, and client.">
+  <img src="/images/planner/empty-km-gaps.png" alt="Gaps page listing coverage gaps and empty-km reload opportunities" />
+</Frame>
 
 ---
 
@@ -9478,6 +9498,10 @@ The Workshop & Maintenance module gives fleet managers a structured way to track
 
 Find the module under **Fleet → Work Orders** and **Fleet → Maintenance**.
 
+<Frame caption="Fleet → Work Orders — jobs tracked from Open through Completed, by Service Type.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Work Orders page listing maintenance jobs by status and service type" />
+</Frame>
+
 ---
 
 ## Work orders
@@ -9820,6 +9844,10 @@ Druma keeps a history of all tyre records per position, including replaced tyres
 Fleet Incidents is a structured log of any accidents, damage events, or safety incidents involving your vehicles. Logging incidents in Druma creates a permanent record for insurance claims, legal defence, and internal safety analysis.
 
 Incidents are **reported by the driver from the driver app**, not created by a planner or fleet manager from the web app. The web-side **Fleet → Incidents** page is where planners and fleet managers review, filter, and manage incidents that drivers have already reported — there is no "+ New Incident" creation flow on the web side, and there is no per-vehicle Incidents tab on the truck detail view.
+
+<Frame caption="Fleet → Incidents — the review list for incidents drivers have reported from the driver app.">
+  <img src="/images/fleet-compliance/incidents.png" alt="Fleet Incidents review page" />
+</Frame>
 
 ---
 
@@ -11587,6 +11615,10 @@ Clients — particularly large retailers, manufacturers, and logistics companies
 Go to **Reports → CO2 Report**.
 
 By default you see the **Monthly** view — the most recent shipments with a calculated CO2 figure, newest first. Switch to **Annual (CSRD)** and pick a **year** to build a full-year dataset for sustainability exports. Optionally narrow either view to one client with the **Client** filter.
+
+<Frame caption="The Monthly CO2 Report — per-order distance, weight, and CO2 (kg), each row's Method showing the GLEC factor version used.">
+  <img src="/images/reports/co2-report.png" alt="Monthly CO2 report with emissions chart and per-order table" />
+</Frame>
 
 ## What the Report Shows
 
