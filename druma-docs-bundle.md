@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-19 06:37 UTC
+Generated: 2026-07-19 06:58 UTC
 
 ---
 
@@ -5654,6 +5654,10 @@ Every time you tap a status update, this happens:
 
 This means your dispatcher isn't calling you every hour to ask where you are, and there's a clean paper trail if anything is disputed later.
 
+<Frame caption="The driver app's Today view — status and hours for the active load.">
+  <img src="/images/driver/status-updates.png" alt="Driver app Today view with load card and status buttons" />
+</Frame>
+
 ---
 
 ## The Status Flow
@@ -6371,6 +6375,10 @@ The client portal gives your customers a dedicated window into their shipments �
 
 There's a single access link per client — not separate account creation, and not multiple link types to choose between. From the **Clients** page, select the client and click **Generate portal link**. The link is valid for **90 days** from when it's generated; click **Resend link** at any point to re-send the same link, or **Revoke** to kill access immediately. Each link is scoped to that client's own orders only.
 
+<Frame caption="The client's Shipments list — status is a plain badge, not a live GPS map.">
+  <img src="/images/client-portal/tracking-shipments.png" alt="Client portal Shipments list" />
+</Frame>
+
 ## Walkthrough: How a Client Tracks a Shipment
 
 
@@ -7042,6 +7050,10 @@ Once an order is delivered, you can generate an invoice directly inside Druma. T
 
 **From the order detail page (fastest):**
 Open the delivered order → click the **Generate Invoice** button in the top-right corner. Druma pre-fills the invoice with that order's details and takes you straight to the review screen.
+
+<Frame caption="The Invoices list — Payment Status (derived from due date/amount paid) is tracked separately from E-Invoice channel and E-Status.">
+  <img src="/images/invoicing/generating-invoices.png" alt="Invoices list with status and payment columns" />
+</Frame>
 
 **From the Invoicing module:**
 Go to **Invoicing** → **New Invoice** → search for the client → select the order or orders you want to include.
@@ -11228,6 +11240,10 @@ Druma's analytics are spread across three places, all scoped to your active comp
 
 Most analytics pages share the same shell: a KPI bar at the top, a global date-range picker, filters relevant to that report, and drill-through — click a bar on a chart or a row in a table to jump to the underlying orders or invoices. Every KPI tile with a small help icon next to it explains exactly how that number is calculated — click it if a figure looks off.
 
+<Frame caption="The Analytics dashboard — the shared shell every analytics page follows.">
+  <img src="/images/reports/analytics-overview.png" alt="Analytics dashboard overview" />
+</Frame>
+
 ---
 
 ## Finding the Report You Need
@@ -11540,6 +11556,10 @@ Many operators know their revenue per lane but not their actual margin once fuel
 Go to **Reports → Lane Profitability**.
 
 Select your date range at the top. The report defaults to the current month. For a meaningful comparison you generally want at least a full month of data, ideally a quarter.
+
+<Frame caption="Lane Profitability — margin per origin-destination pair, with the fixed 15% threshold used to flag underperforming lanes.">
+  <img src="/images/reports/lane-profitability.png" alt="Lane Profitability report" />
+</Frame>
 
 
 ## What the Report Shows
