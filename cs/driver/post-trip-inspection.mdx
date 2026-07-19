@@ -6,10 +6,10 @@ icon: "clipboard-check"
 
 ## Přehled
 
-Po klepnutí na **Doručeno** Druma automaticky zobrazí překryvnou vrstvu **Popřepravní inspekce**. Jedná se o zprávu o inspekci řidičského vozidla (DVIR) — strukturovaný průchod stavem kamionu na konci každé jízdy.
+Po klepnutí řidiče na **Doručeno** Druma automaticky zobrazí překryvnou vrstvu **Popřepravní inspekce**. Jde o zprávu o inspekci vozidla řidiče (DVIR) — strukturovaný průchod stavem vozidla na konci každé jízdy. Nahrazuje neformální ústní hlášení a poskytuje vašemu fleet manažerovi kompletní, časově orazítkovaný záznam každé závady.
 
 <Note>
-Popřepravní inspekce se spouští pouze pro jednorázové objednávky. Nezobrazuje se na mezilehlých zastávkách během skupinové přepravy.
+Popřepravní inspekce se spouští pouze pro jednorázové objednávky (single-order). Nezobrazuje se na mezilehlých zastávkách během skupinových (vícemístných) jízd.
 </Note>
 
 ---
@@ -18,25 +18,27 @@ Popřepravní inspekce se spouští pouze pro jednorázové objednávky. Nezobra
 
 <Steps>
   <Step title="Překryvná vrstva se zobrazí automaticky">
-    Ihned po klepnutí na **Doručeno** se otevře překryvná vrstva Popřepravní inspekce. Řidič ji nemůže zavřít bez akce — musí ji buď dokončit nebo explicitně přeskočit.
+    Ihned po klepnutí na **Doručeno** se otevře celoobrazovková překryvná vrstva Popřepravní inspekce. Řidič ji nemůže zavřít bez akce — musí ji buď dokončit, nebo explicitně přeskočit.
   </Step>
   <Step title="Označte každou položku">
-    Každá položka kontrolního seznamu má třístupňový přepínač:
+    Každá položka kontrolního seznamu má třístupňový přepínač se třemi možnostmi:
 
     | Stav | Barva | Význam |
     |---|---|---|
-    | **OK** | Zelená | Žádné problémy |
-    | **Upozornění** | Žlutá | Drobný problém — může pokračovat v provozu, plánovač upozorněn |
-    | **Bezpečnostně kritické** | Červená | Vážná závada — kamion může být zablokován |
+    | **OK** | Zelená | Žádné problémy nenalezeny |
+    | **Upozornění** | Oranžová | Drobný problém — provoz může pokračovat, plánovač je upozorněn |
+    | **Bezpečnostně kritické** | Červená | Vážná závada — vozidlo může být vyřazeno z dispečinku |
+
+    Řidič projde jednotlivé položky a vybere odpovídající stav. Položky jsou ve výchozím stavu **OK**, takže řidič musí měnit pouze položky, kde existuje problém.
   </Step>
   <Step title="Zadejte stav počitadla kilometrů">
-    Numerický vstup zachycuje aktuální stav odometru v kilometrech.
+    Numerické pole v dolní části překryvné vrstvy zachycuje aktuální stav odometru v kilometrech. Tato hodnota se uloží k záznamu inspekce.
   </Step>
-  <Step title="Přidejte fotografie pro bezpečnostně kritické závady">
-    Pro položky označené jako **Bezpečnostně kritické** se zobrazí tlačítko **Přidat foto**.
+  <Step title="Přidejte poznámky a fotografie k označeným položkám">
+    Jakákoli položka označená jako **Upozornění** nebo **Bezpečnostně kritické** se rozbalí a zobrazí pole pro poznámky a — u položek, kde jsou fotografie povoleny — ovládací prvek pro nahrání fotografie. Řidič může nahrát až 3 fotografie na závadu — z fotoaparátu zařízení nebo výběru souboru. Podporované formáty: JPEG, PNG, WebP, HEIC, HEIF. Maximálně 10 MB na soubor.
   </Step>
-  <Step title="Odeslat nebo přeskočit">
-    Klepněte na **Odeslat inspekci** pro zaznamenání výsledků nebo na **Přeskočit inspekci**.
+  <Step title="Odešlete nebo přeskočte">
+    Klepněte na **Odeslat inspekci** pro zaznamenání výsledků. Pokud řidič nemůže inspekci dokončit ihned (např. potřebuje zaparkovat a obejít vozidlo), může klepnout na **Přeskočit inspekci** — to se zaznamená jako přeskočená inspekce, ne jako úspěšná. Na detailu zakázky pro doručenou objednávku se poté zobrazí tlačítko **Dokončit inspekci**, které řidiči umožní se vrátit a vyplnit ji později.
   </Step>
 </Steps>
 
@@ -48,19 +50,71 @@ Popřepravní inspekce se spouští pouze pro jednorázové objednávky. Nezobra
 Není vyžadována žádná akce. Položka je zaznamenána jako zkontrolovaná a bez problémů.
 
 ### Upozornění
-Závada je zaznamenána a plánovač obdrží upozornění. Kamion není zablokován.
+Závada je zaznamenána a plánovač obdrží upozornění. Vozidlo není zablokováno — může být nadále přiřazováno k objednávkám. Upozornění je vidět v panelu detailu objednávky a v záložce Vozový park → **Závady**.
 
 ### Bezpečnostně kritické
-Vážná závada, která může kamion učinit nebezpečným nebo nevyhovujícím.
-- Plánovač a fleet manažer jsou okamžitě upozorněni
-- Kamion může být zablokován pro nová přiřazení (v závislosti na nastavení)
+Vážná závada, která může vozidlo učinit nebezpečným nebo nevyhovujícím pro provoz.
+
+- Plánovač a fleet manažer jsou upozorněni okamžitě.
+- Pokud je zapnutý firemní přepínač **Automaticky vyřadit vozidlo do servisu při bezpečnostně kritické závadě**, vozidlo je automaticky označeno jako nedostupné a zmizí ze seznamu přiřaditelných vozidel na plánovací tabuli, dokud nebude závada vyřešena přes pracovní příkaz.
+- Řidiči se při odeslání zobrazí jasné varování vysvětlující, že vozidlo může být vyřazeno z provozu.
+
+<Warning>
+Pokud je přepínač automatického vyřazení zapnutý, bezpečnostně kritická závada okamžitě odstraní vozidlo z dispečinku — i pokud jsou mu již přiřazeny budoucí objednávky. Jakmile obdržíte upozornění na bezpečnostně kritickou závadu, zkontrolujte záložku Vozový park → Závady.
+</Warning>
 
 ---
 
-## Zobrazení výsledků inspekcí (plánovač)
+## Co vidí plánovači
 
-Přejděte do **Vozový park → Závady** pro zobrazení všech závad ve stavu Otevřeno, Opraveno nebo Ignorováno.
+V **panelu detailu objednávky** se pod informacemi o trase zobrazí sekce **DVIR** poté, co je inspekce odeslána. Zobrazuje:
 
-<Card title="Doklady vozového parku" icon="file" href="/en/fleet-compliance/fleet-documents">
-  Uchovávejte doklady vozového parku aktuální pro minimalizaci závad při inspekcích.
+- Stav inspekce: Dokončeno, Přeskočeno, nebo Čeká
+- Časové razítko odeslání a jméno řidiče
+- Seznam každé závady s odznakem závažnosti (Upozornění / Bezpečnostně kritické)
+- Náhledy miniatur jakýchkoli nahraných fotografií, které se po kliknutí otevřou v plné velikosti
+
+Pokud byla inspekce přeskočena, sekce DVIR zobrazuje odznak „Přeskočeno" s časovým razítkem.
+
+---
+
+## Fleet manažer: sledování otevřených závad
+
+Přejděte do **Vozový park → Závady** pro zobrazení všech závad napříč celou vaší flotilou. Stránka má tři filtrovací záložky:
+
+| Záložka | Co zobrazuje |
+|---|---|
+| **Otevřené** | Závady dosud nepropojené s dokončeným nebo zrušeným pracovním příkazem |
+| **Potvrzené** | Závady, které fleet manažer zkontroloval |
+| **Vše** | Úplná historie |
+
+Každý řádek zobrazuje vozidlo, název položky závady, odznak závažnosti, datum nahlášení a řidiče, který ji odeslal.
+
+U řádků **Bezpečnostně kritické** je přímo v řádku k dispozici tlačítko **Vytvořit pracovní příkaz**. Kliknutím se otevře formulář pracovního příkazu předvyplněný popisem a závažností závady — bez nutnosti cokoli kopírovat.
+
+---
+
+## Konfigurace pro správce
+
+Přejděte do **Nastavení → Popřepravní DVIR** pro konfiguraci DVIR pro vaši společnost.
+
+| Nastavení | Popis |
+|---|---|
+| **Povolit popřepravní DVIR** | Zapíná nebo vypíná překryvnou vrstvu inspekce pro všechny řidiče |
+| **Vyžadovat fotografie u bezpečnostně kritických závad** | Vyžaduje nahrání alespoň jedné fotografie, než lze bezpečnostně kritickou závadu odeslat |
+| **Automaticky vyřadit vozidlo do servisu při bezpečnostně kritické závadě** | Automaticky zablokuje vozidlo pro dispečink při odeslání bezpečnostně kritické závady |
+| **Položky kontrolního seznamu** | Přidejte, upravte nebo smažte položky, které se zobrazují v překryvné vrstvě inspekce. Každá položka má název a výchozí závažnost (OK / Upozornění / Bezpečnostně kritické) |
+
+<Note>
+Položky kontrolního seznamu jsou celofiremní. Všichni řidiči ve vaší společnosti vidí stejný seznam. Pokud provozujete různé typy vozidel, používejte popisné názvy položek (např. „Chladicí jednotka reefer — zkontrolovat těsnění"), aby byl seznam srozumitelný pro všechny.
+</Note>
+
+---
+
+<Card title="Přípravný kontrolní seznam" icon="clipboard-list" href="/cs/driver/pre-trip-checklist">
+  Přípravný kontrolní seznam probíhá před odjezdem. Zjistěte, jak ho řidiči vyplňují a jak správci konfigurují tvrdé a měkké blokace.
+</Card>
+
+<Card title="Servis a údržba" icon="wrench" href="/cs/fleet-compliance/workshop-maintenance">
+  Jak vytvářet pracovní příkazy z bezpečnostně kritických závad a spravovat plány údržby napříč vaší flotilou.
 </Card>

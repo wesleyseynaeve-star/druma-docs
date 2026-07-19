@@ -1,58 +1,48 @@
 ---
 title: "API publique"
-description: "Comment utiliser l'API REST publique de Druma pour intégrer vos systèmes tiers — authentification, endpoints disponibles et limites de taux."
+description: "Accès REST en lecture seule à vos commandes, connectez Druma à votre propre ERP, portail client, ou outils de reporting."
 icon: "code"
 ---
 
-## Vue d'ensemble
+L'API publique de Druma vous donne un accès REST **en lecture seule** à vos commandes — utile pour un portail libre-service client, un outil BI/reporting, ou des outils internes que votre équipe a construits.
 
-Druma expose une API REST publique qui permet aux développeurs d'intégrer des systèmes tiers — ERP, TMS clients, plateformes de suivi, systèmes de reporting personnalisés.
-
----
+<Warning>
+L'API publique est une fonctionnalité à activation contrôlée et n'est pas activée par défaut. Contactez **support@druma.io** pour demander l'accès — les clés API sont actuellement provisionnées directement par Druma ; il n'y a pas d'écran de génération de clé en libre-service dans l'application.
+</Warning>
 
 ## Authentification
 
-L'API utilise des tokens Bearer JWT. Pour obtenir un token :
+Toutes les requêtes API doivent inclure votre clé API dans l'en-tête `X-API-Key` :
 
-<Steps>
-  <Step title="Créez une clé API">
-    Accédez à **Paramètres → Intégrations → API publique** et cliquez sur **Créer une clé API**.
-  </Step>
-  <Step title="Copiez la clé">
-    La clé est affichée une seule fois. Copiez-la et stockez-la de manière sécurisée.
-  </Step>
-  <Step title="Incluez dans les requêtes">
-    Ajoutez l'en-tête `Authorization: Bearer {votre-clé-api}` à chaque requête.
-  </Step>
-</Steps>
+```
+X-API-Key: VOTRE_CLE_API
+```
 
----
+Les requêtes sans clé valide retournent une réponse `401 Unauthorized`. L'authentification par jeton Bearer (`Authorization: Bearer ...`) n'est **pas** prise en charge et retourne aussi un 401.
 
 ## Endpoints disponibles
 
-| Endpoint | Description |
-|---|---|
-| `GET /orders` | Lister les commandes avec filtres |
-| `GET /orders/{id}` | Détails d'une commande |
-| `POST /orders` | Créer une nouvelle commande |
-| `PATCH /orders/{id}` | Mettre à jour une commande |
-| `GET /clients` | Lister les clients |
-| `GET /invoices` | Lister les factures |
-| `GET /fleet/vehicles` | Lister les véhicules |
-| `GET /fleet/drivers` | Lister les chauffeurs |
+L'API est en lecture seule — seules les requêtes `GET` sont acceptées. Toutes les réponses sont en JSON.
 
----
+| Méthode | Endpoint | Description |
+|---|---|---|
+| `GET` | `/orders` | Lister les commandes (paginé, filtre `status` optionnel) |
+| `GET` | `/orders/{id}` | Détail d'une commande |
+| `GET` | `/orders/{id}/location` | Position actuelle du camion et dernière ETA |
+| `GET` | `/orders/{id}/documents` | Liste des documents avec URL de téléchargement signées à durée limitée |
+
+Toute autre ressource, ou toute méthode non-GET, retourne une erreur `404`/`405`.
 
 ## Limites de taux
 
-L'API est limitée à **100 requêtes par minute** par clé API. Les requêtes dépassant cette limite retournent un code HTTP 429.
+- **100 requêtes par minute** par clé API
+- Si vous dépassez la limite, vous recevez une réponse `429 Too Many Requests` avec un en-tête `Retry-After` indiquant combien de secondes attendre
+- Aucun autre en-tête de limite de taux n'est retourné
 
----
+Pour des limites plus élevées, contactez support@druma.io avec votre cas d'usage.
 
-## Documentation complète de l'API
-
-La documentation Swagger interactive est disponible à `/api/docs` sur votre compte Druma.
-
-<Card title="API client" icon="globe" href="/fr/integrations/client-api">
-  API dédiée pour les intégrations client (portail embarqué, tracking).
-</Card>
+<CardGroup cols={1}>
+  <Card title="Aperçu de la configuration des intégrations" icon="plug" href="/fr/admin/integration-setup">
+    Aperçu de toutes les intégrations Druma et comment les gérer depuis le panneau Paramètres.
+  </Card>
+</CardGroup>

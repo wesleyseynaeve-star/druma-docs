@@ -1,0 +1,102 @@
+---
+title: "KSeF — lengyel e-számlázás"
+description: "Hogyan nyújtja be automatikusan a Druma a számlákat a KSeF-nek (Krajowy System e-Faktur), Lengyelország kötelező, a KAS által üzemeltetett nemzeti e-számlázási rendszerébe, állapotkövetéssel, újrapróbálkozás-kezeléssel és UPO-nyugta letöltéssel."
+icon: "file-invoice"
+---
+
+<Warning>
+**Korai hozzáférés — az első élő operátori validálásra vár.** A Druma KSeF-benyújtása funkcionálisan kész, de e sorok írásakor még nem futott végig teljes körűen Lengyelország élő KSeF API-jával szemben egy valódi, lengyel ÁFA-alany operátornál. A benyújtás zárolt marad, amíg egy élő operátori token nem kerül csatlakoztatásra. Ha az elsők között vagy, akik csatlakoztatják a KSeF-et, kezeld korai hozzáférésként a kezdeti benyújtásaidat — figyeld szorosan a státusz-jelvényeket, és haladéktalanul lépj kapcsolatba az ügyfélszolgálattal, ha valami furcsának tűnik. A lentebb leírt beállítási lépések és viselkedés helyesek; az egyetlen nyitott tétel egy élő éles nyomvonal.
+</Warning>
+
+## Mi az a KSeF?
+
+A KSeF (Krajowy System e-Faktur) Lengyelország nemzeti strukturált e-számlázási rendszere, amelyet a lengyel adóhatóság (KAS — Krajowa Administracja Skarbowa) üzemeltet. Kötelező a lengyel ÁFA-alany cégek számára. Minden PL-ÁFA cég által kiállított számlát el kell küldeni a KSeF-nek a hivatalos FA(3) XML-formátumban — önmagában a KAS-portál nem elegendő.
+
+<Note>
+A KSeF-kötelezettséget szakaszosan vezetik be 2026 folyamán, és élesítési dátumait a lengyel kormány ismételten elhalasztotta. Erősítsd meg a céged konkrét, alkalmazandó élesítési dátumát a könyvelőddel vagy a hivatalos [ksef.mf.gov.pl](https://ksef.mf.gov.pl) portállal, mielőtt bármelyik itt említett dátumra hagyatkoznál.
+</Note>
+
+A KSeF csak akkor vonatkozik rád, ha a céged **lengyel ÁFA-számmal** rendelkezik (formátum: `PL`, majd 10 számjegy, pl. `PL1234567890`). A Romániában, Belgiumban vagy bármely más, nem lengyel országban bejegyzett cégekre nem vonatkozik a KSeF. Ha a Druma nem észlel PL ÁFA-számot a céges rekordodon, a KSeF integrációs kártya inaktív marad.
+
+## Hogyan kezeli a Druma a KSeF-et?
+
+Nem kell bejelentkezned a KAS-portálra, XML-fájlokat készítened, vagy bármit manuálisan benyújtanod. Íme, mi történik automatikusan, amikor egy számlát generálsz, és a KSeF engedélyezve van:
+
+1. A Druma átalakítja a számlát a KAS által megkövetelt hivatalos **FA(3) XML** formátumra.
+2. A Druma hitelesíti magát a KSeF API-val a **operátori tokened** segítségével, amely biztonságosan a Supabase Vault-ban van tárolva — a token soha nem látható egyszerű szövegként, miután beillesztetted.
+3. A Druma benyújtja az XML-t a KSeF-nek, és megkap egy **KSeF-számot** (a KAS hivatalos hivatkozása).
+4. A Druma letölti az **UPO**-t (Urzędowe Poświadczenie Odbioru — hivatalos átvételi igazolás), és a számlarekordhoz tárolja.
+
+A teljes folyamat a háttérben fut. Az eredményt egy színes státusz-jelvényként látod a számlán.
+
+## KSeF-státusz jelvények
+
+Minden KSeF-köteles számla egy státusz-jelvényt mutat a számla-részletező oldalon, a **KSeF** szakasz alatt:
+
+| Jelvény | Jelentés |
+|---|---|
+| **Függőben** | A számla generálva; a KSeF-benyújtás sorba állítva. |
+| **Benyújtva** | Az XML elküldve a KSeF-nek; a KAS feldolgozására vár (jellemzően 1–5 perc). |
+| **Elfogadva** | A KAS elfogadta a számlát. A KSeF-szám tárolva van, és az UPO elérhető. |
+| **Sikertelen** | A KSeF elutasította a számlát egy validálási hiba miatt. Lásd a hibaüzenetet a számlán. |
+| **Elutasítva** | A KAS formális elutasítást adott vissza. Ellenőrizd az UPO-t az ok-kódért. |
+
+<Note>
+Egy háttérfeladat 30 percenként ellenőrzi a sikertelen benyújtásokat, de minden számla ténylegesen csak egy exponenciális visszavárási ütemterv szerint próbálkozik újra — nagyjából 1 óra múlva az első sikertelenség után, majd nagyjából 2 óra múlva ezután (±25% eltéréssel). Ha a harmadik kísérlet (az eredeti benyújtás plusz ez a 2 újrapróbálkozás) is meghiúsul, a számla egyenesen **Sikertelen** státuszra vált, jellemzően az első sikertelenségtől számított kb. 3 órán belül — ezután nem próbálkozik automatikusan újra. Indíts manuális újrapróbálkozást a számla-részletező panelről, miután megoldottad a mögöttes hibát.
+</Note>
+
+## A KSeF beállítása
+
+<Steps>
+  <Step title="Lépj a Beállítások → Integrációk menüpontra">
+    Nyisd meg a **Beállítások** menüt a felső navigációs sávból, és válaszd az **Integrációk** menüpontot.
+  </Step>
+  <Step title="Keresd meg a KSeF kártyát, és kattints a Csatlakozás gombra">
+    Keresd meg a **KSeF (lengyel e-számlázás)** kártyát. Kattints a **Csatlakozás** gombra.
+  </Step>
+  <Step title="Illeszd be az operátori tokened">
+    Add meg a KSeF operátori tokenedet. Ez a KAS által a céged API-hozzáféréséhez kiadott hitelesítő token. A könyvelőd vagy IT-csapatod generálhat egyet a KSeF portálon, a [ksef.mf.gov.pl](https://ksef.mf.gov.pl) oldalon.
+  </Step>
+  <Step title="Mentés">
+    Kattints a **Mentés** gombra. A Druma aktiválás előtt ellenőrzi, hogy a céges rekordodon van-e lengyel ÁFA-szám. Ha a validáció meghiúsul, ellenőrizd, hogy a cégadataidon szereplő ÁFA-szám `PL` + 10 számjegy formátumú-e.
+  </Step>
+</Steps>
+
+Csatlakozás után a céged által generált összes új számla automatikusan benyújtásra kerül a KSeF-nek. A Drumában már meglévő számlák **nem** kerülnek visszamenőleg benyújtásra.
+
+## A KSeF lecsatlakoztatása
+
+Lépj a **Beállítások → Integrációk → KSeF → Lecsatlakoztatás** menüpontra. Ez eltávolítja az operátori tokent a Vault-ból, és azonnal leállítja az új benyújtásokat. A már elfogadott számlák megtartják a KSeF-számukat — a lecsatlakoztatás nem érinti az elfogadott rekordokat.
+
+## Fordított adózású számlák
+
+A Druma helyesen kezeli a fordított adózású ÁFA-t az FA(3) XML-formátumban. Amikor egy számla fordított adózású ÁFA-kezelést hordoz, a Druma elhagyja az ÁFA-összeget, és beállítja a helyes **P_12** mezőt az XML-ben. Nincs szükség manuális beavatkozásra — az ÁFA-kezelés a Drumában konfigurált számlatételekből származik.
+
+## Az UPO letöltése
+
+Az UPO (a KAS hivatalos nyugtája) automatikusan letöltésre kerül, amint a számla eléri az **Elfogadva** státuszt, és a számlarekordhoz tárolódik. Manuális letöltéshez:
+
+1. Nyisd meg a számlát a **Számlázás** menüpontból.
+2. Görgess a **KSeF** szakaszhoz.
+3. Kattints az **UPO letöltése** gombra.
+
+<Warning>
+Az UPO a jogi bizonyíték arra, hogy a KAS megkapta a számládat. Tarts meg egy másolatot a nyilvántartásodban — a lengyel adójog megköveteli, hogy be tudd mutatni egy adóellenőrzés során.
+</Warning>
+
+## Manuális újrapróbálkozás
+
+Ha az automatikus újrapróbálkozások kimerültek, vagy javítottál egy hibát, és azonnal újra szeretnéd küldeni:
+
+Lépj a **Számlázás** menüpontra → nyisd meg a számlát → **KSeF szakasz** → kattints az **Újraküldés próbálkozása** gombra. A Druma azonnal újra elküldi az FA(3) XML-t.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="e-Factura / ANAF benyújtás" icon="landmark" href="/en/invoicing/efactura-anaf">
+    Románia egyenértékű, kötelező e-számlázási rendszere — hogyan nyújt be a Druma az ANAF-nak az SPV API-n keresztül.
+  </Card>
+  <Card title="Peppol e-számlázás" icon="network-wired" href="/en/integrations/peppol-invoicing">
+    EU-szintű elektronikus számlázás a Peppol-hálózaton keresztül — beállítás, küldés és állapotkövetés.
+  </Card>
+</CardGroup>

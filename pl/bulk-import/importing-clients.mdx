@@ -1,6 +1,6 @@
 ---
 title: "Import klientów"
-description: "Masowo dodaj firmy klientów do Druma przy użyciu szablonu CSV."
+description: "Masowo dodaj firmy klientów do Druma przy użyciu szablonu arkusza kalkulacyjnego."
 icon: "file-import"
 ---
 
@@ -9,49 +9,45 @@ Jeśli masz istniejącą listę klientów w Excelu lub innym systemie, import ma
 ## Pobierz szablon
 
 <Steps>
-  <Step title="Otwórz stronę importu">
-    Przejdź do **Klienci → Importuj** i kliknij **Pobierz szablon**.
+  <Step title="Otwórz import masowy">
+    Przejdź do **Klienci** i kliknij **Import masowy** na pasku narzędzi — otwiera to okno importu bezpośrednio na stronie listy klientów; nie ma osobnej strony importu.
   </Step>
-  <Step title="Wypełnij CSV">
-    Jeden klient per wiersz:
+  <Step title="Pobierz szablon i wypełnij go">
+    Kliknij **Pobierz szablon** — Druma generuje plik `.xlsx`. Wypełnij jeden wiersz na klienta:
 
     | Kolumna | Wymagana | Przykład |
-    |---------|----------|---------|
-    | company_name | Tak | Acme Logistics SRL |
-    | vat_number | Tak | RO12345678 |
-    | country | Tak | RO |
-    | address | Tak | Str. Victoriei 1, București |
-    | contact_name | Nie | Ion Popescu |
-    | contact_email | Nie | ion@acme.ro |
-    | contact_phone | Nie | +40721000000 |
-    | payment_terms_days | Nie | 30 |
-    | currency | Nie | EUR |
-    | notes | Nie | Preferuje komunikację e-mailową |
+    |--------|----------|---------|
+    | Nazwa firmy | Tak | Acme Logistics SRL |
+    | Numer VAT | Nie | RO12345678 |
+    | Nazwa prawna | Nie | Acme Logistics S.R.L. |
+    | Kraj | Nie | Rumunia |
+    | Miasto | Nie | Bukareszt |
+    | E-mail | Nie | billing@acme.ro |
+    | Telefon | Nie | +40 21 000 0000 |
+    | Warunki płatności (dni) | Nie | 30 |
+    | Waluta | Nie | EUR |
   </Step>
   <Step title="Prześlij i przejrzyj">
-    Prześlij CSV. Druma wyświetla podgląd wszystkich wierszy — czerwone wiersze mają błędy (zazwyczaj nieprawidłowy format numeru VAT lub brakujące wymagane pola). Popraw i prześlij ponownie.
+    Przeciągnij wypełniony plik (CSV lub XLSX, do 5 MB) do okna importu. Jeśli nagłówki kolumn dokładnie pasują do szablonu, Druma mapuje je automatycznie; w przeciwnym razie zmapujesz każdą kolumnę do właściwego pola. Podgląd pokazuje wtedy pierwsze 5 wierszy — wiersze bez nazwy firmy są oznaczone na czerwono.
   </Step>
   <Step title="Potwierdź import">
-    Kliknij **Importuj [X] klientów**. Klienci są natychmiast dostępni do użycia w zleceniach.
+    Kliknij **Importuj**. Klienci są tworzeni natychmiast i od razu dostępni do użycia w zleceniach. Ekran wyniku pokazuje, ile wierszy zostało utworzonych, pominiętych lub nieudanych, wraz ze szczegółami błędów dla każdego wiersza, który się nie powiódł.
   </Step>
 </Steps>
 
-## Format numeru VAT
+## Deduplikacja
 
-Druma weryfikuje format numeru VAT podczas importu. Rumuńskie numery VAT zaczynają się od `RO`, po którym następują cyfry. Numery VAT UE używają formatu prefiksu kraju (np. `DE123456789`, `FR12345678901`). Klienci spoza UE mogą używać dowolnego identyfikatora podatkowego — dodaj prefiks `XX`, jeśli nie obowiązuje standardowy format.
+Druma porównuje numer VAT każdego wiersza z istniejącymi klientami (znormalizowany do wielkich liter, bez białych znaków). Jeśli znajdzie dopasowanie, ten wiersz jest **pomijany** — nie aktualizuje istniejącego klienta. Wiersze bez numeru VAT nigdy nie są pomijane na tej podstawie i zawsze tworzą nowego klienta.
 
 <Note>
-Klienci bez numerów VAT nie mogą otrzymywać zgłoszeń e-Factura. Dodaj numer VAT przed wygenerowaniem pierwszej faktury dla tego klienta.
+Import masowy zawsze tylko tworzy nowe rekordy klientów — nigdy nie aktualizuje istniejącego, nawet jeśli ponownie zaimportujesz plik z pasującym numerem VAT. Aby zmienić dane istniejącego klienta, edytuj go bezpośrednio w Druma.
 </Note>
 
-## Aktualizowanie istniejących klientów
-
-Wyeksportuj aktualną listę klientów z **Klienci → Eksportuj CSV**, wprowadź zmiany i ponownie zaimportuj. Druma dopasowuje po numerze VAT — istniejący klienci są aktualizowani, nowi są tworzeni.
-
-<Card title="Import kierowców" icon="id-card" href="/pl/bulk-import/importing-drivers">
-  Masowo dodaj swoją listę kierowców w ten sam sposób.
-</Card>
-
-<Card title="Rozliczenia i subskrypcja" icon="credit-card" href="/pl/admin/billing-and-subscription">
-  Dowiedz się, jak liczba miejsc użytkowników i pojazdów wpływa na miesięczny rachunek.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Import floty" icon="truck" href="/pl/bulk-import/importing-fleet">
+    Masowo dodaj swoje pojazdy w ten sam sposób.
+  </Card>
+  <Card title="Wdrażanie kierowców przez Smart Import" icon="id-card" href="/pl/bulk-import/importing-drivers">
+    Narzędzie AI Druma do przesyłania dokumentów przy wdrażaniu listy kierowców.
+  </Card>
+</CardGroup>

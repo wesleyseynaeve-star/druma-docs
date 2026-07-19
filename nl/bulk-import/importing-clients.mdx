@@ -1,38 +1,53 @@
 ---
 title: "Klanten importeren"
-description: "Upload uw klantbedrijven in bulk naar Druma met een CSV-sjabloon."
+description: "Upload uw klantbedrijven in bulk naar Druma met een spreadsheetsjabloon."
 icon: "file-import"
 ---
 
-Als u een bestaande klantenlijst heeft in Excel of een ander systeem, bespaart bulkimport u van het handmatig invoeren van elke klant.
+Heeft u een bestaande klantenlijst in Excel of een ander systeem, dan bespaart bulkimport u het handmatig invoeren van elke klant.
 
-## Download het sjabloon
+## Het sjabloon downloaden
 
 <Steps>
-  <Step title="Open de importpagina">
-    Ga naar **Klanten → Importeren** en klik op **Sjabloon downloaden**.
+  <Step title="Open Bulkimport">
+    Ga naar **Klanten** en klik op **Bulkimport** in de werkbalk — dit opent de importmodal direct op de klantenlijstpagina; er is geen aparte importpagina.
   </Step>
-  <Step title="Vul de CSV in">
-    Één klant per rij:
+  <Step title="Download het sjabloon en vul het in">
+    Klik op **Sjabloon downloaden** — Druma genereert een `.xlsx`-bestand. Vul één klant per rij in:
 
     | Kolom | Vereist | Voorbeeld |
     |--------|----------|---------|
-    | company_name | Ja | Acme Logistics SRL |
-    | vat_number | Ja | RO12345678 |
-    | country | Ja | RO |
-    | address | Ja | Str. Victoriei 1, București |
-    | contact_name | Nee | Ion Popescu |
-    | contact_email | Nee | ion@acme.ro |
-    | payment_terms_days | Nee | 30 |
+    | Bedrijfsnaam | Ja | Acme Logistics SRL |
+    | BTW-nummer | Nee | RO12345678 |
+    | Wettelijke naam | Nee | Acme Logistics S.R.L. |
+    | Land | Nee | Roemenië |
+    | Stad | Nee | Boekarest |
+    | E-mail | Nee | billing@acme.ro |
+    | Telefoon | Nee | +40 21 000 0000 |
+    | Betalingstermijn (dagen) | Nee | 30 |
+    | Valuta | Nee | EUR |
   </Step>
-  <Step title="Upload de CSV">
-    Klik op **Bestand uploaden**, selecteer uw ingevulde CSV en klik op **Importeren**.
+  <Step title="Upload en controleer">
+    Sleep uw ingevulde bestand (CSV of XLSX, tot 5 MB) in de importmodal. Komen uw kolomkoppen exact overeen met het sjabloon, dan mapt Druma ze automatisch; anders wijst u elke kolom zelf toe aan het juiste veld. Een voorvertoning toont daarna de eerste 5 rijen — rijen zonder bedrijfsnaam worden rood gemarkeerd.
   </Step>
-  <Step title="Bekijk en bevestig">
-    Druma detecteert duplicaten op basis van BTW-nummer. U kunt kiezen of u bestaande records wilt overslaan of bijwerken.
+  <Step title="Bevestig de import">
+    Klik op **Importeren**. Klanten worden onmiddellijk aangemaakt en zijn meteen bruikbaar op orders. Een resultaatscherm toont hoeveel rijen zijn aangemaakt, overgeslagen of mislukt, met foutdetails per rij voor mislukte records.
   </Step>
 </Steps>
 
-<Card title="Contacten beheren" icon="address-book" href="/nl/client-portal/managing-contacts">
-  Contactpersonen toevoegen aan klantrecords na import.
-</Card>
+## Deduplicatie
+
+Druma vergelijkt het BTW-nummer van elke rij met uw bestaande klanten (genormaliseerd naar hoofdletters, spaties verwijderd). Bij een match wordt die rij **overgeslagen** — de bestaande klant wordt niet bijgewerkt. Rijen zonder BTW-nummer worden op deze basis nooit overgeslagen en maken altijd een nieuwe klant aan.
+
+<Note>
+Bulkimport maakt uitsluitend nieuwe klantrecords aan — het werkt nooit een bestaand record bij, ook niet bij het opnieuw importeren van een bestand met een overeenkomend BTW-nummer. Wilt u gegevens van een bestaande klant wijzigen, bewerk deze dan rechtstreeks in Druma.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Uw vloot importeren" icon="truck" href="/nl/bulk-import/importing-fleet">
+    Voeg uw vrachtwagens op dezelfde manier in bulk toe.
+  </Card>
+  <Card title="Chauffeurs onboarden met Smart Import" icon="id-card" href="/nl/bulk-import/importing-drivers">
+    Druma's AI-gestuurde documentupload voor het onboarden van een chauffeursrooster.
+  </Card>
+</CardGroup>

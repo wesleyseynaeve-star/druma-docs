@@ -1,47 +1,116 @@
 ---
 title: "Import de relevé bancaire"
-description: "Comment importer des relevés bancaires dans Druma pour alimenter automatiquement la file de réconciliation avec les paiements entrants."
-icon: "file-text"
+description: "Téléversez des fichiers de relevé bancaire CAMT.053 ou MT940 pour rapprocher automatiquement les paiements des factures ouvertes — sans saisie manuelle."
+icon: "file-up"
 ---
 
 ## Vue d'ensemble
 
-Druma peut importer des relevés bancaires dans les formats CAMT.053 et MT940 — les deux formats standard pour les exports bancaires européens. Une fois importé, chaque transaction entrante apparaît dans la file de réconciliation.
+Plutôt que d'enregistrer les paiements un par un, vous pouvez téléverser votre relevé bancaire directement dans Druma. Druma analyse chaque transaction créditrice du fichier, exécute une logique de rapprochement contre vos factures ouvertes, et applique automatiquement toute correspondance fiable. Les transactions non rapprochées passent dans la file de Réconciliation pour une révision manuelle rapide.
 
----
+C'est le moyen le plus rapide de rapprocher un volume élevé de paiements entrants d'un coup — idéal en fin de semaine ou en fin de mois.
 
-## Formats pris en charge
+## Formats et banques pris en charge
+
+Druma accepte trois formats standard :
 
 | Format | Description |
-|---|---|
-| **CAMT.053** | Format XML standard ISO 20022, utilisé par la plupart des banques européennes |
-| **MT940** | Format SWIFT hérité, toujours utilisé par de nombreuses banques |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — exporté par la plupart des banques de l'UE via la banque en ligne |
+| **MT940 SWIFT** | Format historique SWIFT — encore courant pour les API bancaires d'entreprise |
+| **CODA** | Format à largeur fixe utilisé par les banques belges |
 
----
+Les trois formats sont pris en charge par BRD, BCR, Raiffeisen Bank, UniCredit et ING Roumanie, ainsi que par la majorité des banques de l'UE — CODA couvre spécifiquement les exports des banques belges. Druma détecte automatiquement le format au téléversement. Si la détection échoue, sélectionnez le bon format dans la liste déroulante **Format** de la fenêtre d'import.
 
-## Importer un relevé bancaire
+**Taille de fichier maximale :** 10 Mo par téléversement.
+
+<Note>
+Réimporter le même fichier de relevé est sans risque. Druma prend l'empreinte de chaque transaction et ignore silencieusement tout doublon — vous n'enregistrerez jamais un paiement en double.
+</Note>
+
+## Comment importer un relevé
 
 <Steps>
-  <Step title="Exportez votre relevé depuis votre banque">
-    Connectez-vous à votre banque en ligne et exportez les transactions de la période souhaitée en format CAMT.053 ou MT940.
-  </Step>
-  <Step title="Accédez à Facturation → Réconciliation → Importer un relevé">
-    Cliquez sur **Importer un relevé bancaire**.
+  <Step title="Ouvrez la fenêtre d'import">
+    Accédez à **Finance** → **Réconciliation** → onglet **Paiements**. Cliquez sur le bouton **Importer un relevé** en haut à droite de la page.
   </Step>
   <Step title="Sélectionnez votre fichier">
-    Choisissez le fichier exporté depuis votre banque.
+    Cliquez sur **Choisir un fichier** et sélectionnez votre relevé bancaire exporté. Les extensions acceptées sont `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940), et `.cod`/`.coda` (CODA). Le fichier doit faire 10 Mo ou moins.
   </Step>
-  <Step title="Vérifiez les transactions">
-    Druma affiche un aperçu des transactions trouvées dans le fichier. Confirmez l'import.
+  <Step title="Confirmez le format">
+    Druma détecte automatiquement le format et affiche une étiquette sous le nom du fichier. Si l'étiquette est incorrecte, ouvrez la liste déroulante **Format** et sélectionnez le bon format manuellement avant de continuer.
+  </Step>
+  <Step title="Lancez l'import">
+    Cliquez sur **Importer**. Druma analyse toutes les transactions créditrices du fichier et exécute la logique de rapprochement contre chaque facture ouverte de votre entreprise. Cela se termine généralement en quelques secondes.
+  </Step>
+  <Step title="Consultez le résumé des résultats">
+    Une fois le traitement terminé, une fenêtre récapitulative affiche le résultat. Passez en revue chaque catégorie avant de fermer — voir le détail ci-dessous.
   </Step>
 </Steps>
 
+## Comprendre le résumé des résultats
+
+Après chaque import, Druma affiche un résumé des résultats avec les compteurs suivants :
+
+| Champ | Ce que ça signifie |
+|-------|---------------|
+| **Analysées** | Total des transactions créditrices trouvées dans le fichier |
+| **Rapprochées automatiquement** | Transactions rapprochées à une facture avec une confiance élevée — paiement appliqué automatiquement |
+| **À réviser** | Transactions où une correspondance potentielle a été trouvée mais la confiance était sous le seuil — apparaissent dans la file de Réconciliation |
+| **Doublons ignorés** | Transactions déjà enregistrées depuis un téléversement précédent du même fichier — ignorées silencieusement |
+| **Erreurs** | Transactions n'ayant pas pu être analysées (lignes malformées, devise non prise en charge, référence manquante) |
+
+Un import sain a un nombre élevé de **Rapprochées automatiquement** et un faible nombre de **À réviser**. Si vous voyez de nombreuses lignes à réviser, cela signifie généralement que les références de facture ne sont pas incluses dans les descriptions de paiement — demandez aux clients d'inclure leur numéro de facture dans le champ de référence du virement bancaire.
+
+## Logique de rapprochement
+
+Druma rapproche chaque transaction bancaire à une facture en utilisant les signaux suivants, par ordre de priorité :
+
+1. **Numéro de facture dans la référence de transaction** — correspondance exacte ou partielle (normalisée de façon approximative) avec un numéro de facture ouvert. Une correspondance sur ce seul signal suffit à appliquer le paiement automatiquement — aucun autre signal n'est requis.
+2. **Correspondance de montant** — si aucun numéro de facture ne correspond, Druma recherche une facture ouverte dont le solde restant se situe dans votre tolérance configurée (±2 % par défaut) du montant de la transaction, **et** dont la date d'échéance se situe dans ±30 jours de la date de la transaction. Cela évite qu'une correspondance de montant fortuite ne se lie à une facture non liée survenue des mois plus tôt.
+3. **Nom du client** — utilisé uniquement comme départage quand la correspondance de montant ci-dessus retourne plus d'une facture candidate ; Druma restreint au candidat dont le nom de client apparaît dans le nom de l'expéditeur de la transaction.
+
+Une correspondance par numéro de facture applique automatiquement le paiement (entièrement ou partiellement, selon le montant). Une **correspondance par montant seul n'est jamais appliquée automatiquement** — même quand elle identifie de façon unique une facture — elle atterrit toujours dans la file de Réconciliation pour confirmation manuelle, car il n'y a aucune référence prouvant qu'il s'agit véritablement du paiement de cette facture. Aucun signal du tout → mise en file comme non rapprochée.
+
+## Gérer les transactions non rapprochées
+
+Toute transaction n'ayant pas pu être rapprochée avec confiance apparaît dans la file **Réconciliation** sur le même onglet **Paiements**. Chaque ligne affiche un badge de source **Relevé** (pour la distinguer des transactions arrivées par analyse d'email, qui affichent un badge **Email**).
+
+<Steps>
+  <Step title="Ouvrez la file de Réconciliation">
+    Restez sur l'onglet **Finance** → **Réconciliation** → **Paiements**. Les lignes non rapprochées apparaissent sous le résumé avec un statut **En attente**.
+  </Step>
+  <Step title="Développez la transaction">
+    Cliquez sur une ligne pour la développer. Druma montre les détails complets de la transaction : date, montant, texte de référence bancaire, et toute facture candidate qu'il a considérée.
+  </Step>
+  <Step title="Rapprochez manuellement">
+    Cliquez sur **Rapprocher** à côté de la bonne facture. Druma applique le paiement et fait passer la transaction au statut **Appliquée**.
+  </Step>
+  <Step title="Rejetez si non pertinente">
+    Si la transaction n'est pas un paiement client (par exemple, un virement interne ou des frais bancaires), cliquez sur **Rejeter**. La ligne passe au statut **Rejetée** et n'affecte aucune facture.
+  </Step>
+</Steps>
+
+<Warning>
+Rejeter une transaction est une action douce — elle ne fait que marquer la ligne comme rejetée dans Druma. Cela n'affecte pas votre compte bancaire réel ni votre système comptable. Si vous rejetez par erreur, contactez le support — il n'existe actuellement pas d'annulation en libre-service pour les lignes de réconciliation rejetées.
+</Warning>
+
+## Conseils pour des taux de correspondance automatique plus élevés
+
+- **Demandez aux clients d'inclure le numéro de facture** dans le champ de référence de paiement de leur virement bancaire. Une référence comme `INV-000047` donne à Druma une correspondance exacte sur le premier signal.
+- **Gardez les noms de clients cohérents** entre votre fiche client maîtresse et la façon dont les clients s'identifient sur les virements bancaires — Druma ne se rabat sur une correspondance de nom client que pour départager entre plusieurs factures de même montant, donc une correspondance proche là peut sauver une correspondance de montant autrement ambiguë.
+- **Utilisez des conditions de paiement net** de façon cohérente. Les paiements arrivant avec des frais déduits (bancaires ou d'affacturage) restent dans la tolérance de ±2 % pour les montants sous ~5 000 €. Pour les factures plus importantes, confirmez avec les clients qu'ils envoient le montant complet.
+
 ---
 
-## Ingestion par email
+<Card title="Suivi des paiements" icon="circle-check" href="/fr/invoicing/payment-tracking">
+  Enregistrez et suivez les paiements manuellement, ou consultez l'historique complet des paiements par facture.
+</Card>
 
-Si vous avez configuré la boîte de réception des emails de paiement (voir **Paramètres → Entreprise**), les emails de notification de paiement de votre banque sont automatiquement analysés et ajoutés à la file de réconciliation — sans import manuel.
+<Card title="Gestion des retards" icon="triangle-alert" href="/fr/invoicing/overdue-management">
+  Consultez les créances par ancienneté et envoyez des rappels de paiement pour les factures en retard.
+</Card>
 
-<Card title="Réconciliation bancaire" icon="bank" href="/fr/invoicing/bank-reconciliation">
-  Comment faire correspondre les transactions importées avec les factures ouvertes.
+<Card title="Avoirs" icon="file-minus" href="/fr/invoicing/credit-notes">
+  Émettez un avoir pour annuler ou corriger partiellement une facture envoyée.
 </Card>

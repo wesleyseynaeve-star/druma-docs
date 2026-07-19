@@ -1,18 +1,166 @@
-﻿---
+---
 title: "Intermodální a multimodální přeprava"
-description: "Plánování objednávek kombinujících silnici, moře, železnici nebo říční dopravu — s přiřazením dopravce pro každý úsek."
+description: "Plánujte objednávky kombinující úseky silniční, námořní, železniční, letecké nebo lodní přepravy — s přiřazením dopravce za úsek, sledováním nákladů, eCMR a podporou PWA řidiče."
 icon: "git-merge"
 ---
 
-Intermodalni preprava presunuje naklad pres vice dopravnich modu. Jedna objednavka Druma spravuje celou cestu.
+## Přehled
 
-## Vytvoreni intermodalni objednavky
+Intermodální přeprava přesouvá náklad postupně napříč více druhy dopravy — například vozidlo předveze návěs z rumunské továrny do Calais, přejede do Folkestone na trajektu RoRo Eurotunelem a druhé vozidlo obstará dovoz na doručovací adresu ve Spojeném království. Každý segment je **úsek**. Jedna objednávka Druma spravuje celou cestu: plánování, přiřazení dopravce, náklady, eCMR a viditelnost pro řidiče za jednotlivý úsek.
 
-Prejdete do **Operace - Objednavky**, kliknete na **Nova objednavka**, povolte prepinac **Intermodalni** a pridejte etapy pro kazdy segment prepravy.
+Toto se liší od standardní objednávky s interními zastávkami. Interní zastávky jsou body na jedné souvislé silniční jízdě s jedním vozidlem. Intermodální úseky jsou odlišné přepravní události, které mohou používat různé druhy dopravy, různé dopravce a dokonce různé jurisdikce zemí.
 
-## Pole etapy
+<Note>
+Jízdy skupinové přepravy a intermodální úseky jsou oddělené koncepty — úseky patří jedné objednávce, skupinová přeprava konsoliduje více objednávek na jedno vozidlo. Dnes neexistuje kombinovaný postup „intermodální skupinová přeprava".
+</Note>
 
-- Mod: Silnice, More, Zeleznice, Letecky nebo Ricni
-- Puvod a cil
-- Planovany zacatek a konec
-- Dopravce (vlastni flotila nebo subdodavatel)
+---
+
+## Praktický příklad: Rumunsko → Spojené království přes Eurotunel
+
+| Úsek | Druh dopravy | Trasa | Dopravce |
+|---|---|---|---|
+| 1 | Silniční | Bukurešť → Calais | Vlastní flotila — vozidlo RO-01 |
+| 2 | Námořní | Calais → Folkestone (Eurotunnel Le Shuttle) | Subdodavatel: Eurotunnel |
+| 3 | Silniční | Folkestone → Birmingham | Subdodavatel: britský dopravce |
+
+Druma sleduje referenci rezervace a číslo kontejneru pro úsek 2, generuje samostatné eCMR pro úseky 1 a 3 (oba překračují hranice) a britskému dopravci zobrazuje pouze zastávky relevantní pro úsek 3.
+
+---
+
+## Vytvoření intermodální objednávky
+
+Neexistuje přepínač „Intermodální" k zapnutí — úseky se přidávají k objednávce, kterou jste již vytvořili, a Druma objednávku automaticky považuje za intermodální, jakmile má úseky.
+
+<Steps>
+  <Step title="Vytvořte nebo otevřete objednávku">
+    Vytvořte objednávku běžným způsobem (viz [Vytvoření objednávky](/cs/planner/creating-orders)), poté ji otevřete a přejděte na její záložku **Náklad a zastávky**.
+  </Step>
+  <Step title="Přidejte úseky">
+    V sekci **Přepravní úseky** klikněte na **Přidat úsek** pro vytvoření prvního úseku. Přidejte tolik, kolik cesta vyžaduje — neexistuje limit. Původ každého nového úseku je ve výchozím nastavení cíl předchozího úseku (nebo vyzvednutí objednávky, pro první úsek), takže nemusíte znovu zadávat stejnou adresu.
+  </Step>
+  <Step title="Vyplňte každý úsek">
+    Rozbalte kartu úseku pro nastavení jeho druhu dopravy, původu/cíle, plánovaného začátku/konce a dopravce (viz níže).
+  </Step>
+</Steps>
+
+---
+
+## Správa úseků
+
+Každá karta úseku má následující pole:
+
+| Pole | Poznámky |
+|---|---|
+| **Druh dopravy** | Silniční, Námořní, Železniční, Letecký nebo Lodní (vnitrozemská plavba) |
+| **Původ** | Volný text nebo automatické doplňování adresy |
+| **Cíl** | Volný text nebo automatické doplňování adresy |
+| **Plánovaný začátek** | Datum a čas začátku úseku |
+| **Plánovaný konec** | Očekávané datum a čas dokončení úseku |
+| **Dopravce** | Vlastní flotila (pouze silniční) nebo subdodavatel |
+| **Nákupní sazba** | Náklad, který za tento úsek platíte |
+| **Rozpis nákladů** | Palivo, mýtné, trajekt nebo jiné položky |
+
+### Silniční úseky
+
+Silniční úseky lze přiřadit vaší vlastní flotile (vozidlo a řidič) nebo dopravci subdodavatele — vyberte který přes volbu na kartě úseku, poté vyberte vozidlo/řidiče nebo subdodavatele z rozbalovací nabídky.
+
+### Nesilniční úseky (Námořní, Železniční, Letecký, Lodní)
+
+Nesilniční úseky lze přiřadit pouze dopravci subdodavatele — vaše vlastní vozidla a řidiči nemohou být přiřazeni k námořnímu nebo železničnímu úseku. Pole dopravce prohledává váš seznam subdodavatelů.
+
+### Ovládací prvky úseku
+
+- **Šipky nahoru/dolů** — přeuspořádání úseků. Pruh časové osy úseku (viz níže) se aktualizuje při přetažení.
+- **Odebrat úsek** — smazání úseku. V uživatelském rozhraní neexistuje žádné omezení podle stavu, takže před odebráním úseku, který již probíhá, dvakrát zkontrolujte.
+- **Tlačítko Dokončit úsek** — označí úsek jako hotový. Zobrazuje se, jakmile stav úseku dosáhne **Na cestě**, **U doručení** nebo **Vykládka** — je to podmíněno stavem, ne žádným datem.
+
+### Pruh časové osy úseků
+
+Nad harmonikou úseků se zobrazuje kompaktní vodorovný pruh. Zobrazuje všechny úseky v pořadí s odznakem druhu dopravy (silniční, námořní, železniční atd.) a názvy měst pro původ a cíl. Použijte ho pro rychlé ověření, že pořadí cesty dává smysl, než uložíte.
+
+---
+
+## Podrobnosti námořního/intermodálního úseku
+
+Pro jakýkoli úsek s druhem dopravy **Námořní**, **Železniční**, **Letecký** nebo **Lodní** se na kartě úseku zobrazuje rozbalitelná sekce **Podrobnosti námořní/intermodální**. Všechna pole jsou volitelná.
+
+| Pole | Formát | Poznámky |
+|---|---|---|
+| Reference rezervace | Volný text | Číslo potvrzení rezervace dopravce |
+| Číslo kontejneru | Volný text | ID kontejneru ISO |
+| Číslo plomby | Volný text | |
+| Název plavidla | Volný text | Název lodi nebo vlakového spoje |
+| Číslo plavby | Volný text | |
+| SCAC dopravce | 4 znaky | Standard Carrier Alpha Code |
+| Přístav nakládky | 5znakový LOCODE | např. `FRXXX` pro Calais |
+| Přístav vykládky | 5znakový LOCODE | např. `GBFXT` pro Folkestone |
+| Datum/čas uzávěrky | Datum + čas | Termín přijetí nákladu v přístavu nakládky |
+| ETD | Datum + čas | Odhadovaný čas odjezdu z přístavu nakládky |
+| ETA v POD | Datum + čas | Odhadovaný čas příjezdu do přístavu vykládky |
+
+<Warning>
+Pokud je datum uzávěrky do 48 hodin od plánovaného konce úseku, Druma zobrazí na kartě úseku oranžový varovný banner. Zkontrolujte časovou osu, abyste se ujistili, že vozidlo dorazí do přístavu včas.
+</Warning>
+
+Přepnutí druhu dopravy úseku zpět na **Silniční** automaticky vymaže pole podrobností námořní/intermodální.
+
+---
+
+## Chování plánovací tabule
+
+### Dostupnost vozidla
+
+Plánovací tabule počítá dostupnost vozidla na základě **data konce silničního úseku**, ne konečného data doručení objednávky. To znamená, že vozidlo přiřazené k úseku 1 (silniční) se zobrazuje jako volné od okamžiku, kdy tento úsek skončí — i když poslední doručení objednávky je o několik dní později na úseku 3 s jiným dopravcem.
+
+### Přiřazení vozidla k intermodální objednávce
+
+Přetažení vozidla na intermodální objednávku zobrazí v potvrzovacím listu přiřazení sekci **Intermodální úsek** místo standardního postupu. Uvádí každý silniční úsek objednávky (pořadí, původ → cíl, plánovaná data) — kliknutím na řádek úseku ho přímo vyberete; poté není potřeba klikat na žádné samostatné tlačítko „Přiřadit".
+
+<Note>
+Vozidlo lze přiřadit pouze k jednomu silničnímu úseku za intermodální objednávku. Pro pokrytí více silničních úseků různými vozidly opakujte postup přetažení pro každý úsek.
+</Note>
+
+---
+
+## eCMR za silniční úsek
+
+Každý silniční úsek, který překračuje mezinárodní hranici, dostane vlastní eCMR. Pro jeho vytvoření otevřete kartu úseku a klikněte na **Vytvořit eCMR**. Druma zaregistruje dokument pomocí svého nativního interního poskytovatele eCMR, s předvyplněným původem, cílem a přiřazeným dopravcem úseku — dokončení přeshraničního úseku toto automaticky spustí stejným způsobem. (Neexistuje volba poskytovatele: Nativní je jediná cesta pro nové dokumenty; fungují pouze již existující starší řádky TransFollow, nesouvisející s úseky vytvořenými zde.)
+
+Úseky, které zůstávají v rámci jedné země, nevyžadují eCMR (pokud to nevyžaduje politika vaší společnosti). Tlačítko **Vytvořit eCMR** je vždy dostupné, pokud to potřebujete přepsat.
+
+Třístranný proces podepisování a stažení certifikovaného PDF fungují identicky jako u standardního eCMR — podrobnosti viz [dokumentace eCMR](/cs/ecmr/what-is-ecmr).
+
+---
+
+## PWA řidiče — zobrazení omezené na úsek
+
+Řidiči vidí pouze zastávky patřící k jejich přiřazenému silničnímu úseku. Pokud má objednávka tři úseky a řidič pokrývá úsek 1, vidí pouze vyzvednutí a jakékoli interní zastávky pro úsek 1 — ne adresu doručení ve Spojeném království.
+
+Informační banner v horní části detailu zakázky zní:
+
+> **Úsek 1 ze 3 — Silniční: Bukurešť → Calais**
+
+Tím zůstává pohled řidiče čistý a předchází zmatku ohledně zastávek patřících jinému dopravci.
+
+Klepnutí na stavy (u vyzvednutí, nakládka, na cestě, u doručení atd.) fungují přesně jako u standardní objednávky, ale posouvají stav pouze pro silniční úsek řidiče. Plánovač vidí průběh za jednotlivý úsek v panelu detailu objednávky.
+
+---
+
+## Sledování nákladů a marže
+
+Každý úsek má vlastní **nákupní sazbu** a **rozpis nákladů**. Celkový náklad objednávky je součet napříč všemi úseky. Výpočet marže v panelu detailu objednávky porovnává sjednanou prodejní cenu s celkovým nákladem více úseků, což vám dává konsolidovanou hodnotu marže za celou intermodální cestu.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/cs/ecmr/what-is-ecmr">
+  Jak funguje vytváření nativního eCMR, třístranné podpisy a certifikovaná PDF.
+</Card>
+
+<Card title="Subdodavatelé" icon="truck" href="/cs/planner/subcontractors">
+  Spravujte svůj seznam dopravců subdodavatelů — stejní dopravci se zobrazují při přiřazení intermodálního úseku.
+</Card>
+
+<Card title="Plánovací tabule" icon="calendar" href="/cs/planner/planning-board">
+  Jak se dostupnost vozidla a bloky intermodálních objednávek zobrazují na časové ose dispečinku.
+</Card>

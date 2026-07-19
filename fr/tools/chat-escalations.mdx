@@ -1,0 +1,78 @@
+---
+title: "Escalades de chat IA"
+description: "Comment les conversations Ask Druma non résolues s'escaladent vers votre équipe, et comment les planificateurs gèrent les sessions en direct."
+icon: "messages"
+---
+
+## Vue d'ensemble
+
+Ask Druma est un assistant IA disponible pour les planificateurs, chauffeurs, et clients, avec trois modes : répondre aux questions depuis la documentation, répondre aux questions sur vos propres données, et agir comme assistant. **L'escalade ne s'applique qu'au mode documentation** — si l'IA ne peut pas résoudre une question de documentation après que l'utilisateur a envoyé 6 messages, Ask Druma propose un bouton **Demander l'aide d'un humain**. Cela déclenche une escalade — une session de chat en direct que votre équipe peut prendre en charge immédiatement. Les conversations en mode données et en mode assistant n'affichent jamais ce bouton, quelle que soit leur durée.
+
+<Note>
+Ceci est différent de [Messages](/fr/planner/messages) — le hub de chat quotidien personne-à-personne et chauffeur. Escalades de chat est spécifiquement la file réservée admin/company_admin pour les conversations IA qu'Ask Druma n'a pas pu résoudre.
+</Note>
+
+<Frame caption="Outils → Demandes de support — escalades du mode documentation d'Ask Druma uniquement.">
+  <img src="/images/tools/chat-escalations.png" alt="File d'escalades de chat" />
+</Frame>
+
+---
+
+## Comment fonctionne l'escalade
+
+1. **L'utilisateur envoie 6 messages** dans une conversation en mode documentation sans réponse satisfaisante. Cela ne compte que les propres messages de l'utilisateur — avec les réponses de l'IA intercalées, la conversation visible fait environ 11 à 12 messages de long au moment où le seuil est atteint.
+2. Ask Druma affiche : *« Je n'ai pas réussi à résoudre cela. Voulez-vous parler avec votre équipe ? »*
+3. L'utilisateur touche **Demander l'aide d'un humain**.
+4. Une session de chat est créée et son statut est défini sur **en attente**.
+5. Une notification email Resend est envoyée à tous les utilisateurs admin et company_admin de l'entreprise.
+6. La session apparaît sous **Outils → Sessions en direct** avec un badge orange sur l'élément de navigation Outils.
+
+Les escalades en double sont dédupliquées — si le même utilisateur a déjà une session ouverte, un second toucher ne crée pas une autre session ni n'envoie un autre email.
+
+---
+
+## Sessions en direct (vue planificateur)
+
+Accédez à **Outils → Sessions en direct** pour voir toutes les conversations escaladées. La liste est divisée par statut :
+
+| Statut | Signification |
+|---|---|
+| En attente | Escaladée, pas encore prise en charge par un planificateur |
+| Active | Le planificateur a répondu au moins une fois |
+| Clôturée | Conversation terminée |
+
+### Traiter une session
+
+1. Cliquez sur une session **En attente** pour l'ouvrir.
+2. Lisez la transcription complète de l'IA — chaque message envoyé par l'utilisateur et chaque réponse IA est visible.
+3. Tapez votre réponse dans la zone de saisie et appuyez sur **Envoyer**. Cela fait passer la session à **Active** et l'utilisateur voit votre réponse en temps réel.
+4. Continuez la conversation jusqu'à ce que le problème soit résolu.
+5. Cliquez sur **Clôturer la session** quand c'est terminé.
+
+Les mises à jour apparaissent en temps réel des deux côtés via les canaux Supabase Realtime — vous n'avez pas besoin de rafraîchir la page.
+
+---
+
+## Rôles avec accès
+
+Seuls les rôles **admin** et **company_admin** peuvent voir et répondre dans Sessions en direct. La section de navigation Outils est réservée à ces rôles ; les planificateurs et répartiteurs ne la voient pas.
+
+---
+
+## Email de notification
+
+Quand une nouvelle escalade arrive, Druma envoie un email via Resend à tous les utilisateurs admin/company_admin. L'email inclut :
+
+- Le nom et le rôle de l'utilisateur
+- La transcription IA complète de la conversation jusqu'à présent
+- Un lien direct vers la page Sessions en direct
+
+---
+
+<Note>
+Le seuil d'escalade est fixé à 6 messages utilisateur en mode documentation. Il ne peut pas actuellement être modifié par entreprise, et ne se déclenche jamais en mode données ou assistant.
+</Note>
+
+<Card title="Ask Druma" icon="sparkles" href="/fr/tools/smart-import">
+  Ask Druma peut aussi aider à l'extraction et l'import de données — voir Import intelligent.
+</Card>

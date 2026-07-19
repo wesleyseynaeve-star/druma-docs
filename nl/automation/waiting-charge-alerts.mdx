@@ -1,34 +1,81 @@
 ---
-title: "Wachttijdkosten­meldingen"
+title: "Wachttijdkostenmeldingen"
 description: "Druma volgt automatisch hoe lang chauffeurs wachten bij ophaal- en afleverlocaties en helpt u klanten op de hoogte te stellen en wachttijdkosten te genereren."
 icon: "bell"
 ---
 
+Wachttijd is een van de meest voorkomende bronnen van gemiste omzet in het wegtransport. Chauffeurs komen op tijd aan en wachten dan uren terwijl de klant laadt of lost — en de kost haalt nooit de factuur. Druma's wachttijdmeldingen zorgen dat elk gewacht uur wordt bijgehouden, gedocumenteerd en gefactureerd.
+
 ## Hoe de klok start
 
-Wanneer een chauffeur zijn status bijwerkt naar **Aangekomen bij ophaling** of **Aangekomen bij levering**, start de wachttijdklok automatisch. De aankomst wordt van een tijdstempel voorzien met de GPS-locatie van de chauffeur als bewijs.
+Wanneer een chauffeur zijn status in de Druma-chauffeurs-app bijwerkt naar **Aangekomen bij ophaling** of **Aangekomen bij levering**, start de wachttijdklok automatisch. De aankomst wordt van een tijdstempel voorzien met de GPS-locatie van de chauffeur, die als bewijs wordt opgeslagen.
 
-## De planner melding
+Er is geen handmatige actie van de planner nodig. Druma waarschuwt uw planners op het moment dat de chauffeur aankomt (zie hieronder) en berekent apart het factureerbare bedrag zodra de gratis periode is verstreken.
 
-Wanneer de gratis wachttijdtoeslag verloopt (standaard 2 uur), ontvangt de planner een melding:
-- In-app melding op het dashboard
-- E-mailmelding met de chauffeursnaam, locatie en opgebouwde kosten
+## Wat er gebeurt zodra de chauffeur aankomt
+
+Druma waarschuwt uw planners **onmiddellijk** wanneer de status van een chauffeur wijzigt naar Aangekomen bij ophaling of levering — het wacht niet tot de gratis periode is verstreken:
+
+1. Elke planner/dispatcher bij het bedrijf krijgt een **in-app melding**: "Chauffeur aangekomen bij ophaling/levering"
+2. Er wordt ook een **klantgerichte in-app melding** in de wachtrij gezet, die vermeldt dat wachttijdkosten kunnen gelden na de gratis periode
+3. Het activiteitenlog van de order registreert de aankomst met chauffeursnaam, locatie en de geldende gratis-uren-toeslag
+
+De gratis wachtperiode staat standaard op **2 uur**, maar komt uit het vrachtwagen-kostenprofiel (**Instellingen → Tariefkaarten**) — dit bepaalt wanneer de aankomst factureerbaar wordt, niet wanneer de melding afgaat.
 
 ## De klant op de hoogte stellen
 
-Klik op de melding om onmiddellijk een professionele kennisgevingse-mail naar de klant te sturen. De e-mail bevat:
-- GPS-gestempelde aankomsttijd
-- Locatiekaart
-- Totale wachttijd en kosten
+Druma kan de klant een wachttijd-e-mail sturen — hetzij getriggerd door een planner, hetzij automatisch op escalatieniveaus naarmate het wachten voortduurt. De e-mail bevat:
 
-## Wachttijdkosten op de factuur
+- De aankomsttijd van de chauffeur en, indien laden/lossen begonnen is, dat tijdstempel ook (platte tekst — geen GPS-coördinaten of kaartlink)
+- Gratis wachttijd en factureerbare wachttijd tot nu toe, tegen uw geconfigureerd uurtarief
+- De tot nu toe berekende totale wachttijdkost
+- Een link naar de geüploade foto of spraaknotitie van de chauffeur, indien bijgevoegd bij de wachtgebeurtenis (1 uur geldig)
+- Bij automatische escalatie-e-mails: one-click links "Ontvangst bevestigen / Terugbelverzoek / Herplanningsverzoek" (48 uur geldig)
 
-Wanneer de order gereed is voor facturering, verschijnt de wachttijdkosten automatisch als een aparte regelpost op de factuur.
+<Note>
+Deze e-mail dient als formele schriftelijke kennisgeving, wat belangrijk is als u een wachttijdclaim onder het vervoerscontract moet onderbouwen.
+</Note>
 
-## Drempelwaarden aanpassen
+Er is momenteel geen voorvertoning- of bewerkingsstap — de e-mail wordt gegenereerd en verstuurd volgens bovenstaand sjabloon. Het e-mailadres van de klant komt uit hun contactrecord (financiële afdeling bij voorkeur, anders het algemene klant-e-mailadres).
 
-Ga naar **Instellingen → Bedrijf** om de standaard gratis toeslag (2 uur) en het uurtarief (€45) te wijzigen. U kunt ook per klant overschrijvingen instellen.
+## De kost op de factuur
 
-<Card title="Wachttijdkosten" icon="hourglass" href="/nl/planner/waiting-time">
-  Uitgebreide documentatie over wachttijdbeheer.
-</Card>
+Wanneer u de factuur voor de order genereert, wordt de wachttijdkost automatisch toegevoegd als aparte regelpost:
+
+- Omschrijving: "Wachttijd — [locatie] — [datum] — [X uur Y minuten]"
+- Tarief: uw geconfigureerde uurtarief
+- Bedrag: berekend tot op het kwartier nauwkeurig
+
+U kunt deze regelpost bewerken of verwijderen op de factuur voor uitgifte als u anders bent overeengekomen met de klant.
+
+## Wachttijdinstellingen configureren
+
+Gratis wachturen en het uurtarief komen uit uw vrachtwagen-kostenprofiel — ga naar **Instellingen → Tariefkaarten**, open het relevante kostenprofiel voor eigen wagenpark of onderaannemer, en stel daar **Gratis wachturen** en **Wachttarief €/u** in. Er is vandaag geen aparte overschrijving per klant of per order voor deze waarden — elke order geprijsd tegen een gegeven kostenprofiel gebruikt de wachtvoorwaarden van dat profiel.
+
+<Warning>
+Wijzigt u het wachttarief van een kostenprofiel, dan geldt dit alleen voor wachtgebeurtenissen vanaf dat moment. Wachttijdkosten al toegevoegd aan open facturen worden niet automatisch bijgewerkt.
+</Warning>
+
+## Wachtgeschiedenis bekijken
+
+Alle wachtgebeurtenissen worden permanent bij de order opgeslagen. Om ze te bekijken:
+
+- **Orderdetailpagina → tabblad Activiteit** — toont elke statuswijziging met tijdstempel
+- **Analytics → Site Waiting** — wachtbezoeken, totaal aantal uren, gemiddelde duur en factureerbare bedragen, gegroepeerd per ophaal-/afleverlocatie en klant, over een instelbare periode (laatste 24 uur tot laatste 12 maanden, of aangepast bereik)
+
+Deze gegevens zijn nuttig bij het onderhandelen over contractvoorwaarden. Veroorzaakt een klant consequent 3+ uur wachttijd per levering, dan heeft u de cijfers om een tariefheronderhandeling te onderbouwen.
+
+## Veelgestelde vragen
+
+**Wat als de chauffeur vergat "Aangekomen" in te stellen?** De planner kan handmatig een aankomsttijd op de order registreren — voer het werkelijke tijdstip in met een notitie die de handmatige invoer verklaart. Deze tijd wordt gebruikt voor de wachttijdberekening.
+
+**Wat als de klant de kost betwist?** Deel het activiteitenlog van de order vanuit Druma, dat de geregistreerde aankomst- en laad-/lostijdstempels toont, plus de geüploade foto of spraaknotitie van de chauffeur indien bijgevoegd bij de wachtgebeurtenis.
+
+<CardGroup cols={2}>
+  <Card title="Wachttijd in orders" icon="clock" href="/nl/planner/waiting-time">
+    Hoe planners wachttijd handmatig beheren binnen de orderworkflow.
+  </Card>
+  <Card title="Facturen genereren" icon="file-invoice" href="/nl/invoicing/generating-invoices">
+    Hoe wachttijdkosten verschijnen en kunnen worden bewerkt op facturen.
+  </Card>
+</CardGroup>

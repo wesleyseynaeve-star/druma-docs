@@ -1,41 +1,99 @@
 ---
 title: "Brandstofkaartimport"
-description: "Importeer maandelijkse brandstoftransactiegegevens van DKV, UTA, AS24, Shell Card en SmartDiesel om werkelijke brandstofkosten per voertuig bij te houden."
+description: "Importeer brandstoftransactiegegevens van DKV, UTA, AS24, Shell en andere grote Europese brandstofkaartproviders om werkelijke brandstofkosten per voertuig bij te houden."
 icon: "gas-pump"
 ---
 
-Brandstof is doorgaans de grootste variabele kostenpost in wegvervoer. Druma laat u transactiegegevens importeren van de grote brandstofkaartproviders.
+Brandstof is doorgaans de grootste variabele kostenpost in wegvervoer. Druma laat u transactiegegevens importeren van de grote brandstofkaartproviders, waarbij elke tankbeurt aan het juiste voertuig wordt gekoppeld zodat uw kostenrapporten de werkelijke brandstofuitgaven weerspiegelen in plaats van schattingen.
 
 ## Ondersteunde providers
 
-Druma ondersteunt CSV-import van:
-- **DKV** (DKV Mobility)
-- **UTA** (UTA Edenred)
+Druma detecteert de provider automatisch aan de hand van de kolomkoppen en bestandsnaam. Ondersteunde providers:
+
+- **DKV**
+- **UTA**
 - **AS24**
-- **Shell Card**
-- **SmartDiesel**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
+
+Elk ander CSV- of XLSX-bestand met standaard kolomnamen (datum, bedrag, liters, kaart/kenteken) wordt ook geaccepteerd, zelfs zonder herkende providermatch. Gebruikt u meerdere kaarten in uw vloot, dan kunt u van elke provider apart importeren.
 
 ## Hoe importeren
 
 <Steps>
-  <Step title="Exporteer vanuit uw providerportaal">
-    Log in op uw brandstofkaartproviderportaal en exporteer transacties als CSV. Zoek dit doorgaans onder **Rapporten → Transactie-export**.
+  <Step title="Download uw bestand bij de provider">
+    Log in op het onlineportaal van uw brandstofkaartprovider en exporteer de transactiehistorie als CSV of XLSX. Elk providerportaal is anders, maar deze optie staat doorgaans onder Rapporten of Afschriften.
   </Step>
-  <Step title="Open de Brandstofkaartimport-kaart">
-    Ga naar **Instellingen → Integraties → Brandstofkaartimport**.
+  <Step title="Open Druma's brandstofimport">
+    Ga in Druma naar **Vloot → Brandstof** en klik op **Brandstof importeren**.
   </Step>
-  <Step title="Selecteer uw provider">
-    Kies uw provider uit de vervolgkeuzelijst zodat Druma weet welk CSV-kolomformaat verwacht wordt.
+  <Step title="Upload het bestand">
+    Sleep of selecteer het CSV-/XLSX-bestand (max. 5 MB). Druma detecteert de provider automatisch uit het bestand en toont een voorvertoning van de verwerkte rijen — inclusief eventuele tolregels die het aantreft, meegemengd in hetzelfde afschrift.
   </Step>
-  <Step title="Upload de CSV">
-    Klik op **CSV uploaden**, selecteer uw bestand en klik op **Importeren**.
+  <Step title="Controleer en bevestig">
+    Controleer de voorvertoning — rijen zonder overeenkomend voertuig worden gemarkeerd en uitgesloten van de import. Klik op **N rijen importeren** (met het werkelijke rijenaantal) om te bevestigen.
   </Step>
 </Steps>
 
-## Onvergelijkbare transacties
+## Wat wordt geïmporteerd
 
-Als het kenteken van een transactie niet overeenkomt met een voertuig in uw vloot, vermeldt Druma dit als **Onvergelijkbaar**. Controleer de onvergelijkbare lijst regelmatig — het vangt vaak brandstofkaarttfraude of onjuiste kentekenregistraties.
+Voor elke transactie extraheert Druma:
 
-<Card title="Rijstrookwinstgevendheid" icon="route" href="/nl/reports/lane-profitability">
-  Brandstofkosten worden gebruikt in rijstrookwinstgevendheidsberekeningen.
-</Card>
+| Veld | Bron |
+|---|---|
+| Datum (geen tijdcomponent) | Transactiedatumkolom uit het bestand |
+| Voertuig | Gematcht op brandstofkaartnummer, dan op kenteken |
+| Naam tankstation | Locatieveld uit het bestand |
+| Getankte liters | Hoeveelheidsveld uit het bestand |
+| Bedrag | Waardeveld uit het bestand — verondersteld EUR tenzij een valutakolom aanwezig is |
+| Transactie-ID | Unieke transactiereferentie van de provider, gebruikt voor duplicaatdetectie |
+
+Handmatige losse brandstofinvoer (via **Tankbeurt toevoegen**) accepteert alleen een bedrag in EUR — er is geen valutakiezer op dat formulier. RON-bedragen worden alleen automatisch geconverteerd via het aparte e-mail-/dropfolder-auto-inlaadpad hieronder beschreven.
+
+## Transacties matchen aan voertuigen
+
+Druma matcht elke transactie aan een voertuig, eerst op **brandstofkaartnummer**, dan op **kenteken**. Zowel het kaartnummer als het kenteken worden voor vergelijking genormaliseerd — in hoofdletters, met alle spaties, streepjes en andere niet-alfanumerieke tekens verwijderd — zodat "B 123 ABC" en "B123ABC" hetzelfde voertuig matchen.
+
+Matcht een transactie nog steeds geen voertuig, dan wordt ze in de voorvertoning gemarkeerd als **niet-gematcht** en uitgesloten van de import. Veelvoorkomende redenen:
+
+- Het voertuig is recent toegevoegd en staat nog niet in Druma
+- Noch het kaartnummer, noch het kenteken op de transactie komt overeen met een vlootrecord
+- Een chauffeur gebruikte zijn kaart in een gehuurd of uitbesteed voertuig
+
+## Duplicaatdetectie
+
+Importeert u per ongeluk hetzelfde bestand tweemaal, dan detecteert Druma duplicaten met een dedup-sleutel opgebouwd uit transactiedatum, bedrag, liters, kaart, kenteken en providertransactie-ID — duplicaten worden automatisch op databaseniveau overgeslagen. Het succesbericht rapporteert alleen hoeveel tankbeurten (en tolregels) zijn geïmporteerd; het rapporteert geen apart aantal overgeslagen duplicaten.
+
+<Note>
+Importeer altijd het volledige afschrift in plaats van een gedeeltelijke export. Gedeeltelijke imports kunnen hiaten veroorzaken in uw brandstofkostengegevens die de rijstrookwinstgevendheidsberekeningen beïnvloeden.
+</Note>
+
+## Automatische import via e-mail
+
+Naast handmatige upload kan Druma brandstofafschriften automatisch inlezen vanaf een inkomend e-mailadres (met een geplande veeg als terugval), waarbij dezelfde parser wordt hergebruikt als de handmatige importmodal. Neem contact op met Druma-support om dit voor uw account in te stellen.
+
+## Waar geïmporteerde brandstofgegevens verschijnen
+
+Na import verschijnen transacties in:
+
+- **Vloot → Brandstof** — volledige transactiegeschiedenis voor uw vloot, filterbaar en doorzoekbaar op kenteken, provider en locatie
+- **Rapport rijstrookwinstgevendheid** — geïmporteerde brandstofkosten vervangen de geschatte brandstofberekening voor orders waarvoor werkelijke brandstofgegevens beschikbaar zijn
+
+## Waarom CSV-import in plaats van een live API?
+
+Brandstofkaartproviders in Europa hebben inconsistente en vaak beperkte API-toegang. Sommige bieden API's enkel aan enterprise-klanten, andere hebben landspecifieke portalen zonder API-toegang, en API-formaten verschillen aanzienlijk. CSV-export is universeel beschikbaar bij alle providers en accounttypes, wat het de betrouwbaarste aanpak maakt voor een gemengde vloot van een Roemeense operator (ADR-016).
+
+<CardGroup cols={2}>
+  <Card title="Rapport rijstrookwinstgevendheid" icon="route" href="/nl/reports/lane-profitability">
+    Hoe geïmporteerde brandstofkosten de margeberekeningen per route voeden.
+  </Card>
+  <Card title="Vlootbeheer" icon="truck" href="/nl/planner/fleet-management">
+    Voertuigrecords beheren, inclusief kentekens gebruikt voor het matchen van brandstoftransacties.
+  </Card>
+</CardGroup>

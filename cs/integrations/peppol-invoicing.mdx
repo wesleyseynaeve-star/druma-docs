@@ -1,13 +1,120 @@
-﻿---
+---
 title: "Peppol e-fakturace (Belgie)"
-description: "Jak odesílat faktury belgickým B2B klientům prostřednictvím sítě Peppol — povinné od ledna 2026 pro belgické společnosti."
+description: "Připojte Druma k síti Peppol přes e-invoice.be a automaticky směrujte faktury belgickým firemním klientům — bez ručních kroků."
 icon: "file-check-2"
 ---
 
-Peppol je celoevropska sit pro elektronicke faktury. Belgicke spolecnosti (KBO) jsou povinny odesilat faktury jinym belgickym firmam pres Peppol od ledna 2026.
+Peppol (Pan-European Public Procurement On-Line) je standardní síť EU pro výměnu strukturovaných elektronických faktur mezi firmami. V Belgii je odesílání faktur přes Peppol **povinné pro všechny společnosti registrované v KBO** vystavující B2B faktury od ledna 2026.
 
-## Registrace
+Druma se připojuje k síti Peppol přes **e-invoice.be**, akreditovaný belgický přístupový bod Peppol. Po nakonfigurování Druma zjistí, kteří z vašich klientů jsou dostupní na Peppol, a automaticky jim faktury směruje — nemusíte měnit, jak faktury vytváříte nebo odesíláte.
 
-Prejdete do **Nastaveni - Integrace** a kliknete na kartu **Peppol e-fakturace**. Zadejte KBO cislo a DIC, kliknete na **Registrovat do site Peppol**.
+---
 
-Po aktivaci Druma automaticky smeruje faktury belgickym klientum pres Peppol.
+## Kdo to potřebuje
+
+Integraci Peppol potřebujete, pokud:
+
+- Vaše společnost je registrována v Belgii (má číslo KBO), **a**
+- Vystavujete faktury jiným belgickým firmám
+
+Pokud vaše společnost působí mimo Belgii, nebo jsou vaši klienti spotřebitelé nebo zahraniční firmy, Peppol se vás netýká. Druma bude i nadále odesílat faktury e-mailem všem příjemcům mimo Peppol bez ohledu na to, zda je integrace aktivní.
+
+<Note>
+Belgické společnosti, které tuto integraci neaktivují, riskují od ledna 2026 sankce za nesoulad. Nastavení trvá méně než pět minut.
+</Note>
+
+---
+
+## Nastavení
+
+<Steps>
+  <Step title="Otevřete kartu Peppol">
+    Přejděte do **Nastavení → Integrace**. Najděte kartu **Peppol e-fakturace**. Její stav zobrazuje **Nenakonfigurováno**.
+  </Step>
+  <Step title="Klikněte na Konfigurovat">
+    Klikněte na **Konfigurovat** na kartě. Otevře se panel nastavení.
+  </Step>
+  <Step title="Zadejte číslo KBO a DIČ">
+    Zadejte **číslo KBO** vaší společnosti (10místné belgické registrační číslo) a **DIČ** (BE následované 10 číslicemi) do příslušných polí.
+  </Step>
+  <Step title="Registrace do sítě Peppol">
+    Klikněte na **Registrovat do sítě Peppol**. Druma odešle vaši registraci na e-invoice.be. Obvykle se dokončí během několika sekund.
+  </Step>
+  <Step title="Potvrďte aktivaci">
+    Jakmile registrace uspěje, karta zobrazí odznak **Připojeno**. Vaše společnost je nyní účastníkem Peppol a může na síti jak odesílat, tak přijímat strukturované faktury.
+  </Step>
+</Steps>
+
+<Warning>
+Integrace mohou konfigurovat pouze uživatelé **Správce** a **Správce společnosti**. Pokud tlačítko Konfigurovat nevidíte, obraťte se na správce svého účtu.
+</Warning>
+
+---
+
+## Jak funguje směrování faktur
+
+Po aktivaci Druma přidá kontrolu Peppol při každém odeslání faktury:
+
+1. Druma nejprve zkontroluje, zda je DIČ klienta belgické (začíná na `BE`) — tato kontrola proběhne **před jakýmkoli síťovým voláním**, takže u nebelgických klientů se vyhledávání Peppol vůbec nespustí.
+2. U belgických klientů Druma vyhledá příjemce v síti Peppol přes e-invoice.be. Pokud je nalezen, faktura se odešle elektronicky — **z vaší strany nejsou potřeba žádné další kroky**.
+3. Druma odešle fakturu také e-mailem, bez ohledu na to, zda odeslání přes Peppol uspělo — e-mail není podmíněné záložní řešení spouštěné pouze při selhání Peppol. Jedna výjimka: pokud klient výslovně odmítl přijímat oba kanály (samostatné nastavení za klienta), e-mail se přeskočí, jakmile doručení přes Peppol uspěje.
+
+Nemusíte volit způsob doručení za každou fakturu. Směrování je zcela automatické.
+
+---
+
+## Sledování stavu faktury
+
+Seznam faktur obsahuje sloupec stavu **Peppol** s následujícími stavy:
+
+| Stav | Význam |
+|---|---|
+| **Odesláno** | Odesláno na e-invoice.be, čeká na potvrzení doručení |
+| **Doručeno** | Potvrzeno doručení do schránky Peppol příjemce |
+| **Selhalo** | Doručení selhalo u přístupového bodu — viz podrobnosti chyby na řádku faktury |
+| **Validace selhala** | Lokální předběžná kontrola Druma zablokovala odeslání předtím, než se dostalo na e-invoice.be (např. neplatný kontrolní součet KBO/DIČ) — nedošlo k žádnému volání přístupového bodu, takže se nevyužila žádná kvóta e-invoice.be |
+| **Není v síti** | DIČ klienta není registrovaným účastníkem Peppol; faktura byla odeslána e-mailem jako obvykle (zobrazeno jako „→ Odesláno e-mailem") |
+
+Neexistuje stav „Čeká" — faktura buď ještě nebyla odeslána přes Peppol (null), nebo je v jednom z pěti stavů výše. Aktualizace stavu odeslaných faktur se do Druma odesílají automaticky přes webhook z e-invoice.be.
+
+---
+
+## Řešení selhání
+
+Pokud faktura zobrazuje **Selhalo** nebo **Validace selhala**:
+
+1. Najeďte myší nebo klikněte na odznak stavu pro zobrazení podrobností chyby.
+2. Opravte naznačený problém (například neplatné DIČ v záznamu klienta).
+3. Klikněte na **Zopakovat Peppol** na řádku faktury pro opětovné odeslání.
+
+<Note>
+Selhání doručení přes Peppol neovlivňuje interní stav faktury v Druma. Faktura zůstává potvrzená a bude se stále zobrazovat ve vašich účetních exportech. Faktura se také bez ohledu na to odešle e-mailem, takže klient nezůstane bez kopie, zatímco problém řešíte.
+</Note>
+
+---
+
+## Ruční spuštění doručení přes Peppol
+
+U faktur, kde se automatické odeslání nespustilo — například u faktur vytvořených před aktivací integrace — můžete odeslat přes Peppol ručně:
+
+1. Otevřete seznam **Faktury**.
+2. Najděte řádek faktury a klikněte na nabídku akcí řádku (**···**).
+3. Klikněte na **Odeslat nyní**.
+
+To je užitečné také po opravě DIČ nebo čísla KBO klienta.
+
+---
+
+## Související stránky
+
+<Card title="Nastavení integrace" icon="plug" href="/cs/admin/integration-setup">
+  Přehled všech integrací dostupných v Nastavení → Integrace.
+</Card>
+
+<Card title="Odesílání faktur" icon="send" href="/en/finance/sending-invoices">
+  Jak odesílat faktury e-mailem a sledovat stav doručení.
+</Card>
+
+<Card title="Branding a formáty dokumentů" icon="palette" href="/cs/admin/branding-formats">
+  Přizpůsobte číslování faktur, logo a barvy na PDF fakturách.
+</Card>

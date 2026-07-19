@@ -1,51 +1,98 @@
 ---
 title: "Útvonal-jövedelmezőségi jelentés"
-description: "Bevétel, árrés és CO2 elemzése útvonal-páronként, ország/város szintű granularitással, rendezendő táblázattal és CSV exporttal."
-icon: "chart-line"
+description: "Lásd a valódi margint minden általad futtatott eredet-célállomás páron, bevétellel, becsült költségekkel, és trenddel az előző időszakhoz képest."
+icon: "route"
 ---
 
-## Az Útvonal-jövedelmezőségi jelentés oldal
+Sok operátor ismeri az útvonalankénti bevételét, de nem a tényleges marginját, miután az üzemanyagot, az útdíjat és a sofőrköltséget is beszámítják. Az Útvonal-jövedelmezőségi jelentés elvégzi a matematikát minden általad üzemeltetett országpár-kombinációra, így egy pillantással láthatod, mely útvonalak működnek, és melyek eszik meg a nyereségedet.
 
-Lépj a **Jelentések → Útvonal-jövedelmezőség** menüpontra. Ez a jelentés megmutatja, hogy a különböző útvonalak milyen jövedelmezőek, segítve a döntéshozatalt: melyik útvonalat érdemes fejleszteni, és melyiket csökkenteni.
+## A jelentés megnyitása
 
-## Granularitás
+Lépj a **Jelentések → Útvonal-jövedelmezőség** menüpontra.
 
-Az útvonalak kétféle részletességgel elemezhetők:
-- **Ország szintű** — pl. Magyarország → Ausztria
-- **Város szintű** — pl. Budapest → Bécs (finomabb elemzéshez)
+Válaszd ki a dátumtartományt a tetején. A jelentés alapértelmezetten a folyó hónapot mutatja. Egy értelmes összehasonlításhoz általában legalább egy teljes hónap adatára van szükséged, ideális esetben egy negyedévre.
 
-Válts a **Granularitás** kapcsolóval.
+<Frame caption="Útvonal-jövedelmezőség — margin eredet-célállomás páronként, a rosszul teljesítő útvonalak jelölésére használt fix 15%-os küszöbbel.">
+  <img src="/images/reports/lane-profitability.png" alt="Útvonal-jövedelmezőségi jelentés" />
+</Frame>
 
-## Az adatok oszlopai
+## Mit mutat a jelentés?
 
-| Oszlop | Leírás |
+A táblázat minden sora egy eredet-célállomás országpár. Minden útvonalnál látod:
+
+| Oszlop | Mit jelent |
 |---|---|
-| Eredet | Felvételi ország/város |
-| Célállomás | Szállítási ország/város |
-| Rendelésszám | Az útvonalhoz tartozó rendelések száma |
-| Összes bevétel (€) | Az összes megállapodott ár összege |
-| Összes költség (€) | Üzemanyag, teherautó amortizáció, sofőr, útdíjak |
-| Árrés (€) | Bevétel − Költség |
-| Árrés % | (Árrés / Bevétel) × 100 |
-| Átl. távolság (km) | Átlagos útvonalhossz |
-| Összes CO2 (t) | Összes emisszió az útvonalra |
+| **Bevétel** | Az adott útvonalon lévő rendelések teljes kiszámlázott összege az időszakban |
+| **Üzemanyagköltség** | Becsült: távolság × átlagos fogyasztás × üzemanyagár |
+| **Útdíjköltség** | PTV útdíj-adat az útvonalhoz |
+| **Sofőrköltség** | Napi költség × út napjai, a beállított sofőrönkénti díj alapján |
+| **Teljes költség** | Üzemanyag + útdíj + sofőrköltség összege |
+| **Margin €** | Bevétel mínusz teljes költség |
+| **Margin %** | A margin a bevétel százalékában |
+| **Fuvarok** | Az adott útvonalon befejezett rendelések száma az időszakban |
+| **Átl. ár/fuvar** | Átlagos bevétel rendelésenként |
+| **Trend** | Nyíl, amely jelzi, hogy a margin % javult vagy romlott-e az előző időszakhoz képest |
 
-## Rendezés
+A célmargin-küszöb alatti sorok pirossal vannak kiemelve. Ez a küszöb jelenleg fixen **15%**-ra van állítva — még nem konfigurálható a Beállításokból.
 
-Bármely oszlop szerint rendezhető a fejlécre kattintva. Az alapértelmezés az összes bevétel szerint csökkenő sorrendben.
-
-## Összefoglaló sor
-
-Az oldal tetején rögzítve egy összefoglaló sor jelenik meg az összes útvonal összesített adataival.
-
-## CSV export
-
-Kattints az **CSV exportálás** gombra a teljes táblázat exportálásához. Az exportált fájl tartalmaz minden megjelenített sort és oszlopot, UTF-8 BOM kódolással (Excel kompatibilis).
+## Hogyan működnek a költségbecslések?
 
 <Note>
-A jelentés maximálisan 500 sort tartalmaz. Ha a flottád több mint 500 egyedi útvonal-kombinációt generált, szűkítsd az időszakot a kevesebb eredmény érdekében.
+Az ebben a jelentésben szereplő költségbecslések a beállított paramétereid alapján készült közelítések. Hasznosak az útvonalak közötti relatív teljesítmény azonosításához, de a tényleges költségek eltérhetnek — különösen a változó útdíjas utak útdíjköltségeinél.
 </Note>
 
-<Card title="Jelentések áttekintése" icon="chart-bar" href="/en/reports/reports-overview">
-  Az összes elérhető jelentés összefoglalója.
-</Card>
+**Üzemanyagköltség-számítás:**
+Távolság (PTV útvonaltervezésből) × flotta-átlagfogyasztás (liter/100km, beállítva a Beállítások → Flotta → Alapértelmezett fogyasztás menüpontban) × az üzemanyagárad (beállítva a Beállítások → Flotta → Üzemanyagár menüpontban, vagy importálva az üzemanyagkártya-adatból, ha üzemanyagkártya-importot használsz).
+
+**Útdíjköltség-számítás:**
+HERE Maps útdíj-adat az útvonalhoz. A legtöbb európai autópálya-útdíjrendszert lefedi. Kevésbé pontos az összetett matricarendszerű országokon áthaladó útvonalaknál.
+
+**Sofőrköltség-számítás:**
+Az út napjainak száma × a sofőr profiljában beállított napi költségráta (Flotta → Sofőrök → [sofőr] → Napi költségráta). Ha nincs sofőr hozzárendelve, a Druma a globális alapértelmezett sofőr napi költséget használja.
+
+Ezeket a bemeneteket mind frissítheted a Beállításokban a pontosság javításához. A jelentés azonnal újraszámol, amikor elmented az új értékeket.
+
+## Nem nyereséges útvonalak azonosítása
+
+Rendezd a táblázatot **Margin %** szerint növekvő sorrendben — a legrosszabbul teljesítő útvonalak kerülnek felülre.
+
+A piros sorok a célmargin alatti útvonalak. Gyakori okok:
+
+- **Hosszú távú útvonalak** — bevétel alapján nyereségesnek tűnnek, de magas az üzemanyag- és sofőrköltségük
+- **Nagy útdíjú útvonalak** — bizonyos, Franciaországon, Ausztrián vagy Svájcon áthaladó útvonalaknak jelentősen magasabb az útdíja, mint az alternatíváké
+- **Alulárazott régi ügyfelek** — évekkel ezelőtt egyeztetett díjak, amelyeket nem tárgyaltak újra
+- **Alacsony volumenű útvonalak** — kevesebb fuvar azt jelenti, hogy a fix költségek jobban sújtanak
+
+## Egy útvonal mélyebb vizsgálata
+
+Kattints bármelyik útvonal-sorra, hogy lásd az adott útvonal számait alkotó egyedi rendeléseket. Láthatod minden rendelés bevételét, becsült költségét és marginját — és azonosíthatod azokat a konkrét rendeléseket, amelyek kiugró értékek (például egy rendelést, amely sokkal alacsonyabb díjjal fut, mint a többi).
+
+A rendelési listából átkattinthatsz a teljes rendelés-részletezőre. Hasznos, amikor azt vizsgálod, miért teljesített alul egy adott útvonal egy adott hónapban.
+
+## A jelentés szűrése
+
+Használd az oldal tetején lévő szűrőket:
+
+- **Eredet ország** — szűrés egy vagy több konkrét eredet országra
+- **Célállomás ország** — szűrés egy vagy több konkrét célállomás országra
+- **Ügyfél** — az útvonal-jövedelmezőség megtekintése egyetlen ügyfélre
+- **Teherautó** — annak megtekintése, mely teherautók üzemeltetik a legjövedelmezőbben az egyes útvonalakat
+
+## Exportálás
+
+Kattints az **Export → CSV** gombra a teljes jelentés táblázatként való letöltéséhez. A CSV tartalmazza az összes oszlopot, és a lefúrási nézet összes rendelését, ha szűrőket alkalmaztál.
+
+A CSV a legjobb formátum a további Excel-elemzéshez — például saját pivot-táblák építéséhez ügyfelenként vagy teherautónként.
+
+<Warning>
+Ne hozz árazási döntéseket kizárólag ez alapján a jelentés alapján, más tényezők figyelembevétele nélkül: a visszafuvarok, a stratégiai ügyfélkapcsolatok és a szezonális volumen-ingadozás mind befolyásolják egy útvonal valódi értékét.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Jelentések áttekintése" icon="chart-bar" href="/en/reports/reports-overview">
+    Az összes elérhető jelentés a Drumában, és hogyan ütemezd őket.
+  </Card>
+  <Card title="Árkártyák" icon="tag" href="/en/pricing/rate-cards">
+    Állíts be útvonalankénti árkártyákat, amelyek táplálják az anomális árazás-felismerést és a margin-célokat.
+  </Card>
+</CardGroup>

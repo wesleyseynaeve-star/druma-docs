@@ -1,45 +1,69 @@
 ---
 title: "SmartBill integráció"
-description: "A SmartBill számlázó és könyvelő szoftver csatlakoztatása a Druma-hoz automatikus számla szinkronizáláshoz."
-icon: "star"
+description: "Küldd a Druma-számláidat automatikusan a SmartBill-be, amikor elküldöd őket — egyirányú másolatként a könyvelési folyamatodhoz."
+icon: "receipt"
 ---
 
-## Mi a SmartBill?
+A SmartBill egy széles körben használt román felhő alapú számlázási és könyvelési platform. A Druma–SmartBill integráció minden elküldött számládról egy másolatot küld a SmartBill-be, így az a könyvelési rendszeredben is megjelenik, kézi újrarögzítés nélkül.
 
-A SmartBill egy román felhőalapú számlázó és könyvelő szoftver, amelyet sok román KKV használ. A Druma SmartBill-integrációval a Druma-ban generált számlák egyetlen kattintással szinkronizálhatók a SmartBill-be.
+## Mit csinál az integráció?
 
-## SmartBill konfigurálása
+- Minden, a Drumában **elküldött** számla (nem a generálás/létrehozás pillanatában) egyirányúan, vázlatként kerül továbbításra a SmartBill-be
+- A számlát a SmartBill-ből tekinted át és állítod ki, a szokásos könyvelési folyamatod részeként
+- A számla SmartBill-továbbítási státusza (továbbítva vagy hiba) a Druma-számlán kerül rögzítésre — nincs folyamatos, kétirányú státusz-szinkronizálás vissza a SmartBill-ből
+- A SmartBill-nek küldött ügyfél- és termékadatok kifejezetten "ne mentsd el" jelzéssel szerepelnek a küldött payloadban — a SmartBill **nem** hoz létre és nem frissít saját ügyfél-/termékrekordokat ebből az integrációból
+
+## Az integráció beállítása
 
 <Steps>
-  <Step title="Hozd létre az API kulcsot a SmartBill-ben">
-    A SmartBill fiókod beállításaiban (Cont → API) hozz létre egy API kulcsot.
+  <Step title="Szerezd meg a SmartBill API-kulcsodat">
+    Jelentkezz be a [smartbill.ro](https://smartbill.ro) oldalon. Lépj a **Cont → Setări → API** menüpontra. Generálj egy új API-kulcsot (tokent). Másold ki — a SmartBill egyszer mutatja meg.
   </Step>
-  <Step title="Lépj a Beállítások → Integrációk → SmartBill menüpontra">
-    Add meg:
-    - **SmartBill e-mail** — a SmartBill-fiókodhoz kapcsolódó e-mail
-    - **API kulcs** — a SmartBill-ban generált kulcs
-    - **Vállalati CIF** — az adóazonosítód (a SmartBill a megfelelő céget azonosítja)
+  <Step title="Keresd meg a céged CIF-jét és számlasorozatát">
+    A céged CIF-je (Codul de Identificare Fiscală) a SmartBill-fiókodban, a céges beállítások alatt látható. Szükséged lesz még a SmartBill-ben konfigurált **számlasorozat névre** is, amelyet a továbbított számláknak használniuk kell.
+  </Step>
+  <Step title="Add meg a hitelesítő adatokat a Drumában">
+    Lépj a **Beállítások → Integrációk → SmartBill** menüpontra. Add meg a SmartBill-fiókod **e-mail-címét**, az **API-tokent**, a **CIF**-et és a **számlasorozatot** — mind a négy mező kötelező.
   </Step>
   <Step title="Teszteld a kapcsolatot">
-    Kattints a **Kapcsolat tesztelése** gombra.
-  </Step>
-  <Step title="Mentés">
-    Ha a teszt sikeres, mentsd el. Mostantól megjelenik a **SmartBill-be küldés** gomb a számlák küldési panelben.
+    Kattints a **Kapcsolat tesztelése** gombra. A Druma hitelesíti magát a SmartBill-lel, és megerősíti, hogy az integráció aktív.
   </Step>
 </Steps>
 
-## Számla küldése SmartBill-be
+## Hogyan működik a számla-továbbítás?
 
-Számla generálása után:
-1. Nyisd meg a számla részleteit.
-2. Kattints a **SmartBill-be küldés** gombra.
-3. A Druma elküldi a számla adatait a SmartBill API-n keresztül.
-4. A SmartBill-ben megjelenik a számla, a Druma által rögzített számlavonalakkal.
+1. Elkészíted a számlát a Drumában a sorszámozott számlaszámoddal
+2. Amikor **elküldöd** a számlát (nem a generáláskor), a Druma vázlatként továbbítja a SmartBill-be, az esetlegesen a küldéskor egyszerre elinduló ANAF e-Factura vagy Peppol benyújtás mellett
+3. Megnyitod a SmartBill-t, átnézed a vázlatot, és kiállítod (Emite factura)
+4. A SmartBill kiállításkor **saját számlaszámot** rendel hozzá — a Druma számlaszáma nem kerül elküldésre a SmartBill-nek, és ott nem is jelenik meg; a SmartBill száma visszakerül tárolásra a Druma-számlán referenciaként
 
-## Kétirányú szinkronizálás
+<Note>
+A SmartBill-továbbítási státusz a Druma-számlán egy egyszerű továbbítva/hiba jelző, nem egy Vázlat/Kiállítva/Fizetve nyomkövető — a Drumának nincs rálátása arra, mi történik a számlával a SmartBill-en belül a továbbítás után (nincs webhook, amely ebben az irányban összekötné a két rendszert).
+</Note>
 
-Az integráció egyirányú — Druma → SmartBill. A SmartBill-ben végrehajtott módosítások nem szinkronizálódnak vissza a Druma-ba. Ha mindkét helyen módosítasz, a konzisztencia megőrzése érdekében a Druma legyen az igazságforrás.
+## Fontos korlátozások
 
-<Card title="Számlák generálása" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-  Számlák generálása a Drumában.
-</Card>
+**A számlakezelés a SmartBill-ben marad.** Az integráció egy egyirányú továbbítás a küldés pillanatában. A számla szerkesztését, törlését, kiállítását vagy jóváírását közvetlenül a SmartBill-ben kell elvégezni — ezek egyike sem szinkronizálódik vissza a Drumába.
+
+**Nincs szükséged a SmartBill-re az ANAF e-Factura-hoz.** A Druma közvetlenül, a saját e-Factura integrációján keresztül nyújtja be a számlákat az ANAF-nak, a SmartBill-től függetlenül. Mindkét integrációt egyszerre használhatod, konfliktus nélkül.
+
+<Note>
+Ha jelenleg a SmartBill-t használod e-Factura benyújtásra, döntsd el, hogy folytatod-e ezt a SmartBill-ben, vagy áttérsz a Druma közvetlen ANAF-integrációjára. A kettő párhuzamos futtatása duplikált benyújtásokat okoz. Írj a support@druma.io címre, ha útmutatásra van szükséged az átálláshoz.
+</Note>
+
+## Hibaelhárítás
+
+**A továbbítás sikertelen:**
+A Druma-számla egy `smartbill_error` részletet rögzít hiba esetén. Gyakori okok: lejárt API-token, SmartBill karbantartási ablak, vagy egy olyan ügyfélrekord, amelynél hiányzik a CUI/ÁFA-szám, amelyet a SmartBill megkövetel céges ügyfeleknél.
+
+**Számlaszám-ütközés:**
+Ha egy vázlatot manuálisan hoztak létre a SmartBill-ben ugyanazzal a sorozattal/számmal a továbbítás előtt, a SmartBill elutasítja a duplikátumot. Töröld a manuális vázlatot a SmartBill-ben, majd kattints az **Újrapróbálkozás SmartBill-lel** gombra a számla sorának műveletmenüjében a Drumában.
+
+<CardGroup cols={2}>
+  <Card title="Számlák generálása" icon="file-invoice" href="/en/invoicing/generating-invoices">
+    Hogyan generálj számlákat a befejezett rendelésekből a Drumában, mielőtt továbbítódnának a SmartBill-be.
+  </Card>
+  <Card title="ANAF e-Factura" icon="building-columns" href="/en/invoicing/efactura-anaf">
+    Számlák közvetlen benyújtása az ANAF-hoz a Drumából, a SmartBill megkerülésével.
+  </Card>
+</CardGroup>

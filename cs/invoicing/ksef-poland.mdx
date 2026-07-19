@@ -1,0 +1,102 @@
+---
+title: "KSeF — polská e-fakturace"
+description: "Jak Druma automaticky odesílá faktury do KSeF (Krajowy System e-Faktur), povinného polského národního systému e-fakturace provozovaného KAS, se sledováním stavu, opakováním a stažením potvrzení UPO."
+icon: "file-invoice"
+---
+
+<Warning>
+**Předběžný přístup — čeká na první živé ověření operátorem.** Podání KSeF v Druma je funkčně kompletní, ale k datu tohoto zápisu ještě nebylo end-to-end otestováno proti živému API KSeF skutečným polským plátcem DPH. Podání zůstává uzamčené, dokud není připojen token živého operátora. Pokud patříte mezi první operátory připojující KSeF, považujte svá první podání za předběžný přístup — pozorně sledujte odznaky stavu a v případě jakýchkoli nesrovnalostí neprodleně kontaktujte podporu. Níže popsané kroky nastavení a chování jsou správné instrukce; jediná otevřená položka je živá provozní historie.
+</Warning>
+
+## Co je KSeF?
+
+KSeF (Krajowy System e-Faktur) je polský národní systém strukturované e-fakturace provozovaný polskou finanční správou (KAS — Krajowa Administracja Skarbowa). Je povinný pro polské společnosti registrované k DPH. Každá faktura vystavená společností s polským DIČ musí být odeslána do KSeF v oficiálním formátu FA(3) XML — samotný portál KAS nestačí.
+
+<Note>
+Povinnost KSeF se zavádí po fázích během roku 2026 a její termíny spuštění polská vláda opakovaně odkládala. Před spoléháním na jakékoli zde uvedené datum si u svého účetního nebo na oficiálním portálu [ksef.mf.gov.pl](https://ksef.mf.gov.pl) potvrďte konkrétní platné datum spuštění pro vaši společnost.
+</Note>
+
+KSeF se vztahuje pouze v případě, že má vaše společnost **polské DIČ** (formát: `PL` následované 10 číslicemi, např. `PL1234567890`). Společnosti registrované v Rumunsku, Belgii nebo jakékoli jiné nepolské zemi KSeF nepodléhají. Pokud Druma na záznamu vaší společnosti nerozpozná polské DIČ, karta integrace KSeF zůstane neaktivní.
+
+## Jak Druma zpracovává KSeF
+
+Nemusíte se přihlašovat do portálu KAS, vytvářet soubory XML ani nic odesílat ručně. Zde je, co se stane automaticky při vygenerování faktury s povoleným KSeF:
+
+1. Druma převede fakturu do oficiálního formátu **FA(3) XML** vyžadovaného KAS.
+2. Druma se autentizuje s API KSeF pomocí vašeho **tokenu operátora**, bezpečně uloženého v Supabase Vault — token není po vložení nikdy viditelný v prostém textu.
+3. Druma odešle XML do KSeF a obdrží **číslo KSeF** (oficiální referenci od KAS).
+4. Druma stáhne **UPO** (Urzędowe Poświadczenie Odbioru — oficiální potvrzení o přijetí) a uloží ho k záznamu faktury.
+
+Celý proces běží na pozadí. Výsledek uvidíte na faktuře jako barevný odznak stavu.
+
+## Odznaky stavu KSeF
+
+Každá faktura podléhající KSeF zobrazuje odznak stavu na stránce detailu faktury v sekci **KSeF**:
+
+| Odznak | Význam |
+|---|---|
+| **Čeká** | Faktura vygenerována; podání do KSeF je zařazeno do fronty. |
+| **Odesláno** | XML odesláno do KSeF; čeká se na zpracování KAS (obvykle 1–5 minut). |
+| **Přijato** | KAS fakturu přijal. Číslo KSeF je uloženo a UPO je k dispozici. |
+| **Selhalo** | KSeF fakturu odmítl kvůli chybě validace. Viz chybová zpráva na faktuře. |
+| **Odmítnuto** | KAS vrátil formální odmítnutí. Zkontrolujte kód důvodu v UPO. |
+
+<Note>
+Úloha na pozadí kontroluje neúspěšná podání každých 30 minut, ale každá faktura se ve skutečnosti pokouší znovu podle plánu exponenciálního prodlení — přibližně 1 hodinu po prvním selhání, poté přibližně 2 hodiny poté (±25 % rozptyl). Pokud selže i třetí pokus (původní podání plus tato 2 opakování), faktura přejde přímo do stavu **Selhalo**, typicky do asi 3 hodin od prvního selhání — poté už automaticky neopakuje. Ruční opakování spusťte z panelu detailu faktury, jakmile vyřešíte podkladovou chybu.
+</Note>
+
+## Nastavení KSeF
+
+<Steps>
+  <Step title="Přejděte do Nastavení → Integrace">
+    Otevřete nabídku **Nastavení** z horní navigace a vyberte **Integrace**.
+  </Step>
+  <Step title="Najděte kartu KSeF a klikněte na Připojit">
+    Najděte kartu **KSeF (polská e-fakturace)**. Klikněte na **Připojit**.
+  </Step>
+  <Step title="Vložte token operátora">
+    Zadejte svůj token operátora KSeF. Jde o autentizační token vydaný KAS pro API přístup vaší společnosti. Váš účetní nebo IT tým ho může vygenerovat z portálu KSeF na [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  </Step>
+  <Step title="Uložit">
+    Klikněte na **Uložit**. Druma před aktivací ověří, že záznam vaší společnosti má polské DIČ. Pokud validace selže, zkontrolujte, že DIČ v údajích vaší společnosti je ve formátu `PL` + 10 číslic.
+  </Step>
+</Steps>
+
+Po připojení se všechny nové faktury vygenerované vaší společností odesílají do KSeF automaticky. Existující faktury už v Druma se **zpětně** neodesílají.
+
+## Odpojení KSeF
+
+Přejděte do **Nastavení → Integrace → KSeF → Odpojit**. Tím se token operátora odstraní z Vault a nová podání se okamžitě zastaví. Faktury, které již byly přijaty, si ponechají svá čísla KSeF — odpojení neovlivňuje přijaté záznamy.
+
+## Faktury s přenesenou daňovou povinností
+
+Druma správně zpracovává DPH s přenesenou daňovou povinností ve formátu FA(3) XML. Když faktura nese režim přenesené daňové povinnosti DPH, Druma vynechá částku DPH a nastaví správné pole **P_12** v XML. Není potřeba žádná ruční úprava — režim DPH se odvozuje z položek faktury nakonfigurovaných v Druma.
+
+## Stahování UPO
+
+UPO (oficiální potvrzení od KAS) se automaticky stáhne, jakmile faktura dosáhne stavu **Přijato**, a uloží se k záznamu faktury. Pro ruční stažení:
+
+1. Otevřete fakturu z **Fakturace**.
+2. Přejděte na sekci **KSeF**.
+3. Klikněte na **Stáhnout UPO**.
+
+<Warning>
+UPO je právní důkaz, že KAS vaši fakturu přijal. Uchovávejte si kopii pro své záznamy — polské daňové právo vyžaduje, abyste ho mohli předložit při daňové kontrole.
+</Warning>
+
+## Ruční opakování
+
+Pokud jsou automatická opakování vyčerpána, nebo jste opravili chybu a chcete okamžitě znovu podat:
+
+Přejděte do **Fakturace** → otevřete fakturu → **sekce KSeF** → klikněte na **Zopakovat podání**. Druma okamžitě znovu odešle XML FA(3).
+
+---
+
+<CardGroup cols={2}>
+  <Card title="e-Factura / Podání ANAF" icon="landmark" href="/cs/invoicing/efactura-anaf">
+    Rumunský ekvivalent povinného systému e-fakturace — jak Druma odesílá do ANAF přes API SPV.
+  </Card>
+  <Card title="Peppol fakturace" icon="network-wired" href="/cs/integrations/peppol-invoicing">
+    Celoevropská elektronická fakturace přes síť Peppol — nastavení, odesílání a sledování stavu.
+  </Card>
+</CardGroup>

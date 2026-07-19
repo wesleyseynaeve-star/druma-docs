@@ -1,22 +1,179 @@
-﻿---
-title: "Chytrý import"
-description: "AI-powered Smart Import pro hromadné onboardování dat — nahrajte PDF, obrázky nebo tabulky a Gemini extrahuje data."
-icon: "wand"
+---
+title: "Smart Import (hromadný onboarding s AI)"
+description: "Nahrajte nestrukturované dokumenty — PDF, obrázky, tabulky — a nechte AI Druma extrahovat, zkontrolovat a hromadně importovat data vaší flotily, řidičů, klientů a společnosti za pár minut."
+icon: "brain"
 ---
 
-Smart Import je AI nastroj pro automatickou extrakci podrobnosti z dokumentu (Gemini 2.0 Flash).
+## Přehled
 
-Prejdete do **Nastroje - Smart Import**.
+Smart Import je nástroj pro onboarding s podporou AI, který čte dokumenty, které již máte — seznamy flotily dopravců, soubory řidičských průkazů, adresáře klientů, certifikáty pojištění — a promění je ve strukturované záznamy Druma. Místo přepisování dat z papírování nebo přeformátování tabulek podle importní šablony předáte surový dokument Druma a zkontrolujete, co AI extrahovala, než se to dostane do databáze.
 
-## Jak to funguje
+Přejděte do **Nástroje → Smart Import** pro otevření.
 
-1. Nahrajte dokumenty (PDF, JPEG, PNG, XLSX, CSV)
-2. Druma odesl dokumenty Gemini pro extrakci
-3. Zkontrolujte a upravte extrahovana data
-4. Potvrdte import
+<Note>
+Smart Import používá pro extrakci dat Google Gemini. Soubory se zpracovávají na serveru a po extrakci se trvale neukládají — uloží se pouze strukturované záznamy, které se rozhodnete importovat.
+</Note>
 
-## Skore spolehlivosti
+---
 
-- Zelena (90-100%): AI si je jista
-- Zluta (70-89%): Zkontrolujte pred importem
-- Cervena (pod 70%): Rucni overeni povinne
+## Kdy použít Smart Import vs. běžný hromadný import
+
+Druma má dvě cesty hromadného onboardingu. Vyberte tu správnou pro vaši situaci:
+
+| Situace | Použijte |
+|---|---|
+| Máte PDF, skenovaný dokument nebo obrázek | **Smart Import** |
+| Máte fotografii dokumentu nebo ručně psaný seznam | **Smart Import** |
+| Dostali jste seznam flotily od dopravce ve Wordu nebo nestandardním Excelu | **Smart Import** |
+| Exportujete z jiného TMS se známým formátem CSV | **Běžný hromadný import CSV** |
+| Máte čistou tabulku, která už odpovídá struktuře sloupců Druma | **Běžný hromadný import CSV** |
+
+Smart Import zpracovává dokumenty, které jsou příliš nepřehledné nebo nestrukturované pro přímý import CSV. Nenahradí dobře strukturovaný export — běžný import je rychlejší, když jsou vaše data už čistá.
+
+---
+
+## Podporované typy dokumentů
+
+- **PDF** — seznamy flotily, profily dopravců, certifikáty pojištění, spisy řidičů
+- **Obrázky** — JPEG, PNG, WebP, HEIC/HEIF — skeny, fotografie z telefonu, snímky obrazovky
+- **Excel** — soubory `.xlsx` v jakémkoli rozložení (Smart Import čte obsah, ne jen standardní šablony)
+- **CSV** — soubory oddělené čárkou nebo středníkem
+
+---
+
+## Postup krok za krokem
+
+<Steps>
+  <Step title="Otevřete Smart Import">
+    Přejděte do **Nástroje → Smart Import**. Uvidíte plochu pro nahrávání a pod ní karty kategorií (při první návštěvě prázdné).
+  </Step>
+  <Step title="Nahrajte své dokumenty">
+    Klikněte na **Nahrát dokumenty** nebo přetáhněte soubory přímo do plochy pro upuštění. Můžete nahrát více souborů najednou — například PDF seznam flotily a obrázek certifikátu pojištění společně.
+
+    <Note>
+    Maximální velikost souboru je 20 MB na soubor. Pokud je dokument větší, před nahráním ho rozdělte na sekce.
+    </Note>
+  </Step>
+  <Step title="Počkejte na extrakci AI">
+    Druma odešle každý soubor do služby extrakce AI. Obvykle to trvá pár sekund na soubor. Ukazatel průběhu zobrazuje stav každého dokumentu. Během extrakce nezavírejte kartu.
+  </Step>
+  <Step title="Zkontrolujte výsledky extrakce">
+    Po dokončení extrakce se zobrazí **Kontrolní dashboard**. Zobrazuje karty kategorií nahoře — **Společnosti**, **Flotila**, **Řidiči**, **Klienti**, **Pojištění** — s počtem extrahovaných záznamů v každé kategorii.
+  </Step>
+  <Step title="Otevřete kategorii ke kontrole">
+    Klikněte na jakoukoli kartu kategorie pro zobrazení extrahovaných záznamů v editovatelné tabulce. Každý řádek je jeden extrahovaný záznam (jedno vozidlo, jeden řidič, jeden klient atd.).
+  </Step>
+  <Step title="Upravte jakákoli nesprávná pole">
+    Klikněte na jakoukoli buňku v tabulce pro její úpravu přímo na místě. AI je přesná u jasně vytištěného textu, ale může špatně přečíst rukopis, zkratky nebo nestandardní formátování. Před importem opravte jakékoli chyby.
+  </Step>
+  <Step title="Zkontrolujte skóre jistoty a duplicity">
+    Zkontrolujte indikátory jistoty a příznaky duplicit u každého řádku — podrobnosti viz sekce níže.
+  </Step>
+  <Step title="Importujte kategorii">
+    Když kategorie vypadá správně, klikněte na **Importovat [kategorii]** — například **Importovat flotilu** nebo **Importovat klienty**. Druma hromadně vloží všechny nepřeskočené řádky a potvrdí počet importovaných.
+  </Step>
+</Steps>
+
+---
+
+## Kontrolní dashboard
+
+Kontrolní dashboard je centrální pracovní prostor po extrakci. Má dvě úrovně:
+
+**Karty kategorií (nejvyšší úroveň)** — jedna karta na typ dat nalezených ve vašich dokumentech. Každá karta zobrazuje:
+- Název kategorie
+- Počet extrahovaných záznamů
+- Souhrnné upozornění, pokud má nějaký záznam nízkou jistotu nebo příznak Duplicita
+
+**Tabulka záznamů (podrobnosti)** — kliknutím na kartu otevřete editovatelnou tabulku pro danou kategorii. Tabulka zobrazuje jeden sloupec na pole (např. Značka, Typ návěsu, Kapacita, Rok pro Flotilu), s indikátory jistoty a příznaky duplicit u každého řádku.
+
+Mezi kategoriemi můžete volně přepínat — vaše úpravy se zachovají, dokud neprovedete import nebo neuzavřete relaci.
+
+---
+
+## Skórování jistoty
+
+Každé extrahované pole obdrží skóre jistoty na základě toho, jak jasně dokázala AI přečíst a interpretovat zdrojový text. Skóre se zobrazují jako barevně odlišené indikátory na každé buňce:
+
+| Indikátor | Význam |
+|---|---|
+| Zelená — **Vysoká** | AI si je jistá. Pole bylo jasně vytištěné nebo strukturované. |
+| Oranžová — **Střední** | AI provedla rozumnou domněnku, ale zdroj byl nejednoznačný (např. zkratka, částečně viditelné slovo). Zkontrolujte před importem. |
+| Červená — **Nízká** | AI nedokázala extrahovat spolehlivou hodnotu. Buňka může obsahovat nejlepší odhad, nebo být prázdná. Pole s nízkou jistotou vždy zkontrolujte ručně. |
+
+<Warning>
+Pole s nízkou jistotou nejsou blokována z importu — můžete je importovat tak, jak jsou — ale jste odpovědní za ověření jejich přesnosti. Nesprávná data (špatná registrační značka, špatné DIČ) mohou způsobit následné problémy ve fakturaci, souladu s předpisy a komunikaci s dopravci.
+</Warning>
+
+Pro rychlé nalezení všech polí s nízkou jistotou v kategorii hledejte oranžové a červené zvýraznění buněk v tabulce. Neexistuje samostatný filtr — procházejte sloupec po sloupci nebo řádek po řádku.
+
+---
+
+## Detekce duplicit
+
+Před zobrazením Kontrolního dashboardu Druma porovná extrahované záznamy s vašimi existujícími firemními daty — ale pouze pro čtyři kategorie:
+
+- **Flotila (vozidla)**: shoda podle registrační značky
+- **Flotila (návěsy)**: shoda podle registrační značky
+- **Řidiči**: shoda podle celého jména (bez rozlišení velikosti písmen)
+- **Klienti**: shoda podle DIČ, s návratem na jméno, pokud nebylo extrahováno žádné DIČ
+
+<Note>
+Pro Společnosti/Subdodavatele ani záznamy Pojištění zatím neexistuje detekce duplicit — každý extrahovaný řádek v těchto kategoriích se považuje za nový.
+</Note>
+
+Záznamy odpovídající existujícím datům jsou označeny odznakem **Duplicita** na řádku. Pro každou duplicitu máte dvě možnosti:
+
+- **Přeskočit** (výchozí) — řádek se neimportuje. Použijte, když je existující záznam už správný.
+- **Přepsat** — import aktualizuje existující záznam extrahovanými daty. Používejte opatrně — nahradí uložené hodnoty.
+
+Řádky bez příznaku Duplicita jsou nové záznamy a při importu se vloží.
+
+---
+
+## Po importu
+
+Importované záznamy se okamžitě zobrazí v příslušném modulu:
+
+- Záznamy **Flotila** se zobrazí ve **Vozový park → Vozidla** nebo **Vozový park → Návěsy**
+- **Řidiči** se zobrazí ve **Vozový park → Řidiči**
+- **Klienti** se zobrazí v **Klienti**
+- **Společnosti / Subdodavatelé** se zobrazí ve **Forwarding → Subdodavatelé**
+- Data **Pojištění** se připojí k příslušnému záznamu vozidla nebo společnosti
+
+Import nelze vrátit zpět. Pokud byla importována nesprávná data, upravte záznamy jednotlivě v příslušných modulech.
+
+---
+
+## Omezení
+
+Smart Import je navržen pro data společnosti, flotily, řidičů, klientů a pojištění. Nezpracovává:
+
+- **Objednávky** — pro vytváření objednávek použijte formulář objednávky nebo funkci příjmu objednávek e-mailem
+- **Faktury** — faktury se generují automaticky z doručených objednávek nebo přes workflow příjmu faktur dopravce
+- **Migraci historických dat** — pro velké historické datasety (tisíce záznamů) kontaktujte podporu ohledně asistované migrace
+
+Smart Import funguje nejlépe s dokumenty, které jsou primárně textové. Dokáže zpracovat rukopis na obrázcích, ale přesnost výrazně klesá ve srovnání s vytištěným textem.
+
+---
+
+## Praktický příklad
+
+Váš nový subdodavatel vám pošle 3stránkové PDF se seznamem celé své flotily — 12 vozidel se značkou, typem, maximální hmotností a rokem. Místo ručního zadávání každého z nich:
+
+1. Nahrajte PDF do **Nástroje → Smart Import**
+2. Počkejte pár sekund na extrakci
+3. Klikněte na kartu **Flotila** — zobrazí se 12 řádků, většina s vysokou jistotou
+4. Dva řádky mají střední jistotu u pole Typ návěsu — opravte je přímo v tabulce
+5. Jeden řádek je označen jako Duplicita (vozidlo, které jste přidali minulý týden) — ponechte jako Přeskočit
+6. Klikněte na **Importovat flotilu** — 11 nových vozidel se okamžitě přidá do vaší flotily
+
+---
+
+<Card title="Správa vozového parku" icon="truck" href="/cs/planner/fleet-management">
+  Spravujte vozidla, návěsy a řidiče — a po Smart Importu zde ověřte importované záznamy flotily.
+</Card>
+
+<Card title="Klienti" icon="building-2" href="/en/clients/clients-overview">
+  Zobrazte a upravte záznamy klientů vytvořené Smart Importem a přidejte kontakty a stálé pokyny.
+</Card>

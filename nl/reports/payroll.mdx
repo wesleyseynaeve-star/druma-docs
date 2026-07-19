@@ -1,0 +1,81 @@
+---
+title: "Chauffeurspayroll"
+description: "Genereer geautomatiseerde loonberekeningen per chauffeur op basis van gereden km, actieve dagen en wachturen."
+icon: "money-bill-wave"
+---
+
+## Overzicht
+
+Druma berekent chauffeursloon uit de operationele gegevens die het al vastlegt — gereden kilometers, gewerkte dagen en geregistreerde wachturen. Er is geen apart tijdsregistratiesysteem; de gegevens stromen door vanuit orders en statustikken.
+
+Chauffeurspayroll vindt u onder de sectie **Finance**. Toegankelijk voor de rollen admin, company_admin en fleet_manager.
+
+---
+
+## Loonelementen
+
+Elke payrollrun berekent vier componenten:
+
+| Component | Basis |
+|---|---|
+| **Km-loon** | Beladen km × tarief per km |
+| **Leeg-km-loon** | Leeg-/deadhead-km × tarief per km × leeg-km-percentage (een configureerbaar aandeel van het beladen tarief, geen apart leeg-km-tarief — standaard 100%, d.w.z. hetzelfde betaald als beladen km) |
+| **Dagloon** | Actieve werkdagen × dagtarief |
+| **Wachtloon** | Totaal wachturen × wachtuurtarief |
+
+Het totaal is de som van alle vier componenten in EUR.
+
+---
+
+## Een payrollrun genereren
+
+<Steps>
+  <Step title="Selecteer chauffeur en periode">
+    Kies de chauffeur uit de vervolgkeuzelijst en stel de start- en einddatum van de periode in. Typische periodes zijn een kalendermaand of een tweewekelijkse loonperiode.
+  </Step>
+  <Step title="Klik op Genereren">
+    Druma berekent alle vier loonelementen uit de orders en wachttijdlogs binnen de geselecteerde periode.
+  </Step>
+  <Step title="Controleer de uitsplitsing">
+    Het resultaat toont elk component apart zodat u de cijfers kunt verifiëren voor het exporteren.
+  </Step>
+  <Step title="Exporteer naar CSV">
+    Klik op **CSV exporteren** om de payrollsamenvatting te downloaden voor gebruik in uw boekhoud- of payrollsysteem.
+  </Step>
+</Steps>
+
+---
+
+## Tarieven configureren
+
+Looncomponenten (tarief per km, dagtarief, leeg-km-percentage, wachtuurtarief) worden per chauffeur opgeslagen — met een bedrijfsbrede standaardregel die geldt voor elke chauffeur zonder eigen regel — in de onderliggende payrollregelstabel.
+
+<Note>
+Er is momenteel geen in-app scherm om deze tarieven te bekijken of te bewerken. Tarieven moeten rechtstreeks in de database worden ingesteld (of vooraf geladen) tot een Vloot → Chauffeurs-tarieven-UI verschijnt. Heeft een chauffeur geen regel en bestaat er geen bedrijfsstandaard, dan berekent elk component voor die chauffeur als nul.
+</Note>
+
+---
+
+## Historische runs
+
+Elke gegenereerde payrollrun wordt opgeslagen en vermeld onder het record van de chauffeur. U kunt elke vorige run heropenen om te controleren of opnieuw te exporteren.
+
+---
+
+## Grafiek maandelijkse totalen
+
+Een staafdiagram onder de chauffeurskiezer toont totale maandelijkse payrollbedragen voor de geselecteerde chauffeur over de afgelopen 12 maanden. Nuttig om seizoenspatronen of maanden met ongewoon hoge wachtkosten te herkennen.
+
+---
+
+<Note>
+Payrollcijfers in Druma zijn adviserend — Druma integreert niet met payrollverwerkers of belastingdiensten. De CSV-export is bedoeld voor import in uw payrollsysteem of voor handmatige review door een boekhouder.
+</Note>
+
+<Card title="Wachttijd" icon="clock" href="/nl/planner/waiting-time">
+  Leer hoe wachttijd wordt geregistreerd en hoe ze de payrollberekeningen voedt.
+</Card>
+
+<Card title="Verspilde rit" icon="triangle-exclamation" href="/nl/planner/wasted-journey">
+  Lege kilometers van verspilde ritten verschijnen ook in chauffeurspayrollrecords.
+</Card>

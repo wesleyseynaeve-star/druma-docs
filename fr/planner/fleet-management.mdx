@@ -6,43 +6,47 @@ icon: "truck"
 
 ## Vue d'ensemble
 
-Votre flotte est le fondement de tout dans Druma. Avant de pouvoir affecter des camions aux commandes, vous devez ajouter chaque véhicule au système.
+Votre flotte est le fondement de tout dans Druma. Avant de pouvoir affecter des camions aux commandes, vous devez ajouter chaque véhicule au système avec ses détails. Cela prend quelques minutes par camion et vous n'avez besoin de le faire qu'une seule fois.
 
-Accédez à **Flotte → Véhicules** pour gérer vos véhicules.
+Accédez à **Flotte → Camions** pour gérer vos véhicules.
+
+<Frame caption="Flotte → Camions — la liste des véhicules, avec plaque, norme Euro, et type de remorque en un coup d'œil.">
+  <img src="/images/planner/fleet-management.png" alt="Page Flotte Camions listant les véhicules" />
+</Frame>
 
 ---
 
 ## Ajouter un nouveau véhicule
 
-Cliquez sur **Ajouter un véhicule** dans le coin supérieur droit de la page Flotte.
+Cliquez sur **Ajouter un camion** dans le coin supérieur droit de la page Flotte pour ouvrir le formulaire véhicule.
 
 <Steps>
   <Step title="Saisissez la plaque d'immatriculation">
-    Tapez le numéro de plaque exactement tel qu'il apparaît sur les documents du véhicule.
+    Tapez le numéro de plaque exactement tel qu'il apparaît sur les documents du véhicule. C'est ainsi que vous recherchez et identifiez le camion dans tout Druma.
   </Step>
-  <Step title="Choisissez le type de véhicule">
-    Sélectionnez le type qui décrit le mieux ce véhicule : tracteur / semi-remorque, camion rigide, fourgonnette ou plateau.
+  <Step title="Définissez la catégorie de véhicule (optionnel)">
+    Il n'y a pas d'étape « type de véhicule » à choix libre — à la place, **Catégorie de véhicule** est une classification de réception par type UE : laissez non défini pour un **poids lourd (HGV)** standard (par défaut), ou choisissez **N1 — VUL ≤3,5t**, **N2 — VUL 3,5–12t**, ou **N3 — poids lourd >12t** si vous avez besoin d'un traitement spécifique VUL pour les heures de conduite ou la conformité. Il y a un champ **Type de carrosserie** en texte libre séparé si vous voulez noter « Tracteur », « Rigide », « Fourgon », etc. pour votre propre référence.
   </Step>
   <Step title="Choisissez le type de remorque">
-    Options : bâchée, frigorifique, plateau, citerne, conteneur, tautliner, méga.
+    Sélectionnez parmi les types de remorque configurés de votre entreprise — par défaut : **Tautliner, Méga, Caisse, Frigo, Plateau, Citerne, Surbaissé, Bâchée, Châssis conteneur, Silo, Porte-engins**. Cette liste est configurable par entreprise, la vôtre peut donc différer.
   </Step>
-  <Step title="Définissez la norme Euro d'émission">
-    Sélectionnez la norme Euro du véhicule (Euro 3 à Euro 6). Vérifiez le document d'immatriculation si vous n'êtes pas sûr.
+  <Step title="Définissez la norme d'émission Euro">
+    Sélectionnez la **Norme Euro** du véhicule — **Euro 1** à **Euro 6**, plus **Euro 6d** et **EEV**. Cette information est utilisée dans le reporting des émissions CO2 et peut affecter le routage à travers les zones à faibles émissions. Vérifiez le certificat d'immatriculation du véhicule si vous n'êtes pas sûr.
   </Step>
   <Step title="Saisissez les dimensions et le poids">
-    - **Hauteur (m)** — Hauteur maximale du véhicule avec chargement.
-    - **Poids (tonnes)** — Poids total autorisé en charge maximum.
-    - **Charge utile max (kg)** — Le poids maximum de cargaison que ce véhicule peut légalement transporter.
-    - **Nombre d'essieux** — Nombre total d'essieux.
+    - **Hauteur (m)** — hauteur maximale du véhicule incluant le chargement. Utilisée par le routage camion PTV pour éviter les ponts bas.
+    - **Poids max kg** — le poids maximum de cargaison/charge utile autorisé.
+    - **PTAC kg** — poids total en charge du véhicule, utilisé par le routage camion PTV pour les routes à restriction de poids.
+    - **Nombre d'essieux** — nombre total d'essieux. Utilisé pour le routage à travers les routes à restrictions d'essieux.
   </Step>
   <Step title="Saisissez le coût fixe journalier">
-    Le **Coût fixe journalier (€/jour)** est ce que ce camion coûte à faire fonctionner indépendamment de son déplacement — assurance, amortissement, financement, taxes.
+    Le **Coût fixe journalier (€/jour)** est ce que ce camion coûte à faire fonctionner indépendamment de son déplacement — assurance, amortissement, paiements de financement, taxes, etc. Saisissez votre meilleure estimation. Ce chiffre est utilisé dans les rapports de rentabilité pour vous montrer si chaque commande gagne réellement de l'argent après les coûts fixes.
   </Step>
   <Step title="Définissez la date d'expiration du certificat ADR">
-    Si ce véhicule est certifié pour transporter des marchandises dangereuses, saisissez la date d'expiration du certificat ADR.
+    Si ce véhicule est certifié pour transporter des marchandises dangereuses, saisissez la date d'expiration du certificat ADR. Druma vous alertera avant son expiration pour que vous ayez le temps de le renouveler.
   </Step>
   <Step title="Enregistrez le véhicule">
-    Cliquez sur **Enregistrer**.
+    Cliquez sur **Enregistrer**. Le véhicule est maintenant actif et apparaîtra dans les listes déroulantes d'affectation de camion lors de la création de commandes.
   </Step>
 </Steps>
 
@@ -50,65 +54,90 @@ Cliquez sur **Ajouter un véhicule** dans le coin supérieur droit de la page Fl
 
 ## Véhicules actifs et inactifs
 
-Chaque véhicule dispose d'un bouton bascule **Actif / Inactif**.
+Chaque véhicule dispose d'une bascule **Actif / Inactif** en haut de sa page de profil.
 
-- **Actif** — Le véhicule apparaît dans les listes déroulantes d'affectation et sur le tableau de planification.
-- **Inactif** — Le véhicule est masqué des flux de travail de répartition.
+- **Actif** — le véhicule apparaît dans les listes déroulantes d'affectation et sur le tableau de planification.
+- **Inactif** — le véhicule est masqué des flux de travail de répartition. Utilisez cela pour les camions que vous avez vendus, définitivement retirés, ou garés de façon saisonnière.
 
 <Note>
-La désactivation d'un véhicule ne supprime pas son historique de commandes.
+Désactiver un véhicule ne supprime pas son historique de commandes. Toutes les commandes passées restent liées au véhicule et apparaissent dans les rapports. Vous pouvez le réactiver à tout moment.
 </Note>
 
 ---
 
-## Marquer un véhicule comme indisponible
+## Quand un véhicule est temporairement indisponible
 
-Utilisez la fonctionnalité **Indisponibilité** pour bloquer un camion temporairement (atelier, panne, entretien).
+Druma n'a pas de formulaire manuel « marquer ce camion indisponible pour une plage de dates ». À la place, les périodes d'indisponibilité sont créées automatiquement depuis le côté sécurité critique des opérations de flotte : une inspection post-trajet (DVIR) d'un chauffeur qui signale un défaut ouvre un ordre de travail atelier, et un ordre de travail ouvert bloque ce camion de la planification jusqu'à sa résolution.
 
-<Steps>
-  <Step title="Ouvrez le profil du véhicule">
-    Accédez à Flotte → Véhicules et cliquez sur le camion à bloquer.
-  </Step>
-  <Step title="Cliquez sur Ajouter une indisponibilité">
-    Trouvez la section **Indisponibilité** et cliquez sur **Ajouter**.
-  </Step>
-  <Step title="Définissez la plage de dates et la raison">
-    Saisissez la date de début, la date de retour prévue et une raison.
-  </Step>
-  <Step title="Enregistrer">
-    Cliquez sur **Enregistrer**.
-  </Step>
-</Steps>
+<Note>
+Si vous avez besoin qu'un camion soit hors service pour une raison qui ne passe pas par un défaut DVIR/atelier (par ex. un entretien planifié que vous programmez manuellement), l'équivalent le plus proche aujourd'hui est de le basculer sur **Inactif** pour la période et de le réactiver ensuite — voir ci-dessus.
+</Note>
+
+---
+
+## Consulter l'historique et le statut actuel d'un véhicule
+
+Cliquez sur n'importe quel véhicule dans la liste pour ouvrir son profil complet. Depuis là, vous pouvez voir :
+
+- **Affectation actuelle** — sur quelle commande le camion se trouve actuellement, le cas échéant.
+- **Historique de commandes** — une liste complète de toutes les commandes terminées et actives pour ce véhicule, filtrable par date.
+- **Statut d'expiration des documents** — un résumé de tous les documents liés et leurs dates d'expiration (voir Documents de flotte pour le détail).
+- **Périodes d'indisponibilité** — blocages passés et à venir créés par des ordres de travail atelier (voir ci-dessus).
 
 ---
 
 ## Import en masse de véhicules
 
-Si vous configurez Druma pour la première fois avec une grande flotte, vous pouvez importer tous les véhicules à la fois via un fichier CSV.
+Si vous configurez Druma pour la première fois et avez une grande flotte, vous pouvez importer tous les véhicules à la fois à l'aide d'un fichier Excel plutôt que de les ajouter un par un.
 
 <Steps>
   <Step title="Téléchargez le modèle d'import">
-    Accédez à **Flotte → Véhicules → Importer** et cliquez sur **Télécharger le modèle**.
+    Accédez à **Flotte → Camions → Importer** et cliquez sur **Télécharger le modèle**. Cela vous donne un fichier Excel (.xlsx) avec tous les en-têtes de colonnes corrects : Plaque (obligatoire), Nom, Marque, Modèle, Année, Norme Euro, Type de carburant, et Type de remorque.
   </Step>
   <Step title="Remplissez le modèle">
-    Ajoutez un véhicule par ligne. Les colonnes obligatoires sont la plaque, le type de véhicule et le type de remorque.
+    Ouvrez-le dans Excel ou Google Sheets. Ajoutez un véhicule par ligne — seule la **Plaque** est obligatoire, tout le reste est optionnel.
   </Step>
-  <Step title="Téléchargez le fichier">
-    Cliquez sur **Télécharger CSV** et sélectionnez votre fichier complété.
+  <Step title="Téléversez le fichier">
+    Retournez dans Druma et téléversez votre fichier complété. Druma validera chaque ligne et vous montrera toute erreur avant l'import.
   </Step>
   <Step title="Vérifiez et confirmez">
-    Vérifiez l'aperçu et cliquez sur **Importer**.
+    Vérifiez l'aperçu des véhicules à importer. Si tout semble correct, cliquez sur **Importer**. Les véhicules sont ajoutés immédiatement.
   </Step>
 </Steps>
 
 <Warning>
-Le processus d'import ne met pas à jour les véhicules existants — il ne crée que de nouveaux. Les plaques déjà existantes dans Druma seront ignorées.
+Le processus d'import ne met pas à jour les véhicules existants — il ne fait que créer de nouveaux véhicules. Si vous téléversez un fichier avec un numéro de plaque déjà existant dans Druma, cette ligne sera ignorée avec une erreur.
 </Warning>
 
-<Card title="Gestion des remorques" icon="trailer" href="/fr/planner/trailer-management">
-  Gérez les remorques non attachées en permanence à un tracteur.
-</Card>
+---
 
-<Card title="Documents de flotte" icon="file" href="/fr/fleet-compliance/fleet-documents">
-  Suivez les assurances, certificats et autres documents de véhicules avec des alertes d'expiration automatiques.
-</Card>
+## Onglet Carte de flotte
+
+Dans la liste Camions, il y a un onglet **Carte** en haut de la page. Cliquez dessus pour basculer de la vue liste vers une carte en direct montrant tous les véhicules avec positions GPS.
+
+Chaque camion s'affiche avec le même marqueur graphite portant son numéro de plaque — il n'y a pas de code couleur par statut. Les remorques ont leur propre marqueur gris plus foncé, et les véhicules proches se regroupent en un seul marqueur numéroté jusqu'à ce que vous zoomiez.
+
+Cliquez sur n'importe quel marqueur pour ouvrir le panneau de détail du véhicule. Voir [Carte des parkings poids lourd](/en/tools/parking-map) pour le détail complet sur la vue carte, les couches, et la recherche de parking sécurisé le long d'un itinéraire.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Gestion des remorques" icon="trailer" href="/fr/planner/trailer-management">
+    Gérez les remorques qui ne sont pas attachées en permanence à un seul tracteur.
+  </Card>
+  <Card title="Documents de flotte" icon="file" href="/fr/fleet-compliance/fleet-documents">
+    Suivez les assurances, certificats d'aptitude technique, et autres documents véhicule avec des alertes d'expiration automatiques.
+  </Card>
+  <Card title="Pneus de flotte" icon="circle" href="/fr/fleet-compliance/tyres">
+    Suivez l'état des pneus, la profondeur de bande, et les coûts de remplacement par véhicule.
+  </Card>
+  <Card title="Incidents de flotte" icon="triangle-exclamation" href="/fr/fleet-compliance/incidents">
+    Enregistrez les accidents, dommages, et sinistres d'assurance pour votre flotte.
+  </Card>
+  <Card title="DVIR post-trajet" icon="clipboard-check" href="/fr/fleet-compliance/post-trip-dvir">
+    Rapports d'inspection véhicule par le chauffeur et comment les défauts critiques pour la sécurité déclenchent des ordres de travail atelier.
+  </Card>
+  <Card title="Importer votre flotte" icon="upload" href="/fr/bulk-import/importing-fleet">
+    Guide étape par étape pour importer véhicules et chauffeurs depuis un tableur lors de votre première configuration de Druma.
+  </Card>
+</CardGroup>

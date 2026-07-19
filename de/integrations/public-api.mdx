@@ -1,55 +1,48 @@
 ---
-title: "Public API und Webhooks"
-description: "Verbinden Sie Druma mit Ihrem eigenen ERP, Kundenportal oder benutzerdefinierten Anwendungen über die REST-API und Webhook-Ereignisbenachrichtigungen."
+title: "Public API"
+description: "Schreibgeschützter REST-Zugriff auf Ihre Aufträge — verbinden Sie Druma mit Ihrem eigenen ERP, Kundenportal oder Berichtstools."
 icon: "code"
 ---
 
-## Übersicht
+Die Druma Public API gibt Ihnen **schreibgeschützten** REST-Zugriff auf Ihre Aufträge — nützlich für ein Kunden-Selbstbedienungsportal, ein BI-/Berichtstool, oder interne Werkzeuge, die Ihr Team gebaut hat.
 
-Die Druma Public API ermöglicht es Entwicklern, Druma-Daten in externe Systeme zu integrieren. Sie können Auftragserstelle-, Statusabfrage- und Eventbenachrichtigungs-Workflows aufbauen.
-
----
+<Warning>
+Die Public API ist eine per Feature-Flag gesteuerte Funktion und standardmäßig nicht aktiviert. Kontaktieren Sie **support@druma.io**, um Zugang zu beantragen — API-Schlüssel werden derzeit direkt von Druma bereitgestellt; es gibt keinen Selbstbedienungsbildschirm zur Schlüsselerzeugung in der App.
+</Warning>
 
 ## Authentifizierung
 
-Die API verwendet Bearer-Token-Authentifizierung. Generieren Sie Ihren API-Schlüssel in **Einstellungen → Integrationen → API**.
-
-```http
-Authorization: Bearer your_api_key
-```
-
----
-
-## Basis-URL
+Jede API-Anfrage muss Ihren API-Schlüssel im Header `X-API-Key` enthalten:
 
 ```
-https://api.druma.io/v1/
+X-API-Key: IHR_API_SCHLÜSSEL
 ```
 
----
+Anfragen ohne gültigen Schlüssel erhalten eine `401 Unauthorized`-Antwort. Bearer-Token-Authentifizierung (`Authorization: Bearer ...`) wird **nicht** unterstützt und gibt ebenfalls 401 zurück.
 
-## Endpunkte
+## Verfügbare Endpunkte
 
-| Endpunkt | Methode | Beschreibung |
+Die API ist schreibgeschützt — nur `GET`-Anfragen werden akzeptiert. Alle Antworten sind JSON.
+
+| Methode | Endpunkt | Beschreibung |
 |---|---|---|
-| `/orders` | GET | Aufträge mit Filtern auflisten |
-| `/orders/{id}` | GET | Auftragsdetails abrufen |
-| `/orders` | POST | Neuen Auftrag erstellen |
-| `/orders/{id}/status` | PATCH | Auftragsstatus aktualisieren |
-| `/vehicles` | GET | Fahrzeugliste abrufen |
-| `/drivers` | GET | Fahrerliste abrufen |
+| `GET` | `/orders` | Aufträge auflisten (paginiert, optionaler `status`-Filter) |
+| `GET` | `/orders/{id}` | Auftragsdetails |
+| `GET` | `/orders/{id}/location` | Aktuelle LKW-Position und neueste ETA |
+| `GET` | `/orders/{id}/documents` | Dokumentenliste mit zeitlich begrenzten, signierten Download-URLs |
 
----
+Jede andere Ressource oder jede Nicht-GET-Methode gibt einen `404`-/`405`-Fehler zurück.
 
-## Webhooks
+## Ratenlimits
 
-Konfigurieren Sie Webhook-Endpunkte, um Echtzeitbenachrichtigungen zu erhalten, wenn:
-- Ein Auftrag den Status ändert
-- Ein Auftrag zugestellt wird
-- Eine Rechnung gesendet wird
+- **100 Anfragen pro Minute** pro API-Schlüssel
+- Überschreiten Sie das Limit, erhalten Sie eine `429 Too Many Requests`-Antwort mit einem `Retry-After`-Header, der angibt, wie viele Sekunden zu warten sind
+- Es werden keine weiteren Ratenlimit-Header zurückgegeben
 
-Konfigurieren Sie Webhooks in **Einstellungen → Integrationen → Webhooks**.
+Für höhere Limits kontaktieren Sie support@druma.io mit Ihrem Anwendungsfall.
 
-<Card title="Client-API-Integration" icon="plug" href="/en/integrations/client-api">
-  Ermöglichen Sie Kunden, Aufträge direkt in Druma einzureichen.
-</Card>
+<CardGroup cols={1}>
+  <Card title="Übersicht Integrationseinrichtung" icon="plug" href="/de/admin/integration-setup">
+    Übersicht aller Druma-Integrationen und wie Sie diese über das Einstellungspanel verwalten.
+  </Card>
+</CardGroup>

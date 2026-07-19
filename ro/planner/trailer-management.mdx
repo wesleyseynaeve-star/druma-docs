@@ -1,11 +1,175 @@
 ---
 title: "Gestionarea remorcilor"
-description: "Gestioneaza remorcile ca active independente."
-icon: "truck-ramp-box"
+description: "Gestioneaza remorcile care nu sunt cuplate permanent la un singur cap tractor, inclusiv atribuire, disponibilitate si documente."
+icon: "trailer"
 ---
 
-Mergi la **Camioane -> Remorci**.
+## Ai nevoie de gestionare independenta a remorcilor?
 
-Apasa **Adauga Remorca**: numar inmatriculare, tip, dimensiuni interne, capacitate, volum, LDM maxim.
+Inainte sa aprofundezi, merita sa verifici daca aceasta functie se aplica operatiunii tale.
 
-Druma actualizeaza automat locatia remorcii la fiecare livrare. Atasare la tractor: **Camioane -> Vehicule -> [vehicul] -> Remorca atasata**.
+**Ai nevoie de gestionare independenta a remorcilor daca:** Tractoarele tale schimba regulat remorcile — de exemplu, un sofer lasa o remorca incarcata la un hub si preia una diferita, sau remorcile circula intre tractoare in functie de misiune.
+
+**Probabil nu ai nevoie daca:** Fiecare din camioanele tale foloseste intotdeauna aceeasi remorca si nu sunt niciodata separate. In acest caz, seteaza pur si simplu tipul de remorca pe inregistrarea vehiculului si gata. Vezi [Gestionarea flotei](/ro/planner/fleet-management) pentru cum faci asta.
+
+Daca chiar rulezi o operatiune cu schimb de remorci sau cu remorci multiple, continua sa citesti.
+
+<Frame caption="Flota → Remorci — 11 tipuri initializate, complet configurabile per companie.">
+  <img src="/images/planner/trailer-management.png" alt="Pagina de Gestionare Remorci" />
+</Frame>
+
+---
+
+## Adaugarea unei remorci
+
+Mergi la **Flota → Remorci** si apasa **Adauga Remorca**.
+
+Completeaza detaliile remorcii:
+
+- **Numar de inmatriculare sau ID** — Placa de inmatriculare a remorcii. Daca remorca ta nu are placa (unele remorci interne nu au), foloseste propriul tau cod ID intern.
+- **Tip remorca** — Alege tipul care se potriveste caroseriei remorcii. Druma initializeaza 11 tipuri implicite pentru fiecare companie:
+  - Tautliner
+  - Mega
+  - Cutie
+  - Reefer
+  - Platforma
+  - Cisterna
+  - Lowboy
+  - Curtainside
+  - Sasiu container
+  - Silo
+  - Lowloader
+
+  Lista este complet configurabila per companie — un admin poate redenumi, dezactiva sau adauga tipuri in **Setari → Tipuri de Remorca**.
+- **Anul fabricatiei** — Anul de constructie al remorcii. Util pentru urmarirea varstei si planificarea inlocuirilor.
+- **Capacitate** — Capacitatea de sarcina utila a remorcii, in kilograme.
+- **Certificata ADR** — Seteaza la **Da** daca aceasta remorca este certificata pentru transportul de marfuri periculoase. Certificarea ADR este verificata automat cand atribui aceasta remorca unei comenzi marcate ADR.
+- **Locatia curenta** — Introdu o descriere in text liber a locului unde se afla remorca acum, precum "Depozit Timisoara" sau "Depozit client Cluj". Se actualizeaza automat ulterior, la livrare si la detasarea de camion — vezi [Urmarirea locatiei remorcii](#urmarirea-locatiei-remorcii) mai jos.
+
+Apasa **Salveaza** cand ai terminat.
+
+---
+
+## Atasarea unei remorci la un camion
+
+O remorca poate fi atribuita unui singur camion la un moment dat. Exista doua moduri de a atasa o remorca:
+
+### Optiunea 1 — La crearea unei comenzi
+
+Cand completezi o comanda pentru o misiune **Camion Propriu**, dupa ce selectezi tractorul, apare o lista derulanta **Remorca**. Cauta dupa placa sau ID si selecteaza remorca pe care vrei sa o folosesti pentru aceasta misiune. Remorca este marcata automat ca atribuita, pe durata comenzii.
+
+### Optiunea 2 — Din pagina de detaliu a remorcii
+
+<Steps>
+  <Step title="Deschide profilul remorcii">
+    Mergi la **Flota → Remorci** si apasa remorca pe care vrei sa o atribui.
+  </Step>
+  <Step title="Apasa Atribuie la Camion">
+    Gaseste sectiunea **Atribuire Curenta** si apasa **Atribuie la Camion**.
+  </Step>
+  <Step title="Selecteaza camionul">
+    Cauta tractorul dupa numarul de inmatriculare. Sunt afisate doar vehiculele active.
+  </Step>
+  <Step title="Seteaza perioada de atribuire">
+    Introdu data de inceput. Poti lasa data de sfarsit necompletata, daca inca nu stii cand va fi detasata remorca.
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Confirma Atribuirea**. Remorca va aparea acum ca atribuita pe tabla de planificare.
+  </Step>
+</Steps>
+
+---
+
+## Detasarea unei remorci
+
+Cand o comanda este finalizata, Druma elibereaza automat atribuirea remorcii. Poti detasa si o remorca manual, oricand:
+
+<Steps>
+  <Step title="Deschide profilul remorcii">
+    Mergi la Flota → Remorci si apasa remorca.
+  </Step>
+  <Step title="Apasa Detaseaza">
+    In sectiunea Atribuire Curenta, apasa **Detaseaza Remorca**.
+  </Step>
+  <Step title="Confirma">
+    Confirma detasarea. Statusul remorcii revine la **Disponibila** si poate fi atribuita unui alt camion.
+  </Step>
+</Steps>
+
+<Warning>
+Daca detasezi o remorca in timp ce o comanda este inca activa (soferul este in tranzit), comanda ramane legata de remorca in scopuri de evidenta. Detasarea afecteaza doar atribuirile viitoare.
+</Warning>
+
+---
+
+## Vizualizarea disponibilitatii remorcilor
+
+Lista de remorci de la **Flota → Remorci** are trei taburi de filtrare rapida:
+
+- **Toate** — Fiecare remorca din flota ta.
+- **Disponibile** — Remorci neatribuite momentan niciunui camion sau comenzi. Sunt gata de dispecerizare.
+- **Atribuite** — Remorci atasate momentan unui camion sau in folosinta pe o comanda activa.
+
+Apasa orice remorca pentru a-i vedea istoricul complet de atribuire — pe ce camioane a fost, ce comenzi a finalizat si cand.
+
+---
+
+## Documentele remorcii
+
+Remorcile au nevoie de propriile acte — asigurare, certificate de inspectie tehnica si certificate ADR, daca este cazul. Acestea sunt urmarite separat de documentele vehiculului.
+
+Pentru a adauga un document la o remorca:
+
+<Steps>
+  <Step title="Deschide profilul remorcii">
+    Mergi la Flota → Remorci si selecteaza remorca.
+  </Step>
+  <Step title="Mergi la tabul Documente">
+    Apasa tabul **Documente** din profilul remorcii.
+  </Step>
+  <Step title="Incarca documentul">
+    Apasa **Adauga Document**, selecteaza tipul de document, introdu data de expirare si incarca o scanare sau fotografie a certificatului.
+  </Step>
+</Steps>
+
+Druma te va alerta pe Tabloul de bord Acasa si prin email, cand un document de remorca se apropie de data expirarii. Perioada implicita de avertisment este de 30 de zile, pe care o poti schimba in **Setari → Notificari**.
+
+<Note>
+Daca certificatul ADR al unei remorci expira si ai comenzi marcate ADR atribuite ei, Druma va semnala comanda cu un avertisment. Nu va bloca dispecerarea, dar avertismentul este inregistrat.
+</Note>
+
+---
+
+## Urmarirea locatiei remorcii
+
+Druma urmareste locatiile remorcilor prin trei surse, fiecare inregistrata cu un indicator de **sursa locatie**:
+
+### Automat: la livrare
+
+Cand o comanda este marcata **Livrata**, Druma actualizeaza automat locatia remorcii la adresa ultimei opriri de descarcare. Sursa locatiei este setata la **Livrare Comanda**. Asta inseamna ca, dupa fiecare livrare finalizata, pozitia remorcii este actuala, fara nicio introducere manuala.
+
+### Automat: la detasarea de camion
+
+Cand detasezi o remorca de un camion (fie manual, fie pentru ca acel camion este reatribuit), locatia remorcii este setata la ultima pozitie cunoscuta a camionului. Sursa locatiei este setata la **Detasare Camion**.
+
+### Actualizare manuala
+
+Dispecerii pot actualiza locatia remorcii oricand, din pagina de profil a remorcii. Campul **Locatie Curenta** suporta autocompletare de adrese HERE — incepe sa tastezi o adresa si selecteaza din sugestii, pentru coordonate precise. Sursa locatiei este setata la **Manual**.
+
+<Note>
+Urmarirea locatiei remorcii este limitata astazi la aceste trei surse — nu exista o integrare de urmaritor GPS care sa actualizeze automat pozitia unei remorci. Daca remorcile tale poarta propria unitate de telematica, acele date nu sunt momentan conectate la campul de locatie a remorcii din Druma.
+</Note>
+
+### Coloana de locatie in lista de remorci
+
+Lista de remorci de la **Flota → Remorci** include o coloana **Locatie**, care arata adresa curenta a fiecarei remorci si un marcaj temporal al ultimei actualizari a locatiei. Asta iti ofera o vedere la nivelul intregii flote, a locului unde se afla toate remorcile tale, fara sa deschizi profiluri individuale.
+
+---
+
+<Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+  Gestioneaza-ti tractoarele si camioanele rigide — adauga vehicule, seteaza dimensiuni si urmareste disponibilitatea.
+</Card>
+
+<Card title="Documente flota" icon="file" href="/ro/fleet-compliance/fleet-documents">
+  Urmareste si gestioneaza toate documentele de conformitate, atat pentru vehicule cat si pentru remorci, intr-un singur loc.
+</Card>

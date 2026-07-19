@@ -1,0 +1,79 @@
+---
+title: "Zwrot akcyzy paliwowej"
+description: "Śledź i generuj wnioski o zwrot unijnej akcyzy paliwowej dla Belgii i Rumunii na podstawie zaimportowanych danych kart paliwowych."
+icon: "gas-pump"
+---
+
+## Czym jest zwrot akcyzy paliwowej?
+
+Kilka państw członkowskich UE pozwala zawodowym operatorom transportu drogowego odzyskać część akcyzy zapłaconej za olej napędowy. Druma obsługuje dwa schematy:
+
+- **Belgia — Gasoil professionnel**: belgijscy przewoźnicy mogą odzyskać część akcyzy od oleju napędowego użytego do transportu zawodowego. Wnioski są składane kwartalnie do SPF Finances.
+- **Rumunia — zwrot TICAD za diesel**: rumuńscy przewoźnicy mogą odzyskać część akcyzy od oleju napędowego użytego w transporcie drogowym międzynarodowym i krajowym. Wnioski są składane do ANAF.
+
+Zwrot akcyzy paliwowej znajduje się w sekcji **Finanse**. Dostępny tylko dla ról **admin** i **company_admin** — fleet_manager nie ma dostępu do tego raportu.
+
+<Frame caption="Finanse → Akcyza paliwowa — schematy Belgii i Rumunii.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Strona Zwrot akcyzy paliwowej" />
+</Frame>
+
+---
+
+## Wymagania wstępne
+
+Ten raport wymaga wcześniejszego zaimportowania danych kart paliwowych. Bez rekordów tankowań nie ma litrów, wobec których można by liczyć.
+
+<Card title="Import kart paliwowych" icon="credit-card" href="/pl/integrations/fuel-card-import">
+  Importuj tankowania z DKV, UTA, AS24 i innych dostawców.
+</Card>
+
+---
+
+## Generowanie wniosku o zwrot
+
+<Steps>
+  <Step title="Wybierz kraj i okres">
+    Wybierz **Belgię** lub **Rumunię** z listy rozwijanej krajów, a następnie ustaw okres wniosku (typowo kwartał dla Belgii, miesiąc lub kwartał dla Rumunii).
+  </Step>
+  <Step title="Kliknij Generuj">
+    Druma pobiera wszystkie rekordy tankowań za okres kwalifikujące się w ramach wybranego schematu, oblicza łączne kwalifikujące się litry i mnoży przez bieżącą stawkę zwrotu dla tego kraju.
+  </Step>
+  <Step title="Przejrzyj wniosek">
+    Wynik pokazuje kwalifikujące się litry, stawkę zwrotu na litr i łączną kwotę zwrotu w EUR. Przejrzyj przed złożeniem.
+  </Step>
+  <Step title="Ustaw status i referencję">
+    Zmień status na **Złożony** i wpisz numer referencyjny urzędu otrzymany po złożeniu. To łączy rekord Druma z Twoim oficjalnym zgłoszeniem.
+  </Step>
+</Steps>
+
+---
+
+## Cykl życia statusu wniosku
+
+```
+Wersja robocza → Złożony → Zwrócony
+                        → Odrzucony
+```
+
+- **Wersja robocza** — obliczony, ale jeszcze niezłożony do urzędu
+- **Złożony** — wysłany do SPF Finances (BE) lub ANAF (RO); zapisany numer referencyjny
+- **Zwrócony** — otrzymano płatność; wpisz datę zwrotu
+- **Odrzucony** — wniosek został odrzucony; dodaj notatkę z powodem do dalszych działań
+
+---
+
+## Wykres kwot zwrotu
+
+Wykres obszarowy pokazuje kwoty zwrotu wg okresu w ciągu ostatnich 12 miesięcy. Przydatny do wykrywania sezonowych wzorców zużycia paliwa i planowania przepływów pieniężnych.
+
+---
+
+## Eksport CSV
+
+Kliknij **Eksportuj CSV**, aby pobrać szczegóły wniosku — podział tankowanie po tankowaniu, kwalifikujące się litry, stawkę i obliczony zwrot — do celów złożenia lub audytu.
+
+---
+
+<Warning>
+Druma oblicza kwalifikujące się litry z Twoich zaimportowanych danych kart paliwowych. To Twoja odpowiedzialność, aby zweryfikować, że wszystkie tankowania są prawidłowo zaimportowane i że stawka zwrotu odpowiada aktualnie opublikowanej stawce właściwego urzędu podatkowego, zanim złożysz wniosek.
+</Warning>

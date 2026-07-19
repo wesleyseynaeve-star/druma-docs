@@ -1,41 +1,108 @@
 ---
 title: "Facturare si abonament"
-description: "Gestioneaza-ti abonamentul Druma, locurile si facturarea."
+description: "Cum factureaza Druma compania ta — niveluri dupa numarul de vehicule, pool-ul de utilizare AI si facturarea nativa e-Factura."
 icon: "credit-card"
 ---
 
-Druma foloseste un model bazat pe locuri pentru vehicule si utilizatori, cu preturi pe niveluri de volum.
+Druma este **emitentul facturii** pentru abonamentul tau: fiecare taxa de platforma este facturata ca o **e-Factura romaneasca nativa** (ANAF/SPV) si platita prin **transfer bancar** cu termen net — nu exista card salvat, nu exista checkout Stripe si nu exista pret per utilizator. Utilizatorii de birou, soferii si conturile din portalul de client sunt intotdeauna gratuite; platesti pentru vehiculele active (daca ai flota proprie) sau pentru utilizarea platformei (daca esti forwarder/broker pur).
+
+<Note>
+Pentru preturile actuale, viziteaza [druma.io](https://druma.io) sau contacteaza support@druma.io.
+</Note>
+
+<Frame caption="Setari -> Facturare — preturi pe niveluri dupa numarul de vehicule, detaliere costuri si pool-ul de utilizare AI. Fara portal Stripe, fara pret per utilizator.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Panoul de setari de facturare cu detalierea costului abonamentului" />
+</Frame>
+
+---
 
 ## Perioada de proba gratuita
 
-Fiecare companie noua primeste **30 de zile de proba gratuita**. Nu este necesar card de credit.
+Fiecare companie noua primeste **30 de zile de proba gratuita**. Nu este necesar niciun card de credit sau detalii bancare pentru a incepe, iar toate functiile sunt disponibile integral in perioada de proba.
 
-## Vizualizarea facturii
+---
 
-Mergi la **Setari -> Facturare** si apasa **Deschide Portalul de Facturare**.
+## Modelul de preturi
 
-## Adaugarea sau eliminarea locurilor
+Compania ta este facturata dupa unul din cele doua arhetipuri:
 
-<Steps>
-  <Step title="Mergi la Setari -> Facturare">Apasa Gestioneaza Locurile.</Step>
-  <Step title="Ajusteaza locurile">Foloseste + si - pentru vehicule si utilizatori.</Step>
-  <Step title="Confirma">Apasa Salveaza Modificarile.</Step>
-</Steps>
+<Tabs>
+  <Tab title="Transportator cu flota proprie">
+    Daca operezi vehicule proprii, platesti:
+    - O taxa fixa **de baza de 25 €/luna** pentru companie.
+    - O **taxa pe nivel, per vehicul activ**. Vehiculele parcate sunt intotdeauna gratuite; facturarea are un prag minim de **3 vehicule active**. Numarul total de vehicule active determina un singur nivel, iar **toate** vehiculele active sunt facturate la rata acelui nivel (nu este un calcul marginal/cumulativ).
+    - O **alocare AI comuna la nivel de companie** (vezi mai jos).
 
-<Warning>
-Nu poti reduce locurile sub numarul de vehicule sau utilizatori activi.
-</Warning>
+    | Nivel | Vehicule active | Lunar / vehicul | Anual / vehicul |
+    |------|---------------|------------------|-----------------|
+    | Starter | 3–9 | 41 € | 34 € |
+    | Growth | 10–24 | 38 € | 32 € |
+    | Scale | 25–49 | 36 € | 30 € |
+    | Pro | 50–74 | 34 € | 28 € |
+    | Enterprise | 75+ | 30 € | 25 € |
+  </Tab>
+  <Tab title="Forwarder / broker">
+    Daca nu operezi flota proprie, nu exista pool de vehicule si nici taxa de baza — platesti doar utilizare: **maximul dintre 25 €/luna sau costul de utilizare masurata × 2.5**.
+  </Tab>
+</Tabs>
 
-## Sfarsitul perioadei de proba
+Arhetipul tau este setat pe cont; contacteaza support@druma.io daca crezi ca al tau este setat gresit.
 
-- Ziua 31: email de solicitare a metodei de plata
-- 7 zile gratie: dispecerizarea si eCMR sunt blocate
-- Dupa gratie: cont suspendat, datele pastrate
+---
 
-## Facturare eCMR
+## Pagina de facturare
 
-eCMR este inclus în abonamentul tău Druma fără costuri suplimentare. Nu există taxă per document și nici limită de utilizare — semnează atât de multe eCMR-uri câte are nevoie operațiunea ta.
+Mergi la **Setari → Facturare** pentru a vedea planul tau, detalierea costurilor, utilizarea AI si istoricul facturilor.
 
-Poți vizualiza în continuare statisticile de utilizare eCMR pentru perioada curentă la **Setări → Facturare** în secțiunea **Utilizare**.
+### Prezentare plan
 
-<Card title="Contacteaza Suportul" icon="headset" href="mailto:support@druma.io">Email: support@druma.io</Card>
+Partea de sus a paginii arata statusul contului (**Activ**, **Proba**, **Restanta**, sau **Suspendat**), arhetipul tau, intervalul de facturare, numarul de vehicule active curent, data urmatoarei facturi si suma proiectata pentru perioada curenta. Daca ai un sold deschis, neplatit pe o factura anterioara, un banner arata suma restanta si numarul de zile de intarziere.
+
+### Facturare lunara vs. anuala
+
+Companiile cu flota proprie pot alterna intre facturarea **Lunara** si **Anuala** din comutatorul de interval de pe pagina de Facturare.
+
+- **Anual**: platesti 10 luni, primesti 12 — taxa de baza a companiei si abonamentul per vehicul sunt platite anticipat pentru un an, ca o singura e-Factura. Depasirile de utilizare (pool AI) sunt facturate in continuare lunar, in urma.
+- **Lunar**: abonamentul se reinnoieste in fiecare luna. Daca adaugi vehicule in mijlocul ciclului, costul suplimentar este facturat in urma, pe urmatoarea factura.
+
+Companiile forwarder/broker sunt intotdeauna facturate lunar, pay-as-you-go — nu exista optiune anuala, deoarece nu exista abonament de vehicule de platit anticipat.
+
+### Detalierea costurilor
+
+Sub prezentarea planului, un tabel arata exact cum este construita taxa proiectata: taxa de baza a platformei, numarul de vehicule × rata nivelului si (pentru planurile anuale) formula "platesti 10, primesti 12". Preturile afisate sunt fara TVA.
+
+### Plafon de facturare pentru vehicule
+
+Companiile cu flota proprie (cu permisiune de editare a facturarii) pot seta un **plafon optional de facturare pentru vehicule** — un numar maxim de vehicule active pentru care vor fi facturate, intre **3 si 500**. Daca numarul de vehicule active atinge sau depaseste plafonul, pagina arata un avertisment inainte sa activezi mai multe vehicule. Lasa gol pentru fara plafon.
+
+### Utilizare si alocare (pool AI)
+
+Fiecare companie cu vehicule active primeste o **alocare AI comuna**: `5 € de baza + 1.00 € × vehicule active`. Toata utilizarea AI masurata din contul tau — extragere documente, sigilare eCMR, Ask Druma, informatii KPI — este scazuta din acest **pool unic, comun**; numarul de vehicule doar dimensioneaza pool-ul, nu atribuie utilizarea unor vehicule individuale. O bara de progres arata cat din pool-ul lunii curente ai folosit.
+
+Utilizarea peste pool nu este blocata — Druma nu intrerupe niciodata serviciul in mijlocul lunii. Este pur si simplu facturata ca depasire la **cost × 2.5** pe urmatoarea factura.
+
+### Plafoane AI per functie
+
+Sub pool, o sectiune **Functii AI si utilizare** listeaza fiecare functie AI masurata, activata optional, cu utilizarea din luna curenta si un maxim lunar editabil (in €) pentru a plafona cheltuiala pe acea functie specifica.
+
+### Facturi
+
+Un tabel de **Facturi** listeaza facturile de platforma pe perioada, cu sumele de TVA si total, statusul (Previzualizare, Emisa, Platita, Restanta), data scadentei si un link catre factura, acolo unde e disponibil. Facturile sunt emise ca e-Factura romaneasca in EUR, cu linia de TVA afisata si in RON la cursul Bancii Nationale a Romaniei (BNR).
+
+### Plata
+
+O sectiune de **Plata** arata detaliile bancare pentru plata (beneficiar, IBAN, referinta platii) si termenele tale nete de plata. Nu exista optiune de plata cu cardul — achita fiecare e-Factura prin transfer bancar folosind referinta afisata.
+
+---
+
+## Conturi suspendate
+
+Daca contul tau este suspendat, tot accesul in aplicatie este inlocuit cu un singur ecran care cere sa rezolvi soldul restant; un buton deschide direct **Setari → Facturare**. Autentificarea functioneaza in continuare — doar spatiul de lucru in sine este blocat. Daca crezi ca ontul tau a fost suspendat din greseala, contacteaza support@druma.io.
+
+---
+
+## Ai nevoie de ajutor cu facturarea?
+
+<Card title="Contacteaza Suportul" icon="headset" href="mailto:support@druma.io">
+  Pentru intrebari de facturare, dispute sau solicitari de facturi, scrie la support@druma.io. Include numele companiei si numarul de TVA. Raspundem in maximum o zi lucratoare.
+</Card>

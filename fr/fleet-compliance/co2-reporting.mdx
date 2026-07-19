@@ -1,50 +1,131 @@
 ---
 title: "Rapport CO2"
-description: "Comment Druma calcule les émissions de CO2 par commande et génère des rapports d'empreinte carbone pour votre flotte."
+description: "Comment Druma calcule les émissions de carbone par commande et par véhicule, et comment générer des rapports CO2 pour les clients et les déclarations ESG."
 icon: "leaf"
 ---
 
-## Vue d'ensemble
-
-Druma calcule automatiquement les émissions de CO2 pour chaque commande à partir de la distance d'itinéraire HERE et de la norme Euro du véhicule utilisé.
-
-Ces données alimentent le rapport CO2 de la flotte et peuvent être partagées avec les clients qui ont besoin de données de durabilité pour leur reporting ESG.
+Les grands chargeurs — détaillants, industriels, acheteurs de logistique — exigent de plus en plus que leurs transporteurs déclarent l'empreinte carbone de chaque expédition. Druma calcule automatiquement les émissions de CO2 par commande et fournit des rapports téléchargeables pour les déclarations ESG des clients.
 
 ---
 
 ## Méthodologie de calcul
 
-Druma utilise les facteurs d'émission de la méthode GLEC (Global Logistics Emissions Council) adaptés à la norme Euro du véhicule :
+Druma suit le **GLEC Framework v4.0** (Global Logistics Emissions Council), également aligné sur l'**ISO 14083** — la norme internationale pour quantifier et déclarer les émissions de gaz à effet de serre des chaînes de transport (calcul de niveau 1 par facteurs par défaut). C'est la méthodologie que la plupart des grands chargeurs et auditeurs reconnaissent et acceptent.
 
-| Norme Euro | Facteur d'émission (gCO2/km·tonne) |
+Contrairement à une simple estimation basée sur la distance, la méthode GLEC v4.0 Tier 1 est basée sur la **tonne-kilomètre** — elle multiplie la distance par le poids réel de la cargaison, pas seulement par le type de véhicule :
+
+```
+CO2e (kg) = Distance (km) × (Poids (kg) ÷ 1000) × Facteur d'émission (gCO2e/tonne-km) ÷ 1000
+```
+
+Le poids est une donnée requise par la formule : le même itinéraire parcouru à vide ou à pleine charge produit des chiffres de CO2e très différents. Assurez-vous que le poids de la cargaison de la commande est saisi précisément — cela affecte directement le calcul des émissions, pas seulement la facturation.
+
+---
+
+## Facteurs d'émission par classe de véhicule et type de carburant
+
+Le facteur d'émission est recherché dans une table de référence (`co2_emission_factors`, valeurs par défaut GLEC v4.0 Europe) indexée par **classe de véhicule** et **type de carburant** — pas par la norme Euro du camion, qui n'est pas consultée du tout pour ce calcul. La classe de véhicule est dérivée automatiquement de la capacité de charge utile/poids du camion :
+
+| Capacité de charge utile du camion | Classe de véhicule |
 |---|---|
-| Euro 3 | ~72 g/km·t |
-| Euro 4 | ~64 g/km·t |
-| Euro 5 | ~58 g/km·t |
-| Euro 6 | ~52 g/km·t |
+| Plus de 30 000 kg | Semi-remorque articulé 34t (camion FTL typique) |
+| 15 000 – 30 000 kg | Camion rigide 16–26t |
+| Moins de 15 000 kg | Camion rigide 12–16t |
+
+| Classe de véhicule | Type de carburant | Facteur d'émission (gCO2e/tonne-km) |
+|---|---|---|
+| Semi-remorque articulé 34t | Diesel | 62 |
+| Semi-remorque articulé 34t | GNL | 54 |
+| Semi-remorque articulé 34t | Électrique | 25 |
+| Semi-remorque articulé 34t | HVO | 12 |
+| Rigide 16–26t | Diesel | 91 |
+| Rigide 16–26t | Électrique | 37 |
+| Rigide 12–16t | Diesel | 119 |
+| Rigide 12–16t | Électrique | 48 |
+| Semi-remorque articulé 40t (méga-remorque) | Diesel | 55 |
+| Semi-remorque articulé 40t (méga-remorque) | GNL | 48 |
+| Semi-remorque articulé 40t (méga-remorque) | Électrique | 22 |
+
+<Note>
+Si le camion n'a pas de type de carburant défini, Druma suppose le diesel. Si aucun facteur exact classe-véhicule/type-carburant n'est trouvé, Druma se rabat sur le facteur diesel pour cette même classe de véhicule — il n'y a pas de comportement « par défaut vers une norme Euro spécifique », puisque la norme Euro n'intervient pas du tout dans cette recherche.
+</Note>
 
 ---
 
-## Voir les émissions par commande
+## D'où vient la distance
 
-Dans le panneau de détails de chaque commande, la section **Itinéraire** affiche :
-- Distance totale (km)
-- Émissions CO2 estimées (kg)
-- Norme Euro du véhicule utilisé
+La distance utilisée dans le calcul est la **distance d'itinéraire optimisée pour camion** calculée par HERE Maps lors de la création de la commande. Ce n'est pas la distance à vol d'oiseau — elle tient compte des routes autorisées aux camions, des restrictions de poids et des limites de hauteur.
+
+Si vous remplacez manuellement la distance sur une commande (par exemple, parce que l'itinéraire réel différait de celui calculé), Druma utilise la distance remplacée pour le calcul de CO2.
 
 ---
 
-## Rapport CO2
+## Affichage du CO2 par commande
 
-Accédez à **Rapports → CO2** pour le rapport d'empreinte carbone de la flotte :
+Chaque commande terminée affiche son chiffre de CO2 sur la page de détail de la commande, sous la section **Finances** ou **Résumé**. Vous pouvez voir en un coup d'œil :
 
-- Émissions totales par période
-- Émissions par camion
-- Émissions par client
-- Émissions par itinéraire
+- La distance de l'itinéraire en km
+- Le poids de cargaison utilisé
+- Le total en kg CO2e pour la commande
 
-Exportez le rapport en CSV ou PDF pour le partager avec les clients ou pour votre reporting interne.
+---
 
-<Card title="Rapport de rentabilité par ligne" icon="chart-line" href="/fr/reports/lane-profitability">
-  Combinez les données CO2 avec l'analyse de rentabilité.
+## Total mensuel de la flotte
+
+Druma agrège tous les chiffres de CO2 des commandes pour produire un total mensuel de la flotte. Pour le consulter :
+
+1. Accédez à **Rapports → Rapport CO2**
+2. Définissez la plage de dates (par ex. un mois calendaire ou une période personnalisée)
+3. Le rapport affiche :
+   - Le CO2 total de la flotte pour la période
+   - La répartition par camion (quels véhicules sont vos plus gros émetteurs)
+   - La répartition par client (combien de CO2 les expéditions de chaque client ont généré)
+
+---
+
+## CO2 par client dans le portail client
+
+Les clients ayant accès au portail client Druma peuvent consulter directement le chiffre de CO2 de chacune de leurs expéditions. Ils n'ont pas besoin de vous le demander — c'est visible sur chaque commande terminée dans leur vue portail.
+
+C'est particulièrement utile pour les clients qui doivent déclarer les **émissions de Scope 3** (émissions de la chaîne d'approvisionnement) dans le cadre de leurs propres obligations de reporting ESG ou de durabilité au titre de la CSRD ou de cadres similaires.
+
+---
+
+## Exporter le rapport CO2
+
+La page Rapport CO2 n'a pas de bouton « Télécharger le PDF ». À la place, depuis **Rapports → Rapport CO2** (vue annuelle), vous pouvez exporter dans trois formats :
+
+- **XLSX annuel** — un classeur des chiffres de CO2 par commande de l'année
+- **Paquet de données CSRD (.csv)** — un export de données formaté pour alimenter une déclaration CSRD / ESRS E1 Scope 3
+- **iXBRL (.xhtml)** — un fichier XBRL en ligne pour le jeu de balises ESRS E1 Scope 3, avec un avertissement dans l'application indiquant qu'il doit être revu par votre auditeur de durabilité avant dépôt
+
+La vue mensuelle propose à la place une action générique **imprimer** et **exporter** sur le tableau, couvrant les colonnes et la plage de dates actuellement sélectionnées.
+
+<Note>
+Séparément, chaque client ayant des commandes terminées reçoit automatiquement un rapport CO2 mensuel par email — un résumé HTML des émissions de ses expéditions du mois précédent, généré et envoyé automatiquement le 1er de chaque mois. Ce n'est pas quelque chose que vous déclenchez depuis la page Rapport CO2 ; cela s'exécute en arrière-plan pour chaque client ayant eu des livraisons durant cette période.
+</Note>
+
+---
+
+## Pourquoi c'est important pour votre entreprise
+
+Le reporting des émissions n'est plus réservé aux grands transporteurs. La tendance se propage en aval :
+
+- La **CSRD** (directive européenne sur le reporting de durabilité des entreprises) exige que les grandes entreprises déclarent les émissions de Scope 3 — ce qui inclut le transport qu'elles achètent
+- Les **grands détaillants et industriels** répercutent cette exigence de reporting sur leurs fournisseurs et prestataires de services
+- Les **appels d'offres et RFQ** demandent de plus en plus une méthodologie CO2 documentée
+- Les **programmes de fret vert** comme SmartWay Europe et Clean Cargo donnent la préférence en approvisionnement aux transporteurs disposant de données d'émissions documentées
+
+Avoir des rapports CO2 prêts — avec une méthodologie reconnue (GLEC v4.0 / ISO 14083) — différencie votre entreprise dans les appels d'offres compétitifs.
+
+---
+
+## Articles associés
+
+<Card title="Rapport CO2" icon="chart-bar" href="/fr/reports/co2-report">
+  Guide détaillé des filtres du Rapport CO2, des options d'export, et de l'interprétation des données.
+</Card>
+
+<Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+  Comment définir la capacité de charge utile et le type de carburant du véhicule — les données de flotte qui alimentent les calculs de CO2.
 </Card>

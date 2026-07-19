@@ -1,58 +1,47 @@
 ---
 title: "Import kierowców"
-description: "Masowo dodaj listę kierowców do Druma przy użyciu szablonu CSV."
+description: "Wdróż listę kierowców masowo przy użyciu Smart Import — narzędzia AI do ekstrakcji dokumentów Druma — zamiast dodawać kierowców pojedynczo."
 icon: "file-import"
 ---
 
-Dodaj cały zespół kierowców naraz przy użyciu importu CSV — niezbędne podczas wdrażania floty 10 lub więcej kierowców.
+Druma nie ma masowego importu kierowców opartego na szablonie CSV. Zamiast tego użyj **Smart Import** — narzędzia opartego na AI, które odczytuje dowolne dokumenty kierowców, jakie już masz (lista PDF, zeskanowana lista, zdjęcia praw jazdy, dziwnie sformatowany arkusz z poprzedniego systemu) i zamienia je w rekordy kierowców do przejrzenia przed zapisaniem.
 
-## Pobierz szablon
+## Gdzie je znaleźć
+
+Przejdź do **Narzędzia → Smart Import**. To wspólne narzędzie do wdrażania danych firmy, floty, kierowców, klientów i ubezpieczeń — nie strona ograniczona do Flota → Kierowcy.
+
+## Przebieg pracy
 
 <Steps>
-  <Step title="Otwórz stronę importu">
-    Przejdź do **Flota → Kierowcy → Importuj** i kliknij **Pobierz szablon**.
+  <Step title="Prześlij dokumenty kierowców">
+    Kliknij **Prześlij dokumenty** lub przeciągnij pliki na strefę upuszczania. Obsługiwane formaty: PDF, obrazy (JPEG, PNG, WebP, HEIC/HEIF), XLSX i CSV, do 20 MB na plik i do 20 plików na sesję.
   </Step>
-  <Step title="Wypełnij CSV">
-    Jeden kierowca per wiersz:
-
-    | Kolumna | Wymagana | Przykład |
-    |---------|----------|---------|
-    | full_name | Tak | Gheorghe Ionescu |
-    | phone | Tak | +40721000000 |
-    | email | Nie | ghe@example.com |
-    | license_number | Nie | B-123456 |
-    | license_category | Nie | CE |
-    | license_expiry | Nie | 2026-08-15 |
-    | cpc_expiry | Nie | 2025-09-30 |
-    | tachograph_card | Nie | RO123456780 |
-    | adr_expiry | Nie | 2025-12-31 |
-    | country | Nie | RO |
-    | active | Tak | true lub false |
+  <Step title="Poczekaj na ekstrakcję AI">
+    Druma wysyła każdy plik do Gemini w celu ekstrakcji — kilka sekund na plik. Pliki są przetwarzane po stronie serwera i nie są przechowywane trwale po ekstrakcji; zapisywane są tylko rekordy, które zdecydujesz się zaimportować.
   </Step>
-  <Step title="Prześlij i przejrzyj">
-    Prześlij CSV. Sprawdź podgląd pod kątem czerwonych wierszy (zazwyczaj brakujący numer telefonu lub nieprawidłowy format daty). Daty muszą być w formacie `YYYY-MM-DD`.
+  <Step title="Otwórz kartę kategorii Kierowcy">
+    Panel przeglądu pokazuje jedną kartę na każdy typ danych znaleziony w dokumentach, w tym **Kierowcy**, jeśli jacyś zostali wykryci. Kliknij ją, aby zobaczyć wyodrębnione wiersze w edytowalnej tabeli: pełne imię i nazwisko, telefon, e-mail, numer i termin ważności prawa jazdy, certyfikat ADR i jego termin ważności, numer CPC i jego termin ważności, numer karty kierowcy do tachografu oraz język.
   </Step>
-  <Step title="Potwierdź import">
-    Kliknij **Importuj [X] kierowców**. Kierowcy natychmiast pojawiają się na liście.
+  <Step title="Sprawdź pewność i duplikaty">
+    Każde pole ma wskaźnik pewności w kolorze (zielony/pomarańczowy/czerwony) — zawsze dokładnie sprawdź pola pomarańczowe i czerwone. Wiersze są porównywane z istniejącymi kierowcami po **pełnym imieniu i nazwisku (bez rozróżniania wielkości liter)**; dopasowanie jest oznaczane jako **Duplikat**, domyślnie ustawione na **Pomiń** (możesz zamiast tego wybrać **Nadpisz**, jeśli chcesz, aby wyodrębnione dane zastąpiły to, co jest w systemie).
+  </Step>
+  <Step title="Edytuj i importuj">
+    Kliknij dowolną komórkę, aby ją poprawić bezpośrednio, a następnie kliknij **Importuj kierowców**. Pełne imię i nazwisko to jedyne wymagane pole — wiersze bez niego nie są importowane.
   </Step>
 </Steps>
 
-## Numer telefonu jest kluczowy
+<Warning>
+Nie ma cofnięcia importu. Jeśli zaimportowano nieprawidłowe dane, popraw później rekordy kierowców pojedynczo.
+</Warning>
 
-Numer telefonu to sposób, w jaki kierowcy logują się do PWA. Musi być w formacie międzynarodowym (`+40...` dla Rumunii). Bez prawidłowego numeru telefonu kierowca nie może uzyskać dostępu do aplikacji.
+## Numer telefonu i logowanie do aplikacji
 
-<Note>
-Po imporcie udostępnij link do PWA każdemu kierowcy. Przejdź do **Flota → Kierowcy → wybierz kierowcę → Kopiuj link PWA** i wyślij przez WhatsApp lub SMS.
-</Note>
+Smart Import tworzy rekord profilu kierowcy (imię, telefon, dane prawa jazdy/CPC/ADR/tachografu) — nie tworzy jego logowania do aplikacji. Po imporcie przejdź do **Flota → Kierowcy**, otwórz profil każdego kierowcy pojedynczo i w sekcji **Logowanie telefon + PIN** kliknij **Ustaw PIN** (lub **Wygeneruj** dla losowego 6-cyfrowego kodu), a następnie **Zapisz PIN**. Przekaż każdemu kierowcy jego PIN bezpośrednio — może go spersonalizować przy pierwszym logowaniu.
 
-## Alerty wygaśnięcia
-
-Jeśli wypełnisz daty wygaśnięcia prawa jazdy, CPC lub ADR podczas importu, Druma natychmiast zacznie śledzić te daty i alertować Cię 30 i 60 dni przed wygaśnięciem.
-
-<Card title="Zarządzanie kierowcami" icon="id-card" href="/pl/planner/driver-management">
-  Zarządzaj profilami poszczególnych kierowców i udostępniaj link do PWA.
+<Card title="Wdrażanie klientów i floty" icon="brain" href="/pl/tools/smart-import">
+  Smart Import obsługuje w tym samym przepływie pracy również dokumenty firmy, floty, klientów i ubezpieczeń.
 </Card>
 
-<Card title="Instalowanie aplikacji kierowcy" icon="mobile" href="/pl/driver/installing-the-app">
-  Przewodnik krok po kroku dla kierowców instalujących PWA na telefonie.
+<Card title="Zarządzanie kierowcami" icon="id-card" href="/pl/planner/driver-management">
+  Zarządzaj profilami poszczególnych kierowców i konfiguruj logowanie telefon + PIN.
 </Card>

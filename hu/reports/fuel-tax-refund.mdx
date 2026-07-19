@@ -1,0 +1,79 @@
+---
+title: "Üzemanyagadó-visszatérítés"
+description: "Kövesd nyomon és generáld az EU üzemanyagadó-visszatérítési igényeket Belgiumhoz és Romániához, az importált üzemanyagkártya-adatok alapján."
+icon: "gas-pump"
+---
+
+## Mi az üzemanyagadó-visszatérítés?
+
+Több uniós tagállam lehetővé teszi a hivatásos közúti fuvarozók számára, hogy visszaigényeljék a dízelre fizetett jövedéki adó egy részét. A Druma két rendszert támogat:
+
+- **Belgium — Gasoil professionnel**: a belga fuvarozók visszaigényelhetik a hivatásos fuvarozáshoz használt dízel jövedéki adójának egy részét. Az igényeket negyedévente kell benyújtani az SPF Finances-hez.
+- **Románia — TICAD dízel-visszatérítés**: a román fuvarozók visszaigényelhetik a nemzetközi és belföldi közúti fuvarozáshoz használt dízel jövedéki adójának egy részét. Az igényeket az ANAF-hoz kell benyújtani.
+
+Az Üzemanyagadó-visszatérítés a **Pénzügy** szekció alatt található. Csak **admin** és **vállalati admin** szerepkörök férnek hozzá — a flottakezelő nem fér hozzá ehhez a jelentéshez.
+
+<Frame caption="Pénzügy → Üzemanyagadó — belga és román rendszerek.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Üzemanyagadó-visszatérítés oldal" />
+</Frame>
+
+---
+
+## Előfeltételek
+
+Ehhez a jelentéshez előbb be kell importálnod az üzemanyagkártya-adatokat. Feltöltési rekordok nélkül nincsenek literek, amelyekhez a számítást el lehetne végezni.
+
+<Card title="Üzemanyagkártya-importálás" icon="credit-card" href="/en/integrations/fuel-card-import">
+  Importálj üzemanyag-feltöltéseket a DKV-tól, UTA-tól, AS24-től és más szolgáltatóktól.
+</Card>
+
+---
+
+## Visszatérítési igény generálása
+
+<Steps>
+  <Step title="Válaszd ki az országot és az időszakot">
+    Válaszd a **Belgium** vagy a **Románia** opciót az ország legördülő menüből, majd állítsd be az igénylési időszakot (jellemzően egy negyedév Belgiumhoz, egy hónap vagy negyedév Romániához).
+  </Step>
+  <Step title="Kattints a Generálás gombra">
+    A Druma lekéri az összes, a kiválasztott rendszer alapján jogosult üzemanyag-feltöltési rekordot az időszakra, kiszámítja az összes jogosult litert, és megszorozza az adott ország aktuális visszatérítési rátájával.
+  </Step>
+  <Step title="Nézd át az igényt">
+    Az eredmény mutatja a jogosult litereket, a literenkénti visszatérítési rátát, és a teljes visszatérítési összeget EUR-ban. Nézd át benyújtás előtt.
+  </Step>
+  <Step title="Állítsd be a státuszt és a hivatkozást">
+    Módosítsd a státuszt **Benyújtva**-ra, és add meg a benyújtás után kapott kormányzati hivatkozási számot. Ez összeköti a Druma-rekordot a hivatalos beadványoddal.
+  </Step>
+</Steps>
+
+---
+
+## Az igény státusz-életciklusa
+
+```
+Vázlat → Benyújtva → Visszatérítve
+                   → Elutasítva
+```
+
+- **Vázlat** — kiszámítva, de még nem benyújtva a hatóságnak
+- **Benyújtva** — elküldve az SPF Finances-nek (BE) vagy az ANAF-nak (RO); a hivatkozási szám rögzítve
+- **Visszatérítve** — a fizetés megérkezett; add meg a visszatérítés dátumát
+- **Elutasítva** — az igényt elutasították; adj hozzá egy megjegyzést az okkal a nyomon követéshez
+
+---
+
+## Visszatérítési összegek diagram
+
+Egy terület-diagram mutatja a visszatérítési összegeket időszakonként, az elmúlt 12 hónapra. Hasznos a szezonális üzemanyag-fogyasztási minták azonosításához és a pénzforgalom-tervezéshez.
+
+---
+
+## CSV export
+
+Kattints az **Export CSV** gombra az igény-részletek letöltéséhez — feltöltésenkénti bontás, jogosult literek, ráta, és a kiszámított visszatérítés — benyújtási vagy auditálási célra.
+
+---
+
+<Warning>
+A Druma az importált üzemanyagkártya-adataidból számítja ki a jogosult litereket. A te felelősséged ellenőrizni, hogy minden feltöltés helyesen van importálva, és hogy a visszatérítési ráta megegyezik az illetékes adóhatóság aktuálisan közzétett rátájával, mielőtt benyújtanál egy igényt.
+</Warning>

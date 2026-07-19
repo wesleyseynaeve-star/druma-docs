@@ -1,0 +1,84 @@
+---
+title: "Fournisseurs eCMR"
+description: "Le fournisseur eCMR natif in-house de Druma est le seul fournisseur eCMR sélectionnable. TransFollow est un chemin réservé aux configurations héritées pour les entreprises ayant une configuration préexistante."
+icon: "right-left"
+---
+
+Druma émet les eCMR avec son **fournisseur natif** — il émet et scelle les eCMR entièrement en interne, sans coût par document. Dans **Paramètres → Intégrations → Fournisseur eCMR** (accès admin entreprise requis), les seuls choix sont **Natif** et **Désactivé**. **TransFollow** ne peut plus être sélectionné pour la première fois par aucune entreprise ; il n'existe que comme chemin historique pour les entreprises qui l'avaient configuré avant l'introduction du fournisseur natif — voir ci-dessous.
+
+---
+
+## eCMR natif Druma (par défaut)
+
+Le fournisseur natif Druma émet les documents CMR en interne, collecte les signatures, génère le PDF, et applique un **scellé numérique PAdES** — une Signature Électronique Avancée (AdES) sous eIDAS — sans contacter aucun service externe.
+
+### Comment ça fonctionne
+
+- **Aucune configuration nécessaire** — le fournisseur natif est actif par défaut. Vous n'avez besoin de saisir aucune clé API ni de connecter aucun compte externe.
+- **Signature à trois parties, trois appareils distincts :** l'expéditeur signe via l'application web de Druma (généralement capturé par un planificateur ou répartiteur dans l'onglet Documents de la commande) ; le chauffeur signe séparément sur son propre téléphone ; le destinataire signe via un **lien de partage ou un code QR** sur son propre appareil à la livraison — aucun compte Druma requis pour le destinataire.
+- **PDF certifié :** une fois que les trois parties ont signé, Druma génère le PDF CMR complet et applique le scellé PAdES. Le document scellé contient toutes les cases CMR obligatoires (1–24), y compris la mention « soumis au CMR », le lieu et la date d'émission, et toute réserve du transporteur.
+- **Réserves du destinataire (case 24) :** lors de la signature, le destinataire peut ajouter des observations en texte libre (dommage, manquant, écart). Ces remarques sont horodatées dans le PDF scellé et une bannière ambre « Réserves du destinataire » apparaît sur la commande dans Druma.
+
+### Vérifier que le fournisseur est prêt
+
+Accédez à **Paramètres → Intégrations → Fournisseur eCMR** et cliquez sur **Tester la connexion** pour vérifier que le certificat de signature de Druma est configuré et que le fournisseur est prêt.
+
+### Coûts
+
+L'eCMR est inclus dans votre abonnement Druma sans coût supplémentaire — il n'y a pas de frais par document ni de plafond d'usage.
+
+### Consulter et télécharger les documents eCMR
+
+Les documents eCMR signés et leurs signatures sont conservés dans Druma pendant 7 ans après la date de livraison de la commande, puis définitivement supprimés par une tâche programmée — voir [Validité juridique de l'eCMR](/fr/ecmr/ecmr-legal-validity) pour la politique de conservation complète.
+
+**Page de détail de la commande → onglet Documents → Voir l'eCMR**
+
+Depuis là, vous pouvez :
+
+- Consulter le PDF scellé dans votre navigateur
+- Télécharger le PDF signé
+- Vérifier le statut de signature des trois parties — la ligne Expéditeur affiche une date de signature ; Chauffeur et Destinataire affichent un badge signé/non signé sans horodatage
+- Partager un lien vers le document avec votre client (accessible sans connexion Druma)
+
+---
+
+## TransFollow (réservé aux configurations héritées)
+
+TransFollow est une plateforme eCMR tierce que Druma prenait auparavant en charge comme option sélectionnable. Ce n'est **plus quelque chose que vous pouvez sélectionner pour la première fois** — il n'y a pas d'entrée TransFollow à choisir, pas de champ clé API, pas de bascule Mode simulation, et pas de bouton Tester la connexion pour elle dans Paramètres → Intégrations.
+
+La seule raison pour laquelle TransFollow existe encore dans Druma est de maintenir un petit nombre d'entreprises ayant une **configuration TransFollow préexistante** fonctionnelles sans interruption. Si cela s'applique à votre entreprise :
+
+- Votre flux eCMR continue de fonctionner exactement comme avant — rien ne casse et aucune action n'est requise.
+- La carte fournisseur eCMR dans Paramètres → Intégrations affiche votre configuration comme **Native**.
+- La prochaine fois que cette intégration est enregistrée (même sans rien changer), votre entreprise migre silencieusement vers le véritable fournisseur natif.
+
+Si vous configurez l'eCMR pour la première fois, ou si votre entreprise n'a jamais configuré TransFollow, rien de tout cela ne vous concerne — vous êtes déjà sur le fournisseur natif.
+
+<Warning>
+Il n'existe aucun chemin pour configurer TransFollow pour une entreprise qui ne l'utilise pas déjà. Si vous voyez des références à TransFollow ailleurs, elles décrivent ce comportement de continuité héritée, pas une option disponible dans le produit aujourd'hui.
+</Warning>
+
+---
+
+## Couverture par pays
+
+L'eCMR est légalement valide dans les pays ayant ratifié le protocole e-CMR. En 2025, cela inclut la plupart des États membres de l'UE ainsi que la Suisse, la Biélorussie, la Géorgie et d'autres. Vérifiez la liste actuelle sur [unece.org](https://unece.org). Pour les pays n'ayant pas ratifié, le CMR papier reste requis — Druma peut imprimer une note CMR formatée pour ces expéditions.
+
+---
+
+## Articles associés
+
+<CardGroup cols={2}>
+  <Card title="Qu'est-ce que l'eCMR ?" icon="file-contract" href="/fr/ecmr/what-is-ecmr">
+    Introduction aux lettres de voiture CMR électroniques et quand vous en avez besoin.
+  </Card>
+  <Card title="Validité juridique de l'eCMR" icon="scale-balanced" href="/fr/ecmr/ecmr-legal-validity">
+    Le Protocole e-CMR, le scellé PAdES et l'AdES eIDAS expliqués.
+  </Card>
+  <Card title="Créer un eCMR" icon="file-plus" href="/fr/ecmr/creating-ecmr">
+    Guide étape par étape pour émettre un eCMR sur une commande Druma.
+  </Card>
+  <Card title="Le flux de signature" icon="pen-to-square" href="/fr/ecmr/signing-flow">
+    Comment l'expéditeur, le chauffeur et le destinataire signent chacun, et sur quel appareil.
+  </Card>
+</CardGroup>

@@ -1,0 +1,118 @@
+---
+title: "Tachographen-Archiv"
+description: "Wie Druma DDD- und TGD-Tachographendateien speichert, um die Download-Häufigkeits- und Aufbewahrungspflichten der EU-Verordnung 165/2014 zu erfüllen — automatischer nächtlicher Download und manueller Upload."
+icon: "hard-drive"
+---
+
+Die EU-Verordnung 165/2014 verlangt von Transportbetreibern, Tachographendaten von Fahrzeugeinheiten und Fahrerkarten in festgelegten Abständen herunterzuladen und diese Daten mindestens 12 Monate aufzubewahren. Druma speichert diese Dateien im Tacho-Archiv, damit Sie Compliance bei einer Straßenkontrolle oder Behördenprüfung nachweisen können, ohne ein separates Ablagesystem zu pflegen.
+
+---
+
+## Download-Häufigkeitsanforderungen
+
+| Dateityp | Erforderliche Download-Häufigkeit |
+|---|---|
+| Fahrzeugeinheitsdaten (VU / `.ddd`) | Mindestens alle **90 Tage** |
+| Fahrerkartendaten (DDC / `.tgd`) | Mindestens alle **28 Tage** |
+
+Eine verpasste Download-Frist ist ein direkter regulatorischer Verstoß, unabhängig davon, ob der Fahrer während des Zeitraums einen Verstoß verursacht hat. Kontrolleure prüfen, ob die Daten rechtzeitig heruntergeladen wurden, nicht nur, ob sie irgendwann abgerufen wurden.
+
+---
+
+## Wo Sie das Tacho-Archiv finden
+
+Gehen Sie zu **Fuhrpark → Tacho-Archiv**. Die Seite listet alle gespeicherten Tachographendateien nach Upload-Datum sortiert. Jede Zeile zeigt:
+
+- Fahrer- oder Fahrzeugname
+- Dateityp (VU oder DDC)
+- Vom Dateien abgedeckter Datumsbereich
+- Tage seit letztem Download
+- Statusabzeichen
+
+### Statusabzeichen
+
+| Abzeichen | Bedeutung |
+|---|---|
+| **OK** | Innerhalb der Download-Frist |
+| **Bald fällig** | Innerhalb von 5 Tagen bis zur Frist |
+| **Überfällig** | Frist ist verstrichen |
+
+Als **überfällig** markierte Dateien erfordern sofortiges Handeln — laden Sie die Datei vom Fahrzeug oder der Fahrerkarte herunter und laden Sie sie hoch, um den überfälligen Status zu löschen.
+
+---
+
+## Automatischer Download
+
+Bei über rFMS (die standardisierte OEM-Telematik-Schnittstelle) verbundenen LKW ruft Druma jede Nacht automatisch neue DDD- und TGD-Dateien ab. Für verbundene Fahrzeuge und Fahrer ist keine manuelle Aktion erforderlich.
+
+Unterstützte automatische Download-Integrationen:
+
+| Anbieter | Integrationsname | Status |
+|---|---|---|
+| Scania | rFMS | Live |
+| Volvo | rFMS | Live |
+| DAF | rFMS | Live |
+| MAN | rFMS | Live |
+| Mercedes-Benz | rFMS | Live |
+| IVECO | rFMS | Live |
+| Renault | rFMS | Live |
+| Webfleet | TachoShare | Noch nicht implementiert — wartet auf Zugang zum Webfleet-Partnerkonto |
+
+Um den automatischen Download zu aktivieren, gehen Sie zu **Einstellungen → Integrationen** und verbinden Sie Ihren rFMS-unterstützten OEM-Telematikanbieter. Nach der Verbindung ruft Druma verfügbare Dateien während des nächtlichen Synchronisierungsfensters ab und aktualisiert die Statusabzeichen entsprechend.
+
+<Note>
+Der automatische Download hängt davon ab, dass der Telematikanbieter die Datei remote verfügbar macht. Manche älteren Fahrzeugeinheitsmodelle oder Fahrerkarten unterstützen keinen Remote-Abruf — dafür ist manueller Upload erforderlich. Webfleet TachoShare ist auf der Roadmap, aber noch nicht live; verbundene Webfleet-Fahrzeuge benötigen derzeit manuellen Upload.
+</Note>
+
+---
+
+## Manueller Upload
+
+Für Fahrzeuge und Fahrer ohne automatische Integration laden Sie Dateien direkt von einem Tachographen-Downloadgerät hoch (z. B. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+<Steps>
+  <Step title="Das Tacho-Archiv öffnen">
+    Gehen Sie zu **Fuhrpark → Tacho-Archiv**.
+  </Step>
+  <Step title="Auf Datei hochladen klicken">
+    Klicken Sie oben rechts auf die Schaltfläche **Datei hochladen**.
+  </Step>
+  <Step title="Fahrer oder Fahrzeug wählen">
+    Wählen Sie, ob es sich um eine Fahrerkartendatei (DDC) oder eine Fahrzeugeinheitsdatei (VU) handelt, und wählen Sie dann den Fahrer oder das Fahrzeug aus der Liste.
+  </Step>
+  <Step title="Die Datei wählen">
+    Wählen Sie die `.ddd`-, `.tgd`-, `.v1b`- oder `.c1b`-Datei von Ihrem Computer. Maximale Dateigröße: **10 MB**.
+  </Step>
+  <Step title="Upload bestätigen">
+    Klicken Sie auf **Hochladen**. Druma liest den Dateikopf aus, um den Datumsbereich zu extrahieren, und speichert die Datei im Archiv. Die Überfälligkeitsuhr setzt sich für den ausgewählten Fahrer oder das Fahrzeug zurück.
+  </Step>
+</Steps>
+
+<Warning>
+Nur `.ddd`-, `.tgd`-, `.v1b`- und `.c1b`-Dateien werden akzeptiert — `.v1b`/`.c1b` sind die Generation-2-Smart-Tachograph-Äquivalente von `.ddd`/`.tgd`. In anderen Formaten exportierte Dateien (CSV, PDF) können nicht hochgeladen werden und erfüllen nicht die EU-Datenaufbewahrungspflicht. Bewahren Sie stets die originale Binärdatei auf.
+</Warning>
+
+---
+
+## Aufbewahrung
+
+Druma bewahrt alle hochgeladenen und automatisch heruntergeladenen Tachographendateien für die gesetzlich vorgeschriebenen mindestens 12 Monate auf. Dateien, die älter als 12 Monate sind, unterliegen der automatisierten Archivierung. Kontaktieren Sie den Support, falls Sie Dateien außerhalb des Standard-Aufbewahrungsfensters abrufen müssen.
+
+---
+
+## Verwandte Artikel
+
+<CardGroup cols={2}>
+  <Card title="EU-Lenkzeitregeln" icon="clock" href="/de/fleet-compliance/eu-driving-hours">
+    Tägliche und wöchentliche Lenkzeitgrenzen nach Verordnung 561/2006, aus Tachographendaten nachverfolgt.
+  </Card>
+  <Card title="Fahrer-Arbeitszeit (WTD)" icon="clock" href="/de/fleet-compliance/driver-working-time">
+    Arbeitszeitgrenzen nach Richtlinie 2002/15/EG und wie Druma sie überwacht.
+  </Card>
+  <Card title="Fuhrparkdokumente" icon="folder-open" href="/de/fleet-compliance/fleet-documents">
+    Compliance und Ablaufverfolgung von Fahrzeugdokumenten.
+  </Card>
+  <Card title="Mobilitätspaket" icon="globe" href="/de/fleet-compliance/mobility-package">
+    Rückkehrpflichten für Fahrzeug und Fahrer sowie IMI-Entsendemeldungen.
+  </Card>
+</CardGroup>

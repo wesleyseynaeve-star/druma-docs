@@ -1,15 +1,154 @@
 ---
-title: "Schimbarea camionului"
-description: "Cum sa schimbi camionul la mijlocul unei comenzi."
-icon: "right-left"
+title: "Schimbarea camionului (Releu tractor)"
+description: "Cum schimbi capul tractor la mijlocul cursei, pastrand remorca si marfa pe aceeasi comanda — pentru operatiuni de releu, defectiuni si schimburi de sofer."
+icon: "arrow-right-arrow-left"
 ---
 
+## Ce este un releu de tractor?
+
+Un releu de tractor (numit si schimb de camion) este atunci cand schimbi capul tractor care trage o remorca **in timpul unei comenzi active**. Remorca si marfa ei raman pe aceeasi comanda — doar cabina si soferul se schimba.
+
+Scenarii comune:
+
+- **Conducere in releu** — Soferul A duce marfa de la origine pana la un punct intermediar, apoi Soferul B preia remorca si continua pana la destinatie. Asta iti extinde raza efectiva de actiune, fara sa incalci reglementarile de timp de conducere.
+- **Defectiune** — Camionul original are o problema mecanica si un tractor de inlocuire este trimis sa preia remorca.
+- **Limita de ore ale soferului** — Soferul curent ramane fara timp legal de conducere, iar un sofer proaspat cu un alt camion preia.
+- **Predare programata** — Intr-un depozit sau hub, remorcile sunt schimbate de rutina intre tractoare.
+
+<Note>
+Principiul cheie: **remorca ramane cu marfa**. Cand schimbi camionul pe o comanda, Druma detaseaza tractorul vechi, dar pastreaza remorca atasata. Asta pastreaza lantul de custodie al marfii.
+</Note>
+
+---
+
+## Cand poti schimba camionul?
+
+Poti schimba camionul pe orice comanda care se afla intr-unul din aceste statusuri active:
+
+- In asteptare
+- Atribuita
+- Plecat
+- Sosit la Preluare
+- Incarcare
+- In Tranzit
+- Sosit la Livrare
+- Descarcare
+
+Comanda trebuie sa fie de tipul **Camion Propriu**. Comenzile Subcontractate si de vanzare capacitate nu suporta schimbarea camionului — acestea sunt gestionate de transportatorul extern.
+
+---
+
+## Cum schimbi camionul
+
 <Steps>
-  <Step title="Deschide comanda activa">Mergi la Comenzi si deschide comanda in desfasurare.</Step>
-  <Step title="Apasa Schimba Camionul">In panoul de actiuni al comenzii.</Step>
-  <Step title="Selecteaza noul camion si sofer">Alege inlocuitorii.</Step>
-  <Step title="Introdu locatia de transfer">Adresa unde are loc schimbul.</Step>
-  <Step title="Confirma">Apasa Confirma Schimbul.</Step>
+  <Step title="Deschide Tabla de planificare">
+    Mergi la **Planner → Tabla de planificare** si gaseste randul comenzii active.
+  </Step>
+  <Step title="Declanseaza Schimba Camionul">
+    Trage un camion diferit pe randul comenzii (sau foloseste meniul de actiuni al randului). Druma detecteaza ca la comanda este deja atribuit un camion si ofera sa il schimbe, in loc sa inlocuiasca atribuirea direct. Schimba Camionul este disponibil doar pentru comenzile Camion Propriu, intr-un status activ — nu este expus din panoul de detaliu al comenzii.
+  </Step>
+  <Step title="Selecteaza oprirea tinta">
+    Alege oprirea la care are loc schimbul. De exemplu, daca schimbul se intampla la a doua oprire, selecteaza oprirea 2. Toate opririle de la acest punct incolo vor fi gestionate de noul camion.
+  </Step>
+  <Step title="Selecteaza noul camion">
+    Cauta camionul de inlocuire dupa numarul de inmatriculare. Sunt afisate doar camioanele active, disponibile din flota ta. Soferul atribuit noului camion este selectat automat.
+  </Step>
+  <Step title="Introdu un motiv si confirma">
+    Adauga un motiv scurt pentru schimb (de ex. "Limita de ore a soferului", "Defectiune la Timisoara"). Apasa **Confirma Schimbul**.
+  </Step>
 </Steps>
 
-Istoricul complet al transferului este pastrat in timeline-ul comenzii.
+---
+
+## Ce se intampla dupa un schimb
+
+Cand confirmi un schimb de camion, Druma efectueaza automat mai multe actiuni:
+
+1. **Se creeaza un segment de camion** pentru tractorul original, inregistrand ce opriri a gestionat (de la prima oprire pana la punctul de schimb).
+2. **Se creeaza un segment nou** pentru camionul de inlocuire, acoperind de la punctul de schimb pana la sfarsitul comenzii (deschis pana la livrare).
+3. **Toate opririle de la punctul de schimb incolo** sunt actualizate cu noul camion si sofer.
+4. **Campurile principale de camion si sofer ale comenzii** sunt actualizate, ca sa reflecte noua atribuire.
+5. **Remorca ramane neschimbata** — ramane atasata comenzii, indiferent care tractor o trage.
+
+---
+
+## Vizualizarea istoricului de segmente de camion
+
+Dupa un schimb, panoul de detaliu al comenzii arata o sectiune **Segmente de Camion**, care listeaza fiecare tractor implicat in comanda:
+
+| Camion | Sofer | Opriri | Motiv | Schimbat la |
+|---|---|---|---|---|
+| B-201-TCL (Volvo FH) | Ion Ionescu | Oprire 1 → Oprire 2 | Limita de ore a soferului | 12 apr 2026, 14:30 |
+| B-215-TCL (Scania R450) | Vasile Popa | Oprire 2 → (in desfasurare) | — | — |
+
+Fiecare segment inregistreaza:
+- Numele si numarul de inmatriculare al camionului
+- Soferul care conducea
+- Intervalul de opriri (de la → pana la)
+- Motivul schimbului
+- Marcajul temporal al predarii
+
+---
+
+## Suprascrieri de camion si sofer per oprire
+
+Dupa un schimb de camion, opririle individuale ale comenzii pot arata un camion si sofer diferite fata de atribuirea principala a comenzii. Este normal — inseamna ca oprirea a fost gestionata de tractorul anterior, inainte sa se intample schimbul.
+
+Cand vizualizezi cronologia de opriri a comenzii, fiecare oprire arata ce camion si sofer i-au fost atribuite. Daca o oprire nu are nicio suprascriere, mosteneste camionul si soferul curenti ai comenzii.
+
+---
+
+## Schimburi multiple
+
+Poti schimba camionul de mai multe ori pe aceeasi comanda. Fiecare schimb creeaza un segment nou. Este util pentru rute internationale de distanta lunga, unde marfa trece prin mai multe puncte de releu.
+
+De exemplu, o marfa Bucuresti → Duisburg ar putea folosi trei tractoare:
+
+1. Camionul A: Bucuresti → Budapesta (Oprire 1 → Oprire 2)
+2. Camionul B: Budapesta → Viena (Oprire 2 → Oprire 3)
+3. Camionul C: Viena → Duisburg (Oprire 3 → Oprire 4)
+
+Fiecare segment este urmarit independent, cu propriul sofer, motiv si marcaje temporale.
+
+---
+
+## Anularea unui schimb (Undo)
+
+Daca noul camion nu a facut inca nicio activitate pe comanda, poti anula schimbul si restaura camionul original.
+
+Cauta butonul **Anuleaza Schimbul** pe randul comenzii, pe tabla de planificare sau in lista de comenzi — apare doar cand exista un schimb anulabil (o oprire de releu este prezenta si nicio activitate nu este inregistrata pe noul camion).
+
+Alternativ, trage camionul original inapoi pe comanda, pe tabla de planificare — Druma va incerca sa anuleze automat schimbul, inainte sa reatribuie.
+
+**Anularea este blocata daca oricare din urmatoarele este adevarat:**
+- Orice oprire la sau dupa punctul de releu are un marcaj temporal real de sosire sau plecare inregistrat
+- Au fost inregistrate evenimente de status ale soferului dupa schimb
+- Camionul original este acum atribuit unei alte comenzi active
+
+Daca anularea este blocata, Druma arata un mesaj care explica de ce. Poti totusi reatribui manual din panoul de detaliu al comenzii, in acel caz.
+
+---
+
+## Note importante
+
+<Warning>
+Schimbarea unui camion **nu** creeaza o comanda noua. Numarul comenzii originale, clientul, pretul si toti termenii comerciali raman aceiasi. Doar atribuirea operationala (ce camion si sofer) se schimba.
+</Warning>
+
+- **Remorca ramane intotdeauna cu marfa**. Daca trebuie sa schimbi si remorca, este o operatiune diferita — vezi [Gestionarea remorcilor](/ro/planner/trailer-management).
+- Schimburile de camion sunt **inregistrate in istoricul de audit al comenzii**, cu numele planificatorului, marcajul temporal si motivul.
+- Aplicatia soferului se actualizeaza automat — soferul care iese vede comanda disparand din incarcaturile sale active, iar soferul care intra primeste o notificare push cu detaliile comenzii.
+
+---
+
+<Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+  Gestioneaza-ti flota de tractoare — adauga vehicule, urmareste disponibilitatea si gestioneaza blocajele de service.
+</Card>
+
+<Card title="Gestionarea remorcilor" icon="trailer" href="/ro/planner/trailer-management">
+  Gestioneaza remorcile independent de tractoare — atribuire, detasare si urmarirea locatiei.
+</Card>
+
+<Card title="Tabla de planificare" icon="calendar" href="/ro/planner/planning-board">
+  Vezi toate comenzile si camioanele tale pe tabloul vizual de dispecerizare — butonul de schimbare a camionului este accesibil si de aici.
+</Card>

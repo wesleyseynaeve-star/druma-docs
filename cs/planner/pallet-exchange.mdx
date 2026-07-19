@@ -1,15 +1,134 @@
-﻿---
-title: "Výměna palet"
-description: "Sledování zůstatků EUR, CHEP a dalších výměnných palet pro každou protistranu s pohlednicovým záznamem."
+---
+title: "Evidence výměny palet"
+description: "Sledujte zůstatky EUR, CHEP a dalších výměnných palet za protistranu s deníkem pouze pro přidávání záznamů, automatizací poplatků a volitelnou synchronizací s poskytovatelem."
 icon: "package"
 ---
 
-Pohlednicovy zaznam Druma sleduje kazdy pohyb palet jako nemenitelny zaznam a poskytuje zivy zustatek pro kazdu protistranu.
+## Přehled
 
-## Podporovane typy palet
+Když přepravujete zboží na EUR paletách, CHEP nebo jiných výměnných paletách, vstupujete do průběžného zůstatku s každým klientem a subdodavatelem — odeslané palety se musí vrátit, jinak je splatný poplatek. Evidence výměny palet Druma sleduje každý pohyb jako neměnný záznam a dává vám živý zůstatek za jednotlivou protistranu, aby vám nic neuniklo.
 
-EUR, CHEP, EPAL, LPR, IPP, Euro Pool
+Evidence je **pouze pro přidávání**: pohyby se přidávají u každé zastávky objednávky a průběžný zůstatek se počítá automaticky. Opravy a úpravy můžete zaznamenat, aniž byste mazali historii.
 
-## Zaznam pohybu palet
+---
 
-Otevrte podrobnosti objednavky, prejdete na kartu zastavky, kliknete na **+ Pridat pohyb** a vyberte typ palety, typ pohybu (Odesláno/Vraceno/Korekce) a mnozstvi.
+## Podporované typy palet
+
+| Typ | Celý název |
+|---|---|
+| EUR | EUR paleta (EPAL) |
+| CHEP | CHEP paleta |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Ostatní | Jakýkoli jiný typ výměnné palety, který váš provoz používá |
+
+Každý typ palety má vlastní sloupec zůstatku. Protistrana vám může dlužit EUR palety, zatímco vy dlužíte jí CHEP palety zároveň.
+
+---
+
+## Zaznamenávání pohybů palet na objednávce
+
+Pohyby palet se zaznamenávají na úrovni zastávky — zastávky vyzvednutí, doručení a vykládky mají všechny vlastní sekci **Pohyby palet**.
+
+<Steps>
+  <Step title="Otevřete panel detailu objednávky">
+    Klikněte na objednávku na Plánovací tabuli nebo v seznamu Objednávky pro otevření jejího panelu detailu vpravo.
+  </Step>
+  <Step title="Přejděte na kartu zastávky">
+    Přejděte na zastávku, kde dochází k výměně palet — typicky vyzvednutí (palety odchozí) nebo doručení (palety vrácené). Každá karta zastávky zobrazuje sekci **Pohyby palet**.
+  </Step>
+  <Step title="Přidejte pohyb">
+    Klikněte na **+ Přidat pohyb** na kartě zastávky. Zobrazí se malý formulář s:
+    - **Typ palety** — vyberte z EUR, CHEP, LPR, IPP, Euro Pool nebo Ostatní
+    - **Typ pohybu** — Odesláno (kladné), Vráceno (záporné), Úprava, Oprava, nebo Počáteční zůstatek
+    - **Množství** — počet palet
+    - **Poznámky** (volitelné) — referenční číslo nebo poznámka řidiče
+  </Step>
+  <Step title="Uložit">
+    Klikněte na **Uložit** pro potvrzení pohybu. Okamžitě se přidá do evidence a průběžný zůstatek protistrany se aktualizuje.
+  </Step>
+</Steps>
+
+Pro odstranění chybného záznamu klikněte na **ikonu koše** vedle pohybu.
+
+<Note>
+Použijte **Počáteční zůstatek** jednou za protistranu pro zadání jejího výchozího zůstatku, pokud migrujete z tabulky nebo předchozího systému. Následné pohyby na něm stavějí.
+</Note>
+
+---
+
+## Zobrazení zůstatků
+
+### Sloupec zůstatku v seznamu klientů
+
+Seznam **Klienti** (Obchod → Klienti) obsahuje sloupec **Zůstatek palet**. Indikátor používá barevné odlišení na první pohled:
+
+| Barva | Význam |
+|---|---|
+| Oranžová | Klient vám dluží palety |
+| Modrá | Vy dlužíte palety klientovi |
+| Neutrální (šedá) | Zůstatek je vyrovnaný |
+
+Najetím myší na indikátor zůstatku zobrazíte tooltip za jednotlivý typ, rozdělující zůstatek napříč všemi typy palet — například +12 EUR, −4 CHEP.
+
+### Historie pohybů za protistranu
+
+Kliknutím na řádek klienta otevřete panel detailu klienta, poté přejděte na záložku **Palety**. Zobrazuje kompletní evidenci pro danou protistranu: každý pohyb, datum, referenci objednávky a průběžný součet.
+
+---
+
+## Práh poplatku a automatické vytvoření poplatku
+
+Pokud zůstatek palet klienta naroste nad nakonfigurovaný práh, Druma vás může automaticky vyzvat k vyúčtování poplatku za výměnu palet.
+
+Když pohyb způsobí, že zůstatek přesáhne práh, zobrazí se modální okno **Potvrzení poplatku za palety**:
+
+- **Potvrdit** — přidá řádek poplatku do doplňků objednávky (viditelný v editoru faktury jako poplatek za výměnu palet)
+- **Přeskočit** — zavře výzvu bez vytvoření poplatku; zůstatek zůstává beze změny
+
+<Warning>
+Kliknutí na **Přeskočit** neresetuje počítadlo prahu. Modální okno se znovu zobrazí u dalšího pohybu, který práh přesáhne, pokud nejprve nesnížíte zůstatek zaznamenáním vrácených palet.
+</Warning>
+
+---
+
+## Konfigurace prahů a sazeb poplatků
+
+Přejděte do **Nastavení → Konfigurace palet** pro nastavení pravidel poplatků. Tato sekce je dostupná pouze pro role **admin** a **company_admin**.
+
+Pro každý typ palety můžete nakonfigurovat:
+
+| Nastavení | Popis |
+|---|---|
+| Práh poplatku | Počet palet, při kterém se spustí modální okno poplatku |
+| Sazba poplatku | Cena za paletu (ve měně vaší společnosti) použitá na automaticky vygenerovaný řádek poplatku |
+
+Ponechte práh prázdný pro vypnutí modálního okna poplatku pro daný typ palety — pohyby se stále sledují, ale žádný poplatek se nikdy nenavrhne.
+
+---
+
+## Synchronizace s poskytovatelem (volitelné)
+
+Pokud používáte CHEP Connect, Druma může odsouhlasit vaši evidenci v aplikaci proti oficiálnímu zůstatku poskytovatele. Přejděte do **Nastavení → Integrace → Výměna palet**.
+
+**CHEP Connect** je aktivní. Zadejte přihlašovací údaje svého účtu CHEP, poté:
+
+- Klikněte na **Otestovat připojení** pro ověření, že jsou přihlašovací údaje přijaty
+- Klikněte na **Synchronizovat zůstatek** pro stažení aktuálního zůstatku poskytovatele a jeho porovnání s průběžným součtem Druma
+
+Jakákoli nesrovnalost se zobrazí jako řádek odsouhlasení — můžete ji přijmout jako záznam **Oprava** pro sladění obou evidencí.
+
+<Note>
+CHEP Connect je aktuálně jedinou integrací poskytovatele palet. Typy palet EUR, LPR, IPP, Euro Pool a Ostatní se v evidenci sledují ručně — pro ně dnes neexistuje synchronizace s poskytovatelem. Základní evidence funguje plně bez jakéhokoli nakonfigurovaného poskytovatele.
+</Note>
+
+---
+
+<Card title="Doplňky a příplatky objednávky" icon="circle-plus" href="/en/planner/order-extras">
+  Zjistěte, jak se řádky poplatků za palety zobrazují v editoru faktury spolu s ostatními příplatky objednávky.
+</Card>
+
+<Card title="Klienti" icon="building-2" href="/en/planner/clients">
+  Spravujte profily klientů, stálé pokyny a zobrazte historii zůstatku palet za jednotlivého klienta.
+</Card>

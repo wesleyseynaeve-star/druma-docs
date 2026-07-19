@@ -6,50 +6,93 @@ icon: "landmark"
 
 ## Mi az e-Factura?
 
-Az e-Factura Románia kötelező elektronikus számlázási rendszere. 2024-től kezdve a B2B tranzakciókhoz szükséges benyújtani a számlákat az ANAF SPV (Spațiul Privat Virtual) rendszerébe. A rendszer XSD-séma szerint validálja a számlát, és egyedi UIT (Unique Identification Token) kódot rendel hozzá.
+Az e-Factura Románia kötelező elektronikus számlázási rendszere, amelyet az ANAF (a Román Nemzeti Adóhatóság) üzemeltet. 2024 óta minden B2B tranzakciót román ÁFA-alany cégek között be kell jelenteni az ANAF-nak UBL XML formátumban — az Európa-szerte használt szabványos elektronikus számla-formátumban.
 
-## e-Factura konfigurálása a Drumában
+Egyszerűen fogalmazva: minden számlát, amelyet egy CIF-fel (ÁFA-regisztrációs számmal) rendelkező román cégnek állítasz ki, elektronikusan el kell küldeni az ANAF-nak, nem csak az ügyfelednek. A Druma ezt automatikusan kezeli a számla generálása után.
+
+## Hogyan kezeli a Druma az e-Facturát?
+
+Nem kell bejelentkezned az ANAF portálra, XML-fájlokat generálnod, vagy bármit manuálisan elvégezned. Íme, mi történik automatikusan:
+
+1. Számlát generálsz egy olyan román ügyfélnek, akinek van CIF-je az ügyfélrekordján
+2. A Druma létrehozza az UBL XML fájlt a helyes ANAF-formátumban
+3. A Druma benyújtja az XML-t az ANAF-nak az SPV (Spațiul Privat Virtual) API-n keresztül
+4. Az ANAF visszaad egy benyújtási azonosítót, majd feldolgozás után egy elfogadási vagy elutasítási státuszt
+5. A Druma számlarekordja frissül, mutatva az aktuális e-Factura státuszt
+
+## e-Factura státusz-nyomon követés
+
+Minden e-Factura benyújtást igénylő számla egy státusz-jelvényt mutat a számla-részletező oldalon, az **e-Factura** fül alatt:
+
+| Státusz | Jelentés |
+|---|---|
+| **Függőben** | Benyújtásra vár (jellemzően a számla generálásától számított néhány percen belül benyújtásra kerül) |
+| **Benyújtva** | Az XML elküldve az ANAF-nak — feldolgozásra vár |
+| **Elfogadva** | Az ANAF validálta és elfogadta a számlát |
+| **Elutasítva** | Az ANAF hibát talált — lásd a hibakódot a részletekért |
+
+<Note>
+Az ANAF rendszere rendszeresen tapasztal üzemszünetet, különösen hétköznap reggelente és hónap végén. Ha a számlád "Benyújtva" állapotban van néhány óránál tovább, ez általában az ANAF oldalán történik, nem a Druma hibája. Az újrapróbálkozási sor automatikusan kezeli ezt.
+</Note>
+
+## Automatikus újrapróbálkozási sor
+
+Ha egy benyújtás azért hiúsul meg, mert az ANAF nem elérhető, a Druma automatikusan újrapróbálkozik exponenciális visszavárással, összesen legfeljebb 3 kísérletig (az eredeti kísérlet plusz 2 újrapróbálkozás):
+
+- Első újrapróbálkozás: nagyjából **1 óra** múlva a sikertelenség után (±25% eltéréssel)
+- Második újrapróbálkozás: nagyjából **2 óra** múlva az első újrapróbálkozás után (±25% eltéréssel)
+
+Ha a harmadik kísérlet is meghiúsul, a számla egyenesen **Sikertelen** státuszra vált — ezután nincs további automatikus újrapróbálkozás. Ekkor egy **Manuális újraküldést** indíthatsz a számla oldal e-Factura füléről.
+
+## Az e-Factura státusz megtekintése
 
 <Steps>
-  <Step title="Lépj a Beállítások → Integrációk → e-Factura menüpontra">
-    Az ANAF hitelesítési adatok megadásához Admin vagy Vállalati admin jogosultság szükséges.
+  <Step title="Nyisd meg a számlát">
+    Lépj a **Számlázás** menüpontra, és kattints az ellenőrizni kívánt számlára.
   </Step>
-  <Step title="Add meg az ANAF SPV hitelesítési adatokat">
-    - ANAF digitális tanúsítvány (pfx fájl feltöltése)
-    - Tanúsítvány jelszava
-    - CIF (adó-azonosító szám)
+  <Step title="Kattints az e-Factura fülre">
+    Az e-Factura fül mutatja az aktuális státuszt, a benyújtás időbélyegét, az ANAF benyújtási azonosítóját (miután megérkezett), és bármilyen hibaüzenetet.
   </Step>
-  <Step title="Kapcsolat tesztelése">
-    Kattints a **Kapcsolat tesztelése** gombra az ANAF SPV API elérhetőségének ellenőrzéséhez.
-  </Step>
-  <Step title="Mentés">
-    A konfigurálás után a Druma automatikusan benyújtja az összes új számlát.
+  <Step title="Ha elutasítva, olvasd el a hibakódot">
+    Az elutasítási üzenetek az ANAF-tól származnak, és tartalmaznak egy hibakódot és leírást. A gyakoriak lentebb vannak felsorolva.
   </Step>
 </Steps>
 
-## Automatikus benyújtás
+## Gyakori elutasítási hibák
 
-Miután be van konfigurálva, a Druma:
-1. A számla generálásakor automatikusan generál egy érvényes UBL XML-t ANAF formátumban
-2. Benyújtja az ANAF SPV API-n keresztül
-3. Rögzíti a benyújtás időbélyegét és az ANAF által visszaadott UIT kódot
+| Hiba | Valószínű ok | Hogyan javítsd |
+|---|---|---|
+| **Érvénytelen CIF** | Az ügyfél ÁFA-száma a rekordján hibás vagy nincs ÁFA-alanyként regisztrálva | Lépj az **Ügyfelek** menüpontra → szerkeszd az ügyfelet → javítsd a CIF mezőt |
+| **Érvénytelen cím-formátum** | Az utca, város vagy megye mező nem egyezik az ANAF elvárt formátumával | Szerkeszd az ügyfél címét — győződj meg róla, hogy a Megye be van állítva, és a helyes román megyenevet használja |
+| **Hiányzó kötelező mező** | Egy kötelező XML mező üres | Ellenőrizd a számlán a hiányzó ügyfél-adatokat — általában CIF, cím vagy ügyfélnév |
+| **Duplikált számla** | Az ANAF-nak már van egy benyújtása ugyanazzal a számlaszámmal | Ez általában azt jelenti, hogy egy korábbi benyújtás sikeres volt, de a Druma nem kapta meg a megerősítést — ellenőrizd közvetlenül az ANAF SPV portált |
 
-## Állapotkövétés
+## Manuális újraküldés
 
-A **Számlázás** oldalon az e-Factura státusz minden számlán megjelenik:
-- **Függőben** — még nem nyújtották be
-- **Benyújtva** — ANAF rendszerben, feldolgozásra vár
-- **Elfogadva** — az ANAF elfogadta az UIT kóddal
-- **Hiba** — elutasítva, részletekkel
+Ha az automatikus újrapróbálkozások meghiúsulnak, vagy javítottál egy hibát, és azonnal újra szeretnéd próbálni:
 
-## Újrapróbálkozás sikertelen benyújtásnál
+Lépj a **Számlázás** menüpontra → nyisd meg a számlát → **e-Factura fül** → kattints az **Újraküldés az ANAF-nak** gombra. A Druma azonnal újra elküldi az XML-t.
 
-Ha egy benyújtás sikertelen, a Druma automatikusan újrapróbálkozik exponenciális visszavárással (1 óra → 4 óra → 24 óra). Tartós hibák esetén az e-Factura állapotoszlopban piros jelzés jelenik meg, és a részleteket megnyitva látható a hiba oka.
+## Mikor NEM vonatkozik az e-Factura?
 
-<Note>
-Az e-Factura benyújtás csak a romániai illetőségű cégekre és a román ügyfeleknek küldött számlákra vonatkozik. Más EU-s ügyfelekre vonatkozóan más e-számlázási rendszerek alkalmazandók (lásd Peppol a belga ügyfeleknek).
-</Note>
+Az e-Factura benyújtás csak a román ÁFA-alany ügyfeleknél kötelező. **Nem** vonatkozik:
+
+- EU-n belüli, határon átnyúló számlákra (Románián kívüli ügyfelek)
+- Román CIF nélküli ügyfelekre
+- Magánszemélyeknek (nem üzleti) kiállított számlákra
+
+Ezeknél a számláknál a Druma szabványos PDF-számlát generál az UBL XML benyújtási lépés nélkül. Az e-Factura fül nem jelenik meg ezeken a számlákon.
+
+<Warning>
+Győződj meg róla, hogy minden román B2B ügyfélnek a Drumában helyesen van megadva a CIF-je az ügyfélrekordján. CIF nélkül a Druma nem tud e-Factura-benyújtást végezni, és lehet, hogy nem felelsz meg a szabályoknak. Ellenőrizheted és frissítheted a CIF-számokat az Ügyfelek → válaszd ki az ügyfelet → Részletek fülön.
+</Warning>
+
+---
+
+<Card title="Számlák generálása" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
+  Hogyan hozz létre számlákat a Drumában, beleértve a több pénznemet és a kötegelt számlázást.
+</Card>
 
 <Card title="SAGA & WinMENTOR export" icon="database" href="/en/invoicing/saga-export">
-  Számlák exportálása romanian könyvelő szoftverbe.
+  Hogyan exportáld a számlaadatokat román könyvelőszoftverbe a könyvelődnek.
 </Card>

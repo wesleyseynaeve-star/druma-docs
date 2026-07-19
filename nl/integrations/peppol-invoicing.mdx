@@ -1,42 +1,120 @@
 ---
-title: "Peppol E-Facturering (België)"
+title: "Peppol e-facturering (België)"
 description: "Koppel Druma aan het Peppol-netwerk via e-invoice.be en routeer automatisch facturen naar Belgische zakelijke klanten — geen handmatige stappen vereist."
 icon: "file-check-2"
 ---
 
-Peppol is het EU-standaardnetwerk voor het uitwisselen van gestructureerde elektronische facturen tussen bedrijven. In België is het versturen van facturen via Peppol **verplicht voor alle KBO-geregistreerde bedrijven** die B2B-facturen uitreiken vanaf januari 2026.
+Peppol (Pan-European Public Procurement On-Line) is het EU-standaardnetwerk voor het uitwisselen van gestructureerde elektronische facturen tussen bedrijven. In België is het versturen van facturen via Peppol **verplicht voor alle KBO-geregistreerde bedrijven** die B2B-facturen uitreiken, vanaf januari 2026.
 
-Druma maakt verbinding met het Peppol-netwerk via **e-invoice.be**, een geaccrediteerd Belgisch Peppol-toegangspunt.
+Druma maakt verbinding met het Peppol-netwerk via **e-invoice.be**, een geaccrediteerd Belgisch Peppol-toegangspunt. Eenmaal geconfigureerd detecteert Druma welke van uw klanten bereikbaar zijn op Peppol en routeert facturen automatisch naar hen — u hoeft niets te wijzigen aan hoe u facturen aanmaakt of verstuurt.
+
+---
 
 ## Wie dit nodig heeft
 
-Dit is verplicht voor:
-- Belgische bedrijven (KBO-geregistreerd) die facturen uitreiken aan andere Belgische bedrijven
+U heeft de Peppol-integratie nodig als:
+
+- Uw bedrijf in België geregistreerd is (een KBO-nummer heeft), **en**
+- U facturen uitreikt aan andere Belgische bedrijven
+
+Opereert uw bedrijf buiten België, of zijn uw klanten consumenten of buitenlandse bedrijven, dan is Peppol niet op u van toepassing. Druma blijft facturen per e-mail versturen voor alle niet-Peppol-ontvangers, ongeacht of de integratie actief is.
+
+<Note>
+Belgische bedrijven die deze integratie niet activeren, riskeren vanaf januari 2026 boetes voor niet-naleving. De installatie duurt minder dan vijf minuten.
+</Note>
+
+---
 
 ## Instellen
 
 <Steps>
-  <Step title="Vind de Peppol E-Facturering-kaart">
-    Ga naar **Instellingen → Integraties** en klik op **Peppol E-Facturering**.
+  <Step title="Open de Peppol-kaart">
+    Ga naar **Instellingen → Integraties**. Zoek de kaart **Peppol e-facturering**. De status toont **Niet geconfigureerd**.
   </Step>
-  <Step title="Voer uw KBO-nummer en BTW-nummer in">
-    Voer uw Belgische bedrijfsregistratienummer (KBO) en BTW-nummer in.
+  <Step title="Klik op Configureren">
+    Klik op **Configureren** op de kaart. Er opent een instellingenpaneel.
+  </Step>
+  <Step title="Voer uw KBO- en BTW-nummer in">
+    Voer het **KBO-nummer** van uw bedrijf (10-cijferig Belgisch bedrijfsregistratienummer) en **BTW-nummer** (BE gevolgd door 10 cijfers) in de respectieve velden in.
   </Step>
   <Step title="Registreer op het Peppol-netwerk">
-    Klik op **Registreren op Peppol-netwerk**. Druma dient uw registratie in bij e-invoice.be. Dit duurt doorgaans enkele minuten.
+    Klik op **Registreren op Peppol**. Druma dient uw registratie in bij e-invoice.be. Dit is doorgaans binnen enkele seconden voltooid.
   </Step>
   <Step title="Bevestig activering">
-    Zodra actief toont de kaart een groene **Actief**-status.
+    Slaagt de registratie, dan toont de kaart een badge **Verbonden**. Uw bedrijf is nu Peppol-deelnemer en kan gestructureerde facturen zowel versturen als ontvangen op het netwerk.
   </Step>
 </Steps>
 
+<Warning>
+Alleen **Admin**- en **Bedrijfsbeheerder**-gebruikers kunnen integraties configureren. Ziet u de knop Configureren niet, vraag dan uw accountbeheerder.
+</Warning>
+
+---
+
 ## Hoe factuurroutering werkt
 
-Wanneer u een factuur aanmaakt voor een Belgische klant:
-1. Druma controleert of de klant bereikbaar is op het Peppol-netwerk
-2. Als bereikbaar: de factuur wordt automatisch via Peppol gerouteerd
-3. Als niet bereikbaar: de factuur wordt normaal per e-mail verzonden
+Na activering voegt Druma een Peppol-controle toe telkens u een factuur verstuurt:
+
+1. Druma controleert eerst of het BTW-nummer van de klant Belgisch is (begint met `BE`) — deze controle gebeurt **voor elke netwerkaanroep**, dus niet-Belgische klanten triggeren nooit een Peppol-opzoeking.
+2. Voor Belgische klanten zoekt Druma de ontvanger op het Peppol-netwerk via e-invoice.be. Wordt deze gevonden, dan wordt de factuur elektronisch ingediend — **geen extra stappen van uw kant vereist**.
+3. Druma verstuurt de factuur ook per e-mail, ongeacht of de Peppol-indiening slaagde — e-mail is geen voorwaardelijke terugval die alleen afgaat als Peppol faalt. De ene uitzondering: heeft een klant expliciet beide kanalen uitgeschakeld (een aparte instelling per klant), dan wordt e-mail overgeslagen zodra de Peppol-levering slaagt.
+
+U hoeft geen leveringsmethode per factuur te kiezen. De routering is volledig automatisch.
+
+---
+
+## Factuurstatus volgen
+
+De facturenlijst bevat een statuskolom **Peppol** met de volgende statussen:
+
+| Status | Betekenis |
+|---|---|
+| **Ingediend** | Verstuurd naar e-invoice.be, wacht op leveringsbevestiging |
+| **Geleverd** | Bevestigd geleverd in de Peppol-inbox van de ontvanger |
+| **Mislukt** | Levering mislukt bij het toegangspunt — zie de foutdetail op de factuurrij |
+| **Validatie mislukt** | Druma's lokale voorcontrole blokkeerde het versturen voordat het e-invoice.be bereikte (bijv. een ongeldige KBO-/BTW-controlesom) — geen aanroep naar het toegangspunt gebeurde, dus geen e-invoice.be-quotum werd gebruikt |
+| **Niet op netwerk** | Het BTW-nummer van de klant is geen geregistreerde Peppol-deelnemer; de factuur werd zoals gebruikelijk gemaild (getoond als "→ Gemaild") |
+
+Er is geen status "In behandeling" — een factuur is ofwel nog niet via Peppol verstuurd (null), ofwel in één van de vijf bovenstaande statussen. Statusupdates voor ingediende facturen worden automatisch naar Druma gepusht via een webhook van e-invoice.be.
+
+---
+
+## Fouten afhandelen
+
+Toont een factuur **Mislukt** of **Validatie mislukt**:
+
+1. Beweeg over of klik op de statusbadge om de foutdetail te lezen.
+2. Corrigeer het aangegeven probleem (bijvoorbeeld een ongeldig BTW-nummer op het klantrecord).
+3. Klik op **Peppol opnieuw proberen** op de factuurrij om de indiening opnieuw te proberen.
+
+<Note>
+Peppol-leveringsfouten beïnvloeden de interne status van de factuur in Druma niet. De factuur blijft bevestigd en verschijnt nog steeds in uw boekhoudkundige exports. De factuur wordt sowieso ook per e-mail verstuurd, zodat de klant niet zonder kopie zit terwijl u het probleem onderzoekt.
+</Note>
+
+---
+
+## Peppol-levering handmatig activeren
+
+Voor facturen waarvoor auto-versturen niet activeerde — bijvoorbeeld facturen aangemaakt voordat de integratie werd geactiveerd — kunt u handmatig via Peppol indienen:
+
+1. Open de lijst **Facturen**.
+2. Zoek de factuurrij en klik op het rijactiemenu (**···**).
+3. Klik op **Nu indienen**.
+
+Dit is ook nuttig na het corrigeren van het BTW-nummer of KBO-nummer van een klant.
+
+---
+
+## Gerelateerde pagina's
 
 <Card title="Integraties instellen" icon="plug" href="/nl/admin/integration-setup">
-  Alle andere integraties configureren.
+  Overzicht van alle integraties beschikbaar in Instellingen → Integraties.
+</Card>
+
+<Card title="Facturen versturen" icon="send" href="/en/finance/sending-invoices">
+  Hoe u facturen per e-mail verstuurt en de leveringsstatus volgt.
+</Card>
+
+<Card title="Huisstijl & Documentformaten" icon="palette" href="/nl/admin/branding-formats">
+  Factuurnummering, logo en kleuren op PDF-facturen aanpassen.
 </Card>

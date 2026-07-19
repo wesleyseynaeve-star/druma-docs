@@ -1,62 +1,161 @@
 ---
 title: "Skupinová přeprava (LTL)"
-description: "Konsolidujte více malých zásilek od různých klientů na jeden kamion se sledováním na každé zastávce, fakturací pro každého klienta a tisknutelným manifeStem více zastávek."
+description: "Konsolidujte více malých zásilek od různých klientů na jedno vozidlo se sledováním na jednotlivé úseky, fakturací na jednotlivé úseky a tisknutelným manifestem více zastávek."
 icon: "boxes-stacked"
 ---
 
 ## Co je skupinová přeprava?
 
-Skupinová přeprava — také nazývaná LTL (méně než plná vozová zásilka) nebo konsolidace — je situace, kdy naložíte více malých zásilek od různých klientů na stejný kamion jedoucí stejným směrem. Každý klient platí pouze za svoji část prostoru v kamionu.
+Skupinová přeprava — také nazývaná LTL (méně než plná vozová zásilka) nebo konsolidace — je situace, kdy naložíte více malých zásilek od různých klientů na stejné vozidlo jedoucí stejným směrem. Každý klient platí pouze za svou část prostoru v návěsu, a vy naplníte vozidlo kombinovanými náklady, aby byla jízda zisková.
 
-V Druma je **objednávka skupinové přepravy** kontejnerová objednávka, která obsahuje více dílčích objednávek. Kontejner sleduje kamion, řidiče a trasu. Každá dílčí objednávka má svého klienta, náklad, adresu vyzvednutí, doručení a cenu — a generuje vlastní fakturu.
+V Druma je skupinová přeprava vlastní modul (`/groupage`) — **jízda skupinové přepravy** obsahuje více existujících **úseků** objednávek. Jízda sleduje vozidlo, řidiče a trasu; každý úsek si drží vlastního klienta, náklad, adresu vyzvednutí/doručení a cenu.
+
+<Note>
+Skupinová přeprava není čtvrtý „typ objednávky" vedle Vlastní vozidlo / Subdodávka / Přemístění — je to samostatný modul, který seskupuje existující objednávky dohromady.
+</Note>
+
+<Frame caption="Modul Skupinová přeprava — úseky jízdy s klientem, nákladem a sledováním míry naplnění za jednotlivý úsek.">
+  <img src="/images/planner/groupage.png" alt="Jízda skupinové přepravy s více úseky a indikátorem míry naplnění" />
+</Frame>
 
 ---
 
-## Vytvoření kontejneru skupinové přepravy
+## Vytvoření jízdy skupinové přepravy
 
 <Steps>
-  <Step title="Začněte novou objednávku">
-    Přejděte do **Objednávky → Nová objednávka**.
+  <Step title="Přejděte do Skupinová přeprava">
+    Otevřete modul **Skupinová přeprava** z navigace.
   </Step>
-  <Step title="Nastavte typ na Skupinová přeprava">
-    V poli **Typ objednávky** vyberte **Skupinová přeprava**.
+  <Step title="Klikněte na Vytvořit skupinovou přepravu">
+    Klikněte na **Vytvořit skupinovou přepravu**. Druma vytvoří prázdnou jízdu (s automaticky vygenerovanou referencí jako `GRP-XXXXX`) a otevře její panel detailu — v tomto kroku neexistuje formulář vozidla/řidiče/data/trasy.
   </Step>
-  <Step title="Nastavte kontejner">
-    - **Kamion a řidič**, **Datum odjezdu**, **Obecný popis trasy**, **Poznámky**
-  </Step>
-  <Step title="Uložte kontejner">
-    Klikněte na **Uložit**.
+  <Step title="Přidejte objednávky do jízdy">
+    Viz další sekce — jízdu sestavíte přidáním existujících způsobilých objednávek k ní, ne vyplněním formuláře.
   </Step>
 </Steps>
 
 ---
 
-## Přidání dílčích objednávek do skupinové přepravy
+## Přidání objednávek do jízdy skupinové přepravy
 
 <Steps>
-  <Step title="Otevřete kontejner skupinové přepravy">
-    Přejděte do **Objednávky** a otevřete kontejner.
+  <Step title="Otevřete jízdu a klikněte na Přidat objednávky">
+    Otevřete jízdu skupinové přepravy a klikněte na **Přidat objednávky do skupinové přepravy**.
   </Step>
-  <Step title="Klikněte na Přidat dílčí objednávku">
-    Klikněte na tlačítko **+ Přidat zásilku** uvnitř kontejneru.
+  <Step title="Zaškrtněte způsobilé objednávky">
+    Modální okno uvádí existující objednávky způsobilé pro připojení k této jízdě — číslo objednávky, klient, trasa, LDM, hmotnost a typ návěsu — se zaškrtávacím políčkem u každého řádku. Není zde žádný formulář pro zadávání dat; vybíráte objednávky, které již existují, nezadáváte nové podrobnosti zásilky.
   </Step>
-  <Step title="Vyplňte podrobnosti dílčí objednávky">
-    - **Klient**, **Adresa vyzvednutí**, **Adresa doručení**, **Popis nákladu**, **Hmotnost a objem**, **Cena**
+  <Step title="Použijte Automaticky vyplnit, pokud chcete, aby Druma vybrala za vás">
+    Klikněte na **Automaticky vyplnit**, aby Druma vybrala nejlépe sedící kombinaci způsobilých objednávek až do zbývající kapacity nakládacích metrů návěsu.
   </Step>
-  <Step title="Opakujte pro každou zásilku">
-    Přidejte všechny zbývající dílčí objednávky.
+  <Step title="Přidat do skupinové přepravy">
+    Klikněte na **Přidat do skupinové přepravy**. Pokud by váš výběr přesáhl kapacitu LDM návěsu, akce je blokována validační chybou — musíte nejprve něco odznačit. Neshoda typu návěsu (typ návěsu objednávky se liší od jízdy) se zobrazí jako varování, ale akci neblokuje.
   </Step>
 </Steps>
 
+<Note>
+Hmotnost a objem nebrání přidání objednávek — pouze nakládací metry (LDM) ano. Lišty míry naplnění pro hmotnost a objem se stále zobrazují pro referenci (viz níže), ale jsou informativní, ne blokující.
+</Note>
+
 ---
 
-## Sledování stavu na každé zastávce
+## Řazení zastávek
 
-Každá dílčí objednávka má vlastní tok stavu, nezávislý na ostatních zásilkách v kamionu. Příslušný klient vidí stav ve svém portálu.
+Nové zastávky se jednoduše přidávají na konec jízdy v pořadí, v jakém je přidáváte — Druma trasu automaticky za chodu neoptimalizuje.
 
-<Card title="Vytvoření objednávky" icon="plus" href="/en/planner/creating-orders">
-  Základy vytváření standardních objednávek.
-</Card>
+Pro optimalizaci pořadí klikněte na **Automatické řazení** (zobrazuje se pouze při 2+ zastávkách): přeuspořádá seznam zastávek pro minimalizaci celkové vzdálenosti (vyzvednutí před doručeními) a nahlásí, kolik vzdálenosti ušetřilo, nebo že pořadí bylo již optimální. Zastávky můžete také kdykoli přesouvat ručně přetažením, nebo pomocí šipek nahoru/dolů u každého řádku zastávky.
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/groupage).
+## Sledování stavu na jednotlivé úseky
+
+Každý úsek objednávky má vlastní tok stavu, nezávislý na ostatních zásilkách ve vozidle. Když řidič aktualizuje svůj stav pro konkrétní zastávku, aktualizuje se pouze objednávka daného úseku — přehled jízdy zobrazuje, které zastávky jsou dokončené a které čekají.
+
+Například: pokud má vozidlo čtyři doručení a řidič dokončí zastávky 1 a 2, tyto úseky zobrazují **Doručeno**, zatímco zastávky 3 a 4 stále zobrazují **Na cestě k doručení**. Každý klient vidí ve svém portálu pouze stav své vlastní zásilky.
+
+---
+
+## Sledování nakládacích metrů (LDM), hmotnosti a objemu
+
+Každý úsek může mít hodnoty **CBM**, **Hmotnost (kg)** a **LDM** zadané přímo na jeho kartě zastávky. LDM představuje lineární délku podlahové plochy návěsu, kterou zásilka zabírá — standardní míra pro plánování skupinové přepravy napříč Evropou.
+
+Jízda skupinové přepravy zobrazuje lišty průběhu naplnění napříč jakýmikoli rozměry, pro které má přiřazené vozidlo/návěs známou kapacitu — **Hmotnost**, **Objem (CBM)** a **Nakládací metry**:
+
+| Barva | Úroveň naplnění |
+|---|---|
+| Zelená | ≤70 % kapacity |
+| Oranžová | 70–90 % kapacity |
+| Červená | >90 % kapacity (včetně přes 100 %, zobrazeno bez omezení) |
+
+### Režim rozdělení nákladů
+
+**Režim rozdělení nákladů** ovládá, jak se sdílené náklady dělí mezi úseky. K dispozici jsou čtyři režimy: **CBM**, **Hmotnost**, **LDM** a **Fakturovatelné**. Klikněte na tlačítko režimu na záložce Rozdělení nákladů jízdy pro přepnutí — spustí to automatický přepočet podílu nákladů, procenta rozdělení, přidělených nákladů a marže každého úseku.
+
+Vyberte režim, který odpovídá vaší obchodní dohodě s klienty na dané jízdě. CBM je nejběžnější pro obecný náklad, LDM pro náklady kritické na podlahovou plochu, hmotnost pro hutné zboží a Fakturovatelné, když fakturujete podle toho, která z hodnot hmotnosti/objemu je vyšší.
+
+---
+
+## Manifest skupinové přepravy
+
+Než řidič vyrazí, vytiskněte manifest skupinové přepravy — seznam zastávek a nákladu pro danou jízdu.
+
+<Steps>
+  <Step title="Otevřete jízdu skupinové přepravy">
+    Otevřete panel detailu jízdy.
+  </Step>
+  <Step title="Tisk manifestu">
+    Klikněte na **Tisk manifestu**. Druma otevře novou kartu prohlížeče s tisknutelným HTML manifestem — neexistuje samostatné stažení PDF.
+  </Step>
+  <Step title="Sdílejte s řidičem">
+    Vytiskněte a předejte, nebo sdílejte přes vlákno zpráv aplikace pro řidiče.
+  </Step>
+</Steps>
+
+Manifest zahrnuje: pořadí zastávek, adresu vyzvednutí/doručení, klienta, číslo objednávky, hmotnost a jakékoli poznámky za zastávku. Neobsahuje sloupec popisu nákladu.
+
+---
+
+## Fakturace na jednotlivé úseky
+
+Jízda má vlastní záložku **Faktury**, uvádějící každý úsek s jeho stavem faktury (**Nefakturováno → Vygenerováno → Odesláno → Zaplaceno**) a tlačítkem **Generovat fakturu** za jednotlivý úsek:
+
+<Steps>
+  <Step title="Otevřete záložku Faktury jízdy">
+    Otevřete jízdu skupinové přepravy a přejděte na záložku **Faktury**.
+  </Step>
+  <Step title="Generovat fakturu">
+    Klikněte na **Generovat fakturu** vedle jakéhokoli dosud nefakturovaného úseku. Faktura se vytvoří pouze pro klienta daného úseku, s jeho specifickým nákladem, cenou a referencí.
+  </Step>
+</Steps>
+
+Klienti na stejném vozidle nikdy nevidí faktury nebo ceny ostatních — každý dostane čistý, samostatný dokument, a můžete je generovat jednotlivě, jak je každý úsek připraven k fakturaci.
+
+---
+
+## Sledování
+
+Klienti sledující zásilku skupinové přepravy vidí na veřejné stránce sledování statické datum **Očekávané doručení**, ne živé, vícezastávkově seřazené ETA.
+
+---
+
+## Typický případ použití
+
+Máte čtyři klienty, kteří potřebují přepravit náklad z Bukurešti směrem na Vídeň tento čtvrtek. Jednotlivě žádný z nich nezaplní vozidlo. Dohromady ano:
+
+- Klient A: 8 palet do Bratislavy
+- Klient B: 4 palety do Budapešti
+- Klient C: 10 palet do Vídně
+- Klient D: 6 palet do Lince
+
+Vytvoříte čtyři objednávky běžným způsobem, poté vytvoříte jízdu skupinové přepravy, přidáte k ní všechny čtyři objednávky, přiřadíte svého řidiče, automaticky seřadíte zastávky a vytisknete manifest. Každý klient platí za svou část, každý dostane vlastní fakturu a aktualizace stavu, a vy provozujete plné vozidlo.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Vytváření objednávek" icon="plus" href="/cs/planner/creating-orders">
+    Zjistěte, jak fungují standardní objednávky v Druma — nejprve vytvoříte jednotlivé objednávky, poté je seskupíte.
+  </Card>
+  <Card title="Plánovací tabule" icon="calendar" href="/cs/planner/planning-board">
+    Zobrazte všechny své objednávky v týdenním pohledu plánování, než je seskupíte do jízdy.
+  </Card>
+</CardGroup>

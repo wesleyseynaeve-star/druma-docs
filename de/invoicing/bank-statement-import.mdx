@@ -1,35 +1,116 @@
 ---
 title: "Bankkontoauszug importieren"
-description: "Laden Sie CAMT.053- oder MT940-Bankkontoauszugsdateien hoch, um Zahlungen automatisch gegen offene Rechnungen abzugleichen."
+description: "Laden Sie CAMT.053- oder MT940-Bankkontoauszugsdateien hoch, um Zahlungen automatisch gegen offene Rechnungen abzugleichen — keine manuelle Dateneingabe nötig."
 icon: "file-up"
 ---
 
-## Unterstützte Formate
+## Übersicht
+
+Statt Zahlungen einzeln zu erfassen, können Sie Ihren Bankkontoauszug direkt in Druma hochladen. Druma parst jede Gutschrift-Transaktion in der Datei, führt die Abgleichlogik gegen Ihre offenen Rechnungen aus und wendet zuverlässige Übereinstimmungen automatisch an. Nicht zugeordnete Transaktionen landen zur schnellen manuellen Prüfung in der Abgleichswarteschlange.
+
+Dies ist der schnellste Weg, ein hohes Volumen eingehender Zahlungen auf einmal abzugleichen — ideal am Wochen- oder Monatsende.
+
+## Unterstützte Formate und Banken
+
+Druma akzeptiert drei Standardformate:
 
 | Format | Beschreibung |
-|---|---|
-| CAMT.053 | ISO 20022 XML — Standard für europäische Banken |
-| MT940 | SWIFT MT940 — von den meisten Banken unterstützt |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — von den meisten EU-Banken über Online-Banking exportiert |
+| **MT940 SWIFT** | SWIFT-Altformat — noch gängig bei Firmenbanking-APIs |
+| **CODA** | Format mit fester Feldbreite, verwendet von belgischen Banken |
 
----
+Alle drei Formate werden von BRD, BCR, Raiffeisen Bank, UniCredit und ING Rumänien unterstützt, sowie von den meisten EU-Banken — CODA deckt speziell belgische Bankexporte ab. Druma erkennt das Format beim Upload automatisch. Schlägt die Erkennung fehl, wählen Sie das richtige Format aus dem Dropdown **Format** im Import-Modal.
 
-## Kontoauszug hochladen
+**Maximale Dateigröße:** 10 MB pro Upload.
+
+<Note>
+Das erneute Hochladen derselben Kontoauszugsdatei ist unbedenklich. Druma erstellt einen Fingerabdruck jeder Transaktion und überspringt Duplikate stillschweigend — Sie erfassen nie eine Zahlung doppelt.
+</Note>
+
+## So importieren Sie einen Kontoauszug
 
 <Steps>
-  <Step title="Zu Rechnungsstellung → Abgleich gehen">
-    Klicken Sie auf **Kontoauszug importieren**.
+  <Step title="Den Import-Dialog öffnen">
+    Gehen Sie zu **Finanzen** → **Abgleich** → Tab **Zahlungen**. Klicken Sie oben rechts auf der Seite auf **Kontoauszug importieren**.
   </Step>
-  <Step title="Datei hochladen">
-    Klicken Sie auf **Datei hochladen** und wählen Sie Ihre CAMT.053 oder MT940-Datei.
+  <Step title="Ihre Datei auswählen">
+    Klicken Sie auf **Datei wählen** und wählen Sie Ihren exportierten Bankkontoauszug. Akzeptierte Erweiterungen: `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940), und `.cod`/`.coda` (CODA). Die Datei muss 10 MB oder kleiner sein.
   </Step>
-  <Step title="Ergebnisse überprüfen">
-    Druma zeigt automatisch abgeglichene Zahlungen und nicht abgeglichene Transaktionen.
+  <Step title="Das Format bestätigen">
+    Druma erkennt das Format automatisch und zeigt ein Label unter dem Dateinamen. Ist das Label falsch, öffnen Sie das Dropdown **Format** und wählen Sie das richtige Format manuell, bevor Sie fortfahren.
   </Step>
-  <Step title="Manuelle Abgleiche verarbeiten">
-    Für nicht abgeglichene Transaktionen wählen Sie manuell die entsprechende Rechnung aus.
+  <Step title="Den Import ausführen">
+    Klicken Sie auf **Importieren**. Druma parst alle Gutschrift-Transaktionen in der Datei und führt die Abgleichlogik gegen jede offene Rechnung Ihres Unternehmens aus. Dies dauert in der Regel wenige Sekunden.
+  </Step>
+  <Step title="Die Ergebniszusammenfassung prüfen">
+    Nach Abschluss der Verarbeitung zeigt ein Zusammenfassungsmodal das Ergebnis. Prüfen Sie jede Kategorie, bevor Sie schließen — siehe Aufschlüsselung unten.
   </Step>
 </Steps>
 
-<Card title="Bankabgleich" icon="building-columns" href="/en/invoicing/bank-reconciliation">
-  Alternative: E-Mails von Ihrer Bank automatisch weiterleiten.
+## Die Ergebniszusammenfassung verstehen
+
+Nach jedem Import zeigt Druma eine Ergebniszusammenfassung mit folgenden Zählern:
+
+| Feld | Was es bedeutet |
+|-------|---------------|
+| **Geparst** | Gesamtzahl der in der Datei gefundenen Gutschrift-Transaktionen |
+| **Automatisch zugeordnet** | Transaktionen mit hoher Zuverlässigkeit einer Rechnung zugeordnet — Zahlung automatisch angewendet |
+| **Prüfung nötig** | Transaktionen, bei denen eine mögliche Übereinstimmung gefunden wurde, deren Zuverlässigkeit aber unter dem Schwellenwert lag — erscheinen in der Abgleichswarteschlange |
+| **Duplikate übersprungen** | Transaktionen, die bereits aus einem vorherigen Upload derselben Datei erfasst wurden — stillschweigend ignoriert |
+| **Fehler** | Transaktionen, die nicht geparst werden konnten (fehlerhafte Zeilen, nicht unterstützte Währung, fehlende Referenz) |
+
+Ein gesunder Import hat eine hohe Zahl bei **Automatisch zugeordnet** und eine niedrige bei **Prüfung nötig**. Sehen Sie viele Zeilen, die Prüfung benötigen, bedeutet das meist, dass Rechnungsreferenzen nicht in den Zahlungsbeschreibungen enthalten sind — bitten Sie Kunden, ihre Rechnungsnummer in das Überweisungsreferenzfeld aufzunehmen.
+
+## Abgleichlogik
+
+Druma ordnet jede Banktransaktion einer Rechnung zu, anhand folgender Signale, in Prioritätsreihenfolge:
+
+1. **Rechnungsnummer in der Transaktionsreferenz** — exakte oder teilweise (fuzzy-normalisierte) Übereinstimmung mit einer offenen Rechnungsnummer. Eine Übereinstimmung allein bei diesem Signal genügt, um die Zahlung automatisch anzuwenden — kein weiteres Signal erforderlich.
+2. **Betragsübereinstimmung** — passt keine Rechnungsnummer, sucht Druma nach einer offenen Rechnung, deren offener Saldo innerhalb Ihrer konfigurierten Toleranz (Standard ±2 %) des Transaktionsbetrags liegt, **und** deren Fälligkeitsdatum innerhalb ±30 Tagen des Transaktionsdatums liegt. Das verhindert, dass eine zufällige Betragsübereinstimmung eine Verknüpfung zu einer Monate entfernten, nicht verwandten Rechnung herstellt.
+3. **Kundenname** — nur als Tie-Breaker verwendet, wenn die obige Betragsübereinstimmung mehr als eine Kandidatenrechnung liefert; Druma grenzt auf den Kandidaten ein, dessen Kundenname im Absendernamen der Transaktion erscheint.
+
+Eine Rechnungsnummer-Übereinstimmung wendet die Zahlung automatisch an (vollständig oder teilweise, je nach Betrag). Eine **reine Betragsübereinstimmung wird nie automatisch angewendet** — selbst wenn sie eindeutig eine Rechnung identifiziert — sie landet immer zur manuellen Bestätigung in der Abgleichswarteschlange, da kein Nachweis vorliegt, dass es sich wirklich um die Zahlung dieser Rechnung handelt. Kein Signal überhaupt → in die Warteschlange als nicht zugeordnet.
+
+## Umgang mit nicht zugeordneten Transaktionen
+
+Jede Transaktion, die nicht zuverlässig zugeordnet werden konnte, erscheint in der **Abgleichs**-Warteschlange im selben Tab **Zahlungen**. Jede Zeile zeigt ein Quell-Abzeichen **Kontoauszug** (zur Unterscheidung von Transaktionen, die per E-Mail-Parsing eintrafen, die ein Abzeichen **E-Mail** zeigen).
+
+<Steps>
+  <Step title="Die Abgleichswarteschlange öffnen">
+    Bleiben Sie auf **Finanzen** → **Abgleich** → Tab **Zahlungen**. Nicht zugeordnete Zeilen erscheinen unter der Zusammenfassung mit Status **Ausstehend**.
+  </Step>
+  <Step title="Die Transaktion erweitern">
+    Klicken Sie auf eine Zeile, um sie zu erweitern. Druma zeigt alle Transaktionsdetails: Datum, Betrag, Bankreferenztext und alle in Betracht gezogenen Kandidatenrechnungen.
+  </Step>
+  <Step title="Manuell zuordnen">
+    Klicken Sie neben der richtigen Rechnung auf **Zuordnen**. Druma wendet die Zahlung an und verschiebt die Transaktion in den Status **Angewendet**.
+  </Step>
+  <Step title="Verwerfen, falls nicht relevant">
+    Ist die Transaktion keine Kundenzahlung (z. B. eine interne Überweisung oder eine Bankgebühr), klicken Sie auf **Verwerfen**. Die Zeile wechselt in den Status **Abgelehnt** und wirkt sich auf keine Rechnung aus.
+  </Step>
+</Steps>
+
+<Warning>
+Das Verwerfen einer Transaktion ist eine weiche Aktion — sie markiert die Zeile nur in Druma als abgelehnt. Ihr tatsächliches Bankkonto oder Buchhaltungssystem ist davon nicht betroffen. Verwerfen Sie versehentlich, kontaktieren Sie den Support — es gibt derzeit kein Selbstbedienungs-Rückgängigmachen für abgelehnte Abgleichszeilen.
+</Warning>
+
+## Tipps für höhere automatische Zuordnungsraten
+
+- **Bitten Sie Kunden, die Rechnungsnummer** in das Zahlungsreferenzfeld ihrer Überweisung aufzunehmen. Eine Referenz wie `INV-000047` gibt Druma eine exakte Übereinstimmung beim ersten Signal.
+- **Halten Sie Kundennamen konsistent** zwischen Ihrem Kundenstamm und der Art, wie Kunden sich bei Überweisungen identifizieren — Druma greift nur zur Unterscheidung mehrerer Rechnungen mit gleichem Betrag auf eine Kundennamen-Übereinstimmung zurück, eine enge Übereinstimmung kann dort eine sonst mehrdeutige Betragsübereinstimmung retten.
+- **Verwenden Sie konsequent Nettozahlungsbedingungen.** Zahlungen mit abgezogenen Gebühren (Bank oder Factoring) fallen bei Beträgen unter ~5.000 € innerhalb der ±2 %-Toleranz. Bestätigen Sie bei größeren Rechnungen mit Kunden, dass sie den vollen Betrag senden.
+
+---
+
+<Card title="Zahlungsverfolgung" icon="circle-check" href="/de/invoicing/payment-tracking">
+  Zahlungen manuell erfassen und verfolgen, oder den vollständigen Zahlungsverlauf pro Rechnung einsehen.
+</Card>
+
+<Card title="Überfällig-Dashboard" icon="triangle-alert" href="/de/invoicing/overdue-management">
+  Sehen Sie überfällige Schuldner und senden Sie Zahlungserinnerungen für Rechnungen nach Fälligkeitsdatum.
+</Card>
+
+<Card title="Gutschriften" icon="file-minus" href="/de/invoicing/credit-notes">
+  Stellen Sie eine Gutschrift aus, um eine versendete Rechnung zu stornieren oder teilweise zu korrigieren.
 </Card>

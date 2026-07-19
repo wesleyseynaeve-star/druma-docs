@@ -1,41 +1,81 @@
 ---
 title: "Várakozási díj riasztások"
-description: "Automatikus riasztások és ügyfél-értesítések várakozási díjak keletkezésekor."
-icon: "bell-ring"
+description: "A Druma automatikusan nyomon követi, mennyi ideig várnak a sofőrök a felvételi és szállítási helyszíneken, és segít értesíteni az ügyfeleket, valamint várakozási díjat generálni."
+icon: "bell"
 ---
 
-## Automatikus várakozási riasztások
+A várakozási idő a közúti fuvarozás egyik leggyakoribb elveszett bevétel-forrása. A sofőr időben megérkezik, majd órákig ül, amíg az ügyfél berakodik vagy kirakodik — és a díj sosem kerül a számlára. A Druma várakozási riasztásai biztosítják, hogy minden várakozási óra nyomon követett, dokumentált és kiszámlázott legyen.
 
-Ha egy sofőr megérkezik a felvételi vagy szállítási helyszínre, és a megbeszélt időablakon túl vár, a Druma automatikusan:
+## Hogyan indul az óra?
 
-1. Elindítja a várakozási idő számlálóját
-2. Értesíti a tervező csapatot
-3. Riasztást küld az ügyfélnek (ha be van állítva)
+Amikor a sofőr a Druma sofőralkalmazásban **Megérkezett a felvételhez** vagy **Megérkezett a szállításhoz** státuszra frissíti a helyzetét, a várakozási óra automatikusan elindul. Az érkezés a sofőr GPS-helyzete alapján kap időbélyeget, amely bizonyítékként rögzítésre és tárolásra kerül.
 
-## Várakozási értesítések konfigurálása
+A tervezőnek nincs szüksége manuális beavatkozásra. A Druma azonnal riasztja a terveződet, amint a sofőr megérkezik — lásd lentebb —, és külön kiszámítja a felszámítható összeget, amint az ingyenes időszak letelt.
 
-**Az ügyfélnél:**
-1. Lépj az **Ügyfelek** oldalra, és nyisd meg az ügyfél profilját.
-2. A **Kapcsolattartók** fülön minden kapcsolattartónál engedélyezd a **Várakozási díjak** értesítési jelölőnégyzetet.
+## Mi történik, amikor a sofőr megérkezik?
 
-**Vállalati szinten:**
-Lépj a **Beállítások → Vállalat → Automatizálás** menüpontra, és konfiguráld:
-- **Türelmi idő** (percben) — mennyi ideig vár a Druma, mielőtt értesítést küld
-- **Értesítési küszöb** — csak akkor értesítünk, ha a várakozási idő meghaladja X percet
+A Druma **azonnal** riasztja a terveződet, amint a sofőr státusza Megérkezett a felvételhez vagy Megérkezett a szállításhoz értékre változik — nem várja meg előbb az ingyenes időszak lejártát:
 
-## Az értesítés tartalma
+1. Minden tervező/diszpécser a cégnél egy **alkalmazáson belüli értesítést** kap: "A sofőr megérkezett a felvételi/szállítási helyszínre"
+2. Egy **ügyfélnek szóló, alkalmazáson belüli értesítés** is sorba kerül, jelezve, hogy az ingyenes időszak után várakozási díj alkalmazható
+3. A rendelés eseménynaplója rögzíti az érkezést a sofőr nevével, a helyszínnel és az érvényes ingyenes órák számával
 
-Az ügyfélnek küldött várakozási értesítő e-mail tartalmazza:
-- A rendelési hivatkozást és az útvonalat
-- A sofőr érkezési időpontját (GPS alapján)
-- A megbeszélt időablakot
-- A jelenlegi várakozási időt
-- Felszámolható díj becslését (ha konfigurálva van)
+Az ingyenes várakozási időszak alapértelmezetten **2 óra**, de a jármű-költségprofilból (Beállítások → Árkártyák) származik — ez határozza meg, mikor válik az érkezés felszámíthatóvá, nem azt, hogy mikor tüzel a riasztás.
 
-## Egy kattintásos értesítés a tervező számára
+## Az ügyfél értesítése
 
-A tervező a rendelés részletei panelben egyetlen kattintással küldhet várakozási értesítést az ügyfélnek a **Várakozási értesítő küldése** gombbal.
+A Druma küldhet az ügyfélnek egy várakozási idő e-mailt — akár egy tervező indítja el, akár automatikusan, eszkalációs szinteken, ahogy a várakozás folytatódik. Az e-mail tartalmazza:
 
-<Card title="Várakozási idő díjak" icon="hourglass" href="/en/planner/waiting-time">
-  Várakozási idő nyomon követése, számítása és számlázása.
-</Card>
+- A sofőr érkezési idejét, és ha a rakodás/kirakodás megkezdődött, azt az időbélyeget is (egyszerű szöveg — nincs GPS-koordináta vagy térkép-link)
+- Az eddigi ingyenes és felszámítható várakozási időt, a beállított óradíjaddal
+- Az eddig kiszámított teljes várakozási díjat
+- Egy linket a sofőr feltöltött fotójához vagy hangjegyzetéhez, ha csatolva volt a várakozási eseményhez (1 óráig érvényes)
+- Automatikus eszkalációs e-maileknél egykattintásos "Átvétel megerősítése / Visszahívás kérése / Átütemezés kérése" linkeket (48 óráig érvényesek)
+
+<Note>
+Ez az e-mail formális írásos értesítésként szolgál, ami fontos lehet, ha a fuvarozási szerződés alapján várakozási idő igényt kell alátámasztanod.
+</Note>
+
+Jelenleg nincs előnézet vagy szerkesztési lépés — az e-mail a fenti sablon szerint generálódik és kerül elküldésre. Az ügyfél e-mail-címe a kapcsolattartói adataiból származik (elsőbbséget élvez a pénzügyi osztály kapcsolattartója, ennek hiányában az ügyfél általános e-mail-címe).
+
+## A díj a számlán
+
+Amikor elkészíted a rendelés számláját, a várakozási díj automatikusan hozzáadódik külön tételként:
+
+- Leírás: "Várakozási idő — [helyszín] — [dátum] — [X óra Y perc]"
+- Díj: a beállított óradíjad
+- Összeg: a legközelebbi 15 percre kerekítve
+
+A díj-tételt szerkesztheted vagy eltávolíthatod a számláról a kiállítás előtt, ha az ügyféllel másképp állapodtatok meg.
+
+## A várakozási idő beállításainak konfigurálása
+
+Az ingyenes várakozási órák és az óránkénti várakozási díj a jármű-költségprofilodból származik — lépj a **Beállítások → Árkártyák** menüpontra, nyisd meg a megfelelő saját flotta vagy alvállalkozói költségprofilt, és állítsd be ott az **Ingyenes várakozási órák** és a **Várakozási díj €/óra** értékeket. Jelenleg nincs külön ügyfelenkénti vagy rendelésenkénti felülbírálás ezekre az értékekre — minden, egy adott költségprofil szerint árazott rendelés az adott profil várakozási feltételeit használja.
+
+<Warning>
+Ha módosítod egy költségprofil várakozási díját, az csak az ettől a ponttól rögzített várakozási eseményekre vonatkozik. A már nyitott számlákhoz hozzáadott várakozási díjak nem frissülnek automatikusan.
+</Warning>
+
+## Várakozási előzmények megtekintése
+
+Minden várakozási esemény véglegesen tárolva van a rendelésen. Az átteintésükhöz:
+
+- **Rendelés-részletező oldal → Tevékenység fül** — minden státuszváltozást mutat időbélyeggel
+- **Analitika → Helyszíni várakozás** — várakozási látogatások, összes óra, átlagos időtartam és számlázható összegek, felvételi/szállítási helyszín és ügyfél szerint csoportosítva, egy választható időszakra (elmúlt 24 órától az elmúlt 12 hónapig, vagy egyéni időszak)
+
+Ez az adat hasznos a szerződési feltételek tárgyalásánál. Ha egy ügyfél kiszállításonként rendszeresen 3+ óra várakozást okoz, számokkal tudod alátámasztani a díj újratárgyalását.
+
+## Gyakori kérdések
+
+**Mi van, ha a sofőr elfelejtette beállítani a "Megérkezett" státuszt?** A tervező manuálisan is rögzíthet egy érkezési időt a rendelésen — add meg a tényleges időpontot és egy megjegyzést a manuális bejegyzés magyarázatával. Ez az idő kerül felhasználásra a várakozás számításánál.
+
+**Mi van, ha az ügyfél vitatja a díjat?** Oszd meg a rendelés Drumából származó eseménynaplóját, amely mutatja a rögzített érkezési és rakodási/kirakodási időbélyegeket, valamint a sofőr feltöltött fotóját vagy hangjegyzetét, ha volt csatolva a várakozási eseményhez.
+
+<CardGroup cols={2}>
+  <Card title="Várakozási idő a rendelésekben" icon="clock" href="/hu/planner/waiting-time">
+    Hogyan kezelik a tervezők manuálisan a várakozási időt a rendelési folyamaton belül.
+  </Card>
+  <Card title="Számlák generálása" icon="file-invoice" href="/en/invoicing/generating-invoices">
+    Hogyan jelennek meg és szerkeszthetők a várakozási díjak a számlákon.
+  </Card>
+</CardGroup>

@@ -1,0 +1,85 @@
+---
+title: "Sofőr bérszámfejtés"
+description: "Generálj automatizált bérszámfejtési számításokat sofőrönként, a megtett km, az aktív napok és a várakozási órák alapján."
+icon: "money-bill-wave"
+---
+
+## Áttekintés
+
+A Druma a már rögzített operatív adatokból számítja ki a sofőr bérét — a megtett kilométerekből, a ledolgozott napokból és a naplózott várakozási órákból. Nincs külön időkövető rendszer; az adat a rendelésekből és a státusz-koppintásokból folyik.
+
+A Sofőr bérszámfejtés a **Pénzügy** szekció alatt található. Az admin, vállalati admin és flottakezelő szerepkörök számára elérhető.
+
+<Frame caption="Pénzügy → Bérszámfejtés — az üres-km bér a terhelt díj százaléka, nem önálló díj.">
+  <img src="/images/reports/payroll.png" alt="Bérszámfejtés oldal" />
+</Frame>
+
+---
+
+## Bérkomponensek
+
+Minden bérszámfejtési futtatás négy komponenst számol ki:
+
+| Komponens | Alap |
+|---|---|
+| **Km-bér** | Terhelt km × km-enkénti díj |
+| **Üres km-bér** | Üres/deadhead km × km-enkénti díj × üres-km százalék (a terhelt díj konfigurálható részesedése, nem egy önálló üres-km díj — alapértelmezetten 100%, azaz ugyanúgy fizetve, mint a terhelt km) |
+| **Napi bér** | Aktív munkanapok × napidíj |
+| **Várakozási bér** | Teljes várakozási órák × óránkénti várakozási díj |
+
+Az összeg a négy komponens összege, EUR-ban.
+
+---
+
+## Bérszámfejtési futtatás generálása
+
+<Steps>
+  <Step title="Válaszd ki a sofőrt és az időszakot">
+    Válaszd ki a sofőrt a legördülő menüből, és állítsd be az időszak kezdő és záró dátumát. A jellemző időszakok egy naptári hónap vagy egy kéthetes fizetési ciklus.
+  </Step>
+  <Step title="Kattints a Generálás gombra">
+    A Druma kiszámítja mind a négy bérkomponenst a kiválasztott időszakon belüli rendelésekből és várakozási naplókból.
+  </Step>
+  <Step title="Nézd át a bontást">
+    Az eredmény minden komponenst külön mutat, így ellenőrizheted a számokat exportálás előtt.
+  </Step>
+  <Step title="Exportáld CSV-be">
+    Kattints az **Export CSV** gombra a bérszámfejtési összefoglaló letöltéséhez, a könyvelő- vagy bérszámfejtő rendszeredben való felhasználáshoz.
+  </Step>
+</Steps>
+
+---
+
+## Díjak konfigurálása
+
+A bérdíjak (km-enkénti díj, napidíj, üres-km százalék, óránkénti várakozási díj) sofőrönként vannak tárolva — egy céges szintű alapértelmezett szabállyal, amely minden olyan sofőrre vonatkozik, akinek nincs sajátja — a mögöttes bérszámfejtési szabályok táblázatban.
+
+<Note>
+Jelenleg nincs alkalmazáson belüli képernyő ezeknek a díjaknak a megtekintésére vagy szerkesztésére. A díjakat közvetlenül az adatbázisban kell beállítani (vagy előre feltölteni), amíg egy Flotta → Sofőrök díjak felület el nem készül. Ha egy sofőrnek nincs szabálya, és nincs céges alapértelmezés sem, az adott sofőr minden komponense nullaként kerül kiszámításra.
+</Note>
+
+---
+
+## Korábbi futtatások
+
+Minden generált bérszámfejtési futtatás tárolásra kerül, és a sofőr rekordja alatt van felsorolva. Bármely korábbi futtatást újra megnyithatod áttekintéshez vagy újraexportáláshoz.
+
+---
+
+## Havi összesítő diagram
+
+A sofőr-választó alatt egy oszlopdiagram mutatja a kiválasztott sofőr havi teljes bérszámfejtési összegeit az elmúlt 12 hónapra. Hasznos a szezonális minták vagy a szokatlanul magas várakozási díjú hónapok azonosításához.
+
+---
+
+<Note>
+A Drumában szereplő bérszámfejtési adatok tájékoztató jellegűek — a Druma nem integrálódik bérszámfejtési feldolgozókkal vagy adóhatóságokkal. A CSV-export a bérszámfejtő rendszeredbe való importálásra, vagy egy könyvelő általi manuális felülvizsgálatra szolgál.
+</Note>
+
+<Card title="Várakozási idő" icon="clock" href="/en/planner/waiting-time">
+  Ismerd meg, hogyan naplózzuk a várakozási időt, és hogyan táplálja be a bérszámfejtési számításokba.
+</Card>
+
+<Card title="Elveszett fuvar" icon="triangle-exclamation" href="/en/planner/wasted-journey">
+  Az elveszett fuvarokból származó üres kilométerek is megjelennek a sofőr bérszámfejtési rekordjaiban.
+</Card>

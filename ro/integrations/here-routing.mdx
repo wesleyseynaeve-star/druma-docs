@@ -1,19 +1,41 @@
 ---
-title: "Rutare HERE Maps"
-description: "HERE Maps alimenteaza autocompletarea adreselor, rutarea pentru camioane si calculul ETA."
+title: "Cautare adrese HERE Maps"
+description: "HERE Maps alimenteaza autocompletarea adreselor si geocodarea in Druma. Rutarea optimizata pentru camioane, estimarea taxelor de drum si ETA sunt calculate in schimb de PTV."
 icon: "map"
 ---
 
-HERE Maps este configurat la nivel de platforma - nu este necesara nicio configurare din partea ta.
+Druma foloseste **HERE Maps** pentru o singura functie de baza: gasirea si validarea adreselor pe masura ce le tastezi. Rutarea sigura pentru camioane, estimarea taxelor de drum si ETA-ul live sunt calculate de un furnizor diferit, **PTV**, descris pe scurt la finalul acestei pagini. Aceasta integrare functioneaza automat, in fundal — nu este necesara nicio configurare din partea operatorilor sau dispecerilor.
+
+## Nu necesita configurare
+
+HERE este configurat la nivel de platforma Druma. Spre deosebire de integrari precum TransFollow sau SmartBill, nu exista o cheie API de introdus si nicio setare de configurat. Fiecare cont Druma are acces complet la cautarea de adrese HERE, din prima zi.
 
 ## Autocompletarea adreselor
 
-Cand introduci o adresa, HERE sugereaza adrese in timp ce tastezi cu coordonate precise.
+Cand introduci o adresa de preluare sau livrare pe o comanda, incepe sa tastezi numele strazii sau orasul si HERE sugereaza adrese potrivite intr-o lista derulanta. Selecteaza adresa corecta si toate campurile — strada, numar, oras, cod postal si tara — se completeaza automat.
 
-## Rutarea pentru camioane
+Asta previne erorile de introducere a adreselor, care cauzeaza probleme de navigatie pentru sofer. O adresa confirmata prin autocompletarea HERE are intotdeauna coordonate valide, deci aplicatia de navigatie a soferului poate ruta direct catre ea.
 
-Druma trece dimensiunile vehiculului catre HERE pentru rute care evita restrictiile (poduri joase, drumuri cu restrictii de greutate).
+<Note>
+Pentru adrese rurale sau industriale care nu apar in autocompletare, poti introduce adresa manual si apoi trage pinul de pe harta la locatia corecta. Coordonatele sunt stocate impreuna cu comanda si folosite pentru rutare.
+</Note>
 
-## Estimarea taxelor
+## Geocodare inversa
 
-HERE estimeaza costul taxelor pe ruta (vignete, taxe de pod). Apare ca **Taxa estimata** pe comanda si in calculele de marja.
+HERE converteste si un pin plasat pe harta (latitudine/longitudine) inapoi intr-o adresa citibila — folosit, de exemplu, cand un planificator trage un pin pe harta, pentru a precompleta numele si adresa unei locatii.
+
+## Rutare, taxe de drum si ETA: gestionate de PTV
+
+Rutarea optimizata pentru camioane (evitarea podurilor joase, restrictiilor de greutate si altor pericole pe care vehiculele grele nu le pot lua), estimarea costului taxelor de drum in sistemele europene de taxare si ETA-ul live, care tine cont de trafic, sunt toate calculate de **PTV Developer Routing API**, nu de HERE. Druma trimite dimensiunile, greutatea si numarul de axe ale vehiculului tau catre PTV, ca rutele si estimarile de taxe sa reflecte camionul tau real.
+
+<Warning>
+Estimarile de cost pentru taxele de drum raman aproximari, indiferent de furnizor. Taxele reale depind de ruta specifica parcursa, de configuratia de axe sub care este inregistrat camionul tau in sistemul de taxare al fiecarei tari si de daca tarifele s-au schimbat de la ultima actualizare a datelor. Foloseste aceste cifre ca un ghid, nu ca un input precis de factura.
+</Warning>
+
+Mentinerea la zi a detaliilor tehnice ale vehiculului in **Flota → Vehicule → [vehicul] → Detalii Tehnice** este cel mai eficient pas unic pentru a imbunatati precizia rutarii, taxelor si ETA-ului — indiferent care furnizor face calculul.
+
+<CardGroup cols={1}>
+  <Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+    Cum gestionezi inregistrarile vehiculelor tale, inclusiv dimensiunile care alimenteaza rutarea.
+  </Card>
+</CardGroup>

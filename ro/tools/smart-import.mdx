@@ -1,34 +1,179 @@
 ---
-title: "Import inteligent"
-description: "Importul in masa bazat pe AI — incarca documente si Gemini extrage automat datele companiei, flotei, soferilor si clientilor."
-icon: "sparkles"
+title: "Smart Import (Onboarding in masa cu AI)"
+description: "Incarca documente nestructurate — PDF-uri, imagini, foi de calcul — si lasa AI-ul Druma sa extraga, revizuiasca si importe in masa datele tale de flota, sofer, client si companie, in cateva minute."
+icon: "brain"
 ---
 
-Smart Import iti permite sa incarci documente existente (PDF-uri, imagini, Excel, CSV) si AI-ul Druma (Gemini 2.0 Flash) extrage automat datele structurate pentru inregistrarea in masa.
+## Prezentare generala
 
-## Ce date poate extrage
+Smart Import este un instrument de onboarding pe baza de AI, care citeste documente pe care le ai deja — liste de flota de la transportatori, fisiere de permis de sofer, directoare de clienti, certificate de asigurare — si le transforma in inregistrari structurate Druma. In loc sa retastezi date din acte sau sa reformatezi foi de calcul pentru a se potrivi unui template de import, ii dai documentul brut Druma si revizuiesti ce a extras AI-ul, inainte sa intre in baza de date.
 
-- **Companie** - date de inregistrare, TVA, adresa, contact
-- **Flotă** - numere de inmatriculare, tipuri de vehicule, date de expirare documente
-- **Soferi** - nume, numere de telefon, detalii permis, date CPC/ADR
-- **Clienti** - denumiri companii, TVA, adrese, contacte
-- **Asigurari** - numere de polita, date de expirare, asigurator
-
-## Fluxul de lucru
-
-<Steps>
-  <Step title="Mergi la Tools -> Import Inteligent">In meniul principal, mergi la Instrumente -> Import Inteligent.</Step>
-  <Step title="Incarca documentele">Trage si plaseaza fisierele PDF, imagini, Excel sau CSV. Dimensiune maxima 10 MB per fisier.</Step>
-  <Step title="Asteapta extractia AI">Gemini analizeaza documentele si extrage campurile cu un scor de incredere per camp.</Step>
-  <Step title="Revizuieste dashboard-ul">Examineaza datele extrase pe categorii. Editeaza inline campurile incorecte.</Step>
-  <Step title="Elimina duplicatele">Druma verifica automat duplicatele fata de datele existente ale companiei.</Step>
-  <Step title="Importa in lot">Selecteaza inregistrarile de importat si apasa Importa.</Step>
-</Steps>
+Mergi la **Instrumente → Smart Import** pentru a-l deschide.
 
 <Note>
-Extractia AI nu este 100% precisa. Revizuieste intotdeauna datele extrase inainte de a importa.
+Smart Import foloseste Google Gemini pentru a extrage date. Fisierele sunt procesate pe server si nu sunt stocate permanent dupa extragere — se salveaza doar inregistrarile structurate pe care alegi sa le imporți.
 </Note>
 
-## Formate acceptate
+---
 
-PDF, JPG, PNG, HEIC, XLSX, CSV.
+## Cand folosesti Smart Import vs. importul obisnuit in masa
+
+Druma are doua cai de onboarding in masa. Alege-o pe cea potrivita situatiei tale:
+
+| Situatie | Foloseste |
+|---|---|
+| Ai un PDF, un document scanat, sau o imagine | **Smart Import** |
+| Ai o fotografie a unui document sau o lista de mana | **Smart Import** |
+| Ai primit o lista de flota de la un transportator, in Word sau un Excel neconventional | **Smart Import** |
+| Exporti dintr-un alt TMS, cu un format CSV cunoscut | **Import CSV obisnuit in masa** |
+| Ai o foaie de calcul curata, care se potriveste deja cu structura de coloane a Druma | **Import CSV obisnuit in masa** |
+
+Smart Import gestioneaza documente prea dezordonate sau nestructurate pentru un import CSV direct. Nu va inlocui un export bine structurat — importul obisnuit este mai rapid, cand datele tale sunt deja curate.
+
+---
+
+## Tipuri de documente acceptate
+
+- **PDF** — liste de flota, profiluri de transportator, certificate de asigurare, dosare de sofer
+- **Imagini** — JPEG, PNG, WebP, HEIC/HEIF — scanari, poze de telefon, capturi de ecran
+- **Excel** — fisiere `.xlsx` in orice format (Smart Import citeste continutul, nu doar template-uri standard)
+- **CSV** — fisiere delimitate prin virgula sau punct-si-virgula
+
+---
+
+## Flux de lucru pas cu pas
+
+<Steps>
+  <Step title="Deschide Smart Import">
+    Mergi la **Instrumente → Smart Import**. Vei vedea zona de incarcare si, sub ea, cardurile de categorie (goale la prima vizita).
+  </Step>
+  <Step title="Incarca documentele tale">
+    Apasa **Incarca Documente** sau trage fisierele direct pe zona de drop. Poti incarca mai multe fisiere deodata — de exemplu, o lista de flota PDF si o imagine a unui certificat de asigurare, impreuna.
+
+    <Note>
+    Dimensiunea maxima a fisierului este 20 MB per fisier. Daca un document este mai mare, imparte-l in sectiuni inainte de incarcare.
+    </Note>
+  </Step>
+  <Step title="Asteapta extragerea AI">
+    Druma trimite fiecare fisier catre serviciul de extragere AI. De regula dureaza cateva secunde per fisier. Un indicator de progres arata statusul pentru fiecare document. Nu inchide tab-ul in timpul extragerii.
+  </Step>
+  <Step title="Revizuieste rezultatele extragerii">
+    Cand extragerea este completa, apare **Dashboard-ul de Revizuire**. Arata carduri de categorie in partea de sus — **Companii**, **Flota**, **Soferi**, **Clienti**, **Asigurari** — cu un numar de inregistrari extrase in fiecare categorie.
+  </Step>
+  <Step title="Deschide o categorie pentru revizuire">
+    Apasa orice card de categorie pentru a vedea inregistrarile extrase intr-un tabel editabil. Fiecare rand este o inregistrare extrasa (un vehicul, un sofer, un client etc.).
+  </Step>
+  <Step title="Editeaza orice camp incorect">
+    Apasa orice celula din tabel pentru a o edita inline. AI-ul este precis pe text tiparit clar, dar poate citi gresit scrisul de mana, abrevierile sau formatarea neconventionala. Corecteaza orice eroare, inainte de import.
+  </Step>
+  <Step title="Verifica scorurile de incredere si duplicatele">
+    Revizuieste indicatorii de incredere si marcajele de duplicat pe fiecare rand — vezi sectiunile de mai jos pentru detalii.
+  </Step>
+  <Step title="Importa categoria">
+    Cand o categorie arata corect, apasa **Importa [Categorie]** — de exemplu, **Importa Flota** sau **Importa Clienti**. Druma insereaza in lot toate randurile nesarite si confirma numarul importat.
+  </Step>
+</Steps>
+
+---
+
+## Dashboard-ul de Revizuire
+
+Dashboard-ul de Revizuire este spatiul de lucru central dupa extragere. Are doua niveluri:
+
+**Carduri de categorie (nivel superior)** — cate un card per tip de date gasit in documentele tale. Fiecare card arata:
+- Numele categoriei
+- Numarul de inregistrari extrase
+- Un avertisment de sumar, daca vreo inregistrare are marcaje de incredere Scazuta sau Duplicat
+
+**Tabel de inregistrari (aprofundare)** — apasa un card pentru a deschide tabelul editabil al acelei categorii. Tabelul arata cate o coloana per camp (de ex. Numar Inmatriculare, Tip Remorca, Capacitate, An, pentru Flota), cu indicatori de incredere si marcaje de duplicat pe fiecare rand.
+
+Poti comuta liber intre categorii — editarile tale sunt pastrate pana imporți sau inchizi sesiunea.
+
+---
+
+## Scorul de incredere
+
+Fiecare camp extras primeste un scor de incredere, pe baza cat de clar a putut AI-ul sa citeasca si sa interpreteze textul sursa. Scorurile sunt afisate ca indicatori colorati pe fiecare celula:
+
+| Indicator | Semnificatie |
+|---|---|
+| Verde — **Ridicata** | AI-ul este increzator. Campul a fost tiparit sau structurat clar. |
+| Chihlimbariu — **Medie** | AI-ul a facut o inferenta rezonabila, dar sursa a fost ambigua (de ex. o abreviere, un cuvant partial vizibil). Revizuieste inainte de import. |
+| Rosu — **Scazuta** | AI-ul nu a putut extrage o valoare fiabila. Celula poate contine o presupunere sau poate fi goala. Revizuieste intotdeauna manual campurile Scazute. |
+
+<Warning>
+Campurile cu incredere scazuta nu sunt blocate de la import — le poti importa asa cum sunt — dar tu esti responsabil sa le verifici acuratetea. Datele incorecte (numar de inmatriculare gresit, numar de TVA gresit) pot cauza probleme ulterior in facturare, conformitate si comunicarile cu transportatorii.
+</Warning>
+
+Pentru a gasi rapid toate campurile cu incredere scazuta dintr-o categorie, cauta evidentierile chihlimbarii si rosii ale celulelor din tabel. Nu exista un filtru separat — scaneaza coloana cu coloana sau rand cu rand.
+
+---
+
+## Detectarea duplicatelor
+
+Inainte de a arata Dashboard-ul de Revizuire, Druma compara inregistrarile extrase fata de datele existente ale companiei tale — dar doar pentru patru categorii:
+
+- **Flota (camioane)**: potrivire dupa numarul de inmatriculare
+- **Flota (remorci)**: potrivire dupa numarul de inmatriculare
+- **Soferi**: potrivire dupa numele complet (fara sensibilitate la majuscule)
+- **Clienti**: potrivire dupa numarul de TVA, cu revenire la nume, daca nu a fost extras niciun numar de TVA
+
+<Note>
+Momentan nu exista detectare de duplicate pentru inregistrarile de Companii/Subcontractanti sau Asigurari — fiecare rand extras din acele categorii este tratat ca nou.
+</Note>
+
+Inregistrarile care se potrivesc cu date existente sunt marcate cu o eticheta **Duplicat** pe rand. Ai doua optiuni pentru fiecare duplicat:
+
+- **Sari** (implicit) — randul nu va fi importat. Foloseste asta cand inregistrarea existenta este deja corecta.
+- **Suprascrie** — importul va actualiza inregistrarea existenta cu datele extrase. Foloseste cu atentie — inlocuieste valorile stocate.
+
+Randurile fara marcaj de Duplicat sunt inregistrari noi si vor fi inserate la import.
+
+---
+
+## Dupa import
+
+Inregistrarile importate apar imediat in modulul relevant:
+
+- Inregistrarile de **Flota** apar in **Flota → Camioane** sau **Flota → Remorci**
+- **Soferii** apar in **Flota → Soferi**
+- **Clientii** apar in **Clienti**
+- **Companii / Subcontractanti** apar in **Forwarding → Subcontractanti**
+- Datele de **Asigurare** sunt atasate inregistrarii relevante de vehicul sau companie
+
+Nu exista anulare pentru un import. Daca au fost importate date incorecte, editeaza inregistrarile individual, in modulele lor respective.
+
+---
+
+## Limitari
+
+Smart Import este conceput pentru date de companie, flota, sofer, client si asigurare. Nu gestioneaza:
+
+- **Comenzi** — foloseste formularul de comanda sau functia de email de comanda primita, pentru crearea comenzilor
+- **Facturi** — facturile sunt generate automat din comenzile livrate, sau prin fluxul de ingestie a facturilor de transportator
+- **Migrarea datelor istorice** — pentru seturi mari de date istorice (mii de inregistrari), contacteaza suportul pentru o migrare asistata
+
+Smart Import functioneaza cel mai bine cu documente in principal bazate pe text. Poate procesa scris de mana in imagini, dar precizia scade semnificativ, comparativ cu textul tiparit.
+
+---
+
+## Exemplu practic
+
+Noul tau subcontractant iti trimite un PDF de 3 pagini care listeaza intreaga sa flota — 12 vehicule cu numar de inmatriculare, tip, greutate maxima si an. In loc sa introduci fiecare manual:
+
+1. Incarca PDF-ul in **Instrumente → Smart Import**
+2. Asteapta cateva secunde pentru extragere
+3. Apasa cardul **Flota** — apar 12 randuri, majoritatea cu incredere Ridicata
+4. Doua randuri au incredere Medie pe campul Tip Remorca — corecteaza-le inline
+5. Un rand este marcat ca Duplicat (un camion pe care l-ai adaugat deja saptamana trecuta) — lasa-l ca Sari
+6. Apasa **Importa Flota** — 11 vehicule noi sunt adaugate instant in flota ta
+
+---
+
+<Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+  Gestioneaza camioane, remorci si soferi — si verifica aici inregistrarile de flota importate, dupa un Smart Import.
+</Card>
+
+<Card title="Clienti" icon="building-2" href="/en/clients/clients-overview">
+  Vezi si editeaza inregistrarile de client create de Smart Import, si adauga contacte si instructiuni permanente.
+</Card>

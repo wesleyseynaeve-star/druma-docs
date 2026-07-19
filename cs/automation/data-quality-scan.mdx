@@ -1,34 +1,67 @@
 ---
 title: "Noční skenování kvality dat"
-description: "Jak automatický noční sken Druma detekuje problémy s kvalitou dat — chybějící doklady, neúplné profily, objednávky bez faktur."
-icon: "search"
+description: "Každou noc Druma zkontroluje vaše data proti devíti typům běžných problémů, abyste je mohli opravit dřív, než způsobí zpoždění nebo ztrátu tržeb."
+icon: "magnifying-glass-chart"
 ---
 
-## Přehled
+Špatná data jsou drahá. Klientovi chybějící DIČ zablokuje odeslání e-Factura. Doručená objednávka nevyfakturovaná týden je hotovost, kterou jste ještě nevybrali. Faktura po splatnosti bez následného řešení je chladnoucí vztah s klientem. Noční sken kvality dat najde tyto problémy dřív, než vás stojí peníze.
 
-Druma každou noc automaticky skenuje vaše data a detekuje problémy, které by mohly způsobit problémy v provozu nebo při auditu.
+Každou noc Druma spustí devět automatizovaných kontrol napříč celým vaším datasetem a zapíše výsledky na stránku **Kvalita dat** pod **Nástroje**.
 
-## Typy kontrolovaných problémů
+## Devět kontrol
 
-| Závažnost | Příklady |
-|---|---|
-| **Kritická** | Doklady vozidla nebo řidiče expirované, objednávky bez přiřazeného řidiče |
-| **Varování** | Doklady expirují do 30 dní, chybí CPC certifikát |
-| **Informační** | Neúplné profily klientů, starší objednávky bez faktury |
+### 1. Chybějící DIČ
+Klienti použití v nedávné objednávce (nikoli návrhu), kteří nemají zaznamenané DIČ. Rumunské podání e-Factura vyžaduje platné DIČ u každého klienta — pokud chybí, faktury pro tohoto klienta nelze automaticky odeslat na ANAF.
 
-## Zobrazení problémů
+### 2. Faktura neodeslaná na ANAF
+Odeslané faktury bez zaznamenaného stavu podání e-Factura.
 
-Přejděte do **Nástroje → Kvalita dat** pro zobrazení výsledků nejnovějšího skenu. Problémy jsou seřazeny podle závažnosti.
+### 3. Doručeno, nevyfakturováno 7+ dní
+Objednávky označené jako doručené před více než 7 dny, které stále nemají propojenou fakturu. Jde o tržby, které jste vydělali, ale ještě nevyúčtovali.
+
+### 4. Zastaralý návrh objednávky
+Návrhy objednávek, kterých se nikdo nedotkl více než 7 dní — typicky zapomenuté objednávky přijaté e-mailem, které plánovač nikdy nepotvrdil ani nesmazal.
+
+### 5. Klient bez e-mailu
+Klienti bez zaznamenané e-mailové adresy.
+
+### 6. Potvrzená objednávka bez sjednané ceny
+Objednávky ve stavu **Potvrzeno** nebo **Přiřazeno**, kde sjednaná cena stále chybí nebo je nulová.
+
+### 7. Faktura po splatnosti 60+ dní
+Nezaplacené faktury více než 60 dní po termínu splatnosti.
+
+### 8. Dokončená objednávka, žádná faktura po 14 dnech
+Doručené objednávky stále nevyfakturované po 14 dnech — verze kontroly 3 s delším horizontem, označená jako informativní, nikoli kritická.
+
+### 9. Neaktivní klient
+Klienti bez jakékoli objednávky za posledních 90 dní.
+
+## Zobrazení výsledků
+
+Přejděte do **Nástroje → Kvalita dat**.
+
+Stránka zobrazuje:
+
+- KPI lištu s celkovým počtem otevřených problémů, plus počty podle závažnosti (Kritická, Varování, Informační)
+- Skládaný sloupcový graf problémů podle závažnosti za posledních 30 dní
+- Filtrovatelnou tabulku (Otevřené / Vyřešené / Ignorované / Vše) se seznamem každého problému s jeho typem entity, referencí, popisem, závažností, navrhovanou akcí, stavem a datem vytvoření
+- Akce **Vyřešit** a **Ignorovat** u každého otevřeného problému
+
+<Note>
+Sken kvality dat běží každou noc v **03:00 UTC**. Výsledky zobrazené na stránce odrážejí stav vašich dat k tomuto času. Problémy, které opravíte během dne, se vyčistí při dalším nočním skenu (jakmile problém také označíte jako **Vyřešený**, nebo přestane odpovídat podkladovému dotazu).
+</Note>
 
 ## Řešení problémů
 
-Pro každý problém můžete:
-- **Vyřešit** — otevřít příslušný záznam a opravit problém
-- **Ignorovat** — označit problém jako záměrný (s komentářem)
+Stránka Kvalita dat vám řekne, co je špatně, a navrhne akci, ale neodkazuje přímo na podkladový záznam — použijte zobrazenou referenci (jméno klienta, číslo objednávky, číslo faktury) k jeho vyhledání sami v Klientech, Provozu nebo Financích, opravte problém a poté se vraťte a klikněte na **Vyřešit**.
 
-<Card title="Doklady vozového parku" icon="file" href="/en/fleet-compliance/fleet-documents">
-  Udržujte doklady aktuální pro eliminaci kritických výstrah.
-</Card>
----
+Neexistuje nástroj pro hromadnou opravu — každý problém se řeší jednotlivě. Je to záměrné: opravy dat by měly být promyšlené.
 
-This page is being translated. In the meantime, please refer to the [English version](/en/automation/data-quality-scan).
+Kliknutím na **Ignorovat** u problému ho odstraníte z filtru **Otevřené**, aniž byste ho označili jako vyřešený — použijte pro problémy, u kterých jste se rozhodli nejednat. Ignorované a vyřešené problémy jsou vyloučeny z dalšího nočního přeskenování otevřených problémů (každý sken nahrazuje aktuální sadu otevřených, neignorovaných problémů).
+
+<CardGroup cols={1}>
+  <Card title="Přehled reportů" icon="chart-bar" href="/cs/reports/reports-overview">
+    Podívejte se na všechny dostupné reporty v Druma a jak je naplánovat pro pravidelné doručování e-mailem.
+  </Card>
+</CardGroup>

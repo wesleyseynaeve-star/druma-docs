@@ -1,0 +1,102 @@
+---
+title: "KSeF — Polnische E-Rechnung"
+description: "Wie Druma Rechnungen automatisch bei KSeF (Krajowy System e-Faktur) einreicht, Polens obligatorischem nationalem E-Rechnungssystem, betrieben von KAS, mit Statusverfolgung, Wiederholungsbehandlung und UPO-Belegdownload."
+icon: "file-invoice"
+---
+
+<Warning>
+**Früher Zugang — wartet auf erste Live-Betreiber-Validierung.** Drumas KSeF-Einreichung ist funktional vollständig, wurde aber zum Zeitpunkt dieses Textes noch nicht end-to-end gegen Polens Live-KSeF-API von einem echten polnischen USt-Betreiber ausgeführt. Die Einreichung bleibt gesperrt, bis ein Live-Betreiber-Token verbunden ist. Gehören Sie zu den ersten Betreibern, die KSeF verbinden, behandeln Sie Ihre ersten Einreichungen als frühen Zugang — beobachten Sie die Statusabzeichen genau und kontaktieren Sie umgehend den Support, falls etwas nicht stimmt. Die unten beschriebenen Einrichtungsschritte und das Verhalten sind die korrekten Anweisungen; der einzige offene Punkt ist eine Live-Produktions-Erfolgsbilanz.
+</Warning>
+
+## Was ist KSeF?
+
+KSeF (Krajowy System e-Faktur) ist Polens nationales System für strukturierte E-Rechnungen, betrieben von der polnischen Steuerbehörde (KAS — Krajowa Administracja Skarbowa). Es ist für polnische USt-registrierte Unternehmen verpflichtend. Jede von einem PL-USt-Unternehmen ausgestellte Rechnung muss im offiziellen FA(3)-XML-Format an KSeF gesendet werden — das KAS-Portal allein reicht nicht aus.
+
+<Note>
+Die KSeF-Pflicht wird 2026 in Phasen eingeführt, und ihre Stichtage wurden von der polnischen Regierung mehrfach verschoben. Bestätigen Sie das für Ihr Unternehmen konkret geltende Stichdatum mit Ihrem Buchhalter oder über das offizielle Portal [ksef.mf.gov.pl](https://ksef.mf.gov.pl), bevor Sie sich auf ein hier genanntes Datum verlassen.
+</Note>
+
+KSeF gilt nur, wenn Ihr Unternehmen eine **polnische USt-IdNr.** hat (Format: `PL` gefolgt von 10 Ziffern, z. B. `PL1234567890`). Unternehmen, die in Rumänien, Belgien oder einem anderen Nicht-Polen-Land registriert sind, unterliegen KSeF nicht. Erkennt Druma keine PL-USt-IdNr. in Ihrem Unternehmensdatensatz, bleibt die KSeF-Integrationskarte inaktiv.
+
+## Wie Druma KSeF handhabt
+
+Sie müssen sich weder ins KAS-Portal einloggen, noch XML-Dateien erzeugen oder irgendetwas manuell einreichen. So läuft es automatisch ab, wenn Sie eine Rechnung erstellen und KSeF aktiviert ist:
+
+1. Druma wandelt die Rechnung in das offizielle, von KAS geforderte **FA(3)-XML**-Format um.
+2. Druma authentifiziert sich bei der KSeF-API mit Ihrem **Betreiber-Token**, sicher im Supabase Vault gespeichert — das Token ist nach dem Einfügen nie wieder im Klartext sichtbar.
+3. Druma reicht das XML bei KSeF ein und erhält eine **KSeF-Nummer** (die offizielle Referenz von KAS).
+4. Druma lädt die **UPO** herunter (Urzędowe Poświadczenie Odbioru — offizieller Empfangsbeleg) und speichert sie am Rechnungsdatensatz.
+
+Der gesamte Prozess läuft im Hintergrund. Sie sehen das Ergebnis an der Rechnung als farbiges Statusabzeichen.
+
+## KSeF-Statusabzeichen
+
+Jede KSeF-pflichtige Rechnung zeigt auf der Rechnungsdetailseite im Abschnitt **KSeF** ein Statusabzeichen:
+
+| Abzeichen | Bedeutung |
+|---|---|
+| **Ausstehend** | Rechnung erstellt; KSeF-Einreichung ist eingereiht. |
+| **Eingereicht** | XML an KSeF gesendet; wartet auf Verarbeitung durch KAS (meist 1–5 Minuten). |
+| **Akzeptiert** | KAS hat die Rechnung akzeptiert. Die KSeF-Nummer ist gespeichert, und die UPO ist verfügbar. |
+| **Fehlgeschlagen** | KSeF hat die Rechnung wegen eines Validierungsfehlers abgelehnt. Siehe Fehlermeldung an der Rechnung. |
+| **Abgelehnt** | KAS hat eine formelle Ablehnung zurückgegeben. Prüfen Sie die UPO auf den Grundcode. |
+
+<Note>
+Ein Hintergrundjob prüft alle 30 Minuten auf fehlgeschlagene Einreichungen, aber jede Rechnung wiederholt tatsächlich nur nach einem exponentiellen Backoff-Zeitplan — etwa 1 Stunde nach dem ersten Fehlschlag, dann etwa 2 Stunden danach (±25 % Zufallsstreuung). Schlägt auch der dritte Versuch (die ursprüngliche Einreichung plus diese 2 Wiederholungen) fehl, wechselt die Rechnung direkt in den Status **Fehlgeschlagen**, typischerweise innerhalb von etwa 3 Stunden nach dem ersten Fehlschlag — danach erfolgt keine automatische Wiederholung mehr. Lösen Sie eine manuelle Wiederholung im Rechnungsdetailpanel aus, sobald Sie den zugrunde liegenden Fehler behoben haben.
+</Note>
+
+## KSeF einrichten
+
+<Steps>
+  <Step title="Zu Einstellungen → Integrationen gehen">
+    Öffnen Sie das Menü **Einstellungen** aus der oberen Navigationsleiste und wählen Sie **Integrationen**.
+  </Step>
+  <Step title="Die KSeF-Karte finden und auf Verbinden klicken">
+    Suchen Sie die Karte **KSeF (Polnische E-Rechnung)**. Klicken Sie auf **Verbinden**.
+  </Step>
+  <Step title="Ihr Betreiber-Token einfügen">
+    Geben Sie Ihr KSeF-Betreiber-Token ein. Dies ist das von KAS für den API-Zugang Ihres Unternehmens ausgestellte Authentifizierungstoken. Ihr Buchhalter oder Ihr IT-Team kann eines über das KSeF-Portal unter [ksef.mf.gov.pl](https://ksef.mf.gov.pl) erzeugen.
+  </Step>
+  <Step title="Speichern">
+    Klicken Sie auf **Speichern**. Druma validiert vor der Aktivierung, dass Ihr Unternehmensdatensatz eine polnische USt-IdNr. hat. Schlägt die Validierung fehl, prüfen Sie, ob die USt-IdNr. in Ihren Unternehmensdetails im Format `PL` + 10 Ziffern vorliegt.
+  </Step>
+</Steps>
+
+Nach der Verbindung werden alle neuen, von Ihrem Unternehmen erstellten Rechnungen automatisch bei KSeF eingereicht. Bereits in Druma vorhandene Rechnungen werden **nicht** rückwirkend eingereicht.
+
+## KSeF trennen
+
+Gehen Sie zu **Einstellungen → Integrationen → KSeF → Trennen**. Dies entfernt das Betreiber-Token aus dem Vault und stoppt neue Einreichungen sofort. Bereits akzeptierte Rechnungen behalten ihre KSeF-Nummern — das Trennen betrifft akzeptierte Datensätze nicht.
+
+## Reverse-Charge-Rechnungen
+
+Druma handhabt Reverse-Charge-USt im FA(3)-XML-Format korrekt. Trägt eine Rechnung eine Reverse-Charge-USt-Behandlung, lässt Druma den USt-Betrag weg und setzt das korrekte Feld **P_12** im XML. Keine manuelle Anpassung nötig — die USt-Behandlung wird aus den in Druma konfigurierten Rechnungspositionen abgeleitet.
+
+## Die UPO herunterladen
+
+Die UPO (offizieller Beleg von KAS) wird automatisch heruntergeladen, sobald die Rechnung den Status **Akzeptiert** erreicht, und am Rechnungsdatensatz gespeichert. So laden Sie sie manuell herunter:
+
+1. Öffnen Sie die Rechnung unter **Rechnungsstellung**.
+2. Scrollen Sie zum Abschnitt **KSeF**.
+3. Klicken Sie auf **UPO herunterladen**.
+
+<Warning>
+Die UPO ist der rechtliche Nachweis, dass KAS Ihre Rechnung erhalten hat. Bewahren Sie eine Kopie für Ihre Unterlagen auf — polnisches Steuerrecht verlangt, dass Sie sie bei einer Steuerprüfung vorlegen können.
+</Warning>
+
+## Manuelle Wiederholung
+
+Sind automatische Wiederholungen ausgeschöpft, oder haben Sie einen Fehler korrigiert und möchten sofort erneut einreichen:
+
+Gehen Sie zu **Rechnungsstellung** → Rechnung öffnen → **Abschnitt KSeF** → klicken Sie auf **Einreichung wiederholen**. Druma sendet das FA(3)-XML sofort erneut.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="e-Factura / ANAF-Einreichung" icon="landmark" href="/de/invoicing/efactura-anaf">
+    Rumäniens entsprechendes obligatorisches E-Rechnungssystem — wie Druma über die SPV-API bei ANAF einreicht.
+  </Card>
+  <Card title="Peppol E-Rechnung" icon="network-wired" href="/de/integrations/peppol-invoicing">
+    EU-weite elektronische Rechnungsstellung über das Peppol-Netzwerk — Einrichtung, Versand und Statusverfolgung.
+  </Card>
+</CardGroup>

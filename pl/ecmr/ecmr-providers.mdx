@@ -1,0 +1,84 @@
+---
+title: "Dostawcy eCMR"
+description: "Natywny, wewnętrzny dostawca eCMR Druma to jedyny wybieralny dostawca eCMR. TransFollow to ścieżka wyłącznie dla wcześniejszych konfiguracji firm, które go już miały."
+icon: "right-left"
+---
+
+Druma wydaje eCMR za pomocą swojego **natywnego dostawcy** — wydaje i pieczętuje eCMR całkowicie wewnętrznie, bez kosztu za dokument. W **Ustawienia → Integracje → Dostawca eCMR** (wymagany dostęp administratora firmy) jedynymi opcjami są **Natywny** i **Wyłączony**. **TransFollow** nie może zostać nowo wybrany przez żadną firmę; istnieje wyłącznie jako ścieżka dla firm, które skonfigurowały go przed wprowadzeniem natywnego dostawcy — zobacz niżej.
+
+---
+
+## Natywny eCMR Druma (domyślny)
+
+Natywny dostawca Druma wydaje dokumenty CMR wewnętrznie, zbiera podpisy, buduje PDF i nakłada **cyfrową pieczęć PAdES** — Zaawansowany Podpis Elektroniczny (AdES) zgodnie z eIDAS — bez kontaktowania żadnej usługi zewnętrznej.
+
+### Jak to działa
+
+- **Nie jest wymagana żadna konfiguracja** — natywny dostawca jest domyślnie aktywny. Nie musisz wprowadzać żadnego klucza API ani łączyć konta zewnętrznego.
+- **Podpisywanie trójstronne, trzy osobne urządzenia:** nadawca podpisuje przez aplikację webową Druma (zwykle rejestruje to planista lub dyspozytor w karcie Dokumenty zlecenia); kierowca podpisuje osobno na własnym telefonie; odbiorca podpisuje przez **link udostępniania lub kod QR** na własnym urządzeniu przy dostawie — nie jest wymagane konto Druma dla odbiorcy.
+- **Certyfikowany PDF:** gdy wszystkie trzy strony podpiszą, Druma buduje kompletny PDF CMR i nakłada pieczęć PAdES. Opieczętowany dokument zawiera wszystkie obowiązkowe pola CMR (1–24), w tym oświadczenie "podlega CMR", miejsce i datę wydania oraz wszelkie zastrzeżenia przewoźnika.
+- **Zastrzeżenia odbiorcy (pole 24):** przy podpisywaniu odbiorca może dodać dowolne obserwacje tekstowe (uszkodzenie, brak, rozbieżność). Uwagi te są odciskane w opieczętowanym PDF, a na zleceniu w Druma pojawia się bursztynowy baner "Zastrzeżenia odbiorcy".
+
+### Sprawdzanie gotowości dostawcy
+
+Przejdź do **Ustawienia → Integracje → Dostawca eCMR** i kliknij **Testuj połączenie**, aby zweryfikować, że certyfikat podpisujący Druma jest skonfigurowany i dostawca jest gotowy.
+
+### Koszty
+
+eCMR jest wliczone w Twoją subskrypcję Druma bez dodatkowych kosztów — nie ma opłaty za dokument ani limitu użycia.
+
+### Przeglądanie i pobieranie dokumentów eCMR
+
+Podpisane dokumenty eCMR i podpisy są przechowywane w Druma przez 7 lat po dacie dostawy zlecenia, a następnie trwale usuwane przez zaplanowane zadanie — zobacz [Ważność prawna eCMR](/pl/ecmr/ecmr-legal-validity) po pełną politykę przechowywania.
+
+**Strona szczegółów zlecenia → karta Dokumenty → Zobacz eCMR**
+
+Stąd możesz:
+
+- Obejrzeć opieczętowany PDF w przeglądarce
+- Pobrać podpisany PDF
+- Sprawdzić status podpisu dla wszystkich trzech stron — wiersz Nadawcy pokazuje datę podpisania; Kierowca i Odbiorca pokazują odznakę podpisano/niepodpisano bez znacznika czasu
+- Udostępnić link do dokumentu klientowi (dostępny bez logowania do Druma)
+
+---
+
+## TransFollow (tylko wcześniejsze konfiguracje)
+
+TransFollow to zewnętrzna platforma eCMR, którą Druma kiedyś obsługiwała jako wybieralną opcję. **Nie można jej już nowo wybrać** — nie ma wpisu TransFollow do wybrania, pola klucza API, przełącznika trybu testowego ani przycisku testowania połączenia dla niego w Ustawienia → Integracje.
+
+Jedynym powodem, dla którego TransFollow w ogóle nadal istnieje w Druma, jest utrzymanie działania niewielkiej liczby firm z **wcześniejszą konfiguracją TransFollow** bez zakłóceń. Jeśli dotyczy to Twojej firmy:
+
+- Twój przepływ pracy eCMR działa dokładnie tak jak wcześniej — nic się nie psuje i nie jest wymagane żadne działanie.
+- Karta dostawcy eCMR w Ustawienia → Integracje pokazuje Twoją konfigurację jako **Natywny**.
+- Przy następnym zapisaniu tej integracji (nawet bez zmiany czegokolwiek) Twoja firma po cichu migruje do prawdziwego natywnego dostawcy.
+
+Jeśli konfigurujesz eCMR po raz pierwszy, albo Twoja firma nigdy nie skonfigurowała TransFollow, nic z tego Cię nie dotyczy — jesteś już na natywnym dostawcy.
+
+<Warning>
+Nie ma ścieżki skonfigurowania TransFollow dla firmy, która jeszcze go nie ma. Jeśli widzisz gdzie indziej odniesienia do TransFollow, opisują one to zachowanie ciągłości dla wcześniejszych konfiguracji, a nie opcję dostępną dziś w produkcie.
+</Warning>
+
+---
+
+## Pokrycie krajowe
+
+eCMR jest prawnie ważny w krajach, które ratyfikowały protokół e-CMR. Na 2025 rok obejmuje to większość państw członkowskich UE oraz Szwajcarię, Białoruś, Gruzję i inne. Sprawdź aktualną listę na [unece.org](https://unece.org). Dla krajów, które nie ratyfikowały, papierowy CMR jest nadal wymagany — Druma może wydrukować sformatowany list CMR dla takich przesyłek.
+
+---
+
+## Powiązane artykuły
+
+<CardGroup cols={2}>
+  <Card title="Czym jest eCMR?" icon="file-contract" href="/pl/ecmr/what-is-ecmr">
+    Wprowadzenie do elektronicznych listów CMR i kiedy ich potrzebujesz.
+  </Card>
+  <Card title="Ważność prawna eCMR" icon="scale-balanced" href="/pl/ecmr/ecmr-legal-validity">
+    Protokół e-CMR, pieczęć PAdES i AdES eIDAS wyjaśnione.
+  </Card>
+  <Card title="Tworzenie eCMR" icon="file-plus" href="/pl/ecmr/creating-ecmr">
+    Przewodnik krok po kroku do wydawania eCMR na zleceniu Druma.
+  </Card>
+  <Card title="Przepływ podpisywania" icon="pen-to-square" href="/pl/ecmr/signing-flow">
+    Jak podpisują nadawca, kierowca i odbiorca — i na jakim urządzeniu.
+  </Card>
+</CardGroup>

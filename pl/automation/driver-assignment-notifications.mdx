@@ -1,72 +1,72 @@
 ---
 title: "Powiadomienia o przypisaniu kierowcy"
-description: "Druma automatycznie wysyła powiadomienia push do kierowców gdy są przypisani do zlecenia, aby zawsze znali swoje następne zadanie bez telefonu z dyspozytury."
+description: "Druma automatycznie wysyła kierowcom powiadomienia push, gdy zostaną przypisani do zlecenia, aby zawsze znali swoje kolejne zadanie bez telefonu z dyspozytorni."
 icon: "bell-concierge"
 ---
 
-Gdy planista przypisuje kierowcę do zlecenia, Druma zajmuje się poinformowaniem kierowcy. Dwa automatyczne powiadomienia push są wysyłane — jedno wieczorem przed wyjazdem, jedno rano — aby kierowca miał szczegóły zadania we właściwym czasie.
+Gdy planista przypisuje kierowcę do zlecenia, Druma zajmuje się poinformowaniem kierowcy. Wysyłane są dwa automatyczne powiadomienia push — jedno wieczorem przed wyjazdem, jedno rano w dniu wyjazdu — aby kierowca miał szczegóły zadania we właściwym momencie bez telefonu z dyspozytorni.
 
 ## Kiedy wysyłane są powiadomienia
 
-Druma wysyła dwa powiadomienia per zlecenie:
+Druma wysyła dwa powiadomienia na zlecenie:
 
 | Powiadomienie | Czas | Wiadomość |
 |---|---|---|
-| Wieczorne przypomnienie | 18:00 czasu lokalnego dzień przed wyjazdem | "Masz jutro odbiór o [godzina] z [miasto] do [miasto]. Otwórz aplikację po szczegóły." |
-| Poranne przypomnienie | 06:00 czasu lokalnego w dniu wyjazdu | "Masz dziś odbiór o [godzina] z [miasto] do [miasto]. Otwórz aplikację po szczegóły." |
+| Wieczorne przypomnienie | 18:00 UTC dzień przed odbiorem | "Przypomnienie: odbiór jutro" / "Jutro: — w [miasto odbioru] → [miasto dostawy]" |
+| Poranne przypomnienie | 06:00 UTC w dniu odbioru | "Dzisiejszy odbiór" / "Odbiór dziś o — w [miasto odbioru]" |
+
+Obie godziny są **stałe w UTC** — nie są dostosowywane do strefy czasowej kierowcy ani zlecenia. Symbol zastępczy godziny odbioru w wiadomości nie jest obecnie wypełniany (renderuje się jako dosłowny myślnik "—") — powiadomienie mówi kierowcy tylko miasto odbioru (a dla wieczornego przypomnienia — także miasto dostawy), nie konkretną godzinę.
+
+Oba powiadomienia są wysyłane w skonfigurowanym języku kierowcy (pole `language` w jego profilu), z domyślnym powrotem do angielskiego, jeśli nie ustawiono. Druma obsługuje wszystkie 10 języków platformy, w tym rumuński, bułgarski, węgierski, polski, czeski i słowacki.
 
 ## Co widzi kierowca
 
-Gdy kierowca klika powiadomienie, aplikacja Druma otwiera się bezpośrednio na zleceniu. Widzi:
+Gdy kierowca stuka w powiadomienie, aplikacja kierowcy Druma otwiera się bezpośrednio na zleceniu. Widzi:
 
 - Pełny adres odbioru z przyciskiem "Nawiguj" (otwiera Google Maps lub Waze)
 - Imię i numer telefonu kontaktu załadunkowego
 - Żądane okno czasowe załadunku
 - Pełny adres dostawy
 - Opis towarów, wagę i liczbę palet
-- Wszelkie notatki planisty dodane do tego zlecenia
+- Wszelkie notatki dodane przez planistę do tego konkretnego zlecenia
+- Dokumenty CMR / eCMR, jeśli są dostępne
+
+Kierowca nie musi szukać swojego zlecenia — powiadomienie prowadzi go bezpośrednio do niego.
 
 ## Wymagania dla działania powiadomień
 
-Powiadomienia push wymagają od kierowcy zainstalowania PWA Druma na telefonie i zaakceptowania powiadomień przeglądarki.
+Powiadomienia push wymagają zainstalowania PWA Druma na telefonie kierowcy oraz zaakceptowania powiadomień przeglądarki.
 
-**Android (Chrome):** Przeglądarka automatycznie pyta o uprawnienie do powiadomień. Kierowca klika Zezwól.
+**Android (Chrome):**
+Gdy kierowca po raz pierwszy otwiera portal kierowcy Druma w Chrome, przeglądarka automatycznie pyta o uprawnienie do powiadomień. Kierowca stuka Zezwól. Nie jest potrzebna dodatkowa konfiguracja.
 
 **iOS (Safari):**
-1. Otwórz portal kierowcy Druma w Safari
-2. Kliknij przycisk Udostępnij
-3. Wybierz **Dodaj do ekranu głównego**
-4. Otwórz aplikację z ikony na ekranie głównym
-5. Po wyświetleniu monitu kliknij Zezwól na powiadomienia
+iOS obsługuje powiadomienia inaczej. Kierowca musi:
+1. Otworzyć portal kierowcy Druma w Safari
+2. Stuknąć przycisk Udostępnij (kwadrat ze strzałką)
+3. Wybrać **Dodaj do ekranu początkowego**
+4. Otworzyć aplikację z ikony na ekranie początkowym
+5. Po wyświetleniu monitu stuknąć Zezwól na powiadomienia
 
 <Note>
-Na iOS uprawnienie do powiadomień jest żądane dopiero po dodaniu aplikacji do ekranu głównego i otwarciu jej stamtąd. Jeśli kierowca twierdzi, że nie otrzymuje powiadomień na iPhonie, to jest najczęstsza przyczyna.
+Na iOS uprawnienie do powiadomień jest żądane dopiero po dodaniu aplikacji do ekranu początkowego i otwarciu jej stamtąd. Jeśli kierowca zgłasza brak powiadomień na iPhonie, to najczęstsza przyczyna — sprawdź, czy zainstalował aplikację z ekranu początkowego.
 </Note>
 
 ## Co jeśli kierowca nie ma smartfona?
 
-Powiadomienia push są uzupełnieniem istniejącego procesu dyspozycji, a nie jego zastąpieniem. Przypisanie jest nadal rejestrowane w Druma niezależnie od tego, czy kierowca używa aplikacji.
+Powiadomienia push są uzupełnieniem istniejącego procesu dyspozycji, a nie jego zastąpieniem. Jeśli kierowca nie ma smartfona zdolnego uruchomić PWA — lub po prostu nie czuje się pewnie z aplikacjami — dyspozytor powinien zadzwonić do niego jak zwykle.
 
-## Sprawdzanie czy kierowca otworzył powiadomienie
+Przypisanie jest nadal rejestrowane w Druma niezależnie od tego, czy kierowca używa aplikacji. Zlecenie, trasa i dokumenty są przechowywane i możliwe do wydrukowania z komputera.
 
-Planiści mogą sprawdzić aktywność powiadomień kierowcy na stronie szczegółów zlecenia.
+## Powiadomienia dla zleceń z wieloma przystankami
 
-**Zlecenie — karta Aktywność — sekcja Powiadomienia kierowcy**
-
-Pokazuje:
-- Czas wysłania wieczornego przypomnienia
-- Czas wysłania porannego przypomnienia
-- Czy każde powiadomienie zostało otwarte i kiedy
-
-Jeśli powiadomienie pokazuje **"Nie otwarto"** do 07:00 w dniu wyjazdu, planista wie, że należy zadzwonić bezpośrednio.
-
----
+Dla zleceń z wieloma przystankami odbioru lub dostawy Druma wysyła jedno powiadomienie na zlecenie. Treść powiadomienia odnosi się do pierwszego miasta odbioru i ostatniego miasta dostawy. Kierowca widzi wszystkie przystanki we właściwej kolejności po otwarciu zlecenia.
 
 <CardGroup cols={2}>
-  <Card title="Zarządzanie kierowcami" icon="id-card" href="/en/fleet/driver-management">
+  <Card title="Zarządzanie kierowcami" icon="id-card" href="/pl/planner/driver-management">
     Jak dodawać kierowców, ustawiać ich profile i zarządzać dokumentami.
   </Card>
-  <Card title="Instalowanie aplikacji kierowcy" icon="mobile" href="/en/drivers/installing-the-app">
+  <Card title="Instalowanie aplikacji kierowcy" icon="mobile" href="/pl/driver/installing-the-app">
     Przewodnik krok po kroku instalacji PWA Druma na Androidzie i iOS.
   </Card>
 </CardGroup>

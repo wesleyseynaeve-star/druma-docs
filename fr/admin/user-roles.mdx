@@ -1,6 +1,6 @@
 ---
 title: "Rôles utilisateur et permissions"
-description: "Description complète des huit rôles Druma, de ce à quoi chacun peut accéder et comment les attribuer."
+description: "Description complète des huit rôles utilisateur Druma, de ce à quoi chacun peut accéder, et comment les attribuer."
 icon: "shield-halved"
 ---
 
@@ -8,20 +8,25 @@ icon: "shield-halved"
 
 Attribuer le bon rôle à chaque membre de l'équipe signifie :
 - Les personnes ne voient que ce qui est pertinent pour leur travail
-- Les données sensibles restent protégées
-- Les modifications accidentelles sont moins probables
+- Les données sensibles (facturation, finances client) restent protégées
+- Les modifications accidentelles sur les commandes ou les paramètres sont moins probables
 - Vous disposez d'une piste d'audit claire de qui a fait quoi
 
-Druma a **huit rôles**. Six pour l'équipe interne (plateforme web), et deux pour les utilisateurs externes (chauffeurs et clients).
+Druma compte **huit rôles**. Six concernent votre équipe interne (plateforme web), et deux concernent les utilisateurs externes (chauffeurs et clients) qui accèdent à Druma via des liens dédiés plutôt que par la plateforme web.
 
-## Tableau des permissions
+<Frame caption="Paramètres → Utilisateurs — badges de rôle par membre de l'équipe.">
+  <img src="/images/admin/user-roles.png" alt="Panneau des paramètres utilisateurs et rôles" />
+</Frame>
+
+## Aperçu des permissions par rôle
 
 | Permission | Admin | Admin entreprise | Planificateur | Répartiteur | Gest. flotte | CS | Chauffeur | Client |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Facturation et abonnement | Oui | - | - | - | - | - | - | - |
+| Voir la page facturation | Oui | Oui | Oui | Oui | Oui | Oui | - | - |
+| Modifier la facturation (intervalle, plafond camions, plafonds d'usage) | Oui | Oui | - | - | - | - | - | - |
 | Paramètres entreprise | Oui | Oui | - | - | - | - | - | - |
 | Gérer utilisateurs et invitations | Oui | Oui | - | - | - | Inviter | - | - |
-| Intégrations et API | Oui | Oui | - | - | - | - | - | - |
+| Intégrations et paramètres API | Oui | Oui | - | - | - | - | - | - |
 | Barèmes de tarifs | Oui | Oui | - | - | Oui | - | - | - |
 | Créer et modifier des commandes | Oui | Oui | Oui | - | - | Oui | - | - |
 | Voir toutes les commandes | Oui | Oui | Oui | - | - | Oui | - | - |
@@ -33,57 +38,179 @@ Druma a **huit rôles**. Six pour l'équipe interne (plateforme web), et deux po
 | Heures des chauffeurs | Oui | Oui | Oui | Oui | Oui | - | - | - |
 | Générer et envoyer des factures | Oui | Oui | Oui | - | - | Oui | - | - |
 | Rapports et exports | Oui | Oui | Oui | - | - | Oui | - | - |
-| Application chauffeur | - | - | - | - | - | - | Oui | - |
-| Portail client | - | - | - | - | - | - | - | Oui |
+| Application chauffeur (mises à jour commande, eCMR) | - | - | - | - | - | - | Oui | - |
+| Portail client (suivi des expéditions) | - | - | - | - | - | - | - | Oui |
 
 ## Descriptions détaillées des rôles
 
 ### Admin
 
-L'Admin a un **accès complet au système**, y compris la gestion de la facturation et des abonnements. C'est le rôle pour le propriétaire de l'entreprise.
+L'Admin a un **accès complet au système**, y compris la configuration de facturation au niveau plateforme. C'est le rôle du propriétaire de l'entreprise ou de la personne ultimement responsable du compte Druma.
+
+Les Admins peuvent tout faire comme un Admin entreprise, plus :
+- Accéder à **Entités de facturation** et **Config facturation** — surfaces de facturation au niveau plateforme réservées à l'Admin uniquement
+
+*Exemple concret : Vasile possède l'entreprise de transport. Il est l'Admin. Il contrôle l'abonnement, gère la facturation et a une visibilité sur tout dans la plateforme.*
+
+---
 
 ### Admin entreprise
 
-L'Admin entreprise a un accès complet à tout **sauf la facturation**. Idéal pour un responsable des opérations de confiance qui gère les réglages quotidiens de la plateforme.
+L'Admin entreprise a un accès complet à presque tout, **y compris la page Facturation** — c'est le bon rôle pour un responsable des opérations de confiance ou un répartiteur senior qui gère la configuration quotidienne de la plateforme, et qui peut aussi gérer l'abonnement lui-même (intervalle de facturation, plafond de camions, plafonds d'usage par fonctionnalité). Les deux surfaces de facturation au niveau plateforme (**Entités de facturation**, **Config facturation**) restent réservées à l'Admin.
+
+Les Admins entreprise peuvent :
+- Configurer tout dans Paramètres, y compris la Facturation
+- Inviter et gérer d'autres utilisateurs
+- Configurer les intégrations (SmartBill, SAGA, eCMR natif, ANAF, Timocom, etc.)
+- Gérer le profil d'entreprise, les barèmes de tarifs et les paramètres par défaut
+- Créer et gérer les commandes, factures, la flotte et les rapports
+- Consulter les journaux d'audit
+
+*Exemple concret : Mihaela est la responsable des opérations de Vasile. Elle est Admin entreprise. Elle ajoute de nouveaux chauffeurs, met à jour les documents des véhicules, invite de nouveaux répartiteurs, tient le profil d'entreprise à jour, et peut aussi changer l'intervalle de facturation ou ajuster le plafond de camions sur la page Facturation — mais les écrans de config facturation au niveau plateforme restent réservés à Vasile.*
+
+---
 
 ### Planificateur
 
-Le rôle opérationnel principal. Les Planificateurs ont un accès complet aux commandes, au tableau de planification et à la facturation, avec un accès en lecture seule à la flotte.
+Le Planificateur est le rôle opérationnel principal — le répartiteur qui gère le travail de fret au quotidien. Les Planificateurs ont un accès complet aux commandes, au tableau de planification et à la facturation, avec un accès en lecture seule à la flotte, mais ne peuvent pas modifier les paramètres au niveau entreprise ni gérer les utilisateurs.
+
+Les Planificateurs peuvent :
+- Créer, modifier et supprimer des commandes de transport
+- Affecter véhicules et chauffeurs sur le tableau de planification
+- Générer et envoyer des factures
+- Voir les véhicules et chauffeurs de la flotte (lecture seule)
+- Accéder au tableau de bord, à la carte en direct et aux heures des chauffeurs
+- Travailler avec les rapports et exports
+
+*Exemple concret : Radu est répartiteur. Il crée toutes les commandes, affecte les camions, surveille les livraisons et envoie les factures une fois les commandes terminées. Il n'a pas besoin de modifier les paramètres entreprise ni de gérer les accès utilisateur.*
+
+---
 
 ### Répartiteur
 
-Rôle **axé sur la surveillance**. Les Répartiteurs voient le tableau de bord, la carte en direct et les heures des chauffeurs en lecture seule — mais ne peuvent pas créer ni modifier des commandes.
+Le Répartiteur est un rôle **axé sur la surveillance** pour les personnes qui doivent observer les opérations en temps réel sans créer ni modifier de commandes. Les Répartiteurs voient le tableau de bord, la carte en direct, les heures des chauffeurs et la flotte (lecture seule) — rien d'autre.
+
+Les Répartiteurs peuvent :
+- Voir le tableau de bord et l'aperçu des opérations du jour
+- Surveiller la carte en direct avec les positions des camions
+- Consulter les heures des chauffeurs et la conformité
+- Voir les véhicules et chauffeurs de la flotte (lecture seule)
+
+Les Répartiteurs ne peuvent pas :
+- Créer, modifier ou supprimer des commandes
+- Accéder au tableau de planification
+- Générer ou consulter des factures
+- Voir les rapports ou exports
+- Modifier des paramètres
+
+*Exemple concret : Bogdan travaille de nuit. Il surveille la carte en direct et le tableau de bord des heures de conduite pour s'assurer que tous les chauffeurs sont dans les temps et en conformité. En cas de problème, il appelle le planificateur de jour — il n'a pas besoin de toucher aux commandes ou aux factures.*
+
+---
 
 ### Gestionnaire de flotte
 
-**Contrôle total sur les opérations de flotte** — véhicules, remorques, chauffeurs, documents, cartes carburant, cabotage et barèmes de tarifs. Pas d'accès aux commandes ni à la facturation.
+Le Gestionnaire de flotte a un **contrôle total sur les opérations de flotte** — véhicules, remorques, chauffeurs, documents, imports de cartes carburant, suivi du cabotage et barèmes de tarifs. Il voit aussi les heures des chauffeurs. Il n'a pas accès aux commandes, à la facturation, au tableau de planification ni aux rapports.
+
+Les Gestionnaires de flotte peuvent :
+- Ajouter, modifier et retirer véhicules, remorques et chauffeurs
+- Gérer les documents de flotte (ITP, assurance, CEMT, certificats ADR)
+- Importer les données de cartes carburant (DKV, UTA, AS24)
+- Suivre la conformité cabotage
+- Gérer les barèmes de tarifs
+- Voir les heures des chauffeurs
+
+Les Gestionnaires de flotte ne peuvent pas :
+- Créer, modifier ou voir des commandes
+- Accéder au tableau de planification
+- Générer ou consulter des factures
+- Voir les rapports ou exports
+- Modifier les paramètres entreprise ou gérer les utilisateurs
+
+*Exemple concret : Ion est responsable de la flotte. Il gère les contrôles techniques, les renouvellements d'assurance, le suivi des permis chauffeurs et les imports de cartes carburant. Il n'a pas besoin de voir les commandes ou les factures — c'est le travail du planificateur.*
+
+---
 
 ### Service client
 
-Accès opérationnel aux commandes, à la facturation, aux clients et aux rapports. Peut inviter de nouveaux utilisateurs mais ne peut pas gérer la flotte ni le tableau de planification.
+Le rôle Service client donne un **accès opérationnel aux commandes, à la facturation, aux clients et aux rapports**. Les utilisateurs CS peuvent créer et modifier des commandes, générer des factures, gérer les relations client et inviter de nouveaux utilisateurs. Ils ne peuvent pas affecter de véhicules sur le tableau de planification ni gérer la flotte.
+
+Les utilisateurs Service client peuvent :
+- Créer, modifier et voir toutes les commandes
+- Générer et envoyer des factures
+- Gérer les clients et les paramètres du portail client
+- Accéder aux rapports et exports
+- Inviter de nouveaux utilisateurs
+
+Les utilisateurs Service client ne peuvent pas :
+- Affecter véhicules ou chauffeurs sur le tableau de planification
+- Gérer la flotte (véhicules, remorques, chauffeurs)
+- Voir la carte en direct ou le tableau de bord
+- Modifier les paramètres entreprise ou les intégrations
+
+*Exemple concret : Elena gère les relations client de bout en bout. Elle crée des commandes quand les clients appellent, génère les factures après livraison et envoie les rapports. Quand un nouveau membre rejoint l'équipe, elle peut lui envoyer une invitation — mais elle laisse la gestion de flotte et la planification à l'équipe opérations.*
+
+---
 
 ### Chauffeur
 
-**Les chauffeurs n'accèdent jamais à la plateforme web Druma.** Chaque chauffeur dispose d'un lien PWA personnel.
+Le rôle Chauffeur diffère de tous les autres — **les chauffeurs n'accèdent jamais à la plateforme web Druma**. Ils se connectent plutôt à l'application chauffeur Druma sur leur smartphone à l'aide d'un **numéro de téléphone et d'un code PIN** que vous configurez pour eux dans Flotte → Chauffeurs.
+
+Via l'application chauffeur, un chauffeur peut :
+- Voir ses commandes assignées du jour et des jours à venir
+- Mettre à jour le statut de commande : Chargé, Parti, Sur site de livraison, Livré
+- Télécharger des photos (état de la marchandise, preuve de livraison, rapports de dommages)
+- Signer numériquement les documents eCMR à l'écran
+- Voir les adresses d'enlèvement et de livraison et les coordonnées de contact
+
+Les chauffeurs ne peuvent voir ni les commandes d'un autre chauffeur, ni les finances client, ni les paramètres entreprise.
 
 <Warning>
-N'essayez pas d'inviter des chauffeurs via Paramètres → Utilisateurs. Accédez à Flotte → Chauffeurs, ouvrez le profil du chauffeur et copiez son lien PWA personnel. Envoyez-le par WhatsApp ou SMS.
+N'essayez pas d'inviter des chauffeurs via Paramètres → Utilisateurs. Les chauffeurs n'ont pas besoin d'email d'invitation. Accédez à Flotte → Chauffeurs, ouvrez le profil du chauffeur, définissez son numéro de téléphone et générez un code PIN sous **Connexion téléphone + PIN**. Donnez ce PIN directement au chauffeur — il le personnalisera (choisira son propre PIN) lors de sa première connexion.
 </Warning>
+
+*Exemple concret : Gheorghe est chauffeur longue distance. Il ouvre l'application Druma sur son téléphone chaque matin pour voir le détail de ses commandes, met à jour son statut à chaque arrêt, et signe l'eCMR numériquement au point de livraison.*
+
+---
 
 ### Client
 
-**Les clients n'accèdent jamais à la plateforme web Druma.** Chaque entreprise cliente dispose d'un lien de portail privé.
+Comme les chauffeurs, les clients n'accèdent jamais à la plateforme web Druma. Chaque entreprise cliente dispose d'un **lien de portail privé** qui lui donne une vue de toutes ses expéditions avec votre entreprise.
 
-## Attribution de plusieurs rôles
+Via le portail client, un client peut :
+- Voir toutes ses commandes actuelles et passées avec votre entreprise
+- Suivre le statut de livraison en direct
+- Télécharger les documents eCMR, preuves de livraison et factures
+- Voir les heures d'arrivée estimées
 
-Un utilisateur peut détenir plus d'un rôle. Combinaisons courantes :
-- **Admin entreprise + Planificateur** — propriétaire ou répartiteur senior qui gère également la plateforme
-- **Planificateur + Service client** — répartiteur en petite équipe qui gère également les relations clients
+Les clients ne peuvent voir ni les données d'autres clients, ni vos notes de commande internes, ni vos coûts, ni rien au-delà de leurs propres expéditions.
+
+*Exemple concret : Schmidt GmbH envoie régulièrement du fret avec votre entreprise. Vous partagez leur lien de portail une fois. Ensuite, leur responsable logistique ouvre le lien chaque fois qu'il veut vérifier une livraison — sans vous appeler.*
+
+## Attribuer plusieurs rôles
+
+Un utilisateur peut détenir plus d'un rôle. Vous le définissez lorsque vous invitez l'utilisateur ou en modifiant son profil ultérieurement.
+
+Combinaisons multi-rôles courantes :
+- **Admin entreprise + Planificateur** — propriétaire ou répartiteur senior qui gère aussi la plateforme
+- **Planificateur + Service client** — répartiteur en petite équipe qui gère aussi les demandes client
+
+<Note>
+Utilisez les attributions multi-rôles avec parcimonie. Dans une petite équipe, cela a du sens, mais donner un accès étendu à tout le monde complique le suivi des modifications et augmente le risque d'erreurs. Commencez par le rôle le plus restreint qui couvre les besoins de la personne.
+</Note>
+
+## Prise en charge multi-entreprises
+
+Une seule adresse email peut appartenir à **plusieurs comptes entreprise Druma**. Utile si :
+- Vous gérez plusieurs entités juridiques (une holding avec des transporteurs distincts)
+- Un comptable externe travaille avec plusieurs de vos clients qui utilisent tous Druma
+- Une agence de chauffeurs fournit des chauffeurs à plusieurs transporteurs
+
+Pour basculer entre entreprises, cliquez sur le nom de votre entreprise en haut à droite de la plateforme et sélectionnez l'autre entreprise dans la liste déroulante. Les données de chaque entreprise sont totalement séparées — les utilisateurs de l'Entreprise A ne peuvent pas voir les commandes ou clients de l'Entreprise B.
 
 <Card title="Invitez votre équipe" icon="users" href="/fr/getting-started/invite-your-team">
-  Instructions étape par étape pour inviter des utilisateurs.
+  Instructions étape par étape pour inviter des utilisateurs et configurer les connexions chauffeur par téléphone + PIN.
 </Card>
 
 <Card title="Configuration de l'entreprise" icon="building" href="/fr/admin/company-setup">
-  Configurez vos coordonnées légales, logo et paramètres de factures.
+  Configurez vos coordonnées légales, votre logo et vos paramètres de facturation.
 </Card>

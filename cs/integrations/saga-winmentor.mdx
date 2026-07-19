@@ -1,36 +1,86 @@
 ---
-title: "Integrace SAGA a WinMENTOR"
-description: "Jak exportovat data fakturace a objednávek z Druma do účetního softwaru SAGA Classic nebo WinMENTOR."
+title: "Integrace SAGA C a WinMENTOR"
+description: "Exportujte faktury Druma do SAGA C nebo WinMENTOR Classic jako soubory balíčků, které naimportujete do svého účetního softwaru."
 icon: "calculator"
 ---
 
-## Přehled
+Většina rumunských přepravních společností zpracovává účetnictví v SAGA C nebo WinMENTOR Classic. Druma se integruje s oběma, umožňuje přesunout faktury z Druma do vašeho účetního softwaru bez ručního opětovného zadávání dat.
 
-Druma generuje exportní soubory kompatibilní se SAGA Classic a WinMENTOR — dvěma nejrozšířenějšími rumunsko-orientovanými účetními programy. Export zahrnuje faktury prodeje, faktury nákupu, platby a záznamy zákazníků.
+## SAGA C
 
-## SAGA Classic a WinMENTOR Classic
+SAGA C je nejrozšířenější účetní software pro rumunské MSP. Druma exportuje faktury ve formátu DBF, který SAGA C očekává.
 
-Není potřeba API klíč. Přejděte do **Reporty → Export účetnictví**, vyberte rozsah dat a formát, stáhněte soubor a importujte ho do vašeho účetního softwaru.
-
-## WinMENTOR Enterprise (REST API)
-
-WinMENTOR Enterprise podporuje přímou API integraci.
+### Export z Druma
 
 <Steps>
-  <Step title="Otevřete kartu WinMENTOR Enterprise">
-    V **Nastavení → Integrace** klikněte na **WinMENTOR Enterprise**.
+  <Step title="Otevřete nabídku exportu">
+    V Druma přejděte do **Fakturace → Export → SAGA C**.
   </Step>
-  <Step title="Zadejte REST endpoint a přihlašovací údaje">
-    Zadejte URL API endpointu a přihlašovací údaje od správce WinMENTOR.
+  <Step title="Vyberte časový rozsah">
+    Zvolte období, které chcete exportovat — obvykle aktuální nebo předchozí měsíc. Zahrnou se všechny vystavené faktury z daného období.
   </Step>
-  <Step title="Otestujte a uložte">
-    Klikněte na **Otestovat připojení**, pak **Uložit**.
+  <Step title="Stáhněte soubor ZIP">
+    Klikněte na **Stáhnout ZIP**. V závislosti na obsahu vybraného období soubor obsahuje:
+    - `CLI_<datum>.dbf` — hlavní data klientů
+    - `ART_<datum>.dbf` — položka přepravní služby (zahrnuto ve výchozím nastavení pouze při prvním exportu; poté automaticky vypnuto, protože SAGA to potřebuje jen jednou)
+    - `IE_<datum>_<datum>.dbf` — prodejní faktury (Ieșiri) s rozpisem DPH
+    - `INT_<datum>.dbf` — nákupní faktury (Intrări) pro subdodávkové objednávky, přítomno pouze pokud v období nějaké jsou
+    - `NC_<datum>_<datum>.xml` — platby (Încasări), přítomno pouze pokud v období nějaké jsou
+    - `README.txt` — pokyny k importu v rumunštině
   </Step>
 </Steps>
 
-<Card title="Nastavení integrace" icon="plug" href="/en/admin/integration-setup">
-  Úplný průvodce nastavením všech integrací Druma.
-</Card>
----
+### Import do SAGA C
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/saga-winmentor).
+<Steps>
+  <Step title="Otevřete SAGA C">
+    Přihlaste se do SAGA C pro svou společnost.
+  </Step>
+  <Step title="Přejděte na import">
+    Přejděte do **Utilitare → Import date**.
+  </Step>
+  <Step title="Importujte soubory v pořadí">
+    Nejprve importujte `CLI_*.dbf` (Clienți) — potřeba pouze při prvním exportu nebo když se objeví noví klienti. Poté `ART_*.dbf` (Articole), je-li přítomen, poté `IE_*.dbf` (Ieșiri/faktury), poté `INT_*.dbf` (Intrări/nákupní faktury), je-li přítomen, poté `NC_*.xml` (Încasări/platby), je-li přítomen.
+  </Step>
+  <Step title="Ověřte">
+    Zkontrolujte importované dokumenty v **Documente → Ieșiri** (faktury) a **Documente → Încasări** (platby).
+  </Step>
+</Steps>
+
+### Kurzy BNR
+
+U faktur vystavených v jiných měnách než RON Druma automaticky zahrnuje kurz BNR (Rumunské národní banky) platný k datu faktury. Ten je vložen do souboru DBF a automaticky importován do SAGA C — není potřeba ruční zadávání kurzu.
+
+## WinMENTOR Classic
+
+WinMENTOR Classic používá jiný formát než SAGA C: textové soubory `.txt` oddělené znakem `|` místo DBF. V rozbalovací nabídce exportu vyberte místo SAGA C **WinMENTOR Classic**.
+
+ZIP obsahuje:
+- `Iesiri_<datum>_<datum>.txt` — prodejní faktury
+- `Clienti_<datum>.txt` — hlavní data klientů dotčených těmito fakturami
+- `Articole_<datum>.txt` — položka přepravní služby
+- `Incasari_<datum>_<datum>.txt` — platby, přítomno pouze pokud v období nějaké jsou
+- `README.txt` — pokyny k importu v rumunštině
+
+Pro import: ve WinMENTOR přejděte do **Utilitare → Import/Export → Import din fișier text**, vyberte postupně každý soubor a potvrďte, že oddělovač je `|`. Ověřte importované dokumenty v **Documente → Vânzări**.
+
+## Automatický měsíční export (SAGA C)
+
+Místo ručního exportu za každé období může Druma automaticky poslat export SAGA vašemu účetnímu e-mailem:
+
+**Nastavení → Automatizace a funkce → Konfigurace exportu SAGA**
+
+Nakonfigurujte **e-mail účetního** (a volitelnou kopii) a **den v měsíci** (1–28), kdy se má spustit. Naplánovaná úloha kontroluje denně a v nakonfigurovaný den exportuje **předchozí celý měsíc** a odešle ZIP e-mailem účetnímu se souhrnem počtu faktur/nákupů/plateb a případnými validačními upozorněními.
+
+<Note>
+E-mail obsahuje odkaz ke stažení ZIP, který **vyprší po 7 dnech**. Neexistuje žádný seznam „Historie exportů" v aplikaci — soubor za každý měsíc je dostupný pouze přes tento odeslaný odkaz (nebo opětovným spuštěním ručního exportu za stejné období z Fakturace → Export).
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Generování faktur" icon="file-invoice" href="/cs/invoicing/generating-invoices">
+    Jak generovat faktury z dokončených objednávek v Druma.
+  </Card>
+  <Card title="ANAF e-Factura" icon="building-columns" href="/cs/invoicing/efactura-anaf">
+    Elektronické odesílání faktur do ANAF přes systém e-Factura.
+  </Card>
+</CardGroup>

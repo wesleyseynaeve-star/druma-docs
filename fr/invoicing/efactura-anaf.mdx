@@ -1,52 +1,98 @@
 ---
-title: "e-Factura ANAF (Roumanie)"
-description: "Comment soumettre des factures B2B au système e-Factura roumain via ANAF et gérer les statuts de soumission dans Druma."
-icon: "building-columns"
+title: "Soumission e-Factura / ANAF"
+description: "Comment Druma soumet automatiquement les factures au système e-Factura obligatoire de Roumanie via l'API SPV de l'ANAF, avec suivi de statut et gestion des nouvelles tentatives."
+icon: "landmark"
 ---
 
-## Vue d'ensemble
+## Qu'est-ce que l'e-Factura
 
-e-Factura est le système national roumain de facturation électronique B2B. Depuis janvier 2024, toutes les entreprises roumaines sont tenues de soumettre les factures B2B (transactions entre entreprises) au système e-Factura de l'ANAF.
+e-Factura est le système de facturation électronique obligatoire de la Roumanie, géré par l'ANAF (l'administration fiscale roumaine). Depuis 2024, toutes les transactions B2B entre entreprises roumaines immatriculées à la TVA doivent être déclarées à l'ANAF au format XML UBL — le format de facture électronique standard utilisé à travers l'Europe.
 
-Druma prend en charge la soumission automatique des factures à l'ANAF directement depuis l'interface de facturation.
+En clair : chaque facture que vous émettez à une entreprise roumaine avec un CIF (numéro d'immatriculation TVA) doit être envoyée à l'ANAF électroniquement, pas seulement à votre client. Druma gère cela automatiquement une fois la facture générée.
 
----
+## Comment Druma gère l'e-Factura
 
-## Configuration
+Vous n'avez pas besoin de vous connecter au portail ANAF, de générer des fichiers XML, ni de faire quoi que ce soit manuellement. Voici ce qui se passe automatiquement :
 
-<Steps>
-  <Step title="Configurez vos identifiants ANAF">
-    Accédez à **Paramètres → Intégrations → ANAF e-Factura** et saisissez votre certificat numérique et vos identifiants ANAF.
-  </Step>
-  <Step title="Activez la soumission automatique">
-    Activez l'option **Soumettre automatiquement les factures à l'ANAF** dans les paramètres de l'intégration.
-  </Step>
-</Steps>
+1. Vous générez une facture pour un client roumain ayant un CIF sur sa fiche client
+2. Druma crée le fichier XML UBL au format ANAF correct
+3. Druma soumet le XML à l'ANAF via l'API SPV (Spațiul Privat Virtual)
+4. L'ANAF retourne un ID de soumission et, après traitement, un statut d'acceptation ou de rejet
+5. La fiche de facture dans Druma se met à jour pour montrer le statut e-Factura actuel
 
----
+## Suivi du statut e-Factura
 
-## Soumettre une facture à l'ANAF
-
-Lorsque la soumission automatique est activée, Druma soumet automatiquement chaque facture générée au système e-Factura de l'ANAF. Vous pouvez également déclencher manuellement la soumission depuis la page de détails de la facture.
-
----
-
-## Statuts e-Factura
+Chaque facture nécessitant une soumission e-Factura affiche un badge de statut sur la page de détail de la facture sous l'onglet **e-Factura** :
 
 | Statut | Signification |
 |---|---|
-| **En attente** | Facture générée, soumission non encore tentée |
-| **Soumise** | Envoyée à l'ANAF, en attente de confirmation |
-| **Acceptée** | ANAF a accepté la facture |
-| **Rejetée** | ANAF a rejeté la facture — voir les détails de l'erreur |
-| **Échec** | Erreur technique lors de la soumission |
+| **En attente** | En attente de soumission (soumise généralement dans les minutes suivant la génération de la facture) |
+| **Soumise** | XML envoyé à l'ANAF — en attente de traitement par l'ANAF |
+| **Acceptée** | L'ANAF a validé et accepté la facture |
+| **Rejetée** | L'ANAF a trouvé une erreur — voir le code d'erreur pour les détails |
+
+<Note>
+Le système de l'ANAF connaît régulièrement des indisponibilités, particulièrement les matins de semaine et en fin de mois. Si votre facture affiche « Soumise » pendant plus de quelques heures, c'est généralement du côté de l'ANAF, pas une erreur dans Druma. La file de nouvelles tentatives gère cela automatiquement.
+</Note>
+
+## File de nouvelles tentatives automatiques
+
+Si une soumission échoue parce que l'ANAF est indisponible, Druma réessaie automatiquement avec un délai exponentiel, jusqu'à 3 tentatives au total (la tentative d'origine plus 2 nouvelles tentatives) :
+
+- Première nouvelle tentative : environ **1 heure** après l'échec (±25 % de variation aléatoire)
+- Deuxième nouvelle tentative : environ **2 heures** après la première nouvelle tentative (±25 % de variation aléatoire)
+
+Si la troisième tentative échoue aussi, la facture passe directement au statut **Échec** — il n'y a plus de nouvelle tentative automatique après cela. Vous pouvez alors déclencher une **Resoumission manuelle** depuis l'onglet e-Factura de la page de facture.
+
+## Consulter le statut e-Factura
+
+<Steps>
+  <Step title="Ouvrez la facture">
+    Accédez à **Facturation** et cliquez sur la facture à vérifier.
+  </Step>
+  <Step title="Cliquez sur l'onglet e-Factura">
+    L'onglet e-Factura montre le statut actuel, l'horodatage de soumission, l'ID de soumission ANAF (une fois reçu), et tout message d'erreur.
+  </Step>
+  <Step title="Si rejetée, lisez le code d'erreur">
+    Les messages de rejet proviennent de l'ANAF et incluent un code d'erreur et une description. Les plus courants sont listés ci-dessous.
+  </Step>
+</Steps>
+
+## Erreurs de rejet courantes
+
+| Erreur | Cause probable | Comment corriger |
+|---|---|---|
+| **CIF invalide** | Le numéro de TVA du client sur sa fiche est incorrect ou non immatriculé à la TVA | Accédez à **Clients** → modifiez le client → corrigez le champ CIF |
+| **Format d'adresse invalide** | Le champ rue, ville ou comté ne correspond pas au format attendu par l'ANAF | Modifiez l'adresse du client — assurez-vous que le Comté est défini et utilise le nom de comté roumain correct |
+| **Champ obligatoire manquant** | Un champ XML requis est vide | Vérifiez la facture pour des détails client manquants — généralement le CIF, l'adresse, ou le nom du client |
+| **Facture en double** | L'ANAF a déjà une soumission avec le même numéro de facture | Cela signifie généralement qu'une soumission précédente a réussi mais que Druma n'a pas reçu la confirmation — vérifiez directement le portail SPV de l'ANAF |
+
+## Resoumission manuelle
+
+Si les nouvelles tentatives automatiques échouent ou que vous avez corrigé une erreur et voulez réessayer immédiatement :
+
+Accédez à **Facturation** → ouvrez la facture → **onglet e-Factura** → cliquez sur **Resoumettre à l'ANAF**. Druma envoie à nouveau le XML immédiatement.
+
+## Quand l'e-Factura ne s'applique PAS
+
+La soumission e-Factura n'est requise que pour les clients roumains immatriculés à la TVA. Elle ne s'applique **pas** à :
+
+- Les factures transfrontalières UE (clients basés hors de Roumanie)
+- Les clients sans CIF roumain
+- Les factures aux particuliers (hors entreprise)
+
+Pour ces factures, Druma génère une facture PDF standard sans l'étape de soumission XML UBL. L'onglet e-Factura n'apparaîtra pas sur ces factures.
+
+<Warning>
+Assurez-vous que chaque client B2B roumain dans Druma a son CIF correct saisi sur sa fiche client. Sans CIF, Druma ne peut pas soumettre à e-Factura et vous pourriez être non conforme. Vous pouvez vérifier et mettre à jour les numéros CIF sous Clients → sélectionnez le client → onglet Détails.
+</Warning>
 
 ---
 
-## File d'attente de nouvelles tentatives
+<Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
+  Comment créer des factures dans Druma, y compris la multi-devise et la facturation groupée.
+</Card>
 
-Si une soumission échoue ou est rejetée, Druma l'ajoute automatiquement à la file d'attente de nouvelles tentatives avec un backoff exponentiel (1h → 4h → 24h). Vous pouvez également déclencher manuellement une nouvelle tentative depuis la page de détails de la facture.
-
-<Card title="Export SAGA" icon="download" href="/fr/invoicing/saga-export">
-  Exporter les données de facturation vers SAGA et WinMENTOR.
+<Card title="Export SAGA et WinMENTOR" icon="database" href="/fr/invoicing/saga-export">
+  Comment exporter les données de facture vers le logiciel comptable roumain pour votre comptable.
 </Card>

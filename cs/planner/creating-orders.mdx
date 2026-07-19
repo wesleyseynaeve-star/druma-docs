@@ -1,16 +1,44 @@
 ---
 title: "Vytvoření objednávky"
-description: "Jak vytvořit novou přepravní objednávku v Druma, přiřadit kamion a řidiče a nastavit místa vyzvednutí a doručení."
+description: "Jak vytvořit novou přepravní objednávku v Druma, přiřadit vozidlo a řidiče a nastavit podrobnosti vyzvednutí a doručení."
 icon: "plus"
 ---
 
 ## Přehled
 
-Každá zakázka začíná objednávkou. V Druma objednávka obsahuje vše na jednom místě — klient, adresy vyzvednutí a doručení, podrobnosti o zboží, řidič a sjednaná cena. Po uložení objednávka automaticky prochází systémem od plánování až po fakturaci.
+Každá zakázka začíná objednávkou. V Druma objednávka drží vše na jednom místě — klienta, adresy vyzvednutí a doručení, podrobnosti nákladu, řidiče a sjednanou cenu. Po uložení objednávka automaticky prochází systémem, od plánování až po fakturaci.
 
-Přejděte do **Plánovač → Objednávky → Nová objednávka** pro zahájení.
+Pro zahájení přejděte do **Plánovač → Objednávky → Nová objednávka**.
 
-![Tlačítko Nová objednávka v seznamu objednávek](/images/placeholder.png)
+---
+
+## Modální okno Nová objednávka v přehledu
+
+Modální okno je organizováno do záložek. Zde je nejrychlejší cesta skrz něj — sekce níže se ponoří hlouběji do každého pole.
+
+<Steps>
+  <Step title="Otevřete Novou objednávku">
+    Přejděte do **Plánovač → Objednávky** a klikněte na **Nová objednávka**. Modální okno se otevře na záložce **Klient**.
+  </Step>
+  <Step title="Záložka Klient — vyberte nebo přidejte klienta">
+    Vyhledejte podle názvu společnosti nebo DIČ. Pokud nic neodpovídá, klikněte na **Přidat klienta** pro jeho vytvoření přímo, aniž byste modální okno opustili.
+  </Step>
+  <Step title="Záložka Trasa — přidejte zastávky">
+    Klikněte na **Přidat místo nakládky** a **Přidat místo vykládky** pro sestavení seznamu zastávek a **Přidat interní zastávku** pro body odpočinku, tankování nebo parkování návěsu. Každá zastávka má adresu, datum a časové okno.
+  </Step>
+  <Step title="Záložka Náklad — popište zásilku">
+    Zadejte hmotnost, počet palet, objem, LDM a typ návěsu. Zaškrtněte **ADR (nebezpečné zboží)** nebo **Reefer**, pokud náklad vyžaduje manipulaci s nebezpečným zbožím nebo teplotní kontrolu — příslušná další pole se zobrazí automaticky.
+  </Step>
+  <Step title="Záložka Finance — nastavte typ objednávky a cenu">
+    Vyberte **Vlastní vozidlo**, **Subdodávka** nebo **Přemístění** jako typ objednávky, poté zadejte sjednanou cenu, měnu a typ ceny. Použijte **Navrhnout cenu** pro čerpání srovnávacího ceníku nebo historie trasy.
+  </Step>
+  <Step title="Záložky Doplňky a Dokumenty (volitelné)">
+    Přidejte fakturovatelné doplňky (čekací dobu, příplatek ADR atd.) na záložce **Doplňky** a připojte doklady flotily ke sdílení s klientem na záložce **Dokumenty**.
+  </Step>
+  <Step title="Uložit">
+    Klikněte na **Uložit**. Objednávka se vytvoří zatím bez přiřazeného vozidla nebo řidiče — přiřaďte je poté přetažením objednávky na vozidlo na [Plánovací tabuli](/cs/planner/planning-board).
+  </Step>
+</Steps>
 
 ---
 
@@ -20,16 +48,23 @@ Začněte výběrem klienta, ke kterému tato objednávka patří. Zadejte náze
 
 Pokud se klient nezobrazí, musíte ho nejprve přidat v **Klienti** před vytvořením objednávky.
 
+<Note>
+Klient, kterého zde vyberete, je ten, komu se fakturuje. Ujistěte se, že vybíráte správnou entitu — zejména u skupin společností s více DIČ.
+</Note>
+
 ---
 
 ## Krok 2 — Vyberte typ objednávky
 
-Vyberte jeden ze čtyř typů objednávek:
+Vyberte jeden ze tří typů objednávek:
 
-- **Vlastní kamion** — Přepravu provádíte sami vlastním vozidlem a řidičem. Nejběžnější typ.
-- **Subdodávka** — Zakázku outsourcujete na jiného dopravce. Objednávku spravujete v Druma, ale skutečnou přepravu provádí kamion třetí strany. Pole pro kamion a řidiče jsou nahrazena polem pro výběr **dopravce**.
-- **Prodej kapacity** — Prodáváte volný prostor v kamionu nákladnímu zprostředkovateli. Užitečné při zpáteční cestě kamionu.
-- **Přemístění** — Přesun bez tržeb pro kamion na místo dalšího úkolu. Klient ani cena nejsou přiřazeni.
+- **Vlastní vozidlo** — Přepravu provádíte sami vlastním vozidlem a řidičem. Nejběžnější typ.
+- **Subdodávka** — Zakázku outsourcujete na jiného dopravce. Objednávku spravujete v Druma, ale skutečnou přepravu provádí vozidlo třetí strany. Pole pro vozidlo a řidiče jsou nahrazena sekcí **Subdodavatel / Dopravce** (viz Krok 7).
+- **Přemístění** — Přesun bez tržeb pro dopravu vozidla na místo, kde je potřeba pro další úkol. Klient ani cena nejsou přiřazeny. Vyberete kód důvodu přemístění a vzdálenost se sleduje jako interní prázdné kilometry. Podrobnosti viz [Objednávky přemístění](/cs/planner/repositioning).
+
+<Note>
+Pro prodej volné kapacity na existující zásilce použijte místo vytvoření nové objednávky akci tabule **Dát do prodeje** — viz [Plánovací tabule](/cs/planner/planning-board). Neexistuje samostatný typ objednávky „Prodej kapacity".
+</Note>
 
 ---
 
@@ -37,7 +72,7 @@ Vyberte jeden ze čtyř typů objednávek:
 
 Vyplňte, kde bude zboží vyzvednuto:
 
-- **Adresa** — Začněte psát a Druma použije automatické doplňování HERE Maps pro návrh adres.
+- **Adresa** — Začněte psát a Druma použije automatické doplňování HERE Maps pro návrh adres. Vyberte ze seznamu pro přesné souřadnice pro směrování.
 - **Kontaktní osoba** — Jméno osoby, na kterou se ptát v místě nakládky.
 - **Telefonní číslo** — Kontaktní číslo na místo vyzvednutí.
 - **Datum a čas nakládky** — Kdy by měl řidič dorazit k nakládce.
@@ -54,6 +89,10 @@ Sekce doručení funguje stejně jako vyzvednutí:
 - Datum a čas doručení (musí být po datu nakládky)
 - Referenční číslo doručení (volitelné)
 
+<Note>
+Pokud máte více zastávek vyzvednutí nebo doručení, použijte na záložce **Trasa** **Přidat místo nakládky**, **Přidat místo vykládky** nebo **Přidat interní zastávku** (body odpočinku, tankování, parkování návěsu) pro vložení mezilehlých bodů. Každá zastávka má vlastní adresu, čas a referenci.
+</Note>
+
 ---
 
 ## Krok 5 — Podrobnosti o zboží
@@ -67,8 +106,12 @@ Popište, co se přepravuje:
 
 ### Speciální příznaky
 
-- **ADR (nebezpečné zboží)** — Zaškrtněte, pokud je náklad klasifikován jako nebezpečný podle předpisů ADR.
-- **Nadměrný / nestandardní náklad** — Zaškrtněte, pokud náklad přesahuje standardní rozměry a vyžaduje povolení.
+- **ADR (nebezpečné zboží)** — Zaškrtněte, pokud je náklad klasifikován jako nebezpečný podle předpisů ADR. Druma automaticky použije jakýkoli příplatek ADR nakonfigurovaný ve vašich ceníkách a objednávka bude označena, abyste zkontrolovali, že řidič má správný certifikát ADR. Zaškrtnutím se odkryje třída ADR, číslo UN, obalová skupina, kód tunelového omezení, řádný přepravní název a pole poznámek ADR.
+- **Reefer (teplotně řízeno)** — Zaškrtněte, pokud náklad vyžaduje teplotně řízenou manipulaci. Zaškrtnutím se odkryjí pole minimální a maximální teploty.
+
+<Note>
+Neexistuje samostatný příznak nadměrného/nestandardního nákladu na úrovni nákladu. Pokud zásilka vyžaduje povolení pro nadměrný náklad, zpracujte dodatečný náklad jako příplatek/fakturovatelný doplněk na záložce **Doplňky** — samotná záložka nákladu sleduje pouze ADR a reefer.
+</Note>
 
 ---
 
@@ -77,49 +120,55 @@ Popište, co se přepravuje:
 Zadejte obchodní podmínky:
 
 - **Částka** — Cena dohodnutá s klientem.
-- **Měna** — EUR, CZK nebo jiná měna nakonfigurovaná ve vašem účtu.
-- **Typ ceny**: Paušální nebo za km.
+- **Měna** — EUR, RON nebo jiná měna nakonfigurovaná ve vašem účtu.
+- **Typ ceny**:
+  - **Paušální sazba** — Pevná celková cena bez ohledu na vzdálenost.
+  - **Za km** — Cena vypočítaná vynásobením sazby vzdáleností trasy vypočítanou PTV.
+  - **Za paletu** — Cena vypočítaná vynásobením sazby počtem palet.
+  - **Za tunu** — Cena vypočítaná vynásobením sazby hmotností nákladu.
+
+<Note>
+Pokud máte pro tohoto klienta nastavené ceníky, Druma automaticky navrhne cenu na základě původu, cíle a typu objednávky. Návrh můžete přijmout, nebo zadat vlastní cenu.
+</Note>
 
 ---
 
-## Krok 7 — Přiřaďte kamion a řidiče
+## Krok 7 — Přiřazení vozidla a řidiče
 
-**Pro objednávky Vlastní kamion:**
+Modální okno Nová objednávka nepřiřazuje vozidlo ani řidiče — objednávka se uloží bez obojího, bez ohledu na zvolený typ objednávky. Přiřazení probíhá poté na [Plánovací tabuli](/cs/planner/planning-board): přetáhněte objednávku na vozidlo pro přiřazení, nebo tam otevřete objednávku pro výběr vozidla, hlavního řidiče a (pro dvojitou obsluhu na dlouhých mezinárodních trasách) druhého řidiče. Druma tam u každého vozidla zobrazuje dostupnost — zelená pro volné v den nakládky, oranžová pro jinou blízkou objednávku, červená pro konflikt.
 
-- **Kamion** — Vyhledejte podle registrační značky. Druma zobrazuje stav dostupnosti každého kamionu.
-- **Primární řidič** — Vyhledejte podle jména.
-- **Druhý řidič (volitelný)** — Přidejte druhého řidiče pro dvojitou obsluhu na dlouhých mezinárodních trasách.
-
-**Pro Subdodávkové objednávky:**
-
-Místo polí pro kamion a řidiče uvidíte pole **Dopravce**.
+**U subdodávkových objednávek** záložka **Finance** zobrazuje místo polí vozidla/řidiče sekci **Podrobnosti subdodavatele**: vyhledávací pole **Subdodavatel / Dopravce** pro výběr dopravní společnosti, nástroj pro sestavení nákupní sazby pro nastavení toho, co jim platíte, a interní textové pole **Poznámky k dohodě** pro cokoli, co by klient neměl vidět. Jak je pak dopravce upozorněn, viz [Subdodavatelé](/cs/planner/subcontractors).
 
 ---
 
-## Krok 8 — Poznámky pro řidiče
+## Krok 8 — Poznámky za zastávku
 
-Pole **Poznámky pro řidiče** je viditelné řidiči v jeho mobilní aplikaci. Použijte ho pro praktické pokyny: kódy branek, speciální pokyny k vykládce, „zavolat 30 minut před příjezdem".
+Každá zastávka na záložce **Trasa** má vlastní pole **Poznámky**. Použijte ho pro praktické pokyny: kódy branek, speciální pokyny k vykládce, „zavolat 30 minut před příjezdem", nebo jakékoli požadavky specifické pro klienta — aplikace pro řidiče zobrazuje stejné pole jako „Pokyny" u zastávky, jakmile jsou přiřazeny vozidlo a řidič.
+
+<Note>
+Neexistuje samostatné rozlišení poznámek pro řidiče vs. interních poznámek. Jde o jedno sdílené pole za zastávku — cokoli sem napíšete, je viditelné pro kohokoli, kdo objednávku plánuje, i pro řidiče, kterému je přiřazena.
+</Note>
 
 ---
 
 ## Uložení objednávky
 
-Máte dvě možnosti:
-
-- **Uložit jako návrh** — Objednávka je uložena, ale zatím nepotvrzena. Řidič ji v aplikaci neuvidí.
-- **Potvrdit objednávku** — Objednávka je aktivní. Přiřazený řidič obdrží oznámení.
-
 <Warning>
-Řidiči dostávají oznámení pouze pro Potvrzené objednávky. Pokud uložíte jako návrh, nezapomeňte se vrátit a objednávku potvrdit před časem odjezdu řidiče.
+Každá objednávka vytvořená z tohoto modálního okna se uloží jako **Návrh** — ať už kliknete na **Uložit návrh**, nebo **Uložit**, obě akce volají stejnou funkci uložení a objednávka se vloží se stavem **Návrh**. V tomto modálním okně neexistuje krok „Potvrdit objednávku".
 </Warning>
 
-<Card title="Životní cyklus objednávky" icon="circle-dot" href="/en/planner/order-lifecycle">
+Nová objednávka vždy začíná bez přiřazeného vozidla nebo řidiče a na Plánovací tabuli se zobrazuje šedě/nepřiřazená. Potvrzení objednávky — přiřazení vozidla a řidiče, v tomto okamžiku ji řidič vidí ve své aplikaci — probíhá poté, na [Plánovací tabuli](/cs/planner/planning-board) nebo v pracovní ploše Objednávky: přetáhněte objednávku na vozidlo pro přiřazení, nebo tam otevřete objednávku pro výběr vozidla a řidiče.
+
+---
+
+## Co se stane dál
+
+Jakmile je objednávka přiřazena vozidlu a řidiči, prochází definovanou cestou od vyslání po fakturaci. Řidič aktualizuje stavy ze své aplikace, jak postupuje jízdou.
+
+<Card title="Životní cyklus objednávky" icon="circle-dot" href="/cs/planner/order-lifecycle">
   Zjistěte každý stav, kterým objednávka prochází, kdo spouští každý krok a jaká oznámení jsou odesílána.
 </Card>
 
-<Card title="Plánovací tabule" icon="calendar" href="/en/planner/planning-board">
-  Zobrazte všechny potvrzené objednávky na vizuální dispečerské tabuli.
+<Card title="Plánovací tabule" icon="calendar" href="/cs/planner/planning-board">
+  Zobrazte všechny potvrzené objednávky na vizuální dispečerské tabuli, přetahujte je pro přeřazení a na první pohled odhalte konflikty.
 </Card>
----
-
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/creating-orders).

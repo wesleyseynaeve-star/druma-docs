@@ -1,59 +1,88 @@
 ---
 title: "Een eCMR aanmaken"
-description: "Hoe Druma eCMR-documenten automatisch genereert voor grensoverschrijdende orders en hoe u er handmatig één aanmaakt wanneer nodig."
+description: "Hoe Druma standaard automatisch eCMR-documenten genereert voor gedispatchte orders en hoe u er handmatig één aanmaakt wanneer nodig."
 icon: "file-plus"
 ---
 
-Druma maakt eCMR-documenten **standaard in-house aan via de native provider** — geen extern account nodig. Het proces is grotendeels automatisch voor in aanmerking komende orders; u kunt aanmaak ook handmatig starten vanaf de orderdetailpagina.
+Druma maakt eCMR-documenten **standaard in-house aan via de native Druma-provider**. Geen extern serviceaccount nodig. Het proces is grotendeels automatisch voor in aanmerking komende orders, maar u kunt aanmaak ook handmatig starten vanaf de orderdetailpagina.
+
+---
 
 ## Wanneer Druma automatisch een eCMR aanmaakt
 
-Zodra een order **grensoverschrijdend** is (ophaal- en afleverland verschillen) en bevestigd wordt, registreert Druma de eCMR intern — het tabblad eCMR toont dan het documentnummer met status "Wacht op handtekening afzender."
+Druma maakt automatisch een eCMR aan zodra een wegorder wordt **gedispatcht** — het moment waarop een truck wordt toegewezen en de status naar "Toegewezen" gaat. Er wordt geen vergelijking gemaakt tussen ophaal- en afleverland: elke gedispatchte order die niet is uitbesteed, en waarvan het bedrijf de native eCMR-provider gebruikt, krijgt een eCMR uitgegeven als ongetekend concept. Dit betekent dat ook binnenlandse orders er één krijgen — ze blijft simpelweg ongetekend tot u ze nodig heeft.
+
+Eenmaal uitgegeven verschijnt het eCMR-document op het tabblad **Documenten** van de orderdetailpagina, waar u de verzegelde PDF kunt bekijken via de knop **eCMR bekijken** zodra ze gereed is.
 
 <Note>
-Binnenlandse orders triggeren geen automatische aanmaak, maar u kunt handmatig een eCMR aanmaken als uw klant of route dit toch vereist.
+Uitbestede orders worden overgeslagen — de onderaannemer geeft zijn eigen CMR uit, dus Druma kan niet namens hem tekenen. Orders die al een eCMR hebben, worden nooit opnieuw uitgegeven.
 </Note>
 
-## Handmatig aanmaken
+---
 
-<Steps>
-  <Step title="Open de order en het tabblad eCMR">
-    Ga naar de orderdetailpagina en klik op het tabblad **eCMR**.
-  </Step>
-  <Step title="Klik op eCMR aanmaken">
-    Druma toont een voorbeeld van alle vooraf ingevulde CMR-velden.
-  </Step>
-  <Step title="Controleer alle velden">
-    Eenmaal geregistreerd kan het eCMR-documentnummer niet meer worden verwijderd of gewijzigd.
-  </Step>
-  <Step title="Bevestig aanmaak">
-    Klik op **Bevestigen & aanmaken**. De status verandert naar "Wacht op handtekening afzender."
-  </Step>
-</Steps>
+## Handmatig een eCMR aanmaken
 
-Velden worden vooraf ingevuld vanuit uw bedrijfsgegevens, het klantrecord, de order zelf (adressen, goederen, kenteken, chauffeur) en eventuele ADR/temperatuurvlaggen. Ontbrekende of onjuiste ordergegevens worden getoond in het voorbeeld — herstel de order eerst.
+Bij ritten met meerdere trajecten (groupage) krijgt elk wegtraject zijn eigen eCMR. Heeft een traject er nog geen, open dan het tabblad **Lading/Stops** van de order en klik op **eCMR aanmaken** naast dat traject — er is geen apart "eCMR-tabblad": de knop staat rechtstreeks op de trajectrij.
+
+<Note>
+Markeert u een bevestigd grensoverschrijdend wegtraject als voltooid, dan maakt Druma op dat moment ook automatisch de eCMR aan als er nog geen bestaat.
+</Note>
+
+---
+
+## Gegevens vooraf ingevuld vanuit de order
+
+Druma vult de eCMR-velden in met de ordergegevens die u al heeft ingevoerd:
+
+| eCMR-veld | Bron in Druma |
+|---|---|
+| Naam en adres afzender | Klantrecord op de order |
+| Naam en adres vervoerder | Uw bedrijfsgegevens |
+| Naam en adres ontvanger | Klantrecord op de order (afleveradres uit de afleverstop) |
+| Ophaaladres | Ophaallocatie van de order |
+| Afleveradres | Afleverlocatie van de order |
+| Goederenomschrijving | Ladingomschrijvingsveld op de order |
+| Kenteken vrachtwagen | Aan de order toegewezen voertuig |
+| Naam chauffeur | Aan de order toegewezen chauffeur |
+| Bijzondere voorwaarden (ADR) | ADR-vlag en -klasse van de order |
+
+Ontbreken of kloppen deze gegevens niet op de order, herstel de order dan eerst en maak daarna de eCMR aan — er is geen voorvertoningsstap voor het invullen; het document wordt onmiddellijk geschreven.
+
+---
+
+## Voor u bevestigt: wat niet kan worden gewijzigd
 
 <Warning>
-Na **Bevestigen & aanmaken** kan de eCMR niet meer worden verwijderd, het documentnummer niet gewijzigd, en afzender/ontvanger/goederen niet meer aangepast. Een fout herstelt u via de Papieren CMR-terugvalprocedure (annuleren + eventueel opnieuw aanmaken); dit wordt vastgelegd in het auditspoor.
+Is voor een order (of traject) eenmaal een eCMR uitgegeven, dan geeft Druma er geen tweede uit — nogmaals klikken op eCMR aanmaken, of een traject-voltooiingstrigger die opnieuw afgaat, geeft simpelweg het bestaande document terug in plaats van een nieuw te slaan. Dit is een idempotentiewaarborg, geen veldvergrendeling: er is geen beperking op het bewerken van de onderliggende ordergegevens zelf.
+
+Moet u een geregistreerde eCMR corrigeren, gebruik dan de Papieren CMR-terugvalprocedure en maak, indien passend, een nieuwe aan.
 </Warning>
+
+---
 
 ## eCMR-provider: Native (TransFollow is legacy-only)
 
-In **Instellingen → Integraties → eCMR-provider** zijn er nog maar twee keuzes: **Native** en **Uitgeschakeld**. TransFollow kan niet meer nieuw geselecteerd worden — bestaat een bedrijf al met een TransFollow-configuratie, dan blijft die werken en migreert stil naar Native bij de volgende keer opslaan.
+Standaard gebruikt Druma zijn **native eCMR-provider** — geen extern account of API-sleutel nodig. In **Instellingen → Integraties → eCMR-provider** zijn er nog maar twee keuzes: **Native** en **Uitgeschakeld** — TransFollow kan niet meer geselecteerd worden, noch voor een nieuw, noch voor een bestaand bedrijf. Heeft uw bedrijf een bestaande TransFollow-configuratie, dan blijft die werken zoals voorheen en converteert stilzwijgend naar Native bij de volgende keer opslaan van de integratie.
 
 <Card title="eCMR-providers" icon="right-left" href="/nl/ecmr/ecmr-providers">
   Wat de native provider doet en wat er met legacy TransFollow-configuraties gebeurt.
 </Card>
 
+---
+
 ## Facturering
 
-eCMR is inbegrepen in uw abonnement — geen kosten per document, geen gebruikslimiet. Gebruiksstatistieken vindt u onder **Instellingen → Facturering → Gebruik**.
+eCMR is inbegrepen in uw Druma-abonnement zonder extra kosten — geen kosten per document en geen gebruikslimiet. Gebruiksstatistieken vindt u onder **Instellingen → Facturering → Gebruik**.
+
+---
+
+## Volgende stappen
 
 <CardGroup cols={2}>
   <Card title="Het ondertekeningsproces" icon="pen-to-square" href="/nl/ecmr/signing-flow">
-    Hoe de chauffeur alle drie handtekeningen verzamelt.
+    Hoe afzender, chauffeur en ontvanger elk ondertekenen, en op welk apparaat.
   </Card>
   <Card title="Wat is eCMR?" icon="file-contract" href="/nl/ecmr/what-is-ecmr">
-    Achtergrond over eCMR en hoe Druma het in-house uitgeeft.
+    Achtergrond over eCMR, de juridische basis, en hoe Druma het uitgeeft.
   </Card>
 </CardGroup>

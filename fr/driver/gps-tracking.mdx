@@ -1,47 +1,94 @@
 ---
 title: "Suivi GPS"
-description: "Druma suit votre localisation en continu lorsque vous avez un chargement actif, et uniquement lors des mises à jour de statut lorsque vous circulez à vide."
+description: "Druma suit votre position en continu dès qu'un camion vous est assigné — pas seulement pendant que vous transportez un chargement."
 icon: "location-dot"
 ---
 
-## Comment fonctionne le GPS dans Druma
+## Comment le GPS fonctionne dans Druma
 
-Druma utilise deux modes de suivi différents selon que vous avez un chargement actif :
+Le suivi n'est pas lié au fait que vous transportiez actuellement des marchandises. Tant qu'un camion vous est assigné — que vous soyez sur un chargement actif ou simplement en attente avec un véhicule assigné et rien à transporter pour l'instant — Druma suit votre position en continu en arrière-plan, une fois que vous avez donné votre consentement de localisation.
 
-| Votre statut | Comment le suivi fonctionne |
+| Situation | Comment le suivi fonctionne |
 |---|---|
-| **Chargé** (transport de marchandises) | Suivi GPS continu en arrière-plan |
-| **Vide** (pas de chargement actif) | Localisation capturée uniquement lors des mises à jour de statut |
+| **Camion assigné** (chargé ou non) | Suivi GPS continu en arrière-plan |
+| **Aucun camion assigné actuellement** | Pas de suivi en arrière-plan |
 
 ---
 
-## Lorsque vous êtes chargé : suivi continu
+## Suivi continu tant qu'un camion est assigné
 
-Pendant que vous avez des marchandises à bord, Druma suit votre localisation en continu en arrière-plan. Votre planificateur voit un repère mobile en temps réel sur la carte de la Vue Aujourd'hui.
+Dès qu'un camion vous est assigné — que vous ayez ou non un chargement actif dessus — Druma suit votre position en continu en arrière-plan. Ce n'est pas conditionné à votre statut de chargement : un chauffeur qui attend avec un camion assigné et sans commande active est suivi de la même façon qu'un chauffeur en pleine livraison.
+
+Votre planificateur voit un repère mobile en temps réel sur la carte de la Vue Aujourd'hui. Votre position se met à jour en temps réel, pas seulement lorsque vous appuyez sur un bouton de statut.
+
+**Ce qui est enregistré tant qu'un camion vous est assigné :**
+- Votre position GPS en temps réel
+- Votre itinéraire, commande par commande
+- Des horodatages tout au long du trajet
 
 <Note>
-Le suivi continu utilise plus de batterie. Pendant les trajets chargés, gardez votre téléphone chargé ou connecté à l'alimentation de votre camion.
+Le suivi continu en arrière-plan utilise plus de batterie qu'une application qui ne vérifie la position qu'occasionnellement. Gardez votre téléphone chargé ou connecté à l'alimentation de votre camion dès qu'un camion vous est assigné.
 </Note>
 
 ---
 
-## Lorsque vous êtes vide : suivi événementiel
+## Lorsqu'aucun camion n'est assigné
 
-Sans chargement actif, le suivi continu est désactivé. Votre localisation n'est enregistrée qu'au moment où vous appuyez sur une mise à jour de statut.
+Si aucun camion ne vous est actuellement assigné, Druma n'exécute pas de suivi en arrière-plan. Dès qu'un camion vous est assigné, le suivi continu démarre automatiquement (à condition d'avoir donné votre consentement de localisation).
+
+---
+
+## Ce que voit votre planificateur
+
+Sur la Vue Aujourd'hui du planificateur, chaque chauffeur ayant un camion assigné apparaît comme un repère mobile en direct sur la carte, mis à jour en temps réel.
+
+---
+
+## Précision GPS
+
+Druma utilise la puce GPS intégrée de votre téléphone pour la localisation. Précision typique :
+
+| Condition | Précision |
+|---|---|
+| En extérieur, ciel dégagé | ~5–10 mètres |
+| Zones urbaines (bâtiments alentour) | ~15–30 mètres |
+| Quais de chargement couverts, souterrains | Repli sur le réseau (moins précis) |
+| Aucun signal GPS du tout | Localisation réseau (précision à l'échelle de la ville) |
+
+<Note>
+Si le GPS de votre téléphone est désactivé, Druma utilise votre localisation réseau mobile comme repli. C'est moins précis. Pour de meilleurs résultats — notamment pour les preuves d'arrivée et la conformité réglementaire — gardez le GPS activé.
+</Note>
 
 ---
 
 ## Paramètres du téléphone pour le suivi continu
 
+Comme Druma suit en continu dès qu'un camion vous est assigné, vous devez autoriser l'accès à la localisation en arrière-plan :
+
 **Android :**
 - Accédez à **Paramètres → Applications → Druma → Autorisations → Localisation**
 - Réglez sur **« Toujours autoriser »**
-- Accédez à **Paramètres → Applications → Druma → Batterie** et réglez sur **Non restreint**
+- Accédez à **Paramètres → Applications → Druma → Batterie** et réglez sur **Non restreint** (désactivez l'optimisation de batterie)
 
 **iOS :**
 - Accédez à **Paramètres → Druma → Localisation**
 - Réglez sur **« Toujours »**
 
+Sans ces réglages, le suivi peut se mettre en pause lorsque votre écran est éteint ou que l'application est en arrière-plan.
+
+---
+
+## Autorisation de localisation
+
+Lorsque l'application a besoin de votre localisation pour la première fois, elle demandera une autorisation :
+
+- **Android :** accordez **« Toujours autoriser »** — requis pour le suivi continu tant qu'un camion vous est assigné
+- **iOS :** choisissez **« Toujours »** — requis pour le suivi continu tant qu'un camion vous est assigné
+
+« Pendant l'utilisation de l'app » ne suffit pas — le suivi s'arrêterait dès que votre écran se verrouille ou que vous changez d'application, même si un camion vous est toujours assigné. Accorder « Toujours » garantit que le suivi fonctionne correctement dès qu'un camion est assigné, sans interruption.
+
+---
+
 <Card title="Mises à jour de statut" icon="circle-check" href="/fr/driver/status-updates">
-  Apprenez le flux de statut complet et quand chaque pression capture votre position.
+  Découvrez le flux de statut complet et quand chaque pression capture votre position.
 </Card>

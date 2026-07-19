@@ -1,45 +1,103 @@
 ---
 title: "Import palivových karet"
-description: "Jak importovat transakce palivových karet od DKV, UTA, AS24, Shell a SmartDiesel do Druma pro sledování nákladů na palivo."
-icon: "fuel"
+description: "Importujte data transakcí palivových karet od DKV, UTA, AS24, Shell a dalších hlavních evropských poskytovatelů palivových karet pro sledování skutečných nákladů na palivo za vozidlo."
+icon: "gas-pump"
 ---
 
-## Přehled
+Palivo je typicky největší proměnlivý náklad v silniční přepravě. Druma umožňuje importovat data transakcí od hlavních poskytovatelů palivových karet a propojit každé natankování se správným vozidlem, takže vaše nákladové reporty odrážejí skutečné výdaje za palivo místo odhadů.
 
-Druma se nepřipojuje přímo k API poskytovatelů palivových karet. Místo toho stáhnete CSV export z webového portálu vašeho poskytovatele a nahrajete ho do Druma. Transakce jsou automaticky spárovány s vozidly podle registrační značky.
+<Frame caption="Vozový park → Palivo — párování registrační značky je normalizované, ne přesné.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Stránka Palivo vozového parku" />
+</Frame>
 
 ## Podporovaní poskytovatelé
 
-- DKV
-- UTA
-- AS24
-- Shell Card
-- SmartDiesel
+Druma automaticky rozpozná poskytovatele podle záhlaví sloupců a názvu souboru. Podporovaní poskytovatelé:
 
-## Import transakcí
+- **DKV**
+- **UTA**
+- **AS24**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
+
+Přijímá se i jakýkoli jiný soubor CSV nebo XLSX se standardními názvy sloupců (datum, částka, litry, karta/značka), a to i bez rozpoznaného poskytovatele. Pokud používáte více karet napříč flotilou, můžete importovat od každého poskytovatele samostatně.
+
+## Jak importovat
 
 <Steps>
-  <Step title="Export z portálu poskytovatele">
-    Přihlaste se do webového portálu vašeho poskytovatele palivové karty a exportujte transakce jako CSV.
+  <Step title="Stáhněte soubor od poskytovatele">
+    Přihlaste se do online portálu vašeho poskytovatele palivové karty a exportujte historii transakcí jako CSV nebo XLSX. Portál každého poskytovatele je jiný, ale tato možnost bývá obvykle pod Reporty nebo Výpisy.
   </Step>
-  <Step title="Přejděte do Nastavení → Integrace → Import palivových karet">
-    Otevřete kartu Import palivových karet.
+  <Step title="Otevřete import paliva Druma">
+    V Druma přejděte do **Vozový park → Palivo** a klikněte na **Importovat palivo**.
   </Step>
-  <Step title="Vyberte poskytovatele">
-    Vyberte vašeho poskytovatele z rozbalovací nabídky.
+  <Step title="Nahrajte soubor">
+    Přetáhněte nebo vyberte soubor CSV/XLSX (max 5 MB). Druma automaticky rozpozná poskytovatele ze souboru a zobrazí náhled zpracovaných řádků — včetně jakýchkoli řádků mýtného, které najde smíchané ve stejném výpisu.
   </Step>
-  <Step title="Nahrajte CSV">
-    Klikněte na **Nahrát CSV** a importujte soubor.
+  <Step title="Zkontrolujte a potvrďte">
+    Zkontrolujte náhled — řádky bez odpovídajícího vozidla jsou označeny a vyloučeny z importu. Klikněte na **Importovat N řádků** (zobrazuje skutečný počet řádků) pro potvrzení.
   </Step>
 </Steps>
 
-## Nespárované transakce
+## Co se importuje
 
-Pokud registrační značka transakce neodpovídá žádnému vozidlu v parku, transakce je označena jako **Nespárovaná**. Pravidelně kontrolujte seznam nespárovaných — odhaluje podvody nebo nesprávné zadání značky.
+Pro každou transakci Druma extrahuje:
 
-<Card title="Doklady vozového parku" icon="file" href="/en/fleet-compliance/fleet-documents">
-  Jak se náklady na palivo propojují s vozidly a objednávkami.
-</Card>
----
+| Pole | Zdroj |
+|---|---|
+| Datum (bez časové složky) | Sloupec data transakce ze souboru |
+| Vozidlo | Spárováno podle čísla palivové karty, poté podle registrační značky |
+| Název čerpací stanice | Pole umístění ze souboru |
+| Natankované litry | Pole množství ze souboru |
+| Částka | Pole hodnoty ze souboru — předpokládá se EUR, pokud není přítomen sloupec měny |
+| ID transakce | Jedinečná reference transakce poskytovatele, použitá pro detekci duplicit |
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/fuel-card-import).
+Ruční jednotlivé zadání natankování (přes **Přidat natankování**) přijímá pouze částku v EUR — na tomto formuláři není žádný výběr měny. Částky RON se automaticky převádějí pouze přes samostatnou cestu automatického příjmu e-mailem/vhazovací složkou popsanou níže.
+
+## Párování transakcí s vozidly
+
+Druma páruje každou transakci s vozidlem, nejprve podle **čísla palivové karty**, poté podle **registrační značky**. Číslo karty i značka jsou před porovnáním normalizovány — převedeny na velká písmena, se všemi mezerami, pomlčkami a jinými nealfanumerickými znaky odstraněnými — takže „B 123 ABC" a „B123ABC" odpovídají stejnému vozidlu.
+
+Pokud transakce stále neodpovídá žádnému vozidlu, je v náhledu označena jako **nespárovaná** a vyloučena z importu. Časté důvody:
+
+- Vozidlo bylo nedávno přidáno a ještě není v Druma
+- Ani číslo karty, ani značka na transakci neodpovídají žádnému záznamu flotily
+- Řidič použil svou kartu v pronajatém nebo subdodavatelském vozidle
+
+## Detekce duplicit
+
+Pokud omylem importujete stejný soubor dvakrát, Druma detekuje duplicity pomocí deduplikačního klíče sestaveného z data transakce, částky, litrů, karty, značky a ID transakce poskytovatele — duplicity se automaticky přeskočí na úrovni databáze. Zpráva o úspěchu hlásí pouze počet importovaných natankování (a řádků mýtného); nehlásí samostatný počet přeskočených duplicit.
+
+<Note>
+Vždy importujte kompletní výpis místo částečného exportu. Částečné importy mohou způsobit mezery v datech nákladů na palivo, které ovlivňují výpočty ziskovosti tras.
+</Note>
+
+## Automatický import e-mailem
+
+Kromě ručního nahrávání může Druma automaticky přijímat výpisy paliva z příchozí e-mailové adresy (se záložním naplánovaným průchodem), přičemž znovu použije stejný analyzátor jako ruční importní okno. Pro nastavení tohoto pro váš účet kontaktujte podporu Druma.
+
+## Kde se importovaná data o palivu zobrazují
+
+Po importu se transakce zobrazují v:
+
+- **Vozový park → Palivo** — úplná historie transakcí napříč vaší flotilou, filtrovatelná a prohledávatelná podle značky, poskytovatele a umístění
+- **Report ziskovosti tras** — importované náklady na palivo nahrazují odhadovaný výpočet paliva u objednávek, kde jsou k dispozici skutečná data o palivu
+
+## Proč import CSV místo živého API?
+
+Poskytovatelé palivových karet napříč Evropou mají nekonzistentní a často omezený přístup k API. Někteří poskytují API pouze podnikovým zákazníkům, jiní mají portály specifické pro danou zemi bez přístupu k API a formáty API se výrazně liší. Export CSV je univerzálně dostupný u všech poskytovatelů a všech typů účtů, což z něj dělá nejspolehlivější přístup pro rumunského operátora se smíšenou flotilou (ADR-016).
+
+<CardGroup cols={2}>
+  <Card title="Report ziskovosti tras" icon="route" href="/cs/reports/lane-profitability">
+    Jak importované náklady na palivo vstupují do výpočtů marže za trasu.
+  </Card>
+  <Card title="Správa vozového parku" icon="truck" href="/cs/planner/fleet-management">
+    Správa záznamů vozidel, včetně registračních značek použitých pro párování transakcí paliva.
+  </Card>
+</CardGroup>

@@ -1,50 +1,122 @@
 ---
-title: "Útdíj-bevételek és egyeztetés"
+title: "Útdíj-nyugták és egyeztetés"
 description: "Hasonlítsd össze a HERE által becsült útdíjakat a sofőr által rögzített tényleges adatokkal országonként, importálj üzemanyagkártya útdíjsorokat, és konfiguráld az ügyfél átterhelési szabályzatát."
 icon: "receipt"
 ---
 
-## Útdíj-kezelés a Drumában
+## Áttekintés
 
-A Druma kétféle útdíjadatot kezel:
-1. **Becsült útdíjak** — a HERE Maps által a rendelés létrehozásakor kiszámított összeg
-2. **Tényleges útdíjak** — a sofőr által rögzített vagy az üzemanyagkártya-import által betöltött valós összeg
+Az útdíjköltségek a közúti fuvarozás jelentős és gyakran átláthatatlan része. A PTV útvonaltervező API-ja egy országonkénti útdíjbecslést ad, amikor egy rendelést létrehozol, de az úton ténylegesen kifizetett összeg rendszeresen eltér — eltérő jármű-kategóriák, hiányzó matricák, szezonális díjak és határátkelési eltérések mind eltolódást okoznak.
 
-A különbség megmutatja az elcsúszást, és segít dönteni arról, hogy az útdíjakat átterheld-e az ügyfelekre.
+A Druma áthidalja ezt a rést azzal, hogy a sofőrök közvetlenül a PWA-ból rögzíthetik az útdíj-nyugtákat, majd egy színkódolt egyeztetési panelt jelenít meg a rendelés-részletezőben, hogy a tervezők észrevegyék a nagy eltéréseket, mielőtt azok befolyásolnák a marginokat vagy az ügyfélszámlákat.
 
-## Becsült útdíjak megtekintése
+---
 
-Minden rendelésnél a rendelés részletei panelben megtekintheted a HERE által becsült útdíjat:
-- Összesített útdíj euróban
-- Útdíjak lebontása országa szerint
+## Hogyan rögzítik a sofőrök az útdíj-nyugtákat?
 
-## Tényleges útdíjak rögzítése
+Egy aktív rakomány alatt a sofőr PWA-ja mutat egy **Útdíj rögzítése** gombot a rakomány-részletező képernyőn. Megkoppintva megnyílik az **Útdíj-nyugta** lap.
 
-### Sofőr általi rögzítés
+<Steps>
+  <Step title="Koppints az Útdíj rögzítése gombra">
+    A gomb akkor látható, amikor a rakomány státusza felvételnél, rakodás, úton, szállításnál vagy lerakodás — bármelyik státuszban, ahol a teherautó úton van.
+  </Step>
+  <Step title="Add meg az útdíj-adatokat">
+    Töltsd ki:
+    - **Összeg (EUR)** — a kötelező mező: a fizetett útdíj, EUR-ra átváltva
+    - **Helyi összeg** (opcionális) — az összeg a helyi pénznemben, plusz a pénznem-kód és az árfolyam, ha az eredeti számokat is rögzíteni szeretnéd
+    - **Ország** — előre kitöltve az aktuális GPS-pozíció alapján, de szerkeszthető
+    - **Megjegyzések** (opcionális) — autópálya-hivatkozás, fülkeszám vagy bármilyen sofőr-megjegyzés
+  </Step>
+  <Step title="Csatolj egy nyugta-fotót (opcionális)">
+    Koppints a kamera vagy fájl ikonra a nyugta fotójának csatolásához. Elfogadott formátumok: JPEG, PNG, WebP, HEIC, PDF. Maximális fájlméret: 5 MB.
+  </Step>
+  <Step title="Erősítsd meg">
+    Koppints a **Mentés** gombra. A nyugta azonnal tárolásra kerül.
+  </Step>
+</Steps>
 
-A sofőr az alkalmazásban manuálisan rögzítheti a fizetett útdíjakat:
-1. Nyissa meg a rendelést az alkalmazásban.
-2. Koppintson a **Útdíjak** részre.
-3. Adja meg az összeget és az országot.
+### Offline támogatás
 
-### Üzemanyagkártya-importálás
+Az útdíj-nyugták offline is működnek. Ha a sofőr olyan területen van, ahol nincs kapcsolat, a nyugta helyben sorba áll, és automatikusan szinkronizálódik, amint az eszköz újracsatlakozik. A tervező látja megérkezni az egyeztetési panelen, miután a szinkronizálás befejeződött.
 
-Ha az útdíjak megjelennek az üzemanyagkártya kivonatában (DKV, UTA, AS24), az importálás automatikusan hozzárendeli az útdíjsorokat a vonatkozó rendelésekhez.
+---
 
-## Útdíjak egyeztetése
+## Az egyeztetési panel (tervezői nézet)
 
-Lépj az **Egyeztetés → Útdíjak** menüpontra az összehasonlító nézethez:
-- Becsült vs. tényleges útdíjak rendelésenként
-- Eltérések kiemelve (> 10% eltérés piros jelzést kap)
-- CSV export könyveléshez
+Nyisd meg bármely rendelés-részletező panelt, és görgess az **Útdíj-egyeztetés** szakaszhoz. A panel egy táblázatot mutat, soronként egy országgal, ahol vagy egy HERE-becslés, vagy egy rögzített tényleges adat létezik.
 
-## Ügyfél útdíj-átterhelési szabályzat
+### Eltérés-színkódolás
 
-Minden ügyfélhez beállíthatod az útdíj-átterhelési szabályzatot:
-- **Nem terhel át** — az útdíjak bekerülnek a megállapodott árba
-- **Tényleges alapján terhel át** — a tényleges útdíjak kerülnek a számlára
-- **Becsült alapján terhel át** — a HERE-becslés kerül a számlára
+| Szín | Feltétel | Jelentés |
+|---|---|---|
+| Zöld | Eltérés ≤ 5% | A tényleges a várt tartományon belül van |
+| Borostyán | Eltérés 6–15% | Mérsékelt eltérés — érdemes átnézni |
+| Piros | Eltérés > 15% | Jelentős eltérés — ellenőrizd a nyugtákat |
+| Szürke | Nincs HERE-becslés | A HERE-nek nem volt útdíjadata ehhez az ország-szakaszhoz |
 
-<Card title="HERE útvonaltervezés" icon="map" href="/en/integrations/here-routing">
-  Hogyan számítja a HERE a becsült útdíjakat és távolságokat.
+Az eltérés kiszámítása: `(tényleges − becslés) / becslés`. Egy pozitív eltérés azt jelenti, hogy a sofőr többet fizetett a becsültnél; egy negatív azt, hogy kevesebbet.
+
+### Nyugtalista
+
+Az összefoglaló táblázat alatt minden egyes nyugta felsorolásra kerül:
+- Rögzítés dátuma és ideje
+- Ország és összeg
+- Megjegyzések (ha vannak)
+- Egy bélyegkép, ha egy fotó csatolva volt — kattints a teljes kép megnyitásához
+
+A tervezők manuálisan is hozzáadhatnak nyugtákat a szakasz alján lévő **Nyugta hozzáadása** gombbal — hasznos, amikor a sofőr elfelejtett rögzíteni egy útdíjat, de nála van a papír nyugta.
+
+---
+
+## Üzemanyagkártya-importálás — automatikus útdíj-szétválasztás
+
+A DKV, UTA és AS24 üzemanyagkártya-kimutatások gyakran együtt tartalmazzák az üzemanyag- és útdíj-tranzakciókat ugyanabban az exportfájlban. Amikor egy üzemanyagkártya-fájlt importálsz a **Flotta → Üzemanyagkártyák** menüpontban, a Druma automatikusan elválasztja az útdíjsorokat az üzemanyagsoroktól:
+
+- Az **üzemanyagsorok** a szokásos módon hozzáadódnak a teherautó üzemanyag-főkönyvéhez
+- Az **útdíjsorok** útdíj-nyugtákként kerülnek irányításra, és az adott teherautónál, az adott napon aktív rendeléshez párosításra
+
+Ugyanannak a fájlnak az újraimportálása biztonságos — a duplikált bejegyzések (tranzakció-hivatkozás és összeg alapján egyeztetve) automatikusan kihagyásra kerülnek.
+
+<Note>
+Az üzemanyagkártya-importból származó útdíj-egyeztetés a teherautót és a dátumot használja az aktív rendelés megtalálásához. Ha egy teherautónak ugyanazon a napon több rendelése is volt, az importálás az első egyező rendeléshez csatolja a nyugtát, és megjelöli a sort manuális felülvizsgálatra az import-összefoglalóban.
+</Note>
+
+---
+
+## Országonkénti átterhelési szabályzat
+
+Nem minden útdíj kerül kiszámlázásra az ügyfélnek. Egyes cégek magukra vállalják az útdíjakat bizonyos folyosóknál a díjuk részeként; mások teljes egészében átterhelik. A Druma lehetővé teszi ennek konfigurálását árkártya-szinten.
+
+Lépj a **Beállítások → Árkártyák** menüpontra, és nyiss meg bármely árkártyát. Van egy **Országonkénti útdíj-szabályzat** felülbírálási táblázat az alján. Minden országhoz:
+
+| Szabályzat | Viselkedés |
+|---|---|
+| Áthárítás | A tényleges útdíj rendelési extra tételként jelenik meg a számlán |
+| Elnyelés | Az útdíj belsőleg nyomon van követve, de nem jelenik meg az ügyfél-számlán |
+| (üres) | Visszaesik az árkártya felső szintű útdíj-szabályzatára |
+
+A felülbírálási táblázatban nem szereplő országok az árkártya alapértelmezését öröklik.
+
+### Automatikus számlatétel
+
+Amikor egy ország **Áthárítás**-ra van állítva, az adott országhoz rögzített útdíj-nyugták automatikusan összegzésre kerülnek, és rendelési extra tételként hozzáadódnak a számlához generáláskor. A tétel az ország nevével van címkézve.
+
+Ha egy konkrét nyugtát ki kell zárnod a számláról — például mert egy külön felár-megállapodás fedezi —, nyisd meg a számla-szerkesztőt, és kapcsold be a **Kizárás a számláról** opciót az adott extra tételen.
+
+---
+
+## Tippek a pontos egyeztetéshez
+
+- Kérd meg a sofőröket, hogy minden fizetés után azonnal rögzítsék az útdíjakat, ne az út végén, hogy a nyugták a megfelelő naphoz és országhoz maradjanak párosítva.
+- Ha a HERE szürkét mutat (nincs becslés) egy olyan országnál, amelyen a teherautóid gyakran áthaladnak, jelezd ezt a **Beállítások → Árkártyák** menüpontban egy manuális ország-felárral, hogy a marginok védve legyenek HERE-adat nélkül is.
+- A nagy borostyán vagy piros eltérések ugyanannál az országnál, ismétlődően, jelzik, hogy módosítanod kell az alap útdíj-becslést az árkártyádban.
+
+---
+
+<Card title="Árkártyák" icon="sliders-horizontal" href="/en/settings/rate-cards">
+  Konfiguráld az útdíj-áthárítási szabályzatot, az alap felárakat és az országonkénti felülbírálásokat.
+</Card>
+
+<Card title="Üzemanyagkártyák és importok" icon="fuel" href="/en/planner/fuel-cards">
+  Importáld a DKV, UTA és AS24 kimutatásokat az üzemanyag- és útdíj-nyilvántartások automatikus feltöltéséhez.
 </Card>

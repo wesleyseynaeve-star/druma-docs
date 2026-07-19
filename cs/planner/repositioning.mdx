@@ -1,38 +1,113 @@
 ---
 title: "Objednávky přemístění"
-description: "Jak sledovat přesun kamionů bez tržeb — evidenci mrtvých kilometrů, kódy důvodů a dopad na náklady."
+description: "Jak vytvářet a spravovat objednávky přemístění — přesuny bez tržeb pro umístění vozidla tam, kde je potřeba pro další zakázku."
 icon: "route"
 ---
 
-## Co je přemístění?
+## Co je objednávka přemístění?
 
-Přemístění je přesun bez tržeb pro umístění kamionu na místo jeho dalšího úkolu. Žádný klient ani cena není přiřazena. Vzdálenost je sledována jako interní mrtvé kilometry.
+Objednávka přemístění sleduje **přesun bez tržeb** — když pošlete vozidlo z jednoho místa na druhé bez převozu nákladu pro platícího klienta. Běžné scénáře zahrnují:
+
+- Odeslání prázdného vozidla z místa doručení do jiného města, kde čeká vyzvednutí.
+- Přesun vozidla zpět do domovské základny na konci pracovního týdne.
+- Přemístění vozidla kvůli výměně řidiče nebo termínu údržby.
+
+Objednávky přemístění se klientům nefakturují. Existují proto, aby vám daly plnou viditelnost pohybů vaší flotily, sledovaly prázdné kilometry a počítaly skutečné náklady vašeho provozu.
 
 ---
 
 ## Vytvoření objednávky přemístění
 
 <Steps>
-  <Step title="Vytvořte novou objednávku">
-    Přejděte do **Objednávky → Nová objednávka**.
+  <Step title="Otevřete formulář nové objednávky">
+    Přejděte do **Plánovač → Objednávky → Nová objednávka**.
   </Step>
-  <Step title="Vyberte typ Přemístění">
-    V poli **Typ objednávky** vyberte **Přemístění**.
+  <Step title="Vyberte Přemístění jako typ objednávky">
+    V poli **Typ objednávky** vyberte **Přemístění**. Jde o třetí možnost vedle Vlastní vozidlo a Subdodávka.
   </Step>
-  <Step title="Vyplňte podrobnosti">
-    - **Kamion a řidič**
-    - **Výchozí adresa** — odkud kamion jede
-    - **Cílová adresa** — kam kamion míří
-    - **Kód důvodu** — proč je přesun nutný
+  <Step title="Vyberte důvod">
+    Vyberte **Důvod přemístění** z rozbalovací nabídky. Jde o pevný seznam 5 důvodů — neexistuje uživatelské rozhraní v Nastavení pro jejich přidání nebo změnu:
+    - Prázdný návrat
+    - Přemístění flotily
+    - Přesun na údržbu
+    - Předběžné umístění
+    - Jiné
   </Step>
-  <Step title="Uložit">
-    Klikněte na **Uložit**. Přemístění se zobrazí na plánovací tabuli jako fialový blok.
+  <Step title="Vyplňte trasu">
+    Zadejte adresu vyzvednutí (kde je vozidlo nyní) a adresu doručení (kam musí jet). Směrovací engine PTV vypočítá vzdálenost automaticky.
+  </Step>
+  <Step title="Přidejte poznámky (volitelné)">
+    Použijte pole **Poznámky k přemístění** pro vysvětlení, proč k tomuto přesunu dochází. Je viditelné pouze plánovačům, ne řidiči.
+  </Step>
+  <Step title="Přiřaďte vozidlo a uložte">
+    Vyberte vozidlo a řidiče jako u jakékoli jiné objednávky. Uložte jako Návrh, nebo okamžitě Potvrďte.
   </Step>
 </Steps>
 
-<Card title="Plánovací tabule" icon="calendar" href="/en/planner/planning-board">
-  Sledujte objednávky přemístění spolu s jinými typy objednávek.
-</Card>
 ---
 
-Content coming soon. See the [English version](/en/planner/repositioning) for now.
+## Jak se objednávky přemístění liší
+
+| Funkce | Běžná objednávka | Objednávka přemístění |
+|---|---|---|
+| Fakturována klientovi | Ano | Ne |
+| Zobrazuje se na plánovací tabuli | Ano | Ano (s odznakem **Přemístění**) |
+| Počítá se do reportů tržeb | Ano | Ne |
+| Sledovaná vzdálenost | `distance_km` | `distance_km_internal` |
+| Řidič vidí v aplikaci | Ano | Ano |
+| Tok stavu | Plný životní cyklus | Plný životní cyklus |
+
+<Note>
+Objednávky přemístění se řídí stejným životním cyklem stavu jako běžné objednávky (Návrh → Doručeno). Řidič klepá na stavy ve své aplikaci jako obvykle. Jediný rozdíl je, že není přiřazen žádný klient ani cena.
+</Note>
+
+---
+
+## Interní zastávky
+
+Během přesunu přemístění (nebo jakékoli objednávky) můžete přidat **interní zastávky** — neplánované zastávky pro palivo, odpočinek, údržbu nebo jiné provozní potřeby.
+
+Interní zastávky se sledují odděleně od zastávek nakládky a vykládky. Každá interní zastávka má:
+
+- **Adresu** — kde byla zastávka provedena.
+- **Kód důvodu** — vybraný z pevného systémového seznamu: Odpočinek, Tankování, Přenocování, Osobní, Parkování návěsu, Jiné.
+- **Poznámky** — volné textové vysvětlení.
+
+Interní zastávky se zobrazují v časové ose zastávek objednávky, ale jsou vizuálně odlišeny od zastávek nákladu. Neovlivňují výpočty ETA doručení.
+
+---
+
+## Kódy důvodů
+
+### Důvody přemístění
+
+5 důvodů přemístění (Prázdný návrat, Přemístění flotily, Přesun na údržbu, Předběžné umístění, Jiné) je v produktu pevně dané — v současnosti neexistuje obrazovka v Nastavení pro jejich přidání, přejmenování nebo odstranění.
+
+### Důvody interních zastávek
+
+6 důvodů interních zastávek (Odpočinek, Tankování, Přenocování, Osobní, Parkování návěsu, Jiné) je podobně pevně dáno a platí pro všechny typy objednávek, ne jen objednávky přemístění. Dnes neexistuje uživatelské rozhraní pro přidání vlastních kódů důvodů nad rámec těchto, i když podkladová funkce existuje na úrovni API.
+
+---
+
+## Přemístění na plánovací tabuli
+
+Objednávky přemístění se na plánovací tabuli zobrazují s malým šedým odznakem **P**, což usnadňuje jejich odlišení od zásilek generujících tržby. Jsou zahrnuty do výpočtů využití flotily (vozidlo je v provozu), ale vyloučeny z KPI tržeb.
+
+---
+
+## Reportování
+
+Kilometry přemístění se sledují přes pole `distance_km_internal` a zobrazují se v:
+
+- **Reportu ziskovosti tras** — jako samostatný sloupec „prázdné km", takže vidíte skutečné náklady obsluhy každé trasy.
+- **Reportu CO2** — přesuny přemístění přispívají k emisím a jsou reportovány odděleně od naložených jízd.
+
+---
+
+<Card title="Plánovací tabule" icon="calendar" href="/cs/planner/planning-board">
+  Zjistěte, jak se objednávky přemístění zobrazují na dispečerské tabuli spolu s běžnými zásilkami.
+</Card>
+
+<Card title="Vytvoření objednávky" icon="plus" href="/cs/planner/creating-orders">
+  Kompletní průvodce vytvářením všech typů objednávek — Vlastní vozidlo, Subdodávka a Přemístění.
+</Card>

@@ -1,53 +1,105 @@
 ---
-title: "Exports Émissions CSRD"
-description: "Exportez les données CO2 de la flotte aux formats XLSX, CSV aligné CSRD et iXBRL pour le reporting de durabilité et la conformité ESRS E1."
+title: "Exports d'émissions CSRD"
+description: "Exportez les données CO2 de la flotte aux formats XLSX, CSV aligné CSRD, et iXBRL pour le reporting de durabilité et la conformité ESRS E1."
 ---
 
 ## Vue d'ensemble
 
-Au-delà du Rapport CO2 mensuel standard, Druma prend en charge trois formats d'export supplémentaires pour les entreprises ayant des obligations CSRD ou fournissant des données d'émissions à des clients avec ces obligations.
+Au-delà du Rapport CO2 mensuel standard, Druma prend en charge trois formats d'export supplémentaires conçus pour les entreprises ayant des obligations de la Directive sur le reporting de durabilité des entreprises (CSRD) — ou fournissant des données d'émissions à des clients ayant ces obligations.
 
-**Rapports → Rapport CO2 → Export**
+Tous les exports CSRD sont disponibles depuis la page **Rapport CO2** :
+
+**Rapports → Rapport CO2 → Annuel (CSRD)**
 
 ---
 
 ## Mode Annuel
 
-Par défaut, le Rapport CO2 affiche un mois calendaire. Basculez en **mode Annuel** avec le bouton en haut à droite. En mode Annuel, toutes les données des 12 mois sont agrégées.
+Par défaut, le Rapport CO2 affiche les expéditions les plus récentes (vue Mensuelle). Basculez vers **Annuel (CSRD)** à l'aide du sélecteur en haut de la page de rapport.
+
+En mode Annuel :
+- Un sélecteur d'année apparaît
+- Les expéditions de toute l'année sélectionnée sont chargées (plafonnées à 5 000 lignes — restreignez par client si une année est tronquée)
+- Les trois boutons d'export — XLSX annuel, Paquet de données CSRD (.csv), et iXBRL — apparaissent sous le sélecteur
 
 <Note>
-La plupart des soumissions CSRD nécessitent une année civile complète. Basculez en mode Annuel avant d'exporter.
+La plupart des soumissions de reporting CSRD et ESG nécessitent une année civile complète de données. Basculez en mode Annuel avant d'exporter à des fins réglementaires ou de durabilité client.
 </Note>
 
 ---
 
 ## Types d'export
 
-### 1. Rapport Émissions Flotte XLSX
+### 1. XLSX annuel
 
-Exportez le rapport standard au format tableur. Contient une ligne par commande avec ID, Client, Pays d'origine/destination, Distance (km), Véhicule, Standard Euro, CO2 (kg), CO2 (tCO2e) et un onglet résumé.
+L'export tableur standard. Idéal pour partager avec les services achats, les équipes durabilité, ou les cabinets d'audit ESG. Deux feuilles :
 
-Cliquez sur **Export → XLSX**.
+**Expéditions** — une ligne par commande, colonnes : N° de commande, Date de chargement, Date de livraison, Adresse de chargement, Adresse de livraison, Distance (km), Poids (kg), CO2 (kg), Méthode, Norme Euro, Client, Camion.
 
-### 2. CSV Aligné CSRD
+**Méthodologie** — nom d'entreprise et TVA, année de reporting, et totaux généraux pour l'année (total des expéditions, distance totale, CO2 total en kg et tonnes), plus une note méthodologique en texte brut. Il n'y a pas d'onglet de ventilation par mois, par client, ou par norme Euro — les totaux sont à l'échelle de la flotte pour l'année.
 
-Fichier CSV plat formaté selon les exigences de colonnes des cadres CSRD majeurs (VSME Annexe D / ESRS E1). Compatible avec les logiciels de reporting ESG (Sweep, Workiva, Persefoni).
+**Comment exporter :** cliquez sur **XLSX annuel** sur la page Rapport CO2 (mode Annuel).
 
-Cliquez sur **Export → CSV CSRD**.
+---
+
+### 2. Paquet de données CSRD (CSV)
+
+Un fichier CSV plat avec les mêmes données par expédition que la feuille Expéditions du XLSX, dans un format lisible par machine — adapté au chargement dans un logiciel de reporting ESG.
+
+Les en-têtes sont des noms de champs en snake_case simples, pas des identifiants de taxonomie ESRS :
+
+`order_number, pickup_date, delivery_date, pickup_address, delivery_address, distance_km, weight_kg, co2_kg, co2_method, euro_standard`
+
+<Note>
+Il n'y a pas de colonne `fuel_type` dans cet export aujourd'hui — le type de carburant est utilisé en interne pour sélectionner le facteur d'émission (voir [Rapport CO2](/fr/reports/co2-report#méthodologie-de-calcul-des-émissions)) mais n'est actuellement pas exposé comme sa propre colonne CSV.
+</Note>
+
+**Comment exporter :** cliquez sur **Paquet de données CSRD (.csv)** sur la page Rapport CO2 (mode Annuel).
+
+---
 
 ### 3. Rapport iXBRL (Bêta)
 
 <Note>
-L'export iXBRL est en bêta. Validez le fichier avec votre auditeur désigné avant toute soumission à un organisme de réglementation.
+L'export iXBRL est en bêta. Le résultat utilise la **taxonomie ESRS** (European Sustainability Reporting Standards — `xbrl.efrag.org/taxonomy/esrs`), pas l'ESEF (qui est un format de dépôt de rapport annuel séparé pour les sociétés cotées). Validez le fichier avec les exigences de votre auditeur désigné avant toute soumission à un organisme de réglementation. Druma ne garantit pas l'acceptation par un régulateur spécifique à ce stade.
 </Note>
 
-Format machine requis pour les rapports conformes ESEF déposés auprès des autorités financières de réglementation de l'UE. Cliquez sur **Export → iXBRL (Bêta)**.
+L'iXBRL (Inline eXtensible Business Reporting Language) balise le chiffre CO2 brut de Scope 3, Catégorie 9 (transport aval) pour l'année selon la taxonomie ESRS E1, aux côtés d'un résumé en langage clair. C'est conçu comme un composant que vous (ou votre auditeur) intégrez dans un rapport annuel CSRD plus large — pas un dépôt réglementaire autonome.
+
+Le fichier exporté est un document HTML contenant à la fois des tableaux lisibles par un humain et des données d'émissions balisées pour machine.
+
+**Comment exporter :** cliquez sur **Exporter iXBRL (.xhtml)** sur la page Rapport CO2 (mode Annuel) — on vous demandera d'abord de confirmer un avertissement de révision par auditeur.
+
+---
+
+## Partager avec les clients
+
+Si vos clients ont besoin de leurs propres données d'émissions CSRD de votre part :
+
+1. Filtrez le Rapport CO2 sur un client spécifique à l'aide du filtre **Client** en haut de la page
+2. Basculez en mode Annuel et sélectionnez l'année de reporting
+3. Exportez au format préféré de votre client
+4. Joignez à l'email de l'équipe durabilité de votre client ou téléversez sur son portail fournisseur
+
+<Note>
+Les clients dont la fiche contact a **Reçoit les rapports CO2** activé reçoivent déjà automatiquement un résumé CO2 mensuel par email — voir [Rapport CO2](/fr/reports/co2-report#partager-les-données-co2-avec-les-clients). Les exports de cette page sont pour tout ce qui va au-delà : un paquet annuel complet, un partage ponctuel, ou le propre logiciel de reporting ESG d'un client.
+</Note>
+
+---
+
+## Qu'est-ce que le Scope 3 Catégorie 4 ?
+
+Vos clients enregistrent les émissions du transport qu'ils sous-traitent comme **Scope 3 Catégorie 4** (Transport amont) ou **Catégorie 9** (Transport aval). Les données CO2 que vous fournissez depuis Druma alimentent directement ce calcul.
+
+Avoir des données d'émissions annuelles alignées CSRD prêtes — avec une méthodologie reconnue (GLEC Framework v4.0 / ISO 14083) — vous positionne comme transporteur préféré dans les appels d'offres et RFQ qui demandent une méthodologie d'émissions documentée.
+
+---
 
 <CardGroup cols={2}>
   <Card title="Rapport CO2" href="/fr/reports/co2-report">
-    Générez le rapport CO2 mensuel par camion, par client et par route.
+    Les vues Mensuelle et Annuelle (CSRD), et comment le CO2 est calculé par expédition — le fondement de tous les exports CSRD.
   </Card>
-  <Card title="Vue d'ensemble des Rapports" href="/fr/reports/reports-overview">
-    Tous les rapports disponibles dans Druma et comment programmer leur livraison.
+  <Card title="Vue d'ensemble des rapports" href="/fr/reports/reports-overview">
+    Tous les rapports disponibles dans Druma et comment programmer la livraison automatisée.
   </Card>
 </CardGroup>

@@ -1,69 +1,137 @@
 ---
 title: "Fluxul de semnare eCMR"
-description: "Cum colecteaza soferul cele trei semnaturi necesare - expeditor, transportator si destinatar - folosind aplicatia mobila Druma."
+description: "Cum colecteaza Druma toate cele trei semnaturi necesare — expeditor, sofer si destinatar — folosind aplicatia web a planificatorului si telefonul soferului."
 icon: "pen-to-square"
 ---
 
-Un eCMR necesita trei semnaturi pentru a fi legal complet: expeditorul semneaza la preluare, soferul/transportatorul semneaza la preluare, iar destinatarul semneaza la livrare. Asa functioneaza fiecare pas cu furnizorul nativ Druma.
+Un eCMR necesita trei semnaturi pentru a fi legal complet: expeditorul, soferul/transportatorul si destinatarul. Iata cum functioneaza fiecare pas in practica cu furnizorul nativ Druma — retine ca expeditorul si soferul **nu** semneaza pe acelasi dispozitiv.
 
-Pasii 1 si 2 au loc in acelasi moment si loc (preluarea). Pasul 3 are loc mai tarziu, la livrare. Toate trei trebuie completate inainte ca Druma sa emita PDF-ul certificat.
+---
 
-## Pasul 1 - Expeditorul semneaza la preluare
+## Prezentare generala a procesului de semnare in trei parti
 
-<Steps>
-  <Step title="Soferul deschide eCMR-ul">La preluare, soferul deschide comanda si apasa sectiunea eCMR - documentul afiseaza campurile precompletate: marfa, adrese, camion, sofer.</Step>
-  <Step title="Soferul preda telefonul expeditorului">Reprezentantul expeditorului (gestionar depozit, responsabil incarcare) preia telefonul.</Step>
-  <Step title="Expeditorul verifica documentul">Confirma ca descrierea marfii, cantitatea si starea corespund incarcaturii.</Step>
-  <Step title="Expeditorul semneaza">Apasa Semneaza ca Expeditor, deseneaza semnatura, introduce numele complet si rolul, apasa Confirma.</Step>
-</Steps>
+```
+Aplicatia web a planificatorului (birou)   Telefonul soferului   Dispozitivul propriu al destinatarului
+─────────────────────────────────────    ──────────────────    ───────────────────────
+1. Expeditorul semneaza (tab Documente)   2. Soferul semneaza    3. Destinatarul semneaza
+        ↓                                       ↓                       ↓
+                          Sigiliul PAdES este aplicat dupa ce toate trei sunt gata
+                                      PDF-ul certificat este emis
+```
 
-## Pasul 2 - Soferul/transportatorul semneaza la preluare
+Cele trei semnaturi sunt independente una de alta — nu exista o secventa impusa. Odata ce toate trei exista, Druma construieste PDF-ul certificat si aplica sigiliul PAdES.
 
-Imediat dupa ce expeditorul semneaza, soferul preia telefonul. Aplicatia trece automat la ecranul de semnatura a transportatorului; soferul semneaza, isi confirma numele si apasa Confirma. Ambele semnaturi de preluare sunt acum blocate si nu mai pot fi modificate - statusul eCMR devine "In asteptarea semnaturii destinatarului".
+---
 
-<Note>
-Soferul trebuie sa semneze imediat dupa expeditor - aplicatia nu permite trecerea la pasul de livrare pana cand ambele semnaturi de preluare nu sunt complete.
-</Note>
+## Pasul 1 — Expeditorul semneaza (aplicatia web a planificatorului)
 
-## Pasul 3 - Destinatarul semneaza la livrare
-
-Cu furnizorul nativ Druma, destinatarul semneaza pe **propriul dispozitiv** printr-un link de partajare sau cod QR - nu e nevoie sa predai telefonul soferului.
+Semnatura expeditorului este capturata in aplicatia web Druma, nu pe telefonul soferului. Oricine are comanda deschisa — de regula un planificator sau dispecer — o captureaza din tabul **Documente** al paginii de detaliu a comenzii.
 
 <Steps>
-  <Step title="Soferul deschide tabul eCMR la livrare">Documentul arata cele doua semnaturi de preluare deja blocate, plus un link de partajare cu cod QR.</Step>
-  <Step title="Destinatarul scaneaza codul QR sau primeste linkul">Scaneaza cu camera telefonului - fara cont Druma sau descarcare de aplicatie necesare. Alternativ, soferul poate trimite linkul prin WhatsApp sau SMS.</Step>
-  <Step title="Destinatarul verifica documentul">Vede o vizualizare read-only a CMR-ului: marfa, adrese, greutate si cele doua semnaturi de preluare deja blocate.</Step>
-  <Step title="Destinatarul semneaza (si poate adauga rezerve)">Daca exista probleme la livrare - daune, lipsuri, discrepante - poate adauga o nota in campul **Rezerve/observatii** (caseta CMR 24) inainte de a apasa Confirma.</Step>
-  <Step title="PDF-ul certificat este emis">Toate cele trei semnaturi sunt complete. Druma construieste PDF-ul eCMR certificat si aplica **sigiliul digital PAdES**. PDF-ul este stocat automat in comanda.</Step>
+  <Step title="Deschide tabul Documente al comenzii">
+    In aplicatia web Druma, deschide comanda si mergi la tabul **Documente**. Sectiunea **Semnaturi expeditor / sofer** arata statusul curent al tuturor celor trei parti.
+  </Step>
+  <Step title="Apasa Semneaza ca expeditor">
+    Apasa **Semneaza ca expeditor**. Se deschide un panou de semnatura direct in panoul de detaliu al comenzii.
+  </Step>
+  <Step title="Deseneaza semnatura si confirma numele">
+    Deseneaza semnatura si introdu un nume tiparit — este implicit numele utilizatorului autentificat, dar poate fi schimbat pentru a reflecta semnatarul real (de ex. un gestionar de depozit prezent la preluare, caruia i se preda dispozitivul operatorului, sau semnand personal daca operatorul este pe teren).
+  </Step>
+  <Step title="Trimite">
+    Apasa **Trimite semnatura**. Eticheta Expeditor devine verde si arata data semnarii.
+  </Step>
+</Steps>
+
+---
+
+## Pasul 2 — Soferul semneaza (telefonul soferului)
+
+Soferul semneaza separat, pe propriul telefon, in orice moment — nu exista cerinta ca semnatura expeditorului sa existe mai intai.
+
+<Steps>
+  <Step title="Soferul deschide Semneaza eCMR">
+    In aplicatia soferului, soferul apasa **Semneaza eCMR** pe comanda.
+  </Step>
+  <Step title="Soferul semneaza">
+    Soferul isi deseneaza semnatura, isi confirma numele tiparit si apasa **Trimite semnatura**. Ecranul arata etichete de status doar-citire pentru toate cele trei parti, dar soferul poate trimite doar propria semnatura.
+  </Step>
 </Steps>
 
 <Note>
-Linkul codului QR expira dupa 30 de minute. Daca destinatarul nu semneaza in acest interval, soferul poate genera un cod QR nou.
+Aplicatia soferului nu blocheaza progresul pe baza statusului semnaturii expeditorului — soferul poate avansa comanda indiferent daca expeditorul a semnat deja sau nu.
+</Note>
+
+---
+
+## Pasul 3 — Destinatarul semneaza la livrare
+
+Destinatarul semneaza pe **propriul dispozitiv**, printr-un link de partajare sau cod QR. Acest link este generat si afisat din **aplicatia web a planificatorului** (tabul Documente al paginii de detaliu a comenzii) — nu de pe telefonul soferului.
+
+<Steps>
+  <Step title="Genereaza linkul pentru destinatar">
+    In aplicatia web Druma, deschide tabul Documente al comenzii si apasa **Link de semnare pentru destinatar** ca sa generezi un link de partajare si un cod QR.
+  </Step>
+  <Step title="Trimite-l destinatarului">
+    Copiaza linkul si trimite-l destinatarului (de ex. prin WhatsApp, SMS sau email) inainte de livrare sau chiar la livrare, sau afiseaza codul QR daca un planificator se intampla sa fie prezent. Nu este nevoie de cont Druma sau de descarcarea vreunei aplicatii din partea sa.
+  </Step>
+  <Step title="Destinatarul revizuieste documentul">
+    Pe propriul dispozitiv, destinatarul vede o vizualizare doar-citire a CMR-ului: marfa, adrese, greutate si orice semnaturi deja capturate.
+  </Step>
+  <Step title="Destinatarul semneaza (si adauga optional rezerve)">
+    Destinatarul isi deseneaza semnatura si introduce numele. Daca exista probleme cu livrarea — daune, lipsuri sau discrepante — poate adauga o nota in campul **Rezerve / observatii** (caseta CMR 24) inainte de confirmare.
+  </Step>
+  <Step title="PDF-ul certificat este emis">
+    Odata ce toate cele trei semnaturi sunt complete, Druma construieste PDF-ul eCMR certificat si aplica **sigiliul digital PAdES**. Este accesibil prin butonul **Vezi eCMR** din tabul Documente al comenzii.
+  </Step>
+</Steps>
+
+<Note>
+Linkul de partajare pentru destinatar expira dupa 30 de zile. Daca expira inainte ca destinatarul sa semneze, genereaza unul nou din tabul Documente.
 </Note>
 
 <Note>
-Daca firma ta ruleaza inca pe o configurare **TransFollow mostenita** (TransFollow nu mai poate fi selectat de nicio companie noua - vezi [Furnizori eCMR](/ro/ecmr/ecmr-providers)), destinatarul semneaza in schimb luand telefonul soferului la livrare - fluxul TransFollow difera de abordarea nativa cu link QR.
+Daca firma ta ruleaza inca pe o configurare **TransFollow mostenita** (TransFollow nu mai poate fi selectat de nicio companie noua — vezi [Furnizori eCMR](/ro/ecmr/ecmr-providers)), fluxul de semnare al destinatarului este propriul flux QR al TransFollow, nu linkul nativ de partajare descris aici.
 </Note>
+
+---
 
 ## Acceptare cu rezerve (caseta CMR 24)
 
-Destinatarul nu trebuie sa refuze livrarea daca marfa soseste deteriorata sau incompleta - calea legala corecta este **acceptarea cu rezerve**: accepta livrarea, dar isi consemneaza observatiile in caseta CMR 24, pastrandu-si dreptul de a face o reclamatie ulterior conform Articolului 30 CMR.
+Destinatarul nu trebuie sa refuze livrarea daca marfa soseste deteriorata sau incompleta. Calea legala corecta este **acceptarea cu rezerve**: destinatarul accepta livrarea, dar isi consemneaza observatiile in caseta CMR 24. Asta ii protejeaza dreptul de a face o reclamatie ulterior, conform Articolului 30 CMR.
 
-Rezervele sunt inscrise in PDF-ul sigilat sub caseta 24, iar comanda afiseaza un **banner chihlimbariu "Rezerve destinatar"** in Druma, astfel incat echipa e informata imediat. Comanda avanseaza in continuare la Livrat - acceptarea cu rezerve nu e acelasi lucru cu un refuz.
+Cand un destinatar adauga rezerve:
+
+- Observatiile sunt inscrise in PDF-ul sigilat, sub caseta 24 ("Rezerve si observatii ale destinatarului"), devenind parte din inregistrarea legala protejata impotriva alterarii.
+- Pagina de detaliu a comenzii din Druma arata un **banner chihlimbariu "Rezerve destinatar"**, ca echipa ta sa fie informata imediat.
+- Comanda avanseaza in continuare la Livrat — acceptarea cu rezerve nu este acelasi lucru cu un refuz.
 
 <Note>
-Daca destinatarul refuza complet sa semneze, foloseste procesul Alternativa CMR pe hartie in schimb - refuzul e o cale separata de acceptarea cu rezerve.
+Daca destinatarul refuza complet sa semneze, foloseste procesul Alternativa CMR pe hartie in schimb. Refuzul este o cale separata de acceptarea cu rezerve.
 </Note>
+
+---
 
 ## Urmarirea statusului semnaturilor
 
-Din tabul **eCMR** al oricarei comenzi, panoul de status arata trei randuri - Expeditor, Transportator, Destinatar - fiecare cu "Semnat" si marca temporala, sau "In asteptare". Dispecerii pot monitoriza in timp real, fara sa sune soferul.
+Oricand — inainte, in timpul sau dupa procesul de semnare — poti verifica ce parti au semnat:
+
+1. Deschide comanda in aplicatia web Druma
+2. Mergi la tabul **Documente**
+3. Sectiunea **Semnaturi expeditor / sofer** arata o eticheta pentru fiecare dintre Expeditor, Sofer si Destinatar — verde cu bifa odata semnata, gri altfel. Doar randul Expeditor arata un marcaj temporal de semnare.
+
+Dispecerii din birou pot monitoriza statusul semnaturilor in timp real, fara sa sune soferul.
+
+---
+
+## Ce se intampla daca un semnatar nu este disponibil?
+
+Daca expeditorul sau destinatarul refuza sa semneze, nu este prezent, sau o problema tehnica impiedica semnarea:
 
 <CardGroup cols={2}>
   <Card title="Alternativa CMR pe hartie" icon="file-alt" href="/ro/ecmr/paper-cmr-fallback">
-    Cum treci o comanda de la eCMR la CMR pe hartie si cum inregistrezi motivul.
+    Ce faci cand eCMR nu este practic pentru un transport.
   </Card>
-  <Card title="Incarcarea documentelor" icon="upload" href="/ro/ecmr/uploading-documents">
-    Cum incarci un CMR scanat sau alt document de livrare pe o comanda.
+  <Card title="Incarcarea documentelor" icon="upload" href="/ro/driver/uploading-documents">
+    Cum incarci un CMR scanat pe hartie sau alt document de livrare pe o comanda.
   </Card>
 </CardGroup>

@@ -1,53 +1,117 @@
 ---
-title: "Pneus Flotte"
-description: "Suivez le montage des pneus, la profondeur de la bande de roulement, l'état et les coûts de remplacement pour chaque véhicule."
+title: "Pneus de flotte"
+description: "Suivez le montage des pneus, la profondeur de la bande de roulement, l'état et les coûts de remplacement pour chaque véhicule de votre flotte."
 ---
 
 ## Vue d'ensemble
 
-L'onglet Pneus dans Fleet suit le montage des pneus, l'état et l'historique de remplacement pour chaque véhicule.
+La page Flotte → Pneus suit le montage, l'état et l'historique de remplacement des pneus pour chaque véhicule. Elle donne aux gestionnaires de flotte une visibilité sur les coûts liés aux pneus et les cycles d'usure sans dépendre de dossiers papier.
 
-**Accès :** Flotte → Camions → ouvrez un véhicule → onglet **Pneus**.
+**Accès :** Flotte → **Pneus** — une page Flotte de premier niveau autonome, pas un onglet de la vue de détail véhicule.
+
+<Frame caption="Flotte → Pneus — positions de pneus librement configurables par véhicule, avec suivi de la profondeur de bande.">
+  <img src="/images/fleet-compliance/tyres.png" alt="Page Pneus de flotte" />
+</Frame>
 
 ---
 
 ## Enregistrements de pneus
 
+Les positions de pneus s'ajoutent librement par véhicule — il n'y a pas de schéma de position fixe ni de plafond sur le nombre de positions qu'un véhicule peut avoir ; ajoutez exactement les positions que ce véhicule possède réellement. Chaque enregistrement de pneu inclut :
+
 | Champ | Description |
 |---|---|
 | **Position** | Essieu et côté (ex. Avant Gauche, Essieu Moteur Droit Intérieur) |
-| **Marque et modèle** | Fabricant et produit |
-| **Dimension** | Désignation (ex. 315/70 R22.5) |
-| **Numéro de série** | Code DOT du pneu |
-| **Date de montage** | Quand le pneu a été installé |
-| **Profondeur de bande (mm)** | Profondeur mesurée actuelle |
+| **Marque et modèle** | Fabricant et nom du produit |
+| **Dimension** | Désignation de taille du pneu (ex. 315/70 R22.5) |
+| **Numéro de série** | Code DOT du pneu pour la traçabilité |
+| **Date de montage** | Quand ce pneu a été installé |
+| **Profondeur de bande (mm)** | Profondeur de bande mesurée actuelle |
 | **État** | Bon / Surveiller / Remplacer |
-| **Notes** | Notes en texte libre |
+| **Notes** | Notes en texte libre (dommage, historique de crevaison, etc.) |
+
+---
+
+## Ajouter un enregistrement de pneu
+
+<Steps>
+  <Step title="Ouvrez Flotte → Pneus">
+    Accédez à la page autonome **Flotte → Pneus**.
+  </Step>
+  <Step title="Sélectionnez le véhicule">
+    Choisissez le véhicule pour lequel vous voulez ajouter un enregistrement de pneu.
+  </Step>
+  <Step title="Cliquez sur Ajouter un pneu">
+    Cliquez sur **+ Ajouter un pneu**. Un formulaire s'ouvre.
+  </Step>
+  <Step title="Renseignez les détails">
+    Sélectionnez la position dans la liste déroulante et renseignez la marque, la dimension, le numéro de série, la date de montage, la profondeur de bande et l'état.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**. L'enregistrement de pneu apparaît dans la grille de positions.
+  </Step>
+</Steps>
 
 ---
 
 ## Alertes d'état des pneus
 
-| État | Alerte |
-|---|---|
-| **Surveiller** | Indicateur jaune sur la vignette du véhicule |
-| **Remplacer** | Indicateur rouge ; alerte email au Gestionnaire Flotte et Admin |
+Druma surveille l'état des pneus et alerte automatiquement les gestionnaires de flotte :
+
+| État | Ce qui le déclenche | Alerte |
+|---|---|---|
+| **Surveiller** | État défini sur Surveiller, ou profondeur de bande sous 4 mm | Indicateur jaune sur la vignette du véhicule dans la liste Flotte |
+| **Remplacer** | État défini sur Remplacer, ou profondeur de bande sous 2 mm | Indicateur rouge sur la vignette du véhicule ; alerte email au Gestionnaire de flotte et à l'Admin |
 
 <Warning>
-Une profondeur de bande inférieure à **3 mm** déclenche automatiquement un indicateur **Remplacer** — en dessous du minimum légal UE pour les véhicules commerciaux.
+Une profondeur de bande inférieure à **2 mm** déclenche automatiquement un indicateur **Remplacer** ; sous **4 mm** déclenche **Surveiller**. Ne dispatchez pas un véhicule avec des pneus marqués Remplacer.
 </Warning>
 
 ---
 
-## Suivi des coûts des pneus
+## Mettre à jour l'état d'un pneu
 
-Lors du remplacement d'un pneu : éditez l'enregistrement → définissez l'état sur **Remplacé** → entrez le **Coût de remplacement (€)** → Enregistrez. Le coût s'additionne dans le rapport de coût du véhicule.
+Pour mettre à jour l'état d'un pneu après une inspection :
+
+1. Ouvrez **Flotte → Pneus** et sélectionnez le véhicule
+2. Cliquez sur **Modifier** sur la ligne du pneu
+3. Mettez à jour le champ **Profondeur de bande** et/ou **État**
+4. Enregistrez
+
+Cela efface l'alerte une fois le pneu remplacé ou l'état corrigé.
+
+---
+
+## Enregistrer un remplacement de pneu
+
+Lorsqu'un pneu est physiquement remplacé :
+
+1. Modifiez l'enregistrement de pneu existant pour cette position
+2. Définissez **État** sur **Remplacé**
+3. Saisissez le **Coût de remplacement (€)**
+4. Cliquez sur **Enregistrer**
+
+Vous pouvez aussi cliquer sur **+ Ajouter un pneu** sur la même position pour ajouter le nouveau pneu (Druma marquera l'ancien enregistrement comme historique).
+
+Le coût de remplacement se répercute dans le rapport de coût de maintenance du véhicule — vous donnant une vue de coût total de possession aux côtés des coûts de carburant et d'atelier.
+
+---
+
+## Historique des pneus
+
+Druma conserve un historique de tous les enregistrements de pneus par position, y compris les pneus remplacés. Pour consulter l'historique d'une position spécifique :
+
+1. Ouvrez **Flotte → Pneus** et sélectionnez le véhicule
+2. Cliquez sur la position dans la grille
+3. Le panneau d'historique montre tous les pneus jamais montés sur cette position avec leurs dates de montage, statuts d'état et coûts de remplacement
+
+---
 
 <CardGroup cols={2}>
-  <Card title="Atelier & Maintenance" href="/fr/fleet-compliance/workshop-maintenance">
-    Créez des ordres de travail pour les remplacements de pneus.
+  <Card title="Atelier et maintenance" href="/fr/fleet-compliance/workshop-maintenance">
+    Créez des ordres de travail pour les remplacements de pneus et autres travaux de maintenance.
   </Card>
-  <Card title="Documents Flotte" href="/fr/fleet-compliance/fleet-documents">
-    Suivez assurance, contrôle technique et autres documents de conformité.
+  <Card title="Documents de flotte" href="/fr/fleet-compliance/fleet-documents">
+    Suivez l'assurance, l'ITP et les autres documents de conformité véhicule aux côtés de vos enregistrements de pneus.
   </Card>
 </CardGroup>

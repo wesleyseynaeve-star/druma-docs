@@ -1,65 +1,58 @@
 ---
 title: "Import floty"
-description: "Masowo dodaj swoje pojazdy do Druma przy użyciu szablonu CSV zamiast dodawania ich pojedynczo."
+description: "Masowo dodaj swoje pojazdy do Druma przy użyciu szablonu arkusza kalkulacyjnego zamiast dodawania ich pojedynczo."
 icon: "file-import"
 ---
 
-Użyj importu masowego, aby dodać wszystkie pojazdy naraz — idealne podczas rozpoczynania lub migracji z innego systemu.
+Użyj importu masowego, aby dodać wszystkie pojazdy naraz — idealne przy rozpoczynaniu pracy lub migracji z innego systemu.
 
 ## Pobierz szablon
 
 <Steps>
-  <Step title="Otwórz stronę importu">
-    Przejdź do **Flota → Pojazdy → Importuj** i kliknij **Pobierz szablon**.
+  <Step title="Otwórz import masowy">
+    Przejdź do **Flota → Pojazdy** i kliknij **Import masowy** na pasku narzędzi — otwiera to okno importu bezpośrednio na stronie listy pojazdów; nie ma osobnej strony importu.
   </Step>
-  <Step title="Wypełnij CSV">
-    Otwórz plik w Excelu lub Google Sheets. Wypełnij jeden pojazd per wiersz:
+  <Step title="Pobierz szablon i wypełnij go">
+    Kliknij **Pobierz szablon** — Druma generuje plik `.xlsx`. Wypełnij jeden wiersz na pojazd:
 
     | Kolumna | Wymagana | Przykład |
-    |---------|----------|---------|
-    | plate | Tak | B 123 ABC |
-    | type | Tak | tractor, rigid, van |
-    | trailer_type | Nie | curtainsider, reefer, flatbed |
-    | euro_standard | Tak | Euro 3 – Euro 6 |
-    | height_m | Nie | 4.0 |
-    | weight_tonnes | Nie | 24 |
-    | axle_count | Nie | 3 |
-    | payload_kg | Nie | 24000 |
-    | daily_cost_eur | Nie | 120 |
-    | adr_expiry | Nie | 2025-12-31 |
-    | active | Tak | true lub false |
+    |--------|----------|---------|
+    | Numer rejestracyjny | Tak | B-123-ABC |
+    | Nazwa | Nie | Ciężarówka 1 |
+    | Marka | Nie | Volvo |
+    | Model | Nie | FH |
+    | Rok | Nie | 2020 |
+    | Klasa Euro | Nie | euro6 |
+    | Rodzaj paliwa | Nie | diesel |
+    | Typ naczepy | Nie | tautliner |
   </Step>
-  <Step title="Prześlij plik">
-    Zapisz jako CSV. Z powrotem w Druma kliknij **Prześlij CSV** i wybierz plik.
-  </Step>
-  <Step title="Przejrzyj zmapowane rekordy">
-    Druma pokazuje tabelę podglądu ze wszystkimi wykrytymi wierszami. Wiersze z błędami są podświetlone na czerwono — popraw je w CSV i prześlij ponownie lub edytuj inline.
+  <Step title="Prześlij i przejrzyj">
+    Przeciągnij wypełniony plik (CSV lub XLSX, do 5 MB) do okna importu. Jeśli nagłówki kolumn dokładnie pasują do szablonu, Druma mapuje je automatycznie; w przeciwnym razie zmapujesz każdą kolumnę do właściwego pola. Podgląd pokazuje wtedy pierwsze 5 wierszy — wiersze bez numeru rejestracyjnego są oznaczone na czerwono.
   </Step>
   <Step title="Potwierdź import">
-    Kliknij **Importuj [X] pojazdy**. Pojazdy są tworzone natychmiast i pojawiają się na liście floty.
+    Kliknij **Importuj**. Pojazdy są tworzone natychmiast i pojawiają się na liście floty. Ekran wyniku pokazuje, ile wierszy zostało utworzonych, pominiętych lub nieudanych, wraz ze szczegółami błędów dla każdego wiersza, który się nie powiódł.
   </Step>
 </Steps>
 
-## Edycja cyklu
+## Deduplikacja
 
-Ten sam szablon działa do aktualizacji. Przejdź do **Flota → Pojazdy → Eksportuj CSV**, edytuj wyeksportowany plik i ponownie zaimportuj. Druma dopasowuje po numerze rejestracyjnym i aktualizuje istniejące rekordy zamiast tworzyć duplikaty.
+Druma porównuje numer rejestracyjny każdego wiersza z istniejącymi pojazdami (znormalizowany do wielkich liter, bez białych znaków). Jeśli znajdzie dopasowanie, ten wiersz jest **pomijany** — nie aktualizuje istniejącego pojazdu.
 
 <Note>
-Numery rejestracyjne muszą być unikalne. Jeśli ponownie zaimportujesz numer rejestracyjny, który już istnieje, Druma zaktualizuje ten pojazd zamiast tworzyć drugi wpis.
+Import masowy zawsze tylko tworzy nowe rekordy pojazdów — nigdy nie aktualizuje istniejącego, nawet jeśli ponownie zaimportujesz plik z pasującym numerem rejestracyjnym. Aby zmienić dane istniejącego pojazdu, edytuj go bezpośrednio we Flota → Pojazdy.
 </Note>
 
-<Warning>
-Ustawienie `active = false` oznacza pojazd jako nieaktywny — zniknie z rozwijanych list przydziału. Dokładnie sprawdź tę kolumnę przed importem.
-</Warning>
+Ten import nie zawiera kolumn dla wymiarów naczepy, wagi, liczby osi, ładowności, kosztu dziennego, terminu ważności ADR ani flagi aktywny/nieaktywny — te konfiguruje się na samym rekordzie pojazdu po imporcie (pola profilu kosztowego znajdują się w [profilu kosztowym pojazdu](/pl/admin/rate-cards) w Ustawienia → Karty stawek, nie na rekordzie pojazdu).
 
 ## Po imporcie
 
-Zweryfikuj listę floty, a następnie dodaj dokumenty pojazdu (ubezpieczenie, ITP) dla każdej ciężarówki.
+Zweryfikuj listę floty, a następnie dodaj dokumenty pojazdu (ubezpieczenie, ITP) dla każdego pojazdu.
 
-<Card title="Zarządzanie flotą" icon="truck" href="/pl/planner/fleet-management">
-  Dodawaj pojazdy ręcznie i zarządzaj ustawieniami poszczególnych pojazdów.
-</Card>
-
-<Card title="Dokumenty floty" icon="folder-open" href="/pl/fleet-compliance/fleet-documents">
-  Przesyłaj dokumenty ubezpieczenia, rejestracji i zgodności dla każdego pojazdu.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Zarządzanie flotą" icon="truck" href="/pl/planner/fleet-management">
+    Dodawaj pojazdy ręcznie i zarządzaj ustawieniami poszczególnych pojazdów.
+  </Card>
+  <Card title="Dokumenty floty" icon="folder-open" href="/pl/fleet-compliance/fleet-documents">
+    Przesyłaj dokumenty ubezpieczenia, rejestracji i zgodności dla każdego pojazdu.
+  </Card>
+</CardGroup>

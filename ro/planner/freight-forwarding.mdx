@@ -1,24 +1,143 @@
 ---
-title: "Expediere marfuri"
-description: "Gestioneaza incarcaturile subcontractate — facturare split, sincronizare status si urmarire marja."
+title: "Expediere marfuri (Forwarding)"
+description: "Gestioneaza incarcaturile subcontractate unde actionezi ca expeditor de marfa — facturare split, sincronizarea statusului transportatorului si urmarirea automata a marjei, dintr-o singura comanda."
 icon: "arrows-left-right"
 ---
 
-## Crearea comenzii subcontractate
+## Ce este o comanda subcontractata?
+
+Uneori preiei o marfa de la un client, dar nu o transporti tu insuti — angajezi un alt transportator sa o faca. Actionezi ca expeditor de marfa (freight forwarder): esti stratul comercial dintre client si transportatorul efectiv.
+
+In Druma, acesta se numeste tip de comanda **Subcontractat**. Creezi o comanda, o atribui unui transportator din registrul tau de subcontractanti, iar Druma se ocupa de restul: facturare split, urmarirea statusului, fluxul de documente si calculul marjei — toate dintr-o singura comanda, fara introducere dubla de date.
+
+<Frame caption="Pipeline-ul Forwarding — marja tarif-cumparare/tarif-vanzare urmarita per comanda subcontractata.">
+  <img src="/images/planner/freight-forwarding.png" alt="Tabla pipeline Expediere Marfuri" />
+</Frame>
+
+---
+
+## Crearea unei comenzi subcontractate
 
 <Steps>
-  <Step title="Comanda Noua">Mergi la Comenzi -> Comanda Noua.</Step>
-  <Step title="Tip Subcontractat">Selecteaza Subcontractat in campul Tip Comanda.</Step>
-  <Step title="Completeaza detaliile">Adresele, marfa, pretul de vanzare al clientului.</Step>
-  <Step title="Selecteaza transportatorul">Alege din registrul de subcontractori.</Step>
-  <Step title="Introdu costul">Pretul de cumparare platit transportatorului.</Step>
+  <Step title="Creeaza o comanda noua">
+    Mergi la **Comenzi → Comanda Noua**.
+  </Step>
+  <Step title="Seteaza tipul comenzii la Subcontractat">
+    In formularul comenzii, gaseste campul **Tip Comanda** si selecteaza **Subcontractat**.
+  </Step>
+  <Step title="Completeaza detaliile standard ale comenzii">
+    Introdu adresa de preluare, adresa de livrare, descrierea marfii, tipul de remorca si pretul convenit cu clientul (tariful de vanzare).
+  </Step>
+  <Step title="Selecteaza transportatorul">
+    In campul **Subcontractant / Transportator**, alege compania din registrul tau de subcontractanti care va transporta efectiv aceasta marfa.
+  </Step>
+  <Step title="Introdu costul transportatorului">
+    Introdu cat platesti transportatorului (tariful de cumparare). Este pastrat separat de pretul clientului si este vizibil doar planificatorilor — nu clientului.
+  </Step>
+  <Step title="Salveaza si atribuie">
+    Apasa **Salveaza**. Transportatorul primeste automat acces la aceasta comanda prin portalul sau.
+  </Step>
 </Steps>
+
+---
 
 ## Facturare split
 
-- **Factura de vanzare** — catre clientul tau
-- **Factura de cumparare** — catre/de la transportator
+O comanda subcontractata urmareste ambele parti ale banilor, dintr-un singur set de date — fara introducere dubla a rutei, datelor sau marfii:
 
-**Marja = Pret vanzare - Cost transportator**
+**Partea de vanzare** — ce ii ceri clientului tau (pretul convenit). Generezi aceasta factura la fel ca pentru orice alta comanda, din actiunea de facturare proprie a comenzii.
 
-Actualizarile de status din portalul transportatorului curg automat la tine si la client.
+**Partea de cumparare** — ce ii platesti transportatorului. Deschide tabul **Transportator si Bani** al comenzii, ca sa vezi **Tariful de cumparare** convenit cu transportatorul, alaturi de **Venitul** tau, cu **Marja** (Venit − Tariful de cumparare) calculata automat.
+
+<Note>
+Nu exista un buton separat "Genereaza Factura de Achizitie" pe comanda — cand transportatorul iti trimite propria factura pentru marfa, potriveste-o fata de o factura de subcontractant pe pagina dedicata **Facturi Subcontractanti**, care gestioneaza ingestia si potrivirea fata de tariful de cumparare pe care l-ai inregistrat aici.
+</Note>
+
+---
+
+## Sincronizarea statusului: Transportator → Sistemul tau → Client
+
+Cand transportatorul isi actualizeaza statusul comenzii in portalul sau (Preluat, In Tranzit, Livrat), acea actualizare circula automat:
+
+1. Statusul comenzii din Druma-ul tau se actualizeaza imediat
+2. Clientul tau vede statusul actualizat in portalul sau, pe cronologia transportului
+3. Planificatorii tai vad actualizarea in panoul de detaliu al comenzii si, daca camionul este live, pe Harta Live
+
+Nu trebuie sa retransmiti manual actualizarile de status de la transportator la clientul tau. Informatia circula automat prin Druma.
+
+---
+
+## Fluxul de documente
+
+Cand transportatorul incarca documente prin portalul sau — scanare CMR, dovada de livrare, fotografii — acele documente apar in doua locuri deodata:
+
+- **Contul tau Druma** — sub tabul Documente al comenzii
+- **Portalul clientului tau** — pe pagina sa de Documente, filtrabila dupa tip (CMR, eCMR, POD, Factura, CO2)
+
+Clientul primeste acces la CMR si confirmarea de livrare, fara sa fie nevoie sa transmiti manual nimic. Pur si simplu ajunge.
+
+<Note>
+Nu exista un comutator de vizibilitate per document — fiecare document atasat unei comenzi pe care clientul o poate vedea este vizibil pentru el. Daca trebuie sa pastrezi un fisier incarcat de transportator ca fiind intern, nu il atasa la Documentele comenzii.
+</Note>
+
+---
+
+## Urmarirea marjei
+
+Pe fiecare comanda subcontractata, Druma iti arata marja dintr-o privire:
+
+**Marja = Pret de vanzare − Costul transportatorului**
+
+Vei vedea asta pe tabul Transportator si Bani al comenzii si in vizualizarea listei de comenzi. Asta usureaza revizuirea profitabilitatii pe toate incarcaturile tale de forwarding, fara sa construiesti foi de calcul.
+
+Daca costurile reale se schimba (transportatorul factureaza timp de asteptare sau km suplimentari), actualizeaza tariful de cumparare pe comanda si marja se recalculeaza automat.
+
+---
+
+## Actualizari de la transportator
+
+Odata ce o comanda subcontractata este atribuita unui transportator si acesta incepe sa ofere actualizari prin portalul de transportator, Druma afiseaza datele sale in timp real pe tabla de forwarding si in panoul de detaliu al comenzii — fara nicio retransmitere manuala din partea ta.
+
+### Pe tabla de forwarding (carduri In Tranzit)
+
+- **ETA Transportator** — ETA-ul propriu al transportatorului pentru livrare, etichetat "ETA Transportator", pentru a-l distinge de ETA-ul calculat de Druma prin PTV
+- **Eticheta placa camion transportator** — placa reala pe care transportatorul o foloseste pe aceasta marfa
+- **Avertisment tarif de cumparare lipsa** — o eticheta chihlimbarie apare pe orice card unde nu a fost setat niciun tarif de cumparare. Semnaleaza un gol in datele de marja — deschide comanda si introdu tariful de cumparare, inainte de facturare
+
+### In panoul de detaliu al comenzii
+
+Pentru comenzile subcontractate, o sectiune **Actualizari Transportator** apare in panoul de detaliu al comenzii, aratand:
+
+- Placa camionului transportator si numele soferului
+- Numarul de telefon al soferului (afisat ca text simplu, nu un link de apelare)
+- ETA Transportator
+- Date reale de incarcare: sosirea si plecarea raportate de transportator la punctul de preluare
+- Date reale de livrare: sosirea si plecarea raportate de transportator la punctul de livrare
+
+Aceste campuri sunt populate de transportator prin portalul sau — nu este necesara nicio introducere manuala din partea ta. Daca un transportator nu a trimis inca actualizari, sectiunea arata substituenti.
+
+---
+
+## Cand sa folosesti comenzi subcontractate
+
+Foloseste un tip de comanda Subcontractat oricand:
+
+- Ai preluat o marfa, dar propriile tale camioane sunt pline
+- Actionezi pur ca expeditor de marfa si nu transporti marfa tu insuti
+- Folosesti un transportator spot pentru o marfa unica
+- Trebuie sa urmaresti marja dintre ce ii ceri clientului si ce ii platesti transportatorului
+
+<Warning>
+Daca folosesti propriul tau sofer si camion, foloseste un tip de comanda standard — nu Subcontractat. Comenzile Subcontractate sunt special pentru marfuri transportate de transportatori externi.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Subcontractanti" icon="handshake" href="/ro/planner/subcontractors">
+    Adauga companii transportatoare in registrul tau, inainte sa le poti atribui comenzilor subcontractate.
+  </Card>
+  <Card title="Generarea facturilor" icon="file-invoice-dollar" href="/ro/invoicing/generating-invoices">
+    Afla cum generezi facturi de vanzare si de achizitie din comenzile tale.
+  </Card>
+</CardGroup>

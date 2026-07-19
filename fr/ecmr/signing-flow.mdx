@@ -1,54 +1,137 @@
 ---
 title: "Flux de signature eCMR"
-description: "Comment les trois signatures eCMR sont obtenues dans l'ordre — expéditeur au chargement, chauffeur au chargement, destinataire à la livraison."
-icon: "pen"
+description: "Comment Druma collecte les trois signatures requises — expéditeur, chauffeur et destinataire — entre l'application web du planificateur et le téléphone du chauffeur."
+icon: "pen-to-square"
 ---
 
-## Vue d'ensemble
-
-Chaque eCMR nécessite exactement trois signatures dans un ordre précis. Le chauffeur gère l'ensemble du processus via l'application Druma sur son téléphone.
-
----
-
-## Ordre des signatures
-
-1. **Expéditeur** → signe au chargement
-2. **Chauffeur** → signe au chargement (immédiatement après l'expéditeur)
-3. **Destinataire** → signe à la livraison
+Un eCMR nécessite trois signatures pour être légalement complet : l'expéditeur, le chauffeur/transporteur, et le destinataire. Voici comment chaque étape fonctionne en pratique avec le fournisseur natif Druma — notez que l'expéditeur et le chauffeur ne signent **pas** sur le même appareil.
 
 ---
 
-## Signature de l'expéditeur (au chargement)
+## Vue d'ensemble du processus de signature à trois parties
 
-Le chauffeur ouvre l'onglet **eCMR** dans son application, vérifie les détails avec le représentant de l'expéditeur, donne son téléphone à l'expéditeur pour signature, et appuie sur **Confirmer** après que l'expéditeur a signé et saisi son nom.
+```
+Application web du planificateur (bureau)   Téléphone du chauffeur   Appareil du destinataire
+──────────────────────────────────────────  ──────────────────────  ─────────────────────────
+1. L'expéditeur signe (onglet Documents)     2. Le chauffeur signe    3. Le destinataire signe
+        ↓                                          ↓                        ↓
+                                  Scellé PAdES appliqué une fois les trois signatures obtenues
+                                          PDF certifié émis
+```
 
----
-
-## Signature du chauffeur (au chargement)
-
-Immédiatement après la signature de l'expéditeur, l'application passe à l'étape de signature du chauffeur. Le chauffeur signe et confirme.
-
----
-
-## Signature du destinataire (à la livraison)
-
-À l'adresse de livraison, le chauffeur ouvre à nouveau l'onglet eCMR et le destinataire signe. Après confirmation, TransFollow émet le PDF certifié.
+Les trois signatures sont indépendantes les unes des autres — il n'y a pas de séquence imposée. Une fois les trois obtenues, Druma génère le PDF certifié et applique le scellé PAdES.
 
 ---
 
-## Option Code QR
+## Étape 1 — L'expéditeur signe (application web du planificateur)
 
-Si le destinataire préfère signer sur son propre téléphone, le chauffeur affiche un code QR que le destinataire scanne avec son propre appareil.
+La signature de l'expéditeur est capturée dans l'application web de Druma, pas sur le téléphone du chauffeur. Quiconque a la commande ouverte — généralement un planificateur ou un répartiteur — la capture depuis l'onglet **Documents** de la page de détail de la commande.
+
+<Steps>
+  <Step title="Ouvrez l'onglet Documents de la commande">
+    Dans l'application web de Druma, ouvrez la commande et allez à l'onglet **Documents**. La section **Signatures expéditeur / chauffeur** montre le statut actuel des trois parties.
+  </Step>
+  <Step title="Cliquez sur Signer en tant qu'expéditeur">
+    Cliquez sur **Signer en tant qu'expéditeur**. Cela ouvre un pavé de signature directement dans le panneau de détail de la commande.
+  </Step>
+  <Step title="Tracez la signature et confirmez le nom">
+    Tracez la signature et saisissez un nom en capitales — par défaut le nom de la personne connectée, mais modifiable pour refléter le signataire réel (par ex. un responsable d'entrepôt présent au chargement, remettant l'appareil de l'opérateur, ou signant en personne si le planificateur est sur place).
+  </Step>
+  <Step title="Soumettez">
+    Cliquez sur **Soumettre la signature**. Le badge Expéditeur devient vert et affiche la date de signature.
+  </Step>
+</Steps>
 
 ---
 
-## Après la troisième signature
+## Étape 2 — Le chauffeur signe (téléphone du chauffeur)
 
-- TransFollow émet un **PDF eCMR certifié**
-- Le PDF est stocké automatiquement dans la commande
-- Votre répartiteur peut le voir immédiatement
-- Le portail client affiche le document certifié
+Le chauffeur signe séparément, sur son propre téléphone, à n'importe quel moment — il n'est pas nécessaire que la signature de l'expéditeur existe déjà.
 
-<Card title="Repli vers CMR papier" icon="file" href="/fr/ecmr/paper-cmr-fallback">
-  Que faire quand le processus eCMR n'est pas possible.
-</Card>
+<Steps>
+  <Step title="Le chauffeur ouvre Signer l'eCMR">
+    Dans l'application chauffeur, le chauffeur touche **Signer l'eCMR** sur la commande.
+  </Step>
+  <Step title="Le chauffeur signe">
+    Le chauffeur trace sa signature, confirme son nom en capitales, et touche **Soumettre la signature**. L'écran montre des badges de statut en lecture seule pour les trois parties, mais le chauffeur ne peut soumettre que la sienne.
+  </Step>
+</Steps>
+
+<Note>
+L'application chauffeur ne bloque pas la progression selon le statut de signature de l'expéditeur — le chauffeur peut faire avancer la commande que l'expéditeur ait déjà signé ou non.
+</Note>
+
+---
+
+## Étape 3 — Le destinataire signe à la livraison
+
+Le destinataire signe sur son **propre appareil** via un lien de partage ou un code QR. Ce lien est généré et affiché depuis **l'application web du planificateur** (onglet Documents de la page de détail de la commande) — pas depuis le téléphone du chauffeur.
+
+<Steps>
+  <Step title="Générez le lien destinataire">
+    Dans l'application web de Druma, ouvrez l'onglet Documents de la commande et cliquez sur **Lien de signature destinataire** pour générer un lien de partage et un code QR.
+  </Step>
+  <Step title="Envoyez-le au destinataire">
+    Copiez le lien et envoyez-le au destinataire (par ex. via WhatsApp, SMS ou email) avant ou pendant la livraison, ou affichez le code QR si un planificateur est présent. Aucun compte Druma ni téléchargement d'application n'est requis de leur côté.
+  </Step>
+  <Step title="Le destinataire examine le document">
+    Sur son propre appareil, le destinataire voit une vue en lecture seule du CMR — marchandises, adresses, poids, et toutes les signatures déjà capturées.
+  </Step>
+  <Step title="Le destinataire signe (et ajoute éventuellement des réserves)">
+    Le destinataire trace sa signature et saisit son nom. En cas de problème avec la livraison — dommage, manquant ou écart — il peut ajouter une note dans le champ **Réserves / observations** (case 24 du CMR) avant de confirmer.
+  </Step>
+  <Step title="PDF certifié émis">
+    Une fois les trois signatures complètes, Druma génère le PDF eCMR certifié et applique le **scellé numérique PAdES**. Il est accessible via le bouton **Voir l'eCMR** dans l'onglet Documents de la commande.
+  </Step>
+</Steps>
+
+<Note>
+Le lien de partage destinataire expire après 30 jours. S'il expire avant que le destinataire ne signe, générez-en un nouveau depuis l'onglet Documents.
+</Note>
+
+<Note>
+Si votre entreprise est encore sur une configuration **TransFollow héritée** (TransFollow ne peut plus être sélectionné pour la première fois — voir [Fournisseurs eCMR](/fr/ecmr/ecmr-providers)), le flux de signature du destinataire est le propre flux QR de TransFollow plutôt que le lien de partage natif décrit ici.
+</Note>
+
+---
+
+## Accepter avec réserves (case 24 du CMR)
+
+Le destinataire n'a pas à refuser la livraison si les marchandises arrivent endommagées ou incomplètes. Le bon chemin légal est d'**accepter avec réserves** : le destinataire accepte la livraison mais enregistre ses observations dans la case 24 du CMR. Cela protège le droit du destinataire de faire une réclamation ultérieure au titre de l'article 30 du CMR.
+
+Quand un destinataire ajoute des réserves :
+
+- Les remarques sont horodatées dans le PDF scellé sous la case 24 (« Réserves et observations du destinataire »), les intégrant à l'enregistrement légal inviolable.
+- La page de détail de la commande dans Druma affiche une **bannière ambre « Réserves du destinataire »** pour que votre équipe en soit immédiatement informée.
+- La commande avance quand même vers Livrée — accepter avec réserves n'est pas la même chose qu'un refus.
+
+<Note>
+Si le destinataire refuse totalement de signer, utilisez le processus de repli vers CMR papier à la place. Le refus est un chemin distinct de l'acceptation avec réserves.
+</Note>
+
+---
+
+## Suivre le statut de signature
+
+À tout moment — avant, pendant ou après le processus de signature — vous pouvez vérifier quelles parties ont signé :
+
+1. Ouvrez la commande dans l'application web de Druma
+2. Allez à l'onglet **Documents**
+3. La section **Signatures expéditeur / chauffeur** montre un badge pour chacun de l'Expéditeur, du Chauffeur et du Destinataire — vert avec une coche une fois signé, gris sinon. Seule la ligne Expéditeur affiche un horodatage de signature.
+
+Les répartiteurs au bureau peuvent surveiller le statut de signature en temps réel sans appeler le chauffeur.
+
+---
+
+## Que faire si un signataire n'est pas disponible ?
+
+Si l'expéditeur ou le destinataire refuse de signer, n'est pas présent, ou qu'un problème technique empêche la signature :
+
+<CardGroup cols={2}>
+  <Card title="Repli vers CMR papier" icon="file-alt" href="/fr/ecmr/paper-cmr-fallback">
+    Que faire quand l'eCMR n'est pas praticable pour une expédition.
+  </Card>
+  <Card title="Télécharger des documents" icon="upload" href="/fr/driver/uploading-documents">
+    Comment téléverser un CMR papier scanné ou un autre document de livraison sur une commande.
+  </Card>
+</CardGroup>

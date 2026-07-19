@@ -1,20 +1,111 @@
 ---
 title: "Generarea facturilor"
-description: "Creeaza facturi din comenzile livrate in Druma."
+description: "Creeaza facturi din comenzile livrate in Druma — individual sau in masa, multi-valuta, cu calcul automat al suprataxelor si trimitere cu un click."
 icon: "file-invoice-dollar"
 ---
 
-Din pagina comenzii livrate: apasa **Genereaza Factura**. Sau mergi la **Facturi -> Factura Noua**.
+## Prezentare generala
+
+Odata ce o comanda este livrata, poti genera o factura direct in Druma. Cea mai rapida cale este chiar din pagina de detaliu a comenzii. Poti si sa grupezi mai multe comenzi de la acelasi client intr-o singura factura — ideal pentru cicluri de facturare saptamanale sau lunare.
+
+## Doua moduri de a incepe
+
+**Din pagina de detaliu a comenzii (cel mai rapid):**
+Deschide comanda livrata → apasa butonul **Genereaza Factura** din coltul din dreapta sus. Druma precompleteaza factura cu detaliile acelei comenzi si te duce direct la ecranul de revizuire.
+
+<Frame caption="Lista de Facturi — Statusul de Plata (derivat din data scadenta/suma platita) este urmarit separat de canalul E-Factura si E-Status.">
+  <img src="/images/invoicing/generating-invoices.png" alt="Lista de facturi cu coloanele de status si plata" />
+</Frame>
+
+**Din modulul de Facturare:**
+Mergi la **Facturare** → **Factura Noua** → cauta clientul → selecteaza comanda sau comenzile pe care vrei sa le incluzi.
+
+## Pas cu pas: Crearea unei facturi
 
 <Steps>
-  <Step title="Selecteaza comanda">Comenzile trebuie sa fie livrate si sa apartina aceluiasi client.</Step>
-  <Step title="Verifica elementele">Druma pre-completeaza: taxa transport, asteptare, supliment ADR.</Step>
-  <Step title="Seteaza data si scadenta">Data scadentei se calculeaza din termenele clientului.</Step>
-  <Step title="Previzualizeaza PDF">Verifica toate datele inainte de generare.</Step>
-  <Step title="Genereaza">Druma atribuie un numar secvential si blocheaza documentul.</Step>
-  <Step title="Trimite">Apasa Trimite prin Email sau Descarca PDF.</Step>
+  <Step title="Selecteaza comanda sau comenzile">
+    Alege care comanda livrata sau comenzi livrate sa incluzi. Poti grupa mai multe comenzi de la acelasi client intr-o singura factura — bifeaza-le pe fiecare in selectorul de comenzi. Toate comenzile trebuie sa aiba statusul **Livrata** si sa apartina aceluiasi client.
+  </Step>
+  <Step title="Revizuieste elementele de linie">
+    Druma precompleteaza automat elementele de linie din datele comenzii. Revizuieste si ajusteaza fiecare:
+
+    - **Taxa de transport** — preluata din pretul agreat setat la crearea comenzii
+    - **Taxa de asteptare** — calculata automat, daca soferul a inregistrat timp de asteptare peste perioada gratuita
+    - **Suprataxa ADR** — adaugata automat, daca comanda a fost marcata drept marfa ADR, folosind tariful de suprataxa ADR configurat al companiei tale (implicit 75 €, daca nu ai setat unul)
+    - **Suprataxa combustibil** — inclusa, daca ai o regula de suprataxa combustibil configurata in Setari
+    - **Alte suprataxe** — adauga orice elemente de linie personalizate necesare (rambursare taxe de drum, feribot, opriri suplimentare)
+
+    Poti edita orice suma, adauga linii noi sau elimina linii care nu se aplica.
+  </Step>
+  <Step title="Seteaza data facturii si scadenta">
+    Data facturii este implicit azi. Data scadentei este calculata automat din termenele de plata de pe inregistrarea clientului — de exemplu, net 30 inseamna ca scadenta este la 30 de zile de la data facturii. Suprascrie oricare data manual, daca este necesar.
+  </Step>
+  <Step title="Previzualizeaza PDF-ul">
+    Apasa **Previzualizeaza PDF** ca sa vezi exact ce va primi clientul. Verifica numele clientului, numarul de TVA, adresele, elementele de linie, totalurile si datele tale bancare. Corecteaza orice inainte de generare — e mult mai usor sa corectezi acum decat dupa.
+  </Step>
+  <Step title="Genereaza factura">
+    Apasa **Genereaza**. Druma atribuie un numar secvential de factura (de exemplu, INV-000047) si blocheaza documentul. Odata generata, nu poti edita sumele direct — foloseste o nota de credit pentru orice corectii.
+  </Step>
+  <Step title="Trimite factura">
+    Alege cum sa o trimiti:
+
+    - **Email din Druma** — apasa **Trimite prin Email**. Druma precompleteaza email-ul folosind contactul financiar al clientului si ataseaza PDF-ul. Revizuieste mesajul si apasa Trimite.
+    - **Descarca si trimite manual** — apasa **Descarca PDF** si trimite prin propriul client de email, WhatsApp, sau cum comunici de obicei cu acel client.
+  </Step>
 </Steps>
 
+## Linii automate de suprataxa (Extra Comanda)
+
+Pe langa taxa principala de transport, Druma adauga automat linii de suprataxa pe factura, in functie de ce s-a intamplat in timpul comenzii:
+
+| Suprataxa | Cand este adaugata |
+|---|---|
+| **Taxa de asteptare** | Cand soferul a inregistrat timp de asteptare peste perioada gratuita |
+| **Taxa de drum (transferata)** | Cand exista chitante de taxe de drum inregistrate de sofer si politica ta de fisa de tarifare este de transfer pentru acea tara |
+| **Taxa de cursa irosita** | Cand a fost inregistrata o cursa irosita pe comanda |
+| **Suprataxa ADR** | Cand comanda a fost marcata drept marfa ADR/periculoasa |
+
+Aceste linii apar automat in editorul de factura — fara introducere manuala necesara.
+
+**Poti:**
+- **Exclude o linie din factura** — apasa comutatorul **Exclude** pe randul liniei. Taxa dispare din factura, dar ramane pe inregistrarea comenzii pentru urmarirea interna a costurilor.
+- **Restaura liniile excluse** — apasa **Restaureaza taxele ascunse** in partea de jos a sectiunii de elemente de linie, ca sa aduci inapoi orice linie automata exclusa.
+- **Adauga linii personalizate** — foloseste butonul **+ Adauga Linie** pentru a adauga taxe de schimb paleti, taxe vamale, taxe de manipulare sau orice alt extra. Alege din **catalogul de extra** al companiei tale, sau introdu o descriere si o suma personalizate.
+
+Pentru a gestiona catalogul de extra (sabloane de elemente de linie la nivel de companie): **Setari → Catalog Extra**.
+
+## Numerotarea facturilor
+
+Numerele de factura sunt secventiale si folosesc un prefix configurabil. Formatul implicit (fara un pattern personalizat configurat) este `{prefix}-{secventa de 6 cifre}` — de exemplu, `INV-000001`, `INV-000002`, `INV-000003`. Un pattern cu un token de an (`{YYYY}`) este disponibil, daca configurezi un pattern de numerotare personalizat.
+
+Pentru a schimba prefixul sau a configura un pattern de numerotare personalizat (inclusiv un token de an): **Setari** → **Branding si Formate** → **Numerotare Facturi**.
+
+## Facturi multi-valuta
+
+Druma suporta facturarea in EUR, GBP, CHF, USD, RON si PLN. Selecteaza moneda cand creezi factura. Pentru orice moneda alta decat RON, Druma preia automat cursul de schimb de la **BNR (Banca Nationala a Romaniei)** pentru data facturii si il include pe PDF.
+
+Asta este important pentru conformitatea contabila romaneasca si trimiterea e-Factura — echivalentul in RON al oricarei sume in valuta straina trebuie sa apara pe factura.
+
+## Facturare in masa — reguli cheie
+
+- Poti grupa in aceeasi factura doar comenzi de la **acelasi client**
+- Toate comenzile grupate trebuie sa aiba statusul **Livrata**
+- Comenzile in monede diferite trebuie facturate separat
+
 <Warning>
-Odata generata, factura nu poate fi editata direct. Foloseste o nota de credit pentru corectii.
+Odata ce o factura este generata (statusul iese din Ciorna), nu o poti edita direct. Daca ai facut o greseala — suma gresita, client gresit, element de linie gresit — trebuie sa creezi o nota de credit pentru a o inversa, apoi sa emiti o factura corectata. Aceasta este o cerinta legala in Romania. Nu incerca sa stergi sau sa suprascrii o factura trimisa.
 </Warning>
+
+---
+
+<Card title="Note de credit" icon="file-minus" href="/ro/invoicing/credit-notes">
+  Cum inversezi sau corectezi partial o factura trimisa, folosind o nota de credit.
+</Card>
+
+<Card title="e-Factura / Trimitere ANAF" icon="landmark" href="/ro/invoicing/efactura-anaf">
+  Cum trimite Druma automat facturile la sistemul e-Factura ANAF, pentru clientii romani.
+</Card>
+
+<Card title="Urmarirea platilor" icon="money-bill-wave" href="/ro/invoicing/payment-tracking">
+  Inregistrarea platilor fata de facturi si urmarirea soldurilor restante.
+</Card>

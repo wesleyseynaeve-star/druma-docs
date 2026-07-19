@@ -6,34 +6,46 @@ icon: "lock"
 
 _Zuletzt aktualisiert: 10. Juli 2026._
 
-Für Ihre **Betriebsdaten** (Aufträge, Kunden, Fahrer, Dokumente und verwandte Datensätze, die Ihr Unternehmen auf der Plattform speichert) ist Druma **Auftragsverarbeiter** — Ihr Unternehmen ist der Verantwortliche, und die Verarbeitung erfolgt auf Grundlage eines Auftragsverarbeitungsvertrags (AVV) zwischen Ihrem Unternehmen und Druma. Für Ihre **Konto- und Abrechnungsdaten** (die Details Ihres Druma-Abonnements und der Nutzer, die es verwalten) handelt Druma selbst als **Verantwortlicher**.
+Für Ihre **Betriebsdaten** (Aufträge, Kunden, Fahrer, Dokumente und verwandte Datensätze, die Ihr Unternehmen auf der Plattform speichert) ist Druma **Auftragsverarbeiter** — Ihr Unternehmen ist der Verantwortliche, und die Verarbeitung erfolgt auf Grundlage eines Auftragsverarbeitungsvertrags (AVV) zwischen Ihrem Unternehmen und Druma. Für Ihre **Konto- und Abrechnungsdaten** (die Details Ihres Druma-Abonnements und der Nutzer, die es verwalten) handelt Druma selbst als **Verantwortlicher**. Dieser Artikel beschreibt genau, was gespeichert wird, wie lange, von wem verarbeitet, und welche Rechte Sie nach der DSGVO haben.
+
+<Frame caption="Einstellungen → DSGVO & Datenschutz — jede Rolle kann einsehen; nur Admin kann handeln.">
+  <img src="/images/admin/gdpr-data-management.png" alt="Einstellungen DSGVO und Datenschutz" />
+</Frame>
 
 ---
 
 ## Welche Daten Druma speichert
 
 ### Unternehmens- und Kontodaten
-- Unternehmensname, CIF, Adresse, Kontaktdaten
+- Unternehmensname, USt-IdNr., Adresse, Kontaktdaten
 - Benutzerkonten: Name, E-Mail-Adresse, Rolle, Anmeldezeitstempel
 
 ### Betriebliche Daten
-- Aufträge: Routendetails, Ladungsbeschreibungen, Adressen, Statusverlauf, Fahrer und Fahrzeug, Zeitstempel
-- Kundendatensätze, Fahrerinformationen, Fahrzeugdatensätze
+- Aufträge: Routendetails, Ladungsbeschreibungen, Abhol- und Lieferadressen, Statusverlauf, zugewiesener Fahrer und Fahrzeug, Zeitstempel
+- Kundendatensätze: Firmenname, Adresse, Ansprechpartner, USt-IdNr.
+- Fahrerinformationen: Name, Kontaktnummer, Führerscheinnummer, ADR-Zertifikatsdaten, Ablaufdaten von Dokumenten
+- Fahrzeugdatensätze: Kennzeichen, Marke/Modell, Euro-Norm, Ablaufdaten von Dokumenten
 
 ### Finanzdaten
 - Rechnungsdatensätze, Positionen, Beträge, Zahlungsstatus
+- Kraftstoffkarten-Importdaten, verknüpft mit Fahrzeugen
 
 ### eCMR-Dokumente
-- Elektronische Frachtbriefe, ausgestellt und **PAdES-versiegelt in-house von Drumas nativem Anbieter**, einschließlich Signaturdaten und zertifizierter PDFs. TransFollow bleibt als **Legacy-Fallback** für Unternehmen verfügbar, die es bereits vor Einführung des nativen Anbieters genutzt haben.
+- Elektronische Frachtbriefe, ausgestellt und **PAdES-versiegelt in-house von Drumas nativem Anbieter**, einschließlich Signaturdaten und zertifizierter PDFs. TransFollow bleibt als Legacy-Fallback für Unternehmen verfügbar, die es bereits vor Einführung des nativen Anbieters genutzt haben.
 
 ### GPS-Positionsdaten
-- Druma speichert nur die **aktuelle GPS-Position**. **Es wird kein Positionsverlauf gespeichert** — jede neue Position überschreibt die vorherige.
+- **Live-LKW-Tracking**: Druma speichert nur die aktuelle Position des LKW, laufend überschrieben bei neuen GPS-Signalen — es wird kein historisches Protokoll früherer Positionen für die Live-Karte geführt.
+- **GPS-Stempel bei Auftragsereignissen**: Meldet ein Fahrer eine Statusänderung, Verzögerung oder einen Vorfall, kann eine einzelne GPS-Koordinate erfasst und diesem konkreten Auftragsereignis zugeordnet werden. Diese Stempel werden als Teil des Auftragsdatensatzes aufbewahrt (siehe Aufbewahrung „betriebliche Daten" unten), nicht als separater fortlaufender Positionsverlauf.
+- **Rumänisches e-Transport**: Bei Sendungen, die eine ANAF-e-Transport-Meldung erfordern, werden an ANAF übermittelte GPS-Koordinaten separat protokolliert und nach **30 Tagen** gelöscht.
+
+### Tachographen-Archivdaten
+- Rohe DDD-Dateien (Fahrzeugeinheit) und TGD-Dateien (Fahrerkarte), automatisch über einen verbundenen Telematikanbieter heruntergeladen oder manuell hochgeladen, im Tacho-Archiv gespeichert zur Erfüllung der Aufbewahrungspflichten der EU-Verordnung 165/2014. Siehe [Tachographen-Archiv](/de/fleet-compliance/tacho-archive).
 
 ### Audit-Protokolle
-- Protokoll bedeutender Benutzeraktionen: Anmeldeereignisse, Statusänderungen, Rollenänderungen, Dokumentenuploads
+- Protokoll bedeutender Benutzeraktionen: Anmeldeereignisse, Auftragsstatusänderungen, Rollenänderungen, Dokumentenuploads, Abrechnungsereignisse
 
 <Note>
-Druma speichert keine Tachographendaten, Anrufaufzeichnungen oder biometrische Fahrerdaten.
+Druma speichert keine Anrufaufzeichnungen, biometrischen Fahrerdaten oder Gesundheitsdaten von Fahrern.
 </Note>
 
 ---
@@ -42,28 +54,39 @@ Druma speichert keine Tachographendaten, Anrufaufzeichnungen oder biometrische F
 
 | Datenkategorie | Aufbewahrungsfrist |
 |---|---|
-| Betriebliche Daten | Dauer des Abonnements + 90 Tage nach Kündigung |
+| Betriebliche Daten (Aufträge, Kunden, Fahrer, Fahrzeuge) | Dauer des Abonnements + 90 Tage nach Kündigung |
 | Benutzerkontodaten | Dauer des Abonnements + 90 Tage nach Kündigung |
-| Audit-Protokolle | 18 Monate ab Datum des Ereignisses |
-| eCMR-Dokumente | 10 Jahre (gesetzliche Anforderung) |
-| GPS-Positionsdaten | In Echtzeit überschrieben |
-| Abrechnungsunterlagen | 7 Jahre (rumänisches Buchhaltungsrecht) |
+| Audit-Protokolle | 12 Monate ab Datum des protokollierten Ereignisses |
+| eCMR-Dokumente | 10 Jahre (gesetzliche Anforderung nach dem e-CMR-Protokoll) |
+| GPS-Positionsdaten (Live-Tracking) | Nicht aufbewahrt — nur die aktuelle Position wird gespeichert und bei jedem Update überschrieben |
+| GPS-Stempel bei Auftragsereignissen | Aufbewahrt zusammen mit dem Auftrag (siehe oben) |
+| An ANAF e-Transport übermittelte GPS-Daten | 30 Tage, danach automatisch gelöscht |
+| Tachographendateien (DDD/TGD) | Unbegrenzt aufbewahrt (12 Monate ist die gesetzliche Mindestfrist, kein Löschziel) |
+| Abrechnungsunterlagen | 10 Jahre (Obergrenze nach EU-Steuerrecht) |
+
+<Note>
+Am Ende des unten beschriebenen 90-Tage-Aufbewahrungsfensters löscht der geplante Bereinigungslauf von Druma **Aufträge, die älter als 3 Jahre sind**, Auftragsnachrichten, Auftragsnotizen, Kunden, LKW und Anhänger, und entfernt Unternehmensintegrationen und -einstellungen. Rechnungen und eCMR-Signaturen werden dabei bewusst **nicht gelöscht** — beide unterliegen unabhängig von der Kontolöschung den gesetzlichen Aufbewahrungsfristen oben. Aufträge, die zum Zeitpunkt der Bereinigung jünger als 3 Jahre sind, werden ebenfalls nicht gelöscht.
+</Note>
 
 ---
 
 ## Einen Datenexport anfordern
 
+Sie können jederzeit einen vollständigen Export der Daten Ihres Unternehmens anfordern.
+
 <Steps>
-  <Step title="Zu Einstellungen → Daten & Datenschutz gehen">
-    Nur Admin und Unternehmensadministratoren können auf diesen Abschnitt zugreifen.
+  <Step title="Zu Einstellungen → DSGVO & Datenschutz gehen">
+    Jede Rolle kann diese Seite öffnen und einsehen. Nur die Rolle **Admin** kann einen Export anfordern, die Aufbewahrungsrichtlinie bearbeiten oder Betroffenenanfragen bearbeiten — **Unternehmensadministrator** hat Nur-Lese-Zugriff auf die hochgeladenen DSGVO-Dokumente, andere Rollen können die Seite einsehen, aber nicht handeln.
   </Step>
   <Step title="Auf Export anfordern klicken">
-    Druma bereitet ein ZIP-Archiv in maschinenlesbarem Format (JSON und CSV) vor.
+    Druma bereitet ein ZIP-Archiv aller Unternehmensdaten in maschinenlesbarem Format (JSON und CSV) vor.
   </Step>
   <Step title="Den Export erhalten">
-    Sie erhalten innerhalb von **24 Stunden** eine E-Mail mit einem Download-Link (gültig 7 Tage).
+    Sie erhalten **innerhalb von etwa 15 Minuten** eine E-Mail mit einem Download-Link (der Export läuft über einen Hintergrundjob, der alle 15 Minuten ausgeführt wird). Der Link läuft nach 7 Tagen ab.
   </Step>
 </Steps>
+
+Der Export enthält: Aufträge, Kunden, Rechnungen, Flottenfahrzeuge, In-App-Auftragsnachrichten, Audit-Protokolleinträge, Einwilligungsdatensätze und eCMR-Signaturdatensätze. Die Datei `drivers.csv` im Export enthält nur Benutzerkonten mit der Rolle **Fahrer** — sie ist keine vollständige Liste Ihrer Büro-Benutzer. Zertifizierte eCMR-PDFs sind nicht enthalten — diese lassen sich einzeln über den eCMR-Tab jedes Auftrags herunterladen.
 
 ---
 
@@ -74,17 +97,17 @@ Die Kontolöschung ist nach dem 90-tägigen Aufbewahrungsfenster dauerhaft und u
 </Warning>
 
 <Steps>
-  <Step title="Zu Einstellungen → Daten & Datenschutz gehen">
-    Scrollen Sie zum Abschnitt **Konto löschen**.
+  <Step title="Zu Einstellungen → DSGVO & Datenschutz gehen">
+    Scrollen Sie zum Abschnitt **Konto löschen**. Nur die Rolle **Admin** kann dies starten.
   </Step>
   <Step title="Auf Konto löschen klicken">
-    Geben Sie Ihren Unternehmensnamen ein, um die Aktion zu bestätigen.
+    Sie werden aufgefordert, Ihren Unternehmensnamen einzugeben, um zu bestätigen, dass Sie die Aktion verstehen.
   </Step>
   <Step title="90-tägige Aufbewahrungsfrist beginnt">
-    Ihr Konto wird sofort deaktiviert. Druma bewahrt die Daten 90 Tage lang auf.
+    Ihr Konto wird sofort deaktiviert — niemand kann sich mehr anmelden. Druma bewahrt die Daten 90 Tage lang für den Fall regulatorischer oder rechtlicher Erfordernisse auf. Sie können die geplante Löschung innerhalb dieses Zeitfensters jederzeit auf derselben Seite abbrechen.
   </Step>
-  <Step title="Dauerhafte Löschung">
-    Nach 90 Tagen werden alle betrieblichen Daten dauerhaft gelöscht. eCMR-Dokumente werden für die volle gesetzliche Frist von 10 Jahren aufbewahrt.
+  <Step title="Geplante Bereinigung">
+    Nach 90 Tagen löscht Druma Aufträge, die älter als 3 Jahre sind, Auftragsnachrichten, Auftragsnotizen, Kunden, LKW, Anhänger und Unternehmensintegrationen, und entfernt den Unternehmensdatensatz selbst. **Rechnungen und eCMR-Signaturen werden dabei nicht gelöscht** — sie werden für ihre volle gesetzliche Aufbewahrungsfrist aufbewahrt (siehe Tabelle oben), unabhängig von der Kontolöschung. Aufträge, die zum Zeitpunkt der Bereinigung jünger als 3 Jahre sind, werden ebenfalls nicht gelöscht.
   </Step>
 </Steps>
 
@@ -92,38 +115,48 @@ Die Kontolöschung ist nach dem 90-tägigen Aufbewahrungsfenster dauerhaft und u
 
 ## Unterauftragsverarbeiter
 
+Druma teilt Daten mit folgenden Unterauftragsverarbeitern zur Erbringung des Dienstes:
+
 | Unterauftragsverarbeiter | Zweck |
 |---|---|
 | Supabase | Datenbankhosting und Authentifizierung (EU — Frankfurt) |
 | Cloudflare | CDN, DDoS-Schutz und DNS |
-| Resend | Transaktionale E-Mail-Zustellung |
-| Mailgun | Eingehende E-Mail-Verarbeitung (Auftrags-, Rechnungs- und Zahlungsmails) |
+| Resend | Ausgehende transaktionale E-Mail-Zustellung |
+| Mailgun | Eingehende E-Mail-Verarbeitung (Auftrags-, Rechnungs- und Zahlungsmails, die in Druma geparst werden) |
 | Stripe | Zahlungsabwicklung und Abonnementverwaltung |
 | PTV Group | Routen-, Distanz- und ETA-Berechnung — erhält Abhol-/Lieferkoordinaten |
-| HERE Technologies | Adress-Geocodierung und Autocomplete |
-| Google Vertex AI (europe-west1) | KI-gestützte Funktionen (Dokumente, E-Mails) — kein Modelltraining |
+| HERE Technologies | Adress-Geocodierung und Autovervollständigung |
+| Google Vertex AI (europe-west1) | KI-gestützte Funktionen (Dokumentenauslesung, E-Mail-Extraktion) — kein Modelltraining |
 | Google Cloud Translation | Bedarfsgesteuerte Übersetzung von UI- und Dokumentinhalten |
-| Sentry | Fehlerüberwachung |
-| Google Firebase Cloud Messaging | Push-Benachrichtigungen der Fahrer-App |
+| Sentry | Fehlerüberwachung und Absturzberichte |
+| Google Firebase Cloud Messaging | Push-Benachrichtigungen an die Fahrer-App |
 | WhatsApp Business Cloud API (Meta) | Fahrerkommunikation — nur wenn Ihr Unternehmen WhatsApp-Benachrichtigungen aktiviert |
-| Telematik-Anbieter (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- und Tachographendaten — nur der von Ihrem Unternehmen verbundene Anbieter |
-| Reefer-Telematik-Anbieter (Mapon, Orbcomm, Thermo King) | Kühltemperaturdaten — nur der von Ihrem Unternehmen verbundene Anbieter |
-| TransFollow | Nur als Legacy-eCMR-Fallback — der native In-House-Anbieter von Druma ist der Standard für Ausstellung, Signatur und Archivierung |
+| Telematik-Anbieter (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | GPS- und Tachographendaten — nur der von Ihrem Unternehmen verbundene Anbieter |
+| Kühlfahrzeug-Telematik-Anbieter (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Kühltemperaturdaten — nur der von Ihrem Unternehmen verbundene Anbieter |
+| TransFollow | Nur als Legacy-eCMR-Fallback — der native, hauseigene Anbieter von Druma ist der Standard für Ausstellung, Signatur und Archivierung |
 
-Wenn Ihr Unternehmen die optionale Funktion **Druma Copilot** mit einem eigenen KI-Anbieter-API-Schlüssel aktiviert ("Bring your own AI"), werden Ihre Prompts und die abgefragten Daten direkt an den von Ihnen gewählten KI-Anbieter (OpenAI, Anthropic oder Google) im Rahmen Ihrer eigenen Vereinbarung mit diesem Anbieter gesendet — dies kann eine Datenübermittlung außerhalb der EU bedeuten. Druma Copilot ist **standardmäßig deaktiviert** und wird erst aktiv, wenn Ihr Unternehmen einen eigenen Schlüssel hinterlegt.
+Alle Unterauftragsverarbeiter sind vertraglich verpflichtet, Daten nur weisungsgemäß und DSGVO-konform zu verarbeiten.
+
+Aktiviert Ihr Unternehmen die optionale Funktion **Druma Copilot** mit einem eigenen KI-Anbieter-API-Schlüssel („Bring your own AI"), werden Ihre Prompts und die abgefragten Daten direkt an den gewählten KI-Anbieter (OpenAI, Anthropic oder Google) im Rahmen Ihrer eigenen Vereinbarung mit diesem Anbieter gesendet — dies kann eine Datenübermittlung außerhalb der EU bedeuten. Druma Copilot ist **standardmäßig deaktiviert** und aktiviert sich erst, wenn Ihr Unternehmen einen eigenen Schlüssel hinterlegt.
 
 ---
 
 ## Ihre DSGVO-Rechte
 
-- **Auskunftsrecht** — Kopie der gespeicherten Daten anfordern
-- **Recht auf Berichtigung** — unrichtige Daten korrigieren
-- **Recht auf Löschung** — Löschung beantragen
-- **Recht auf Datenübertragbarkeit** — Daten in maschinenlesbarem Format erhalten
-- **Recht auf Einschränkung** — Verarbeitung einschränken lassen
-- **Widerspruchsrecht** — der Verarbeitung widersprechen
+Als betroffene Person oder als Verantwortlicher im Namen Ihrer Mitarbeiter haben Sie folgende Rechte:
 
-E-Mail an **privacy@druma.io** mit Unternehmensnamen, CIF und Beschreibung Ihrer Anfrage. Wir antworten innerhalb von 30 Tagen.
+- **Auskunftsrecht** — Kopie der über Sie gespeicherten personenbezogenen Daten anfordern
+- **Recht auf Berichtigung** — unrichtige personenbezogene Daten korrigieren
+- **Recht auf Löschung** — Löschung beantragen (vorbehaltlich gesetzlicher Aufbewahrungspflichten)
+- **Recht auf Datenübertragbarkeit** — Daten in strukturiertem, maschinenlesbarem Format erhalten (nutzen Sie die Datenexport-Funktion)
+- **Recht auf Einschränkung** — Druma bitten, die Verarbeitung in bestimmten Fällen einzuschränken
+- **Widerspruchsrecht** — der auf berechtigten Interessen beruhenden Verarbeitung widersprechen
+
+Um eines dieser Rechte auszuüben, senden Sie eine E-Mail an **privacy@druma.io** mit Unternehmensnamen, USt-IdNr. und einer Beschreibung Ihrer Anfrage. Druma antwortet innerhalb von 30 Tagen.
+
+---
+
+## Weiterführende Informationen
 
 <Card title="Datenschutzrichtlinie" icon="shield" href="/de/legal/privacy-policy">
   Vollständige Datenschutzrichtlinie einschließlich der Rechtsgrundlage für die Verarbeitung.

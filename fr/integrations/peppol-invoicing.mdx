@@ -1,60 +1,120 @@
 ---
 title: "Facturation électronique Peppol (Belgique)"
-description: "Comment Druma achemine automatiquement les factures vers les entreprises belges via le réseau Peppol — obligatoire depuis janvier 2026."
+description: "Connectez Druma au réseau Peppol via e-invoice.be et acheminez automatiquement les factures vers vos clients professionnels belges — sans étape manuelle requise."
 icon: "file-check-2"
 ---
 
-## Vue d'ensemble
+Peppol (Pan-European Public Procurement On-Line) est le réseau standard de l'UE pour l'échange de factures électroniques structurées entre entreprises. En Belgique, l'envoi de factures via Peppol est **obligatoire pour toutes les entreprises enregistrées au KBO** émettant des factures B2B depuis janvier 2026.
 
-Peppol (Pan-European Public Procurement On-Line) est l'infrastructure de réseau standard pour la facturation électronique en Europe. Pour les entreprises belges, l'envoi de factures B2B via Peppol est obligatoire depuis janvier 2026.
+Druma se connecte au réseau Peppol via **e-invoice.be**, un point d'accès Peppol belge accrédité. Une fois configuré, Druma détecte lesquels de vos clients sont joignables sur Peppol et leur achemine les factures automatiquement — vous n'avez pas besoin de changer votre façon de créer ou d'envoyer des factures.
 
 ---
 
-## Qui doit utiliser Peppol ?
+## Qui a besoin de ceci
 
-Les entreprises belges (enregistrées au KBO) qui :
-- Envoient des factures à d'autres entreprises belges (B2B)
-- Ont un numéro de TVA belge actif
+Vous avez besoin de l'intégration Peppol si :
+
+- Votre entreprise est enregistrée en Belgique (dispose d'un numéro KBO), **et**
+- Vous émettez des factures à d'autres entreprises belges
+
+Si votre entreprise opère hors de Belgique, ou si vos clients sont des particuliers ou des entreprises étrangères, Peppol ne s'applique pas à vous. Druma continuera d'envoyer les factures par email pour tous les destinataires non-Peppol, que l'intégration soit active ou non.
+
+<Note>
+Les entreprises belges qui n'activent pas cette intégration risquent des pénalités de non-conformité à partir de janvier 2026. La configuration prend moins de cinq minutes.
+</Note>
 
 ---
 
 ## Configuration
 
-Voir [Configuration des intégrations → Peppol](/fr/admin/integration-setup) pour les instructions de configuration.
+<Steps>
+  <Step title="Ouvrez la carte Peppol">
+    Accédez à **Paramètres → Intégrations**. Repérez la carte **Facturation électronique Peppol**. Son statut affichera **Non configuré**.
+  </Step>
+  <Step title="Cliquez sur Configurer">
+    Cliquez sur **Configurer** sur la carte. Un panneau de paramètres s'ouvre.
+  </Step>
+  <Step title="Saisissez vos numéros KBO et TVA">
+    Saisissez le **numéro KBO** de votre entreprise (numéro d'immatriculation d'entreprise belge à 10 chiffres) et votre **numéro de TVA** (BE suivi de 10 chiffres) dans les champs respectifs.
+  </Step>
+  <Step title="Enregistrez-vous sur le réseau Peppol">
+    Cliquez sur **S'enregistrer sur Peppol**. Druma soumet votre inscription à e-invoice.be. Cela se termine généralement en quelques secondes.
+  </Step>
+  <Step title="Confirmez l'activation">
+    Une fois l'inscription réussie, la carte affiche un badge **Connecté**. Votre entreprise est maintenant participante Peppol et peut à la fois envoyer et recevoir des factures structurées sur le réseau.
+  </Step>
+</Steps>
+
+<Warning>
+Seuls les utilisateurs **Admin** et **Admin entreprise** peuvent configurer les intégrations. Si vous ne voyez pas le bouton Configurer, demandez à votre administrateur de compte.
+</Warning>
 
 ---
 
-## Comment l'acheminement Peppol fonctionne
+## Comment fonctionne l'acheminement des factures
 
-Lorsque vous envoyez une facture à un client belge :
+Après activation, Druma ajoute une vérification Peppol chaque fois que vous envoyez une facture :
 
-1. Druma vérifie si le client est enregistré sur le réseau Peppol (via son numéro de TVA).
-2. Si le client est sur Peppol, la facture est envoyée électroniquement via le réseau Peppol.
-3. Si le client n'est pas sur Peppol, la facture est envoyée par email normalement.
-4. Druma enregistre le statut de livraison Peppol dans le panneau de détails de la facture.
+1. Druma vérifie d'abord si le numéro de TVA du client est belge (commence par `BE`) — cette vérification se fait **avant tout appel réseau**, donc les clients non belges ne déclenchent jamais de recherche Peppol du tout.
+2. Pour les clients belges, Druma recherche le destinataire sur le réseau Peppol via e-invoice.be. S'il est trouvé, la facture est soumise électroniquement — **aucune étape supplémentaire n'est requise de votre part**.
+3. Druma envoie aussi la facture par email, que la soumission Peppol ait réussi ou non — l'email n'est pas un repli conditionnel déclenché uniquement en cas d'échec de Peppol. La seule exception : si un client s'est explicitement désinscrit de la réception des deux canaux (un paramètre séparé par client), l'email est sauté une fois la livraison Peppol réussie.
+
+Vous n'avez pas besoin de choisir une méthode de livraison par facture. L'acheminement est entièrement automatique.
 
 ---
 
-## Statuts Peppol
+## Suivre le statut des factures
+
+La liste des factures inclut une colonne de statut **Peppol** avec les états suivants :
 
 | Statut | Signification |
 |---|---|
-| **Envoyée** | Facture transmise au réseau Peppol |
-| **Livrée** | Destinataire a reçu la facture |
-| **Rejetée** | Destinataire a rejeté la facture (voir détails) |
-| **Erreur** | Problème technique lors de la transmission |
+| **Soumise** | Envoyée à e-invoice.be, en attente de confirmation de livraison |
+| **Livrée** | Livraison confirmée dans la boîte de réception Peppol du destinataire |
+| **Échec** | La livraison a échoué au point d'accès — voir le détail de l'erreur sur la ligne de facture |
+| **Échec de validation** | Le contrôle préliminaire local de Druma a bloqué l'envoi avant qu'il n'atteigne e-invoice.be (par ex. une somme de contrôle KBO/TVA invalide) — aucun appel au point d'accès n'a été fait, donc aucun quota e-invoice.be n'a été utilisé |
+| **Pas sur le réseau** | Le TVA du client n'est pas un participant Peppol enregistré ; la facture a été envoyée par email comme d'habitude (affiché comme « → Envoyée par email ») |
+
+Il n'y a pas de statut « En attente » — une facture n'est soit pas encore envoyée via Peppol (nul), soit dans l'un des cinq états ci-dessus. Les mises à jour de statut des factures soumises sont poussées vers Druma automatiquement via un webhook d'e-invoice.be.
 
 ---
 
-## Gestion des rejets
+## Gérer les échecs
 
-Si une facture est rejetée par le destinataire Peppol :
+Si une facture affiche **Échec** ou **Échec de validation** :
 
-1. Ouvrez la facture dans Druma.
-2. Lisez les détails du rejet dans la section **Statut Peppol**.
-3. Corrigez le problème identifié (ex. : numéro de TVA incorrect, format invalide).
-4. Envoyez à nouveau la facture.
+1. Survolez ou cliquez sur le badge de statut pour lire le détail de l'erreur.
+2. Corrigez le problème indiqué (par exemple, un numéro de TVA invalide sur la fiche client).
+3. Cliquez sur **Réessayer Peppol** sur la ligne de facture pour relancer la soumission.
 
-<Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
-  Guide complet sur la création et l'envoi de factures.
+<Note>
+Les échecs de livraison Peppol n'affectent pas le statut interne de la facture dans Druma. La facture reste confirmée et apparaîtra toujours dans vos exports comptables. La facture est aussi envoyée par email dans tous les cas, afin que le client ne reste pas sans copie pendant que vous enquêtez.
+</Note>
+
+---
+
+## Déclencher manuellement la livraison Peppol
+
+Pour les factures où l'envoi automatique ne s'est pas déclenché — par exemple, des factures créées avant l'activation de l'intégration — vous pouvez soumettre manuellement via Peppol :
+
+1. Ouvrez la liste **Factures**.
+2. Trouvez la ligne de facture et cliquez sur le menu d'actions de la ligne (**···**).
+3. Cliquez sur **Soumettre maintenant**.
+
+C'est aussi utile après avoir corrigé le numéro de TVA ou de KBO d'un client.
+
+---
+
+## Pages associées
+
+<Card title="Configuration des intégrations" icon="plug" href="/fr/admin/integration-setup">
+  Aperçu de toutes les intégrations disponibles sous Paramètres → Intégrations.
+</Card>
+
+<Card title="Envoi des factures" icon="send" href="/en/finance/sending-invoices">
+  Comment envoyer les factures par email et suivre le statut de livraison.
+</Card>
+
+<Card title="Marque et formats de documents" icon="palette" href="/fr/admin/branding-formats">
+  Personnalisez la numérotation des factures, le logo et les couleurs sur les factures PDF.
 </Card>

@@ -1,49 +1,152 @@
 ---
 title: "e-Transport Románia"
-description: "A román e-Transport rendszer és az UIT-kód kötelező nyilatkozat konfigurálása nagy értékű áruk szállításához, GPS-továbbítással az ANAF felé."
-icon: "satellite"
+description: "Hogyan automatizálja a Druma az ANAF e-Transport nyilatkozatokat, az UIT-kód generálást és a GPS-naplózást a Romániában és Románián keresztül zajló, jogosult árufuvarozásoknál."
+icon: "truck-fast"
+---
+
+Az e-Transport Románia kötelező elektronikus nyilatkozattételi és GPS-nyomon követési rendszere az árufuvarozás közúti szállításához, amelyet az ANAF (Agenția Națională de Administrare Fiscală) üzemeltet. A Druma automatizálja a nyilatkozattételi folyamatot, generálja az UIT-kódokat, és kezeli a GPS-pozíció jelentését — megszüntetve a manuális terhet és csökkentve a bírságok kockázatát.
+
 ---
 
 ## Mi az e-Transport?
 
-Az e-Transport Románia kötelező árufuvarozás-nyomon követési rendszere a nagy értékű árukhoz. Ha bizonyos értékhatárt meghaladó árut szállítasz Románia területén, UIT-kódot (Unique Identification Token) kell igényelni az ANAF-tól az indulás előtt, és a GPS-pozíciót folyamatosan továbbítani kell a szállítás alatt.
+Az e-Transport megköveteli a fuvarozási operátoroktól, hogy:
 
-## Ki érintett?
+1. **Bejelentsék a szállítást** az ANAF-nak, mielőtt a teherautó elindulna, és megkapjanak egy egyedi UIT-kódot
+2. **Naplózzák a GPS-pozíciókat** rendszeres időközönként a szállítás alatt
+3. **Magukkal vigyék az UIT-kódot** a teherautóban (nyomtatva vagy a sofőr telefonján látható módon)
 
-Az e-Transport kötelező, ha:
-- Az áru értéke meghaladja a 10 000 lej küszöbértéket
-- Az áru Románia területén kerül szállításra (beleértve a tranzitot)
-- Egyes árukategóriák (magas kockázatú áruk) alacsonyabb küszöbértékek alá esnek
+A rendszer lehetővé teszi az ANAF és a Poliția Rutieră számára, hogy valós időben ellenőrizzék, hogy egy szállítást bejelentettek-e, ki szállítja az árut, és hogy a teherautó a bejelentett útvonalon van-e.
 
-## e-Transport konfigurálása a Drumában
+---
+
+## Mikor alkalmazandó az e-Transport?
+
+Az e-Transport alkalmazandó az áruk **Románián belüli vagy Románián keresztül tranzitáló** szállítására, amikor a rakomány meghalad bizonyos súly- és értékhatárokat. Ezeket a küszöbértékeket az ANAF állapítja meg, és időszakosan kormányrendelettel frissíti.
+
+<Warning>
+Mindig ellenőrizd az aktuális ANAF-küszöbértékeket, mielőtt arra a következtetésre jutnál, hogy egy szállítmányhoz nem szükséges e-Transport nyilatkozat. A szabályokat a rendszer indulása óta többször frissítették. A hiteles forrás a [mfinante.gov.ro](https://www.mfinante.gov.ro) és az ANAF e-Transport portál.
+</Warning>
+
+A nyilatkozattételt igénylő kategóriák közé tartoznak: fiskális kockázatú áruk (élelmiszer, alkohol, dohány, textil, építőanyag, elektronika), egy értékhatár feletti áruk, és minden nemzetközi tranzit Románián keresztül egy bizonyos tonnaszám felett. A könyvelőd vagy fuvarozási jogi tanácsadód megerősítheti a rakományaid típusaira jelenleg alkalmazandó kategóriákat.
+
+---
+
+## Ki jelenti be: az ügyfeled, vagy te?
+
+Az OUG 41/2022 8. cikke szerint a szállítás ANAF-nak való bejelentésének jogi kötelezettsége a **román kereskedelmi félen** nyugszik — a román bejegyzésű feladón vagy az áru átvevőjén, sosem a fuvarozón mint olyanon. A legtöbb fuvarozó cégnél ez azt jelenti: **az ügyfeled jelent be, és ad neked egy UIT-kódot** (a fuvarozói folyamat — a Druma alapértelmezettje). Csak akkor jelentesz be te magad (a bejelentő folyamat, cégenként engedélyezve a Beállítások → Integrációk → ANAF e-Transport menüpontban), ha a céged maga a román kereskedelmi fél — mert saját árut adsz el vagy mozgatsz.
+
+### Melyik folyamatot mikor használd?
+
+| Helyzet | Folyamat |
+|---|---|
+| A céged a román kereskedelmi fél (feladó vagy átvevő) | **Bejelentő folyamat** — rendelj hozzá egy járművet, és a Druma automatikusan benyújtja az ANAF-nak |
+| Fuvarozó vagy, és a román ügyfeled a kereskedelmi fél | **Fuvarozói folyamat** — az ügyfél megadja az UIT-t a portálon vagy telefonon |
+| Alvállalkozásba adott rendelés (továbbadás egy másik fuvarozónak) | Egyik sem — az alvállalkozó vagy az ő ügyfele kezeli a bejelentést |
+
+---
+
+## Hogyan kezeli a Druma az e-Transportot?
+
+### Fuvarozói folyamat (az alapértelmezett): az ügyfeled jelent be
+
+Amikor az ügyfeled viseli a bejelentési kötelezettséget, a Druma automatikusan tovább löki a folyamatot, hogy az UIT eljusson hozzád, mielőtt a teherautó elindulna.
 
 <Steps>
-  <Step title="Add meg az ANAF hitelesítési adatokat">
-    Lépj a **Beállítások → Integrációk → e-Transport** menüpontra, és add meg:
-    - ANAF digitális tanúsítvány
-    - CIF (adó-azonosítószám)
-    - Tanúsítvány jelszava
+  <Step title="Megerősítő e-mail figyelmeztetés">
+    Amikor a Druma elküldi a rendelés-megerősítést az ügyfélnek, észleli, hogy az útvonal érinti Romániát, és egy kiemelt figyelmeztetést tartalmaz, amely arra kéri az ügyfelet, hogy adja meg az UIT-kódot a portáljukon.
   </Step>
-  <Step title="A Druma ellenőrzi az e-Transport szükségességét">
-    A rendelés létrehozásakor, ha az áru értéke meghaladja a küszöbértéket és a célállomás Románia, a Druma jelöli, hogy UIT-kód szükséges.
+  <Step title="Ügyfélportál bejegyzés">
+    Az ügyfél megnyitja a szállítmányt a Druma ügyfélportálon. Egy **e-Transport (Románia)** kártya elmagyarázza a követelményt, és egy beviteli mezőt biztosít. Az ügyfél megadja az ANAF-tól kapott UIT-kódot — a Druma ellenőrzi a formátumot (8–30 nagybetűs alfanumerikus karakter), mielőtt menti.
   </Step>
-  <Step title="Automatikus UIT-kód igénylés">
-    A rendelés kiosztásakor a Druma automatikusan beküldi az ANAF-hoz a szükséges adatokat és megkapja az UIT-kódot.
+  <Step title="Tervező manuális bejegyzés">
+    Ha az ügyfél telefonon vagy e-mailben adja meg az UIT-t, a tervező közvetlenül beírhatja a rendelés-részletező panelen, a **rakomány fülön**. Ugyanaz az **e-Transport (Románia)** szakasz mutat egy beviteli mezőt, ha nincs rögzített UIT, és a rendelés státusza engedélyezi a szerkesztést.
+  </Step>
+  <Step title="A GPS-továbbítás automatikusan aktiválódik">
+    Amint egy UIT-kód rögzítve van, a Druma GPS-továbbítási folyamata felveszi a rendelést, és megkezdi a pozíciók továbbítását az ANAF-nak — a tervezőnek nincs szüksége további intézkedésre.
+  </Step>
+  <Step title="A sofőr látja az UIT-kódot">
+    Az UIT-kód megjelenik a sofőr Druma-alkalmazásában az aktív rendelés képernyőn, megerősítve a sofőrnek, hogy a bejelentés megtörtént indulás előtt. Ha egy útmenti ellenőr megkérdezi, a sofőr megmutatja a kódot a telefonján, vagy bemutatja a nyomtatott rendelési dokumentumot.
   </Step>
 </Steps>
 
-## UIT-kód megjelenítése a sofőrnek
+### Bejelentő folyamat: a céged jelent be
 
-Miután az UIT-kód megérkezett, az a sofőr alkalmazásban megjelenik — nagy, jól olvasható számjegyekkel és egy másolás gombbal. A sofőrnek ezt be kell mutatnia hatósági ellenőrzésnél.
+Csak akkor engedélyezd ezt, ha a céged az a román kereskedelmi fél, amely jogilag bejelent az ANAF-nak. Lépj a **Beállítások → Integrációk → ANAF e-Transport** menüpontra, és kapcsold be a bejelentői beállítást.
 
-## GPS-továbbítás
+Engedélyezés után:
 
-A szállítás alatt a Druma folyamatosan továbbítja a GPS-pozíciót az ANAF felé. Ha a továbbítás megszakad (pl. internetkapcsolat hiánya miatt), a Druma sorba állítja és pótlólag küldi el a pozícióadatokat.
+- Amikor egy Romániában felvételi vagy szállítási megállóval rendelkező rendelést hozol létre, a rendelési űrlap egy **Áru értéke (RON)** mezőt mutat. Ez az érték kötelező a bejelentéshez. A nélküle történő mentés figyelmeztetést mutat — továbbra is menthetsz, és később hozzáadhatod az értéket a rendelés szerkesztésével.
+- Amikor egy járművet rendelsz a rendeléshez, a Druma ellenőrzi, hogy a rendelés hatálya alá tartozik-e: az áru értékének el kell érnie vagy meg kell haladnia a bejelentési küszöböt (alapértelmezett **10 000 RON**, cégenként konfigurálható), és a rendelés nem lehet alvállalkozásba adva.
+- Ha minden feltétel teljesül, a Druma **automatikusan benyújtja a bejelentést**, amint a jármű-hozzárendelés mentésre kerül, és tárolja a kapott UIT-t a rendelésen.
 
-<Warning>
-Az e-Transport követelmények megsértése bírságot vonhat maga után. Mindig győződj meg arról, hogy az UIT-kód megérkezett, mielőtt a sofőr elindul.
-</Warning>
+**Ha a bejelentés meghiúsul** — például egy hiányzó áruérték, egy megállási cím-hiba, vagy egy átmeneti ANAF API-probléma miatt — a rendelés-részletező oldal egy **Bejelentés sikertelen** figyelmeztetést mutat. Javítsd a mögöttes adatot, és próbáld újra a **Bejelentés / Újrapróbálkozás e-Transport** opcióval a rendelés műveletei menüjében.
 
-<Card title="Flottadokumentumok" icon="file-check" href="/en/fleet-compliance/fleet-documents">
-  Egyéb megfelelőségi dokumentumok nyomon követése.
-</Card>
+<Note>
+A bejelentői beállítás nélküli cégek sosem látják az Áru értéke (RON) felszólítást, és nem váltanak ki automatikus bejelentéseket. A fuvarozói folyamat mindig elérhető mind a bejelentő, mind a nem bejelentő cégeknek olyan rendeléseknél, ahol az ügyfél viseli a kötelezettséget.
+</Note>
+
+---
+
+## GPS-pozíció naplózás
+
+Az e-Transport megköveteli, hogy a GPS-pozíciókat az aktív szállítás alatt továbbítsák az ANAF-nak. A Druma ezt automatikusan kezeli az ANAF e-Transport API-n keresztül — külön a sofőr manuális státuszfrissítéseitől. Hogy elkerülje az ANAF API-jának elárasztását minden egyes GPS-jelnél, a Druma rendelésenként legfeljebb **5 percenként egyszer** korlátozza a kimenő továbbítást, a legfrissebb pozíciót továbbítva ilyen ütemben, nem minden egyes, a sofőr telefonjától érkező nyers jelet.
+
+**Fontos:** a GPS-naplózás csak akkor működik, ha a sofőr **nyitva tartja a Druma alkalmazást a telefonján** a szállítás alatt. Ha a sofőr bezárja az alkalmazást, vagy a telefon képernyője lezár anélkül, hogy az alkalmazás a háttérben futna, a pozíció-naplózás megszakadhat.
+
+<Steps>
+  <Step title="Utasítsd a sofőröket indulás előtt">
+    Mielőtt a teherautó elindulna, erősítsd meg a sofőrrel, hogy a Druma alkalmazás nyitva van, és az aktív rendelést mutatja. Androidon erősítsd meg, hogy az alkalmazásnak van háttér-helymeghatározási engedélye.
+  </Step>
+  <Step title="Az alkalmazás fut a szállítás alatt">
+    Az alkalmazás a mozgás közben GPS-koordinátákat továbbít a Drumának. A Druma rendelésenként legfeljebb 5 percenként egyszer továbbít egy pozíciót az ANAF e-Transport API-nak.
+  </Step>
+  <Step title="A szállítás befejezése">
+    Amikor a sofőr kiszállítottként jelöli meg a rendelést, az adott UIT-kódhoz tartozó GPS-naplózás leáll.
+  </Step>
+</Steps>
+
+<Note>
+Az e-Transport GPS-naplózása mobiladatot használ. Győződj meg róla, hogy a sofőröknek van aktív, adatforgalmat lehetővé tevő SIM-kártyájuk. Gyenge jelű területeken áthaladó útvonalaknál a Druma pufferolja a pozíciókat, és a kapcsolat helyreállásakor küldi el őket.
+</Note>
+
+---
+
+## Mit kell tennie a sofőrnek?
+
+A sofőr felelősségei az e-Transport megfelelésért minimálisak a Druma használatakor:
+
+1. **Tartsa nyitva az alkalmazást** a telefonján a szállítás alatt
+2. **Mutassa meg az UIT-kódot**, ha egy útmenti ellenőr kéri (látható az aktív rendelésen az alkalmazásban)
+3. **Ne térjen el jelentősen a bejelentett útvonaltól** — a jelentős útvonal-eltérések módosított bejelentést igényelhetnek, amelyet a diszpécser a Druma webes felületéről kezel
+
+---
+
+## Büntetések a meg nem felelés esetén
+
+Az ANAF e-Transport szabálysértésekért kiszabott bírságai jelentősek — a büntetések mind a fuvarozóra, mind a szállítás kedvezményezettjére (az ügyfél vagy a feladó) vonatkoznak. Gyakori szabálysértések:
+
+- Áru szállítása érvényes UIT-kód nélkül
+- GPS-pozíció naplózási hiányosságok a szállítás alatt
+- A bejelentett rakomány nem egyezik a ténylegesen szállított áruval
+
+A Druma automatizálása kiküszöböli a leggyakoribb megfelelési hibákat: a hiányzó bejelentéseket és a GPS-naplózási hiányosságokat. Azonban a pontos rakomány-információ (súly, érték, típus) felelőssége a rendelési adatokat megadó diszpécsernél marad.
+
+---
+
+## Kapcsolódó cikkek
+
+<CardGroup cols={2}>
+  <Card title="e-Transport bejelentési beállítások" icon="gear" href="/en/admin/etransport-settings">
+    Konfiguráld az ANAF API-hitelesítő adataidat, az áruérték-küszöböt és az e-Transport alapértelmezéseit a Drumában.
+  </Card>
+  <Card title="Flottadokumentumok" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    Jármű-dokumentumok megfelelősége, beleértve a nemzetközi fuvarozáshoz nyomon követett CEMT-engedélyt.
+  </Card>
+  <Card title="EU vezetési idő szabályai" icon="clock" href="/en/fleet-compliance/eu-driving-hours">
+    Az 561/2006 rendelet vezetési korlátai, és hogyan követi ezeket a Druma.
+  </Card>
+  <Card title="Mobility Package" icon="globe" href="/en/fleet-compliance/mobility-package">
+    Jármű- és sofőr-visszatérési kötelezettségek és IMI kiküldetési nyilatkozatok.
+  </Card>
+</CardGroup>

@@ -12,75 +12,115 @@ Deze pagina legt precies uit welke gegevens Druma over uw bedrijf bewaart, hoe l
 
 | Gegevenstype | Bewaartermijn | Rechtsgrondslag |
 |-----------|-----------------|-------------|
-| Bedrijfsprofiel, gebruikers, orders, klanten, chauffeurs | Duur abonnement + 90 dagen | Overeenkomst |
-| Facturen en financiële records | 7 jaar vanaf factuurdatum | Roemeense boekhoudwetgeving |
-| eCMR-documenten (ondertekend) | 10 jaar vanaf ondertekeningsdatum | e-CMR Protocol (wettelijke vereiste) |
+| Bedrijfsprofiel en -instellingen | Duur abonnement + 90 dagen | Overeenkomst |
+| Gebruikersaccounts | Duur abonnement + 90 dagen | Overeenkomst |
+| Transportorders en zendingsrecords | Duur abonnement + 90 dagen | Overeenkomst |
+| Klantrecords | Duur abonnement + 90 dagen | Overeenkomst |
+| Chauffeursrecords | Duur abonnement + 90 dagen | Overeenkomst |
+| Facturen en financiële records | Gearchiveerd na 3 jaar, definitief verwijderd na 10 jaar vanaf factuurdatum | EU-fiscaal recht / Roemeense boekhoudwet |
+| eCMR-documenten (ondertekend) | Definitief verwijderd 7 jaar na de leveringsdatum van de zending, via een jaarlijkse opschoning — onafhankelijk van uw accountstatus | Aanvullend Protocol bij de CMR-Overeenkomst |
 | Auditlogs | 18 maanden | Gerechtvaardigde belangen |
 | GPS-positie (live tracking) | Niet bewaard — alleen huidige positie, overschreven bij elke update | Overeenkomst |
-| GPS orderevent-stempels | Bewaard bij de order zelf (zie hierboven) | Overeenkomst |
+| GPS orderevent-stempels | Bewaard bij de order (zie orderrecords hierboven) | Overeenkomst |
 | GPS doorgestuurd naar ANAF e-Transport | 30 dagen, dan automatisch gewist | Wettelijke vereiste (Roemenië) |
 | Tachograafbestanden (DDD/TGD) | Onbeperkt (12 maanden is het wettelijk minimum, geen verwijderdoel) | EU-Verordening 165/2014 |
 | Fout- en beveiligingslogs | 90 dagen | Gerechtvaardigde belangen |
 | Factureringsrecords (Stripe) | 7 jaar | Belastingwetgeving |
 
 <Note>
-eCMR-documenten hebben een bewaarverplichting van 10 jaar onder het Aanvullend Protocol bij de CMR-Overeenkomst — dit kan niet worden verkort, ook niet na accountsluiting.
+eCMR-handtekeningen en eCMR-documenten worden automatisch definitief verwijderd **7 jaar na de leveringsdatum van de zending** door een jaarlijkse opschoningstaak — dit draait ongeacht of uw account open of gesloten is. Los daarvan: wordt het account van een individuele gebruiker verwijderd, dan wordt elke eCMR-handtekening die hij binnen de **laatste 3 jaar** aanmaakte geanonimiseerd (niet verwijderd) in plaats van onmiddellijk verwijderd, zodat ze — zonder persoonsgegevens — blijft bestaan tot de bovenstaande grens van 7 jaar haar inhaalt.
 </Note>
 
 ## GPS-gegevens: wat we opslaan
 
-**Live tracking** (de positie op de kaart) bewaart alleen de **huidige** GPS-positie van een truck — elke nieuwe melding overschrijft de vorige, dus er wordt geen historisch rittenspoor bijgehouden.
+Druma legt de GPS-positie van het toestel van de chauffeur vast terwijl een lading actief is, nadat de chauffeur locatietoestemming heeft gegeven in de app. Voor **live tracking** (de positie getoond op de kaart) wordt alleen de huidige positie van de truck opgeslagen — elke nieuwe melding overschrijft de vorige, dus er wordt geen historisch spoor van eerdere posities bewaard.
 
-Los daarvan legt Druma bij een orderstatuswijziging, vertraging of incident soms **één GPS-coördinaat** vast, gekoppeld aan dat specifieke orderevent. Dit stempel wordt bewaard als onderdeel van de order zelf (zie tabel hierboven) — het is een eenmalige vastlegging, geen doorlopende locatiegeschiedenis.
+Los daarvan: meldt een chauffeur een statuswijziging, vertraging of incident, dan wordt één GPS-coördinaat vastgelegd en gekoppeld aan dat specifieke orderevent, en wordt onderdeel van het record van de order zelf (bewaard zolang de order zelf — zie de tabel hierboven). Dit is een eenmalige vastlegging bij dat event, geen doorlopende locatielog.
 
 We doen **niet**:
+
 - Chauffeurslocatie volgen buiten een actieve toegewezen rit
 - Een historisch spoor van live-trackingposities bijhouden
-- GPS-gegevens delen met derden, behalve voor de verplichte e-Transport-rapportage aan ANAF (rollende buffer van 30 dagen)
+- GPS-gegevens delen met derden, behalve zoals vereist voor e-Transport-rapportage aan ANAF, die een rollende buffer van 30 dagen gebruikt voor verwijdering
+
+<Note>
+Een legacy append-only positietabel uit een eerdere versie van de chauffeurschat bestaat nog met een rollende opschoning van 90 dagen, maar niets in de huidige app schrijft nieuwe rijen ernaartoe — een slapend restant, geen actieve historische GPS-log.
+</Note>
 
 ## Tachograafgegevens: wat we opslaan
 
-Druma's **Tachograafarchief** bewaart ruwe DDD- (voertuigunit) en TGD-bestanden (chauffeurskaart) — automatisch gedownload via een gekoppelde telematicaprovider of handmatig geüpload — conform EU-Verordening 165/2014. In tegenstelling tot operationele gegevens worden tachograafbestanden **onbeperkt bewaard**: 12 maanden is het wettelijk minimum, geen verwijderdoel, aangezien operators ze vaak langer moeten kunnen tonen bij een wegcontrole of audit. Zie [Tachograafarchief](/nl/fleet-compliance/tacho-archive).
+Druma onderhoudt een **Tachoarchief** dat ruwe DDD- (voertuigunit) en TGD-bestanden (chauffeurskaart) opslaat — automatisch gedownload via een gekoppelde telematicaprovider of handmatig geüpload — om te voldoen aan de downloadfrequentie- en bewaarvereisten van EU-Verordening 165/2014. In tegenstelling tot operationele gegevens worden tachograafbestanden **onbeperkt bewaard**: 12 maanden is het wettelijk minimum, geen verwijderdoel, aangezien operators ze mogelijk ver daarbuiten moeten kunnen tonen bij een wegcontrole of overheidsaudit. Zie [Tachograafarchief](/nl/fleet-compliance/tacho-archive) voor details.
+
+## Auditlog
+
+Elke belangrijke actie in Druma (order aangemaakt, factuur verstuurd, gebruikersaanmelding, instelling gewijzigd) wordt vastgelegd in een auditlog met tijdstempel, gebruiker en actiedetails. Auditlogs worden 18 maanden bewaard en kunnen niet worden gewijzigd of verwijderd — ze bestaan om zowel u als Druma te beschermen bij geschillen.
 
 ## Na accountopzegging
 
-Bij opzegging start een genadetermijn van 90 dagen (gegevens blijven toegankelijk), waarna operationele gegevens permanent worden verwijderd. Facturen blijven 7 jaar bewaard, eCMR-documenten 10 jaar — beide wettelijk verplicht.
+Zegt u uw abonnement op:
 
-## Gegevensexport en -verwijdering
+1. Uw account gaat een **genadetermijn van 90 dagen** in — gegevens blijven bewaard en toegankelijk.
+2. Na 90 dagen, wordt uw hele bedrijfsaccount verwijderd: orderberichten en interne notities worden onmiddellijk verwijderd, orders **ouder dan 3 jaar** worden verwijderd, en klanten, vrachtwagens en aanhangwagens worden verwijderd. Orders **jonger dan 3 jaar worden in deze stap niet verwijderd** — zij blijven, samen met hun gekoppelde facturen en eCMR-handtekeningen, verouderen onder de onderstaande zelfstandige bewaarregels in plaats van op dag 90 gewist te worden.
+3. Facturen en financiële records worden na 3 jaar gearchiveerd en na 10 jaar vanaf de factuurdatum definitief verwijderd — deze tijdlijn loopt onafhankelijk van wanneer u opzegde.
+4. eCMR-handtekeningen en -documenten worden 7 jaar na de leveringsdatum van de zending definitief verwijderd — ook onafhankelijk van uw opzegdatum.
 
-Zie [AVG & Gegevensbeheer](/nl/admin/gdpr-data-management) voor instructies over het aanvragen van een gegevensexport of accountverwijdering.
+<Note>
+Wordt het account van een individueel teamlid verwijderd (in plaats van het hele bedrijf), dan geldt een aparte, engere regel: orders en eCMR-handtekeningen die hij binnen de laatste 3 jaar aanmaakte worden geanonimiseerd (persoonsvelden verwijderd, records behouden voor de zakelijke gegevens), en facturen die hij binnen de laatste 10 jaar aanmaakte worden geanonimiseerd. Records buiten die vensters worden samen met het gebruikersrecord verwijderd.
+</Note>
+
+## Een gegevensexport aanvragen
+
+U kunt op elk moment een volledige export van de gegevens van uw bedrijf aanvragen:
+
+**Instellingen → AVG & Privacy → Export aanvragen**
+
+Uw gegevens worden verpakt als ZIP-bestand (JSON- en CSV-formaten) en binnen 24 uur geleverd aan uw accounte-mail. De export bevat alle orders, klanten, chauffeurs, facturen en instellingen.
+
+## Accountverwijdering aanvragen
 
 <Warning>
-Accountverwijdering is onomkeerbaar na de bewaartermijn van 90 dagen. Wettelijk verplichte gegevens (facturen, eCMR) blijven zoals wettelijk vereist bewaard.
+Accountverwijdering is onomkeerbaar. Na het verstrijken van de bewaartermijn van 90 dagen wordt oudere operationele data (orders ouder dan 3 jaar, plus klanten/vrachtwagens/aanhangwagens) permanent verwijderd; recentere orders, facturen en eCMR-gegevens worden geanonimiseerd of bewaard volgens hun eigen wettelijk vereiste tijdlijnen in plaats van onmiddellijk verwijderd — zie "Na accountopzegging" hierboven.
 </Warning>
+
+Om uw account te verwijderen: **Instellingen → AVG & Privacy → Account verwijderen** → bevestig door uw bedrijfsnaam in te typen.
+
+Of mail privacy@druma.io vanaf het e-mailadres van uw accounteigenaar.
 
 ## Subverwerkers en gegevenslocaties
 
 | Aanbieder | Verwerkte gegevens | Locatie |
 |----------|------------------|----------|
 | Supabase | Database (alle gegevens) | EU (Frankfurt) |
-| Cloudflare | CDN, DDoS-bescherming, DNS | EU |
-| Resend | Uitgaande transactionele e-mail | EU |
-| Mailgun | Verwerking van inkomende e-mail | EU |
+| Cloudflare | CDN, DDoS-bescherming, DNS, verzoeklogs | EU |
+| Resend | Inhoud uitgaande transactionele e-mail | EU |
+| Mailgun | Verwerking inkomende e-mail (order-, factuur-, betalingsmails) | EU |
 | Stripe | Facturerings- en betaalgegevens | EU |
-| PTV Group | Route-, afstands- en ETA-gegevens | EU |
-| HERE Technologies | Geocodering en adres-autocomplete | EU |
-| Google Vertex AI | AI-extractie van e-mail/documenten (geen modeltraining) | europe-west1 |
-| Google Cloud Translation | On-demand vertaling | Google Cloud |
-| Sentry | Foutbewaking | EU |
+| PTV Group | Route-, afstands- en ETA-gegevens (ophaal-/afleverkoördinaten) | EU |
+| HERE Technologies | Geocodering en adresautocomplete | EU |
+| Google Vertex AI | AI-extractie van e-mail/documenten | europe-west1 (geen modeltraining) |
+| Google Cloud Translation | On-demand vertaling van UI-/documentinhoud | Google Cloud |
+| Sentry | Foutbewaking en crashrapportage | EU |
 | Google Firebase Cloud Messaging | Pushmeldingen chauffeurs-app | Google Cloud |
-| WhatsApp Business Cloud API (Meta) | Chauffeurscommunicatie (optioneel) | Meta (VS/EU) |
-| Telematica-/reeferproviders (alleen de gekoppelde provider) | GPS, tachograaf, reefertemperatuur | Verschilt per provider |
-| TransFollow | Alleen als legacy eCMR-fallback — native in-house provider is de standaard | Nederland |
+| WhatsApp Business Cloud API (Meta) | Chauffeurscommunicatie (alleen indien ingeschakeld) | Meta (VS/EU) |
+| Telematicaproviders (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- en tachograafgegevens (alleen de gekoppelde provider) | Verschilt per provider |
+| Reefer-telematicaproviders (Mapon, Orbcomm, Thermo King) | Reefertemperatuurgegevens (alleen de gekoppelde provider) | Verschilt per provider |
+| TransFollow | Alleen legacy eCMR-terugvaloptie — de native in-house Druma-provider is de standaard | Nederland |
 
-## Uw AVG-rechten
+## Uw rechten onder de AVG
 
-Inzage, rectificatie, verwijdering, dataportabiliteit, beperking en bezwaar — mail **privacy@druma.io**, reactie binnen 30 dagen.
+- **Recht van inzage** — vraag een kopie van uw gegevens op (gebruik de exportfunctie hierboven)
+- **Recht op rectificatie** — corrigeer onjuiste gegevens (bewerk rechtstreeks in Druma, of neem contact op met support)
+- **Recht op verwijdering** — vraag verwijdering aan (gebruik de functie Account verwijderen hierboven)
+- **Recht op dataportabiliteit** — ontvang uw gegevens in machineleesbaar formaat (inbegrepen in de export)
+- **Recht van bezwaar** — bezwaar maken tegen verwerking op basis van gerechtvaardigd belang
+- **Recht op beperking** — beperkte verwerking aanvragen in bepaalde omstandigheden
+
+Om een recht uit te oefenen: privacy@druma.io. We reageren binnen 30 dagen.
 
 <Card title="Privacybeleid" icon="shield" href="/nl/legal/privacy-policy">
-  Hoe Druma uw persoonlijke gegevens verzamelt, gebruikt en beschermt.
+  Volledig privacybeleid inclusief subverwerkers en rechtsgrondslagen.
 </Card>
 
 <Card title="AVG & Gegevensbeheer" icon="lock" href="/nl/admin/gdpr-data-management">
-  Gegevens exporteren of uw account verwijderen vanuit Druma.
+  Hoe u gegevens exporteert of uw account verwijdert vanuit Druma.
 </Card>

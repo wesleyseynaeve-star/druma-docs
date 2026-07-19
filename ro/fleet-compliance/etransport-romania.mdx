@@ -1,21 +1,152 @@
 ---
 title: "e-Transport Romania"
-description: "Cum gestioneaza Druma declaratiile UIT obligatorii e-Transport ANAF."
-icon: "truck"
+description: "Cum automatizeaza Druma declaratiile ANAF e-Transport, generarea codului UIT si logarea GPS pentru transportul de marfuri eligibil in si prin Romania."
+icon: "truck-fast"
 ---
 
-e-Transport este sistemul ANAF obligatoriu pentru declararea transporturilor de marfuri de mare valoare pe teritoriul Romaniei.
+e-Transport este sistemul obligatoriu romanesc de declarare electronica si urmarire GPS pentru transportul rutier de marfuri, administrat de ANAF (Agentia Nationala de Administrare Fiscala). Druma automatizeaza procesul de declarare, genereaza coduri UIT si gestioneaza raportarea pozitiei GPS — eliminand efortul manual si reducand riscul de amenzi.
 
-## Configurarea
+---
 
-Mergi la **Setari -> Integrarsi -> ANAF e-Transport** si introdu credentialele SPV si certificatul digital.
+## Ce este e-Transport?
 
-## Fluxul de lucru
+e-Transport cere operatorilor de transport sa:
 
-Druma detecteaza automat necesitatea declararii. Trimite declaratia la ANAF, primeste codul UIT si il afiseaza soferului in aplicatia mobila.
+1. **Declare transportul** la ANAF inainte ca vehiculul sa se puna in miscare, primind un cod UIT unic
+2. **Logheze pozitiile GPS** la intervale regulate in timpul transportului
+3. **Poarte codul UIT** in camion (tiparit sau vizibil pe telefonul soferului)
 
-Soferul nu poate actualiza statusul de plecare fara UIT (blocaj pre-plecare).
+Sistemul permite ANAF si Politiei Rutiere sa verifice in timp real ca un transport a fost declarat, cine transporta marfa si daca vehiculul se afla pe ruta declarata.
 
-## Raportul de conformitate
+---
 
-Mergi la **Rapoarte -> e-Transport** pentru statusurile pe 30 de zile si export CSV.
+## Cand se aplica e-Transport
+
+e-Transport se aplica transportului de marfuri **pe teritoriul Romaniei sau in tranzit prin Romania**, cand marfa depaseste anumite praguri de greutate si valoare. Aceste praguri sunt stabilite de ANAF si actualizate periodic prin ordonanta de guvern.
+
+<Warning>
+Verifica intotdeauna pragurile ANAF actuale inainte sa concluzionezi ca un transport nu necesita declaratie e-Transport. Regulile au fost actualizate de mai multe ori de la lansarea sistemului. Sursa autoritara este [mfinante.gov.ro](https://www.mfinante.gov.ro) si portalul ANAF e-Transport.
+</Warning>
+
+Categoriile care au necesitat declaratie includ: marfuri cu risc fiscal (alimente, alcool, tutun, textile, materiale de constructii, electronice), marfuri peste un prag valoric si tot tranzitul international prin Romania peste un anumit tonaj. Contabilul sau consultantul juridic de transport iti pot confirma categoriile aplicabile actuale pentru tipurile tale de marfa.
+
+---
+
+## Cine declara: clientul tau, sau tu?
+
+Conform OUG 41/2022 Art. 8, obligatia legala de a declara un transport la ANAF revine **partii comerciale romanesti** — expeditorul sau destinatarul inregistrat in Romania al marfii — niciodata transportatorului ca atare. Pentru majoritatea companiilor de transport, asta inseamna: **clientul tau declara si iti furnizeaza codul UIT** (fluxul de transportator — implicit in Druma). Doar daca firma ta insasi este partea comerciala romaneasca — pentru ca vinzi sau muti propria marfa — declari tu insuti (fluxul de declarant, activat per companie in Setari → Integrari → ANAF e-Transport).
+
+### Cand sa folosesti care flux
+
+| Situatie | Flux |
+|---|---|
+| Firma ta este partea comerciala romaneasca (expeditor sau destinatar) | **Flux declarant** — atribui un camion si Druma trimite automat la ANAF |
+| Esti transportator, iar clientul tau roman este partea comerciala | **Flux transportator** — clientul furnizeaza UIT-ul prin portal sau telefon |
+| Comanda subcontractata (o transferi altui transportator) | Niciunul — subcontractantul sau clientul lui gestioneaza declararea |
+
+---
+
+## Cum gestioneaza Druma e-Transport
+
+### Fluxul de transportator (implicit): clientul tau declara
+
+Cand clientul tau detine obligatia de declarare, Druma impinge procesul automat, ca UIT-ul sa ajunga la tine inainte ca vehiculul sa plece.
+
+<Steps>
+  <Step title="Impuls prin email de confirmare">
+    Cand Druma trimite confirmarea comenzii catre client, detecteaza ca ruta atinge Romania si include o notificare vizibila care ii cere clientului sa introduca codul UIT in portalul sau.
+  </Step>
+  <Step title="Introducere in portalul de client">
+    Clientul deschide transportul in portalul de client Druma. Un card **e-Transport (Romania)** explica cerinta si ofera un camp de introducere. Clientul introduce codul UIT primit de la ANAF — Druma valideaza formatul (8–30 caractere alfanumerice majuscule) inainte de salvare.
+  </Step>
+  <Step title="Introducere manuala de catre planificator">
+    Daca clientul furnizeaza UIT-ul prin telefon sau email, planificatorul il poate introduce direct pe panoul de detaliu al comenzii, sub **tabul de marfa**. Aceeasi sectiune **e-Transport (Romania)** arata un camp de introducere cand nu este inregistrat niciun UIT si statusul comenzii permite editarea.
+  </Step>
+  <Step title="Transmisia GPS se activeaza automat">
+    Odata ce un cod UIT este inregistrat, pipeline-ul de retransmitere GPS al Druma preia comanda si incepe sa transmita pozitii catre ANAF — fara nicio actiune suplimentara necesara din partea planificatorului.
+  </Step>
+  <Step title="Soferul vede codul UIT">
+    Codul UIT apare in aplicatia Druma a soferului, pe ecranul comenzii active, confirmand soferului ca declaratia este in vigoare inainte de plecare. Daca un inspector rutier intreaba, soferul arata codul pe telefon sau prezinta documentul de comanda tiparit.
+  </Step>
+</Steps>
+
+### Fluxul de declarant: compania ta declara
+
+Activeaza asta doar daca firma ta este partea comerciala romaneasca care declara legal la ANAF. Mergi la **Setari → Integrari → ANAF e-Transport** si activeaza setarea de declarant.
+
+Odata activata:
+
+- Cand creezi o comanda cu o oprire de preluare sau livrare in Romania, formularul comenzii arata un camp **Valoare marfa (RON)**. Aceasta valoare este necesara pentru declaratie. Salvarea fara ea arata un avertisment — poti totusi salva si adauga valoarea mai tarziu, editand comanda.
+- Cand atribui un camion comenzii, Druma verifica daca comanda este in domeniul de aplicare: valoarea marfii trebuie sa fie la sau peste pragul de declarare (implicit **10.000 RON**, configurabil per companie), iar comanda nu trebuie sa fie subcontractata.
+- Daca toate conditiile sunt indeplinite, Druma **trimite declaratia automat** de indata ce atribuirea camionului este salvata, si stocheaza codul UIT rezultat pe comanda.
+
+**Daca declaratia esueaza** — de exemplu, din cauza unei valori de marfa lipsa, unei erori la adresa unei opriri, sau unei probleme temporare a API-ului ANAF — pagina de detaliu a comenzii arata un avertisment **Declaratie esuata**. Corecteaza datele de baza si reincearca folosind optiunea **Declara / Reincearca e-Transport** din meniul de actiuni al comenzii.
+
+<Note>
+Companiile fara setarea de declarant activata nu vad niciodata promptul Valoare marfa (RON) si nu vor declansa auto-declaratii. Fluxul de transportator este intotdeauna disponibil, atat companiilor declarante, cat si celor nedeclarante, pentru comenzile in care clientul detine obligatia.
+</Note>
+
+---
+
+## Logarea pozitiei GPS
+
+e-Transport necesita transmiterea pozitiilor GPS catre ANAF in timpul transportului activ. Druma gestioneaza asta automat prin API-ul ANAF e-Transport — separat de actualizarile manuale de status ale soferului. Pentru a evita inundarea API-ului ANAF cu o actualizare de pozitie la fiecare ping GPS, Druma limiteaza transmisiile catre exterior per comanda la **cel mult o data la 5 minute**, retransmitand cea mai recenta pozitie in acest ritm, nu fiecare ping brut primit de la telefonul soferului.
+
+**Important:** logarea GPS functioneaza doar cand soferul are aplicatia Druma **deschisa pe telefon** in timpul tranzitului. Daca soferul inchide aplicatia sau ecranul telefonului se blocheaza fara ca aplicatia sa ruleze in fundal, logarea pozitiei poate fi intrerupta.
+
+<Steps>
+  <Step title="Instruieste soferii inainte de plecare">
+    Inainte ca vehiculul sa plece, confirma cu soferul ca aplicatia Druma este deschisa si arata comanda activa. Pe Android, confirma ca aplicatia are permisiunea de locatie in fundal.
+  </Step>
+  <Step title="Aplicatia ruleaza in timpul tranzitului">
+    Aplicatia transmite coordonatele GPS catre Druma pe masura ce se misca. Druma retransmite o pozitie catre API-ul ANAF e-Transport cel mult o data la 5 minute per comanda.
+  </Step>
+  <Step title="Finalizarea transportului">
+    Cand soferul marcheaza comanda ca livrata, logarea GPS pentru acel cod UIT se opreste.
+  </Step>
+</Steps>
+
+<Note>
+Logarea GPS pentru e-Transport foloseste date mobile. Asigura-te ca soferii au un SIM activ cu date. Pe rute prin zone cu semnal slab, Druma stocheaza pozitiile in tampon si le transmite cand conectivitatea este restabilita.
+</Note>
+
+---
+
+## Ce trebuie sa faca soferul
+
+Responsabilitatile soferului pentru conformitatea e-Transport sunt minime cand foloseste Druma:
+
+1. **Tine aplicatia deschisa** pe telefon in timpul tranzitului
+2. **Arata codul UIT**, daca este intrebat de un inspector rutier (este vizibil pe comanda activa din aplicatie)
+3. **Nu devia semnificativ de la ruta declarata** — devierile majore de ruta pot necesita o declaratie modificata, pe care dispecerul o gestioneaza din interfata web Druma
+
+---
+
+## Penalitati pentru neconformitate
+
+Amenzile ANAF pentru incalcarile e-Transport sunt semnificative — penalitatile se aplica atat transportatorului, cat si beneficiarului transportului (clientul sau expeditorul). Incalcarile comune includ:
+
+- Transportul de marfuri fara un cod UIT valid
+- Goluri in logarea pozitiei GPS in timpul transportului
+- Marfa declarata care nu se potriveste cu ce se transporta efectiv
+
+Automatizarea Druma elimina cele mai comune esecuri de conformitate: declaratii lipsa si goluri de logare GPS. Totusi, responsabilitatea pentru informatiile corecte despre marfa (greutate, valoare, tip) ramane a dispecerului care introduce datele comenzii.
+
+---
+
+## Articole asociate
+
+<CardGroup cols={2}>
+  <Card title="Setari declaratie e-Transport" icon="gear" href="/en/admin/etransport-settings">
+    Configureaza-ti credentialele API ANAF, pragul de valoare a marfii si valorile implicite e-Transport in Druma.
+  </Card>
+  <Card title="Documente flota" icon="folder-open" href="/ro/fleet-compliance/fleet-documents">
+    Conformitatea documentelor vehiculului, inclusiv permisul CEMT urmarit pentru transportul international.
+  </Card>
+  <Card title="Reguli UE ore de conducere" icon="clock" href="/ro/fleet-compliance/eu-driving-hours">
+    Limitele de conducere din Regulamentul 561/2006 si cum le urmareste Druma.
+  </Card>
+  <Card title="Pachetul de mobilitate" icon="globe" href="/ro/fleet-compliance/mobility-package">
+    Obligatiile de returnare a vehiculului si soferului si declaratiile IMI de detasare.
+  </Card>
+</CardGroup>

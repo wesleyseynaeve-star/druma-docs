@@ -1,51 +1,88 @@
 ---
 title: "Ein eCMR erstellen"
-description: "Wie Druma eCMR-Dokumente automatisch für grenzüberschreitende Aufträge generiert und wie man bei Bedarf manuell eines erstellt."
+description: "Wie Druma eCMR-Dokumente automatisch für grenzüberschreitende Aufträge generiert und wie Sie bei Bedarf manuell eines erstellen."
 icon: "file-plus"
 ---
 
-## Wann wird ein eCMR erstellt?
-
-Druma erkennt automatisch, ob ein Auftrag einen eCMR erfordert, basierend auf:
-- Ob die Abholung und Lieferung in verschiedenen Ländern stattfinden
-- Ob der Kunde und das Transportland eCMR unterstützen
-- Ob Ihre TransFollow-Integration aktiv ist
-
-Wenn alle Bedingungen erfüllt sind, erstellt Druma beim Bestätigen des Auftrags automatisch einen eCMR-Datensatz.
+Druma erstellt eCMR-Dokumente standardmäßig **hausintern mit dem nativen Druma-Anbieter**. Kein externes Servicekonto nötig. Der Prozess läuft für qualifizierende Aufträge weitgehend automatisch, Sie können die Erstellung aber auch manuell über die Auftragsdetailseite auslösen.
 
 ---
 
-## Automatische eCMR-Erstellung
+## Wann Druma automatisch ein eCMR erstellt
 
-Wenn Sie einen Auftrag bestätigen, der als eCMR-pflichtig erkannt wird:
-1. Druma registriert das eCMR bei TransFollow
-2. Eine eindeutige eCMR-Nummer wird generiert
-3. Das eCMR erscheint im Tab **eCMR** des Auftrags
+Druma erstellt automatisch ein eCMR, sobald ein Straßenauftrag **disponiert** wird — in dem Moment, in dem ihm ein LKW zugewiesen wird und sein Status auf „Zugewiesen" wechselt. Es gibt keinen Vergleich der Abhol-/Lieferländer: Jeder disponierte Auftrag, der nicht unterauftragnehmerbasiert ist und dessen Unternehmen den nativen eCMR-Anbieter nutzt, erhält ein eCMR als unsignierten Entwurf. Auch innerstaatliche Aufträge erhalten also eines — es bleibt einfach unsigniert, bis Sie es brauchen.
+
+Nach der Ausstellung erscheint das eCMR-Dokument im Tab **Dokumente** der Auftragsdetailseite, wo Sie das versiegelte PDF über die Schaltfläche **eCMR anzeigen** einsehen können, sobald es fertig ist.
+
+<Note>
+Unterauftragnehmer-Aufträge werden übersprungen — der Unterauftragnehmer stellt sein eigenes CMR aus, Druma kann nicht in seinem Namen signieren. Aufträge, die bereits ein eCMR haben, werden nie erneut ausgestellt.
+</Note>
 
 ---
 
-## Manuell ein eCMR erstellen
+## Ein eCMR manuell erstellen
 
-Falls automatische Erkennung fehlschlägt oder Sie manuell eines erstellen möchten:
+Bei mehrstufigen (Sammelgut-)Aufträgen erhält jede Straßenetappe ihr eigenes eCMR. Hat eine Etappe noch keines, öffnen Sie den Tab **Ladung / Stopps** des Auftrags und klicken Sie neben dieser Etappe auf **eCMR erstellen** — es gibt keinen separaten „eCMR-Tab": die Schaltfläche sitzt direkt in der Etappenzeile.
 
-<Steps>
-  <Step title="Auftrag öffnen">
-    Gehen Sie zu Planer → Aufträge und öffnen Sie den Auftrag.
-  </Step>
-  <Step title="Zum eCMR-Tab navigieren">
-    Klicken Sie auf den Tab **eCMR** im Auftragsdetail-Panel.
-  </Step>
-  <Step title="eCMR erstellen klicken">
-    Klicken Sie auf **eCMR erstellen**.
-  </Step>
-  <Step title="Details überprüfen">
-    Überprüfen Sie die vorausgefüllten Details: Absender, Empfänger, Waren.
-  </Step>
-  <Step title="Bestätigen">
-    Klicken Sie auf **eCMR registrieren**.
-  </Step>
-</Steps>
+<Note>
+Markieren Sie eine bestätigte grenzüberschreitende Straßenetappe als abgeschlossen, erstellt Druma an diesem Punkt automatisch auch das eCMR dafür, sofern noch keines existiert.
+</Note>
 
-<Card title="eCMR-Signaturprozess" icon="pen-to-square" href="/en/ecmr/signing-flow">
-  Erfahren Sie, wie der Fahrer alle drei Unterschriften sammelt.
+---
+
+## Aus dem Auftrag vorausgefüllte Daten
+
+Druma befüllt die eCMR-Felder aus den bereits eingegebenen Auftragsdaten. Hier, was von wo kommt:
+
+| eCMR-Feld | Quelle in Druma |
+|---|---|
+| Absendername und -adresse | Kundendatensatz am Auftrag |
+| Frachtführername und -adresse | Ihre Unternehmensdaten |
+| Empfängername und -adresse | Kundendatensatz am Auftrag (Lieferadresse aus dem Lieferstopp) |
+| Abholadresse | Abholort des Auftrags |
+| Lieferadresse | Lieferort des Auftrags |
+| Warenbeschreibung | Feld Ladungsbeschreibung am Auftrag |
+| LKW-Kennzeichen | Dem Auftrag zugewiesenes Fahrzeug |
+| Fahrername | Dem Auftrag zugewiesener Fahrer |
+| Sonderbedingungen (ADR) | ADR-Kennzeichnung und -Klasse des Auftrags |
+
+Fehlen diese Daten am Auftrag oder sind sie falsch, korrigieren Sie zuerst den Auftrag und erstellen Sie dann das eCMR — es gibt keinen Vorschau-Schritt für die Vorbefüllung; das Dokument wird sofort geschrieben.
+
+---
+
+## Vor der Bestätigung: Was nicht geändert werden kann
+
+<Warning>
+Ist für einen Auftrag (oder eine Etappe) ein eCMR ausgestellt, stellt Druma kein zweites dafür aus — ein erneuter Klick auf eCMR erstellen, oder ein erneut auslösender Etappenabschluss-Trigger, gibt einfach das bestehende Dokument zurück, statt ein neues zu erzeugen. Dies ist eine Idempotenz-Absicherung, keine Feldsperre: Es gibt keine Einschränkung, die zugrunde liegenden Auftragsdaten selbst zu bearbeiten.
+
+Müssen Sie ein registriertes eCMR korrigieren, verwenden Sie den Papier-CMR-Fallback-Prozess und erstellen Sie gegebenenfalls ein neues.
+</Warning>
+
+---
+
+## eCMR-Anbieter: Nativ (TransFollow nur noch für Bestandsfälle)
+
+Standardmäßig verwendet Druma seinen **nativen eCMR-Anbieter** — kein externes Konto oder API-Schlüssel nötig. Unter **Einstellungen → Integrationen → eCMR-Anbieter** stehen nur **Nativ** und **Deaktiviert** zur Auswahl — TransFollow kann weder für ein neues noch ein bestehendes Unternehmen neu ausgewählt werden. Hat Ihr Unternehmen eine bestehende TransFollow-Konfiguration, funktioniert diese wie gewohnt weiter und wandelt sich beim nächsten Speichern der Integration stillschweigend in Nativ um.
+
+<Card title="eCMR-Anbieter" icon="right-left" href="/de/ecmr/ecmr-providers">
+  Was der native Anbieter leistet, und was mit bestehenden TransFollow-Konfigurationen passiert.
 </Card>
+
+---
+
+## Abrechnung
+
+eCMR ist ohne zusätzliche Kosten im Druma-Abonnement enthalten — es gibt keine Gebühr pro Dokument und keine Nutzungsobergrenze. Nutzungsstatistiken sehen Sie unter **Einstellungen → Abrechnung → Nutzung**.
+
+---
+
+## Nächste Schritte
+
+<CardGroup cols={2}>
+  <Card title="Der Signaturablauf" icon="pen-to-square" href="/de/ecmr/signing-flow">
+    Wie Absender, Fahrer und Empfänger jeweils unterschreiben, und auf welchem Gerät.
+  </Card>
+  <Card title="Was ist eCMR?" icon="file-contract" href="/de/ecmr/what-is-ecmr">
+    Hintergrund zu eCMR, seiner Rechtsgrundlage, und wie Druma es ausstellt.
+  </Card>
+</CardGroup>

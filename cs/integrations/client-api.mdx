@@ -1,18 +1,174 @@
-﻿---
-title: "API pro klienty"
-description: "Jak poskytovat klientům přístup k datům jejich zásilek přes Druma API — autentizace, dostupné endpointy a příklady."
-icon: "code"
+---
+title: "Integrace API pro klienty (CAPI)"
+description: "Umožněte klientům odesílat objednávky přímo do Druma nebo přijímat doručovací události v reálném čase na webhook — konfigurováno za klienta, bez úprav kódu v Druma."
+icon: "plug"
 ---
 
-Druma poskytuje API endpointy pro klienty, kteri chteji integrovat data zasilek do vlastnich systemu.
+Integrace API pro klienty (CAPI) vytváří přímý datový kanál mezi konkrétním klientem a vaším účtem Druma. Má dvě nezávislé poloviny:
 
-## Autentizace
+- **Příchozí (Inbound)**: systém klienta odesílá objednávky do Druma automaticky. Není potřeba ruční zadávání objednávek.
+- **Odchozí (Outbound)**: Druma odesílá stavové události (odesláno, doručeno, vyfakturováno atd.) do systému klienta v reálném čase.
 
-Klientsky API pristup vyzaduje API klic specificky pro klienta. Vygenerujte ho v profilu klienta v sekci **API pristup**.
+Každou polovinu můžete povolit nezávisle, nebo obě zároveň. Každý klient dostane vlastní token a endpoint, takže přihlašovací údaje jsou plně izolované.
 
-## Dostupne endpointy
+---
 
-- GET /client/shipments - seznam zasilek klienta
-- GET /client/shipments/{id} - podrobnosti zasilky
-- GET /client/documents/{id} - stazeni dokladu
-- GET /client/invoices - seznam faktur
+## Kdy toto použít
+
+CAPI je vhodné, když klient:
+
+- Má systém WMS, ERP nebo správy objednávek schopný volat HTTP
+- Rezervuje zásilky často a chce se vyhnout přihlašování do vašeho klientského portálu kvůli vytváření objednávek
+- Potřebuje automatizované potvrzení doručení odesílané do svého systému pro navazující workflow (rezervace skladu, fakturace, aktualizace zásob)
+
+Pro klienty, kteří rezervují příležitostně nebo preferují portál, přidává CAPI zbytečnou složitost. Použijte místo toho standardní klientský portál.
+
+---
+
+## Kde najít nastavení
+
+1. Přejděte do **Klienti** v levé navigaci.
+2. Otevřete záznam klienta.
+3. Klikněte na záložku **API**.
+
+Nastavení pro příchozí i odchozí komunikaci jsou na této záložce.
+
+---
+
+## Příchozí — klient odesílá objednávky do Druma
+
+<Steps>
+  <Step title="Povolte příchozí komunikaci">
+    Na záložce **API** zapněte přepínač **Povolit příchozí API**.
+  </Step>
+  <Step title="Vygenerujte token">
+    Klikněte na **Vygenerovat token**. Celý token se zobrazí **jednou** — okamžitě si ho zkopírujte a bezpečně uložte (dobře poslouží správce hesel). Druma ukládá pouze hash tokenu; celou hodnotu nelze obnovit. Po této obrazovce se jako reference zobrazuje pouze prvních 20 znaků.
+  </Step>
+  <Step title="Sdílejte URL endpointu">
+    Zkopírujte **URL endpointu** zobrazenou pod polem tokenu. Předejte tuto URL a token technickému týmu klienta.
+  </Step>
+  <Step title="Nakonfigurujte mapování polí (volitelné)">
+    Pokud systém klienta používá jiné názvy polí než Druma (například `shipment_id` místo `reference`), přidejte řádky do tabulky **Mapování polí** kliknutím na **+ Přidat mapování**. Každý řádek mapuje jeden název pole klienta (levý sloupec) na odpovídající název pole Druma (pravý sloupec).
+  </Step>
+</Steps>
+
+Systém klienta odešle požadavek `POST` na URL endpointu s hlavičkou `Authorization: Bearer <token>` a tělem JSON. Druma vytvoří objednávku ve stavu **Návrh** s příznakem zdroje `booked_via: client_api`. Plánovač může návrhy objednávek zkontrolovat a potvrdit z plánovací tabule.
+
+<Note>
+Objednávky vytvořené přes CAPI přicházejí jako návrhy. Na tabuli se nezobrazí jako přiřazené, dokud je plánovač (nebo pravidlo automatizace, pokud je nakonfigurováno) neposune do dalšího stavu. Je to záměrné — umožňuje vám objednávku ověřit a ocenit, než vstoupí do workflow.
+</Note>
+
+---
+
+## Odchozí — Druma odesílá události klientovi
+
+<Steps>
+  <Step title="Povolte odchozí komunikaci">
+    Zapněte přepínač **Povolit odchozí webhook**.
+  </Step>
+  <Step title="Zadejte URL webhooku">
+    Vložte **URL webhooku** klienta — endpoint v jeho systému, který bude přijímat události.
+  </Step>
+  <Step title="Vyberte typ autentizace">
+    Vyberte jednu ze čtyř možností **Typ autentizace**:
+
+    - **Žádná** — bez autentizační hlavičky (používejte pouze na důvěryhodných privátních sítích)
+    - **Bearer token** — Druma přidá `Authorization: Bearer <hodnota>` ke každému požadavku
+    - **Basic auth** — Druma přidá hlavičku `Authorization: Basic` s uživatelským jménem a heslem zakódovanými v base64
+    - **Podpis HMAC** — Druma podepíše tělo každého požadavku sdíleným tajným klíčem a zahrne podpis do hlavičky; klient ho před zpracováním ověří
+
+    Vyplňte přihlašovací údaje pro zvolený typ.
+  </Step>
+  <Step title="Vyberte události k odeslání">
+    Zaškrtněte události, které chcete, aby Druma odesílala:
+
+    - **Objednávka vytvořena** — spustí se při potvrzení nové objednávky v Druma
+    - **Stav aktualizován** — spustí se při jakékoli změně stavu (přiřazeno, na vyzvednutí, na cestě atd.)
+    - **Doručeno** — spustí se, když objednávka dosáhne stavu Doručeno
+    - **Faktura odeslána** — spustí se při odeslání prodejní faktury klientovi
+  </Step>
+  <Step title="Nakonfigurujte odchozí mapování polí (volitelné)">
+    Pokud systém klienta očekává v datech jiné názvy polí, použijte tabulku **Mapování polí** na odchozí straně (identická jako u příchozí) pro přejmenování výstupních polí Druma před odesláním.
+  </Step>
+  <Step title="Uložit">
+    Klikněte na **Uložit**. Druma od tohoto okamžiku začne doručovat události pro vybrané spouštěče.
+  </Step>
+</Steps>
+
+---
+
+## Vysvětlení mapování polí
+
+Mapování polí je překladová tabulka klíč–hodnota. Nemění data — pouze názvy polí v datovém obsahu.
+
+**Příklad — příchozí mapování:**
+
+| Pole klienta | Pole Druma |
+|---|---|
+| `shipment_id` | `reference` |
+| `pickup_city` | `pickup_address` |
+| `drop_city` | `delivery_address` |
+| `cargo_weight_kg` | `weight_kg` |
+
+S tímto mapováním může klient odeslat svou nativní strukturu JSON a Druma ji správně interpretuje, aniž by klient musel svá data přeformátovat.
+
+**Příklad — odchozí mapování:**
+
+| Pole Druma | Pole klienta |
+|---|---|
+| `order_id` | `druma_ref` |
+| `status` | `shipment_status` |
+| `actual_delivery_at` | `actual_delivery_datetime` |
+
+Nemapovaná pole se předávají pod výchozími názvy polí Druma.
+
+---
+
+## Rotace tokenu
+
+Pokud je token kompromitován nebo klíčová osoba opustí tým klienta:
+
+1. Na záložce **API** klikněte na **Rotovat token**.
+2. Starý token je okamžitě zneplatněn.
+3. Nový token se zobrazí jednou — zkopírujte ho a distribuujte, než opustíte stránku.
+
+Aktualizujte token v systému klienta co nejdříve. Požadavky používající starý token budou od dokončení rotace odmítány s `401 Unauthorized`.
+
+---
+
+## Časová razítka aktivity
+
+Jakmile bylo API použito, záložka zobrazuje:
+
+- **Poslední příchozí** — časové razítko nejnovější objednávky přijaté od klienta
+- **Poslední odchozí** — časové razítko nejnovější události doručené na webhook klienta
+
+Tato časová razítka jsou užitečná pro potvrzení, že integrace je aktivní, a pro diagnostiku výpadků komunikace.
+
+---
+
+## Limity požadavků
+
+Druma vynucuje limit **200 volání API za hodinu na konfiguraci klienta**. Požadavky přesahující tento limit obdrží odpověď `429 Too Many Requests`. Limit se resetuje v klouzavém hodinovém okně.
+
+Pokud klient legitimně potřebuje vyšší propustnost, kontaktujte podporu Druma.
+
+<Warning>
+Nesdílejte bearer token klienta s jinými klienty ani ho nevkládejte do veřejně přístupného kódu. Každý token uděluje plná práva vytváření příchozích objednávek v rozsahu společnosti daného klienta.
+</Warning>
+
+---
+
+## Související stránky
+
+<Card title="Portál pro klienty" icon="users" href="/cs/client-portal/tracking-shipments">
+  No-code alternativa: umožněte klientům sledovat zásilky a stahovat dokumenty bez jakékoli integrace API.
+</Card>
+
+<Card title="Nastavení integrace" icon="plug" href="/cs/admin/integration-setup">
+  Přehled všech integrací dostupných v Nastavení → Integrace.
+</Card>
+
+<Card title="Vytváření objednávek" icon="package-plus" href="/cs/planner/creating-orders">
+  Jak plánovači vytvářejí a spravují objednávky v Druma.
+</Card>

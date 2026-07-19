@@ -1,47 +1,95 @@
 ---
 title: "Suivi des paiements"
-description: "Comment enregistrer les paiements reçus, suivre les factures impayées et gérer les partiels et les remises de dettes dans Druma."
-icon: "check-circle"
+description: "Enregistrez les paiements complets et partiels sur les factures dans Druma, suivez les soldes restants, et exportez les données de paiement pour votre comptable."
+icon: "money-bill-wave"
 ---
 
 ## Vue d'ensemble
 
-Druma vous permet de marquer les factures comme payées, d'enregistrer des paiements partiels et de suivre les soldes impayés dans la liste des factures.
-
----
+Une fois qu'une facture est envoyée et que le client paie, vous enregistrez le paiement dans Druma afin que votre solde restant reste exact. Druma prend en charge les paiements complets, les paiements partiels, et plusieurs paiements sur une même facture — ce qui est courant quand les clients paient en plusieurs fois ou envoient un paiement qui ne correspond pas exactement au montant de la facture.
 
 ## Enregistrer un paiement
 
 <Steps>
   <Step title="Ouvrez la facture">
-    Accédez à **Facturation** et trouvez la facture payée.
+    Accédez à **Facturation** et trouvez la facture à marquer comme payée. Cliquez dessus pour ouvrir la page de détail de la facture.
   </Step>
   <Step title="Cliquez sur Enregistrer un paiement">
-    Cliquez sur le bouton **···** → **Enregistrer un paiement**.
+    Cliquez sur le bouton **Enregistrer un paiement** près du haut de la page de facture.
   </Step>
-  <Step title="Saisissez les détails du paiement">
-    - **Montant payé** — peut être inférieur au total (paiement partiel)
-    - **Date de paiement**
-    - **Mode de paiement** — virement bancaire, chèque, espèces, etc.
-    - **Référence** — numéro de référence bancaire optionnel
+  <Step title="Renseignez les détails du paiement">
+    Complétez les champs suivants :
+
+    - **Date de paiement** — la date à laquelle l'argent est arrivé sur votre compte (depuis votre relevé bancaire)
+    - **Montant reçu** — le montant exact que vous avez reçu
+    - **Mode de paiement** — virement bancaire, espèces, carte, ou chèque
+    - **Numéro de référence bancaire** — la référence affichée sur votre relevé bancaire pour ce virement (aide pour la réconciliation ultérieure)
+    - **Notes** — optionnel, pour tout ce qui vaut la peine d'être noté
   </Step>
-  <Step title="Enregistrer">
-    Cliquez sur **Enregistrer**. Le statut de la facture se met à jour automatiquement.
+  <Step title="Enregistrez le paiement">
+    Cliquez sur **Enregistrer le paiement**. Le statut de la facture se met à jour immédiatement.
   </Step>
 </Steps>
 
----
+## Progression du statut de facture
 
-## Statuts de paiement
+À mesure que les paiements sont enregistrés, le statut de la facture change automatiquement :
 
 | Statut | Signification |
 |---|---|
-| **Non payée** | Aucun paiement enregistré |
-| **Partiellement payée** | Un paiement partiel a été enregistré |
-| **Payée** | Le montant total a été reçu |
-| **En retard** | La date d'échéance est dépassée, non payée |
-| **Remise de dette** | La facture a été annulée sans paiement complet |
+| **Non payée** | Aucun paiement encore enregistré |
+| **Partiellement payée** | Au moins un paiement enregistré, mais le total reçu est inférieur au montant de la facture |
+| **Payée** | Le total des paiements enregistrés égale le montant de la facture |
+| **En retard** | Non payée ou partiellement payée, et la date d'échéance est dépassée |
+| **Remise de dette** | Marquée comme irrécouvrable — retirée du solde restant |
+| **Annulée** | La facture a été annulée (par exemple, via un avoir total) et ne porte aucun poids fiscal ou de solde restant |
 
-<Card title="Gestion des impayés" icon="alert-circle" href="/fr/invoicing/overdue-management">
-  Suivez et gérez les factures en retard avec le tableau de bord des créances.
+## Paiements partiels
+
+Si un client paie une partie de la facture — par exemple, il envoie 50 % maintenant et le reste le mois prochain — enregistrez le montant partiel. La facture passe à **Partiellement payée** et Druma affiche clairement le solde restant sur la facture.
+
+Quand le deuxième paiement arrive, ouvrez la même facture et cliquez à nouveau sur **Enregistrer un paiement**. Saisissez le nouveau paiement. Vous pouvez enregistrer autant de paiements partiels que nécessaire. L'historique complet des paiements est affiché sur la page de détail de la facture par ordre chronologique.
+
+<Note>
+Les paiements partiels sont aussi utiles quand un client paie un montant légèrement différent — par exemple, en raison de frais de virement bancaire déduits à la source. Enregistrez ce qui est réellement arrivé et ajoutez une note expliquant la différence.
+</Note>
+
+## Exemple de paiements partiels multiples
+
+Un client vous doit 4 200 € pour trois factures groupées. Il paie en trois parties sur six semaines :
+
+1. 15 mars — 2 000 € reçus. Statut : Partiellement payée. Restant : 2 200 €.
+2. 1er avril — 1 500 € reçus. Statut : Partiellement payée. Restant : 700 €.
+3. 22 avril — 700 € reçus. Statut : Payée. Solde : 0 €.
+
+Les trois enregistrements de paiement sont visibles sur la facture, chacun avec sa date et sa référence bancaire.
+
+## Remettre une facture en dette
+
+Si un client ne paiera pas — litige non résolu, entreprise en faillite, ou montant trop faible pour être poursuivi — vous pouvez la remettre en dette.
+
+Ouvrez la facture → cliquez sur **Marquer comme remise en dette** → saisissez une brève raison (par exemple, « Client insolvable — dette irrécouvrable » ou « Contestée — remise selon accord commercial »). La facture est retirée de votre solde restant et la raison est enregistrée pour vos archives.
+
+<Warning>
+Remettre une facture en dette ne l'annule pas légalement. La facture reste dans vos archives. À des fins comptables, consultez votre comptable sur la façon de traiter les montants remis en dette dans votre déclaration fiscale — un avoir peut être requis dans certains cas.
+</Warning>
+
+## Historique des paiements par client
+
+Pour voir tous les paiements d'un client spécifique sur toutes les factures : accédez à **Clients** → sélectionnez le client → onglet **Historique des paiements**. Cela affiche une liste complète de chaque paiement enregistré, du plus ancien au plus récent, avec les références de facture et le solde courant.
+
+## Exporter les données de paiement
+
+Pour donner à votre comptable un rapport complet des paiements :
+
+Accédez à **Facturation** → **Export** → **Paiements**. Sélectionnez la plage de dates et cliquez sur **Télécharger CSV**. L'export inclut le numéro de facture, le nom du client, la date de paiement, le montant, le mode, la référence bancaire, et le solde restant au moment de chaque paiement.
+
+---
+
+<Card title="Gestion des impayés" icon="bell" href="/fr/invoicing/overdue-management">
+  Gérer les factures en retard, envoyer des rappels de paiement, et configurer des calendriers de rappel automatique.
+</Card>
+
+<Card title="Réconciliation bancaire" icon="building-columns" href="/fr/invoicing/bank-reconciliation">
+  Faites correspondre automatiquement les emails de paiement bancaire aux factures ouvertes en utilisant la fonctionnalité d'analyse d'email de Druma.
 </Card>

@@ -1,35 +1,134 @@
 ---
-title: "Échange de palettes"
-description: "Suivez les échanges de palettes EUR dans Druma — palettes chargées, rendues et solde net par commande et par client."
-icon: "pallet"
+title: "Registre d'échange de palettes"
+description: "Suivez les soldes de palettes EUR, CHEP, et autres par contrepartie avec un registre en ajout seul, l'automatisation des frais, et une synchronisation fournisseur optionnelle."
+icon: "package"
 ---
 
 ## Vue d'ensemble
 
-Druma vous permet de suivre les échanges de palettes EUR sur les commandes. Pour chaque commande, vous enregistrez le nombre de palettes chargées et le nombre retourné à la livraison.
+Quand vous transportez des marchandises sur des palettes EUR, CHEP, ou autres palettes d'échange, vous entrez dans un solde courant avec chaque client et sous-traitant — les palettes envoyées doivent revenir, ou un frais est dû. Le registre d'échange de palettes de Druma suit chaque mouvement comme un enregistrement immuable et vous donne un solde en direct par contrepartie afin que rien ne passe entre les mailles du filet.
+
+Le registre est **en ajout seul** : les mouvements sont ajoutés à chaque arrêt de commande, et le solde courant est calculé automatiquement. Vous pouvez enregistrer des corrections et des ajustements sans supprimer l'historique.
 
 ---
 
-## Enregistrer un échange de palettes
+## Types de palettes pris en charge
 
-Dans le formulaire de commande ou le panneau de détails, renseignez :
+| Type | Nom complet |
+|---|---|
+| EUR | Palette EUR (EPAL) |
+| CHEP | Palette CHEP |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Autre | Tout autre type de palette d'échange utilisé par votre exploitation |
 
-- **Palettes chargées** — Nombre de palettes EUR récupérées au chargement.
-- **Palettes rendues** — Nombre de palettes EUR remises à la livraison.
-- **Différence nette** — Calculée automatiquement.
+Chaque type de palette a sa propre colonne de solde. Une contrepartie peut vous devoir des palettes EUR tout en vous devant des palettes CHEP en même temps.
 
 ---
 
-## Suivi par client
+## Enregistrer les mouvements de palettes sur une commande
 
-Accédez au profil d'un client pour voir le solde de palettes cumulé : combien de palettes ce client vous doit ou vous a rendues sur toutes les commandes.
+Les mouvements de palettes sont enregistrés au niveau de l'arrêt — les arrêts de chargement, de livraison, et de déchargement ont tous leur propre section **Mouvements de palettes**.
+
+<Steps>
+  <Step title="Ouvrez le panneau de détail de la commande">
+    Cliquez sur la commande sur le Tableau de planification ou dans la liste Commandes pour ouvrir son panneau de détail à droite.
+  </Step>
+  <Step title="Naviguez vers la carte d'arrêt">
+    Faites défiler jusqu'à l'arrêt où des palettes sont échangées — généralement le chargement (palettes sortantes) ou la livraison (palettes rendues). Chaque carte d'arrêt affiche une section **Mouvements de palettes**.
+  </Step>
+  <Step title="Ajoutez un mouvement">
+    Cliquez sur **+ Ajouter un mouvement** sur la carte d'arrêt. Un petit formulaire apparaît avec :
+    - **Type de palette** — sélectionnez parmi EUR, CHEP, LPR, IPP, Euro Pool, ou Autre
+    - **Type de mouvement** — Envoyée (positif), Retournée (négatif), Ajustement, Correction, ou Solde d'ouverture
+    - **Quantité** — nombre de palettes
+    - **Notes** (optionnel) — numéro de référence ou commentaire du chauffeur
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer** pour valider le mouvement. Il est ajouté au registre immédiatement et le solde courant de la contrepartie se met à jour.
+  </Step>
+</Steps>
+
+Pour retirer une entrée erronée, cliquez sur l'**icône corbeille** à côté du mouvement.
+
+<Note>
+Utilisez **Solde d'ouverture** une fois par contrepartie pour amorcer son solde de départ si vous migrez depuis un tableur ou un système précédent. Les mouvements suivants s'appuient dessus.
+</Note>
 
 ---
 
-## Exporter le suivi des palettes
+## Consulter les soldes
 
-Utilisez **Rapports → Export des palettes** pour télécharger un relevé CSV de tous les échanges de palettes par période.
+### Colonne de solde dans la liste Clients
 
-<Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">
-  Renseignez les détails des palettes lors de la création d'une commande.
+La liste **Clients** (Commercial → Clients) inclut une colonne **Solde de palettes**. L'indicateur utilise un code couleur en un coup d'œil :
+
+| Couleur | Signification |
+|---|---|
+| Ambre | Le client vous doit des palettes |
+| Bleu | Vous devez des palettes au client |
+| Neutre (gris) | Le solde est équilibré |
+
+Survolez l'indicateur de solde pour voir une infobulle par type détaillant le solde à travers tous les types de palettes — par exemple, +12 EUR, −4 CHEP.
+
+### Historique des mouvements par contrepartie
+
+Cliquez sur une ligne client pour ouvrir le panneau de détail client, puis accédez à l'onglet **Palettes**. Cela montre le registre complet pour cette contrepartie : chaque mouvement, date, référence de commande, et total courant.
+
+---
+
+## Seuil de frais et création automatique de frais
+
+Si le solde de palettes d'un client dépasse un seuil configuré, Druma peut vous inviter automatiquement à générer un frais d'échange de palettes.
+
+Quand un mouvement fait dépasser le solde au-delà du seuil, une fenêtre **Confirmation de frais de palettes** apparaît :
+
+- **Confirmer** — ajoute une ligne de frais aux extras de la commande (visible dans l'éditeur de facture comme un frais d'échange de palettes)
+- **Ignorer** — ferme l'invite sans créer de frais ; le solde reste tel quel
+
+<Warning>
+Cliquer sur **Ignorer** ne réinitialise pas le compteur de seuil. La fenêtre réapparaîtra au prochain mouvement dépassant le seuil, à moins que vous ne réduisiez d'abord le solde en enregistrant des palettes retournées.
+</Warning>
+
+---
+
+## Configurer les seuils et tarifs de frais
+
+Accédez à **Paramètres → Configuration des palettes** pour définir les règles de frais. Cette section n'est accessible qu'aux rôles **admin** et **company_admin**.
+
+Pour chaque type de palette, vous pouvez configurer :
+
+| Paramètre | Description |
+|---|---|
+| Seuil de frais | Nombre de palettes au-delà duquel la fenêtre de frais se déclenche |
+| Tarif de frais | Prix par palette (dans la devise de votre entreprise) appliqué à la ligne de frais auto-générée |
+
+Laissez le seuil vide pour désactiver la fenêtre de frais pour ce type de palette — les mouvements sont toujours suivis, mais aucun frais n'est jamais suggéré.
+
+---
+
+## Synchronisation fournisseur (optionnel)
+
+Si vous utilisez CHEP Connect, Druma peut rapprocher votre registre in-app avec le solde officiel du fournisseur. Accédez à **Paramètres → Intégrations → Échange de palettes**.
+
+**CHEP Connect** est en production. Saisissez vos identifiants de compte CHEP, puis :
+
+- Cliquez sur **Tester la connexion** pour vérifier que les identifiants sont acceptés
+- Cliquez sur **Synchroniser le solde** pour récupérer le solde actuel du fournisseur et le comparer au total courant de Druma
+
+Toute divergence s'affiche comme une ligne de rapprochement — vous pouvez l'accepter comme une entrée **Correction** pour aligner les deux registres.
+
+<Note>
+CHEP Connect est actuellement la seule intégration de fournisseur de palettes. Les types de palettes EUR, LPR, IPP, Euro Pool, et Autre sont suivis manuellement dans le registre — il n'y a pas de synchronisation fournisseur pour eux aujourd'hui. Le registre principal fonctionne entièrement sans aucun fournisseur configuré.
+</Note>
+
+---
+
+<Card title="Extras et suppléments de commande" icon="circle-plus" href="/en/planner/order-extras">
+  Découvrez comment les lignes de frais de palettes apparaissent dans l'éditeur de facture aux côtés des autres suppléments de commande.
+</Card>
+
+<Card title="Clients" icon="building-2" href="/en/planner/clients">
+  Gérez les profils clients, les instructions permanentes, et consultez l'historique de solde de palettes par client.
 </Card>

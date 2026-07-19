@@ -1,53 +1,93 @@
 ---
-title: "Inspekcja Pojazdu Po Kursie (DVIR)"
-description: "Ustrukturyzowane raporty z inspekcji pojazdu na końcu każdego kursu — z automatyczną blokadą przy defektach krytycznych dla bezpieczeństwa."
+title: "Inspekcja pojazdu po podróży (DVIR)"
+description: "Jak skonfigurować listę kontrolną po podróży i gdzie kierownicy floty przeglądają oraz działają na usterkach zgłoszonych przez kierowców."
+icon: "clipboard-check"
 ---
 
 ## Przegląd
 
-Inspekcja pojazdu po kursie (DVIR) to ustrukturyzowana kontrola bezpieczeństwa przeprowadzana przez kierowców na końcu każdego kursu. Krytyczne defekty bezpieczeństwa powodują automatyczną blokadę pojazdu i natychmiastowe powiadomienie menedżera floty.
+Po stuknięciu przez kierowcę **Dostarczone**, Druma automatycznie prezentuje nakładkę **Inspekcji po podróży** w aplikacji kierowcy — Raport inspekcji pojazdu kierowcy (DVIR), który przechodzi przez stan ciężarówki na koniec podróży. Ta strona opisuje stronę kierownika floty: konfigurację listy kontrolnej i przegląd usterek, które ona generuje. Po pełny opis przepływu widzianego przez kierowcę zobacz [Inspekcja po podróży](/pl/driver/post-trip-inspection).
+
+<Note>
+Inspekcja po podróży jest uruchamiana tylko dla podróży z jednym zleceniem. Nie pojawia się na przystankach pośrednich podczas przejazdów drobnicowych (grupażu, wieloprzystankowych).
+</Note>
 
 ---
 
-## Przebieg
+## Jak to działa, w skrócie
 
-<Steps>
-  <Step title="Otwórz monit inspekcji">
-    Stuknij monit **Inspekcja pojazdu po kursie** na dole ukończonego zlecenia w aplikacji.
-  </Step>
-  <Step title="Przejdź przez listę kontrolną">
-    Otworzy się formularz. Dla każdej pozycji wybierz: **OK**, **Defekt — Mały** lub **Defekt — Krytyczny dla bezpieczeństwa**.
-  </Step>
-  <Step title="Zgłoś defekty">
-    Wprowadź opis i opcjonalnie dołącz zdjęcie (do 5 zdjęć na defekt).
-  </Step>
-  <Step title="Podpisz inspekcję">
-    Złóż podpis cyfrowy na ekranie.
-  </Step>
-  <Step title="Wyślij">
-    Stuknij **Wyślij inspekcję**. Raport zostanie natychmiast przesłany do Druma.
-  </Step>
-</Steps>
+Kierowca oznacza każdą pozycję listy kontrolnej trójstanowym przełącznikiem — **OK**, **Doradczy** lub **Krytyczny dla bezpieczeństwa** — wpisuje bieżący odczyt licznika i dołącza zdjęcia dla każdej pozycji Krytycznej dla bezpieczeństwa (do 3 zdjęć na usterkę; JPEG, PNG, WebP, HEIC lub HEIF, maks. 10 MB każde — PDF nie jest akceptowany dla zdjęć usterek). Kierowca może przesłać natychmiast albo stuknąć **Pomiń inspekcję**, aby ukończyć ją później ze szczegółów ładunku zlecenia.
 
----
-
-## Poziomy ważności
-
-| Poziom | Znaczenie | Działanie Druma |
+| Dotkliwość | Znaczenie | Efekt |
 |---|---|---|
-| **OK** | Brak defektu | Brak działania |
-| **Mały defekt** | Pojazd może pozostać w eksploatacji | Pomarańczowa odznaka; menedżer powiadomiony e-mailem |
-| **Krytyczny dla bezpieczeństwa** | Pojazd nie jest bezpieczny | Czerwona odznaka; pojazd zablokowany; menedżer powiadomiony natychmiast |
+| **OK** | Nie znaleziono problemów | Brak działania |
+| **Doradczy** | Drobny problem, ciężarówka pozostaje w eksploatacji | Planista powiadomiony; widoczne w szczegółach zlecenia i Flota → Usterki |
+| **Krytyczny dla bezpieczeństwa** | Poważna usterka | Planista i kierownik floty powiadomieni natychmiast; jeśli auto-blokada jest włączona, ciężarówka jest oznaczona jako niedostępna do czasu rozwiązania |
+
+---
+
+## Konfiguracja administratora
+
+Przejdź do **Ustawienia → Lista kontrolna po podróży**, aby skonfigurować DVIR dla Twojej firmy.
+
+| Ustawienie | Opis |
+|---|---|
+| **Włącz DVIR po podróży** | Włącza lub wyłącza nakładkę inspekcji dla wszystkich kierowców |
+| **Wymagaj zdjęć dla pozycji krytycznych dla bezpieczeństwa** | Wymusza przesłanie co najmniej jednego zdjęcia przed przesłaniem usterki krytycznej dla bezpieczeństwa |
+| **Auto-twórz niedostępność pojazdu dla usterek krytycznych dla bezpieczeństwa** | Automatycznie blokuje ciężarówkę do dyspozycji po przesłaniu usterki krytycznej dla bezpieczeństwa |
+| **Elementy listy kontrolnej** | Dodawaj, edytuj lub usuwaj elementy pojawiające się w nakładce inspekcji. Każdy element ma nazwę i domyślną dotkliwość (OK / Doradczy / Krytyczny dla bezpieczeństwa) |
+
+<Note>
+Elementy listy kontrolnej są wspólne dla całej firmy i konfigurowalne przez administratora — nie ma stałej, wbudowanej listy kategorii. Wszyscy kierowcy w Twojej firmie widzą tę samą listę. Jeśli prowadzisz różne typy pojazdów, używaj opisowych nazw elementów (np. "Agregat chłodniczy — sprawdź uszczelki"), aby lista miała sens dla wszystkich.
+</Note>
+
+---
+
+## Przeglądanie pojedynczej inspekcji
+
+W **panelu szczegółów zlecenia** sekcja **DVIR** pojawia się poniżej informacji o trasie po przesłaniu inspekcji. Pokazuje:
+
+- Status inspekcji: Ukończona, Pominięta lub Oczekująca
+- Znacznik czasu przesłania i imię kierowcy
+- Odczyt licznika zarejestrowany przez kierowcę
+- Listę każdego elementu usterki z odznaką dotkliwości (Doradczy / Krytyczny dla bezpieczeństwa)
+- Miniatury podglądu wszelkich przesłanych zdjęć, które po kliknięciu otwierają się w pełnym rozmiarze
+
+Jeśli inspekcja została pominięta, sekcja DVIR pokazuje odznakę "Pominięta" ze znacznikiem czasu.
+
+---
+
+## Śledzenie otwartych usterek w całej flocie
+
+Przejdź do **Flota → Usterki**, aby zobaczyć wszystkie usterki w całej flocie. Strona ma trzy zakładki filtrów:
+
+| Zakładka | Co pokazuje |
+|---|---|
+| **Otwarte** | Usterki jeszcze niepowiązane z ukończonym lub anulowanym zleceniem roboczym |
+| **Potwierdzone** | Usterki przejrzane przez kierownika floty |
+| **Wszystkie** | Pełna historia |
+
+Każdy wiersz pokazuje ciężarówkę, nazwę elementu usterki, odznakę dotkliwości, datę zgłoszenia i kierowcę, który ją przesłał.
+
+---
+
+## Tworzenie zlecenia roboczego z usterki
+
+Dla wierszy **Krytyczny dla bezpieczeństwa** w **Flota → Usterki** bezpośrednio na wierszu dostępny jest przycisk **Utwórz zlecenie robocze**. Kliknięcie go otwiera formularz zlecenia roboczego wstępnie wypełniony ciężarówką, która była inspekcjonowana, i powiązany z pierwotnym zgłoszeniem usterki. Zlecenia robocze nie mają pola dotkliwości — wybierz **Typ serwisu** pasujący do naprawy i dodaj opis, następnie dodaj pozycje i planowaną datę, po czym zapisz. Jeśli przełącznik **Auto-twórz niedostępność pojazdu dla usterek krytycznych dla bezpieczeństwa** jest włączony, ciężarówka pozostaje zablokowana na tablicy planowania do czasu oznaczenia powiązanego zlecenia roboczego jako ukończone.
 
 <Warning>
-Pojazd z defektem krytycznym dla bezpieczeństwa jest automatycznie blokowany na tablicy planowania do czasu gdy menedżer floty zniesie blokadę przez oznaczenie zlecenia roboczego jako rozwiązane.
+Jeśli przełącznik auto-blokady jest włączony, usterka krytyczna dla bezpieczeństwa natychmiast usuwa ciężarówkę z dyspozycji — nawet jeśli ma już przypisane przyszłe zlecenia. Sprawdź Flota → Usterki, gdy tylko otrzymasz alert krytyczny dla bezpieczeństwa.
 </Warning>
 
+Zobacz [Serwis i konserwacja](/pl/fleet-compliance/workshop-maintenance) po pełny przepływ pracy zleceń roboczych.
+
+---
+
 <CardGroup cols={2}>
-  <Card title="Warsztat i Konserwacja" href="/pl/fleet-compliance/workshop-maintenance">
-    Twórz zlecenia robocze z raportów defektów.
+  <Card title="Inspekcja po podróży (widok kierowcy)" icon="mobile" href="/pl/driver/post-trip-inspection">
+    Pełny przepływ widziany przez kierowcę: wypełnianie listy kontrolnej, przesyłanie zdjęć oraz pomijanie/wznawianie inspekcji.
   </Card>
-  <Card title="Dokumenty floty" href="/pl/fleet-compliance/fleet-documents">
-    Śledź certyfikaty i dokumenty zgodności pojazdów.
+  <Card title="Serwis i konserwacja" icon="wrench" href="/pl/fleet-compliance/workshop-maintenance">
+    Twórz i zarządzaj zleceniami roboczymi z raportów usterek i regularnych harmonogramów konserwacji.
   </Card>
 </CardGroup>

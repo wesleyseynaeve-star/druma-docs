@@ -1,44 +1,41 @@
 ---
-title: "HERE Routing"
-description: "Comment HERE Maps alimente le routage, l'autocomplétion des adresses, le calcul des distances et des péages dans Druma."
+title: "Recherche d'adresse HERE Maps"
+description: "HERE Maps alimente l'autocomplétion des adresses et le géocodage dans Druma. Le routage optimisé pour camions, l'estimation des péages et l'ETA sont calculés par PTV à la place."
 icon: "map"
 ---
 
-## Vue d'ensemble
-
-HERE Technologies alimente plusieurs fonctionnalités clés de Druma :
-
-- **Autocomplétion des adresses** — Suggestions d'adresses en temps réel lors de la saisie
-- **Calcul d'itinéraire** — Itinéraires optimisés pour les poids lourds (évite les restrictions de hauteur/poids)
-- **Estimation de distance** — Distances précises utilisées pour la facturation au kilomètre
-- **Calcul des péages** — Estimation des coûts de péage par pays et par type de véhicule
-- **Estimation CO2** — Basée sur la distance réelle d'itinéraire
-
----
+Druma utilise **HERE Maps** pour une fonction principale : trouver et valider les adresses au fur et à mesure de la saisie. Le routage sûr pour camions, l'estimation des péages et l'ETA en direct sont calculés par un fournisseur différent, **PTV**, décrit brièvement à la fin de cette page. Cette intégration fonctionne automatiquement en arrière-plan — aucune configuration n'est requise de la part des opérateurs ou répartiteurs.
 
 ## Aucune configuration requise
 
-La clé API HERE est gérée au niveau de la plateforme Druma et est incluse dans votre abonnement. Vous n'avez rien à configurer.
-
----
-
-## Routage pour poids lourds
-
-HERE calcule des itinéraires spécifiques aux poids lourds en tenant compte de :
-- Restrictions de hauteur (ponts, tunnels)
-- Restrictions de poids (certaines routes)
-- Restrictions de largeur
-- Zones à faibles émissions
-- Restrictions de temps (ex. : interdiction de circuler le week-end dans certains pays)
-
-Les paramètres du véhicule (hauteur, poids, nombre d'essieux) configurés dans votre profil de camion sont automatiquement passés à HERE pour le calcul d'itinéraire.
-
----
+HERE est configuré au niveau de la plateforme Druma. Contrairement à des intégrations comme TransFollow ou SmartBill, il n'y a pas de clé API à saisir ni de paramètres à configurer. Chaque compte Druma a un accès complet à la recherche d'adresse HERE dès le premier jour.
 
 ## Autocomplétion des adresses
 
-Lors de la création d'une commande, commencez à taper n'importe quelle adresse et Druma affiche des suggestions HERE en temps réel. Sélectionnez une suggestion pour obtenir des coordonnées GPS précises — essentielles pour le calcul d'itinéraire et le suivi GPS.
+Lors de la saisie d'une adresse de chargement ou de livraison sur une commande, commencez à taper le nom de la rue ou de la ville et HERE suggère des adresses correspondantes dans une liste déroulante. Sélectionnez la bonne adresse et tous les champs — rue, numéro, ville, code postal et pays — se remplissent automatiquement.
 
-<Card title="Configuration des intégrations" icon="plug" href="/fr/admin/integration-setup">
-  Vue d'ensemble de toutes les intégrations disponibles dans Druma.
-</Card>
+Cela évite les erreurs de saisie d'adresse qui causent des problèmes de navigation aux chauffeurs. Une adresse confirmée via l'autocomplétion HERE a toujours des coordonnées valides, donc l'application de navigation du chauffeur peut y router directement.
+
+<Note>
+Pour les adresses rurales ou industrielles n'apparaissant pas dans l'autocomplétion, vous pouvez saisir l'adresse manuellement puis faire glisser le repère sur la carte jusqu'au bon emplacement. Les coordonnées sont stockées avec la commande et utilisées pour le routage.
+</Note>
+
+## Géocodage inverse
+
+HERE convertit aussi un repère déposé sur la carte (latitude/longitude) en adresse lisible — utilisé, par exemple, quand un planificateur fait glisser un repère sur la carte pour pré-remplir le nom et l'adresse d'un lieu.
+
+## Routage, péages et ETA : gérés par PTV
+
+Le routage optimisé pour camions (évitant les ponts bas, les restrictions de poids, et autres dangers que les poids lourds ne peuvent pas emprunter), l'estimation des coûts de péage à travers les systèmes de péage européens, et l'ETA en direct tenant compte du trafic sont tous calculés par l'**API PTV Developer Routing**, pas par HERE. Druma transmet les dimensions, le poids et le nombre d'essieux de votre véhicule à PTV afin que les itinéraires et estimations de péage reflètent votre camion réel.
+
+<Warning>
+Les estimations de coût de péage restent des approximations, quel que soit le fournisseur. Les péages réels dépendent de l'itinéraire spécifique emprunté, de la configuration d'essieux sous laquelle votre camion est enregistré dans le système de péage de chaque pays, et de si les tarifs ont changé depuis la dernière mise à jour des données. Utilisez ces chiffres comme guide, pas comme donnée précise de facturation.
+</Warning>
+
+Garder les détails techniques du véhicule à jour dans **Flotte → Véhicules → [véhicule] → Détails techniques** est l'étape la plus efficace pour améliorer la précision du routage, des péages et de l'ETA — quel que soit le fournisseur qui effectue le calcul.
+
+<CardGroup cols={1}>
+  <Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+    Comment gérer vos fiches véhicule, y compris les dimensions qui alimentent le routage.
+  </Card>
+</CardGroup>

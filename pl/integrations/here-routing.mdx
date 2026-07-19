@@ -1,77 +1,41 @@
 ---
-title: "Routing HERE Maps"
-description: "HERE Maps zasila autouzupełnianie adresów, routing zoptymalizowany pod ciężarówki, szacowanie kosztów opłat drogowych i obliczanie ETA we wszystkich funkcjach Druma."
+title: "Wyszukiwanie adresów HERE Maps"
+description: "HERE Maps zasila autouzupełnianie adresów i geokodowanie w całej Druma. Routing zoptymalizowany pod ciężarówki, szacowanie opłat drogowych i ETA oblicza zamiast tego PTV."
 icon: "map"
 ---
 
-Druma używa HERE Maps do trzech podstawowych funkcji: znajdowania i weryfikacji adresów, obliczania tras bezpiecznych dla ciężarówek oraz szacowania kosztów opłat drogowych. Ta integracja działa automatycznie w tle — nie jest wymagana żadna konfiguracja ze strony operatorów ani dyspozytorów.
+Druma używa **HERE Maps** do jednej podstawowej funkcji: znajdowania i weryfikacji adresów podczas wpisywania. Routing bezpieczny dla ciężarówek, szacowanie opłat drogowych i ETA na żywo są obliczane przez innego dostawcę, **PTV**, opisanego krótko na końcu tej strony. Ta integracja działa automatycznie w tle — nie jest wymagana żadna konfiguracja ze strony operatorów ani dyspozytorów.
 
 ## Brak wymaganej konfiguracji
 
-HERE jest skonfigurowany na poziomie platformy Druma. W przeciwieństwie do integracji takich jak TransFollow lub SmartBill, nie ma klucza API do wprowadzenia i żadnych ustawień do konfiguracji. Każde konto Druma ma pełny dostęp do routingu HERE od pierwszego dnia.
+HERE jest skonfigurowany na poziomie platformy Druma. W przeciwieństwie do integracji takich jak TransFollow czy SmartBill, nie ma klucza API do wprowadzenia ani ustawień do konfiguracji. Każde konto Druma ma pełny dostęp do wyszukiwania adresów HERE od pierwszego dnia.
 
 ## Autouzupełnianie adresów
 
 Podczas wprowadzania adresu odbioru lub dostawy w zleceniu zacznij wpisywać nazwę ulicy lub miasto, a HERE sugeruje pasujące adresy w liście rozwijanej. Wybierz prawidłowy adres, a wszystkie pola — ulica, numer, miasto, kod pocztowy i kraj — są wypełniane automatycznie.
 
-Zapobiega to błędom wprowadzania adresów, które powodują problemy z nawigacją kierowcy. Adres potwierdzony przez autouzupełnianie HERE zawsze ma prawidłowe współrzędne, więc aplikacja nawigacyjna kierowcy może wyznaczyć bezpośrednią trasę.
+Zapobiega to błędom wprowadzania adresów, które powodują problemy z nawigacją kierowcy. Adres potwierdzony przez autouzupełnianie HERE zawsze ma prawidłowe współrzędne, więc aplikacja nawigacyjna kierowcy może wyznaczyć bezpośrednią trasę do niego.
 
 <Note>
-W przypadku wiejskich lub przemysłowych adresów, które nie pojawiają się w autouzupełnianiu, możesz wprowadzić adres ręcznie, a następnie przeciągnąć pin na mapie do właściwej lokalizacji. Współrzędne są przechowywane ze zleceniem i używane do routingu.
+Dla wiejskich lub przemysłowych adresów, które nie pojawiają się w autouzupełnianiu, możesz wprowadzić adres ręcznie, a następnie przeciągnąć pin na mapie do właściwej lokalizacji. Współrzędne są przechowywane ze zleceniem i używane do routingu.
 </Note>
 
-## Routing zoptymalizowany pod ciężarówki
+## Geokodowanie odwrotne
 
-Standardowe trasy nawigacji samochodowej nie są bezpieczne dla ciężkich ciężarówek. Niskie mosty, drogi z ograniczeniami tonażowymi, wąskie wiejskie uliczki i ograniczenia dla materiałów niebezpiecznych — wszystko to musi być omijane. Druma przekazuje wymiary pojazdu do HERE przy obliczaniu tras:
+HERE zamienia też upuszczony pin na mapie (szerokość/długość geograficzna) z powrotem na czytelny adres — używane na przykład, gdy planista przeciąga pin na mapie, aby wstępnie wypełnić nazwę i adres lokalizacji.
 
-- Wysokość pojazdu (z rekordu pojazdu)
-- Całkowita masa (z rekordu pojazdu)
-- Liczba osi (z rekordu pojazdu)
-- Klasa materiałów niebezpiecznych, jeśli dotyczy (ustawiana per zlecenie)
+## Routing, opłaty drogowe i ETA: obsługuje PTV
 
-HERE zwraca trasę omijającą ograniczenia, których Twój konkretny pojazd nie może spełnić. Jest to szczególnie ważne na trasach przez Europę Środkową i Zachodnią, gdzie ograniczenia prześwitu są powszechne.
-
-**Gdzie ustawić wymiary pojazdu:** Flota → Pojazdy → [pojazd] → Dane techniczne. Jeśli wymiary nie są wypełnione, HERE używa domyślnych parametrów ciężkiej ciężarówki, które mogą być mniej dokładne dla Twojego konkretnego pojazdu.
-
-## Szacowany dystans
-
-Każde zlecenie pokazuje szacowany dystans w kilometrach obliczony przez HERE przy użyciu trasy ciężarówkowej. Ten dystans jest używany w trzech miejscach:
-
-- **Cena per km** — jeśli karta stawek jest ustawiona jako stawka per km, cena jest obliczana na podstawie tego dystansu
-- **Obliczenie CO2** — emisje są obliczane jako dystans × współczynnik emisji dla przypisanej ciężarówki
-- **Koszty rentowności trasy** — szacunek kosztu paliwa to dystans × zużycie × cena paliwa
-
-Dystans jest obliczany podczas tworzenia zlecenia lub gdy adresy są aktualizowane. Używa profilu routingu ciężarówkowego, więc jest zazwyczaj 5–15% dłuższy niż dystans trasy samochodowej.
-
-## Obliczanie ETA
-
-Druma szacuje ETA dostawy na podstawie:
-
-- Dystansu routingu HERE
-- Średniej prędkości ciężarówki (konfigurowalnej per trasa w Ustawienia → Routing → Średnia prędkość)
-- Czasu załadunku przy odbiorze
-- Postoje odpoczynkowe kierowcy dla długich tras (zgodnie z przepisami EU dotyczącymi czasu jazdy)
-
-ETA aktualizuje się automatycznie, gdy kierowca zgłasza opóźnienia przez aplikację lub gdy postój trwa dłużej niż oczekiwano.
-
-## Szacowanie kosztów opłat drogowych
-
-HERE zapewnia dane o opłatach drogowych dla głównych europejskich systemów. Gdy tworzone jest zlecenie, Druma pokazuje szacowany koszt opłat drogowych w sekcji Finansowe zlecenia.
-
-Dane o opłatach drogowych obejmują: Francję (péage), Włochy (autostrada), Austrię (winiet autostradowy + ASFINAG), Czechy, Słowację, Węgry, Polskę, Niemcy (LKW-Maut) i inne.
+Routing zoptymalizowany pod ciężarówki (omijanie niskich mostów, ograniczeń wagowych i innych zagrożeń, których pojazdy ciężkie nie mogą pokonać), szacowanie kosztów opłat drogowych w europejskich systemach opłat oraz ETA uwzględniające ruch na żywo są obliczane przez **PTV Developer Routing API**, nie przez HERE. Druma przekazuje do PTV wymiary, wagę i liczbę osi Twojego pojazdu, aby trasy i szacunki opłat odzwierciedlały Twoją faktyczną ciężarówkę.
 
 <Warning>
-Szacunki kosztów opłat drogowych są przybliżone. Rzeczywiste opłaty zależą od konkretnej trasy, konfiguracji osi pojazdu zarejestrowanej w systemie opłat drogowych każdego kraju oraz od tego, czy stawki opłat zmieniły się od ostatniej aktualizacji danych HERE. Używaj tych liczb jako wskazówek, nie jako precyzyjnych danych do faktury.
+Szacunki kosztów opłat drogowych pozostają przybliżeniami niezależnie od dostawcy. Rzeczywiste opłaty zależą od konkretnej przejechanej trasy, konfiguracji osi, pod którą Twoja ciężarówka jest zarejestrowana w systemie opłat każdego kraju, oraz od tego, czy stawki zmieniły się od ostatniej aktualizacji danych. Używaj tych liczb jako wskazówek, nie jako precyzyjnego wejścia do faktury.
 </Warning>
 
-## Dlaczego dokładność routingu ma znaczenie dla kosztów
-
-Dystans obliczony przez HERE staje się podstawą szacunków kosztów paliwa w raporcie rentowności trasy. Jeśli wymiary pojazdu nie są wprowadzone poprawnie i HERE prowadzi ciężarówkę krótszą, ale ograniczoną drogą, dystans zostanie niedoszacowany, a obliczenia kosztów będą zbyt optymistyczne.
-
-Utrzymywanie aktualnych danych technicznych pojazdu w Druma to jeden najskuteczniejszy krok w celu poprawy dokładności routingu i kosztów.
+Utrzymywanie aktualnych danych technicznych pojazdu w **Flota → Pojazdy → [pojazd] → Dane techniczne** to pojedynczy najskuteczniejszy krok, by poprawić dokładność routingu, opłat drogowych i ETA — niezależnie od tego, który dostawca wykonuje obliczenia.
 
 <CardGroup cols={1}>
   <Card title="Zarządzanie flotą" icon="truck" href="/pl/planner/fleet-management">
-    Jak zarządzać rekordami pojazdów, w tym wymiarami używanymi w routingu HERE.
+    Jak zarządzać rekordami pojazdów, w tym wymiarami zasilającymi routing.
   </Card>
 </CardGroup>

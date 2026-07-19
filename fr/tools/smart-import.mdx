@@ -1,53 +1,179 @@
 ---
-title: "Import intelligent"
-description: "Importez des données en masse dans Druma via l'IA — téléchargez des documents PDF, images ou feuilles de calcul et Gemini extrait automatiquement les données de flotte, clients, chauffeurs et assurances."
-icon: "sparkles"
+title: "Import intelligent (intégration en masse par IA)"
+description: "Téléversez des documents non structurés — PDF, images, tableurs — et laissez l'IA de Druma extraire, réviser, et importer en masse vos données de flotte, chauffeurs, clients, et entreprise en quelques minutes."
+icon: "brain"
 ---
 
 ## Vue d'ensemble
 
-L'Import intelligent vous permet d'alimenter Druma en données en masse en téléchargeant vos documents existants. L'IA (Google Gemini) analyse les documents et extrait automatiquement les informations structurées avec un score de confiance par champ.
+L'Import intelligent est un outil d'intégration piloté par IA qui lit les documents dont vous disposez déjà — listes de flotte de transporteur, fichiers de permis chauffeur, répertoires clients, certificats d'assurance — et les transforme en fiches Druma structurées. Plutôt que de ressaisir des données depuis de la paperasse ou de reformater des tableurs pour correspondre à un modèle d'import, vous remettez le document brut à Druma et vérifiez ce que l'IA a extrait avant qu'il n'entre dans la base de données.
 
-Accédez à **Outils → Import intelligent** pour commencer.
+Accédez à **Outils → Import intelligent** pour l'ouvrir.
+
+<Note>
+L'Import intelligent utilise Google Gemini pour extraire les données. Les fichiers sont traités côté serveur et ne sont pas conservés de façon permanente après l'extraction — seules les fiches structurées que vous choisissez d'importer sont enregistrées.
+</Note>
 
 ---
 
-## Formats pris en charge
+## Quand utiliser l'Import intelligent vs l'import en masse régulier
 
-| Format | Description |
+Druma a deux chemins d'intégration en masse. Choisissez le bon pour votre situation :
+
+| Situation | Utilisez |
 |---|---|
-| **PDF** | Certificats d'immatriculation, certificats d'assurance, permis de conduire |
-| **Images** | JPEG, PNG, WebP, HEIC — photos de documents |
-| **CSV / XLSX** | Feuilles de calcul de flotte, listes de clients |
+| Vous avez un PDF, un document scanné, ou une image | **Import intelligent** |
+| Vous avez une photo d'un document ou une liste manuscrite | **Import intelligent** |
+| Vous avez reçu une liste de flotte d'un transporteur en Word ou en Excel non standard | **Import intelligent** |
+| Vous exportez depuis un autre TMS avec un format CSV connu | **Import en masse CSV régulier** |
+| Vous avez un tableur propre correspondant déjà à la structure de colonnes de Druma | **Import en masse CSV régulier** |
+
+L'Import intelligent gère les documents trop désordonnés ou non structurés pour un import CSV direct. Il ne remplacera pas un export bien structuré — l'import régulier est plus rapide quand vos données sont déjà propres.
 
 ---
 
-## Processus d'import
+## Types de documents pris en charge
+
+- **PDF** — listes de flotte, profils transporteur, certificats d'assurance, dossiers chauffeur
+- **Images** — JPEG, PNG, WebP, HEIC/HEIF — scans, photos de téléphone, captures d'écran
+- **Excel** — fichiers `.xlsx` dans n'importe quelle disposition (l'Import intelligent lit le contenu, pas seulement les modèles standard)
+- **CSV** — fichiers délimités par virgule ou point-virgule
+
+---
+
+## Déroulement étape par étape
 
 <Steps>
-  <Step title="Téléchargez vos documents">
-    Faites glisser et déposez vos documents dans la zone de téléchargement, ou cliquez pour sélectionner des fichiers.
+  <Step title="Ouvrez l'Import intelligent">
+    Accédez à **Outils → Import intelligent**. Vous verrez la zone de téléversement et, en dessous, les cartes de catégorie (vides à la première visite).
   </Step>
-  <Step title="Attendez l'extraction">
-    Gemini analyse chaque document et extrait les données. Cela prend généralement quelques secondes par document.
+  <Step title="Téléversez vos documents">
+    Cliquez sur **Téléverser des documents** ou glissez-déposez des fichiers directement dans la zone de dépôt. Vous pouvez téléverser plusieurs fichiers à la fois — par exemple, une liste de flotte PDF et une image d'un certificat d'assurance ensemble.
+
+    <Note>
+    La taille de fichier maximale est de 20 Mo par fichier. Si un document est plus volumineux, divisez-le en sections avant de téléverser.
+    </Note>
   </Step>
-  <Step title="Examinez les données extraites">
-    Le tableau de bord affiche les données extraites par catégorie (Flotte, Chauffeurs, Clients, Assurances) avec un score de confiance pour chaque champ.
-    - **Vert (haute confiance)** — données probablement correctes
-    - **Ambre (confiance moyenne)** — vérifiez avant d'importer
-    - **Rouge (faible confiance)** — corrigez manuellement
+  <Step title="Attendez l'extraction par IA">
+    Druma envoie chaque fichier au service d'extraction IA. Cela prend généralement quelques secondes par fichier. Un indicateur de progression montre le statut de chaque document. Ne fermez pas l'onglet pendant l'extraction.
   </Step>
-  <Step title="Modifiez si nécessaire">
-    Cliquez sur n'importe quel champ pour le modifier directement dans le tableau.
+  <Step title="Vérifiez les résultats d'extraction">
+    Une fois l'extraction terminée, le **Tableau de bord de révision** apparaît. Il montre des cartes de catégorie en haut — **Entreprises**, **Flotte**, **Chauffeurs**, **Clients**, **Assurance** — avec un compte des fiches extraites dans chaque catégorie.
   </Step>
-  <Step title="Vérifiez les doublons">
-    Druma vérifie automatiquement les enregistrements existants (plaques, numéros de TVA) et signale les doublons potentiels.
+  <Step title="Ouvrez une catégorie pour révision">
+    Cliquez sur n'importe quelle carte de catégorie pour voir les fiches extraites dans un tableau modifiable. Chaque ligne est une fiche extraite (un véhicule, un chauffeur, un client, etc.).
   </Step>
-  <Step title="Importez">
-    Sélectionnez les catégories à importer et cliquez sur **Importer les données sélectionnées**.
+  <Step title="Modifiez les champs incorrects">
+    Cliquez sur n'importe quelle cellule du tableau pour la modifier en ligne. L'IA est précise sur le texte clairement imprimé, mais peut mal lire l'écriture manuscrite, les abréviations, ou le formatage non standard. Corrigez toute erreur avant l'import.
+  </Step>
+  <Step title="Vérifiez les scores de confiance et les doublons">
+    Passez en revue les indicateurs de confiance et les signalements de doublon sur chaque ligne — voir les sections ci-dessous pour le détail.
+  </Step>
+  <Step title="Importez la catégorie">
+    Quand une catégorie semble correcte, cliquez sur **Importer [Catégorie]** — par exemple, **Importer la flotte** ou **Importer les clients**. Druma insère en lot toutes les lignes non ignorées et confirme le nombre importé.
   </Step>
 </Steps>
 
-<Card title="Importer votre flotte" icon="truck" href="/fr/bulk-import/importing-fleet">
-  Import manuel de flotte via CSV avec mappage de colonnes.
+---
+
+## Le Tableau de bord de révision
+
+Le Tableau de bord de révision est l'espace de travail central après l'extraction. Il a deux niveaux :
+
+**Cartes de catégorie (niveau supérieur)** — une carte par type de données trouvé dans vos documents. Chaque carte montre :
+- Le nom de la catégorie
+- Le nombre de fiches extraites
+- Un avertissement récapitulatif si des fiches ont des signalements de confiance faible ou de doublon
+
+**Tableau de fiches (exploration)** — cliquez sur une carte pour ouvrir le tableau modifiable de cette catégorie. Le tableau montre une colonne par champ (par ex., Plaque, Type de remorque, Capacité, Année pour Flotte), avec des indicateurs de confiance et des signalements de doublon sur chaque ligne.
+
+Vous pouvez basculer librement entre catégories — vos modifications sont préservées jusqu'à l'import ou la fermeture de la session.
+
+---
+
+## Score de confiance
+
+Chaque champ extrait reçoit un score de confiance basé sur la clarté avec laquelle l'IA a pu lire et interpréter le texte source. Les scores sont affichés comme des indicateurs codés par couleur sur chaque cellule :
+
+| Indicateur | Signification |
+|---|---|
+| Vert — **Élevée** | L'IA est confiante. Le champ était clairement imprimé ou structuré. |
+| Ambre — **Moyenne** | L'IA a fait une inférence raisonnable mais la source était ambiguë (par ex., une abréviation, un mot partiellement visible). Vérifiez avant d'importer. |
+| Rouge — **Faible** | L'IA n'a pas pu extraire une valeur fiable. La cellule peut contenir une meilleure estimation ou être vide. Vérifiez toujours manuellement les champs à faible confiance. |
+
+<Warning>
+Les champs à faible confiance ne sont pas bloqués à l'import — vous pouvez les importer tels quels — mais vous êtes responsable de vérifier leur exactitude. Des données incorrectes (mauvaise plaque d'immatriculation, mauvais numéro de TVA) peuvent causer des problèmes en aval dans la facturation, la conformité, et les communications transporteur.
+</Warning>
+
+Pour trouver rapidement tous les champs à faible confiance dans une catégorie, cherchez les surlignages de cellule ambre et rouge dans le tableau. Il n'y a pas de filtre séparé — parcourez colonne par colonne ou ligne par ligne.
+
+---
+
+## Détection de doublons
+
+Avant d'afficher le Tableau de bord de révision, Druma compare les fiches extraites à vos données d'entreprise existantes — mais seulement pour quatre catégories :
+
+- **Flotte (camions)** : correspondance par plaque d'immatriculation
+- **Flotte (remorques)** : correspondance par plaque d'immatriculation
+- **Chauffeurs** : correspondance par nom complet (insensible à la casse)
+- **Clients** : correspondance par numéro de TVA, avec repli sur le nom si aucun numéro de TVA n'a été extrait
+
+<Note>
+Il n'y a pas encore de détection de doublons pour les fiches Entreprises/Sous-traitants ou Assurance — chaque ligne extraite dans ces catégories est traitée comme nouvelle.
+</Note>
+
+Les fiches correspondant à des données existantes sont signalées avec un badge **Doublon** sur la ligne. Vous avez deux options pour chaque doublon :
+
+- **Ignorer** (par défaut) — la ligne ne sera pas importée. Utilisez ceci quand la fiche existante est déjà correcte.
+- **Écraser** — l'import mettra à jour la fiche existante avec les données extraites. Utilisez ceci avec précaution — cela remplace les valeurs stockées.
+
+Les lignes sans signalement de doublon sont de nouvelles fiches et seront insérées à l'import.
+
+---
+
+## Après l'import
+
+Les fiches importées apparaissent immédiatement dans le module concerné :
+
+- Les fiches **Flotte** apparaissent dans **Flotte → Camions** ou **Flotte → Remorques**
+- Les **Chauffeurs** apparaissent dans **Flotte → Chauffeurs**
+- Les **Clients** apparaissent dans **Clients**
+- **Entreprises / Sous-traitants** apparaissent dans **Affrètement → Sous-traitants**
+- Les données d'**Assurance** sont rattachées à la fiche véhicule ou entreprise concernée
+
+Il n'y a pas d'annulation pour un import. Si des données incorrectes ont été importées, modifiez les fiches individuellement dans leurs modules respectifs.
+
+---
+
+## Limitations
+
+L'Import intelligent est conçu pour les données d'entreprise, de flotte, de chauffeurs, de clients, et d'assurance. Il ne gère pas :
+
+- **Les commandes** — utilisez le formulaire de commande ou la fonctionnalité d'email de commande entrant pour la création de commandes
+- **Les factures** — les factures sont générées automatiquement depuis les commandes livrées ou via le flux d'ingestion de factures transporteur
+- **La migration de données historiques** — pour de grands jeux de données historiques (milliers de fiches), contactez le support pour une migration assistée
+
+L'Import intelligent fonctionne mieux avec des documents principalement textuels. Il peut traiter l'écriture manuscrite dans les images mais la précision chute significativement par rapport au texte imprimé.
+
+---
+
+## Exemple pratique
+
+Votre nouveau sous-traitant vous envoie un PDF de 3 pages listant toute sa flotte — 12 véhicules avec plaque, type, poids max, et année. Plutôt que de saisir chacun manuellement :
+
+1. Téléversez le PDF dans **Outils → Import intelligent**
+2. Attendez quelques secondes pour l'extraction
+3. Cliquez sur la carte **Flotte** — 12 lignes apparaissent, la plupart à confiance élevée
+4. Deux lignes ont une confiance moyenne sur le champ Type de remorque — corrigez-les en ligne
+5. Une ligne est signalée comme Doublon (un camion que vous avez déjà ajouté la semaine dernière) — laissez-la sur Ignorer
+6. Cliquez sur **Importer la flotte** — 11 nouveaux véhicules sont ajoutés à votre flotte instantanément
+
+---
+
+<Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+  Gérez camions, remorques, et chauffeurs — et vérifiez les fiches de flotte importées ici après un Import intelligent.
+</Card>
+
+<Card title="Clients" icon="building-2" href="/fr/bulk-import/importing-clients">
+  Consultez et modifiez les fiches client créées par l'Import intelligent, et ajoutez des contacts et instructions permanentes.
 </Card>

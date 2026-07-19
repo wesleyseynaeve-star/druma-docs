@@ -8,7 +8,7 @@ icon: "arrows-left-right"
 
 Soms neemt u een lading van een klant aan maar vervoert u die niet zelf — u huurt een andere vervoerder in. U treedt op als vrachtdoorzender: u bent de commerciële laag tussen de klant en de daadwerkelijke vervoerder.
 
-In Druma heet dit een **Uitbesteed** ordertype.
+In Druma heet dit een **Uitbesteed** ordertype. U maakt één order aan, wijst ze toe aan een vervoerder uit uw onderaannemerregister, en Druma regelt de rest: gesplitste facturering, statusopvolging, documentstroom en margeberekening — allemaal vanuit die ene order, zonder dubbele gegevensinvoer.
 
 ---
 
@@ -19,19 +19,19 @@ In Druma heet dit een **Uitbesteed** ordertype.
     Ga naar **Orders → Nieuwe order**.
   </Step>
   <Step title="Stel het ordertype in op Uitbesteed">
-    Selecteer **Uitbesteed** in het veld **Ordertype**.
+    Zoek in het orderformulier het veld **Ordertype** en selecteer **Uitbesteed**.
   </Step>
   <Step title="Vul de standaard ordergegevens in">
-    Ophaaladres, afleveradres, goederenbeschrijving, opleggertype en uw afgesproken prijs met de klant (verkooptarief).
+    Voer ophaaladres, afleveradres, goederenbeschrijving, opleggertype en uw afgesproken prijs met de klant in (het verkooptarief).
   </Step>
   <Step title="Selecteer de vervoerder">
-    Kies het bedrijf uit uw onderaannemer­register in het veld **Vervoerder**.
+    Kies in het veld **Onderaannemer/Vervoerder** het bedrijf uit uw onderaannemerregister dat deze lading fysiek zal vervoeren.
   </Step>
-  <Step title="Voer de vervoerderskosten in">
-    Voer in wat u de vervoerder betaalt (inkooptarief). Dit is alleen zichtbaar voor planners.
+  <Step title="Voer de vervoerderskost in">
+    Voer in wat u de vervoerder betaalt (het inkooptarief). Dit blijft gescheiden van de klantprijs en is alleen zichtbaar voor planners — niet voor de klant.
   </Step>
   <Step title="Opslaan en toewijzen">
-    Klik op **Opslaan**.
+    Klik op **Opslaan**. De vervoerder krijgt automatisch toegang tot deze order via zijn portaal.
   </Step>
 </Steps>
 
@@ -39,22 +39,101 @@ In Druma heet dit een **Uitbesteed** ordertype.
 
 ## Gesplitste facturering
 
-Een uitbestede order genereert twee facturen uit één set gegevens:
+Een uitbestede order houdt beide kanten van het geld bij vanuit één set gegevens — geen dubbele invoer van route, datums of lading:
 
-**Verkoopfactuur** — gaat naar uw klant. Dit is wat u in rekening brengt voor het transport.
+**Verkoopzijde** — wat u uw klant aanrekent (de afgesproken prijs). U genereert deze factuur op dezelfde manier als voor elke andere order, vanuit de eigen facturatie-actie van de order.
 
-**Inkoopfactuur** — gaat naar de vervoerder. Dit weerspiegelt wat u de vervoerder betaalt.
+**Inkoopzijde** — wat u de vervoerder betaalt. Open het tabblad **Carrier & Money** van de order om het **inkooptarief** te zien dat u met de vervoerder overeenkwam, naast uw **omzet**, met de **marge** (omzet − inkooptarief) automatisch berekend.
+
+<Note>
+Er is geen aparte knop "Inkoopfactuur genereren" op de order — stuurt de vervoerder u zijn eigen factuur voor de lading, koppel die dan aan een onderaannemersfactuur op de toegewijde pagina **Onderaannemersfacturen**, die inname en koppeling tegen het hier geregistreerde inkooptarief afhandelt.
+</Note>
+
+---
+
+## Statussynchronisatie: vervoerder → uw systeem → klant
+
+Werkt de vervoerder de orderstatus bij in zijn portaal (Opgehaald, Onderweg, Afgeleverd), dan stroomt die update automatisch door:
+
+1. De orderstatus in uw Druma werkt onmiddellijk bij
+2. Uw klant ziet de bijgewerkte status in zijn portaal, op de tijdlijn van zijn zending
+3. Uw planners zien de update op het orderdetailpaneel en, als de truck live is, op de Live Kaart
+
+U hoeft statusupdates van de vervoerder niet handmatig door te geven aan uw klant. De informatie stroomt automatisch door Druma.
+
+---
+
+## Documentstroom
+
+Uploadt de vervoerder documenten via zijn portaal — CMR-scan, afleveringsbewijs, foto's — dan verschijnen die documenten op twee plekken tegelijk:
+
+- **Uw Druma-account** — onder het tabblad Documenten van de order
+- **Het portaal van uw klant** — op zijn pagina Documenten, filterbaar op type (CMR, eCMR, POD, factuur, CO2)
+
+De klant krijgt toegang tot de CMR en afleveringsbevestiging zonder dat u iets handmatig hoeft door te sturen. Het komt gewoon aan.
+
+<Note>
+Er is geen zichtbaarheidsschakelaar per document — elk document gekoppeld aan een order dat de klant kan zien, is zichtbaar voor hem. Moet u een door de vervoerder geüpload bestand intern houden, koppel het dan niet aan de Documenten van de order.
+</Note>
 
 ---
 
 ## Margetracking
 
-Op het tabblad **Financiën** van elke uitbestede order ziet u:
-- **Verkoopprijs** — wat de klant betaalt
-- **Inkoopprijs** — wat de vervoerder betaalt
-- **Brutomarge** — het verschil in euro's
-- **Margepercentage** — de marge als percentage van de verkoopprijs
+Op elke uitbestede order toont Druma uw marge in één oogopslag:
 
-<Card title="Onderaannemers" icon="handshake" href="/nl/planner/subcontractors">
-  Hoe u vervoerders toevoegt aan uw onderaannemer­register.
-</Card>
+**Marge = Verkoopprijs − Vervoerderskost**
+
+U ziet dit op het tabblad Carrier & Money van de order en in de orderlijstweergave. Dit maakt het makkelijk om de winstgevendheid van uw doorzendladingen te bekijken zonder spreadsheets te bouwen.
+
+Wijzigen de werkelijke kosten (de vervoerder rekent wachttijd of extra km aan), werk dan het inkooptarief op de order bij en de marge wordt automatisch herberekend.
+
+---
+
+## Vervoerdersupdates
+
+Eenmaal een uitbestede order toegewezen aan een vervoerder en zodra deze begint met updates via het carrier portal, toont Druma zijn realtime gegevens op het doorzendingsbord en in het orderdetailpaneel — geen handmatige doorgifte vereist aan uw kant.
+
+### Op het doorzendingsbord (kaarten Onderweg)
+
+- **ETA vervoerder** — de eigen ETA van de vervoerder voor levering, gelabeld "ETA vervoerder" om te onderscheiden van Druma's door PTV berekende ETA
+- **Kentekenbadge vervoerder** — het werkelijke kenteken dat de vervoerder gebruikt voor deze lading
+- **Waarschuwing ontbrekend inkooptarief** — een amberkleurige badge verschijnt op elke kaart waarvoor geen inkooptarief is ingesteld. Dit signaleert een hiaat in de margegegevens — open de order en voer het inkooptarief in voor facturering
+
+### In het orderdetailpaneel
+
+Voor uitbestede orders verschijnt een sectie **Vervoerdersupdates** in het orderdetailpaneel, met:
+
+- Kenteken vervoerder en naam chauffeur
+- Telefoonnummer chauffeur (getoond als platte tekst, geen tik-om-te-bellen-link)
+- ETA vervoerder
+- Laadgegevens: door de vervoerder gemelde aankomst en vertrek op het ophaalpunt
+- Levergegevens: door de vervoerder gemelde aankomst en vertrek op het leverpunt
+
+Deze velden worden ingevuld door de vervoerder via zijn portaal — geen handmatige invoer vereist aan uw kant. Heeft de vervoerder nog geen updates verstuurd, dan toont de sectie plaatshouders.
+
+---
+
+## Wanneer uitbestede orders te gebruiken
+
+Gebruik een uitbesteed ordertype telkens wanneer:
+
+- U een lading heeft aangenomen maar uw eigen trucks vol zijn
+- U puur als doorzender optreedt en zelf geen ladingen vervoert
+- U een spotvervoerder gebruikt voor een eenmalige lading
+- U de marge tussen wat u de klant aanrekent en wat u de vervoerder betaalt moet bijhouden
+
+<Warning>
+Gebruikt u uw eigen chauffeur en truck, gebruik dan een standaard ordertype — niet Uitbesteed. Uitbestede orders zijn specifiek voor ladingen vervoerd door externe vervoerders.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Onderaannemers" icon="handshake" href="/nl/planner/subcontractors">
+    Voeg vervoerderbedrijven toe aan uw register voordat u ze kunt toewijzen aan uitbestede orders.
+  </Card>
+  <Card title="Facturen genereren" icon="file-invoice-dollar" href="/nl/invoicing/generating-invoices">
+    Leer hoe u verkoop- en inkoopfacturen genereert vanuit uw orders.
+  </Card>
+</CardGroup>

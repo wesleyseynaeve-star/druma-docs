@@ -1,0 +1,118 @@
+---
+title: "Archiwum tachografu"
+description: "Jak Druma przechowuje pliki tachografu DDD i TGD, aby spełnić wymogi częstotliwości pobierania i przechowywania z Rozporządzenia UE 165/2014 — automatyczne nocne pobieranie i ręczne przesyłanie."
+icon: "hard-drive"
+---
+
+Rozporządzenie UE 165/2014 wymaga od operatorów transportu pobierania danych tachografu z jednostek pokładowych i kart kierowców w określonych odstępach oraz przechowywania tych danych przez co najmniej 12 miesięcy. Druma przechowuje te pliki w Archiwum tachografu, dzięki czemu możesz udowodnić zgodność podczas kontroli drogowej lub audytu organu bez utrzymywania osobnego systemu archiwizacji.
+
+---
+
+## Wymagania częstotliwości pobierania
+
+| Typ pliku | Wymagana częstotliwość pobierania |
+|---|---|
+| Dane jednostki pokładowej (VU / `.ddd`) | Co najmniej co **90 dni** |
+| Dane karty kierowcy (DDC / `.tgd`) | Co najmniej co **28 dni** |
+
+Przekroczenie terminu pobrania to bezpośrednie naruszenie przepisów, niezależnie od tego, czy kierowca dopuścił się naruszenia w tym okresie. Inspektorzy sprawdzają, czy dane zostały pobrane na czas, nie tylko czy zostały ostatecznie pobrane.
+
+---
+
+## Gdzie znaleźć Archiwum tachografu
+
+Przejdź do **Flota → Archiwum tachografu**. Strona wylistowuje wszystkie przechowywane pliki tachografu posortowane wg daty przesłania. Każdy wiersz pokazuje:
+
+- Nazwę kierowcy lub pojazdu
+- Typ pliku (VU lub DDC)
+- Zakres dat objęty plikiem
+- Dni od ostatniego pobrania
+- Odznakę statusu
+
+### Odznaki statusu
+
+| Odznaka | Znaczenie |
+|---|---|
+| **OK** | W granicach terminu pobrania |
+| **Wkrótce termin** | W ciągu 5 dni od terminu |
+| **Zaległe** | Termin minął |
+
+Pliki oznaczone jako **Zaległe** wymagają natychmiastowego działania — pobierz plik z pojazdu lub karty kierowcy i prześlij go, aby wyczyścić status zaległości.
+
+---
+
+## Automatyczne pobieranie
+
+Dla ciężarówek podłączonych przez rFMS (standaryzowany interfejs telematyki producenta), Druma automatycznie pobiera nowe pliki DDD i TGD każdej nocy. Dla podłączonych pojazdów i kierowców nie jest wymagane żadne ręczne działanie.
+
+Obsługiwane integracje automatycznego pobierania:
+
+| Dostawca | Nazwa integracji | Status |
+|---|---|---|
+| Scania | rFMS | Aktywna |
+| Volvo | rFMS | Aktywna |
+| DAF | rFMS | Aktywna |
+| MAN | rFMS | Aktywna |
+| Mercedes-Benz | rFMS | Aktywna |
+| IVECO | rFMS | Aktywna |
+| Renault | rFMS | Aktywna |
+| Webfleet | TachoShare | Jeszcze niewdrożona — oczekuje na dostęp do konta partnerskiego Webfleet |
+
+Aby włączyć automatyczne pobieranie, przejdź do **Ustawienia → Integracje** i połącz swojego dostawcę telematyki producenta obsługującego rFMS. Po połączeniu Druma pobiera dostępne pliki podczas nocnego okna synchronizacji i odpowiednio aktualizuje odznaki statusu.
+
+<Note>
+Automatyczne pobieranie zależy od tego, czy dostawca telematyki udostępnia plik zdalnie. Niektóre starsze modele jednostek pokładowych lub kart kierowców mogą nie obsługiwać zdalnego pobierania — dla nich wymagane jest ręczne przesyłanie. Webfleet TachoShare jest w planach, ale jeszcze nie działa; podłączone pojazdy Webfleet obecnie wymagają ręcznego przesyłania.
+</Note>
+
+---
+
+## Ręczne przesyłanie
+
+Dla pojazdów i kierowców nieobsługiwanych przez automatyczną integrację, prześlij pliki bezpośrednio z narzędzia do pobierania tachografu (np. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+<Steps>
+  <Step title="Otwórz Archiwum tachografu">
+    Przejdź do **Flota → Archiwum tachografu**.
+  </Step>
+  <Step title="Kliknij Prześlij plik">
+    Kliknij przycisk **Prześlij plik** w prawym górnym rogu.
+  </Step>
+  <Step title="Wybierz kierowcę lub pojazd">
+    Wybierz, czy plik jest plikiem karty kierowcy (DDC) czy plikiem jednostki pokładowej (VU), a następnie wybierz kierowcę lub pojazd z listy.
+  </Step>
+  <Step title="Wybierz plik">
+    Wybierz plik `.ddd`, `.tgd`, `.v1b` lub `.c1b` z komputera. Maksymalny rozmiar pliku to **10 MB**.
+  </Step>
+  <Step title="Potwierdź przesłanie">
+    Kliknij **Prześlij**. Druma parsuje nagłówek pliku, aby wyodrębnić zakres dat, i przechowuje plik w archiwum. Zegar zaległości resetuje się dla wybranego kierowcy lub pojazdu.
+  </Step>
+</Steps>
+
+<Warning>
+Akceptowane są tylko pliki `.ddd`, `.tgd`, `.v1b` i `.c1b` — `.v1b`/`.c1b` to odpowiedniki `.ddd`/`.tgd` dla inteligentnego tachografu Generacji 2. Pliki wyeksportowane w innych formatach (CSV, PDF) nie mogą zostać przesłane i nie spełniają unijnego wymogu przechowywania danych. Zawsze zachowuj oryginalny plik binarny.
+</Warning>
+
+---
+
+## Przechowywanie
+
+Druma przechowuje wszystkie przesłane i automatycznie pobrane pliki tachografu przez wymagane prawnie minimum 12 miesięcy. Pliki starsze niż 12 miesięcy podlegają automatycznej archiwizacji. Skontaktuj się z pomocą techniczną, jeśli musisz odzyskać pliki spoza standardowego okna przechowywania.
+
+---
+
+## Powiązane artykuły
+
+<CardGroup cols={2}>
+  <Card title="Przepisy UE dotyczące godzin jazdy" icon="clock" href="/pl/fleet-compliance/eu-driving-hours">
+    Dzienne i tygodniowe limity jazdy wg Rozporządzenia 561/2006, śledzone z danych tachografu.
+  </Card>
+  <Card title="Czas pracy kierowcy (WTD)" icon="clock" href="/pl/fleet-compliance/driver-working-time">
+    Limity czasu pracy wg Dyrektywy 2002/15/WE i jak Druma je monitoruje.
+  </Card>
+  <Card title="Dokumenty floty" icon="folder-open" href="/pl/fleet-compliance/fleet-documents">
+    Zgodność dokumentów pojazdu i śledzenie terminów ważności.
+  </Card>
+  <Card title="Pakiet mobilności" icon="globe" href="/pl/fleet-compliance/mobility-package">
+    Obowiązki powrotu pojazdu i kierowcy oraz deklaracje delegowania IMI.
+  </Card>
+</CardGroup>

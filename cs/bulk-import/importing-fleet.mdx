@@ -1,49 +1,58 @@
 ---
 title: "Import vozového parku"
-description: "Jak importovat vozidla a návěsy hromadně do Druma pomocí CSV šablony — ideální pro nastavení nového účtu s velkou flotilou."
-icon: "upload"
+description: "Hromadně nahrajte svá vozidla do Druma pomocí šablony tabulky místo jejich přidávání jedno po druhém."
+icon: "file-import"
 ---
 
-## Přehled
-
-Místo přidávání vozidel jedno po druhém můžete importovat celou flotilu najednou pomocí CSV souboru. Toto je ideální při nastavování Druma poprvé.
+Použijte hromadný import pro přidání všech vozidel najednou — ideální při zahájení práce s Druma nebo migraci z jiného systému.
 
 ## Stažení šablony
 
 <Steps>
-  <Step title="Přejděte do Vozový park → Vozidla → Import">
-    Klikněte na tlačítko **Import** na stránce vozidel.
+  <Step title="Otevřete Hromadný import">
+    Přejděte do **Flotila → Vozidla** a klikněte na **Hromadný import** v panelu nástrojů — otevře se importní modální okno přímo na stránce seznamu vozidel; neexistuje samostatná stránka pro import.
   </Step>
-  <Step title="Stáhněte šablonu">
-    Klikněte na **Stáhnout šablonu**. Obdržíte CSV soubor se všemi správnými záhlavími sloupců.
+  <Step title="Stáhněte šablonu a vyplňte ji">
+    Klikněte na **Stáhnout šablonu** — Druma vygeneruje soubor `.xlsx`. Vyplňte jedno vozidlo na řádek:
+
+    | Sloupec | Povinný | Příklad |
+    |--------|----------|---------|
+    | Plate (SPZ) | Ano | B-123-ABC |
+    | Name (Název) | Ne | Truck 1 |
+    | Brand (Značka) | Ne | Volvo |
+    | Model | Ne | FH |
+    | Year (Rok) | Ne | 2020 |
+    | Euro class (Emisní norma) | Ne | euro6 |
+    | Fuel type (Typ paliva) | Ne | diesel |
+    | Trailer type (Typ návěsu) | Ne | tautliner |
+  </Step>
+  <Step title="Nahrajte a zkontrolujte">
+    Přetáhněte vyplněný soubor (CSV nebo XLSX, do 5 MB) do importního okna. Pokud vaše záhlaví sloupců přesně odpovídá šabloně, Druma je namapuje automaticky; jinak namapujete každý sloupec na správné pole ručně. Poté se zobrazí náhled prvních 5 řádků — řádky s chybějící SPZ jsou označeny červeně.
+  </Step>
+  <Step title="Potvrďte import">
+    Klikněte na **Importovat**. Vozidla se vytvoří okamžitě a zobrazí se ve vašem seznamu flotily. Výsledková obrazovka zobrazí počet vytvořených, přeskočených a chybných řádků, s podrobnostmi chyby na úrovni řádku pro vše, co selhalo.
   </Step>
 </Steps>
 
-## Vyplnění šablony
+## Deduplikace
 
-Otevřete CSV v Excelu nebo Google Sheets. Přidejte jedno vozidlo na řádek. Požadované sloupce jsou registrační značka, typ vozidla a typ návěsu. Všechny ostatní sloupce jsou volitelné, ale doporučují se.
+Druma zkontroluje SPZ každého řádku proti vašim existujícím vozidlům (normalizováno na velká písmena, ořezané mezery). Pokud je nalezena shoda, daný řádek je **přeskočen** — neaktualizuje existující vozidlo.
 
-## Nahrání souboru
+<Note>
+Hromadný import vždy vytváří pouze nové záznamy vozidel — nikdy neaktualizuje existující, i když znovu importujete soubor se shodnou SPZ. Pro změnu údajů u již existujícího vozidla ho upravte přímo ve Flotila → Vozidla.
+</Note>
 
-<Steps>
-  <Step title="Klikněte na Nahrát CSV">
-    Vyberte vyplněný CSV soubor.
-  </Step>
-  <Step title="Zkontrolujte náhled">
-    Druma ověří každý řádek a zobrazí případné chyby před importem.
-  </Step>
-  <Step title="Potvrďte">
-    Klikněte na **Importovat**. Vozidla jsou přidána okamžitě.
-  </Step>
-</Steps>
+Tento import neobsahuje sloupce pro rozměry návěsu, hmotnost, počet náprav, nosnost, denní náklad, platnost ADR ani příznak aktivní/neaktivní — ty se konfigurují na samotném záznamu vozidla po importu (pole nákladového profilu žijí na [nákladovém profilu vozidla](/cs/admin/rate-cards) v Nastavení → Ceníky, ne na záznamu vozidla).
 
-<Warning>
-Import nevytváří duplicity — pokud řádek obsahuje registrační značku, která již existuje, je přeskočen s chybou.
-</Warning>
+## Po importu
 
-<Card title="Správa vozového parku" icon="truck" href="/en/planner/fleet-management">
-  Přidávejte a spravujte vozidla ručně po importu.
-</Card>
----
+Zkontrolujte svůj seznam flotily a poté přidejte dokumenty vozidel (pojištění, ITP) pro každé vozidlo.
 
-This page is being translated. In the meantime, please refer to the [English version](/en/bulk-import/importing-fleet).
+<CardGroup cols={2}>
+  <Card title="Správa vozového parku" icon="truck" href="/cs/planner/fleet-management">
+    Přidávejte vozidla ručně a spravujte nastavení jednotlivých vozidel.
+  </Card>
+  <Card title="Doklady vozového parku" icon="folder-open" href="/cs/fleet-compliance/fleet-documents">
+    Nahrajte pojištění, registraci a doklady o dodržování předpisů pro každé vozidlo.
+  </Card>
+</CardGroup>

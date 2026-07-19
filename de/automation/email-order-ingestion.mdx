@@ -4,52 +4,85 @@ description: "Lassen Sie Druma eingehende E-Mails von Kunden und Brokern lesen u
 icon: "envelope-open-text"
 ---
 
-## Übersicht
+Statt per E-Mail eingehende Aufträge manuell abzutippen, kann Druma sie für Sie lesen. Kunden und Broker senden ihre Frachtbestätigungen, Ladelisten oder Freitext-Anweisungen an Ihre eindeutige Druma-Posteingangsadresse, und die KI extrahiert die Kerndaten in einen Auftragsentwurf, den Ihr Planer prüft und bestätigt.
 
-Die E-Mail-Auftragserfassung verwendet KI, um eingehende E-Mails von Kunden und Frachtvermittlern zu lesen und automatisch Auftrags-Entwürfe in Druma zu erstellen. Ihre Planer überprüfen und bestätigen diese Entwürfe, anstatt Daten manuell einzugeben.
+## Ihre Druma-Posteingangsadresse
 
----
+Jedes Unternehmen erhält eine eindeutige Posteingangs-E-Mail-Adresse. Sie finden Ihre auf der **Aufträge**-Seite — klicken Sie in der Symbolleiste auf **Auftragsposteingang**, um sie anzuzeigen (mit Kopieren-Schaltfläche). Sie wird nicht über eine Einstellungsseite konfiguriert.
 
-## Einrichten
-
-<Steps>
-  <Step title="Zu Einstellungen → Unternehmen gehen">
-    Scrollen Sie zum Abschnitt **E-Mail-Auftragserfassung**.
-  </Step>
-  <Step title="Posteingang aktivieren">
-    Schalten Sie **E-Mail-Auftragserfassung aktivieren** ein. Druma generiert eine eindeutige E-Mail-Adresse für Ihr Unternehmen.
-  </Step>
-  <Step title="Absender-Whitelist konfigurieren">
-    Fügen Sie die E-Mail-Adressen oder Domains hinzu, von denen Sie Auftragsanfragen erwarten.
-  </Step>
-  <Step title="Adresse mit Kunden teilen">
-    Teilen Sie die generierte E-Mail-Adresse mit Ihren Kunden und Brokern als Auftragseinreichungsadresse.
-  </Step>
-</Steps>
-
----
-
-## Wie es funktioniert
-
-1. Ein Kunde sendet eine E-Mail mit Frachtdetails an Ihre Druma-Adresse.
-2. Druma KI (Gemini) liest die E-Mail und extrahiert: Abhol-/Lieferadressen, Daten, Warendetails, Referenznummern.
-3. Ein Auftrags-**Entwurf** wird automatisch erstellt.
-4. Der Planer erhält eine Benachrichtigung und überprüft den Entwurf.
-5. Der Planer bestätigt oder bearbeitet den Entwurf.
-
----
+Teilen Sie diese Adresse mit den Kunden und Brokern, von denen Sie Aufträge erhalten möchten. Sie können sie auch als Weiterleitungsziel aus Ihrem bestehenden Logistik-Postfach einrichten, wenn Sie extern lieber eine einzige Hauptadresse behalten möchten.
 
 ## Was die KI extrahiert
 
-- Abhol- und Lieferadressen
-- Abhol- und Lieferdaten und Zeitfenster
-- Warenart, Gewicht und Volumen
-- Kundennummer oder Referenz
+Trifft eine E-Mail ein, liest Druma sowohl den E-Mail-Text als auch alle Anhänge. Es versucht zu extrahieren:
+
+- Abholadresse (Straße, Stadt, Land, Postleitzahl)
+- Lieferadresse
+- Angefordertes Abholdatum und Zeitfenster
+- Angefordertes Lieferdatum
+- Ladungsbeschreibung (Warenart, Gewicht, Abmessungen, Paletten)
+- Referenznummern (Kunden-Bestellnummer, Broker-Referenz)
+- Preis oder Tarif, falls erwähnt
+
+Unterstützte Anhangsformate:
+
+- **PDF** — Frachtbestätigungen, CMR-Kopien, Ladeaufträge (textbasiert extrahiert, mit Vision-Fallback für gescannte/bildbasierte PDFs)
+- **DOCX** (Word) — als Word-Dokument gesendete Frachtbestätigungen
+- **Klartext (.txt)** und **reiner E-Mail-Text** — unstrukturierte Text-E-Mails von Brokern
+- **Bilder** (JPEG, PNG, WebP, HEIC/HEIF) — ein Foto eines gedruckten Auftrags oder einer Frachtbestätigung wird direkt an die KI gesendet
+
+Es gibt derzeit kein Excel-/CSV-Parsing — ein Tabellenanhang wird von der Extraktionspipeline nicht gelesen.
+
+## Auftragsentwürfe überprüfen
+
+Extrahierte Aufträge landen mit Status **Entwurf** in Ihrer **Aufträge**-Liste, nicht direkt als aktive Aufträge. Das ist Absicht — Sie müssen jeden Entwurf prüfen, bevor er in Ihr System gelangt. E-Mails, die nicht automatisch extrahiert werden konnten (geringe Zuverlässigkeit, unbekannter Absender oder ein Parsing-Fehler), erstellen gar keinen Entwurf — sie warten stattdessen in einem einklappbaren Banner **„N E-Mails warten auf Extraktion"** oben auf der Aufträge-Seite.
+
+<Steps>
+  <Step title="Die Aufträge-Seite öffnen">
+    Auftragsentwürfe erscheinen in Ihrer normalen Auftragsliste mit einem „Entwurf"-Abzeichen und einem KI-Zuverlässigkeitswert. E-Mails, die noch auf Extraktion warten, erscheinen separat im Banner für ausstehende Extraktion, wo Sie auf **Extrahieren** klicken können, um es erneut zu versuchen, oder **Verwerfen**, um sie zu entfernen.
+  </Step>
+  <Step title="Jedes Feld prüfen">
+    Klicken Sie auf den Entwurf, um ihn zu öffnen. Überprüfen Sie Abhol- und Lieferadresse auf der Karte, bestätigen Sie, dass die Daten stimmig sind, und prüfen Sie die Ladungsdetails. Korrigieren Sie, was die KI falsch gelesen oder übersehen hat.
+  </Step>
+  <Step title="LKW und Fahrer zuweisen">
+    Verwenden Sie das Zuweisungspanel rechts, um ein verfügbares Fahrzeug und einen Fahrer für diese Ladung auszuwählen.
+  </Step>
+  <Step title="Auftrag bestätigen">
+    Klicken Sie auf **Auftrag bestätigen**. Der Entwurf wechselt in Ihre aktiven Aufträge, und der Fahrer erhält eine Benachrichtigung.
+  </Step>
+</Steps>
+
+<Warning>
+Die KI-Extraktion ist nicht zu 100 % genau. Adressen in ungewöhnlichen Formaten, gescannte PDFs mit geringer Bildqualität und E-Mails mit gemischten Sprachen erhöhen alle die Fehlerwahrscheinlichkeit. Überprüfen Sie extrahierte Felder immer vor der Bestätigung.
+</Warning>
+
+## Absender-Whitelist
+
+Druma kann einschränken, welche Absender Auftragsentwürfe erstellen dürfen, aber es gibt derzeit **keine In-App-Seite**, um diese Positivliste selbst zu verwalten. Ist für Ihr Unternehmen keine Positivliste konfiguriert, verarbeitet Druma E-Mails von **jedem** Absender, der Ihre Posteingangsadresse erreicht. Möchten Sie eingehende Aufträge auf bestimmte Kunden-/Broker-Domains beschränken, kontaktieren Sie support@druma.io, um Einträge hinzufügen zu lassen.
 
 <Note>
-Immer den erstellten Entwurf überprüfen, bevor er bestätigt wird. Die KI ist genau, aber nicht unfehlbar.
+Ist eine Positivliste konfiguriert und trifft eine E-Mail von einem nicht gelisteten Absender ein, wird diese E-Mail im Banner für ausstehende Extraktion eingereiht (nicht automatisch verarbeitet), und Ihre Planer werden benachrichtigt, statt die E-Mail stillschweigend zu verwerfen.
 </Note>
 
-<Card title="Auftragslebenszyklus" icon="circle-dot" href="/en/planner/order-lifecycle">
-  Verstehen Sie, wie Auftrags-Entwürfe zu bestätigten Aufträgen werden.
-</Card>
+## Tipps für bessere Extraktion
+
+- Bitten Sie Ihre Broker, wo möglich strukturierte PDFs statt gescannter Bilder zu senden
+- Frachtbestätigungen mit klaren Abschnittsüberschriften (Abholung, Lieferung, Ladung) werden am genauesten extrahiert
+- Extrahiert das Format eines bestimmten Brokers konsequent schlecht, kontaktieren Sie support@druma.io — formatspezifische Extraktionsregeln können hinzugefügt werden
+
+## Häufige Fragen
+
+**Was, wenn eine E-Mail mehrere Ladungen enthält?** Enthält eine E-Mail zwei oder mehr PDF-/DOCX-Auftragsanhänge, extrahiert Druma jeden unabhängig und erstellt einen separaten Entwurf pro Anhang, der als echter Transportauftrag bestätigt wird (Begleitdokumente wie Versicherungsnachweise werden stattdessen dem ersten Entwurf angehängt, statt eigene Entwürfe zu erzeugen). Dies gilt nur für **mehrere Dokumentanhänge** — eine einzelne Tabelle mit mehreren Ladungen wird nicht in mehrere Entwürfe aufgeteilt, da Tabellen-Parsing nicht unterstützt wird.
+
+**Kann ich die Extraktion manuell erneut auslösen?** Nur für eine E-Mail, die noch im Banner für ausstehende Extraktion wartet — klicken Sie daneben auf **Extrahieren**. Für einen bereits erstellten Entwurf gibt es keine Neu-Extraktions-Aktion.
+
+**Was passiert mit der Original-E-Mail?** Sie wird gespeichert und mit dem Auftragsentwurf verknüpft. Sie können sie jederzeit über die Auftragsdetailseite einsehen.
+
+<CardGroup cols={2}>
+  <Card title="Aufträge manuell erstellen" icon="plus" href="/de/planner/creating-orders">
+    Erfahren Sie, wie Sie Aufträge direkt in Druma erstellen, wenn Sie keine E-Mail-Erfassung nutzen.
+  </Card>
+  <Card title="Mit Brokern arbeiten" icon="handshake" href="/de/planner/brokers">
+    Verwalten Sie Broker-Beziehungen, Frachtbestätigungen und Provisionsverfolgung.
+  </Card>
+</CardGroup>

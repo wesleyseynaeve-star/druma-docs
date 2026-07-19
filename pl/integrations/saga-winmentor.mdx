@@ -1,10 +1,10 @@
 ---
 title: "Integracja SAGA C i WinMENTOR"
-description: "Eksportuj faktury Druma do SAGA C lub WinMENTOR Classic przy użyciu plików DBF, lub przesyłaj je automatycznie do WinMENTOR Enterprise przez REST API."
+description: "Eksportuj faktury Druma do SAGA C lub WinMENTOR Classic jako pakiety plików, które importujesz do swojego oprogramowania księgowego."
 icon: "calculator"
 ---
 
-Większość rumuńskich firm transportowych prowadzi księgowość w SAGA C lub WinMENTOR. Druma integruje się z oboma, umożliwiając przeniesienie faktur z Druma do oprogramowania księgowego bez ręcznego ponownego wprowadzania danych.
+Większość rumuńskich firm transportowych prowadzi księgowość w SAGA C lub WinMENTOR Classic. Druma integruje się z oboma, umożliwiając przeniesienie faktur z Druma do oprogramowania księgowego bez ręcznego ponownego wprowadzania danych.
 
 ## SAGA C
 
@@ -20,9 +20,13 @@ SAGA C to najpowszechniej używane oprogramowanie księgowe dla rumuńskich MŚP
     Wybierz okres do eksportu — zazwyczaj bieżący lub poprzedni miesiąc. Wszystkie wystawione faktury w tym okresie zostaną uwzględnione.
   </Step>
   <Step title="Pobierz plik ZIP">
-    Kliknij **Pobierz ZIP**. Plik zawiera dwa pliki DBF:
-    - `Clienti.dbf` — dane główne klientów (nazwa, CUI, adres, kontakt)
-    - `Facturi.dbf` — rekordy faktur z pozycjami i podziałem VAT
+    Kliknij **Pobierz ZIP**. W zależności od zawartości wybranego okresu, plik zawiera:
+    - `CLI_<data>.dbf` — dane główne klientów
+    - `ART_<data>.dbf` — pozycja usługi transportowej (dołączona domyślnie tylko przy pierwszym eksporcie; potem automatycznie wyłączana, ponieważ SAGA potrzebuje jej tylko raz)
+    - `IE_<data>_<data>.dbf` — faktury sprzedaży (Ieșiri) z podziałem VAT
+    - `INT_<data>.dbf` — faktury zakupu (Intrări) dla zleceń podzleconych, obecne tylko jeśli okres jakieś zawiera
+    - `NC_<data>_<data>.xml` — płatności (Încasări), obecne tylko jeśli okres jakieś zawiera
+    - `README.txt` — instrukcje importu po rumuńsku
   </Step>
 </Steps>
 
@@ -33,13 +37,13 @@ SAGA C to najpowszechniej używane oprogramowanie księgowe dla rumuńskich MŚP
     Zaloguj się do SAGA C dla swojej firmy.
   </Step>
   <Step title="Przejdź do importu">
-    Przejdź do **Fișier → Import**.
+    Przejdź do **Utilitare → Import date**.
   </Step>
-  <Step title="Wybierz plik DBF">
-    Przejdź do rozpakowanych plików DBF. Najpierw importuj `Clienti.dbf`, aby upewnić się, że rekordy klientów istnieją przed importem faktur. Następnie importuj `Facturi.dbf`.
+  <Step title="Importuj pliki w kolejności">
+    Zaimportuj najpierw `CLI_*.dbf` (Clienți) — potrzebne tylko przy pierwszym eksporcie lub gdy pojawiają się nowi klienci. Następnie `ART_*.dbf` (Articole), jeśli obecny, potem `IE_*.dbf` (Ieșiri/faktury), potem `INT_*.dbf` (Intrări/faktury zakupu), jeśli obecny, następnie `NC_*.xml` (Încasări/płatności), jeśli obecny.
   </Step>
-  <Step title="Zweryfikuj i potwierdź">
-    SAGA C pokazuje podgląd rekordów do zaimportowania. Sprawdź, czy sumy odpowiadają eksportowi z Druma. Kliknij **Confirmare**, aby zakończyć import.
+  <Step title="Zweryfikuj">
+    Sprawdź zaimportowane dokumenty w **Documente → Ieșiri** (faktury) i **Documente → Încasări** (płatności).
   </Step>
 </Steps>
 
@@ -49,57 +53,38 @@ W przypadku faktur wystawionych w walutach innych niż RON, Druma automatycznie 
 
 ## WinMENTOR Classic
 
-WinMENTOR Classic używa tego samego procesu importu opartego na DBF co SAGA C, ale mapowanie pól jest inne. Druma obsługuje to automatycznie.
+WinMENTOR Classic używa innego formatu niż SAGA C: pliki `.txt` rozdzielane znakiem `|`, a nie DBF. Wybierz **WinMENTOR Classic** z listy rozwijanej eksportu zamiast SAGA C.
 
-### Eksport dla WinMENTOR Classic
+ZIP zawiera:
+- `Iesiri_<data>_<data>.txt` — faktury sprzedaży
+- `Clienti_<data>.txt` — dane główne klientów dotkniętych tymi fakturami
+- `Articole_<data>.txt` — pozycja usługi transportowej
+- `Incasari_<data>_<data>.txt` — płatności, obecne tylko jeśli okres jakieś zawiera
+- `README.txt` — instrukcje importu po rumuńsku
 
-Postępuj tak samo jak dla SAGA C, ale w kroku 2 wybierz **WinMENTOR Classic** z listy rozwijanej eksportu zamiast SAGA C. Plik ZIP będzie zawierał pliki DBF sformatowane dla oczekiwanej struktury WinMENTOR. Proces importu w WinMENTOR Classic przebiega tak samo jak w SAGA C (Fișier → Import → wybierz DBF → zweryfikuj → potwierdź).
-
-## WinMENTOR Enterprise
-
-WinMENTOR Enterprise używa REST API zamiast importu plików, co umożliwia automatyczne przesyłanie faktur bez ręcznych eksportów.
-
-### Konfiguracja integracji API
-
-<Steps>
-  <Step title="Znajdź URL API WinMENTOR Enterprise">
-    W WinMENTOR Enterprise przejdź do Administracja → Ustawienia API. Skopiuj URL API i wygeneruj dane uwierzytelniające.
-  </Step>
-  <Step title="Wprowadź dane uwierzytelniające w Druma">
-    Przejdź do **Ustawienia → Integracje → WinMENTOR Enterprise**. Wprowadź URL API, nazwę użytkownika i hasło.
-  </Step>
-  <Step title="Przetestuj połączenie">
-    Kliknij **Testuj połączenie**. Druma zweryfikuje, że może uwierzytelnić się i połączyć z instancją WinMENTOR Enterprise.
-  </Step>
-</Steps>
-
-### Jak działa automatyczne przesyłanie
-
-Po aktywowaniu integracji API każda faktura wygenerowana w Druma jest automatycznie przesyłana do WinMENTOR Enterprise jako wersja robocza faktury. Dzieje się to w ciągu kilku sekund od wygenerowania faktury — nie jest potrzebny ręczny eksport.
-
-Przeglądasz i księgujesz fakturę w WinMENTOR Enterprise jako część normalnego przepływu pracy księgowej.
+Aby zaimportować: w WinMENTOR przejdź do **Utilitare → Import/Export → Import din fișier text**, wybierz każdy plik po kolei i potwierdź, że separatorem jest `|`. Zweryfikuj zaimportowane dokumenty pod **Documente → Vânzări**.
 
 <Note>
-Jeśli przesyłanie nie powiedzie się (na przykład dlatego, że WinMENTOR Enterprise jest offline na konserwację), Druma kolejkuje fakturę i automatycznie ponawia próbę. Nieudane przesyłania są widoczne w **Ustawienia → Integracje → WinMENTOR Enterprise → Dziennik przesyłań**.
+Obecnie nie ma bezpośredniej integracji REST API dla WinMENTOR Enterprise ani żadnego innego pakietu księgowego — SAGA C i WinMENTOR Classic to jedyne dwa obsługiwane formaty, oba oparte na plikach.
 </Note>
 
-## Automatyczny nocny eksport (SAGA C i WinMENTOR Classic)
+## Automatyczny miesięczny eksport (SAGA C)
 
-Jeśli chcesz mieć świeży plik eksportu dostępny każdego ranka bez logowania w celu ręcznego uruchomienia:
+Zamiast ręcznie eksportować każdy okres, możesz zlecić Druma automatyczne wysłanie eksportu SAGA e-mailem do Twojego księgowego:
 
-**Ustawienia → Integracje → SAGA C → Włącz nocny eksport**
+**Ustawienia → Automatyzacje i funkcje → Konfiguracja eksportu SAGA**
 
-Po włączeniu Druma uruchamia eksport codziennie o **06:00 UTC** i udostępnia plik w **Faktury → Eksport → Historia eksportów**. Każdego ranka znajdziesz plik z poprzedniego dnia gotowy do pobrania i importu do oprogramowania księgowego.
+Skonfiguruj **e-mail księgowego** (i opcjonalne DW) oraz **dzień miesiąca** (1–28), w którym eksport ma się uruchamiać. Zaplanowane zadanie sprawdza codziennie i w skonfigurowanym dniu eksportuje **poprzedni pełny miesiąc** i wysyła ZIP e-mailem do księgowego wraz z podsumowaniem liczby faktur/zakupów/płatności i wszelkimi ostrzeżeniami walidacji.
 
-<Warning>
-Nocny eksport obejmuje wszystkie faktury wystawione do północy UTC. Faktury wygenerowane po północy pojawią się w pliku eksportu następnej nocy. Jeśli potrzebujesz eksportu tego samego dnia, użyj ręcznego procesu eksportu.
-</Warning>
+<Note>
+E-mail zawiera link do pobrania ZIP, który **wygasa po 7 dniach**. Nie ma listy "Historia eksportów" w aplikacji — plik każdego miesiąca jest dostępny wyłącznie przez ten wysłany e-mailem link (lub przez ponowne uruchomienie ręcznego eksportu dla tego samego okresu z Faktury → Eksport).
+</Note>
 
 <CardGroup cols={2}>
   <Card title="Generowanie faktur" icon="file-invoice" href="/pl/invoicing/generating-invoices">
-    Jak generować faktury z dostarczonych zleceń w Druma.
+    Jak generować faktury z ukończonych zleceń w Druma.
   </Card>
-  <Card title="e-Factura / Składanie do ANAF" icon="building-columns" href="/pl/invoicing/efactura-anaf">
+  <Card title="ANAF e-Factura" icon="building-columns" href="/pl/invoicing/efactura-anaf">
     Elektroniczne składanie faktur do ANAF przez system e-Factura.
   </Card>
 </CardGroup>

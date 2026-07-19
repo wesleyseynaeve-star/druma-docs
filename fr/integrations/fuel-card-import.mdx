@@ -1,59 +1,103 @@
 ---
 title: "Import de cartes carburant"
-description: "Comment importer les transactions de cartes carburant DKV, UTA, AS24, Shell et SmartDiesel dans Druma pour le suivi des coûts."
+description: "Importez les données de transaction carburant depuis DKV, UTA, AS24, Shell et d'autres grands fournisseurs européens de cartes carburant pour suivre les coûts réels de carburant par véhicule."
 icon: "gas-pump"
 ---
 
-## Vue d'ensemble
+Le carburant est généralement le plus gros coût variable du fret routier. Druma vous permet d'importer les données de transaction des principaux fournisseurs de cartes carburant, en liant chaque plein au bon véhicule afin que vos rapports de coûts reflètent les dépenses de carburant réelles plutôt que des estimations.
 
-Druma importe les données de transactions de cartes carburant depuis les principaux fournisseurs. Une fois importées, les transactions sont automatiquement liées aux véhicules par plaque d'immatriculation et alimentent les rapports de coûts de carburant.
-
----
+<Frame caption="Flotte → Carburant — la correspondance de plaque est normalisée, pas exacte.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Page Carburant de la flotte" />
+</Frame>
 
 ## Fournisseurs pris en charge
 
-| Fournisseur | Format d'export |
-|---|---|
-| **DKV** | CSV depuis le portail DKV |
-| **UTA** | CSV depuis le portail UTA |
-| **AS24** | CSV depuis le portail AS24 |
-| **Shell Card** | CSV depuis le portail Shell Fleet |
-| **SmartDiesel** | CSV depuis le portail SmartDiesel |
+Druma détecte automatiquement le fournisseur à partir des en-têtes de colonnes et du nom du fichier. Fournisseurs pris en charge :
 
----
+- **DKV**
+- **UTA**
+- **AS24**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
 
-## Processus d'import
+Tout autre fichier CSV ou XLSX avec des noms de colonnes standard (date, montant, litres, carte/plaque) est également accepté, même sans correspondance de fournisseur reconnu. Si vous utilisez plusieurs cartes sur votre flotte, vous pouvez importer depuis chaque fournisseur séparément.
+
+## Comment importer
 
 <Steps>
-  <Step title="Exportez depuis votre portail fournisseur">
-    Connectez-vous à votre portail DKV, UTA, AS24, Shell ou SmartDiesel et exportez les transactions de la période souhaitée en CSV.
+  <Step title="Téléchargez votre fichier depuis le fournisseur">
+    Connectez-vous au portail en ligne de votre fournisseur de carte carburant et exportez l'historique des transactions en CSV ou XLSX. Le portail de chaque fournisseur diffère, mais cette option se trouve généralement sous Rapports ou Relevés.
   </Step>
-  <Step title="Accédez à Paramètres → Intégrations → Import de cartes carburant">
-    Cliquez sur la carte Import de cartes carburant.
+  <Step title="Ouvrez l'import carburant de Druma">
+    Dans Druma, accédez à **Flotte → Carburant** et cliquez sur **Importer carburant**.
   </Step>
-  <Step title="Sélectionnez votre fournisseur">
-    Choisissez votre fournisseur dans la liste déroulante pour que Druma sache quel format CSV attendre.
+  <Step title="Téléversez le fichier">
+    Déposez ou sélectionnez le fichier CSV/XLSX (max 5 Mo). Druma détecte automatiquement le fournisseur à partir du fichier et affiche un aperçu des lignes analysées — y compris toute ligne de péage qu'il trouve mêlée au même relevé.
   </Step>
-  <Step title="Téléchargez le CSV">
-    Cliquez sur **Télécharger CSV**, sélectionnez votre fichier et cliquez sur **Importer**.
-  </Step>
-  <Step title="Examinez les transactions">
-    Druma affiche un résumé des transactions importées et celles non correspondantes (plaque non trouvée).
+  <Step title="Vérifiez et confirmez">
+    Vérifiez l'aperçu — les lignes sans véhicule correspondant sont signalées et exclues de l'import. Cliquez sur **Importer N lignes** (affichant le nombre réel de lignes) pour confirmer.
   </Step>
 </Steps>
 
----
+## Ce qui est importé
 
-## Transactions non correspondantes
+Pour chaque transaction, Druma extrait :
 
-Si une transaction a une plaque d'immatriculation qui ne correspond à aucun véhicule de votre flotte, elle apparaît dans la liste **Non correspondantes**. Vous pouvez :
-- L'affecter manuellement à un véhicule
-- L'ignorer si c'est une erreur ou une transaction non pertinente
+| Champ | Source |
+|---|---|
+| Date (sans composante horaire) | Colonne date de transaction du fichier |
+| Véhicule | Rapproché par numéro de carte carburant, puis par plaque d'immatriculation |
+| Nom de la station | Champ lieu du fichier |
+| Litres remplis | Champ quantité du fichier |
+| Montant | Champ valeur du fichier — supposé en EUR sauf si une colonne devise est présente |
+| ID de transaction | Référence de transaction unique du fournisseur, utilisée pour la détection de doublons |
+
+Les pleins saisis manuellement en une seule entrée (via **Ajouter un plein**) n'acceptent qu'un montant en EUR — il n'y a pas de sélecteur de devise sur ce formulaire. Les montants en RON ne sont convertis automatiquement que via le chemin séparé d'ingestion automatique par email/dossier décrit ci-dessous.
+
+## Rapprocher les transactions aux véhicules
+
+Druma rapproche chaque transaction à un véhicule, d'abord par **numéro de carte carburant**, puis par **plaque d'immatriculation**. Le numéro de carte et la plaque sont tous deux normalisés avant comparaison — mis en majuscules, avec tous les espaces, tirets et autres caractères non alphanumériques supprimés — afin que « B 123 ABC » et « B123ABC » correspondent au même véhicule.
+
+Si une transaction ne correspond toujours à aucun véhicule, elle est signalée comme **non rapprochée** dans l'aperçu et exclue de l'import. Raisons courantes :
+
+- Le véhicule a été récemment ajouté et n'est pas encore dans Druma
+- Ni le numéro de carte ni la plaque de la transaction ne correspondent à un enregistrement de flotte
+- Un chauffeur a utilisé sa carte dans un véhicule loué ou sous-traité
+
+## Détection de doublons
+
+Si vous importez accidentellement le même fichier deux fois, Druma détecte les doublons à l'aide d'une clé de déduplication construite à partir de la date de transaction, du montant, des litres, de la carte, de la plaque et de l'ID de transaction du fournisseur — les doublons sont ignorés automatiquement au niveau de la base de données. Le message de succès ne rapporte que le nombre de pleins (et de lignes de péage) importés ; il ne rapporte pas de compte séparé des doublons ignorés.
 
 <Note>
-Vérifiez régulièrement la liste des non correspondants — elle détecte souvent les fraudes à la carte carburant ou les entrées de plaque incorrectes.
+Importez toujours le relevé complet plutôt qu'un export partiel. Les imports partiels peuvent créer des lacunes dans vos données de coût carburant qui affectent les calculs de rentabilité par ligne.
 </Note>
 
-<Card title="Documents de flotte" icon="file-check" href="/fr/fleet-compliance/fleet-documents">
-  Suivez d'autres coûts de véhicule et documents dans Druma.
-</Card>
+## Import automatique par email
+
+En plus du téléversement manuel, Druma peut ingérer automatiquement les relevés carburant depuis une adresse email entrante (avec un balayage programmé en repli), en réutilisant le même analyseur que la fenêtre d'import manuel. Contactez le support Druma pour configurer cela pour votre compte.
+
+## Où apparaissent les données carburant importées
+
+Après l'import, les transactions apparaissent dans :
+
+- **Flotte → Carburant** — historique complet des transactions sur votre flotte, filtrable et consultable par plaque, fournisseur et lieu
+- **Rapport de rentabilité par ligne** — les coûts carburant importés remplacent le calcul carburant estimé pour les commandes où des données carburant réelles sont disponibles
+
+## Pourquoi l'import CSV plutôt qu'une API en direct ?
+
+Les fournisseurs de cartes carburant en Europe ont un accès API incohérent et souvent restreint. Certains ne fournissent des API qu'aux clients entreprise, d'autres ont des portails spécifiques par pays qui n'offrent pas d'accès API, et les formats d'API varient considérablement. L'export CSV est disponible universellement chez tous les fournisseurs et tous les types de compte, ce qui en fait l'approche la plus fiable pour un opérateur roumain à flotte mixte (ADR-016).
+
+<CardGroup cols={2}>
+  <Card title="Rapport de rentabilité par ligne" icon="route" href="/fr/reports/lane-profitability">
+    Comment les coûts carburant importés alimentent les calculs de marge par itinéraire.
+  </Card>
+  <Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+    Gestion des fiches véhicule, y compris les plaques d'immatriculation utilisées pour le rapprochement des transactions carburant.
+  </Card>
+</CardGroup>

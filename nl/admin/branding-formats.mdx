@@ -1,10 +1,12 @@
 ---
 title: "Huisstijl & Documentformaten"
-description: "Pas uw bedrijfslogo, huisstijlkleuren en het nummeringsformaat voor facturen, creditnota's en orders aan op alle door Druma gegenereerde documenten."
+description: "Pas uw huisstijlkleuren en het nummeringspatroon voor facturen, orders en gemarkeerde rijen aan binnen Druma."
 icon: "palette"
 ---
 
-De instellingen voor **Huisstijl & Formaten** bepalen hoe uw bedrijf verschijnt op elk door Druma gegenereerd document: factuur-PDF's, creditnota-PDF's en e-mailkopteksten. Ze definiëren ook het nummeringspatroon voor facturen, creditnota's en orderreferenties.
+De instellingen **Huisstijl & Formaten** bepalen hoe uw bedrijf verschijnt op gegenereerde documenten en hoe factuur- en orderreferentienummers worden opgebouwd.
+
+Deze instellingen zijn bedrijfsspecifiek. Beheert u meerdere bedrijven in Druma, dan heeft elk bedrijf zijn eigen huisstijl- en formaatconfiguratie.
 
 **Wie kan bewerken:** Alleen Admin- en Bedrijfsbeheerder-rollen.
 
@@ -12,85 +14,117 @@ De instellingen voor **Huisstijl & Formaten** bepalen hoe uw bedrijf verschijnt 
 
 ## De instellingen openen
 
-Ga naar **Instellingen → Huisstijl & Formaten**. De pagina heeft drie tabbladen: **Huisstijl**, **Factuurformaat** en **Orderformaat**.
+Ga naar **Instellingen → Huisstijl & Formaten**. De pagina heeft vier tabbladen: **Huisstijl**, **Factuurformaat**, **Orderformaat** en **Rijopmaak**.
 
 ---
 
 ## Tabblad Huisstijl
 
-### Logo
-
-Klik op **Logo uploaden** om een afbeeldingsbestand te selecteren. Druma accepteert PNG-, JPG- en SVG-formaten. Gebruik voor beste resultaten een logo met transparante achtergrond (PNG of SVG) met een minimale breedte van 300 px.
+Bepaalt de twee huisstijlkleuren gebruikt op gegenereerde PDF's en e-mailsjablonen.
 
 ### Primaire kleur
 
-Klik op de **Primaire kleur**-kleurenkiezer en voer uw huisstijlkleur in. Deze kleur wordt toegepast op de koptekstbalk en accentelementen op factuur-PDF's.
+Gebruikt voor documentranden, labels en totalen op factuur-PDF's en e-mailsjablonen.
 
 ### Accentkleur
 
-De **Accentkleur** wordt gebruikt voor secundaire elementen zoals tabelkoppenrijen en gemarkeerde randen op PDF's.
+Gebruikt voor tabelkoppen en hoofdtekst op dezelfde documenten.
+
+Elke kleur heeft een hexcode-veld plus een kleurenkiezer, met een live voorvertoning die beide kleuren naast elkaar toont.
 
 ### Opslaan
 
-Klik op **Huisstijl opslaan**. De nieuwe huisstijl treedt onmiddellijk in werking voor alle daarna gegenereerde documenten.
+Klik op **Wijzigingen opslaan**, of **Terugzetten naar standaarden** om de ingebouwde kleuren te herstellen.
 
 <Note>
-Huisstijlwijzigingen zijn alleen van toepassing op **nieuwe** documenten. Al gegenereerde en verstuurde facturen worden niet met terugwerkende kracht bijgewerkt.
+Uw bedrijfs**logo** wordt niet op deze pagina geconfigureerd — dat wordt geüpload onder **Instellingen → Bedrijf**. Druma accepteert PNG, JPEG, SVG of WebP tot 2 MB; er is geen minimale breedte of vereiste voor een transparante achtergrond.
 </Note>
 
 ---
 
 ## Tabblad Factuurformaat
 
+Bepaalt het factuurnummerpatroon, de titel van de factuurkoptekst, betalingsachterstandsrente, betalingsinstructies, algemene voorwaarden, voettekst en welke optionele secties op de factuur-PDF verschijnen.
+
 ### Formaattokens
 
-Nummerformaten zijn opgebouwd uit een korte sjabloonstring die vaste tekst combineert met dynamische tokens tussen accolades.
+Nummerpatronen zijn opgebouwd uit een sjabloonstring die vaste tekst combineert met dynamische tokens tussen accolades:
 
 | Token | Wat het invoegt |
 |---|---|
-| `{PREFIX}` | Een vaste tekstprefix die u definieert (bijv. `DR`, `INV`) |
+| `{PREFIX}` | De prefix die u definieert (bijv. `INV`, `ORD`, uw eigen afkorting) |
 | `{YYYY}` | Viercijferig jaar (bijv. `2026`) |
 | `{YY}` | Tweecijferig jaar (bijv. `26`) |
 | `{MM}` | Tweecijferige maand (bijv. `04`) |
-| `{NNN}` | Driecijferig volgnummer, met voorloopnullen (bijv. `007`) |
-| `{NNNN}` | Viercijferig volgnummer, met voorloopnullen (bijv. `0007`) |
+| `{DD}` | Tweecijferige dag (bijv. `07`) |
+| `{YYMMDD}` | Gecombineerd jaar, maand en dag (bijv. `260407`) |
+| `{SEQ3}` | Volgnummer, opgevuld tot 3 cijfers (bijv. `042`) |
+| `{SEQ4}` | Volgnummer, opgevuld tot 4 cijfers (bijv. `0042`) |
+| `{SEQ5}` | Volgnummer, opgevuld tot 5 cijfers |
+| `{SEQ6}` | Volgnummer, opgevuld tot 6 cijfers |
+
+Er bestaat geen `{NNN}`/`{NNNN}`-token — gebruik één van de `{SEQ3}`–`{SEQ6}`-tokens voor een opgevuld volgnummer. Tokens zijn vrij te combineren met scheidingstekens zoals `-` of `/`.
+
+De reeks reset zodra een datumtoken in het patroon (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` of `{YYYY}`) van waarde verandert — een patroon met `{YYMMDD}` reset dus **dagelijks**, niet jaarlijks. Een patroon met alleen `{YYYY}` reset zoals verwacht eenmaal per jaar.
 
 ### Factuurnummerformaat
 
-Voer uw gewenste sjabloon in het veld **Factuurnummerformaat** in. Een **live voorvertoning** wordt rechts bijgewerkt.
+Voer uw gewenste sjabloon in bij **Factuurnummerformaat**. Een live voorvertoning eronder werkt bij terwijl u typt, met een voorbeeldnummer op basis van de datum van vandaag.
 
-**Standaardformaat:** `DR-{YYYY}-{NNN}` → produceert `DR-2026-001`, `DR-2026-002`, …
+**Standaard:** factuurprefix `INV`, patroon `{PREFIX}-{YYMMDD}-{SEQ3}` → geeft bijvoorbeeld `INV-260407-042`.
 
-### Creditnotanummerformaat
+| Sjabloon | Voorbeelduitvoer |
+|---|---|
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
 
-Creditnota's gebruiken een aparte teller en een apart formaatsjabloon.
-
-**Standaardformaat:** `CN-{YYYY}-{NNN}` → produceert `CN-2026-001`, `CN-2026-002`, …
-
-### Terugzetten naar standaarden
-
-Klik op **Terugzetten naar standaarden** om beide velden te herstellen.
+<Note>
+Creditnota's gebruiken een eigen nummerreeks (standaardprefix `CN`) en eigen teller, maar hebben momenteel geen bewerkbaar patroonveld op deze pagina.
+</Note>
 
 ### Opslaan
 
-Klik op **Factuurformaat opslaan**. Het nieuwe formaat is van toepassing op de volgende aangemakte factuur of creditnota.
+Klik op **Wijzigingen opslaan**. Het nieuwe formaat geldt voor de volgende factuur aangemaakt na het opslaan — bestaande facturen behouden hun referentienummer.
 
 ---
 
 ## Tabblad Orderformaat
 
+Bepaalt het nummeringspatroon voor orderreferentienummers — de identifier getoond op het planningsbord, het orderdetailpaneel en communicatie met chauffeurs of klanten.
+
 ### Ordernummerformaat
 
-Hetzelfde tokensysteem als voor facturen. Voer uw sjabloon in het veld **Ordernummerformaat** in.
+Hetzelfde tokensysteem als bij facturen. Voer een **Prefix** en een **Nummerpatroon** in; de live voorvertoning onder de velden werkt direct bij.
 
-**Standaardformaat:** `DR-{YYYY}-{NNN}` → produceert `DR-2026-001`, `DR-2026-002`, …
+**Standaard:** orderprefix `ORD`, patroon `{PREFIX}-{YYMMDD}-{SEQ3}` → geeft bijvoorbeeld `ORD-260407-042`.
+
+**Voorbeeld:** een vervoerder in België zou prefix `BE` met patroon `{PREFIX}-{YYYY}-{SEQ4}` kunnen gebruiken voor referenties als `BE-2026-0042`.
 
 ### Opslaan
 
-Klik op **Orderformaat opslaan**.
+Klik op **Wijzigingen opslaan**. Het nieuwe formaat geldt voor alle orders aangemaakt na het opslaan. Bestaande orders behouden hun oorspronkelijke referentienummer.
 
 ---
 
+## Tabblad Rijopmaak
+
+Hiermee kunt u tabelrijen doorheen Druma markeren op basis van eenvoudige voorwaarden — bijvoorbeeld een rij rood kleuren wanneer de marge onder een drempel zakt, of wanneer iets achterstallig is.
+
+Elke regel heeft een naam, een te evalueren veld (marge %, achterstallig, status, dagen sinds aanmaak), een voorwaarde (kleiner dan, hoogstens, groter dan, minstens, gelijk aan, niet gelijk aan), een vergelijkingswaarde en een markeringskleur. Klik op **Regel toevoegen** om er één aan te maken, en **Wijzigingen opslaan** om toe te passen.
+
+---
+
+## Gerelateerde pagina's
+
 <Card title="Integraties instellen" icon="plug" href="/nl/admin/integration-setup">
-  Koppel uw eCMR-provider (Druma native eCMR, of TransFollow als optionele terugvaloptie), SmartBill, brandstofkaartproviders en boekhoudsoftware.
+  Koppel uw eCMR-provider (Druma's native, in-house eCMR — TransFollow blijft alleen bestaan voor een klein aantal bedrijven met een bestaande legacyconfiguratie), brandstofkaartproviders en boekhoudsoftware.
+</Card>
+
+<Card title="Peppol e-facturering (België)" icon="file-check-2" href="/nl/integrations/peppol-invoicing">
+  Automatisch facturen routeren naar Belgische zakelijke klanten via het Peppol-netwerk.
+</Card>
+
+<Card title="Facturen versturen" icon="send" href="/en/finance/sending-invoices">
+  Hoe u verkoopfacturen genereert, verstuurt en opvolgt in Druma.
 </Card>

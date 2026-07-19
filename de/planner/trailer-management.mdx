@@ -4,11 +4,19 @@ description: "Verwalten Sie Anhänger, die nicht dauerhaft mit einer einzelnen Z
 icon: "trailer"
 ---
 
-## Benötigen Sie eine unabhängige Anhängerverwaltung?
+## Benötigen Sie unabhängige Anhängerverwaltung?
 
-**Sie benötigen eine unabhängige Anhängerverwaltung, wenn:** Ihre Zugmaschinen regelmäßig Anhänger wechseln — zum Beispiel legt ein Fahrer einen beladenen Anhänger an einem Hub ab und nimmt einen anderen auf.
+Bevor Sie eintauchen, lohnt es sich zu prüfen, ob diese Funktion für Ihren Betrieb gilt.
 
-**Sie brauchen sie wahrscheinlich nicht, wenn:** Jeder Ihrer LKW immer denselben Anhänger verwendet. Stellen Sie in diesem Fall einfach den Anhängertyp im Fahrzeugdatensatz ein.
+**Sie benötigen unabhängige Anhängerverwaltung, wenn:** Ihre Zugmaschinen regelmäßig Anhänger wechseln — z. B. lässt ein Fahrer einen beladenen Anhänger an einem Hub zurück und nimmt einen anderen auf, oder Anhänger wechseln je nach Auftrag zwischen Zugmaschinen.
+
+**Sie brauchen sie wahrscheinlich nicht, wenn:** Jeder Ihrer LKW immer denselben Anhänger nutzt und sie nie getrennt werden. Legen Sie in diesem Fall einfach den Anhängertyp im Fahrzeugdatensatz fest, fertig. Siehe [Fuhrparkverwaltung](/de/planner/fleet-management), wie das geht.
+
+Betreiben Sie einen Wechselanhänger- oder Mehranhänger-Betrieb, lesen Sie weiter.
+
+<Frame caption="Fuhrpark → Anhänger — 11 vorbelegte Typen, vollständig unternehmensweit konfigurierbar.">
+  <img src="/images/planner/trailer-management.png" alt="Anhängerverwaltungs-Seite" />
+</Frame>
 
 ---
 
@@ -16,41 +24,152 @@ icon: "trailer"
 
 Gehen Sie zu **Fuhrpark → Anhänger** und klicken Sie auf **Anhänger hinzufügen**.
 
-Pflichtfelder:
-- **Kennzeichen** — Das Kennzeichen des Anhängers
-- **Anhängertyp** — Plane, Kühlfahrzeug, Tieflader, Tankauflieger usw.
-- **Nutzlast (Tonnen)** — Maximales Ladegewicht
-- **Volumen (m³)** — Ladekapazität
-- **Lademaß (LDM)** — Lademeter
+Füllen Sie die Anhängerdetails aus:
+
+- **Kennzeichen oder ID** — Das Kennzeichen des Anhängers. Hat Ihr Anhänger kein Kennzeichen (manche internen Anhänger haben keines), nutzen Sie Ihren eigenen internen ID-Code.
+- **Anhängertyp** — Wählen Sie den zum Anhängeraufbau passenden Typ. Druma belegt jedes Unternehmen mit 11 Standardtypen vor:
+  - Tautliner
+  - Mega
+  - Koffer
+  - Kühlfahrzeug
+  - Pritsche
+  - Tankauflieger
+  - Tieflader
+  - Curtainsider
+  - Containerchassis
+  - Silo
+  - Tiefladeanhänger
+
+  Die Liste ist pro Unternehmen vollständig konfigurierbar — ein Admin kann Typen unter **Einstellungen → Anhängertypen** umbenennen, deaktivieren oder hinzufügen.
+- **Baujahr** — Das Baujahr des Anhängers. Nützlich für die Altersverfolgung und Ersatzplanung.
+- **Kapazität** — Die Nutzlastkapazität des Anhängers in Kilogramm.
+- **ADR-zertifiziert** — Setzen Sie dies auf **Ja**, falls dieser Anhänger für den Gefahrguttransport zertifiziert ist. Die ADR-Zertifizierung wird automatisch geprüft, wenn Sie diesen Anhänger einem ADR-markierten Auftrag zuweisen.
+- **Aktueller Standort** — Geben Sie eine Freitextbeschreibung ein, wo sich der Anhänger gerade befindet, z. B. „Depot Timișoara" oder „Kundenlager Cluj". Dies aktualisiert sich danach automatisch bei Lieferung und beim Abkoppeln vom LKW — siehe [Anhänger-Standortverfolgung](#anhaenger-standortverfolgung) unten.
+
+Klicken Sie auf **Speichern**, wenn Sie fertig sind.
 
 ---
 
-## Anhänger einem LKW zuweisen
+## Einen Anhänger an einen LKW koppeln
 
-Öffnen Sie in **Fuhrpark → Anhänger** den Anhänger, klicken Sie auf **Dem LKW zuweisen** und wählen Sie die Zugmaschine aus der Liste aus.
+Ein Anhänger kann jeweils nur einem LKW zugewiesen sein. Es gibt zwei Wege, einen Anhänger anzukoppeln:
 
-Wenn ein Anhänger zugewiesen ist:
-- Er erscheint auf der Auftragsplanungstafel neben der LKW-Zeile
-- Er wird in Auftragsformularen als Standardauswahl angezeigt
+### Option 1 — Bei der Auftragserstellung
+
+Füllen Sie einen Auftrag für einen **Eigener-LKW**-Job aus, erscheint nach Auswahl der Zugmaschine ein Dropdown **Anhänger**. Suchen Sie nach Kennzeichen oder ID und wählen Sie den Anhänger, den Sie für diesen Job nutzen möchten. Der Anhänger wird automatisch für die Dauer des Auftrags als zugewiesen markiert.
+
+### Option 2 — Von der Anhängerdetailseite
+
+<Steps>
+  <Step title="Das Anhängerprofil öffnen">
+    Gehen Sie zu **Fuhrpark → Anhänger** und klicken Sie auf den zuzuweisenden Anhänger.
+  </Step>
+  <Step title="Auf Dem LKW zuweisen klicken">
+    Finden Sie den Abschnitt **Aktuelle Zuweisung** und klicken Sie auf **Dem LKW zuweisen**.
+  </Step>
+  <Step title="Den LKW wählen">
+    Suchen Sie die Zugmaschine nach Kennzeichen. Nur aktive Fahrzeuge werden angezeigt.
+  </Step>
+  <Step title="Den Zuweisungszeitraum festlegen">
+    Geben Sie das Startdatum ein. Sie können das Enddatum leer lassen, falls Sie noch nicht wissen, wann der Anhänger abgekoppelt wird.
+  </Step>
+  <Step title="Speichern">
+    Klicken Sie auf **Zuweisung bestätigen**. Der Anhänger erscheint nun als zugewiesen auf der Planungstafel.
+  </Step>
+</Steps>
 
 ---
 
-## Anhänger-Abstellverfolgung
+## Einen Anhänger abkoppeln
 
-Wenn ein Anhänger an einem anderen Standort als dem Ladeort geparkt ist, zeigt die Planungstafel ein Amber-Banner mit dem Standort des Anhängers und der Zeit seit dem letzten Update.
+Ist ein Auftrag abgeschlossen, gibt Druma die Anhängerzuweisung automatisch frei. Sie können einen Anhänger auch jederzeit manuell abkoppeln:
 
-Wenn Sie einem Auftrag, bei dem der Anhänger an einem anderen Ort geparkt ist, einen LKW zuweisen, wird Druma fragen, wie Sie mit dem Anhänger umgehen möchten:
-- **Anhänger vor dem Auftrag aufnehmen** — Fügt einen Anhänger-Abholstopp hinzu
-- **Ohne Anhänger fahren** — Anhänger bleibt am aktuellen Standort
+<Steps>
+  <Step title="Das Anhängerprofil öffnen">
+    Gehen Sie zu Fuhrpark → Anhänger und klicken Sie auf den Anhänger.
+  </Step>
+  <Step title="Auf Abkoppeln klicken">
+    Klicken Sie im Abschnitt Aktuelle Zuweisung auf **Anhänger abkoppeln**.
+  </Step>
+  <Step title="Bestätigen">
+    Bestätigen Sie das Abkoppeln. Der Anhängerstatus kehrt zu **Verfügbar** zurück und kann einem anderen LKW zugewiesen werden.
+  </Step>
+</Steps>
+
+<Warning>
+Koppeln Sie einen Anhänger ab, während ein Auftrag noch aktiv ist (der Fahrer ist unterwegs), bleibt der Auftrag zu Dokumentationszwecken mit dem Anhänger verknüpft. Das Abkoppeln betrifft nur künftige Zuweisungen.
+</Warning>
 
 ---
 
-## Dokumentenverfolgung für Anhänger
+## Anhängerverfügbarkeitsansicht
 
-Für jeden Anhänger können Sie Ablaufdaten eintragen:
-- Versicherung
-- Technische Inspektion
+Die Anhängerliste unter **Fuhrpark → Anhänger** hat drei Schnellfilter-Tabs:
 
-<Card title="Fuhrparkverwaltung" icon="truck" href="/en/planner/fleet-management">
-  Verwalten Sie Zugmaschinen und Fahrzeugdetails.
+- **Alle** — jeder Anhänger Ihrer Flotte.
+- **Verfügbar** — Anhänger, die aktuell keinem LKW oder Auftrag zugewiesen sind. Diese sind einsatzbereit.
+- **Zugewiesen** — Anhänger, die aktuell an einen LKW gekoppelt oder bei einem aktiven Auftrag im Einsatz sind.
+
+Klicken Sie auf einen Anhänger, um seine vollständige Zuweisungshistorie zu sehen — welche LKW er hatte, welche Aufträge er abgeschlossen hat, und wann.
+
+---
+
+## Anhängerdokumente
+
+Anhänger brauchen ihre eigenen Papiere — Versicherung, Verkehrstauglichkeitsbescheinigungen, und ADR-Zertifikate, falls zutreffend. Diese werden getrennt von Fahrzeugdokumenten verfolgt.
+
+So fügen Sie einem Anhänger ein Dokument hinzu:
+
+<Steps>
+  <Step title="Das Anhängerprofil öffnen">
+    Gehen Sie zu Fuhrpark → Anhänger und wählen Sie den Anhänger.
+  </Step>
+  <Step title="Zum Tab Dokumente gehen">
+    Klicken Sie auf den Tab **Dokumente** im Anhängerprofil.
+  </Step>
+  <Step title="Das Dokument hochladen">
+    Klicken Sie auf **Dokument hinzufügen**, wählen Sie den Dokumenttyp, geben Sie das Ablaufdatum ein, und laden Sie einen Scan oder ein Foto des Zertifikats hoch.
+  </Step>
+</Steps>
+
+Druma warnt Sie im Start-Dashboard und per E-Mail, wenn sich das Ablaufdatum eines Anhängerdokuments nähert. Die Standard-Warnfrist beträgt 30 Tage, änderbar unter **Einstellungen → Benachrichtigungen**.
+
+<Note>
+Läuft das ADR-Zertifikat eines Anhängers ab und sind ihm ADR-markierte Aufträge zugewiesen, markiert Druma den Auftrag mit einer Warnung. Die Disposition wird dadurch nicht blockiert, aber die Warnung wird protokolliert.
+</Note>
+
+---
+
+## Anhänger-Standortverfolgung
+
+Druma verfolgt Anhängerstandorte über drei Quellen, jede mit einem **Standortquelle**-Indikator erfasst:
+
+### Automatisch: bei Lieferung
+
+Wird ein Auftrag als **Zugestellt** markiert, aktualisiert Druma automatisch den Standort des Anhängers auf die Adresse des letzten Entladestopps. Die Standortquelle wird auf **Auftragslieferung** gesetzt. Das bedeutet, nach jeder abgeschlossenen Lieferung ist die Position des Anhängers ohne manuelle Eingabe aktuell.
+
+### Automatisch: beim Abkoppeln vom LKW
+
+Koppeln Sie einen Anhänger von einem LKW ab (manuell oder weil der LKW neu zugewiesen wird), wird der Standort des Anhängers auf die zuletzt bekannte Position des LKW gesetzt. Die Standortquelle wird auf **LKW-Abkopplung** gesetzt.
+
+### Manuelle Aktualisierung
+
+Disponenten können den Standort des Anhängers jederzeit von der Anhängerprofilseite aktualisieren. Das Feld **Aktueller Standort** unterstützt HERE-Adress-Autovervollständigung — beginnen Sie eine Adresse zu tippen und wählen Sie aus den Vorschlägen, um präzise Koordinaten zu erhalten. Die Standortquelle wird auf **Manuell** gesetzt.
+
+<Note>
+Die Anhänger-Standortverfolgung ist heute auf diese drei Quellen beschränkt — es gibt keine GPS-Tracker-Integration, die die Position eines Anhängers automatisch aktualisiert. Tragen Ihre Anhänger ein eigenes Telematikgerät, sind diese Daten derzeit nicht in Drumas Anhänger-Standortfeld eingebunden.
+</Note>
+
+### Standortspalte in der Anhängerliste
+
+Die Anhängerliste unter **Fuhrpark → Anhänger** enthält eine Spalte **Standort**, die die aktuelle Adresse jedes Anhängers und einen Zeitstempel der letzten Aktualisierung zeigt. Das gibt Ihnen eine flottenweite Übersicht, wo sich alle Ihre Anhänger befinden, ohne einzelne Profile zu öffnen.
+
+---
+
+<Card title="Fuhrparkverwaltung" icon="truck" href="/de/planner/fleet-management">
+  Verwalten Sie Ihre Zugmaschinen und starren LKW — Fahrzeuge hinzufügen, Abmessungen festlegen, und Verfügbarkeit verfolgen.
+</Card>
+
+<Card title="Fuhrparkdokumente" icon="file" href="/de/fleet-compliance/fleet-documents">
+  Verfolgen und verwalten Sie alle Compliance-Dokumente für Fahrzeuge und Anhänger an einem Ort.
 </Card>

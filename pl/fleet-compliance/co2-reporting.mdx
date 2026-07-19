@@ -4,84 +4,128 @@ description: "Jak Druma oblicza emisje dwutlenku węgla per zlecenie i per pojaz
 icon: "leaf"
 ---
 
-Duzi nadawcy — sprzedawcy detaliczni, producenci, nabywcy logistyczni — coraz częściej wymagają od dostawców transportu raportowania śladu węglowego każdej przesyłki. Druma oblicza emisje CO2 per zlecenie automatycznie i udostępnia pobieralne raporty.
+Duzi nadawcy — sprzedawcy detaliczni, producenci, nabywcy usług logistycznych — coraz częściej wymagają od swoich dostawców transportu raportowania śladu węglowego każdej przesyłki. Druma automatycznie oblicza emisje CO2 per zlecenie i udostępnia pobieralne raporty na potrzeby ujawnień ESG klientów.
 
 ---
 
 ## Metodologia obliczeń
 
-Druma stosuje **Framework GLEC v3** (Global Logistics Emissions Council), który jest również zgodny z **ISO 14083** — międzynarodowym standardem kwantyfikacji i raportowania emisji gazów cieplarnianych z łańcuchów transportowych.
+Druma stosuje **GLEC Framework v4.0** (Global Logistics Emissions Council), zgodny również z **ISO 14083** — międzynarodowym standardem kwantyfikacji i raportowania emisji gazów cieplarnianych z łańcuchów transportowych (obliczenia Tier 1 na współczynnikach domyślnych). To metodologia uznawana i akceptowana przez większość dużych nadawców i audytorów.
+
+W przeciwieństwie do czystego szacunku opartego na odległości, metoda GLEC v4.0 Tier 1 opiera się na **tonokilometrach** — mnoży odległość przez rzeczywistą wagę ładunku, nie tylko typ pojazdu:
 
 ```
-CO2 (kg) = Odległość (km) × Współczynnik emisji (gCO2/km) ÷ 1000
+CO2e (kg) = Odległość (km) × (Waga (kg) ÷ 1000) × Współczynnik emisji (gCO2e/tonokm) ÷ 1000
 ```
+
+Waga jest wymaganym parametrem wzoru: ta sama trasa przejechana pusta i z pełnym ładunkiem daje bardzo różne wartości CO2e. Upewnij się, że waga ładunku zlecenia jest wpisana dokładnie — wpływa bezpośrednio na obliczenia emisji, nie tylko na rozliczenia.
 
 ---
 
-## Współczynniki emisji według normy Euro
+## Współczynniki emisji wg klasy pojazdu i typu paliwa
 
-| Norma Euro | Współczynnik emisji |
+Współczynnik emisji jest wyszukiwany z tabeli referencyjnej (`co2_emission_factors`, domyślne wartości europejskie GLEC v4.0) indeksowanej przez **klasę pojazdu** i **typ paliwa** — nie przez normę emisji Euro pojazdu, która w ogóle nie jest brana pod uwagę w tym obliczeniu. Klasa pojazdu jest automatycznie wyprowadzana z ładowności/wagi pojazdu:
+
+| Ładowność pojazdu | Klasa pojazdu |
 |---|---|
-| Euro 3 | 115 gCO2/km |
-| Euro 4 | 98 gCO2/km |
-| Euro 5 | 82 gCO2/km |
-| Euro 6 | 62 gCO2/km |
+| Ponad 30 000 kg | Ciągnik siodłowy 34t (typowa ciężarówka FTL) |
+| 15 000 – 30 000 kg | Pojazd sztywny 16–26t |
+| Poniżej 15 000 kg | Pojazd sztywny 12–16t |
+
+| Klasa pojazdu | Typ paliwa | Współczynnik emisji (gCO2e/tonokm) |
+|---|---|---|
+| Ciągnik siodłowy 34t | Diesel | 62 |
+| Ciągnik siodłowy 34t | LNG | 54 |
+| Ciągnik siodłowy 34t | Elektryczny | 25 |
+| Ciągnik siodłowy 34t | HVO | 12 |
+| Sztywny 16–26t | Diesel | 91 |
+| Sztywny 16–26t | Elektryczny | 37 |
+| Sztywny 12–16t | Diesel | 119 |
+| Sztywny 12–16t | Elektryczny | 48 |
+| Ciągnik siodłowy 40t (mega naczepa) | Diesel | 55 |
+| Ciągnik siodłowy 40t (mega naczepa) | LNG | 48 |
+| Ciągnik siodłowy 40t (mega naczepa) | Elektryczny | 22 |
 
 <Note>
-Jeśli nie ustawiłeś normy Euro na pojeździe, Druma domyślnie przyjmuje Euro 5. Przejdź do **Flota — Pojazdy — [Pojazd] — Edytuj**, aby ustawić właściwą normę.
+Jeśli pojazd nie ma ustawionego typu paliwa, Druma zakłada diesel. Jeśli nie znaleziono dokładnego współczynnika dla pary klasa-pojazdu/typ-paliwa, Druma używa zamiennie współczynnika diesla dla tej samej klasy pojazdu — nie ma zachowania "domyślnie przyjmuje konkretną normę Euro", ponieważ norma Euro w ogóle nie występuje w tym wyszukiwaniu.
 </Note>
 
 ---
 
 ## Skąd pochodzi odległość
 
-Odległość używana w obliczeniach to **odległość trasy zoptymalizowanej dla ciężarówki** obliczona przez HERE Maps przy tworzeniu zlecenia. Uwzględnia drogi dozwolone dla ciężarówek, ograniczenia wagi i wysokości.
+Odległość używana w obliczeniach to **odległość trasy zoptymalizowanej dla ciężarówki**, obliczona przez HERE Maps przy tworzeniu zlecenia. To nie jest odległość w linii prostej — uwzględnia drogi dozwolone dla ciężarówek, ograniczenia wagi i wysokości.
+
+Jeśli ręcznie nadpiszesz odległość na zleceniu (np. ponieważ rzeczywista trasa różniła się od obliczonej), Druma używa nadpisanej odległości do obliczenia CO2.
 
 ---
 
 ## Wyświetlanie CO2 per zlecenie
 
-Każde ukończone zlecenie pokazuje swój wskaźnik CO2 na stronie szczegółów zlecenia w sekcji **Finanse** lub **Podsumowanie**:
+Każde ukończone zlecenie pokazuje swój wskaźnik CO2 na stronie szczegółów zlecenia, w sekcji **Finanse** lub **Podsumowanie**. Możesz zobaczyć od razu:
 
 - Odległość trasy w km
-- Użyta norma Euro pojazdu
-- Łączne kg CO2 dla zlecenia
+- Użytą wagę ładunku
+- Łączne kg CO2e dla zlecenia
 
 ---
 
 ## Miesięczna suma floty
 
-1. Przejdź do **Raporty — Raport CO2**
-2. Ustaw zakres dat (np. miesiąc kalendarzowy)
+Druma agreguje wszystkie wskaźniki CO2 zleceń, tworząc miesięczną sumę floty. Aby ją zobaczyć:
+
+1. Przejdź do **Raporty → Raport CO2**
+2. Ustaw zakres dat (np. miesiąc kalendarzowy lub okres niestandardowy)
 3. Raport pokazuje:
    - Łączne CO2 floty za okres
-   - Podział per ciężarówka (które pojazdy emitują najwięcej)
+   - Podział per pojazd (które pojazdy emitują najwięcej)
    - Podział per klient (ile CO2 wygenerowały przesyłki każdego klienta)
 
 ---
 
 ## CO2 per klient w portalu klienta
 
-Klienci mający dostęp do portalu klienta Druma mogą przeglądać wskaźnik CO2 dla każdej ze swoich przesyłek bezpośrednio. Jest to szczególnie przydatne dla klientów, którzy muszą raportować **emisje Zakresu 3** w ramach własnych obowiązków raportowania ESG.
+Klienci mający dostęp do portalu klienta Druma mogą przeglądać wskaźnik CO2 dla każdej ze swoich przesyłek bezpośrednio. Nie muszą Cię o to pytać — jest widoczny na każdym ukończonym zleceniu w ich widoku portalu.
+
+Jest to szczególnie przydatne dla klientów, którzy muszą raportować **emisje Zakresu 3** (emisje łańcucha dostaw) w ramach własnych obowiązków raportowania ESG lub zrównoważonego rozwoju wg CSRD lub podobnych ram.
 
 ---
 
-## Pobieranie raportu CO2 PDF
+## Eksportowanie raportu CO2
 
-<Steps>
-  <Step title="Otwórz Raport CO2">
-    Przejdź do **Raporty — Raport CO2**.
-  </Step>
-  <Step title="Ustaw filtry">
-    Wybierz zakres dat i opcjonalnie filtruj według konkretnego klienta lub pojazdu.
-  </Step>
-  <Step title="Pobierz PDF">
-    Kliknij **Pobierz PDF**. Raport jest sformatowany do użytku profesjonalnego, zawiera odniesienie do metodologii GLEC v3.
-  </Step>
-</Steps>
+Strona Raport CO2 nie ma przycisku "Pobierz PDF". Zamiast tego, z **Raporty → Raport CO2** (widok roczny) możesz eksportować w trzech formatach:
+
+- **Roczny XLSX** — arkusz kalkulacyjny z wartościami CO2 per zlecenie za dany rok
+- **Pakiet danych CSRD (.csv)** — eksport danych sformatowany pod zasilenie ujawnienia CSRD / ESRS E1 Zakres 3
+- **iXBRL (.xhtml)** — plik inline XBRL dla zestawu tagów ESRS E1 Zakres 3, z zastrzeżeniem w aplikacji, że musi zostać zweryfikowany przez Twojego audytora zrównoważonego rozwoju przed złożeniem
+
+Widok miesięczny oferuje zamiast tego ogólną akcję **drukuj** i **eksportuj** na tabeli, obejmującą wybrane obecnie kolumny i zakres dat.
+
+<Note>
+Osobno, każdy klient z ukończonymi zleceniami automatycznie otrzymuje miesięczny raport CO2 e-mailem — podsumowanie HTML emisji jego przesyłek za poprzedni miesiąc, generowane i wysyłane automatycznie 1. dnia każdego miesiąca. Nie jest to coś, co wyzwalasz ze strony Raport CO2; działa w tle dla każdego klienta z dostawami w danym okresie.
+</Note>
 
 ---
 
-<Card title="Raport CO2" icon="chart-bar" href="/en/reports/co2-report">
+## Dlaczego to ma znaczenie dla Twojej firmy
+
+Raportowanie emisji nie jest już tylko dla dużych przewoźników. Trend przesuwa się w dół łańcucha:
+
+- **CSRD** (Dyrektywa UE o Sprawozdawczości Zrównoważonego Rozwoju Przedsiębiorstw) wymaga od dużych firm raportowania emisji Zakresu 3 — co obejmuje kupowany przez nie transport
+- **Duzi sprzedawcy detaliczni i producenci** przekazują ten wymóg raportowania swoim dostawcom i usługodawcom
+- **Przetargi i zapytania ofertowe** coraz częściej wymagają udokumentowanej metodologii CO2
+- **Programy zielonego frachtu**, takie jak SmartWay Europe i Clean Cargo, dają preferencję zakupową przewoźnikom z udokumentowanymi danymi emisji
+
+Posiadanie gotowych raportów CO2 — z uznaną metodologią (GLEC v4.0 / ISO 14083) — wyróżnia Twoją firmę w konkurencyjnych przetargach.
+
+---
+
+## Powiązane artykuły
+
+<Card title="Raport CO2" icon="chart-bar" href="/pl/reports/co2-report">
   Szczegółowy przewodnik po filtrach raportu CO2, opcjach eksportu i interpretacji danych.
+</Card>
+
+<Card title="Zarządzanie flotą" icon="truck" href="/pl/planner/fleet-management">
+  Jak ustawić ładowność pojazdu i typ paliwa — dane floty zasilające obliczenia CO2.
 </Card>

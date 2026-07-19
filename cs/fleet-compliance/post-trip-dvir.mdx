@@ -1,53 +1,93 @@
 ---
-title: "Kontrola vozidla po jízdě (DVIR)"
-description: "Strukturované zprávy o kontrole vozidla na konci každé jízdy — s automatickým blokováním při bezpečnostně kritických závadách."
+title: "Popřepravní inspekce vozidla (DVIR)"
+description: "Jak nakonfigurovat popřepravní kontrolní seznam a kde fleet manažeři kontrolují a řeší závady nahlášené řidiči."
+icon: "clipboard-check"
 ---
 
 ## Přehled
 
-Kontrola vozidla po jízdě (DVIR) je strukturovaná bezpečnostní kontrola prováděná řidiči na konci každé jízdy. Bezpečnostně kritické závady spustí automatické zablokování vozidla a okamžité upozornění manažera flotily.
+Po klepnutí řidiče na **Doručeno** Druma automaticky zobrazí v aplikaci pro řidiče překryvnou vrstvu **Popřepravní inspekce** — zprávu o inspekci vozidla řidiče (DVIR), která projde stavem vozidla na konci jízdy. Tato stránka pokrývá stranu fleet manažera: konfiguraci kontrolního seznamu a kontrolu závad, které z něj vzejdou. Kompletní postup pro řidiče viz [Popřepravní inspekce](/cs/driver/post-trip-inspection).
+
+<Note>
+Popřepravní inspekce se spouští pouze pro jednorázové objednávky (single-order). Nezobrazuje se na mezilehlých zastávkách během skupinových (vícemístných) jízd.
+</Note>
 
 ---
 
-## Postup
+## Jak to funguje ve zkratce
 
-<Steps>
-  <Step title="Otevření výzvy k inspekci">
-    Klepněte na výzvu **Kontrola vozidla po jízdě** ve spodní části dokončené zakázky v aplikaci.
-  </Step>
-  <Step title="Projití kontrolního seznamu">
-    Otevře se formulář. Pro každou položku vyberte: **OK**, **Závada — Drobná** nebo **Závada — Bezpečnostně kritická**.
-  </Step>
-  <Step title="Nahlášení závad">
-    Zadejte popis a volitelně připojte fotografii (až 5 fotografií na závadu).
-  </Step>
-  <Step title="Podpis inspekce">
-    Digitálně podepište na obrazovce.
-  </Step>
-  <Step title="Odeslání">
-    Klepněte na **Odeslat inspekci**. Zpráva je okamžitě odeslána do Druma.
-  </Step>
-</Steps>
+Řidič označí každou položku kontrolního seznamu třístupňovým přepínačem — **OK**, **Upozornění** nebo **Bezpečnostně kritické** — zadá aktuální stav odometru a připojí fotografie u jakékoli položky Bezpečnostně kritické (až 3 fotografie na závadu; JPEG, PNG, WebP, HEIC nebo HEIF, max 10 MB každá — PDF se pro fotografie závad nepřijímá). Řidič může odeslat okamžitě, nebo klepnout na **Přeskočit inspekci** a dokončit ji později z detailu zakázky objednávky.
 
----
-
-## Úrovně závažnosti
-
-| Úroveň | Význam | Akce Druma |
+| Závažnost | Význam | Efekt |
 |---|---|---|
-| **OK** | Žádná závada | Žádná akce |
-| **Drobná závada** | Vozidlo může zůstat v provozu | Oranžový odznak; manažer upozorněn e-mailem |
-| **Bezpečnostně kritická** | Vozidlo není bezpečné k provozu | Červený odznak; vozidlo zablokováno; manažer upozorněn okamžitě |
+| **OK** | Žádné problémy nenalezeny | Žádná akce |
+| **Upozornění** | Drobný problém, vozidlo zůstává v provozu | Plánovač upozorněn; vidět v detailu objednávky a Vozový park → Závady |
+| **Bezpečnostně kritické** | Vážná závada | Plánovač a fleet manažer upozorněni okamžitě; pokud je zapnuté automatické blokování, vozidlo je označeno jako nedostupné, dokud není vyřešeno |
+
+---
+
+## Konfigurace pro správce
+
+Přejděte do **Nastavení → Popřepravní kontrolní seznam** pro konfiguraci DVIR pro vaši společnost.
+
+| Nastavení | Popis |
+|---|---|
+| **Povolit popřepravní DVIR** | Zapíná nebo vypíná překryvnou vrstvu inspekce pro všechny řidiče |
+| **Vyžadovat fotografie u bezpečnostně kritických položek** | Vyžaduje nahrání alespoň jedné fotografie, než lze bezpečnostně kritickou závadu odeslat |
+| **Automaticky vytvořit nedostupnost vozidla u bezpečnostně kritických závad** | Automaticky zablokuje vozidlo pro dispečink při odeslání bezpečnostně kritické závady |
+| **Položky kontrolního seznamu** | Přidejte, upravte nebo smažte položky, které se zobrazují v překryvné vrstvě inspekce. Každá položka má název a výchozí závažnost (OK / Upozornění / Bezpečnostně kritické) |
+
+<Note>
+Položky kontrolního seznamu jsou celofiremní a konfigurovatelné správcem — neexistuje pevný, vestavěný seznam kategorií. Všichni řidiči ve vaší společnosti vidí stejný seznam. Pokud provozujete různé typy vozidel, používejte popisné názvy položek (např. „Chladicí jednotka reefer — zkontrolovat těsnění"), aby byl seznam srozumitelný pro všechny.
+</Note>
+
+---
+
+## Zobrazení jednotlivé inspekce
+
+V **panelu detailu objednávky** se pod informacemi o trase zobrazí sekce **DVIR** poté, co je inspekce odeslána. Zobrazuje:
+
+- Stav inspekce: Dokončeno, Přeskočeno, nebo Čeká
+- Časové razítko odeslání a jméno řidiče
+- Stav odometru zachycený řidičem
+- Seznam každé závady s odznakem závažnosti (Upozornění / Bezpečnostně kritické)
+- Náhledy miniatur jakýchkoli nahraných fotografií, které se po kliknutí otevřou v plné velikosti
+
+Pokud byla inspekce přeskočena, sekce DVIR zobrazuje odznak „Přeskočeno" s časovým razítkem.
+
+---
+
+## Sledování otevřených závad napříč flotilou
+
+Přejděte do **Vozový park → Závady** pro zobrazení všech závad napříč celou vaší flotilou. Stránka má tři filtrovací záložky:
+
+| Záložka | Co zobrazuje |
+|---|---|
+| **Otevřené** | Závady dosud nepropojené s dokončeným nebo zrušeným pracovním příkazem |
+| **Potvrzené** | Závady, které fleet manažer zkontroloval |
+| **Vše** | Úplná historie |
+
+Každý řádek zobrazuje vozidlo, název položky závady, odznak závažnosti, datum nahlášení a řidiče, který ji odeslal.
+
+---
+
+## Vytvoření pracovního příkazu ze závady
+
+U řádků **Bezpečnostně kritické** ve **Vozový park → Závady** je přímo v řádku k dispozici tlačítko **Vytvořit pracovní příkaz**. Kliknutím se otevře formulář pracovního příkazu předvyplněný kontrolovaným vozidlem a propojený s výchozím lístkem závady. Pracovní příkazy nemají pole závažnosti — vyberte **Typ servisu**, který odpovídá opravě, přidejte popis, poté přidejte položky a naplánované datum a uložte. Pokud je zapnutý přepínač **Automaticky vytvořit nedostupnost vozidla u bezpečnostně kritických závad**, vozidlo zůstává zablokované na plánovací tabuli, dokud není propojený pracovní příkaz označen jako dokončený.
 
 <Warning>
-Vozidlo s bezpečnostně kritickou závadou je automaticky zablokováno na plánovací tabuli, dokud manažer flotily neodblokuje blokaci označením pracovního příkazu jako vyřešeného.
+Pokud je přepínač automatického blokování zapnutý, bezpečnostně kritická závada okamžitě odstraní vozidlo z dispečinku — i pokud jsou mu již přiřazeny budoucí objednávky. Jakmile obdržíte upozornění na bezpečnostně kritickou závadu, zkontrolujte Vozový park → Závady.
 </Warning>
 
+Kompletní workflow pracovních příkazů viz [Servis a údržba](/cs/fleet-compliance/workshop-maintenance).
+
+---
+
 <CardGroup cols={2}>
-  <Card title="Dílna a údržba" href="/cs/fleet-compliance/workshop-maintenance">
-    Vytvářejte pracovní příkazy ze zpráv o závadách.
+  <Card title="Popřepravní inspekce (pohled řidiče)" icon="mobile" href="/cs/driver/post-trip-inspection">
+    Kompletní postup pro řidiče: vyplnění kontrolního seznamu, nahrávání fotografií a přeskočení/dokončení inspekce.
   </Card>
-  <Card title="Dokumenty flotily" href="/cs/fleet-compliance/fleet-documents">
-    Sledujte certifikáty a doklady o shodě vozidel.
+  <Card title="Servis a údržba" icon="wrench" href="/cs/fleet-compliance/workshop-maintenance">
+    Vytvářejte a spravujte pracovní příkazy ze zpráv o závadách a plány pravidelné údržby.
   </Card>
 </CardGroup>

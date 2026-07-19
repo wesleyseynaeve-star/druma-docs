@@ -1,50 +1,95 @@
 ---
 title: "CO2-Emissionsbericht"
-description: "Monatliche Flottenemissionsdaten berechnet nach GLEC-Framework v3 und ISO 14083-Standards, bereit zur Weitergabe an Kunden für ihre ESG-Berichte."
+description: "Monatliche Flottenemissionsdaten, berechnet nach GLEC-Framework v4.0 und ISO-14083-Standards, bereit zur Weitergabe an Kunden für deren ESG-Berichte."
 icon: "cloud"
 ---
 
-## Übersicht
+Kunden — besonders große Einzelhändler, Hersteller und Logistikunternehmen — benötigen zunehmend CO2-Emissionsdaten von ihren Transportanbietern für ihre eigenen ESG- und Nachhaltigkeitsberichte. Druma berechnet die Emissionen Ihrer Flotte automatisch aus Ihren Auftrags- und Fahrzeugdaten und erstellt einen Bericht, den Sie direkt mit Kunden teilen können.
 
-Der CO2-Emissionsbericht liefert eine standardisierte Darstellung der Treibhausgasemissionen Ihrer Flotte. Dieser Bericht wird häufig von Kunden für ihre eigenen ESG-Berichte oder Nachhaltigkeitsdisclosures angefordert.
+## Den Bericht öffnen
 
----
+Gehen Sie zu **Berichte → CO2-Bericht**.
 
-## Berechnungsmethodik
+Standardmäßig sehen Sie die Ansicht **Monatlich** — die jüngsten Sendungen mit berechnetem CO2-Wert, neueste zuerst. Wechseln Sie zu **Jährlich (CSRD)** und wählen Sie ein **Jahr**, um einen vollständigen Jahresdatensatz für Nachhaltigkeitsexporte zu erstellen. Optional grenzen Sie beide Ansichten mit dem Filter **Kunde** auf einen Kunden ein.
 
-Druma berechnet CO2-Emissionen nach:
-- **GLEC Framework v3** (Global Logistics Emissions Council)
-- **ISO 14083** (Quantifizierung und Berichterstattung von Treibhausgasemissionen aus Transportketten)
+<Frame caption="Der monatliche CO2-Bericht — Distanz, Gewicht und CO2 (kg) pro Auftrag, mit der Methode jeder Zeile, die die verwendete GLEC-Faktorversion zeigt.">
+  <img src="/images/reports/co2-report.png" alt="Monatlicher CO2-Bericht mit Emissionsdiagramm und Pro-Auftrag-Tabelle" />
+</Frame>
 
-**Eingabeparameter:**
-- Routendistanz (aus HERE Maps)
-- Fahrzeug-Euro-Norm (3, 4, 5 oder 6)
-- Fahrzeugtyp (LKW, Sattelzug, usw.)
-- Kraftstofftyp (Diesel, HVO, Elektro)
+## Was der Bericht zeigt
 
----
+Die Seite hat zwei oben umschaltbare Ansichtsmodi: **Monatlich** und **Jährlich (CSRD)**.
 
-## Bericht erstellen
+### Monatliche Ansicht
 
-<Steps>
-  <Step title="Zu Berichte → CO2-Bericht gehen">
-    Wählen Sie den Datumsbereich (typischerweise ein Kalendermonat).
-  </Step>
-  <Step title="Filter anwenden (optional)">
-    Filtern nach: Fahrzeug, Kundengruppe, Route.
-  </Step>
-  <Step title="Bericht anzeigen">
-    Der Bericht zeigt:
-    - Gesamtemissionen in CO2e-Tonnen
-    - Emissionen pro Auftrag
-    - Emissionen pro Fahrzeug
-    - Emissionen pro Kunde
-  </Step>
-  <Step title="Exportieren">
-    Klicken Sie auf **Als PDF exportieren** für ein kundenfreundliches Dokument oder **Als CSV exportieren** für Rohdaten.
-  </Step>
-</Steps>
+Eine Pro-Sendung-Tabelle — eine Zeile pro Auftrag, mit Distanz, Gewicht, berechnetem CO2, Berechnungsmethode, Kunde und LKW. Filtern Sie mit dem Dropdown **Kunde** auf einen einzelnen Kunden, und nutzen Sie das Trenddiagramm über der Tabelle, um die tCO2e-Gesamtsumme nach Monat zu sehen. Die KPI-Leiste zeigt Gesamt-CO2 für den Zeitraum, durchschnittliches CO2 pro Auftrag, und wie viele Aufträge einen berechneten CO2-Wert haben.
 
-<Card title="CO2-Berichterstattung" icon="leaf" href="/en/fleet-compliance/co2-reporting">
-  Wie Druma CO2-Emissionen berechnet.
-</Card>
+<Note>
+Die monatliche Ansicht ist für einen gegebenen Filter auf die ersten **500 Zeilen** begrenzt (die Berichtsseiten-Konvention, die in ganz Druma verwendet wird). Ist ein Monat gekürzt, grenzen Sie Ihren Datumsbereich oder Kundenfilter für ein vollständiges Bild ein — ein Warnbanner erscheint auf der Seite, wenn das passiert.
+</Note>
+
+### Jährliche (CSRD-)Ansicht
+
+Dieselbe Pro-Sendung-Struktur, erweitert um Lieferdatum, vollständige Abhol-/Lieferadressen, und die Euro-Norm-Spalte des LKW (zur Referenz — der CO2-Wert selbst wird nicht aus der Euro-Norm berechnet, siehe unten). Diese Ansicht ist auf 5.000 Sendungen pro Jahr begrenzt; erscheint eine Kürzungswarnung, falls das Jahr mehr enthält.
+
+## Berechnungsmethodik der Emissionen
+
+Druma folgt den Standard-Emissionsfaktoren des **GLEC-Framework v4.0**, abgestimmt mit **ISO 14083** (Tier-1-Methode) — dem internationalen Standard zur Quantifizierung und Berichterstattung von Treibhausgasemissionen in Transportketten.
+
+CO2 pro Auftrag basiert **nicht** auf der Euro-Emissionsnorm des LKW. Es basiert auf der **Gewichtsklasse** und der **Kraftstoffart** des LKW:
+
+| Fahrzeugklasse | Kraftstoffart | Emissionsfaktor (gCO2e/Tonnenkilometer) |
+|---|---|---|
+| Sattelzug 32–34t (Standard-FTL-LKW) | Diesel | 62 |
+| Sattelzug 32–34t | LNG | 54 |
+| Sattelzug 32–34t | Elektro | 25 |
+| Sattelzug 32–34t | HVO | 12 |
+| Starrer LKW 16–26t | Diesel | 91 |
+| Starrer LKW 16–26t | Elektro | 37 |
+| Starrer LKW 12–16t | Diesel | 119 |
+| Starrer LKW 12–16t | Elektro | 48 |
+
+Die Fahrzeugklasse wird automatisch aus der erfassten maximalen Nutzlast/Gewicht des LKW abgeleitet (über 30t → Sattelzug 32–34t; über 15t → starr 16–26t; sonst starr 12–16t). Die Kraftstoffart stammt aus dem Fahrzeugdatensatz und ist standardmäßig Diesel, falls nicht gesetzt; existiert noch kein Faktor für eine ungewöhnliche Kraftstoffart in dieser Klasse, greift Druma auf den Dieselfaktor derselben Klasse zurück, statt den Auftrag unberechnet zu lassen.
+
+Die Formel (Well-to-Wheel, ISO 14083 Tier 1):
+
+```
+CO2e (kg) = Distanz (km) × [Gewicht (kg) ÷ 1.000] × Emissionsfaktor (gCO2e/tkm) ÷ 1.000
+```
+
+Die Distanz stammt aus dem PTV-LKW-Routing (dieselbe Distanz, die am Auftrag angezeigt wird). Das Gewicht ist das am Auftrag erfasste Ladungsgewicht; hat ein Auftrag kein erfasstes Gewicht, schätzt Druma die Hälfte der maximalen Nutzlast des LKW als konservative Durchschnittslast.
+
+## CO2-Daten mit Kunden teilen
+
+Druma sendet automatisch eine monatliche CO2-Zusammenfassung per E-Mail an jeden Kundenkontakt mit aktiviertem **CO2-Berichte erhalten** (pro Kontakt im Tab **Kontakte** des Kunden festgelegt) — kein manueller Export für diesen Empfänger nötig.
+
+Für alles darüber hinaus — ein vollständiges, ESRS-konformes Jahrespaket, eine Ad-hoc-Weitergabe an das Nachhaltigkeitsteam eines Kunden, oder Ihre eigene interne Aufzeichnung — wechseln Sie zur Ansicht **Jährlich (CSRD)** und nutzen Sie die in [CSRD-Emissionsexporte](/de/reports/csrd-exports) beschriebenen Export-Schaltflächen: Jährliches XLSX, CSRD-Datenpaket (CSV), und iXBRL. Die monatliche Ansicht hat außerdem eine generische Druck-/Export-Schaltfläche für die sichtbare Tabelle.
+
+### Was Scope 3 bedeutet
+
+Ihre Kunden erfassen Emissionen aus ausgelagertem Transport als **Scope-3-Emissionen** (Kategorie 4: Vorgelagerter Transport, oder Kategorie 9: Nachgelagerter Transport). Die von Ihnen bereitgestellten Daten fließen direkt in diese Berechnung ein. Diese Daten bereitzuhalten, spart Ihren Kunden Zeit und macht Sie zu einem attraktiveren Frachtführer.
+
+## Wie Sie Ihren CO2-Wert verbessern
+
+Da die Berechnung von **Kraftstoffart** und **Fahrzeuggewichtsklasse** angetrieben wird, nicht allein von der Distanz, ist der größte Hebel der LKW selbst. Bei der gängigsten FTL-Klasse (Sattelzug, 32–34t) senkt ein Wechsel von Diesel (62 gCO2e/tkm) zu HVO (12 gCO2e/tkm) oder Elektro (25 gCO2e/tkm) den Faktor um 81 % bzw. 60 %. Beispiel: eine 1.000-km-Fahrt mit 24t Ladung:
+
+- Diesel: 1.000 km × 24t × 62 gCO2e/tkm ÷ 1.000 = **1.488 kg CO2**
+- HVO auf derselben Fahrzeugklasse: 1.000 km × 24t × 12 gCO2e/tkm ÷ 1.000 = **288 kg CO2** — eine Reduzierung um 1.200 kg (81 %) pro Fahrt
+
+Weitere Verbesserungen, die Druma Ihnen zu verfolgen hilft:
+
+- **Routenoptimierung** — kürzere Routen aus dem PTV-LKW-Routing bedeuten geringere Gesamtemissionen
+- **Ladungskonsolidierung** — weniger, dafür vollere Fahrten reduzieren die gesamten Tonnenkilometer der Flotte
+- **Reduzierung von Leerfahrten** — Leerkilometer sind CO2 ohne Umsatz zum Ausgleich
+
+<CardGroup cols={2}>
+  <Card title="CSRD-Emissionsexporte" icon="download" href="/de/reports/csrd-exports">
+    Exportieren Sie jährliche CO2-Daten in XLSX-, CSRD-konformem CSV- und iXBRL-Format für Nachhaltigkeitsberichterstattung und ESRS-E1-Compliance.
+  </Card>
+  <Card title="CO2-Berichterstattung (Fuhrpark-Einstellungen)" icon="truck" href="/de/fleet-compliance/co2-reporting">
+    Wie Kraftstoffart und Gewichtsklasse des LKW in die CO2-Berechnung einfließen, und was Sie an Ihren Flottendatensätzen prüfen sollten.
+  </Card>
+  <Card title="Berichte-Übersicht" icon="chart-bar" href="/de/reports/reports-overview">
+    Alle verfügbaren Berichte in Druma und wie Sie automatisierten Versand planen.
+  </Card>
+</CardGroup>

@@ -1,63 +1,120 @@
 ---
 title: "Documents de flotte"
-description: "Suivez les assurances, certificats d'inspection technique et autres documents de véhicules avec des alertes d'expiration automatiques dans Druma."
-icon: "file-check"
+description: "Suivez les certificats d'assurance, l'ITP, les permis CEMT, les certificats ADR et de calibrage tachygraphe, et tous les autres documents véhicule, avec une notification d'alerte d'expiration optionnelle."
+icon: "folder-open"
 ---
 
-## Vue d'ensemble
-
-Druma suit les dates d'expiration de tous les documents réglementaires de votre flotte. Vous recevez des alertes avant qu'un document n'expire afin de ne jamais être pris par surprise lors d'un contrôle routier ou d'une inspection.
-
-Accédez à **Flotte → Documents** pour voir le tableau de bord des documents.
+Chaque camion de votre flotte doit porter un ensemble de documents valides — des certificats légalement requis qui expirent et doivent être renouvelés régulièrement. Des documents manquants ou expirés peuvent immobiliser un véhicule lors d'un contrôle routier. Druma les suit tous et vous alerte avant leur expiration.
 
 ---
 
-## Types de documents suivis
+## Types de documents suivis par véhicule
 
-| Document | Description |
-|---|---|
-| **ITP / Contrôle technique** | Inspection technique périodique du véhicule |
-| **Assurance RCA** | Assurance responsabilité civile automobile |
-| **CEMT / Licence de transport** | Licence de transport routier international |
-| **Certificat ADR** | Autorisation pour le transport de marchandises dangereuses |
-| **Carte verte** | Assurance internationale |
-| **Tachygraphe** | Calibrage du tachygraphe numérique |
-| **Permis de conduire** | Permis du chauffeur |
-| **CPC** | Certificat de compétence professionnelle du chauffeur |
+Druma suit les catégories de documents suivantes pour chaque véhicule :
+
+| Document | Nom roumain | Remarques |
+|---|---|---|
+| Certificat d'aptitude technique (ITP) | ITP | Inspection technique périodique |
+| Assurance responsabilité civile (RCA) | RCA | Obligatoire pour tous les véhicules |
+| Assurance cargaison CMR | Asigurare CMR | Requise pour le transport international |
+| Certificat d'immatriculation du véhicule | Talon / Carte de identitate a vehiculului | |
+| Permis CEMT | Autorizație CEMT | Permis de quota multilatéral, distinct de la licence d'exploitation nationale |
+| Certificat ADR | Certificat ADR vehicul | Uniquement si le véhicule transporte des marchandises dangereuses |
+| Certificat de calibrage tachygraphe | Certificat verificare tahograf | Requis périodiquement par la loi |
+| Certificat ATP | Certificat ATP | Remorques frigorifiques/à température contrôlée uniquement |
+| Autre | — | Tout type de document ne correspondant pas aux catégories ci-dessus |
+
+<Note>
+Vous pouvez aussi ajouter des types de documents personnalisés si votre exploitation a des documents ne correspondant pas à ces catégories — par exemple, des certificats de calibrage de chaîne du froid ou des documents de permis pour chargements hors gabarit.
+</Note>
 
 ---
 
-## Ajouter un document
+## Ajouter un document à un véhicule
 
 <Steps>
-  <Step title="Ouvrez le profil du véhicule ou du chauffeur">
-    Accédez à Flotte → Véhicules ou Flotte → Chauffeurs et cliquez sur l'entrée.
+  <Step title="Ouvrez l'aperçu des documents">
+    Accédez à **Flotte → Aperçu des documents** — c'est une page Flotte de premier niveau séparée, pas un onglet de la vue de détail véhicule.
   </Step>
-  <Step title="Accédez à l'onglet Documents">
-    Cliquez sur l'onglet **Documents**.
+  <Step title="Cliquez sur Téléverser un document">
+    Cliquez sur **Téléverser un document**.
   </Step>
-  <Step title="Cliquez sur Ajouter un document">
-    Sélectionnez le type de document et saisissez la date d'expiration.
+  <Step title="Sélectionnez le type de document">
+    Choisissez le type de document dans la liste déroulante (par ex. RCA, ITP, Calibrage tachygraphe).
   </Step>
-  <Step title="Téléchargez une copie numérique (optionnel)">
-    Téléchargez une copie PDF ou image du document pour référence.
+  <Step title="Saisissez la date d'expiration">
+    Saisissez la date d'expiration figurant sur le document. C'est cette date que Druma utilise pour tous les calculs d'alerte.
+  </Step>
+  <Step title="Téléversez le scan">
+    Joignez un scan PDF, JPG ou PNG du document. Taille de fichier maximale : 20 Mo par fichier.
   </Step>
   <Step title="Enregistrer">
-    Cliquez sur **Enregistrer**.
+    Cliquez sur **Enregistrer**. Le document apparaît dans la liste des documents du véhicule avec sa date d'expiration et son statut.
   </Step>
 </Steps>
 
 ---
 
-## Alertes d'expiration
+## Suivi d'expiration et alertes
 
-Druma envoie des alertes lorsqu'un document expire dans :
-- **30 jours** — avertissement précoce
-- **7 jours** — avertissement urgent
-- **0 jours (expiré)** — alerte critique
+Les badges (avertissement jaune / expiré rouge) sur le véhicule dans la liste de flotte reflètent toujours le véritable statut d'expiration de chaque document, calculé quotidiennement. La **notification** proactive en plus de ces badges est cependant optionnelle :
 
-Les documents expirés apparaissent avec un badge rouge sur le tableau de planification lors de l'affectation d'un camion.
+| Temps avant expiration | Badge affiché | Notification (si activée) |
+|---|---|---|
+| 60 jours | — | Notification d'avertissement envoyée |
+| 14 jours | Badge d'avertissement jaune | Notification critique envoyée |
+| Expiré | Badge rouge ; véhicule bloqué pour les nouvelles affectations de commande | Notification envoyée |
 
-<Card title="Certificats ADR" icon="triangle-exclamation" href="/fr/fleet-compliance/adr-certificates">
-  Gestion spécifique des certificats ADR pour le transport de marchandises dangereuses.
+<Warning>
+La notification est conditionnée par **Paramètres → Automatisations et fonctionnalités → Alertes d'expiration des documents de flotte**, **désactivée par défaut** pour chaque entreprise. Tant que vous ne l'activez pas, Druma affiche toujours les badges corrects sur le véhicule et la liste de flotte, mais personne n'est notifié proactivement à l'approche de l'expiration d'un document — vous devez le remarquer dans la liste. Une fois activée, les notifications in-app vont aux utilisateurs ayant le rôle Gestionnaire de flotte, Admin entreprise ou Admin (il n'y a pas de canal email séparé pour cette alerte).
+</Warning>
+
+<Warning>
+Un véhicule ayant un document expiré **ne peut pas être affecté à de nouvelles commandes** tant que le document expiré n'est pas renouvelé et téléversé. Les commandes en cours existantes ne sont pas interrompues, mais les répartiteurs verront un avertissement.
+</Warning>
+
+Si vous renouvelez un document, téléversez immédiatement la nouvelle version — Druma effacera le statut expiré dès que la nouvelle date d'expiration est enregistrée.
+
+---
+
+## Aperçu de conformité
+
+Plutôt que de vérifier les véhicules un par un, utilisez la vue de conformité pour toute la flotte :
+
+1. Accédez à **Flotte → Aperçu des documents**
+2. Voyez chaque véhicule et chaque type de document dans une seule grille
+3. Filtrez la vue par statut : **Expiré**, **Expire bientôt** (sous 30 jours), ou **À jour**
+
+Cette vue est conçue pour le contrôle matinal du gestionnaire de flotte — un rapide coup d'œil à la grille montre si quelque chose nécessite une action aujourd'hui.
+
+---
+
+## Exigences de format de fichier
+
+- **Formats acceptés :** PDF, JPG, PNG
+- **Taille de fichier maximale :** 20 Mo par document
+- **Recommandé :** scannez à une résolution où le texte du document est clairement lisible — au moins 150 DPI pour les documents A4
+
+Si un inspecteur routier ou un client demande un document, vous pouvez le télécharger directement depuis **Flotte → Aperçu des documents** et l'envoyer par email. Les chauffeurs peuvent aussi consulter les documents de leur véhicule assigné dans l'application mobile Druma.
+
+---
+
+## Questions fréquentes
+
+**Un même document peut-il couvrir plusieurs véhicules ?** Non — chaque document doit être téléversé séparément pour chaque véhicule qu'il couvre. Votre police RCA peut couvrir toute votre flotte, mais téléversez-la individuellement pour chaque véhicule afin que le suivi d'expiration fonctionne par véhicule.
+
+**Que faire si j'ai un document qui n'est pas dans la liste ?** Utilisez l'option de type de document personnalisé lors du téléversement. Saisissez le nom du document manuellement.
+
+**Les chauffeurs peuvent-ils téléverser leurs propres documents véhicule ?** Non — la gestion des documents est réservée aux rôles Répartiteur, Gestionnaire de flotte, Admin et Admin entreprise.
+
+---
+
+## Articles associés
+
+<Card title="Certificats ADR" icon="radiation" href="/fr/fleet-compliance/adr-certificates">
+  Suivi de la certification ADR pour les chauffeurs et les véhicules, et comment les commandes ADR imposent la conformité.
+</Card>
+
+<Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+  Ajouter des véhicules, modifier les détails véhicule et gérer votre liste de flotte.
 </Card>

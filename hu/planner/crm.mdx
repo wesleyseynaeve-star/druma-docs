@@ -1,0 +1,147 @@
+---
+title: "Értékesítés"
+description: "Kövesd nyomon az érdeklődőket és a meglévő fiókokat az értékesítési csatornán keresztül — az első kapcsolatfelvételtől az átalakult ügyfélig, árajánlatig vagy pályázatig."
+icon: "user-group"
+---
+
+## Áttekintés
+
+Az **Értékesítés** modul (`/operator-crm`, a főnavigációban **Értékesítés** néven) az a hely, ahol a kapcsolatépítést kezeled, elkülönítve azoktól a fuvarozási rendelésektől, amelyekhez ezek a kapcsolatok vezetnek. Két rekordtípus köré épül, amelyek ugyanazokon az életciklus-szakaszokon haladnak át:
+
+- **Érdeklődők** — potenciális ügyfelek, akik még nem ügyfelek a Drumában
+- **Fiókok** — a meglévő ügyfeleid, ugyanazon a csatornán keresztül nyomon követve, ha meghosszabbításokat vagy bővítést szeretnél kezelni
+
+Az Értékesítés az **admin, vállalati admin, tervező, diszpécser és ügyfélszolgálat** szerepkörök számára elérhető.
+
+<Frame caption="Az Értékesítési csatorna fül — érdeklődők és fiókok haladnak az érdeklődő → minősített → ajánlat → megnyert szakaszokon.">
+  <img src="/images/planner/crm.png" alt="Értékesítési csatorna kanban tábla érdeklődőkkel és fiókokkal négy szakaszon keresztül" />
+</Frame>
+
+---
+
+## A fülsáv
+
+<Steps>
+  <Step title="Csatorna">
+    Egy kanban tábla az érdeklődőkről és fiókokról négy szakaszon keresztül, húzd-és-ejtsd újra-ütemezéssel. Ez az alapértelmezett kiindulási füled.
+  </Step>
+  <Step title="Kapcsolattartók">
+    Egy táblázat az összes érdeklődőről, cég, kapcsolattartó, ország, forrás, utolsó érintkezés és szakasz oszlopokkal.
+  </Step>
+  <Step title="Fiókok">
+    Egy táblázat a meglévő ügyfeleidről, mindegyik opcionálisan a saját életciklus-szakaszával és utolsó érintkezési dátumával nyomon követve.
+  </Step>
+  <Step title="Árajánlatok">
+    Megnyitja az [Árajánlatok](/en/planner/quotes) oldalt — egy konkrét rakomány azonnali árazása egy érdeklődőnek vagy ügyfélnek.
+  </Step>
+  <Step title="Pályázatok (ha engedélyezve van)">
+    Megnyitja a [Pályázatok és szerződések](/en/planner/tenders-and-contracts) oldalt — csak akkor jelenik meg, ha a pályázatkezelés engedélyezve van a cégednél.
+  </Step>
+  <Step title="Jelentés">
+    Nyerési arány, átlagos üzletméret, értékesítési ciklus hossza, súlyozott csatorna-érték, és egy tevékenységi ranglista.
+  </Step>
+</Steps>
+
+<Note>
+Az Árajánlatok és a Pályázatok osztoznak ezen a fülsávon, hogy a teljes értékesítési folyamat — az alacsony elköteleződéstől a magasig — egy egységként olvasható legyen, de mindkettő megtartja a saját oldal-tartalmát és saját dokumentációs oldalát.
+</Note>
+
+---
+
+## Életciklus-szakaszok
+
+Minden érdeklődő és minden nyomon követett fiók ugyanazon a szakaszkészleten halad át:
+
+| Szakasz | Jelentés |
+|---|---|
+| `lead` (érdeklődő) | Kezdeti kapcsolatfelvétel, még nem minősített |
+| `qualified` (minősített) | Megerősítve valós lehetőségként |
+| `proposal` (ajánlat) | Egy árajánlatot vagy pályázatot elküldtek |
+| `won` (megnyert) | Aktív ügyféllé alakítva |
+| `lost` (elvesztett) | Nem alakult át |
+| `inactive` (inaktív) | A fiók elhallgatott |
+
+A **Csatorna** tábla csak az `érdeklődő` → `minősített` → `ajánlat` → `megnyert` oszlopokat mutatja. Az `elvesztett` és az `inaktív` a rekord részletező paneljén belüli szakasz-legördülőből állítható be, nem tábla-oszlopként jelenik meg.
+
+---
+
+## Érdeklődő hozzáadása
+
+<Steps>
+  <Step title="Kattints az Új érdeklődő gombra">
+    A **Csatorna** vagy a **Kapcsolattartók** fülről kattints az **Új érdeklődő** gombra.
+  </Step>
+  <Step title="Töltsd ki az adatokat">
+    Add meg:
+    - **Cég** (kötelező)
+    - **Kapcsolattartó**, **Ország**, **E-mail**, **Telefon**, **ÁFA-szám**
+    - **Forrás** — szabad szöveg (pl. "ajánlás", "fuvartőzsde")
+    - **Szakasz** — alapértelmezetten `érdeklődő`
+    - **Megjegyzések**
+  </Step>
+  <Step title="Létrehozás">
+    Kattints a **Létrehozás** gombra. Az érdeklődő megjelenik a Csatorna táblán és a Kapcsolattartók táblázatban.
+  </Step>
+</Steps>
+
+<Note>
+A bejövő árajánlat-kérésből (RFQ) vagy egy bejövő, CRM-hez továbbított e-mailből származó érdeklődők automatikusan megjelölésre kerülnek ("Bejövő RFQ" / "Bejövő e-mail") a Kapcsolattartók táblázat Forrás oszlopában.
+</Note>
+
+---
+
+## Egy érdeklődő vagy fiók kezelése
+
+Kattints bármelyik kártyára vagy sorra a részletező panel megnyitásához:
+
+- **Szakasz** — közvetlenül módosítsd az életciklus-szakaszt.
+- **Megjegyzések** — szabad formátumú jegyzetek a kapcsolatról.
+- **Üzlet** *(csak érdeklődőknél)* — várható érték (EUR/RON), valószínűség (%), várható zárási dátum, vesszővel elválasztott címkék, és egy elvesztés-ok legördülő menü, amely akkor jelenik meg, amikor a szakaszt `elvesztett`-re állítják.
+- **Emberek / Kapcsolattartók** *(csak érdeklődőknél)* — adj hozzá több kapcsolattartó személyt ugyanahhoz a fiókhoz, és jelölj meg egyet elsődlegesként.
+- **Érintkezési pontok** — naplózz egy interakciót: válassz típust (**Hívás, E-mail, Találkozó, Bemutató, Jegyzet**), egy opcionális összefoglalót/eredményt, és egy opcionális fájlcsatolmányt, majd kattints az **Érintkezési pont naplózása** gombra. Az érintkezési pontokat az érdeklődők és a fiókok is megosztják, és a legújabbal kezdve jelennek meg.
+
+Érdeklődőknél a panel fejlécén ez is szerepel:
+
+- **Árajánlat létrehozása** — közvetlenül az [Árajánlatok](/en/planner/quotes) oldalra visz, egy új, ebből az érdeklődőből előtöltött árajánlattal.
+- **Pályázat létrehozása** *(ha a pályázatkezelés engedélyezve van)* — közvetlenül a [Pályázatok és szerződések](/en/planner/tenders-and-contracts) oldalra visz, egy új, ehhez az érdeklődőhöz előre kapcsolt pályázattal.
+- **Átalakítás ügyféllé** — lásd lentebb. Átalakítás után ez a gomb **Ügyfél megtekintése** gombra változik.
+
+---
+
+## Egy érdeklődő átalakítása ügyféllé
+
+<Steps>
+  <Step title="Nyisd meg az érdeklődőt, és kattints az Átalakítás ügyféllé gombra">
+    Erősítsd meg a felszólítást. A Druma egy új ügyfélrekordot hoz létre az érdeklődő adataiból — ez idempotens, tehát egy már átalakított érdeklődőre való ismételt kattintás egyszerűen megnyitja a meglévő ügyfelet, ahelyett hogy duplikálná.
+  </Step>
+  <Step title="Opcionálisan hozz létre árkártyát">
+    Megkérdezésre kerül, szeretnél-e útvonal-árazási árkártyát létrehozni az új ügyfélhez. A **Árkártya létrehozása** választása egy előtöltött új árkártya-formhoz visz; a **Most nem** semmit nem hagy hátra.
+  </Step>
+  <Step title="Keresd meg a Fiókok alatt">
+    Az oldal átvált a **Fiókok** fülre, az újonnan átalakított ügyfélre szűrve.
+  </Step>
+</Steps>
+
+---
+
+## Jelentés
+
+A **Jelentés** fül összefoglalja a csatornádat:
+
+- **Nyerési arány** — a lezárt üzletek (nyert vs. elvesztett) közül a megnyertek aránya.
+- **Átlagos üzletméret** — az értékkel rendelkező üzletek várható értékének átlaga.
+- **Értékesítési ciklus** — átlagos napok az érdeklődő létrehozásától a zárásig.
+- **Súlyozott csatorna** — minden nyitott üzlet várható értékének × valószínűségének összege, szakaszonként bontva (számítási magyarázattal).
+- **Pályázati csatorna** *(ha a pályázatkezelés engedélyezve van)* — elkötelezett volumen pályázati státusz szerint.
+- **Tevékenységi ranglista** — csapattagonként naplózott érintkezési pontok.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Árajánlatok" icon="file-invoice" href="/en/planner/quotes">
+    Készíts és küldj egy fuvarozási árajánlatot egy érdeklődőnek vagy ügyfélnek, egykattintásos elfogadással, amely megerősített rendeléssé alakítja.
+  </Card>
+  <Card title="Pályázatok és szerződések" icon="file-signature" href="/en/planner/tenders-and-contracts">
+    Kövesd nyomon az ügyfél-beszerzési pályázatokat a jelöltségtől az aktív szerződésig, és ítélj meg útvonal-díjakat egy árkártyába.
+  </Card>
+</CardGroup>

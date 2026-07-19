@@ -1,15 +1,120 @@
 ---
 title: "Facturare electronica Peppol (Belgia)"
-description: "Trimite automat facturile catre clientii belgieni prin reteaua Peppol."
+description: "Conecteaza Druma la reteaua Peppol prin e-invoice.be si trimite automat facturi catre clientii belgieni — fara pasi manuali."
 icon: "file-check-2"
 ---
 
-Peppol este reteaua pan-europeana de facturare electronica B2B. Din **ianuarie 2026**, obligatorie in Belgia pentru tranzactiile B2B.
+Peppol (Pan-European Public Procurement On-Line) este reteaua standard UE pentru schimbul de facturi electronice structurate intre companii. In Belgia, trimiterea facturilor prin Peppol este **obligatorie pentru toate companiile inregistrate KBO** care emit facturi B2B, incepand din ianuarie 2026.
+
+Druma se conecteaza la reteaua Peppol prin **e-invoice.be**, un Punct de Acces Peppol belgian acreditat. Odata configurata, Druma detecteaza care dintre clientii tai sunt accesibili pe Peppol si trimite facturile catre ei automat — nu trebuie sa schimbi modul in care creezi sau trimiti facturi.
+
+---
+
+## Cine are nevoie de asta
+
+Ai nevoie de integrarea Peppol daca:
+
+- Compania ta este inregistrata in Belgia (are un numar KBO), **si**
+- Emiti facturi catre alte companii belgiene
+
+Daca compania ta opereaza in afara Belgiei, sau daca clientii tai sunt consumatori sau companii straine, Peppol nu se aplica pentru tine. Druma va continua sa trimita facturi prin email pentru toti destinatarii non-Peppol, indiferent daca integrarea este activa.
+
+<Note>
+Companiile belgiene care nu activeaza aceasta integrare risca penalitati de neconformitate, incepand din ianuarie 2026. Configurarea dureaza sub cinci minute.
+</Note>
+
+---
+
+## Configurare
 
 <Steps>
-  <Step title="Mergi la Setari -> Integrarsi -> Peppol">Sectiunea de integrare Peppol.</Step>
-  <Step title="Introdu numarul KBO">Numarul de inregistrare belgian (KBO/BCE).</Step>
-  <Step title="Inregistreaza compania">Apasa **Inregistreaza in Peppol**. Druma se ocupa de inregistrarea la e-invoice.be.</Step>
+  <Step title="Deschide cardul Peppol">
+    Mergi la **Setari → Integrari**. Gaseste cardul **Facturare electronica Peppol**. Statusul sau va arata **Neconfigurat**.
+  </Step>
+  <Step title="Apasa Configureaza">
+    Apasa **Configureaza** pe card. Se deschide un panou de setari.
+  </Step>
+  <Step title="Introdu numarul KBO si numarul de TVA">
+    Introdu **numarul KBO** al companiei tale (numarul de inregistrare belgian pe 10 cifre) si **numarul de TVA** (BE urmat de 10 cifre) in campurile respective.
+  </Step>
+  <Step title="Inregistreaza-te in reteaua Peppol">
+    Apasa **Inregistreaza-te in Peppol**. Druma trimite inregistrarea ta catre e-invoice.be. De regula se finalizeaza in cateva secunde.
+  </Step>
+  <Step title="Confirma activarea">
+    Odata ce inregistrarea reuseste, cardul arata o eticheta **Conectat**. Compania ta este acum un participant Peppol si poate atat trimite, cat si primi facturi structurate pe retea.
+  </Step>
 </Steps>
 
-Cand generezi o factura pentru un client belgian, Druma verifica automat daca este inregistrat in Peppol si trimite factura corespunzator.
+<Warning>
+Doar utilizatorii **Admin** si **Company Admin** pot configura integrari. Daca nu vezi butonul Configureaza, cere-i administratorului contului tau.
+</Warning>
+
+---
+
+## Cum functioneaza rutarea facturilor
+
+Dupa activare, Druma adauga o verificare Peppol de fiecare data cand trimiti o factura:
+
+1. Druma verifica mai intai daca numarul de TVA al clientului este belgian (incepe cu `BE`) — aceasta verificare se intampla **inainte de orice apel de retea**, deci clientii non-belgieni nu declanseaza niciodata o cautare Peppol.
+2. Pentru clientii belgieni, Druma cauta destinatarul pe reteaua Peppol prin e-invoice.be. Daca este gasit, factura este trimisa electronic — **fara pasi suplimentari din partea ta**.
+3. Druma trimite si factura prin email, indiferent daca trimiterea Peppol a reusit — email-ul nu este o rezerva conditionata, declansata doar cand Peppol esueaza. Singura exceptie: daca un client a renuntat explicit la a primi ambele canale (o setare separata, per client), email-ul este sarit odata ce livrarea Peppol reuseste.
+
+Nu trebuie sa alegi o metoda de livrare per factura. Rutarea este complet automata.
+
+---
+
+## Urmarirea statusului facturii
+
+Lista de facturi include o coloana de status **Peppol**, cu urmatoarele stari:
+
+| Status | Semnificatie |
+|---|---|
+| **Trimisa** | Trimisa catre e-invoice.be, in asteptarea confirmarii de livrare |
+| **Livrata** | Confirmata ca livrata la inbox-ul Peppol al destinatarului |
+| **Esuata** | Livrarea a esuat la Punctul de Acces — vezi detaliul erorii pe randul facturii |
+| **Validare esuata** | Verificarea prealabila locala a Druma a blocat trimiterea inainte sa ajunga la e-invoice.be (de ex. o suma de control KBO/TVA invalida) — nu s-a facut niciun apel la Punctul de Acces, deci nu s-a folosit nicio cota e-invoice.be |
+| **Nu este in retea** | TVA-ul clientului nu este un participant Peppol inregistrat; factura a fost trimisa prin email ca de obicei (afisat ca "→ Trimisa prin email") |
+
+Nu exista un status "In asteptare" — o factura fie nu este inca trimisa prin Peppol (null), fie se afla in una din cele cinci stari de mai sus. Actualizarile de status pentru facturile trimise ajung automat in Druma printr-un webhook de la e-invoice.be.
+
+---
+
+## Gestionarea esecurilor
+
+Daca o factura arata **Esuata** sau **Validare esuata**:
+
+1. Treci cu mouse-ul peste sau apasa eticheta de status ca sa citesti detaliul erorii.
+2. Corecteaza orice problema indicata (de exemplu, un numar de TVA invalid pe inregistrarea clientului).
+3. Apasa **Reincearca Peppol** pe randul facturii, pentru a retrimite.
+
+<Note>
+Esecurile de livrare Peppol nu afecteaza statusul intern al facturii in Druma. Factura ramane confirmata si va aparea in continuare in exporturile tale contabile. Factura este de asemenea trimisa prin email indiferent, deci clientul nu ramane fara o copie cat timp investighezi.
+</Note>
+
+---
+
+## Declansarea manuala a livrarii Peppol
+
+Pentru facturile unde trimiterea automata nu s-a declansat — de exemplu, facturi create inainte ca integrarea sa fie activata — poti trimite manual prin Peppol:
+
+1. Deschide lista **Facturi**.
+2. Gaseste randul facturii si apasa meniul de actiuni al randului (**···**).
+3. Apasa **Trimite acum**.
+
+Este util si dupa ce corectezi numarul de TVA sau numarul KBO al unui client.
+
+---
+
+## Pagini asociate
+
+<Card title="Configurarea integrarilor" icon="plug" href="/ro/admin/integration-setup">
+  Prezentare generala a tuturor integrarilor disponibile in Setari → Integrari.
+</Card>
+
+<Card title="Trimiterea facturilor" icon="send" href="/en/finance/sending-invoices">
+  Cum trimiti facturi prin email si urmaresti statusul livrarii.
+</Card>
+
+<Card title="Branding si formate documente" icon="palette" href="/ro/admin/branding-formats">
+  Personalizeaza numerotarea facturilor, logo-ul si culorile pe facturile PDF.
+</Card>

@@ -10,44 +10,63 @@ Tento článek přesně vysvětluje, jaká data Druma o vaší společnosti ucho
 
 ## Doby uchovávání dat
 
-| Kategorie dat | Doba uchovávání | Právní základ |
-|---|---|---|
+| Typ dat | Doba uchovávání | Právní základ |
+|-----------|-----------------|-------------|
 | Profil společnosti a nastavení | Trvání předplatného + 90 dní | Smlouva |
 | Uživatelské účty | Trvání předplatného + 90 dní | Smlouva |
-| Přepravní zakázky a záznamy o zásilkách | Trvání předplatného + 90 dní | Smlouva |
+| Přepravní objednávky a záznamy zásilek | Trvání předplatného + 90 dní | Smlouva |
 | Záznamy klientů | Trvání předplatného + 90 dní | Smlouva |
-| Záznamy o řidičích | Trvání předplatného + 90 dní | Smlouva |
-| Faktury a finanční záznamy | 7 let od data vystavení | Rumunský zákon o účetnictví |
-| Dokumenty eCMR (podepsané) | 10 let od data podpisu | Protokol e-CMR (zákonný požadavek) |
-| Auditní záznamy | 18 měsíců | Oprávněné zájmy |
-| GPS poloha (pouze aktuální) | Přepsána v reálném čase — žádná historie není uchovávána | Smlouva |
+| Záznamy řidičů | Trvání předplatného + 90 dní | Smlouva |
+| Faktury a finanční záznamy | Archivováno po 3 letech, trvale smazáno po 10 letech od data faktury | Fiskální právo EU / rumunský zákon o účetnictví |
+| Dokumenty eCMR (podepsané) | Trvale smazány 7 let po datu doručení zásilky, samostatnou roční úlohou výmazu — nezávisle na stavu vašeho účtu | Dodatkový protokol k Úmluvě CMR |
+| Auditní záznamy | 12 měsíců | Oprávněné zájmy |
+| GPS poloha (živé sledování) | Neuchovává se — pouze aktuální poloha, přepisovaná při každé aktualizaci | Smlouva |
+| GPS razítka u událostí objednávky | Uchovávána spolu s objednávkou (viz záznamy objednávek výše) | Smlouva |
+| GPS data odeslaná ANAF e-Transport | 30 dní, poté automaticky vymazána | Zákonný požadavek (Rumunsko) |
+| Soubory tachografu (DDD/TGD) | Neomezeně (12 měsíců je zákonné minimum, ne cíl výmazu) | Nařízení EU 165/2014 |
 | Chybové a bezpečnostní záznamy | 90 dní | Oprávněné zájmy |
 | Fakturační záznamy (Stripe) | 7 let | Daňové právo |
 
 <Note>
-Dokumenty eCMR podléhají desetileté době uchovávání podle Dodatkového protokolu k Úmluvě CMR. Tato doba nemůže být zkrácena, ani pokud zrušíte svůj účet.
+Podpisy eCMR a dokumenty eCMR jsou automaticky trvale smazány **7 let po datu doručení zásilky** roční úlohou výmazu — ta běží bez ohledu na to, zda je váš účet otevřený nebo uzavřený. Samostatně, pokud je smazán účet jednotlivého uživatele, jakýkoli podpis eCMR, který vytvořil během **posledních 3 let**, je anonymizován (ne smazán), místo aby byl okamžitě odstraněn, takže přežije — bez připojených osobních údajů — dokud ho nedostihne výše uvedená 7letá hranice.
 </Note>
 
-## Data GPS polohy: co uchováváme
+## Data GPS: co uchováváme
 
-Druma zaznamenává GPS polohu ze zařízení řidiče **pouze během aktivní přiřazené jízdy**, poté co řidič v aplikaci udělí svolení ke sdílení polohy. Každá nová poloha **přepisuje tu předchozí** — Druma uchovává pouze aktuální polohu, nikoli historii. Neděláme následující:
+Druma zaznamenává GPS polohu ze zařízení řidiče, dokud je zásilka aktivní, poté co řidič v aplikaci udělí svolení ke sdílení polohy. Pro **živé sledování** (poloha zobrazená na mapě) se uchovává pouze aktuální poloha vozidla — každý nový signál přepisuje předchozí, takže se neuchovává žádná historická stopa předchozích poloh.
+
+Samostatně, když řidič nahlásí změnu stavu, zpoždění nebo incident, zachytí se jedna GPS souřadnice a připojí se k dané konkrétní události objednávky, čímž se stane součástí záznamu objednávky (uchovávaného po stejnou dobu jako samotná objednávka — viz tabulka výše). Jde o jednorázové razítko u dané události, ne o průběžný záznam polohy.
+
+**Neděláme** následující:
 
 - Nesledujeme polohu řidiče mimo aktivní přiřazenou jízdu
-- Neuchováváme žádnou historii polohy ani trasové stopy
+- Neuchováváme historickou stopu poloh živého sledování
 - Nesdílíme GPS data s žádnou třetí stranou s výjimkou případů vyžadovaných pro hlášení e-Transport orgánu ANAF, které využívá klouzavý 30denní buffer před smazáním
+
+<Note>
+Starší tabulka poloh pouze pro přidávání záznamů z dřívější verze chatu s řidiči stále existuje s 90denním klouzavým výmazem, ale nic v aktuální aplikaci do ní nezapisuje nové řádky — jde o neaktivní pozůstatek, ne o aktivní historický záznam GPS.
+</Note>
+
+## Data tachografu: co uchováváme
+
+Druma udržuje **Archiv tachografu**, který ukládá surové soubory DDD (jednotka vozidla) a TGD (karta řidiče) — stažené automaticky přes připojeného poskytovatele telematiky nebo nahrané ručně — pro splnění požadavků na frekvenci stahování a uchovávání podle nařízení EU 165/2014. Na rozdíl od provozních dat jsou soubory tachografu **uchovávány neomezeně dlouho**: 12 měsíců je zákonné minimum, ne cíl výmazu, protože operátoři je mohou potřebovat předložit dlouho po tomto minimu při silniční kontrole nebo úředním auditu. Podrobnosti viz [Archiv tachografu](/cs/fleet-compliance/tacho-archive).
 
 ## Auditní záznam
 
-Každá významná akce v Druma (vytvoření objednávky, odeslání faktury, přihlášení uživatele, změna nastavení) je zaznamenána v auditním záznamu s časovým razítkem, uživatelem a podrobnostmi akce. Auditní záznamy jsou uchovávány 18 měsíců a nelze je upravit ani smazat — existují k ochraně vaší i naší v případě sporů.
+Každá významná akce v Druma (vytvoření objednávky, odeslání faktury, přihlášení uživatele, změna nastavení) je zaznamenána v auditním záznamu s časovým razítkem, uživatelem a podrobnostmi akce. Auditní záznamy jsou uchovávány 12 měsíců a nelze je upravit ani smazat — existují k ochraně vaší i naší v případě sporů.
 
 ## Po zrušení účtu
 
 Po zrušení předplatného:
 
-1. Váš účet vstoupí do 90denní ochranné lhůty — data zůstávají zachována a přístupná
-2. Po 90 dnech jsou veškerá provozní data trvale smazána
-3. Faktury a finanční záznamy jsou uchovávány 7 let (zákonný požadavek)
-4. Dokumenty eCMR jsou uchovávány 10 let (zákonný požadavek)
+1. Váš účet vstoupí do **90denní ochranné lhůty** — data zůstávají zachována a přístupná.
+2. Po 90 dnech, pokud je smazán celý účet vaší společnosti: zprávy k objednávkám a interní poznámky jsou smazány okamžitě, objednávky **starší 3 let** jsou smazány a klienti, vozidla a přívěsy jsou smazáni. Objednávky **mladší 3 let se v tomto kroku nemažou** — spolu s propojenými fakturami a podpisy eCMR nadále podléhají samostatným pravidlům uchovávání níže, místo aby byly vymazány 90. den.
+3. Faktury a finanční záznamy jsou archivovány po 3 letech a trvale smazány po 10 letech od data faktury — tento harmonogram běží nezávisle na tom, kdy jste zrušili předplatné.
+4. Podpisy a dokumenty eCMR jsou trvale smazány 7 let po datu doručení zásilky — také nezávisle na datu zrušení.
+
+<Note>
+Pokud je odstraněn účet jednotlivého člena týmu (místo celé společnosti), platí samostatné, užší pravidlo: objednávky a podpisy eCMR, které vytvořil během posledních 3 let, jsou anonymizovány (osobní pole odstraněna, záznamy zachovány pro obchodní data) a faktury, které vytvořil během posledních 10 let, jsou anonymizovány. Záznamy mimo tato období jsou smazány spolu se záznamem uživatele.
+</Note>
 
 ## Žádost o export dat
 
@@ -60,7 +79,7 @@ Vaše data jsou zabalena jako ZIP archiv (formáty JSON a CSV) a doručena na e-
 ## Žádost o smazání účtu
 
 <Warning>
-Smazání účtu je nevratné. Veškerá provozní data jsou trvale smazána po 90denní době uchovávání. Zákonem vyžadovaná data (faktury, eCMR) jsou uchovávána tak, jak vyžaduje zákon.
+Smazání účtu je nevratné. Jakmile uplyne 90denní doba uchovávání, starší provozní data (objednávky starší 3 let, plus klienti/vozidla/přívěsy) jsou trvale smazána; novější objednávky, faktury a data eCMR jsou anonymizovány nebo uchovávány podle vlastních zákonem vyžadovaných harmonogramů místo okamžitého smazání — viz „Po zrušení účtu" výše.
 </Warning>
 
 Chcete-li smazat svůj účet: **Nastavení → Data a soukromí → Smazat účet** → potvrďte zadáním názvu vaší společnosti.
@@ -79,13 +98,13 @@ Alternativně napište e-mail na privacy@druma.io z e-mailové adresy vlastníka
 | PTV Group | Data o trase, vzdálenosti a ETA (souřadnice vyzvednutí/doručení) | EU |
 | HERE Technologies | Geokódování a automatické doplňování adres | EU |
 | Google Vertex AI | AI extrakce z e-mailů a dokumentů | europe-west1 (bez trénování modelů) |
-| Google Cloud Translation | Překlad obsahu UI/dokumentů na vyžádání | Google Cloud (data mohou opustit EU) |
+| Google Cloud Translation | Překlad obsahu UI/dokumentů na vyžádání | Google Cloud |
 | Sentry | Sledování chyb a hlášení havárií | EU |
 | Google Firebase Cloud Messaging | Push oznámení v aplikaci pro řidiče | Google Cloud |
 | WhatsApp Business Cloud API (Meta) | Komunikace s řidiči (pouze pokud je povolena) | Meta (USA/EU) |
 | Poskytovatelé telematiky (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS a tachografová data (pouze u připojeného poskytovatele) | Liší se dle poskytovatele |
 | Poskytovatelé telematiky pro chlazená vozidla (Mapon, Orbcomm, Thermo King) | Data o teplotě chlazeného nákladu (pouze u připojeného poskytovatele) | Liší se dle poskytovatele |
-| TransFollow | Pouze záložní řešení pro eCMR — výchozím poskytovatelem je nyní nativní řešení Druma | Nizozemsko |
+| TransFollow | Pouze existující konfigurace pro eCMR — výchozím poskytovatelem je nativní řešení Druma | Nizozemsko |
 
 ## Vaše práva podle GDPR
 
@@ -102,6 +121,6 @@ Pro uplatnění jakéhokoli práva: privacy@druma.io. Odpovídáme do 30 dnů.
   Úplné zásady ochrany osobních údajů včetně zpracovatelů třetích stran a právních základů.
 </Card>
 
-<Card title="GDPR a správa dat" icon="lock" href="/en/admin/gdpr-data-management">
+<Card title="GDPR a správa dat" icon="lock" href="/cs/admin/gdpr-data-management">
   Kompletní průvodce správou dat, exportem a smazáním účtu.
 </Card>

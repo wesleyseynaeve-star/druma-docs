@@ -11,30 +11,45 @@ Ta strona wyjaśnia dokładnie, jakie dane Druma przechowuje na temat Twojej fir
 ## Okresy przechowywania danych
 
 | Typ danych | Okres przechowywania | Podstawa prawna |
-|-----------|---------------------|-----------------|
+|-----------|-----------------|-----------------|
 | Profil firmy i ustawienia | Czas trwania subskrypcji + 90 dni | Umowa |
 | Konta użytkowników | Czas trwania subskrypcji + 90 dni | Umowa |
 | Zlecenia transportowe i rekordy przesyłek | Czas trwania subskrypcji + 90 dni | Umowa |
 | Rekordy klientów | Czas trwania subskrypcji + 90 dni | Umowa |
 | Rekordy kierowców | Czas trwania subskrypcji + 90 dni | Umowa |
-| Faktury i dokumenty finansowe | 7 lat od daty faktury | Rumuńskie prawo rachunkowe |
-| Dokumenty eCMR (podpisane) | 10 lat od daty podpisania | Protokół e-CMR (wymóg prawny) |
+| Faktury i dokumenty finansowe | Archiwizowane po 3 latach, trwale usuwane po 10 latach od daty faktury | Prawo fiskalne UE / rumuńskie prawo rachunkowe |
+| Dokumenty eCMR (podpisane) | Trwale usuwane 7 lat po dacie dostawy przesyłki, przez samodzielne coroczne czyszczenie — niezależnie od statusu Twojego konta | Protokół dodatkowy do Konwencji CMR |
 | Dzienniki audytu | 18 miesięcy | Prawnie uzasadnione interesy |
-| Pozycja GPS (tylko bieżąca) | Nadpisywana w czasie rzeczywistym — brak przechowywanej historii | Umowa |
+| Pozycja GPS (śledzenie na żywo) | Nieprzechowywana — tylko bieżąca pozycja, nadpisywana przy każdej aktualizacji | Umowa |
+| Znaczniki GPS zdarzeń zlecenia | Przechowywane razem ze zleceniem (patrz rekordy zleceń powyżej) | Umowa |
+| Dane GPS przekazywane do ANAF e-Transport | 30 dni, następnie automatycznie usuwane | Wymóg prawny (Rumunia) |
+| Pliki tachografu (DDD/TGD) | Bezterminowo (12 miesięcy to prawne minimum, nie cel usunięcia) | Rozporządzenie UE 165/2014 |
 | Dzienniki błędów i bezpieczeństwa | 90 dni | Prawnie uzasadnione interesy |
 | Zapisy rozliczeniowe (Stripe) | 7 lat | Prawo podatkowe |
 
 <Note>
-Dokumenty eCMR mają 10-letni wymóg przechowywania na mocy Protokołu dodatkowego do Konwencji CMR. Nie można go skrócić nawet po zamknięciu konta.
+Podpisy eCMR i dokumenty eCMR są trwale usuwane automatycznie **7 lat po dacie dostawy przesyłki** przez coroczne zadanie czyszczące — działa to niezależnie od tego, czy Twoje konto jest otwarte czy zamknięte. Osobno, jeśli konto pojedynczego użytkownika zostanie usunięte, każdy podpis eCMR, który utworzył w **ciągu ostatnich 3 lat**, jest anonimizowany (nie usuwany), a nie natychmiast usunięty, więc przetrwa — bez dołączonych danych osobowych — aż dogoni go powyższy 7-letni termin.
 </Note>
 
 ## Dane GPS: co przechowujemy
 
-Druma rejestruje pozycję GPS z urządzenia kierowcy **podczas aktywnego, przypisanego kursu, po udzieleniu przez kierowcę zgody na lokalizację** w aplikacji. Każda nowa pozycja **nadpisuje poprzednią** — Druma przechowuje wyłącznie bieżącą pozycję, a nie historię. Druma **nie**:
+Druma przechwytuje pozycję GPS z urządzenia kierowcy, gdy ładunek jest aktywny, po tym jak kierowca udzielił zgody na lokalizację w aplikacji. Dla **śledzenia na żywo** (pozycji pokazywanej na mapie) przechowywana jest tylko bieżąca pozycja ciężarówki — każdy nowy sygnał nadpisuje poprzedni, więc nie jest zachowywany żaden historyczny ślad wcześniejszych pozycji.
+
+Osobno, gdy kierowca zgłasza zmianę statusu, opóźnienie lub incydent, przechwytywana jest pojedyncza współrzędna GPS i dołączana do tego konkretnego zdarzenia zlecenia, stając się częścią rekordu samego zlecenia (przechowywana tak długo, jak samo zlecenie — patrz tabela powyżej). To jednorazowy znacznik na tym zdarzeniu, nie ciągły log lokalizacji.
+
+Druma **nie**:
 
 - Śledzi lokalizacji kierowcy poza aktywnym, przypisanym kursem
-- Przechowuje żadnej historii lokalizacji ani śladów przemieszczania się
-- Udostępnia danych GPS stronom trzecim, z wyjątkiem przypadków wymaganych przez raportowanie e-Transport do ANAF, które korzysta z 30-dniowego bufora przed usunięciem
+- Przechowuje historycznego śladu pozycji śledzenia na żywo
+- Udostępnia danych GPS żadnej stronie trzeciej, z wyjątkiem przypadków wymaganych przez raportowanie e-Transport do ANAF, które korzysta z kroczącego 30-dniowego bufora przed usunięciem
+
+<Note>
+Wciąż istnieje zarchiwizowana tabela pozycji tylko-do-dopisywania z wcześniejszej wersji czatu kierowcy, z kroczącym 90-dniowym czyszczeniem, ale nic w obecnej aplikacji nie zapisuje do niej nowych wierszy — to uśpiona pozostałość, nie aktywny historyczny log GPS.
+</Note>
+
+## Dane tachografu: co przechowujemy
+
+Druma prowadzi **Archiwum tachografu**, które przechowuje surowe pliki DDD (jednostka pokładowa) i TGD (karta kierowcy) — pobierane automatycznie przez podłączonego dostawcę telematyki lub przesyłane ręcznie — aby spełnić wymogi częstotliwości pobierania i przechowywania z Rozporządzenia UE 165/2014. W przeciwieństwie do danych operacyjnych, pliki tachografu są **przechowywane bezterminowo**: 12 miesięcy to prawne minimum, nie cel usunięcia, ponieważ operatorzy mogą musieć je przedstawić znacznie później niż ten próg podczas kontroli drogowej lub audytu organu. Zobacz [Archiwum tachografu](/pl/fleet-compliance/tacho-archive) po szczegóły.
 
 ## Dziennik audytu
 
@@ -44,10 +59,14 @@ Każde istotne działanie w Druma (zlecenie utworzone, faktura wysłana, login u
 
 Gdy anulujesz subskrypcję:
 
-1. Twoje konto wchodzi w 90-dniowy okres karencji — dane są zachowane i dostępne
-2. Po 90 dniach wszystkie dane operacyjne są trwale usuwane
-3. Faktury i dokumenty finansowe są przechowywane przez 7 lat (wymóg prawny)
-4. Dokumenty eCMR są przechowywane przez 10 lat (wymóg prawny)
+1. Twoje konto wchodzi w **90-dniowy okres karencji** — dane są zachowane i dostępne.
+2. Po 90 dniach, jeśli całe konto Twojej firmy zostanie usunięte: wiadomości zleceń i wewnętrzne notatki są usuwane natychmiast, zlecenia **starsze niż 3 lata** są usuwane, a klienci, ciężarówki i naczepy są usuwane. Zlecenia **młodsze niż 3 lata nie są usuwane na tym etapie** — one, wraz z powiązanymi fakturami i podpisami eCMR, nadal wygasają zgodnie z poniższymi samodzielnymi zasadami przechowywania, zamiast zostać wymazane w 90. dniu.
+3. Faktury i dokumenty finansowe są archiwizowane po 3 latach i trwale usuwane po 10 latach od daty faktury — ten harmonogram działa niezależnie od momentu anulowania.
+4. Podpisy i dokumenty eCMR są trwale usuwane 7 lat po dacie dostawy przesyłki — również niezależnie od daty anulowania.
+
+<Note>
+Jeśli konto pojedynczego członka zespołu zostanie usunięte (zamiast całej firmy), obowiązuje osobna, węższa zasada: zlecenia i podpisy eCMR, które utworzył w ciągu ostatnich 3 lat, są anonimizowane (pola osobowe usunięte, rekordy zachowane dla danych biznesowych), a faktury, które utworzył w ciągu ostatnich 10 lat, są anonimizowane. Rekordy poza tymi oknami są usuwane wraz z rekordem użytkownika.
+</Note>
 
 ## Żądanie eksportu danych
 
@@ -60,10 +79,10 @@ Twoje dane są pakowane jako plik ZIP (formaty JSON i CSV) i dostarczane na adre
 ## Żądanie usunięcia konta
 
 <Warning>
-Usunięcie konta jest nieodwracalne. Wszystkie dane operacyjne są trwale usuwane po 90-dniowym okresie przechowywania. Prawnie wymagane dane (faktury, eCMR) są przechowywane zgodnie z wymogami prawa.
+Usunięcie konta jest nieodwracalne. Gdy minie 90-dniowy okres przechowywania, starsze dane operacyjne (zlecenia starsze niż 3 lata, plus klienci/ciężarówki/naczepy) są trwale usuwane; nowsze zlecenia, faktury i dane eCMR są anonimizowane lub przechowywane zgodnie z własnymi, prawnie wymaganymi harmonogramami, zamiast zostać od razu usunięte — patrz "Po anulowaniu konta" powyżej.
 </Warning>
 
-Aby usunąć konto: **Ustawienia → Dane i prywatność → Usuń konto** → potwierdź wpisując nazwę firmy.
+Aby usunąć konto: **Ustawienia → Dane i prywatność → Usuń konto** → potwierdź, wpisując nazwę firmy.
 
 Alternatywnie wyślij e-mail na adres privacy@druma.io z adresu e-mail właściciela konta.
 
@@ -85,7 +104,7 @@ Alternatywnie wyślij e-mail na adres privacy@druma.io z adresu e-mail właścic
 | WhatsApp Business Cloud API (Meta) | Wiadomości do kierowców (tylko jeśli włączone) | Meta (US/UE) |
 | Dostawcy telematyki (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Dane GPS i tachografu (tylko podłączony dostawca) | Zależnie od dostawcy |
 | Dostawcy telematyki chłodni (Mapon, Orbcomm, Thermo King) | Dane temperatury chłodni (tylko podłączony dostawca) | Zależnie od dostawcy |
-| TransFollow | Wyłącznie zapasowy (legacy) provider eCMR — domyślny jest natywny provider Druma | Holandia |
+| TransFollow | Wyłącznie zapasowy (legacy) provider eCMR — domyślny jest natywny, wewnętrzny provider Druma | Holandia |
 
 ## Twoje prawa na mocy RODO
 

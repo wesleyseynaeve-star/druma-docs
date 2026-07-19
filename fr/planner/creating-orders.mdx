@@ -1,33 +1,70 @@
 ---
 title: "Créer une commande"
-description: "Comment créer un nouvel ordre de transport dans Druma, affecter un camion et un chauffeur, et définir les détails de chargement et de livraison."
+description: "Comment créer une nouvelle commande de transport dans Druma, affecter un camion et un chauffeur, et définir les détails de chargement et de livraison."
 icon: "plus"
 ---
 
 ## Vue d'ensemble
 
-Chaque mission commence par une commande. Dans Druma, une commande regroupe tout en un seul endroit — le client, les adresses de chargement et de livraison, les détails des marchandises, le chauffeur et le prix convenu.
+Chaque mission commence par une commande. Dans Druma, une commande regroupe tout en un seul endroit — le client, les adresses de chargement et de livraison, les détails des marchandises, le chauffeur, et le prix convenu. Une fois enregistrée, la commande circule automatiquement dans le système, de la planification jusqu'à la facturation.
 
 Accédez à **Planificateur → Commandes → Nouvelle commande** pour commencer.
 
 ---
 
+## La fenêtre Nouvelle commande en un coup d'œil
+
+La fenêtre est organisée en onglets. Voici le chemin le plus rapide — les sections ci-dessous approfondissent chaque champ.
+
+<Steps>
+  <Step title="Ouvrez Nouvelle commande">
+    Accédez à **Planificateur → Commandes** et cliquez sur **Nouvelle commande**. La fenêtre s'ouvre sur l'onglet **Client**.
+  </Step>
+  <Step title="Onglet Client — choisissez ou ajoutez le client">
+    Recherchez par nom d'entreprise ou numéro de TVA. Si rien ne correspond, cliquez sur **Ajouter un client** pour en créer un directement sans quitter la fenêtre.
+  </Step>
+  <Step title="Onglet Itinéraire — ajoutez les arrêts">
+    Cliquez sur **Ajouter un point de chargement** et **Ajouter un point de déchargement** pour construire la liste des arrêts, et **Ajouter un arrêt interne** pour les points de repos, ravitaillement, ou stationnement de remorque. Chaque arrêt reçoit une adresse, une date, et une plage horaire.
+  </Step>
+  <Step title="Onglet Cargaison — décrivez le chargement">
+    Saisissez le poids, les palettes, le volume, le LDM, et le type de remorque. Cochez **ADR (marchandises dangereuses)** ou **Frigo** si le chargement nécessite une manipulation de matières dangereuses ou à température contrôlée — les champs supplémentaires pertinents apparaissent automatiquement.
+  </Step>
+  <Step title="Onglet Financier — définissez le type de commande et le prix">
+    Choisissez **Camion propre**, **Sous-traitée**, ou **Repositionnement** comme type de commande, puis saisissez le prix convenu, la devise, et le type de prix. Utilisez **Suggérer un prix** pour tirer un point de référence de barème de tarifs ou d'historique de ligne pour l'itinéraire.
+  </Step>
+  <Step title="Onglets Extras et Documents (optionnel)">
+    Ajoutez des extras facturables (temps d'attente, supplément ADR, etc.) sur **Extras**, et joignez des documents de flotte à partager avec le client sur **Documents**.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**. La commande est créée sans camion ni chauffeur encore affectés — affectez-en un ensuite en faisant glisser la commande sur un camion sur le [Tableau de planification](/fr/planner/planning-board).
+  </Step>
+</Steps>
+
+---
+
 ## Étape 1 — Choisir un client
 
-Commencez par sélectionner le client auquel appartient cette commande. Tapez le nom de l'entreprise ou le numéro de TVA dans la zone de recherche.
+Commencez par sélectionner le client auquel appartient cette commande. Tapez le nom de l'entreprise ou le numéro de TVA dans la zone de recherche et Druma trouvera les fiches correspondantes.
 
 Si le client n'apparaît pas, vous devez l'ajouter d'abord dans **Clients** avant de créer la commande.
+
+<Note>
+Le client que vous sélectionnez ici est celui qui sera facturé. Assurez-vous de choisir la bonne entité — surtout pour les groupes d'entreprises avec plusieurs numéros de TVA.
+</Note>
 
 ---
 
 ## Étape 2 — Sélectionner le type de commande
 
-Choisissez l'un des quatre types de commandes :
+Choisissez l'un des trois types de commande :
 
-- **Camion propre** — Vous transportez les marchandises avec votre propre véhicule et chauffeur. C'est le type le plus courant.
-- **Sous-traitée** — Vous externalisez la mission à un autre transporteur.
-- **Vente de capacité** — Vous vendez de l'espace de camion disponible à un courtier en fret.
-- **Repositionnement** — Déplacement sans revenu pour positionner un camion pour la prochaine mission. Voir [Commandes de repositionnement](/fr/planner/repositioning).
+- **Camion propre** — vous transportez les marchandises vous-même avec votre propre véhicule et chauffeur. C'est le type le plus courant.
+- **Sous-traitée** — vous externalisez la mission à un autre transporteur. Vous gérez la commande dans Druma, mais le transport réel est effectué par un camion tiers. Les champs camion et chauffeur sont remplacés par une section **Sous-traitant / Transporteur** (voir Étape 7).
+- **Repositionnement** — un déplacement sans revenu pour amener un camion là où il doit être pour la prochaine mission. Aucun client ni prix n'est rattaché. Vous sélectionnez un code de raison de repositionnement et la distance est suivie comme kilomètres morts internes. Voir [Commandes de repositionnement](/fr/planner/repositioning) pour le détail.
+
+<Note>
+Pour vendre de la capacité disponible sur un chargement existant, utilisez l'action **Mettre en vente** du tableau plutôt que de créer une nouvelle commande — voir [Tableau de planification](/fr/planner/planning-board). Il n'y a pas de type de commande « Vente de capacité » séparé.
+</Note>
 
 ---
 
@@ -35,91 +72,103 @@ Choisissez l'un des quatre types de commandes :
 
 Remplissez où les marchandises seront collectées :
 
-- **Adresse** — Druma utilise l'autocomplétion HERE Maps pour suggérer des adresses.
-- **Personne de contact** — Le nom de la personne à demander au site de chargement.
-- **Numéro de téléphone** — Le numéro de contact au lieu de chargement.
-- **Date et heure de chargement** — Quand le chauffeur doit arriver.
-- **Numéro de référence** — La référence propre du client (numéro de commande, référence CMR, etc.).
+- **Adresse** — commencez à taper et Druma utilise l'autocomplétion HERE Maps pour suggérer des adresses. Sélectionnez dans la liste pour obtenir des coordonnées précises pour le routage.
+- **Personne de contact** — le nom de la personne à demander au site de chargement.
+- **Numéro de téléphone** — le numéro de contact au lieu de chargement.
+- **Date et heure de chargement** — quand le chauffeur doit arriver pour charger.
+- **Numéro de référence** — la référence propre du client (numéro de bon de commande, référence CMR, etc.). Elle apparaît sur le document CMR.
 
 ---
 
 ## Étape 4 — Adresse de livraison
 
-La section livraison fonctionne de la même façon que le chargement.
+La section livraison fonctionne de la même façon que le chargement :
+
+- Adresse complète avec autocomplétion HERE
+- Personne de contact et téléphone au site de livraison
+- Date et heure de livraison (doit être après la date de chargement)
+- Numéro de référence de livraison (optionnel)
 
 <Note>
-Si vous avez plusieurs points de chargement ou de livraison, utilisez le bouton **Ajouter un arrêt** pour insérer des points intermédiaires.
+Si vous avez plusieurs points de chargement ou de livraison, utilisez **Ajouter un point de chargement**, **Ajouter un point de déchargement**, ou **Ajouter un arrêt interne** (points de repos, ravitaillement, stationnement de remorque) sur l'onglet **Itinéraire** pour insérer des points intermédiaires. Chaque arrêt a sa propre adresse, heure, et référence.
 </Note>
 
 ---
 
 ## Étape 5 — Détails des marchandises
 
-- **Marchandise** — Ce qui est transporté (ex. : « produits alimentaires palettisés », « bobines en acier »).
-- **Poids (kg)** — Poids brut de la cargaison.
-- **Volume (m³)** — Volume total, si connu.
-- **Nombre de palettes** — Nombre d'EUR-palettes ou autres unités de chargement.
+Décrivez ce qui est transporté :
+
+- **Marchandise** — ce que sont les marchandises (ex. « produits alimentaires palettisés », « bobines en acier », « pièces automobiles »).
+- **Poids (kg)** — poids brut de la cargaison.
+- **Volume (m³)** — volume total, si connu.
+- **Nombre de palettes** — nombre d'EUR-palettes ou autres unités de chargement.
 
 ### Indicateurs spéciaux
 
-- **ADR (Marchandises dangereuses)** — Cochez cette case si la cargaison est classifiée comme dangereuse. Druma appliquera automatiquement tout supplément ADR configuré dans vos barèmes de tarifs.
-- **Chargement hors gabarit / exceptionnel** — Cochez cette case si la cargaison dépasse les dimensions standard.
+- **ADR (marchandises dangereuses)** — cochez cette case si la cargaison est classifiée comme dangereuse selon la réglementation ADR. Druma appliquera automatiquement tout supplément ADR configuré dans vos barèmes de tarifs, et la commande sera signalée pour que vous vérifiiez que le chauffeur détient le certificat ADR correct. Cocher révèle la classe ADR, le numéro ONU, le groupe d'emballage, le code de restriction en tunnel, la désignation officielle de transport, et un champ de notes ADR.
+- **Frigo (température contrôlée)** — cochez cette case si le chargement nécessite une manipulation à température contrôlée. Cocher révèle les champs de température minimale et maximale.
+
+<Note>
+Il n'y a pas d'indicateur hors gabarit/exceptionnel séparé au niveau de la cargaison. Si un chargement nécessite un permis hors gabarit, gérez le coût supplémentaire comme une ligne de supplément/extra facturable sur l'onglet **Extras** — l'onglet cargaison lui-même ne suit que l'ADR et le frigo.
+</Note>
 
 ---
 
 ## Étape 6 — Prix convenu
 
-- **Montant** — Le prix convenu avec le client.
-- **Devise** — EUR, RON ou toute autre devise configurée.
+Saisissez les conditions commerciales :
+
+- **Montant** — le prix convenu avec le client.
+- **Devise** — EUR, RON, ou toute autre devise configurée dans votre compte.
 - **Type de prix** :
-  - **Forfait** — Un prix total fixe.
-  - **Par km** — Prix calculé en multipliant le tarif par la distance d'itinéraire.
+  - **Forfait** — un prix total fixe quelle que soit la distance.
+  - **Par km** — prix calculé en multipliant le tarif par la distance d'itinéraire calculée par PTV.
+  - **Par palette** — prix calculé en multipliant le tarif par le nombre de palettes.
+  - **Par tonne** — prix calculé en multipliant le tarif par le poids de la cargaison.
 
 <Note>
-Si vous avez des barèmes de tarifs configurés pour ce client, Druma suggérera automatiquement un prix.
+Si vous avez des barèmes de tarifs configurés pour ce client, Druma suggérera automatiquement un prix basé sur l'origine, la destination, et le type de commande. Vous pouvez accepter la suggestion ou saisir votre propre prix.
 </Note>
 
 ---
 
-## Étape 7 — Affecter un camion et un chauffeur
+## Étape 7 — Affectation du camion et du chauffeur
 
-**Pour les commandes Camion propre :**
+La fenêtre Nouvelle commande n'affecte pas de camion ni de chauffeur — une commande s'enregistre sans l'un ni l'autre, quel que soit le type de commande choisi. L'affectation se fait ensuite sur le [Tableau de planification](/fr/planner/planning-board) : faites glisser la commande sur un camion pour l'affecter, ou ouvrez la commande là-bas pour choisir un camion, un chauffeur principal, et (pour le double équipage sur les longs trajets internationaux) un deuxième chauffeur. Druma montre la disponibilité de chaque camion là-bas — vert pour libre à la date de chargement, orange pour une autre commande proche, rouge pour un conflit.
 
-- **Camion** — Recherchez par plaque d'immatriculation. Un indicateur vert signifie que le camion est libre.
-- **Chauffeur principal** — Recherchez par nom.
-- **Deuxième chauffeur (optionnel)** — Ajoutez un deuxième chauffeur pour les longs trajets internationaux.
-
-**Pour les commandes Sous-traitées :**
-
-Vous verrez un champ **Transporteur** à la place des champs camion et chauffeur.
+**Pour les commandes sous-traitées**, l'onglet **Financier** affiche une section **Détails du sous-traitant** à la place des champs camion/chauffeur : un champ de recherche **Sous-traitant / Transporteur** pour choisir l'entreprise transporteuse, un générateur de tarif d'achat pour définir ce que vous leur payez, et une zone de texte interne **Notes d'arrangement** pour tout ce que le client ne doit pas voir. Voir [Sous-traitants](/fr/planner/subcontractors) pour savoir comment le transporteur est ensuite notifié.
 
 ---
 
-## Étape 8 — Notes pour le chauffeur
+## Étape 8 — Notes par arrêt
 
-Le champ **Notes pour le chauffeur** est visible dans l'application mobile du chauffeur. Utilisez-le pour les instructions pratiques : codes d'accès, instructions spéciales de déchargement.
+Chaque arrêt sur l'onglet **Itinéraire** a son propre champ **Notes**. Utilisez-le pour des instructions pratiques : codes d'accès, instructions spéciales de déchargement, « appeler 30 minutes avant l'arrivée », ou toute exigence spécifique au client — l'application chauffeur affiche ce même champ comme « Instructions » sur l'arrêt une fois qu'un camion et un chauffeur sont affectés.
+
+<Note>
+Il n'y a pas de séparation notes-chauffeur vs notes-internes. C'est un seul champ partagé par arrêt — tout ce que vous y tapez est visible par quiconque planifie la commande et par le chauffeur qui lui est affecté.
+</Note>
 
 ---
 
-## Enregistrement de la commande
-
-Deux options :
-
-- **Enregistrer en brouillon** — La commande est enregistrée mais pas encore confirmée. Le chauffeur ne la verra pas dans son application.
-- **Confirmer la commande** — La commande est active. Le chauffeur assigné reçoit une notification.
+## Enregistrer la commande
 
 <Warning>
-Les chauffeurs ne reçoivent des notifications que pour les commandes Confirmées. Si vous enregistrez en brouillon, revenez et confirmez avant l'heure de départ du chauffeur.
+Chaque commande créée depuis cette fenêtre est enregistrée en tant que **Brouillon** — que vous cliquiez sur **Enregistrer le brouillon** ou **Enregistrer**, les deux appellent la même action d'enregistrement et la commande est insérée avec le statut **Brouillon**. Il n'y a pas d'étape « Confirmer la commande » dans cette fenêtre.
 </Warning>
+
+Une nouvelle commande commence toujours sans camion ni chauffeur affecté, et apparaît grise/non assignée sur le Tableau de planification. Confirmer la commande — affecter un camion et un chauffeur, moment auquel le chauffeur peut la voir dans son application — se fait ensuite, sur le [Tableau de planification](/fr/planner/planning-board) ou l'établi Commandes : faites glisser la commande sur un camion pour l'affecter, ou ouvrez la commande là-bas pour choisir un camion et un chauffeur.
 
 ---
 
 ## Et ensuite ?
 
+Une fois affectée à un camion et un chauffeur, la commande suit un parcours défini du dispatch à la facturation. Le chauffeur met à jour les statuts depuis son application au fur et à mesure de sa progression dans le trajet.
+
 <Card title="Cycle de vie d'une commande" icon="circle-dot" href="/fr/planner/order-lifecycle">
-  Découvrez tous les statuts qu'une commande traverse, qui déclenche chaque étape et quelles notifications sont envoyées.
+  Découvrez tous les statuts qu'une commande traverse, qui déclenche chaque étape, et quelles notifications sont envoyées.
 </Card>
 
 <Card title="Tableau de planification" icon="calendar" href="/fr/planner/planning-board">
-  Voyez toutes vos commandes confirmées sur le tableau de répartition visuel.
+  Voyez toutes vos commandes confirmées sur le tableau de répartition visuel, glissez-déposez pour réaffecter, et repérez les conflits en un coup d'œil.
 </Card>

@@ -1,46 +1,70 @@
 ---
 title: "Notificari de atribuire sofer"
-description: "Druma trimite automat notificari push soferilor cand sunt atribuiti la o comanda, fara ca dispecerul sa mai dea telefon."
+description: "Druma trimite automat notificari push soferilor cand sunt atribuiti la o comanda, ca sa stie mereu urmatoarea cursa fara un telefon din partea dispecerului."
 icon: "bell-concierge"
 ---
 
-Cand un planificator atribuie un sofer la o comanda, Druma trimite automat doua notificari push per comanda:
+Cand un planificator atribuie un sofer la o comanda, Druma se ocupa de instiintarea soferului. Pleaca doua notificari push automate — una seara dinainte de plecare, una in dimineata plecarii — ca soferul sa aiba detaliile cursei la momentul potrivit, fara ca dispeceratul sa fie nevoit sa sune.
 
-| Notificare | Momentul trimiterii |
-|-----------|---------------------|
-| Reminder seara | 18:00 ora locala, cu o zi inainte de plecare |
-| Reminder dimineata | 06:00 ora locala, in ziua plecarii |
+## Cand se trimit notificarile
 
-Ambele notificari sunt trimise in **limba configurata a soferului** (campul `language` din profil), cu revenire la engleza daca nu e setata - Druma suporta toate cele **10 limbi ale platformei**, inclusiv romana, bulgara, maghiara, poloneza, ceha si slovaca.
+Druma trimite doua notificari per comanda:
 
-Atingand notificarea, soferul ajunge direct la comanda si vede: adresa completa de preluare (cu buton Navigheaza), contactul de incarcare, fereastra orara solicitata, adresa de livrare, descrierea marfii, greutatea, numarul de paleti, notele planificatorului si documentele CMR/eCMR disponibile.
+| Notificare | Moment | Mesaj |
+|---|---|---|
+| Reminder de seara | 18:00 UTC, cu o zi inainte de preluare | "Reminder: preluare maine" / "Maine: — in [oras preluare] → [oras livrare]" |
+| Reminder de dimineata | 06:00 UTC, in ziua preluarii | "Preluarea de azi" / "Preluare azi la — in [oras preluare]" |
 
-## Cerinte pentru functionare
+Ambele momente sunt **fixe, in UTC** — nu sunt ajustate dupa fusul orar local al soferului sau al comenzii. Substituentul pentru ora de preluare din mesaj nu este momentan completat (apare ca o simpla liniuta "—") — notificarea ii spune soferului doar orasul de preluare (si, pentru reminder-ul de seara, orasul de livrare), nu o ora exacta.
 
-Necesita aplicatia Druma instalata si notificarile browser-ului acceptate.
+Ambele notificari sunt trimise in **limba configurata a soferului** (campul `language` din profil), cu revenire la engleza daca nu e setata. Druma suporta toate cele **10 limbi ale platformei**, inclusiv romana, bulgara, maghiara, poloneza, ceha si slovaca.
 
-- **Android (Chrome)**: permisiunea este ceruta automat la prima deschidere - soferul apasa Permite.
-- **iOS (Safari)**: permisiunea se cere abia dupa ce aplicatia este adaugata pe Ecranul de Start si deschisa de acolo. Cea mai frecventa cauza pentru "nu primesc notificari" pe iPhone este ca soferul nu a instalat-o pe ecranul de start.
+## Ce vede soferul
 
-Daca un sofer nu are un smartphone compatibil, notificarile sunt doar un supliment - dispecerul suna ca de obicei, iar comanda ramane inregistrata normal in Druma.
+Cand soferul atinge notificarea, aplicatia Druma se deschide direct la comanda respectiva. Poate vedea:
 
-## Verificarea daca soferul a deschis notificarea
+- Adresa completa de preluare, cu buton "Navigheaza" (deschide Google Maps sau Waze)
+- Numele si numarul de telefon al contactului de incarcare
+- Fereastra orara solicitata pentru incarcare
+- Adresa completa de livrare
+- Descrierea marfii, greutatea si numarul de paleti
+- Orice nota adaugata de planificator pentru aceasta comanda specifica
+- Documentele CMR / eCMR, cand sunt disponibile
 
-**Comanda -> tab Activitate -> sectiunea Notificari Sofer** arata ora trimiterii fiecarui reminder si daca a fost deschis. Un indicator galben pe cardul comenzii in vederea Astazi semnaleaza "Nedeschis" pana la ora 07:00 in ziua plecarii - context pentru dispecer sa sune direct.
+Soferul nu trebuie sa caute comanda — notificarea il duce direct la ea.
+
+## Cerinte pentru functionarea notificarilor
+
+Notificarile push necesita ca soferul sa aiba aplicatia PWA Druma instalata pe telefon si sa fi acceptat notificarile browser-ului.
+
+**Android (Chrome):** cand soferul deschide pentru prima data portalul soferului Druma in Chrome, browser-ul cere automat permisiunea de notificare. Soferul apasa Permite. Nu e nevoie de nimic altceva.
+
+**iOS (Safari):** iOS gestioneaza notificarile diferit. Soferul trebuie:
+1. Sa deschida portalul soferului Druma in Safari
+2. Sa apese butonul Partajare (cutia cu sageata)
+3. Sa selecteze **Adauga pe Ecranul de Start**
+4. Sa deschida aplicatia din pictograma de pe ecranul de start
+5. Cand i se cere, sa apese Permite pentru notificari
 
 <Note>
-"Nedeschis" poate insemna si ca soferul a deschis comanda direct din aplicatie, nu din notificare - nu e neaparat un semn ca nu stie de cursa.
+Pe iOS, permisiunea de notificare este ceruta doar dupa ce aplicatia este adaugata pe ecranul de start si deschisa de acolo. Daca un sofer spune ca nu primeste notificari pe iPhone, aceasta este cea mai frecventa cauza — verifica daca a instalat-o de pe ecranul de start.
 </Note>
 
-## Dezactivare per sofer
+## Ce se intampla daca soferul nu are smartphone?
 
-**Flota -> Soferi -> [nume sofer] -> Preferinte -> Dezactiveaza notificarile push**. Atribuirile raman inregistrate, dar nu se mai trimit notificari - dispecerul preia manual comunicarea.
+Notificarile push sunt un supliment la procesul tau existent de dispecerat, nu un inlocuitor. Daca un sofer nu are un smartphone capabil sa ruleze PWA-ul — sau pur si simplu nu se simte confortabil cu aplicatiile — dispecerul il suna ca de obicei.
+
+Atribuirea ramane inregistrata in Druma indiferent daca soferul foloseste aplicatia. Comanda, ruta si documentele sunt toate stocate si printabile din desktop.
+
+## Notificari pentru comenzi cu mai multe opriri
+
+Pentru comenzile cu mai multe puncte de preluare sau livrare, Druma trimite o singura notificare per comanda. Textul notificarii se refera la primul oras de preluare si ultimul oras de livrare. Soferul vede toate opririle in ordinea corecta cand deschide comanda.
 
 <CardGroup cols={2}>
   <Card title="Gestionarea soferilor" icon="id-card" href="/ro/planner/driver-management">
-    Adauga soferi, seteaza profiluri si gestioneaza documente.
+    Cum adaugi soferi, le setezi profilurile si gestionezi documentele.
   </Card>
   <Card title="Instalarea aplicatiei soferului" icon="mobile" href="/ro/driver/installing-the-app">
-    Ghid pas cu pas pentru instalarea aplicatiei Druma pe Android si iOS.
+    Ghid pas cu pas pentru instalarea PWA-ului Druma pe Android si iOS.
   </Card>
 </CardGroup>

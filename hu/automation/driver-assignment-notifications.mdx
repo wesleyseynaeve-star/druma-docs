@@ -1,40 +1,72 @@
 ---
 title: "Sofőr-kiosztás értesítések"
-description: "Push értesítések küldése a sofőröknek, amikor rendelést rendelnek hozzájuk — azonnali értesítés és reggeli emlékeztetők a holnapi szállításokhoz."
-icon: "bell"
+description: "A Druma automatikusan push-értesítést küld a sofőröknek, amikor rendelést rendelnek hozzájuk, így mindig tudják a következő feladatukat anélkül, hogy a diszpécser felhívná őket."
+icon: "bell-concierge"
 ---
 
-## Hogyan értesül a sofőr a kiosztásról?
+Amikor egy tervező sofőrt rendel egy rendeléshez, a Druma gondoskodik az értesítésről. Két automatikus push-értesítés megy ki — az egyik az indulás előtti este, a másik aznap reggel —, hogy a sofőr a megfelelő időben megkapja a feladat részleteit anélkül, hogy a diszpécsernek fel kellene hívnia.
 
-Amikor egy tervező rendelést rendel egy sofőrhöz a tervezőtáblán:
-1. A sofőr **azonnali push-értesítést** kap a telefonján
-2. Az értesítés mutatja: rendelési hivatkozás, felvételi helyszín, időpont
-3. A Druma alkalmazásban megjelenik az új rendelés
+## Mikor küldjük az értesítéseket?
 
-## Feltételek
+A Druma két értesítést küld rendelésenként:
 
-A push-értesítések működéséhez:
-- A sofőr telepítette a Druma alkalmazást, és megadta az értesítési engedélyeket
-- A telefon be van kapcsolva és internetkapcsolattal rendelkezik
+| Értesítés | Időzítés | Üzenet |
+|---|---|---|
+| Esti emlékeztető | 18:00 UTC a felvétel előtti napon | "Emlékeztető: holnapi felvétel" / "Holnap: — [felvételi város] → [szállítási város]" |
+| Reggeli emlékeztető | 06:00 UTC a felvétel napján | "Mai felvétel" / "Felvétel ma — [felvételi városban]" |
 
-Ha a sofőr telefon offline, az értesítés küldésre kerül, amint a telefon online lesz.
+Mindkét időpont **fix UTC** — nincs igazítva a sofőr vagy a rendelés helyi időzónájához. Az üzenetben a felvételi időpont helyőrzője jelenleg nincs kitöltve (egy szimpla gondolatjelként "—" jelenik meg) — az értesítés csak a felvételi várost közli (az esti emlékeztetőnél a szállítási várost is), konkrét időpontot nem.
 
-## Reggeli emlékeztetők
+Mindkét értesítés a sofőr beállított nyelvén megy ki (a profiljukon szereplő `language` mező alapján), angolra visszaesve, ha nincs beállítva. A Druma mind a 10 platform-nyelvet támogatja, beleértve a románt, bolgárt, magyart, lengyelt, csehet és szlovákot.
 
-Az éjszakai kiosztási emlékeztetők automatikusan ki lesznek küldve:
-- **18:00** (előző este) — emlékeztető a holnapi kiosztásokhoz
-- **06:00** (reggel) — emlékeztető az aznapi kiosztásokhoz
+## Mit lát a sofőr?
 
-Ez biztosítja, hogy a sofőrök biztosan tudnak a reggeli szállításokról, még ha esetleg nem is nézték meg az alkalmazást az előző estén.
+Amikor a sofőr megérinti az értesítést, a Druma sofőralkalmazás közvetlenül a rendelésre nyílik meg. Látja:
 
-## FCM token kezelés
+- A teljes felvételi címet egy "Navigálás" gombbal (megnyitja a Google Maps-et vagy a Waze-t)
+- A rakodási kapcsolattartó nevét és telefonszámát
+- A kért rakodási időablakot
+- A teljes szállítási címet
+- Az áru leírását, súlyát és raklapszámát
+- Bármilyen jegyzetet, amelyet a tervező hozzáadott az adott rendeléshez
+- CMR / eCMR dokumentumokat, ha elérhetők
 
-A push-értesítések Firebase Cloud Messaging (FCM) segítségével kerülnek küldésre. Az FCM token automatikusan regisztrálódik, amikor a sofőr bejelentkezik az alkalmazásba. Nincs szükség manuális konfigurációra.
+A sofőrnek nem kell keresnie a rendelését — az értesítés egyenesen odaviszi.
+
+## Mi szükséges ahhoz, hogy az értesítések működjenek?
+
+A push-értesítésekhez az szükséges, hogy a sofőr telepítse a Druma PWA-t a telefonjára, és elfogadja a böngésző-értesítéseket.
+
+**Android (Chrome):**
+Amikor a sofőr először nyitja meg a Druma sofőrportált Chrome-ban, a böngésző automatikusan kéri az értesítési engedélyt. A sofőr megérinti az Engedélyezést. Nincs szükség további beállításra.
+
+**iOS (Safari):**
+Az iOS másképp kezeli az értesítéseket. A sofőrnek:
+1. Meg kell nyitnia a Druma sofőrportált Safariban
+2. Meg kell érintenie a Megosztás gombot (a nyíllal ellátott doboz ikon)
+3. Ki kell választania a **Hozzáadás a kezdőképernyőhöz** opciót
+4. Meg kell nyitnia az alkalmazást a kezdőképernyő ikonjáról
+5. A felszólításkor meg kell érintenie az Engedélyezést az értesítésekhez
 
 <Note>
-A push-értesítések kiegészítik, de nem helyettesítik a telefonos kommunikációt. Fontos vagy sürgős esetekben mindig hívd fel a sofőrt.
+iOS-en az értesítési engedélyt csak azután kéri a rendszer, hogy az alkalmazást hozzáadták a kezdőképernyőhöz, és onnan nyitották meg. Ha egy sofőr azt jelzi, hogy nem kap értesítést iPhone-on, ez a leggyakoribb ok — ellenőrizd, hogy a kezdőképernyőről telepítette-e.
 </Note>
 
-<Card title="Sofőrkezelés" icon="id-card" href="/en/planner/driver-management">
-  Sofőrök hozzáadása és PWA-linkek kezelése.
-</Card>
+## Mi van, ha a sofőrnek nincs okostelefonja?
+
+A push-értesítések kiegészítik a meglévő diszpécseri folyamatodat, nem helyettesítik. Ha egy sofőrnek nincs olyan okostelefonja, amely futtatni tudja a PWA-t — vagy egyszerűen nem szeretné használni az alkalmazásokat —, a diszpécser a szokásos módon hívja fel.
+
+A kiosztás így is rögzítésre kerül a Drumában, függetlenül attól, hogy a sofőr használja-e az alkalmazást. A rendelés, az útvonal és a dokumentumok mind tárolva és nyomtathatók az asztali felületről.
+
+## Értesítések több megállós rendeléseknél
+
+Több felvételi vagy szállítási megállóval rendelkező rendeléseknél a Druma egyetlen értesítést küld rendelésenként. Az értesítés szövege az első felvételi városra és az utolsó szállítási városra hivatkozik. A sofőr a rendelés megnyitásakor a helyes sorrendben látja az összes megállót.
+
+<CardGroup cols={2}>
+  <Card title="Sofőrkezelés" icon="id-card" href="/en/fleet/driver-management">
+    Hogyan adj hozzá sofőröket, állítsd be a profiljukat, és kezeld a dokumentumaikat.
+  </Card>
+  <Card title="A sofőralkalmazás telepítése" icon="mobile" href="/en/drivers/installing-the-app">
+    Lépésről lépésre útmutató a Druma PWA telepítéséhez Androidon és iOS-en.
+  </Card>
+</CardGroup>

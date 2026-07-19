@@ -1,44 +1,174 @@
 ---
-title: "Ügyfél API"
-description: "A Druma Ügyfél API-ja, amely lehetővé teszi az ügyfelek számára a szállítmány-adatok lekérdezését saját rendszereikbe való integráláshoz."
-icon: "link"
+title: "Ügyfél API-integráció (CAPI)"
+description: "Add lehetőséget az ügyfeleidnek, hogy közvetlenül rendeléseket küldjenek a Drumába, vagy valós idejű kiszállítási eseményeket fogadjanak egy webhookon — ügyfelenként konfigurálva, kódmódosítás nélkül a Drumában."
+icon: "plug"
 ---
 
-## Az ügyfél API-ról
+Az Ügyfél API-integráció (CAPI) közvetlen adatcsatornát hoz létre egy konkrét ügyfél és a Druma-fiókod között. Két egymástól független fele van:
 
-Az Ügyfél API lehetővé teszi az ügyfeleidnek, hogy a Druma szállítmány-adatait programozottan lekérdezzék, és integrálják saját belső rendszereikbe (ERP, WMS, ügyfél-portál).
+- **Bejövő**: az ügyfél rendszere automatikusan küld rendeléseket a Drumába. Nincs szükség manuális rendelésrögzítésre.
+- **Kimenő**: a Druma valós időben küld státuszeseményeket (elindult, kiszállítva, kiszámlázva stb.) az ügyfél rendszerébe.
 
-Ez különösen hasznos nagyobb ügyfelek számára, akik automatizálni szeretnék a rendelés-követést és a dokumentum-letöltést anélkül, hogy az ügyfélportálra kellene bejelentkezniük.
+Bármelyik felet engedélyezheted egyedül, vagy mindkettőt együtt. Minden ügyfél saját tokent és végpontot kap, így a hitelesítő adatok teljesen elkülönültek.
 
-## Hitelesítés
+---
 
-Az ügyfél API az ügyfél portál-tokenét használja hitelesítéshez. Minden portál-token egyben API tokenként is funkcionál.
+## Mikor használd ezt?
 
-```
-Authorization: Bearer <portál_token>
-```
+A CAPI akkor megfelelő, ha egy ügyfél:
 
-## Elérhető végpontok
+- Rendelkezik egy WMS-, ERP- vagy rendeléskezelő rendszerrel, amely HTTP-hívásokat tud indítani
+- Gyakran foglal szállítmányokat, és el szeretné kerülni, hogy az ügyfélportálra kelljen bejelentkeznie rendelések létrehozásához
+- Automatizált kiszállítási megerősítést igényel a rendszerébe küldve a downstream folyamatokhoz (raktárfoglalás, számlázás, készletfrissítés)
 
-### Szállítmányok
-- `GET /client-api/shipments` — az összes szállítmány listája szűrőkkel
-- `GET /client-api/shipments/{id}` — egy szállítmány adatai az élő pozícióval és ETA-val
+Azoknál az ügyfeleknél, akik ritkán foglalnak, vagy inkább a portált preferálják, a CAPI felesleges bonyolultságot ad. Használd inkább a szabványos ügyfélportált.
 
-### Dokumentumok
-- `GET /client-api/shipments/{id}/documents` — egy szállítmány dokumentumainak listája
-- `GET /client-api/documents/{id}/download` — dokumentum letöltési link generálása
+---
 
-### Nyomkövetés
-- `GET /client-api/shipments/{id}/tracking` — valós idejű GPS-pozíció és ETA
+## Hol találod a beállításokat?
 
-## Token igénylés
+1. Lépj az **Ügyfelek** menüpontra a bal oldali navigációban.
+2. Nyisd meg az ügyfélrekordot.
+3. Kattints az **API** fülre.
 
-Az ügyfél API token azonos a portál-tokennel. Lépj az **Ügyfelek** oldalra, nyisd meg az ügyfél profilját, és másold ki a portál-linket — a linkben lévő token az API tokenként is használható.
+Mind a bejövő, mind a kimenő beállítások ezen a fülön találhatók.
+
+---
+
+## Bejövő — az ügyfél rendeléseket küld a Drumába
+
+<Steps>
+  <Step title="Engedélyezd a bejövőt">
+    Az **API** fülön kapcsold be a **Bejövő API engedélyezése** kapcsolót.
+  </Step>
+  <Step title="Generálj egy tokent">
+    Kattints a **Token generálása** gombra. A teljes token **egyszer** jelenik meg — másold ki azonnal, és tárold biztonságosan (egy jelszókezelő jól működik erre). A Druma csak a token hash-ét tárolja; a teljes érték nem visszaállítható. Ezután a képernyő után csak az első 20 karakter jelenik meg referenciaként.
+  </Step>
+  <Step title="Oszd meg a végpont URL-t">
+    Másold ki a token mező alatt megjelenő **Végpont URL-t**. Add meg ezt az URL-t és a tokent az ügyfél technikai csapatának.
+  </Step>
+  <Step title="Konfiguráld a mezőleképezéseket (opcionális)">
+    Ha az ügyfél rendszere más mezőneveket használ, mint a Druma (például `shipment_id` a `reference` helyett), adj hozzá sorokat a **Mezőleképezés** táblázathoz a **+ Leképezés hozzáadása** gombra kattintva. Minden sor az ügyfél egyik mezőnevét (bal oszlop) a megfelelő Druma mezőnévhez (jobb oszlop) rendeli.
+  </Step>
+</Steps>
+
+Az ügyfél rendszere egy `POST` kérést küld a végpont URL-re a `Authorization: Bearer <token>` fejléccel és egy JSON törzzsel. A Druma **Vázlat** státusszal hozza létre a rendelést, `booked_via: client_api` forrás-jelzővel. Egy tervező felülvizsgálhatja és megerősítheti a vázlat rendeléseket a tervezőtábláról.
 
 <Note>
-Az ügyfél API hozzáférés csak a saját szállítmányaik adataira korlátozódik — az ügyfél nem láthatja más ügyfelek adatait.
+A CAPI-n keresztül létrehozott rendelések vázlatként érkeznek. Nem jelennek meg hozzárendeltként a táblán, amíg egy tervező (vagy egy automatizálási szabály, ha konfigurálva van) tovább nem mozgatja őket a következő státuszra. Ez szándékos — lehetővé teszi, hogy validáld és beárazd a rendelést, mielőtt bekerül a folyamatba.
 </Note>
 
-<Card title="Nyilvános API és webhookok" icon="code" href="/en/integrations/public-api">
-  Belső rendszer-integráció a Druma REST API-jával.
+---
+
+## Kimenő — a Druma eseményeket küld az ügyfélnek
+
+<Steps>
+  <Step title="Engedélyezd a kimenőt">
+    Kapcsold be a **Kimenő webhook engedélyezése** kapcsolót.
+  </Step>
+  <Step title="Add meg a webhook URL-t">
+    Illeszd be az ügyfél **Webhook URL-jét** — az ő rendszerükben lévő végpontot, amely fogadja majd az eseményeket.
+  </Step>
+  <Step title="Válassz hitelesítési típust">
+    Válassz a négy **Hitelesítés típusa** opció közül:
+
+    - **Nincs** — nincs hitelesítési fejléc (csak megbízható, privát hálózatokon használd)
+    - **Bearer token** — a Druma hozzáadja az `Authorization: Bearer <érték>` fejlécet minden kéréshez
+    - **Basic auth** — a Druma hozzáad egy `Authorization: Basic` fejlécet base64-kódolt felhasználónévvel és jelszóval
+    - **HMAC-aláírás** — a Druma aláírja minden kérés törzsét egy közös titkos kulccsal, és tartalmazza az aláírást egy fejlécben; az ügyfél feldolgozás előtt ellenőrzi
+
+    Töltsd ki a hitelesítő adatokat a választott típushoz.
+  </Step>
+  <Step title="Válaszd ki a küldendő eseményeket">
+    Jelöld be azokat az eseményeket, amelyeket a Druma küldjön:
+
+    - **Rendelés létrehozva** — akkor tüzel, amikor egy új rendelést megerősítenek a Drumában
+    - **Státusz frissítve** — bármilyen státuszváltozáskor tüzel (hozzárendelve, felvételnél, úton stb.)
+    - **Kiszállítva** — amikor a rendelés eléri a Kiszállítva státuszt
+    - **Számla elküldve** — amikor egy értékesítési számlát elküldenek az ügyfélnek
+  </Step>
+  <Step title="Konfiguráld a kimenő mezőleképezéseket (opcionális)">
+    Ha az ügyfél rendszere más mezőneveket vár a payloadban, használd a **Mezőleképezés** táblázatot a kimenő oldalon (a bejövőével azonos felhasználói élmény) a Druma kimeneti mezőneveinek átnevezéséhez, mielőtt elküldésre kerülnének.
+  </Step>
+  <Step title="Mentés">
+    Kattints a **Mentés** gombra. A Druma ettől kezdve elkezdi kézbesíteni az eseményeket a kiválasztott triggerekhez.
+  </Step>
+</Steps>
+
+---
+
+## A mezőleképezés magyarázata
+
+A mezőleképezés egy kulcs-érték fordítási táblázat. Nem változtatja meg az adatot — csak a mezőneveket a payloadban.
+
+**Példa — bejövő leképezés:**
+
+| Ügyfél mező | Druma mező |
+|---|---|
+| `shipment_id` | `reference` |
+| `pickup_city` | `pickup_address` |
+| `drop_city` | `delivery_address` |
+| `cargo_weight_kg` | `weight_kg` |
+
+Ezzel a leképezéssel az ügyfél elküldheti a saját natív JSON-struktúráját, és a Druma helyesen fogja értelmezni, anélkül hogy az ügyfélnek át kellene formáznia a payloadját.
+
+**Példa — kimenő leképezés:**
+
+| Druma mező | Ügyfél mező |
+|---|---|
+| `order_id` | `druma_ref` |
+| `status` | `shipment_status` |
+| `actual_delivery_at` | `actual_delivery_datetime` |
+
+A le nem képezett mezők a Druma alapértelmezett mezőneveivel kerülnek átadásra.
+
+---
+
+## Token rotálása
+
+Ha egy token kompromittálódott, vagy egy kulcsfontosságú személy távozik az ügyfél csapatától:
+
+1. Az **API** fülön kattints a **Token rotálása** gombra.
+2. A régi token azonnal érvénytelenné válik.
+3. Az új token egyszer jelenik meg — másold ki és oszd meg, mielőtt elnavigálnál.
+
+Frissítsd a tokent az ügyfél rendszerében a lehető leghamarabb. A régi tokent használó kérések a rotáció befejezésének pillanatától kezdve `401 Unauthorized` választ kapnak.
+
+---
+
+## Tevékenység-időbélyegek
+
+Amikor az API-t már használták, a fül mutatja:
+
+- **Utolsó bejövő** — a legutóbb az ügyféltől kapott rendelés időbélyege
+- **Utolsó kimenő** — a legutóbb az ügyfél webhookjához kézbesített esemény időbélyege
+
+Ezek az időbélyegek hasznosak annak megerősítéséhez, hogy az integráció aktív, és a kommunikációs hiányosságok diagnosztizálásához.
+
+---
+
+## Sebességkorlátok
+
+A Druma **óránként 200 API-hívást** enforce-ol ügyfélkonfigurációnként. Az e korlátot meghaladó kérések `429 Too Many Requests` választ kapnak. A korlát egy gördülő, egyórás ablakon nullázódik.
+
+Ha egy ügyfélnek jogosan nagyobb átviteli sebességre van szüksége, vedd fel a kapcsolatot a Druma ügyfélszolgálatával.
+
+<Warning>
+Ne oszd meg egy ügyfél bearer tokenjét más ügyfelekkel, és ne ágyazd be nyilvánosan elérhető kódba. Minden token teljes bejövő rendelés-létrehozási jogot ad az adott ügyfél cégének hatókörében.
+</Warning>
+
+---
+
+## Kapcsolódó oldalak
+
+<Card title="Ügyfélportál" icon="users" href="/en/clients/client-portal">
+  A kód nélküli alternatíva: engedd, hogy az ügyfelek nyomon kövessék a szállítmányokat és letöltsék a dokumentumokat, API-integráció nélkül.
+</Card>
+
+<Card title="Integráció beállítása" icon="plug" href="/en/admin/integration-setup">
+  A Beállítások → Integrációk menüpontban elérhető összes integráció áttekintése.
+</Card>
+
+<Card title="Rendelés létrehozása" icon="package-plus" href="/en/operations/creating-orders">
+  Hogyan hoznak létre és kezelnek a tervezők rendeléseket a Drumában.
 </Card>

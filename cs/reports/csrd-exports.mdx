@@ -1,53 +1,105 @@
 ---
 title: "Exporty emisí CSRD"
-description: "Exportujte data CO2 flotily ve formátech XLSX, CSV sladěném s CSRD a iXBRL pro výkaznictví udržitelnosti a soulad s ESRS E1."
+description: "Exportujte data CO2 flotily ve formátech XLSX, CSV sladěném s CSRD a iXBRL pro reportování udržitelnosti a soulad s ESRS E1."
 ---
 
 ## Přehled
 
-Druma podporuje tři doplňkové exportní formáty pro společnosti s povinnostmi CSRD.
+Nad rámec standardního měsíčního Reportu CO2 podporuje Druma tři další exportní formáty určené pro společnosti s povinnostmi podle směrnice o podnikovém výkaznictví udržitelnosti (CSRD) — nebo které dodávají data o emisích klientům, kteří tyto povinnosti mají.
 
-**Přehledy → Zpráva CO2 → Export**
+Všechny exporty CSRD jsou dostupné ze stránky **Report CO2**:
+
+**Reporty → Report CO2 → Roční (CSRD)**
 
 ---
 
 ## Roční režim
 
-Ve výchozím nastavení zobrazuje Zpráva CO2 jeden kalendářní měsíc. Přepněte do **ročního režimu** přepínačem vpravo nahoře a agregujte všech 12 měsíců.
+Ve výchozím nastavení Report CO2 zobrazuje nejnovější zásilky (Měsíční zobrazení). Přepněte na **Roční (CSRD)** přepínačem v horní části stránky reportu.
+
+V ročním režimu:
+- Zobrazí se výběr roku
+- Načtou se zásilky za celý vybraný rok (omezeno na 5 000 řádků — pokud je rok oříznut, zúžete podle klienta)
+- Pod přepínačem se zobrazí všechna tři exportní tlačítka — Roční XLSX, Datový balíček CSRD (.csv) a iXBRL
 
 <Note>
-Většina podání CSRD vyžaduje celý kalendářní rok dat. Před exportem přepněte do ročního režimu.
+Většina podání CSRD a ESG výkaznictví vyžaduje celý kalendářní rok dat. Před exportem pro regulační nebo klientské účely udržitelnosti přepněte do ročního režimu.
 </Note>
 
 ---
 
 ## Typy exportu
 
-### 1. XLSX zpráva o emisích flotily
+### 1. Roční XLSX
 
-Standardní tabulkový export s jedním řádkem na zakázku (ID, Zákazník, Země původu/cíle, Vzdálenost, Vozidlo, Euro norma, CO2 v kg a tCO2e) plus souhrnný list.
+Standardní tabulkový export. Nejvhodnější pro sdílení s nákupními odděleními, týmy udržitelnosti nebo auditory ESG. Dva listy:
 
-Klikněte na **Export → XLSX**.
+**Zásilky** — jeden řádek na objednávku, sloupce: Číslo objednávky, Datum vyzvednutí, Datum doručení, Adresa vyzvednutí, Adresa doručení, Vzdálenost (km), Hmotnost (kg), CO2 (kg), Metoda, Norma Euro, Klient, Vozidlo.
 
-### 2. CSV sladěný s CSRD
+**Metodika** — název a DIČ společnosti, rok reportování a celkové součty za rok (celkový počet zásilek, celková vzdálenost, celkové CO2 v kg a tunách), plus textová poznámka k metodice. Neexistuje záložka s rozpisem podle měsíce, klienta ani normy Euro — součty jsou za celou flotilu za daný rok.
 
-Plochý CSV soubor formátovaný dle požadavků CSRD rámců (VSME Příloha D / ESRS E1). Kompatibilní se softwarem ESG (Sweep, Workiva, Persefoni).
+**Jak exportovat:** Klikněte na **Roční XLSX** na stránce Report CO2 (roční režim).
 
-Klikněte na **Export → CSRD CSV**.
+---
 
-### 3. iXBRL zpráva (Beta)
+### 2. Datový balíček CSRD (CSV)
+
+Plochý soubor CSV se stejnými daty za zásilku jako list Zásilky v XLSX, ve strojově čitelném formátu — vhodný pro načtení do softwaru ESG reportování.
+
+Záhlaví jsou obyčejné názvy polí ve snake_case, ne identifikátory taxonomie ESRS:
+
+`order_number, pickup_date, delivery_date, pickup_address, delivery_address, distance_km, weight_kg, co2_kg, co2_method, euro_standard`
 
 <Note>
-Export iXBRL je v beta verzi. Ověřte soubor u svého auditora před předložením regulátorovi.
+V tomto exportu dnes neexistuje sloupec `fuel_type` — typ paliva se interně používá pro výběr emisního faktoru (viz [Report CO2](/cs/reports/co2-report#metodika-vypoctu-emisi)), ale aktuálně se nezobrazuje jako vlastní sloupec CSV.
 </Note>
 
-Strojově čitelný formát kompatibilní s ESEF pro společnosti kótované na regulovaných trzích EU. Klikněte na **Export → iXBRL (Beta)**.
+**Jak exportovat:** Klikněte na **Datový balíček CSRD (.csv)** na stránce Report CO2 (roční režim).
+
+---
+
+### 3. Report iXBRL (Beta)
+
+<Note>
+Export iXBRL je v beta verzi. Výstup používá **taxonomii ESRS** (European Sustainability Reporting Standards — `xbrl.efrag.org/taxonomy/esrs`), ne ESEF (což je samostatný formát podání výroční zprávy pro kótované společnosti). Před podáním jakémukoli regulačnímu orgánu soubor ověřte podle požadavků svého určeného auditora. Druma v této fázi nezaručuje přijetí žádným konkrétním regulátorem.
+</Note>
+
+iXBRL (Inline eXtensible Business Reporting Language) označkuje hrubou hodnotu CO2 za scope 3, kategorii 9 (sestupná přeprava) za daný rok podle taxonomie ESRS E1, spolu se shrnutím v prostém jazyce. Je zamýšlen jako součást, kterou vy (nebo váš auditor) začleníte do širší roční zprávy CSRD — ne jako samostatné regulační podání.
+
+Exportovaný soubor je dokument HTML obsahující jak tabulky čitelné pro člověka, tak strojově označkovaná data o emisích.
+
+**Jak exportovat:** Klikněte na **Export iXBRL (.xhtml)** na stránce Report CO2 (roční režim) — nejprve budete požádáni o potvrzení upozornění na kontrolu auditorem.
+
+---
+
+## Sdílení s klienty
+
+Pokud vaši klienti od vás potřebují vlastní data o emisích CSRD:
+
+1. Filtrujte Report CO2 na konkrétního klienta pomocí filtru **Klient** v horní části stránky
+2. Přepněte do ročního režimu a vyberte rok reportování
+3. Exportujte ve formátu preferovaném klientem
+4. Přiložte k e-mailu týmu udržitelnosti klienta, nebo nahrajte do jeho dodavatelského portálu
+
+<Note>
+Klienti, jejichž kontaktní záznam má povoleno **Přijímat reporty CO2**, už automaticky dostávají měsíční souhrn CO2 e-mailem — viz [Report CO2](/cs/reports/co2-report#sdileni-dat-co2-s-klienty). Exporty na této stránce jsou pro cokoli nad rámec toho: balíček za celý rok, ad-hoc sdílení, nebo vlastní software ESG reportování klienta.
+</Note>
+
+---
+
+## Co je scope 3 kategorie 4?
+
+Vaši klienti zaznamenávají emise z přepravy, kterou zadávají externě, jako **scope 3 kategorii 4** (Vzestupná přeprava) nebo **kategorii 9** (Sestupná přeprava). Data CO2, která poskytujete z Druma, přímo vstupují do tohoto výpočtu.
+
+Mít připravená roční data emisí zarovnaná s CSRD — s uznávanou metodikou (GLEC Framework v4.0 / ISO 14083) — vás staví do pozice preferovaného dopravce v tendrech a poptávkách vyžadujících zdokumentovanou metodiku emisí.
+
+---
 
 <CardGroup cols={2}>
-  <Card title="Zpráva CO2" href="/cs/reports/co2-report">
-    Generujte měsíční zprávu CO2 podle vozidla, zákazníka a trasy.
+  <Card title="Report CO2" href="/cs/reports/co2-report">
+    Měsíční a roční (CSRD) zobrazení a jak se počítá CO2 za zásilku — základ pro všechny exporty CSRD.
   </Card>
-  <Card title="Přehled zpráv" href="/cs/reports/reports-overview">
-    Všechny dostupné zprávy v Druma a nastavení automatického doručení.
+  <Card title="Přehled reportů" href="/cs/reports/reports-overview">
+    Všechny dostupné reporty v Druma a jak naplánovat automatické doručování.
   </Card>
 </CardGroup>

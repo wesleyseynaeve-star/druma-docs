@@ -1,85 +1,98 @@
 ---
-title: "Raport rentowności trasy"
-description: "Analizuj przychody, koszty i marże według trasy (kraj–kraj lub miasto–miasto) w Druma, aby identyfikować Twoje najbardziej i najmniej opłacalne kierunki."
+title: "Raport rentowności tras"
+description: "Zobacz rzeczywistą marżę na każdej parze pochodzenie-cel, którą obsługujesz, z przychodem, szacowanymi kosztami i trendem wobec poprzedniego okresu."
 icon: "route"
 ---
 
-Raport rentowności trasy agreguje dostarczone zlecenia według pary tras — kraju lub miasta odbioru i dostawy — i oblicza przychody, koszty i marże dla każdej kombinacji.
+Wielu operatorów zna swój przychód per trasa, ale nie zna rzeczywistej marży po policzeniu paliwa, opłat drogowych i kosztów kierowcy. Raport rentowności tras wykonuje te obliczenia dla każdej kombinacji par krajów, którą obsługujesz, więc widzisz od razu, które trasy działają, a które zjadają Twój zysk.
 
-Używaj tego raportu do identyfikowania tras, które warto rozwijać, oraz tych, na których tracisz marżę.
+## Otwieranie raportu
 
----
+Przejdź do **Raporty → Rentowność tras**.
 
-## Dostęp do raportu
+Wybierz zakres dat na górze. Raport domyślnie pokazuje bieżący miesiąc. Dla sensownego porównania zazwyczaj potrzebujesz co najmniej pełnego miesiąca danych, najlepiej kwartału.
 
-Przejdź do **Raporty → Rentowność trasy**.
+<Frame caption="Rentowność tras — marża per para pochodzenie-cel, ze stałym progiem 15% używanym do oznaczania tras słabo działających.">
+  <img src="/images/reports/lane-profitability.png" alt="Raport rentowności tras" />
+</Frame>
 
----
+## Co pokazuje raport
 
-## Filtry
+Każdy wiersz w tabeli to jedna para krajów pochodzenie-cel. Dla każdej trasy widzisz:
 
-| Filtr | Opis |
-|-------|------|
-| **Zakres dat** | Wybierz przedział dat dostawy. Domyślnie: bieżący miesiąc. |
-| **Granularność** | Przełącz między **Kraj** (np. PL → DE) a **Miasto** (np. Warszawa → Berlin) dla szczegółowości trasy. |
-| **Klient** | Ogranicz do konkretnego klienta lub zostaw puste dla wszystkich. |
+| Kolumna | Co oznacza |
+|---|---|
+| **Przychód** | Łączna zafakturowana kwota za zlecenia na tej trasie w okresie |
+| **Koszt paliwa** | Szacowany: odległość × średnie zużycie × cena paliwa |
+| **Koszt opłat drogowych** | Dane opłat PTV dla trasy |
+| **Koszt kierowcy** | Koszt dzienny × dni podróży, na podstawie skonfigurowanej przez Ciebie stawki per kierowca |
+| **Łączne koszty** | Suma paliwa + opłat drogowych + kosztu kierowcy |
+| **Marża €** | Przychód minus łączne koszty |
+| **Marża %** | Marża jako procent przychodu |
+| **Przejazdy** | Liczba ukończonych zleceń na tej trasie w okresie |
+| **Śr. cena/przejazd** | Średni przychód na zlecenie |
+| **Trend** | Strzałka wskazująca, czy marża % poprawiła się czy spadła wobec poprzedniego okresu |
 
----
+Wiersze poniżej docelowego progu marży są podświetlone na czerwono. Ten próg jest obecnie ustalony na **15%** — nie jest jeszcze konfigurowalny z Ustawień.
 
-## Kolumny tabeli
+## Jak działają szacunki kosztów
 
-| Kolumna | Opis |
-|---------|------|
-| **Trasa** | Para kraj–kraj lub miasto–miasto |
-| **Liczba zleceń** | Liczba dostarczonych zleceń na tej trasie w wybranym okresie |
-| **Przychody (EUR)** | Łączna kwota zafakturowana klientom za te zlecenia |
-| **Koszty (EUR)** | Szacowany koszt łącznie: paliwo + opłaty drogowe + amortyzacja pojazdu + koszty kierowcy |
-| **Marża (EUR)** | Przychody minus koszty |
-| **Marża (%)** | Marża jako procent przychodów |
-| **CO2 (kg)** | Łączna emisja CO2 dla tej trasy w wybranym okresie |
-| **Dystans (km)** | Łączny dystans dla wszystkich zleceń na tej trasie |
-| **Czas oczekiwania (h)** | Łączny zalogowany czas oczekiwania |
+<Note>
+Szacunki kosztów w tym raporcie to przybliżenia oparte na skonfigurowanych przez Ciebie parametrach. Są przydatne do identyfikowania relatywnej wydajności między trasami, ale rzeczywiste koszty mogą się różnić — zwłaszcza koszty opłat drogowych na trasach o zmiennych systemach opłat.
+</Note>
 
-Kliknij dowolny nagłówek kolumny, aby posortować tabelę według tego pola. Domyślne sortowanie: przychody malejąco.
+**Obliczenie kosztu paliwa:**
+Odległość (z routingu PTV) × średnie zużycie floty (litry/100km, ustawione w Ustawienia → Flota → Domyślne zużycie) × Twoja cena paliwa (ustawiona w Ustawienia → Flota → Cena paliwa, lub zaimportowana z danych kart paliwowych, jeśli używasz importu kart paliwowych).
 
----
+**Obliczenie kosztu opłat drogowych:**
+Dane opłat HERE Maps dla trasy. Obejmuje większość europejskich systemów opłat autostradowych. Mniej dokładne dla tras przez kraje ze złożonymi systemami winiet.
 
-## Metodologia kosztów
+**Obliczenie kosztu kierowcy:**
+Liczba dni podróży × stawka dziennego kosztu, którą ustawiłeś dla każdego kierowcy w jego profilu (Flota → Kierowcy → [kierowca] → Stawka dziennego kosztu). Jeśli żaden kierowca nie jest przypisany, Druma używa Twojego globalnego domyślnego dziennego kosztu kierowcy.
 
-Kolumna **Koszty** jest obliczana jako suma kosztów per zlecenie:
+Możesz aktualizować wszystkie te dane wejściowe w Ustawieniach, aby poprawić dokładność. Raport przelicza się natychmiast po zapisaniu nowych wartości.
 
-- **Paliwo** — odległość × zużycie paliwa × cena paliwa (ze skonfigurowanej karty stawek)
-- **Opłaty drogowe** — faktyczne kwoty przechowywane w zleceniu z przejazdów HERE lub ręcznie wprowadzone
-- **Amortyzacja pojazdu** — stawka dziennego kosztu pojazdu × liczba dni trwania zlecenia
-- **Koszty kierowcy** — dzienny koszt kierowcy × liczba dni + godziny oczekiwania
+## Identyfikowanie nierentownych tras
 
-Jeśli karta stawek nie jest skonfigurowana, kolumna kosztów może być niedoszacowana — upewnij się, że masz aktualną kartę stawek w **Ustawienia → Karty stawek**.
+Posortuj tabelę wg **Marża %** rosnąco — najgorzej działające trasy wypłyną na górę.
 
----
+Czerwone wiersze to trasy poniżej Twojego docelowego progu marży. Częste przyczyny:
 
-## Wiersz podsumowania
+- **Trasy długodystansowe** — wyglądają rentownie na przychodzie, ale mają wysokie koszty paliwa i kierowcy
+- **Trasy z dużymi opłatami drogowymi** — niektóre trasy przez Francję, Austrię lub Szwajcarię mają znacznie wyższe opłaty niż alternatywy
+- **Niedowycenieni klienci historyczni** — stawki uzgodnione lata temu, które nie zostały renegocjowane
+- **Trasy o niskim wolumenie** — mniej przejazdów oznacza, że koszty stałe uderzają mocniej
 
-Pogrubiony wiersz **Łącznie** na dole tabeli sumuje wszystkie wartości w wybranym zakresie dat i filtrach. Jest zawsze przypięty na dole, niezależnie od sortowania.
+## Zagłębianie się w trasę
 
----
+Kliknij dowolny wiersz trasy, aby zobaczyć poszczególne zlecenia składające się na liczby tej trasy. Możesz zobaczyć przychód, szacowany koszt i marżę każdego zlecenia — i zidentyfikować konkretne zlecenia będące odstającymi (na przykład pojedyncze zlecenie po znacznie niższej stawce niż reszta).
 
-## Eksport CSV
+Z listy zleceń możesz przejść do pełnych szczegółów zlecenia. Przydatne przy badaniu, dlaczego konkretna trasa słabo wypadła w danym miesiącu.
 
-Kliknij **Eksportuj CSV**, aby pobrać pełną tabelę jako plik CSV zakodowany w UTF-8 z BOM. Plik zawiera wszystkie kolumny widoczne w tabeli, w tym wiersz podsumowania.
+## Filtrowanie raportu
 
----
+Użyj filtrów na górze strony:
 
-## Limity wierszy
+- **Kraj pochodzenia** — filtruj do jednego lub kilku konkretnych krajów pochodzenia
+- **Kraj docelowy** — filtruj do jednego lub kilku konkretnych krajów docelowych
+- **Klient** — zobacz rentowność tras dla jednego klienta
+- **Pojazd** — zobacz, które pojazdy obsługują które trasy najbardziej rentownie
 
-Raport jest ograniczony do **500 tras**. Jeśli Twoje operacje mają więcej niż 500 unikalnych kombinacji tras, zawęź zakres dat lub filtruj do konkretnego klienta.
+## Eksportowanie
 
----
+Kliknij **Eksportuj → CSV**, aby pobrać pełny raport jako arkusz kalkulacyjny. CSV zawiera wszystkie kolumny i wszystkie zlecenia z widoku zagłębienia, jeśli zastosowałeś filtry.
+
+CSV to najlepszy format do dalszej analizy w Excelu — na przykład budowania własnych tabel przestawnych per klient lub per pojazd.
+
+<Warning>
+Nie podejmuj decyzji cenowych wyłącznie na podstawie tego raportu, bez uwzględnienia innych czynników: ładunki powrotne, strategiczne relacje z klientami i sezonowe zmiany wolumenu — wszystkie wpływają na rzeczywistą wartość trasy.
+</Warning>
 
 <CardGroup cols={2}>
   <Card title="Przegląd raportów" icon="chart-bar" href="/pl/reports/reports-overview">
-    Przegląd wszystkich raportów wbudowanych w Druma.
+    Wszystkie dostępne raporty w Druma i jak je zaplanować.
   </Card>
-  <Card title="Raport CO2" icon="leaf" href="/pl/reports/co2-report">
-    Emisje CO2 w podziale na ciężarówkę, klienta i trasę.
+  <Card title="Karty stawek" icon="tag" href="/pl/admin/rate-cards">
+    Skonfiguruj karty stawek per trasa, które zasilają wykrywanie anomalii cenowych i cele marży.
   </Card>
 </CardGroup>

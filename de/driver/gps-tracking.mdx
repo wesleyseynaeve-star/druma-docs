@@ -1,45 +1,94 @@
 ---
 title: "GPS-Tracking"
-description: "Druma verfolgt Ihren Standort kontinuierlich, während Sie eine aktive Ladung haben, und nur bei Status-Taps, wenn Sie leer fahren."
+description: "Druma verfolgt Ihren Standort kontinuierlich, sobald Ihnen ein LKW zugewiesen ist — nicht nur während Sie eine Ladung transportieren."
 icon: "location-dot"
 ---
 
 ## Wie GPS in Druma funktioniert
 
-| Ihr Status | Wie das Tracking funktioniert |
+Das Tracking ist nicht daran gebunden, ob Sie gerade Ware transportieren. Solange Ihnen ein LKW zugewiesen ist — ob auf einer aktiven Ladung oder einfach mit einem zugewiesenen Fahrzeug ohne aktuelle Fracht — verfolgt Druma Ihren Standort kontinuierlich im Hintergrund, sobald Sie der Standorterfassung zugestimmt haben.
+
+| Situation | Wie das Tracking funktioniert |
 |---|---|
-| **Beladen** (Waren an Bord) | Kontinuierliches GPS-Tracking im Hintergrund |
-| **Leer** (keine aktive Ladung) | Standort nur bei Status-Taps erfasst |
+| **LKW Ihnen zugewiesen** (beladen oder nicht) | Kontinuierliches GPS-Tracking im Hintergrund |
+| **Kein LKW aktuell zugewiesen** | Kein Hintergrund-Tracking |
 
 ---
 
-## Wenn Sie beladen sind: Kontinuierliches Tracking
+## Kontinuierliches Tracking bei zugewiesenem LKW
 
-Während Sie Waren an Bord haben, verfolgt Druma Ihren Standort kontinuierlich im Hintergrund. Ihr Disponent sieht einen Live-Pin auf der Heute-Karte.
+Ab dem Moment, in dem Ihnen ein LKW zugewiesen wird — unabhängig davon, ob Sie darauf eine aktive Ladung haben — verfolgt Druma Ihren Standort kontinuierlich im Hintergrund. Dies ist nicht an Ihren Ladungsstatus gekoppelt: Ein Fahrer, der mit zugewiesenem LKW ohne aktiven Auftrag wartet, wird genauso getrackt wie einer mitten in einer Lieferung.
+
+Ihr Planer sieht einen Live-Pin, der sich auf der Heute-Ansicht-Karte bewegt. Ihre Position aktualisiert sich in Echtzeit, nicht nur bei einem Status-Tap.
+
+**Was erfasst wird, solange Ihnen ein LKW zugewiesen ist:**
+- Ihre Echtzeit-GPS-Position
+- Ihre Route, Auftrag für Auftrag
+- Durchgehende Zeitstempel
 
 <Note>
-Kontinuierliches Tracking verbraucht mehr Akku. Halten Sie Ihr Telefon während beladener Fahrten geladen oder an die Stromversorgung des LKW angeschlossen.
+Kontinuierliches Hintergrund-Tracking verbraucht mehr Akku als eine App, die den Standort nur gelegentlich prüft. Halten Sie Ihr Telefon geladen oder an die Stromversorgung des LKW angeschlossen, sobald Ihnen ein LKW zugewiesen ist.
 </Note>
 
 ---
 
-## Wenn Sie leer sind: Ereignisbasiertes Tracking
+## Wenn kein LKW zugewiesen ist
 
-Wenn Sie keine aktive Ladung haben, ist das kontinuierliche Tracking ausgeschaltet. Ihr Standort wird nur aufgezeichnet, wenn Sie einen Status-Tap in der App durchführen.
+Ist Ihnen aktuell kein LKW zugewiesen, führt Druma kein Hintergrund-Tracking aus. Sobald ein LKW zugewiesen wird, startet das kontinuierliche Tracking automatisch (vorausgesetzt, Sie haben der Standorterfassung zugestimmt).
+
+---
+
+## Was Ihr Planer sieht
+
+Auf der Heute-Ansicht des Planers erscheint jeder Fahrer mit zugewiesenem LKW als Live-Pin auf der Karte, der sich in Echtzeit bewegt.
+
+---
+
+## GPS-Genauigkeit
+
+Druma verwendet den eingebauten GPS-Chip Ihres Telefons für die Standortbestimmung. Typische Genauigkeit:
+
+| Bedingung | Genauigkeit |
+|---|---|
+| Im Freien bei klarem Himmel | ~5–10 Meter |
+| Städtische Gebiete (Gebäude ringsum) | ~15–30 Meter |
+| Überdachte Laderampen, unterirdisch | Netzwerkbasierter Rückgriff (weniger präzise) |
+| Kein GPS-Signal überhaupt | Netzwerkstandort (Genauigkeit auf Stadtebene) |
+
+<Note>
+Ist das GPS Ihres Telefons ausgeschaltet, verwendet Druma als Rückgriff Ihren Mobilfunknetz-Standort. Dieser ist weniger präzise. Für beste Ergebnisse — besonders für Ankunftsnachweise und regulatorische Compliance — lassen Sie GPS eingeschaltet.
+</Note>
 
 ---
 
 ## Telefoneinstellungen für kontinuierliches Tracking
 
+Da Druma kontinuierlich verfolgt, sobald Ihnen ein LKW zugewiesen ist, müssen Sie den Hintergrund-Standortzugriff erlauben:
+
 **Android:**
 - Gehen Sie zu **Einstellungen → Apps → Druma → Berechtigungen → Standort**
-- Setzen Sie auf **"Immer zulassen"**
-- Gehen Sie zu **Einstellungen → Apps → Druma → Akku** und setzen Sie auf **Uneingeschränkt**
+- Stellen Sie auf **„Immer zulassen"**
+- Gehen Sie zu **Einstellungen → Apps → Druma → Akku** und stellen Sie auf **Uneingeschränkt** (Akku-Optimierung ausschalten)
 
 **iOS:**
 - Gehen Sie zu **Einstellungen → Druma → Standort**
-- Setzen Sie auf **"Immer"**
+- Stellen Sie auf **„Immer"**
 
-<Card title="Statusaktualisierungen" icon="circle-check" href="/en/driver/status-updates">
-  Erfahren Sie den vollständigen Statusfluss und wann jeder Tap Ihren Standort erfasst.
+Ohne diese Einstellungen kann das Tracking pausieren, wenn Ihr Bildschirm aus ist oder die App im Hintergrund läuft.
+
+---
+
+## Standortberechtigung
+
+Wenn die App erstmals Ihren Standort benötigt, fragt sie nach der Berechtigung:
+
+- **Android:** Gewähren Sie **„Immer zulassen"** — erforderlich für kontinuierliches Tracking, solange Ihnen ein LKW zugewiesen ist
+- **iOS:** Wählen Sie **„Immer"** — erforderlich für kontinuierliches Tracking, solange Ihnen ein LKW zugewiesen ist
+
+„Bei Nutzung der App" reicht nicht aus — das Tracking würde stoppen, sobald Ihr Bildschirm sich sperrt oder Sie die App wechseln, auch wenn Ihnen weiterhin ein LKW zugewiesen ist. Die Gewährung von „Immer" stellt sicher, dass das Tracking ab dem Moment der LKW-Zuweisung ohne Unterbrechung korrekt funktioniert.
+
+---
+
+<Card title="Statusaktualisierungen" icon="circle-check" href="/de/driver/status-updates">
+  Erfahren Sie den vollständigen Statusfluss und wann jeder Tap Ihre Position erfasst.
 </Card>

@@ -1,43 +1,134 @@
 ---
-title: "Palletuitwisseling"
+title: "Palletuitwisselingsgrootboek"
 description: "Houd EUR-, CHEP- en andere palletsaldi bij per tegenpartij met een aanvullend grootboek, kostenautomatisering en optionele providersyncing."
 icon: "package"
 ---
 
-## Wat is palletuitwisseling?
+## Overzicht
 
-Bij iedere lading met EUR- of CHEP-pallets worden pallets uitgewisseld: de klant of afzender geeft u pallets mee; bij de levering geeft u (idealiter) dezelfde pallets terug. Als er een tekort is, moet er een vergoeding worden betaald.
+Vervoert u goederen op EUR-pallets, CHEP of andere uitwisselingspallets, dan gaat u een lopend saldo aan met elke klant en onderaannemer — pallets die uitgaan moeten terugkomen, of er is een vergoeding verschuldigd. Druma's palletuitwisselingsgrootboek houdt elke beweging bij als een onveranderlijk record en geeft u een live saldo per tegenpartij, zodat niets tussen wal en schip valt.
 
-Druma's palletuitwisselingssysteem houdt deze saldi bij per tegenpartij — klant, leverancier of depot — zodat u altijd weet wie u pallets verschuldigd is en wie u pallets verschuldigt.
-
----
-
-## Palletten registreren op een order
-
-Bij het aanmaken of bewerken van een order, in het gedeelte **Goederendetails**:
-
-- **Pallets gegeven** — hoeveel pallets u bij de ophaling heeft ontvangen
-- **Pallets ontvangen** — hoeveel pallets u bij de levering heeft teruggegeven
-
-Druma berekent automatisch het saldo (tekort of overschot) per order en accumuleert dit in het grootboek van de tegenpartij.
+Het grootboek is **aanvullend (append-only)**: bewegingen worden toegevoegd op elke orderstop, en het lopende saldo wordt automatisch berekend. U kunt correcties en aanpassingen registreren zonder geschiedenis te verwijderen.
 
 ---
 
-## Het palletgrootboek bekijken
+## Ondersteunde pallettypes
 
-Ga naar **Vloot → Palletuitwisseling** (of **Rapporten → Palletuitwisseling**) om het saldo per tegenpartij te zien.
+| Type | Volledige naam |
+|---|---|
+| EUR | EUR-pallet (EPAL) |
+| CHEP | CHEP-pallet |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Overig | Elk ander uitwisselingspallettype dat uw operatie gebruikt |
 
-Het grootboek toont:
-- Huidige saldo per tegenpartij (+ = u heeft pallets tegoed; - = u bent pallets verschuldigd)
-- Transactiegeschiedenis per order
-- Kosten voor ontbrekende pallets
+Elk pallettype heeft zijn eigen saldokolom. Een tegenpartij kan u EUR-pallets verschuldigd zijn terwijl u hen tegelijk CHEP-pallets verschuldigd bent.
 
 ---
 
-## Pallettekorten factureren
+## Palletbewegingen registreren op een order
 
-Als een klant pallets niet teruggeeft, kunt u ze daarvoor factureren. Druma genereert een automatische factuurregelpost voor pallettekorten op basis van het geconfigureerde tarief per pallet.
+Palletbewegingen worden op stopniveau gelogd — ophaal-, leverings- en losstops hebben elk hun eigen sectie **Palletbewegingen**.
 
-<Card title="Wachttijdkosten" icon="hourglass" href="/nl/planner/waiting-time">
-  Andere kostenposten die automatisch worden bijgehouden.
+<Steps>
+  <Step title="Open het orderdetailpaneel">
+    Klik op de order op het Planningsbord of in de Orderslijst om het detailpaneel rechts te openen.
+  </Step>
+  <Step title="Navigeer naar de stopkaart">
+    Scroll naar de stop waar pallets worden uitgewisseld — meestal de ophaling (pallets uit) of levering (pallets teruggegeven). Elke stopkaart toont een sectie **Palletbewegingen**.
+  </Step>
+  <Step title="Voeg een beweging toe">
+    Klik op **+ Beweging toevoegen** op de stopkaart. Een klein formulier verschijnt met:
+    - **Pallettype** — kies uit EUR, CHEP, LPR, IPP, Euro Pool of Overig
+    - **Bewegingstype** — Verstuurd (positief), Teruggegeven (negatief), Aanpassing, Correctie, of Openingssaldo
+    - **Aantal** — aantal pallets
+    - **Notities** (optioneel) — referentienummer of chauffeursopmerking
+  </Step>
+  <Step title="Opslaan">
+    Klik op **Opslaan** om de beweging vast te leggen. Ze wordt onmiddellijk aan het grootboek toegevoegd en het lopende saldo van de tegenpartij werkt bij.
+  </Step>
+</Steps>
+
+Om een verkeerde invoer te verwijderen, klikt u op het **prullenbakicoon** naast de beweging.
+
+<Note>
+Gebruik **Openingssaldo** eenmaal per tegenpartij om het startsaldo te initialiseren als u migreert van een spreadsheet of vorig systeem. Latere bewegingen bouwen daarop verder.
+</Note>
+
+---
+
+## Saldi bekijken
+
+### Saldokolom in de klantenlijst
+
+De lijst **Klanten** (Commercieel → Klanten) bevat een kolom **Palletsaldo**. De indicator gebruikt kleurcodering in één oogopslag:
+
+| Kleur | Betekenis |
+|---|---|
+| Amber | De klant is u pallets verschuldigd |
+| Blauw | U bent de klant pallets verschuldigd |
+| Neutraal (grijs) | Saldo is in evenwicht |
+
+Beweeg over de saldo-indicator voor een tooltip per type die het saldo uitsplitst over alle pallettypes — bijvoorbeeld +12 EUR, −4 CHEP.
+
+### Bewegingsgeschiedenis per tegenpartij
+
+Klik op een klantrij om het klantdetailpaneel te openen, ga dan naar het tabblad **Pallets**. Dit toont het volledige grootboek voor die tegenpartij: elke beweging, datum, orderreferentie en lopend totaal.
+
+---
+
+## Kostendrempel en automatische kostaanmaak
+
+Groeit het palletsaldo van een klant boven een geconfigureerde drempel, dan kan Druma u automatisch vragen om een palletuitwisselingskost aan te rekenen.
+
+Veroorzaakt een beweging dat het saldo de drempel overschrijdt, dan verschijnt een modal **Palletkostbevestiging**:
+
+- **Bevestigen** — voegt een kostregel toe aan de extra's van de order (zichtbaar in de factuureditor als palletuitwisselingskost)
+- **Overslaan** — verwerpt de melding zonder een kost aan te maken; het saldo blijft ongewijzigd
+
+<Warning>
+Klikken op **Overslaan** reset de drempelteller niet. De modal verschijnt opnieuw bij de volgende beweging die de drempel overschrijdt, tenzij u het saldo eerst verlaagt door teruggegeven pallets te registreren.
+</Warning>
+
+---
+
+## Drempels en tarieven configureren
+
+Ga naar **Instellingen → Palletconfiguratie** om de kostregels in te stellen. Deze sectie is alleen toegankelijk voor de rollen **admin** en **company_admin**.
+
+Voor elk pallettype kunt u configureren:
+
+| Instelling | Beschrijving |
+|---|---|
+| Kostdrempel | Aantal pallets waarbij de kostmodal triggert |
+| Kosttarief | Prijs per pallet (in uw bedrijfsvaluta) toegepast op de automatisch gegenereerde kostregel |
+
+Laat de drempel leeg om de kostmodal voor dat pallettype uit te schakelen — bewegingen blijven bijgehouden, maar er wordt nooit een kost voorgesteld.
+
+---
+
+## Providersync (optioneel)
+
+Gebruikt u CHEP Connect, dan kan Druma uw in-app-grootboek afstemmen tegen het officiële saldo van de provider. Ga naar **Instellingen → Integraties → Palletuitwisseling**.
+
+**CHEP Connect** is live. Voer uw CHEP-accountgegevens in, dan:
+
+- Klik op **Verbinding testen** om te verifiëren dat de inloggegevens aanvaard worden
+- Klik op **Saldo synchroniseren** om het huidige saldo van de provider op te halen en te vergelijken met het lopende totaal van Druma
+
+Elke afwijking wordt getoond als een afstemmingsrij — u kunt deze aanvaarden als een **Correctie**-invoer om beide grootboeken op elkaar af te stemmen.
+
+<Note>
+CHEP Connect is momenteel de enige pallet-provider-integratie. EUR, LPR, IPP, Euro Pool en Overige pallettypes worden handmatig bijgehouden in het grootboek — daarvoor bestaat vandaag geen providersync. Het kerngrootboek werkt volledig zonder enige provider geconfigureerd.
+</Note>
+
+---
+
+<Card title="Order-extra's & toeslagen" icon="circle-plus" href="/en/planner/order-extras">
+  Leer hoe palletkostregels verschijnen in de factuureditor naast andere ordertoeslagen.
+</Card>
+
+<Card title="Klanten" icon="building-2" href="/en/planner/clients">
+  Beheer klantprofielen, standaardinstructies en bekijk de palletsaldogeschiedenis per klant.
 </Card>

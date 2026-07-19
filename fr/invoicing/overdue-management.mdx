@@ -1,48 +1,150 @@
 ---
 title: "Gestion des impayés"
-description: "Suivez les factures en retard, visualisez les créances vieillies et envoyez des rappels de paiement depuis Druma."
-icon: "alert-circle"
+description: "Suivez les factures en retard, consultez les rapports de créances vieillies, envoyez des rappels de paiement, et configurez des calendriers de rappel automatiques dans Druma."
+icon: "bell"
 ---
 
 ## Vue d'ensemble
 
-Le tableau de bord des impayés affiche toutes les factures dont la date d'échéance est dépassée, classées par ancienneté. Il vous aide à prioriser les relances et à maintenir un flux de trésorerie sain.
+Relancer les paiements est l'une des parties les moins agréables de la gestion d'une entreprise de transport. Druma vous donne une vue claire de ce qui est en retard, qui doit combien, et des outils pour envoyer des rappels sans rédiger d'email manuellement à chaque fois. Vous pouvez aussi configurer des rappels automatiques pour que Druma fasse la relance à votre place.
 
-Accédez à **Facturation → Impayés** pour ouvrir le tableau de bord.
+## Consulter les factures en retard
 
----
+Accédez à **Facturation** → onglet **Impayés**. Cela affiche toutes les factures impayées et partiellement payées dont la date d'échéance est dépassée, triées par nombre de jours de retard — les créances les plus anciennes en haut.
 
-## Tableau des créances vieillies
+<Frame caption="Finance → Impayés — la limite d'envoi manuel est de 50/heure par utilisateur, pas par entreprise.">
+  <img src="/images/invoicing/overdue-management.png" alt="Page Gestion des impayés" />
+</Frame>
 
-| Tranche | Description |
+Chaque ligne montre :
+
+- Numéro et date de facture
+- Nom du client
+- Montant de la facture et montant restant dû
+- Date d'échéance et nombre de jours de retard
+- Dernier rappel envoyé (le cas échéant)
+
+## Vue des créances vieillies
+
+La vue des créances vieillies regroupe vos montants en cours dans des tranches de temps afin que vous puissiez voir d'un coup d'œil où se situe votre risque de crédit :
+
+| Tranche | Ce qu'elle montre |
 |---|---|
-| **0–30 jours** | Légèrement en retard — premier rappel |
-| **31–60 jours** | En retard — deuxième rappel recommandé |
-| **61–90 jours** | Sérieusement en retard — appel téléphonique requis |
-| **90+ jours** | Créance douteuse — envisagez une action en recouvrement |
+| **1–30 jours** | Récemment en retard — probablement juste un paiement lent |
+| **31–60 jours** | Ça devient sérieux — nécessite une relance |
+| **61–90 jours** | Comptes à problème — escaladez |
+| **90+ jours** | Risque élevé — envisagez une action juridique ou de recouvrement |
 
----
+Pour accéder à la vue des créances vieillies : **Facturation** → **Impayés** → cliquez sur la bascule **Créances vieillies** en haut de la page.
+
+## Solde restant par client
+
+Pour voir la vue complète pour un client spécifique — toutes les factures ouvertes, les plus anciennes en premier, avec le montant total restant dû — accédez à **Clients** → sélectionnez le client → onglet **Factures**. Le solde restant est affiché en gras en haut de l'onglet.
+
+C'est utile avant un appel avec un client : vous pouvez voir exactement ce qu'il doit et depuis combien de temps.
 
 ## Envoyer un rappel de paiement
 
 <Steps>
-  <Step title="Sélectionnez la facture en retard">
-    Dans le tableau des impayés, cochez la facture pour laquelle vous souhaitez envoyer un rappel.
+  <Step title="Accédez à l'onglet Impayés">
+    Naviguez vers **Facturation** → **Impayés**.
+  </Step>
+  <Step title="Sélectionnez les factures à rappeler">
+    Cochez les cases à côté des factures à inclure dans le rappel. Vous pouvez sélectionner plusieurs factures du même client pour envoyer un seul rappel les couvrant toutes.
   </Step>
   <Step title="Cliquez sur Envoyer un rappel">
-    Cliquez sur **Envoyer un rappel**. Druma génère un email de rappel professionnel pré-rempli.
+    Cliquez sur le bouton **Envoyer un rappel**. Druma génère un email de rappel courtois qui inclut :
+
+    - Un résumé des factures en retard avec dates et montants
+    - Le montant total en cours
+    - Vos coordonnées bancaires pour le paiement
+    - Les PDF de facture joints
   </Step>
   <Step title="Vérifiez et envoyez">
-    Modifiez le message si nécessaire et cliquez sur **Envoyer**.
+    Un aperçu de l'email apparaît. Vous pouvez modifier le message avant l'envoi. Cliquez sur **Envoyer** pour le remettre au contact financier du client.
   </Step>
 </Steps>
 
+<Note>
+L'email de rappel utilise le modèle configuré dans vos paramètres. Si vous voulez ajuster le ton ou la langue du rappel standard, accédez à **Paramètres** → **Modèles** → **Rappel de paiement**. Vous pouvez configurer des modèles séparés par langue si vous avez des clients dans plusieurs pays.
+</Note>
+
+## Rappels automatiques
+
+Si vous ne voulez pas envoyer de rappels manuellement chaque semaine, Druma peut le faire pour vous selon un calendrier.
+
+<Steps>
+  <Step title="Accédez aux Paramètres de facturation">
+    Naviguez vers **Paramètres** → **Facturation**.
+  </Step>
+  <Step title="Activez les rappels automatiques">
+    Activez **Rappels automatiques**.
+  </Step>
+  <Step title="Configurez le calendrier">
+    Définissez quand chaque rappel part :
+
+    - **Premier rappel** — par exemple, 7 jours après la date d'échéance
+    - **Deuxième rappel** — par exemple, 14 jours après la date d'échéance
+    - **Avis final** — par exemple, 30 jours après la date d'échéance
+
+    Vous pouvez ajuster ces seuils pour correspondre à votre culture de paiement et à vos relations client.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**. Druma enverra désormais des rappels automatiquement aux intervalles configurés pour toutes les factures en retard.
+  </Step>
+</Steps>
+
+<Warning>
+Les rappels automatiques vont au contact financier enregistré du client. Assurez-vous que chaque client dispose d'un contact financier configuré avec la bonne adresse email avant d'activer cette fonctionnalité — sinon les rappels pourraient aller à la mauvaise personne ou ne pas être envoyés du tout. Vérifiez sous Clients → Contacts.
+</Warning>
+
+## Calendrier de relance — comment fonctionnent les rappels automatiques
+
+Les rappels automatiques s'exécutent selon un **calendrier de relance à 4 étapes**, configuré par entreprise.
+
+- **Étapes 1 à 3** : des emails sont envoyés aux contacts financiers du client aux intervalles configurés (par exemple, 7 jours / 14 jours / 30 jours de retard). Chaque étape utilise un modèle d'email séparé afin que le ton puisse s'escalader de façon appropriée, d'un rappel courtois à un avis ferme.
+- **Étape 4** : aucun email n'est envoyé automatiquement. À la place, une notification d'escalade est envoyée à vos planificateurs et admins — c'est un signal pour prendre une action manuelle (juridique, affacturage, un appel téléphonique). L'étape 4 n'envoie jamais d'email au client sans validation humaine.
+
+Pour configurer le calendrier, accédez à **Paramètres → Politiques de relance** :
+
+- Définissez le **décalage en jours** par étape (quand chaque rappel se déclenche par rapport à la date d'échéance)
+- Modifiez l'**objet et le corps de l'email** par étape, ou utilisez les modèles i18n par défaut
+- Cliquez sur **Aperçu** sur n'importe quelle étape pour lancer un **aperçu à blanc** et voir l'email avant qu'il ne parte réellement
+
+## Mettre en pause et exempter des clients
+
+Tous les clients ne devraient pas recevoir de rappels automatisés. Druma vous donne trois niveaux de contrôle :
+
+- **Mettre en pause les rappels pour un client** : accédez à **Clients** → ouvrez le client → définissez une date **Pause des rappels jusqu'au**. Aucun email de relance n'est envoyé à ce client tant que cette date n'est pas passée. Utile après qu'un client s'est engagé sur un plan de paiement.
+- **Exempter un client de façon permanente** : dans le même formulaire client, activez la bascule **Exempté de relance**. Ce client n'est jamais relancé automatiquement — utile pour les comptes clés où vous préférez gérer la relation manuellement.
+- **Supprimer une facture unique** : dans l'éditeur de facture, activez la bascule **Supprimer la relance** sur la facture spécifique. Cette facture est sautée par le calendrier de relance même si le client n'est pas exempté. Utile pour les factures contestées ou en cours de révision d'avoir.
+
+## Envoi manuel
+
+Pour envoyer un rappel immédiatement, en dehors du calendrier automatique :
+
+1. Accédez à **Facturation → Impayés**
+2. Sélectionnez la ou les factures
+3. Cliquez sur **Envoyer un rappel**
+
+Cela déclenche le modèle approprié à l'étape immédiatement, que la date d'envoi programmée ait été atteinte ou non.
+
+<Note>
+Limite de taux : 50 envois manuels par heure et par utilisateur. Chaque planificateur a son propre quota, donc plusieurs membres d'équipe peuvent chacun envoyer jusqu'à 50 rappels par heure. Cela évite les envois en masse accidentels à de grandes listes de clients.
+</Note>
+
+## Conditions de paiement par client
+
+Différents clients peuvent avoir des conditions de paiement différentes — certains paient à net 15, d'autres à net 45. Druma stocke les conditions de paiement par client afin que la date d'échéance soit calculée correctement sur chaque facture.
+
+Pour définir ou mettre à jour les conditions de paiement d'un client : **Clients** → sélectionnez le client → onglet **Détails** → champ **Conditions de paiement**. Définissez-le au nombre de jours convenu (par exemple, 30 pour net 30). Cela remplace les conditions de paiement par défaut dans vos paramètres globaux.
+
 ---
 
-## Exporter le rapport des impayés
+<Card title="Suivi des paiements" icon="money-bill-wave" href="/fr/invoicing/payment-tracking">
+  Comment enregistrer les paiements contre les factures et suivre les soldes restants par client.
+</Card>
 
-Cliquez sur **Exporter CSV** pour télécharger un rapport de toutes les factures en retard — utile pour les réunions de révision ou pour l'envoi à votre équipe comptable.
-
-<Card title="Réconciliation bancaire" icon="bank" href="/fr/invoicing/bank-reconciliation">
-  Faites correspondre les paiements bancaires entrants avec les factures ouvertes.
+<Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
+  Comment créer et envoyer des factures à partir de commandes livrées dans Druma.
 </Card>

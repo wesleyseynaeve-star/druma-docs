@@ -6,40 +6,174 @@ icon: "brain"
 
 ## Overzicht
 
-Smart Import is een AI-ondersteund onboarding-hulpmiddel dat documenten leest die u al heeft — vervoerdersvlootlijsten, rijbewijsbestanden, klantenmappen, verzekeringscertificaten — en ze omzet in gestructureerde Druma-records.
+Smart Import is een AI-ondersteund onboarding-hulpmiddel dat documenten leest die u al heeft — vervoerdersvlootlijsten, rijbewijsbestanden, klantenmappen, verzekeringscertificaten — en ze omzet in gestructureerde Druma-records. In plaats van gegevens over te typen uit papierwerk of spreadsheets te herformatteren om aan een importsjabloon te voldoen, geeft u het ruwe document aan Druma en controleert u wat de AI extraheerde voordat het de database ingaat.
 
 Ga naar **Hulpmiddelen → Smart Import** om het te openen.
 
 <Note>
-Smart Import gebruikt Google Gemini om gegevens te extraheren. Bestanden worden server-side verwerkt en worden niet permanent opgeslagen na extractie — alleen de gestructureerde records die u kiest te importeren worden opgeslagen.
+Smart Import gebruikt Google Gemini om gegevens te extraheren. Bestanden worden server-side verwerkt en niet permanent opgeslagen na extractie — alleen de gestructureerde records die u kiest te importeren worden opgeslagen.
 </Note>
+
+---
+
+## Wanneer Smart Import gebruiken vs. gewone bulkimport
+
+Druma heeft twee bulk-onboardingpaden. Kies het juiste voor uw situatie:
+
+| Situatie | Gebruik |
+|---|---|
+| U heeft een PDF, gescand document of afbeelding | **Smart Import** |
+| U heeft een foto van een document of een handgeschreven lijst | **Smart Import** |
+| U ontving een vlootlijst van een vervoerder in Word of een niet-standaard Excel | **Smart Import** |
+| U exporteert vanuit een ander TMS met een bekend CSV-formaat | **Gewone CSV-bulkimport** |
+| U heeft een schone spreadsheet die al overeenkomt met de kolomstructuur van Druma | **Gewone CSV-bulkimport** |
+
+Smart Import behandelt documenten die te rommelig of ongestructureerd zijn voor een directe CSV-import. Het vervangt geen goed gestructureerde export — de gewone import is sneller als uw gegevens al schoon zijn.
+
+---
 
 ## Ondersteunde documenttypen
 
-- **PDF's** — doorzoekbaar of gescand
-- **Afbeeldingen** — JPEG, PNG, WebP (foto's van documenten)
-- **Spreadsheets** — XLSX, CSV
+- **PDF** — vlootlijsten, vervoerdersprofielen, verzekeringscertificaten, chauffeursdossiers
+- **Afbeeldingen** — JPEG, PNG, WebP, HEIC/HEIF — scans, telefoonfoto's, screenshots
+- **Excel** — `.xlsx`-bestanden in elke indeling (Smart Import leest de inhoud, niet enkel standaardsjablonen)
+- **CSV** — komma- of puntkomma-gescheiden bestanden
 
-## Hoe het werkt
+---
+
+## Stapsgewijze workflow
 
 <Steps>
+  <Step title="Open Smart Import">
+    Ga naar **Hulpmiddelen → Smart Import**. U ziet het uploadgebied en daaronder de categoriekaarten (leeg bij het eerste bezoek).
+  </Step>
   <Step title="Upload uw documenten">
-    Sleep bestanden naar het uploadgebied of klik om te bladeren. U kunt meerdere bestanden tegelijk uploaden.
+    Klik op **Documenten uploaden** of sleep bestanden rechtstreeks naar de dropzone. U kunt meerdere bestanden tegelijk uploaden — bijvoorbeeld een PDF-vlootlijst en een afbeelding van een verzekeringscertificaat samen.
+
+    <Note>
+    Maximale bestandsgrootte is 20 MB per bestand. Is een document groter, splits het dan in secties voor het uploaden.
+    </Note>
   </Step>
-  <Step title="Selecteer de gegevenscategorie">
-    Kies wat Druma moet zoeken: Vloot, Chauffeurs, Klanten, Onderaannemers of Bedrijfsgegevens.
+  <Step title="Wacht op AI-extractie">
+    Druma stuurt elk bestand naar de AI-extractiedienst. Dit duurt doorgaans enkele seconden per bestand. Een voortgangsindicator toont de status per document. Sluit het tabblad niet tijdens de extractie.
   </Step>
-  <Step title="Beoordeel de geëxtraheerde gegevens">
-    Druma toont een tabel met alle geëxtraheerde velden. Elk veld heeft een betrouwbaarheidsscore. Bewerk eventuele onjuiste extracties inline.
+  <Step title="Bekijk de extractieresultaten">
+    Is de extractie voltooid, dan verschijnt het **Review Dashboard**. Het toont categoriekaarten bovenaan — **Bedrijven**, **Vloot**, **Chauffeurs**, **Klanten**, **Verzekering** — met een aantal geëxtraheerde records per categorie.
   </Step>
-  <Step title="Dedupliceer">
-    Druma vergelijkt de geëxtraheerde records met uw bestaande gegevens en markeert potentiële duplicaten. Kies of u ze wilt overslaan of bijwerken.
+  <Step title="Open een categorie om te beoordelen">
+    Klik op een categoriekaart om de geëxtraheerde records in een bewerkbare tabel te zien. Elke rij is één geëxtraheerd record (één voertuig, één chauffeur, één klant, enz.).
   </Step>
-  <Step title="Importeer">
-    Klik op **Importeer [N] records**. Alle geselecteerde records worden in één keer in Druma ingevoerd.
+  <Step title="Bewerk onjuiste velden">
+    Klik op een cel in de tabel om ze inline te bewerken. De AI is nauwkeurig bij duidelijk gedrukte tekst, maar kan handschrift, afkortingen of niet-standaardopmaak verkeerd lezen. Corrigeer fouten voor het importeren.
+  </Step>
+  <Step title="Controleer betrouwbaarheidsscores en duplicaten">
+    Controleer de betrouwbaarheidsindicatoren en duplicaatvlaggen op elke rij — zie de secties hieronder voor details.
+  </Step>
+  <Step title="Importeer de categorie">
+    Ziet een categorie er correct uit, klik dan op **[Categorie] importeren** — bijvoorbeeld **Vloot importeren** of **Klanten importeren**. Druma voegt alle niet-overgeslagen rijen in bulk in en bevestigt het geïmporteerde aantal.
   </Step>
 </Steps>
 
-<Card title="Vloot importeren" icon="truck" href="/nl/bulk-import/importing-fleet">
-  Handmatige vlootimport via CSV-sjabloon.
+---
+
+## Het Review Dashboard
+
+Het Review Dashboard is de centrale werkruimte na extractie. Het heeft twee niveaus:
+
+**Categoriekaarten (bovenste niveau)** — één kaart per gegevenstype gevonden in uw documenten. Elke kaart toont:
+- De categorienaam
+- Aantal geëxtraheerde records
+- Een samenvattende waarschuwing als records een lage betrouwbaarheid of duplicaatvlag hebben
+
+**Recordtabel (detailweergave)** — klik op een kaart om de bewerkbare tabel voor die categorie te openen. De tabel toont één kolom per veld (bijv. Kenteken, Trailertype, Capaciteit, Bouwjaar voor Vloot), met betrouwbaarheidsindicatoren en duplicaatvlaggen op elke rij.
+
+U kunt vrij wisselen tussen categorieën — uw bewerkingen blijven bewaard tot u importeert of de sessie sluit.
+
+---
+
+## Betrouwbaarheidsscore
+
+Elk geëxtraheerd veld krijgt een betrouwbaarheidsscore op basis van hoe duidelijk de AI de brontekst kon lezen en interpreteren. Scores worden getoond als kleurgecodeerde indicatoren op elke cel:
+
+| Indicator | Betekenis |
+|---|---|
+| Groen — **Hoog** | De AI is zeker. Het veld was duidelijk gedrukt of gestructureerd. |
+| Amber — **Middel** | De AI maakte een redelijke inschatting maar de bron was dubbelzinnig (bijv. een afkorting, een gedeeltelijk zichtbaar woord). Controleer voor het importeren. |
+| Rood — **Laag** | De AI kon geen betrouwbare waarde extraheren. De cel kan een beste gok bevatten of leeg zijn. Controleer lage velden altijd handmatig. |
+
+<Warning>
+Velden met lage betrouwbaarheid worden niet geblokkeerd voor import — u kunt ze zo importeren — maar u bent verantwoordelijk voor het verifiëren van hun nauwkeurigheid. Onjuiste gegevens (verkeerd kenteken, verkeerd BTW-nummer) kunnen problemen veroorzaken in facturering, naleving en vervoerderscommunicatie.
+</Warning>
+
+Om snel alle velden met lage betrouwbaarheid in een categorie te vinden, zoek naar de amberkleurige en rode celmarkeringen in de tabel. Er is geen apart filter — scan kolom per kolom of rij per rij.
+
+---
+
+## Duplicaatdetectie
+
+Voor het tonen van het Review Dashboard vergelijkt Druma geëxtraheerde records met uw bestaande bedrijfsgegevens — maar alleen voor vier categorieën:
+
+- **Vloot (vrachtwagens)**: matcht op kenteken
+- **Vloot (trailers)**: matcht op kenteken
+- **Chauffeurs**: matcht op volledige naam (niet hoofdlettergevoelig)
+- **Klanten**: matcht op BTW-nummer, valt terug op naam als geen BTW-nummer werd geëxtraheerd
+
+<Note>
+Er is nog geen duplicaatdetectie voor Bedrijven/Onderaannemers of Verzekeringsrecords — elke geëxtraheerde rij in die categorieën wordt behandeld als nieuw.
+</Note>
+
+Records die overeenkomen met bestaande gegevens krijgen een **Duplicaat**-badge op de rij. U heeft twee opties per duplicaat:
+
+- **Overslaan** (standaard) — de rij wordt niet geïmporteerd. Gebruik dit wanneer het bestaande record al correct is.
+- **Overschrijven** — de import werkt het bestaande record bij met de geëxtraheerde gegevens. Gebruik dit voorzichtig — het vervangt de opgeslagen waarden.
+
+Rijen zonder Duplicaat-vlag zijn nieuwe records en worden bij import ingevoegd.
+
+---
+
+## Na de import
+
+Geïmporteerde records verschijnen onmiddellijk in de relevante module:
+
+- **Vloot**-records verschijnen in **Vloot → Vrachtwagens** of **Vloot → Trailers**
+- **Chauffeurs** verschijnen in **Vloot → Chauffeurs**
+- **Klanten** verschijnen in **Klanten**
+- **Bedrijven/Onderaannemers** verschijnen in **Forwarding → Onderaannemers**
+- **Verzekeringsgegevens** worden gekoppeld aan het relevante voertuig- of bedrijfsrecord
+
+Er is geen ongedaan-maken voor een import. Is er onjuiste data geïmporteerd, bewerk dan de records individueel in hun respectieve modules.
+
+---
+
+## Beperkingen
+
+Smart Import is ontworpen voor bedrijfs-, vloot-, chauffeurs-, klant- en verzekeringsgegevens. Het behandelt niet:
+
+- **Orders** — gebruik het orderformulier of de functie voor inkomende order-e-mail voor orderaanmaak
+- **Facturen** — facturen worden automatisch gegenereerd vanuit afgeleverde orders of via de workflow voor vervoerdersfactuurinname
+- **Historische gegevensmigratie** — voor grote historische datasets (duizenden records), neem contact op met support voor een begeleide migratie
+
+Smart Import werkt het best met voornamelijk tekstgebaseerde documenten. Het kan handschrift in afbeeldingen verwerken, maar de nauwkeurigheid daalt aanzienlijk vergeleken met gedrukte tekst.
+
+---
+
+## Praktisch voorbeeld
+
+Uw nieuwe onderaannemer stuurt u een PDF van 3 pagina's met zijn hele vloot — 12 voertuigen met kenteken, type, maximumgewicht en bouwjaar. In plaats van elk handmatig in te voeren:
+
+1. Upload de PDF naar **Hulpmiddelen → Smart Import**
+2. Wacht enkele seconden op extractie
+3. Klik op de kaart **Vloot** — 12 rijen verschijnen, de meeste met hoge betrouwbaarheid
+4. Twee rijen hebben middelmatige betrouwbaarheid op het veld Trailertype — corrigeer ze inline
+5. Eén rij is gemarkeerd als Duplicaat (een truck die u vorige week al toevoegde) — laat op Overslaan staan
+6. Klik op **Vloot importeren** — 11 nieuwe voertuigen worden onmiddellijk aan uw vloot toegevoegd
+
+---
+
+<Card title="Vlootbeheer" icon="truck" href="/nl/planner/fleet-management">
+  Beheer vrachtwagens, trailers en chauffeurs — en verifieer hier geïmporteerde vlootrecords na een Smart Import.
+</Card>
+
+<Card title="Klanten" icon="building-2" href="/en/clients/clients-overview">
+  Bekijk en bewerk klantrecords aangemaakt door Smart Import, en voeg contacten en standaardinstructies toe.
 </Card>

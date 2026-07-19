@@ -1,0 +1,147 @@
+---
+title: "Ventes"
+description: "Suivez les prospects et les comptes existants à travers le pipeline commercial — du premier contact à un client, devis, ou appel d'offres converti."
+icon: "user-group"
+---
+
+## Vue d'ensemble
+
+Le module **Ventes** (`/operator-crm`, dans la navigation principale sous **Ventes**) est l'endroit où vous gérez la construction de relations séparément des commandes de transport auxquelles ces relations mènent. Il est construit autour de deux types de fiches passant par les mêmes étapes de cycle de vie :
+
+- **Prospects** — des personnes intéressées qui ne sont pas encore clientes dans Druma
+- **Comptes** — vos clients existants, suivis à travers le même pipeline une fois que vous voulez gérer les renouvellements ou l'expansion
+
+Ventes est disponible pour les rôles **admin, company_admin, planner, dispatcher, et customer_service**.
+
+<Frame caption="L'onglet Pipeline des ventes — prospects et comptes progressant à travers quatre étapes.">
+  <img src="/images/planner/crm.png" alt="Tableau kanban du pipeline des ventes avec prospects et comptes sur quatre étapes" />
+</Frame>
+
+---
+
+## La barre d'onglets
+
+<Steps>
+  <Step title="Pipeline">
+    Un tableau kanban de prospects et de comptes à travers quatre étapes, avec repositionnement par glisser-déposer. C'est votre onglet d'atterrissage par défaut.
+  </Step>
+  <Step title="Contacts">
+    Un tableau de tous les prospects, avec les colonnes entreprise, contact, pays, source, dernier contact, et étape.
+  </Step>
+  <Step title="Comptes">
+    Un tableau de vos clients existants, chacun suivi optionnellement avec sa propre étape de cycle de vie et sa date de dernier point de contact.
+  </Step>
+  <Step title="Devis">
+    Ouvre la page [Devis](/fr/planner/quotes) — tarifer ponctuellement un chargement spécifique pour un prospect ou un client.
+  </Step>
+  <Step title="Appels d'offres (si activé)">
+    Ouvre [Appels d'offres et contrats](/fr/planner/tenders-and-contracts) — affiché uniquement quand la gestion des appels d'offres est activée pour votre entreprise.
+  </Step>
+  <Step title="Reporting">
+    Taux de conversion, taille moyenne des affaires, durée du cycle de vente, valeur pondérée du pipeline, et un classement d'activité.
+  </Step>
+</Steps>
+
+<Note>
+Devis et Appels d'offres partagent cette barre d'onglets afin que toute la démarche commerciale — de faible à fort engagement — se lise comme une seule unité, mais chacun garde son propre corps de page et sa propre page de documentation.
+</Note>
+
+---
+
+## Étapes du cycle de vie
+
+Chaque prospect et chaque compte suivi passe par le même ensemble d'étapes :
+
+| Étape | Signification |
+|---|---|
+| `lead` | Contact initial, pas encore qualifié |
+| `qualified` | Confirmé comme une véritable opportunité |
+| `proposal` | Un devis ou un appel d'offres a été envoyé |
+| `won` | Converti en client actif |
+| `lost` | N'a pas converti |
+| `inactive` | Le compte s'est tu |
+
+Le tableau **Pipeline** n'affiche que les colonnes `lead` → `qualified` → `proposal` → `won`. `lost` et `inactive` se définissent depuis la liste déroulante d'étape dans le panneau de détail d'une fiche plutôt que d'être affichés comme colonnes du tableau.
+
+---
+
+## Ajouter un prospect
+
+<Steps>
+  <Step title="Cliquez sur Nouveau prospect">
+    Depuis l'onglet **Pipeline** ou **Contacts**, cliquez sur **Nouveau prospect**.
+  </Step>
+  <Step title="Renseignez les détails">
+    Saisissez :
+    - **Entreprise** (obligatoire)
+    - **Contact**, **Pays**, **Email**, **Téléphone**, **TVA**
+    - **Source** — texte libre (ex. « recommandation », « bourse de fret »)
+    - **Étape** — par défaut `lead`
+    - **Notes**
+  </Step>
+  <Step title="Créer">
+    Cliquez sur **Créer**. Le prospect apparaît sur le tableau Pipeline et dans le tableau Contacts.
+  </Step>
+</Steps>
+
+<Note>
+Les prospects provenant d'une demande de devis entrante ou d'un email transféré depuis le CRM entrant sont étiquetés automatiquement (« RFQ entrante » / « Email entrant ») dans la colonne Source du tableau Contacts.
+</Note>
+
+---
+
+## Travailler un prospect ou un compte
+
+Cliquez sur n'importe quelle carte ou ligne pour ouvrir son panneau de détail :
+
+- **Étape** — changez l'étape du cycle de vie directement.
+- **Notes** — notes libres sur la relation.
+- **Affaire** *(prospects uniquement)* — valeur attendue (EUR/RON), probabilité (%), date de clôture attendue, étiquettes séparées par des virgules, et une liste déroulante de motif de perte qui apparaît une fois l'étape définie sur `lost`.
+- **Personnes / Contacts** *(prospects uniquement)* — ajoutez plusieurs personnes de contact pour le même compte et marquez-en une comme principale.
+- **Points de contact** — enregistrez une interaction : choisissez un type (**Appel, Email, Réunion, Démo, Note**), un résumé/résultat optionnel, et une pièce jointe optionnelle, puis cliquez sur **Enregistrer le point de contact**. Les points de contact sont partagés entre prospects et comptes et affichés du plus récent au plus ancien.
+
+Pour les prospects, l'en-tête du panneau a aussi :
+
+- **Créer un devis** — lien direct vers [Devis](/fr/planner/quotes) avec un nouveau devis pré-rempli à partir de ce prospect.
+- **Créer un appel d'offres** *(si la gestion des appels d'offres est activée)* — lien direct vers [Appels d'offres et contrats](/fr/planner/tenders-and-contracts) avec un nouvel appel d'offres pré-lié à ce prospect.
+- **Convertir en client** — voir ci-dessous. Une fois converti, ce bouton devient **Voir le client** à la place.
+
+---
+
+## Convertir un prospect en client
+
+<Steps>
+  <Step title="Ouvrez le prospect et cliquez sur Convertir en client">
+    Confirmez l'invite. Druma crée une nouvelle fiche client à partir des détails du prospect — c'est idempotent, donc recliquer sur un prospect déjà converti ouvre simplement le client existant au lieu de le dupliquer.
+  </Step>
+  <Step title="Créez éventuellement un barème de tarifs">
+    On vous demande si vous voulez créer un barème de tarification par lane pour le nouveau client. Choisir **Créer un barème** vous amène à un formulaire de nouveau barème pré-rempli ; **Pas maintenant** ne laisse rien derrière.
+  </Step>
+  <Step title="Trouvez-le sous Comptes">
+    La page bascule vers l'onglet **Comptes**, filtré sur le client nouvellement converti.
+  </Step>
+</Steps>
+
+---
+
+## Reporting
+
+L'onglet **Reporting** résume votre pipeline :
+
+- **Taux de conversion** — part des affaires clôturées (gagnées vs perdues) qui ont été gagnées.
+- **Taille moyenne des affaires** — valeur attendue moyenne parmi les affaires ayant une valeur définie.
+- **Cycle de vente** — nombre moyen de jours entre la création du prospect et la clôture.
+- **Pipeline pondéré** — somme de la valeur attendue de chaque affaire ouverte × probabilité, ventilée par étape (avec une transparence de calcul).
+- **Pipeline d'appels d'offres** *(si la gestion des appels d'offres est activée)* — volume engagé par statut d'appel d'offres.
+- **Classement d'activité** — points de contact enregistrés par membre d'équipe.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Devis" icon="file-invoice" href="/fr/planner/quotes">
+    Construisez et envoyez un devis de fret à un prospect ou un client, avec acceptation en un clic le transformant en commande confirmée.
+  </Card>
+  <Card title="Appels d'offres et contrats" icon="file-signature" href="/fr/planner/tenders-and-contracts">
+    Suivez les appels d'offres d'achat des clients, du prospect au contrat actif, et attribuez les tarifs de ligne dans un barème de tarifs.
+  </Card>
+</CardGroup>

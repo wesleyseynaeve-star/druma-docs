@@ -1,45 +1,126 @@
 ---
-title: "SAGA & WinMENTOR Export"
-description: "Hoe u Druma factuur- en klantgegevens exporteert naar SAGA C en WinMENTOR voor Roemeense boekhouding, inclusief automatische nachtelijkse exports."
+title: "SAGA & WinMENTOR-export"
+description: "Hoe u Druma factuur- en klantgegevens exporteert naar SAGA C en WinMENTOR Classic voor Roemeense boekhouding, inclusief de automatische maandelijkse export gemaild naar uw boekhouder."
 icon: "database"
 ---
 
 ## Overzicht
 
-SAGA C en WinMENTOR zijn de twee meest gebruikte boekhoudsoftwarepakketten door Roemeense bedrijven. Druma exporteert factuur- en klantgegevens in de formaten die beide pakketten verwachten.
+SAGA C en WinMENTOR Classic zijn de twee meest gebruikte boekhoudsoftwarepakketten bij Roemeense bedrijven. Druma exporteert factuur- en klantgegevens in de formaten die beide pakketten verwachten, zodat uw boekhouder rechtstreeks kan importeren zonder handmatige heringave.
 
-## SAGA C Export
+## SAGA C-export
 
-SAGA gebruikt DBF-bestanden (dBase) voor gegevensimport. Druma genereert twee bestanden per export:
+SAGA gebruikt DBF-bestanden (dBase) voor gegevensimport. Druma genereert een volledig exportpakket, niet enkel klant- en factuurgegevens:
 
-- **Clienti.dbf** — klantstamgegevens (naam, CIF, adres, betalingstermijnen)
-- **Facturi.dbf** — factuurregels (factuurnummer, datum, bedragen, BTW)
+- **CLI_\<datum>.dbf** (Clienti) — klantstamgegevens (naam, CIF, adres, betalingstermijnen)
+- **ART_\<datum>.dbf** (Articole) — de dienstregelpost gebruikt op verkoopfacturen, standaard meegenomen
+- **IE_\<datum>_\<datum>.dbf** (Iesiri) — verkoopfactuurgegevens (factuurnummer, datum, bedragen, BTW, klantreferentie)
+- **INT_\<datum>.dbf** (Intrari) — aankoopfacturen, wanneer de periode uitbestede orders bevat
+- **NC_\<datum>_\<datum>.xml** (Incasari) — betalingen geregistreerd in de periode (dit ene bestand is XML, geen DBF)
+- **README.txt** — een platte-tekstsamenvatting van de export plus importinstructies voor uw boekhouder
 
-**Hoe exporteren:**
+### Exporteren voor SAGA
 
 <Steps>
-  <Step title="Ga naar Rapporten → Boekhoudexport">
-    Open de exportmodule.
+  <Step title="Ga naar de Facturering-module">
+    Klik op **Facturering** in het hoofdnavigatiemenu.
   </Step>
-  <Step title="Selecteer datumbereik en formaat">
-    Kies het datumbereik en selecteer **SAGA C** als formaat.
+  <Step title="Open het Export-menu">
+    Klik op de knop **Export** rechtsboven op het Facturering-scherm.
   </Step>
-  <Step title="Download">
-    Klik op **Exporteren**. Een ZIP-bestand met beide DBF-bestanden wordt gedownload.
+  <Step title="Selecteer SAGA">
+    Kies **SAGA C** uit de exportformaatopties.
   </Step>
-  <Step title="Importeer in SAGA">
-    Open SAGA C en gebruik de standaard import wizard om de bestanden in te lezen.
+  <Step title="Stel het datumbereik in">
+    Kies de start- en einddatum voor de facturen die u wilt exporteren. De meeste boekhouders willen een maandelijkse export.
+  </Step>
+  <Step title="Download de ZIP">
+    Klik op **Downloaden**. Druma maakt een ZIP-bestand met de bovenstaande DBF-bestanden (plus de Incasari-XML en README.txt) en downloadt het naar uw computer.
   </Step>
 </Steps>
 
-## WinMENTOR Classic Export
+### Importeren in SAGA C
 
-Hetzelfde proces als SAGA maar selecteer **WinMENTOR Classic** als formaat. Druma genereert het XML-formaat dat WinMENTOR Classic verwacht.
+<Steps>
+  <Step title="Open SAGA C op de computer van uw boekhouder">
+    Log in op het bedrijfsbestand waarin u wilt importeren.
+  </Step>
+  <Step title="Ga naar Import">
+    Navigeer in SAGA naar **Import → Facturi furnizori / clienti** (afhankelijk van uw configuratie).
+  </Step>
+  <Step title="Selecteer de DBF-bestanden">
+    Blader naar de ZIP die u van Druma downloadde en selecteer het relevante .dbf-bestand.
+  </Step>
+  <Step title="Verifieer de veldmapping">
+    SAGA toont een voorvertoning van de veldmapping. Bevestig dat de kolommen overeenkomen met de verwachte SAGA-velden — ze zouden automatisch moeten aansluiten bij Druma's export.
+  </Step>
+  <Step title="Bevestig de import">
+    Klik op **Importeren**. SAGA verwerkt de records. Controleer het importlog op fouten.
+  </Step>
+</Steps>
 
-## Automatische nachtelijkse export
+## WinMENTOR Classic-export
 
-Ga naar **Instellingen → Bedrijf → SAGA Auto-export** om een nachtelijkse automatische export in te schakelen. Druma genereert de exportbestanden elke nacht en stuurt een download-link per e-mail.
+WinMENTOR Classic gebruikt **geen** DBF-bestanden zoals SAGA — Druma exporteert in plaats daarvan pipe-gescheiden (`|`) platte-tekstbestanden, passend bij WinMENTOR's formaat "Import uit tekstbestand":
+
+- **Iesiri_\<datum>_\<datum>.txt** — verkoopfactuurgegevens
+- **Clienti_\<datum>.txt** — klantstamgegevens voor de klanten gefactureerd in de periode
+- **Articole_\<datum>.txt** — de dienstregelpost gebruikt op verkoopfacturen
+- **Incasari_\<datum>_\<datum>.txt** — betalingen geregistreerd in de periode (alleen meegenomen indien aanwezig)
+- **README.txt** — importinstructies voor uw boekhouder
+
+<Steps>
+  <Step title="Open het Export-menu in Facturering">
+    Ga naar **Facturering → Export**.
+  </Step>
+  <Step title="Selecteer WinMENTOR Classic">
+    Kies **WinMENTOR Classic** uit de formaatlijst. Dit genereert de bovenstaande pipe-gescheiden `.txt`-bestanden in plaats van SAGA's DBF-bestanden — gebruik de SAGA-optie niet voor WinMENTOR.
+  </Step>
+  <Step title="Stel het datumbereik in en download">
+    Kies uw datumbereik en klik op **Downloaden**.
+  </Step>
+</Steps>
+
+Importeer de bestanden in WinMENTOR via **Import/Export → Import din fisier text**, met scheidingsteken (`|`) geselecteerd.
+
+<Note>
+Er is momenteel geen directe REST API-integratie voor WinMENTOR Enterprise of enig ander boekhoudpakket — SAGA C en WinMENTOR Classic zijn de enige twee ondersteunde formaten, beide bestandsgebaseerd.
+</Note>
+
+## Automatische maandelijkse export (SAGA en WinMENTOR Classic)
+
+In plaats van een handmatige nachtelijke download, mailt Druma de export automatisch eenmaal per maand naar uw boekhouder:
+
+<Steps>
+  <Step title="Ga naar Instellingen">
+    Navigeer naar **Instellingen → Automatisering** en zoek de sectie **SAGA-exportconfiguratie**.
+  </Step>
+  <Step title="Stel het e-mailadres van de boekhouder en de exportdag in">
+    Voer het **e-mailadres van de boekhouder** in (en een optionele CC), kies dan de **dag van de maand** waarop de export moet draaien (1–28).
+  </Step>
+  <Step title="Opslaan">
+    Klik op **SAGA-configuratie opslaan**. Een achtergrondtaak controleert dagelijks om **06:00 UTC** of vandaag overeenkomt met uw geconfigureerde dag — is dat zo, dan genereert Druma de export voor de **vorige kalendermaand** en mailt deze rechtstreeks naar uw boekhouder, zonder handmatige downloadstap.
+  </Step>
+</Steps>
+
+<Note>
+Er is geen in-app "Exportgeschiedenis"-lijst — de export van elke maand komt binnen als een e-mail met een beveiligde downloadlink naar de ZIP, **7 dagen** geldig. Verloopt de link, of heeft u een export buiten de cyclus of voor een aangepaste periode nodig, gebruik dan de handmatige exportflow hierboven (of **Finance → Export Builder** voor een aangepaste kolomindeling).
+</Note>
+
+## Facturen in meerdere valuta en BNR-wisselkoersen
+
+Voor facturen in EUR, USD, GBP, CHF of PLN neemt Druma de BNR-wisselkoers (Nationale Bank van Roemenië) voor de factuurdatum mee in de DBF-/tekstexport. Zo heeft de software van uw boekhouder de RON-equivalente bedragen onmiddellijk — geen handmatige koersopzoeking nodig.
+
+<Warning>
+Controleer altijd bij uw boekhouder welk exportformaat nodig is — SAGA C of WinMENTOR Classic. Het verkeerde formaat gebruiken veroorzaakt importfouten of stilzwijgend onjuiste gegevens.
+</Warning>
+
+---
 
 <Card title="Integraties instellen" icon="plug" href="/nl/admin/integration-setup">
-  Koppel WinMENTOR Enterprise via REST API.
+  Hoe u alle Druma-integraties configureert, inclusief boekhoudsoftware en API-koppelingen.
+</Card>
+
+<Card title="Facturen genereren" icon="file-invoice-dollar" href="/nl/invoicing/generating-invoices">
+  Hoe u facturen aanmaakt in Druma voordat u ze exporteert naar uw boekhoudsoftware.
 </Card>

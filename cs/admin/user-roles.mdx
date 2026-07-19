@@ -14,11 +14,16 @@ Přiřazení správné role každému členovi týmu znamená:
 
 Druma má **osm rolí**. Šest je pro váš interní tým (webová platforma) a dvě jsou pro externí uživatele (řidiče a klienty), kteří přistupují k Druma prostřednictvím speciálních odkazů, nikoli webové platformy.
 
+<Frame caption="Nastavení → Uživatelé — odznaky rolí u jednotlivých členů týmu.">
+  <img src="/images/admin/user-roles.png" alt="Panel nastavení uživatelů a rolí" />
+</Frame>
+
 ## Přehled oprávnění rolí
 
 | Oprávnění | Správce | Správce společnosti | Plánovač | Dispečer | Fleet manažer | ZS | Řidič | Klient |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Fakturace a předplatné | Ano | - | - | - | - | - | - | - |
+| Zobrazení stránky fakturace | Ano | Ano | Ano | Ano | Ano | Ano | - | - |
+| Úprava fakturace (interval, strop vozidel, limity využití) | Ano | Ano | - | - | - | - | - | - |
 | Nastavení společnosti | Ano | Ano | - | - | - | - | - | - |
 | Správa uživatelů a pozvánek | Ano | Ano | - | - | - | Pozvat | - | - |
 | Integrace a nastavení API | Ano | Ano | - | - | - | - | - | - |
@@ -40,11 +45,10 @@ Druma má **osm rolí**. Šest je pro váš interní tým (webová platforma) a 
 
 ### Správce
 
-Správce má **plný přístup k systému**, včetně fakturace a správy předplatného. Tato role je pro majitele firmy nebo osobu, která je nakonec zodpovědná za účet Druma.
+Správce má **plný přístup k systému**, včetně konfigurace fakturace na úrovni platformy. Tato role je pro majitele firmy nebo osobu, která je nakonec zodpovědná za účet Druma.
 
 Správci mohou dělat vše, co správce společnosti, plus:
-- Spravovat fakturaci, plány předplatného a platební metody
-- Zobrazovat a měnit počty míst a cenové úrovně
+- Přistupovat k sekcím **Billing Entities** a **Billing Config** — fakturační obrazovky na úrovni platformy vyhrazené pouze pro Správce
 
 *Praktický příklad: Vasile vlastní přepravní společnost. Je správcem. Kontroluje předplatné, spravuje fakturaci a má přehled nad vším na platformě.*
 
@@ -52,17 +56,17 @@ Správci mohou dělat vše, co správce společnosti, plus:
 
 ### Správce společnosti
 
-Správce společnosti má plný přístup ke všemu **kromě fakturace**. Toto je správná role pro důvěryhodného vedoucího provozu nebo senior dispečera, který řídí každodenní nastavení platformy — přidávání uživatelů, konfigurace integrací, úprava firemních údajů — bez přístupu k vašim platebním informacím.
+Správce společnosti má plný přístup téměř ke všemu, **včetně stránky Fakturace** — jde o vhodnou roli pro důvěryhodného vedoucího provozu nebo senior dispečera, který řídí každodenní nastavení platformy a může také spravovat samotné předplatné (fakturační interval, strop vozidel, limity využití podle funkce). Dvě fakturační obrazovky na úrovni platformy (**Billing Entities**, **Billing Config**) zůstávají vyhrazeny pouze pro Správce.
 
 Správci společnosti mohou:
-- Konfigurovat vše v Nastavení (kromě fakturace)
+- Konfigurovat vše v Nastavení, včetně Fakturace
 - Zvát a spravovat ostatní uživatele
-- Nastavovat integrace (SmartBill, SAGA, TransFollow, ANAF, Timocom atd.)
+- Nastavovat integrace (SmartBill, SAGA, nativní eCMR, ANAF, Timocom atd.)
 - Spravovat firemní profil, ceníky a výchozí nastavení
 - Vytvářet a spravovat objednávky, faktury, vozový park a reporty
 - Zobrazovat auditní záznamy
 
-*Praktický příklad: Mihaela je vedoucí provozu. Je správkyní společnosti. Přidává nové řidiče, aktualizuje dokumenty vozidel, zve nové dispečery a udržuje firemní profil aktuální — ale Vasile si ponechává fakturační údaje pro sebe.*
+*Praktický příklad: Mihaela je vedoucí provozu Vasileho. Je správkyní společnosti. Přidává nové řidiče, aktualizuje dokumenty vozidel, zve nové dispečery, udržuje firemní profil aktuální a může také přepnout fakturační interval nebo upravit strop vozidel na stránce Fakturace — ale obrazovky fakturační konfigurace na úrovni platformy zůstávají u Vasileho.*
 
 ---
 
@@ -78,7 +82,7 @@ Plánovači mohou:
 - Přistupovat k přehledu, živé mapě a hodinám řidičů
 - Pracovat s reporty a exporty
 
-*Praktický příklad: Radu je dispečer. Vytváří všechny objednávky, přiřazuje kamiony, sleduje doručení a odesílá faktury po dokončení objednávek.*
+*Praktický příklad: Radu je dispečer. Vytváří všechny objednávky, přiřazuje kamiony, sleduje doručení a odesílá faktury po dokončení objednávek. Nepotřebuje měnit nastavení společnosti ani spravovat přístup uživatelů.*
 
 ---
 
@@ -99,7 +103,7 @@ Dispečeři nemohou:
 - Zobrazovat reporty ani exporty
 - Měnit jakékoli nastavení
 
-*Praktický příklad: Bogdan pracuje noční směnu. Sleduje živou mapu a přehled hodin řidičů, aby zajistil, že všichni řidiči jsou v souladu s předpisy. Pokud se něco pokazí, zavolá plánovači denní směny.*
+*Praktický příklad: Bogdan pracuje noční směnu. Sleduje živou mapu a přehled hodin řidičů, aby zajistil, že všichni řidiči jsou podle plánu a v souladu s předpisy. Pokud se něco pokazí, zavolá plánovači denní směny — nepotřebuje pracovat s objednávkami ani fakturami.*
 
 ---
 
@@ -122,7 +126,7 @@ Fleet manažeři nemohou:
 - Zobrazovat reporty ani exporty
 - Měnit nastavení společnosti ani spravovat uživatele
 
-*Praktický příklad: Ion se stará o vozový park. Zpracovává technické prohlídky vozidel, obnovy pojištění, sledování řidičských průkazů a import palivových karet.*
+*Praktický příklad: Ion se stará o vozový park. Zpracovává technické prohlídky vozidel, obnovy pojištění, sledování řidičských průkazů a import palivových karet. Nepotřebuje vidět objednávky ani faktury — to je práce plánovače.*
 
 ---
 
@@ -137,13 +141,19 @@ Uživatelé zákaznického servisu mohou:
 - Přistupovat k reportům a exportům
 - Zvát nové uživatele
 
-*Praktický příklad: Elena se stará o klientské vztahy od začátku do konce. Vytváří objednávky při telefonátech klientů, generuje faktury po doručení a odesílá reporty.*
+Uživatelé zákaznického servisu nemohou:
+- Přiřazovat vozidla ani řidiče na plánovací tabuli
+- Spravovat vozový park (vozidla, návěsy, řidiči)
+- Zobrazovat živou mapu ani přehled
+- Měnit nastavení společnosti ani integrace
+
+*Praktický příklad: Elena se stará o klientské vztahy od začátku do konce. Vytváří objednávky při telefonátech klientů, generuje faktury po doručení a odesílá reporty. Když se přidá nový člen týmu, může mu poslat pozvánku — ale správu vozového parku a plánování nechává provoznímu týmu.*
 
 ---
 
 ### Řidič
 
-Role řidiče se liší od všech ostatních — **řidiči nikdy nepřistupují k webové platformě Druma**. Místo toho má každý řidič jedinečný osobní odkaz (odkaz PWA), který otevírá aplikaci Druma pro řidiče na jejich smartphonu.
+Role řidiče se liší od všech ostatních — **řidiči nikdy nepřistupují k webové platformě Druma**. Místo toho se přihlašují do mobilní aplikace Druma pro řidiče pomocí **telefonního čísla a PIN**, který jim nastavíte ve Vozový park → Řidiči.
 
 Přes aplikaci pro řidiče může řidič:
 - Vidět přiřazené objednávky na daný den a nadcházející dny
@@ -152,9 +162,13 @@ Přes aplikaci pro řidiče může řidič:
 - Digitálně podepisovat dokumenty eCMR na obrazovce
 - Zobrazovat adresy vyzvednutí a doručení a kontaktní informace
 
+Řidiči nevidí objednávky jiných řidičů, finance klientů ani nastavení společnosti.
+
 <Warning>
-Nepokoušejte se zvát řidiče přes Nastavení → Uživatelé. Řidiči nepotřebují pozvánkový e-mail. Přejděte do Vozový park → Řidiči, otevřete profil řidiče a zkopírujte jeho osobní odkaz PWA. Pošlete ho řidiči přes WhatsApp, SMS nebo libovolnou messaging aplikaci.
+Nepokoušejte se zvát řidiče přes Nastavení → Uživatelé. Řidiči nepotřebují pozvánkový e-mail. Přejděte do Vozový park → Řidiči, otevřete profil řidiče, nastavte jeho telefonní číslo a vygenerujte PIN v sekci **Přihlášení telefonem + PIN**. Předejte řidiči tento PIN přímo — při prvním přihlášení si ho přizpůsobí (zvolí si vlastní PIN).
 </Warning>
+
+*Praktický příklad: Gheorghe je dálkový řidič. Každé ráno otevře aplikaci Druma na svém telefonu, aby viděl podrobnosti objednávky, aktualizuje svůj stav na každé zastávce a digitálně podepisuje eCMR v místě doručení.*
 
 ---
 
@@ -168,6 +182,10 @@ Přes portál pro klienty může klient:
 - Stahovat dokumenty eCMR, doklady o doručení a faktury
 - Zobrazovat odhadované časy příjezdu
 
+Klienti nevidí data jiných klientů, vaše interní poznámky k objednávkám, vaše náklady ani nic nad rámec svých vlastních zásilek.
+
+*Praktický příklad: Schmidt GmbH pravidelně posílá náklad přes vaši společnost. Jednou jim sdílíte odkaz na portál. Od té chvíle jejich logistický manažer otevírá odkaz, kdykoli chce zkontrolovat doručení — bez telefonování vám.*
+
 ## Přiřazení více rolí
 
 Jeden uživatel může mít více než jednu roli. Nastavíte to při pozvání uživatele nebo při pozdější úpravě jeho profilu.
@@ -177,7 +195,7 @@ Běžné kombinace více rolí:
 - **Plánovač + Zákaznický servis** — dispečer malého týmu, který také zpracovává dotazy klientů
 
 <Note>
-Používejte přiřazení více rolí střídmě. V malém týmu to dává smysl, ale dávání každému širokého přístupu ztěžuje sledování změn a zvyšuje riziko chyb.
+Používejte přiřazení více rolí střídmě. V malém týmu to dává smysl, ale dávání každému širokého přístupu ztěžuje sledování změn a zvyšuje riziko chyb. Začněte s nejomezenější rolí, která pokrývá potřeby dané osoby.
 </Note>
 
 ## Podpora více společností
@@ -185,16 +203,14 @@ Používejte přiřazení více rolí střídmě. V malém týmu to dává smysl
 Jedna e-mailová adresa může patřit do **více než jednoho firemního účtu Druma**. To je užitečné, pokud:
 - Spravujete více právních subjektů (holding se samostatnými dopravci)
 - Externí účetní pracuje s několika klienty, kteří všichni používají Druma
+- Agentura řidičů poskytuje řidiče více dopravcům
 
-Pro přepínání mezi společnostmi klikněte na název své společnosti v pravém horním rohu platformy a vyberte jinou společnost z rozbalovací nabídky.
+Pro přepínání mezi společnostmi klikněte na název své společnosti v pravém horním rohu platformy a vyberte jinou společnost z rozbalovací nabídky. Data každé společnosti jsou zcela oddělená — uživatelé ve společnosti A nevidí objednávky ani klienty společnosti B.
 
-<Card title="Pozvěte svůj tým" icon="users" href="/en/getting-started/invite-your-team">
-  Pokyny krok za krokem pro zvání uživatelů a odesílání odkazu na aplikaci pro řidiče.
+<Card title="Pozvěte svůj tým" icon="users" href="/cs/getting-started/invite-your-team">
+  Pokyny krok za krokem pro zvání uživatelů a nastavení přihlášení řidičů telefonem + PIN.
 </Card>
 
-<Card title="Nastavení společnosti" icon="building" href="/en/admin/company-setup">
+<Card title="Nastavení společnosti" icon="building" href="/cs/admin/company-setup">
   Nakonfigurujte právní údaje, logo a nastavení faktur.
 </Card>
----
-
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/user-roles).

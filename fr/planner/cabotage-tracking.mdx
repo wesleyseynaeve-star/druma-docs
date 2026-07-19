@@ -1,42 +1,110 @@
 ---
 title: "Suivi du cabotage"
-description: "Suivez la conformité au cabotage UE par camion et par pays — limites de 3 trajets en 7 jours après une livraison internationale."
-icon: "map"
+description: "Surveillez les opérations de cabotage par camion pour rester dans les limites de l'UE et éviter de lourdes amendes lors des contrôles routiers."
+icon: "flag"
 ---
 
 ## Qu'est-ce que le cabotage ?
 
-Le cabotage est le transport de marchandises entre deux points dans le même pays par un transporteur étranger. Dans l'UE, les transporteurs non résidents peuvent effectuer au maximum **3 opérations de cabotage dans les 7 jours suivant une livraison internationale** dans ce pays.
+Le cabotage se produit quand un camion immatriculé dans un pays effectue un transport national à l'intérieur d'un pays différent — c'est-à-dire que le chargement et la livraison se trouvent tous deux dans le même pays étranger.
+
+**Exemple :** un camion immatriculé en Roumanie livre un chargement de Bucarest à Munich (international). Après cette livraison, le camion charge à Munich et livre à Francfort. Ce mouvement Munich → Francfort, effectué par un camion roumain entièrement à l'intérieur de l'Allemagne, est une **opération de cabotage**.
+
+Le cabotage est légal dans l'UE — mais strictement limité.
+
+---
+
+## Les règles de cabotage de l'UE
+
+Selon le Règlement UE 1072/2009, après avoir effectué une livraison internationale dans un État membre :
+
+- Un camion étranger peut effectuer **jusqu'à 3 opérations de cabotage** dans ce pays
+- Les 3 opérations doivent toutes être terminées **dans les 7 jours** suivant la livraison internationale
+- Après ces 3 opérations (ou 7 jours, selon ce qui arrive en premier), le camion doit quitter ce pays
+- Il y a un **délai de récupération obligatoire de 4 jours** avant que le camion puisse revenir dans ce pays et refaire du cabotage
+
+**Pourquoi c'est important :** les autorités de contrôle routier dans des pays comme l'Allemagne, la France et les Pays-Bas vérifient activement les infractions au cabotage. Les amendes peuvent atteindre plusieurs milliers d'euros par infraction. Les infractions répétées peuvent entraîner des problèmes de licence d'exploitation.
+
+<Warning>
+Les règles de cabotage ont été renforcées davantage sous le Paquet Mobilité de l'UE. La période de récupération de 4 jours est strictement appliquée dans les pays d'Europe de l'Ouest. Vérifiez toujours que les règles actuelles s'appliquent — la réglementation peut être mise à jour.
+</Warning>
 
 ---
 
 ## Comment Druma suit le cabotage
 
-Druma enregistre automatiquement chaque opération de cabotage lorsque vous créez une commande dont l'origine et la destination sont dans le même pays étranger (différent du pays d'immatriculation du camion).
+Druma surveille le cabotage automatiquement à partir des données de commande que vous saisissez. Voici ce qu'il vérifie :
 
-Consultez **Conformité → Cabotage** pour voir le tableau de bord de conformité.
-
----
-
-## Tableau de bord du cabotage
-
-Le tableau de bord affiche pour chaque camion :
-
-- **Pays** — Où les opérations de cabotage ont été effectuées.
-- **Nombre d'opérations** — Sur les 7 derniers jours.
-- **Fenêtre 7 jours** — Début et fin de la fenêtre de cabotage.
-- **Statut** — Vert (conforme), orange (avertissement à 2/3), rouge (limite atteinte).
+1. **Détection de pays** — sur chaque commande, Druma vérifie le pays de l'adresse de chargement et le pays de l'adresse de livraison
+2. **Indicateur non-résident** — si le camion est immatriculé dans un pays différent des pays de chargement et de livraison, et que le chargement et la livraison sont tous deux dans le même pays, la commande est signalée comme opération de cabotage
+3. **Compteur par camion** — Druma compte les opérations de cabotage par pays, par véhicule, sur une fenêtre glissante de 7 jours après la dernière livraison internationale qualifiante
+4. **Suivi du délai de récupération** — Druma suit quand la fenêtre de 7 jours expire et quand le délai de récupération de 4 jours commence et se termine
 
 ---
 
-## Alertes sur le tableau de planification
+## Consulter le journal de cabotage
 
-Lorsque vous essayez d'affecter un camion à une commande de cabotage qui dépasserait la limite, Druma affiche un avertissement sur le tableau de planification.
+Pour voir l'historique complet du cabotage de votre flotte :
 
-<Warning>
-Les avertissements de cabotage sont consultatifs — ils n'empêchent pas l'affectation. Vous êtes responsable de vous assurer de la conformité légale.
-</Warning>
+<Steps>
+  <Step title="Accédez à Planification">
+    Cliquez sur **Planification** dans la navigation supérieure.
+  </Step>
+  <Step title="Ouvrez Cabotage">
+    Cliquez sur l'onglet **Cabotage** (`/operations/cabotage`), aux côtés du Tableau de planification, Commandes, et les autres onglets de planification.
+  </Step>
+  <Step title="Recherchez ou triez">
+    Utilisez la zone de recherche pour trouver un camion, une plaque, ou un pays spécifique. Cliquez sur un en-tête de colonne pour trier.
+  </Step>
+</Steps>
 
-<Card title="Documents de flotte" icon="file" href="/fr/fleet-compliance/fleet-documents">
-  Gérez les licences de cabotage et autres documents requis.
-</Card>
+Le journal montre :
+- Chaque opération de cabotage (référence de commande, pays, dates)
+- Le nombre d'opérations dans la fenêtre de 7 jours par camion
+- Le statut du délai de récupération : récupération active, récupération expirée, ou éligible pour de nouvelles opérations
+- Toute alerte déclenchée
+
+---
+
+## Alertes de cabotage
+
+Druma vous avertit avant de dépasser la limite, pas après — avec un avertissement dans l'application au moment où vous affectez un camion à une commande nationale sur le Tableau de planification :
+
+**Avertissement** — le camion est sur le point d'atteindre ses opérations de cabotage autorisées dans ce pays dans la fenêtre de 7 jours. Vous pouvez toujours confirmer l'affectation, mais le nombre et la date de fin de fenêtre vous sont d'abord montrés.
+
+**Limite dépassée** — le camion a déjà utilisé ses 3 opérations, et l'affectation violerait le Règlement UE 1072/2009. L'avertissement s'affiche en rouge, et confirmer est signalé comme **Affecter (Infraction légale)**.
+
+**Récupération active** — le camion est encore dans son délai de récupération obligatoire de 4 jours dans ce pays. L'avertissement nomme la date de fin de récupération et l'affectation est à nouveau signalée comme infraction légale si vous continuez.
+
+Ces alertes apparaissent au moment de l'affectation, afin que vous puissiez repérer le problème avant que le camion ne soit dispatché.
+
+---
+
+## Ce que Druma suit vs ce que vous devez encore gérer
+
+Le suivi de cabotage de Druma repose entièrement sur les données de commande que vous saisissez dans le système. Il est précis tant que vos commandes sont saisies correctement et rapidement.
+
+<Note>
+Le suivi de cabotage de Druma est un outil d'aide à la planification — il ne remplace pas un système dédié de conformité cabotage ni un conseil juridique. Assurez-vous toujours que les chauffeurs transportent la documentation correcte au contrôle routier : le CMR international d'origine, les trois CMR de cabotage (le cas échéant), et les dates clairement visibles. Les autorités de contrôle vérifient la documentation papier, pas votre TMS.
+</Note>
+
+**Druma suit :**
+- Le nombre d'opérations par camion par pays par fenêtre de 7 jours
+- Les périodes de récupération
+- Les indicateurs de cabotage au niveau de la commande
+
+**Vous devez encore gérer :**
+- La documentation du chauffeur au contrôle routier
+- Les mises à jour légales si la réglementation de l'UE change
+- Les opérations effectuées en dehors de Druma (par ex., des chargements non saisis dans le système)
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+    Gérez vos véhicules, pays d'immatriculation, et profils de camion.
+  </Card>
+  <Card title="Heures de conduite UE" icon="clock" href="/fr/fleet-compliance/eu-driving-hours">
+    Suivez les heures de conduite et les périodes de repos des chauffeurs pour rester conforme aux règles tachygraphe de l'UE.
+  </Card>
+</CardGroup>

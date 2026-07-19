@@ -1,51 +1,143 @@
 ---
-title: "Fuvarozás"
-description: "Alvállalkozásba adott rakományok kezelése fuvarozóként — osztott számlázás, fuvarozói állapotszinkronizálás és automatikus árréskövetés egyetlen rendelésből."
+title: "Fuvarközvetítés"
+description: "Kezeld az alvállalkozásba adott rakományokat, ahol fuvarközvetítőként jársz el — osztott számlázás, fuvarozói állapot-szinkronizálás és automatikus árréskövetés egyetlen rendelésből."
 icon: "arrows-left-right"
 ---
 
-## Mi az a fuvarozási mód?
+## Mi az alvállalkozásba adott rendelés?
 
-A fuvarozási mód alvállalkozásra vonatkozik: te fogadod az ügyfél rendelését, majd egy harmadik fél fuvarozóhoz (alvállalkozóhoz) adod ki a tényleges fuvarozást. A Druma kezeli mindkét oldalt:
-- Az ügyfélnek szóló értékesítési ár (amit kiszámlázol)
-- A fuvarozónak szóló vételár (amit fizetsz az alvállalkozónak)
-- Az árrés automatikus kiszámítása
+Néha elfogadsz egy rakományt egy ügyféltől, de nem te szállítod — felbérelsz egy másik fuvarozót, hogy elvégezze. Fuvarközvetítőként jársz el: te vagy a kereskedelmi réteg az ügyfél és a tényleges fuvarozó között.
 
-## A Fuvarozás szekció
+A Drumában ezt **Alvállalkozásba adott** rendelés-típusnak hívjuk. Létrehozol egy rendelést, hozzárendeled egy fuvarozóhoz az alvállalkozói nyilvántartásodból, és a Druma elvégzi a többit: osztott számlázás, státuszkövetés, dokumentum-folyamat és margin-számítás — mindezt abból az egy rendelésből, kettős adatrögzítés nélkül.
 
-Lépj a **Fuvarozás** szekcióhoz a bal oldali navigációban. Ez három lapot tartalmaz:
+<Frame caption="A Fuvarközvetítési csővezeték — beszerzési-ár/eladási-ár margin nyomon követve alvállalkozásba adott rendelésenként.">
+  <img src="/images/planner/freight-forwarding.png" alt="Fuvarközvetítési csővezeték tábla" />
+</Frame>
 
-### Pipeline
+---
 
-A kanban-stílusú tábla négy oszloppal: **Nyitott → Kiosztott → Szállítás alatt → Kiszállítva**. Minden kártya mutatja a megrendelőt, az útvonalat, a szállítási dátumot és az árrést.
+## Alvállalkozásba adott rendelés létrehozása
 
-### Alvállalkozók
+<Steps>
+  <Step title="Hozz létre egy új rendelést">
+    Lépj a **Rendelések → Új rendelés** menüpontra.
+  </Step>
+  <Step title="Állítsd be a rendelés típusát Alvállalkozásba adottra">
+    A rendelési formon keresd meg a **Rendelés típusa** mezőt, és válaszd az **Alvállalkozásba adott** opciót.
+  </Step>
+  <Step title="Töltsd ki a szokásos rendelési adatokat">
+    Add meg a felvételi címet, a szállítási címet, a rakomány leírását, a pótkocsi-típust, és az ügyféllel megállapodott árat (az eladási árat).
+  </Step>
+  <Step title="Válaszd ki a fuvarozót">
+    Az **Alvállalkozó / Fuvarozó** mezőben válaszd ki azt a céget az alvállalkozói nyilvántartásodból, amely fizikailag szállítja majd ezt a rakományt.
+  </Step>
+  <Step title="Add meg a fuvarozói költséget">
+    Add meg, mennyit fizetsz a fuvarozónak (a beszerzési árat). Ez elkülönül az ügyfél árától, és csak a tervezők számára látható — az ügyfél nem látja.
+  </Step>
+  <Step title="Mentés és hozzárendelés">
+    Kattints a **Mentés** gombra. A fuvarozó automatikusan hozzáférést kap ehhez a rendeléshez a portálján keresztül.
+  </Step>
+</Steps>
 
-Az alvállalkozói fuvarozó cégeid nyilvántartása. Lásd az [Alvállalkozók](/en/planner/subcontractors) oldalt.
+---
 
-### Számlák
+## Osztott számlázás
 
-A vásárlási számlák az összes alvállalkozói rendeléshez — bevételek sorával (mit szed az ügyfél) és kiadások sorával (mit fizetsz a fuvarozónak).
+Egy alvállalkozásba adott rendelés mindkét oldalon nyomon követi a pénzt, egyetlen adatkészletből — nincs kettős rögzítés útvonalra, dátumokra vagy rakományra:
 
-## Alvállalkozói rendelés létrehozása
+**Eladási oldal** — amit az ügyfélnek felszámítasz (a megállapodott ár). Ezt a számlát ugyanúgy generálod, mint bármely más rendelésnél, a rendelés saját számlázási műveletéből.
 
-1. Hozz létre egy rendelést a szokásos módon (**Rendelések → Új rendelés**).
-2. A **Rendelés típusa** mezőben válaszd az **Alvállalkozói** opciót.
-3. Válassz alvállalkozót a nyilvántartásból.
-4. Add meg a **Vételárat** (amit az alvállalkozónak fizetsz).
-5. Az ügyfélnek szóló **Eladási ár** az **Megállapodott ár** mezőből kerül be.
+**Beszerzési oldal** — amit a fuvarozónak fizetsz. Nyisd meg a rendelés **Fuvarozó és pénz** fülét, hogy lásd a fuvarozóval megállapodott **Beszerzési árat** a **Bevételed** mellett, a **Margin**-nal (Bevétel − Beszerzési ár) automatikusan kiszámítva.
 
-A Druma kiszámolja és megjeleníti az árrést mindkét árból.
+<Note>
+Nincs külön "Beszerzési számla generálása" gomb a rendelésen — amikor a fuvarozó elküldi neked a saját számláját a rakományhoz, egyeztesd egy alvállalkozói számlával a dedikált **Alvállalkozói számlák** oldalon, amely kezeli a befogadást és az itt rögzített beszerzési árral való egyeztetést.
+</Note>
 
-## Fuvarozói frissítések nyomon követése
+---
 
-Miután a rendelés kiosztva az alvállalkozóhoz, az alvállalkozói portálból frissítéseket kap:
-- Jármű rendszám és sofőr neve
-- ETA frissítések
-- Tényleges érkezési és indulási időbélyegek
+## Állapot-szinkronizálás: fuvarozó → a rendszered → ügyfél
 
-Ezek a frissítések szinkronizálódnak a Druma-ban a rendelés részletei panelre, és az ügyfélportálon is láthatóak.
+Amikor a fuvarozó frissíti a rendelés státuszát a portálján (Felrakva, Úton, Kiszállítva), az a frissítés automatikusan átfolyik:
 
-<Card title="Alvállalkozók" icon="handshake" href="/en/planner/subcontractors">
-  Alvállalkozói fuvarozók portál-hozzáférésének beállítása.
-</Card>
+1. A rendelés státusza a Drumádban azonnal frissül
+2. Az ügyfeled látja a frissített státuszt a portálján, a szállítmánya idővonalán
+3. A tervezőid látják a frissítést a rendelés-részletező panelen, és ha a teherautó élő, az Élő térképen
+
+Nem kell manuálisan továbbítanod a státuszfrissítéseket a fuvarozótól az ügyfélnek. Az információ automatikusan átfolyik a Drumán.
+
+---
+
+## Dokumentum-folyamat
+
+Amikor a fuvarozó dokumentumokat tölt fel a portálján keresztül — CMR-szkennelés, szállítási igazolás, fotók —, ezek a dokumentumok egyszerre két helyen jelennek meg:
+
+- **A Druma-fiókodban** — a rendelés Dokumentumok fülén
+- **Az ügyfeled portálján** — a Dokumentumok oldalukon, típus szerint szűrhetően (CMR, eCMR, POD, Számla, CO2)
+
+Az ügyfél hozzáférést kap a CMR-hez és a kiszállítási megerősítéshez anélkül, hogy neked bármit manuálisan továbbítanod kellene. Egyszerűen megérkezik.
+
+<Note>
+Nincs dokumentumonkénti láthatósági kapcsoló — minden, a rendeléshez csatolt dokumentum, amelyet az ügyfél láthat, számára látható. Ha egy fuvarozó által feltöltött fájlt belsőnek kell tartanod, ne csatold a rendelés Dokumentumaihoz.
+</Note>
+
+---
+
+## Margin-nyomon követés
+
+Minden alvállalkozásba adott rendelésnél a Druma egy pillantással mutatja a margint:
+
+**Margin = Eladási ár − Fuvarozói költség**
+
+Ezt látod a rendelés Fuvarozó és pénz fülén, és a rendelés-lista nézetben. Ez megkönnyíti a jövedelmezőség áttekintését a fuvarközvetítési rakományaidon keresztül, táblázatok építése nélkül.
+
+Ha a tényleges költségek változnak (a fuvarozó várakozási időt vagy extra km-t számít fel), frissítsd a beszerzési árat a rendelésen, és a margin automatikusan újraszámítódik.
+
+---
+
+## Fuvarozói frissítések
+
+Amint egy alvállalkozásba adott rendelést hozzárendeltek egy fuvarozóhoz, és ők elkezdenek frissítéseket adni a fuvarozói portálon keresztül, a Druma felszínre hozza a valós idejű adataikat a fuvarközvetítési táblán és a rendelés-részletező panelen — nincs szükség manuális továbbításra a te oldaladon.
+
+### A fuvarközvetítési táblán (Úton kártyák)
+
+- **Fuvarozói ETA** — a fuvarozó saját ETA-ja a kiszállításhoz, "Fuvarozói ETA"-ként megjelölve, hogy megkülönböztesse a Druma PTV által számított ETA-jától
+- **Fuvarozói jármű-rendszám** jelvény — a fuvarozó által ezen a rakományon használt tényleges rendszám
+- **Hiányzó beszerzési ár figyelmeztetés** — egy borostyánsárga jelvény jelenik meg bármelyik kártyán, ahol nincs beállítva beszerzési ár. Ez egy margin-adathiányt jelez — nyisd meg a rendelést, és add meg a beszerzési árat számlázás előtt
+
+### A rendelés-részletező panelen
+
+Alvállalkozásba adott rendeléseknél egy **Fuvarozói frissítések** szakasz jelenik meg a rendelés-részletező panelen, amely mutatja:
+
+- A fuvarozói jármű rendszámát és a sofőr nevét
+- A sofőr telefonszámát (egyszerű szövegként megjelenítve, nem hívásra koppintható linkként)
+- A fuvarozói ETA-t
+- A rakodási tényleges adatokat: a fuvarozó által jelentett érkezés és indulás a felvételi ponton
+- A szállítási tényleges adatokat: a fuvarozó által jelentett érkezés és indulás a szállítási ponton
+
+Ezeket a mezőket a fuvarozó tölti ki a portálján keresztül — nincs szükség manuális bevitelre a te oldaladon. Ha egy fuvarozó még nem küldött frissítéseket, a szakasz helyőrzőket mutat.
+
+---
+
+## Mikor használj alvállalkozásba adott rendeléseket?
+
+Használj Alvállalkozásba adott rendelés-típust, amikor:
+
+- Elfogadtál egy rakományt, de a saját teherautóid teljesen le vannak foglalva
+- Tisztán fuvarközvetítőként jársz el, és nem szállítasz rakományokat magad
+- Egy eseti fuvarozót használsz egy egyszeri rakományhoz
+- Nyomon kell követned a margint az ügyfélnek felszámított és a fuvarozónak fizetett összeg között
+
+<Warning>
+Ha a saját sofőrödet és teherautódat használod, egy standard rendelés-típust használj — ne Alvállalkozásba adottat. Az alvállalkozásba adott rendelések kifejezetten a külső fuvarozók által szállított rakományokhoz valók.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Alvállalkozók" icon="handshake" href="/en/planner/subcontractors">
+    Add hozzá a fuvarozó cégeket a nyilvántartásodhoz, mielőtt alvállalkozásba adott rendelésekhez rendelnéd őket.
+  </Card>
+  <Card title="Számlák generálása" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
+    Ismerd meg, hogyan generálj eladási és beszerzési számlákat a rendeléseidből.
+  </Card>
+</CardGroup>

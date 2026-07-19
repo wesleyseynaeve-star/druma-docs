@@ -1,54 +1,154 @@
 ---
 title: "LKW-Wechsel (Zugmaschinenwechsel)"
-description: "So tauschen Sie die Zugmaschine mid-Trip aus, während Anhänger und Ladung im selben Auftrag bleiben — für Relaisoperationen, Pannen und Fahrerwechsel."
+description: "So tauschen Sie die Zugmaschine mitten in der Fahrt aus, während Anhänger und Ladung im selben Auftrag bleiben — für Relaisbetrieb, Pannen und Fahrerwechsel."
 icon: "arrow-right-arrow-left"
 ---
 
 ## Was ist ein Zugmaschinenwechsel?
 
-Ein Zugmaschinenwechsel ist, wenn Sie die Zugmaschine, die einen Anhänger zieht, **während eines aktiven Auftrags** wechseln. Der Anhänger und seine Ladung bleiben im selben Auftrag — nur die Kabine und der Fahrer wechseln.
+Ein Zugmaschinenwechsel (auch LKW-Wechsel genannt) ist, wenn Sie die einen Anhänger ziehende Zugmaschine **während eines aktiven Auftrags** wechseln. Der Anhänger und seine Ladung bleiben im selben Auftrag — nur Kabine und Fahrer wechseln.
 
 Häufige Szenarien:
-- **Relaisfahrt** — Fahrer A bringt die Ladung von der Herkunft bis zu einem Zwischenpunkt, dann übernimmt Fahrer B den Anhänger.
-- **Panne** — Der ursprüngliche LKW hat eine mechanische Störung und eine Ersatzzugmaschine wird geschickt.
-- **Fahrerzeitlimit** — Der aktuelle Fahrer nähert sich seinem gesetzlichen Fahrzeitlimit.
+
+- **Relaisfahrt** — Fahrer A bringt die Ladung vom Ursprung zu einem Zwischenpunkt, dann übernimmt Fahrer B den Anhänger und fährt weiter zum Ziel. Das erweitert Ihre effektive Reichweite, ohne Lenkzeitvorschriften zu brechen.
+- **Panne** — Der ursprüngliche LKW hat ein mechanisches Problem, und eine Ersatzzugmaschine wird geschickt, um den Anhänger abzuholen.
+- **Fahrerstundenlimit** — Dem aktuellen Fahrer geht die gesetzliche Lenkzeit aus, und ein frischer Fahrer mit einem anderen LKW übernimmt.
+- **Geplante Übergabe** — An einem Depot oder Hub werden Anhänger routinemäßig zwischen Zugmaschinen getauscht.
 
 <Note>
-Das Schlüsselprinzip: **Der Anhänger bleibt bei der Ladung**. Wenn Sie den LKW bei einem Auftrag wechseln, löst Druma die alte Zugmaschine, behält aber den Anhänger zugewiesen.
+Das Schlüsselprinzip: **Der Anhänger bleibt bei der Ladung**. Wechseln Sie den LKW bei einem Auftrag, löst Druma die alte Zugmaschine, behält aber den Anhänger zugewiesen. Das bewahrt die Aufsichtskette für die Ware.
 </Note>
 
 ---
 
-## Einen LKW wechseln
+## Wann können Sie den LKW wechseln?
+
+Sie können den LKW bei jedem Auftrag wechseln, der sich in einem dieser aktiven Status befindet:
+
+- Ausstehend
+- Zugewiesen
+- Abgefahren
+- An der Abholung
+- Beladung
+- Unterwegs
+- An der Lieferung
+- Entladung
+
+Der Auftrag muss vom Typ **Eigener LKW** sein. Unterauftragnehmer- und Kapazitätsverkaufsaufträge unterstützen keinen LKW-Wechsel — diese werden vom externen Frachtführer verwaltet.
+
+---
+
+## So wechseln Sie den LKW
 
 <Steps>
-  <Step title="Auftrag öffnen">
-    Gehen Sie zu Planer → Aufträge und öffnen Sie den aktiven Auftrag.
+  <Step title="Die Planungstafel öffnen">
+    Gehen Sie zu **Planer → Planungstafel** und finden Sie die Zeile des aktiven Auftrags.
   </Step>
-  <Step title="LKW wechseln klicken">
-    Klicken Sie auf die Schaltfläche **LKW wechseln** im Auftragskopf.
+  <Step title="LKW-Wechsel auslösen">
+    Ziehen Sie einen anderen LKW auf die Zeile des Auftrags (oder nutzen Sie das Aktionsmenü der Zeile). Druma erkennt, dass dem Auftrag bereits ein LKW zugewiesen ist, und bietet an, ihn zu wechseln, statt die Zuweisung schlicht zu ersetzen. LKW-Wechsel ist nur für Eigener-LKW-Aufträge in aktivem Status verfügbar — er ist nicht im Auftragsdetailpanel zugänglich.
   </Step>
-  <Step title="Neuen LKW auswählen">
-    Wählen Sie die Ersatzzugmaschine und den Fahrer.
+  <Step title="Den Zielstopp wählen">
+    Wählen Sie den Stopp, an dem der Wechsel stattfindet. Findet der Wechsel z. B. am zweiten Stopp statt, wählen Sie Stopp 2. Alle Stopps ab diesem Punkt werden vom neuen LKW übernommen.
   </Step>
-  <Step title="Übergabepunkt angeben">
-    Geben Sie den Standort ein, an dem der Wechsel stattfindet.
+  <Step title="Den neuen LKW wählen">
+    Suchen Sie die Ersatzzugmaschine nach Kennzeichen. Nur aktive, verfügbare LKW Ihrer Flotte werden angezeigt. Der zugewiesene Fahrer des neuen LKW wird automatisch ausgewählt.
   </Step>
-  <Step title="Bestätigen">
-    Klicken Sie auf **LKW wechseln bestätigen**. Druma erstellt einen neuen Auftragssegmentdatensatz.
+  <Step title="Einen Grund eingeben und bestätigen">
+    Fügen Sie einen kurzen Grund für den Wechsel hinzu (z. B. „Fahrerstundenlimit", „Panne bei Timișoara"). Klicken Sie auf **Wechsel bestätigen**.
   </Step>
 </Steps>
 
 ---
 
-## Auftragssegmente
+## Was nach einem Wechsel passiert
 
-Nach einem LKW-Wechsel zeigt die Auftragshistorie separate Segmente:
-- **Segment 1** — Ursprüngliche Zugmaschine + Fahrer + Strecke
-- **Segment 2** — Neue Zugmaschine + Fahrer + verbleibende Strecke
+Bestätigen Sie einen LKW-Wechsel, führt Druma mehrere Aktionen automatisch aus:
 
-Dies bewahrt die vollständige Kette der Aufsicht für die Waren.
+1. **Ein LKW-Segment wird erstellt** für die ursprüngliche Zugmaschine, das erfasst, welche Stopps sie übernommen hat (vom ersten Stopp bis zum Wechselpunkt).
+2. **Ein neues Segment wird erstellt** für die Ersatzzugmaschine, das vom Wechselpunkt bis zum Ende des Auftrags reicht (offen bis zur Lieferung).
+3. **Alle Stopps ab dem Wechselpunkt** werden mit dem neuen LKW und Fahrer aktualisiert.
+4. **Die Hauptfelder LKW und Fahrer des Auftrags** werden aktualisiert, um die neue Zuweisung widerzuspiegeln.
+5. **Der Anhänger bleibt unverändert** — er bleibt dem Auftrag zugewiesen, unabhängig davon, welche Zugmaschine ihn zieht.
 
-<Card title="Auftragslebenszyklus" icon="circle-dot" href="/en/planner/order-lifecycle">
-  Verstehen Sie alle möglichen Auftragsstatus und Übergänge.
+---
+
+## LKW-Segment-Historie einsehen
+
+Nach einem Wechsel zeigt das Auftragsdetailpanel einen Abschnitt **LKW-Segmente** mit jeder am Auftrag beteiligten Zugmaschine:
+
+| LKW | Fahrer | Stopps | Grund | Gewechselt am |
+|---|---|---|---|---|
+| B-201-TCL (Volvo FH) | Ion Ionescu | Stopp 1 → Stopp 2 | Fahrerstundenlimit | 12. Apr. 2026, 14:30 |
+| B-215-TCL (Scania R450) | Vasile Popa | Stopp 2 → (laufend) | — | — |
+
+Jedes Segment erfasst:
+- Name und Kennzeichen des LKW
+- Den fahrenden Fahrer
+- Den Stoppbereich (von → bis)
+- Den Grund für den Wechsel
+- Den Zeitstempel der Übergabe
+
+---
+
+## Überschreibungen von LKW und Fahrer pro Stopp
+
+Nach einem LKW-Wechsel können einzelne Stopps im Auftrag einen anderen LKW und Fahrer zeigen als die Hauptzuweisung des Auftrags. Das ist normal — es bedeutet, der Stopp wurde von der vorherigen Zugmaschine vor dem Wechsel übernommen.
+
+In der Stopp-Zeitleiste des Auftrags zeigt jeder Stopp, welcher LKW und Fahrer ihm zugewiesen waren. Hat ein Stopp keine Überschreibung, übernimmt er den aktuellen LKW und Fahrer des Auftrags.
+
+---
+
+## Mehrfache Wechsel
+
+Sie können den LKW mehr als einmal beim selben Auftrag wechseln. Jeder Wechsel erstellt ein neues Segment. Nützlich für internationale Langstrecken, bei denen die Ladung mehrere Relaispunkte durchläuft.
+
+Beispiel: Eine Bukarest-→-Duisburg-Ladung könnte drei Zugmaschinen nutzen:
+
+1. LKW A: Bukarest → Budapest (Stopp 1 → Stopp 2)
+2. LKW B: Budapest → Wien (Stopp 2 → Stopp 3)
+3. LKW C: Wien → Duisburg (Stopp 3 → Stopp 4)
+
+Jedes Segment wird unabhängig mit eigenem Fahrer, Grund und Zeitstempeln erfasst.
+
+---
+
+## Einen Wechsel stornieren (Rückgängig)
+
+Hat die Ersatzzugmaschine noch keine Arbeit am Auftrag verrichtet, können Sie den Wechsel stornieren und den ursprünglichen LKW wiederherstellen.
+
+Suchen Sie die Schaltfläche **Wechsel rückgängig** in der Auftragszeile auf der Planungstafel oder in der Auftragsliste — sie erscheint nur, wenn ein stornierbarer Wechsel existiert (Relaisstopp vorhanden und keine Aktivität am neuen LKW erfasst).
+
+Alternativ ziehen Sie den ursprünglichen LKW auf der Planungstafel zurück auf den Auftrag — Druma versucht, den Wechsel automatisch zu stornieren, bevor neu zugewiesen wird.
+
+**Die Stornierung wird blockiert, wenn eines der Folgenden zutrifft:**
+- Ein Stopp am oder nach dem Relaispunkt hat einen tatsächlichen Ankunfts- oder Abfahrtszeitstempel erfasst
+- Nach dem Wechsel wurden Fahrerstatusereignisse erfasst
+- Der ursprüngliche LKW ist nun einem anderen aktiven Auftrag zugewiesen
+
+Wird die Stornierung blockiert, zeigt Druma eine Meldung, die erklärt warum. Sie können in diesem Fall trotzdem manuell über das Auftragsdetailpanel neu zuweisen.
+
+---
+
+## Wichtige Hinweise
+
+<Warning>
+Ein LKW-Wechsel erstellt **keinen** neuen Auftrag. Ursprüngliche Auftragsnummer, Kunde, Preisgestaltung und alle kommerziellen Bedingungen bleiben gleich. Nur die operative Zuweisung (welcher LKW und Fahrer) ändert sich.
+</Warning>
+
+- Der **Anhänger bleibt immer bei der Ladung**. Müssen Sie auch den Anhänger wechseln, ist das eine andere Operation — siehe [Anhängerverwaltung](/de/planner/trailer-management).
+- LKW-Wechsel werden **im Audit-Verlauf des Auftrags protokolliert**, mit Name des Planers, Zeitstempel und Grund.
+- Die Fahrer-App aktualisiert sich automatisch — der ausscheidende Fahrer sieht den Auftrag aus seinen aktiven Ladungen verschwinden, und der übernehmende Fahrer erhält eine Push-Benachrichtigung mit den Auftragsdetails.
+
+---
+
+<Card title="Fuhrparkverwaltung" icon="truck" href="/de/planner/fleet-management">
+  Verwalten Sie Ihre Zugmaschinenflotte — Fahrzeuge hinzufügen, Verfügbarkeit verfolgen, und Wartungssperren handhaben.
+</Card>
+
+<Card title="Anhängerverwaltung" icon="trailer" href="/de/planner/trailer-management">
+  Verwalten Sie Anhänger unabhängig von Zugmaschinen — Zuweisung, Abkopplung und Standortverfolgung.
+</Card>
+
+<Card title="Planungstafel" icon="calendar" href="/de/planner/planning-board">
+  Sehen Sie alle Ihre Aufträge und LKW auf der visuellen Dispositionstafel — die LKW-Wechsel-Schaltfläche ist auch von hier zugänglich.
 </Card>

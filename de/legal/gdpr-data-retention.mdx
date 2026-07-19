@@ -6,73 +6,121 @@ icon: "clock"
 
 _Zuletzt aktualisiert: 10. Juli 2026._
 
+Diese Seite erklärt genau, welche Daten Druma über Ihr Unternehmen hält, wie lange wir sie behalten, und Ihre Rechte auf Zugriff oder Löschung.
+
 ## Aufbewahrungsfristen
 
-| Datenkategorie | Aufbewahrungsfrist | Rechtsgrundlage |
-|---|---|---|
-| Betriebsdaten (Aufträge, Kunden, Fahrer, Fahrzeuge) | Abonnementdauer + 90 Tage | Vertragliche Verpflichtung |
-| Benutzerkontodaten | Abonnementdauer + 90 Tage | Vertragliche Verpflichtung |
-| Audit-Protokolle | 18 Monate | Sicherheitsanforderungen |
-| eCMR-Dokumente | 10 Jahre | e-CMR-Protokoll |
-| GPS-Positionsdaten | Wird in Echtzeit überschrieben — kein Verlauf gespeichert | Datensparsamkeit |
-| Abrechnungsunterlagen | 7 Jahre | Rumänisches Buchhaltungsrecht |
-| Backup-Daten | 30 Tage | Betriebliche Kontinuität |
+| Datentyp | Aufbewahrungsfrist | Rechtsgrundlage |
+|-----------|-----------------|-------------|
+| Unternehmensprofil und -einstellungen | Abonnementdauer + 90 Tage | Vertrag |
+| Benutzerkonten | Abonnementdauer + 90 Tage | Vertrag |
+| Transportaufträge und Sendungsdatensätze | Abonnementdauer + 90 Tage | Vertrag |
+| Kundendatensätze | Abonnementdauer + 90 Tage | Vertrag |
+| Fahrerdatensätze | Abonnementdauer + 90 Tage | Vertrag |
+| Rechnungen und Finanzunterlagen | Archiviert nach 3 Jahren, endgültig gelöscht nach 10 Jahren ab Rechnungsdatum | EU-Steuerrecht / Rumänisches Buchhaltungsgesetz |
+| eCMR-Dokumente (signiert) | Endgültig gelöscht 7 Jahre nach dem Lieferdatum der Sendung, über eine eigenständige jährliche Bereinigung — unabhängig vom Kontostatus | Zusatzprotokoll zum CMR-Übereinkommen |
+| Audit-Protokolle | 18 Monate | Berechtigte Interessen |
+| GPS-Position (Live-Tracking) | Nicht aufbewahrt — nur aktuelle Position, bei jedem Update überschrieben | Vertrag |
+| GPS-Stempel bei Auftragsereignissen | Aufbewahrt zusammen mit dem Auftrag (siehe Auftragsdatensätze oben) | Vertrag |
+| An ANAF e-Transport übermittelte GPS-Daten | 30 Tage, dann automatisch gelöscht | Gesetzliche Anforderung (Rumänien) |
+| Tachographendateien (DDD/TGD) | Unbegrenzt (12 Monate ist die gesetzliche Mindestfrist, kein Löschziel) | EU-Verordnung 165/2014 |
+| Fehler- und Sicherheitsprotokolle | 90 Tage | Berechtigte Interessen |
+| Abrechnungsunterlagen (Stripe) | 7 Jahre | Steuerrecht |
 
 <Note>
-Druma speichert nur die aktuelle GPS-Position eines Fahrers während einer aktiven zugewiesenen Fahrt — keine Standorthistorie. Für die e-Transport-Meldung an ANAF wird ein rollierender 30-Tage-Puffer verwendet, bevor die Positionsdaten gelöscht werden.
+eCMR-Signaturen und eCMR-Dokumente werden automatisch **7 Jahre nach dem Lieferdatum der Sendung** durch einen jährlichen Bereinigungsjob endgültig gelöscht — dies läuft unabhängig davon, ob Ihr Konto offen oder geschlossen ist. Getrennt davon: Wird das Konto eines einzelnen Benutzers gelöscht, wird jede von ihm innerhalb der **letzten 3 Jahre** erstellte eCMR-Signatur anonymisiert (nicht gelöscht) statt sofort entfernt, sodass sie — ohne personenbezogene Daten — bis zur oben genannten 7-Jahres-Grenze fortbesteht.
 </Note>
 
----
+## GPS-Daten: was wir speichern
+
+Druma erfasst die GPS-Position vom Gerät des Fahrers, während eine Ladung aktiv ist, nachdem der Fahrer die Standortberechtigung in der App erteilt hat. Für das **Live-Tracking** (die auf der Karte angezeigte Position) wird nur die aktuelle Position des LKW gespeichert — jeder neue Ping überschreibt den vorherigen, es wird also kein historischer Verlauf vergangener Positionen geführt.
+
+Getrennt davon: Meldet ein Fahrer eine Statusänderung, Verzögerung oder einen Vorfall, wird eine einzelne GPS-Koordinate erfasst und diesem konkreten Auftragsereignis zugeordnet, wodurch sie Teil des Auftragsdatensatzes selbst wird (aufbewahrt so lange wie der Auftrag selbst — siehe Tabelle oben). Dies ist ein einmaliger Stempel an diesem Ereignis, kein fortlaufendes Standortprotokoll.
+
+Wir tun **nicht**:
+
+- Den Fahrerstandort außerhalb einer aktiven zugewiesenen Fahrt verfolgen
+- Einen historischen Verlauf von Live-Tracking-Positionen führen
+- GPS-Daten mit Dritten teilen, außer wie für die e-Transport-Meldung an ANAF erforderlich, die einen rollierenden 30-Tage-Puffer vor der Löschung verwendet
+
+<Note>
+Eine Legacy-Nur-Anhänge-Positionstabelle aus einer früheren Version des Fahrer-Chats existiert noch mit einer rollierenden 90-Tage-Bereinigung, aber nichts in der aktuellen App schreibt neue Zeilen dorthin — es ist ein ruhendes Überbleibsel, kein aktives historisches GPS-Protokoll.
+</Note>
+
+## Tachographendaten: was wir speichern
+
+Druma unterhält ein **Tacho-Archiv**, das rohe DDD-Dateien (Fahrzeugeinheit) und TGD-Dateien (Fahrerkarte) speichert — automatisch über einen verbundenen Telematikanbieter heruntergeladen oder manuell hochgeladen — um die Download-Häufigkeits- und Aufbewahrungspflichten der EU-Verordnung 165/2014 zu erfüllen. Anders als Betriebsdaten werden Tachographendateien **unbegrenzt aufbewahrt**: 12 Monate ist die gesetzliche Mindestfrist, kein Löschziel, da Betreiber sie bei einer Straßenkontrolle oder Behördenprüfung weit über diese Untergrenze hinaus vorlegen müssen. Siehe [Tachographen-Archiv](/de/fleet-compliance/tacho-archive) für Details.
+
+## Audit-Protokoll
+
+Jede bedeutende Aktion in Druma (Auftrag erstellt, Rechnung gesendet, Benutzeranmeldung, Einstellungsänderung) wird in einem Audit-Protokoll mit Zeitstempel, Benutzer und Aktionsdetails erfasst. Audit-Protokolle werden 18 Monate aufbewahrt und können nicht geändert oder gelöscht werden — sie existieren, um Sie und Druma im Streitfall zu schützen.
+
+## Nach Kontokündigung
+
+Kündigen Sie Ihr Abonnement:
+
+1. Ihr Konto tritt in eine **90-tägige Kulanzfrist** ein — Daten bleiben erhalten und zugänglich.
+2. Nach 90 Tagen, falls Ihr gesamtes Unternehmenskonto gelöscht wird: Auftragsnachrichten und interne Notizen werden sofort gelöscht, Aufträge, die **älter als 3 Jahre** sind, werden gelöscht, und Kunden, LKW und Anhänger werden gelöscht. Aufträge, die **weniger als 3 Jahre alt sind, werden in diesem Schritt nicht gelöscht** — sie altern zusammen mit ihren verknüpften Rechnungen und eCMR-Signaturen nach den unten stehenden eigenständigen Aufbewahrungsregeln aus, statt am Tag 90 gelöscht zu werden.
+3. Rechnungen und Finanzunterlagen werden nach 3 Jahren archiviert und nach 10 Jahren ab Rechnungsdatum endgültig gelöscht — dieser Zeitplan läuft unabhängig davon, wann Sie gekündigt haben.
+4. eCMR-Signaturen und -Dokumente werden 7 Jahre nach dem Lieferdatum der Sendung endgültig gelöscht — ebenfalls unabhängig von Ihrem Kündigungsdatum.
+
+<Note>
+Wird das Konto eines einzelnen Teammitglieds entfernt (statt des gesamten Unternehmens), gilt eine separate, engere Regel: Von ihm innerhalb der letzten 3 Jahre erstellte Aufträge und eCMR-Signaturen werden anonymisiert (personenbezogene Felder entfernt, Datensätze für die Geschäftsdaten behalten), und von ihm innerhalb der letzten 10 Jahre erstellte Rechnungen werden anonymisiert. Datensätze außerhalb dieser Fenster werden zusammen mit dem Benutzerdatensatz gelöscht.
+</Note>
+
+## Datenexport anfordern
+
+Sie können jederzeit einen vollständigen Export der Daten Ihres Unternehmens anfordern:
+
+**Einstellungen → Daten & Datenschutz → Export anfordern**
+
+Ihre Daten werden als ZIP-Datei (JSON- und CSV-Formate) verpackt und innerhalb von 24 Stunden an Ihre Konto-E-Mail geliefert. Der Export enthält alle Aufträge, Kunden, Fahrer, Rechnungen und Einstellungen.
+
+## Kontolöschung beantragen
+
+<Warning>
+Die Kontolöschung ist unwiderruflich. Nach Ablauf der 90-tägigen Aufbewahrungsfrist werden ältere Betriebsdaten (Aufträge über 3 Jahre, plus Kunden/LKW/Anhänger) endgültig gelöscht; aktuellere Aufträge, Rechnungen und eCMR-Daten werden anonymisiert oder nach ihren eigenen gesetzlich vorgeschriebenen Zeitplänen aufbewahrt statt sofort gelöscht — siehe „Nach Kontokündigung" oben.
+</Warning>
+
+So löschen Sie Ihr Konto: **Einstellungen → Daten & Datenschutz → Konto löschen** → bestätigen Sie, indem Sie Ihren Unternehmensnamen eingeben.
+
+Alternativ senden Sie eine E-Mail an privacy@druma.io von der E-Mail-Adresse des Kontoinhabers.
 
 ## Unterauftragsverarbeiter und Datenstandorte
 
 | Anbieter | Verarbeitete Daten | Standort |
-|---|---|---|
+|----------|------------------|----------|
 | Supabase | Datenbank (alle Daten) | EU (Frankfurt) |
-| Cloudflare | CDN, DDoS-Schutz, DNS, Request-Logs | EU |
-| Resend | Ausgehende Transaktions-E-Mail-Inhalte | EU |
+| Cloudflare | CDN, DDoS-Schutz, DNS, Request-Protokolle | EU |
+| Resend | Ausgehende transaktionale E-Mail-Inhalte | EU |
 | Mailgun | Eingehende E-Mail-Verarbeitung (Auftrags-, Rechnungs-, Zahlungsmails) | EU |
 | Stripe | Abrechnungs- und Zahlungsdaten | EU |
-| PTV Group | Routen-, Distanz- und ETA-Daten | EU |
-| HERE Technologies | Geocoding und Adress-Autocomplete | EU |
+| PTV Group | Routen-, Distanz- und ETA-Daten (Abhol-/Lieferkoordinaten) | EU |
+| HERE Technologies | Geokodierung und Adress-Autovervollständigung | EU |
 | Google Vertex AI | KI-Extraktion aus E-Mails und Dokumenten | europe-west1 (kein Modelltraining) |
 | Google Cloud Translation | Bedarfsgesteuerte Übersetzung von UI-/Dokumentinhalten | Google Cloud |
-| Sentry | Fehlerüberwachung | EU |
+| Sentry | Fehlerüberwachung und Absturzberichte | EU |
 | Google Firebase Cloud Messaging | Push-Benachrichtigungen der Fahrer-App | Google Cloud |
-| WhatsApp Business Cloud API (Meta) | Fahrerkommunikation (nur bei Aktivierung) | Meta (US/EU) |
+| WhatsApp Business Cloud API (Meta) | Fahrerkommunikation (nur falls aktiviert) | Meta (US/EU) |
 | Telematik-Anbieter (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- und Tachographendaten (nur der verbundene Anbieter) | je nach Anbieter |
-| Reefer-Telematik-Anbieter (Mapon, Orbcomm, Thermo King) | Kühltemperaturdaten (nur der verbundene Anbieter) | je nach Anbieter |
-| TransFollow | Nur als Legacy-Fallback — der native In-House-Anbieter von Druma ist der Standard | Niederlande |
+| Kühlfahrzeug-Telematik-Anbieter (Mapon, Orbcomm, Thermo King) | Kühltemperaturdaten (nur der verbundene Anbieter) | je nach Anbieter |
+| TransFollow | Nur Legacy-eCMR-Fallback — der native, hauseigene Anbieter von Druma ist der Standard | Niederlande |
 
----
+## Ihre Rechte nach der DSGVO
 
-## Löschverfahren
+- **Auskunftsrecht** — eine Kopie Ihrer Daten anfordern (nutzen Sie die Export-Funktion oben)
+- **Recht auf Berichtigung** — unrichtige Daten korrigieren (direkt in Druma bearbeiten, oder Support kontaktieren)
+- **Recht auf Löschung** — Löschung beantragen (nutzen Sie die Funktion Konto löschen oben)
+- **Recht auf Datenübertragbarkeit** — Ihre Daten in maschinenlesbarem Format erhalten (im Export enthalten)
+- **Widerspruchsrecht** — der auf berechtigten Interessen beruhenden Verarbeitung widersprechen
+- **Recht auf Einschränkung** — eingeschränkte Verarbeitung in bestimmten Fällen beantragen
 
-Nach Ablauf der Aufbewahrungsfrist:
+Um ein Recht auszuüben: privacy@druma.io. Wir antworten innerhalb von 30 Tagen.
 
-1. **Automatische Löschung** — Geplante Cronjobs löschen abgelaufene Datensätze
-2. **Backup-Bereinigung** — Gelöschte Daten werden aus Backups nach dem normalen Rotationszyklus (30 Tage) entfernt
-3. **Drittanbieter** — Wir fordern die Löschung bei Unterauftragsverarbeitern an, die möglicherweise Kopien gespeichert haben
+<Card title="Datenschutzrichtlinie" icon="shield" href="/de/legal/privacy-policy">
+  Vollständige Datenschutzrichtlinie einschließlich Unterauftragsverarbeitern und Rechtsgrundlagen.
+</Card>
 
----
-
-## Frühzeitige Löschung auf Anfrage
-
-Sie können die Löschung bestimmter Daten vor Ablauf der standardmäßigen Aufbewahrungsfrist beantragen, sofern:
-- Keine gesetzliche Verpflichtung besteht, die Daten zu behalten
-- Die Daten nicht für die Erbringung eines aktiven Dienstes benötigt werden
-
-Senden Sie Löschanfragen an privacy@druma.io.
-
----
-
-## Ausnahmen
-
-Bestimmte Daten können länger aufbewahrt werden, wenn:
-- Eine gerichtliche Anordnung oder behördliche Anfrage vorliegt
-- Rechtliche Ansprüche geltend gemacht werden
-- Gesetzliche Aufbewahrungspflichten dies erfordern
-
-<Card title="DSGVO & Datenverwaltung" icon="lock" href="/de/admin/gdpr-data-management">
-  Vollständige Informationen zu Datenexport und Kontolöschung.
+<Card title="DSGVO-Datenverwaltung" icon="lock" href="/de/admin/gdpr-data-management">
+  Wie Sie Daten exportieren oder Ihr Konto aus Druma heraus löschen.
 </Card>

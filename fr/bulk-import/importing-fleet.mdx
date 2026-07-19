@@ -1,71 +1,58 @@
 ---
 title: "Importer votre flotte"
-description: "Comment importer plusieurs véhicules à la fois dans Druma via un fichier CSV ou XLSX — téléchargez le modèle, remplissez-le et importez."
-icon: "truck"
+description: "Importez vos véhicules en masse dans Druma à l'aide d'un modèle de feuille de calcul plutôt que de les ajouter un par un."
+icon: "file-import"
 ---
 
-## Vue d'ensemble
-
-Si vous configurez Druma pour la première fois et avez une grande flotte, l'import en masse vous fait gagner beaucoup de temps par rapport à la saisie manuelle de chaque véhicule.
-
-Accédez à **Flotte → Véhicules → Importer** pour commencer.
-
----
+Utilisez l'import en masse pour ajouter tous vos véhicules à la fois — idéal lors du démarrage ou d'une migration depuis un autre système.
 
 ## Télécharger le modèle
 
-Cliquez sur **Télécharger le modèle** pour obtenir un fichier CSV ou XLSX avec toutes les colonnes correctes pré-configurées.
-
----
-
-## Colonnes du modèle
-
-| Colonne | Obligatoire | Description |
-|---|---|---|
-| `plate` | Oui | Plaque d'immatriculation du véhicule |
-| `vehicle_type` | Oui | tractor, rigid, van, flatbed |
-| `trailer_type` | Oui | curtainsider, reefer, flatbed, tanker, container, mega, other |
-| `euro_standard` | Non | euro3, euro4, euro5, euro6 |
-| `height_m` | Non | Hauteur en mètres |
-| `weight_tonnes` | Non | Poids total autorisé en tonnes |
-| `max_payload_kg` | Non | Charge utile maximale en kg |
-| `axle_count` | Non | Nombre d'essieux |
-| `daily_cost_eur` | Non | Coût fixe journalier en EUR |
-| `adr_cert_expiry` | Non | Date d'expiration ADR (YYYY-MM-DD) |
-
----
-
-## Validation à l'import
-
-Druma valide chaque ligne avant l'import :
-
-- Les plaques doublons dans Druma sont ignorées (avec notification)
-- Les valeurs invalides pour `vehicle_type` ou `trailer_type` bloquent la ligne
-- Les dates doivent être au format `YYYY-MM-DD`
-
----
-
-## Effectuer l'import
-
 <Steps>
-  <Step title="Remplissez le modèle">
-    Ouvrez le modèle CSV ou XLSX dans Excel ou Google Sheets. Ajoutez un véhicule par ligne.
+  <Step title="Ouvrez l'import en masse">
+    Accédez à **Flotte → Camions** et cliquez sur **Import en masse** dans la barre d'outils — cela ouvre la fenêtre d'import directement sur la page liste Camions ; il n'y a pas de page d'import séparée.
   </Step>
-  <Step title="Téléchargez le fichier">
-    Dans Druma, cliquez sur **Télécharger CSV**, sélectionnez votre fichier et cliquez sur **Importer**.
+  <Step title="Téléchargez le modèle et remplissez-le">
+    Cliquez sur **Télécharger le modèle** — Druma génère un fichier `.xlsx`. Renseignez un camion par ligne :
+
+    | Colonne | Obligatoire | Exemple |
+    |--------|----------|---------|
+    | Plaque | Oui | B-123-ABC |
+    | Nom | Non | Camion 1 |
+    | Marque | Non | Volvo |
+    | Modèle | Non | FH |
+    | Année | Non | 2020 |
+    | Norme Euro | Non | euro6 |
+    | Type de carburant | Non | diesel |
+    | Type de remorque | Non | bâchée |
   </Step>
-  <Step title="Vérifiez les erreurs">
-    Si des lignes ont des erreurs, Druma les liste avec les problèmes spécifiques.
+  <Step title="Téléchargez et vérifiez">
+    Déposez votre fichier rempli (CSV ou XLSX, jusqu'à 5 Mo) dans la fenêtre d'import. Si vos en-têtes de colonnes correspondent exactement au modèle, Druma les associe automatiquement ; sinon, vous devrez associer chaque colonne au bon champ. Un aperçu affiche ensuite les 5 premières lignes — les lignes sans plaque sont signalées en rouge.
   </Step>
   <Step title="Confirmez l'import">
-    Après correction, confirmez l'import des lignes valides.
+    Cliquez sur **Importer**. Les camions sont créés immédiatement et apparaissent dans votre liste de flotte. Un écran de résultat indique combien de lignes ont été créées, ignorées ou en échec, avec le détail des erreurs ligne par ligne pour tout ce qui a échoué.
   </Step>
 </Steps>
 
-<Warning>
-L'import ne met pas à jour les véhicules existants. Les plaques déjà dans Druma seront ignorées avec un avertissement.
-</Warning>
+## Déduplication
 
-<Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
-  Gérer manuellement les véhicules après import.
-</Card>
+Druma compare la plaque de chaque ligne à vos camions existants (normalisée en majuscules, espaces supprimés). Si une correspondance est trouvée, cette ligne est **ignorée** — elle ne met pas à jour le camion existant.
+
+<Note>
+L'import en masse ne fait que créer de nouvelles fiches camion — il ne met jamais à jour une fiche existante, même si vous réimportez un fichier avec une plaque correspondante. Pour modifier les détails d'un camion déjà existant, modifiez-le directement dans Flotte → Camions.
+</Note>
+
+Cet import ne comporte aucune colonne pour les dimensions de remorque, le poids, le nombre d'essieux, la charge utile, le coût journalier, l'expiration ADR, ou un indicateur actif/inactif — ces éléments se configurent sur la fiche du camion elle-même après l'import (les champs de profil de coût se trouvent sur le [profil de coût camion](/fr/admin/rate-cards) sous Paramètres → Barèmes de tarifs, pas sur la fiche camion).
+
+## Après l'import
+
+Vérifiez votre liste de flotte, puis ajoutez les documents véhicule (assurance, ITP) pour chaque camion.
+
+<CardGroup cols={2}>
+  <Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+    Ajoutez des véhicules manuellement et gérez les paramètres de véhicules individuels.
+  </Card>
+  <Card title="Documents de flotte" icon="folder-open" href="/fr/fleet-compliance/fleet-documents">
+    Téléchargez les documents d'assurance, d'immatriculation et de conformité pour chaque véhicule.
+  </Card>
+</CardGroup>

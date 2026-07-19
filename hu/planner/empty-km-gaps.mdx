@@ -1,0 +1,63 @@
+---
+title: "Rések"
+description: "Találd meg a fedezetlen rakományokat, az üres kilométeres (deadhead) áthelyezési lehetőségeket, és a közelben újratölthető üres teherautókat."
+icon: "route"
+---
+
+## Mi az a Rések eszköz?
+
+Minden alkalommal, amikor egy teherautó befejez egy kiszállítást anélkül, hogy a következő rakomány be lenne ütemezve, vagy egy rendelés jármű-hozzárendelés nélkül marad, ahogy közeledik a felvételi dátuma, vagy üres kilométereket égetsz, vagy egy elmulasztott felvétel kockázatát futod. A **Rések** oldal (`/operations/gaps`, a Tervezés fülsávban **Rések** néven) mindkét problémát egy helyen felszínre hozza, három al-fülön keresztül.
+
+<Frame caption="A Rések eszköz — lefedettségi rések javasolt művelettel, üres km, felvétel, szállítás és ügyfél.">
+  <img src="/images/planner/empty-km-gaps.png" alt="Rések oldal, lefedettségi réseket és üres-km újratöltési lehetőségeket listázva" />
+</Frame>
+
+---
+
+## Lefedettség
+
+Az alapértelmezett al-fül felsorolja a **fedezetlen rakományokat** — olyan jövőbeli rendeléseket, amelyekhez még nincs teherautó rendelve, sürgősség szerint rendezve. Minden sor mutatja:
+
+- **Javasolt** — egy jelvény: **Hozzárendelés** (egy közeli teherautót találtunk), **Alvállalkozásba adás** (fuvarozó keresése), vagy **Saját erőforrásból kell megoldani** (nem találtunk lehetőséget)
+- **Üres KM** — a javasolt egyezés üres (deadhead) távolsága, színkódolva: zöld ≤150 km, borostyán 150–300 km, piros >300 km
+- **Felvétel**, **Felvételi dátum**, **Szállítás**, **Ügyfél**
+
+A soronkénti műveletek lehetővé teszik, hogy közvetlenül hozzárendeld a javasolt teherautót, ugorj a **Fuvarozó keresése** funkcióhoz, vagy megnyisd a rendelést részletekért. Egy **Osztályozás** menü lehetővé teszi, hogy egy sort **Folyamatban lévőként**, **Szundi 24 óra**-ként, vagy **Elfogadva alvállalkozásként** jelölj meg, hogy ne versenyezzen tovább a figyelemért.
+
+A KPI-sáv mutatja a **≤12ó / ≤24ó / ≤72ó fedezetlen**, az **Automatikusan megoldható %**, a **Fuvarozó szükséges**, és a **Hiányzó koordináták** (olyan rendelések, amelyek megállóinál nincsenek koordináták, és nem párosíthatók) értékeket.
+
+---
+
+## Üres-km optimalizáló
+
+Ez az al-fül kiszámítja az áthelyezési lehetőségeket **minden** rendelésen (lefedett és fedezetlen egyaránt) keresztül, egy útvonaltervezési mátrixot futtatva minden szállítás→felvétel párra — ez néhány másodpercig tarthat a betöltés. Ez egy állandó **felosztott táblázat + térkép** elrendezés, nem egy kapcsoló: a táblázat balra listázza a réseket, és egy sorra kattintva egy szaggatott vonalat rajzol a térképen az adott szállítási ponttól a javasolt következő felvételig — csak a kiválasztott sor vonala rajzolódik ki, nem az összes.
+
+Oszlopok: **Javasolt**, **Üres KM**, **Felvétel**, **Felvételi dátum**, **Áthelyezés innen** (az a rendelés és szállítási pont, ahonnan a teherautó jönne), **Szállítás**, **Ügyfél**. Egy **Top 10 / Top 25 / Összes** szűrő korlátozza, hány sor kerül kiszámításra és megjelenítésre, és a térképnek saját súlyossági szűrője van (Magas / Közepes / Alacsony / Fedezetlen).
+
+---
+
+## Üres teherautók
+
+Ez az al-fül megfordítja a nézetet: soronként egy **teherautó**, amely befejez egy kiszállítást anélkül, hogy utána bármi tervezve lenne, a legközelebbi, hozzárendeletlen rakományhoz párosítva, amellyel újratölthetne. Oszlopok: **Teherautó** (a sofőr nevével), **Befejezés helye** (hely és dátum), **Legjobb újratöltés**, és **Üres km** ehhez az újratöltéshez. Azok a teherautók, amelyeknek nincs elérhető rakományuk, nem mutatnak újratöltési javaslatot, és manuális áthelyezési vagy alvállalkozásba adási döntést igényelnek.
+
+KPI-k: **Üres teherautók**, **Újratöltés található**, **Nincs újratöltés**, **Átlagos üres km**, **Hiányzó koordináták**.
+
+---
+
+## Exportálás
+
+Minden al-fül eszköztárán van egy **Nyomtatás** és **Exportálás** gomb az aktuális táblázathoz — az exportálás egy Excel (.xlsx) fájlt hoz létre a látható oszlopokból. Nincs nyers GPS-koordináta export.
+
+---
+
+## Szűrők
+
+Minden al-fülnek van egy szabad szöveges keresőmezője (rendelésszám, ügyfélnév, felvételi/szállítási cím). Nincs külön dátumtartomány-, teherautó- vagy sofőr-szűrő — a Lefedettség és az Optimalizáló fülek már a közelgő rendelésekre korlátozódnak, és az Üres teherautók fülnek nincs teherautónkénti/sofőrönkénti választója, mivel minden sor már egy teherautó.
+
+---
+
+## Ennek az eszköznek a használata visszafuvarok találásához
+
+Azok az útvonalak, ahol következetesen piros réseket (>300 km) látsz, pontosan azok, ahol egy állandó visszafuvar-megállapodás — vagy egy manuális keresés egy fuvartőzsdén, mint a Timocom vagy a Trans.eu, kiszállításkor — a legnagyobb megtérülést hozná. A Druma nem futtat automatikus rakomány-keresést az általános FTL-rendelésekhez; a visszafuvar azonosítása és lefoglalása egy manuális lépés, miután az eszköz rámutatott az útvonalra.
+
+Ha a rés egy gyűjtőfuvar (több megállós) útvonalat érint, ellenőrizd, hogy a Druma automatikus visszafuvar-összevonási javaslatai már jelöltek-e egy egyező visszafuvart — ezek közvetlenül a gyűjtőfuvar-összevonási panelen jelennek meg, és nem igényelnek manuális keresést.

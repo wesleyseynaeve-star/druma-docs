@@ -1,0 +1,142 @@
+---
+title: "Conformitate Pachet de Mobilitate"
+description: "Cum urmareste Druma obligatiile Pachetului de Mobilitate UE — returul vehiculului la fiecare 8 saptamani (Reg 2020/1055), returul soferului la fiecare 4 saptamani (Reg 2020/1054) si declaratiile IMI de detasare (Dir 2020/1057)."
+icon: "globe"
+---
+
+Pachetul de Mobilitate UE, in vigoare din februarie 2022, a introdus trei obligatii angajante pentru operatorii de transport rutier transfrontalier. Neconformitatea este verificata in timpul inspectiilor rutiere si poate duce la amenzi in orice stat membru UE unde vehiculul este oprit.
+
+---
+
+## Cele trei reguli
+
+| Regulament | Obligatie | Termen |
+|---|---|---|
+| **Regulamentul 2020/1055** | Vehiculul trebuie sa se intoarca in tara de origine a operatorului | Cel putin la fiecare **8 saptamani** |
+| **Regulamentul 2020/1054** | Soferul trebuie sa se intoarca acasa (sau la o locatie la alegere) | Cel putin la fiecare **4 saptamani**, pentru odihna saptamanala regulata |
+| **Directiva 2020/1057** | Declaratiile de detasare trebuie trimise prin IMI | Inainte ca soferul sa inceapa sa lucreze in statul membru gazda |
+
+<Warning>
+Returul vehiculului inseamna ca vehiculul trece fizic inapoi in tara unde este detinuta licenta de operare — nu doar o oprire scurta intr-o zona de frontiera. Returul soferului inseamna ca soferul isi ia odihna saptamanala regulata (minimum 45 de ore consecutive) la locatia aleasa, nu o odihna redusa. Ambele cerinte sunt interpretate strict.
+</Warning>
+
+---
+
+## Unde gasesti dashboard-ul Pachetului de Mobilitate
+
+Mergi la **Analytics → Pachet de Mobilitate**. Pagina este impartita in trei sectiuni: Retururi Vehicule, Retururi Soferi si Declaratii IMI.
+
+---
+
+## Retururi vehicule
+
+Tabelul Retururi Vehicule arata cate un rand per camion, cu ultima data la care vehiculul s-a intors in tara de origine, numarul de zile scurse de la acel retur si o eticheta de status.
+
+| Status | Conditie |
+|---|---|
+| **OK** | Mai putin de 6 saptamani de la ultimul retur |
+| **Avertisment** | 6–8 saptamani de la ultimul retur (14 zile sau mai putin ramase pana la termenul de 8 saptamani) |
+| **Restant** | Mai mult de 8 saptamani de la ultimul retur |
+
+Un vehicul **Restant** trebuie sa se intoarca imediat in tara de origine, ca sa restabileasca conformitatea. Planifica segmentele de retur proactiv — de indata ce un camion este marcat **Avertisment**, incepe programarea unei curse de retur.
+
+<Note>
+"Ultimul retur" nu este derivat dintr-un flux GPS live sau dintr-un eveniment dedicat de urmarire a returului. Este dedus din **opririle de comanda finalizate**: cea mai recenta oprire de incarcare sau descarcare, pe o comanda livrata sau facturata, care se afla in tara de baza a companiei (`companies.country`). Acesta este un proxy practic, nu o observatie directa — un camion care a trecut fizic prin tara de baza fara o oprire de comanda acolo (de ex. in tranzit gol, sau o oprire pe care soferul nu a inregistrat-o) nu va aparea ca fiind intors. Daca vehiculele tale nu preiau sau nu livreaza in mod constant in tara de baza, ca parte a comenzilor normale, inregistreaza retururile manual in schimb.
+</Note>
+
+---
+
+## Retururi soferi
+
+Tabelul Retururi Soferi arata cate un rand per sofer, cu ultima data de retur inregistrata, zilele scurse si o eticheta de status.
+
+| Status | Conditie |
+|---|---|
+| **OK** | Mai putin de 3 saptamani de la ultimul retur |
+| **Avertisment** | 3–4 saptamani de la ultimul retur |
+| **Restant** | Mai mult de 4 saptamani de la ultimul retur |
+
+La fel ca retururile vehiculelor, datele de retur ale soferilor nu sunt derivate din datele de perioada de odihna ale tahografului — Druma nu distinge intre odihna regulata si redusa, sau intre odihna in vehicul si odihna la o oprire propriu-zisa, in acest scop. Foloseste acelasi proxy de oprire-de-comanda-finalizata: cea mai recenta oprire de incarcare sau descarcare, pe o comanda livrata sau facturata a acelui sofer, in tara de baza a companiei. Nu exista inca nici un camp separat de "tara de origine a soferului" — tara de baza a companiei este folosita ca inlocuitor pentru centrul de operare/domiciliu al soferului.
+
+Daca comenzile soferilor tai nu ii traseaza in mod natural prin tara de baza, acest proxy va sub-detecta retururile eligibile — inregistreaza retururile manual, editand inregistrarea soferului in schimb.
+
+---
+
+## Declaratii IMI de detasare
+
+Sectiunea Declaratii IMI listeaza toate declaratiile de detasare active si istorice pentru soferii care lucreaza in alte state membre UE. Fiecare intrare arata:
+
+- Numele soferului
+- Tara gazda
+- Datele de inceput si sfarsit ale declaratiei
+- Numarul de referinta IMI (daca a fost introdus)
+- Eticheta de status
+
+| Status | Semnificatie |
+|---|---|
+| **Activa** | Declaratia este valida si curenta |
+| **Expira** | Expira in 30 de zile — necesita actiune |
+| **Expirata** | Trecuta de data de sfarsit |
+| **Retrasa** | Retrasa manual |
+
+Declaratiile marcate **Expira** sunt evidentiate cu o eticheta chihlimbarie, ca sa le poti reinnoi sau extinde inainte de data de expirare.
+
+---
+
+## Crearea unei declaratii de detasare
+
+<Steps>
+  <Step title="Deschide Declaratii IMI">
+    Mergi la **Analytics → Pachet de Mobilitate** si selecteaza tabul **Declaratii IMI**.
+  </Step>
+  <Step title="Apasa Declaratie noua">
+    Apasa butonul **Declaratie noua**.
+  </Step>
+  <Step title="Completeaza detaliile">
+    Introdu soferul, tara gazda unde este detasat soferul si datele de inceput si sfarsit ale perioadei de detasare.
+  </Step>
+  <Step title="Trimite pe portalul IMI">
+    Druma **nu** trimite direct la IMI — trebuie sa faci asta separat, prin [sistemul IMI](https://ec.europa.eu/imi-net/). Odata ce ai trimis si ai primit numarul tau de referinta IMI, revino in Druma ca sa il introduci.
+  </Step>
+  <Step title="Adauga numarul de referinta IMI">
+    Editeaza declaratia in Druma si introdu numarul de referinta IMI. Asta leaga inregistrarea ta din Druma de trimiterea oficiala.
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza**. Druma va urmari expirarea si va marca declaratia ca **Expira**, pe masura ce data de sfarsit se apropie.
+  </Step>
+</Steps>
+
+<Note>
+O declaratie de detasare este necesara de fiecare data cand un sofer lucreaza intr-un stat membru gazda, nu o singura data per sofer. Daca un sofer merge regulat in Germania, este necesara o noua declaratie pentru fiecare perioada de detasare. Declaratiile nu se pot suprapune pentru acelasi sofer si aceeasi tara gazda.
+</Note>
+
+---
+
+## Cum sunt urmarite datele de retur
+
+| Tip de date | Sursa |
+|---|---|
+| Datele de retur ale vehiculelor | Cea mai recenta oprire de comanda finalizata (incarcare sau descarcare, pe o comanda livrata/facturata) in tara de baza a companiei |
+| Datele de retur ale soferilor | Acelasi proxy de oprire-de-comanda-finalizata, limitat la comenzile acelui sofer |
+| Suprascriere manuala | Editeaza direct inregistrarea soferului sau a vehiculului |
+
+Deoarece ambele sisteme de urmarire se bazeaza pe opriri de comanda, nu pe un flux de pozitie live, ele vad prezenta in tara doar prin comenzi finalizate — nu prin trasee GPS sau date de tahograf. Daca operatiunea ta nu traseaza in mod natural camioanele/soferii prin tara de baza, ca parte a comenzilor normale, inregistreaza datele de retur manual, ca sa mentii etichetele de status si cronometrele exacte.
+
+---
+
+## Articole asociate
+
+<CardGroup cols={2}>
+  <Card title="Reguli UE ore de conducere" icon="clock" href="/ro/fleet-compliance/eu-driving-hours">
+    Limitele de conducere din Regulamentul 561/2006 — separate, dar aplicate impreuna cu Pachetul de Mobilitate.
+  </Card>
+  <Card title="Timpul de lucru al soferului (WTD)" icon="clock" href="/ro/fleet-compliance/driver-working-time">
+    Limitele de timp de lucru de 60 de ore si medie de 48 de ore, conform Directivei 2002/15/CE.
+  </Card>
+  <Card title="Arhiva tahograf" icon="hard-drive" href="/ro/fleet-compliance/tacho-archive">
+    Stocarea fisierelor DDD/TGD pentru a indeplini cerinta de frecventa de descarcare din Reg. 165/2014.
+  </Card>
+  <Card title="Documente flota" icon="folder-open" href="/ro/fleet-compliance/fleet-documents">
+    Conformitatea documentelor vehiculului si urmarirea expirarii.
+  </Card>
+</CardGroup>

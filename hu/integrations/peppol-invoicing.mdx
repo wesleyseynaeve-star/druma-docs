@@ -1,48 +1,120 @@
 ---
 title: "Peppol e-számlázás (Belgium)"
-description: "Számlák automatikus továbbítása belga B2B ügyfeleknek a Peppol-hálózaton keresztül — 2026. január 1-jétől kötelező."
+description: "Csatlakoztasd a Drumát a Peppol-hálózathoz az e-invoice.be-n keresztül, és automatikusan továbbítsd a számlákat belga üzleti ügyfeleknek — nincs szükség manuális lépésekre."
 icon: "file-check-2"
 ---
 
-## Mi az a Peppol?
+A Peppol (Pan-European Public Procurement On-Line) az EU szabványos hálózata a strukturált elektronikus számlák vállalkozások közötti cseréjéhez. Belgiumban a Peppolon keresztüli számlaküldés **kötelező minden KBO-bejegyzésű cégnek**, amely B2B számlát állít ki, 2026 januárjától.
 
-A Peppol (Pan-European Public Procurement Online) egy európai e-számlázási hálózat, amely lehetővé teszi a vállalkozások közötti elektronikus számlák automatikus cseréjét. Belgium 2026. január 1-jétől kötelezővé teszi a Peppol-t minden B2B számlára.
+A Druma az **e-invoice.be**-n keresztül csatlakozik a Peppol-hálózathoz, amely egy akkreditált belga Peppol hozzáférési pont (Access Point). Konfigurálás után a Druma felismeri, mely ügyfeleid érhetők el a Peppolon, és automatikusan hozzájuk irányítja a számlákat — nem kell megváltoztatnod, hogyan hozol létre vagy küldesz számlákat.
 
-Ha belga ügyfeleknek számlázol, 2026-tól a számlákat a Peppol-hálózaton keresztül kell benyújtani, nem pedig e-mailben PDF-ként.
+---
 
-## Peppol konfigurálása
+## Kinek szükséges ez?
+
+A Peppol-integrációra szükséged van, ha:
+
+- A céged Belgiumban van bejegyezve (van KBO-száma), **és**
+- Más belga vállalkozásoknak állítasz ki számlákat
+
+Ha a céged Belgiumon kívül működik, vagy az ügyfeleid fogyasztók vagy külföldi vállalkozások, a Peppol nem vonatkozik rád. A Druma továbbra is e-mailben küldi a számlákat minden nem-Peppol címzettnek, függetlenül attól, hogy az integráció aktív-e.
+
+<Note>
+Azok a belga cégek, amelyek nem aktiválják ezt az integrációt, 2026 januárjától meg nem felelési bírságkockázatnak vannak kitéve. A beállítás öt percnél kevesebb ideig tart.
+</Note>
+
+---
+
+## Beállítás
 
 <Steps>
-  <Step title="Regisztrálj Peppol Access Point-ra">
-    A Druma az e-invoice.be-t használja Access Pointként (AP). A regisztráláshoz lépj a **Beállítások → Integrációk → Peppol** menüpontra.
+  <Step title="Nyisd meg a Peppol kártyát">
+    Lépj a **Beállítások → Integrációk** menüpontra. Keresd meg a **Peppol e-számlázás** kártyát. Státusza **Nincs konfigurálva** lesz.
   </Step>
-  <Step title="Add meg a KBO-számot">
-    A belga Peppol regisztrációhoz szükséged van a KBO-számodra (Kruispuntbank van Ondernemingen — Vállalkozások Keresztmetszeti Adatbankja). Ezt a belga cégnyilvántartásban találod meg.
+  <Step title="Kattints a Konfigurálás gombra">
+    Kattints a **Konfigurálás** gombra a kártyán. Megnyílik egy beállítási panel.
   </Step>
-  <Step title="Aktiválás">
-    Kattints a **Peppol regisztráció** gombra. A Druma regisztrálja a vállalatot az e-invoice.be rendszerben és aktiválja a Peppol-képességet.
+  <Step title="Add meg a KBO- és ÁFA-számodat">
+    Add meg a céged **KBO-számát** (10 számjegyű belga cégbejegyzési szám) és **ÁFA-számát** (BE, majd 10 számjegy) a megfelelő mezőkben.
+  </Step>
+  <Step title="Regisztrálj a Peppol-hálózaton">
+    Kattints a **Regisztráció a Peppolon** gombra. A Druma benyújtja a regisztrációdat az e-invoice.be-hez. Ez jellemzően néhány másodperc alatt lezajlik.
+  </Step>
+  <Step title="Erősítsd meg az aktiválást">
+    A sikeres regisztráció után a kártya egy **Csatlakoztatva** jelvényt mutat. A céged mostantól Peppol-résztvevő, és tud strukturált számlákat küldeni és fogadni a hálózaton.
   </Step>
 </Steps>
 
-## Számlák küldése Peppolen keresztül
+<Warning>
+Csak **Admin** és **Vállalati admin** felhasználók konfigurálhatnak integrációkat. Ha nem látod a Konfigurálás gombot, kérd meg a fiók-adminisztrátorodat.
+</Warning>
 
-Miután a Peppol aktiválva van, a belga ügyfélnek küldött számlák automatikusan Peppol-on keresztül kerülnek benyújtásra. A folyamat:
-1. Számla generálása a szokásos módon
-2. A Druma felismeri, hogy az ügyfél belga B2B vállalat
-3. A Druma JSON-formátumban benyújtja az e-invoice.be API-n keresztül
-4. Az e-invoice.be megkeresi az ügyfél Peppol-azonosítóját és kézbesíti
+---
 
-## Állapotkövétés
+## Hogyan működik a számla-továbbítás?
 
-A **Számlázás** oldalon a Peppol státusz minden belga számlán megjelenik:
-- **Benyújtva** — az e-invoice.be feldolgozza
-- **Kézbesítve** — az ügyfél könyvelő rendszere megkapta
-- **Hiba** — megtekinthető a hibarészletekkel
+Aktiválás után a Druma egy Peppol-ellenőrzést ad hozzá minden alkalommal, amikor számlát küldesz:
+
+1. A Druma először ellenőrzi, hogy az ügyfél ÁFA-száma belga-e (BE-vel kezdődik-e) — ez az ellenőrzés **bármilyen hálózati hívás előtt** megtörténik, így a nem belga ügyfelek soha nem váltanak ki Peppol-lekérdezést.
+2. Belga ügyfeleknél a Druma megkeresi a címzettet a Peppol-hálózaton az e-invoice.be-n keresztül. Ha megtalálja, a számla elektronikusan kerül benyújtásra — **nincs szükség extra lépésre a részedről**.
+3. A Druma emellett e-mailben is elküldi a számlát, függetlenül attól, hogy a Peppol-benyújtás sikeres volt-e — az e-mail nem egy feltételes tartalék, amely csak akkor tüzel, ha a Peppol meghiúsul. Az egyetlen kivétel: ha egy ügyfél kifejezetten lemondott mindkét csatorna fogadásáról (egy külön, ügyfelenkénti beállítás), az e-mail kimarad, amint a Peppol-kézbesítés sikeres.
+
+Nem kell számlánként kiválasztanod egy kézbesítési módot. A továbbítás teljesen automatikus.
+
+---
+
+## A számlastátusz nyomon követése
+
+A számlák listája tartalmaz egy **Peppol** státusz-oszlopot a következő állapotokkal:
+
+| Státusz | Jelentés |
+|---|---|
+| **Benyújtva** | Elküldve az e-invoice.be-nek, kézbesítési megerősítésre vár |
+| **Kézbesítve** | Megerősítetten kézbesítve a címzett Peppol-postafiókjába |
+| **Sikertelen** | A kézbesítés meghiúsult a hozzáférési pontnál — lásd a hibarészletet a számla során |
+| **Validáció sikertelen** | A Druma helyi előellenőrzése blokkolta a küldést, mielőtt elérte volna az e-invoice.be-t (pl. egy érvénytelen KBO/ÁFA ellenőrzőösszeg) — nem történt hozzáférési pont hívás, így nem használódott e-invoice.be kvóta |
+| **Nincs a hálózaton** | Az ügyfél ÁFA-száma nem regisztrált Peppol-résztvevő; a számla a szokásos módon e-mailben lett elküldve (megjelenítve: "→ E-mailben elküldve") |
+
+Nincs "Függőben" státusz — egy számla vagy még nincs elküldve Peppolon (null), vagy a fenti öt állapot egyikében van. A benyújtott számlák státuszfrissítései automatikusan a Drumába kerülnek, egy e-invoice.be-től érkező webhookon keresztül.
+
+---
+
+## Hibák kezelése
+
+Ha egy számla **Sikertelen** vagy **Validáció sikertelen** státuszt mutat:
+
+1. Vidd az egeret a státusz-jelvény fölé, vagy kattints rá a hibarészlet elolvasásához.
+2. Javítsd a jelzett problémát (például az ügyfélrekordon szereplő érvénytelen ÁFA-számot).
+3. Kattints a **Peppol újrapróbálkozás** gombra a számla során az újraküldéshez.
+
+<Note>
+A Peppol-kézbesítési hibák nem befolyásolják a számla belső státuszát a Drumában. A számla megerősített marad, és továbbra is megjelenik a könyvelési exportjaidban. A számla ettől függetlenül e-mailben is elküldésre kerül, így az ügyfél nem marad másolat nélkül, amíg kivizsgálod a problémát.
+</Note>
+
+---
+
+## A Peppol-kézbesítés manuális elindítása
+
+Azoknál a számláknál, ahol az automatikus küldés nem indult el — például az integráció aktiválása előtt létrehozott számláknál — manuálisan is benyújthatod Peppolon keresztül:
+
+1. Nyisd meg a **Számlák** listát.
+2. Keresd meg a számla sorát, és kattints a sor műveletmenüjére (**···**).
+3. Kattints a **Benyújtás most** gombra.
+
+Ez akkor is hasznos, ha egy ügyfél ÁFA-számát vagy KBO-számát javítottad.
+
+---
+
+## Kapcsolódó oldalak
 
 <Card title="Integráció beállítása" icon="plug" href="/en/admin/integration-setup">
-  Visszatérés az összes integráció áttekintéséhez.
+  A Beállítások → Integrációk menüpontban elérhető összes integráció áttekintése.
 </Card>
 
-<Card title="e-Factura / ANAF benyújtás" icon="landmark" href="/en/invoicing/efactura-anaf">
-  Román e-számlázás az ANAF rendszeren keresztül.
+<Card title="Számlák küldése" icon="send" href="/en/finance/sending-invoices">
+  Hogyan küldj számlákat e-mailben, és kövesd nyomon a kézbesítési státuszt.
+</Card>
+
+<Card title="Arculat és dokumentumformátumok" icon="palette" href="/en/admin/branding-formats">
+  Testreszabhatod a számla-sorszámozást, a logót és a színeket a PDF-számlákon.
 </Card>

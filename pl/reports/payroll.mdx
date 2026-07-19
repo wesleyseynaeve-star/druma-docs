@@ -1,0 +1,85 @@
+---
+title: "Płace kierowców"
+description: "Generuj automatyczne obliczenia płac per kierowca na podstawie przejechanych km, aktywnych dni i godzin oczekiwania."
+icon: "money-bill-wave"
+---
+
+## Przegląd
+
+Druma oblicza wynagrodzenie kierowcy z danych operacyjnych, które już przechwytuje — przejechane kilometry, przepracowane dni i zalogowane godziny oczekiwania. Nie ma osobnego systemu ewidencji czasu pracy; dane płyną ze zleceń i kliknięć statusu.
+
+Płace kierowców znajdują się w sekcji **Finanse**. Dostępne dla ról admin, company_admin i fleet_manager.
+
+<Frame caption="Finanse → Płace — wynagrodzenie za puste km to procent stawki załadowanej, nie niezależna stawka.">
+  <img src="/images/reports/payroll.png" alt="Strona Płace" />
+</Frame>
+
+---
+
+## Składniki wynagrodzenia
+
+Każde uruchomienie listy płac oblicza cztery składniki:
+
+| Składnik | Podstawa |
+|---|---|
+| **Wynagrodzenie za km** | Załadowane km × stawka za km |
+| **Wynagrodzenie za puste km** | Puste/martwe km × stawka za km × procent pustych km (konfigurowalny udział stawki załadowanej, nie osobna stawka za puste km — domyślnie 100%, czyli płatne tak samo jak załadowane km) |
+| **Wynagrodzenie za dzień** | Aktywne dni robocze × stawka dzienna |
+| **Wynagrodzenie za oczekiwanie** | Łączne godziny oczekiwania × godzinowa stawka oczekiwania |
+
+Suma to łączna kwota wszystkich czterech składników w EUR.
+
+---
+
+## Generowanie listy płac
+
+<Steps>
+  <Step title="Wybierz kierowcę i okres">
+    Wybierz kierowcę z listy rozwijanej i ustaw datę początkową i końcową okresu. Typowe okresy to miesiąc kalendarzowy lub dwutygodniowy cykl płacowy.
+  </Step>
+  <Step title="Kliknij Generuj">
+    Druma oblicza wszystkie cztery składniki wynagrodzenia ze zleceń i dzienników oczekiwania w wybranym okresie.
+  </Step>
+  <Step title="Przejrzyj podział">
+    Wynik pokazuje każdy składnik osobno, abyś mógł zweryfikować liczby przed eksportem.
+  </Step>
+  <Step title="Eksportuj do CSV">
+    Kliknij **Eksportuj CSV**, aby pobrać podsumowanie płac do użytku w swoim systemie księgowym lub kadrowo-płacowym.
+  </Step>
+</Steps>
+
+---
+
+## Konfigurowanie stawek
+
+Stawki wynagrodzenia (stawka za km, stawka dzienna, procent pustych km, godzinowa stawka oczekiwania) są przechowywane per kierowca — z regułą domyślną dla całej firmy stosowaną do każdego kierowcy bez własnej — w bazowej tabeli reguł płacowych.
+
+<Note>
+Obecnie nie ma ekranu w aplikacji do przeglądania lub edycji tych stawek. Stawki muszą być ustawione bezpośrednio w bazie danych (lub zasiane), dopóki nie pojawi się interfejs stawek Flota → Kierowcy. Jeśli kierowca nie ma reguły i nie istnieje domyślna wartość firmy, każdy składnik dla tego kierowcy oblicza się jako zero.
+</Note>
+
+---
+
+## Historyczne uruchomienia
+
+Każde wygenerowane uruchomienie listy płac jest przechowywane i wylistowane pod rekordem kierowcy. Możesz ponownie otworzyć dowolne poprzednie uruchomienie, aby je przejrzeć lub ponownie wyeksportować.
+
+---
+
+## Wykres sum miesięcznych
+
+Wykres słupkowy poniżej selektora kierowcy pokazuje łączne miesięczne kwoty płac dla wybranego kierowcy w ciągu ostatnich 12 miesięcy. Przydatny do wykrywania wzorców sezonowych lub miesięcy z nietypowo wysokimi opłatami za oczekiwanie.
+
+---
+
+<Note>
+Wartości płac w Druma mają charakter doradczy — Druma nie integruje się z procesorami płac ani urzędami podatkowymi. Eksport CSV jest przeznaczony do importu do Twojego systemu płacowego lub ręcznego przeglądu przez księgowego.
+</Note>
+
+<Card title="Czas oczekiwania" icon="clock" href="/pl/planner/waiting-time">
+  Dowiedz się, jak czas oczekiwania jest logowany i jak zasila obliczenia płac.
+</Card>
+
+<Card title="Zmarnowany kurs" icon="triangle-exclamation" href="/pl/planner/wasted-journey">
+  Martwe kilometry ze zmarnowanych kursów również pojawiają się w rekordach płac kierowcy.
+</Card>

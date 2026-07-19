@@ -1,62 +1,98 @@
 ---
 title: "e-Factura / ANAF-Einreichung"
-description: "Wie Druma Rechnungen automatisch an Rumäniens obligatorisches e-Factura-System über die ANAF SPV API einreicht, mit Statusverfolgung und Wiederholungsbehandlung."
+description: "Wie Druma Rechnungen automatisch bei Rumäniens obligatorischem e-Factura-System über die ANAF-SPV-API einreicht, mit Statusverfolgung und Wiederholungsbehandlung."
 icon: "landmark"
 ---
 
-## Was ist e-Factura?
+## Was e-Factura ist
 
-e-Factura ist Rumäniens obligatorisches elektronisches Rechnungsstellungssystem. Ab 2024 müssen alle B2B-Rechnungen zwischen rumänischen Unternehmen elektronisch über die ANAF SPV-Plattform eingereicht werden.
+e-Factura ist Rumäniens obligatorisches System für elektronische Rechnungsstellung, betrieben von ANAF (der rumänischen Nationalen Steuerbehörde). Seit 2024 müssen alle B2B-Transaktionen zwischen rumänischen USt-registrierten Unternehmen im UBL-XML-Format bei ANAF gemeldet werden — dem europaweiten Standardformat für elektronische Rechnungen.
 
-Druma automatisiert diesen Prozess vollständig — Sie müssen keine manuellen Einreichungen vornehmen.
-
----
+Einfach gesagt: Jede Rechnung, die Sie an ein rumänisches Unternehmen mit CIF (USt-Registrierungsnummer) ausstellen, muss elektronisch an ANAF gesendet werden, nicht nur an Ihren Kunden. Druma übernimmt dies automatisch, nachdem Sie die Rechnung erstellt haben.
 
 ## Wie Druma e-Factura handhabt
 
-1. Wenn Sie eine Rechnung in Druma senden, erkennt das System automatisch, ob der Kunde für e-Factura qualifiziert ist (rumänischer CIF).
-2. Druma sendet die Rechnung im erforderlichen XML-Format an den ANAF SPV.
-3. ANAF verarbeitet die Einreichung und gibt entweder eine Validierungs-ID zurück oder ein Fehlerprotokoll.
-4. Druma zeigt den ANAF-Status direkt in der Rechnung an.
+Sie müssen sich weder ins ANAF-Portal einloggen, noch XML-Dateien erzeugen oder irgendetwas manuell tun. So läuft es automatisch ab:
 
----
+1. Sie erstellen eine Rechnung für einen rumänischen Kunden mit CIF im Kundendatensatz
+2. Druma erzeugt die UBL-XML-Datei im korrekten ANAF-Format
+3. Druma reicht das XML über die SPV-API (Spațiul Privat Virtual) bei ANAF ein
+4. ANAF gibt eine Einreichungs-ID zurück und, nach Verarbeitung, einen Akzeptanz- oder Ablehnungsstatus
+5. Der Rechnungsdatensatz in Druma aktualisiert sich mit dem aktuellen e-Factura-Status
 
-## ANAF-Einreichungsstatus
+## e-Factura-Statusverfolgung
+
+Jede Rechnung, die eine e-Factura-Einreichung erfordert, zeigt auf der Rechnungsdetailseite im Tab **e-Factura** ein Statusabzeichen:
 
 | Status | Bedeutung |
 |---|---|
-| Ausstehend | Noch nicht bei ANAF eingereicht |
-| Eingereicht | An ANAF gesendet, Antwort ausstehend |
-| Bestätigt | Von ANAF validiert |
-| Fehler | ANAF hat die Einreichung abgelehnt |
-| Wiederholung geplant | Automatische Wiederholung nach einem Fehler |
+| **Ausstehend** | Wartet auf Einreichung (übermittelt meist innerhalb weniger Minuten nach Rechnungserstellung) |
+| **Eingereicht** | XML an ANAF gesendet — wartet auf Verarbeitung durch ANAF |
+| **Akzeptiert** | ANAF hat die Rechnung validiert und akzeptiert |
+| **Abgelehnt** | ANAF hat einen Fehler gefunden — Details siehe Fehlercode |
 
----
+<Note>
+ANAFs System hat regelmäßig Ausfallzeiten, besonders an Wochentagvormittagen und Monatsende. Zeigt Ihre Rechnung länger als ein paar Stunden „Eingereicht", liegt das meist an ANAF selbst, nicht an einem Fehler in Druma. Die Wiederholungswarteschlange handhabt dies automatisch.
+</Note>
 
-## ANAF-Anmeldedaten konfigurieren
+## Automatische Wiederholungswarteschlange
+
+Schlägt eine Einreichung fehl, weil ANAF nicht erreichbar ist, wiederholt Druma automatisch mit exponentiellem Backoff, bis zu 3 Versuchen insgesamt (der ursprüngliche Versuch plus 2 Wiederholungen):
+
+- Erste Wiederholung: etwa **1 Stunde** nach dem Fehlschlag (±25 % Zufallsstreuung)
+- Zweite Wiederholung: etwa **2 Stunden** nach der ersten Wiederholung (±25 % Zufallsstreuung)
+
+Schlägt auch der dritte Versuch fehl, wechselt die Rechnung direkt in den Status **Fehlgeschlagen** — danach gibt es keine weitere automatische Wiederholung. Sie können dann eine **Manuelle erneute Einreichung** aus dem Tab e-Factura auf der Rechnungsseite auslösen.
+
+## e-Factura-Status einsehen
 
 <Steps>
-  <Step title="Zu Einstellungen → Integrationen gehen">
-    Öffnen Sie die ANAF e-Factura-Karte.
+  <Step title="Die Rechnung öffnen">
+    Gehen Sie zu **Rechnungsstellung** und klicken Sie auf die zu prüfende Rechnung.
   </Step>
-  <Step title="CIF und Zugangsdaten eingeben">
-    Geben Sie Ihren CIF und Ihre ANAF SPV-API-Zugangsdaten ein.
+  <Step title="Auf den Tab e-Factura klicken">
+    Der Tab e-Factura zeigt den aktuellen Status, den Einreichungszeitstempel, die ANAF-Einreichungs-ID (sobald erhalten) und etwaige Fehlermeldungen.
   </Step>
-  <Step title="Verbindung testen">
-    Klicken Sie auf **Verbindung testen**, um zu bestätigen, dass die Zugangsdaten korrekt sind.
+  <Step title="Bei Ablehnung den Fehlercode lesen">
+    Ablehnungsmeldungen stammen von ANAF und enthalten einen Fehlercode und eine Beschreibung. Häufige sind unten aufgelistet.
   </Step>
 </Steps>
 
+## Häufige Ablehnungsfehler
+
+| Fehler | Wahrscheinliche Ursache | Behebung |
+|---|---|---|
+| **Ungültige CIF** | Die USt-IdNr. des Kunden im Datensatz ist falsch oder nicht USt-registriert | Gehen Sie zu **Kunden** → Kunden bearbeiten → CIF-Feld korrigieren |
+| **Ungültiges Adressformat** | Straße, Stadt oder Kreisfeld entspricht nicht dem von ANAF erwarteten Format | Bearbeiten Sie die Kundenadresse — stellen Sie sicher, dass der Kreis (Județ) gesetzt ist und den korrekten rumänischen Kreisnamen verwendet |
+| **Fehlendes Pflichtfeld** | Ein erforderliches XML-Feld ist leer | Prüfen Sie die Rechnung auf fehlende Kundendetails — meist CIF, Adresse oder Kundenname |
+| **Doppelte Rechnung** | ANAF hat bereits eine Einreichung mit derselben Rechnungsnummer | Bedeutet meist, dass eine vorherige Einreichung erfolgreich war, Druma aber die Bestätigung nicht erhalten hat — prüfen Sie direkt im ANAF-SPV-Portal |
+
+## Manuelle erneute Einreichung
+
+Schlagen automatische Wiederholungen fehl, oder haben Sie einen Fehler korrigiert und möchten es sofort erneut versuchen:
+
+Gehen Sie zu **Rechnungsstellung** → Rechnung öffnen → **Tab e-Factura** → klicken Sie auf **Erneut an ANAF senden**. Druma sendet das XML sofort erneut.
+
+## Wann e-Factura NICHT gilt
+
+Die e-Factura-Einreichung ist nur für rumänische USt-registrierte Kunden erforderlich. Sie gilt **nicht** für:
+
+- Grenzüberschreitende EU-Rechnungen (Kunden außerhalb Rumäniens)
+- Kunden ohne rumänischen CIF
+- Rechnungen an Privatpersonen (keine Unternehmen)
+
+Für diese Rechnungen erstellt Druma eine Standard-PDF-Rechnung ohne den UBL-XML-Einreichungsschritt. Der Tab e-Factura erscheint bei diesen Rechnungen nicht.
+
+<Warning>
+Stellen Sie sicher, dass jeder rumänische B2B-Kunde in Druma seine korrekte CIF im Kundendatensatz eingetragen hat. Ohne CIF kann Druma nicht bei e-Factura einreichen, und Sie könnten nicht compliant sein. Sie können CIF-Nummern unter Kunden → Kunden auswählen → Tab Details prüfen und aktualisieren.
+</Warning>
+
 ---
 
-## Fehlerbehandlung und Wiederholung
+<Card title="Rechnungen erstellen" icon="file-invoice-dollar" href="/de/invoicing/generating-invoices">
+  Wie Sie Rechnungen in Druma erstellen, einschließlich Mehrwährung und Sammelrechnungsstellung.
+</Card>
 
-Wenn ANAF eine Einreichung ablehnt, zeigt Druma die spezifische Fehlermeldung an. Häufige Fehler:
-
-- **Ungültige CIF des Empfängers** — Überprüfen Sie die USt-IdNr. des Kunden
-- **Fehlende Pflichtfelder** — Überprüfen Sie die Rechnung auf vollständige Details
-- **Technischer Fehler auf ANAF-Seite** — Druma wiederholt automatisch nach 1h, 4h und 24h
-
-<Card title="Rechnungen erstellen" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-  Erfahren Sie, wie Sie Rechnungen erstellen, die e-Factura-konform sind.
+<Card title="SAGA & WinMENTOR Export" icon="database" href="/de/invoicing/saga-export">
+  Wie Sie Rechnungsdaten für Ihren Buchhalter in rumänische Buchhaltungssoftware exportieren.
 </Card>

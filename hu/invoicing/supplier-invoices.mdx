@@ -1,51 +1,172 @@
 ---
-title: "Szállítói számlák (Kötelezettségek)"
-description: "A céged kötelezettségeinek kezelése — alvállalkozói fuvarozók, üzemanyagkártyák, műhelyek, útdíjak, biztosítás és lízing — AI-asszisztált számlabefogadással és elöregedett hitelezők irányítópultjával."
+title: "Szállítói számlák (kötelezettségek)"
+description: "Kezeld, mivel tartozik a céged — alvállalkozói fuvarozóknak, üzemanyagkártyáknak, műhelyeknek, útdíjaknak, biztosításnak és lízingnek — AI-asszisztált számlabefogadással és elöregedett hitelezők irányítópultjával."
 icon: "building-2"
 ---
 
-## Mi a szállítói számla-kezelés?
+## Áttekintés
 
-A szállítói számlák (kötelezettségek) a vállalat által fizetett tételek, szemben az ügyfelek által neked fizetett bevételekkel:
-- **Alvállalkozói fuvarozók** — amit a részedre szállítást végző fuvarozóknak fizetsz
-- **Üzemanyagkártyák** — DKV, UTA, AS24 havi elszámolások
-- **Műhely** — járműjavítás és -karbantartás
-- **Útdíjak** — a sofőrök által nem kártyával fizetett útdíjak
-- **Biztosítás és lízing** — fix havi kötelezettségek
+A Kötelezettségek (Accounts Payable, AP) modul nyomon követi minden beszerzési számlát, amelyet a céged külső szállítóktól kap. Ez magában foglalja azokat az alvállalkozói fuvarozókat, akiknek rakományokat adsz tovább, az üzemanyagkártya-szolgáltatókat (DKV, UTA, AS24), a műhely- és gumiabroncs-szállítókat, az útdíjkezelőket (ASFINAG, HU-GO), a biztosítótársaságokat, a lízingcégeket és bármilyen más üzleti kiadást.
 
-## Szállítói számla hozzáadása
+A Druma két mechanizmuson keresztül csökkenti a manuális rögzítést: az **alvállalkozói fuvarozók automatikusan tükröződnek a szállítói listádba** (nincs kettős rögzítés), és egy **AI-alapú e-mail postafiók** közvetlenül a szállítói e-mailekből tud kinyerni és vázlatozni beszerzési számlákat. Ami nem egyezik automatikusan, egy **felülvizsgálati sorba** kerül gyors emberi döntéshez.
+
+## Szállítói törzsadat
+
+A szállítói törzsadat azon cégek nyilvántartása, amelyektől vásárolsz. Ez az alapja a számla-egyeztetésnek és az elöregedett hitelező-jelentésnek.
+
+**Elérés:** Pénzügy → Fuvarközvetítés → **Szállítók** fül
+
+Minden szállítói rekord tartalmazza:
+
+| Mező | Leírás |
+|-------|-------------|
+| **Név** | Szállító cégneve |
+| **ÁFA-szám** | A kinyert számlaadatokkal való egyeztetéshez használva |
+| **E-mail** | Szállítói kapcsolattartó e-mail-címe — a küldő fehérlista egyeztetéséhez is használva |
+| **Szállító típusa** | Fuvarozó / Üzemanyag / Műhely / Útdíj / Biztosítás / Lízing / Egyéb |
+| **Ország** | A szállító bejegyzési országa |
+
+### Szállítók kezelése
+
+- **Szállító hozzáadása:** kattints a **+ Szállító hozzáadása** gombra, töltsd ki az űrlapot, és mentsd el.
+- **Szállító szerkesztése:** kattints a **Szerkesztés** gombra bármelyik szállítói soron a részletek frissítéséhez.
+- **Szállító törlése:** kattints a **Törlés** gombra. A törlés blokkolva van, ha a szállítónak kapcsolt beszerzési számlái vannak.
+
+<Note>
+Az Alvállalkozók szekcióban hozzáadott alvállalkozói fuvarozók automatikusan tükröződnek a Szállítók listába, **Fuvarozó** típussal. Nem kell újra hozzáadnod őket itt. Az alvállalkozói rekord módosításai (név, ÁFA-szám, e-mail) automatikusan szinkronizálódnak a szállítói rekordba.
+</Note>
+
+## Szállítói számla e-mail postafiók
+
+A Druma tud e-mailben szállítói számlákat fogadni, AI-val kinyerni a legfontosabb mezőket, és vagy automatikusan létrehozni egy vázlat beszerzési számlát, vagy a dokumentumot a felülvizsgálati sorba irányítani.
+
+### Beállítás
 
 <Steps>
-  <Step title="Lépj a Számlázás → Szállítói számlák menüpontra">
-    Kattints a **Számla hozzáadása** gombra.
+  <Step title="Nyisd meg a vállalati beállításokat">
+    Lépj a **Beállítások** → **Vállalat** menüpontra, és görgess a **Szállítói számla e-mail** szakaszhoz.
   </Step>
-  <Step title="Töltsd ki az adatokat">
-    - **Szállító** — válassz az alvállalkozókból, vagy hozz létre manuálisan
-    - **Számlaszám**
-    - **Dátum és esedékesség**
-    - **Összeg és pénznem**
-    - **Kategória** — Fuvarozás / Üzemanyag / Karbantartás / Útdíj / Egyéb
-    - **Kapcsolódó rendelés** — ha az alvállalkozói fuvarozáshoz kapcsolódik
+  <Step title="Kapcsold be a postafiókot">
+    Kapcsold be a **Szállítói számla postafiók engedélyezése** funkciót. A Druma egy dedikált bejövő e-mail-címet biztosít a cégednek (például `invoices-acme@in.druma.io`). A cím azonnal megjelenik az engedélyezés után.
   </Step>
-  <Step title="PDF feltöltése">
-    Töltsd fel a szállítói számla PDF-jét a dokumentáció megőrzéséhez.
+  <Step title="Másold ki az e-mail-címet">
+    Kattints a másolás ikonra a cím mellett. Oszd meg ezt a címet a szállítóiddal, és kérd meg őket, hogy a PDF-számlákat erre küldjék. A saját postafiókodból is továbbíthatsz számlákat erre a címre.
   </Step>
-  <Step title="Mentés">
-    A számla megjelenik a kötelezettségek listájában.
+  <Step title="Add hozzá a küldő címeket a fehér listához">
+    A közvetlenül alatta lévő **Küldő fehér lista** szakaszban kattints a **+ Küldő hozzáadása** gombra, és add meg minden szállító küldő e-mail-címét. Csak a fehérlistán szereplő küldők kerülnek feldolgozásra — az ismeretlen címekről érkező e-mailek csendben eldobásra kerülnek, spam- és megszemélyesítés-védelemként.
   </Step>
 </Steps>
 
-## AI-asszisztált befogadás
+<Warning>
+Tartsd bizalmasan a szállítói számla e-mail-címet. Ne tedd közzé a weboldaladon vagy külső dokumentumokban. Bárkit, aki ismeri a címet, de nincs a fehér listán, blokkolunk, de magát a címet privát útválasztási címként kell kezelned.
+</Warning>
 
-Ha alvállalkozói fuvarozói számlázási e-mail aliaszt állítottál be (**Beállítások → Vállalat**), a fuvarozók PDF számlákat küldhetnek közvetlenül a Drumának. A rendszer Gemini AI-val kinyeri a számlátételeket és megpróbálja egyeztetni a vonatkozó rendelésekkel.
+<Note>
+Ennek a bejövő útvonalnak nemrég átjárási (gateway) útválasztási problémái voltak, amelyek miatt az erre a címre érkező e-mailek csendben elutasításra kerültek, mielőtt egyáltalán elérték volna a Drumát. Ha szállítók azt jelzik, hogy a számláik sosem érkeznek meg, vagy semmi nem jelenik meg a felülvizsgálati sorban az elküldött e-mailek ellenére, ellenőrizd az ügyfélszolgálattal, hogy az útválasztási probléma teljesen megoldódott-e a te környezetedben, mielőtt a küldőt vagy a fehér listát okolnád.
+</Note>
+
+### Mi történik, amikor egy számla megérkezik?
+
+Amikor egy szállító egy fehérlistán szereplő küldőtől PDF-et (vagy képet) küld a postafiók-címedre:
+
+1. A Druma letölti a mellékletet, és biztonságosan tárolja.
+2. Az AI kinyeri: a szállító nevét, ÁFA-számát, a számlaszámot, a számla dátumát, a teljes összeget, a pénznemet és a kiadási kategóriát (üzemanyag / műhely / útdíj / biztosítás / lízing / egyéb).
+3. A Druma megpróbálja egyeztetni a kinyert adatot a szállítói törzsadattal, ÁFA-szám és e-mail-cím alapján.
+
+Az eredmény a megbízhatósági szinttől függ:
+
+| Eredmény | Mi történik |
+|---------|-------------|
+| **Nagy megbízhatóságú fuvarozói számla** | A fuvarozói számlasorba irányítva (egy konkrét, alvállalkozásba adott rendelés beszerzési számlájával egyeztetve) |
+| **Nagy megbízhatóságú szállítói egyezés** | Automatikusan létrejön egy vázlat beszerzési számla, kapcsolva a szállítóhoz |
+| **Alacsony megbízhatóság vagy fel nem ismert szállító** | A **felülvizsgálati sorban** jelenik meg manuális egyeztetésre |
+
+<Note>
+Az AI-kinyerés a PDF szövegrétegét olvassa. Az alacsony felbontású szkennelt képek vagy kézírásos szöveg alacsonyabb megbízhatósági pontszámot eredményezhetnek, és gyakrabban kerülnek a felülvizsgálati sorba. Kérd meg a szállítóidat, hogy lehetőség szerint natív PDF-exportot küldjenek a könyvelőszoftverükből.
+</Note>
+
+## Felülvizsgálati sor
+
+A felülvizsgálati sor az a hely, ahol minden olyan számla — mind a fuvarozói számlák, mind az általános szállítói számlák —, amelyet nem sikerült automatikusan alkalmazni, emberi döntésre vár.
+
+**Elérés:** Pénzügy → Fuvarközvetítés → **Számlasor** fül
+
+### A sor értelmezése
+
+A sorban minden sor mutatja:
+
+- **Forrás-jelvény** — **Fuvarozó** (a fuvarozói számla postafiókból) vagy **Szállító** (a szállítói számla postafiókból)
+- **Szállító neve** — AI által kinyerve, vagy a szállítói törzsadatból egyeztetve
+- **Összeg** és **Pénznem**
+- **Státusz** — Függőben / Alkalmazva / Elutasítva
+- **Beérkezés dátuma**
+
+Használd a szűrőfüleket a tetején a **Függőben**, **Alkalmazva** és **Elutasítva** nézetek közötti váltáshoz. Szűrhetsz szállító-típus szerint is, hogy egy konkrét kategóriára fókuszálj (például csak az Üzemanyag-számlák megjelenítéséhez).
+
+### Egy sortétel feldolgozása
+
+<Steps>
+  <Step title="Bontsd ki a sort">
+    Kattints bárhová egy sor sorára a kibontásához. A kibontott nézet mutatja az összes AI által kinyert mezőt, az egyeztetett (vagy javasolt) szállítót, és az egyeztetett beszerzési számlát, ha találtunk ilyet.
+  </Step>
+  <Step title="Nézd át a kinyert adatot">
+    Ellenőrizd a kinyert szállítói nevet, ÁFA-számot, számlaszámot, összeget és dátumot a PDF-hez képest. Javítások nem végezhetők soron belül — ha az adat hibás, jóváhagyás után a beszerzési számla-rekordon javítod ki.
+  </Step>
+  <Step title="Válassz egy műveletet">
+
+    | Művelet | Mikor használd |
+    |--------|------------|
+    | **Jóváhagyás** | Az adat helyesnek tűnik, és az egyeztetés helyes — létrehozza vagy megerősíti a beszerzési számlát |
+    | **Elutasítás** | A számla nem érvényes, duplikátum, vagy egy másik céghez tartozik — eltávolítja a sorból |
+    | **Újra-hozzárendelés** | A javasolt beszerzési számla hibás — megnyit egy keresést a helyes kiválasztásához |
+    | **PDF megtekintése** | Megnyitja az eredeti csatolt fájlt egy új lapon manuális ellenőrzéshez |
+
+  </Step>
+</Steps>
 
 ## Elöregedett hitelezők irányítópult
 
-A **Szállítói számlák** oldal mutatja az összes kötelező fizetés összesítőjét:
-- Esedékes 7 napon belül
-- Esedékes 30 napon belül
-- Lejárt (nem fizetett az esedékességi dátum után)
+Az Elöregedett hitelezők irányítópult mutatja mindent, amivel a céged tartozik az összes szállító felé, a tartozás fennállási ideje szerint csoportosítva.
 
-<Card title="Banki egyeztetés" icon="building-columns" href="/en/invoicing/bank-reconciliation">
-  Beérkező fizetések egyeztetése a számlákkal.
+**Elérés:** Pénzügy → Analitika → **Elöregedett hitelezők** fül
+
+### Az irányítópult értelmezése
+
+Az oldal teteje három összefoglaló kártyát mutat:
+
+- **Teljes fennálló összeg** — az összes ki nem fizetett beszerzési számla összege
+- **Számlák elöregedési sáv szerint** — darabszám sávonként
+- **Szállítók száma** — a fennálló egyenleggel rendelkező egyedi szállítók száma
+
+Az összefoglaló alatt egy rendezhető táblázat listázza az egyes szállítókat, soronként egy számlával. Kattints bármelyik oszlopfejlécre a rendezéshez. Kattints egy szállítói sorra a kibontásához, és az egyedi számlák megtekintéséhez.
+
+Az elöregedési sávok a standard AP-konvenciót követik:
+
+| Sáv | Meghatározás |
+|--------|-----------|
+| **0–30 nap** | Aktuális — a szabványos fizetési feltételeken belül |
+| **31–60 nap** | Kissé lejárt |
+| **61–90 nap** | Lejárt — nyomon követés ajánlott |
+| **90+ nap** | Jelentősen lejárt — eszkaláld |
+
+<Note>
+Az Elöregedett hitelezők nézet 500 sorra van korlátozva. Ha a cégednek 500-nál több fennálló beszerzési számlája van, egy csonkítási figyelmeztető banner jelenik meg a táblázat tetején. Használd az **Export CSV** gombot a teljes adatkészlet letöltéséhez Excelben történő elemzéshez.
+</Note>
+
+### Exportálás
+
+Kattints az **Export CSV** gombra a teljes elöregedett hitelezők jelentés letöltéséhez CSV-fájlként. Az export az 500-soros megjelenítési korláttól függetlenül minden szállítói sort tartalmaz, alkalmassá téve az AP-egyeztetésre a könyvelőrendszeredben.
+
+---
+
+<Card title="Banki kivonat importálása" icon="file-up" href="/en/invoicing/bank-statement-import">
+  Töltsd fel a CAMT.053 vagy MT940 fájlokat a bejövő fizetések automatikus egyeztetéséhez a nyitott számlákkal.
+</Card>
+
+<Card title="Fizetéskövetés" icon="circle-check" href="/en/invoicing/payment-tracking">
+  Rögzítsd és kövesd nyomon a fizetéseket az értékesítési számlákon, és tekintsd meg a fennálló egyenlegeket.
+</Card>
+
+<Card title="Lejárt irányítópult" icon="triangle-alert" href="/en/invoicing/overdue-dashboard">
+  Figyeld az elöregedett követeléseket, és küldj fizetési emlékeztetőket a lejárt ügyfeleknek.
 </Card>

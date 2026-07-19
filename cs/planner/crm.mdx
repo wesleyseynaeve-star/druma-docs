@@ -1,0 +1,147 @@
+---
+title: "Obchod"
+description: "Sledujte leady a existující účty napříč obchodním pipeline — od prvního kontaktu po konvertovaného klienta, nabídku nebo tendr."
+icon: "user-group"
+---
+
+## Přehled
+
+Modul **Obchod** (`/operator-crm`, v hlavní navigaci jako **Obchod**) je místo, kde spravujete budování vztahů odděleně od přepravních objednávek, ke kterým tyto vztahy vedou. Je postaven kolem dvou typů záznamů procházejících stejnými fázemi životního cyklu:
+
+- **Leady** — potenciální zákazníci, kteří ještě nejsou klienty v Druma
+- **Účty** — vaši existující klienti, sledovaní stejným pipeline, jakmile chcete spravovat obnovy nebo rozšíření
+
+Obchod je dostupný pro role **admin, company_admin, planner, dispatcher a customer_service**.
+
+<Frame caption="Záložka Obchodní pipeline — leady a účty procházející čtyřmi fázemi: lead → kvalifikováno → nabídka → získáno.">
+  <img src="/images/planner/crm.png" alt="Kanban obchodního pipeline s leady a účty ve čtyřech fázích" />
+</Frame>
+
+---
+
+## Panel záložek
+
+<Steps>
+  <Step title="Pipeline">
+    Kanban tabule leadů a účtů napříč čtyřmi fázemi, s přeřazováním přetažením. Toto je vaše výchozí záložka.
+  </Step>
+  <Step title="Kontakty">
+    Tabulka všech leadů, se sloupci společnost, kontakt, země, zdroj, poslední kontakt a fáze.
+  </Step>
+  <Step title="Účty">
+    Tabulka vašich existujících klientů, každý volitelně sledovaný s vlastní fází životního cyklu a datem posledního kontaktu.
+  </Step>
+  <Step title="Nabídky">
+    Otevře stránku [Nabídky](/cs/planner/quotes) — cenová nabídka konkrétní zásilky pro lead nebo klienta.
+  </Step>
+  <Step title="Tendry (pokud povoleno)">
+    Otevře [Tendry a smlouvy](/cs/planner/tenders-and-contracts) — zobrazeno pouze, když je pro vaši společnost povolena správa tendrů.
+  </Step>
+  <Step title="Reporty">
+    Míra úspěšnosti, průměrná velikost obchodu, délka obchodního cyklu, vážená hodnota pipeline a žebříček aktivity.
+  </Step>
+</Steps>
+
+<Note>
+Nabídky a Tendry sdílí tento panel záložek, takže celý obchodní proces — od nízkého po vysoký závazek — čte jako jeden celek, ale každý si udržuje vlastní obsah stránky a vlastní dokumentační stránku.
+</Note>
+
+---
+
+## Fáze životního cyklu
+
+Každý lead a každý sledovaný účet prochází stejnou sadou fází:
+
+| Fáze | Význam |
+|---|---|
+| `lead` | Počáteční kontakt, ještě nekvalifikovaný |
+| `qualified` | Potvrzeno jako skutečná příležitost |
+| `proposal` | Byla odeslána nabídka nebo tendr |
+| `won` | Konvertováno na aktivního klienta |
+| `lost` | Nekonvertovalo |
+| `inactive` | Účet ztichl |
+
+Tabule **Pipeline** zobrazuje pouze sloupce `lead` → `qualified` → `proposal` → `won`. `lost` a `inactive` se nastavují z rozbalovací nabídky fáze uvnitř panelu detailu záznamu, ne jako sloupce tabule.
+
+---
+
+## Přidání leadu
+
+<Steps>
+  <Step title="Klikněte na Nový lead">
+    Ze záložky **Pipeline** nebo **Kontakty** klikněte na **Nový lead**.
+  </Step>
+  <Step title="Vyplňte podrobnosti">
+    Zadejte:
+    - **Společnost** (povinné)
+    - **Kontakt**, **Země**, **E-mail**, **Telefon**, **DIČ**
+    - **Zdroj** — volný text (např. „doporučení", „nákladní burza")
+    - **Fáze** — výchozí `lead`
+    - **Poznámky**
+  </Step>
+  <Step title="Vytvořit">
+    Klikněte na **Vytvořit**. Lead se zobrazí na tabuli Pipeline i v tabulce Kontakty.
+  </Step>
+</Steps>
+
+<Note>
+Leady pocházející z příchozí poptávky (RFQ) nebo příchozího e-mailu přeposlaného do CRM jsou ve sloupci Zdroj tabulky Kontakty automaticky označeny („Příchozí RFQ" / „Příchozí e-mail").
+</Note>
+
+---
+
+## Práce s leadem nebo účtem
+
+Kliknutím na jakoukoli kartu nebo řádek otevřete panel detailu:
+
+- **Fáze** — změňte fázi životního cyklu přímo.
+- **Poznámky** — volné poznámky o vztahu.
+- **Obchod** *(pouze leady)* — očekávaná hodnota (EUR/RON), pravděpodobnost (%), očekávané datum uzavření, štítky oddělené čárkou a rozbalovací nabídka důvodu ztráty, která se zobrazí, jakmile je fáze nastavena na `lost`.
+- **Lidé / kontakty** *(pouze leady)* — přidejte více kontaktních osob za stejný účet a jednu označte jako hlavní.
+- **Kontaktní body** — zaznamenejte interakci: vyberte typ (**Hovor, E-mail, Schůzka, Demo, Poznámka**), volitelné shrnutí/výsledek a volitelnou přílohu souboru, poté klikněte na **Zaznamenat kontaktní bod**. Kontaktní body sdílí leady i účty a zobrazují se od nejnovějšího.
+
+U leadů má záhlaví panelu také:
+
+- **Vytvořit nabídku** — přímý odkaz na [Nabídky](/cs/planner/quotes) s novou nabídkou předvyplněnou z tohoto leadu.
+- **Vytvořit tendr** *(pokud je povolena správa tendrů)* — přímý odkaz na [Tendry a smlouvy](/cs/planner/tenders-and-contracts) s novým tendrem předem propojeným s tímto leadem.
+- **Konvertovat na klienta** — viz níže. Po konverzi se toto tlačítko změní na **Zobrazit klienta**.
+
+---
+
+## Konverze leadu na klienta
+
+<Steps>
+  <Step title="Otevřete lead a klikněte na Konvertovat na klienta">
+    Potvrďte výzvu. Druma vytvoří nový záznam klienta z podrobností leadu — je to idempotentní, takže opětovné kliknutí na již konvertovaný lead jednoduše otevře existujícího klienta místo duplikace.
+  </Step>
+  <Step title="Volitelně vytvořte ceník">
+    Budete dotázáni, zda vytvořit ceník trasy pro nového klienta. Volba **Vytvořit ceník** vás přenese na předvyplněný formulář nového ceníku; **Teď ne** nic nevytvoří.
+  </Step>
+  <Step title="Najděte ho pod Účty">
+    Stránka se přepne na záložku **Účty**, filtrovanou na nově konvertovaného klienta.
+  </Step>
+</Steps>
+
+---
+
+## Reporty
+
+Záložka **Reporty** shrnuje váš pipeline:
+
+- **Míra úspěšnosti** — podíl uzavřených obchodů (získáno vs. ztraceno), které byly získány.
+- **Průměrná velikost obchodu** — střední očekávaná hodnota napříč obchody s nastavenou hodnotou.
+- **Obchodní cyklus** — průměrný počet dní od vytvoření leadu po uzavření.
+- **Vážený pipeline** — součet očekávané hodnoty × pravděpodobnosti každého otevřeného obchodu, rozdělený podle fáze (s vysvětlením výpočtu).
+- **Pipeline tendrů** *(pokud je povolena správa tendrů)* — sjednaný objem podle stavu tendru.
+- **Žebříček aktivity** — kontaktní body zaznamenané za jednotlivého člena týmu.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Nabídky" icon="file-invoice" href="/cs/planner/quotes">
+    Sestavte a odešlete přepravní nabídku leadu nebo klientovi, s přijetím jedním kliknutím, které ji promění v potvrzenou objednávku.
+  </Card>
+  <Card title="Tendry a smlouvy" icon="file-signature" href="/cs/planner/tenders-and-contracts">
+    Sledujte klientské výběrová řízení od zájemce po aktivní smlouvu a přiřaďte sazby tras do ceníku.
+  </Card>
+</CardGroup>

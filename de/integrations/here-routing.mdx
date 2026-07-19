@@ -1,40 +1,41 @@
 ---
-title: "HERE Maps Routing"
-description: "HERE Maps treibt Adressenautovervollständigung, LKW-optimiertes Routing, Mautkostenschätzung und ETA-Berechnung in ganz Druma an."
+title: "HERE Maps Adresssuche"
+description: "HERE Maps treibt Adress-Autovervollständigung und Geokodierung in ganz Druma an. LKW-optimiertes Routing, Mautschätzung und ETA werden stattdessen von PTV berechnet."
 icon: "map"
 ---
 
-## Übersicht
+Druma nutzt **HERE Maps** für eine Kernfunktion: das Finden und Validieren von Adressen während der Eingabe. LKW-sicheres Routing, Mautkostenschätzung und Live-ETA werden von einem anderen Anbieter berechnet, **PTV**, kurz am Ende dieser Seite beschrieben. Diese Integration funktioniert automatisch im Hintergrund — keine Einrichtung durch Betreiber oder Disponenten nötig.
 
-HERE Maps ist der Mapping-Dienst, auf dem Druma basiert. Er wird für folgende Funktionen verwendet:
+## Keine Einrichtung erforderlich
 
-| Funktion | Wie HERE verwendet wird |
-|---|---|
-| Adressautovervollständigung | Live-Suche beim Eingeben von Adressen |
-| Routenberechnung | LKW-optimierte Route (Höhenbeschränkungen, Gewichtslimits, verbotene Routen) |
-| Distanzberechnung | Exakte km pro Auftrag für Preisgestaltung und Berichte |
-| ETA-Berechnung | Geschätzte Ankunftszeit basierend auf aktuellen Verkehrsbedingungen |
-| Mautkostenschätzung | Pro-Land-Mautkosten für LKW-Kategorien |
-| CO2-Berechnung | Routendistanz als Eingabe für Emissionsberechnungen |
+HERE ist auf Plattformebene von Druma konfiguriert. Anders als bei Integrationen wie TransFollow oder SmartBill gibt es keinen API-Schlüssel einzugeben und keine Einstellungen zu konfigurieren. Jedes Druma-Konto hat von Tag eins an vollen Zugriff auf die HERE-Adresssuche.
 
----
+## Adress-Autovervollständigung
 
-## Keine Konfiguration erforderlich
+Geben Sie bei einem Auftrag eine Abhol- oder Lieferadresse ein, beginnen Sie mit der Straße oder Stadt zu tippen, und HERE schlägt passende Adressen in einem Dropdown vor. Wählen Sie die richtige Adresse, werden alle Felder — Straße, Hausnummer, Stadt, Postleitzahl und Land — automatisch ausgefüllt.
 
-HERE Maps ist auf Plattformebene von Druma konfiguriert. Sie müssen keinen API-Schlüssel einrichten — die HERE-Nutzung ist in Ihrem Druma-Abonnement enthalten.
+Das verhindert Adresseingabefehler, die Navigationsprobleme für den Fahrer verursachen. Eine über die HERE-Autovervollständigung bestätigte Adresse hat immer gültige Koordinaten, sodass die Navigations-App des Fahrers direkt dorthin routen kann.
 
----
+<Note>
+Für ländliche oder Industrieadressen, die nicht in der Autovervollständigung erscheinen, können Sie die Adresse manuell eingeben und dann den Kartenpin an die richtige Stelle ziehen. Die Koordinaten werden mit dem Auftrag gespeichert und für das Routing verwendet.
+</Note>
 
-## LKW-optimiertes Routing
+## Umkehr-Geokodierung
 
-HERE Maps kennt LKW-spezifische Routenbeschränkungen:
-- Brücken- und Tunnelhöhenbeschränkungen
-- Gewichtslimits auf Straßen
-- Routen, die für Gefahrgut verboten sind
-- LKW-Verbotszonen in Stadtzentren
+HERE wandelt außerdem einen gesetzten Kartenpin (Breiten-/Längengrad) zurück in eine lesbare Adresse um — genutzt z. B., wenn ein Planer einen Pin auf der Karte zieht, um Name und Adresse eines Ortes vorzubefüllen.
 
-Druma verwendet diese Einschränkungen, um realistische Routen für Ihre Fahrzeugkonfiguration zu berechnen.
+## Routing, Maut und ETA: von PTV übernommen
 
-<Card title="Integrationseinrichtung" icon="plug" href="/en/admin/integration-setup">
-  Überblick aller Druma-Integrationen.
-</Card>
+LKW-optimiertes Routing (Vermeidung niedriger Brücken, Gewichtsbeschränkungen und anderer für schwere Fahrzeuge ungeeigneter Gefahren), Mautkostenschätzung über europäische Mautsysteme hinweg, und live-verkehrsabhängige ETA werden alle von der **PTV Developer Routing API** berechnet, nicht von HERE. Druma übermittelt die Abmessungen, das Gewicht und die Achszahl Ihres Fahrzeugs an PTV, damit Routen und Mautschätzungen Ihren tatsächlichen LKW widerspiegeln.
+
+<Warning>
+Mautkostenschätzungen bleiben unabhängig vom Anbieter Näherungswerte. Die tatsächliche Maut hängt von der konkret gefahrenen Route ab, welcher Achskonfiguration Ihr LKW im Mautsystem jedes Landes zugeordnet ist, und ob sich Tarife seit der letzten Datenaktualisierung geändert haben. Verwenden Sie diese Werte als Richtwert, nicht als präzise Rechnungsgrundlage.
+</Warning>
+
+Die technischen Fahrzeugdetails unter **Fuhrpark → Fahrzeuge → [Fahrzeug] → Technische Details** aktuell zu halten, ist der wirksamste einzelne Schritt, um Routing-, Maut- und ETA-Genauigkeit zu verbessern — unabhängig davon, welcher Anbieter die Berechnung durchführt.
+
+<CardGroup cols={1}>
+  <Card title="Fuhrparkverwaltung" icon="truck" href="/de/planner/fleet-management">
+    Wie Sie Ihre Fahrzeugdatensätze verwalten, einschließlich der Abmessungen, die ins Routing einfließen.
+  </Card>
+</CardGroup>

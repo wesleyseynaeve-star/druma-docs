@@ -1,48 +1,69 @@
 ---
 title: "SmartBill-Integration"
-description: "Übertragen Sie Druma-Rechnungen automatisch an SmartBill und synchronisieren Sie den Zahlungsstatus zurück, um beide Systeme aktuell zu halten."
+description: "Übertragen Sie Druma-Rechnungen automatisch an SmartBill, sobald Sie sie versenden — als einseitige Kopie für Ihren Buchhaltungsworkflow."
 icon: "receipt"
 ---
 
-## Übersicht
+SmartBill ist eine weit verbreitete rumänische Cloud-Plattform für Rechnungsstellung und Buchhaltung. Die Druma-SmartBill-Integration überträgt eine Kopie jeder von Ihnen versendeten Rechnung an SmartBill, damit sie ohne manuelle Neueingabe auch in Ihrem Buchhaltungssystem existiert.
 
-SmartBill ist eine rumänische Cloud-Rechnungsstellungsplattform. Mit dieser Integration können Sie Rechnungen mit einem Klick in SmartBill übertragen, ohne Daten erneut eingeben zu müssen.
+## Was die Integration macht
 
----
+- Jede in Druma **versendete** Rechnung (nicht zum Zeitpunkt der Erstellung) wird einseitig als Rechnungsentwurf an SmartBill übertragen
+- Sie prüfen und stellen die Rechnung von SmartBill aus im Rahmen Ihres normalen Buchhaltungsworkflows aus
+- Der SmartBill-Übertragungsstatus der Rechnung (übertragen oder Fehler) wird auf der Druma-Rechnung erfasst — es gibt keine laufende Zwei-Wege-Statussynchronisierung von SmartBill zurück
+- Kunden- und Produktdaten, die an SmartBill gesendet werden, sind im Übertragungs-Payload explizit als „nicht speichern" markiert — SmartBill legt aus dieser Integration **keine** eigenen Kunden-/Produktdatensätze an oder aktualisiert sie
 
-## SmartBill verbinden
+## Die Integration einrichten
 
 <Steps>
-  <Step title="SmartBill-API-Schlüssel abrufen">
-    Gehen Sie in Ihrem SmartBill-Konto zu **Konto → API** und kopieren Sie Ihren API-Schlüssel.
+  <Step title="Ihren SmartBill-API-Schlüssel abrufen">
+    Melden Sie sich bei [smartbill.ro](https://smartbill.ro) an. Gehen Sie zu **Cont → Setări → API**. Generieren Sie einen neuen API-Schlüssel (Token). Kopieren Sie ihn — SmartBill zeigt ihn einmalig.
   </Step>
-  <Step title="Zu Einstellungen → Integrationen → SmartBill gehen">
-    Fügen Sie den API-Schlüssel und Ihre CIF ein.
+  <Step title="Ihre Unternehmens-CIF und Rechnungsserie finden">
+    Ihre Unternehmens-CIF (Codul de Identificare Fiscală) wird in Ihrem SmartBill-Konto unter den Unternehmenseinstellungen angezeigt. Sie benötigen außerdem den Namen der in SmartBill konfigurierten **Rechnungsserie**, die für übertragene Rechnungen verwendet werden soll.
   </Step>
-  <Step title="Verbindung testen">
-    Klicken Sie auf **Verbindung testen**.
+  <Step title="Zugangsdaten in Druma eingeben">
+    Gehen Sie zu **Einstellungen → Integrationen → SmartBill**. Geben Sie **E-Mail**, **API-Token**, **CIF** und **Rechnungsserie** Ihres SmartBill-Kontos ein — alle vier Felder sind erforderlich.
   </Step>
-  <Step title="Speichern">
-    Klicken Sie auf **Speichern**.
+  <Step title="Die Verbindung testen">
+    Klicken Sie auf **Verbindung testen**. Druma authentifiziert sich bei SmartBill und bestätigt, dass die Integration aktiv ist.
   </Step>
 </Steps>
 
----
+## Wie die Rechnungsübertragung funktioniert
 
-## Eine Rechnung an SmartBill übertragen
+1. Sie erstellen die Rechnung in Druma mit Ihrer fortlaufenden Rechnungsnummer
+2. Wenn Sie die Rechnung **versenden** (nicht bei der Erstellung), überträgt Druma sie als Entwurf an SmartBill, zusammen mit jeder ANAF-e-Factura- oder Peppol-Einreichung, die ebenfalls beim Versand ausgelöst wird
+3. Sie öffnen SmartBill, prüfen den Entwurf und stellen ihn aus (Emite factura)
+4. SmartBill vergibt beim Ausstellen **seine eigene Rechnungsnummer** — Drumas Rechnungsnummer wird nicht an SmartBill gesendet und dort nicht abgebildet; SmartBills Nummer wird zur Referenz auf die Druma-Rechnung zurückgeschrieben
 
-Öffnen Sie eine bestätigte Rechnung und klicken Sie auf **An SmartBill übertragen**. Die Rechnung erscheint in Ihrem SmartBill-Dashboard.
+<Note>
+Der SmartBill-Übertragungsstatus auf der Druma-Rechnung ist ein einfaches Übertragen/Fehler-Kennzeichen, kein Entwurf-/Ausgestellt-/Bezahlt-Tracker — Druma hat keine Sichtbarkeit darauf, was nach der Übertragung in SmartBill mit der Rechnung passiert (es gibt keinen Webhook, der beide Systeme in dieser Richtung verbindet).
+</Note>
 
----
+## Wichtige Einschränkungen
 
-## Automatischer Transfer
+**Die Rechnungsverwaltung bleibt in SmartBill.** Die Integration ist eine einseitige Übertragung zum Versandzeitpunkt. Bearbeiten, Stornieren, Ausstellen oder Gutschreiben einer Rechnung muss direkt in SmartBill erfolgen — nichts davon synchronisiert zurück zu Druma.
 
-Wenn Sie möchten, dass alle Rechnungen automatisch übertragen werden, aktivieren Sie **Automatisch an SmartBill übertragen** in den Integrationseinstellungen.
+**Sie benötigen SmartBill nicht für ANAF e-Factura.** Druma reicht Rechnungen direkt bei ANAF ein, über seine eigene e-Factura-Integration, unabhängig von SmartBill. Sie können beide Integrationen gleichzeitig ohne Konflikt nutzen.
 
-<Warning>
-Wenn Ihr SmartBill-Abonnement abläuft oder Ihr API-Schlüssel neu generiert wird, hört die Integration lautlos auf zu funktionieren. Prüfen Sie regelmäßig den Integrationsstatus.
-</Warning>
+<Note>
+Nutzen Sie derzeit SmartBill für die e-Factura-Einreichung, entscheiden Sie, ob Sie dies weiterhin in SmartBill tun oder zu Drumas direkter ANAF-Integration wechseln. Beide parallel laufen zu lassen, verursacht doppelte Einreichungen. Kontaktieren Sie support@druma.io, falls Sie Hilfe bei der Migration benötigen.
+</Note>
 
-<Card title="Rechnungen erstellen" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-  Erstellen und senden Sie Rechnungen in Druma.
-</Card>
+## Fehlerbehebung
+
+**Übertragung fehlgeschlagen:**
+Die Druma-Rechnung erfasst bei einem Fehler ein Detail `smartbill_error`. Häufige Ursachen: abgelaufenes API-Token, SmartBill-Wartungsfenster, oder ein Kundendatensatz mit fehlender CUI/USt-IdNr., die SmartBill für Firmenkunden benötigt.
+
+**Rechnungsnummernkonflikt:**
+Wurde in SmartBill vor der Übertragung manuell ein Entwurf mit derselben Serie/Nummer erstellt, lehnt SmartBill das Duplikat ab. Löschen Sie den manuellen Entwurf in SmartBill, klicken Sie dann in Druma im Aktionsmenü der Rechnungszeile auf **SmartBill erneut versuchen**.
+
+<CardGroup cols={2}>
+  <Card title="Rechnungen erstellen" icon="file-invoice" href="/de/invoicing/generating-invoices">
+    Wie Sie Rechnungen aus abgeschlossenen Aufträgen in Druma erstellen, bevor sie an SmartBill übertragen werden.
+  </Card>
+  <Card title="ANAF e-Factura" icon="building-columns" href="/de/invoicing/efactura-anaf">
+    Rechnungen direkt von Druma aus bei ANAF einreichen, ohne über SmartBill zu gehen.
+  </Card>
+</CardGroup>

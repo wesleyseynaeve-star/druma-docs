@@ -6,34 +6,47 @@ icon: "route"
 
 ## Wat is een herpositioneringsorder?
 
-Een herpositioneringsorder volgt een **niet-commerciële rit** — een truck verplaatsen zonder betalende lading. Voorbeelden: een lege truck van een afleverpunt naar een andere stad met een wachtende ophaling, terugkeer naar het thuisdepot aan het einde van de week, of verplaatsing voor een chauffeurswissel of onderhoudsafspraak.
+Een herpositioneringsorder volgt een **niet-commerciële rit** — wanneer u een truck van de ene naar de andere locatie stuurt zonder lading voor een betalende klant. Veelvoorkomende scenario's:
 
-Herpositionering is één van de drie ordertypen (naast **Eigen truck** en **Uitbesteed**) en wordt nooit aan een klant gefactureerd — het geeft wel volledig zicht op vlootbewegingen, lege kilometers en de werkelijke operationele kosten.
+- Een lege truck van een afleverpunt naar een andere stad sturen waar een ophaling wacht.
+- Een truck terugbrengen naar het thuisdepot aan het einde van een werkweek.
+- Een voertuig verplaatsen voor een chauffeurswissel of onderhoudsafspraak.
 
-## Aanmaken
+Herpositioneringsorders worden niet aan klanten gefactureerd. Ze bestaan om u volledig zicht te geven op de bewegingen van uw vloot, lege kilometers bij te houden en de werkelijke kost van uw operaties te berekenen.
+
+---
+
+## Een herpositioneringsorder aanmaken
 
 <Steps>
-  <Step title="Nieuwe order">
-    **Planner → Orders → Nieuwe order.**
+  <Step title="Open het formulier voor nieuwe order">
+    Ga naar **Planner → Orders → Nieuwe order**.
   </Step>
-  <Step title="Ordertype: Herpositionering">
-    De derde optie naast Eigen truck en Uitbesteed.
+  <Step title="Selecteer Herpositionering als ordertype">
+    Kies in het veld **Ordertype** voor **Herpositionering**. Dit is de derde optie naast Eigen truck en Uitbesteed.
   </Step>
-  <Step title="Selecteer een reden">
-    Uw bedrijf kan tot 6 redencodes configureren, bijv. Retour depot, Pre-positionering, Chauffeurswissel, Onderhoudsafspraak, Klantverzoek (geen kosten), Grensformaliteiten.
+  <Step title="Selecteer de reden">
+    Kies een **Herpositioneringsreden** uit de vervolgkeuzelijst. Dit is een vaste lijst van 5 redenen — er is geen instellingenscherm om ze toe te voegen of te wijzigen:
+    - Lege terugrit
+    - Vlootverplaatsing
+    - Onderhoudstransfer
+    - Vooraf positioneren
+    - Anders
   </Step>
   <Step title="Vul de route in">
-    Ophaaladres (huidige locatie) en afleveradres (bestemming) — HERE berekent de afstand automatisch.
+    Voer het ophaaladres in (waar de truck nu is) en het afleveradres (waar hij naartoe moet). De PTV-routeringsengine berekent de afstand automatisch.
   </Step>
-  <Step title="Notities (optioneel)">
-    Alleen zichtbaar voor planners, niet voor de chauffeur.
+  <Step title="Voeg notities toe (optioneel)">
+    Gebruik het veld **Herpositioneringsnotities** om uit te leggen waarom deze verplaatsing gebeurt. Dit is alleen zichtbaar voor planners, niet voor de chauffeur.
   </Step>
   <Step title="Wijs een truck toe en sla op">
-    Zoals bij elke order — concept of direct bevestigen.
+    Selecteer de truck en chauffeur zoals bij elke order. Sla op als concept of bevestig onmiddellijk.
   </Step>
 </Steps>
 
-## Verschil met een gewone order
+---
+
+## Hoe herpositioneringsorders verschillen
 
 | Kenmerk | Gewone order | Herpositioneringsorder |
 |---|---|---|
@@ -45,20 +58,51 @@ Herpositionering is één van de drie ordertypen (naast **Eigen truck** en **Uit
 | Statusverloop | Volledige levenscyclus | Volledige levenscyclus |
 
 <Note>
-Herpositioneringsorders volgen dezelfde statusflow als gewone orders (Concept → Afgeleverd) — alleen ontbreken klant en prijs.
+Herpositioneringsorders volgen dezelfde statuslevenscyclus als gewone orders (Concept → Afgeleverd). De chauffeur tikt statussen in zijn app zoals gebruikelijk. Het enige verschil is dat er geen klant of prijs aan gekoppeld is.
 </Note>
+
+---
 
 ## Interne stops
 
-Tijdens elke order (ook herpositionering) kunt u **interne stops** toevoegen — ongeplande stops voor brandstof, rust of onderhoud, elk met adres, redencode (tot 6 bedrijfsconfigureerbare codes) en notities. Ze staan apart in de stop-tijdlijn en beïnvloeden de ETA-berekening niet.
+Tijdens een herpositioneringsrit (of elke order) kunt u **interne stops** toevoegen — ongeplande stops voor brandstof, rust, onderhoud of andere operationele behoeften.
 
-## Redencodes configureren
+Interne stops worden apart bijgehouden van laad- en losstops. Elke interne stop heeft:
 
-**Instellingen → Bedrijf** beheert zowel herpositioneringsredenen als interne-stopredenen (elk max. 6 actieve codes) — interne-stopredenen gelden voor alle ordertypen.
+- **Adres** — waar de stop plaatsvond.
+- **Redencode** — geselecteerd uit een vaste systeemlijst: Rust, Tanken, Overnachting, Persoonlijk, Aanhangwagenparking, Anders.
+- **Notities** — vrije tekstuitleg.
+
+Interne stops verschijnen op de stoptijdlijn van de order maar zijn visueel onderscheiden van ladingstops. Ze beïnvloeden de ETA-berekeningen voor levering niet.
+
+---
+
+## Redencodes
+
+### Herpositioneringsredenen
+
+De 5 herpositioneringsredenen (Lege terugrit, Vlootverplaatsing, Onderhoudstransfer, Vooraf positioneren, Anders) staan vast in het product — er is momenteel geen instellingenscherm om ze toe te voegen, te hernoemen of te verwijderen.
+
+### Redenen interne stops
+
+De 6 redenen voor interne stops (Rust, Tanken, Overnachting, Persoonlijk, Aanhangwagenparking, Anders) staan eveneens vast en gelden voor alle ordertypen, niet alleen herpositioneringsorders. Er is vandaag geen UI om aangepaste redencodes toe te voegen bovenop deze, ook al bestaat de onderliggende mogelijkheid op API-niveau.
+
+---
+
+## Herpositionering op het planningsbord
+
+Herpositioneringsorders verschijnen op het planningsbord met een kleine grijze **R**-badge, wat ze makkelijk onderscheidt van omzetgenererende ladingen. Ze tellen mee in vlootbenuttingsberekeningen (de truck is in gebruik) maar worden uitgesloten van omzet-KPI's.
+
+---
 
 ## Rapportage
 
-Herpositioneringskilometers verschijnen als aparte "lege km"-kolom in het **Lane profitability-rapport** en worden apart gerapporteerd in het **CO2-rapport**.
+Herpositioneringskilometers worden bijgehouden via het veld `distance_km_internal` en verschijnen in:
+
+- **Rapport rijstrookwinstgevendheid** — als aparte kolom "lege km" zodat u de werkelijke kost van elk traject ziet.
+- **CO2-rapport** — herpositioneringsritten dragen bij aan emissies en worden apart gerapporteerd van beladen ritten.
+
+---
 
 <Card title="Planningsbord" icon="calendar" href="/nl/planner/planning-board">
   Zie hoe herpositioneringsorders naast gewone ladingen op het dispatchbord verschijnen.

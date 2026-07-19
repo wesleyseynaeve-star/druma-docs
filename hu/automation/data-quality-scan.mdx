@@ -1,45 +1,67 @@
 ---
 title: "Éjszakai adatminőségi vizsgálat"
-description: "A Druma automatikus éjszakai adatminőségi vizsgálata — hiányzó adatok, következetlenségek és potenciális problémák azonosítása a műveleti adatokban."
-icon: "search-check"
+description: "A Druma minden éjjel kilencféle gyakori problémára ellenőrzi az adataidat, hogy a hibákat javíthasd, mielőtt késést vagy bevételkiesést okoznának."
+icon: "magnifying-glass-chart"
 ---
 
-## Mi az adatminőségi vizsgálat?
+A rossz adat pénzbe kerül. Egy ÁFA-szám nélküli ügyfél blokkolja az e-Factura benyújtást. Egy egy hete kiszállított, de ki nem számlázott rendelés be nem szedett bevétel. Egy nyomon követés nélküli lejárt számla lassan elhidegülő ügyfélkapcsolat. Az éjszakai adatminőségi vizsgálat ezeket a problémákat azelőtt találja meg, hogy pénzbe kerülnének.
 
-Az adatminőségi vizsgálat (Data Quality Scan) egy automatizált ellenőrzési folyamat, amely minden éjjel lefut és azonosítja a potenciális adatproblémákat a Druma-ban. Segít megelőzni a közeli hibákat (pl. számlázási problémák, lejárt dokumentumok) mielőtt azok komoly gonddá válnának.
+Minden éjjel a Druma kilenc automatizált ellenőrzést futtat le a teljes adatállományodon, és az eredményeket az **Eszközök** alatti **Adatminőség** oldalra írja.
 
-## Az adatminőségi vizsgálat oldal
+## A kilenc ellenőrzés
 
-Lépj az **Eszközök → Adatminőség** menüpontra a legutóbbi vizsgálat eredményeinek megtekintéséhez. Az eredmények három szintbe sorolódnak:
+### 1. Hiányzó ÁFA-szám
+Olyan ügyfelek, akiket egy nemrégi, nem vázlat állapotú rendelésben használtak, és nincs rögzített ÁFA-számuk. A román e-Factura benyújtáshoz minden ügyfélnél érvényes ÁFA-szám szükséges — ha hiányzik, az adott ügyfél számlái nem küldhetők be automatikusan az ANAF-hoz.
 
-### Kritikus problémák (Piros)
-Azonnali beavatkozást igénylő problémák:
-- Lejárt járműbiztosítás
-- Lejárt sofőr jogosítvány
-- Kiszállítva megjelölt, de nem számlázott rendelések (30+ naposok)
-- Hiányzó ÁFA-szám az ügyféleknél (számlázást blokkolja)
+### 2. Nincs ANAF-hoz benyújtva a számla
+Elküldött számlák, amelyeknél nincs rögzített e-Factura benyújtási státusz.
 
-### Figyelmeztetések (Sárga)
-7–30 napon belül beavatkozást igénylő problémák:
-- Hamarosan lejáró dokumentumok (biztosítás, ITP, tachográf)
-- Sokáig Vázlat állapotban ragadt rendelések
-- Bróker feltöltési tokenek hamarosan lejárnak
+### 3. Kiszállítva, 7+ napja nincs számlázva
+7 napnál régebben kiszállítottként megjelölt rendelések, amelyekhez még nincs kapcsolt számla. Ez már megkeresett, de még ki nem számlázott bevétel.
 
-### Információk (Kék)
-Figyelmet érdemlő, de nem sürgős megjegyzések:
-- Ügyfelek ÁFA-száma nélkül (nem blokkolja a számlázást)
-- Inaktív teherautók aktív rendelésekkel
+### 4. Elavult vázlat rendelés
+7 napnál régebb óta érintetlenül álló vázlat rendelések — jellemzően elfeledett, e-mailből beolvasott rendelések, amelyeket a tervező sosem erősített meg vagy törölt.
 
-## Problémák megoldása
+### 5. Ügyfélnek nincs e-mail-címe
+Ügyfelek, akiknél nincs rögzített e-mail-cím.
 
-Minden problémán van egy **Megoldás** gomb, amely közvetlenül arra az oldalra navigál, ahol a javítás elvégezhető.
+### 6. Megerősített rendelés, nincs megállapodott ár
+**Megerősítve** vagy **Hozzárendelve** státuszú rendelések, amelyeknél a megállapodott ár még hiányzik vagy nulla.
 
-Ha egy probléma nem releváns (pl. a figyelmeztetés téves riasztás), kattints az **Figyelmen kívül hagyás** gombra.
+### 7. 60+ napja lejárt számla
+Kifizetetlen számlák, amelyek fizetési határideje 60 napnál régebben lejárt.
 
-## Vizsgálat időzítése
+### 8. Lezárt rendelés, 14 nap után sincs számla
+14 nap után is ki nem számlázott, kiszállított rendelések — a 3. ellenőrzés hosszabb távú változata, tájékoztató jellegűnek, nem kritikusnak jelölve.
 
-A vizsgálat automatikusan fut minden éjjel 09:00 UTC-kor. Nincs lehetőség azonnali manuális futtatásra — az eredmények naponta egyszer frissülnek.
+### 9. Alvó ügyfél
+Ügyfelek, akiknek nem volt rendelése az elmúlt 90 napban.
 
-<Card title="Flottadokumentumok" icon="file-check" href="/en/fleet-compliance/fleet-documents">
-  Dokumentum lejáratok részletes kezelése.
-</Card>
+## Az eredmények megtekintése
+
+Lépj az **Eszközök → Adatminőség** menüpontra.
+
+Az oldal mutatja:
+
+- Egy KPI-sávot a nyitott problémák teljes számával, valamint súlyosság szerinti bontással (Kritikus, Figyelmeztetés, Info)
+- Egy halmozott oszlopdiagramot a problémákról súlyosság szerint, az elmúlt 30 napra
+- Egy szűrhető táblázatot (Nyitott / Megoldva / Figyelmen kívül hagyva / Összes), amely minden problémát listáz az entitástípussal, hivatkozással, leírással, súlyossággal, javasolt intézkedéssel, státusszal és létrehozási dátummal
+- **Megoldás** és **Figyelmen kívül hagyás** műveleteket minden nyitott problémánál
+
+<Note>
+Az adatminőségi vizsgálat minden éjjel **03:00 UTC**-kor fut. Az oldalon látott eredmények az adataid ekkori állapotát tükrözik. A napközben javított problémák a következő éjszakai vizsgálat után törlődnek (miután a problémát **Megoldottként** is megjelölöd, vagy az már nem felel meg a mögöttes lekérdezésnek).
+</Note>
+
+## Problémák javítása
+
+Az Adatminőség oldal megmondja, mi a hiba, és javasol egy intézkedést, de nem link át közvetlenül a mögöttes rekordhoz — használd a megjelenített hivatkozást (ügyfélnév, rendelésszám, számlaszám), hogy magad megtaláld az Ügyfelek, Műveletek vagy Pénzügy szekcióban, javítsd ki a problémát, majd térj vissza és kattints a **Megoldás** gombra.
+
+Nincs tömeges javítási eszköz — minden problémát egyedileg kell megoldani. Ez szándékos: az adatjavításoknak tudatosnak kell lenniük.
+
+A **Figyelmen kívül hagyás** gombra kattintva a probléma eltűnik a **Nyitott** szűrőből anélkül, hogy megoldottként jelölődne — olyan problémáknál használd, amelyekkel kapcsolatban úgy döntöttél, hogy nem cselekszel. A figyelmen kívül hagyott és megoldott problémák nem szerepelnek a következő éjszakai újravizsgálatban (minden vizsgálat lecseréli a nyitott, nem figyelmen kívül hagyott problémák aktuális készletét).
+
+<CardGroup cols={1}>
+  <Card title="Jelentések áttekintése" icon="chart-bar" href="/en/reports/reports-overview">
+    Tekintsd meg a Drumában elérhető összes jelentést, és hogyan ütemezheted rendszeres e-mailes kézbesítésre.
+  </Card>
+</CardGroup>

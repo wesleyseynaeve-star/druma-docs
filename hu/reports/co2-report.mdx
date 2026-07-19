@@ -1,56 +1,95 @@
 ---
-title: "CO2 kibocsátás-jelentés"
-description: "Részletes CO2 emissziós adatok elemzése — flottaszintű és ügyfélenkénti összesítések, havi trendek és exportálható adatok."
-icon: "leaf"
+title: "CO2-kibocsátási jelentés"
+description: "Havi flotta-kibocsátási adatok, a GLEC Framework v4.0 és az ISO 14083 szabványok szerint kiszámítva, készen arra, hogy megoszd az ügyfelekkel az ESG-jelentéseikhez."
+icon: "cloud"
 ---
 
-## A CO2 kibocsátás-jelentés oldal
+Az ügyfelek — különösen a nagy kiskereskedők, gyártók és logisztikai cégek — egyre inkább igénylik a fuvarozó szállítóiktól a CO2-kibocsátási adatokat a saját ESG- és fenntarthatósági jelentéseikhez. A Druma automatikusan kiszámítja a flottád kibocsátását a rendelési és jármű-adataidból, és egy jelentést készít, amelyet közvetlenül megoszthatsz az ügyfelekkel.
 
-Lépj a **Jelentések → CO2 kibocsátás** menüpontra. Az oldal a következőket tartalmazza:
+## A jelentés megnyitása
 
-### KPI kártyák
+Lépj a **Jelentések → CO2-jelentés** menüpontra.
 
-- **Összes CO2** — az összes mért emisszió tonnában a kiválasztott időszakra
-- **Átlagos intenzitás** — gCO2e/tkm (gramm CO2 ekvivalens per tonna-kilométer)
-- **Megrendelések száma** — CO2 adattal rendelkező rendelések száma
-- **Teljes távolság** — összes mért kilométer
+Alapértelmezetten a **Havi** nézetet látod — a legutóbbi, kiszámított CO2-értékkel rendelkező szállítmányokat, a legújabbal kezdve. Válts az **Éves (CSRD)** nézetre, és válassz egy **évet** egy teljes éves adatkészlet felépítéséhez fenntarthatósági exportokhoz. Opcionálisan mindkét nézetet szűkítheted egyetlen ügyfélre az **Ügyfél** szűrővel.
 
-### Havi CO2 trend diagram
+<Frame caption="A Havi CO2-jelentés — rendelésenkénti távolság, súly és CO2 (kg), minden sor Módszer oszlopa a használt GLEC tényező-verziót mutatja.">
+  <img src="/images/reports/co2-report.png" alt="Havi CO2-jelentés kibocsátási diagrammal és rendelésenkénti táblázattal" />
+</Frame>
 
-Havi bontású oszlopdiagram az emisszió időbeli alakulásáról.
+## Mit mutat a jelentés?
 
-### Rendelésenkénti részletek táblázat
+Az oldalnak két nézetmódja van, a tetején váltva: **Havi** és **Éves (CSRD)**.
 
-Az összes rendelés adatai:
-- Rendelési hivatkozás
-- Dátum
-- Eredet → Célállomás
-- Teherautó
-- Távolság (km)
-- Rakománysúly (kg)
-- CO2 (kg)
-- Intenzitás (gCO2e/tkm)
+### Havi nézet
 
-## Szűrők
-
-- **Időszak** (dátumtól-ig)
-- **Ügyfél** — egy adott ügyfélre szűrés ügyféli CO2 riporthoz
-- **Teherautó** — flottaszintű elemzéshez
-
-## Export
-
-### CSV export
-
-A teljes rendelési táblázat exportálható CSV-be a könyvelőnek vagy az ügyfélnek.
-
-### PDF export
-
-Az összefoglaló nézettel — KPI kártyák és diagram — PDF exportálható az ügyfélnek ESG-jelentési célra.
+Egy szállítmányonkénti táblázat — soronként egy rendelés, távolsággal, súllyal, kiszámított CO2-vel, számítási módszerrel, ügyféllel és teherautóval. Szűrj egyetlen ügyfélre az **Ügyfél** legördülő menüvel, és használd a táblázat feletti trend-diagramot a havi teljes tCO2e megtekintéséhez. A KPI-sáv mutatja az időszak teljes CO2-értékét, a rendelésenkénti átlagos CO2-t, és hogy hány rendelésnek van kiszámított CO2-értéke.
 
 <Note>
-A CO2 számítás a HERE Maps útvonal-távolságán, a rakomány súlyán és a jármű Euro-osztályán alapul, a GLEC Framework módszertan szerint.
+A havi nézet az első **500 sorra** van korlátozva egy adott szűrőnél (a Druma-szerte használt jelentés-oldali konvenció). Ha egy hónap csonkolva van, szűkítsd a dátumtartományt vagy az ügyfél-szűrőt a teljes képért — egy figyelmeztető banner jelenik meg az oldalon, ha ez történik.
 </Note>
 
-<Card title="CO2 kibocsátás-követés" icon="leaf" href="/en/fleet-compliance/co2-reporting">
-  A CO2 számítás módszertana és a sofőr-oldalas beállítás.
-</Card>
+### Éves (CSRD) nézet
+
+Ugyanaz a szállítmányonkénti szerkezet, kiterjesztve a szállítási dátummal, a teljes felvételi/szállítási címekkel, és a teherautó Euro-szabvány oszlopával (referenciaként — maga a CO2-érték nem az Euro-szabványból van kiszámítva, lásd lentebb). Ez a nézet évi 5000 szállítmányra van korlátozva; egy csonkítási figyelmeztetés jelenik meg, ha az évben több van.
+
+## Kibocsátás-számítási módszertan
+
+A Druma a **GLEC Framework v4.0** alapértelmezett emissziós tényezőit követi, összhangban az **ISO 14083** szabvánnyal (Tier 1 módszer) — a szállítási láncokból származó üvegházhatású gázok mennyiségi meghatározásának és jelentésének nemzetközi szabványával.
+
+A rendelésenkénti CO2 **nem** a teherautó Euro-kibocsátási szabványán alapul. A teherautó **tömegosztályán** és **üzemanyag-típusán** alapul:
+
+| Jármű-osztály | Üzemanyag-típus | Emissziós tényező (gCO2e / tonna-km) |
+|---|---|---|
+| Nyerges vontató 32–34t (standard FTL teherautó) | Dízel | 62 |
+| Nyerges vontató 32–34t | LNG | 54 |
+| Nyerges vontató 32–34t | Elektromos | 25 |
+| Nyerges vontató 32–34t | HVO | 12 |
+| Merev teherautó 16–26t | Dízel | 91 |
+| Merev teherautó 16–26t | Elektromos | 37 |
+| Merev teherautó 12–16t | Dízel | 119 |
+| Merev teherautó 12–16t | Elektromos | 48 |
+
+A jármű-osztály automatikusan a teherautó rögzített maximális teherbírásából/tömegéből származik (30t felett → nyerges 32–34t; 15t felett → merev 16–26t; egyébként merev 12–16t). Az üzemanyag-típus a jármű-rekordból származik, és dízelre esik vissza, ha nincs beállítva; ha egy szokatlan üzemanyag-típushoz még nincs tényező az adott osztályban, a Druma az azonos osztály dízel-tényezőjére esik vissza, ahelyett hogy kiszámítatlanul hagyná a rendelést.
+
+A képlet (Well-to-Wheel, ISO 14083 Tier 1):
+
+```
+CO2e (kg) = távolság (km) × [súly (kg) ÷ 1000] × emissziós tényező (gCO2e/tkm) ÷ 1000
+```
+
+A távolság a PTV teherautó-útvonaltervezésből származik (ugyanaz a távolság, amely a rendelésen is látható). A súly a rendelés rögzített rakománysúlya; ha egy rendelésnél nincs rögzített súly, a Druma a teherautó maximális teherbírásának felét becsüli konzervatív átlagos rakományként.
+
+## CO2-adatok megosztása az ügyfelekkel
+
+A Druma automatikusan e-mailben küld egy havi CO2-összefoglalót minden olyan ügyfél-kapcsolattartónak, akinél be van kapcsolva a **CO2-jelentések fogadása** opció (kapcsolattartónként beállítva az ügyfél **Kapcsolattartók** fülén) — az ilyen címzetteknek nincs szükség manuális exportra.
+
+Bármi máshoz, ami túlmutat ezen az automatikus e-mailen — egy teljes éves, ESRS-nek megfelelő csomag, egy eseti megosztás egy ügyfél fenntarthatósági csapatával, vagy a saját belső nyilvántartásod — válts az **Éves (CSRD)** nézetre, és használd a [CSRD kibocsátási exportok](/en/reports/csrd-exports) oldalon leírt export-gombokat: Éves XLSX, CSRD adatcsomag (CSV), és iXBRL. A Havi nézetnek is van egy általános nyomtatás/exportálás gombja a látható táblázathoz.
+
+### Mit jelent a Scope 3?
+
+Az ügyfeleid a kiszervezett fuvarozásból származó kibocsátást **Scope 3 kibocsátásként** rögzítik (4. kategória: Upstream szállítás, vagy 9. kategória: Downstream szállítás). Az általad biztosított adat közvetlenül beépül ebbe a számításba. Ha ez az adat készen áll, időt spórolsz meg az ügyfeleidnek, és vonzóbb fuvarozóvá teszed magad.
+
+## Hogyan javítsd a CO2-pontszámodat?
+
+Mivel a számítást az **üzemanyag-típus** és a **jármű tömegosztálya** vezérli, nem csak a távolság, a legnagyobb emelőkar maga a teherautó. A leggyakoribb FTL-osztálynál (nyerges, 32–34t) a dízelről (62 gCO2e/tkm) HVO-ra (12 gCO2e/tkm) vagy elektromosra (25 gCO2e/tkm) váltás 81%, illetve 60%-kal csökkenti a tényezőt. Például egy 1000 km-es, 24 tonnát szállító fuvarnál:
+
+- Dízel: 1000 km × 24t × 62 gCO2e/tkm ÷ 1000 = **1488 kg CO2**
+- HVO ugyanazon a teherautó-osztályon: 1000 km × 24t × 12 gCO2e/tkm ÷ 1000 = **288 kg CO2** — 1200 kg (81%) csökkenés fuvaronként
+
+Más javítások, amelyeket a Druma segít nyomon követni:
+
+- **Útvonal-optimalizálás** — rövidebb útvonalak a PTV teherautó-útvonaltervezésből alacsonyabb teljes kibocsátást jelentenek
+- **Rakomány-konszolidáció** — kevesebb, teltebb fuvar csökkenti a flotta teljes tonna-kilométerét
+- **Üresjárat csökkentése** — az üres kilométerek olyan CO2-t jelentenek, amelyet nincs mivel ellensúlyozni bevétellel
+
+<CardGroup cols={2}>
+  <Card title="CSRD kibocsátási exportok" icon="download" href="/en/reports/csrd-exports">
+    Exportálj éves CO2-adatokat XLSX, CSRD-nek megfelelő CSV és iXBRL formátumban fenntarthatósági jelentéshez és ESRS E1 megfelelőséghez.
+  </Card>
+  <Card title="CO2-jelentés (flotta-beállítások)" icon="truck" href="/en/fleet-compliance/co2-reporting">
+    Hogyan táplálja a teherautó üzemanyag-típusa és tömegosztálya a CO2-számítást, és mit ellenőrizz a flotta-rekordjaidon.
+  </Card>
+  <Card title="Jelentések áttekintése" icon="chart-bar" href="/en/reports/reports-overview">
+    Az összes elérhető jelentés a Drumában, és hogyan ütemezd az automatikus kézbesítést.
+  </Card>
+</CardGroup>

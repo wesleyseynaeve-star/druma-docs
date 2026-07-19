@@ -1,82 +1,69 @@
 ---
 title: "Integracja SmartBill"
-description: "Przesyłaj faktury Druma do SmartBill automatycznie i synchronizuj status płatności, aby oba systemy były aktualne."
+description: "Przesyłaj faktury Druma do SmartBill automatycznie w momencie ich wysłania, jako jednokierunkową kopię na potrzeby Twojego procesu księgowego."
 icon: "receipt"
 ---
 
-SmartBill to szeroko stosowana rumuńska platforma fakturowania i księgowania w chmurze. Integracja Druma-SmartBill eliminuje podwójne wprowadzanie danych — faktury generowane w Druma są automatycznie przesyłane do SmartBill, a status płatności synchronizuje się z powrotem.
+SmartBill to szeroko stosowana rumuńska platforma fakturowania i księgowania w chmurze. Integracja Druma-SmartBill przesyła kopię każdej wysłanej przez Ciebie faktury do SmartBill, dzięki czemu żyje ona też w Twoim systemie księgowym bez ręcznego ponownego wprowadzania danych.
 
 ## Co robi integracja
 
-- Każda faktura wygenerowana w Druma jest przesyłana do SmartBill jako wersja robocza faktury w ciągu sekund
-- Przeglądasz i wystawiasz fakturę ze SmartBill jako część normalnego przepływu pracy księgowej
-- Gdy SmartBill oznacza fakturę jako wysłaną lub zapłaconą, status aktualizuje się w Druma automatycznie
-- Rekordy klientów są synchronizowane — nowi klienci dodani w Druma są tworzeni w SmartBill przy pierwszym przesyłaniu faktury
+- Każda faktura, którą **wyślesz** w Druma (nie w momencie generowania/tworzenia), jest przesyłana do SmartBill jako wersja robocza faktury, jednokierunkowo
+- Przeglądasz i wystawiasz fakturę ze SmartBill jako część normalnego procesu księgowego
+- Status przesłania faktury do SmartBill (przesłano lub błąd) jest zapisywany na fakturze Druma — nie ma trwającej dwukierunkowej synchronizacji statusu z powrotem od SmartBill
+- Dane klienta i produktu wysyłane do SmartBill są wyraźnie oznaczone jako "nie zapisuj" w ładunku przesyłania — SmartBill **nie** tworzy ani nie aktualizuje własnych rekordów klienta/produktu na podstawie tej integracji
 
 ## Konfiguracja integracji
 
 <Steps>
-  <Step title="Pobierz klucz API SmartBill">
-    Zaloguj się na [smartbill.ro](https://smartbill.ro). Przejdź do **Cont → Setări → API**. Wygeneruj nowy klucz API. Skopiuj go — SmartBill pokazuje go tylko raz.
+  <Step title="Pobierz swój klucz API SmartBill">
+    Zaloguj się na [smartbill.ro](https://smartbill.ro). Przejdź do **Cont → Setări → API**. Wygeneruj nowy klucz API (token). Skopiuj go — SmartBill pokazuje go tylko raz.
   </Step>
-  <Step title="Znajdź CIF swojej firmy">
-    Twój CIF firmy (Codul de Identificare Fiscală) jest widoczny na Twoim koncie SmartBill w ustawieniach firmy. Będziesz go potrzebował wraz z kluczem API.
+  <Step title="Znajdź CIF swojej firmy i serię faktur">
+    CIF Twojej firmy (Codul de Identificare Fiscală) jest widoczny na Twoim koncie SmartBill w ustawieniach firmy. Będziesz też potrzebować **nazwy serii faktur** skonfigurowanej w SmartBill, którą mają używać przesyłane faktury.
   </Step>
   <Step title="Wprowadź dane uwierzytelniające w Druma">
-    Przejdź do **Ustawienia → Integracje → SmartBill**. Wprowadź klucz API SmartBill i CIF swojej firmy.
+    Przejdź do **Ustawienia → Integracje → SmartBill**. Wprowadź swój **e-mail** konta SmartBill, **token API**, **CIF** i **serię faktur** — wszystkie cztery pola są wymagane.
   </Step>
   <Step title="Przetestuj połączenie">
-    Kliknij **Testuj połączenie**. Druma uwierzytelni się w SmartBill i potwierdzi aktywność integracji. Zielony wskaźnik statusu potwierdza sukces.
+    Kliknij **Testuj połączenie**. Druma uwierzytelni się w SmartBill i potwierdzi, że integracja jest aktywna.
   </Step>
 </Steps>
 
 ## Jak działa przesyłanie faktur
 
-Gdy klikasz **Generuj fakturę** przy zleceniu w Druma:
-
-1. Faktura jest tworzona w Druma z Twoim sekwencyjnym numerem faktury
-2. W ciągu kilku sekund Druma przesyła ją do SmartBill jako wersję roboczą (Proiect de factură)
+1. Generujesz fakturę w Druma z Twoim sekwencyjnym numerem faktury
+2. Gdy **wysyłasz** fakturę (nie w momencie generowania), Druma przesyła ją do SmartBill jako wersję roboczą, obok wszelkiego zgłoszenia ANAF e-Factura lub Peppol, które również uruchamia się przy wysyłaniu
 3. Otwierasz SmartBill, przeglądasz wersję roboczą i wystawiasz ją (Emite factura)
-4. SmartBill obsługuje generowanie PDF, wysyłanie e-mailem do klientów i wpisy księgowe
-
-Faktura w Druma pokazuje pole **Status SmartBill** odzwierciedlające aktualny status w SmartBill: Wersja robocza, Wystawiona lub Zapłacona.
+4. SmartBill nadaje **własny numer faktury** przy wystawieniu — numer faktury Druma nie jest wysyłany do SmartBill i nie jest tam odzwierciedlony; numer SmartBill jest zapisywany z powrotem na fakturze Druma jako referencja
 
 <Note>
-Numery faktur są kontrolowane przez Druma. Numer widoczny na fakturze w SmartBill to ten wygenerowany przez sekwencję numerowania Druma — Twoja seria i format oparty na roku skonfigurowany w Ustawieniach fakturowania.
+Status przesłania SmartBill na fakturze Druma to prosta flaga przesłano/błąd, nie tracker Wersja robocza/Wystawiona/Opłacona — Druma nie ma wglądu w to, co dzieje się z fakturą wewnątrz SmartBill po przesłaniu (nie ma webhooka łączącego oba systemy w tym kierunku).
 </Note>
-
-## Synchronizacja statusu: SmartBill → Druma
-
-SmartBill powiadamia Druma przez webhook o zmianie statusu faktury:
-
-- **Wystawiona w SmartBill** → Druma aktualizuje status faktury na Wystawiona i rejestruje datę wystawienia
-- **Zapłacona w SmartBill** → Druma aktualizuje status faktury na Zapłacona i rejestruje datę płatności, co uruchamia dopasowywanie uzgodnienia bankowego
-
-Oznacza to, że raport wiekowania faktur Druma i pozycja gotówkowa pozostają dokładne bez żadnych ręcznych aktualizacji.
 
 ## Ważne ograniczenia
 
-**Zarządzanie fakturami pozostaje w SmartBill.** Integracja obejmuje tworzenie faktury i synchronizację statusu. Edytowanie, anulowanie lub kredytowanie faktury musi być wykonane bezpośrednio w SmartBill. Zmiany dokonane w SmartBill po początkowym przesyłaniu nie są synchronizowane z powrotem do rekordu faktury Druma (z wyjątkiem zmian statusu).
+**Zarządzanie fakturami pozostaje w SmartBill.** Integracja to jednokierunkowe przesłanie w momencie wysłania. Edytowanie, anulowanie, wystawianie lub korygowanie faktury musi odbywać się bezpośrednio w SmartBill — nic z tego nie synchronizuje się z powrotem do Druma.
 
-**Nie potrzebujesz SmartBill do ANAF e-Factura.** Druma składa faktury do ANAF bezpośrednio przy użyciu własnej integracji e-Factura. Nie musisz kierować składania e-Factura przez SmartBill. Obie integracje są niezależne — możesz używać obu jednocześnie bez konfliktu.
+**Nie potrzebujesz SmartBill do ANAF e-Factura.** Druma składa faktury do ANAF bezpośrednio, korzystając z własnej integracji e-Factura, niezależnie od SmartBill. Możesz używać obu integracji jednocześnie bez konfliktu.
 
 <Note>
-Jeśli aktualnie używasz SmartBill do składania e-Factura, powinieneś zdecydować, czy kontynuować to w SmartBill, czy przejść na bezpośrednią integrację ANAF Druma. Uruchomienie obu równolegle spowoduje duplikaty zgłoszeń. Skontaktuj się z support@druma.io, jeśli potrzebujesz wskazówek dotyczących migracji.
+Jeśli obecnie używasz SmartBill do składania e-Factura, zdecyduj, czy kontynuować robić to w SmartBill, czy przejść na bezpośrednią integrację ANAF Druma. Uruchomienie obu równolegle spowoduje duplikaty zgłoszeń. Skontaktuj się z support@druma.io, jeśli potrzebujesz wskazówek dotyczących migracji.
 </Note>
 
 ## Rozwiązywanie problemów
 
-**Przesyłanie nie powiodło się — faktura pokazuje odznakę "Błąd synchronizacji":**
-Przejdź do **Ustawienia → Integracje → SmartBill → Dziennik przesyłań**, aby zobaczyć szczegóły błędu. Typowe przyczyny: wygasły klucz API, okno konserwacji SmartBill lub rekord klienta z brakującym CUI, którego SmartBill wymaga dla klientów firmowych.
+**Przesłanie nie powiodło się:**
+Faktura Druma zapisuje szczegół `smartbill_error` w przypadku niepowodzenia. Typowe przyczyny: wygasły token API, okno konserwacji SmartBill lub rekord klienta z brakującym CUI/numerem VAT, którego SmartBill wymaga dla klientów firmowych.
 
 **Konflikt numeru faktury:**
-Jeśli wersja robocza została ręcznie utworzona w SmartBill z tym samym numerem przed przesyłaniem, SmartBill odrzuci duplikat. Usuń ręczną wersję roboczą w SmartBill i ponownie uruchom przesyłanie z Druma (Faktura → menu z trzema kropkami → Ponów przesyłanie SmartBill).
+Jeśli wersja robocza została ręcznie utworzona w SmartBill z tą samą serią/numerem przed przesłaniem, SmartBill odrzuci duplikat. Usuń ręczną wersję roboczą w SmartBill, a następnie kliknij **Ponów SmartBill** w menu akcji wiersza faktury w Druma.
 
 <CardGroup cols={2}>
   <Card title="Generowanie faktur" icon="file-invoice" href="/pl/invoicing/generating-invoices">
-    Jak generować faktury z dostarczonych zleceń przed ich przesłaniem do SmartBill.
+    Jak generować faktury z ukończonych zleceń w Druma, zanim zostaną przesłane do SmartBill.
   </Card>
-  <Card title="e-Factura / Składanie do ANAF" icon="building-columns" href="/pl/invoicing/efactura-anaf">
+  <Card title="ANAF e-Factura" icon="building-columns" href="/pl/invoicing/efactura-anaf">
     Bezpośrednie składanie faktur do ANAF z Druma bez przechodzenia przez SmartBill.
   </Card>
 </CardGroup>

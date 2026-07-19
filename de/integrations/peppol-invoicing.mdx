@@ -1,48 +1,120 @@
 ---
-title: "Peppol E-Invoicing (Belgien)"
-description: "Verbinden Sie Druma mit dem Peppol-Netzwerk und leiten Sie Rechnungen automatisch an belgische Geschäftskunden weiter."
+title: "Peppol E-Rechnung (Belgien)"
+description: "Verbinden Sie Druma über e-invoice.be mit dem Peppol-Netzwerk und leiten Sie Rechnungen automatisch an belgische Geschäftskunden weiter — ohne manuelle Schritte."
 icon: "file-check-2"
 ---
 
-## Was ist Peppol?
+Peppol (Pan-European Public Procurement On-Line) ist das EU-Standardnetzwerk für den Austausch strukturierter elektronischer Rechnungen zwischen Unternehmen. In Belgien ist der Versand von Rechnungen über Peppol seit Januar 2026 **für alle KBO-registrierten Unternehmen verpflichtend**, die B2B-Rechnungen ausstellen.
 
-Peppol ist das pan-europäische E-Invoicing-Netzwerk. In Belgien ist B2B-E-Invoicing über Peppol seit Januar 2026 obligatorisch für KBO-registrierte Unternehmen.
-
----
-
-## Wie Druma Peppol handhabt
-
-1. Prüft bei jeder Rechnung, ob der Empfänger im Peppol-Netzwerk ist.
-2. Wenn ja, sendet Druma die Rechnung automatisch über das Netzwerk.
-3. Wenn nicht, wird normal per E-Mail gesendet.
+Druma verbindet sich über **e-invoice.be**, einen akkreditierten belgischen Peppol Access Point, mit dem Peppol-Netzwerk. Nach der Konfiguration erkennt Druma, welche Ihrer Kunden über Peppol erreichbar sind, und leitet Rechnungen automatisch an sie weiter — Sie müssen nichts an der Art ändern, wie Sie Rechnungen erstellen oder versenden.
 
 ---
 
-## Einrichten
+## Wer dies benötigt
+
+Sie benötigen die Peppol-Integration, wenn:
+
+- Ihr Unternehmen in Belgien registriert ist (eine KBO-Nummer hat), **und**
+- Sie Rechnungen an andere belgische Unternehmen ausstellen
+
+Ist Ihr Unternehmen außerhalb Belgiens tätig, oder sind Ihre Kunden Verbraucher oder ausländische Unternehmen, gilt Peppol nicht für Sie. Druma versendet Rechnungen weiterhin per E-Mail an alle Nicht-Peppol-Empfänger, unabhängig davon, ob die Integration aktiv ist.
+
+<Note>
+Belgische Unternehmen, die diese Integration nicht aktivieren, riskieren ab Januar 2026 Bußgelder wegen Nichteinhaltung. Die Einrichtung dauert weniger als fünf Minuten.
+</Note>
+
+---
+
+## Einrichtung
 
 <Steps>
-  <Step title="Zu Einstellungen → Integrationen → Peppol gehen">
-    Öffnen Sie die Peppol-Karte.
+  <Step title="Die Peppol-Karte öffnen">
+    Gehen Sie zu **Einstellungen → Integrationen**. Suchen Sie die Karte **Peppol E-Rechnung**. Ihr Status zeigt **Nicht konfiguriert**.
   </Step>
-  <Step title="KBO-Nummer und USt-IdNr. eingeben">
-    Geben Sie Ihre belgischen Unternehmensregistrierungsdaten ein.
+  <Step title="Auf Konfigurieren klicken">
+    Klicken Sie auf der Karte auf **Konfigurieren**. Ein Einstellungspanel öffnet sich.
   </Step>
-  <Step title="Registrieren">
-    Klicken Sie auf **Im Peppol-Netzwerk registrieren**.
+  <Step title="KBO- und USt-IdNr. eingeben">
+    Geben Sie die **KBO-Nummer** Ihres Unternehmens (10-stellige belgische Unternehmensregistrierungsnummer) und die **USt-IdNr.** (BE gefolgt von 10 Ziffern) in die jeweiligen Felder ein.
+  </Step>
+  <Step title="Im Peppol-Netzwerk registrieren">
+    Klicken Sie auf **Bei Peppol registrieren**. Druma übermittelt Ihre Registrierung an e-invoice.be. Dies dauert in der Regel nur wenige Sekunden.
+  </Step>
+  <Step title="Aktivierung bestätigen">
+    War die Registrierung erfolgreich, zeigt die Karte ein Abzeichen **Verbunden**. Ihr Unternehmen ist nun Peppol-Teilnehmer und kann strukturierte Rechnungen im Netzwerk sowohl senden als auch empfangen.
   </Step>
 </Steps>
 
+<Warning>
+Nur Benutzer mit den Rollen **Admin** und **Unternehmensadministrator** können Integrationen konfigurieren. Sehen Sie die Schaltfläche Konfigurieren nicht, fragen Sie Ihren Kontoadministrator.
+</Warning>
+
 ---
 
-## Peppol-Rechnungsstatus
+## Wie das Rechnungsrouting funktioniert
+
+Nach der Aktivierung fügt Druma jedem Rechnungsversand eine Peppol-Prüfung hinzu:
+
+1. Druma prüft zuerst, ob die USt-IdNr. des Kunden belgisch ist (beginnt mit `BE`) — diese Prüfung erfolgt **vor jedem Netzwerkaufruf**, sodass nicht-belgische Kunden nie eine Peppol-Abfrage auslösen.
+2. Für belgische Kunden sucht Druma den Empfänger über e-invoice.be im Peppol-Netzwerk. Wird er gefunden, wird die Rechnung elektronisch eingereicht — **keine zusätzlichen Schritte auf Ihrer Seite nötig**.
+3. Druma sendet die Rechnung außerdem per E-Mail, unabhängig davon, ob die Peppol-Einreichung erfolgreich war — E-Mail ist kein bedingter Rückfall, der nur bei Peppol-Fehlern ausgelöst wird. Die eine Ausnahme: Hat ein Kunde explizit beide Kanäle abgelehnt (eine separate Pro-Kunde-Einstellung), wird die E-Mail übersprungen, sobald die Peppol-Zustellung erfolgreich ist.
+
+Sie müssen keine Versandmethode pro Rechnung wählen. Das Routing ist vollständig automatisch.
+
+---
+
+## Rechnungsstatus nachverfolgen
+
+Die Rechnungsliste enthält eine Statusspalte **Peppol** mit folgenden Zuständen:
 
 | Status | Bedeutung |
 |---|---|
-| Gesendet | An Peppol-Netzwerk übertragen |
-| Zugestellt | Vom Empfänger bestätigt |
-| Fehlgeschlagen | Übertragungsfehler |
-| Abgelehnt | Empfänger hat abgelehnt |
+| **Eingereicht** | An e-invoice.be gesendet, wartet auf Zustellbestätigung |
+| **Zugestellt** | Bestätigt zugestellt an den Peppol-Posteingang des Empfängers |
+| **Fehlgeschlagen** | Zustellung am Access Point fehlgeschlagen — siehe Fehlerdetail in der Rechnungszeile |
+| **Validierung fehlgeschlagen** | Drumas lokale Vorabprüfung blockierte den Versand, bevor er e-invoice.be erreichte (z. B. eine ungültige KBO-/USt-Prüfsumme) — kein Access-Point-Aufruf erfolgte, es wurde also kein e-invoice.be-Kontingent verbraucht |
+| **Nicht im Netzwerk** | Die USt-IdNr. des Kunden ist kein registrierter Peppol-Teilnehmer; die Rechnung wurde wie gewohnt per E-Mail gesendet (angezeigt als „→ Per E-Mail") |
 
-<Card title="Integrationseinrichtung" icon="plug" href="/en/admin/integration-setup">
-  Überblick aller Druma-Integrationen.
+Es gibt keinen Status „Ausstehend" — eine Rechnung wurde entweder noch nicht über Peppol gesendet (null), oder befindet sich in einem der fünf oben genannten Zustände. Statusaktualisierungen für eingereichte Rechnungen werden automatisch per Webhook von e-invoice.be an Druma übermittelt.
+
+---
+
+## Umgang mit Fehlern
+
+Zeigt eine Rechnung **Fehlgeschlagen** oder **Validierung fehlgeschlagen**:
+
+1. Fahren Sie mit der Maus über das Statusabzeichen oder klicken Sie darauf, um das Fehlerdetail zu lesen.
+2. Beheben Sie das angezeigte Problem (z. B. eine ungültige USt-IdNr. im Kundendatensatz).
+3. Klicken Sie in der Rechnungszeile auf **Peppol erneut versuchen**, um die Einreichung zu wiederholen.
+
+<Note>
+Peppol-Zustellfehler wirken sich nicht auf den internen Status der Rechnung in Druma aus. Die Rechnung bleibt bestätigt und erscheint weiterhin in Ihren Buchhaltungsexporten. Die Rechnung wird zudem trotzdem per E-Mail versendet, damit der Kunde nicht ohne Kopie dasteht, während Sie das Problem untersuchen.
+</Note>
+
+---
+
+## Peppol-Zustellung manuell auslösen
+
+Bei Rechnungen, für die der automatische Versand nicht ausgelöst wurde — z. B. Rechnungen, die vor Aktivierung der Integration erstellt wurden — können Sie manuell über Peppol einreichen:
+
+1. Öffnen Sie die Liste **Rechnungen**.
+2. Finden Sie die Rechnungszeile und klicken Sie auf das Zeilenaktionsmenü (**···**).
+3. Klicken Sie auf **Jetzt einreichen**.
+
+Dies ist auch nützlich, nachdem Sie die USt-IdNr. oder KBO-Nummer eines Kunden korrigiert haben.
+
+---
+
+## Verwandte Seiten
+
+<Card title="Integrationseinrichtung" icon="plug" href="/de/admin/integration-setup">
+  Übersicht aller unter Einstellungen → Integrationen verfügbaren Integrationen.
+</Card>
+
+<Card title="Rechnungen versenden" icon="send" href="/en/finance/sending-invoices">
+  Wie Sie Rechnungen per E-Mail versenden und den Zustellstatus nachverfolgen.
+</Card>
+
+<Card title="Branding & Dokumentenformate" icon="palette" href="/de/admin/branding-formats">
+  Passen Sie Rechnungsnummerierung, Logo und Farben auf PDF-Rechnungen an.
 </Card>

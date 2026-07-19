@@ -1,0 +1,84 @@
+---
+title: "eCMR-Anbieter"
+description: "Drumas nativer, hausinterner eCMR-Anbieter ist der einzig wählbare eCMR-Anbieter. TransFollow ist nur noch ein Legacy-Pfad für Unternehmen mit bestehender Konfiguration."
+icon: "right-left"
+---
+
+Druma stellt eCMRs mit seinem **nativen Anbieter** aus — es stellt und versiegelt eCMRs vollständig hausintern, ohne Kosten pro Dokument. Unter **Einstellungen → Integrationen → eCMR-Anbieter** (Zugriff für Unternehmensadministratoren erforderlich) stehen nur **Nativ** und **Deaktiviert** zur Auswahl. **TransFollow** kann von keinem Unternehmen mehr neu ausgewählt werden; es existiert nur noch als Legacy-Pfad für Unternehmen, die es vor Einführung des nativen Anbieters konfiguriert haben — siehe unten.
+
+---
+
+## Druma natives eCMR (Standard)
+
+Der native Druma-Anbieter stellt CMR-Dokumente intern aus, sammelt Unterschriften, erstellt das PDF und bringt ein **PAdES-Digitalsiegel** an — eine Advanced Electronic Signature (AdES) nach eIDAS — ohne einen externen Dienst zu kontaktieren.
+
+### So funktioniert es
+
+- **Keine Einrichtung nötig** — der native Anbieter ist standardmäßig aktiv. Sie müssen keinen API-Schlüssel eingeben oder ein externes Konto verbinden.
+- **Dreiparteiige Signatur, drei separate Geräte:** Der Absender unterschreibt über Drumas Web-App (typischerweise von einem Planer oder Disponenten im Tab Dokumente des Auftrags erfasst); der Fahrer unterschreibt separat auf seinem eigenen Telefon; der Empfänger unterschreibt über einen **Freigabelink oder QR-Code** auf seinem eigenen Gerät bei der Lieferung — kein Druma-Konto für den Empfänger erforderlich.
+- **Zertifiziertes PDF:** Sobald alle drei Parteien unterschrieben haben, erstellt Druma das vollständige CMR-PDF und bringt das PAdES-Siegel an. Das versiegelte Dokument enthält alle Pflichtfelder des CMR (1–24), einschließlich des Vermerks „unterliegt dem CMR", Ort und Datum der Ausstellung sowie etwaiger Vorbehalte des Frachtführers.
+- **Vorbehalte des Empfängers (Feld 24):** Beim Unterschreiben kann der Empfänger Freitextbemerkungen hinzufügen (Beschädigung, Fehlmenge, Abweichung). Diese Vermerke werden in das versiegelte PDF gestempelt, und ein gelbes Banner „Vorbehalte des Empfängers" erscheint am Auftrag in Druma.
+
+### Prüfen, ob der Anbieter bereit ist
+
+Gehen Sie zu **Einstellungen → Integrationen → eCMR-Anbieter** und klicken Sie auf **Verbindung testen**, um zu prüfen, dass Drumas Signaturzertifikat konfiguriert und der Anbieter einsatzbereit ist.
+
+### Kosten
+
+eCMR ist ohne zusätzliche Kosten im Druma-Abonnement enthalten — es gibt keine Gebühr pro Dokument und keine Nutzungsobergrenze.
+
+### eCMR-Dokumente einsehen und herunterladen
+
+Signierte eCMR-Dokumente und Signaturen werden 7 Jahre ab dem Lieferdatum des Auftrags in Druma aufbewahrt, dann durch einen geplanten Job dauerhaft gelöscht — siehe [eCMR Rechtsgültigkeit](/de/ecmr/ecmr-legal-validity) für die vollständige Aufbewahrungsrichtlinie.
+
+**Auftragsdetailseite → Tab Dokumente → eCMR anzeigen**
+
+Von hier aus können Sie:
+
+- Das versiegelte PDF im Browser ansehen
+- Das signierte PDF herunterladen
+- Den Signaturstatus aller drei Parteien prüfen — die Absender-Zeile zeigt ein Signaturdatum; Fahrer und Empfänger zeigen ein Signiert/Nicht-signiert-Abzeichen ohne Zeitstempel
+- Einen Link zum Dokument mit Ihrem Kunden teilen (zugänglich ohne Druma-Login)
+
+---
+
+## TransFollow (nur Bestandsfälle)
+
+TransFollow ist eine Drittanbieter-eCMR-Plattform, die Druma früher als wählbare Option unterstützte. Sie kann **nicht mehr neu ausgewählt werden** — es gibt keinen TransFollow-Eintrag zur Auswahl, kein API-Schlüsselfeld, keinen Mock-Modus-Schalter und keine Verbindung-testen-Schaltfläche dafür unter Einstellungen → Integrationen.
+
+Der einzige Grund, warum TransFollow überhaupt noch in Druma existiert, ist, eine kleine Zahl von Unternehmen mit einer **bestehenden TransFollow-Konfiguration** störungsfrei weiterlaufen zu lassen. Trifft das auf Ihr Unternehmen zu:
+
+- Ihr eCMR-Ablauf funktioniert genau wie zuvor weiter — nichts bricht, keine Aktion nötig.
+- Die eCMR-Anbieterkarte in Einstellungen → Integrationen zeigt Ihre Konfiguration als **Nativ** an.
+- Beim nächsten Speichern dieser Integration (auch ohne Änderungen) migriert Ihr Unternehmen stillschweigend zum eigentlichen nativen Anbieter.
+
+Richten Sie eCMR erstmals ein, oder hat Ihr Unternehmen TransFollow nie konfiguriert, betrifft Sie nichts davon — Sie sind bereits auf dem nativen Anbieter.
+
+<Warning>
+Es gibt keinen Weg, TransFollow für ein Unternehmen zu konfigurieren, das es noch nicht nutzt. Sehen Sie andernorts Verweise auf TransFollow, beschreiben diese dieses Legacy-Kontinuitätsverhalten, keine im Produkt heute verfügbare Option.
+</Warning>
+
+---
+
+## Länderabdeckung
+
+eCMR ist in Ländern rechtsgültig, die das e-CMR-Protokoll ratifiziert haben. Mit Stand 2025 zählen dazu die meisten EU-Mitgliedstaaten sowie die Schweiz, Belarus, Georgien und andere. Prüfen Sie die aktuelle Liste unter [unece.org](https://unece.org). Für Länder ohne Ratifizierung ist weiterhin ein Papier-CMR erforderlich — Druma kann für solche Sendungen einen formatierten CMR-Frachtbrief ausdrucken.
+
+---
+
+## Verwandte Artikel
+
+<CardGroup cols={2}>
+  <Card title="Was ist eCMR?" icon="file-contract" href="/de/ecmr/what-is-ecmr">
+    Eine Einführung in elektronische Frachtbriefe und wann Sie sie brauchen.
+  </Card>
+  <Card title="eCMR Rechtsgültigkeit" icon="scale-balanced" href="/de/ecmr/ecmr-legal-validity">
+    Das e-CMR-Protokoll, PAdES-Siegel und eIDAS AdES erklärt.
+  </Card>
+  <Card title="Ein eCMR erstellen" icon="file-plus" href="/de/ecmr/creating-ecmr">
+    Schritt-für-Schritt-Anleitung zum Ausstellen eines eCMR bei einem Druma-Auftrag.
+  </Card>
+  <Card title="Der Signaturablauf" icon="pen-to-square" href="/de/ecmr/signing-flow">
+    Wie Absender, Fahrer und Empfänger jeweils unterschreiben, und auf welchem Gerät.
+  </Card>
+</CardGroup>

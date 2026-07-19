@@ -1,6 +1,6 @@
 ---
 title: "Sammelgut (LTL)"
-description: "Konsolidieren Sie mehrere kleine Ladungen verschiedener Kunden auf einem LKW mit Beinverfolgung, kundenspezifischer Rechnungsstellung und einem druckbaren Mehrfachstopp-Manifest."
+description: "Konsolidieren Sie mehrere kleine Ladungen verschiedener Kunden auf einem LKW mit Etappenverfolgung, Etappen-Rechnungsstellung, und einem druckbaren Mehrfachstopp-Manifest."
 icon: "boxes-stacked"
 ---
 
@@ -8,59 +8,154 @@ icon: "boxes-stacked"
 
 Sammelgut — auch LTL (Less-Than-Truckload) oder Konsolidierung genannt — ist, wenn Sie mehrere kleine Sendungen verschiedener Kunden auf denselben LKW in dieselbe Richtung laden. Jeder Kunde zahlt nur für seinen Teil des LKW-Platzes, und Sie füllen den LKW mit kombinierten Ladungen, um die Fahrt profitabel zu machen.
 
-In Druma ist ein **Sammelgutauftrag** ein Container-Auftrag, der mehrere Unteraufträge enthält. Der Container verfolgt den LKW, Fahrer und die Route. Jeder Unterauftrag hat seinen eigenen Kunden, Ladung, Abholung, Lieferadresse und Preis — und generiert seine eigene Rechnung.
+In Druma ist Sammelgut ein eigenes Modul (`/groupage`) — eine **Sammelgutfahrt** enthält mehrere bestehende Auftrags-**Etappen**. Die Fahrt verfolgt LKW, Fahrer und Route; jede Etappe behält ihren eigenen Kunden, Ladung, Abhol-/Lieferadresse und Preis.
+
+<Note>
+Sammelgut ist kein vierter „Auftragstyp" neben Eigener LKW / Unterauftragnehmer / Positionierung — es ist ein separates Modul, das bestehende Aufträge gruppiert.
+</Note>
+
+<Frame caption="Das Sammelgut-Modul — die Etappen einer Fahrt mit Kunde, Ladung und Auslastungsverfolgung pro Etappe.">
+  <img src="/images/planner/groupage.png" alt="Sammelgutfahrt mit mehreren Etappen und Auslastungsanzeige" />
+</Frame>
 
 ---
 
-## Einen Sammelgut-Container erstellen
+## Eine Sammelgutfahrt erstellen
 
 <Steps>
-  <Step title="Neuen Auftrag starten">
-    Gehen Sie zu **Aufträge → Neuer Auftrag**.
+  <Step title="Zu Sammelgut gehen">
+    Öffnen Sie das Modul **Sammelgut** aus der Navigation.
   </Step>
-  <Step title="Sammelgut-Schalter aktivieren">
-    Aktivieren Sie den Schalter **Sammelgut-Auftrag** oben im Formular.
+  <Step title="Auf Sammelgut erstellen klicken">
+    Klicken Sie auf **Sammelgut erstellen**. Druma legt eine leere Fahrt an (mit automatisch erzeugter Referenz wie `GRP-XXXXX`) und öffnet ihr Detailpanel — bei diesem Schritt gibt es kein LKW-/Fahrer-/Datum-/Routenformular.
   </Step>
-  <Step title="LKW und Fahrer auswählen">
-    Weisen Sie Ihren LKW und Fahrer dem Container-Auftrag zu.
-  </Step>
-  <Step title="Erste Sendung hinzufügen">
-    Klicken Sie auf **Sendung hinzufügen** und füllen Sie Kundendetails, Abhol- und Lieferadresse aus.
-  </Step>
-  <Step title="Weitere Sendungen hinzufügen">
-    Klicken Sie erneut auf **Sendung hinzufügen** für jede weitere Ladung. Druma berechnet automatisch die Kapazitätsauslastung.
+  <Step title="Aufträge zur Fahrt hinzufügen">
+    Siehe nächsten Abschnitt — Sie bauen die Fahrt auf, indem Sie bestehende, geeignete Aufträge hinzufügen, nicht durch Ausfüllen eines Formulars.
   </Step>
 </Steps>
 
 ---
 
-## Kostenteilung
+## Aufträge zu einer Sammelgutfahrt hinzufügen
 
-Druma teilt Kosten (Kraftstoff, Maut, Fahrerstunden) nach einer konfigurierbaren Methode auf:
+<Steps>
+  <Step title="Die Fahrt öffnen und auf Aufträge hinzufügen klicken">
+    Öffnen Sie die Sammelgutfahrt und klicken Sie auf **Aufträge zu Sammelgut hinzufügen**.
+  </Step>
+  <Step title="Geeignete Aufträge ankreuzen">
+    Das Modal listet bestehende, für diese Fahrt geeignete Aufträge — Auftragsnummer, Kunde, Route, LDM, Gewicht und Anhängertyp — mit einer Checkbox pro Zeile. Es gibt hier kein Dateneingabeformular; Sie wählen bereits existierende Aufträge aus, statt neue Sendungsdetails einzutippen.
+  </Step>
+  <Step title="Auto-Ausfüllen nutzen, wenn Druma für Sie wählen soll">
+    Klicken Sie auf **Auto-Ausfüllen**, damit Druma die am besten passende Kombination geeigneter Aufträge bis zur verbleibenden Lademeterkapazität des Anhängers auswählt.
+  </Step>
+  <Step title="Zu Sammelgut hinzufügen">
+    Klicken Sie auf **Zu Sammelgut hinzufügen**. Würde Ihre Auswahl die LDM-Kapazität des Anhängers überschreiten, wird die Aktion mit einem Validierungsfehler blockiert — Sie müssen zuerst etwas abwählen. Eine Anhängertyp-Abweichung (der Anhängertyp eines Auftrags weicht von dem der Fahrt ab) wird als Warnung angezeigt, blockiert die Aktion aber nicht.
+  </Step>
+</Steps>
 
-- **Nach Gewicht** — Proportional zum Gewicht jeder Sendung
-- **Nach Volumen (m³)** — Proportional zum Volumen
-- **Nach Lademetern (LDM)** — Proportional zu den Lademetern
-
-Sie können die Kostenteilung manuell für jede Sendung überschreiben.
+<Note>
+Gewicht und Volumen blockieren das Hinzufügen von Aufträgen nicht — nur Lademeter (LDM) tun das. Auslastungsbalken für Gewicht und Volumen werden weiterhin zur Referenz angezeigt (siehe unten), sind aber informativ, keine Sperre.
+</Note>
 
 ---
 
-## Sammelgut-Fakturierung
+## Stoppreihenfolge
 
-Jede Sendung wird separat fakturiert:
-- Eine Rechnung pro Kunde
-- Basierend auf dem vereinbarten Preis pro Sendung
+Neue Stopps werden einfach in der Reihenfolge, in der Sie sie hinzufügen, ans Ende der Fahrt angehängt — Druma optimiert die Route dabei nicht automatisch.
+
+Um die Reihenfolge zu optimieren, klicken Sie auf **Auto-Sequenzierung** (nur bei 2+ Stopps sichtbar): sie ordnet die Stoppliste neu, um die Gesamtdistanz zu minimieren (Abholungen vor Lieferungen), und meldet, wie viel Distanz gespart wurde, oder dass die Reihenfolge bereits optimal war. Sie können Stopps auch jederzeit manuell per Drag-and-Drop oder mit den Auf-/Ab-Pfeilen jeder Stoppzeile verschieben.
 
 ---
 
-## Kapazitätsüberwachung
+## Statusverfolgung pro Etappe
 
-Das Sammelgut-Panel zeigt Fortschrittsbalken für:
-- **Gewichtsauslastung** — Gesamtgewicht vs. LKW-Kapazität
-- **Volumenauslastung** — Gesamtvolumen vs. LKW-Kapazität
-- **LDM-Auslastung** — Gesamtlademeter vs. Anhängerlänge
+Jede Auftragsetappe hat ihren eigenen Statusfluss, unabhängig von den anderen Sendungen auf dem LKW. Aktualisiert der Fahrer seinen Status für einen bestimmten Stopp, aktualisiert sich nur der Auftrag dieser Etappe — die Fahrtübersicht zeigt, welche Stopps abgeschlossen und welche ausstehend sind.
 
-<Card title="Frachtspedition" icon="arrows-left-right" href="/en/planner/freight-forwarding">
-  Verwalten Sie ausgelagerte Ladungen und Speditionsworkflows.
-</Card>
+Beispiel: Hat der LKW vier Lieferungen und schließt der Fahrer Stopp 1 und 2 ab, zeigen diese Etappen **Geliefert**, während Stopp 3 und 4 noch **Unterwegs zur Lieferung** zeigen. Jeder Kunde sieht in seinem Portal nur den Status seiner eigenen Sendung.
+
+---
+
+## Lademeter (LDM), Gewicht und Volumen verfolgen
+
+Jede Etappe kann direkt auf ihrer Stoppkarte **CBM**, **Gewicht (kg)** und **LDM** eingetragen bekommen. LDM steht für die lineare Länge der Anhängerfläche, die die Sendung belegt — das europaweite Standardmaß für die Sammelgutplanung.
+
+Die Sammelgutfahrt zeigt Auslastungsbalken für jede Dimension, für die der zugewiesene LKW/Anhänger eine bekannte Kapazität hat — **Gewicht**, **Volumen (CBM)** und **Lademeter**:
+
+| Farbe | Auslastungsgrad |
+|---|---|
+| Grün | ≤70 % der Kapazität |
+| Gelb | 70–90 % der Kapazität |
+| Rot | >90 % der Kapazität (einschließlich über 100 %, unbegrenzt angezeigt) |
+
+### Kostenteilungsmodus
+
+Der **Kostenteilungsmodus** steuert, wie gemeinsame Kosten auf Etappen aufgeteilt werden. Vier Modi stehen zur Verfügung: **CBM**, **Gewicht**, **LDM** und **Berechnungsfähig**. Klicken Sie im Tab Kostenteilung der Fahrt auf eine Modus-Schaltfläche, um zu wechseln — dies löst eine automatische Neuberechnung von Kostenanteil, Aufteilungsprozentsatz, zugewiesenen Kosten und Marge jeder Etappe aus.
+
+Wählen Sie den Modus, der zu Ihrer kommerziellen Vereinbarung mit den Kunden dieser Fahrt passt. CBM ist am gängigsten für Stückgut, LDM für flächenkritische Ladungen, Gewicht für dichte Waren, und Berechnungsfähig, wenn Sie nach dem jeweils höheren Wert von Gewicht/Volumen abrechnen.
+
+---
+
+## Sammelgut-Manifest
+
+Bevor der Fahrer losfährt, drucken Sie das Sammelgut-Manifest — eine Liste der Stopps und Ladung der Fahrt.
+
+<Steps>
+  <Step title="Die Sammelgutfahrt öffnen">
+    Öffnen Sie das Detailpanel der Fahrt.
+  </Step>
+  <Step title="Manifest drucken">
+    Klicken Sie auf **Manifest drucken**. Druma öffnet einen neuen Browser-Tab mit einem druckbaren HTML-Manifest — es gibt keinen separaten PDF-Download.
+  </Step>
+  <Step title="Mit dem Fahrer teilen">
+    Drucken Sie es aus und übergeben Sie es, oder teilen Sie es über den Nachrichten-Thread der Fahrer-App.
+  </Step>
+</Steps>
+
+Das Manifest enthält: Stoppreihenfolge, Abhol-/Lieferadresse, Kunde, Auftragsnummer, Gewicht und etwaige Notizen pro Stopp. Es enthält keine Ladungsbeschreibungsspalte.
+
+---
+
+## Rechnungsstellung pro Etappe
+
+Die Fahrt hat ihren eigenen Tab **Rechnungen**, der jede Etappe mit ihrem Rechnungsstatus auflistet (**Nicht abgerechnet → Erstellt → Gesendet → Bezahlt**) und einer Schaltfläche **Rechnung erstellen** pro Etappe:
+
+<Steps>
+  <Step title="Den Tab Rechnungen der Fahrt öffnen">
+    Öffnen Sie die Sammelgutfahrt und gehen Sie zum Tab **Rechnungen**.
+  </Step>
+  <Step title="Rechnung erstellen">
+    Klicken Sie neben einer noch nicht abgerechneten Etappe auf **Rechnung erstellen**. Die Rechnung wird nur für den Kunden dieser Etappe erstellt, mit dessen spezifischer Ladung, Preis und Referenz.
+  </Step>
+</Steps>
+
+Kunden auf demselben LKW sehen nie die Rechnungen oder Preise des anderen — jeder erhält ein sauberes, separates Dokument, und Sie können sie einzeln erstellen, sobald jede Etappe abrechnungsbereit ist.
+
+---
+
+## Sendungsverfolgung
+
+Kunden, die eine Sammelgutsendung verfolgen, sehen auf der öffentlichen Tracking-Seite ein statisches **Voraussichtliches Lieferdatum**, keine live nach mehreren Stopps sequenzierte ETA.
+
+---
+
+## Ein typischer Anwendungsfall
+
+Sie haben vier Kunden, die diesen Donnerstag Ladungen von Bukarest Richtung Wien bewegen müssen. Einzeln füllt keiner von ihnen einen LKW. Zusammen schon:
+
+- Kunde A: 8 Paletten nach Bratislava
+- Kunde B: 4 Paletten nach Budapest
+- Kunde C: 10 Paletten nach Wien
+- Kunde D: 6 Paletten nach Linz
+
+Sie erstellen die vier Aufträge normal, dann eine Sammelgutfahrt, fügen alle vier Aufträge hinzu, weisen Ihren Fahrer zu, sequenzieren die Stopps automatisch, und drucken das Manifest. Jeder Kunde zahlt für seinen Anteil, jeder erhält seine eigene Rechnung und Statusaktualisierungen, und Sie fahren einen vollen LKW.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Aufträge erstellen" icon="plus" href="/de/planner/creating-orders">
+    Erfahren Sie, wie Standardaufträge in Druma funktionieren — Sie erstellen zuerst die einzelnen Aufträge, dann gruppieren Sie sie.
+  </Card>
+  <Card title="Planungstafel" icon="calendar" href="/de/planner/planning-board">
+    Sehen Sie alle Ihre Aufträge in der Wochenplanansicht, bevor Sie sie zu einer Fahrt gruppieren.
+  </Card>
+</CardGroup>

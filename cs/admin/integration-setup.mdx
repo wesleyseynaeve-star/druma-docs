@@ -1,57 +1,49 @@
 ---
 title: "Nastavení integrace"
-description: "Připojte Druma k poskytovateli eCMR, HERE Maps, poskytovatelům palivových karet, účetnímu softwaru a SmartBill ze stránky Nastavení → Integrace."
+description: "Připojte Druma k poskytovateli eCMR, HERE Maps, poskytovatelům palivových karet, účetnímu softwaru, SmartBill a poskytovatelům telematiky/chlazení ze stránky Nastavení → Integrace."
 icon: "plug"
 ---
 
 Všechny integrace, které vaše společnost používá, jsou konfigurovány na jednom místě: **Nastavení → Integrace**. Není potřeba vývojář — všechna nastavení jsou formulářová a trvají méně než pět minut každé.
 
-![Přehled stránky Integrace](/images/placeholder.png)
+<Frame caption="Nastavení → Integrace — karta poskytovatele eCMR má pouze dva stavy: Nativní a Vypnuto.">
+  <img src="/images/admin/integration-setup.png" alt="Panel nastavení integrací" />
+</Frame>
 
 ---
 
 ## 1. Poskytovatel eCMR
 
-Druma vydává elektronické nákladní listy **interně pomocí nativního poskytovatele Druma jako výchozí možnosti** — není vyžadován žádný externí účet, API klíč ani nastavení. eCMR je k dispozici ihned po spuštění pro přeshraniční objednávky a Druma každý dokončený dokument opatří digitální pečetí PAdES.
+Druma vydává elektronické nákladní listy **interně pomocí nativního poskytovatele Druma** — není vyžadován žádný externí účet, API klíč ani nastavení. eCMR je k dispozici ihned pro přeshraniční objednávky a Druma každý dokončený dokument opatří digitální pečetí PAdES.
 
-**TransFollow** zůstává k dispozici jako volitelná záložní možnost pro společnosti, které jej používaly před zavedením nativního poskytovatele. Nové společnosti by měly zůstat na nativním poskytovateli.
+Karta poskytovatele eCMR nabízí pouze dva stavy: **Nativní** a **Vypnuto**. TransFollow není volitelnou možností — existuje pouze jako záložní cesta pro malý počet společností s již existující konfigurací (viz poznámka níže).
 
 <Steps>
   <Step title="Otevřete kartu poskytovatele eCMR">
-    Přejděte do **Nastavení → Integrace** a otevřete kartu **Poskytovatel eCMR**. Nativní poskytovatel Druma je vybrán jako výchozí.
-  </Step>
-  <Step title="(Volitelně) Přepněte na TransFollow">
-    Chcete-li místo toho použít TransFollow, vyberte ho a vložte API klíč z přehledové plochy vašeho účtu TransFollow do pole **API klíč**. Pokud účet nemáte, zaregistrujte se na [transfollow.org](https://transfollow.org).
-  </Step>
-  <Step title="Povolte zkušební režim (volitelné)">
-    Při použití TransFollow zapněte **Zkušební režim**, pokud chcete testovat workflow eCMR bez vydávání skutečných, právně registrovaných dokumentů. Používejte to při školení nebo onboardingu řidičů. Před ostrým provozem vypněte.
+    Přejděte do **Nastavení → Integrace** a otevřete kartu **Poskytovatel eCMR**. Ve výchozím nastavení je vybráno **Nativní**.
   </Step>
   <Step title="Otestujte připojení">
-    Klikněte na **Otestovat připojení**. Druma ověří nativní podpisový certifikát — nebo, pokud je vybrán TransFollow, zavolá API TransFollow a potvrdí platnost klíče.
+    Klikněte na **Otestovat připojení**. Druma ověří, že je podpisový certifikát nakonfigurován a připraven.
   </Step>
   <Step title="Uložit">
-    Klikněte na **Uložit**. Vytváření eCMR je nyní aktivní pro přeshraniční objednávky.
+    Klikněte na **Uložit**. Vytváření eCMR je aktivní pro přeshraniční objednávky.
   </Step>
 </Steps>
 
 <Note>
-Většina společností toto nastavení nikdy nemusí měnit — nativní poskytovatel je doporučenou výchozí možností. Úplné srovnání naleznete v části [Poskytovatelé eCMR](/en/ecmr/ecmr-providers).
+Většina společností toto nastavení nikdy nemusí měnit — Nativní je jediná skutečná možnost. Pokud vaše společnost má již existující konfiguraci TransFollow, ta funguje dál jako dřív a je zde zobrazena jako **Nativní**; tiše se migruje na skutečně nativního poskytovatele při dalším uložení této karty, aniž byste museli cokoli přepínat nebo konfigurovat. Podrobnosti viz [Poskytovatelé eCMR](/cs/ecmr/ecmr-providers).
 </Note>
-
-<Warning>
-Dokumenty eCMR ve zkušebním režimu TransFollow **nejsou právně platné**. Před odesíláním skutečných zásilek zkontrolujte, že je zkušební režim vypnutý.
-</Warning>
 
 ---
 
-## 2. HERE Maps
+## 2. HERE Maps a směrování PTV
 
-HERE Maps poskytuje dvě funkce v Druma: automatické doplňování adres při vytváření objednávek a výpočet tras optimalizovaných pro kamiony (vzdálenost, odhadovaná doba jízdy a údaje CO2).
+HERE Maps zajišťuje automatické doplňování adres při vytváření objednávek. Výpočet trasy optimalizované pro kamiony, vzdálenost, ETA a odhad mýtného zajišťuje **PTV**, samostatný poskytovatel směrování.
 
-**Není potřeba žádné nastavení.** API klíč HERE Maps je spravován na úrovni platformy Druma. Není co konfigurovat a nebudete fakturováni samostatně za využití HERE — je zahrnuto v předplatném.
+**Pro ani jedno není potřeba žádné nastavení.** Oba API klíče jsou spravovány na úrovni platformy Druma. Není co konfigurovat a nebudete fakturováni samostatně za využití HERE nebo PTV — obojí je zahrnuto v předplatném.
 
 <Note>
-Pokud automatické doplňování adres přestane fungovat, jde o problém na úrovni platformy. Kontaktujte podporu Druma, místo abyste se pokoušeli HERE sami překonfigurovat.
+Pokud automatické doplňování adres nebo směrování přestane fungovat, jde o problém na úrovni platformy. Kontaktujte podporu Druma, místo abyste se pokoušeli HERE nebo PTV sami překonfigurovat.
 </Note>
 
 ---
@@ -60,14 +52,14 @@ Pokud automatické doplňování adres přestane fungovat, jde o problém na úr
 
 Druma se přímo nepřipojuje k API poskytovatelů palivových karet. Místo toho stáhnete CSV export z webového portálu poskytovatele a nahrajete ho do Druma. Tím se náklady na palivo automaticky propojí s vozidly a objednávkami.
 
-**Podporovaní poskytovatelé:** DKV, UTA, AS24, Shell Card, SmartDiesel.
+**Podporovaní poskytovatelé:** DKV, UTA, AS24, Shell, TotalEnergies, BP, Circle K, Eurowag, WEG, MOL, E100.
 
 <Steps>
   <Step title="Export z portálu poskytovatele">
-    Přihlaste se do webového portálu DKV, UTA, AS24, Shell nebo SmartDiesel a exportujte transakce jako CSV. Většina portálů to nabízí pod **Reporty → Export transakcí**.
+    Přihlaste se do webového portálu vašeho poskytovatele palivových karet a exportujte transakce jako CSV. Většina portálů to nabízí pod **Reporty → Export transakcí**.
   </Step>
-  <Step title="Otevřete kartu Import palivových karet">
-    V **Nastavení → Integrace** klikněte na kartu Import palivových karet.
+  <Step title="Otevřete Import palivových karet">
+    Přejděte do **Flotila → Palivo** a otevřete dialog importu.
   </Step>
   <Step title="Vyberte poskytovatele">
     Vyberte svého poskytovatele z rozbalovací nabídky, aby Druma věděla, jaký formát sloupců CSV očekávat.
@@ -85,60 +77,40 @@ Pokud registrační značka transakce neodpovídá žádnému vozidlu ve vašem 
 
 ## 4. Účetnictví SAGA / WinMENTOR
 
-Druma exportuje data faktur a objednávek ve formátech kompatibilních se SAGA a WinMENTOR, dvěma nejrozšířenějšími rumunsko-orientovanými účetními programy.
+Druma exportuje data faktur a objednávek ve formátech kompatibilních se SAGA a WinMENTOR, dvěma nejrozšířenějšími rumunskými účetními programy.
 
 ### SAGA Classic a WinMENTOR Classic
 
-Není potřeba API klíč. Druma generuje strukturovaný exportní soubor (XML nebo CSV podle programu), který přímo importujete do účetního softwaru.
+Není potřeba API klíč. SAGA exportuje jako soubory DBF (`CLI_`, `ART_`, `IE_`, `INT_`, `NC_.xml`); WinMENTOR Classic exportuje jako textové soubory oddělené znakem `|`. Oba formáty se generují automaticky jednou měsíčně a odesílají e-mailem na nakonfigurovanou adresu vašeho účetního jako ZIP (přes Resend, podepsaný odkaz na 7 dní) — den exportu nastavíte v **Nastavení → Automatizace a funkce → Konfigurace exportu SAGA**. Neexistuje ruční seznam „historie exportů" — export za daný měsíc existuje pouze jako odeslaný ZIP.
 
-Přejděte do **Reporty → Export účetnictví**, vyberte rozsah dat a formát účetnictví a stáhněte soubor. Importujte ho do SAGA nebo WinMENTOR pomocí standardního průvodce importem tohoto softwaru.
-
-### WinMENTOR Enterprise (REST API)
-
-WinMENTOR Enterprise podporuje přímou integraci API.
-
-<Steps>
-  <Step title="Otevřete kartu WinMENTOR Enterprise">
-    V **Nastavení → Integrace** klikněte na **WinMENTOR Enterprise**.
-  </Step>
-  <Step title="Zadejte REST endpoint">
-    Zadejte URL REST API endpointu poskytnutou správcem WinMENTOR Enterprise. Obvykle vypadá jako `https://vasespolecnost.winmentor.ro/api/`.
-  </Step>
-  <Step title="Zadejte přihlašovací údaje">
-    Zadejte API uživatelské jméno a heslo nakonfigurované ve WinMENTOR Enterprise.
-  </Step>
-  <Step title="Otestujte a uložte">
-    Klikněte na **Otestovat připojení**, poté na **Uložit**.
-  </Step>
-</Steps>
+<Note>
+V současnosti neexistuje přímá REST API integrace pro WinMENTOR Enterprise ani žádný jiný účetní program — SAGA a WinMENTOR Classic jsou jediné dva podporované formáty, oba souborové.
+</Note>
 
 ---
 
 ## 5. SmartBill
 
-SmartBill je rumunská cloudová fakturační platforma. S aktivní integrací Druma automaticky odesílá potvrzené faktury do SmartBill — bez ručního zadávání.
+SmartBill je rumunská cloudová fakturační platforma. S aktivní integrací Druma automaticky odešle fakturu do SmartBill při jejím **odeslání** (ne při vytvoření nebo označení jako potvrzené) — bez ručního zadávání.
 
 <Steps>
-  <Step title="Získejte svůj API klíč SmartBill">
-    Ve svém účtu SmartBill přejděte do **Účet → API** a zkopírujte API klíč.
+  <Step title="Získejte přihlašovací údaje SmartBill">
+    Ve svém účtu SmartBill najděte účtový **E-mail**, **API token**, **CIF** (daňové registrační číslo) a **řadu faktur** — všechny čtyři jsou vyžadovány.
   </Step>
   <Step title="Otevřete kartu SmartBill v Druma">
     Přejděte do **Nastavení → Integrace → SmartBill**.
   </Step>
-  <Step title="Zadejte API klíč a CIF">
-    Vložte API klíč a zadejte CIF vaší společnosti (daňové identifikační číslo). SmartBill používá CIF k směrování faktur na správný firemní účet.
-  </Step>
-  <Step title="Otestujte připojení">
-    Klikněte na **Otestovat připojení**. Druma se pokusí navázat spojení se SmartBill a potvrdí platnost přihlašovacích údajů.
+  <Step title="Zadejte přihlašovací údaje">
+    Zadejte E-mail, API token, CIF a řadu faktur. SmartBill používá CIF k směrování faktur na správný firemní účet.
   </Step>
   <Step title="Uložit">
-    Klikněte na **Uložit**. Od tohoto okamžiku bude každá faktura, kterou označíte jako potvrzenou v Druma, automaticky odeslána do SmartBill.
+    Klikněte na **Uložit**. Od tohoto okamžiku odeslání faktury v Druma zároveň odešle fakturu do SmartBill.
   </Step>
 </Steps>
 
-<Warning>
-Pokud vyprší vaše předplatné SmartBill nebo dojde k regeneraci API klíče, integrace tiše přestane fungovat. Pravidelně kontrolujte **Nastavení → Integrace** a ověřte, že stav SmartBill je zelený.
-</Warning>
+<Note>
+SmartBill při odeslání přiřadí vlastní číslo faktury — nepoužívá znovu číslo faktury z Druma. Stav se sleduje jednoduše jako odesláno nebo chyba; Druma nesleduje stav SmartBill Návrh/Vystaveno/Zaplaceno a po odeslání neexistuje webhook, který by udržoval oba systémy synchronizované (ve SmartBill se také nevytvářejí žádné záznamy klientů ani produktů). Pokud vaše předplatné SmartBill vyprší nebo dojde k regeneraci API klíče, odesílání začne selhávat — pravidelně kontrolujte **Nastavení → Integrace** a ověřte, že stav SmartBill je zelený.
+</Note>
 
 ---
 
@@ -159,15 +131,19 @@ Peppol je celoevropská síť pro elektronické faktury. Belgické společnosti 
     Klikněte na **Registrovat do sítě Peppol**. Druma odešle vaši registraci přístupovému bodu e-invoice.be. Obvykle se dokončí během několika minut.
   </Step>
   <Step title="Potvrďte aktivaci">
-    Po aktivaci karta zobrazí zelený stav **Aktivní**. Směrování Peppol je nyní automatické pro způsobilé belgické klienty.
+    Po aktivaci karta zobrazí stav **Připojeno**. Směrování Peppol je nyní automatické pro způsobilé belgické klienty — při odesílání faktur belgickým příjemcům nejsou potřeba žádné další kroky.
   </Step>
 </Steps>
+
+<Note>
+Podrobnosti o fungování směrování, co se stane, pokud příjemce není v síti Peppol, a jak řešit zamítnutí, viz [Peppol e-fakturace](/cs/integrations/peppol-invoicing).
+</Note>
 
 ---
 
 ## 7. E-mailová schránka pro faktury dodavatelů
 
-To vaší společnosti poskytne vyhrazenou e-mailovou adresu pro přijímání faktur od dodavatelů — od poskytovatelů palivových karet, autoservisů, operátorů mýtného nebo jakéhokoli jiného dodavatele. Přijaté faktury jsou AI klasifikovány a směrovány do fronty pro kontrolu.
+To vaší společnosti poskytne vyhrazenou e-mailovou adresu pro přijímání faktur od dodavatelů — od poskytovatelů palivových karet, autoservisů, operátorů mýtného nebo jakéhokoli jiného dodavatele. Přijaté faktury jsou AI klasifikovány a směrovány do fronty pro kontrolu, takže nic neunikne.
 
 <Steps>
   <Step title="Přejděte do Nastavení společnosti">
@@ -177,20 +153,84 @@ To vaší společnosti poskytne vyhrazenou e-mailovou adresu pro přijímání f
     Zapněte **Povolit schránku pro faktury dodavatelů**. Druma vygeneruje vyhrazenou příchozí e-mailovou adresu pro vaši společnost.
   </Step>
   <Step title="Přidejte e-mailové adresy odesílatelů na bílou listinu">
-    Do pole **Bílá listina odesílatelů** přidejte e-mailové adresy nebo domény, od kterých očekáváte faktury. E-maily od odesílatelů, kteří nejsou na bílé listině, jsou odmítnuty.
+    Do pole **Bílá listina odesílatelů** přidejte e-mailové adresy nebo domény, od kterých očekáváte faktury (např. `invoices@dkv.com` nebo `@uta.eu`). E-maily od odesílatelů, kteří nejsou na bílé listině, jsou odmítnuty a do fronty se nikdy nedostanou.
   </Step>
   <Step title="Sdílejte adresu s dodavateli">
     Zkopírujte vygenerovanou e-mailovou adresu a dejte ji každému dodavateli jako adresu pro odesílání faktur.
   </Step>
 </Steps>
 
-<Card title="TransFollow a eCMR" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+Přijaté faktury se zobrazují ve **Finance → Forwarding → Fronta faktur** ke kontrole, párování a schválení.
+
+<Note>
+Podrobnosti o frontě kontrol, logice automatického párování a řešení nespárovaných faktur viz [Faktury dodavatelů](/cs/invoicing/supplier-invoices).
+</Note>
+
+---
+
+## 8. Poskytovatelé telematiky, tachografu a chlazení
+
+Druma se připojuje přímo k GPS, tachografu (hodiny řízení) a poskytovatelům chlazení přívěsů z **Nastavení → Integrace**, takže živé pozice, data o hodinách řízení podle EU 561/2006 a údaje o teplotě nákladu proudí do Druma automaticky bez ručního zadávání.
+
+### GPS a tachograf (telematika)
+
+Otevřete kartu svého poskytovatele v **Nastavení → Integrace** a zadejte níže uvedené údaje. Odkaz „Kde je získám?" na každé kartě zopakuje toto vysvětlení přímo v aplikaci.
+
+| Poskytovatel | Přihlašovací údaje | Kde je získat |
+|---|---|---|
+| **Scania / Volvo / DAF / MAN / Mercedes-Benz / IVECO / Renault (rFMS)** | Client ID, Client Secret, volba OEM | Vydává vývojářský nebo flotilový portál výrobce vozidla (např. `developer.scania.com` pro Scania). Scania navíc vyžaduje palubní jednotku Communicator a předplatné Location nebo Performance. Scania a Volvo jsou nejzavedenější; ostatní značky se standardem rFMS sdílejí stejné API a měly by fungovat stejně, ale stále se ověřují na živých flotilách. |
+| **Webfleet** | Účet, uživatelské jméno, heslo, API klíč | Od uživatele Webfleet s profilem „expert" a povoleným externím přístupem. API klíč vydává podpora Webfleet nebo partnerský program WEBFLEET.connect. |
+| **Geotab** | Databáze, uživatelské jméno, heslo | Vytvořte servisní účet (jen pro čtení) v MyGeotab → Administrace → Uživatelé. „Databáze" je název v URL `my.geotab.com/<databaze>`. |
+| **Samsara** | API token, základní URL (volitelné) | Vygenerujte token v dashboardu Samsara pod Settings → API Tokens, s oprávněním „Read Vehicle Statistics". Pro flotily v EU ponechte základní URL prázdné; nastavte ho, pokud vaše organizace běží na americkém shardu. Pouze GPS pozice — Samsara neposkytuje data o tachografu/hodinách řízení. |
+| **Frotcom** | Uživatelské jméno, heslo, poskytovatel | Přihlašovací údaje k vašemu účtu Frotcom s API přístupem povoleným podporou Frotcom nebo místním prodejcem. Aktuálně v **beta verzi** — připojení funguje, ale mapování polí se stále ověřuje na živých účtech. |
+| **Continental VDO** | Client ID, Secret, ID účtu/společnosti | Vyžaduje partnerskou smlouvu s Continental — kontaktujte Continental přes kontaktní formulář `fleet.vdo.com`. **Vázáno na partnerství** — neexistuje veřejná samoobslužná registrace. |
+| **Webeye / Eurowag** | Uživatelské jméno, tajný klíč | Generováno v `selfcare.eurowag.com` → Telematika → Správa flotily → Systémová propojení. Vaše společnost musí být nejprve schválena Eurowag jako partner. **Vázáno na partnerství** — neexistuje veřejná samoobslužná registrace. |
+
+<Note>
+Scania, Webfleet, Geotab a Samsara jsou zavedené integrace. Frotcom je v beta verzi — funguje, ale mapování polí se stále potvrzuje. Continental VDO a Webeye/Eurowag vyžadují, aby dodavatel schválil vaši společnost jako partnera, než připojení vrátí živá data; formulář přihlašovacích údajů umožňuje uložení a test i bez toho, ale synchronizace nezačne, dokud partnerský přístup není aktivní.
+</Note>
+
+### Teplota chlazení / přívěsu
+
+<Steps>
+  <Step title="Otevřete kartu poskytovatele chlazení">
+    V **Nastavení → Integrace** najděte kartu poskytovatele telematiky vašeho přívěsu — **Mapon**, **Orbcomm**, **Thermo King TracKing** nebo **Carrier Lynx Fleet** — a otevřete ji.
+  </Step>
+  <Step title="Zadejte přihlašovací údaje">
+    Odkaz „Kde je získám?" na každé kartě vysvětluje, jak získat údaje pro daného poskytovatele (viz tabulka níže).
+  </Step>
+  <Step title="Otestujte a uložte">
+    Klikněte na **Otestovat připojení**, poté na **Uložit**. Jakmile je připojení potvrzeno, teplotní údaje se automaticky začnou synchronizovat.
+  </Step>
+</Steps>
+
+| Poskytovatel | Přihlašovací údaje | Kde je získat |
+|---|---|---|
+| **Mapon** | API klíč, základní URL (volitelné) | Vygenerujte API klíč v platformě Mapon pod Settings → API. Plně veřejné API — funguje okamžitě. |
+| **Orbcomm** | Přístupový token, nebo uživatelské jméno + heslo, základní URL (volitelné) | Vydáno přes váš účet ORBCOMM Platform API. Pokud máte pouze uživatelské jméno/heslo, Druma je automaticky vymění za token. |
+| **Thermo King TracKing** | API klíč, nebo uživatelské jméno + heslo, základní URL (volitelné) | Vyžádejte si API klíč TracKing od svého prodejce Thermo King nebo přes portál TracKing. Žádná veřejná samoobslužná registrace — jde o integraci vázanou na partnerství. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (nebo starší API klíč), základní URL (volitelné) | Získáno přes Carrier Transicold nebo vašeho prodejce Carrier jako součást sady API Lynx Fleet. Žádná veřejná samoobslužná registrace. |
+
+<Note>
+Mapon je plně veřejný a funguje ihned po nastavení. Orbcomm potřebuje token účtu od ORBCOMM, než začne vracet živá data. Thermo King TracKing a Carrier Lynx Fleet jsou pouze pro partnery — o API přístup musíte požádat u dodavatele, než Druma může stahovat živá data, i když je formulář připojení dostupný pro všechny čtyři.
+</Note>
+
+---
+
+## Podrobnější články
+
+<Card title="Co je eCMR?" icon="file-contract" href="/cs/ecmr/what-is-ecmr">
   Pochopte, jak eCMR funguje, kdo podepisuje a kdy se používá.
 </Card>
 
-<Card title="Import palivových karet" icon="gas-pump" href="/en/fleet-compliance/fleet-documents">
+<Card title="Vytvoření eCMR" icon="file-plus" href="/cs/ecmr/creating-ecmr">
+  Podrobný návod pro vydávání dokumentů eCMR z objednávky.
+</Card>
+
+<Card title="Podrobnosti o importu palivových karet" icon="gas-pump" href="/cs/fleet-compliance/fleet-documents">
   Jak se náklady na palivo propojují s vozidly a objednávkami.
 </Card>
----
 
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/integration-setup).
+<Card title="Reporting CO2" icon="leaf" href="/cs/fleet-compliance/co2-reporting">
+  Jak vzdálenosti ze směrování PTV vstupují do výpočtů CO2.
+</Card>

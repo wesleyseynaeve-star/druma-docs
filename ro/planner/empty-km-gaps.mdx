@@ -1,41 +1,63 @@
 ---
-title: "Goluri de kilometri goi"
-description: "Identifica distantele parcurse gol intre comenzi consecutive si unde ar aduce cel mai mult beneficiu o incarcatura de retur."
+title: "Goluri"
+description: "Gaseste comenzi neacoperite, oportunitati de repozitionare cu kilometri goi si camioane goale care ar putea reincarca in apropiere."
 icon: "route"
 ---
 
-De fiecare data cand un camion livreaza o comanda si apoi merge gol pana la urmatoarea preluare, consuma combustibil si ore de conducere fara venit. Raportul **Goluri de km goi** scoate la iveala exact aceste goluri - distanta dintre punctul de livrare al unei comenzi si urmatoarea preluare atribuita. Se gaseste sub tabul **Operatiuni**.
+## Ce este instrumentul Goluri?
 
-## Randul de KPI
+De fiecare data cand un camion finalizeaza o livrare fara o urmatoare comanda planificata, sau o comanda ramane fara camion atribuit pe masura ce se apropie data de preluare, fie consumi kilometri goi, fie risti o preluare rateaza. Pagina **Goluri** (`/operations/gaps`, in bara de taburi Planificare, ca **Goluri**) scoate la iveala ambele probleme intr-un singur loc, pe trei sub-taburi.
 
-Trei carduri sumarizeaza situatia la nivel de flota pentru perioada selectata: **Total goluri** (numarul de curse goale identificate), **Km goi medii** (distanta medie) si **Total km goi** (kilometri morti cumulati).
+<Frame caption="Instrumentul Goluri — goluri de acoperire cu o actiune recomandata, km goi, preluare, livrare si client.">
+  <img src="/images/planner/empty-km-gaps.png" alt="Pagina Goluri listand golurile de acoperire si oportunitatile de reincarcare cu km goi" />
+</Frame>
 
-## Codare pe culori
+---
 
-| Culoare | Distanta | Interpretare |
-|---|---|---|
-| Verde | < 150 km | Acceptabil - in limita normala de repozitionare |
-| Chihlimbariu | 150-300 km | Ridicat - merita verificat pentru o incarcatura de retur |
-| Rosu | > 300 km | Mare - candidat puternic pentru potrivire cu incarcatura de retur |
+## Acoperire
 
-## Vizualizare tabel
+Sub-tabul implicit listeaza **comenzile neacoperite** — comenzi viitoare care inca nu au un camion atribuit, ordonate dupa urgenta. Fiecare rand arata:
 
-Un rand per gol: camion, sofer, comanda livrata (referinta si oras livrare), urmatoarea preluare (oras si referinta comanda), distanta golului (colorata) si data golului. Sortabil pe orice coloana; click pe un rand deschide comanda in panoul de detaliu.
+- **Recomandat** — o eticheta: **Atribuie** (a fost potrivit un camion in apropiere), **Subcontracteaza** (gaseste un transportator), sau **Trebuie acoperit intern** (nicio optiune gasita)
+- **KM Goi** — distanta de deplasare goala pentru potrivirea recomandata, colorata: verde ≤150 km, chihlimbariu 150–300 km, rosu >300 km
+- **Preluare**, **Data Preluarii**, **Livrare**, **Client**
 
-## Vizualizare harta
+Actiunile de pe rand iti permit sa atribui direct camionul sugerat, sa sari la **Gaseste transportator**, sau sa deschizi comanda pentru detalii. Un meniu **Triaj** iti permite sa marchezi un rand ca **In lucru**, **Amana 24h**, sau **Accepta ca subcontract**, ca sa nu mai concureze pentru atentie.
 
-Comuta la vizualizarea **Harta** pentru aceleasi goluri pe o harta Leaflet - fiecare gol apare ca o linie punctata intre livrare si urmatoarea preluare, colorata verde/chihlimbariu/rosu. Util pentru a observa clustere geografice unde o ruta dedicata de retur ar avea sens.
+Bara KPI arata **≤12h / ≤24h / ≤72h neacoperite**, **% auto-rezolvabil**, **Necesita transportator** si **Coordonate lipsa** (comenzi ale caror opriri nu au coordonate si nu pot fi potrivite).
 
-## Export CSV
+---
 
-**Export CSV** descarca setul complet de date pentru intervalul selectat, inclusiv coordonatele GPS brute ale capetelor.
+## Optimizator km goi
+
+Acest sub-tab calculeaza oportunitati de repozitionare pe **toate** comenzile (acoperite si neacoperite), rulind o matrice de rutare pentru fiecare pereche livrare→preluare — poate dura cateva secunde sa se incarce. Este un layout permanent de **tabel impartit + harta**, nu un comutator: tabelul listeaza golurile in stanga, iar apasarea unui rand deseneaza o linie punctata pe harta, de la acel punct de livrare la urmatoarea preluare propusa — doar linia randului selectat este desenata, nu toate.
+
+Coloane: **Recomandat**, **KM Goi**, **Preluare**, **Data Preluarii**, **Repozitioneaza din** (comanda si punctul de livrare din care ar veni camionul), **Livrare**, **Client**. Un filtru **Top 10 / Top 25 / Toate** limiteaza cate randuri sunt calculate si afisate, iar harta are propriul filtru de severitate (Ridicat / Mediu / Scazut / Neacoperit).
+
+---
+
+## Camioane goale
+
+Acest sub-tab intoarce vizualizarea pe dos: un rand per **camion** care finalizeaza o livrare fara nimic planificat dupa, potrivit cu cea mai apropiata comanda neatribuita cu care ar putea reincarca. Coloane: **Camion** (cu numele soferului), **Se termina la** (loc si data), **Cea mai buna reincarcare** si **KM goi** pentru acea reincarcare. Camioanele fara nicio comanda accesibila nu arata nicio sugestie de reincarcare si necesita o decizie manuala de repozitionare sau subcontractare.
+
+KPI-uri: **Camioane goale**, **Reincarcare gasita**, **Fara reincarcare**, **KM goi medii**, **Coordonate lipsa**.
+
+---
+
+## Exportarea
+
+Bara de instrumente a fiecarui sub-tab are butoane **Printeaza** si **Exporta** pentru tabelul curent — exportul produce un fisier Excel (.xlsx) al coloanelor vizibile. Nu exista un export de coordonate GPS brute.
+
+---
 
 ## Filtre
 
-Interval de date (dupa data de livrare a comenzii precedente), camion, sofer.
+Fiecare sub-tab are o casuta de cautare in text liber (numar de comanda, nume de client, adresa de preluare/livrare). Nu exista un filtru separat de interval de date, camion sau sofer — taburile Acoperire si Optimizator sunt deja limitate la comenzile viitoare, iar tabul Camioane Goale nu are un selector per camion/sofer, deoarece fiecare rand este deja un camion.
 
-## Cum folosesti raportul pentru a gasi incarcaturi de retur
+---
 
-Rutele cu goluri rosii constante (>300 km) sunt exact locul unde un aranjament permanent de retur - sau o cautare manuala pe o bursa de transport precum Timocom sau Trans.eu la livrare - ar avea cel mai mare randament. Druma nu ruleaza o cautare automata de incarcaturi pentru comenzile FTL obisnuite - identificarea si rezervarea cursei de retur raman un pas manual, dupa ce raportul ti-a indicat ruta.
+## Folosirea acestui instrument pentru a gasi curse de retur
 
-Daca golul implica o ruta de grupaj (multi-stop), verifica daca sugestiile automate de consolidare retur ale Druma au semnalat deja o incarcatura potrivita - acestea apar direct in panoul de consolidare grupaj, fara cautare manuala.
+Rutele unde vezi constant goluri rosii (>300 km) sunt exact locul unde un aranjament permanent de retur — sau o cautare manuala pe o bursa de transport precum Timocom sau Trans.eu, la livrare — ar avea cel mai mare randament. Druma nu ruleaza o cautare automata de incarcaturi pentru comenzile FTL obisnuite; identificarea si rezervarea cursei de retur raman un pas manual, dupa ce instrumentul te-a indicat spre ruta.
+
+Daca golul implica o ruta de grupaj (cu mai multe opriri), verifica daca sugestiile automate de consolidare a curselor de retur ale Druma au semnalat deja o incarcatura potrivita — acestea apar direct in panoul de consolidare grupaj si nu necesita o cautare manuala.

@@ -1,42 +1,122 @@
 ---
-title: "Péages réels"
-description: "Comment les coûts de péage réels sont calculés pour chaque commande et comment ils affectent la marge."
-icon: "road"
+title: "Reçus de péage et réconciliation"
+description: "Comparez les péages estimés par HERE aux réels enregistrés par le chauffeur par pays, importez les lignes de péage des cartes carburant, et configurez la politique de répercussion client."
+icon: "receipt"
 ---
 
 ## Vue d'ensemble
 
-Druma calcule les coûts de péage estimés pour chaque commande via l'API de routage HERE. Ces estimations sont basées sur le poids du véhicule, le nombre d'essieux et l'itinéraire.
+Les coûts de péage sont une part significative et souvent opaque du fret routier. L'API de routage de PTV vous donne une estimation de péage par pays à la création d'une commande, mais le montant réel payé sur la route diffère régulièrement — catégories de véhicule différentes, vignettes manquantes, tarifs saisonniers, et variations de passage de frontière causent tous des écarts.
+
+Druma comble cet écart en laissant les chauffeurs enregistrer les reçus de péage directement depuis la PWA, puis présente un panneau de réconciliation codé par couleur dans le détail de la commande afin que les planificateurs puissent repérer les écarts importants avant qu'ils n'affectent les marges ou les factures client.
 
 ---
 
-## Coûts de péage dans les commandes
+## Comment les chauffeurs enregistrent les reçus de péage
 
-Lors de la création d'une commande, Druma calcule automatiquement :
+Pendant un chargement actif, la PWA du chauffeur affiche un bouton **Enregistrer un péage** sur l'écran de détail du chargement. Le toucher ouvre la fiche **Reçu de péage**.
 
-- **Distance totale** (km)
-- **Coût de péage estimé** (€)
-- **Émissions CO2** (kg)
+<Steps>
+  <Step title="Touchez Enregistrer un péage">
+    Le bouton est visible chaque fois que le statut du chargement est arrivé au chargement, chargement, en transit, arrivé à la livraison, ou déchargement — tout statut où le camion est sur la route.
+  </Step>
+  <Step title="Saisissez les détails du péage">
+    Renseignez :
+    - **Montant (EUR)** — le champ requis : le péage payé, converti en EUR
+    - **Montant local** (optionnel) — le montant en devise locale, plus le code devise et le taux de change, si vous voulez aussi enregistrer les chiffres d'origine
+    - **Pays** — pré-rempli selon la position GPS actuelle, mais modifiable
+    - **Notes** (optionnel) — référence d'autoroute, numéro de péage, ou tout commentaire du chauffeur
+  </Step>
+  <Step title="Joignez une photo du reçu (optionnel)">
+    Touchez l'icône appareil photo ou fichier pour joindre une photo du reçu. Formats acceptés : JPEG, PNG, WebP, HEIC, PDF. Taille de fichier maximale : 5 Mo.
+  </Step>
+  <Step title="Confirmez">
+    Touchez **Enregistrer**. Le reçu est stocké immédiatement.
+  </Step>
+</Steps>
 
-Ces chiffres apparaissent dans la section **Itinéraire** du formulaire de commande et dans le panneau de détails.
+### Prise en charge hors ligne
+
+Les reçus de péage fonctionnent hors ligne. Si le chauffeur est dans une zone sans connectivité, le reçu est mis en file localement et synchronisé automatiquement dès que l'appareil se reconnecte. Le planificateur le voit arriver dans le panneau de réconciliation une fois la synchronisation terminée.
 
 ---
 
-## Impact sur la marge
+## Le panneau de réconciliation (vue planificateur)
 
-Les coûts de péage sont inclus dans le calcul de marge de la commande :
+Ouvrez le panneau de détail de n'importe quelle commande et faites défiler jusqu'à la section **Réconciliation des péages**. Le panneau montre un tableau avec une ligne par pays où existe soit une estimation HERE soit un réel enregistré.
 
-**Marge = Prix convenu - Coûts variables (carburant, péage) - Coûts fixes alloués**
+### Code couleur de l'écart
+
+| Couleur | Condition | Signification |
+|---|---|---|
+| Vert | Écart ≤ 5% | Le réel est dans la fourchette attendue |
+| Ambre | Écart 6–15% | Écart modéré — mérite une révision |
+| Rouge | Écart > 15% | Écart significatif — vérifiez les reçus |
+| Gris | Pas d'estimation HERE | HERE n'avait pas de données de péage pour ce segment de pays |
+
+L'écart est calculé comme `(réel − estimation) / estimation`. Un écart positif signifie que le chauffeur a payé plus que l'estimation ; un écart négatif signifie moins.
+
+### Liste des reçus
+
+Sous le tableau récapitulatif, chaque reçu individuel est listé avec :
+- Date et heure d'enregistrement
+- Pays et montant
+- Notes (le cas échéant)
+- Une miniature si une photo a été jointe — cliquez pour ouvrir l'image en pleine taille
+
+Les planificateurs peuvent ajouter des reçus manuellement à l'aide du bouton **Ajouter un reçu** en bas de la section — utile quand le chauffeur a oublié d'enregistrer un péage mais a le reçu papier.
 
 ---
 
-## Données de péage dans les rapports
+## Import de cartes carburant — répartition automatique des péages
 
-Les coûts de péage agrégés apparaissent dans :
+Les relevés de cartes carburant DKV, UTA, et AS24 regroupent souvent des transactions de carburant et de péage dans le même fichier d'export. Quand vous importez un fichier de carte carburant dans **Flotte → Cartes carburant**, Druma sépare automatiquement les lignes de péage des lignes de carburant :
 
-- **Rapports → Rentabilité par ligne** — Coûts de péage par itinéraire.
-- **Rapports → CO2** — En combinaison avec les données d'émissions.
+- Les **lignes de carburant** sont ajoutées au registre carburant du camion normalement
+- Les **lignes de péage** sont acheminées vers les reçus de péage et rapprochées de la commande active à cette date pour ce camion
 
-<Card title="Rapport de rentabilité par ligne" icon="chart-line" href="/fr/reports/lane-profitability">
-  Analysez les coûts de péage et la rentabilité par itinéraire.
+Réimporter le même fichier est sans risque — les entrées en double (rapprochées par référence de transaction et montant) sont ignorées automatiquement.
+
+<Note>
+Le rapprochement des péages depuis les imports de cartes carburant utilise le camion et la date pour trouver la commande active. Si un camion avait plus d'une commande à la même date, l'import rattache le reçu à la première commande correspondante et signale la ligne pour révision manuelle dans le résumé d'import.
+</Note>
+
+---
+
+## Politique de répercussion par pays
+
+Tous les péages ne sont pas facturés au client. Certaines entreprises absorbent les péages pour certains corridors dans le cadre de leur tarif ; d'autres les répercutent intégralement. Druma vous permet de configurer cela au niveau du barème de tarifs.
+
+Accédez à **Paramètres → Barèmes de tarifs** et ouvrez n'importe quel barème. Il y a un tableau de dérogation **Politique de péage par pays** en bas. Pour chaque pays :
+
+| Politique | Comportement |
+|---|---|
+| Répercuté | Le péage réel apparaît comme une ligne d'extras de commande sur la facture |
+| Absorbé | Le péage est suivi en interne mais n'apparaît pas sur la facture client |
+| (vide) | Se rabat sur la politique de péage de premier niveau du barème |
+
+Les pays non listés dans le tableau de dérogation héritent du défaut du barème.
+
+### Ligne de facture automatique
+
+Quand un pays est défini sur **Répercuté**, les reçus de péage enregistrés pour ce pays sont automatiquement additionnés et ajoutés comme ligne d'extras de commande sur la facture lors de la génération. La ligne est étiquetée avec le nom du pays.
+
+Si vous devez exclure un reçu spécifique de la facture — par exemple, parce qu'il est couvert par un accord de supplément séparé — ouvrez l'éditeur de facture et activez **Exclure de la facture** sur cette ligne d'extras.
+
+---
+
+## Conseils pour une réconciliation précise
+
+- Demandez aux chauffeurs d'enregistrer les péages immédiatement après chaque paiement, pas à la fin du trajet, afin que les reçus restent rapprochés du bon jour et du bon pays.
+- Si HERE affiche gris (pas d'estimation) pour un pays que vos camions traversent fréquemment, signalez-le dans **Paramètres → Barèmes de tarifs** avec un supplément pays manuel afin que les marges soient protégées même sans données HERE.
+- Des écarts ambre ou rouge importants et répétés sur le même pays sont un signal pour ajuster l'estimation de péage de base dans votre barème de tarifs.
+
+---
+
+<Card title="Barèmes de tarifs" icon="sliders-horizontal" href="/fr/admin/rate-cards">
+  Configurez la politique de répercussion des péages, les suppléments de base, et les dérogations par pays.
+</Card>
+
+<Card title="Cartes carburant et imports" icon="fuel" href="/fr/integrations/fuel-card-import">
+  Importez les relevés DKV, UTA, et AS24 pour peupler automatiquement les enregistrements de carburant et de péage.
 </Card>

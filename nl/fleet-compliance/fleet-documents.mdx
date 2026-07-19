@@ -1,10 +1,12 @@
 ---
 title: "Vlootdocumenten"
-description: "Houd verzekeringscertificaten, ITP, exploitatievergunningen, tachograafkalibratie en alle andere voertuigdocumenten bij met automatische verloopmeldingen."
+description: "Houd verzekeringscertificaten, ITP, CEMT-vergunningen, ADR- en tachograafkalibratiecertificaten en alle andere voertuigdocumenten bij, met een optionele vervalmelding."
 icon: "folder-open"
 ---
 
-Elke truck in uw vloot moet een set geldige documenten bij zich hebben. Ontbrekende of verlopen documenten kunnen een voertuig stilleggen bij een wegkanttcontrole. Druma houdt ze allemaal bij en waarschuwt u voor ze verlopen.
+Elke truck in uw vloot moet een set geldige documenten bij zich hebben — wettelijk vereiste certificaten die verlopen en regelmatig vernieuwd moeten worden. Ontbrekende of verlopen documenten kunnen een voertuig stilleggen bij een wegcontrole. Druma houdt ze allemaal bij en waarschuwt u voor ze verlopen.
+
+---
 
 ## Bijgehouden documenttypen per voertuig
 
@@ -12,39 +14,107 @@ Druma houdt de volgende documentcategorieën bij voor elk voertuig:
 
 | Document | Roemeense naam | Opmerkingen |
 |---|---|---|
-| Wegenbelasting | Rovinietă | Jaarlijks vernieuwen |
-| Periodieke technische keuring | ITP | Jaarlijks (nieuwer) of halfjaarlijks (ouder) |
-| Transportvergunning | Licență de transport | Voor grensoverschrijdend vervoer |
-| Bedrijfsaansprakelijkheids­verzekering | RCA | Verplicht |
-| Cargo­verzekering | Asigurare marfă | Voor gedekte lading |
-| ADR-certificaat | Certificat ADR | Voor gevaarlijke goederen |
-| Tachograafkalibratie | Calibrare tahograf | Elke 2 jaar |
-| CEMT-vergunning | Licență CEMT | Voor meerdere landen transport |
+| Rijvaardigheidscertificaat (ITP) | ITP | Periodieke technische keuring |
+| Aansprakelijkheidsverzekering derden (RCA) | RCA | Verplicht voor alle voertuigen |
+| CMR-cargoverzekering | Asigurare CMR | Vereist voor internationaal transport |
+| Kentekenbewijs | Talon / Carte de identitate a vehiculului | |
+| CEMT-vergunning | Autorizație CEMT | Multilaterale quotumvergunning, los van de binnenlandse exploitatievergunning |
+| ADR-certificaat | Certificat ADR vehicul | Alleen bij vervoer van gevaarlijke goederen |
+| Tachograafkalibratiecertificaat | Certificat verificare tahograf | Wettelijk periodiek vereist |
+| ATP-certificaat | Certificat ATP | Alleen reefer-/temperatuurgereguleerde trailers |
+| Overig | — | Elk documenttype dat niet in bovenstaande categorieën past |
 
-## Documentvervaldatum toevoegen
+<Note>
+U kunt ook aangepaste documenttypen toevoegen als uw operatie documenten heeft die niet in deze categorieën passen — bijvoorbeeld koudeketen-kalibratiecertificaten of vergunningsdocumenten voor oversized ladingen.
+</Note>
+
+---
+
+## Een document toevoegen aan een voertuig
 
 <Steps>
-  <Step title="Open het voertuigprofiel">
-    Ga naar **Vloot → Voertuigen** en klik op het voertuig.
+  <Step title="Open het Documentenoverzicht">
+    Ga naar **Vloot → Documentenoverzicht** — dit is een aparte hoofdpagina binnen Vloot, geen tabblad op de voertuigdetailweergave.
   </Step>
-  <Step title="Ga naar het tabblad Documenten">
-    Klik op het tabblad **Documenten** op de voertuigprofielpagina.
+  <Step title="Klik op Document uploaden">
+    Klik op **Document uploaden**.
   </Step>
-  <Step title="Klik op Document toevoegen">
-    Klik op **+ Document toevoegen**.
+  <Step title="Selecteer het documenttype">
+    Kies het documenttype uit de vervolgkeuzelijst (bijv. RCA, ITP, tachograafkalibratie).
   </Step>
-  <Step title="Selecteer het documenttype en vul de vervaldatum in">
-    Kies het type document en voer de vervaldatum in. Upload optioneel een scan van het document.
+  <Step title="Voer de vervaldatum in">
+    Voer de vervaldatum van het document in. Dit is de datum die Druma gebruikt voor alle waarschuwingsberekeningen.
+  </Step>
+  <Step title="Upload de scan">
+    Koppel een PDF-, JPG- of PNG-scan van het document. Maximale bestandsgrootte: 20 MB per bestand.
+  </Step>
+  <Step title="Opslaan">
+    Klik op **Opslaan**. Het document verschijnt in de documentenlijst van het voertuig met vervaldatum en status.
   </Step>
 </Steps>
 
-## Verloopmeldingen
+---
 
-Druma stuurt meldingen wanneer documenten naderen:
-- **30 dagen** voor verloop: oranje waarschuwing
-- **7 dagen** voor verloop: rode waarschuwing
-- **Verlopen**: rode blokkering op het planningsbord — de truck kan niet worden toegewezen
+## Vervalopvolging en meldingen
+
+Badges (geel waarschuwing / rood verlopen) op het voertuig in de vlootlijst weerspiegelen altijd de werkelijke vervalstatus van elk document, dagelijks berekend. De proactieve **melding** bovenop die badges is echter opt-in:
+
+| Tijd voor verval | Getoonde badge | Melding (indien ingeschakeld) |
+|---|---|---|
+| 60 dagen | — | Waarschuwingsmelding verstuurd |
+| 14 dagen | Gele waarschuwingsbadge | Kritieke melding verstuurd |
+| Verlopen | Rode badge; voertuig geblokkeerd voor nieuwe ordertoewijzingen | Melding verstuurd |
+
+<Warning>
+De melding zit achter **Instellingen → Automatiseringen & Functies → Vlootdocument-vervalwaarschuwingen**, wat voor elk bedrijf **standaard uit staat**. Tot u dit inschakelt, toont Druma nog steeds de juiste badges op het voertuig en de vlootlijst, maar wordt niemand proactief op de hoogte gesteld naarmate een document zijn vervaldatum nadert — u moet het zelf in de lijst opmerken. Eenmaal ingeschakeld gaan in-app meldingen naar gebruikers met de rol Wagenparkbeheerder, Bedrijfsbeheerder of Admin (er is geen apart e-mailkanaal voor deze melding).
+</Warning>
+
+<Warning>
+Een voertuig met een verlopen document **kan niet worden toegewezen aan nieuwe orders** totdat het verlopen document is vernieuwd en geüpload. Bestaande lopende orders worden niet onderbroken, maar dispatchers zien een waarschuwing.
+</Warning>
+
+Vernieuwt u een document, upload dan onmiddellijk de nieuwe versie — Druma wist de verlopen status zodra de nieuwe vervaldatum is opgeslagen.
+
+---
+
+## Nalevingsoverzicht
+
+In plaats van voertuigen één voor één te controleren, gebruikt u de vlootbrede nalevingsweergave:
+
+1. Ga naar **Vloot → Documentenoverzicht**
+2. Zie elk voertuig en elk documenttype in één enkel raster
+3. Filter de weergave op status: **Verlopen**, **Verloopt binnenkort** (binnen 30 dagen), of **Actueel**
+
+Deze weergave is bedoeld voor de ochtendcontrole van de wagenparkbeheerder — een korte blik op het raster toont of er vandaag actie nodig is.
+
+---
+
+## Bestandsformaatvereisten
+
+- **Toegestane formaten:** PDF, JPG, PNG
+- **Maximale bestandsgrootte:** 20 MB per document
+- **Aanbevolen:** scan op een resolutie waarbij de documenttekst duidelijk leesbaar is — minstens 150 DPI voor A4-documenten
+
+Vraagt een wegcontroleur of klant om een document, dan kunt u het rechtstreeks downloaden vanaf **Vloot → Documentenoverzicht** en per e-mail versturen. Chauffeurs kunnen ook documenten voor hun toegewezen voertuig bekijken in de Druma-mobiele app.
+
+---
+
+## Veelgestelde vragen
+
+**Kan één document meerdere voertuigen dekken?** Nee — elk document moet apart worden geüpload naar elk voertuig dat het dekt. De RCA-polis kan uw hele vloot dekken, maar upload ze naar elk voertuig individueel zodat vervalopvolging per voertuig werkt.
+
+**Wat als ik een document heb dat niet op de lijst staat?** Gebruik de optie voor aangepast documenttype bij het uploaden. Voer de documentnaam handmatig in.
+
+**Kunnen chauffeurs hun eigen voertuigdocumenten uploaden?** Nee — documentbeheer is beperkt tot de rollen Dispatcher, Wagenparkbeheerder, Admin en Bedrijfsbeheerder.
+
+---
+
+## Gerelateerde artikelen
 
 <Card title="ADR-certificaten" icon="radiation" href="/nl/fleet-compliance/adr-certificates">
-  ADR-naleving voor gevaarlijke goederen bijhouden.
+  ADR-certificering voor chauffeurs en voertuigen bijhouden, en hoe ADR-orders naleving afdwingen.
+</Card>
+
+<Card title="Vlootbeheer" icon="truck" href="/nl/planner/fleet-management">
+  Voertuigen toevoegen, voertuiggegevens bewerken en uw vlootlijst beheren.
 </Card>

@@ -1,65 +1,161 @@
 ---
-title: "Groupage"
-description: "Comment créer et gérer des commandes de groupage multi-stops dans Druma — combinaison de commandes, répartition des coûts et suivi par étape."
+title: "Groupage (LTL)"
+description: "Consolidez plusieurs petits chargements de différents clients sur un seul camion avec suivi par leg, facturation par leg, et un manifeste imprimable à arrêts multiples."
 icon: "boxes-stacked"
 ---
 
 ## Qu'est-ce que le groupage ?
 
-Le groupage (ou transport groupé) consiste à combiner plusieurs commandes de clients différents sur un même camion. Druma gère chaque arrêt indépendamment — avec ses propres statuts, eCMR, facture et client.
+Le groupage — aussi appelé LTL (less-than-truckload) ou consolidation — consiste à charger plusieurs petites expéditions de différents clients sur le même camion allant dans la même direction. Chaque client ne paie que pour sa portion d'espace camion, et vous remplissez le camion avec des chargements combinés pour rendre le trajet rentable.
+
+Dans Druma, le groupage est son propre module (`/groupage`) — un **trajet de groupage** contient plusieurs **legs** de commandes existantes. Le trajet suit le camion, le chauffeur, et l'itinéraire ; chaque leg garde son propre client, sa cargaison, son adresse de chargement/livraison, et son prix.
+
+<Note>
+Le groupage n'est pas un quatrième « type de commande » aux côtés de Camion propre / Sous-traitée / Repositionnement — c'est un module séparé qui regroupe des commandes existantes.
+</Note>
+
+<Frame caption="Le module Groupage — les legs d'un trajet avec client par leg, cargaison, et suivi de taux de remplissage.">
+  <img src="/images/planner/groupage.png" alt="Trajet de groupage avec plusieurs legs et indicateur de taux de remplissage" />
+</Frame>
 
 ---
 
-## Créer une commande de groupage
+## Créer un trajet de groupage
 
 <Steps>
-  <Step title="Accédez à Commandes → Nouveau groupage">
-    Sélectionnez au moins 2 commandes existantes à combiner, ou créez de nouvelles commandes directement dans le formulaire de groupage.
+  <Step title="Accédez à Groupage">
+    Ouvrez le module **Groupage** depuis la navigation.
   </Step>
-  <Step title="Définissez la séquence des arrêts">
-    Ordonnez les arrêts de chargement et de livraison. Druma calcule l'itinéraire optimal.
+  <Step title="Cliquez sur Créer un groupage">
+    Cliquez sur **Créer un groupage**. Druma crée un trajet vide (avec une référence auto-générée comme `GRP-XXXXX`) et ouvre son panneau de détail — il n'y a pas de formulaire camion/chauffeur/date/itinéraire à cette étape.
   </Step>
-  <Step title="Configurez la répartition des coûts">
-    Choisissez comment les coûts communs sont répartis entre les clients : **par poids**, **par volume (m³)** ou **par mètres de plancher (LDM)**.
-  </Step>
-  <Step title="Affectez le camion et le chauffeur">
-    Sélectionnez le véhicule et le chauffeur pour l'ensemble du trajet.
-  </Step>
-  <Step title="Confirmez">
-    Cliquez sur **Confirmer le groupage**. Chaque commande individuelle reçoit ses propres statuts et eCMR.
+  <Step title="Ajoutez des commandes au trajet">
+    Voir la section suivante — vous construisez le trajet en ajoutant des commandes éligibles existantes, pas en remplissant un formulaire.
   </Step>
 </Steps>
 
 ---
 
-## Répartition des coûts
-
-Druma calcule automatiquement la part de chaque client dans les coûts totaux. Vous pouvez remplacer manuellement la répartition si nécessaire.
-
----
-
-## Facturation par étape
-
-Chaque étape du groupage génère une facture séparée pour le client concerné. La facturation d'une étape n'est pas bloquée par les autres étapes.
-
----
-
-## Ajouter des commandes à un groupage existant
-
-Vous pouvez ajouter des commandes à un groupage déjà confirmé — tant que le chargement n'a pas commencé.
+## Ajouter des commandes à un trajet de groupage
 
 <Steps>
-  <Step title="Ouvrez le groupage">
-    Trouvez le groupage dans la liste des commandes.
+  <Step title="Ouvrez le trajet et cliquez sur Ajouter des commandes">
+    Ouvrez le trajet de groupage et cliquez sur **Ajouter des commandes au groupage**.
   </Step>
-  <Step title="Cliquez sur Ajouter une commande">
-    Sélectionnez la commande à ajouter et définissez sa position dans la séquence.
+  <Step title="Cochez les commandes éligibles">
+    La fenêtre liste les commandes existantes éligibles à rejoindre ce trajet — numéro de commande, client, itinéraire, LDM, poids, et type de remorque — avec une case à cocher par ligne. Il n'y a pas de formulaire de saisie ici ; vous sélectionnez des commandes qui existent déjà, pas en tapant de nouveaux détails d'expédition.
   </Step>
-  <Step title="Recalculez la répartition des coûts">
-    Druma recalcule automatiquement la répartition en incluant la nouvelle commande.
+  <Step title="Utilisez Remplissage auto si vous voulez que Druma choisisse pour vous">
+    Cliquez sur **Remplissage auto** pour que Druma sélectionne la meilleure combinaison de commandes éligibles jusqu'à la capacité en mètres de plancher restante de la remorque.
+  </Step>
+  <Step title="Ajouter au groupage">
+    Cliquez sur **Ajouter au groupage**. Si votre sélection dépasse la capacité LDM de la remorque, l'action est bloquée avec une erreur de validation — vous devrez d'abord désélectionner quelque chose. Une discordance de type de remorque (le type de remorque d'une commande diffère de celui du trajet) s'affiche comme un avertissement mais ne bloque pas l'action.
   </Step>
 </Steps>
 
-<Card title="Cycle de vie d'une commande" icon="circle-dot" href="/fr/planner/order-lifecycle">
-  Comprendre comment les statuts fonctionnent pour les commandes de groupage multi-stops.
-</Card>
+<Note>
+Le poids et le volume ne bloquent pas l'ajout de commandes — seuls les mètres de plancher (LDM) le font. Les barres de taux de remplissage pour le poids et le volume sont quand même affichées pour référence (voir ci-dessous), mais elles sont informatives, pas bloquantes.
+</Note>
+
+---
+
+## Séquençage des arrêts
+
+Les nouveaux arrêts sont simplement ajoutés à la fin du trajet dans l'ordre où vous les ajoutez — Druma n'optimise pas automatiquement l'itinéraire au fur et à mesure.
+
+Pour optimiser l'ordre, cliquez sur **Auto-séquencer** (affiché uniquement avec 2+ arrêts) : cela réordonne la liste des arrêts pour minimiser la distance totale (chargements avant livraisons) et indique combien de distance a été économisée, ou que l'ordre était déjà optimal. Vous pouvez aussi glisser-déposer les arrêts manuellement, ou utiliser les flèches haut/bas sur chaque ligne d'arrêt, à tout moment.
+
+---
+
+## Suivi de statut par leg
+
+Chaque leg de commande a son propre flux de statut, indépendant des autres expéditions sur le camion. Quand le chauffeur met à jour son statut pour un arrêt spécifique, seule la commande de ce leg se met à jour — l'aperçu du trajet montre quels arrêts sont terminés et lesquels sont en attente.
+
+Par exemple : si le camion a quatre livraisons et que le chauffeur termine les arrêts 1 et 2, ces legs affichent **Livré** tandis que les arrêts 3 et 4 affichent encore **En route vers la livraison**. Chaque client ne voit que le statut de sa propre expédition dans son portail.
+
+---
+
+## Suivi des mètres de plancher (LDM), du poids et du volume
+
+Chaque leg peut avoir des valeurs **CBM**, **Poids (kg)**, et **LDM** saisies directement sur sa carte d'arrêt. Le LDM représente la longueur linéaire de plancher de remorque occupée par l'expédition — la mesure standard pour la planification de groupage à travers l'Europe.
+
+Le trajet de groupage affiche des barres de progression de taux de remplissage pour les dimensions dont le camion/remorque affecté a une capacité connue — **Poids**, **Volume (CBM)**, et **Mètres de plancher** :
+
+| Couleur | Niveau de remplissage |
+|---|---|
+| Vert | ≤70% de la capacité |
+| Ambre | 70–90% de la capacité |
+| Rouge | >90% de la capacité (y compris au-delà de 100%, affiché sans plafond) |
+
+### Mode de répartition des coûts
+
+Le **mode de répartition des coûts** contrôle comment les coûts partagés sont divisés entre les legs. Quatre modes sont disponibles : **CBM**, **Poids**, **LDM**, et **Facturable**. Cliquez sur un bouton de mode dans l'onglet Répartition des coûts du trajet pour basculer — cela déclenche un recalcul automatique de la part de coût, du pourcentage de répartition, du coût alloué, et de la marge de chaque leg.
+
+Choisissez le mode qui correspond à votre accord commercial avec les clients de ce trajet. CBM est le plus courant pour le fret général, LDM pour les chargements critiques en espace de plancher, poids pour les marchandises denses, et Facturable quand vous facturez selon celui du poids/volume qui donne le chiffre le plus élevé.
+
+---
+
+## Manifeste de groupage
+
+Avant que le chauffeur ne parte, imprimez le manifeste de groupage — une liste des arrêts et de la cargaison du trajet.
+
+<Steps>
+  <Step title="Ouvrez le trajet de groupage">
+    Ouvrez le panneau de détail du trajet.
+  </Step>
+  <Step title="Imprimer le manifeste">
+    Cliquez sur **Imprimer le manifeste**. Druma ouvre un nouvel onglet de navigateur avec un manifeste HTML imprimable — il n'y a pas de téléchargement PDF séparé.
+  </Step>
+  <Step title="Partagez avec le chauffeur">
+    Imprimez-le et remettez-le, ou partagez-le via le fil de messages de l'application chauffeur.
+  </Step>
+</Steps>
+
+Le manifeste inclut : la séquence des arrêts, l'adresse de chargement/livraison, le client, le numéro de commande, le poids, et toute note par arrêt. Il n'inclut pas de colonne de description de cargaison.
+
+---
+
+## Facturation par leg
+
+Le trajet a son propre onglet **Factures**, listant chaque leg avec son statut de facture (**Non facturé → Générée → Envoyée → Payée**) et un bouton **Générer une facture** par leg :
+
+<Steps>
+  <Step title="Ouvrez l'onglet Factures du trajet">
+    Ouvrez le trajet de groupage et accédez à l'onglet **Factures**.
+  </Step>
+  <Step title="Générez une facture">
+    Cliquez sur **Générer une facture** à côté de n'importe quel leg pas encore facturé. La facture est créée pour le client de ce leg uniquement, avec sa cargaison, son prix, et sa référence spécifiques.
+  </Step>
+</Steps>
+
+Les clients sur le même camion ne voient jamais les factures ni les prix des autres — chacun reçoit un document propre et séparé, et vous pouvez les générer un par un à mesure que chaque leg est prêt à être facturé.
+
+---
+
+## Suivi
+
+Les clients suivant une expédition de groupage voient une date **Livraison prévue** statique sur la page de suivi publique, pas une ETA en direct séquencée à arrêts multiples.
+
+---
+
+## Un cas d'usage typique
+
+Vous avez quatre clients ayant besoin de chargements déplacés de Bucarest vers Vienne ce jeudi. Individuellement, aucun d'eux ne remplit un camion. Ensemble, oui :
+
+- Client A : 8 palettes vers Bratislava
+- Client B : 4 palettes vers Budapest
+- Client C : 10 palettes vers Vienne
+- Client D : 6 palettes vers Linz
+
+Vous créez les quatre commandes normalement, puis créez un trajet de groupage, ajoutez les quatre commandes, affectez votre chauffeur, auto-séquencez les arrêts, et imprimez le manifeste. Chaque client paie pour sa portion, chacun reçoit sa propre facture et ses mises à jour de statut, et vous faites tourner un camion plein.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Créer des commandes" icon="plus" href="/fr/planner/creating-orders">
+    Découvrez comment fonctionnent les commandes standard dans Druma — vous créerez d'abord les commandes individuelles, puis les regrouperez.
+  </Card>
+  <Card title="Tableau de planification" icon="calendar" href="/fr/planner/planning-board">
+    Voyez toutes vos commandes dans la vue de planification hebdomadaire avant de les regrouper en un trajet.
+  </Card>
+</CardGroup>

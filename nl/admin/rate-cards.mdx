@@ -1,69 +1,85 @@
 ---
 title: "Tariefkaarten"
-description: "Hoe u tariefkaarten aanmaakt en beheert in Druma om standaard rijstrookprijzen op te slaan en het aanmaken van orders te versnellen."
+description: "Hoe u vrachtwagen-kostenprofielen definieert in Druma zodat orders een nauwkeurige geschatte kost en marge tonen."
 icon: "tags"
 ---
 
+<Note>
+Deze pagina behandelt **Instellingen → Tariefkaarten** — vrachtwagen-**kostenprofielen** die worden gebruikt om de kost en marge van een order te schatten. Zoekt u traject-gebaseerde **verkoop**prijzen (herkomst/bestemming-gebaseerde offertesuggesties, bijv. "Roemenië → Duitsland, schuifzeildak — €1.450"), dat is een aparte functie genaamd **Lane Pricing**, onder **Pricing → Lane Pricing** in de hoofdapp — niet op deze pagina.
+</Note>
+
 ## Wat is een tariefkaart?
 
-Een tariefkaart is een opgeslagen prijssjabloon voor een route die u regelmatig rijdt. Als u wekelijks lading vervoert van Roemenië naar Duitsland, hoeft u de prijs niet elke keer opnieuw te berekenen. U slaat een tariefkaart op voor dat traject — en Druma stelt automatisch de prijs voor wanneer u een nieuwe order aanmaakt op die route.
+Een tariefkaart in **Instellingen → Tariefkaarten** is een kostenprofiel voor een categorie vrachtwagenoperatie — ofwel uw **eigen wagenpark**, ofwel een **onderaannemer**. Het legt vast wat het u werkelijk kost om een vrachtwagen te laten rijden (vaste kost, chauffeursloon, brandstof, ADR-/overmaattoeslagen, tol), zodat Druma de kost en marge van een order kan schatten naast de prijs die u de klant aanrekent.
 
-Tariefkaarten zijn een startpunt, geen regel. Uw planners kunnen altijd de voorgestelde prijs overschrijven op individuele orders.
-
-## Hoe tariefkaarten in de praktijk werken
-
-Wanneer een planner een nieuwe order aanmaakt, controleert Druma of er actieve tariefkaarten overeenkomen met het geselecteerde land van oorsprong, bestemmingsland en opleggertype. Bij een overeenkomst toont Druma een prompt:
-
-*"Een tariefkaart komt overeen met dit traject: Roemenië → Duitsland, Schuifzeildak — €1.450 vast tarief. Toepassen?"*
-
-De planner kan op **Toepassen** klikken of de suggestie negeren en handmatig een andere prijs invoeren.
+**Wie kan bewerken:** Admin, Bedrijfsbeheerder en Planner-rollen.
 
 ## Een tariefkaart aanmaken
 
-Ga naar **Instellingen → Tariefkaarten** en klik op **Tariefkaart toevoegen**.
+Ga naar **Instellingen → Tariefkaarten** en klik op **Nieuwe kaart**.
 
 ### Naam
 
-Geef de tariefkaart een duidelijke, beschrijvende naam zodat planners deze in één oogopslag kunnen herkennen.
+Geef de kaart een duidelijke naam, bijv. "Eigen wagenpark — standaard" of "Onderaannemer — RO/BG-trajecten".
 
-### Land van oorsprong en bestemmingsland
+### Type
 
-Selecteer het land waar de lading wordt geladen en het land waar deze wordt afgeleverd.
+Kies **Eigen wagenpark** of **Onderaannemer** — dit bepaalt op welke ordercategorie het kostenprofiel van toepassing is.
 
-### Opleggertype
+### Tarief/km (€)
 
-Selecteer het type oplegger dat op dit traject wordt gebruikt: Schuifzeildak, Koel/vrieswagen, Dieplader, Tankwagen, Gesloten opbouw, Mega-oplegger, Diepzwenklader of Anders.
+Een optioneel vast kosttarief per kilometer.
 
-### Prijstype
+### Kostbasis
 
-Kies hoe de prijs wordt berekend:
-- **Vaste basisprijs** — een vast bedrag voor het hele traject
-- **Per kilometer** — een tarief vermenigvuldigd met de door Druma berekende afstand
+Kies hoe de vaste operationele kost wordt berekend:
+- **Dagtarief** — voer een **vaste dagkost (€)** en een **chauffeursloon/dag (€)** in.
+- **Weekhuur** — voer een **vaste weekkost (€)** en een **chauffeursloon/week (€)** in.
 
-### Prijs en valuta
+### Wachttijd
 
-Voer het bedrag in en selecteer de valuta.
+- **Gratis wachturen** — hoeveel uur wachttijd inbegrepen zijn voordat een kost geldt.
+- **Wachttarief €/u** — het uurtarief zodra de gratis wachturen overschreden zijn.
 
-### Brandstoftoeslag %
+### Toeslagen
 
-Als u een brandstoftoeslag toevoegt bovenop uw basisprijs, voer hier het percentage in.
+- **ADR-toeslag (€)** — extra kost voor gevaarlijke-stoffenzendingen.
+- **Overmaattoeslag (€)** — extra kost voor oversized ladingen.
 
-### Notities
+### Brandstof
 
-Voeg interne notities toe over deze tariefkaart — zichtbaar voor planners maar niet op facturen.
+- **Brandstofbasis (€/L)** — de brandstofprijs gebruikt in kostberekeningen.
+- **Brandstofverbruik (L/100km)** — het verwachte verbruik van de vrachtwagen, samen met de brandstofbasisprijs en routeafstand gebruikt om de brandstofkost te schatten.
 
-## Een tariefkaart bewerken
+### Margedoelen
 
-Ga naar **Instellingen → Tariefkaarten**, zoek de tariefkaart en klik op het **bewerken-icoon** (potlood).
+- **Doelmarge %** — de marge waarnaar u streeft bij orders met dit kostenprofiel.
+- **Minimummarge %** — de minimaal aanvaardbare marge voordat Druma de order moet signaleren.
 
-## Een tariefkaart uitschakelen
+### Tolbeleid
 
-Als een tarief niet langer geldig is, kunt u de tariefkaart uitschakelen zonder deze te verwijderen. Zet de schakelaar **Actief** uit.
+Kies de standaard tolafhandeling voor dit kostenprofiel:
+- **Inbegrepen in tarief** — tol wordt in uw tarief geabsorbeerd, niet apart gefactureerd.
+- **Doorbelast aan klant** — tol wordt gefactureerd aan de klant zodra gemaakt.
+- **Aparte regel** — tol verschijnt als eigen regel op de order/factuur.
 
-<Note>
-Uitschakelen is beter dan verwijderen, zeker als u dat traject in de toekomst mogelijk opnieuw activeert.
-</Note>
+U kunt deze standaard overschrijven per land of per tolexploitant:
 
-<Card title="Orders aanmaken" icon="file-lines" href="/nl/planner/creating-orders">
-  Bekijk hoe tariefkaartsuggesties verschijnen wanneer u een nieuwe transportorder aanmaakt.
+- **Overschrijvingen per land** — kies een land en een beleid (Gefactureerd aan klant / Inbegrepen in tarief / Niet gefactureerd). Handig wanneer bijvoorbeeld Franse tol wordt doorbelast maar Duitse tol inbegrepen is.
+- **Overschrijvingen per exploitant** — voer een tolexploitantnaam exact zoals op de bonnen (bijv. `ASFINAG`, `HU-GO`, `Viapass`) in met een beleid. Een overschrijving op exploitantniveau heeft voorrang op het landbeleid.
+
+### Opslaan
+
+Klik op **Wijzigingen opslaan** bij een bestaande kaart, of **Aanmaken** bij een nieuwe.
+
+## Een tariefkaart bewerken of verwijderen
+
+Klap een kaart in de lijst uit om velden inline te bewerken. Klik op het **X** naast een kaart om te verwijderen — u wordt om bevestiging gevraagd, dit kan niet ongedaan gemaakt worden.
+
+Tariefkaart-kostenprofielen voeden de kost-/margeschatting getoond bij het aanmaken of prijzen van een order — een apart berekeningsvlak dat hier niet behandeld wordt.
+
+## Gerelateerde pagina's
+
+<Card title="Bedrijfsinstellingen" icon="building" href="/nl/admin/company-setup">
+  Configureer uw bedrijfsprofiel, dat samenwerkt met tariefkaarten bij het berekenen van orderkosten.
 </Card>

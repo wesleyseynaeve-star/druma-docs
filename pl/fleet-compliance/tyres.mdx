@@ -1,49 +1,117 @@
 ---
-title: "Opony Floty"
+title: "Opony floty"
 description: "Śledź montaż opon, głębokość bieżnika, stan i koszty wymiany dla każdego pojazdu w flocie."
 ---
 
 ## Przegląd
 
-Karta Opony w module Floty śledzi montaż opon, stan i historię wymian dla każdego pojazdu.
+Strona Flota → Opony śledzi montaż opon, stan i historię wymian dla każdego pojazdu. Daje kierownikom floty widoczność kosztów związanych z oponami i cykli zużycia bez polegania na papierowych rekordach.
 
-**Dostęp:** Flota → Ciężarówki → otwórz pojazd → karta **Opony**.
+**Dostęp:** Flota → **Opony** — samodzielna strona najwyższego poziomu Floty, nie karta w widoku szczegółów pojazdu.
+
+<Frame caption="Flota → Opony — dowolnie konfigurowalne pozycje opon per pojazd, ze śledzeniem głębokości bieżnika.">
+  <img src="/images/fleet-compliance/tyres.png" alt="Strona Opony floty" />
+</Frame>
 
 ---
 
 ## Rekordy opon
 
+Pozycje opon są dodawane swobodnie per pojazd — nie ma stałego schematu pozycji ani limitu, ile pozycji może mieć pojazd; dodaj dokładnie te pozycje, które ten pojazd faktycznie ma. Każdy rekord opony zawiera:
+
 | Pole | Opis |
 |---|---|
 | **Pozycja** | Oś i strona (np. Przód lewy, Oś napędowa prawy wewnętrzny) |
-| **Marka i model** | Producent i produkt |
+| **Marka i model** | Producent i nazwa produktu opony |
 | **Rozmiar** | Oznaczenie rozmiaru opony (np. 315/70 R22.5) |
-| **Numer seryjny** | Kod DOT opony |
-| **Data montażu** | Kiedy opona została zamontowana |
-| **Głębokość bieżnika (mm)** | Aktualnie zmierzona głębokość |
+| **Numer seryjny** | Kod DOT opony dla identyfikowalności |
+| **Data montażu** | Kiedy ta opona została zamontowana |
+| **Głębokość bieżnika (mm)** | Aktualnie zmierzona głębokość bieżnika |
 | **Stan** | Dobry / Monitoruj / Wymień |
-| **Uwagi** | Notatki w dowolnym tekście |
+| **Uwagi** | Notatki tekstowe (uszkodzenie, historia przebić itd.) |
+
+---
+
+## Dodawanie rekordu opony
+
+<Steps>
+  <Step title="Otwórz Flota → Opony">
+    Przejdź do samodzielnej strony **Flota → Opony**.
+  </Step>
+  <Step title="Wybierz pojazd">
+    Wybierz pojazd, dla którego chcesz dodać rekord opony.
+  </Step>
+  <Step title="Kliknij Dodaj oponę">
+    Kliknij **+ Dodaj oponę**. Otwiera się formularz.
+  </Step>
+  <Step title="Wypełnij szczegóły">
+    Wybierz pozycję z listy rozwijanej i wypełnij markę, rozmiar, numer seryjny, datę montażu, głębokość bieżnika i stan.
+  </Step>
+  <Step title="Zapisz">
+    Kliknij **Zapisz**. Rekord opony pojawia się w siatce pozycji.
+  </Step>
+</Steps>
 
 ---
 
 ## Alerty stanu opon
 
-| Stan | Alert |
-|---|---|
-| **Monitoruj** | Żółty wskaźnik na kafelku pojazdu |
-| **Wymień** | Czerwony wskaźnik; alert e-mail do Menedżera floty i Admina |
+Druma monitoruje stan opon i automatycznie powiadamia kierowników floty:
+
+| Stan | Co go wyzwala | Alert |
+|---|---|---|
+| **Monitoruj** | Stan ustawiony na Monitoruj, lub głębokość bieżnika poniżej 4 mm | Żółty wskaźnik na kafelku pojazdu na liście floty |
+| **Wymień** | Stan ustawiony na Wymień, lub głębokość bieżnika poniżej 2 mm | Czerwony wskaźnik na kafelku pojazdu; alert e-mail do Kierownika floty i Admina |
 
 <Warning>
-Głębokość bieżnika poniżej **3 mm** automatycznie uruchamia wskaźnik **Wymień** — poniżej prawnego minimum UE dla pojazdów użytkowych.
+Głębokość bieżnika poniżej **2 mm** automatycznie uruchamia flagę **Wymień**; poniżej **4 mm** uruchamia **Monitoruj**. Nie dysponuj pojazdem z oponami oflagowanymi jako Wymień.
 </Warning>
 
-Przy wymianie: edytuj rekord → ustaw stan na **Wymieniony** → wprowadź **Koszt wymiany (€)** → Zapisz. Koszt jest uwzględniany w raporcie kosztów pojazdu.
+---
+
+## Aktualizowanie stanu opony
+
+Aby zaktualizować stan opony po inspekcji:
+
+1. Otwórz **Flota → Opony** i wybierz pojazd
+2. Kliknij **Edytuj** na wierszu opony
+3. Zaktualizuj pole **Głębokość bieżnika** i/lub **Stan**
+4. Zapisz
+
+To czyści alert, gdy opona zostanie wymieniona lub stan zostanie skorygowany.
+
+---
+
+## Rejestrowanie wymiany opony
+
+Gdy opona zostaje fizycznie wymieniona:
+
+1. Edytuj istniejący rekord opony dla tej pozycji
+2. Ustaw **Stan** na **Wymieniona**
+3. Wpisz **Koszt wymiany (€)**
+4. Kliknij **Zapisz**
+
+Alternatywnie kliknij **+ Dodaj oponę** na tej samej pozycji, aby dodać nową oponę (Druma oznaczy stary rekord jako historyczny).
+
+Koszt wymiany wlicza się do raportu kosztów konserwacji pojazdu — dając pełny obraz całkowitego kosztu posiadania obok kosztów paliwa i warsztatu.
+
+---
+
+## Historia opon
+
+Druma przechowuje historię wszystkich rekordów opon per pozycja, w tym wymienionych opon. Aby zobaczyć historię konkretnej pozycji:
+
+1. Otwórz **Flota → Opony** i wybierz pojazd
+2. Kliknij pozycję w siatce
+3. Panel historii pokazuje wszystkie opony kiedykolwiek zamontowane na tej pozycji z datami montażu, statusem stanu i kosztami wymiany
+
+---
 
 <CardGroup cols={2}>
-  <Card title="Warsztat i Konserwacja" href="/pl/fleet-compliance/workshop-maintenance">
-    Twórz zlecenia robocze dla wymian opon.
+  <Card title="Serwis i konserwacja" href="/pl/fleet-compliance/workshop-maintenance">
+    Twórz zlecenia robocze dla wymian opon i innych zadań konserwacyjnych.
   </Card>
   <Card title="Dokumenty floty" href="/pl/fleet-compliance/fleet-documents">
-    Śledź ubezpieczenie, przeglądy techniczne i inne dokumenty zgodności.
+    Śledź ubezpieczenie, ITP i inne dokumenty zgodności pojazdu obok rekordów opon.
   </Card>
 </CardGroup>

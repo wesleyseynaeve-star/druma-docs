@@ -1,55 +1,69 @@
 ---
-title: "SmartBill"
-description: "Comment configurer et utiliser l'intégration SmartBill pour pousser automatiquement les factures Druma vers votre compte SmartBill."
-icon: "cloud"
+title: "Intégration SmartBill"
+description: "Poussez les factures Druma vers SmartBill automatiquement quand vous les envoyez, comme une copie à sens unique pour votre flux comptable."
+icon: "receipt"
 ---
 
-## Vue d'ensemble
+SmartBill est une plateforme de facturation et de comptabilité cloud roumaine largement utilisée. L'intégration Druma-SmartBill pousse une copie de chaque facture que vous envoyez vers SmartBill, afin qu'elle vive aussi dans votre système comptable sans ressaisie manuelle.
 
-SmartBill est une plateforme de facturation cloud populaire en Roumanie. Avec cette intégration, chaque facture confirmée dans Druma est automatiquement poussée vers SmartBill — aucune ressaisie manuelle.
+## Ce que fait l'intégration
 
----
+- Chaque facture que vous **envoyez** dans Druma (pas au moment de la génération/création) est poussée vers SmartBill comme facture brouillon, à sens unique
+- Vous révisez et émettez la facture depuis SmartBill dans le cadre de votre flux comptable normal
+- Le statut de push SmartBill de la facture (poussée ou en erreur) est enregistré sur la facture Druma — il n'y a pas de synchronisation de statut continue à double sens depuis SmartBill
+- Les données client et produit envoyées à SmartBill sont explicitement marquées « ne pas enregistrer » dans la charge utile du push — SmartBill ne crée ni ne met à jour **pas** ses propres fiches client/produit à partir de cette intégration
 
-## Configuration
-
-Voir [Configuration des intégrations → SmartBill](/fr/admin/integration-setup) pour les instructions de configuration.
-
----
-
-## Comment ça fonctionne
-
-Lorsque vous générez et confirmez une facture dans Druma :
-
-1. Druma appelle automatiquement l'API SmartBill.
-2. SmartBill crée la facture correspondante dans votre compte.
-3. La facture apparaît dans votre liste SmartBill avec le même numéro et les mêmes montants.
-4. Druma enregistre le statut de synchronisation SmartBill dans le panneau de détails de la facture.
-
----
-
-## Pousser manuellement une facture
-
-Si une facture n'a pas été synchronisée automatiquement (ex. : erreur de connexion temporaire), vous pouvez la pousser manuellement :
+## Configurer l'intégration
 
 <Steps>
-  <Step title="Ouvrez la facture">
-    Accédez à la facture dans Druma.
+  <Step title="Récupérez votre clé API SmartBill">
+    Connectez-vous sur [smartbill.ro](https://smartbill.ro). Allez dans **Cont → Setări → API**. Générez une nouvelle clé API (jeton). Copiez-la — SmartBill ne l'affiche qu'une fois.
   </Step>
-  <Step title="Cliquez sur Envoyer vers SmartBill">
-    Cliquez sur le bouton **Envoyer vers SmartBill** dans le panneau de détails.
+  <Step title="Trouvez le CIF de votre entreprise et la série de factures">
+    Le CIF de votre entreprise (Codul de Identificare Fiscală) est affiché dans votre compte SmartBill sous les paramètres d'entreprise. Vous aurez aussi besoin du **nom de série de facture** configuré dans SmartBill que vous voulez utiliser pour les factures poussées.
+  </Step>
+  <Step title="Saisissez les identifiants dans Druma">
+    Accédez à **Paramètres → Intégrations → SmartBill**. Saisissez l'**email** de votre compte SmartBill, le **jeton API**, le **CIF**, et la **série de factures** — les quatre champs sont requis.
+  </Step>
+  <Step title="Testez la connexion">
+    Cliquez sur **Tester la connexion**. Druma s'authentifiera auprès de SmartBill et confirmera que l'intégration est active.
   </Step>
 </Steps>
 
----
+## Comment fonctionne le push de facture
 
-## Résolution des problèmes
+1. Vous générez la facture dans Druma avec votre numéro de facture séquentiel
+2. Quand vous **envoyez** la facture (pas au moment de la génération), Druma la pousse vers SmartBill comme brouillon, aux côtés de toute soumission ANAF e-Factura ou Peppol qui se déclenche aussi à l'envoi
+3. Vous ouvrez SmartBill, révisez le brouillon, et l'émettez (Emite factura)
+4. SmartBill attribue **son propre numéro de facture** à l'émission — le numéro de facture de Druma n'est pas envoyé à SmartBill et n'y est pas reflété ; le numéro de SmartBill est stocké en retour sur la facture Druma pour référence
 
-Si le statut SmartBill affiche une erreur :
+<Note>
+Le statut de push SmartBill sur la facture Druma est un simple indicateur poussé/erreur, pas un tracker Brouillon/Émise/Payée — Druma n'a aucune visibilité sur ce qui arrive à la facture dans SmartBill après le push (il n'y a pas de webhook reliant les deux systèmes dans ce sens).
+</Note>
 
-1. Vérifiez que votre abonnement SmartBill est actif.
-2. Vérifiez que votre clé API n'a pas été régénérée dans SmartBill.
-3. Si la clé a changé, mettez-la à jour dans **Paramètres → Intégrations → SmartBill**.
+## Limitations importantes
 
-<Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
-  Guide complet sur la création de factures dans Druma.
-</Card>
+**La gestion des factures reste dans SmartBill.** L'intégration est un push à sens unique au moment de l'envoi. Modifier, annuler, émettre, ou créditer une facture doit se faire directement dans SmartBill — rien de tout cela ne se synchronise en retour vers Druma.
+
+**Vous n'avez pas besoin de SmartBill pour l'e-Factura ANAF.** Druma soumet les factures à l'ANAF directement en utilisant sa propre intégration e-Factura, indépendamment de SmartBill. Vous pouvez utiliser les deux intégrations simultanément sans conflit.
+
+<Note>
+Si vous utilisez actuellement SmartBill pour la soumission e-Factura, décidez si vous continuez à le faire dans SmartBill ou passez à l'intégration ANAF directe de Druma. Faire tourner les deux en parallèle causera des soumissions en double. Contactez support@druma.io si vous avez besoin de conseils pour la migration.
+</Note>
+
+## Dépannage
+
+**Le push a échoué :**
+La facture Druma enregistre un détail `smartbill_error` en cas d'échec. Causes courantes : jeton API expiré, fenêtre de maintenance SmartBill, ou une fiche client avec un CUI/numéro de TVA manquant que SmartBill exige pour les clients professionnels.
+
+**Conflit de numéro de facture :**
+Si un brouillon a été créé manuellement dans SmartBill avec la même série/numéro avant le push, SmartBill rejettera le doublon. Supprimez le brouillon manuel dans SmartBill, puis cliquez sur **Réessayer SmartBill** dans le menu d'actions de la ligne de facture dans Druma.
+
+<CardGroup cols={2}>
+  <Card title="Générer des factures" icon="file-invoice" href="/fr/invoicing/generating-invoices">
+    Comment générer des factures à partir des commandes terminées dans Druma avant qu'elles ne soient poussées vers SmartBill.
+  </Card>
+  <Card title="e-Factura ANAF" icon="building-columns" href="/fr/invoicing/efactura-anaf">
+    Soumettre les factures directement à l'ANAF depuis Druma sans passer par SmartBill.
+  </Card>
+</CardGroup>

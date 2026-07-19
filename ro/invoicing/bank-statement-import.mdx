@@ -1,14 +1,116 @@
 ---
 title: "Import extras de cont bancar"
-description: "Cum sa importi extrasele de cont bancar in Druma."
-icon: "file-import"
+description: "Incarca fisiere de extras bancar CAMT.053 sau MT940 pentru a potrivi automat platile cu facturile deschise — fara introducere manuala de date."
+icon: "file-up"
 ---
 
-Formate suportate: **CAMT.053** (XML European, BCR/BRD/Raiffeisen/UniCredit), **MT940** (SWIFT text).
+## Prezentare generala
+
+In loc sa inregistrezi platile una cate una, poti incarca extrasul tau bancar direct in Druma. Druma analizeaza fiecare tranzactie de creditare din fisier, ruleaza logica de potrivire fata de facturile tale deschise si aplica automat orice potrivire cu incredere ridicata. Tranzactiile nepotrivite ajung in coada de Reconciliere, pentru o revizuire manuala rapida.
+
+Aceasta este cea mai rapida modalitate de a reconcilia un volum mare de plati primite deodata — ideal la sfarsit de saptamana sau sfarsit de luna.
+
+## Formate si banci acceptate
+
+Druma accepta trei formate standard:
+
+| Format | Descriere |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — exportat de majoritatea bancilor UE prin internet banking |
+| **MT940 SWIFT** | Format vechi SWIFT — inca folosit de multe API-uri bancare corporate |
+| **CODA** | Format cu latime fixa, folosit de bancile belgiene |
+
+Toate cele trei formate sunt acceptate de BRD, BCR, Raiffeisen Bank, UniCredit si ING Romania, precum si de majoritatea bancilor UE — CODA acopera in mod specific exporturile bancilor belgiene. Druma detecteaza automat formatul la incarcare. Daca detectarea esueaza, selecteaza formatul corect din lista **Format**, in interiorul modalului de import.
+
+**Dimensiune maxima fisier:** 10 MB per incarcare.
+
+<Note>
+Reincarcarea aceluiasi fisier de extras este sigura. Druma amprenteaza fiecare tranzactie si sare silentios peste orice duplicate — nu vei inregistra niciodata o plata de doua ori.
+</Note>
+
+## Cum imporți un extras
 
 <Steps>
-  <Step title="Descarca extrasul">Descarca in format CAMT.053 sau MT940 din internet banking.</Step>
-  <Step title="Mergi la Facturi -> Reconciliere">Modulul de Reconciliere din Druma.</Step>
-  <Step title="Apasa Import Extras">Selecteaza fisierul - Druma il parseaza automat.</Step>
-  <Step title="Verifica si confirma">Revizuieste tranzactiile si apasa Confirma Importul.</Step>
+  <Step title="Deschide dialogul de import">
+    Mergi la **Finante** → **Reconciliere** → tabul **Plati**. Apasa butonul **Importa Extras** din coltul din dreapta sus al paginii.
+  </Step>
+  <Step title="Selecteaza fisierul">
+    Apasa **Alege fisier** si selecteaza extrasul bancar exportat. Extensiile acceptate sunt `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940) si `.cod`/`.coda` (CODA). Fisierul trebuie sa fie de 10 MB sau mai mic.
+  </Step>
+  <Step title="Confirma formatul">
+    Druma detecteaza automat formatul si arata o eticheta sub numele fisierului. Daca eticheta este gresita, deschide lista **Format** si selecteaza manual formatul corect, inainte sa continui.
+  </Step>
+  <Step title="Ruleaza importul">
+    Apasa **Importa**. Druma analizeaza toate tranzactiile de creditare din fisier si ruleaza logica de potrivire fata de fiecare factura deschisa din compania ta. De regula se finalizeaza in cateva secunde.
+  </Step>
+  <Step title="Revizuieste sumarul rezultatelor">
+    Cand procesarea se finalizeaza, un modal de sumar afiseaza rezultatul. Revizuieste fiecare categorie inainte sa il inchizi — vezi detalierea de mai jos.
+  </Step>
 </Steps>
+
+## Intelegerea sumarului de rezultate
+
+Dupa fiecare import, Druma arata un sumar de rezultate cu urmatorii contori:
+
+| Camp | Ce inseamna |
+|-------|---------------|
+| **Analizate** | Total tranzactii de creditare gasite in fisier |
+| **Potrivite automat** | Tranzactii potrivite cu o factura, cu incredere ridicata — plata aplicata automat |
+| **Necesita revizuire** | Tranzactii unde a fost gasita o potrivire potentiala, dar increderea a fost sub prag — apar in coada de Reconciliere |
+| **Duplicate sarite** | Tranzactii deja inregistrate dintr-o incarcare anterioara a aceluiasi fisier — ignorate silentios |
+| **Erori** | Tranzactii care nu au putut fi analizate (randuri malformate, moneda neacceptata, referinta lipsa) |
+
+Un import sanatos are un numar mare de **Potrivite automat** si un numar mic de **Necesita revizuire**. Daca vezi multe randuri care necesita revizuire, de regula inseamna ca referintele de factura nu sunt incluse in descrierile de plata — cere clientilor sa includa numarul facturii in campul de referinta al transferului bancar.
+
+## Logica de potrivire
+
+Druma potriveste fiecare tranzactie bancara cu o factura, folosind urmatoarele semnale, in ordinea prioritatii:
+
+1. **Numarul facturii in referinta tranzactiei** — potrivire exacta sau partiala (normalizata fuzzy) fata de un numar de factura deschisa. O potrivire pe acest semnal, singur, este suficienta pentru a aplica automat plata — nu este necesar niciun alt semnal.
+2. **Potrivirea sumei** — daca niciun numar de factura nu se potriveste, Druma cauta o factura deschisa al carei sold restant se incadreaza in toleranta ta configurata (implicit ±2%) fata de suma tranzactiei, **si** a carei data scadenta se incadreaza in ±30 de zile fata de data tranzactiei. Asta previne ca o potrivire intamplatoare de suma sa se lege de o factura fara legatura, la luni distanta.
+3. **Numele clientului** — folosit doar ca departajare, cand potrivirea de suma de mai sus returneaza mai mult de o factura candidata; Druma restrange la candidatul al carui nume de client apare in numele expeditorului tranzactiei.
+
+O potrivire pe numarul de factura aplica automat plata (integral sau partial, in functie de suma). O **potrivire doar pe suma nu este niciodata aplicata automat** — chiar si atunci cand identifica in mod unic o factura — ajunge intotdeauna in coada de Reconciliere, pentru confirmare manuala, deoarece nu exista o referinta care sa dovedeasca ca este cu adevarat plata acelei facturi. Niciun semnal deloc → pusa in coada ca nepotrivita.
+
+## Gestionarea tranzactiilor nepotrivite
+
+Orice tranzactie care nu a putut fi potrivita cu incredere apare in coada de **Reconciliere**, pe acelasi tab **Plati**. Fiecare rand arata o eticheta de sursa **Extras** (care o distinge de tranzactiile sosite prin analiza email, care arata o eticheta **Email**).
+
+<Steps>
+  <Step title="Deschide coada de Reconciliere">
+    Ramai pe tabul **Finante** → **Reconciliere** → **Plati**. Randurile nepotrivite apar sub sumar, cu statusul **In asteptare**.
+  </Step>
+  <Step title="Extinde tranzactia">
+    Apasa un rand pentru a-l extinde. Druma arata detaliile complete ale tranzactiei: data, suma, textul de referinta bancara si orice facturi candidate pe care le-a luat in considerare.
+  </Step>
+  <Step title="Potriveste manual">
+    Apasa **Potriveste** langa factura corecta. Druma aplica plata si muta tranzactia in statusul **Aplicata**.
+  </Step>
+  <Step title="Renunta, daca nu este relevanta">
+    Daca tranzactia nu este o plata de client (de exemplu, un transfer intern sau o taxa bancara), apasa **Renunta**. Randul trece in statusul **Respinsa** si nu afecteaza nicio factura.
+  </Step>
+</Steps>
+
+<Warning>
+Renuntarea la o tranzactie este o actiune usoara — doar marcheaza randul ca respins in Druma. Nu iti afecteaza contul bancar real sau sistemul de contabilitate. Daca renunti din greseala, contacteaza suportul — momentan nu exista o anulare de sine statatoare pentru randurile de reconciliere respinse.
+</Warning>
+
+## Sfaturi pentru rate mai mari de potrivire automata
+
+- **Cere clientilor sa includa numarul facturii** in campul de referinta de plata al transferului lor bancar. O referinta precum `INV-000047` ii da Druma o potrivire exacta pe primul semnal.
+- **Mentine numele clientilor consistente** intre inregistrarea ta principala de client si modul in care clientii se identifica pe transferurile bancare — Druma revine la o potrivire pe numele clientului doar pentru a departaja intre mai multe facturi cu aceeasi suma, deci o potrivire apropiata acolo poate salva o potrivire de suma altfel ambigua.
+- **Foloseste termene de plata neta** in mod consistent. Platile care sosesc cu taxe scazute (bancare sau de factoring) se incadreaza in toleranta de ±2% pentru facturi sub ~5.000 €. Pentru facturi mai mari, confirma cu clientii ca trimit suma integrala.
+
+---
+
+<Card title="Urmarirea platilor" icon="circle-check" href="/ro/invoicing/payment-tracking">
+  Inregistreaza si urmareste platile manual, sau vezi istoricul complet de plati per factura.
+</Card>
+
+<Card title="Dashboard restante" icon="triangle-alert" href="/ro/invoicing/overdue-management">
+  Vezi debitorii vechi si trimite memento-uri de plata pentru facturile restante.
+</Card>
+
+<Card title="Note de credit" icon="file-minus" href="/ro/invoicing/credit-notes">
+  Emite o nota de credit pentru a inversa sau corecta partial o factura trimisa.
+</Card>

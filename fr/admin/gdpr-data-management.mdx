@@ -8,6 +8,10 @@ _Dernière mise à jour : 10 juillet 2026._
 
 Pour vos **données opérationnelles** (commandes, clients, chauffeurs, documents et enregistrements associés que votre entreprise stocke sur la plateforme), Druma agit en tant que **sous-traitant** — votre entreprise est le responsable du traitement, encadré par un accord de traitement des données (DPA) entre votre entreprise et Druma. Pour vos **données de compte et de facturation** (les informations de votre abonnement Druma et les utilisateurs qui l'administrent), Druma agit en tant que **responsable du traitement** de plein droit. Cet article détaille précisément ce qui est stocké, combien de temps c'est conservé, qui le traite, et quelles actions vous pouvez entreprendre au titre du RGPD.
 
+<Frame caption="Paramètres → RGPD et confidentialité — tout rôle peut consulter ; seul Admin peut agir.">
+  <img src="/images/admin/gdpr-data-management.png" alt="Panneau des paramètres RGPD et confidentialité" />
+</Frame>
+
 ---
 
 ## Données stockées par Druma
@@ -17,26 +21,31 @@ Pour vos **données opérationnelles** (commandes, clients, chauffeurs, document
 - Comptes utilisateurs : nom, adresse email, rôle, horodatages de connexion
 
 ### Données opérationnelles
-- Commandes : itinéraire, marchandises, adresses, historique des statuts, chauffeur et véhicule assignés
-- Fiches clients : nom, adresse, personne de contact, CIF
-- Informations chauffeur : nom, contact, numéro de permis, détails ADR
-- Fiches véhicules : plaque, marque/modèle, norme Euro
+- Commandes : détails d'itinéraire, description des marchandises, adresses d'enlèvement et de livraison, historique des statuts, chauffeur et véhicule assignés, horodatages
+- Fiches clients : nom d'entreprise, adresse, personne de contact, CIF
+- Informations chauffeur : nom, numéro de contact, numéro de permis, détails du certificat ADR, dates d'expiration des documents
+- Fiches véhicules : plaque d'immatriculation, marque/modèle, norme Euro, dates d'expiration des documents
 
 ### Données financières
-- Enregistrements de factures, montants, statut de paiement
-- Données d'import de cartes carburant
+- Enregistrements de factures, lignes de détail, montants, statut de paiement
+- Données d'import de cartes carburant liées aux véhicules
 
 ### Documents eCMR
-- Lettres de voiture électroniques émises et **scellées PAdES en interne par le fournisseur natif de Druma** (in-house). TransFollow reste disponible uniquement comme **solution de secours historique (legacy fallback)** pour les entreprises qui l'utilisaient déjà avant l'introduction du fournisseur natif.
+- Lettres de voiture électroniques émises et **scellées PAdES en interne par le fournisseur natif de Druma**, y compris les données de signature et les PDF certifiés. TransFollow reste disponible comme solution de secours historique pour les entreprises qui l'utilisaient déjà avant l'introduction du fournisseur natif.
 
 ### Données de position GPS
-- Druma stocke **uniquement la position GPS actuelle**. **Aucun historique de position n'est stocké.** La précédente est écrasée dès qu'une nouvelle est reçue.
+- **Suivi en direct des camions** : Druma stocke uniquement la position actuelle du camion, continuellement écrasée à chaque nouvelle réception GPS — aucun historique de positions passées n'est conservé pour la carte en direct.
+- **Horodatages GPS d'événements de commande** : lorsqu'un chauffeur signale un changement de statut, un retard ou un incident, une coordonnée GPS ponctuelle peut être capturée et rattachée à cet événement de commande précis. Ces horodatages sont conservés dans le cadre de l'enregistrement de la commande elle-même (voir la conservation des « données opérationnelles » ci-dessous), et non comme un historique de position distinct.
+- **e-Transport Roumanie** : pour les expéditions nécessitant une déclaration ANAF e-Transport, les coordonnées GPS transmises à l'ANAF sont journalisées séparément et purgées après **30 jours**.
+
+### Données d'archive tachygraphe
+- Fichiers tachygraphes bruts DDD (unité embarquée) et TGD (carte chauffeur), téléchargés automatiquement via un fournisseur télématique connecté ou importés manuellement, stockés dans l'Archive Tacho pour répondre aux obligations de conservation du règlement UE 165/2014. Voir [Archive Tachygraphe](/fr/fleet-compliance/tacho-archive).
 
 ### Journaux d'audit
-- Un journal des actions utilisateur importantes
+- Un journal des actions utilisateur importantes : connexions, changements de statut de commande, changements de rôle utilisateur, téléchargements de documents et événements de facturation
 
 <Note>
-Druma ne stocke pas les données de tachographe, les enregistrements d'appels, les données biométriques ni les informations médicales des chauffeurs.
+Druma ne stocke pas d'enregistrements d'appels, de données biométriques des chauffeurs, ni d'informations de santé des chauffeurs.
 </Note>
 
 ---
@@ -45,57 +54,85 @@ Druma ne stocke pas les données de tachographe, les enregistrements d'appels, l
 
 | Catégorie de données | Période de conservation |
 |---|---|
-| Données opérationnelles | Durée de l'abonnement + 90 jours |
-| Données de compte utilisateur | Durée de l'abonnement + 90 jours |
-| Journaux d'audit | 18 mois |
+| Données opérationnelles (commandes, clients, chauffeurs, véhicules) | Durée de l'abonnement + 90 jours après résiliation |
+| Données de compte utilisateur | Durée de l'abonnement + 90 jours après résiliation |
+| Journaux d'audit | 12 mois à compter de la date de l'événement journalisé |
 | Documents eCMR | 10 ans (exigence légale du Protocole e-CMR) |
-| Données de position GPS | Écrasées en temps réel — aucun historique |
-| Dossiers de facturation | 7 ans (loi comptable) |
+| Données de position GPS (suivi en direct) | Non conservées — seule la position actuelle est stockée, écrasée à chaque mise à jour |
+| Horodatages GPS d'événements de commande | Conservés avec la commande (voir la conservation des données opérationnelles ci-dessus) |
+| Données GPS transmises à l'ANAF e-Transport | 30 jours, puis purgées automatiquement |
+| Fichiers tachygraphes (DDD/TGD) | Conservés indéfiniment (12 mois est le minimum légal, pas un objectif de purge) |
+| Dossiers de facturation | 10 ans (plafond de la loi fiscale de l'UE) |
+
+<Note>
+À l'issue de la fenêtre de conservation de 90 jours décrite ci-dessous, la purge programmée de Druma supprime les **commandes de plus de 3 ans**, les messages de commande, les notes de commande, les clients, les camions et les remorques, et retire les intégrations et préférences de l'entreprise. Elle **ne supprime volontairement ni les factures ni les signatures eCMR** — les deux sont conservées selon les règles légales ci-dessus, indépendamment de la suppression du compte. Les commandes de moins de 3 ans au moment de la purge ne sont pas non plus supprimées par ce processus.
+</Note>
 
 ---
 
-## Demande d'export de données
+## Demander un export de données
+
+Vous pouvez demander un export complet des données de votre entreprise à tout moment.
 
 <Steps>
-  <Step title="Accédez à Paramètres → Données et confidentialité">
-    Seuls les rôles Admin et Admin entreprise peuvent accéder à cette section.
+  <Step title="Accédez à Paramètres → RGPD et confidentialité">
+    Tout rôle peut ouvrir cette page et consulter son contenu. Seul le rôle **Admin** peut demander un export, modifier la politique de conservation ou traiter les demandes de personnes concernées — **Admin entreprise** a un accès en lecture seule aux documents RGPD téléchargés, et les autres rôles peuvent consulter la page mais pas agir dessus.
   </Step>
   <Step title="Cliquez sur Demander un export">
-    Druma préparera une archive ZIP de toutes les données de votre entreprise en JSON et CSV.
+    Cliquez sur le bouton **Demander un export**. Druma préparera une archive ZIP de toutes les données de votre entreprise dans un format lisible par machine (JSON et CSV).
   </Step>
   <Step title="Recevez l'export">
-    Vous recevrez un email avec un lien de téléchargement dans les **24 heures**. Le lien expire après 7 jours.
+    Vous recevrez un email avec un lien de téléchargement **en environ 15 minutes** (l'export est traité par une tâche de fond qui s'exécute toutes les 15 minutes). Le lien expire après 7 jours.
   </Step>
 </Steps>
 
+L'export inclut : commandes, clients, factures, véhicules de flotte, messages de commande in-app, entrées de journal d'audit, enregistrements de consentement et enregistrements de signature numérique eCMR. Le fichier `drivers.csv` de l'export est filtré aux comptes utilisateur ayant le rôle **chauffeur** uniquement — ce n'est pas une liste complète de vos utilisateurs de bureau. Il n'inclut pas les PDF eCMR certifiés — ceux-ci se téléchargent individuellement depuis l'onglet eCMR de chaque commande.
+
 ---
 
-## Suppression de votre compte
+## Supprimer votre compte
 
 <Warning>
 La suppression du compte est permanente et irréversible après la fenêtre de conservation de 90 jours. Téléchargez toutes les données dont vous avez besoin avant de demander la suppression.
 </Warning>
 
+<Steps>
+  <Step title="Accédez à Paramètres → RGPD et confidentialité">
+    Faites défiler jusqu'à la section **Supprimer le compte**. Seul le rôle **Admin** peut lancer cette action.
+  </Step>
+  <Step title="Cliquez sur Supprimer le compte">
+    Il vous sera demandé de saisir le nom de votre entreprise pour confirmer que vous comprenez l'action.
+  </Step>
+  <Step title="La période de conservation de 90 jours commence">
+    Votre compte est immédiatement désactivé — personne ne peut plus se connecter. Druma conserve les données pendant 90 jours en cas de besoin réglementaire ou légal. Vous pouvez annuler la suppression programmée à tout moment durant cette fenêtre depuis la même page.
+  </Step>
+  <Step title="Purge programmée">
+    Après 90 jours, Druma supprime les commandes de plus de 3 ans, les messages de commande, les notes de commande, les clients, les camions, les remorques et les intégrations de l'entreprise, et retire l'enregistrement de l'entreprise lui-même. **Les factures et les signatures numériques eCMR ne sont pas supprimées** par ce processus — elles sont conservées pendant toute leur période légale de conservation (voir le tableau ci-dessus) indépendamment de la suppression du compte. Les commandes de moins de 3 ans au moment de la purge ne sont pas non plus supprimées à cette étape.
+  </Step>
+</Steps>
+
 ---
 
 ## Sous-traitants
+
+Druma partage des données avec les sous-traitants tiers suivants pour fournir le service :
 
 | Sous-traitant | Finalité |
 |---|---|
 | Supabase | Hébergement de base de données et authentification (UE — Francfort) |
 | Cloudflare | CDN, protection DDoS et DNS |
-| Resend | Envoi d'emails transactionnels |
-| Mailgun | Ingestion des emails entrants (commandes, factures, paiements) |
+| Resend | Envoi d'emails transactionnels sortants |
+| Mailgun | Ingestion des emails entrants (commandes, factures et paiements analysés dans Druma) |
 | Stripe | Traitement des paiements et gestion des abonnements |
-| PTV Group | Itinéraire, distance et ETA — reçoit les coordonnées d'enlèvement/livraison |
+| PTV Group | Calcul d'itinéraire, de distance et d'ETA — reçoit les coordonnées d'enlèvement/livraison |
 | HERE Technologies | Géocodage d'adresses et autocomplétion |
-| Google Vertex AI (europe-west1) | Fonctionnalités d'IA (analyse de documents, extraction d'e-mails) — sans entraînement de modèle |
-| Google Cloud Translation | Traduction à la demande du contenu UI et des documents |
-| Sentry | Surveillance des erreurs |
-| Google Firebase Cloud Messaging | Notifications push de l'application chauffeur |
+| Google Vertex AI (europe-west1) | Fonctionnalités assistées par IA (analyse de documents, extraction d'emails) — sans entraînement de modèle |
+| Google Cloud Translation | Traduction à la demande du contenu de l'interface et des documents |
+| Sentry | Surveillance des erreurs et rapports de plantage |
+| Google Firebase Cloud Messaging | Notifications push vers l'application chauffeur |
 | WhatsApp Business Cloud API (Meta) | Messagerie chauffeur — uniquement si votre entreprise active les notifications WhatsApp |
-| Fournisseurs télématiques (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Données GPS et tachygraphe — uniquement le fournisseur connecté par votre entreprise |
-| Fournisseurs télématiques frigorifiques (Mapon, Orbcomm, Thermo King) | Données de température frigorifique — uniquement le fournisseur connecté par votre entreprise |
+| Fournisseurs télématiques (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | Données GPS et tachygraphe — uniquement le fournisseur connecté par votre entreprise |
+| Fournisseurs télématiques frigorifiques (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Données de température frigorifique — uniquement le fournisseur connecté par votre entreprise |
 | TransFollow | Solution de secours historique pour l'eCMR uniquement — le fournisseur natif in-house de Druma est la valeur par défaut pour l'émission, la signature et l'archivage |
 
 Tous les sous-traitants sont contractuellement tenus de ne traiter les données que selon vos instructions et conformément au RGPD.
@@ -106,14 +143,20 @@ Si votre entreprise active la fonctionnalité optionnelle **Druma Copilot** avec
 
 ## Vos droits RGPD
 
-- **Droit d'accès** — demander une copie des données personnelles vous concernant
-- **Droit de rectification** — corriger les données inexactes
-- **Droit à l'effacement** — demander la suppression (sous réserve des obligations légales)
-- **Droit à la portabilité** — recevoir vos données dans un format structuré
-- **Droit à la limitation** — demander à Druma de limiter le traitement
-- **Droit d'opposition** — s'opposer au traitement basé sur des intérêts légitimes
+En tant que personne concernée ou responsable de traitement pour le compte de vos employés, vous disposez des droits suivants :
 
-Pour exercer l'un de ces droits, envoyez un email à **privacy@druma.io**. Druma répondra dans les 30 jours.
+- **Droit d'accès** — demander une copie des données personnelles vous concernant
+- **Droit de rectification** — corriger des données personnelles inexactes
+- **Droit à l'effacement** — demander la suppression (sous réserve des obligations légales de conservation)
+- **Droit à la portabilité** — recevoir vos données dans un format structuré et lisible par machine (utilisez la fonctionnalité Export de données)
+- **Droit à la limitation** — demander à Druma de limiter le traitement dans certaines circonstances
+- **Droit d'opposition** — vous opposer à un traitement fondé sur des intérêts légitimes
+
+Pour exercer l'un de ces droits, envoyez un email à **privacy@druma.io** avec le nom de votre entreprise, votre CIF et une description de votre demande. Druma répondra sous 30 jours.
+
+---
+
+## Pour aller plus loin
 
 <Card title="Politique de confidentialité" icon="shield" href="/fr/legal/privacy-policy">
   Politique de confidentialité complète incluant la base légale du traitement.

@@ -1,51 +1,152 @@
 ---
 title: "e-Transport Rumunsko"
-description: "Jak splnit požadavky rumunského systému e-Transport pro zásilky s vysokou hodnotou — automatická deklarace UIT, odesílání GPS a sledování stavu."
-icon: "satellite"
+description: "Jak Druma automatizuje deklarace ANAF e-Transport, generování kódů UIT a logování GPS pro způsobilou přepravu zboží do, z a přes Rumunsko."
+icon: "truck-fast"
+---
+
+e-Transport je rumunský povinný systém elektronické deklarace a GPS sledování pro silniční přepravu zboží, spravovaný ANAF (Agenția Națională de Administrare Fiscală). Druma automatizuje proces deklarace, generuje kódy UIT a zajišťuje hlášení GPS pozice — odstraňuje ruční zátěž a snižuje riziko pokut.
+
 ---
 
 ## Co je e-Transport?
 
-e-Transport je rumunský systém sledování zásilek s vysokou hodnotou (hodnota nad prahem) na rumunském území. Zásilky, které splňují kritéria, musí být deklarovány na ANAF (rumunské daňové úřady) před odjezdem, aby byl získán kód UIT (Unique Identification Token).
+e-Transport vyžaduje, aby přepravní operátoři:
+
+1. **Deklarovali přepravu** ANAF před odjezdem vozidla a obdrželi jedinečný kód UIT
+2. **Logovali GPS pozice** v pravidelných intervalech během přepravy
+3. **Vezli kód UIT** ve vozidle (vytištěný nebo viditelný na telefonu řidiče)
+
+Systém umožňuje ANAF a Poliția Rutieră v reálném čase ověřit, že přeprava byla deklarována, kdo náklad veze a zda je vozidlo na deklarované trase.
+
+---
 
 ## Kdy se e-Transport vztahuje
 
-e-Transport je povinný pro zásilky:
-- S hodnotou zboží v RON překračující stanovený práh ANAF
-- Přepravující zboží vstupující, vystupující nebo pohybující se po rumunském území
-
-Druma automaticky označí objednávky, u nichž je vyžadován e-Transport, na základě hodnoty zboží a trasy.
-
-## Konfigurace e-Transport
-
-Nakonfigurujte přihlašovací údaje ANAF v **Nastavení → Integrace → ANAF e-Transport**:
-1. Nahrajte certifikát ANAF pro vaši společnost
-2. Zadejte PIN certifikátu
-3. Otestujte připojení
-
-## Deklarace UIT
-
-Jakmile je objednávka splňující požadavky potvrzena, Druma:
-
-1. Automaticky detekuje potřebu e-Transport
-2. Odešle deklaraci XML na ANAF
-3. Obdrží kód UIT z ANAF
-4. Zobrazí UIT řidiči v aplikaci (velký, snadno čitelný kód)
-
-## Zobrazení pro řidiče
-
-Řidiči vidí bannerovou kartu UIT v aplikaci s:
-- Kódem UIT (velké písmo, monospace)
-- Tlačítkem pro kopírování
-- Stavem (Deklarováno, Chyba, Čeká)
+e-Transport se vztahuje na přepravu zboží **v rámci Rumunska nebo v tranzitu přes Rumunsko**, když náklad překročí určité hmotnostní a hodnotové prahy. Tyto prahy stanovuje ANAF a pravidelně je aktualizuje vládním nařízením.
 
 <Warning>
-Řidič nemůže odjet (klepnout Na cestě) bez platného UIT pro zásilky podléhající e-Transport, pokud je v nastavení povolen pevný blok.
+Před závěrem, že zásilka nevyžaduje deklaraci e-Transport, si vždy ověřte aktuální prahy ANAF. Pravidla byla od spuštění systému několikrát aktualizována. Autoritativním zdrojem je [mfinante.gov.ro](https://www.mfinante.gov.ro) a portál ANAF e-Transport.
 </Warning>
 
-<Card title="Doklady vozového parku" icon="file" href="/en/fleet-compliance/fleet-documents">
-  Správa všech dokladů souladu vozového parku na jednom místě.
-</Card>
+Kategorie, které vyžadovaly deklaraci, zahrnují: zboží s fiskálním rizikem (potraviny, alkohol, tabák, textil, stavební materiály, elektronika), zboží nad hodnotovým prahem a veškerý mezinárodní tranzit přes Rumunsko nad určitou tonáží. Váš účetní nebo právní poradce pro přepravu vám může potvrdit aktuálně platné kategorie pro vaše typy nákladu.
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/fleet-compliance/etransport-romania).
+## Kdo deklaruje: váš klient, nebo vy?
+
+Podle OUG 41/2022 čl. 8 leží zákonná povinnost deklarovat přepravu ANAF na **rumunské obchodní straně** — rumunsky registrovaném odesílateli nebo příjemci zboží, nikdy na dopravci jako takovém. Pro většinu přepravních společností to znamená: **váš klient deklaruje a poskytne vám kód UIT** (tok dopravce — výchozí nastavení Druma). Pouze pokud je vaše společnost sama rumunskou obchodní stranou — protože prodáváte nebo přesouváte vlastní zboží — deklarujete sami (tok deklaranta, povolený za společnost v Nastavení → Integrace → ANAF e-Transport).
+
+### Kdy použít který tok
+
+| Situace | Tok |
+|---|---|
+| Vaše společnost je rumunská obchodní strana (odesílatel nebo příjemce) | **Tok deklaranta** — přiřadíte vozidlo a Druma automaticky odešle ANAF |
+| Jste dopravce a váš rumunský klient je obchodní stranou | **Tok dopravce** — klient poskytne UIT přes portál nebo telefonicky |
+| Subdodávková objednávka (přeposíláte jinému dopravci) | Ani jedno — deklaraci řeší subdodavatel nebo jeho klient |
+
+---
+
+## Jak Druma zpracovává e-Transport
+
+### Tok dopravce (výchozí): deklaruje váš klient
+
+Když povinnost deklarace nese váš klient, Druma proces automaticky pošťuchuje, aby se UIT dostal k vám dřív, než vozidlo odjede.
+
+<Steps>
+  <Step title="Upozornění v e-mailu s potvrzením">
+    Když Druma odešle klientovi potvrzení objednávky, zjistí, že se trasa dotýká Rumunska, a zahrne výrazné upozornění žádající klienta, aby zadal kód UIT ve svém portálu.
+  </Step>
+  <Step title="Zadání v klientském portálu">
+    Klient otevře zásilku v klientském portálu Druma. Karta **e-Transport (Rumunsko)** vysvětluje požadavek a poskytuje vstupní pole. Klient zadá kód UIT obdržený od ANAF — Druma před uložením ověří formát (8–30 velkých alfanumerických znaků).
+  </Step>
+  <Step title="Ruční zadání plánovačem">
+    Pokud klient poskytne UIT telefonicky nebo e-mailem, plánovač ho může zadat přímo v panelu detailu objednávky pod **záložkou nákladu**. Stejná sekce **e-Transport (Rumunsko)** zobrazuje vstupní pole, když UIT není zaznamenán a stav objednávky umožňuje úpravu.
+  </Step>
+  <Step title="Přenos GPS se aktivuje automaticky">
+    Jakmile je kód UIT zaznamenán, pipeline pro přeposílání GPS Druma objednávku zachytí a začne odesílat pozice na ANAF — od plánovače není potřeba žádná další akce.
+  </Step>
+  <Step title="Řidič vidí kód UIT">
+    Kód UIT se zobrazí v aplikaci Druma řidiče na obrazovce aktivní objednávky, čímž řidiči potvrdí, že je deklarace zavedena ještě před odjezdem. Pokud se zeptá silniční kontrola, řidič ukáže kód na telefonu nebo předloží vytištěný dokument objednávky.
+  </Step>
+</Steps>
+
+### Tok deklaranta: deklaruje vaše společnost
+
+Toto povolte pouze v případě, že je vaše společnost rumunská obchodní strana, která zákonně deklaruje ANAF. Přejděte do **Nastavení → Integrace → ANAF e-Transport** a povolte nastavení deklaranta.
+
+Po povolení:
+
+- Když vytvoříte objednávku se zastávkou vyzvednutí nebo doručení v Rumunsku, formulář objednávky zobrazí pole **Hodnota zboží (RON)**. Tato hodnota je pro deklaraci povinná. Uložení bez ní zobrazí upozornění — přesto můžete uložit a hodnotu doplnit později úpravou objednávky.
+- Když k objednávce přiřadíte vozidlo, Druma zkontroluje, zda objednávka spadá do rozsahu: hodnota zboží musí dosahovat nebo překračovat prah deklarace (výchozí **10 000 RON**, konfigurovatelný za společnost) a objednávka nesmí být subdodávková.
+- Pokud jsou splněny všechny podmínky, Druma **odešle deklaraci automaticky** ihned po uložení přiřazení vozidla a uloží výsledný UIT k objednávce.
+
+**Pokud deklarace selže** — například kvůli chybějící hodnotě zboží, chybě adresy zastávky nebo dočasnému problému API ANAF — stránka detailu objednávky zobrazí upozornění **Deklarace selhala**. Opravte podkladová data a zkuste to znovu pomocí možnosti **Deklarovat / Zopakovat e-Transport** v nabídce akcí objednávky.
+
+<Note>
+Společnosti bez povoleného nastavení deklaranta nikdy neuvidí výzvu Hodnota zboží (RON) a nespustí automatické deklarace. Tok dopravce je vždy dostupný pro deklarantské i nedeklarantské společnosti u objednávek, kde povinnost nese klient.
+</Note>
+
+---
+
+## Logování GPS pozice
+
+e-Transport vyžaduje, aby byly GPS pozice odesílány ANAF během aktivní přepravy. Druma to zajišťuje automaticky přes API ANAF e-Transport — odděleně od ručních aktualizací stavu řidiče. Aby nedocházelo k zahlcení API ANAF aktualizací pozice při každém GPS signálu, Druma zpomaluje odchozí přenosy za objednávku na **nejvýše jednou za 5 minut**, přeposílá poslední pozici v tomto tempu místo každého surového signálu přijatého z telefonu řidiče.
+
+**Důležité:** logování GPS funguje pouze tehdy, když má řidič aplikaci Druma **otevřenou na telefonu** během přepravy. Pokud řidič aplikaci zavře nebo se obrazovka telefonu zamkne bez toho, aby aplikace běžela na pozadí, logování pozice může být přerušeno.
+
+<Steps>
+  <Step title="Poučte řidiče před odjezdem">
+    Před odjezdem vozidla si s řidičem potvrďte, že je aplikace Druma otevřená a zobrazuje aktivní objednávku. Na Androidu potvrďte, že aplikace má oprávnění k poloze na pozadí.
+  </Step>
+  <Step title="Aplikace běží během přepravy">
+    Aplikace odesílá GPS souřadnice do Druma, jak se pohybuje. Druma přeposílá pozici na API ANAF e-Transport nejvýše jednou za 5 minut na objednávku.
+  </Step>
+  <Step title="Dokončení přepravy">
+    Když řidič označí objednávku jako doručenou, logování GPS pro daný kód UIT se zastaví.
+  </Step>
+</Steps>
+
+<Note>
+Logování GPS pro e-Transport používá mobilní data. Zajistěte, aby měli řidiči aktivní SIM kartu s daty. Na trasách s oblastmi se špatným signálem Druma pozice ukládá do vyrovnávací paměti a odesílá je po obnovení připojení.
+</Note>
+
+---
+
+## Co musí udělat řidič
+
+Odpovědnosti řidiče za soulad s e-Transport jsou při použití Druma minimální:
+
+1. **Nechat aplikaci otevřenou** na telefonu během přepravy
+2. **Ukázat kód UIT**, pokud se zeptá silniční kontrola (je viditelný na aktivní objednávce v aplikaci)
+3. **Výrazně se neodchylovat od deklarované trasy** — velké odchylky trasy mohou vyžadovat upravenou deklaraci, kterou řeší dispečer z webového rozhraní Druma
+
+---
+
+## Sankce za nesoulad
+
+Pokuty ANAF za porušení e-Transport jsou významné — sankce se vztahují jak na dopravce, tak na příjemce přepravy (klienta nebo odesílatele). Mezi časté případy porušení patří:
+
+- Přeprava zboží bez platného kódu UIT
+- Mezery v logování GPS pozice během přepravy
+- Deklarovaný náklad neodpovídající skutečně přepravovanému zboží
+
+Automatizace Druma eliminuje nejčastější selhání souladu: chybějící deklarace a mezery v logování GPS. Odpovědnost za přesné informace o nákladu (hmotnost, hodnota, typ) však zůstává na dispečerovi zadávajícím data objednávky.
+
+---
+
+## Související články
+
+<CardGroup cols={2}>
+  <Card title="Nastavení deklarace e-Transport" icon="gear" href="/en/admin/etransport-settings">
+    Nakonfigurujte přihlašovací údaje API ANAF, práh hodnoty zboží a výchozí nastavení e-Transport v Druma.
+  </Card>
+  <Card title="Doklady vozového parku" icon="folder-open" href="/cs/fleet-compliance/fleet-documents">
+    Soulad dokladů vozidel, včetně povolení CEMT sledovaného pro mezinárodní přepravu.
+  </Card>
+  <Card title="Pravidla EU o hodinách řízení" icon="clock" href="/cs/fleet-compliance/eu-driving-hours">
+    Limity řízení podle nařízení 561/2006 a jak je Druma sleduje.
+  </Card>
+  <Card title="Mobility Package" icon="globe" href="/cs/fleet-compliance/mobility-package">
+    Povinnosti návratu vozidla a řidiče a hlášení vyslání do IMI.
+  </Card>
+</CardGroup>

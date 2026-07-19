@@ -1,64 +1,143 @@
 ---
 title: "Frachtspedition"
-description: "Verwalten Sie ausgelagerte Ladungen, bei denen Sie als Spediteur agieren — geteilte Rechnungsstellung, Spediteursstatussynchronisierung und automatische Margenverfolgung aus einem Auftrag."
+description: "Verwalten Sie ausgelagerte Ladungen, bei denen Sie als Spediteur agieren — geteilte Rechnungsstellung, Frachtführer-Statussynchronisierung und automatische Margenverfolgung aus einem Auftrag."
 icon: "arrows-left-right"
 ---
 
-## Was ist ein Unterauftrag?
+## Was ist ein unterauftragnehmerbasierter Auftrag?
 
-Manchmal nehmen Sie eine Ladung von einem Kunden an, transportieren sie aber nicht selbst — Sie beauftragen einen anderen Spediteur. Sie agieren als Spediteur: Sie sind die kommerzielle Ebene zwischen dem Kunden und dem tatsächlichen Spediteur.
+Manchmal nehmen Sie eine Ladung von einem Kunden an, transportieren sie aber nicht selbst — Sie beauftragen einen anderen Frachtführer damit. Sie agieren als Spediteur: Sie sind die kommerzielle Ebene zwischen Kunde und tatsächlichem Frachtführer.
 
-In Druma wird dies als **Unterauftrag**-Auftragstyp bezeichnet. Sie erstellen einen Auftrag, weisen ihn einem Spediteur aus Ihrem Unterauftragnehmer-Register zu, und Druma übernimmt den Rest: geteilte Rechnungsstellung, Statusverfolgung, Dokumentenfluss und Margenkalkulation.
+In Druma heißt das der Auftragstyp **Unterauftragnehmer**. Sie erstellen einen Auftrag, weisen ihn einem Frachtführer aus Ihrem Unterauftragnehmer-Register zu, und Druma übernimmt den Rest: geteilte Rechnungsstellung, Statusverfolgung, Dokumentenfluss und Margenberechnung — alles aus diesem einen Auftrag, ohne doppelte Dateneingabe.
+
+<Frame caption="Die Speditions-Pipeline — Einkaufs-/Verkaufspreis-Marge pro unterauftragnehmerbasiertem Auftrag verfolgt.">
+  <img src="/images/planner/freight-forwarding.png" alt="Speditions-Pipeline-Tafel" />
+</Frame>
 
 ---
 
-## Einen Unterauftrag erstellen
+## Einen unterauftragnehmerbasierten Auftrag erstellen
 
 <Steps>
-  <Step title="Neuen Auftrag erstellen">
+  <Step title="Einen neuen Auftrag erstellen">
     Gehen Sie zu **Aufträge → Neuer Auftrag**.
   </Step>
-  <Step title="Auftragstyp auswählen">
-    Wählen Sie **Unterauftragnehmer** als Auftragstyp.
+  <Step title="Den Auftragstyp auf Unterauftragnehmer setzen">
+    Finden Sie im Auftragsformular das Feld **Auftragstyp** und wählen Sie **Unterauftragnehmer**.
   </Step>
-  <Step title="Kunden- und Routendetails eingeben">
-    Füllen Sie Kundendaten, Abhol- und Lieferadressen aus.
+  <Step title="Die Standard-Auftragsdetails ausfüllen">
+    Geben Sie Abholadresse, Lieferadresse, Ladungsbeschreibung, Anhängertyp und Ihren mit dem Kunden vereinbarten Preis (den Verkaufspreis) ein.
   </Step>
-  <Step title="Verkaufspreis eingeben">
-    Geben Sie den Preis ein, den Ihr Kunde zahlt.
+  <Step title="Den Frachtführer auswählen">
+    Wählen Sie im Feld **Unterauftragnehmer / Frachtführer** das Unternehmen aus Ihrem Unterauftragnehmer-Register, das diese Ladung physisch transportiert.
   </Step>
-  <Step title="Spediteur auswählen">
-    Wählen Sie den Spediteur aus Ihrem Unterauftragnehmer-Register.
+  <Step title="Die Frachtführerkosten eingeben">
+    Geben Sie ein, was Sie dem Frachtführer zahlen (den Einkaufspreis). Dies bleibt vom Kundenpreis getrennt und ist nur für Planer sichtbar — nicht für den Kunden.
   </Step>
-  <Step title="Einkaufspreis eingeben">
-    Geben Sie den Preis ein, den Sie dem Spediteur zahlen. Druma berechnet automatisch Ihre Marge.
+  <Step title="Speichern und zuweisen">
+    Klicken Sie auf **Speichern**. Der Frachtführer erhält automatisch Zugang zu diesem Auftrag über sein Portal.
   </Step>
 </Steps>
 
 ---
 
-## Speditionsbereich in Druma
-
-Der Bereich **Spedition** zeigt:
-
-- **Pipeline** — Alle aktiven Speditionsaufträge nach Status
-- **Unterauftragnehmer** — Ihre Spediteurpartnerliste
-- **Rechnungen** — Kaufrechnungen von Spediteuren
-
----
-
-## Spediteursstatussynchronisierung
-
-Wenn Ihr Spediteur Statusaktualisierungen über sein Portal eingibt (Abgeholt, Zugestellt, Probleme), werden diese sofort in Ihrem Auftrag in Druma angezeigt.
-
----
-
 ## Geteilte Rechnungsstellung
 
-Aus einem Speditionsauftrag können Sie erstellen:
-- Eine **Ausgangsrechnung** an Ihren Kunden
-- Eine **Eingangsrechnung** von Ihrem Spediteur (separat verfolgt)
+Ein unterauftragnehmerbasierter Auftrag verfolgt beide Geldseiten aus einem Datensatz — keine doppelte Eingabe von Route, Daten oder Ladung:
 
-<Card title="Unterauftragnehmer" icon="handshake" href="/en/planner/subcontractors">
-  Fügen Sie Spediteure zu Ihrem Unterauftragnehmer-Register hinzu.
-</Card>
+**Verkaufsseite** — was Sie Ihrem Kunden berechnen (der vereinbarte Preis). Sie erstellen diese Rechnung genauso wie bei jedem anderen Auftrag, über die Rechnungsstellungsaktion des Auftrags.
+
+**Einkaufsseite** — was Sie dem Frachtführer zahlen. Öffnen Sie den Tab **Frachtführer & Geld** des Auftrags, um den mit dem Frachtführer vereinbarten **Einkaufspreis** neben Ihrem **Umsatz** zu sehen, mit der automatisch berechneten **Marge** (Umsatz − Einkaufspreis).
+
+<Note>
+Es gibt keine separate Schaltfläche „Eingangsrechnung erstellen" am Auftrag — sendet der Frachtführer Ihnen seine eigene Rechnung für die Ladung, gleichen Sie sie auf der dedizierten Seite **Unterauftragnehmer-Rechnungen** ab, die die Erfassung und den Abgleich gegen den hier erfassten Einkaufspreis übernimmt.
+</Note>
+
+---
+
+## Statussynchronisierung: Frachtführer → Ihr System → Kunde
+
+Aktualisiert der Frachtführer den Auftragsstatus in seinem Portal (Abgeholt, Unterwegs, Geliefert), fließt diese Aktualisierung automatisch durch:
+
+1. Der Auftragsstatus in Ihrem Druma aktualisiert sich sofort
+2. Ihr Kunde sieht den aktualisierten Status in seinem Portal, auf der Zeitleiste seiner Sendung
+3. Ihre Planer sehen die Aktualisierung im Auftragsdetailbereich und, falls der LKW live ist, auf der Live-Karte
+
+Sie müssen Statusaktualisierungen vom Frachtführer nicht manuell an Ihren Kunden weiterleiten. Die Information fließt automatisch durch Druma.
+
+---
+
+## Dokumentenfluss
+
+Lädt der Frachtführer über sein Portal Dokumente hoch — CMR-Scan, Liefernachweis, Fotos — erscheinen diese Dokumente an zwei Stellen gleichzeitig:
+
+- **Ihr Druma-Konto** — im Tab Dokumente des Auftrags
+- **Das Portal Ihres Kunden** — auf dessen Dokumente-Seite, filterbar nach Typ (CMR, eCMR, POD, Rechnung, CO2)
+
+Der Kunde erhält Zugang zu CMR und Lieferbestätigung, ohne dass Sie etwas manuell weiterleiten müssen. Es kommt einfach an.
+
+<Note>
+Es gibt keinen Sichtbarkeits-Schalter pro Dokument — jedes einem Auftrag angehängte Dokument, das der Kunde sehen kann, ist für ihn sichtbar. Müssen Sie eine vom Frachtführer hochgeladene Datei intern halten, hängen Sie sie nicht an die Dokumente des Auftrags an.
+</Note>
+
+---
+
+## Margenverfolgung
+
+Bei jedem unterauftragnehmerbasierten Auftrag zeigt Ihnen Druma die Marge auf einen Blick:
+
+**Marge = Verkaufspreis − Frachtführerkosten**
+
+Sie sehen dies im Tab Frachtführer & Geld des Auftrags und in der Auftragslistenansicht. Das macht es einfach, die Rentabilität über Ihre Speditionsladungen zu prüfen, ohne Tabellen zu bauen.
+
+Ändern sich tatsächliche Kosten (der Frachtführer berechnet Wartezeit oder zusätzliche km), aktualisieren Sie den Einkaufspreis am Auftrag, und die Marge berechnet sich automatisch neu.
+
+---
+
+## Frachtführer-Updates
+
+Ist ein unterauftragnehmerbasierter Auftrag einem Frachtführer zugewiesen und beginnt er, Updates über das Frachtführer-Portal zu liefern, zeigt Druma dessen Echtzeitdaten auf der Speditionstafel und im Auftragsdetailpanel an — keine manuelle Weiterleitung Ihrerseits nötig.
+
+### Auf der Speditionstafel (Unterwegs-Karten)
+
+- **Frachtführer-ETA** — die eigene Liefer-ETA des Frachtführers, beschriftet mit „Frachtführer-ETA" zur Unterscheidung von Drumas PTV-berechneter ETA
+- **Frachtführer-Kennzeichen**-Abzeichen — das tatsächliche Kennzeichen, das der Frachtführer für diese Ladung nutzt
+- **Fehlender-Einkaufspreis-Warnung** — ein gelbes Abzeichen erscheint bei jeder Karte ohne gesetzten Einkaufspreis. Dies signalisiert eine Margendatenlücke — öffnen Sie den Auftrag und tragen Sie den Einkaufspreis ein, bevor Sie abrechnen
+
+### Im Auftragsdetailbereich
+
+Bei unterauftragnehmerbasierten Aufträgen erscheint ein Abschnitt **Frachtführer-Updates** im Auftragsdetailbereich mit:
+
+- Frachtführer-Kennzeichen und Fahrername
+- Fahrertelefonnummer (als Klartext angezeigt, kein Tippen-zum-Anrufen-Link)
+- Frachtführer-ETA
+- Tatsächliche Ladewerte: vom Frachtführer gemeldete Ankunft und Abfahrt am Abholpunkt
+- Tatsächliche Lieferwerte: vom Frachtführer gemeldete Ankunft und Abfahrt am Lieferpunkt
+
+Diese Felder werden vom Frachtführer über sein Portal befüllt — keine manuelle Eingabe Ihrerseits nötig. Hat ein Frachtführer noch keine Updates gesendet, zeigt der Abschnitt Platzhalter.
+
+---
+
+## Wann unterauftragnehmerbasierte Aufträge verwenden
+
+Verwenden Sie den Auftragstyp Unterauftragnehmer, wann immer:
+
+- Sie eine Ladung angenommen haben, aber Ihre eigenen LKW voll sind
+- Sie rein als Spediteur agieren und selbst keine Ladungen fahren
+- Sie einen Spot-Frachtführer für eine Einzelladung nutzen
+- Sie die Marge zwischen dem, was Sie dem Kunden berechnen, und dem, was Sie dem Frachtführer zahlen, verfolgen müssen
+
+<Warning>
+Nutzen Sie Ihren eigenen Fahrer und LKW, verwenden Sie einen Standard-Auftragstyp — nicht Unterauftragnehmer. Unterauftragnehmerbasierte Aufträge sind speziell für Ladungen, die von externen Frachtführern transportiert werden.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Unterauftragnehmer" icon="handshake" href="/de/planner/subcontractors">
+    Fügen Sie Frachtführerunternehmen zu Ihrem Register hinzu, bevor Sie ihnen unterauftragnehmerbasierte Aufträge zuweisen können.
+  </Card>
+  <Card title="Rechnungen erstellen" icon="file-invoice-dollar" href="/de/invoicing/generating-invoices">
+    Erfahren Sie, wie Sie Verkaufs- und Einkaufsrechnungen aus Ihren Aufträgen erstellen.
+  </Card>
+</CardGroup>

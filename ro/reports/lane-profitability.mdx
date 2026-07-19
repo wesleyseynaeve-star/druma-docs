@@ -1,39 +1,98 @@
 ---
-title: "Profitabilitate pe rute"
-description: "Analizeaza profitabilitatea pe fiecare ruta de transport - venituri, costuri, marja si performanta la timp."
+title: "Raportul de profitabilitate pe rute"
+description: "Vezi marja reala pe fiecare pereche origine-destinatie pe care o rulezi, cu venit, costuri estimate si tendinta fata de perioada anterioara."
 icon: "route"
 ---
 
-Raportul de Profitabilitate pe Rute arata cat de rentabila este fiecare ruta (combinatie tara/oras) din operatiunile tale.
+Multi operatori isi cunosc venitul per ruta, dar nu si marja reala, odata ce se numara combustibilul, taxele de drum si costurile soferului. Raportul de Profitabilitate pe Rute face calculul pentru fiecare combinatie de tari pe care o operezi, ca sa vezi dintr-o privire ce rute functioneaza si care iti erodeaza profitul.
 
-## Accesarea raportului
+## Deschiderea raportului
 
-Mergi la **Rapoarte -> Profitabilitate pe Rute**.
+Mergi la **Rapoarte → Profitabilitate pe Rute**.
 
-## Granularitatea
+Selecteaza intervalul de date din partea de sus. Raportul este implicit pe luna curenta. Pentru o comparatie relevanta, ai de regula nevoie de cel putin o luna completa de date, ideal un trimestru.
 
-Comuta intre doua niveluri de granularitate cu butonul **Tara/Oras**:
-- **Tara** - grupat dupa tara de origine si destinatie (ex. RO -> DE)
-- **Oras** - grupat dupa oras de origine si destinatie (ex. Bucuresti -> Munchen)
+<Frame caption="Profitabilitate pe Rute — marja per pereche origine-destinatie, cu pragul fix de 15% folosit pentru a semnala rutele sub-performante.">
+  <img src="/images/reports/lane-profitability.png" alt="Raportul de Profitabilitate pe Rute" />
+</Frame>
 
-## Coloanele raportului
+## Ce arata raportul
 
-| Coloana | Descriere |
-|---------|-----------|
-| Ruta | Combinatia origine - destinatie |
-| Nr. comenzi | Volumul de comenzi pe acea ruta |
-| Venituri totale | Suma vanzarilor pe ruta |
-| Costuri totale | Costuri estimate (combustibil, soferi, taxa, uzura) |
-| Marja (EUR) | Venituri - Costuri |
-| Marja (%) | Procentul de marja |
-| CO2 total | Emisii totale pe ruta |
-| La timp | Procentul de livrari la timp |
-| Km total | Distanta totala pentru toate comenzile pe ruta |
+Fiecare rand din tabel este o pereche de tari origine-destinatie. Pentru fiecare ruta vezi:
 
-## Exportul CSV
+| Coloana | Ce inseamna |
+|---|---|
+| **Venit** | Suma totala facturata pentru comenzile pe aceasta ruta, in perioada |
+| **Cost Combustibil** | Estimat: distanta × consumul mediu × pretul combustibilului |
+| **Cost Taxe de Drum** | Date de taxa de drum PTV pentru ruta |
+| **Cost Sofer** | Cost zilnic × zilele cursei, pe baza tarifului per sofer pe care il configurezi |
+| **Costuri Totale** | Suma combustibil + taxe de drum + cost sofer |
+| **Marja €** | Venit minus costuri totale |
+| **Marja %** | Marja ca procent din venit |
+| **Curse** | Numarul de comenzi finalizate pe aceasta ruta, in perioada |
+| **Pret Mediu/Cursa** | Venitul mediu per comanda |
+| **Tendinta** | O sageata care arata daca marja % s-a imbunatatit sau a scazut fata de perioada anterioara |
 
-Apasa **Exporta CSV** pentru a descarca datele complete cu UTF-8 BOM (compatibil Excel roman).
+Randurile sub pragul tinta de marja sunt evidentiate cu rosu. Acest prag este momentan fix la **15%** — inca nu este configurabil din Setari.
 
-## Limita de randuri
+## Cum functioneaza estimarile de cost
 
-Raportul afiseaza maxim 500 de randuri. Daca ai mai mult de 500 de rute distincte, se afiseaza un avertisment de trunchiere.
+<Note>
+Estimarile de cost din acest raport sunt aproximari, bazate pe parametrii tai configurati. Sunt utile pentru identificarea performantei relative intre rute, dar costurile reale pot diferi — mai ales pentru costurile de taxa de drum, pe rute cu drumuri cu taxa variabila.
+</Note>
+
+**Calculul costului de combustibil:**
+Distanta (din rutarea PTV) × consumul mediu al flotei (litri/100km, setat in Setari → Flota → Consum Implicit) × pretul tau de combustibil (setat in Setari → Flota → Pret Combustibil, sau importat din datele de card de combustibil, daca folosesti import de card de combustibil).
+
+**Calculul costului de taxa de drum:**
+Date de taxa de drum HERE Maps pentru ruta. Acopera majoritatea sistemelor europene de taxare pe autostrada. Mai putin precis pentru rutele prin tari cu sisteme complexe de vigneta.
+
+**Calculul costului soferului:**
+Numarul de zile de cursa × tariful de cost zilnic pe care l-ai setat pentru fiecare sofer in profilul sau (Flota → Soferi → [sofer] → Tarif Cost Zilnic). Daca niciun sofer nu este atribuit, Druma foloseste costul zilnic implicit global al soferului.
+
+Poti actualiza toate aceste inputuri in Setari, pentru a imbunatati precizia. Raportul se recalculeaza imediat cand salvezi valori noi.
+
+## Identificarea rutelor neprofitabile
+
+Sorteaza tabelul dupa **Marja %** crescator — rutele cele mai slabe urca in varf.
+
+Randurile rosii sunt rute sub marja tinta. Motive comune:
+
+- **Rute de distanta lunga** — arata profitabile ca venit, dar au costuri mari de combustibil si sofer
+- **Rute cu taxe de drum mari** — anumite trasee prin Franta, Austria sau Elvetia au taxe semnificativ mai mari decat alternativele
+- **Clienti vechi, sub-tarifati** — tarife convenite acum ani, nerenegociate
+- **Rute cu volum redus** — mai putine curse inseamna ca costurile fixe lovesc mai tare
+
+## Aprofundarea unei rute
+
+Apasa orice rand de ruta, pentru a vedea comenzile individuale care compun cifrele acelei rute. Poti vedea venitul, costul estimat si marja fiecarei comenzi — si identifica comenzi specifice care sunt exceptii (de exemplu, o singura comanda la un tarif mult mai mic decat restul).
+
+Din lista de comenzi poti face click pentru detaliul complet al comenzii. Util cand investighezi de ce o anumita ruta a sub-performat intr-o luna data.
+
+## Filtrarea raportului
+
+Foloseste filtrele din partea de sus a paginii:
+
+- **Tara de origine** — filtreaza la una sau mai multe tari specifice de origine
+- **Tara de destinatie** — filtreaza la una sau mai multe tari specifice de destinatie
+- **Client** — vezi profitabilitatea pe rute pentru un singur client
+- **Camion** — vezi ce camioane opereaza cele mai profitabile rute
+
+## Exportul
+
+Apasa **Export → CSV** pentru a descarca raportul complet ca foaie de calcul. CSV-ul include toate coloanele si toate comenzile din vizualizarea aprofundata, daca ai aplicat filtre.
+
+CSV-ul este cel mai bun format pentru o analiza suplimentara in Excel — de exemplu, construirea propriilor tabele pivot pe client sau pe camion.
+
+<Warning>
+Nu lua decizii de tarifare bazandu-te doar pe acest raport, fara sa iei in considerare alti factori: cursele de retur, relatiile strategice cu clientii si variatia sezoniera de volum afecteaza toate valoarea reala a unei rute.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Prezentare generala rapoarte" icon="chart-bar" href="/ro/reports/reports-overview">
+    Toate rapoartele disponibile in Druma si cum le programezi.
+  </Card>
+  <Card title="Fise de tarifare" icon="tag" href="/ro/admin/rate-cards">
+    Configureaza fise de tarifare per ruta, care alimenteaza detectarea preturilor anormale si tintele de marja.
+  </Card>
+</CardGroup>

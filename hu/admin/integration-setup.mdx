@@ -1,103 +1,236 @@
 ---
 title: "Integráció beállítása"
-description: "A Druma csatlakoztatása az eCMR-szolgáltatóhoz, HERE Maps, üzemanyagkártya-szolgáltatókhoz, könyvelő szoftverekhez és SmartBill rendszerhez a Beállítások → Integrációk oldalon."
+description: "Csatlakoztasd a Drumát az eCMR-szolgáltatódhoz, a HERE Maps-hez, üzemanyagkártya-szolgáltatókhoz, könyvelőszoftverhez, SmartBill-hez, valamint telematikai/hűtős szolgáltatókhoz a Beállítások → Integrációk oldalon."
 icon: "plug"
 ---
 
-## Az Integrációk oldal
+Minden integráció, amelyet a céged használ, egy helyen konfigurálható: **Beállítások → Integrációk**. Nincs szükség fejlesztőre — minden beállítás űrlap alapú, és egyenként kevesebb mint öt percet vesz igénybe.
 
-Lépj a **Beállítások → Integrációk** menüpontra az összes külső csatlakozás megtekintéséhez és konfigurálásához. Minden integráció az oldalon egy kártya formájában jelenik meg az aktuális állapottal (nincs konfigurálva / aktív / hiba).
-
-**Ki konfigurálhatja:** Csak az Admin és Vállalati admin szerepkörök.
+<Frame caption="Beállítások → Integrációk — az eCMR-szolgáltató kártyának csak két állapota van: Natív és Letiltva.">
+  <img src="/images/admin/integration-setup.png" alt="Integrációs beállítások panel" />
+</Frame>
 
 ---
 
 ## 1. eCMR-szolgáltató
 
-A Druma alapértelmezés szerint **saját házon belüli Druma natív szolgáltatóval** állítja ki az elektronikus fuvarjegyeket — nincs szükség külső fiókra, API-kulcsra vagy beállításra. Az eCMR azonnal elérhető a határon átnyúló rendelésekhez, és a Druma PAdES digitális aláírással pecsételi le az elkészült dokumentumot.
+A Druma **saját, belső natív szolgáltatóval** állítja ki az elektronikus fuvarleveleket — nincs szükség külső fiókra, API-kulcsra vagy beállításra. Az eCMR azonnal elérhető a határon átnyúló rendelésekhez, és a Druma PAdES digitális aláírással pecsételi le az elkészült dokumentumot.
 
-A **TransFollow** opcionális visszaállási lehetőségként elérhető marad azoknak a cégeknek, amelyek a natív szolgáltató bevezetése előtt már használták. Az új cégeknek a natív szolgáltatón kell maradniuk.
+Az eCMR-szolgáltató kártyának csak két állapota van: **Natív** és **Letiltva**. A TransFollow nem választható opció — csak egy korábbi (legacy) útként létezik azon kis számú cég számára, amelyeknek már volt korábbi konfigurációja (lásd a lenti megjegyzést).
 
 <Steps>
   <Step title="Nyisd meg az eCMR-szolgáltató kártyát">
-    Lépj a **Beállítások → Integrációk** menüpontra, és nyisd meg az **eCMR-szolgáltató** kártyát. A Druma natív szolgáltató alapértelmezés szerint ki van választva.
+    Lépj a **Beállítások → Integrációk** menüpontra, és nyisd meg az **eCMR-szolgáltató** kártyát. Alapértelmezés szerint a **Natív** van kiválasztva.
   </Step>
-  <Step title="(Opcionális) Váltás TransFollow-ra">
-    A TransFollow használatához válaszd ki azt, és illeszd be a TransFollow-fiókod irányítópultjáról az API-kulcsot az **API-kulcs** mezőbe. Amennyiben még nincs fiókod, regisztrálj a [transfollow.org](https://transfollow.org) oldalon.
-  </Step>
-  <Step title="Tesztmód engedélyezése (opcionális)">
-    TransFollow használata esetén kapcsold be a **Tesztmód** kapcsolót, ha valódi, jogilag bejegyzett dokumentumok kiállítása nélkül szeretnéd tesztelni az eCMR-munkafolyamatot. Használd ezt sofőrképzés vagy onboarding során. Éles üzem előtt kapcsold ki.
-  </Step>
-  <Step title="Kapcsolat tesztelése">
-    Kattints a **Kapcsolat tesztelése** gombra. A Druma ellenőrzi a natív aláíró tanúsítványt — vagy, ha a TransFollow van kiválasztva, meghívja a TransFollow API-t az API-kulcs érvényességének megerősítéséhez.
+  <Step title="Teszteld a kapcsolatot">
+    Kattints a **Kapcsolat tesztelése** gombra. A Druma ellenőrzi, hogy az aláíró tanúsítványa konfigurálva és készen áll-e.
   </Step>
   <Step title="Mentés">
-    Kattints a **Mentés** gombra. Az eCMR létrehozás aktív a határon átnyúló rendelésekhez.
+    Kattints a **Mentés** gombra. Az eCMR-létrehozás aktív a határon átnyúló rendelésekhez.
   </Step>
 </Steps>
 
 <Note>
-A legtöbb cégnek soha nem kell ezt megváltoztatni — a natív szolgáltató az ajánlott alapértelmezés. Teljes összehasonlításért lásd az [eCMR-szolgáltatók](/en/ecmr/ecmr-providers) oldalt.
+A legtöbb cégnek soha nem kell ezt megváltoztatnia — a Natív az egyetlen valós lehetőség. Ha a cégednek korábbi TransFollow-konfigurációja van, az továbbra is a megszokott módon működik, és itt **Natívként** jelenik meg; a következő mentéskor csendben átáll a valódi natív szolgáltatóra, anélkül, hogy neked bármit is váltanod vagy beállítanod kellene. Részletekért lásd az [eCMR-szolgáltatók](/en/ecmr/ecmr-providers) oldalt.
 </Note>
 
-<Warning>
-A TransFollow tesztmódban kiállított eCMR-dokumentumok **nem jogilag érvényesek**. Győződj meg arról, hogy a tesztmód ki van kapcsolva, mielőtt valódi szállítmányokat indítasz.
-</Warning>
+---
+
+## 2. HERE Maps és PTV útvonaltervezés
+
+A HERE Maps biztosítja a cím-autokiegészítést rendelés létrehozásakor. A teherautó-optimalizált útvonalszámítást, a távolságot, az ETA-t és az útdíjbecslést egy külön szolgáltató, a **PTV** végzi.
+
+**Egyikhez sincs szükség beállításra.** Mindkét API-kulcsot platform-szinten a Druma kezeli. Nincs mit konfigurálni, és a HERE vagy PTV használatáért nem kerülsz külön számlázásra — mindkettő az előfizetésed része.
+
+<Note>
+Ha a cím-autokiegészítés vagy az útvonaltervezés leáll, az platform-szintű probléma. Ilyenkor a Druma ügyfélszolgálatát keresd, ne próbáld a HERE-t vagy a PTV-t saját magad újrakonfigurálni.
+</Note>
 
 ---
 
-## HERE Maps (Útvonaltervezés)
+## 3. Üzemanyagkártya-importálás
 
-A HERE Maps biztosítja a távolságszámítást, ETA-becsléseket, útdíj-kiszámítást és GPS-pozíció megjelenítést a tervezőtáblán. A HERE Maps alapértelmezés szerint be van konfigurálva a Drumában — ha nem látod a térképet vagy az útvonalakat, lépj kapcsolatba az ügyfélszolgálattal.
+A Druma nem csatlakozik közvetlenül az üzemanyagkártya-szolgáltatók API-jaihoz. Ehelyett a szolgáltatód webes portálján exportálsz egy CSV-fájlt, amelyet feltöltesz a Drumába. Így az üzemanyagköltségek automatikusan összekapcsolódnak a járművekkel és rendelésekkel.
 
----
+**Támogatott szolgáltatók:** DKV, UTA, AS24, Shell, TotalEnergies, BP, Circle K, Eurowag, WEG, MOL, E100.
 
-## Üzemanyagkártya-importálás
+<Steps>
+  <Step title="Exportálás a szolgáltatói portálról">
+    Jelentkezz be az üzemanyagkártya-szolgáltatód webes portáljára, és exportáld a tranzakciókat CSV-ként. A legtöbb portálon ez a **Jelentések → Tranzakció-export** menüpontban található.
+  </Step>
+  <Step title="Nyisd meg az üzemanyagkártya-importot">
+    Lépj a **Flotta → Üzemanyag** menüpontra, és nyisd meg az importálási párbeszédablakot.
+  </Step>
+  <Step title="Válaszd ki a szolgáltatódat">
+    Válaszd ki a szolgáltatót a legördülő menüből, hogy a Druma tudja, milyen CSV-oszlopformátumot várjon.
+  </Step>
+  <Step title="Töltsd fel a CSV-t">
+    Kattints a **CSV feltöltése** gombra, válaszd ki a fájlt, majd kattints az **Importálás** gombra. A Druma a tranzakciókat rendszám alapján párosítja a járművekhez.
+  </Step>
+</Steps>
 
-A Druma importálni tud az üzemanyag-felhasználási adatokat a DKV, UTA és AS24 szolgáltatóktól. Miután konfigurálod, az üzemanyagadatok automatikusan frissülnek, és a valós üzemanyagköltségek megjelennek a rendelési költségszámításokban.
-
-**Beállítás:**
-1. Lépj a **Beállítások → Integrációk → Üzemanyagkártyák** menüpontra.
-2. Válaszd ki a szolgáltatót, és add meg az API hitelesítő adatokat.
-3. Teszteld a kapcsolatot.
-4. Mentsd el.
-
----
-
-## SmartBill
-
-A SmartBill egy román számviteli és számlázó szoftver. Csatlakoztatás után a Druma-ban generált számlák egy kattintással küldhetők a SmartBill-be.
-
-**Beállítás:**
-1. Lépj a **Beállítások → Integrációk → SmartBill** menüpontra.
-2. Add meg a SmartBill API-kulcsát és vállalati kódját.
-3. Teszteld a kapcsolatot.
-4. Mentsd el.
+<Note>
+Ha egy tranzakció rendszáma nem egyezik egyetlen flottajárművel sem, a Druma **párosítatlanként** listázza. Manuálisan hozzárendelheted, vagy figyelmen kívül hagyhatod. Rendszeresen ellenőrizd a párosítatlan listát — gyakran itt bukik le az üzemanyagkártya-visszaélés vagy a hibás rendszám-bevitel.
+</Note>
 
 ---
 
-## SAGA / WinMENTOR
+## 4. SAGA / WinMENTOR könyvelés
 
-A SAGA C és WinMENTOR a legszélesebb körben használt román számviteli szoftverek. A Druma ZIP-fájlba exportál, amely importálható mindkét rendszerbe. Nincs szükség élő API-ra — az exportálás manuálisan vagy automatikusan, éjszaka elvégezhető.
+A Druma a két legelterjedtebb román könyvelőszoftverrel, a SAGA-val és a WinMENTOR-ral kompatibilis formátumban exportálja a számla- és rendelésadatokat.
 
-Részletekért lásd az [SAGA & WinMENTOR Exportálás](/en/invoicing/saga-export) oldalát.
+### SAGA Classic és WinMENTOR Classic
+
+Nincs szükség API-kulcsra. A SAGA DBF-fájlokat exportál (`CLI_`, `ART_`, `IE_`, `INT_`, `NC_.xml`); a WinMENTOR Classic csővezérjellel (pipe) tagolt `.txt` fájlokat exportál. Mindkét formátum havonta egyszer automatikusan generálódik, és e-mailben, ZIP-fájlként kerül elküldésre a beállított könyvelői címre (Resend, 7 napig érvényes aláírt link) — az export napja a **Beállítások → Automatizálás és funkciók → SAGA export-konfiguráció** menüpontban állítható. Nincs manuális "Exporttörténet" lista; minden havi export csak az e-mailben kiküldött ZIP-ként létezik.
+
+<Note>
+Jelenleg nincs közvetlen REST API-integráció a WinMENTOR Enterprise-hoz vagy bármilyen más könyvelőszoftverhez — a SAGA és a WinMENTOR Classic az egyetlen két támogatott formátum, mindkettő fájl alapú.
+</Note>
 
 ---
 
-## Peppol (Belgium)
+## 5. SmartBill
 
-A belga vállalatok számára a Peppol integráció lehetővé teszi a számlákat kötelező Peppol-hálózaton keresztüli elküldését a belga B2B ügyfeleknek 2026. január 1-jétől. Részletekért lásd a [Peppol E-Számlázás](/en/integrations/peppol-invoicing) oldalát.
+A SmartBill egy román felhő alapú számlázási platform. Az integráció aktiválása után a Druma automatikusan továbbítja a számlát a SmartBill-be, amikor **elküldöd** (nem akkor, amikor létrehozod vagy jóváhagyottként megjelölöd) — nincs szükség manuális újra-rögzítésre.
+
+<Steps>
+  <Step title="Szerezd meg a SmartBill hitelesítő adataidat">
+    A SmartBill-fiókodban keresd meg a fiók **E-mail-címét**, az **API-tokent**, a **CIF**-et (adószám) és a **Számlasorozatot** — mind a négy szükséges.
+  </Step>
+  <Step title="Nyisd meg a SmartBill kártyát a Drumában">
+    Lépj a **Beállítások → Integrációk → SmartBill** menüpontra.
+  </Step>
+  <Step title="Add meg a hitelesítő adataidat">
+    Add meg az e-mail-címet, az API-tokent, a CIF-et és a számlasorozatot. A SmartBill a CIF alapján irányítja a számlákat a megfelelő céges fiókba.
+  </Step>
+  <Step title="Mentés">
+    Kattints a **Mentés** gombra. Innentől a Drumában elküldött számla a SmartBill-be is továbbításra kerül.
+  </Step>
+</Steps>
+
+<Note>
+A SmartBill a továbbításkor saját számlaszámot rendel hozzá — nem a Druma számlaszámát használja újra. A státusz egyszerűen "továbbítva" vagy "hiba" formában követhető; a Druma nem követi a SmartBill Vázlat/Kiállítva/Fizetve állapotát, és a továbbítás után nincs webhook, amely a két rendszert szinkronban tartaná (a SmartBill-ben ügyfél- vagy termékrekordok sem jönnek létre). Ha a SmartBill-előfizetésed lejár, vagy az API-kulcsod újragenerálódik, a továbbítás hibázni fog — időnként ellenőrizd a **Beállítások → Integrációk** oldalon, hogy a SmartBill státusza zöld-e.
+</Note>
 
 ---
 
-## e-Factura ANAF (Románia)
+## 6. Peppol e-számlázás (Belgium)
 
-A román illetőségű vagy romániai B2B ügyfeleket kiszolgáló cégek számára a Druma automatikusan benyújtja a számlákat az ANAF e-Factura rendszerbe. Részletekért lásd az [e-Factura / ANAF](/en/invoicing/efactura-anaf) oldalát.
+A Peppol az összeurópai e-számlázási hálózat. A belga (KBO-bejegyzésű) cégeknek Peppolon keresztül kell számlát küldeniük más belga vállalkozásoknak — ez 2026 januárja óta kötelező.
 
-<Card title="SmartBill integráció" icon="star" href="/en/integrations/smartbill">
-  A SmartBill összekötése és a számlák automatikus szinkronizálása.
+**Kinek szükséges:** belga cégeknek, amelyek B2B számlát küldenek más belga vállalkozásoknak.
+
+<Steps>
+  <Step title="Keresd meg a Peppol e-számlázás kártyát">
+    Lépj a **Beállítások → Integrációk** menüpontra, és kattints a **Peppol e-számlázás** kártyára.
+  </Step>
+  <Step title="Add meg a bejegyzési adataidat">
+    Add meg a **KBO-számodat** (belga cégbejegyzési szám) és az **ÁFA-számodat**.
+  </Step>
+  <Step title="Regisztrálj a Peppolon">
+    Kattints a **Regisztráció a Peppolon** gombra. A Druma benyújtja a regisztrációdat az e-invoice.be hozzáférési ponthoz. Ez általában néhány percen belül lezajlik.
+  </Step>
+  <Step title="Erősítsd meg az aktiválást">
+    Aktiválás után a kártya **Csatlakoztatva** státuszt mutat. A Peppol-útválasztás mostantól automatikus a jogosult belga ügyfelekhez — nincs szükség extra lépésre belga címzetteknek küldött számláknál.
+  </Step>
+</Steps>
+
+<Note>
+Lásd a [Peppol e-számlázás](/en/integrations/peppol-invoicing) oldalt a teljes útválasztási logikáért, azért, hogy mi történik, ha egy címzett nincs a Peppol-hálózaton, és hogyan kell kezelni az elutasításokat.
+</Note>
+
+---
+
+## 7. Beszállítói számla e-mail postafiók
+
+Ez egy dedikált e-mail-címet ad a cégednek beszállítói számlák fogadására — üzemanyagkártya-szolgáltatóktól, szervizektől, útdíjkezelőktől vagy bármely más beszállítótól. A beérkezett számlákat az AI osztályozza és egy ellenőrzési sorba irányítja, így semmi nem marad ki.
+
+<Steps>
+  <Step title="Lépj a Vállalati beállításokhoz">
+    Navigálj a **Beállítások → Vállalat** menüpontra, és görgess a **Beszállítói számla e-mail** szakaszhoz.
+  </Step>
+  <Step title="Kapcsold be a postafiókot">
+    Kapcsold be a **Beszállítói számla postafiók engedélyezése** funkciót. A Druma egy dedikált bejövő e-mail-címet generál a cégednek.
+  </Step>
+  <Step title="Add hozzá a küldő címeket a fehér listához">
+    A **Küldő fehér lista** mezőben add hozzá azokat az e-mail-címeket vagy domaineket, amelyektől számlákat vársz (például `invoices@dkv.com` vagy `@uta.eu`). A fehér listán nem szereplő küldők e-mailjei elutasításra kerülnek, és soha nem kerülnek a sorba.
+  </Step>
+  <Step title="Oszd meg a címet a beszállítóiddal">
+    Másold ki a generált e-mail-címet, és add meg minden beszállítónak számla-benyújtási címként a céged számára.
+  </Step>
+</Steps>
+
+A beérkezett számlák a **Pénzügy → Fuvarközvetítés → Számlasor** menüpontban jelennek meg ellenőrzésre, párosításra és jóváhagyásra.
+
+<Note>
+Lásd a [Beszállítói számlák](/en/invoicing/supplier-invoices) oldalt az ellenőrzési sor, az automatikus párosítási logika és a párosítatlan számlák kezelésének részleteiért.
+</Note>
+
+---
+
+## 8. Telematika, tachográf és hűtős szolgáltatók
+
+A Druma közvetlenül a **Beállítások → Integrációk** oldalon csatlakozik a járműveid GPS-, tachográf- (vezetési idő) és pótkocsi hűtő-szolgáltatóihoz, így az élő pozíciók, az EU 561/2006 vezetési idő adatai és a rakomány-hőmérsékleti adatok automatikusan bekerülnek a Drumába, kézi rögzítés nélkül.
+
+### GPS és tachográf (telematika)
+
+Nyisd meg a szolgáltatód kártyáját a **Beállítások → Integrációk** alatt, és add meg a lenti hitelesítő adatokat. Minden kártya "Honnan szerzem be ezeket?" linkje megismétli ezt az útmutatást az alkalmazáson belül.
+
+| Szolgáltató | Hitelesítő mezők | Honnan szerezhető be |
+|---|---|---|
+| **Scania / Volvo / DAF / MAN / Mercedes-Benz / IVECO / Renault (rFMS)** | Client ID, Client Secret, OEM-választó | A teherautó-gyártó fejlesztői vagy flottaportálja adja ki (pl. `developer.scania.com` a Scaniánál). A Scaniánál emellett szükséges egy Communicator fedélzeti egység, plusz egy Location vagy Performance előfizetés. A Scania és a Volvo a legkiforrottabb; a többi rFMS-szabványú márka ugyanazt az API-t osztja meg, és várhatóan ugyanúgy működik, de élő flottákon még validáljuk. |
+| **Webfleet** | Fiók, felhasználónév, jelszó, API-kulcs | Egy "expert" profillal és külső hozzáféréssel rendelkező Webfleet-felhasználótól. Magát az API-kulcsot a Webfleet ügyfélszolgálata vagy a WEBFLEET.connect partnerprogram adja ki. |
+| **Geotab** | Adatbázis, felhasználónév, jelszó | Hozz létre egy Service Account-ot (csak megtekintés) a MyGeotab → Adminisztráció → Felhasználók alatt. Az "Adatbázis" a `my.geotab.com/<adatbázis>` URL-ben szereplő név. |
+| **Samsara** | API-token, alap URL (opcionális) | Generálj egy tokent a Samsara irányítópultján a Beállítások → API-tokenek alatt, "Read Vehicle Statistics" jogkörrel. EU-flottáknál hagyd üresen az alap URL-t; állítsd be, ha a szervezeted az amerikai szerveren fut. Csak GPS-pozíció — a Samsara nem szolgáltat tachográf/vezetési idő adatot. |
+| **Frotcom** | Felhasználónév, jelszó, szolgáltató | A Frotcom-fiókod adatai, API-hozzáféréssel, amelyet a Frotcom ügyfélszolgálata vagy a helyi viszonteladó engedélyez. Jelenleg **béta** állapotban — a kapcsolat működik, de a mezőleképezést még élő fiókokon validáljuk. |
+| **Continental VDO** | Client ID, Secret, fiók-/cégazonosító | Continental partnerszerződést igényel — vedd fel a kapcsolatot a Continentallal a `fleet.vdo.com` kapcsolatfelvételi űrlapon keresztül. **Partnerhez kötött** — nincs nyilvános önkiszolgáló regisztráció. |
+| **Webeye / Eurowag** | Felhasználónév, titkos kulcs | A `selfcare.eurowag.com` → Telematika → Flottakezelés → Rendszerkapcsolatok alatt generálható. A cégednek előbb az Eurowag partnereként jóvá kell hagyatnia magát. **Partnerhez kötött** — nincs nyilvános önkiszolgáló regisztráció. |
+
+<Note>
+A Scania, a Webfleet, a Geotab és a Samsara kiforrott integrációk. A Frotcom béta állapotban van — működik, de a mezőleképezését még megerősítjük. A Continental VDO és a Webeye/Eurowag esetén a szolgáltatónak jóvá kell hagynia a céged partnerségét, mielőtt a kapcsolat élő adatot ad vissza; a hitelesítő adat űrlap ettől függetlenül elmenthető és tesztelhető, de a szinkronizálás csak a partnerhozzáférés aktiválása után indul el.
+</Note>
+
+### Hűtős / pótkocsi hőmérséklet
+
+<Steps>
+  <Step title="Nyisd meg a hűtős szolgáltató kártyát">
+    A **Beállítások → Integrációk** alatt keresd meg a pótkocsid telematikai szolgáltatójának kártyáját — **Mapon**, **Orbcomm**, **Thermo King TracKing** vagy **Carrier Lynx Fleet** —, és nyisd meg.
+  </Step>
+  <Step title="Add meg a hitelesítő adataidat">
+    Minden kártya "Honnan szerzem be ezeket?" linkje elmagyarázza, hogyan szerezhetők be az adott szolgáltató hitelesítő adatai (lásd a lenti táblázatot).
+  </Step>
+  <Step title="Teszt és mentés">
+    Kattints a **Kapcsolat tesztelése**, majd a **Mentés** gombra. A hőmérséklet-adatok automatikusan szinkronizálódni kezdenek, amint a kapcsolat megerősítést nyer.
+  </Step>
+</Steps>
+
+| Szolgáltató | Hitelesítő mezők | Honnan szerezhető be |
+|---|---|---|
+| **Mapon** | API-kulcs, alap URL (opcionális) | Generálj egy API-kulcsot a Mapon platformon a Beállítások → API alatt. Teljesen nyilvános API — azonnal működik. |
+| **Orbcomm** | Access token, vagy felhasználónév + jelszó, alap URL (opcionális) | Az ORBCOMM Platform API-fiókodon keresztül adott ki. Ha csak felhasználónévvel/jelszóval rendelkezel, a Druma automatikusan tokenre cseréli. |
+| **Thermo King TracKing** | API-kulcs, vagy felhasználónév + jelszó, alap URL (opcionális) | Kérj TracKing API-kulcsot a Thermo King márkakereskedődtől vagy a TracKing portálon keresztül. Nincs nyilvános önkiszolgáló regisztráció — ez egy partnerhez kötött integráció. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (vagy egy régebbi API-kulcs), alap URL (opcionális) | A Carrier Transicold-on vagy a Carrier márkakereskedődön keresztül, a Lynx Fleet API-eszközkészlet részeként. Nincs nyilvános önkiszolgáló regisztráció. |
+
+<Note>
+A Mapon teljesen nyilvános, és azonnal működik. Az Orbcommnak fiók-tokenre van szüksége az ORBCOMM-tól, mielőtt élő adatot adna vissza. A Thermo King TracKing és a Carrier Lynx Fleet csak partnereknek elérhető — API-hozzáférést kell igényelned a szolgáltatótól, mielőtt a Druma élő adatot tudna lekérni, még akkor is, ha a kapcsolati űrlap mind a négynél elérhető.
+</Note>
+
+---
+
+## Elmélyülő cikkek
+
+<Card title="Mi az az eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+  Ismerd meg, hogyan működik az eCMR, ki írja alá, és mikor alkalmazandó.
 </Card>
 
-<Card title="eCMR-szolgáltatók" icon="pen" href="/en/ecmr/ecmr-providers">
-  A Druma natív eCMR és a TransFollow teljes összehasonlítása.
+<Card title="eCMR létrehozása" icon="file-plus" href="/en/ecmr/creating-ecmr">
+  Lépésről lépésre útmutató az eCMR-dokumentumok kiállításához egy rendelésből.
+</Card>
+
+<Card title="Üzemanyagkártya-importálás részletei" icon="gas-pump" href="/en/fleet-compliance/fleet-documents">
+  Hogyan kapcsolódnak az üzemanyagköltségek a járművekhez és a rendelésekhez.
+</Card>
+
+<Card title="CO2-jelentés" icon="leaf" href="/en/fleet-compliance/co2-reporting">
+  Hogyan táplálják a PTV útvonaltávolságok a CO2-számításaidat.
 </Card>

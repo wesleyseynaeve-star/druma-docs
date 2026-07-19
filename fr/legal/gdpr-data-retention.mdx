@@ -1,92 +1,126 @@
 ---
 title: "Conservation des données RGPD"
-description: "Détail des périodes de conservation des données dans Druma et des procédures de suppression conformes au RGPD."
-icon: "database"
+description: "Quelles données Druma stocke, combien de temps elles sont conservées, et comment demander leur suppression."
+icon: "clock"
 ---
 
 _Dernière mise à jour : 10 juillet 2026._
 
-## Vue d'ensemble
+Cette page explique précisément quelles données Druma détient sur votre entreprise, combien de temps nous les conservons, et vos droits d'y accéder ou de les supprimer.
 
-Ce document détaille les périodes de conservation des données appliquées par Druma et les procédures de suppression.
+## Périodes de conservation des données
 
----
+| Type de données | Période de conservation | Base légale |
+|-----------|-----------------|-------------|
+| Profil et paramètres d'entreprise | Durée de l'abonnement + 90 jours | Contrat |
+| Comptes utilisateurs | Durée de l'abonnement + 90 jours | Contrat |
+| Commandes de transport et enregistrements d'expédition | Durée de l'abonnement + 90 jours | Contrat |
+| Fiches clients | Durée de l'abonnement + 90 jours | Contrat |
+| Fiches chauffeurs | Durée de l'abonnement + 90 jours | Contrat |
+| Factures et enregistrements financiers | Archivées à 3 ans, supprimées définitivement à 10 ans à partir de la date de facture | Loi fiscale de l'UE / Loi comptable roumaine |
+| Documents eCMR (signés) | Supprimés définitivement 7 ans après la date de livraison de l'expédition, via une purge annuelle autonome — indépendante du statut de votre compte | Protocole additionnel à la Convention CMR |
+| Journaux d'audit | 18 mois | Intérêts légitimes |
+| Position GPS (suivi en direct) | Non conservée — position actuelle uniquement, écrasée à chaque mise à jour | Contrat |
+| Horodatages GPS d'événements de commande | Conservés avec la commande (voir les enregistrements de commande ci-dessus) | Contrat |
+| Données GPS transmises à l'ANAF e-Transport | 30 jours, puis purgées automatiquement | Exigence légale (Roumanie) |
+| Fichiers tachygraphes (DDD/TGD) | Indéfinie (12 mois est le minimum légal, pas un objectif de purge) | Règlement UE 165/2014 |
+| Journaux d'erreur et de sécurité | 90 jours | Intérêts légitimes |
+| Enregistrements de facturation (Stripe) | 7 ans | Loi fiscale |
 
-## Tableau de conservation détaillé
-
-| Catégorie de données | Données spécifiques | Période de conservation | Base légale |
-|---|---|---|---|
-| **Données opérationnelles** | Commandes, itinéraires, statuts | Durée abonnement + 90 jours | Contrat + obligation légale |
-| **Données clients** | Noms, adresses, TVA, contacts | Durée abonnement + 90 jours | Contrat |
-| **Données chauffeurs** | Profils, permis, CPC | Durée abonnement + 90 jours | Contrat |
-| **Données véhicules** | Plaques, documents, historique | Durée abonnement + 90 jours | Contrat |
-| **Factures** | Montants, numéros, statuts | 7 ans | Obligation légale (loi comptable) |
-| **eCMR** | Documents certifiés | 10 ans | Obligation légale (Protocole e-CMR) |
-| **Journaux d'audit** | Actions utilisateurs | 18 mois | Intérêt légitime (sécurité) |
-| **Position GPS** | Dernière position connue | Écrasée en temps réel — aucun historique conservé | Contrat |
-| **Messages de commande** | Échanges planificateur-chauffeur | 90 jours | Contrat |
-| **Données de facturation** | Abonnements, paiements | 7 ans | Obligation légale |
-
----
+<Note>
+Les signatures eCMR et les documents eCMR sont supprimés définitivement automatiquement **7 ans après la date de livraison de l'expédition** par une tâche de purge annuelle — celle-ci s'exécute que votre compte soit ouvert ou fermé. Séparément, si le compte d'un utilisateur individuel est supprimé, toute signature eCMR qu'il a créée au cours des **3 dernières années** est anonymisée (pas supprimée) plutôt que retirée immédiatement, afin qu'elle survive — sans donnée personnelle rattachée — jusqu'à ce que l'échéance de 7 ans ci-dessus la rattrape.
+</Note>
 
 ## Données GPS : ce que nous stockons
 
-Druma stocke uniquement la **position GPS actuelle** du chauffeur, transmise pendant un trajet assigné actif. Chaque nouvelle position **écrase la précédente** — aucun historique de déplacement n'est conservé, sauf exception ci-dessous.
+Druma capture la position GPS depuis l'appareil du chauffeur pendant qu'un chargement est actif, après que le chauffeur a accordé l'autorisation de localisation dans l'application. Pour le **suivi en direct** (la position affichée sur la carte), seule la position actuelle du camion est stockée — chaque nouveau signal écrase le précédent, donc aucune trace historique de positions passées n'est conservée.
+
+Séparément, lorsqu'un chauffeur signale un changement de statut, un retard, ou un incident, une coordonnée GPS unique est capturée et rattachée à cet événement de commande précis, devenant partie de la fiche de la commande elle-même (conservée aussi longtemps que la commande elle-même — voir le tableau ci-dessus). C'est un horodatage ponctuel sur cet événement, pas un journal de localisation continu.
+
+Nous ne faisons **pas** :
+
+- De suivi de la localisation du chauffeur en dehors d'un trajet assigné actif
+- De conservation d'une trace historique des positions de suivi en direct
+- De partage des données GPS avec un tiers, sauf si requis pour la déclaration e-Transport à l'ANAF, qui utilise un tampon glissant de 30 jours avant suppression
 
 <Note>
-Exception : le pipeline de télédéclaration e-Transport (ANAF) utilise un **tampon glissant de 30 jours** avant suppression des positions transmises à l'administration roumaine. En dehors de ce cas, aucune trace de position n'est conservée.
+Une table de position historique héritée en ajout seul, provenant d'une version antérieure du chat chauffeur, existe encore avec une purge glissante de 90 jours, mais rien dans l'application actuelle n'y écrit de nouvelles lignes — c'est un vestige dormant, pas un journal GPS historique actif.
 </Note>
 
----
+## Données tachygraphe : ce que nous stockons
 
-## Suppression après résiliation
+Druma maintient une **Archive Tacho** qui stocke les fichiers tachygraphe bruts DDD (unité embarquée) et TGD (carte chauffeur) — téléchargés automatiquement via un fournisseur télématique connecté ou téléversés manuellement — pour respecter les exigences de fréquence de téléchargement et de conservation du Règlement UE 165/2014. Contrairement aux données opérationnelles, les fichiers tachygraphe sont **conservés indéfiniment** : 12 mois est le minimum légal, pas un objectif de purge, puisque les opérateurs peuvent devoir les produire bien au-delà de ce plancher pour un contrôle routier ou un audit des autorités. Voir [Archive Tachygraphe](/fr/fleet-compliance/tacho-archive) pour le détail.
 
-Lorsqu'un compte est résilié ou qu'une demande de suppression est soumise :
+## Journal d'audit
 
-1. **Immédiat** — Le compte est désactivé. Plus personne ne peut se connecter.
-2. **90 jours** — Période de rétention. Les données restent accessibles pour les besoins légaux ou réglementaires.
-3. **Après 90 jours** — Toutes les données opérationnelles sont purgées de tous les systèmes, y compris les sauvegardes.
-4. **Exception** — Les documents eCMR sont conservés 10 ans (même après suppression du compte) et les données financières 7 ans.
+Chaque action significative dans Druma (commande créée, facture envoyée, connexion utilisateur, paramètres modifiés) est enregistrée dans un journal d'audit avec horodatage, utilisateur, et détails de l'action. Les journaux d'audit sont conservés pendant 18 mois et ne peuvent être ni modifiés ni supprimés — ils existent pour vous protéger, vous et Druma, en cas de litige.
 
----
+## Après résiliation du compte
 
-## Mécanismes de suppression
+Lorsque vous résiliez votre abonnement :
 
-**Suppression automatique :**
-- Les journaux de messages de commande sont purgés après 90 jours via une tâche planifiée (pg_cron).
-- Les données GPS sont écrasées en temps réel à chaque nouvelle position (à l'exception du tampon e-Transport de 30 jours ci-dessus).
+1. Votre compte entre dans une **période de grâce de 90 jours** — les données sont préservées et accessibles.
+2. Après 90 jours, si l'intégralité du compte entreprise est supprimée : les messages de commande et notes internes sont supprimés immédiatement, les commandes **de plus de 3 ans** sont supprimées, et les clients, camions et remorques sont supprimés. Les commandes **de moins de 3 ans ne sont pas supprimées à cette étape** — elles, ainsi que leurs factures et signatures eCMR liées, continuent d'expirer selon les règles de conservation autonomes ci-dessous plutôt que d'être effacées au jour 90.
+3. Les factures et enregistrements financiers sont archivés à 3 ans et supprimés définitivement à 10 ans à partir de la date de facture — ce calendrier s'exécute indépendamment de la date de votre résiliation.
+4. Les signatures et documents eCMR sont supprimés définitivement 7 ans après la date de livraison de l'expédition — également indépendamment de votre date de résiliation.
 
-**Suppression sur demande :**
-- Export et suppression de compte disponibles dans **Paramètres → Données et confidentialité**.
+<Note>
+Si le compte d'un membre d'équipe individuel est retiré (plutôt que toute l'entreprise), une règle séparée et plus restreinte s'applique : les commandes et signatures eCMR qu'il a créées au cours des 3 dernières années sont anonymisées (champs personnels retirés, enregistrements conservés pour les données métier), et les factures qu'il a créées au cours des 10 dernières années sont anonymisées. Les enregistrements en dehors de ces fenêtres sont supprimés avec la fiche utilisateur.
+</Note>
 
----
+## Demander un export de données
+
+Vous pouvez demander un export complet des données de votre entreprise à tout moment :
+
+**Paramètres → Données et confidentialité → Demander un export**
+
+Vos données sont regroupées dans un fichier ZIP (formats JSON et CSV) et livrées à l'email de votre compte dans les 24 heures. L'export inclut toutes les commandes, clients, chauffeurs, factures, et paramètres.
+
+## Demander la suppression du compte
+
+<Warning>
+La suppression du compte est irréversible. Une fois la période de conservation de 90 jours passée, les données opérationnelles plus anciennes (commandes de plus de 3 ans, plus clients/camions/remorques) sont supprimées définitivement ; les commandes, factures et données eCMR plus récentes sont anonymisées ou conservées selon leurs propres calendriers légalement requis plutôt que supprimées immédiatement — voir « Après résiliation du compte » ci-dessus.
+</Warning>
+
+Pour supprimer votre compte : **Paramètres → Données et confidentialité → Supprimer le compte** → confirmez en tapant le nom de votre entreprise.
+
+Alternativement, envoyez un email à privacy@druma.io depuis l'adresse email du propriétaire de votre compte.
 
 ## Sous-traitants et localisation des données
 
-| Sous-traitant | Données traitées | Localisation |
-|---|---|---|
+| Fournisseur | Données traitées | Localisation |
+|----------|------------------|----------|
 | Supabase | Base de données (toutes les données) | UE (Francfort) |
 | Cloudflare | CDN, protection DDoS, DNS, journaux de requêtes | UE |
-| Resend | Envoi d'emails transactionnels | UE |
+| Resend | Contenu des emails transactionnels sortants | UE |
 | Mailgun | Ingestion des emails entrants (commandes, factures, paiements) | UE |
-| Stripe | Facturation et paiements | UE |
-| PTV Group | Itinéraire, distance et ETA (coordonnées d'enlèvement/livraison) | UE |
+| Stripe | Données de facturation et de paiement | UE |
+| PTV Group | Itinéraire, distance et données ETA (coordonnées d'enlèvement/livraison) | UE |
 | HERE Technologies | Géocodage et autocomplétion d'adresses | UE |
 | Google Vertex AI | Extraction IA d'emails et de documents | europe-west1 (sans entraînement de modèle) |
 | Google Cloud Translation | Traduction à la demande du contenu UI/documents | Google Cloud |
-| Sentry | Surveillance des erreurs et des incidents | UE |
+| Sentry | Surveillance des erreurs et rapports de plantage | UE |
 | Google Firebase Cloud Messaging | Notifications push de l'application chauffeur | Google Cloud |
-| WhatsApp Business Cloud API (Meta) | Messagerie chauffeur (si activée) | Meta (US/UE) |
+| WhatsApp Business Cloud API (Meta) | Messagerie chauffeur (uniquement si activée) | Meta (US/UE) |
 | Fournisseurs télématiques (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Données GPS et tachygraphe (uniquement le fournisseur connecté) | Selon le fournisseur |
 | Fournisseurs télématiques frigorifiques (Mapon, Orbcomm, Thermo King) | Données de température frigorifique (uniquement le fournisseur connecté) | Selon le fournisseur |
 | TransFollow | Solution de secours historique pour l'eCMR uniquement — le fournisseur natif in-house de Druma est la valeur par défaut | Pays-Bas |
 
----
+## Vos droits au titre du RGPD
 
-## Exercer vos droits
+- **Droit d'accès** — demander une copie de vos données (utilisez la fonctionnalité Export ci-dessus)
+- **Droit de rectification** — corriger des données inexactes (modifiez directement dans Druma, ou contactez le support)
+- **Droit à l'effacement** — demander la suppression (utilisez la fonctionnalité Supprimer le compte ci-dessus)
+- **Droit à la portabilité** — recevoir vos données dans un format lisible par machine (inclus dans l'Export)
+- **Droit d'opposition** — s'opposer au traitement basé sur des intérêts légitimes
+- **Droit à la limitation** — demander un traitement limité dans certaines circonstances
 
-Pour exercer vos droits RGPD (accès, rectification, effacement, portabilité, limitation, opposition), contactez **privacy@druma.io** avec vos informations d'identification.
+Pour exercer un droit : privacy@druma.io. Nous répondons sous 30 jours.
 
-<Card title="RGPD et gestion des données" icon="lock" href="/fr/admin/gdpr-data-management">
-  Guide opérationnel sur la gestion de vos données dans Druma.
+<Card title="Politique de confidentialité" icon="shield" href="/fr/legal/privacy-policy">
+  Politique de confidentialité complète incluant les sous-traitants et bases légales.
+</Card>
+
+<Card title="Gestion des données RGPD" icon="lock" href="/fr/admin/gdpr-data-management">
+  Comment exporter des données ou supprimer votre compte depuis Druma.
 </Card>

@@ -1,63 +1,157 @@
 ---
 title: "Groupage (LTL)"
-description: "Consolideer meerdere kleine ladingen van verschillende klanten op één truck met per-leg tracking, per-klant facturering en een afdrukbaar manifest voor meerdere stops."
+description: "Consolideer meerdere kleine ladingen van verschillende klanten op één truck met per-leg tracking, per-leg facturering en een afdrukbaar manifest voor meerdere stops."
 icon: "boxes-stacked"
 ---
 
 ## Wat is groupage?
 
-Groupage — ook wel LTL (less-than-truckload) of consolidatie — is wanneer u meerdere kleine zendingen van verschillende klanten op dezelfde truck laadt. In Druma is een **Groupage-order** een containerorder die meerdere kind-orders bevat.
+Groupage — ook wel LTL (less-than-truckload) of consolidatie genoemd — is wanneer u meerdere kleine zendingen van verschillende klanten op dezelfde truck laadt, die dezelfde richting op gaan. Elke klant betaalt alleen voor zijn deel van de laadruimte, en u vult de truck met gecombineerde ladingen om de rit rendabel te maken.
+
+In Druma is groupage zijn eigen module (`/groupage`) — een **groupage-rit** bevat meerdere bestaande order-**legs**. De rit houdt de truck, chauffeur en route bij; elke leg houdt zijn eigen klant, lading, ophaal-/afleveradres en prijs bij.
+
+<Note>
+Groupage is geen vierde "ordertype" naast Eigen truck/Uitbesteed/Herpositionering — het is een aparte module die bestaande orders groepeert.
+</Note>
 
 ---
 
-## Een groupage-container aanmaken
+## Een groupage-rit aanmaken
 
 <Steps>
-  <Step title="Start een nieuwe order">
-    Ga naar **Orders → Nieuwe order**.
+  <Step title="Ga naar Groupage">
+    Open de module **Groupage** vanuit de navigatie.
   </Step>
-  <Step title="Stel het type in op Groupage">
-    Selecteer **Groupage** in het veld **Ordertype**.
+  <Step title="Klik op Groupage aanmaken">
+    Klik op **Groupage aanmaken**. Druma maakt een lege rit aan (met een automatisch gegenereerde referentie zoals `GRP-XXXXX`) en opent het detailpaneel — er is in deze stap geen formulier voor truck/chauffeur/datum/route.
   </Step>
-  <Step title="Stel de container in">
-    Vul in: truck en chauffeur, vertrekdatum, algemene routebeschrijving en notities.
-  </Step>
-  <Step title="Sla de container op">
-    Klik op **Opslaan**.
+  <Step title="Voeg orders toe aan de rit">
+    Zie de volgende sectie — u bouwt de rit op door bestaande, in aanmerking komende orders toe te voegen, niet door een formulier in te vullen.
   </Step>
 </Steps>
 
 ---
 
-## Kind-orders toevoegen aan een groupage
+## Orders toevoegen aan een groupage-rit
 
 <Steps>
-  <Step title="Open de groupage-container">
-    Ga naar **Orders** en open de aangemaakte groupage-container.
+  <Step title="Open de rit en klik op Orders toevoegen">
+    Open de groupage-rit en klik op **Orders toevoegen aan groupage**.
   </Step>
-  <Step title="Klik op Zending toevoegen">
-    Klik op de knop **+ Zending toevoegen**.
+  <Step title="Vink in aanmerking komende orders aan">
+    De modal toont bestaande orders die in aanmerking komen om aan deze rit deel te nemen — ordernummer, klant, route, LDM, gewicht en opleggertype — met een selectievakje per rij. Er is hier geen invoerformulier; u selecteert orders die al bestaan, u typt geen nieuwe zendingdetails in.
   </Step>
-  <Step title="Vul de kind-orderdetails in">
-    Voer voor elke kind-order in: klant, ophaaladres, afleveradres, goederenbeschrijving, gewicht en volume, prijs en valuta.
+  <Step title="Gebruik Auto-vullen als u Druma voor u wilt laten kiezen">
+    Klik op **Auto-vullen** om Druma de best passende combinatie van in aanmerking komende orders te laten selecteren, tot de resterende laadmetercapaciteit van de trailer.
   </Step>
-  <Step title="Sla de kind-order op">
-    Klik op **Opslaan**.
+  <Step title="Toevoegen aan groupage">
+    Klik op **Toevoegen aan groupage**. Zou uw selectie de LDM-capaciteit van de trailer overschrijden, dan wordt de actie geblokkeerd met een validatiefout — u moet dan eerst iets deselecteren. Een mismatch in opleggertype (het opleggertype van een order verschilt van dat van de rit) toont een waarschuwing maar blokkeert de actie niet.
   </Step>
 </Steps>
 
----
-
-## Kostenverdeling
-
-Druma verdeelt kosten (tolkosten, brandstof, vaste kosten) automatisch over de kind-orders op basis van hun aandeel in het totale gewicht of volume. U kunt de verdeling handmatig aanpassen.
+<Note>
+Gewicht en volume blokkeren het toevoegen van orders niet — alleen laadmeters (LDM) doen dat. Vulgraadbalken voor gewicht en volume worden nog steeds getoond ter referentie (zie hieronder), maar zijn informatief, niet blokkerend.
+</Note>
 
 ---
 
-## eCMR per leg
+## Stopvolgorde
 
-Voor elke stop genereert Druma een afzonderlijk eCMR-document — één CMR per klantaflevering. Elke CMR bevat alleen de relevante klantinformatie.
+Nieuwe stops worden simpelweg toegevoegd aan het einde van de rit, in de volgorde waarin u ze toevoegt — Druma optimaliseert de route niet automatisch terwijl u bezig bent.
 
-<Card title="Aanmaken van een order" icon="plus" href="/nl/planner/creating-orders">
-  Leer hoe standaard orders worden aangemaakt.
-</Card>
+Om de volgorde te optimaliseren, klik op **Auto-sequentie** (alleen getoond bij 2+ stops): dit herschikt de stoplijst om de totale afstand te minimaliseren (ophalingen voor leveringen) en meldt hoeveel afstand het bespaarde, of dat de volgorde al optimaal was. U kunt stops ook op elk moment handmatig verslepen, of de pijltjes omhoog/omlaag op elke stoprij gebruiken.
+
+---
+
+## Statusopvolging per leg
+
+Elke order-leg heeft zijn eigen statusflow, onafhankelijk van de andere zendingen op de truck. Werkt de chauffeur zijn status bij voor een specifieke stop, dan werkt alleen de order van die leg bij — het ritoverzicht toont welke stops voltooid zijn en welke nog in behandeling.
+
+Bijvoorbeeld: heeft de truck vier leveringen en voltooit de chauffeur stops 1 en 2, dan tonen die legs **Afgeleverd** terwijl stops 3 en 4 nog **Onderweg naar levering** tonen. Elke klant ziet alleen de status van zijn eigen zending in zijn portaal.
+
+---
+
+## Laadmeters (LDM), gewicht en volume bijhouden
+
+Elke leg kan **CBM**, **Gewicht (kg)** en **LDM**-waarden rechtstreeks op zijn stopkaart invoeren. LDM staat voor de lineaire lengte trailervloerruimte die de zending inneemt — de standaardmaat voor groupageplanning doorheen Europa.
+
+De groupage-rit toont vulgraad-voortgangsbalken voor elke dimensie waarvoor de toegewezen truck/trailer een bekende capaciteit heeft — **Gewicht**, **Volume (CBM)** en **Laadmeters**:
+
+| Kleur | Vulniveau |
+|---|---|
+| Groen | ≤70% van de capaciteit |
+| Amber | 70–90% van de capaciteit |
+| Rood | >90% van de capaciteit (inclusief meer dan 100%, ongelimiteerd getoond) |
+
+### Kostverdelingsmodus
+
+De **kostverdelingsmodus** bepaalt hoe gedeelde kosten worden verdeeld tussen legs. Er zijn vier modi beschikbaar: **CBM**, **Gewicht**, **LDM** en **Factureerbaar**. Klik op een moduskop op het tabblad Kostverdeling van de rit om te wisselen — dit triggert een automatische herberekening van het kostaandeel, splitpercentage, toegewezen kost en marge van elke leg.
+
+Kies de modus die aansluit bij uw commerciële afspraak met de klanten op die rit. CBM is het meest gebruikelijk voor algemene lading, LDM voor vloerruimte-kritieke ladingen, gewicht voor dichte goederen, en Factureerbaar wanneer u factureert op welk van gewicht/volume het hoogste cijfer oplevert.
+
+---
+
+## Groupage-manifest
+
+Voordat de chauffeur vertrekt, drukt u het groupage-manifest af — een lijst van stops en lading voor de rit.
+
+<Steps>
+  <Step title="Open de groupage-rit">
+    Open het detailpaneel van de rit.
+  </Step>
+  <Step title="Manifest afdrukken">
+    Klik op **Manifest afdrukken**. Druma opent een nieuw browsertabblad met een afdrukbaar HTML-manifest — er is geen aparte PDF-download.
+  </Step>
+  <Step title="Deel met de chauffeur">
+    Druk het af en overhandig het, of deel het via de berichtenthread van de chauffeurs-app.
+  </Step>
+</Steps>
+
+Het manifest bevat: stopvolgorde, ophaal-/afleveradres, klant, ordernummer, gewicht en eventuele notities per stop. Het bevat geen kolom met ladingomschrijving.
+
+---
+
+## Facturering per leg
+
+De rit heeft zijn eigen tabblad **Facturen**, met elke leg en zijn factuurstatus (**Niet gefactureerd → Gegenereerd → Verstuurd → Betaald**) en een knop **Factuur genereren** per leg:
+
+<Steps>
+  <Step title="Open het tabblad Facturen van de rit">
+    Open de groupage-rit en ga naar het tabblad **Facturen**.
+  </Step>
+  <Step title="Genereer de factuur">
+    Klik op **Factuur genereren** naast een nog niet gefactureerde leg. De factuur wordt aangemaakt voor alleen de klant van die leg, met zijn specifieke lading, prijs en referentie.
+  </Step>
+</Steps>
+
+Klanten op dezelfde truck zien nooit elkaars facturen of prijzen — elk krijgt een schoon, apart document, en u kunt ze één voor één genereren naarmate elke leg klaar is om te factureren.
+
+---
+
+## Tracking
+
+Klanten die een groupage-zending volgen, zien een statische **verwachte leverdatum** op de publieke trackingpagina, geen live, multi-stop-gesequencede ETA.
+
+---
+
+## Een typisch gebruiksgeval
+
+U heeft vier klanten die ladingen van Boekarest richting Wenen moeten laten vervoeren deze donderdag. Individueel vult geen van hen een truck. Samen wel:
+
+- Klant A: 8 pallets naar Bratislava
+- Klant B: 4 pallets naar Boedapest
+- Klant C: 10 pallets naar Wenen
+- Klant D: 6 pallets naar Linz
+
+U maakt de vier orders normaal aan, maakt dan een groupage-rit aan, voegt alle vier orders eraan toe, wijst uw chauffeur toe, sequentieert de stops automatisch en drukt het manifest af. Elke klant betaalt voor zijn deel, elk krijgt zijn eigen factuur en statusupdates, en u rijdt een volle truck.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Orders aanmaken" icon="plus" href="/nl/planner/creating-orders">
+    Leer hoe standaardorders werken in Druma — u maakt eerst de individuele orders aan, en groepeert ze daarna.
+  </Card>
+  <Card title="Planningsbord" icon="calendar" href="/nl/planner/planning-board">
+    Bekijk al uw orders in de wekelijkse planningsweergave voordat u ze groepeert tot een rit.
+  </Card>
+</CardGroup>

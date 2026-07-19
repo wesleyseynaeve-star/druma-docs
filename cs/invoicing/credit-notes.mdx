@@ -1,40 +1,74 @@
 ---
 title: "Dobropisy"
-description: "Jak vystavit dobropisy v Druma pro zrušení nebo částečné storno faktur."
+description: "Jak v Druma vytvořit dobropis pro storno nebo částečnou opravu odeslané faktury — vyžadováno rumunským právem, když je potřeba fakturu změnit."
 icon: "file-minus"
 ---
 
-## Přehled
+## Kdy potřebujete dobropis
 
-Dobropis je dokument, který snižuje nebo ruší dříve vystavené faktury. Použijte dobropisy pro opravu chyb, vrácení plateb nebo poskytnutí slev po fakturaci.
+Jakmile je faktura vygenerována a odeslána, nemůžete ji upravit ani smazat — jde o zákonný požadavek v Rumunsku. Pokud je něco špatně nebo se to musí změnit, správným postupem je vystavit dobropis.
 
-## Vystavení dobropisu
+Použijte dobropis, když:
+
+- Fakturovali jste nesprávnou částku (chyba v ceně, špatně vypočítaný příplatek)
+- Zboží bylo po doručení vráceno a byla dohodnuta refundace
+- Dodatečně jste klientovi dohodli slevu
+- Faktura byla odeslána špatnému klientovi a je potřeba ji zrušit
+- Poplatek za čekací dobu byl zpochybněn a odepisujete ho
+
+Dobropis sníží nezaplacený zůstatek klienta o dobropisovanou částku. Jde o samostatný, číslovaný dokument propojený zpět s původní fakturou.
+
+## Vytvoření dobropisu
 
 <Steps>
   <Step title="Otevřete původní fakturu">
-    Přejděte do **Fakturace** a otevřete fakturu, ke které chcete vystavit dobropis.
+    Přejděte do **Fakturace** a najděte fakturu, kterou potřebujete opravit. Kliknutím na ni otevřete stránku detailu faktury.
   </Step>
-  <Step title="Klikněte na Vystavit dobropis">
-    Najděte tlačítko **Vystavit dobropis** na stránce faktury.
+  <Step title="Klikněte na Vytvořit dobropis">
+    Klikněte na tlačítko **Vytvořit dobropis**. Druma otevře krátký formulář dobropisu odkazující na číslo a celkovou částku původní faktury.
   </Step>
-  <Step title="Vyberte položky ke stornování">
-    Vyberte které položky faktury zahrnout do dobropisu a zadejte částky.
+  <Step title="Zadejte částku">
+    Nastavte pole **Částka** na to, kolik dobropisujete, až do celkové částky původní faktury (zobrazené jako **Max**). Ponechte na plné částce pro plný dobropis, nebo snižte pro částečný dobropis — neexistuje editor jednotlivých položek, dobropis je jedna částka, kterou Druma automaticky poměrně rozdělí na základ a DPH.
   </Step>
-  <Step title="Zadejte důvod">
-    Vyberte kód důvodu: chyba v ceně, vrácení zboží, slevy, duplicitní faktura nebo jiný.
+  <Step title="Vyberte důvod">
+    Vyberte **Důvod** z rozbalovací nabídky: Chybná faktura (storno a nové vystavení), Úprava ceny, Zrušení, Duplicitní faktura, Problém s kvalitou / refundace, nebo Jiné. Použijte samostatné pole **Poznámky** pro jakékoli podrobnosti volným textem (například „dohodnutá sazba byla 850 €, ne 950 €"). Důvod i poznámky se zobrazují na PDF dobropisu.
   </Step>
   <Step title="Vygenerujte dobropis">
-    Klikněte na **Vygenerovat dobropis**. Druma přiřadí číslo dobropisu (např. CN-2024-001) a propojí ho s původní fakturou.
+    Klikněte na **Vytvořit dobropis**. Pokud je důvod jedním ze storno-důvodů (Chybná faktura, Úprava ceny, Zrušení nebo Duplicitní) a částka se rovná celkové částce faktury, Druma také stornuje původní fakturu a nabídne zaškrtávací pole **Vytvořit návrh opravené faktury** pro zahájení náhradní faktury předvyplněné z původní. Druma přiřadí pořadové číslo dobropisu s prefixem `CN-` (například `CN-000001`). Čísla dobropisů mají vlastní samostatnou řadu — nesdílejí posloupnost s fakturami.
+  </Step>
+  <Step title="Odešlete klientovi">
+    Klikněte na **Stáhnout PDF** pro získání souboru dobropisu, poté ho pošlete e-mailem finančnímu kontaktu klienta. Nebo použijte **Odeslat e-mailem**, aby ho Druma odeslala přímo, předadresovaný na finanční kontakt v záznamu.
   </Step>
 </Steps>
 
-<Note>
-Dobropisy snižují váš nesplacený zůstatek od klienta automaticky. Dobropis a původní faktura jsou propojeny a zobrazeny společně.
-</Note>
+## Plné vs. částečné dobropisy
 
-<Card title="Generování faktur" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-  Jak generovat nové faktury z doručených objednávek.
-</Card>
+**Plný dobropis:** zadejte částku rovnou celkové částce faktury. Použijte, když potřebujete fakturu zcela zrušit — špatný klient, zcela špatná objednávka, faktura odeslaná omylem. Pokud je důvodem storno-důvod, Druma označí původní fakturu jako stornovanou a umožní vám ve stejném kroku vytvořit návrh opravené faktury.
+
+**Částečný dobropis:** zadejte částku nižší než celková částka faktury. Použijte, když je špatná pouze část faktury — například dobropisujete pouze příplatek ADR, zatímco přepravní poplatek ponecháte beze změny. Druma za vás poměrně rozdělí DPH a základ podle zadané částky; neexistuje úprava jednotlivých položek.
+
+## Číslování dobropisů
+
+Dobropisy používají prefix `CN-` a vlastní pořadovou řadu (například `CN-000001`, `CN-000002` atd. — rok se ve výchozím nastavení nezahrnuje). Tato řada je oddělená od čísel vašich faktur. Vlastní vzor číslování, včetně tokenu roku, lze nakonfigurovat v **Nastavení** → **Branding a formáty** → **Číslování faktur**.
+
+## Účetní dopad
+
+Když je dobropis vygenerován:
+
+- Nezaplacený zůstatek klienta se sníží o dobropisovanou částku
+- Pokud byla původní faktura plně zaplacena, dobropis vytvoří kreditní zůstatek na účtu klienta, který lze uplatnit vůči budoucím fakturám
+- Dobropis se zobrazuje ve všech účetních exportech (SAGA, WinMENTOR) spolu s původní fakturou
+
+<Warning>
+Dobropisy jsou v Rumunsku zákonně vyžadované dokumenty. Nikdy neupravujte ani nemažte odeslanou fakturu. Pokud objevíte chybu — i malou — vždy postupujte podle procesu dobropisu. Podání ANAF e-Factura také vyžadují odeslání dobropisu, aby byla původní faktura formálně opravena v systému.
+</Warning>
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/credit-notes).
+<Card title="Generování faktur" icon="file-invoice-dollar" href="/cs/invoicing/generating-invoices">
+  Jak vytvářet faktury z doručených objednávek, včetně hromadné fakturace a více měn.
+</Card>
+
+<Card title="Sledování plateb" icon="money-bill-wave" href="/cs/invoicing/payment-tracking">
+  Zaznamenávání plateb k fakturám a správa nezaplacených zůstatků.
+</Card>

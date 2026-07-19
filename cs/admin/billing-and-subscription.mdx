@@ -1,119 +1,103 @@
 ---
 title: "Fakturace a předplatné"
-description: "Spravujte předplatné, místa a fakturaci Druma prostřednictvím zákaznického portálu Stripe."
+description: "Jak Druma fakturuje vaši společnost — pásma podle počtu vozidel, sdílený fond AI a nativní e-Factura fakturace."
 icon: "credit-card"
 ---
 
-Druma používá model předplatného založený na místech se dvěma typy míst — místa pro vozidla a místa pro uživatele — oceněná na objemových úrovních. Můžete si vybrat měsíční nebo roční fakturaci. Vše spravujete prostřednictvím zákaznického portálu Stripe, přístupného přímo z Druma.
+Druma je **vystavovatelem faktur**: každý poplatek za platformu je fakturován jako nativní rumunská **e-Factura** (ANAF/SPV) a hrazen **bankovním převodem** se splatností — neexistuje uložená platební karta, žádný Stripe checkout ani cena za uživatelské místo. Kancelářští uživatelé, řidiči a účty klientského portálu jsou vždy zdarma; platíte za svá aktivní vozidla (pokud provozujete vlastní flotilu) nebo za využití platformy (pokud jste čistý zasílatel/broker).
 
 <Note>
 Aktuální ceník naleznete na [druma.io](https://druma.io) nebo kontaktujte support@druma.io.
 </Note>
 
+<Frame caption="Nastavení → Fakturace — cenová pásma podle počtu vozidel, rozpis nákladů a fond AI. Žádný portál Stripe, žádná cena za místo.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Panel nastavení fakturace se zobrazením rozpisu nákladů předplatného" />
+</Frame>
+
 ---
 
 ## Bezplatná zkušební verze
 
-Každá nová společnost získá **30denní bezplatnou zkušební verzi**. Pro zahájení není vyžadována platební karta. Všechny funkce — včetně eCMR (ve zkušebním režimu) — jsou během zkušební verze plně dostupné. Na konci zkušebního období budete vyzváni k přidání platební metody a výběru počtu míst.
+Každá nová společnost získá **30denní bezplatnou zkušební verzi**. Pro zahájení není potřeba platební karta ani bankovní údaje a všechny funkce jsou během zkušební doby plně dostupné.
 
 ---
 
-## Zobrazení faktury
+## Model cenotvorby
 
-<Steps>
-  <Step title="Otevřete stránku Fakturace">
-    Přejděte do **Nastavení → Fakturace**.
-  </Step>
-  <Step title="Otevřete zákaznický portál Stripe">
-    Klikněte na **Otevřít fakturační portál**. Budete přesměrováni na hostovaný zákaznický portál Stripe, kde Druma nikdy přímo neukládá podrobnosti vaší karty.
-  </Step>
-  <Step title="Zobrazit faktury">
-    Na portálu Stripe klikněte na **Historie faktur** pro stažení PDF faktur za jakýkoli minulý měsíc.
-  </Step>
-</Steps>
+Vaše společnost je fakturována podle jednoho ze dvou modelů:
 
-![Stránka nastavení fakturace](/images/placeholder.png)
+- **Vlastník flotily** — pokud provozujete vlastní vozidla:
+  - paušální **základní poplatek 25 €/měsíc**,
+  - **pásmový poplatek za aktivní vozidlo** — zaparkovaná vozidla jsou vždy zdarma, minimum je **3 aktivní vozidla**. Celkový počet aktivních vozidel určí jedno pásmo a **všechna** aktivní vozidla se fakturují sazbou tohoto pásma (nejde o postupný/kumulativní výpočet),
+  - **sdílený fond AI na úrovni společnosti** (viz níže).
 
----
+  | Pásmo | Aktivní vozidla | Měsíčně / vozidlo | Ročně / vozidlo |
+  |------|---------------|------------------|-----------------|
+  | Starter | 3–9 | 41 € | 34 € |
+  | Growth | 10–24 | 38 € | 32 € |
+  | Scale | 25–49 | 36 € | 30 € |
+  | Pro | 50–74 | 34 € | 28 € |
+  | Enterprise | 75+ | 30 € | 25 € |
 
-## Přidání nebo odebrání míst
+- **Zasílatel / broker** — pokud neprovozujete vlastní flotilu: žádný fond vozidel ani základní poplatek — platíte čisté využití: **vyšší z hodnot 25 €/měsíc nebo náklady na měřené využití × 2,5**.
 
-Počty míst můžete kdykoli upravit. Změny vstoupí v platnost na začátku příštího fakturačního cyklu.
-
-<Steps>
-  <Step title="Přejděte do Nastavení → Fakturace">
-    Klikněte na **Spravovat místa**.
-  </Step>
-  <Step title="Upravte místa pro vozidla">
-    Použijte ovládací prvky + a – pro nastavení počtu míst pro vozidla, která potřebujete.
-  </Step>
-  <Step title="Upravte místa pro uživatele">
-    Nastavte počet míst pro uživatele. Pokud máte více aktivních uživatelů než míst, Druma vás vyzve k přidání míst před povolením nových pozvánek.
-  </Step>
-  <Step title="Potvrďte změny">
-    Klikněte na **Uložit změny**. Aktualizovaná výše faktury se zobrazí před potvrzením.
-  </Step>
-</Steps>
-
-<Warning>
-Snížení míst pod počet aktuálně aktivních vozidel nebo uživatelů není povoleno. Nejprve archivujte vozidla nebo deaktivujte uživatele, poté snižte počet míst.
-</Warning>
+Váš model je nastaven na účtu; pokud si myslíte, že je nastaven chybně, kontaktujte support@druma.io.
 
 ---
 
-## Konec zkušební verze, lhůta odkladu a pozastavení
+## Stránka Fakturace
 
-### Co se stane po skončení zkušební verze
+Přejděte do **Nastavení → Fakturace** pro zobrazení plánu, rozpisu nákladů, využití AI a historie faktur.
 
-31. den po registraci Druma zašle e-mail s žádostí o přidání platební metody. Pokud není platební metoda přidána do **7 dní**, váš účet vstoupí do lhůty odkladu.
+### Přehled plánu
 
-### Lhůta odkladu (7 dní)
+Horní část stránky zobrazuje stav účtu (**Aktivní**, **Zkušební**, **Po splatnosti** nebo **Pozastaveno**), váš model, fakturační interval, počet aktuálně aktivních vozidel, datum další faktury a odhadovanou částku za aktuální období. Pokud máte otevřený nezaplacený zůstatek z minulé faktury, banner zobrazuje dlužnou částku a počet dní po splatnosti.
 
-Během 7denní lhůty odkladu:
-- Všechna stávající data jsou zachována.
-- Stále se můžete přihlásit a zobrazovat data.
-- Odesílání nových objednávek a vydávání dokumentů eCMR je **zablokováno**.
+### Měsíční vs. roční fakturace
 
-Během lhůty odkladu se na každé stránce zobrazuje banner s odkazem na přidání platební metody.
+Společnosti s vlastní flotilou mohou přepínat mezi **měsíční** a **roční** fakturací pomocí přepínače intervalu na stránce Fakturace.
 
-### Pozastavení (režim pouze pro čtení)
+- **Roční**: platíte 10 měsíců, dostanete 12 — základní poplatek společnosti a předplatné za vozidla jsou předplaceny na rok jako jedna e-Factura. Překročení fondu AI se stále fakturuje měsíčně zpětně.
+- **Měsíční**: předplatné se obnovuje každý měsíc. Pokud přidáte vozidla v průběhu cyklu, dodatečný náklad je vyúčtován zpětně na další faktuře.
 
-Po vypršení lhůty odkladu bez platby je účet pozastaven:
-- Přihlášení stále funguje — vaše data nejsou smazána.
-- Účet je **pouze pro čtení**: žádné úpravy, žádné nové objednávky, žádné exporty.
-- Řidiči nemohou přijímat nové dispečerské pokyny přes mobilní aplikaci.
+Zasílatelé/brokeři jsou vždy fakturováni měsíčně podle skutečného využití — roční varianta neexistuje, protože není co předplácet.
 
-### Jak reaktivovat
+### Rozpis nákladů
 
-Přejděte do **Nastavení → Fakturace** a klikněte na **Reaktivovat předplatné**. Přidejte platební metodu, pokud ji ještě nemáte. Váš účet je okamžitě obnoven na plný přístup.
+Pod přehledem plánu tabulka položek ukazuje přesně, jak je odhadovaná částka sestavena: základní poplatek platformy, počet vozidel × sazba pásma a (u ročních plánů) rámec „zaplať 10, dostaneš 12". Ceny jsou uvedeny bez DPH.
+
+### Strop fakturace vozidel
+
+Společnosti s vlastní flotilou (s oprávněním upravovat fakturaci) mohou nastavit volitelný **strop fakturace vozidel** — maximální počet aktivních vozidel, za který chcete být fakturováni, mezi **3 a 500**. Pokud počet aktivních vozidel dosáhne stropu nebo jej překročí, stránka před aktivací dalších vozidel zobrazí upozornění. Ponechte prázdné pro žádný strop.
+
+### Využití a fond AI
+
+Každá společnost s aktivními vozidly získá **sdílený fond AI**: `5 € základ + 1,00 € × aktivní vozidla`. Veškeré měřené využití AI napříč účtem — extrakce dokumentů, zapečetění eCMR, Ask Druma, KPI přehledy — čerpá z tohoto **jednoho sdíleného fondu**; počet vozidel pouze určuje velikost fondu, nepřiřazuje využití jednotlivým vozidlům. Ukazatel průběhu zobrazuje, kolik z fondu aktuálního měsíce jste vyčerpali.
+
+Využití nad rámec fondu není blokováno — Druma vás nikdy neodstaví uprostřed měsíce. Jednoduše se fakturuje jako překročení sazbou **náklady × 2,5** na další faktuře.
+
+### Limity AI podle funkce
+
+Pod fondem sekce **Funkce a využití AI** uvádí každou volitelnou měřenou funkci AI, kterou jste zapnuli, s využitím za tento měsíc a upravitelným měsíčním maximem (v €) pro omezení nekontrolovaných výdajů na danou funkci.
+
+### Faktury
+
+Tabulka **Faktury** uvádí vaše fakturace platformy podle období, s DPH a celkovými částkami, stavem (Náhled, Vystaveno, Zaplaceno, Po splatnosti), datem splatnosti a odkazem na zobrazení faktury, je-li dostupný. Faktury se vystavují jako rumunská e-Factura v EUR, řádek DPH je navíc zobrazen v RON podle kurzu Národní banky Rumunska (BNR).
+
+### Platba
+
+Sekce **Platba** zobrazuje bankovní údaje pro úhradu (příjemce, IBAN, variabilní symbol) a vaše platební podmínky. Neexistuje možnost platby kartou — každou e-Factura uhraďte bankovním převodem podle zobrazeného symbolu.
 
 ---
 
-## Měsíční vs. roční fakturace
+## Pozastavené účty
 
-Druma nabízí jak **měsíční**, tak **roční** fakturaci. Roční fakturace vám dá **2 měsíce zdarma** — platíte za 10 měsíců a získáte 12 měsíců přístupu.
-
----
-
-## Aktivace placeného předplatného
-
-Po skončení zkušební verze přejděte do **Nastavení → Fakturace** a klikněte na **Přihlásit se k odběru**. Budete přesměrováni na stránku Stripe checkout pro zadání platebních údajů a potvrzení počtu míst.
-
----
-
-## Fakturování eCMR
-
-eCMR je součástí předplatného Druma bez dalších nákladů. Neexistuje žádný poplatek za dokument ani žádný limit využití — podepisujte tolik eCMR, kolik vaše provoz potřebuje.
-
-Statistiky využití eCMR za aktuální období si stále můžete zobrazit v **Nastavení → Fakturace** v sekci **Využití**.
+Pokud je váš účet pozastaven, veškerý přístup do aplikace je nahrazen jedinou obrazovkou s výzvou k vyrovnání dlužné částky; tlačítko otevírá přímo **Nastavení → Fakturace**. Přihlášení stále funguje — blokován je pouze samotný pracovní prostor. Pokud si myslíte, že byl váš účet pozastaven omylem, kontaktujte support@druma.io.
 
 ---
 
 ## Potřebujete pomoc s fakturací?
 
 <Card title="Kontaktujte podporu" icon="headset" href="mailto:support@druma.io">
-  Pro dotazy k fakturaci, spory nebo žádosti o faktury s DPH pošlete e-mail na support@druma.io. Odpoví do jednoho pracovního dne.
+  Pro dotazy k fakturaci, spory nebo žádosti o faktury pošlete e-mail na support@druma.io. Uveďte název společnosti a DIČ. Odpovíme do jednoho pracovního dne.
 </Card>
----
-
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/billing-and-subscription).

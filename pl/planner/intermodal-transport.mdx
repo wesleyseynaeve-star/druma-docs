@@ -1,45 +1,46 @@
 ---
 title: "Transport intermodalny i multimodalny"
-description: "Planuj zlecenia łączące etapy drogowe, morskie, kolejowe, lotnicze lub barek — z przypisaniem przewoźnika per etap, śledzeniem kosztów, eCMR i obsługą PWA kierowcy."
+description: "Planuj zlecenia łączące etapy drogowe, morskie, kolejowe, lotnicze lub barkowe — z przypisaniem przewoźnika per etap, śledzeniem kosztów, eCMR i obsługą PWA kierowcy."
 icon: "git-merge"
 ---
 
 ## Przegląd
 
-Transport intermodalny przewozi ładunek przez wiele środków transportu w sekwencji — na przykład ciężarówka przewozi naczepę z rumuńskiej fabryki do Calais, następnie przeprawia się do Folkestone promem RoRo przez tunel Channel, a druga ciężarówka obsługuje ostatni odcinek do miejsca dostawy w Wielkiej Brytanii. Każdy segment to **etap**. Jedno zlecenie Druma zarządza całą podróżą: harmonogramem, przypisaniem przewoźnika, kosztami, eCMR i widocznością kierowcy per etap.
+Transport intermodalny przewozi ładunek przez wiele środków transportu w sekwencji — na przykład ciężarówka przewozi naczepę z rumuńskiej fabryki do Calais, następnie przeprawia się do Folkestone promem RoRo przez tunel pod kanałem La Manche, a druga ciężarówka obsługuje ostatni odcinek do miejsca dostawy w Wielkiej Brytanii. Każdy segment to **etap**. Jedno zlecenie Druma zarządza całą podróżą: harmonogramem, przypisaniem przewoźnika, kosztami, eCMR i widocznością kierowcy per etap.
+
+To coś innego niż standardowe zlecenie z przystankami wewnętrznymi. Przystanki wewnętrzne to punkty pośrednie na jednej, ciągłej podróży drogowej z jedną ciężarówką. Etapy intermodalne to odrębne zdarzenia transportowe, które mogą używać różnych trybów, różnych przewoźników, a nawet różnych krajów jurysdykcji.
 
 <Note>
-Zlecenia grupowania nie mogą być intermodalne. Przełącznik intermodalny jest ukryty dla zleceń grupowania.
+Przejazdy grupażowe i etapy intermodalne to osobne koncepcje — etapy należą do jednego zlecenia, grupaż konsoliduje wiele zleceń na jednej ciężarówce. Nie ma dziś połączonego przepływu "grupaż intermodalny".
 </Note>
 
 ---
 
-## Praktyczny przykład: Rumunia — Wielka Brytania przez tunel Channel
+## Praktyczny przykład: Rumunia → Wielka Brytania przez tunel pod kanałem La Manche
 
 | Etap | Tryb | Trasa | Przewoźnik |
 |---|---|---|---|
-| 1 | Drogowy | Bucharest — Calais | Własna flota — ciężarówka RO-01 |
-| 2 | Morski | Calais — Folkestone (Eurotunnel Le Shuttle) | Podwykonawca: Eurotunnel |
-| 3 | Drogowy | Folkestone — Birmingham | Podwykonawca: przewoźnik z UK |
+| 1 | Drogowy | Bukareszt → Calais | Własna flota — ciężarówka RO-01 |
+| 2 | Morski | Calais → Folkestone (Eurotunnel Le Shuttle) | Podwykonawca: Eurotunnel |
+| 3 | Drogowy | Folkestone → Birmingham | Podwykonawca: przewoźnik z UK |
 
-Druma śledzi numer rezerwacji i numer kontenera dla etapu 2, generuje oddzielne eCMR dla etapów 1 i 3 (oba przekraczają granice) i pokazuje przewoźnikowi z UK tylko przystanki istotne dla etapu 3.
+Druma śledzi numer rezerwacji i numer kontenera dla etapu 2, generuje osobne eCMR dla etapów 1 i 3 (oba przekraczają granice) i pokazuje przewoźnikowi z UK tylko przystanki istotne dla etapu 3.
 
 ---
 
 ## Tworzenie zlecenia intermodalnego
 
+Nie ma przełącznika "Intermodalne" do włączenia — etapy są dodawane do już utworzonego zlecenia, a Druma automatycznie traktuje zlecenie jako intermodalne, gdy tylko ma etapy.
+
 <Steps>
-  <Step title="Otwórz modal Nowe zlecenie lub edytuj istniejące">
-    Przejdź do **Operacje — Zlecenia** i kliknij **Nowe zlecenie**.
-  </Step>
-  <Step title="Włącz przełącznik Intermodalny">
-    W nagłówku sekcji **Przystanki** znajdź przełącznik **Intermodalny** i włącz go. Pojawia się sekcja **Etapy**.
+  <Step title="Utwórz lub otwórz zlecenie">
+    Utwórz zlecenie normalnie (zobacz [Tworzenie zlecenia](/pl/planner/creating-orders)), a następnie otwórz je i przejdź do karty **Ładunek i przystanki**.
   </Step>
   <Step title="Dodaj etapy">
-    Kliknij **+ Dodaj etap**, aby utworzyć pierwszy etap. Dodaj tyle etapów, ile wymaga podróż.
+    W sekcji **Etapy transportu** kliknij **Dodaj etap**, aby utworzyć pierwszy etap. Dodaj tyle etapów, ile wymaga podróż — nie ma limitu. Miejsce pochodzenia każdego nowego etapu domyślnie ustawia się na miejsce docelowe poprzedniego etapu (lub odbiór zlecenia, dla pierwszego etapu), więc nie wpisujesz tego samego adresu ponownie.
   </Step>
-  <Step title="Dodaj przystanki normalnie">
-    Przystanki (odbiór, dostawa, wewnętrzne) są dodawane w sekcji Przystanki jak zwykle. Każdy przystanek jest powiązany z etapem, do którego należy.
+  <Step title="Wypełnij każdy etap">
+    Rozwiń kartę etapu, aby ustawić jego tryb, miejsce pochodzenia/celu, planowany start/koniec i przewoźnika (patrz niżej).
   </Step>
 </Steps>
 
@@ -52,62 +53,114 @@ Każda karta etapu ma następujące pola:
 | Pole | Uwagi |
 |---|---|
 | **Tryb** | Drogowy, Morski, Kolejowy, Lotniczy lub Barka |
-| **Źródło** | Wolny tekst lub autouzupełnianie adresów |
+| **Pochodzenie** | Wolny tekst lub autouzupełnianie adresów |
 | **Cel** | Wolny tekst lub autouzupełnianie adresów |
 | **Planowany start** | Data i czas rozpoczęcia etapu |
 | **Planowane zakończenie** | Oczekiwana data i czas zakończenia etapu |
 | **Przewoźnik** | Własna flota (tylko drogowy) lub podwykonawca |
-| **Cena zakupu** | Koszt który płacisz za ten etap |
+| **Stawka zakupu** | Koszt, który płacisz za ten etap |
+| **Podział kosztów** | Paliwo, opłaty drogowe, prom lub inne pozycje |
 
-### Etapy niedrogowe (Morskie, Kolejowe, Lotnicze, Barka)
+### Etapy drogowe
 
-Etapy niedrogowe mogą być przypisane tylko do podwykonawcy. Dla etapów morskich dostępne są dodatkowe pola:
+Etapy drogowe mogą być przypisane do własnej floty (ciężarówka i kierowca) albo do przewoźnika podwykonawcy — wybierz który przez opcję radiową na karcie etapu, a następnie wybierz ciężarówkę/kierowcę lub podwykonawcę z listy rozwijanej.
 
-| Pole | Format |
-|---|---|
-| Numer rezerwacji | Wolny tekst |
-| Numer kontenera | Wolny tekst |
-| Nazwa statku/pociągu | Wolny tekst |
-| Numer rejsu | Wolny tekst |
-| SCAC przewoźnika | 4 znaki |
-| Port załadunku | 5-znakowy LOCODE |
-| Port rozładunku | 5-znakowy LOCODE |
-| Termin graniczny | Data + czas |
-| ETD | Szacowany czas wyjścia |
-| ETA w porcie docelowym | Szacowany czas przybycia |
+### Etapy niedrogowe (morskie, kolejowe, lotnicze, barka)
+
+Etapy niedrogowe mogą być przypisane tylko do przewoźnika podwykonawcy — Twoje własne ciężarówki i kierowcy floty nie mogą być przypisani do etapu morskiego ani kolejowego. Pole przewoźnika przeszukuje Twoją listę podwykonawców.
+
+### Kontrolki etapu
+
+- **Strzałki góra/dół** — zmiana kolejności etapów. Pasek osi czasu etapów (patrz niżej) aktualizuje się w miarę przeciągania.
+- **Usuń etap** — usuwa etap. Nie ma ograniczenia opartego na statusie w interfejsie, więc dokładnie sprawdź przed usunięciem etapu, który już się rozpoczął.
+- Przycisk **Zakończ etap** — oznacza etap jako ukończony. Pojawia się, gdy status etapu osiągnie **W transporcie**, **Przy dostawie** lub **Rozładunek** — to zależy od statusu, nie od żadnej daty.
+
+### Pasek osi czasu etapów
+
+Kompaktowy poziomy pasek pojawia się nad akordeonem etapów. Pokazuje wszystkie etapy w sekwencji z odznaką trybu (drogowy, morski, kolejowy itd.) i nazwami miast pochodzenia i celu. Użyj go, aby szybko zweryfikować, czy sekwencja podróży ma sens przed zapisaniem.
+
+---
+
+## Szczegóły etapu morskiego/intermodalnego
+
+Dla dowolnego etapu z trybem **Morski**, **Kolejowy**, **Lotniczy** lub **Barka**, na karcie etapu pojawia się zwijalna sekcja **Szczegóły morskie/intermodalne**. Wszystkie pola są opcjonalne.
+
+| Pole | Format | Uwagi |
+|---|---|---|
+| Numer rezerwacji | Wolny tekst | Numer potwierdzenia rezerwacji przewoźnika |
+| Numer kontenera | Wolny tekst | Identyfikator kontenera ISO |
+| Numer plomby | Wolny tekst | |
+| Nazwa statku | Wolny tekst | Nazwa statku lub usługi kolejowej |
+| Numer rejsu | Wolny tekst | |
+| SCAC przewoźnika | 4 znaki | Standardowy kod alfa przewoźnika |
+| Port załadunku | 5-znakowy LOCODE | np. `FRXXX` dla Calais |
+| Port rozładunku | 5-znakowy LOCODE | np. `GBFXT` dla Folkestone |
+| Data/godzina graniczna | Data + godzina | Termin przyjęcia ładunku w porcie załadunku |
+| ETD | Data + godzina | Szacowany czas odjazdu z portu załadunku |
+| ETA w porcie docelowym | Data + godzina | Szacowany czas przybycia do portu rozładunku |
 
 <Warning>
-Jeśli termin graniczny jest w ciągu 48 godzin od planowanego końca etapu, Druma pokazuje bursztynowy baner ostrzegawczy. Sprawdź harmonogram, aby upewnić się, że ciężarówka dotrze do portu na czas.
+Jeśli data graniczna przypada w ciągu 48 godzin od planowanego końca etapu, Druma pokazuje bursztynowy baner ostrzegawczy na karcie etapu. Sprawdź harmonogram, aby upewnić się, że ciężarówka dotrze do portu na czas.
 </Warning>
+
+Przełączenie trybu etapu z powrotem na **Drogowy** automatycznie czyści pola szczegółów morskich/intermodalnych.
+
+---
+
+## Zachowanie na tablicy planowania
+
+### Dostępność ciężarówki
+
+Tablica planowania oblicza dostępność ciężarówki na podstawie **daty zakończenia etapu drogowego**, nie ostatecznej daty dostawy zlecenia. Oznacza to, że ciężarówka przypisana do etapu 1 (drogowego) jest pokazywana jako wolna od momentu zakończenia tego etapu — nawet jeśli ostatnia dostawa zlecenia jest dni później, na etapie 3, z innym przewoźnikiem.
+
+### Przypisywanie ciężarówki do zlecenia intermodalnego
+
+Przeciągnięcie ciężarówki na zlecenie intermodalne pokazuje sekcję **Etap intermodalny** w arkuszu potwierdzenia przypisania zamiast standardowego przepływu. Wylistowuje każdy etap drogowy zlecenia (sekwencja, pochodzenie → cel, planowane daty) — kliknięcie wiersza etapu wybiera go bezpośrednio; nie ma osobnego przycisku "Przypisz" do kliknięcia potem.
+
+<Note>
+Ciężarówka może być przypisana tylko do jednego etapu drogowego per zlecenie intermodalne. Aby pokryć wiele etapów drogowych różnymi ciężarówkami, powtórz proces przeciągnij-i-upuść dla każdego etapu.
+</Note>
 
 ---
 
 ## eCMR per etap drogowy
 
-Każdy etap drogowy przekraczający granicę międzynarodową otrzymuje własne eCMR. Otwórz kartę etapu i kliknij **Utwórz eCMR**. Druma rejestruje dokument używając natywnego dostawcy Druma (domyślnie) lub TransFollow, jeśli to jest wybrany przez Twoją firmę dostawca, z wypełnionym miejscem pochodzenia, miejscem docelowym i przypisanym przewoźnikiem.
+Każdy etap drogowy przekraczający granicę międzynarodową otrzymuje własne eCMR. Aby je utworzyć, otwórz kartę etapu i kliknij **Utwórz eCMR**. Druma rejestruje dokument, używając swojego natywnego, wewnętrznego dostawcy eCMR, z wypełnionym miejscem pochodzenia, celem i przypisanym przewoźnikiem etapu — ukończenie etapu transgranicznego wyzwala to automatycznie w ten sam sposób. (Nie ma wyboru dostawcy: Natywny to jedyna ścieżka dla nowych dokumentów; tylko wcześniejsze, zapasowe wiersze TransFollow nadal działają, niezwiązane z etapami tworzonymi tutaj.)
+
+Etapy pozostające w granicach jednego kraju nie wymagają eCMR (chyba że polityka Twojej firmy tego wymaga). Przycisk **Utwórz eCMR** jest zawsze dostępny, jeśli musisz to nadpisać.
+
+Trójstronny przepływ podpisywania i pobieranie certyfikowanego PDF działają identycznie jak w standardowym eCMR — zobacz [dokumentację eCMR](/pl/ecmr/what-is-ecmr) po szczegóły.
 
 ---
 
-## PWA kierowcy — widok scoped per etap
+## PWA kierowcy — widok ograniczony do etapu
 
-Kierowcy widzą tylko przystanki należące do ich przypisanego etapu drogowego. Jeśli zlecenie ma trzy etapy i kierowca obsługuje etap 1, widzi tylko odbiór i wewnętrzne przystanki dla etapu 1.
+Kierowcy widzą tylko przystanki należące do przypisanego im etapu drogowego. Jeśli zlecenie ma trzy etapy, a kierowca obsługuje etap 1, widzi tylko odbiór i wszelkie wewnętrzne przystanki dla etapu 1 — nie adres dostawy w Wielkiej Brytanii.
 
-Informacyjny baner na górze szczegółów ładunku brzmi:
+Baner informacyjny na górze szczegółów ładunku brzmi:
 
-> **Etap 1 z 3 — Drogowy: Bucharest — Calais**
+> **Etap 1 z 3 — Drogowy: Bukareszt → Calais**
+
+To utrzymuje widok kierowcy czystym i unika pomyłek dotyczących przystanków należących do innego przewoźnika.
+
+Kliknięcia statusu (przy odbiorze, załadunek, w transporcie, przy dostawie itd.) działają dokładnie tak jak przy standardowym zleceniu, ale przesuwają status tylko dla etapu drogowego kierowcy. Planista widzi postęp per etap w panelu szczegółów zlecenia.
 
 ---
 
 ## Śledzenie kosztów i marży
 
-Każdy etap ma własną **Cenę zakupu** i **Podział kosztów**. Łączny koszt zlecenia to suma wszystkich etapów. Obliczenie marży w panelu szczegółów zlecenia porównuje uzgodnioną cenę sprzedaży z łącznym kosztem wieloetapowym.
+Każdy etap ma własną **Stawkę zakupu** i **Podział kosztów**. Łączny koszt zlecenia to suma wszystkich etapów. Obliczenie marży w panelu szczegółów zlecenia porównuje uzgodnioną cenę sprzedaży z łącznym kosztem wieloetapowym, dając Ci skonsolidowaną wartość marży dla całej podróży intermodalnej.
 
 ---
 
-<Card title="eCMR" icon="file-signature" href="/en/planner/ecmr">
-  Jak działają tworzenie eCMR przez TransFollow, podpisy trójstronne i certyfikowane PDF.
+<Card title="eCMR" icon="file-signature" href="/pl/ecmr/what-is-ecmr">
+  Jak działają tworzenie natywnego eCMR, podpisy trójstronne i certyfikowane PDF.
 </Card>
 
-<Card title="Podwykonawcy" icon="truck" href="/en/forwarding/subcontractors">
+<Card title="Podwykonawcy" icon="truck" href="/pl/planner/subcontractors">
   Zarządzaj listą podwykonawców — ci sami przewoźnicy pojawiają się przy przypisaniu do etapu intermodalnego.
+</Card>
+
+<Card title="Tablica planowania" icon="calendar" href="/pl/planner/planning-board">
+  Jak dostępność ciężarówki i bloki zleceń intermodalnych pojawiają się na osi czasu dyspozycji.
 </Card>

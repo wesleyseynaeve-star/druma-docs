@@ -1,68 +1,116 @@
 ---
 title: "Import wyciągów bankowych"
-description: "Prześlij pliki wyciągów bankowych CAMT.053 lub MT940, aby automatycznie dopasować płatności do otwartych faktur — bez ręcznego wprowadzania danych."
+description: "Prześlij pliki wyciągów bankowych CAMT.053, MT940 lub CODA, aby automatycznie dopasować płatności do otwartych faktur — bez ręcznego wprowadzania danych."
 icon: "file-up"
 ---
 
 ## Przegląd
 
-Zamiast rejestrować płatności jedna po jednej, możesz przesłać wyciąg bankowy bezpośrednio do Druma. Druma parsuje każdą transakcję kredytową w pliku, uruchamia logikę dopasowania wobec otwartych faktur i automatycznie stosuje pewne dopasowania. Niedopasowane transakcje trafiają do kolejki Uzgodnienia do szybkiego ręcznego przeglądu.
+Zamiast rejestrować płatności jedna po jednej, możesz przesłać wyciąg bankowy bezpośrednio do Druma. Druma parsuje każdą transakcję kredytową w pliku, uruchamia logikę dopasowania wobec Twoich otwartych faktur i automatycznie stosuje wszelkie pewne dopasowania. Niedopasowane transakcje trafiają do kolejki Uzgodnienia do szybkiego, ręcznego przeglądu.
+
+To najszybszy sposób uzgodnienia dużej liczby przychodzących płatności naraz — idealne na koniec tygodnia lub koniec miesiąca.
 
 ## Obsługiwane formaty i banki
+
+Druma akceptuje trzy standardowe formaty:
 
 | Format | Opis |
 |--------|------|
 | **CAMT.053 XML** | ISO 20022 — eksportowany przez większość banków UE przez bankowość internetową |
-| **MT940 SWIFT** | Format starszego SWIFT — nadal powszechny dla korporacyjnych API bankowych |
+| **MT940 SWIFT** | Starszy format SWIFT — nadal powszechny w korporacyjnych API bankowych |
+| **CODA** | Format o stałej szerokości pól używany przez belgijskie banki |
 
-Oba formaty są obsługiwane przez BRD, BCR, Raiffeisen Bank, UniCredit i ING Romania.
+Wszystkie trzy formaty są obsługiwane przez BRD, BCR, Raiffeisen Bank, UniCredit i ING Rumunia, a także przez większość banków UE — CODA konkretnie obejmuje eksporty belgijskich banków. Druma automatycznie wykrywa format przy przesyłaniu. Jeśli wykrywanie się nie powiedzie, wybierz właściwy format z listy rozwijanej **Format** wewnątrz okna importu.
 
-**Maksymalny rozmiar pliku:** 10 MB per przesłanie.
+**Maksymalny rozmiar pliku:** 10 MB na przesłanie.
 
 <Note>
-Ponowne przesyłanie tego samego pliku wyciągu jest bezpieczne. Druma identyfikuje każdą transakcję i cicho pomija duplikaty.
+Ponowne przesłanie tego samego pliku wyciągu jest bezpieczne. Druma tworzy odcisk cyfrowy każdej transakcji i po cichu pomija wszelkie duplikaty — nigdy nie zarejestrujesz płatności podwójnie.
 </Note>
 
-## Jak importować wyciąg
+## Jak zaimportować wyciąg
 
 <Steps>
   <Step title="Otwórz okno dialogowe importu">
-    Przejdź do **Finanse — Uzgodnienie — Karta Płatności**. Kliknij przycisk **Importuj wyciąg** w prawym górnym rogu strony.
+    Przejdź do **Finanse** → **Uzgodnienie** → karta **Płatności**. Kliknij przycisk **Importuj wyciąg** w prawym górnym rogu strony.
   </Step>
   <Step title="Wybierz plik">
-    Kliknij **Wybierz plik** i wybierz wyeksportowany wyciąg bankowy. Akceptowane rozszerzenia to `.xml` (CAMT.053) i `.sta` lub `.txt` (MT940).
+    Kliknij **Wybierz plik** i wybierz swój wyeksportowany wyciąg bankowy. Akceptowane rozszerzenia to `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940) oraz `.cod`/`.coda` (CODA). Plik musi mieć maksymalnie 10 MB.
   </Step>
   <Step title="Potwierdź format">
-    Druma auto-wykrywa format. Jeśli etykieta jest nieprawidłowa, otwórz listę rozwijaną **Format** i wybierz właściwy format ręcznie.
+    Druma automatycznie wykrywa format i pokazuje etykietę pod nazwą pliku. Jeśli etykieta jest błędna, otwórz listę rozwijaną **Format** i wybierz właściwy format ręcznie przed kontynuowaniem.
   </Step>
   <Step title="Uruchom import">
-    Kliknij **Importuj**. Druma parsuje wszystkie transakcje kredytowe i uruchamia logikę dopasowania.
+    Kliknij **Importuj**. Druma parsuje wszystkie transakcje kredytowe w pliku i uruchamia logikę dopasowania wobec każdej otwartej faktury w Twojej firmie. Zwykle zajmuje to kilka sekund.
   </Step>
   <Step title="Przejrzyj podsumowanie wyników">
-    Po zakończeniu przetwarzania wyświetla się modal podsumowania.
+    Gdy przetwarzanie się zakończy, wyświetla się modal podsumowania z wynikiem. Przejrzyj każdą kategorię przed zamknięciem — patrz podział niżej.
   </Step>
 </Steps>
 
 ## Rozumienie podsumowania wyników
 
+Po każdym imporcie Druma pokazuje podsumowanie wyniku z następującymi licznikami:
+
 | Pole | Co oznacza |
-|------|-----------|
-| **Sparsowane** | Całkowita liczba transakcji kredytowych w pliku |
+|-------|---------------|
+| **Sparsowane** | Łączna liczba transakcji kredytowych znalezionych w pliku |
 | **Auto-dopasowane** | Transakcje dopasowane do faktury z wysoką pewnością — płatność zastosowana automatycznie |
-| **Wymagają przeglądu** | Transakcje gdzie znaleziono potencjalne dopasowanie, ale pewność była poniżej progu |
-| **Pominięte duplikaty** | Transakcje już zarejestrowane z poprzedniego przesłania tego samego pliku |
-| **Błędy** | Transakcje które nie mogły być sparsowane |
+| **Wymagają przeglądu** | Transakcje, w których znaleziono potencjalne dopasowanie, ale pewność była poniżej progu — pojawiają się w kolejce Uzgodnienia |
+| **Pominięte duplikaty** | Transakcje już zarejestrowane z poprzedniego przesłania tego samego pliku — zignorowane po cichu |
+| **Błędy** | Transakcje, których nie udało się sparsować (nieprawidłowe wiersze, nieobsługiwana waluta, brakująca referencja) |
+
+Zdrowy import ma wysoką liczbę **Auto-dopasowane** i niską liczbę **Wymagają przeglądu**. Jeśli widzisz wiele wierszy wymagających przeglądu, zwykle oznacza to, że referencje faktur nie są zawarte w opisach płatności — poproś klientów o umieszczanie numeru faktury w polu referencji przelewu bankowego.
 
 ## Logika dopasowania
 
-Druma dopasowuje każdą transakcję bankową do faktury używając następujących sygnałów, w kolejności priorytetu:
+Druma dopasowuje każdą transakcję bankową do faktury, używając następujących sygnałów, w kolejności priorytetu:
 
-1. **Numer faktury w referencji transakcji** — dokładne lub częściowe dopasowanie
-2. **Dopasowanie kwoty** — w tolerancji ±2%
-3. **Nazwa klienta lub numer VAT** — skrzyżowane z danymi głównymi klienta
+1. **Numer faktury w referencji transakcji** — dokładne lub częściowe (rozmyte, znormalizowane) dopasowanie do numeru otwartej faktury. Dopasowanie samego tego sygnału wystarczy, aby automatycznie zastosować płatność — żaden inny sygnał nie jest wymagany.
+2. **Dopasowanie kwoty** — jeśli żaden numer faktury nie pasuje, Druma szuka otwartej faktury, której zaległe saldo mieści się w skonfigurowanej tolerancji (domyślnie ±2%) kwoty transakcji, **i** której termin płatności mieści się w ±30 dniach od daty transakcji. Zapobiega to przypadkowemu połączeniu przypadkowego dopasowania kwoty z niepowiązaną fakturą sprzed miesięcy.
+3. **Nazwa klienta** — używana tylko jako rozstrzygnięcie remisu, gdy powyższe dopasowanie kwoty zwraca więcej niż jedną kandydującą fakturę; Druma zawęża do kandydata, którego nazwa klienta pojawia się w nazwie nadawcy transakcji.
+
+Dopasowanie po numerze faktury automatycznie stosuje płatność (w całości lub częściowo, w zależności od kwoty). **Dopasowanie tylko po kwocie nigdy nie jest stosowane automatycznie** — nawet gdy jednoznacznie identyfikuje jedną fakturę — zawsze trafia do kolejki Uzgodnienia do ręcznego potwierdzenia, ponieważ nie ma referencji dowodzącej, że to naprawdę płatność za tę fakturę. Brak jakiegokolwiek sygnału → kolejkowane jako niedopasowane.
+
+## Obsługa niedopasowanych transakcji
+
+Każda transakcja, której nie udało się pewnie dopasować, pojawia się w kolejce **Uzgodnienie** na tej samej karcie **Płatności**. Każdy wiersz pokazuje odznakę źródła **Wyciąg** (odróżniając ją od transakcji, które przyszły przez parsowanie e-maili, pokazujących odznakę **E-mail**).
+
+<Steps>
+  <Step title="Otwórz kolejkę Uzgodnienia">
+    Pozostań na karcie **Finanse** → **Uzgodnienie** → **Płatności**. Niedopasowane wiersze pojawiają się poniżej podsumowania ze statusem **Oczekująca**.
+  </Step>
+  <Step title="Rozwiń transakcję">
+    Kliknij wiersz, aby go rozwinąć. Druma pokazuje pełne szczegóły transakcji: datę, kwotę, tekst referencji bankowej i wszelkie kandydujące faktury, które rozważyła.
+  </Step>
+  <Step title="Dopasuj ręcznie">
+    Kliknij **Dopasuj** obok właściwej faktury. Druma stosuje płatność i przenosi transakcję do statusu **Zastosowana**.
+  </Step>
+  <Step title="Odrzuć, jeśli nieistotne">
+    Jeśli transakcja nie jest płatnością od klienta (na przykład przelew wewnętrzny lub opłata bankowa), kliknij **Odrzuć**. Wiersz przechodzi do statusu **Odrzucona** i nie wpływa na żadną fakturę.
+  </Step>
+</Steps>
+
+<Warning>
+Odrzucenie transakcji to miękka akcja — tylko oznacza wiersz jako odrzucony w Druma. Nie wpływa na Twoje faktyczne konto bankowe ani system księgowy. Jeśli odrzucisz przez pomyłkę, skontaktuj się z pomocą techniczną — obecnie nie ma samoobsługowego cofnięcia dla odrzuconych wierszy uzgodnienia.
+</Warning>
+
+## Wskazówki dla wyższych wskaźników auto-dopasowania
+
+- **Poproś klientów o umieszczanie numeru faktury** w polu referencji płatności ich przelewu bankowego. Referencja taka jak `INV-000047` daje Druma dokładne dopasowanie na pierwszym sygnale.
+- **Utrzymuj spójne nazwy klientów** między głównym rekordem klienta a tym, jak klienci identyfikują się na przelewach bankowych — Druma stosuje dopasowanie po nazwie klienta tylko do rozstrzygania między wieloma fakturami o tej samej kwocie, więc bliskie dopasowanie tam może uratować inaczej niejednoznaczne dopasowanie kwoty.
+- **Konsekwentnie stosuj warunki płatności netto.** Płatności, które docierają z odliczonymi opłatami (bankowymi lub faktoringowymi), mieszczą się w tolerancji ±2% dla kwot poniżej ~5000 €. Dla większych faktur potwierdź z klientami, że wysyłają pełną kwotę.
 
 ---
 
-<Card title="Śledzenie płatności" icon="circle-check" href="/en/invoicing/payment-tracking">
-Rejestruj i śledź płatności ręcznie lub przeglądaj pełną historię płatności per faktura.
+<Card title="Śledzenie płatności" icon="circle-check" href="/pl/invoicing/payment-tracking">
+  Rejestruj i śledź płatności ręcznie lub przeglądaj pełną historię płatności per faktura.
+</Card>
+
+<Card title="Panel zaległości" icon="triangle-alert" href="/pl/invoicing/overdue-management">
+  Przeglądaj wiekowanie dłużników i wysyłaj przypomnienia o płatnościach dla faktur po terminie.
+</Card>
+
+<Card title="Noty kredytowe" icon="file-minus" href="/pl/invoicing/credit-notes">
+  Wystaw notę kredytową, aby cofnąć lub częściowo skorygować wysłaną fakturę.
 </Card>

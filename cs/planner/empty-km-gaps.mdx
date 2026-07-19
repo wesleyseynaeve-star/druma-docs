@@ -1,0 +1,63 @@
+---
+title: "Mezery"
+description: "Najděte nepokryté zásilky, příležitosti k přemístění naprázdno (prázdné km) a volná vozidla, která by mohla nedaleko naložit."
+icon: "route"
+---
+
+## Co je nástroj Mezery?
+
+Pokaždé, když vozidlo dokončí doručení bez naplánované další zásilky, nebo objednávka zůstává bez přiřazeného vozidla, zatímco se blíží datum vyzvednutí, buď pálíte prázdné kilometry, nebo riskujete zmeškané vyzvednutí. Stránka **Mezery** (`/operations/gaps`, v panelu záložek Plánování jako **Mezery**) odhaluje oba problémy na jednom místě, napříč třemi podzáložkami.
+
+<Frame caption="Nástroj Mezery — mezery v pokrytí s doporučenou akcí, prázdné km, vyzvednutí, doručení a klient.">
+  <img src="/images/planner/empty-km-gaps.png" alt="Stránka Mezery se seznamem mezer v pokrytí a příležitostí dokládky prázdných km" />
+</Frame>
+
+---
+
+## Pokrytí
+
+Výchozí podzáložka uvádí **nepokryté zásilky** — budoucí objednávky, které zatím nemají přiřazené vozidlo, seřazené podle naléhavosti. Každý řádek zobrazuje:
+
+- **Doporučeno** — odznak: **Přiřadit** (bylo nalezeno blízké vozidlo), **Subdodávka** (najít dopravce), nebo **Nutno pokrýt sami** (nenalezena žádná možnost)
+- **Prázdné km** — vzdálenost naprázdno pro doporučenou shodu, barevně odlišená: zelená ≤150 km, oranžová 150–300 km, červená >300 km
+- **Vyzvednutí**, **Datum vyzvednutí**, **Doručení**, **Klient**
+
+Akce řádku vám umožňují přímo přiřadit navrhované vozidlo, přejít na **Najít dopravce**, nebo otevřít objednávku pro podrobnosti. Nabídka **Třídění** umožňuje označit řádek jako **Zpracovává se**, **Odložit o 24h**, nebo **Přijmout jako subdodávku**, aby přestal soupeřit o pozornost.
+
+KPI lišta zobrazuje **nepokryto ≤12h / ≤24h / ≤72h**, **% automaticky řešitelných**, **Potřeba dopravce** a **Chybějící souřadnice** (objednávky, jejichž zastávky postrádají souřadnice a nelze je spárovat).
+
+---
+
+## Optimalizátor prázdných km
+
+Tato podzáložka počítá příležitosti k přemístění napříč **všemi** objednávkami (pokrytými i nepokrytými) spuštěním směrovací matice přes každý pár doručení→vyzvednutí — načtení může trvat několik sekund. Jde o trvalé rozložení **rozdělená tabulka + mapa**, ne přepínač: tabulka vlevo uvádí mezery a kliknutím na řádek se na mapě vykreslí přerušovaná čára z daného bodu doručení k navrhovanému dalšímu vyzvednutí — vykreslí se pouze čára vybraného řádku, ne všechny.
+
+Sloupce: **Doporučeno**, **Prázdné km**, **Vyzvednutí**, **Datum vyzvednutí**, **Přemísťuje se z** (objednávka a bod doručení, odkud by vozidlo přijíždělo), **Doručení**, **Klient**. Filtr **Top 10 / Top 25 / Vše** omezuje, kolik řádků se počítá a zobrazuje, a mapa má vlastní filtr závažnosti (Vysoká / Střední / Nízká / Nepokryto).
+
+---
+
+## Volná vozidla
+
+Tato podzáložka otočí pohled: jeden řádek na **vozidlo**, které dokončí doručení bez naplánovaného pokračování, spárované s nejbližší nepřiřazenou zásilkou, kterou by mohlo doložit. Sloupce: **Vozidlo** (se jménem řidiče), **Končí v** (místo a datum), **Nejlepší doložení** a **Prázdné km** pro dané doložení. Vozidla bez dosažitelné zásilky nezobrazují žádný návrh doložení a vyžadují ruční rozhodnutí o přemístění nebo subdodávce.
+
+KPI: **Volná vozidla**, **Doložení nalezeno**, **Bez doložení**, **Průměrné prázdné km**, **Chybějící souřadnice**.
+
+---
+
+## Export
+
+Panel nástrojů každé podzáložky má tlačítka **Tisk** a **Export** pro aktuální tabulku — export vytvoří soubor Excel (.xlsx) viditelných sloupců. Neexistuje export surových GPS souřadnic.
+
+---
+
+## Filtry
+
+Každá podzáložka má textové vyhledávací pole (číslo objednávky, jméno klienta, adresa vyzvednutí/doručení). Neexistuje samostatný filtr časového rozsahu, vozidla ani řidiče — záložky Pokrytí a Optimalizátor se již omezují na nadcházející objednávky, a záložka Volná vozidla nemá výběr za vozidlo/řidiče, protože každý řádek už je vozidlo.
+
+---
+
+## Použití tohoto nástroje pro hledání zpátečních jízd
+
+Trasy, kde soustavně vidíte červené mezery (>300 km), jsou přesně tam, kde by stálá dohoda o zpáteční jízdě — nebo ruční hledání na nákladní burze jako Timocom nebo Trans.eu při doručení — měla nejvyšší návratnost. Druma nespouští automatické hledání zásilek pro obecné celovozové (FTL) objednávky; identifikace a rezervace zpáteční jízdy je ruční krok poté, co vás nástroj na danou trasu upozornil.
+
+Pokud se mezera týká skupinové (vícemístné) trasy, zkontrolujte, zda automatické návrhy konsolidace zpátečních jízd Druma již neoznačily odpovídající zpáteční zásilku — ty se zobrazují přímo na panelu konsolidace skupinové přepravy a nevyžadují ruční hledání.

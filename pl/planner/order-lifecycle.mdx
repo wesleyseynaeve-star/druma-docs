@@ -1,92 +1,170 @@
 ---
 title: "Cykl życia zlecenia"
-description: "Jak zlecenie przechodzi od wersji roboczej do zafakturowania w Druma — każdy status, kto go uruchamia i co się dzieje na każdym etapie."
+description: "Jak zlecenie przechodzi od Wersji roboczej do Dostarczone w Druma — każdy status, kto go uruchamia i co się dzieje na każdym etapie."
 icon: "circle-dot"
 ---
 
 ## Przegląd
 
-Każde zlecenie w Druma podąża określoną ścieżką. Zrozumienie cyklu życia pomaga wiedzieć, czego się spodziewać na każdym etapie, kiedy interweniować i jak obsługiwać wyjątki, takie jak opóźnione dostawy lub zapomniane aktualizacje statusu.
+Każde zlecenie w Druma podąża określoną ścieżką. Zrozumienie cyklu życia pomaga wiedzieć, czego się spodziewać na każdym etapie, kiedy interweniować i jak obsługiwać wyjątki, takie jak opóźnione dostawy czy zapomniane aktualizacje statusu.
+
+<Note>
+Jeśli Twoja firma używa szablonów zadań, zlecenie może też nieść **listę kontrolną zadań** powiązaną z tymi samymi fazami cyklu życia — zobacz [Zadania zlecenia i szablony przepływu pracy](/en/planner/order-tasks).
+</Note>
 
 Oto pełny przepływ:
 
-**Wersja robocza — Potwierdzone — W drodze — Dotarł do odbioru — Załadunek — W drodze do dostawy — Dotarł do dostawy — Rozładunek — Dostarczone — Zafakturowane**
+**Wersja robocza → Oczekujące → Przypisane → Wyjechał → Przy odbiorze → Załadunek → W transporcie → Przy dostawie → Rozładunek → Dostarczone**
 
-Na końcu omówiono też oddzielny status **Anulowane**.
+Są też dwa statusy wyjątkowe — **Anulowane** i **Zmarnowany kurs** — omówione bliżej końca.
 
-![Diagram przepływu statusów zleceń](/images/placeholder.png)
+---
+
+## Kolory statusów w skrócie
+
+Każdy status ma jeden kolor (odcień), identyczny między tablicą planowania a aplikacją kierowcy — ten sam status nigdy nie ma innego koloru na dwóch ekranach.
+
+| Status | Kolor |
+|---|---|
+| Wersja robocza | Szary (łupkowy) |
+| Oczekujące | Szary (łupkowy) |
+| Przypisane | Niebieski |
+| Wyjechał | Indygo |
+| Przy odbiorze | Bursztynowy |
+| Załadunek | Bursztynowy |
+| W transporcie | Szmaragdowozielony |
+| Przy dostawie | Błękitny |
+| Rozładunek | Błękitny |
+| Dostarczone | Zielony |
+| Anulowane | Czerwony |
+| Zmarnowany kurs | Czerwony |
+
+<Note>
+**W transporcie** to odcinek ciężarówki po załadunku do adresu dostawy — to *jedyny* status renderowany na zielono przed Dostarczone. **Wyjechał** (odcinek do adresu odbioru) jest renderowany na indygo, wizualnie odrębny kolor, więc od razu widać, czy ciężarówka jedzie po załadunek, czy jest już załadowana i jedzie dostarczyć.
+</Note>
 
 ---
 
 ## Wersja robocza
 
-**Uruchamia:** Planista zapisuje nowe zlecenie bez potwierdzania go.
+**Uruchamiane przez:** planista zapisuje nowe zlecenie bez jego potwierdzania.
 
-Zlecenie istnieje w systemie, ale nie jest jeszcze aktywne. Kierowca nie widzi go w swojej aplikacji. Na tablicy planowania wyświetla się w kolorze szarym.
+**Kto może to uruchomić:** tylko planista.
 
-**Dostępne akcje z wersji roboczej:**
-- Edytowanie dowolnego pola
-- Potwierdzenie zlecenia (przejście do Potwierdzone)
+Zlecenie istnieje w systemie, ale nie jest jeszcze aktywne. Kierowca nie widzi go w swojej aplikacji. Pojawia się na szaro na tablicy planowania.
+
+**Dostępne akcje z Wersji roboczej:**
+- Edycja dowolnego pola
+- Potwierdzenie zlecenia (przejście do Oczekujące)
 - Usunięcie zlecenia
+- Anulowanie zlecenia
+
+Użyj Wersji roboczej, gdy klient dokonał wstępnej rezerwacji, ale jeszcze nie potwierdził, albo gdy budujesz zlecenie, ale wciąż czekasz na szczegóły.
+
+---
+
+## Oczekujące
+
+**Uruchamiane przez:** planista klika **Potwierdź zlecenie** (ze strony zlecenia lub tablicy planowania).
+
+**Kto może to uruchomić:** tylko planista.
+
+Zlecenie jest teraz aktywne i gotowe do dopasowania z ciężarówką i kierowcą — po prostu nie zostało jeszcze przypisane. Nadal pojawia się na **szaro** na tablicy planowania, tym samym odcieniem co Wersja robocza, ponieważ żadna ciężarówka nie jest jeszcze do niego zaangażowana.
+
+**Wysyłane powiadomienia:**
+- Opcjonalnie: automatyczne potwierdzenie e-mailowe do klienta (jeśli włączone w ustawieniach konta)
+
+**Dostępne akcje z Oczekujące:**
+- Edycja dowolnego pola
+- Przypisanie ciężarówki i kierowcy (przejście do Przypisane)
 - Anulowanie zlecenia
 
 ---
 
-## Potwierdzone
+## Przypisane
 
-**Uruchamia:** Planista klika **Potwierdź zlecenie**.
+**Uruchamiane przez:** planista przypisuje ciężarówkę i kierowcę do zlecenia — z formularza Nowe zlecenie, Tablicy planowania lub panelu szczegółów zlecenia.
 
-Zlecenie jest teraz aktywne. Przypisany kierowca otrzymuje powiadomienie push z danymi zadania. Zlecenie pojawia się na tablicy planowania w kolorze niebieskim.
+**Kto może to uruchomić:** tylko planista.
+
+Zlecenie ma teraz przypisaną ciężarówkę i kierowcę. Przypisany kierowca otrzymuje powiadomienie push w swojej aplikacji pokazujące szczegóły zadania — adres odbioru, adres dostawy, datę i notatki dodane przez Ciebie.
+
+Zlecenie pojawia się na **niebiesko** na tablicy planowania.
+
+**Dostępne akcje z Przypisane:**
+- Edycja większości pól (zmiany wyzwalają nowe powiadomienie dla kierowcy)
+- Ponowne przypisanie ciężarówki lub kierowcy
+- Anulowanie zlecenia
+- Przejście do Wyjechał (akcja kierowcy lub nadpisanie planisty)
 
 ---
 
-## W drodze
+## Wyjechał
 
-**Uruchamia:** Kierowca klika **W trasie** w swojej aplikacji, gdy wyrusza do miejsca odbioru.
+**Uruchamiane przez:** kierowca stuka **Wyjechał** w swojej aplikacji, gdy wyrusza do miejsca odbioru.
 
-Ten status oznacza, że kierowca jest w drodze do miejsca odbioru. Zlecenie zmienia kolor na zielony na tablicy planowania.
+**Kto może to uruchomić:** kierowca (główna akcja) lub planista (ręczne nadpisanie).
+
+Ten status oznacza, że kierowca jest w drodze do miejsca odbioru. Zlecenie zmienia się na **indygo** na tablicy planowania.
 
 <Note>
-Jeśli kierowca zapomni kliknąć "W trasie", możesz ręcznie ustawić status ze strony zlecenia. Otwórz zlecenie, kliknij **Zastąp status** i wybierz "W drodze".
+Jeśli kierowca zapomni stuknąć Wyjechał, możesz ustawić status ręcznie ze strony zlecenia. Otwórz zlecenie, kliknij **Nadpisz status** i wybierz Wyjechał. Zawsze zanotuj powód w polu komentarza, aby mieć rekord.
 </Note>
 
 ---
 
-## Dotarł do odbioru
+## Przy odbiorze
 
-**Uruchamia:** Kierowca klika **Dotarł do odbioru** po dotarciu na adres załadunku.
+**Uruchamiane przez:** kierowca stuka **Przy odbiorze**, gdy dociera na adres załadunku.
 
-Kierowca dotarł na miejsce załadunku i czeka na obsługę. Ten status automatycznie uruchamia **licznik czasu oczekiwania**.
+**Kto może to uruchomić:** kierowca lub planista.
+
+Kierowca dotarł na miejsce załadunku i czeka na obsługę. Ten status automatycznie uruchamia **licznik czasu oczekiwania** — przydatny do dokumentowania wszelkich opóźnień przy rampie załadunkowej.
+
+**Wysyłane powiadomienia:**
+- Opcjonalnie: automatyczne powiadomienie do klienta lub jego kontaktu w miejscu załadunku (konfigurowalne per klient)
 
 ---
 
 ## Załadunek
 
-**Uruchamia:** Kierowca klika **Rozpoczęto załadunek**.
+**Uruchamiane przez:** kierowca stuka **Załadunek**, gdy towary są ładowane na ciężarówkę.
 
-Licznik czasu oczekiwania zatrzymuje się, gdy załadunek się rozpoczyna. Zarejestrowany czas oczekiwania może być używany do obliczania dopłat.
+**Kto może to uruchomić:** kierowca lub planista.
 
----
-
-## W drodze do dostawy
-
-**Uruchamia:** Kierowca klika **Wyjechał z odbioru** po zakończeniu załadunku i podpisaniu CMR.
-
-Ciężarówka jedzie teraz do miejsca dostawy. Zlecenie pokazuje szacowany czas przybycia na tablicy planowania.
+Licznik czasu oczekiwania zatrzymuje się, gdy załadunek się rozpoczyna. Wszelki zarejestrowany czas oczekiwania jest zapisywany do zlecenia i może być użyty do obliczeń dopłat.
 
 ---
 
-## Dotarł do dostawy
+## W transporcie
 
-**Uruchamia:** Kierowca klika **Dotarł do dostawy**.
+**Uruchamiane przez:** kierowca stuka **W transporcie**, gdy załadunek jest ukończony (i CMR podpisany, jeśli dotyczy).
 
-Licznik czasu oczekiwania uruchamia się ponownie w miejscu dostawy.
+**Kto może to uruchomić:** kierowca lub planista.
+
+Ciężarówka jedzie teraz do adresu dostawy. Zlecenie zmienia się na **szmaragdowozielone** na tablicy planowania — to jedyny status w toku renderowany na zielono, więc łatwo zauważyć ciężarówkę, która jest załadowana i w ruchu. Zlecenie pokazuje szacowany czas przybycia na podstawie obliczenia trasy PTV.
+
+<Note>
+To dobry moment, aby wysłać proaktywne powiadomienie o opóźnieniu do odbiorcy, jeśli kierowca jest opóźniony względem planu. Użyj przycisku **Wyślij ETA** na stronie zlecenia, aby wysłać SMS lub e-mail z bieżącym szacowanym czasem przybycia.
+</Note>
+
+---
+
+## Przy dostawie
+
+**Uruchamiane przez:** kierowca stuka **Przy dostawie**, gdy dociera na adres dostawy.
+
+**Kto może to uruchomić:** kierowca lub planista.
+
+Licznik czasu oczekiwania uruchamia się ponownie w miejscu dostawy. Wszelkie opóźnienia rozładunku są rejestrowane od tego momentu. Zlecenie pojawia się w odcieniu błękitnym.
 
 ---
 
 ## Rozładunek
 
-**Uruchamia:** Kierowca klika **Rozpoczęto rozładunek**.
+**Uruchamiane przez:** kierowca stuka **Rozładunek**, gdy towary są zdejmowane z ciężarówki.
+
+**Kto może to uruchomić:** kierowca lub planista.
 
 Czas oczekiwania przy dostawie zatrzymuje się. Kierowca może teraz przygotować podpisane dokumenty dostawy.
 
@@ -94,68 +172,107 @@ Czas oczekiwania przy dostawie zatrzymuje się. Kierowca może teraz przygotowa�
 
 ## Dostarczone
 
-**Uruchamia:** Kierowca klika **Dostarczone** i opcjonalnie przesyła zdjęcie podpisanego CMR.
+**Uruchamiane przez:** kierowca stuka **Dostarczone** i opcjonalnie przesyła zdjęcie podpisanego CMR lub listu dostawy.
 
-Transport jest zakończony. Zlecenie zmienia kolor na ciemnozielony i przechodzi do karty **Zakończone** na liście zleceń.
+**Kto może to uruchomić:** kierowca (główna akcja) lub planista.
 
-**Dostępne akcje od stanu Dostarczone:**
-- Generowanie faktury (przejście do Zafakturowane)
-- Przesyłanie lub przeglądanie dokumentów dostawy (CMR, POD)
+Transport jest zakończony. Zlecenie zmienia się na zielone na tablicy planowania i przechodzi do karty **Ukończone** na liście zleceń.
+
+**Wysyłane powiadomienia:**
+- Opcjonalnie: e-mail z potwierdzeniem dostawy do klienta ze znacznikiem czasu i wszelkimi przesłanymi dokumentami.
+
+**Dostępne akcje z Dostarczone:**
+- Generowanie faktury dla zlecenia (samo zlecenie pozostaje w statusie Dostarczone — generowanie faktury go nie zmienia; faktura jest tworzona jako własny, powiązany rekord)
+- Przesyłanie lub przeglądanie dokumentów dostawy (zdjęcie CMR, POD)
 - Dodawanie notatki o sporze lub uszkodzeniu
-
----
-
-## Zafakturowane
-
-**Uruchamia:** Planista generuje fakturę dla zlecenia.
-
-Zlecenie jest całkowicie zamknięte. Jest tylko do odczytu i powiązane z rekordem faktury.
 
 ---
 
 ## Anulowane
 
-**Uruchamia:** Planista anuluje zlecenie.
+**Uruchamiane przez:** planista anuluje zlecenie.
+
+**Kto może to uruchomić:** tylko planista.
 
 <Warning>
-Możesz anulować zlecenie w statusie **Wersja robocza** lub **Potwierdzone** bez specjalnych kroków. Jednak nie możesz anulować zlecenia będącego w trasie lub później bez przejścia przez ręczny proces. Skontaktuj się z administratorem konta, jeśli musisz anulować aktywne zlecenie.
+Możesz anulować zlecenie w statusie **Wersja robocza** lub **Oczekujące** bez żadnych specjalnych kroków. Jednak **nie możesz** anulować zlecenia będącego w statusie Wyjechał lub późniejszym bez przejścia przez ręczny proces. Skontaktuj się z administratorem konta, jeśli musisz anulować aktywne zlecenie — wymaga to zarejestrowania powodu i może wpłynąć na płatności kierowcy.
 </Warning>
+
+Anulowane zlecenia są zachowywane w systemie do celów audytowych. Są widoczne na liście zleceń pod filtrem **Anulowane**.
 
 ---
 
 ## Zmarnowany kurs
 
-Zmarnowany kurs dotyczy zleceń, w których kierowca już wyjechał, ale podróż musi zostać przerwana — z powodu anulowania przez klienta, siły wyższej lub decyzji firmy.
+**Uruchamiane przez:** planista deklaruje zmarnowany kurs z panelu szczegółów zlecenia.
+
+**Kto może to uruchomić:** tylko planista.
+
+Zmarnowany kurs dotyczy zleceń, w których kierowca **już wyjechał**, ale podróż musi zostać przerwana — z powodu anulowania przez klienta, siły wyższej lub decyzji firmy. To różni się od zwykłego anulowania, ponieważ rzeczywiste koszty zostały już poniesione (paliwo, czas kierowcy, martwe kilometry).
+
+Możesz zadeklarować zmarnowany kurs z dowolnego z tych statusów: **Wyjechał, Przy odbiorze, Załadunek, W transporcie, Przy dostawie, Rozładunek**.
+
+Planista musi podać kod przyczyny, bieżącą lokalizację kierowcy, przejechane martwe kilometry i opcjonalnie oflagować zlecenie do obciążenia klienta.
 
 <Warning>
-Deklaracja zmarnowanego kursu nie może być cofnięta. Zlecenie trwale przechodzi do statusu Zmarnowany kurs.
+Zadeklarowanie zmarnowanego kursu **nie może być cofnięte**. Zlecenie przechodzi trwale do statusu Zmarnowany kurs, a powód, lokalizacja kierowcy, martwe kilometry i (jeśli włączone) kwota obciążenia klienta są zapisywane bezpośrednio na zleceniu do późniejszego fakturowania — żaden osobny rekord płacowy ani obciążeniowy nie jest generowany automatycznie.
 </Warning>
+
+Zobacz [Zmarnowany kurs](/pl/planner/wasted-journey) po pełny przewodnik.
 
 ---
 
-## Ręczne zastępowanie statusów
+## Ręczne nadpisania statusu
+
+Kierowcy czasem zapominają stuknąć aktualizacje statusu — zdarza się. Jako planista zawsze możesz nadpisać status ręcznie:
 
 <Steps>
   <Step title="Otwórz zlecenie">
-    Przejdź do Planner — Zlecenia i znajdź zlecenie. Kliknij je, aby otworzyć stronę szczegółów.
+    Przejdź do Planer → Zlecenia i znajdź zlecenie. Kliknij je, aby otworzyć stronę szczegółów.
   </Step>
-  <Step title="Kliknij Zastąp status">
-    Znajdź przycisk **Zastąp status** przy bieżącym wskaźniku statusu.
+  <Step title="Kliknij Nadpisz status">
+    Znajdź przycisk **Nadpisz status** przy wskaźniku bieżącego statusu na górze strony.
   </Step>
   <Step title="Wybierz właściwy status">
-    Wybierz status, w którym zlecenie powinno teraz być.
+    Wybierz status, w którym zlecenie powinno teraz się znajdować.
   </Step>
-  <Step title="Dodaj notatkę i zapisz">
-    Wpisz krótkie wyjaśnienie i kliknij **Zastosuj zastąpienie**.
+  <Step title="Dodaj notatkę">
+    Wpisz krótkie wyjaśnienie (np. "Kierowca zapomniał zaktualizować — potwierdzone telefonicznie"). Jest to zapisywane w historii zlecenia.
+  </Step>
+  <Step title="Zapisz">
+    Kliknij **Zastosuj nadpisanie**. Status aktualizuje się natychmiast, a zmiana jest logowana z Twoim imieniem i znacznikiem czasu.
   </Step>
 </Steps>
 
 ---
 
-<Card title="Widok dziś" icon="sun" href="/en/planner/today-view">
-  Monitoruj wszystkie aktywne zlecenia na dziś, obserwuj pozycje kierowców na żywo i obsługuj alerty z codziennego panelu.
+## Przejścia automatyczne vs ręczne
+
+| Status | Automatyczny | Ręczny (kierowca) | Ręczny (planista) |
+|---|---|---|---|
+| Wersja robocza | — | — | Tak |
+| Oczekujące | — | — | Tak |
+| Przypisane | — | — | Tak |
+| Wyjechał | — | Tak | Tak (nadpisanie) |
+| Przy odbiorze | — | Tak | Tak (nadpisanie) |
+| Załadunek | — | Tak | Tak (nadpisanie) |
+| W transporcie | — | Tak | Tak (nadpisanie) |
+| Przy dostawie | — | Tak | Tak (nadpisanie) |
+| Rozładunek | — | Tak | Tak (nadpisanie) |
+| Dostarczone | — | Tak | Tak (nadpisanie) |
+| Anulowane | — | — | Tak |
+| Zmarnowany kurs | — | — | Tak (z aktywnych statusów) |
+
+---
+
+<Card title="Panel główny" icon="gauge" href="/pl/planner/today-view">
+  Monitoruj wszystkie aktywne zlecenia, obserwuj pozycje kierowców na żywo i obsługuj alerty z żywego pulpitu operacyjnego.
 </Card>
 
-<Card title="Generowanie faktur" icon="file-invoice" href="/en/finances/generating-invoices">
-  Po dostarczeniu zlecenia dowiedz się, jak tworzyć i wysyłać faktury do klienta.
+<Card title="Zadania zlecenia i szablony przepływu pracy" icon="list-check" href="/en/planner/order-tasks">
+  Konfigurowalne listy kontrolne zadań powiązane z tymi fazami cyklu życia, plus jak administratorzy budują stojące za nimi szablony.
+</Card>
+
+<Card title="Generowanie faktur" icon="file-invoice" href="/pl/invoicing/generating-invoices">
+  Gdy zlecenie jest Dostarczone, dowiedz się, jak utworzyć i wysłać fakturę do klienta.
 </Card>

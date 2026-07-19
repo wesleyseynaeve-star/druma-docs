@@ -1,44 +1,121 @@
 ---
 title: "ADR-certificaten"
-description: "Houd ADR-certificering bij voor chauffeurs en voertuigen, handhaaf naleving op gevaarlijke goederen-orders en beheer de automatische ADR-toeslag."
+description: "Houd ADR-certificering bij voor chauffeurs en voertuigen, handhaaf naleving op gevaarlijke-goederen-orders en beheer de automatische ADR-toeslag."
 icon: "radiation"
 ---
 
-ADR is de Europese Overeenkomst betreffende het internationale vervoer van gevaarlijke goederen over de weg. Als uw bedrijf gevaarlijke materialen vervoert, moeten zowel uw chauffeurs als uw voertuigen geldige ADR-certificaten hebben.
+ADR is de Europese Overeenkomst betreffende het internationale vervoer van gevaarlijke goederen over de weg. Vervoert uw bedrijf gevaarlijke stoffen — chemicaliën, brandbare stoffen, gassen, explosieven, radioactieve materialen of andere gereguleerde stoffen — dan moeten zowel uw chauffeurs als uw voertuigen geldige ADR-certificaten hebben. Druma houdt deze certificaten bij en handhaaft naleving automatisch op het moment van ordertoewijzing.
+
+---
 
 ## Wat ADR-certificering dekt
 
 ### Chauffeur ADR-certificaat
 
-Een chauffeur ADR-certificaat bewijst dat de chauffeur goedgekeurde ADR-training heeft gevolgd. ADR-certificaten zijn vijf jaar geldig en moeten worden vernieuwd.
+Een chauffeur ADR-certificaat bewijst dat de chauffeur goedgekeurde ADR-training heeft voltooid en het vereiste examen heeft gehaald. ADR-certificaten worden uitgegeven voor specifieke klassen gevaarlijke goederen, en het certificaat van de chauffeur moet de vervoerde klasse dekken. Certificaten zijn vijf jaar geldig en moeten worden vernieuwd.
 
 ### Voertuig ADR-certificaat
 
-Voertuigen die gevaarlijke goederen vervoeren moeten een geldig voertuig ADR-certificaat hebben, dat bevestigt dat het voertuig voldoet aan de ADR-constructievereisten.
+Bepaalde ADR-klassen — met name Klasse 1 (explosieven) en Klasse 7 (radioactieve materialen) — vereisen dat het voertuig zelf speciaal is uitgerust en gecertificeerd. Het voertuig-ADR-certificaat bevestigt dat het voertuig voldoet aan de uitrustings- en constructienormen voor die klassen.
 
-## ADR-naleving instellen in Druma
+Niet elk ADR-vervoer vereist een voertuigcertificaat — voor veel klassen volstaat het chauffeurscertificaat samen met correcte verpakking en waarschuwingsborden.
 
-### Chauffeursside
+---
 
-Bij het toevoegen of bewerken van een chauffeersprofiel (Vloot → Chauffeurs):
-- Schakel **ADR-gecertificeerd** in
-- Voer de **vervaldatum van het ADR-certificaat** in
+## ADR-certificering toevoegen aan een chauffeur
 
-### Voertuigside
+<Steps>
+  <Step title="Open het chauffeursrecord">
+    Ga naar **Vloot → Chauffeurs** en klik op de naam van de chauffeur.
+  </Step>
+  <Step title="Ga naar het tabblad Certificaten">
+    Klik op het tabblad **Certificaten** op de chauffeursdetailpagina.
+  </Step>
+  <Step title="Voer het ADR-certificaat in">
+    Voer onder **ADR-certificaat** het certificaatnummer in bij **ADR-certificaatnr.** en stel **ADR-vervaldatum** in. Dit zijn twee eenvoudige velden — er is geen apart "Certificaat toevoegen"-proces en geen selector voor welke ADR-klassen het certificaat dekt.
+  </Step>
+  <Step title="Opslaan">
+    Klik op **Opslaan**. De rij en het record van de chauffeur tonen nu de ADR-vervalstatus via de vervalbadge.
+  </Step>
+</Steps>
 
-Bij het voertuigprofiel (Vloot → Voertuigen):
-- Voer de **vervaldatum van het voertuig ADR-certificaat** in
+<Note>
+Druma slaat momenteel geen scan van het certificaat of een lijst van gedekte klassen op voor het chauffeurs-ADR-certificaat — alleen het certificaatnummer en de vervaldatum.
+</Note>
 
-## Automatische nalevingscontrole
+---
 
-Wanneer u een truck toewijst aan een order met het ADR-vlag:
-- Als de truck of chauffeur geen ADR-certificaat heeft: **rode fout** — toewijzing is geblokkeerd
-- Als het certificaat binnen 7 dagen verloopt: **oranje waarschuwing** — toewijzing is toegestaan maar gemarkeerd
+## ADR-certificering toevoegen aan een voertuig
+
+<Steps>
+  <Step title="Open het Documentenoverzicht">
+    Ga naar **Vloot → Documentenoverzicht** — dit is een aparte hoofdpagina binnen Vloot, geen tabblad op de voertuigdetailweergave.
+  </Step>
+  <Step title="Upload ADR-uitrustingscertificaat">
+    Klik op **Document uploaden**, selecteer **ADR** als documenttype, kies het voertuig, voer de vervaldatum in en upload de scan van het certificaat.
+  </Step>
+  <Step title="Opslaan">
+    De ADR-status van het voertuig wordt nu bijgehouden samen met de andere vlootdocumenten op het raster van het Documentenoverzicht.
+  </Step>
+</Steps>
+
+---
+
+## Naleving afdwingen op orderniveau
+
+Wanneer u een order aanmaakt en als ADR-zending markeert, controleert Druma naleving automatisch zodra u een chauffeur en voertuig probeert toe te wijzen.
+
+<Steps>
+  <Step title="Markeer de order als ADR">
+    Schakel bij het aanmaken of bewerken van een order het **ADR**-vlag in de sectie ladinggegevens in en selecteer de relevante ADR-klasse.
+  </Step>
+  <Step title="Wijs een chauffeur toe">
+    Selecteert u een chauffeur voor de order, dan controleert Druma of die chauffeur de **ADR**-vaardigheidstag heeft (een eenvoudige ja/nee-vlag op het vaardighedenrecord van de chauffeur, onafhankelijk ingesteld van de velden ADR-certificaatnr. / ADR-vervaldatum). Heeft de chauffeur de ADR-vaardigheid niet gemarkeerd, dan toont de order een uitzondering **Ontbrekende ADR-documentatie / niet-capabele resource**.
+  </Step>
+  <Step title="Wijs een voertuig toe">
+    Selecteert u een voertuig, dan controleert Druma of de toegewezen **voertuigcategorie** van het voertuig gemarkeerd is als **ADR-capabel** — ook dit een eenvoudige ja/nee-vlag op de categorie, niet op de certificaatvervaldatum van het individuele voertuig. Een voertuig zonder toegewezen categorie wordt als onbeperkt behandeld (niet geblokkeerd).
+  </Step>
+</Steps>
+
+<Note>
+Deze controle is een booleaanse capaciteitsvlag, geen vervaldatum- of per-klassecontrole: ze kijkt helemaal niet naar de velden **ADR-certificaatnr.** / **ADR-vervaldatum** van de chauffeur of het geüploade ADR-document van het voertuig, en verifieert niet of het certificaat de specifieke ADR-klasse van de order dekt. De ADR-vaardigheidstag van de chauffeur en de voertuigcategorie van de truck actueel houden is wat deze controle zinvol maakt — een verlopen ADR-vervaldatum alleen blokkeert de toewijzing niet.
+</Note>
+
+---
 
 ## ADR-toeslag
 
-U kunt een automatische ADR-toeslag configureren in **Instellingen → Tariefkaarten**. Wanneer ADR is aangevinkt op een order, wordt de toeslag automatisch toegevoegd aan de voorgestelde prijs.
+Orders gemarkeerd als ADR bevatten automatisch een ADR-toeslag als regelpost op de factuur. Het tarief is een vast **forfaitair bedrag van €75 per order**, centraal geconfigureerd door Druma — er is momenteel geen instelling per bedrijf om dit bedrag te wijzigen.
+
+<Note>
+Worden sommige ADR-contracten anders geprijsd, dan kunt u het toeslagbedrag op individuele orders overschrijven nadat de order is aangemaakt — ga naar het tabblad Financiën van de order en bewerk de regelpost ADR-toeslag.
+</Note>
+
+---
+
+## Vervalwaarschuwingen
+
+ADR-certificaatvervalwaarschuwingen draaien op twee aparte schema's, afhankelijk van of het certificaat bij een chauffeur of een voertuig hoort:
+
+| Document | Kritiek | Waarschuwing |
+|---|---|---|
+| Chauffeur ADR-certificaat (veld ADR-vervaldatum) | Binnen 7 dagen, of al verlopen | Binnen 30 dagen |
+| Voertuig ADR-document (geüpload via Documentenoverzicht) | Binnen 14 dagen, of al verlopen | Binnen 60 dagen |
+
+<Warning>
+Vervalwaarschuwingen voor chauffeursdocumenten (die het veld ADR-vervaldatum dekken) hebben geen zichtbare instellingsschakelaar en zijn, voor bedrijven aangemaakt sinds midden 2026, helemaal niet voorzien van de inschakelvlag — in de praktijk gaat deze melding voor de meeste bedrijven momenteel niet af. Voertuigdocumentwaarschuwingen zitten achter **Automatiseringen & Functies → Vlootdocument-vervalwaarschuwingen**, wat **standaard uit staat** en ingeschakeld moet worden om vervalmeldingen te ontvangen. In beide gevallen tonen verlopen/kritieke badges nog steeds correct op de chauffeurs- en voertuigrecords — alleen de proactieve melding wordt beïnvloed.
+</Warning>
+
+Ongeacht of waarschuwingen zijn ingeschakeld, blokkeert een verlopen ADR-document op zichzelf geen ordertoewijzing — de toewijzingscontrole kijkt alleen naar de ADR-vaardigheidstag van de chauffeur en de ADR-capabele categorievlag van het voertuig (zie hierboven), niet naar deze vervaldatums. Houd vervaldatums actueel voor uw eigen overzicht, maar vertrouw er niet op om een niet-conforme toewijzing te stoppen.
+
+---
+
+## Gerelateerde artikelen
 
 <Card title="Vlootdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
-  Alle vlootdocumenten bijhouden met vervaldatumwaarschuwingen.
+  Volledige gids voor het bijhouden van alle voertuigdocumenttypes en het nalevingsoverzicht.
+</Card>
+
+<Card title="Orders aanmaken" icon="plus" href="/nl/planner/creating-orders">
+  Hoe u een order aanmaakt, ADR-lading markeert en chauffeurs en voertuigen toewijst.
 </Card>

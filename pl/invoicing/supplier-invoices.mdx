@@ -1,74 +1,172 @@
 ---
-title: "Faktury dostawców (Zobowiązania)"
-description: "Zarządzaj tym, co Twoja firma jest winna — podwykonawcom przewoźnikom, kartom paliwowym, warsztatom, opłatom drogowym, ubezpieczeniom i leasingowi — z AI-asystowaną ingencją faktur i pulpitem wiekowania zobowiązań."
+title: "Faktury dostawców (zobowiązania)"
+description: "Zarządzaj tym, co Twoja firma jest winna — podwykonawcom przewoźnikom, kartom paliwowym, warsztatom, opłatom drogowym, ubezpieczeniom i leasingowi — z AI-asystowaną ekstrakcją faktur i pulpitem wiekowania zobowiązań."
 icon: "building-2"
 ---
 
 ## Przegląd
 
-Moduł Zobowiązań (AP) śledzi każdą fakturę zakupową, którą Twoja firma otrzymuje od zewnętrznych dostawców. Obejmuje to podwykonawców przewoźników, dostawców kart paliwowych (DKV, UTA, AS24), dostawców usług warsztatowych i opon, operatorów opłat drogowych, firmy ubezpieczeniowe, firmy leasingowe i inne wydatki.
+Moduł Zobowiązań (AP) śledzi każdą fakturę zakupową, którą Twoja firma otrzymuje od zewnętrznych dostawców. Obejmuje to podwykonawców przewoźników, którym przekazujesz ładunki, dostawców kart paliwowych (DKV, UTA, AS24), dostawców usług warsztatowych i opon, operatorów opłat drogowych (ASFINAG, HU-GO), firmy ubezpieczeniowe, firmy leasingowe i wszelkie inne wydatki biznesowe.
+
+Druma ogranicza ręczne wprowadzanie dzięki dwóm mechanizmom: **podwykonawcy przewoźnicy są automatycznie odzwierciedlani na liście dostawców** (bez podwójnego wprowadzania), a **skrzynka e-mail wspomagana przez AI** może wyodrębniać i tworzyć projekty faktur zakupu bezpośrednio z e-maili dostawców. To, co nie zostanie automatycznie dopasowane, trafia do **Kolejki przeglądu** do szybkiej ludzkiej decyzji.
 
 ## Kartoteka dostawców
 
-Kartoteka dostawców to rejestr wszystkich firm, od których kupujesz.
+Kartoteka dostawców to rejestr wszystkich firm, od których kupujesz. To podstawa dla dopasowywania faktur i raportowania wiekowania zobowiązań.
 
-**Gdzie:** Finanse — Spedycja — karta **Dostawcy**
+**Gdzie:** Finanse → Spedycja → karta **Dostawcy**
 
 Każdy rekord dostawcy zawiera:
 
 | Pole | Opis |
-|------|------|
+|-------|------|
 | **Nazwa** | Nazwa firmy dostawcy |
 | **Numer VAT** | Używany do dopasowywania z wyodrębnionymi danymi faktur |
-| **E-mail** | Kontaktowy e-mail dostawcy |
+| **E-mail** | Kontaktowy e-mail dostawcy — używany też do dopasowywania białej listy nadawców |
 | **Typ dostawcy** | Przewoźnik / Paliwo / Warsztat / Opłaty drogowe / Ubezpieczenie / Leasing / Inne |
 | **Kraj** | Kraj rejestracji dostawcy |
 
+### Zarządzanie dostawcami
+
+- **Dodaj dostawcę:** kliknij **+ Dodaj dostawcę**, wypełnij formularz i zapisz.
+- **Edytuj dostawcę:** kliknij **Edytuj** na dowolnym wierszu dostawcy, aby zaktualizować jego dane.
+- **Usuń dostawcę:** kliknij **Usuń**. Usunięcie jest blokowane, jeśli dostawca ma powiązane faktury zakupu.
+
 <Note>
-Podwykonawcy przewoźnicy dodani w sekcji Podwykonawcy są automatycznie odzwierciedlani na liście Dostawców z typem **Przewoźnik**. Nie musisz dodawać ich ponownie tutaj.
+Podwykonawcy przewoźnicy dodani w sekcji Podwykonawcy są automatycznie odzwierciedlani na liście Dostawców z typem **Przewoźnik**. Nie musisz dodawać ich tutaj ponownie. Zmiany w rekordzie podwykonawcy (nazwa, VAT, e-mail) synchronizują się automatycznie z rekordem dostawcy.
 </Note>
 
 ## Skrzynka e-mail faktur dostawców
 
-Druma może odbierać faktury dostawców e-mailem, wyodrębniać kluczowe pola używając AI i automatycznie tworzyć projekt faktury zakupowej lub kierować dokument do Kolejki przeglądu.
+Druma może odbierać faktury dostawców e-mailem, wyodrębniać kluczowe pola za pomocą AI i albo automatycznie tworzyć projekt faktury zakupu, albo kierować dokument do Kolejki przeglądu.
 
 ### Konfiguracja
 
 <Steps>
   <Step title="Otwórz ustawienia firmy">
-    Przejdź do **Ustawienia — Firma** i przewiń do sekcji **E-mail faktur dostawców**.
+    Przejdź do **Ustawienia** → **Firma** i przewiń do sekcji **E-mail faktur dostawców**.
   </Step>
   <Step title="Włącz skrzynkę">
-    Włącz przełącznik **Włącz skrzynkę faktur dostawców**. Druma przydziela dedykowany przychodzący adres e-mail dla Twojej firmy.
+    Włącz **Włącz skrzynkę faktur dostawców**. Druma przydziela dedykowany przychodzący adres e-mail dla Twojej firmy (np. `invoices-acme@in.druma.io`). Adres jest pokazywany od razu po włączeniu.
   </Step>
   <Step title="Skopiuj adres e-mail">
-    Kliknij ikonę kopiowania obok adresu. Udostępnij go dostawcom i poproś o wysyłanie faktur PDF na ten adres.
+    Kliknij ikonę kopiowania obok adresu. Udostępnij ten adres swoim dostawcom i poproś ich o wysyłanie faktur PDF na niego. Możesz też przekazywać faktury z własnej skrzynki na ten adres.
   </Step>
   <Step title="Dodaj adresy nadawców do białej listy">
-    W sekcji **Biała lista nadawców** kliknij **+ Dodaj nadawcę** i wpisz adres e-mail każdego dostawcy. Tylko nadawcy na białej liście są przetwarzani.
+    W sekcji **Biała lista nadawców** bezpośrednio poniżej, kliknij **+ Dodaj nadawcę** i wpisz adres e-mail wysyłający każdego dostawcy. Przetwarzani są tylko nadawcy z białej listy — e-maile z nieznanych adresów są po cichu odrzucane jako zabezpieczenie przed spamem i podszywaniem się.
   </Step>
 </Steps>
 
-### Co się dzieje gdy faktura dociera
+<Warning>
+Zachowaj poufność adresu e-mail faktur dostawców. Nie publikuj go na swojej stronie internetowej ani w dokumentach zewnętrznych. Każdy, kto zna adres i nie jest na białej liście, jest blokowany, ale sam adres powinien być traktowany jako prywatny adres routingu.
+</Warning>
+
+<Note>
+Ta ścieżka przychodząca miała niedawno problemy z routingiem bramy, które powodowały, że e-maile na ten adres były po cichu odrzucane, zanim w ogóle dotarły do Druma. Jeśli dostawcy zgłaszają, że ich faktury nigdy nie docierają, albo nic nie pojawia się w Kolejce przeglądu mimo wysłanych e-maili, sprawdź z pomocą techniczną, czy problem routingu został w pełni rozwiązany dla Twojego środowiska, zanim założysz, że winny jest nadawca lub biała lista.
+</Note>
+
+### Co się dzieje, gdy faktura dociera
+
+Gdy dostawca wysyła PDF (lub obraz) na Twój adres skrzynki z nadawcy z białej listy:
 
 1. Druma pobiera załącznik i przechowuje go bezpiecznie.
-2. AI wyodrębnia: nazwę dostawcy, numer VAT, numer faktury, datę faktury, łączną kwotę, walutę i kategorię wydatku.
-3. Druma próbuje dopasować wyodrębnione dane do kartoteki dostawców.
+2. AI wyodrębnia: nazwę dostawcy, numer VAT, numer faktury, datę faktury, łączną kwotę, walutę i kategorię wydatku (paliwo / warsztat / opłaty drogowe / ubezpieczenie / leasing / inne).
+3. Druma próbuje dopasować wyodrębnione dane do kartoteki dostawców, używając numeru VAT i adresu e-mail.
+
+Wynik zależy od pewności dopasowania:
 
 | Wynik | Co się dzieje |
-|-------|--------------|
-| **Faktura przewoźnika z wysoką pewnością** | Kierowana do kolejki faktur przewoźnika |
-| **Dopasowanie dostawcy z wysoką pewnością** | Automatycznie tworzony projekt faktury zakupowej powiązanej z dostawcą |
+|---------|-------------|
+| **Faktura przewoźnika z wysoką pewnością** | Kierowana do kolejki faktur przewoźnika (dopasowana do faktury zakupu z konkretnego podzleconego zlecenia) |
+| **Dopasowanie dostawcy z wysoką pewnością** | Automatycznie tworzony projekt faktury zakupu, powiązany z dostawcą |
 | **Niska pewność lub nierozpoznany dostawca** | Pojawia się w **Kolejce przeglądu** do ręcznego dopasowania |
+
+<Note>
+Ekstrakcja AI odczytuje warstwę tekstową PDF. Zeskanowane obrazy o niskiej rozdzielczości lub tekst odręczny mogą skutkować niższymi wynikami pewności i częściej lądować w Kolejce przeglądu. Poproś dostawców o wysyłanie natywnych eksportów PDF z ich oprogramowania księgowego, gdzie to możliwe.
+</Note>
 
 ## Kolejka przeglądu
 
-Kolejka przeglądu to miejsce, gdzie trzymane są wszystkie faktury, które nie mogły być automatycznie zastosowane.
+Kolejka przeglądu to miejsce, gdzie przechowywane są wszystkie faktury — zarówno faktury przewoźnika, jak i ogólne faktury dostawców — które nie mogły zostać automatycznie zastosowane, oczekujące na ludzką decyzję.
 
-**Gdzie:** Finanse — Spedycja — karta **Kolejka faktur**
+**Gdzie:** Finanse → Spedycja → karta **Kolejka faktur**
+
+### Odczytywanie kolejki
+
+Każdy wiersz w kolejce pokazuje:
+
+- **Odznaka źródła** — **Przewoźnik** (ze skrzynki faktur przewoźnika) lub **Dostawca** (ze skrzynki faktur dostawcy)
+- **Nazwa dostawcy** — wyodrębniona przez AI lub dopasowana z kartoteki dostawców
+- **Kwota** i **Waluta**
+- **Status** — Oczekująca / Zastosowana / Odrzucona
+- **Data otrzymania**
+
+Użyj zakładek filtrów na górze, aby przełączać się między widokami **Oczekujące**, **Zastosowane** i **Odrzucone**. Możesz też filtrować wg typu dostawcy, aby skupić się na konkretnej kategorii (np. pokaż tylko faktury Paliwo).
+
+### Przetwarzanie pozycji kolejki
+
+<Steps>
+  <Step title="Rozwiń wiersz">
+    Kliknij w dowolnym miejscu wiersza kolejki, aby go rozwinąć. Rozwinięty widok pokazuje wszystkie pola wyodrębnione przez AI, dopasowanego (lub sugerowanego) dostawcę oraz dopasowaną fakturę zakupu, jeśli została znaleziona.
+  </Step>
+  <Step title="Przejrzyj wyodrębnione dane">
+    Sprawdź wyodrębnioną nazwę dostawcy, numer VAT, numer faktury, kwotę i datę względem PDF. Poprawki nie mogą być wprowadzane bezpośrednio w wierszu — jeśli dane są błędne, poprawisz je po zatwierdzeniu, na rekordzie faktury zakupu.
+  </Step>
+  <Step title="Wybierz akcję">
+
+    | Akcja | Kiedy użyć |
+    |--------|------------|
+    | **Zatwierdź** | Dane wyglądają poprawnie, a dopasowanie jest właściwe — tworzy lub potwierdza fakturę zakupu |
+    | **Odrzuć** | Faktura jest nieprawidłowa, duplikatem lub należy do innej firmy — usuwa ją z kolejki |
+    | **Przypisz ponownie** | Sugerowana faktura zakupu jest błędna — otwiera wyszukiwanie, aby wybrać właściwą |
+    | **Zobacz PDF** | Otwiera oryginalny dołączony plik w nowej karcie do ręcznej weryfikacji |
+
+  </Step>
+</Steps>
+
+## Pulpit wiekowanych zobowiązań
+
+Pulpit Wiekowanych zobowiązań pokazuje wszystko, co Twoja firma jest winna wszystkim dostawcom, pogrupowane wg tego, jak długo dług pozostaje niespłacony.
+
+**Gdzie:** Finanse → Analityka → karta **Wiekowane zobowiązania**
+
+### Odczytywanie pulpitu
+
+Góra strony pokazuje trzy karty podsumowania:
+
+- **Łącznie zaległe** — suma wszystkich niezapłaconych faktur zakupu
+- **Faktury wg przedziału wiekowania** — liczba w każdym przedziale
+- **Liczba dostawców** — odrębni dostawcy z zaległymi saldami
+
+Poniżej podsumowania sortowalna tabela wylistowuje każdego dostawcę z wierszem per faktura. Kliknij dowolny nagłówek kolumny, aby posortować. Kliknij wiersz dostawcy, aby go rozwinąć i zobaczyć poszczególne faktury.
+
+Przedziały wiekowania stosują standardową konwencję AP:
+
+| Przedział | Definicja |
+|--------|-----------|
+| **0–30 dni** | Bieżące — w standardowych warunkach płatności |
+| **31–60 dni** | Nieznacznie zaległe |
+| **61–90 dni** | Zaległe — zalecane działanie następcze |
+| **90+ dni** | Znacznie zaległe — eskaluj |
+
+<Note>
+Widok Wiekowanych zobowiązań jest ograniczony do 500 wierszy. Jeśli Twoja firma ma więcej niż 500 zaległych faktur zakupu, na górze tabeli pojawia się baner ostrzeżenia o obcięciu. Użyj przycisku **Eksportuj CSV**, aby pobrać pełny zbiór danych do analizy w Excelu.
+</Note>
+
+### Eksportowanie
+
+Kliknij **Eksportuj CSV**, aby pobrać pełny raport wiekowanych zobowiązań jako plik CSV. Eksport zawiera wszystkie wiersze dostawców niezależnie od limitu 500 wierszy w wyświetlaniu, co czyni go odpowiednim do uzgodnienia AP w Twoim systemie księgowym.
 
 ---
 
-<Card title="Generowanie faktur" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-Jak tworzyć faktury sprzedaży z dostarczonych zleceń.
+<Card title="Import wyciągów bankowych" icon="file-up" href="/pl/invoicing/bank-statement-import">
+  Prześlij pliki CAMT.053 lub MT940, aby automatycznie dopasować przychodzące płatności do otwartych faktur.
+</Card>
+
+<Card title="Śledzenie płatności" icon="circle-check" href="/pl/invoicing/payment-tracking">
+  Rejestruj i śledź płatności wobec faktur sprzedaży i przeglądaj zaległe salda.
+</Card>
+
+<Card title="Zarządzanie zaległościami" icon="triangle-alert" href="/pl/invoicing/overdue-management">
+  Monitoruj wiekowane należności i wysyłaj przypomnienia o płatności do zalegających klientów.
 </Card>

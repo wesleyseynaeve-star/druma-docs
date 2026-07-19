@@ -1,48 +1,113 @@
 ---
 title: "Áthelyezési rendelések"
-description: "Hogyan hozz létre és kezelj áthelyezési rendeléseket — nem bevételt termelő üres járatokat egy teherautó megfelelő helyre juttatásához a következő munkához."
+description: "Hogyan hozz létre és kezelj áthelyezési rendeléseket — nem bevételt termelő mozgásokat, hogy egy teherautó a megfelelő helyre kerüljön a következő munkához."
 icon: "route"
 ---
 
 ## Mi az az áthelyezési rendelés?
 
-Az áthelyezési rendelés egy nem bevételt termelő jármű-mozgás — a teherautó egy olyan helyszínre kerül, ahol a következő rakományát felvenni tudja. Ezeket a mozgásokat nyilván kell tartani a valós üzemeltetési költségek megismerése érdekében (üzemanyag, sofőrórák), még akkor is, ha nincs ügyfél és nincs bevétel.
+Egy áthelyezési rendelés egy **nem bevételt termelő mozgást** követ nyomon — amikor egy teherautót egyik helyről a másikra küldesz, rakomány szállítása nélkül egy fizető ügyfélnek. Gyakori helyzetek:
 
-Példák:
-- Teherautó visszaküldése saját bázisra egy szállítás után
-- Teherautó küldése egy raktárba a következő napi felvételhez
-- Tom jármű áthelyezése Tom felvételi pontjától Péter felvételi pontjára
+- Egy üres teherautó küldése egy szállítási pontból egy másik városba, ahol egy felvétel várja.
+- Egy teherautó visszavitele a saját telephelyre a munkahét végén.
+- Egy jármű áthelyezése egy sofőrcsere vagy szervizidőpont lefedésére.
+
+Az áthelyezési rendelések nem kerülnek kiszámlázásra az ügyfeleknek. Azért léteznek, hogy teljes láthatóságot adjanak a flottád mozgásairól, nyomon kövessék az üres kilométereket, és kiszámítsák az üzemeltetésed valódi költségét.
+
+---
 
 ## Áthelyezési rendelés létrehozása
 
 <Steps>
-  <Step title="Nyisd meg az Új rendelés panelt">
-    Kattints a **Rendelések → Új rendelés** menüpontra, vagy az **Új rendelés** gombra a tervezőtáblán.
+  <Step title="Nyisd meg az új rendelés formot">
+    Lépj a **Tervező → Rendelések → Új rendelés** menüpontra.
   </Step>
-  <Step title="Válaszd az Áthelyezési típust">
-    A **Rendelés típusa** mezőben válaszd az **Áthelyezési** opciót.
+  <Step title="Válaszd az Áthelyezést rendelés-típusként">
+    A **Rendelés típusa** mezőben válaszd az **Áthelyezés** opciót. Ez a harmadik lehetőség a Saját teherautó és az Alvállalkozásba adott mellett.
   </Step>
-  <Step title="Töltsd ki a részleteket">
-    - **Felvételi helyszín** — ahonnan a teherautó indul
-    - **Szállítási helyszín** — ahová a teherautónak mennie kell
-    - **Dátum és időablak**
-    - **Teherautó és sofőr**
-
-    Nem szükséges ügyfelet, árat vagy rakomány adatokat megadni.
+  <Step title="Válaszd ki az okot">
+    Válassz egy **Áthelyezési okot** a legördülő menüből. Ez egy fix, 5 okból álló lista — nincs Beállítások felület a hozzáadásukhoz vagy módosításukhoz:
+    - Üres visszatérés
+    - Flotta-áthelyezés
+    - Szervizhez szállítás
+    - Előre-pozicionálás
+    - Egyéb
   </Step>
-  <Step title="Mentés">
-    Az áthelyezési rendelés megjelenik a tervezőtáblán egy speciális "Áthelyezés" jelöléssel.
+  <Step title="Töltsd ki az útvonalat">
+    Add meg a felvételi címet (ahol a teherautó jelenleg van) és a szállítási címet (ahová mennie kell). A PTV útvonaltervező motor automatikusan kiszámítja a távolságot.
+  </Step>
+  <Step title="Adj hozzá megjegyzéseket (opcionális)">
+    Használd az **Áthelyezési megjegyzések** mezőt, hogy elmagyarázd, miért történik ez a mozgás. Ez csak a tervezők számára látható, a sofőrnek nem.
+  </Step>
+  <Step title="Rendelj hozzá egy teherautót, és mentsd el">
+    Válaszd ki a teherautót és a sofőrt, mint bármely rendelésnél. Mentsd el Vázlatként, vagy erősítsd meg azonnal.
   </Step>
 </Steps>
 
-## Áthelyezési rendelések a tervezőtáblán
+---
 
-Az áthelyezési rendelések külön vizuális stílussal jelennek meg a tervezőtáblán — nincs ügyfél neve, nincs ár, de mutatják a "Áthelyezés" feliratot és az útvonalat.
+## Miben különböznek az áthelyezési rendelések?
 
-## Költségnyilvántartás
+| Funkció | Normál rendelés | Áthelyezési rendelés |
+|---|---|---|
+| Ügyfélnek kiszámlázva | Igen | Nem |
+| Megjelenik a tervezőtáblán | Igen | Igen (**Áthelyezés** jelvénnyel) |
+| Beleszámít a bevételi jelentésekbe | Igen | Nem |
+| Nyomon követett távolság | `distance_km` | `distance_km_internal` |
+| A sofőr látja az alkalmazásban | Igen | Igen |
+| Státuszfolyamat | Teljes életciklus | Teljes életciklus |
 
-Bár az áthelyezési rendelések nem bevételtermelők, a Druma rögzíti a becsült üzemanyagköltséget (a HERE-útvonal és az üzemanyag díjszabása alapján) és a sofőr idejét. Ez a valós üzemelési költségek belső elemzéséhez és a haszonrés számításhoz szükséges.
+<Note>
+Az áthelyezési rendelések ugyanazt a státusz-életciklust követik, mint a normál rendelések (Vázlat → Kiszállítva). A sofőr a szokásos módon koppint a státuszokra az alkalmazásában. Az egyetlen különbség, hogy nincs hozzá kapcsolva ügyfél vagy ár.
+</Note>
+
+---
+
+## Belső megállók
+
+Egy áthelyezési mozgás során (vagy bármely rendelésnél) hozzáadhatsz **belső megállókat** — nem tervezett megállókat üzemanyagért, pihenőért, karbantartásért vagy más operatív igényért.
+
+A belső megállók külön vannak nyomon követve a rakodási és lerakodási megállóktól. Minden belső megállónak van:
+
+- **Cím** — hol történt a megálló.
+- **Ok-kód** — egy fix rendszerlistából választva: Pihenő, Tankolás, Éjszakázás, Személyes, Pótkocsi-parkolás, Egyéb.
+- **Megjegyzések** — szabad szöveges magyarázat.
+
+A belső megállók megjelennek a rendelés megálló-idővonalán, de vizuálisan megkülönböztetve a rakomány-megállóktól. Nem befolyásolják a kiszállítási ETA-számításokat.
+
+---
+
+## Ok-kódok
+
+### Áthelyezési okok
+
+Az 5 áthelyezési ok (Üres visszatérés, Flotta-áthelyezés, Szervizhez szállítás, Előre-pozicionálás, Egyéb) fixen be van építve a termékbe — jelenleg nincs Beállítások képernyő a hozzáadásukhoz, átnevezésükhöz vagy eltávolításukhoz.
+
+### Belső megálló okok
+
+A 6 belső megálló ok (Pihenő, Tankolás, Éjszakázás, Személyes, Pótkocsi-parkolás, Egyéb) szintén fix, és minden rendelés-típusra vonatkozik, nem csak az áthelyezési rendelésekre. Jelenleg nincs felület egyedi ok-kódok hozzáadásához ezek fölé, még akkor sem, ha a mögöttes képesség létezik API-szinten.
+
+---
+
+## Áthelyezés a tervezőtáblán
+
+Az áthelyezési rendelések egy kis szürke **Á** jelvénnyel jelennek meg a tervezőtáblán, ami megkönnyíti a megkülönböztetést a bevételt termelő rakományoktól. Beleszámítanak a flotta-kihasználtsági számításokba (a teherautó használatban van), de kimaradnak a bevételi KPI-kból.
+
+---
+
+## Jelentés
+
+Az áthelyezési kilométerek a `distance_km_internal` mezőn keresztül kerülnek nyomon követésre, és megjelennek:
+
+- **Útvonal-jövedelmezőségi jelentés** — külön "üres km" oszlopként, hogy lásd az egyes útvonalak kiszolgálásának valódi költségét.
+- **CO2-jelentés** — az áthelyezési mozgások hozzájárulnak a kibocsátáshoz, és külön kerülnek jelentésre a terhelt utaktól.
+
+---
 
 <Card title="Tervezőtábla" icon="calendar" href="/en/planner/planning-board">
-  Visszafordulás a vizuális diszpécser-táblához.
+  Lásd, hogyan jelennek meg az áthelyezési rendelések a diszpécseri táblán a normál rakományok mellett.
+</Card>
+
+<Card title="Rendelés létrehozása" icon="plus" href="/en/planner/creating-orders">
+  Teljes útmutató minden rendelés-típus létrehozásához — Saját teherautó, Alvállalkozásba adott és Áthelyezés.
 </Card>

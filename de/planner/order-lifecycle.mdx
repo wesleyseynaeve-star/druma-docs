@@ -1,133 +1,278 @@
 ---
 title: "Auftragslebenszyklus"
-description: "Wie ein Auftrag in Druma von Entwurf bis Fakturiert durchläuft — jeder Status, wer ihn auslöst und was bei jedem Schritt passiert."
+description: "Wie ein Auftrag in Druma von Entwurf bis Zugestellt durchläuft — jeder Status, wer ihn auslöst und was bei jedem Schritt passiert."
 icon: "circle-dot"
 ---
 
 ## Übersicht
 
-Jeder Auftrag in Druma folgt einem definierten Weg:
+Jeder Auftrag in Druma folgt einem definierten Weg. Das Verständnis des Lebenszyklus hilft Ihnen zu wissen, was in jeder Phase zu erwarten ist, wann Sie eingreifen sollten, und wie Sie mit Ausnahmen wie verspäteten Lieferungen oder vergessenen Statusaktualisierungen umgehen.
 
-**Entwurf → Bestätigt → Unterwegs → An der Abholung → Beladung → Unterwegs zur Lieferung → An der Lieferung → Entladung → Zugestellt → Fakturiert**
+<Note>
+Nutzt Ihr Unternehmen Aufgabenvorlagen, kann ein Auftrag auch eine **Aufgaben-Checkliste** tragen, die an dieselben Lebenszyklusphasen gebunden ist — siehe [Auftragsaufgaben & Workflow-Vorlagen](/en/planner/order-tasks).
+</Note>
+
+Hier der vollständige Ablauf:
+
+**Entwurf → Ausstehend → Zugewiesen → Abgefahren → An der Abholung → Beladung → Unterwegs → An der Lieferung → Entladung → Zugestellt**
+
+Es gibt außerdem zwei Ausnahmestatus — **Storniert** und **Fehlfahrt** — die gegen Ende behandelt werden.
+
+---
+
+## Statusfarben auf einen Blick
+
+Jeder Status hat eine einzige Farbe (Ton), die identisch zwischen Planungstafel und Fahrer-App geteilt wird — derselbe Status ist auf zwei Bildschirmen nie unterschiedlich gefärbt.
+
+| Status | Farbe |
+|---|---|
+| Entwurf | Grau (Schiefer) |
+| Ausstehend | Grau (Schiefer) |
+| Zugewiesen | Blau |
+| Abgefahren | Indigo |
+| An der Abholung | Gelb |
+| Beladung | Gelb |
+| Unterwegs | Smaragdgrün |
+| An der Lieferung | Himmelblau |
+| Entladung | Himmelblau |
+| Zugestellt | Grün |
+| Storniert | Rot |
+| Fehlfahrt | Rot |
+
+<Note>
+**Unterwegs** ist die Nachbeladungsetappe des LKW zur Lieferadresse — es ist der *einzige* Status, der vor Zugestellt grün dargestellt wird. **Abgefahren** (die Etappe zur Abholadresse) wird indigofarben dargestellt, eine visuell unterscheidbare Farbe, damit Sie auf einen Blick erkennen, ob ein LKW zum Beladen unterwegs oder bereits beladen und auf dem Weg zur Lieferung ist.
+</Note>
 
 ---
 
 ## Entwurf
 
-**Ausgelöst von:** Planer speichert einen neuen Auftrag ohne Bestätigung.
+**Ausgelöst von:** Planer speichert einen neuen Auftrag, ohne ihn zu bestätigen.
 
-Der Auftrag ist im System vorhanden, aber noch nicht aktiv. Der Fahrer sieht ihn nicht in seiner App.
+**Wer kann es auslösen:** Nur der Planer.
+
+Der Auftrag existiert im System, ist aber noch nicht aktiv. Der Fahrer sieht ihn nicht in seiner App. Er erscheint grau auf der Planungstafel.
+
+**Verfügbare Aktionen ab Entwurf:**
+- Jedes Feld bearbeiten
+- Den Auftrag bestätigen (wechselt zu Ausstehend)
+- Den Auftrag löschen
+- Den Auftrag stornieren
+
+Nutzen Sie Entwurf, wenn ein Kunde eine vorläufige Buchung gemacht, aber noch nicht bestätigt hat, oder während Sie den Auftrag aufbauen, aber noch auf Details warten.
 
 ---
 
-## Bestätigt
+## Ausstehend
 
-**Ausgelöst von:** Planer klickt auf **Auftrag bestätigen**.
+**Ausgelöst von:** Planer klickt auf **Auftrag bestätigen** (von der Auftragsseite oder Planungstafel).
 
-Der Auftrag ist jetzt aktiv. Der zugewiesene Fahrer erhält eine Push-Benachrichtigung in seiner App. Der Auftrag erscheint blau auf der Planungstafel.
+**Wer kann es auslösen:** Nur der Planer.
+
+Der Auftrag ist nun aktiv und bereit, einem LKW und Fahrer zugeordnet zu werden — nur noch nicht zugewiesen. Er erscheint weiterhin **grau** auf der Planungstafel, im selben Ton wie Entwurf, da noch kein LKW dafür festgelegt ist.
+
+**Gesendete Benachrichtigungen:**
+- Optional: automatische Bestätigungs-E-Mail an den Kunden (falls in Ihren Kontoeinstellungen aktiviert)
+
+**Verfügbare Aktionen ab Ausstehend:**
+- Jedes Feld bearbeiten
+- Einen LKW und Fahrer zuweisen (wechselt zu Zugewiesen)
+- Den Auftrag stornieren
 
 ---
 
-## Unterwegs
+## Zugewiesen
 
-**Ausgelöst von:** Fahrer tippt auf **Unterwegs** in seiner App, wenn er zum Abholort aufbricht.
+**Ausgelöst von:** Planer weist dem Auftrag einen LKW und Fahrer zu — über das Neuer-Auftrag-Formular, die Planungstafel, oder das Auftragsdetailpanel.
 
-Der Auftrag wird grün auf der Planungstafel.
+**Wer kann es auslösen:** Nur der Planer.
+
+Der Auftrag hat nun einen LKW und Fahrer zugeordnet. Der zugewiesene Fahrer erhält eine Push-Benachrichtigung in seiner App mit den Auftragsdetails — Abholadresse, Lieferadresse, Datum und die von Ihnen hinzugefügten Fahrernotizen.
+
+Der Auftrag erscheint **blau** auf der Planungstafel.
+
+**Verfügbare Aktionen ab Zugewiesen:**
+- Die meisten Felder bearbeiten (Änderungen lösen eine neue Benachrichtigung an den Fahrer aus)
+- LKW oder Fahrer neu zuweisen
+- Den Auftrag stornieren
+- Zu Abgefahren wechseln (Fahreraktion oder Planer-Überschreibung)
+
+---
+
+## Abgefahren
+
+**Ausgelöst von:** Fahrer tippt in seiner App auf **Abgefahren**, wenn er zum Abholort aufbricht.
+
+**Wer kann es auslösen:** Fahrer (primäre Aktion) oder Planer (manuelle Überschreibung).
+
+Dieser Status bedeutet, der Fahrer ist auf dem Weg zum Abholpunkt. Der Auftrag wird **indigofarben** auf der Planungstafel.
 
 <Note>
-Wenn ein Fahrer vergisst, auf "Unterwegs" zu tippen, können Sie den Status manuell über die Auftragsseite setzen.
+Vergisst ein Fahrer, auf Abgefahren zu tippen, können Sie den Status manuell über die Auftragsseite setzen. Öffnen Sie den Auftrag, klicken Sie auf **Status überschreiben**, und wählen Sie Abgefahren. Notieren Sie immer den Grund im Kommentarfeld, damit Sie einen Nachweis haben.
 </Note>
 
 ---
 
 ## An der Abholung
 
-**Ausgelöst von:** Fahrer tippt auf **An der Abholung angekommen**.
+**Ausgelöst von:** Fahrer tippt auf **An der Abholung**, wenn er die Ladeadresse erreicht.
 
-Die **Wartezeitkuhr** startet automatisch.
+**Wer kann es auslösen:** Fahrer oder Planer.
+
+Der Fahrer ist am Ladeort angekommen und wartet auf Abfertigung. Dieser Status startet automatisch die **Wartezeituhr** — nützlich, um Verzögerungen an der Laderampe zu dokumentieren.
+
+**Gesendete Benachrichtigungen:**
+- Optional: automatische Benachrichtigung an den Kunden oder dessen Kontakt am Ladeort (pro Kunde konfigurierbar)
 
 ---
 
 ## Beladung
 
-**Ausgelöst von:** Fahrer tippt auf **Beladung gestartet**.
+**Ausgelöst von:** Fahrer tippt auf **Beladung**, wenn Ware auf den LKW geladen wird.
 
-Die Wartezeitkuhr stoppt.
+**Wer kann es auslösen:** Fahrer oder Planer.
+
+Die Wartezeituhr stoppt, sobald die Beladung beginnt. Jede erfasste Wartezeit wird am Auftrag gespeichert und kann für Zuschlagsberechnungen genutzt werden.
 
 ---
 
-## Unterwegs zur Lieferung
+## Unterwegs
 
-**Ausgelöst von:** Fahrer tippt auf **Von Abholung abgefahren** nach Abschluss der Beladung.
+**Ausgelöst von:** Fahrer tippt auf **Unterwegs**, sobald die Beladung abgeschlossen ist (und der CMR unterschrieben ist, falls zutreffend).
 
-Der LKW ist jetzt auf dem Weg zur Lieferadresse.
+**Wer kann es auslösen:** Fahrer oder Planer.
+
+Der LKW ist nun auf dem Weg zur Lieferadresse. Der Auftrag wird **smaragdgrün** auf der Planungstafel — dies ist der einzige laufende Status, der grün dargestellt wird, sodass ein beladener, fahrender LKW leicht erkennbar ist. Der Auftrag zeigt eine geschätzte Ankunftszeit basierend auf der PTV-Routenberechnung.
+
+<Note>
+Dies ist ein guter Zeitpunkt, um dem Empfänger eine proaktive Verspätungsbenachrichtigung zu senden, falls der Fahrer hinter dem Zeitplan liegt. Nutzen Sie die Schaltfläche **ETA senden** auf der Auftragsseite, um per SMS oder E-Mail die aktuelle geschätzte Ankunft zu senden.
+</Note>
 
 ---
 
 ## An der Lieferung
 
-**Ausgelöst von:** Fahrer tippt auf **An der Lieferung angekommen**.
+**Ausgelöst von:** Fahrer tippt auf **An der Lieferung**, wenn er die Lieferadresse erreicht.
 
-Die Wartezeitkuhr startet erneut.
+**Wer kann es auslösen:** Fahrer oder Planer.
+
+Die Wartezeituhr startet am Lieferpunkt erneut. Ab diesem Moment werden etwaige Entladeverzögerungen erfasst. Der Auftrag erscheint in einem Himmelblau-Ton.
 
 ---
 
 ## Entladung
 
-**Ausgelöst von:** Fahrer tippt auf **Entladung gestartet**.
+**Ausgelöst von:** Fahrer tippt auf **Entladung**, wenn Ware vom LKW entladen wird.
 
-Wartezeit an der Lieferung stoppt.
+**Wer kann es auslösen:** Fahrer oder Planer.
+
+Die Wartezeit bei der Lieferung stoppt. Der Fahrer kann nun die unterschriebenen Lieferdokumente vorbereiten.
 
 ---
 
 ## Zugestellt
 
-**Ausgelöst von:** Fahrer tippt auf **Zugestellt** und lädt optional ein Foto des unterzeichneten CMR oder Lieferscheins hoch.
+**Ausgelöst von:** Fahrer tippt auf **Zugestellt** und lädt optional ein Foto des unterschriebenen CMR oder Lieferscheins hoch.
 
-Der Transport ist abgeschlossen. Der Auftrag wird dunkelgrün auf der Planungstafel.
+**Wer kann es auslösen:** Fahrer (primäre Aktion) oder Planer.
 
----
+Der Transport ist abgeschlossen. Der Auftrag wird grün auf der Planungstafel und wechselt in der Auftragsliste zum Tab **Abgeschlossen**.
 
-## Fakturiert
+**Gesendete Benachrichtigungen:**
+- Optional: Lieferbestätigungs-E-Mail an den Kunden mit Zeitstempel und etwaigen hochgeladenen Dokumenten.
 
-**Ausgelöst von:** Planer erstellt eine Rechnung für den Auftrag.
-
-Der Auftrag ist vollständig abgeschlossen und schreibgeschützt.
+**Verfügbare Aktionen ab Zugestellt:**
+- Rechnung für den Auftrag erstellen (der Auftrag selbst bleibt im Status Zugestellt — das Erstellen einer Rechnung ändert ihn nicht; die Rechnung wird als eigener, verknüpfter Datensatz erstellt)
+- Lieferdokumente hochladen oder ansehen (CMR-Foto, POD)
+- Eine Streit- oder Schadensnotiz hinzufügen
 
 ---
 
 ## Storniert
 
-Aufträge können im Status **Entwurf** oder **Bestätigt** ohne besondere Schritte storniert werden.
+**Ausgelöst von:** Planer storniert den Auftrag.
+
+**Wer kann es auslösen:** Nur der Planer.
 
 <Warning>
-Sie können einen Auftrag, der sich im Status "Unterwegs" oder später befindet, nicht ohne einen manuellen Prozess stornieren. Kontaktieren Sie Ihren Kontoadministrator.
+Sie können einen Auftrag im Status **Entwurf** oder **Ausstehend** ohne besondere Schritte stornieren. Sie können jedoch einen Auftrag, der Abgefahren oder später ist, **nicht** ohne einen manuellen Prozess stornieren. Kontaktieren Sie Ihren Kontoadministrator, wenn Sie einen aktiven Auftrag stornieren müssen — dies erfordert die Protokollierung des Grundes und kann Fahrerzahlungen beeinflussen.
 </Warning>
+
+Stornierte Aufträge bleiben zu Prüfzwecken im System. Sie sind in der Auftragsliste unter dem Filter **Storniert** sichtbar.
+
+---
+
+## Fehlfahrt
+
+**Ausgelöst von:** Planer erklärt eine Fehlfahrt aus dem Auftragsdetailpanel.
+
+**Wer kann es auslösen:** Nur der Planer.
+
+Eine Fehlfahrt gilt für Aufträge, bei denen der Fahrer **bereits abgefahren** ist, die Fahrt aber abgebrochen werden muss — wegen Kundenstornierung, höherer Gewalt, oder einer Unternehmensentscheidung. Dies unterscheidet sich von einer regulären Stornierung, da bereits echte Kosten entstanden sind (Kraftstoff, Fahrerzeit, Leerkilometer).
+
+Sie können eine Fehlfahrt aus jedem dieser Status erklären: **Abgefahren, An der Abholung, Beladung, Unterwegs, An der Lieferung, Entladung**.
+
+Der Planer muss einen Grundcode, den aktuellen Standort des Fahrers, gefahrene Leerkilometer angeben, und optional den Auftrag zur Kundenbelastung markieren.
+
+<Warning>
+Das Erklären einer Fehlfahrt **kann nicht rückgängig gemacht werden**. Der Auftrag wechselt dauerhaft in den Status Fehlfahrt, und Grund, Fahrerstandort, Leerkilometer und (falls aktiviert) ein Kundenbelastungsbetrag werden direkt am Auftrag für die spätere Rechnungsstellung erfasst — kein separater Lohn- oder Gebührendatensatz wird automatisch erzeugt.
+</Warning>
+
+Siehe [Fehlfahrt](/de/planner/wasted-journey) für den vollständigen Leitfaden.
 
 ---
 
 ## Manuelle Statusüberschreibungen
 
-Als Planer können Sie den Status immer manuell überschreiben, wenn Fahrer vergessen, Statusaktualisierungen vorzunehmen:
+Fahrer vergessen manchmal, Statusaktualisierungen zu tippen — es passiert. Als Planer können Sie den Status jederzeit manuell überschreiben:
 
 <Steps>
-  <Step title="Auftrag öffnen">
-    Gehen Sie zu Planer → Aufträge und öffnen Sie den Auftrag.
+  <Step title="Den Auftrag öffnen">
+    Gehen Sie zu Planer → Aufträge und suchen Sie den Auftrag. Klicken Sie darauf, um die Detailseite zu öffnen.
   </Step>
-  <Step title="Status überschreiben klicken">
-    Klicken Sie auf die Schaltfläche **Status überschreiben**.
+  <Step title="Auf Status überschreiben klicken">
+    Finden Sie die Schaltfläche **Status überschreiben** neben dem aktuellen Statusindikator oben auf der Seite.
   </Step>
-  <Step title="Richtigen Status auswählen">
+  <Step title="Den richtigen Status auswählen">
     Wählen Sie den Status, den der Auftrag jetzt haben sollte.
   </Step>
-  <Step title="Notiz hinzufügen">
-    Geben Sie eine kurze Erklärung ein (z. B. „Fahrer hat vergessen zu aktualisieren — telefonisch bestätigt").
+  <Step title="Eine Notiz hinzufügen">
+    Geben Sie eine kurze Erklärung ein (z. B. „Fahrer hat vergessen zu aktualisieren — telefonisch bestätigt"). Dies wird im Auftragsverlauf gespeichert.
   </Step>
   <Step title="Speichern">
-    Klicken Sie auf **Überschreibung anwenden**.
+    Klicken Sie auf **Überschreibung anwenden**. Der Status aktualisiert sich sofort, und die Änderung wird mit Ihrem Namen und einem Zeitstempel protokolliert.
   </Step>
 </Steps>
 
-<Card title="Heute-Ansicht" icon="sun" href="/en/planner/today-view">
-  Überwachen Sie alle aktiven Aufträge für heute auf Ihrem täglichen Dashboard.
+---
+
+## Automatische vs. manuelle Übergänge
+
+| Status | Automatisch | Manuell (Fahrer) | Manuell (Planer) |
+|---|---|---|---|
+| Entwurf | — | — | Ja |
+| Ausstehend | — | — | Ja |
+| Zugewiesen | — | — | Ja |
+| Abgefahren | — | Ja | Ja (Überschreibung) |
+| An der Abholung | — | Ja | Ja (Überschreibung) |
+| Beladung | — | Ja | Ja (Überschreibung) |
+| Unterwegs | — | Ja | Ja (Überschreibung) |
+| An der Lieferung | — | Ja | Ja (Überschreibung) |
+| Entladung | — | Ja | Ja (Überschreibung) |
+| Zugestellt | — | Ja | Ja (Überschreibung) |
+| Storniert | — | — | Ja |
+| Fehlfahrt | — | — | Ja (aus aktiven Status) |
+
+---
+
+<Card title="Startseiten-Dashboard" icon="gauge" href="/de/planner/today-view">
+  Überwachen Sie alle aktiven Aufträge, sehen Sie Live-Fahrerpositionen, und bearbeiten Sie Warnungen von Ihrem Live-Betriebsdashboard.
+</Card>
+
+<Card title="Auftragsaufgaben & Workflow-Vorlagen" icon="list-check" href="/en/planner/order-tasks">
+  Konfigurierbare Aufgaben-Checklisten, gebunden an diese Lebenszyklusphasen, sowie wie Admins die zugrunde liegenden Vorlagen bauen.
+</Card>
+
+<Card title="Rechnungen erstellen" icon="file-invoice" href="/de/invoicing/generating-invoices">
+  Sobald ein Auftrag Zugestellt ist, erfahren Sie, wie Sie die Rechnung erstellen und an Ihren Kunden senden.
 </Card>

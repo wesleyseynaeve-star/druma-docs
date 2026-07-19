@@ -1,63 +1,121 @@
 ---
 title: "Certificats ADR"
-description: "Comment gérer les certificats ADR des chauffeurs et des véhicules dans Druma — suivi des expirations et avertissements sur le tableau de planification."
-icon: "triangle-exclamation"
+description: "Suivez la certification ADR des chauffeurs et des véhicules, imposez la conformité sur les commandes de marchandises dangereuses, et gérez le supplément ADR automatique."
+icon: "radiation"
 ---
 
-## Vue d'ensemble
-
-ADR est l'accord européen sur le transport international de marchandises dangereuses par route. Les chauffeurs et les véhicules transportant des marchandises dangereuses doivent tous deux détenir des certificats ADR valides.
-
-Druma vérifie automatiquement les certificats ADR avant d'autoriser l'affectation d'un camion à une commande ADR.
+L'ADR est l'accord européen relatif au transport international de marchandises dangereuses par route. Si votre entreprise transporte des matières dangereuses — produits chimiques, inflammables, gaz, explosifs, matières radioactives, ou autres substances réglementées — vos chauffeurs et vos véhicules doivent tous deux détenir des certificats ADR valides. Druma suit ces certificats et impose la conformité automatiquement au moment de l'affectation d'une commande.
 
 ---
 
-## Enregistrer un certificat ADR
+## Ce que couvre la certification ADR
 
-**Pour un chauffeur :**
-Accédez à Flotte → Chauffeurs → profil du chauffeur → onglet Documents → Ajouter → **Certificat ADR chauffeur**.
+### Certificat ADR chauffeur
 
-**Pour un véhicule :**
-Accédez à Flotte → Véhicules → profil du véhicule → onglet Documents → Ajouter → **Certificat ADR véhicule**.
+Un certificat ADR chauffeur prouve que le chauffeur a suivi une formation ADR agréée et réussi l'examen requis. Les certificats ADR sont délivrés pour des classes spécifiques de marchandises dangereuses, et le certificat du chauffeur doit couvrir la classe de marchandises transportées. Les certificats sont valables cinq ans et doivent être renouvelés.
 
-Saisissez la date d'expiration et téléchargez une copie du certificat.
+### Certificat ADR véhicule
 
----
+Certaines classes ADR — notamment la Classe 1 (explosifs) et la Classe 7 (matières radioactives) — exigent que le véhicule lui-même soit spécialement équipé et certifié. Le certificat ADR véhicule confirme que le véhicule répond aux normes d'équipement et de construction pour ces classes.
 
-## Vérifications ADR sur le tableau de planification
-
-Lorsque vous affectez un camion à une commande marquée ADR, Druma vérifie :
-
-1. Le véhicule a un certificat ADR valide
-2. Le chauffeur principal a un certificat ADR valide
-3. Si un deuxième chauffeur est assigné, il a également un certificat ADR valide
-
-**Résultat de la vérification :**
-
-| Résultat | Affichage |
-|---|---|
-| ADR valide pour les deux | Affectation autorisée |
-| ADR expirant dans 7 jours | Avertissement (affectation autorisée) |
-| ADR expiré ou manquant | Erreur (affectation bloquée) |
+Tous les transports ADR ne nécessitent pas de certificat véhicule — pour de nombreuses classes, seul le certificat chauffeur est requis, avec l'emballage et la signalisation corrects.
 
 ---
 
-## Classes ADR
+## Ajouter la certification ADR à un chauffeur
 
-Druma prend en charge toutes les classes de marchandises dangereuses ADR :
+<Steps>
+  <Step title="Ouvrez la fiche chauffeur">
+    Accédez à **Flotte → Chauffeurs** et cliquez sur le nom du chauffeur.
+  </Step>
+  <Step title="Accédez à l'onglet Certificats">
+    Cliquez sur l'onglet **Certificats** de la page de détail du chauffeur.
+  </Step>
+  <Step title="Saisissez le certificat ADR">
+    Sous **Certificat ADR**, saisissez le numéro de certificat dans **N° certificat ADR** et définissez **Expiration ADR**. Ce sont deux champs simples — il n'y a pas de flux « Ajouter un certificat » séparé ni de sélecteur pour les classes ADR couvertes par le certificat.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**. La ligne et la fiche du chauffeur affichent désormais le statut d'expiration ADR via le badge d'expiration.
+  </Step>
+</Steps>
 
-| Classe | Description |
-|---|---|
-| Classe 1 | Explosifs |
-| Classe 2 | Gaz |
-| Classe 3 | Liquides inflammables |
-| Classe 4 | Solides inflammables |
-| Classe 5 | Substances comburantes et peroxydes |
-| Classe 6 | Substances toxiques et infectieuses |
-| Classe 7 | Matières radioactives |
-| Classe 8 | Substances corrosives |
-| Classe 9 | Autres substances dangereuses |
+<Note>
+Druma ne stocke actuellement pas de téléversement de scan de certificat ni de liste des classes couvertes pour le certificat ADR chauffeur — seulement le numéro de certificat et sa date d'expiration.
+</Note>
 
-<Card title="Documents de flotte" icon="file-check" href="/fr/fleet-compliance/fleet-documents">
-  Gestion de tous les documents réglementaires de votre flotte.
+---
+
+## Ajouter la certification ADR à un véhicule
+
+<Steps>
+  <Step title="Ouvrez l'aperçu des documents">
+    Accédez à **Flotte → Aperçu des documents** — c'est une page Flotte de premier niveau séparée, pas un onglet de la vue de détail véhicule.
+  </Step>
+  <Step title="Téléversez le certificat d'équipement ADR">
+    Cliquez sur **Téléverser un document**, sélectionnez **ADR** comme type de document, choisissez le véhicule, saisissez la date d'expiration, et téléversez le scan du certificat.
+  </Step>
+  <Step title="Enregistrer">
+    Le statut ADR du véhicule est désormais suivi aux côtés de ses autres documents de flotte dans la grille de l'aperçu des documents.
+  </Step>
+</Steps>
+
+---
+
+## Application ADR au niveau de la commande
+
+Lorsque vous créez une commande et la marquez comme expédition ADR, Druma vérifie automatiquement la conformité quand vous essayez d'affecter un chauffeur et un véhicule.
+
+<Steps>
+  <Step title="Marquez la commande comme ADR">
+    Lors de la création ou de la modification d'une commande, activez l'indicateur **ADR** dans la section détails de la cargaison et sélectionnez la classe ADR concernée.
+  </Step>
+  <Step title="Affectez un chauffeur">
+    Quand vous sélectionnez un chauffeur pour la commande, Druma vérifie si ce chauffeur détient l'étiquette de compétence **ADR** (un simple indicateur oui/non sur la fiche de compétences du chauffeur, défini indépendamment des champs N° certificat ADR / Expiration ADR). Si le chauffeur n'a pas la compétence ADR étiquetée, la commande affiche une exception **Documentation ADR manquante / ressource non habilitée**.
+  </Step>
+  <Step title="Affectez un véhicule">
+    Quand vous sélectionnez un véhicule, Druma vérifie si la **catégorie de véhicule** assignée est marquée **habilitée ADR** — là encore un simple indicateur oui/non sur la catégorie, pas sur la date d'expiration du certificat du véhicule individuel. Un véhicule sans catégorie assignée est traité comme non restreint (pas bloqué).
+  </Step>
+</Steps>
+
+<Note>
+Cette vérification est un indicateur booléen de capacité, pas une vérification d'expiration ou par classe : elle ne consulte pas du tout les champs **N° certificat ADR** / **Expiration ADR** du chauffeur ni le document ADR téléversé du véhicule, et ne vérifie pas que le certificat couvre la classe ADR spécifique de la commande. Maintenir à jour l'étiquette de compétence ADR du chauffeur et la catégorie de véhicule du camion est ce qui garde cette vérification pertinente — une date d'Expiration ADR expirée à elle seule ne bloquera pas l'affectation.
+</Note>
+
+---
+
+## Supplément ADR
+
+Les commandes marquées ADR incluent automatiquement un supplément ADR comme ligne sur la facture. Le tarif est un **forfait fixe de 75 € par commande**, configuré centralement par Druma — il n'existe actuellement pas de paramètre par entreprise pour modifier ce montant.
+
+<Note>
+Si certains contrats ADR sont tarifés différemment, vous pouvez remplacer le montant du supplément sur des commandes individuelles après la création de la commande — allez dans l'onglet Finances de la commande et modifiez la ligne de supplément ADR.
+</Note>
+
+---
+
+## Alertes d'expiration
+
+Les alertes d'expiration de certificat ADR fonctionnent selon deux calendriers distincts, selon que le certificat est celui d'un chauffeur ou d'un véhicule :
+
+| Document | Critique | Avertissement |
+|---|---|---|
+| Certificat ADR chauffeur (champ Expiration ADR) | Sous 7 jours, ou déjà expiré | Sous 30 jours |
+| Document ADR véhicule (téléversé via l'aperçu des documents) | Sous 14 jours, ou déjà expiré | Sous 60 jours |
+
+<Warning>
+Les alertes d'expiration de documents chauffeur (qui couvrent le champ Expiration ADR) n'ont pas de bascule de paramètre visible et, pour les entreprises créées depuis mi-2026, ne sont pas du tout initialisées avec l'indicateur d'activation — en pratique, cette notification ne se déclenche actuellement pas pour la plupart des entreprises. Les alertes de documents véhicule sont conditionnées par **Automatisations et fonctionnalités → Alertes d'expiration des documents de flotte**, **désactivées par défaut** et devant être activées pour recevoir des notifications d'expiration. Dans les deux cas, les badges expiré/critique s'affichent toujours correctement sur les fiches chauffeur et véhicule — seule la notification proactive est affectée.
+</Warning>
+
+Que les alertes soient activées ou non, un document ADR expiré ne bloque pas à lui seul une affectation de commande — la vérification d'affectation ne regarde que l'étiquette de compétence ADR du chauffeur et l'indicateur de catégorie habilitée ADR du véhicule (voir ci-dessus), pas ces dates d'expiration. Gardez les dates d'expiration à jour pour votre propre visibilité, mais ne comptez pas dessus pour arrêter une affectation non conforme.
+
+---
+
+## Articles associés
+
+<Card title="Documents de flotte" icon="folder-open" href="/fr/fleet-compliance/fleet-documents">
+  Guide complet pour suivre tous les types de documents véhicule et l'aperçu de conformité.
+</Card>
+
+<Card title="Créer des commandes" icon="plus" href="/fr/planner/creating-orders">
+  Comment créer une commande, marquer une cargaison ADR, et affecter chauffeurs et véhicules.
 </Card>

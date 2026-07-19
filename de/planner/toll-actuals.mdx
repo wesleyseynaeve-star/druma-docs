@@ -1,39 +1,122 @@
 ---
 title: "Mautbelege & Abgleich"
-description: "Vergleichen Sie HERE-geschätzte Maut mit vom Fahrer protokollierten tatsächlichen Werten pro Land."
+description: "Vergleichen Sie PTV-geschätzte Maut mit vom Fahrer protokollierten tatsächlichen Werten pro Land, importieren Sie Mautpositionen aus Kraftstoffkarten, und konfigurieren Sie die Kunden-Weitergaberichtlinie."
 icon: "receipt"
 ---
 
 ## Übersicht
 
-HERE gibt beim Erstellen eines Auftrags eine Mautschätzung pro Land. Fahrer können tatsächlich gezahlte Maut aus der PWA protokollieren. Druma vergleicht Schätzung vs. Tatsächlich.
+Mautkosten sind ein bedeutender und oft undurchsichtiger Teil des Straßengüterverkehrs. PTVs Routing-API gibt Ihnen bei Auftragserstellung eine Mautschätzung pro Land, aber der tatsächlich auf der Straße gezahlte Betrag weicht regelmäßig ab — unterschiedliche Fahrzeugkategorien, fehlende Vignetten, saisonale Tarife und Grenzübertrittsabweichungen verursachen alle Drift.
+
+Druma schließt diese Lücke, indem Fahrer Mautbelege direkt aus der PWA protokollieren können, und zeigt dann ein farbcodiertes Abgleichspanel im Auftragsdetail, damit Planer große Abweichungen erkennen, bevor sie Margen oder Kundenrechnungen beeinflussen.
 
 ---
 
 ## Wie Fahrer Mautbelege protokollieren
 
-In der Fahrer-PWA: Tippen Sie auf **Maut protokollieren** → Land auswählen → Betrag eingeben → Bestätigen.
+Während einer aktiven Ladung zeigt die PWA des Fahrers auf dem Ladungsdetailbildschirm eine Schaltfläche **Maut protokollieren**. Ein Tap öffnet das Blatt **Mautbeleg**.
+
+<Steps>
+  <Step title="Auf Maut protokollieren tippen">
+    Die Schaltfläche ist sichtbar, wann immer der Ladungsstatus An der Abholung, Beladung, Unterwegs, An der Lieferung oder Entladung ist — jeder Status, in dem der LKW auf der Straße ist.
+  </Step>
+  <Step title="Die Mautdetails eingeben">
+    Füllen Sie aus:
+    - **Betrag (EUR)** — das Pflichtfeld: die gezahlte Maut, in EUR umgerechnet
+    - **Lokaler Betrag** (optional) — der Betrag in der Landeswährung, plus Währungscode und Wechselkurs, falls Sie auch die Originalwerte erfassen möchten
+    - **Land** — anhand der aktuellen GPS-Position vorausgefüllt, aber bearbeitbar
+    - **Notizen** (optional) — Autobahnreferenz, Kassennummer, oder ein Fahrerkommentar
+  </Step>
+  <Step title="Ein Beleg-Foto anhängen (optional)">
+    Tippen Sie auf das Kamera- oder Datei-Symbol, um ein Foto des Belegs anzuhängen. Akzeptierte Formate: JPEG, PNG, WebP, HEIC, PDF. Maximale Dateigröße: 5 MB.
+  </Step>
+  <Step title="Bestätigen">
+    Tippen Sie auf **Speichern**. Der Beleg wird sofort gespeichert.
+  </Step>
+</Steps>
+
+### Offline-Unterstützung
+
+Mautbelege funktionieren offline. Ist der Fahrer in einem Gebiet ohne Verbindung, wird der Beleg lokal eingereiht und automatisch synchronisiert, sobald das Gerät wieder verbunden ist. Der Planer sieht ihn im Abgleichspanel erscheinen, sobald die Synchronisierung abgeschlossen ist.
 
 ---
 
-## Abgleich in der Auftragsdetailansicht
+## Das Abgleichspanel (Planer-Ansicht)
 
-| Spalte | Bedeutung |
+Öffnen Sie den Detailbereich eines beliebigen Auftrags und scrollen Sie zum Abschnitt **Mautabgleich**. Das Panel zeigt eine Tabelle mit einer Zeile pro Land, für das entweder eine PTV-Schätzung oder ein protokollierter Tatsächlich-Wert existiert.
+
+### Abweichungs-Farbcodierung
+
+| Farbe | Bedingung | Bedeutung |
+|---|---|---|
+| Grün | Abweichung ≤ 5 % | Tatsächlicher Wert liegt im erwarteten Bereich |
+| Gelb | Abweichung 6–15 % | Moderate Abweichung — Prüfung lohnt sich |
+| Rot | Abweichung > 15 % | Erhebliche Abweichung — Belege prüfen |
+| Grau | Keine PTV-Schätzung | PTV hatte keine Mautdaten für dieses Landsegment |
+
+Die Abweichung wird berechnet als `(Tatsächlich − Schätzung) / Schätzung`. Eine positive Abweichung bedeutet, der Fahrer zahlte mehr als geschätzt; eine negative bedeutet weniger.
+
+### Belegliste
+
+Unter der Zusammenfassungstabelle wird jeder einzelne Beleg aufgelistet mit:
+- Protokollierungsdatum und -uhrzeit
+- Land und Betrag
+- Notizen (falls vorhanden)
+- Einem Vorschaubild, falls ein Foto angehängt wurde — klicken, um das Vollbild zu öffnen
+
+Planer können manuell Belege über die Schaltfläche **Beleg hinzufügen** unten im Abschnitt hinzufügen — nützlich, wenn der Fahrer vergessen hat zu protokollieren, aber den Papierbeleg hat.
+
+---
+
+## Kraftstoffkartenimport — automatische Mauttrennung
+
+DKV-, UTA- und AS24-Kraftstoffkarten-Kontoauszüge bündeln oft Kraftstoff- und Mauttransaktionen in derselben Exportdatei. Importieren Sie eine Kraftstoffkartendatei unter **Fuhrpark → Kraftstoffkarten**, trennt Druma automatisch Mautpositionen von Kraftstoffpositionen:
+
+- **Kraftstoffpositionen** werden wie gewohnt zum Kraftstoffhauptbuch des LKW hinzugefügt
+- **Mautpositionen** werden zu Mautbelegen weitergeleitet und dem an diesem Datum für diesen LKW aktiven Auftrag zugeordnet
+
+Das erneute Importieren derselben Datei ist unbedenklich — doppelte Einträge (abgeglichen nach Transaktionsreferenz und Betrag) werden automatisch übersprungen.
+
+<Note>
+Der Mautabgleich aus Kraftstoffkartenimporten nutzt LKW und Datum, um den aktiven Auftrag zu finden. Hatte ein LKW am selben Datum mehr als einen Auftrag, hängt der Import den Beleg an den ersten passenden Auftrag an und markiert die Zeile in der Importzusammenfassung zur manuellen Prüfung.
+</Note>
+
+---
+
+## Weitergaberichtlinie pro Land
+
+Nicht jede Maut wird dem Kunden in Rechnung gestellt. Manche Unternehmen absorbieren Maut für bestimmte Korridore als Teil ihres Tarifs; andere geben sie vollständig weiter. Druma lässt Sie dies auf Preistabellenebene konfigurieren.
+
+Gehen Sie zu **Einstellungen → Preistabellen** und öffnen Sie eine Preistabelle. Unten befindet sich eine Überschreibungstabelle **Mautrichtlinie pro Land**. Für jedes Land:
+
+| Richtlinie | Verhalten |
 |---|---|
-| Land | Wo die Maut entstanden ist |
-| HERE-Schätzung | Vorhergesagter Betrag |
-| Tatsächlich | Vom Fahrer protokollierter Betrag |
-| Abweichung | Differenz: Grün < 10%, Amber 10-25%, Rot > 25% |
+| Weitergeben | Tatsächliche Maut erscheint als Auftrags-Extras-Position auf der Rechnung |
+| Absorbieren | Maut wird intern verfolgt, erscheint aber nicht auf der Kundenrechnung |
+| (leer) | Fällt auf die übergeordnete Mautrichtlinie der Preistabelle zurück |
+
+Nicht in der Überschreibungstabelle gelistete Länder übernehmen den Standard der Preistabelle.
+
+### Automatische Rechnungsposition
+
+Ist ein Land auf **Weitergeben** gesetzt, werden protokollierte Mautbelege für dieses Land automatisch summiert und bei der Erstellung als Auftrags-Extras-Position auf der Rechnung hinzugefügt. Die Position ist mit dem Ländernamen beschriftet.
+
+Müssen Sie einen bestimmten Beleg von der Rechnung ausschließen — z. B. weil er durch eine separate Zuschlagsvereinbarung abgedeckt ist — öffnen Sie den Rechnungseditor und aktivieren Sie **Von Rechnung ausschließen** bei dieser Extras-Position.
 
 ---
 
-## Maut dem Kunden weitergeben
+## Tipps für genauen Abgleich
 
-Konfigurieren Sie in **Einstellungen → Unternehmen → Mautpolitik**:
-- Im Preis enthalten
-- Schätzung weitergeben
-- Tatsächliche weitergeben
+- Bitten Sie Fahrer, Maut sofort nach jeder Zahlung zu protokollieren, nicht erst am Ende der Fahrt, damit Belege dem richtigen Tag und Land zugeordnet bleiben.
+- Zeigt PTV Grau (keine Schätzung) für ein Land, das Ihre LKW häufig durchqueren, tragen Sie dies unter **Einstellungen → Preistabellen** mit einem manuellen Länderzuschlag ein, damit Margen auch ohne PTV-Daten geschützt sind.
+- Wiederholt große gelbe oder rote Abweichungen im selben Land sind ein Signal, die Basis-Mautschätzung in Ihrer Preistabelle anzupassen.
 
-<Card title="CO2-Berichterstattung" icon="leaf" href="/en/fleet-compliance/co2-reporting">
-  Wie Routenentfernungen in CO2-Berechnungen einfließen.
+---
+
+<Card title="Preistabellen" icon="sliders-horizontal" href="/de/admin/rate-cards">
+  Konfigurieren Sie Mautweitergaberichtlinie, Basiszuschläge, und Überschreibungen pro Land.
+</Card>
+
+<Card title="Kraftstoffkartenimport" icon="fuel" href="/de/integrations/fuel-card-import">
+  Importieren Sie DKV-, UTA- und AS24-Kontoauszüge, um Kraftstoff- und Mautdatensätze automatisch zu befüllen.
 </Card>

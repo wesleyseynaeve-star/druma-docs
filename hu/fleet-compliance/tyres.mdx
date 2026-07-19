@@ -1,49 +1,117 @@
 ---
 title: "Flotta gumiabroncsok"
-description: "Gumiabroncs-felszerelés, mintamélység, állapot és csereköltségek nyomon követése minden járműnél."
+description: "Kövesd nyomon a gumiabroncs-felszerelést, a mintamélységet, az állapotot és a csereköltségeket a flottád minden járművénél."
 ---
 
 ## Áttekintés
 
-A Flotta Gumiabroncsok füle nyomon követi a gumiabroncs-felszerelést, állapotot és csereelőzményeket minden járműnél.
+A Flotta → Gumiabroncsok oldal nyomon követi a gumiabroncs-felszerelést, az állapotot és a csereelőzményeket minden járműnél. Ez láthatóságot ad a flottakezelőknek a gumiabroncs-költségekről és a kopási ciklusokról, papíralapú nyilvántartás nélkül.
 
-**Elérés:** Flotta → Tehergépjárművek → jármű megnyitása → **Gumiabroncsok** fül.
+**Elérés:** Flotta → **Gumiabroncsok** — egy önálló, felső szintű Flotta-oldal, nem a jármű-részletező nézet egy füle.
+
+<Frame caption="Flotta → Gumiabroncsok — szabadon konfigurálható gumiabroncs-pozíciók járművenként, mintamélység-nyomon követéssel.">
+  <img src="/images/fleet-compliance/tyres.png" alt="Flotta Gumiabroncsok oldal" />
+</Frame>
 
 ---
 
-## Gumiabroncs bejegyzések
+## Gumiabroncs-bejegyzések
+
+A gumiabroncs-pozíciókat szabadon adhatod hozzá járművenként — nincs rögzített pozíció-séma vagy plafon arra, hány pozíciója lehet egy járműnek; add hozzá pontosan azokat a pozíciókat, amelyekkel a jármű ténylegesen rendelkezik. Minden gumiabroncs-bejegyzés tartalmazza:
 
 | Mező | Leírás |
 |---|---|
 | **Pozíció** | Tengely és oldal (pl. Első bal, Hajtótengely jobb belső) |
-| **Márka és modell** | Gyártó és termék |
+| **Márka és modell** | Gumiabroncs-gyártó és terméknév |
 | **Méret** | Gumiabroncs-méret jelölés (pl. 315/70 R22.5) |
-| **Sorozatszám** | A gumiabroncs DOT kódja |
-| **Felszerelés dátuma** | Mikor szerelték fel |
+| **Sorozatszám** | A gumiabroncs DOT-kódja a nyomonkövethetőséghez |
+| **Felszerelés dátuma** | Mikor szerelték fel ezt a gumiabroncsot |
 | **Mintamélység (mm)** | Jelenleg mért mintamélység |
 | **Állapot** | Jó / Figyelés / Csere |
-| **Megjegyzések** | Szabad szöveges megjegyzések |
+| **Megjegyzések** | Szabad szöveges megjegyzések (sérülés, defektelőzmény stb.) |
 
 ---
 
-## Gumiabroncs állapot figyelmeztetések
+## Gumiabroncs-bejegyzés hozzáadása
 
-| Állapot | Figyelmeztetés |
-|---|---|
-| **Figyelés** | Sárga jelző a jármű csempéjén |
-| **Csere** | Piros jelző; e-mail figyelmeztetés a Flottamanagernek és Admin-nak |
+<Steps>
+  <Step title="Nyisd meg a Flotta → Gumiabroncsok menüpontot">
+    Lépj az önálló **Flotta → Gumiabroncsok** oldalra.
+  </Step>
+  <Step title="Válaszd ki a járművet">
+    Válaszd ki azt a járművet, amelyhez gumiabroncs-bejegyzést szeretnél hozzáadni.
+  </Step>
+  <Step title="Kattints a Gumiabroncs hozzáadása gombra">
+    Kattints a **+ Gumiabroncs hozzáadása** gombra. Megnyílik egy űrlap.
+  </Step>
+  <Step title="Töltsd ki a részleteket">
+    Válaszd ki a pozíciót a legördülő menüből, és töltsd ki a márkát, a méretet, a sorozatszámot, a felszerelés dátumát, a mintamélységet és az állapotot.
+  </Step>
+  <Step title="Mentés">
+    Kattints a **Mentés** gombra. A gumiabroncs-bejegyzés megjelenik a pozíció-táblázatban.
+  </Step>
+</Steps>
+
+---
+
+## Gumiabroncs-állapot riasztások
+
+A Druma automatikusan figyeli a gumiabroncs állapotát, és riasztja a flottakezelőket:
+
+| Állapot | Mi váltja ki | Riasztás |
+|---|---|---|
+| **Figyelés** | Az állapot Figyelésre állítva, vagy a mintamélység 4 mm alatt | Sárga jelző a jármű csempéjén a Flotta listában |
+| **Csere** | Az állapot Cserére állítva, vagy a mintamélység 2 mm alatt | Piros jelző a jármű csempéjén; e-mail riasztás a Flottakezelőnek és Adminnak |
 
 <Warning>
-**3 mm** alatti mintamélység automatikusan aktiválja a **Csere** jelzőt — az EU törvényes minimuma alatt tehergépjárműveknél.
+A **2 mm** alatti mintamélység automatikusan **Csere** jelzőt vált ki; a **4 mm** alatti **Figyelés** jelzőt. Ne indíts útnak egy Csere-jelöléssel megjelölt gumiabroncsú járművet.
 </Warning>
 
-Cserénél: szerkessze a bejegyzést → állítsa az állapotot **Cserélt**-re → adja meg a **Csereköltséget (€)** → Mentés.
+---
+
+## Gumiabroncs-állapot frissítése
+
+Egy ellenőrzés után a gumiabroncs állapotának frissítéséhez:
+
+1. Nyisd meg a **Flotta → Gumiabroncsok** oldalt, és válaszd ki a járművet
+2. Kattints a **Szerkesztés** gombra a gumiabroncs során
+3. Frissítsd a **Mintamélység** és/vagy az **Állapot** mezőt
+4. Mentsd el
+
+Ez törli a riasztást, amint a gumiabroncsot kicserélik, vagy az állapotot javítják.
+
+---
+
+## Gumiabroncs-csere rögzítése
+
+Amikor egy gumiabroncsot fizikailag kicserélnek:
+
+1. Szerkeszd az adott pozíció meglévő gumiabroncs-bejegyzését
+2. Állítsd az **Állapotot** **Cserélt**-re
+3. Add meg a **Csereköltséget (€)**
+4. Kattints a **Mentés** gombra
+
+Alternatívaként kattints a **+ Gumiabroncs hozzáadása** gombra ugyanazon a pozíción az új gumiabroncs hozzáadásához (a Druma a régi bejegyzést előzményként jelöli meg).
+
+A csereköltség beépül a jármű karbantartási költség-jelentésébe — teljes birtoklási költség nézetet adva az üzemanyag- és szerviz-költségek mellett.
+
+---
+
+## Gumiabroncs-előzmények
+
+A Druma minden pozícióhoz megőrzi a gumiabroncs-bejegyzések előzményét, beleértve a kicserélt gumiabroncsokat is. Egy adott pozíció előzményének megtekintéséhez:
+
+1. Nyisd meg a **Flotta → Gumiabroncsok** oldalt, és válaszd ki a járművet
+2. Kattints a pozícióra a táblázatban
+3. Az előzmény-panel mutatja az összes, valaha az adott pozícióra felszerelt gumiabroncsot, felszerelési dátumukkal, állapot-státuszukkal és csereköltségükkel
+
+---
 
 <CardGroup cols={2}>
-  <Card title="Műhely és karbantartás" href="/hu/fleet-compliance/workshop-maintenance">
-    Munkamegrendelések létrehozása gumiabroncs-cserékhez.
+  <Card title="Szerviz és karbantartás" href="/en/fleet-compliance/workshop-maintenance">
+    Munkalapok létrehozása gumiabroncs-cserékhez és más karbantartási munkákhoz.
   </Card>
-  <Card title="Flotta dokumentumok" href="/hu/fleet-compliance/fleet-documents">
-    Biztosítás, műszaki vizsga és egyéb megfelelőségi dokumentumok nyomon követése.
+  <Card title="Flottadokumentumok" href="/en/fleet-compliance/fleet-documents">
+    Biztosítás, ITP és más jármű-megfelelőségi dokumentumok nyomon követése a gumiabroncs-bejegyzések mellett.
   </Card>
 </CardGroup>

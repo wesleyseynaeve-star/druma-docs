@@ -1,98 +1,190 @@
 ---
 title: "Životní cyklus objednávky"
-description: "Jak objednávka prochází od Návrhu po Fakturaci v Druma — každý stav, kdo ho spouští a co se děje v každém kroku."
+description: "Jak objednávka postupuje od Návrhu po Doručeno v Druma — každý stav, kdo ho spouští a co se v každém kroku stane."
 icon: "circle-dot"
 ---
 
 ## Přehled
 
-Každá objednávka v Druma sleduje definovanou cestu. Pochopení životního cyklu vám pomůže vědět, co očekávat v každé fázi, kdy zasáhnout a jak řešit výjimky.
+Každá objednávka v Druma sleduje definovanou cestu. Pochopení životního cyklu vám pomůže vědět, co očekávat v každé fázi, kdy zasáhnout a jak řešit výjimky jako pozdní doručení nebo zapomenuté aktualizace stavu.
+
+<Note>
+Pokud vaše společnost používá šablony úkolů, objednávka může nést i **kontrolní seznam úkolů** vázaný na tyto stejné fáze životního cyklu — viz [Úkoly objednávky a šablony workflow](/en/planner/order-tasks).
+</Note>
 
 Zde je celý tok:
 
-**Návrh → Potvrzeno → Na cestě → Příjezd na vyzvednutí → Nakládka → Na cestě k doručení → Příjezd na doručení → Vykládka → Doručeno → Fakturováno**
+**Návrh → Čeká → Přiřazeno → Odjezd → Na vyzvednutí → Nakládka → Na cestě → Na doručení → Vykládka → Doručeno**
 
-Existuje také samostatný stav **Zrušeno** popsaný na konci.
+Existují také dva výjimečné stavy — **Zrušeno** a **Zmařená jízda** — popsané ke konci.
+
+---
+
+## Barvy stavů v přehledu
+
+Každý stav se vyhodnocuje na jednu barvu (odstín), která je identicky sdílená mezi plánovací tabulí a aplikací pro řidiče — stejný stav nikdy nemá jinou barvu na dvou obrazovkách.
+
+| Stav | Barva |
+|---|---|
+| Návrh | Šedá (břidlicová) |
+| Čeká | Šedá (břidlicová) |
+| Přiřazeno | Modrá |
+| Odjezd | Indigová |
+| Na vyzvednutí | Oranžová |
+| Nakládka | Oranžová |
+| Na cestě | Smaragdově zelená |
+| Na doručení | Nebesky modrá |
+| Vykládka | Nebesky modrá |
+| Doručeno | Zelená |
+| Zrušeno | Červená |
+| Zmařená jízda | Červená |
+
+<Note>
+**Na cestě** je úsek vozidla po nakládce směrem k adrese doručení — je to *jediný* stav, který se před Doručeno vykresluje zeleně. **Odjezd** (úsek k adrese vyzvednutí) se vykresluje indigově, vizuálně odlišnou barvou, takže na první pohled poznáte, zda vozidlo míří k nakládce, nebo je již naloženo a míří doručit.
+</Note>
 
 ---
 
 ## Návrh
 
-**Spouští:** Plánovač uloží novou objednávku bez potvrzení.
+**Spouští:** Plánovač uloží novou objednávku bez jejího potvrzení.
+
+**Kdo to může spustit:** Pouze plánovač.
 
 Objednávka existuje v systému, ale zatím není aktivní. Řidič ji v aplikaci nevidí. Na plánovací tabuli se zobrazuje šedě.
 
----
+**Dostupné akce z Návrhu:**
+- Úprava jakéhokoli pole
+- Potvrzení objednávky (přejde na Čeká)
+- Smazání objednávky
+- Zrušení objednávky
 
-## Potvrzeno
-
-**Spouští:** Plánovač klikne na **Potvrdit objednávku**.
-
-Objednávka je nyní aktivní. Přiřazený řidič dostane v aplikaci push oznámení s podrobnostmi o zakázce. Na plánovací tabuli se zobrazuje modře.
-
----
-
-## Na cestě
-
-**Spouští:** Řidič klepne na **Na cestě** v aplikaci při odjezdu na místo vyzvednutí.
-
-Řidič je na pohybu směrem k místu vyzvednutí. Na plánovací tabuli se objednávka zbarví zeleně.
+Použijte Návrh, když klient provedl předběžnou rezervaci, ale ještě ji nepotvrdil, nebo když objednávku sestavujete, ale stále čekáte na podrobnosti.
 
 ---
 
-## Příjezd na vyzvednutí
+## Čeká
 
-**Spouští:** Řidič klepne na **Příjezd na vyzvednutí** při dosažení adresy nakládky.
+**Spouští:** Plánovač klikne na **Potvrdit objednávku** (ze stránky objednávky nebo plánovací tabule).
 
-Řidič dorazil na místo nakládky a čeká. Automaticky se spustí **hodiny čekací doby**.
+**Kdo to může spustit:** Pouze plánovač.
+
+Objednávka je nyní živá a připravená k přiřazení vozidlu a řidiči — jen jí to ještě nebylo přiřazeno. Na plánovací tabuli se stále zobrazuje **šedě**, stejný odstín jako Návrh, protože jí zatím není přiřazeno žádné vozidlo.
+
+**Odesílaná oznámení:**
+- Volitelné: automatické potvrzovací e-mail klientovi (pokud je povoleno v nastavení vašeho účtu)
+
+**Dostupné akce z Čeká:**
+- Úprava jakéhokoli pole
+- Přiřazení vozidla a řidiče (přejde na Přiřazeno)
+- Zrušení objednávky
+
+---
+
+## Přiřazeno
+
+**Spouští:** Plánovač přiřadí objednávce vozidlo a řidiče — z formuláře Nová objednávka, Plánovací tabule, nebo panelu detailu objednávky.
+
+**Kdo to může spustit:** Pouze plánovač.
+
+Objednávka má nyní připojené vozidlo a řidiče. Přiřazený řidič obdrží ve své aplikaci push notifikaci s podrobnostmi zakázky — adresa vyzvednutí, adresa doručení, datum a poznámky pro řidiče, které jste přidali.
+
+Objednávka se na plánovací tabuli zobrazuje **modře**.
+
+**Dostupné akce z Přiřazeno:**
+- Úprava většiny polí (změny spustí novou notifikaci řidiči)
+- Přeřazení vozidla nebo řidiče
+- Zrušení objednávky
+- Přechod na Odjezd (akce řidiče, nebo přepsání plánovačem)
+
+---
+
+## Odjezd
+
+**Spouští:** Řidič klepne na **Odjezd** ve své aplikaci, když vyráží na místo vyzvednutí.
+
+**Kdo to může spustit:** Řidič (hlavní akce) nebo plánovač (ruční přepsání).
+
+Tento stav znamená, že řidič je na cestě směrem k místu vyzvednutí. Objednávka se na plánovací tabuli zbarví **indigově**.
+
+<Note>
+Pokud řidič zapomene klepnout na Odjezd, můžete stav nastavit ručně ze stránky objednávky. Otevřete objednávku, klikněte na **Přepsat stav** a vyberte Odjezd. Vždy poznamenejte důvod do pole komentáře, abyste měli záznam.
+</Note>
+
+---
+
+## Na vyzvednutí
+
+**Spouští:** Řidič klepne na **Na vyzvednutí** při dosažení adresy nakládky.
+
+**Kdo to může spustit:** Řidič nebo plánovač.
+
+Řidič dorazil na místo nakládky a čeká na zpracování. Tento stav automaticky spustí **hodiny čekací doby** — užitečné pro zdokumentování jakéhokoli zpoždění na nakládací rampě.
+
+**Odesílaná oznámení:**
+- Volitelné: automatické oznámení klientovi nebo jeho kontaktu na místě nakládky (konfigurovatelné za klienta)
 
 ---
 
 ## Nakládka
 
-**Spouští:** Řidič klepne na **Zahájení nakládky** při nakládce zboží.
+**Spouští:** Řidič klepne na **Nakládka**, když se zboží nakládá na vozidlo.
 
-Hodiny čekací doby se zastaví. Zaznamenaná čekací doba je uložena k objednávce.
+**Kdo to může spustit:** Řidič nebo plánovač.
 
----
-
-## Na cestě k doručení
-
-**Spouští:** Řidič klepne na **Odjezd z vyzvednutí** po dokončení nakládky.
-
-Kamion míří na adresu doručení. Na plánovací tabuli se zobrazuje odhadovaný čas příjezdu.
+Hodiny čekací doby se zastaví, jakmile nakládka začne. Jakákoli zaznamenaná čekací doba se uloží k objednávce a lze ji použít pro výpočty příplatků.
 
 ---
 
-## Příjezd na doručení
+## Na cestě
 
-**Spouští:** Řidič klepne na **Příjezd na doručení**.
+**Spouští:** Řidič klepne na **Na cestě**, jakmile je nakládka dokončena (a CMR podepsáno, je-li relevantní).
 
-Hodiny čekací doby se znovu spustí. Jakékoli zpoždění při vykládce se zaznamenává od tohoto okamžiku.
+**Kdo to může spustit:** Řidič nebo plánovač.
+
+Vozidlo nyní míří na adresu doručení. Objednávka se na plánovací tabuli zbarví **smaragdově zeleně** — jde o jediný probíhající stav, který se vykresluje zeleně, takže je snadné rozpoznat vozidlo, které je naloženo a v pohybu. Objednávka zobrazuje odhadovaný čas příjezdu na základě výpočtu trasy PTV.
+
+<Note>
+Toto je vhodný okamžik pro odeslání proaktivního oznámení o zpoždění příjemci, pokud řidič má zpoždění oproti plánu. Použijte tlačítko **Odeslat ETA** na stránce objednávky pro odeslání SMS nebo e-mailu s aktuálním odhadovaným časem příjezdu.
+</Note>
+
+---
+
+## Na doručení
+
+**Spouští:** Řidič klepne na **Na doručení** při dosažení adresy doručení.
+
+**Kdo to může spustit:** Řidič nebo plánovač.
+
+Hodiny čekací doby se znovu spustí v místě doručení. Jakékoli zpoždění při vykládce se od tohoto okamžiku zaznamenává. Objednávka se zobrazuje v nebesky modrém odstínu.
 
 ---
 
 ## Vykládka
 
-**Spouští:** Řidič klepne na **Zahájení vykládky**.
+**Spouští:** Řidič klepne na **Vykládka**, když se zboží vykládá z vozidla.
 
-Čekací doba na doručení se zastaví. Řidič nyní může připravit podepsané doklady o doručení.
+**Kdo to může spustit:** Řidič nebo plánovač.
+
+Čekací doba u doručení se zastaví. Řidič nyní může připravit podepsané doklady o doručení.
 
 ---
 
 ## Doručeno
 
-**Spouští:** Řidič klepne na **Doručeno** a volitelně nahraje fotografii podepsaného CMR.
+**Spouští:** Řidič klepne na **Doručeno** a volitelně nahraje fotografii podepsaného CMR nebo dodacího listu.
 
-Přeprava je dokončena. Na plánovací tabuli se objednávka zbarví tmavě zeleně.
+**Kdo to může spustit:** Řidič (hlavní akce) nebo plánovač.
 
----
+Přeprava je dokončena. Objednávka se na plánovací tabuli zbarví zeleně a přejde do záložky **Dokončeno** v seznamu objednávek.
 
-## Fakturováno
+**Odesílaná oznámení:**
+- Volitelné: e-mail s potvrzením doručení klientovi s časovým razítkem a jakýmikoli nahranými dokumenty.
 
-**Spouští:** Plánovač vygeneruje fakturu pro objednávku.
-
-Objednávka je plně uzavřena. Je pouze pro čtení a propojena se záznamem faktury.
+**Dostupné akce z Doručeno:**
+- Generování faktury pro objednávku (samotná objednávka zůstává ve stavu Doručeno — generování faktury ji nemění; faktura se vytvoří jako vlastní propojený záznam)
+- Nahrání nebo zobrazení dokumentů doručení (fotografie CMR, POD)
+- Přidání poznámky o sporu nebo poškození
 
 ---
 
@@ -100,35 +192,87 @@ Objednávka je plně uzavřena. Je pouze pro čtení a propojena se záznamem fa
 
 **Spouští:** Plánovač zruší objednávku.
 
+**Kdo to může spustit:** Pouze plánovač.
+
 <Warning>
-Objednávku ve stavu **Návrh** nebo **Potvrzeno** lze zrušit bez speciálních kroků. Nicméně objednávku, která je Na cestě nebo v pozdějším stavu, **nelze** zrušit bez ručního procesu.
+Objednávku ve stavu **Návrh** nebo **Čeká** můžete zrušit bez jakýchkoli speciálních kroků. Nicméně **nemůžete** zrušit objednávku, která je ve stavu Odjezd nebo pozdějším, bez absolvování ručního procesu. Pokud potřebujete zrušit aktivní objednávku, kontaktujte správce svého účtu — vyžaduje to zaznamenání důvodu a může to ovlivnit platby řidiči.
 </Warning>
+
+Zrušené objednávky zůstávají v systému pro účely auditu. Jsou viditelné v seznamu objednávek pod filtrem **Zrušeno**.
 
 ---
 
-## Manuální přepsání stavů
+## Zmařená jízda
+
+**Spouští:** Plánovač vyhlásí zmařenou jízdu z panelu detailu objednávky.
+
+**Kdo to může spustit:** Pouze plánovač.
+
+Zmařená jízda se vztahuje na objednávky, kde řidič **již odjel**, ale jízda musí být přerušena — kvůli zrušení klientem, vyšší moci, nebo firemnímu rozhodnutí. Liší se od běžného zrušení, protože již vznikly skutečné náklady (palivo, čas řidiče, prázdné kilometry).
+
+Zmařenou jízdu můžete vyhlásit z kteréhokoli z těchto stavů: **Odjezd, Na vyzvednutí, Nakládka, Na cestě, Na doručení, Vykládka**.
+
+Plánovač musí zadat kód důvodu, aktuální polohu řidiče, ujeté prázdné kilometry a volitelně označit objednávku pro účtování klientovi.
+
+<Warning>
+Vyhlášení zmařené jízdy **nelze vrátit zpět**. Objednávka trvale přejde do stavu Zmařená jízda a důvod, poloha řidiče, prázdné kilometry a (pokud je přepnuto) částka účtovaná klientovi se zaznamenají přímo na objednávku pro pozdější fakturaci — žádný samostatný záznam mzdy nebo poplatku se automaticky nevytváří.
+</Warning>
+
+Kompletní průvodce viz [Zmařená jízda](/cs/planner/wasted-journey).
+
+---
+
+## Ruční přepsání stavů
+
+Řidiči občas zapomenou klepnout na aktualizace stavu — stává se to. Jako plánovač můžete stav vždy ručně přepsat:
 
 <Steps>
   <Step title="Otevřete objednávku">
-    Přejděte do Plánovač → Objednávky a najděte objednávku.
+    Přejděte do Plánovač → Objednávky a najděte objednávku. Kliknutím na ni otevřete stránku detailu.
   </Step>
   <Step title="Klikněte na Přepsat stav">
-    Najděte tlačítko **Přepsat stav** u indikátoru aktuálního stavu.
+    Najděte tlačítko **Přepsat stav** vedle indikátoru aktuálního stavu v horní části stránky.
   </Step>
   <Step title="Vyberte správný stav">
     Zvolte stav, ve kterém by objednávka nyní měla být.
   </Step>
   <Step title="Přidejte poznámku">
-    Napište krátké vysvětlení. Toto je uloženo v historii objednávky.
+    Napište krátké vysvětlení (např. „Řidič zapomněl aktualizovat — potvrzeno telefonicky"). Toto se uloží do historie objednávky.
   </Step>
   <Step title="Uložit">
-    Klikněte na **Použít přepsání**.
+    Klikněte na **Použít přepsání**. Stav se okamžitě aktualizuje a změna se zaznamená s vaším jménem a časovým razítkem.
   </Step>
 </Steps>
 
-<Card title="Zobrazení dnes" icon="sun" href="/en/planner/today-view">
-  Sledujte všechny aktivní objednávky dnes, živé polohy řidičů a upozornění z denního přehledu.
-</Card>
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/order-lifecycle).
+## Automatické vs. ruční přechody
+
+| Stav | Automaticky | Ručně (řidič) | Ručně (plánovač) |
+|---|---|---|---|
+| Návrh | — | — | Ano |
+| Čeká | — | — | Ano |
+| Přiřazeno | — | — | Ano |
+| Odjezd | — | Ano | Ano (přepsání) |
+| Na vyzvednutí | — | Ano | Ano (přepsání) |
+| Nakládka | — | Ano | Ano (přepsání) |
+| Na cestě | — | Ano | Ano (přepsání) |
+| Na doručení | — | Ano | Ano (přepsání) |
+| Vykládka | — | Ano | Ano (přepsání) |
+| Doručeno | — | Ano | Ano (přepsání) |
+| Zrušeno | — | — | Ano |
+| Zmařená jízda | — | — | Ano (z aktivních stavů) |
+
+---
+
+<Card title="Domovský dashboard" icon="gauge" href="/cs/planner/today-view">
+  Sledujte všechny aktivní objednávky, zobrazte živé pozice řidičů a řešte upozornění z vašeho živého provozního dashboardu.
+</Card>
+
+<Card title="Úkoly objednávky a šablony workflow" icon="list-check" href="/en/planner/order-tasks">
+  Konfigurovatelné kontrolní seznamy úkolů vázané na tyto fáze životního cyklu, plus jak správci vytvářejí šablony za nimi.
+</Card>
+
+<Card title="Generování faktur" icon="file-invoice" href="/cs/invoicing/generating-invoices">
+  Jakmile je objednávka Doručena, zjistěte, jak vytvořit a odeslat fakturu klientovi.
+</Card>

@@ -1,53 +1,166 @@
 ---
-title: "Intermodaal & Multimodaal Transport"
-description: "Plan orders die weg-, zee-, spoor-, lucht- of binnenscheepvaarttrajecten combineren — met per-leg vervoerderstoewijzing, kostenbewaking, eCMR en ondersteuning voor chauffeurs-PWA."
+title: "Intermodaal & multimodaal transport"
+description: "Plan orders die weg-, zee-, spoor-, lucht- of binnenscheepvaarttrajecten combineren — met per-leg vervoerderstoewijzing, kostenbewaking, eCMR en ondersteuning voor de chauffeurs-PWA."
 icon: "git-merge"
 ---
 
-## Wat is intermodaal transport?
+## Overzicht
 
-Intermodaal transport combineert twee of meer transportmodi op één order: de lading gaat eerst over de weg, dan per schip, dan weer over de weg — zonder de inhoud van de laadbak te wisselen.
+Intermodaal transport verplaatst lading over meerdere transportmodi na elkaar — bijvoorbeeld: een truck brengt een trailer vooraf van een Roemeense fabriek naar Calais, ze steekt over naar Folkestone op een Kanaaltunnel-RoRo-veerboot, en een tweede truck verzorgt het natraject naar het afleveradres in het VK. Elk segment is een **leg** (traject). Eén enkele Druma-order beheert de hele reis: planning, vervoerderstoewijzing, kosten, eCMR en chauffeurszichtbaarheid per leg.
 
-In Druma kunt u een order aanmaken met meerdere **trajecten (legs)**, elk met een eigen vervoersmodus, vervoerder, kosten en tijdlijn.
+Dit verschilt van een standaardorder met interne stops. Interne stops zijn waypoints op één doorlopende wegrit met één truck. Intermodale legs zijn afzonderlijke transportgebeurtenissen die verschillende modi, verschillende vervoerders en zelfs verschillende rechtsgebieden kunnen gebruiken.
+
+<Note>
+Groupage-ritten en intermodale legs zijn aparte concepten — legs horen bij één enkele order, groupage consolideert meerdere orders op één truck. Er bestaat vandaag geen gecombineerde "intermodale groupage"-flow.
+</Note>
+
+---
+
+## Praktisch voorbeeld: Roemenië → VK via de Kanaaltunnel
+
+| Leg | Modus | Route | Vervoerder |
+|---|---|---|---|
+| 1 | Weg | Boekarest → Calais | Eigen vloot — truck RO-01 |
+| 2 | Zee | Calais → Folkestone (Eurotunnel Le Shuttle) | Onderaannemer: Eurotunnel |
+| 3 | Weg | Folkestone → Birmingham | Onderaannemer: Britse vervoerder |
+
+Druma houdt de boekingsreferentie en het containernummer voor leg 2 bij, genereert een aparte eCMR voor legs 1 en 3 (beide overschrijden grenzen), en toont de Britse vervoerder alleen de stops relevant voor leg 3.
 
 ---
 
 ## Een intermodale order aanmaken
 
+Er is geen schakelaar "Intermodaal" om aan te zetten — legs worden toegevoegd aan een order die u al heeft aangemaakt, en Druma behandelt de order automatisch als intermodaal zodra ze legs heeft.
+
 <Steps>
-  <Step title="Maak een nieuwe order aan">
-    Ga naar **Orders → Nieuwe order**.
+  <Step title="Maak de order aan of open ze">
+    Maak de order normaal aan (zie [Een order aanmaken](/nl/planner/creating-orders)), open ze dan en ga naar het tabblad **Lading & Stops**.
   </Step>
-  <Step title="Stel het ordertype in">
-    Selecteer **Intermodaal** in het veld **Ordertype**.
+  <Step title="Voeg legs toe">
+    Klik in de sectie **Transporttrajecten** op **Traject toevoegen** om het eerste traject aan te maken. Voeg er zoveel toe als de reis vereist — er is geen limiet. De herkomst van elk nieuw traject staat standaard op de bestemming van het vorige traject (of de ophaling van de order, voor het eerste traject), zodat u niet hetzelfde adres opnieuw hoeft te typen.
   </Step>
-  <Step title="Voeg trajecten toe">
-    Klik op **+ Traject toevoegen** voor elk segment van de reis. Per traject voert u in:
-    - Vervoersmodus (Weg, Zee, Spoor, Lucht, Binnenvaart)
-    - Vertrekpunt en aankomstpunt
-    - Vervoerder (eigen vloot of onderaannemer)
-    - Geplande vertrek- en aankomsttijden
-    - Kosten voor dit traject
-  </Step>
-  <Step title="Sla de order op">
-    Klik op **Opslaan**.
+  <Step title="Vul elk traject in">
+    Klap een trajectkaart uit om de modus, herkomst/bestemming, geplande start/eind en vervoerder in te stellen (zie hieronder).
   </Step>
 </Steps>
 
 ---
 
-## Wegtrajecten met chauffeurs
+## Trajecten beheren
 
-Voor wegtrajecten kunt u een truck en chauffeur toewijzen zoals bij een standaard order. De chauffeur ziet alleen zijn eigen wegtraject in hun app — niet de volledige intermodale keten.
+Elke trajectkaart heeft de volgende velden:
 
-Elk wegtraject dat een internationale grens overschrijdt krijgt zijn eigen eCMR. Klik hiervoor op de trajectkaart en klik op **eCMR aanmaken**. Druma registreert het document via de Druma native provider (standaard), of TransFollow als dat de geselecteerde provider van uw bedrijf is, met het vertrekpunt, de bestemming en de toegewezen vervoerder reeds ingevuld.
+| Veld | Opmerkingen |
+|---|---|
+| **Modus** | Weg, Zee, Spoor, Lucht of Binnenvaart |
+| **Herkomst** | Vrije tekst of adresautocomplete |
+| **Bestemming** | Vrije tekst of adresautocomplete |
+| **Geplande start** | Datum en tijd waarop het traject begint |
+| **Gepland einde** | Verwachte datum en tijd waarop het traject eindigt |
+| **Vervoerder** | Eigen vloot (alleen weg) of onderaannemer |
+| **Inkooptarief** | Kost die u betaalt voor dit traject |
+| **Kostenuitsplitsing** | Brandstof, tol, veerboot of andere regelposten |
+
+### Wegtrajecten
+
+Wegtrajecten kunnen worden toegewezen aan uw eigen vloot (truck en chauffeur) of aan een onderaannemer-vervoerder — kies via een keuzerondje op de trajectkaart, selecteer dan de truck/chauffeur of onderaannemer uit een vervolgkeuzelijst.
+
+### Niet-wegtrajecten (zee, spoor, lucht, binnenvaart)
+
+Niet-wegtrajecten kunnen alleen worden toegewezen aan een onderaannemer-vervoerder — uw eigen vloottrucks en chauffeurs kunnen niet worden toegewezen aan een zee- of spoortraject. Het vervoerderveld doorzoekt uw onderaannemerslijst.
+
+### Trajectbediening
+
+- **Pijltjes omhoog/omlaag** — herschik trajecten. De trajecttijdlijnstrook (zie hieronder) werkt bij terwijl u sleept.
+- **Traject verwijderen** — verwijder een traject. Er is geen statusgebaseerde beperking hierop in de UI, dus controleer dubbel voor u een traject verwijdert dat al bezig is.
+- **Traject voltooien**-knop — markeert het traject als klaar. Ze verschijnt zodra de status van het traject **Onderweg**, **Bij levering** of **Lossen** bereikt — dit is gekoppeld aan status, niet aan een datum.
+
+### Trajecttijdlijnstrook
+
+Boven de accordeon met trajecten verschijnt een compacte horizontale strook. Ze toont alle trajecten in volgorde met een modusbadge (weg, zee, spoor, enz.) en de plaatsnamen voor herkomst en bestemming. Gebruik ze om snel te verifiëren dat de reisvolgorde klopt voor u opslaat.
 
 ---
 
-## Kostenbewaking
+## Details van zee-/intermodale trajecten
 
-Druma aggregeert de kosten van alle trajecten en vergelijkt het met de verkoopprijs om de totale marge te berekenen.
+Voor elk traject met modus **Zee**, **Spoor**, **Lucht** of **Binnenvaart** verschijnt een inklapbare sectie **Zee-/intermodale details** op de trajectkaart. Alle velden zijn optioneel.
 
-<Card title="Vrachtdoorzending" icon="arrows-left-right" href="/nl/planner/freight-forwarding">
-  Beheer uitbestede ladingen met gesplitste facturering.
+| Veld | Formaat | Opmerkingen |
+|---|---|---|
+| Boekingsreferentie | Vrije tekst | Boekingsbevestigingsnummer van de vervoerder |
+| Containernummer | Vrije tekst | ISO-container-ID |
+| Zegelnummer | Vrije tekst | |
+| Naam schip | Vrije tekst | Naam van het schip of de treindienst |
+| Reisnummer | Vrije tekst | |
+| SCAC vervoerder | 4 tekens | Standard Carrier Alpha Code |
+| Laadhaven | 5-tekens LOCODE | bijv. `FRXXX` voor Calais |
+| Loshaven | 5-tekens LOCODE | bijv. `GBFXT` voor Folkestone |
+| Cut-off-datum/tijd | Datum + tijd | Deadline voor ladingacceptatie bij de laadhaven |
+| ETD | Datum + tijd | Geschatte vertrektijd vanaf de laadhaven |
+| ETA bij POD | Datum + tijd | Geschatte aankomsttijd bij de loshaven |
+
+<Warning>
+Ligt de cut-off-datum binnen 48 uur van het geplande einde van het traject, dan toont Druma een amberkleurige waarschuwingsbanner op de trajectkaart. Controleer de tijdlijn om te bevestigen dat de truck op tijd bij de haven aankomt.
+</Warning>
+
+Schakelt u de modus van een traject terug naar **Weg**, dan wist Druma automatisch de zee-/intermodale detailvelden.
+
+---
+
+## Gedrag op het planningsbord
+
+### Truckbeschikbaarheid
+
+Het planningsbord berekent truckbeschikbaarheid op basis van het **einde van het wegtraject**, niet de uiteindelijke leverdatum van de order. Dit betekent dat een truck toegewezen aan leg 1 (weg) getoond wordt als vrij vanaf het moment dat dat traject eindigt — zelfs als de laatste levering van de order dagen later plaatsvindt op leg 3 met een andere vervoerder.
+
+### Een truck toewijzen aan een intermodale order
+
+Een truck naar een intermodale order slepen toont een sectie **Intermodaal traject** in het bevestigingsvenster voor toewijzing, in plaats van de standaardflow. Ze somt elk wegtraject op de order op (volgorde, herkomst → bestemming, geplande datums) — klikken op een trajectrij selecteert het rechtstreeks; er is nadien geen aparte knop "Toewijzen" om te klikken.
+
+<Note>
+Een truck kan slechts aan één wegtraject per intermodale order worden toegewezen. Om meerdere wegtrajecten met verschillende trucks te dekken, herhaalt u het sleep-en-neerzet-proces voor elk traject.
+</Note>
+
+---
+
+## eCMR per wegtraject
+
+Elk wegtraject dat een internationale grens overschrijdt krijgt zijn eigen eCMR. Om er één aan te maken, opent u de trajectkaart en klikt u op **eCMR aanmaken**. Druma registreert het document via zijn native, in-house eCMR-provider, met herkomst, bestemming en toegewezen vervoerder van het traject vooraf ingevuld — het voltooien van een grensoverschrijdend traject triggert dit automatisch op dezelfde manier. (Er is geen providerkeuze te maken: Native is het enige pad voor nieuwe documenten; alleen bestaande legacy TransFollow-rijen blijven functioneren, los van legs hier aangemaakt.)
+
+Trajecten die binnen één land blijven, vereisen geen eCMR (tenzij het beleid van uw bedrijf er één verplicht). De knop **eCMR aanmaken** is altijd beschikbaar als u dit wilt overschrijven.
+
+Het drieledige handtekeningproces en het downloaden van de gecertificeerde PDF werken identiek aan standaard eCMR — zie de [eCMR-documentatie](/nl/ecmr/what-is-ecmr) voor details.
+
+---
+
+## Chauffeurs-PWA — leg-beperkte weergave
+
+Chauffeurs zien alleen de stops die bij hun toegewezen wegtraject horen. Heeft de order drie legs en dekt de chauffeur leg 1, dan ziet hij alleen de ophaling en eventuele interne stops voor leg 1 — niet het afleveradres in het VK.
+
+Een infobanner bovenaan de laaddetails leest:
+
+> **Traject 1 van 3 — Weg: Boekarest → Calais**
+
+Dit houdt de weergave van de chauffeur overzichtelijk en vermijdt verwarring over stops die bij een andere vervoerder horen.
+
+Statustikken (at_pickup, loading, in_transit, at_delivery, enz.) werken exact zoals op een standaardorder, maar ze bewegen alleen de status van het wegtraject van de chauffeur vooruit. De planner ziet de voortgang per leg in het orderdetailpaneel.
+
+---
+
+## Kosten- en margebewaking
+
+Elk traject heeft zijn eigen **inkooptarief** en **kostenuitsplitsing**. De totale kost van de order is de som over alle trajecten. De margeberekening in het orderdetailpaneel vergelijkt de afgesproken verkoopprijs met de totale meertraject-kost, wat u een geconsolideerd margecijfer geeft voor de hele intermodale reis.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/nl/ecmr/what-is-ecmr">
+  Hoe native eCMR-aanmaak, drieledige handtekeningen en gecertificeerde PDF's werken.
+</Card>
+
+<Card title="Onderaannemers" icon="truck" href="/nl/planner/subcontractors">
+  Beheer uw onderaannemer-vervoerderslijst — dezelfde vervoerders verschijnen bij intermodale trajecttoewijzing.
+</Card>
+
+<Card title="Planningsbord" icon="calendar" href="/nl/planner/planning-board">
+  Hoe truckbeschikbaarheid en intermodale orderblokken verschijnen op de dispatchtijdlijn.
 </Card>

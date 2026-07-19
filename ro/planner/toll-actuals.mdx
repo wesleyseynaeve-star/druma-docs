@@ -1,9 +1,122 @@
 ---
-title: "Taxe reale de taxa"
-description: "Inregistreaza taxele de vigneta si taxa platite efectiv."
-icon: "road"
+title: "Chitante si reconciliere taxe de drum"
+description: "Compara taxele de drum estimate de HERE fata de sumele reale inregistrate de sofer, per tara, importa liniile de taxa din cardurile de combustibil si configureaza politica de transfer catre client."
+icon: "receipt"
 ---
 
-Soferul inregistreaza in aplicatia mobila: comanda activa -> **Adauga Taxa** -> suma, tara, tip (vigneta/taxa punct).
+## Prezentare generala
 
-La generarea facturii, taxele pot fi incluse ca element separat de trecere catre client.
+Costurile de taxa de drum sunt o parte semnificativa si adesea opaca a transportului rutier. API-ul de rutare PTV iti ofera o estimare de taxa per tara, la crearea unei comenzi, dar suma reala platita pe drum difera de regula — categorii diferite de vehicul, vignete lipsa, tarife sezoniere si variatii la trecerea frontierei cauzeaza toate o abatere.
+
+Druma inchide acest gol, permitand soferilor sa inregistreze chitantele de taxa direct din PWA, apoi afiseaza un panou de reconciliere colorat in detaliul comenzii, ca planificatorii sa observe variatii mari inainte sa afecteze marjele sau facturile clientilor.
+
+---
+
+## Cum inregistreaza soferii chitantele de taxa
+
+In timpul unei incarcaturi active, PWA-ul soferului arata un buton **Inregistreaza Taxa** pe ecranul de detaliu al incarcaturii. Apasarea lui deschide fisa **Chitanta Taxa**.
+
+<Steps>
+  <Step title="Apasa Inregistreaza Taxa">
+    Butonul este vizibil oricand statusul incarcaturii este sosit la preluare, incarcare, in tranzit, sosit la livrare sau descarcare — orice status in care camionul este pe drum.
+  </Step>
+  <Step title="Introdu detaliile taxei">
+    Completeaza:
+    - **Suma (EUR)** — campul obligatoriu: taxa platita, convertita in EUR
+    - **Suma locala** (optional) — suma in moneda locala, plus codul monedei si cursul de schimb, daca vrei sa inregistrezi si cifrele originale
+    - **Tara** — precompletata pe baza pozitiei GPS curente, dar editabila
+    - **Note** (optional) — referinta autostrada, numar cabina, sau orice comentariu de sofer
+  </Step>
+  <Step title="Ataseaza o fotografie a chitantei (optional)">
+    Apasa pictograma de camera sau fisier, pentru a atasa o fotografie a chitantei. Formate acceptate: JPEG, PNG, WebP, HEIC, PDF. Dimensiune maxima fisier: 5 MB.
+  </Step>
+  <Step title="Confirma">
+    Apasa **Salveaza**. Chitanta este stocata imediat.
+  </Step>
+</Steps>
+
+### Suport offline
+
+Chitantele de taxa functioneaza offline. Daca soferul este intr-o zona fara conectivitate, chitanta este pusa in asteptare local si sincronizata automat de indata ce dispozitivul se reconecteaza. Planificatorul o vede aparand in panoul de reconciliere, odata ce sincronizarea se finalizeaza.
+
+---
+
+## Panoul de reconciliere (vizualizarea planificatorului)
+
+Deschide panoul de detaliu al oricarei comenzi si deruleaza la sectiunea **Reconciliere Taxe**. Panoul arata un tabel cu cate un rand per tara, unde exista fie o estimare HERE, fie o suma reala inregistrata.
+
+### Codarea pe culori a diferentei
+
+| Culoare | Conditie | Ce inseamna |
+|---|---|---|
+| Verde | Diferenta ≤ 5% | Suma reala este in intervalul asteptat |
+| Chihlimbariu | Diferenta 6–15% | Variatie moderata — merita revizuita |
+| Rosu | Diferenta > 15% | Variatie semnificativa — verifica chitantele |
+| Gri | Nicio estimare HERE | HERE nu a avut date de taxa pentru acest segment de tara |
+
+Diferenta este calculata ca `(suma reala − estimare) / estimare`. O diferenta pozitiva inseamna ca soferul a platit mai mult decat estimat; una negativa inseamna mai putin.
+
+### Lista de chitante
+
+Sub tabelul de sumar, fiecare chitanta individuala este listata cu:
+- Data si ora inregistrarii
+- Tara si suma
+- Note (daca exista)
+- O miniatura, daca a fost atasata o fotografie — apasa pentru a deschide imaginea completa
+
+Planificatorii pot adauga chitante manual, folosind butonul **Adauga Chitanta** din partea de jos a sectiunii — util cand soferul a uitat sa inregistreze o taxa, dar are chitanta pe hartie.
+
+---
+
+## Import card de combustibil — impartire automata a taxelor
+
+Extrasele de card de combustibil DKV, UTA si AS24 combina adesea tranzactiile de combustibil si de taxa in acelasi fisier de export. Cand imporți un fisier de card de combustibil in **Flota → Carduri Combustibil**, Druma separa automat liniile de taxa de liniile de combustibil:
+
+- **Liniile de combustibil** sunt adaugate normal in registrul de combustibil al camionului
+- **Liniile de taxa** sunt directionate catre chitante de taxa si potrivite cu comanda activa la acea data, pentru acel camion
+
+Reimportarea aceluiasi fisier este sigura — intrarile duplicate (potrivite dupa referinta de tranzactie si suma) sunt sarite automat.
+
+<Note>
+Potrivirea taxelor din importurile de card de combustibil foloseste camionul si data, pentru a gasi comanda activa. Daca un camion a avut mai mult de o comanda in aceeasi zi, importul ataseaza chitanta primei comenzi potrivite si marcheaza randul pentru revizuire manuala, in sumarul importului.
+</Note>
+
+---
+
+## Politica de transfer per tara
+
+Nu fiecare taxa este facturata clientului. Unele companii absorb taxele pentru anumite coridoare, ca parte din tariful lor; altele le transfera integral. Druma iti permite sa configurezi asta la nivelul fisei de tarifare.
+
+Mergi la **Setari → Fise de Tarifare** si deschide orice fisa de tarifare. Exista un tabel de suprascriere **Politica de taxe de drum per tara**, in partea de jos. Pentru fiecare tara:
+
+| Politica | Comportament |
+|---|---|
+| Transferata | Taxa reala apare ca o linie de extra a comenzii, pe factura |
+| Absorbita | Taxa este urmarita intern, dar nu apare pe factura clientului |
+| (necompletat) | Revine la politica de taxa de nivel superior a fisei de tarifare |
+
+Tarile nelistate in tabelul de suprascriere mostenesc implicitul fisei de tarifare.
+
+### Linie automata pe factura
+
+Cand o tara este setata la **Transferata**, chitantele de taxa inregistrate pentru acea tara sunt insumate automat si adaugate ca o linie de extra a comenzii, pe factura, in timpul generarii. Linia este etichetata cu numele tarii.
+
+Daca trebuie sa excluzi o chitanta specifica din factura — de exemplu, pentru ca este acoperita de un acord separat de suprataxa — deschide editorul de factura si activeaza **Exclude din factura** pe acea linie de extra.
+
+---
+
+## Sfaturi pentru o reconciliere precisa
+
+- Cere soferilor sa inregistreze taxele imediat dupa fiecare plata, nu la finalul cursei, ca chitantele sa ramana potrivite cu ziua si tara corecte.
+- Daca HERE arata gri (fara estimare) pentru o tara pe care camioanele tale o traverseaza frecvent, semnaleaza asta in **Setari → Fise de Tarifare**, cu o suprataxa manuala de tara, ca marjele sa fie protejate chiar si fara date HERE.
+- Diferente mari, chihlimbarii sau rosii, repetate pe aceeasi tara, sunt un semnal sa ajustezi estimarea de baza a taxei in fisa ta de tarifare.
+
+---
+
+<Card title="Fise de tarifare" icon="sliders-horizontal" href="/ro/admin/rate-cards">
+  Configureaza politica de transfer a taxelor de drum, suprataxele de baza si suprascrierile per tara.
+</Card>
+
+<Card title="Carduri de combustibil si importuri" icon="fuel" href="/ro/integrations/fuel-card-import">
+  Importa extrase DKV, UTA si AS24, ca sa populezi automat inregistrarile de combustibil si taxa.
+</Card>

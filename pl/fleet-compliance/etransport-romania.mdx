@@ -4,7 +4,7 @@ description: "Jak Druma automatyzuje deklaracje e-Transport ANAF, generowanie ko
 icon: "truck-fast"
 ---
 
-e-Transport to rumuński obowiązkowy system elektronicznych deklaracji i śledzenia GPS dla drogowego transportu towarów, administrowany przez ANAF (Agenția Națională de Administrare Fiscală). Druma automatyzuje proces deklaracji, generuje kody UIT i obsługuje raportowanie pozycji GPS.
+e-Transport to rumuński obowiązkowy system elektronicznych deklaracji i śledzenia GPS dla drogowego transportu towarów, administrowany przez ANAF (Agenția Națională de Administrare Fiscală). Druma automatyzuje proces deklaracji, generuje kody UIT i obsługuje raportowanie pozycji GPS — usuwając ręczny wysiłek i zmniejszając ryzyko kar.
 
 ---
 
@@ -13,80 +13,140 @@ e-Transport to rumuński obowiązkowy system elektronicznych deklaracji i śledz
 e-Transport wymaga od operatorów transportu:
 
 1. **Zadeklarowania transportu** do ANAF przed wyruszeniem ciężarówki, otrzymując unikalny kod UIT
-2. **Rejestrowania pozycji GPS** co 30 sekund podczas transportu
+2. **Rejestrowania pozycji GPS** w regularnych odstępach podczas transportu
 3. **Posiadania kodu UIT** w ciężarówce (wydrukowanego lub widocznego na telefonie kierowcy)
+
+System pozwala ANAF i Poliției Rutiere zweryfikować w czasie rzeczywistym, że transport został zadeklarowany, kto przewozi towary i czy ciężarówka jest na zadeklarowanej trasie.
 
 ---
 
 ## Kiedy stosuje się e-Transport
 
-e-Transport dotyczy transportu towarów **wewnątrz Rumunii lub w tranzycie przez Rumunię** gdy ładunek przekracza określone progi wagowe i wartościowe ustalone przez ANAF.
+e-Transport dotyczy transportu towarów **wewnątrz Rumunii lub w tranzycie przez Rumunię**, gdy ładunek przekracza określone progi wagowe i wartościowe. Progi te są ustalane przez ANAF i okresowo aktualizowane rozporządzeniem rządowym.
 
 <Warning>
-Zawsze sprawdzaj aktualne progi ANAF zanim stwierdzisz, że przesyłka nie wymaga deklaracji e-Transport. Przepisy były kilkakrotnie aktualizowane od czasu uruchomienia systemu. Autorytatywnym źródłem jest [mfinante.gov.ro](https://www.mfinante.gov.ro).
+Zawsze sprawdzaj aktualne progi ANAF, zanim stwierdzisz, że przesyłka nie wymaga deklaracji e-Transport. Przepisy były kilkakrotnie aktualizowane od czasu uruchomienia systemu. Autorytatywnym źródłem jest [mfinante.gov.ro](https://www.mfinante.gov.ro) oraz portal ANAF e-Transport.
 </Warning>
+
+Kategorie wymagające deklaracji obejmowały: towary o ryzyku fiskalnym (żywność, alkohol, tytoń, tekstylia, materiały budowlane, elektronika), towary powyżej progu wartości oraz cały międzynarodowy tranzyt przez Rumunię powyżej określonego tonażu. Twój księgowy lub doradca prawny ds. transportu może potwierdzić obecnie obowiązujące kategorie dla Twoich typów ładunków.
+
+---
+
+## Kto deklaruje: Twój klient czy Ty?
+
+Zgodnie z OUG 41/2022 Art. 8, prawny obowiązek zadeklarowania transportu do ANAF spoczywa na **rumuńskiej stronie handlowej** — rumuńskim zarejestrowanym nadawcy lub odbiorcy towarów, nigdy na przewoźniku jako takim. Dla większości firm transportowych oznacza to: **Twój klient deklaruje i dostarcza Ci kod UIT** (przepływ przewoźnika — domyślny w Druma). Tylko jeśli Twoja firma sama jest rumuńską stroną handlową — ponieważ sprzedaje lub przewozi własne towary — deklarujesz samodzielnie (przepływ deklaranta, włączany per firma w Ustawienia → Integracje → ANAF e-Transport).
+
+### Kiedy stosować który przepływ
+
+| Sytuacja | Przepływ |
+|---|---|
+| Twoja firma jest rumuńską stroną handlową (nadawca lub odbiorca) | **Przepływ deklaranta** — przypisz ciężarówkę, a Druma automatycznie przesyła do ANAF |
+| Jesteś przewoźnikiem, a Twój rumuński klient jest stroną handlową | **Przepływ przewoźnika** — klient dostarcza UIT przez portal lub telefonicznie |
+| Zlecenie podzlecone (przekazujesz innemu przewoźnikowi) | Żaden — podwykonawca lub jego klient obsługuje deklarację |
 
 ---
 
 ## Jak Druma obsługuje e-Transport
 
-### Automatyczna deklaracja UIT
+### Przepływ przewoźnika (domyślny): deklaruje Twój klient
 
-Dla rumuńskich zleceń krajowych lub zleceń w tranzycie przez Rumunię, Druma automatycznie generuje i przesyła deklarację e-Transport do ANAF przez API e-Transport ANAF gdy zlecenie jest potwierdzone.
+Gdy to Twój klient ma obowiązek deklaracji, Druma automatycznie popycha proces do przodu, aby UIT dotarł do Ciebie, zanim ciężarówka wyruszy.
 
 <Steps>
-  <Step title="Utwórz zlecenie">
-    Wprowadź wszystkie szczegóły zlecenia w Druma: typ ładunku, wagę, wartość, adres odbioru, adres dostawy, numer tablicy rejestracyjnej ciężarówki, kierowcę.
+  <Step title="Przypomnienie w e-mailu potwierdzenia">
+    Gdy Druma wysyła klientowi potwierdzenie zlecenia, wykrywa, że trasa dotyczy Rumunii, i dołącza widoczną notatkę z prośbą o wpisanie kodu UIT w portalu klienta.
   </Step>
-  <Step title="Potwierdź zlecenie">
-    Gdy klikniesz **Potwierdź zlecenie**, Druma wykrywa, że zlecenie dotyczy Rumunii i przesyła deklarację do ANAF.
+  <Step title="Wpis w portalu klienta">
+    Klient otwiera przesyłkę w portalu klienta Druma. Karta **e-Transport (Rumunia)** wyjaśnia wymóg i udostępnia pole wprowadzania. Klient wpisuje kod UIT otrzymany od ANAF — Druma waliduje format (8–30 wielkich znaków alfanumerycznych) przed zapisaniem.
   </Step>
-  <Step title="Wygenerowano kod UIT">
-    ANAF odpowiada kodem UIT (Cod Unic de Identificare a Transportului). Druma przechowuje go w zleceniu i wyświetla w widocznym miejscu na stronie szczegółów.
+  <Step title="Ręczny wpis planisty">
+    Jeśli klient przekazuje UIT telefonicznie lub e-mailem, planista może wpisać go bezpośrednio w panelu szczegółów zlecenia, w **karcie ładunku**. Ta sama sekcja **e-Transport (Rumunia)** pokazuje pole wprowadzania, gdy nie zarejestrowano jeszcze UIT, a status zlecenia pozwala na edycję.
+  </Step>
+  <Step title="Transmisja GPS aktywuje się automatycznie">
+    Gdy tylko kod UIT jest zapisany, potok przekazywania GPS Druma przejmuje zlecenie i zaczyna przesyłać pozycje do ANAF — nie jest wymagane żadne dodatkowe działanie ze strony planisty.
   </Step>
   <Step title="Kierowca widzi kod UIT">
-    Kod UIT pojawia się w aplikacji Druma kierowcy na jego telefonie. Jeśli poprosi o to inspektor drogowy, kierowca pokazuje kod na telefonie.
+    Kod UIT pojawia się w aplikacji kierowcy Druma na ekranie aktywnego zlecenia, potwierdzając kierowcy, że deklaracja jest w porządku przed wyjazdem. Jeśli poprosi o to inspektor drogowy, kierowca pokazuje kod na telefonie lub okazuje wydrukowany dokument zlecenia.
   </Step>
 </Steps>
+
+### Przepływ deklaranta: deklaruje Twoja firma
+
+Włącz to tylko, jeśli Twoja firma jest rumuńską stroną handlową, która prawnie deklaruje do ANAF. Przejdź do **Ustawienia → Integracje → ANAF e-Transport** i włącz ustawienie deklaranta.
+
+Po włączeniu:
+
+- Gdy tworzysz zlecenie z przystankiem odbioru lub dostawy w Rumunii, formularz zlecenia pokazuje pole **Wartość towarów (RON)**. Ta wartość jest wymagana do deklaracji. Zapisanie bez niej pokazuje ostrzeżenie — nadal możesz zapisać i dodać wartość później, edytując zlecenie.
+- Gdy przypisujesz ciężarówkę do zlecenia, Druma sprawdza, czy zlecenie mieści się w zakresie: wartość towarów musi być na poziomie lub powyżej progu deklaracji (domyślnie **10 000 RON**, konfigurowalny per firma), a zlecenie nie może być podzlecone.
+- Jeśli wszystkie warunki są spełnione, Druma **automatycznie przesyła deklarację** natychmiast po zapisaniu przypisania ciężarówki i zapisuje wynikowy UIT na zleceniu.
+
+**Jeśli deklaracja się nie powiedzie** — na przykład z powodu brakującej wartości towarów, błędu adresu przystanku lub tymczasowego problemu API ANAF — strona szczegółów zlecenia pokazuje ostrzeżenie **Deklaracja nieudana**. Popraw dane źródłowe i ponów próbę za pomocą opcji **Zadeklaruj / Ponów e-Transport** w menu akcji zlecenia.
+
+<Note>
+Firmy bez włączonego ustawienia deklaranta nigdy nie widzą monitu Wartość towarów (RON) i nie wyzwolą automatycznych deklaracji. Przepływ przewoźnika jest zawsze dostępny zarówno dla firm-deklarantów, jak i niebędących deklarantami, dla zleceń, w których obowiązek ma klient.
+</Note>
 
 ---
 
 ## Rejestrowanie pozycji GPS
 
-e-Transport wymaga przesyłania pozycji GPS do ANAF co **30 sekund** podczas aktywnego transportu. Druma obsługuje to automatycznie przez API e-Transport ANAF.
+e-Transport wymaga przesyłania pozycji GPS do ANAF podczas aktywnego transportu. Druma obsługuje to automatycznie przez API ANAF e-Transport — osobno od ręcznych aktualizacji statusu kierowcy. Aby uniknąć zalewania API ANAF aktualizacją pozycji przy każdym sygnale GPS, Druma ogranicza wychodzące transmisje per zlecenie do **maksymalnie raz na 5 minut**, przekazując najnowszą pozycję w tym tempie, zamiast każdego surowego sygnału otrzymanego z telefonu kierowcy.
 
-**Ważne:** Rejestrowanie GPS działa tylko gdy kierowca ma **otwartą aplikację Druma na telefonie** podczas transportu.
+**Ważne:** rejestrowanie GPS działa tylko wtedy, gdy kierowca ma **otwartą aplikację Druma na telefonie** podczas transportu. Jeśli kierowca zamknie aplikację lub ekran telefonu zablokuje się bez działania aplikacji w tle, rejestrowanie pozycji może zostać przerwane.
 
 <Steps>
-  <Step title="Poinstruuj kierowców przed odjazdem">
-    Przed wyruszeniem ciężarówki potwierdź z kierowcą, że aplikacja Druma jest otwarta i pokazuje aktywne zlecenie.
+  <Step title="Poinstruuj kierowców przed wyjazdem">
+    Przed wyruszeniem ciężarówki potwierdź z kierowcą, że aplikacja Druma jest otwarta i pokazuje aktywne zlecenie. Na Androidzie potwierdź, że aplikacja ma uprawnienie lokalizacji w tle.
   </Step>
   <Step title="Aplikacja działa podczas transportu">
-    Aplikacja przesyła współrzędne GPS do Druma co 30 sekund. Druma automatycznie przekazuje je do API e-Transport ANAF.
+    Aplikacja przesyła współrzędne GPS do Druma w miarę ruchu. Druma przekazuje pozycję do API ANAF e-Transport maksymalnie raz na 5 minut per zlecenie.
   </Step>
   <Step title="Zakończenie transportu">
     Gdy kierowca oznacza zlecenie jako dostarczone, rejestrowanie GPS dla tego kodu UIT zatrzymuje się.
   </Step>
 </Steps>
 
+<Note>
+Rejestrowanie GPS dla e-Transport korzysta z transmisji danych mobilnych. Upewnij się, że kierowcy mają aktywną kartę SIM z transmisją danych. Na trasach przez obszary o słabym sygnale Druma buforuje pozycje i przesyła je po przywróceniu łączności.
+</Note>
+
 ---
 
 ## Co musi zrobić kierowca
 
-Obowiązki kierowcy dla zgodności e-Transport są minimalne przy użyciu Druma:
+Obowiązki kierowcy w zakresie zgodności e-Transport są minimalne przy użyciu Druma:
 
 1. **Trzymaj aplikację otwartą** na telefonie podczas transportu
-2. **Pokaż kod UIT** jeśli poprosi o to inspektor drogowy
-3. **Nie odchylaj się znacząco od zadeklarowanej trasy**
+2. **Pokaż kod UIT**, jeśli poprosi o to inspektor drogowy (jest widoczny na aktywnym zleceniu w aplikacji)
+3. **Nie odchylaj się znacząco od zadeklarowanej trasy** — poważne odchylenia trasy mogą wymagać zmienionej deklaracji, którą obsługuje dyspozytor z interfejsu webowego Druma
 
 ---
 
 ## Kary za niezgodność
 
-Kary ANAF za naruszenia e-Transport są znaczące. Typowe naruszenia to: transport towarów bez ważnego kodu UIT, przerwy w rejestrowaniu GPS, deklarowany ładunek niezgodny z przewożonym.
+Kary ANAF za naruszenia e-Transport są znaczące — kary dotyczą zarówno przewoźnika, jak i beneficjenta transportu (klienta lub nadawcy). Typowe naruszenia obejmują:
+
+- Transport towarów bez ważnego kodu UIT
+- Przerwy w rejestrowaniu pozycji GPS podczas transportu
+- Zadeklarowany ładunek niezgodny z faktycznie przewożonym
+
+Automatyzacja Druma eliminuje najczęstsze naruszenia zgodności: brakujące deklaracje i przerwy w rejestrowaniu GPS. Jednak odpowiedzialność za dokładne informacje o ładunku (waga, wartość, typ) pozostaje po stronie dyspozytora wprowadzającego dane zlecenia.
 
 ---
 
-<Card title="Dokumenty floty" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
-  Zgodność dokumentów pojazdu, w tym licencji operacyjnych wymaganych dla transportu rumuńskiego.
-</Card>
+## Powiązane artykuły
+
+<CardGroup cols={2}>
+  <Card title="Ustawienia deklaracji e-Transport" icon="gear" href="/pl/admin/etransport-settings">
+    Skonfiguruj dane uwierzytelniające API ANAF, próg wartości towarów i domyślne ustawienia e-Transport w Druma.
+  </Card>
+  <Card title="Dokumenty floty" icon="folder-open" href="/pl/fleet-compliance/fleet-documents">
+    Zgodność dokumentów pojazdu, w tym licencji CEMT śledzonej dla transportu międzynarodowego.
+  </Card>
+  <Card title="Przepisy UE dotyczące godzin jazdy" icon="clock" href="/pl/fleet-compliance/eu-driving-hours">
+    Limity jazdy wg Rozporządzenia 561/2006 i jak Druma je śledzi.
+  </Card>
+  <Card title="Pakiet mobilności" icon="globe" href="/pl/fleet-compliance/mobility-package">
+    Obowiązki powrotu pojazdu i kierowcy oraz deklaracje delegowania IMI.
+  </Card>
+</CardGroup>

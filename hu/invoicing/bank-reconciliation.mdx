@@ -1,43 +1,100 @@
 ---
 title: "Banki egyeztetés"
-description: "Beérkező banki fizetési e-mailek automatikus egyeztetése a Druma nyitott számláival a román bank értesítő e-mailjének továbbításával."
+description: "Egyeztesd automatikusan a beérkező banki fizetési e-maileket a Druma nyitott számláival, a román bankod értesítő e-mailjeinek továbbításával."
 icon: "building-columns"
 ---
 
-## Hogyan működik a banki egyeztetés?
+## Áttekintés
 
-Sok román bank (BRD, BCR, Raiffeisen, UniCredit, ING) e-mailes értesítőt küld minden bejövő átutalásról. A Druma ezeket az e-maileket feldolgozza és automatikusan megpróbálja egyeztetni a befizetést a nyitott számlával.
+A banki átutalások számlákkal való manuális egyeztetése fárasztó és hibalehetőségekkel teli. A Druma banki egyeztetési funkciója ennek nagy részét automatizálja, feldolgozva azokat a fizetési értesítő e-maileket, amelyeket a román bankok minden bejövő átutaláshoz küldenek. Továbbítod ezeket az e-maileket egy speciális Druma-postafiókra, és a Druma elvégzi az egyeztetést.
 
-## Beállítás
+Nincs szükség banki API-hozzáférésre. Nincs szükség új szoftver telepítésére. Csak e-mail-továbbítás.
+
+<Frame caption="Pénzügy → Egyeztetés — CAMT.053, MT940 és CODA kivonatformátumok.">
+  <img src="/images/invoicing/bank-reconciliation.png" alt="Banki egyeztetés oldal" />
+</Frame>
+
+## Hogyan működik?
+
+Amikor pénz érkezik a bankszámládra, a bankod automatikus értesítő e-mailt küld. A Druma be tudja olvasni ezeket az e-maileket, és kinyeri a legfontosabb adatokat:
+
+- Kapott összeg
+- Fizető neve
+- Fizetési hivatkozási szám
+- Átutalás dátuma
+
+A Druma ezután megkeresi a nyitott számláid között az egyezést. Ha az összeg és a hivatkozási szám egyezik, a számla automatikusan kifizetettként lesz megjelölve. Ha nincs egyértelmű egyezés, a fizetés egy felülvizsgálati sorba kerül, amelyet manuálisan kell kezelned.
+
+## Támogatott bankok
+
+Az alábbi román bankok e-mail-feldolgozása támogatott:
+
+- BRD – Groupe Société Générale
+- BCR – Banca Comercială Română
+- Raiffeisen Bank
+- UniCredit Bank
+- ING Bank
+
+<Note>
+Ha a bankod nincs ezen a listán, továbbra is használhatod a Drumát manuális fizetésrögzítésre — egyszerűen rögzítsd a fizetéseket a Fizetés rögzítése gombbal minden számlán. A manuális egyeztetés mindig elérhető, függetlenül a bankbeállítástól.
+</Note>
+
+## Az e-mail-továbbítás beállítása
 
 <Steps>
-  <Step title="Lépj a Beállítások → Vállalat → Banki egyeztetés menüpontra">
-    Ez az oldal mutatja a vállalat banki e-mail aliaszát.
+  <Step title="Keresd meg a Druma egyeztetési postafiók-címedet">
+    Lépj a **Beállítások** → **Vállalat** menüpontra, és kapcsold be a **Banki fizetési postafiók engedélyezése** kapcsolót. Az egyedi Druma egyeztetési e-mail-címed itt jelenik meg — valahogy így néz ki: `reconcile-tegcegneved@inbox.druma.io`.
   </Step>
-  <Step title="Másold ki a Druma e-mail aliaszt">
-    Minden vállalat egyedi e-mail aliaszt kap, pl. `abc-transport-12345@invoices.druma.io`.
+  <Step title="Másold ki az e-mail-címet">
+    Másold ki a teljes címet. Szükséged lesz rá az e-mail-kliensedben vagy a bank értesítési beállításaiban.
   </Step>
-  <Step title="Állítsd be az automatikus továbbítást a bankodnál">
-    A bankod online banki felületén állíts be automatikus továbbítást: minden bejövő átutalási értesítőt küldjön a Druma aliasz e-mail-címre.
+  <Step title="Állítsd be a továbbítást az e-mail-kliensedben">
+    Abban az e-mail-fiókban, ahová a bankod a fizetési értesítéseket küldi, hozz létre egy továbbítási szabályt:
 
-    Ha ez nem lehetséges, a feladó-whitelist-be be kell venni a bank feladói e-mail-tartományát (lásd az oldal Engedélyezett küldők részét).
+    - **Feltétel:** e-mailek a bankod értesítési címéről (például `notificari@brd.ro`)
+    - **Művelet:** továbbítás a Druma egyeztetési címedre
+
+    A pontos lépések az e-mail-szolgáltatódtól függenek. Gmailben lépj a Beállítások → Szűrők és letiltott címek → Új szűrő létrehozása menüpontra. Outlookban használd a Szabályok → Új szabály funkciót.
+  </Step>
+  <Step title="Teszteld egy valódi fizetéssel">
+    Várj a következő bejövő fizetésre. Amint a bankod elküldi az értesítő e-mailt, az automatikusan továbbításra kerül a Drumába. Néhány percen belül ellenőrizd a **Számlázás** → **Egyeztetés** menüpontban, hogy egyeztetésre került-e.
   </Step>
 </Steps>
 
-## Egyeztetési folyamat
+## Automatikus egyeztetés
 
-Amikor a Druma megkapja a bank e-mailját:
-1. Elemzi az összeget, a dátumot és a hivatkozást
-2. Megkeresi az egyező nyitott számlát az összeg és az ügyfél neve alapján
-3. Ha egyezést talál: automatikusan rögzíti a befizetést és **Kifizetve** állapotra frissíti a számlát
-4. Ha nem talál egyezést: az e-mail a **Nem egyeztetett** sorba kerül manuális feldolgozáshoz
+Amikor egy továbbított e-mail megérkezik, a Druma megpróbálja egy nyitott számlához egyeztetni a következők alapján:
 
-## Nem egyeztetett fizetések kezelése
+1. **Összeg** — a kapott összeg egyezik a számla fennmaradó egyenlegével
+2. **Hivatkozási szám** — az e-mailben szereplő fizetési hivatkozás egyezik egy Druma-számlaszámmal (az ügyfeleket arra kérjük, hogy a számlaszámot használják fizetési hivatkozásként)
 
-Lépj a **Számlázás → Egyeztetés** menüpontra a nem egyeztetett befizetések megtekintéséhez. Minden tételnél:
-- Manuálisan hozzárendelhetod egy számlához
-- Elutasíthatod (ha nem vonatkozik a Drumára)
+Ha mindkettő egyezik, a számla automatikusan **Kifizetve** állapotra vált. Nincs szükség beavatkozásra a részedről.
 
-<Card title="Bankiállapot-import" icon="file-up" href="/en/invoicing/bank-statement-import">
-  CAMT.053 vagy MT940 bankikivonatok feltöltése tömeges egyeztetéshez.
+## Nem egyeztetett fizetések
+
+Egyes fizetések nem egyeznek automatikusan — például, ha az ügyfél nem tüntette fel a számlaszámot az átutalás hivatkozásában, vagy ha az összeg kissé eltér. Ezek a felülvizsgálati sorban jelennek meg:
+
+Lépj a **Számlázás** → **Egyeztetés** → **Nem egyeztetett fizetések** menüpontra. Minden nem egyeztetett fizetés mutatja az összeget, a fizető nevét és a hivatkozást. Tehetsz a következőket:
+
+- **Számlához kapcsolás** — keresd meg a helyes számlát, és kapcsold hozzá ezt a fizetést
+- **Figyelmen kívül hagyás** — jelöld meg a fizetést a Druma-számlákkal nem összefüggőként (például egy, a Drumán kívüli fizetés)
+
+Amint egy fizetést egy számlához kapcsolsz, a számla státusza frissül, mintha manuálisan rögzítetted volna a fizetést.
+
+## Duplikátumkezelés
+
+Ha véletlenül kétszer továbbítod ugyanazt az értesítő e-mailt, a Druma nem hoz létre duplikált fizetést. A duplikátumokat az e-mail `Message-Id` fejléce alapján észleli, nem a banki hivatkozási szám alapján — így akkor is, ha a hivatkozás mező üres vagy újra felhasznált, ugyanaz az e-mail sosem kerül kétszer feldolgozásra. A második e-mail csendben figyelmen kívül marad.
+
+<Note>
+Ösztönözd az ügyfeleidet, hogy a számlaszámot használják banki átutalási hivatkozásként. Ez az egyetlen szokás drámaian növeli az automatikus egyeztetési arányt — a legtöbb fizetés egyeztetésre kerül manuális munka nélkül a részedről.
+</Note>
+
+<Warning>
+A banki értesítő e-mailek néha bizalmas pénzügyi információkat tartalmaznak. Győződj meg róla, hogy a Druma egyeztetési postafiók-címed privát marad — ne oszd meg nyilvánosan. Egyedi a céged számára, és nem kitalálható, de kezeld úgy, mint egy jelszót.
+</Warning>
+
+---
+
+<Card title="Fizetéskövetés" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
+  Hogyan rögzíts fizetéseket manuálisan, kezeld a részleges fizetéseket, és exportáld a fizetési adatokat.
 </Card>

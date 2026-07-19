@@ -1,0 +1,118 @@
+---
+title: "Tachográf-archívum"
+description: "Hogyan tárolja a Druma a DDD és TGD tachográf-fájlokat az EU 165/2014 rendelet letöltési gyakoriságra és megőrzésre vonatkozó követelményeinek teljesítéséhez — automatikus éjszakai letöltés és manuális feltöltés."
+icon: "hard-drive"
+---
+
+Az EU 165/2014 rendelet előírja a fuvarozási operátorok számára, hogy meghatározott időközönként töltsék le a tachográf-adatokat a jármű-egységekről és a sofőrkártyákról, és őrizzék meg ezeket az adatokat legalább 12 hónapig. A Druma a Tachográf-archívumban tárolja ezeket a fájlokat, így útmenti ellenőrzés vagy hatósági audit esetén bizonyítani tudod a megfelelést, külön iktatási rendszer fenntartása nélkül.
+
+---
+
+## Letöltési gyakorisági követelmények
+
+| Fájltípus | Szükséges letöltési gyakoriság |
+|---|---|
+| Jármű-egység adat (VU / `.ddd`) | Legalább **90 naponta** |
+| Sofőrkártya adat (DDC / `.tgd`) | Legalább **28 naponta** |
+
+Egy letöltési határidő elmulasztása közvetlen szabálysértés, függetlenül attól, hogy a sofőr elkövetett-e szabálysértést az adott időszak alatt. Az ellenőrök azt vizsgálják, hogy az adatot időben letöltötték-e, nem csupán azt, hogy végül lekérésre került.
+
+---
+
+## Hol találod a Tachográf-archívumot?
+
+Lépj a **Flotta → Tachográf-archívum** menüpontra. Az oldal feltöltési dátum szerint listázza az összes tárolt tachográf-fájlt. Minden sor mutatja:
+
+- Sofőr vagy jármű nevét
+- Fájltípust (VU vagy DDC)
+- A fájl által lefedett dátumtartományt
+- Az utolsó letöltés óta eltelt napokat
+- Státusz-jelvényt
+
+### Státusz-jelvények
+
+| Jelvény | Jelentés |
+|---|---|
+| **Rendben** | A letöltési határidőn belül |
+| **Hamarosan esedékes** | A határidőtől számított 5 napon belül |
+| **Lejárt** | A határidő elmúlt |
+
+A **Lejárt** jelöléssel ellátott fájlok azonnali intézkedést igényelnek — töltsd le a fájlt a járműről vagy a sofőrkártyáról, és töltsd fel a lejárt státusz megszüntetéséhez.
+
+---
+
+## Automatikus letöltés
+
+Az rFMS-en (a szabványosított OEM telematikai interfészen) keresztül csatlakoztatott teherautóknál a Druma minden éjjel automatikusan lehívja az új DDD- és TGD-fájlokat. A csatlakoztatott járműveknél és sofőröknél nincs szükség manuális beavatkozásra.
+
+Támogatott automatikus letöltési integrációk:
+
+| Szolgáltató | Integráció neve | Státusz |
+|---|---|---|
+| Scania | rFMS | Élesben |
+| Volvo | rFMS | Élesben |
+| DAF | rFMS | Élesben |
+| MAN | rFMS | Élesben |
+| Mercedes-Benz | rFMS | Élesben |
+| IVECO | rFMS | Élesben |
+| Renault | rFMS | Élesben |
+| Webfleet | TachoShare | Még nincs megvalósítva — Webfleet partnerfiók hozzáférésre vár |
+
+Az automatikus letöltés engedélyezéséhez lépj a **Beállítások → Integrációk** menüpontra, és csatlakoztasd az rFMS-t támogató OEM telematikai szolgáltatódat. Csatlakozás után a Druma az éjszakai szinkronizálási ablak alatt lekéri az elérhető fájlokat, és ennek megfelelően frissíti a státusz-jelvényeket.
+
+<Note>
+Az automatikus letöltés attól függ, hogy a telematikai szolgáltató távolról elérhetővé teszi-e a fájlt. Egyes régebbi jármű-egység modellek vagy sofőrkártyák nem támogatják a távoli lekérést — ezeknél manuális feltöltés szükséges. A Webfleet TachoShare a tervek között szerepel, de még nem élő; a csatlakoztatott Webfleet-járműveknél jelenleg manuális feltöltés szükséges.
+</Note>
+
+---
+
+## Manuális feltöltés
+
+Az automatikus integráció által nem lefedett járműveknél és sofőröknél töltsd fel a fájlokat közvetlenül egy tachográf-letöltő eszközből (pl. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+<Steps>
+  <Step title="Nyisd meg a Tachográf-archívumot">
+    Lépj a **Flotta → Tachográf-archívum** menüpontra.
+  </Step>
+  <Step title="Kattints a Fájl feltöltése gombra">
+    Kattints a **Fájl feltöltése** gombra a jobb felső sarokban.
+  </Step>
+  <Step title="Válaszd ki a sofőrt vagy a járművet">
+    Válaszd ki, hogy a fájl egy sofőrkártya-fájl (DDC) vagy egy jármű-egység fájl (VU), majd válaszd ki a sofőrt vagy a járművet a listából.
+  </Step>
+  <Step title="Válaszd ki a fájlt">
+    Válaszd ki a `.ddd`, `.tgd`, `.v1b` vagy `.c1b` fájlt a számítógépedről. A maximális fájlméret **10 MB**.
+  </Step>
+  <Step title="Erősítsd meg a feltöltést">
+    Kattints a **Feltöltés** gombra. A Druma feldolgozza a fájl fejlécét, kinyeri a dátumtartományt, és tárolja a fájlt az archívumban. A lejárati óra nullázódik a kiválasztott sofőrnél vagy járműnél.
+  </Step>
+</Steps>
+
+<Warning>
+Csak `.ddd`, `.tgd`, `.v1b` és `.c1b` fájlok fogadhatók el — a `.v1b`/`.c1b` a 2. generációs okos tachográf megfelelője a `.ddd`/`.tgd` fájloknak. A más formátumban exportált fájlok (CSV, PDF) nem tölthetők fel, és nem elégítik ki az EU adatmegőrzési követelményét. Mindig őrizd meg az eredeti bináris fájlt.
+</Warning>
+
+---
+
+## Megőrzés
+
+A Druma minden feltöltött és automatikusan letöltött tachográf-fájlt megőriz a törvényileg előírt 12 hónapos minimumig. A 12 hónapnál régebbi fájlok automatikus archiválás alá esnek. Ha a szabványos megőrzési időszakon túl kell fájlokat visszakérned, vedd fel a kapcsolatot az ügyfélszolgálattal.
+
+---
+
+## Kapcsolódó cikkek
+
+<CardGroup cols={2}>
+  <Card title="EU vezetési idő szabályai" icon="clock" href="/en/fleet-compliance/eu-driving-hours">
+    Az 561/2006 rendelet napi és heti vezetési korlátai, tachográf-adatokból nyomon követve.
+  </Card>
+  <Card title="Sofőrök munkaideje (WTD)" icon="clock" href="/en/fleet-compliance/driver-working-time">
+    A 2002/15/EK irányelv munkaidő-korlátai, és hogyan figyeli ezeket a Druma.
+  </Card>
+  <Card title="Flottadokumentumok" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
+    Jármű-dokumentumok megfelelősége és lejárat-nyomon követés.
+  </Card>
+  <Card title="Mobility Package" icon="globe" href="/en/fleet-compliance/mobility-package">
+    Jármű- és sofőr-visszatérési kötelezettségek és IMI kiküldetési nyilatkozatok.
+  </Card>
+</CardGroup>

@@ -4,43 +4,149 @@ description: "Hoe Druma ANAF e-Transport-aangiften automatiseert, UIT-codes gene
 icon: "truck-fast"
 ---
 
-e-Transport is het verplichte elektronische aangifte- en GPS-trackingsysteem van Roemenië voor het wegtransport van goederen, beheerd door ANAF. Druma automatiseert het aangifteproces, genereert UIT-codes en verwerkt GPS-positierapportage.
+e-Transport is het verplichte elektronische aangifte- en GPS-trackingsysteem van Roemenië voor het wegtransport van goederen, beheerd door ANAF (Agenția Națională de Administrare Fiscală). Druma automatiseert het aangifteproces, genereert UIT-codes en verwerkt GPS-positierapportage — dit verwijdert de handmatige last en verlaagt het risico op boetes.
+
+---
 
 ## Wat is e-Transport?
 
 e-Transport vereist van transportoperators:
 
-1. **De transport van tevoren aanmelden** bij ANAF, en een unieke UIT-code ontvangen
-2. **De UIT-code op de vrachtbrief** vermelden
-3. **GPS-posities** van de truck doorzenden naar ANAF gedurende de rit
+1. **Het transport aanmelden** bij ANAF voordat de truck vertrekt, en een unieke UIT-code ontvangen
+2. **GPS-posities loggen** met regelmatige tussenpozen tijdens het transport
+3. **De UIT-code meevoeren** in de truck (afgedrukt of zichtbaar op de telefoon van de chauffeur)
 
-## Wanneer e-Transport verplicht is
+Het systeem laat ANAF en de Poliția Rutieră toe om in realtime te verifiëren dat een transport is aangemeld, wie de goederen vervoert en of de truck de aangemelde route volgt.
 
-e-Transport is verplicht wanneer **al** van de volgende voorwaarden gelden:
-- De lading is van hoge waarde (boven de ANAF-drempel, momenteel RON 20.000)
-- De route gaat door Roemeen territorium
-- De goederen behoren tot de gereglementeerde categorieën
+---
 
-Druma detecteert dit automatisch en triggert de e-Transport-aangifte.
+## Wanneer e-Transport van toepassing is
 
-## Configureren
+e-Transport geldt voor het vervoer van goederen **binnen Roemenië of in transit door Roemenië** wanneer de lading bepaalde gewichts- en waardedrempels overschrijdt. Deze drempels worden vastgesteld door ANAF en periodiek bijgewerkt via regeringsverordening.
+
+<Warning>
+Controleer altijd de actuele ANAF-drempels voor u concludeert dat een zending geen e-Transport-aangifte vereist. De regels zijn sinds de lancering van het systeem meerdere keren bijgewerkt. De gezaghebbende bron is [mfinante.gov.ro](https://www.mfinante.gov.ro) en het ANAF e-Transport-portaal.
+</Warning>
+
+Categorieën die aangifte hebben vereist: goederen met fiscaal risico (voedsel, alcohol, tabak, textiel, bouwmaterialen, elektronica), goederen boven een waardedrempel, en alle internationale transit door Roemenië boven bepaalde tonnage. Uw boekhouder of transportjurist kan de actueel toepasselijke categorieën voor uw ladingtypes bevestigen.
+
+---
+
+## Wie meldt aan: uw klant, of u?
+
+Onder OUG 41/2022 Art. 8 rust de wettelijke verplichting om een transport bij ANAF aan te melden bij de **Roemeense handelspartij** — de in Roemenië geregistreerde afzender of ontvanger van de goederen, nooit bij de vervoerder als zodanig. Voor de meeste transportbedrijven betekent dit: **uw klant meldt aan en bezorgt u de UIT-code** (de vervoerdersstroom — Druma's standaard). Alleen als uw bedrijf zelf de Roemeense handelspartij is — omdat u uw eigen goederen verkoopt of verplaatst — meldt u zelf aan (de aangeversstroom, per bedrijf ingeschakeld in Instellingen → Integraties → ANAF e-Transport).
+
+### Welke stroom wanneer gebruiken
+
+| Situatie | Stroom |
+|---|---|
+| Uw bedrijf is de Roemeense handelspartij (afzender of ontvanger) | **Aangeversstroom** — wijs een truck toe en Druma dient automatisch in bij ANAF |
+| U bent vervoerder en uw Roemeense klant is de handelspartij | **Vervoerdersstroom** — de klant levert de UIT via het portaal of telefonisch |
+| Uitbestede order (u besteedt uit aan een andere vervoerder) | Geen van beide — de onderaannemer of diens klant regelt de aangifte |
+
+---
+
+## Hoe Druma e-Transport afhandelt
+
+### Vervoerdersstroom (de standaard): uw klant meldt aan
+
+Wanneer uw klant de aangifteplicht draagt, stuwt Druma het proces automatisch vooruit zodat de UIT u bereikt voor de truck vertrekt.
 
 <Steps>
-  <Step title="Voer ANAF-inloggegevens in">
-    Ga naar **Instellingen → Bedrijf** en scroll naar het gedeelte **e-Transport Inloggegevens**. Voer uw ANAF SPV API-inloggegevens in.
+  <Step title="Herinnering in de bevestigingsmail">
+    Wanneer Druma de orderbevestiging naar de klant stuurt, detecteert het dat de route Roemenië raakt en voegt een prominente melding toe die de klant vraagt de UIT-code in zijn portaal in te voeren.
   </Step>
-  <Step title="Upload uw certificaat">
-    Upload het door ANAF verstrekte digitale certificaat.
+  <Step title="Invoer via het klantportaal">
+    De klant opent de zending in het Druma-klantportaal. Een kaart **e-Transport (Roemenië)** legt de vereiste uit en biedt een invoerveld. De klant voert de van ANAF ontvangen UIT-code in — Druma valideert het formaat (8–30 hoofdlettertekens alfanumeriek) voor het opslaan.
   </Step>
-  <Step title="Test de verbinding">
-    Klik op **Verbinding testen** om te bevestigen dat de inloggegevens geldig zijn.
+  <Step title="Handmatige invoer door de planner">
+    Levert de klant de UIT telefonisch of per e-mail, dan kan de planner ze rechtstreeks invoeren op het orderdetailpaneel onder het **ladingtabblad**. Dezelfde sectie **e-Transport (Roemenië)** toont een invoerveld wanneer er nog geen UIT geregistreerd is en de orderstatus bewerken toelaat.
+  </Step>
+  <Step title="GPS-doorzending activeert automatisch">
+    Zodra een UIT-code geregistreerd is, pikt Druma's GPS-doorstuurpijplijn de order op en begint automatisch posities naar ANAF door te sturen — geen verdere actie vereist van de planner.
+  </Step>
+  <Step title="Chauffeur ziet de UIT-code">
+    De UIT-code verschijnt in de Druma-app van de chauffeur op het scherm van de actieve order, wat de chauffeur bevestigt dat de aangifte in orde is voor vertrek. Vraagt een wegcontroleur ernaar, dan toont de chauffeur de code op zijn telefoon of het afgedrukte orderdocument.
   </Step>
 </Steps>
 
-## UIT-code voor chauffeurs
+### Aangeversstroom: uw bedrijf meldt aan
 
-Zodra de aangifte is goedgekeurd, toont de chauffeurs-app de UIT-code prominent op de orderkaart. De chauffeur kan de code kopiëren en ziet ook een blokkering als de aangifte nog in behandeling is.
+Schakel dit alleen in als uw bedrijf de Roemeense handelspartij is die wettelijk aan ANAF meldt. Ga naar **Instellingen → Integraties → ANAF e-Transport** en schakel de aangeversinstelling in.
 
-<Card title="Vlootdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
-  Andere nalevingsdocumenten bijhouden.
-</Card>
+Eenmaal ingeschakeld:
+
+- Maakt u een order aan met een ophaal- of afleverstop in Roemenië, dan toont het orderformulier een veld **Goederenwaarde (RON)**. Deze waarde is vereist voor de aangifte. Opslaan zonder waarde toont een waarschuwing — u kunt nog steeds opslaan en de waarde later toevoegen door de order te bewerken.
+- Wijst u een truck toe aan de order, dan controleert Druma of de order binnen bereik valt: de goederenwaarde moet de aangiftedrempel bereiken of overschrijden (standaard **10.000 RON**, configureerbaar per bedrijf) en de order mag niet uitbesteed zijn.
+- Zijn alle voorwaarden vervuld, dan **dient Druma de aangifte automatisch in** zodra de truck-toewijzing is opgeslagen, en slaat het resulterende UIT op de order op.
+
+**Faalt de aangifte** — bijvoorbeeld door een ontbrekende goederenwaarde, een fout in het stopadres, of een tijdelijk ANAF-API-probleem — dan toont de orderdetailpagina een waarschuwing **Aangifte mislukt**. Herstel de onderliggende gegevens en probeer opnieuw via de optie **Aangeven/Opnieuw proberen e-Transport** in het actiemenu van de order.
+
+<Note>
+Bedrijven zonder de aangeversinstelling ingeschakeld zien de prompt Goederenwaarde (RON) nooit en triggeren geen automatische aangiften. De vervoerdersstroom is altijd beschikbaar voor zowel aangevende als niet-aangevende bedrijven, voor orders waarbij de klant de verplichting draagt.
+</Note>
+
+---
+
+## GPS-positielogging
+
+e-Transport vereist dat GPS-posities naar ANAF worden doorgestuurd tijdens actief transport. Druma verzorgt dit automatisch via de ANAF e-Transport-API — los van de handmatige statusupdates van de chauffeur. Om te voorkomen dat ANAF's API overspoeld wordt met een positie-update bij elke GPS-ping, dempt Druma uitgaande transmissies per order tot **maximaal eenmaal per 5 minuten**, en stuurt het de meest recente positie door op dat ritme in plaats van elke ruwe ping van de telefoon van de chauffeur.
+
+**Belangrijk:** GPS-logging werkt alleen wanneer de chauffeur de Druma-app **open heeft op zijn telefoon** tijdens het transport. Sluit de chauffeur de app of vergrendelt het telefoonscherm zonder dat de app op de achtergrond draait, dan kan de positielogging onderbroken worden.
+
+<Steps>
+  <Step title="Instrueer chauffeurs vóór vertrek">
+    Bevestig voor de truck vertrekt bij de chauffeur dat de Druma-app open is en de actieve order toont. Bevestig op Android dat de app achtergrondlocatiemachtiging heeft.
+  </Step>
+  <Step title="De app draait tijdens het transport">
+    De app stuurt GPS-coördinaten naar Druma terwijl ze beweegt. Druma stuurt een positie naar de ANAF e-Transport-API maximaal eenmaal per 5 minuten per order.
+  </Step>
+  <Step title="Transport voltooid">
+    Markeert de chauffeur de order als afgeleverd, dan stopt de GPS-logging voor die UIT-code.
+  </Step>
+</Steps>
+
+<Note>
+GPS-logging voor e-Transport gebruikt mobiele data. Zorg dat chauffeurs een actieve simkaart met data hebben. Op routes door gebieden met zwak signaal buffert Druma posities en verstuurt ze zodra de connectiviteit hersteld is.
+</Note>
+
+---
+
+## Wat de chauffeur moet doen
+
+De verantwoordelijkheden van de chauffeur voor e-Transport-naleving zijn minimaal bij gebruik van Druma:
+
+1. **De app open houden** op zijn telefoon tijdens het transport
+2. **De UIT-code tonen** indien gevraagd door een wegcontroleur (zichtbaar op de actieve order in de app)
+3. **Niet significant afwijken van de aangemelde route** — grote routeafwijkingen kunnen een aangepaste aangifte vereisen, die de dispatcher afhandelt vanuit de Druma-webinterface
+
+---
+
+## Sancties bij niet-naleving
+
+ANAF-boetes voor e-Transport-overtredingen zijn aanzienlijk — sancties gelden voor zowel de vervoerder als de begunstigde van het transport (de klant of afzender). Veelvoorkomende overtredingen zijn:
+
+- Goederen vervoeren zonder geldige UIT-code
+- Hiaten in GPS-positielogging tijdens transport
+- Aangemelde lading die niet overeenkomt met wat wordt vervoerd
+
+Druma's automatisering elimineert de meest voorkomende nalevingsfouten: ontbrekende aangiften en GPS-logginghiaten. De verantwoordelijkheid voor nauwkeurige ladinggegevens (gewicht, waarde, type) blijft echter bij de dispatcher die de ordergegevens invoert.
+
+---
+
+## Gerelateerde artikelen
+
+<CardGroup cols={2}>
+  <Card title="e-Transport-aangifte-instellingen" icon="gear" href="/en/admin/etransport-settings">
+    Configureer uw ANAF-API-inloggegevens, goederenwaardedrempel en e-Transport-standaarden in Druma.
+  </Card>
+  <Card title="Vlootdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
+    Naleving van voertuigdocumenten, inclusief de CEMT-vergunning bijgehouden voor internationaal transport.
+  </Card>
+  <Card title="EU-rijurenregels" icon="clock" href="/nl/fleet-compliance/eu-driving-hours">
+    Rijtijdlimieten van Verordening 561/2006 en hoe Druma ze bijhoudt.
+  </Card>
+  <Card title="Mobiliteitspakket" icon="globe" href="/nl/fleet-compliance/mobility-package">
+    Terugkeerverplichtingen voor voertuig en chauffeur en IMI-detacheringsmeldingen.
+  </Card>
+</CardGroup>

@@ -1,107 +1,161 @@
 ---
-title: "Grupowanie (LTL)"
-description: "Konsoliduj wiele małych ładunków od różnych klientów na jednej ciężarówce z śledzeniem per odcinek, fakturowaniem per klient i wydrukowalnym manifestem wieloprzystankowym."
+title: "Grupaż (LTL)"
+description: "Konsoliduj wiele małych ładunków od różnych klientów na jednej ciężarówce z śledzeniem per odcinek, fakturowaniem per odcinek i wydrukowalnym manifestem wieloprzystankowym."
 icon: "boxes-stacked"
 ---
 
-## Czym jest grupowanie?
+## Czym jest grupaż?
 
-Grupowanie — zwane też LTL (less-than-truckload) lub konsolidacją — polega na załadowaniu wielu małych przesyłek od różnych klientów na tę samą ciężarówkę jadącą w tym samym kierunku. Każdy klient płaci tylko za swoją część przestrzeni na ciężarówce, a Ty zapełniasz ciężarówkę połączonymi ładunkami, aby przejazd był opłacalny.
+Grupaż — zwany też LTL (less-than-truckload) lub konsolidacją — polega na załadowaniu wielu małych przesyłek od różnych klientów na tę samą ciężarówkę jadącą w tym samym kierunku. Każdy klient płaci tylko za swoją część przestrzeni na ciężarówce, a Ty zapełniasz ciężarówkę połączonymi ładunkami, aby przejazd był opłacalny.
 
-W Druma **zlecenie grupowania** to zlecenie kontenerowe zawierające wiele zleceń podrzędnych. Kontener śledzi ciężarówkę, kierowcę i trasę. Każde zlecenie podrzędne ma własnego klienta, ładunek, adres odbioru i dostawy oraz cenę — i generuje własną fakturę.
+W Druma grupaż to osobny moduł (`/groupage`) — **przejazd grupażowy** zawiera wiele istniejących **odcinków** zleceń. Przejazd śledzi ciężarówkę, kierowcę i trasę; każdy odcinek zachowuje własnego klienta, ładunek, adres odbioru/dostawy i cenę.
+
+<Note>
+Grupaż nie jest czwartym "typem zlecenia" obok Własna ciężarówka / Podzlecone / Repozycjonowanie — to osobny moduł, który grupuje istniejące zlecenia razem.
+</Note>
+
+<Frame caption="Moduł Grupaż — odcinki przejazdu z klientem per odcinek, ładunkiem i śledzeniem wskaźnika wypełnienia.">
+  <img src="/images/planner/groupage.png" alt="Przejazd grupażowy z wieloma odcinkami i wskaźnikiem wypełnienia" />
+</Frame>
 
 ---
 
-## Tworzenie kontenera grupowania
+## Tworzenie przejazdu grupażowego
 
 <Steps>
-  <Step title="Utwórz nowe zlecenie">
-    Przejdź do **Zlecenia — Nowe zlecenie**.
+  <Step title="Przejdź do Grupażu">
+    Otwórz moduł **Grupaż** z nawigacji.
   </Step>
-  <Step title="Ustaw typ na Grupowanie">
-    W polu **Typ zlecenia** wybierz **Grupowanie**. Formularz dostosowuje się, aby pokazać pola kontenera grupowania.
+  <Step title="Kliknij Utwórz grupaż">
+    Kliknij **Utwórz grupaż**. Druma tworzy pusty przejazd (z automatycznie wygenerowaną referencją jak `GRP-XXXXX`) i otwiera jego panel szczegółów — na tym etapie nie ma formularza ciężarówka/kierowca/data/trasa.
   </Step>
-  <Step title="Skonfiguruj kontener">
-    Wypełnij:
-    - **Ciężarówka i kierowca** — pojazd i kierowca wykonujący przejazd
-    - **Data wyjazdu** — kiedy ciężarówka wyrusza
-    - **Opis ogólny trasy** — np. "Bucharest — kierunek Wiedeń"
-    - **Notatki** — wszelkie ogólne instrukcje dla kierowcy
-  </Step>
-  <Step title="Zapisz kontener">
-    Kliknij **Zapisz**. Kontener grupowania jest tworzony. Teraz możesz zacząć dodawać zlecenia podrzędne.
+  <Step title="Dodaj zlecenia do przejazdu">
+    Zobacz następną sekcję — budujesz przejazd, dodając do niego istniejące kwalifikujące się zlecenia, a nie wypełniając formularz.
   </Step>
 </Steps>
 
 ---
 
-## Dodawanie zleceń podrzędnych do grupowania
-
-Każde zlecenie podrzędne reprezentuje przesyłkę jednego klienta na ciężarówce.
+## Dodawanie zleceń do przejazdu grupażowego
 
 <Steps>
-  <Step title="Otwórz kontener grupowania">
-    Przejdź do **Zlecenia** i otwórz kontener grupowania.
+  <Step title="Otwórz przejazd i kliknij Dodaj zlecenia">
+    Otwórz przejazd grupażowy i kliknij **Dodaj zlecenia do grupażu**.
   </Step>
-  <Step title="Kliknij Dodaj przesyłkę">
-    Kliknij przycisk **+ Dodaj przesyłkę** wewnątrz kontenera.
+  <Step title="Zaznacz kwalifikujące się zlecenia">
+    Okno modalne wylistowuje istniejące zlecenia kwalifikujące się do dołączenia do tego przejazdu — numer zlecenia, klient, trasa, LDM, waga i typ naczepy — z polem wyboru per wiersz. Nie ma tu formularza wprowadzania danych; wybierasz zlecenia, które już istnieją, nie wpisujesz nowych szczegółów przesyłki.
   </Step>
-  <Step title="Wypełnij szczegóły zlecenia podrzędnego">
-    Dla każdego zlecenia podrzędnego wpisz:
-    - **Klient** — do kogo należy ta przesyłka
-    - **Adres odbioru** — gdzie kierowca odbiera tę przesyłkę
-    - **Adres dostawy** — gdzie ta przesyłka jest dostarczana
-    - **Opis ładunku** — np. "6 palet, części samochodowe"
-    - **Waga i objętość** — dla dokładności manifestu
-    - **Cena** — co naliczasz temu klientowi za jego część
+  <Step title="Użyj Auto-wypełnij, jeśli chcesz, by Druma wybrała za Ciebie">
+    Kliknij **Auto-wypełnij**, aby Druma wybrała najlepiej dopasowaną kombinację kwalifikujących się zleceń, aż do pozostałej pojemności metrów ładunkowych naczepy.
   </Step>
-  <Step title="Zapisz zlecenie podrzędne">
-    Kliknij **Zapisz**. Zlecenie podrzędne pojawia się na liście przystanków kontenera.
-  </Step>
-  <Step title="Powtórz dla każdej przesyłki">
-    Dodaj wszystkie pozostałe zlecenia podrzędne, aż ciężarówka będzie w pełni zaplanowana.
+  <Step title="Dodaj do grupażu">
+    Kliknij **Dodaj do grupażu**. Jeśli Twój wybór przekroczyłby pojemność LDM naczepy, akcja jest blokowana błędem walidacji — będziesz musiał najpierw coś odznaczyć. Niezgodność typu naczepy (typ naczepy zlecenia różni się od typu przejazdu) pokazuje się jako ostrzeżenie, ale nie blokuje akcji.
   </Step>
 </Steps>
 
 <Note>
-Kolejność przystanków w kontenerze jest ustawiana automatycznie przez Druma na podstawie optymalizacji trasy, ale możesz przeciągać i zmieniać kolejność ręcznie, jeśli masz specyficzne sekwencje odbioru/dostawy do przestrzegania.
+Waga i objętość nie blokują dodawania zleceń — tylko metry ładunkowe (LDM) to robią. Paski wskaźnika wypełnienia dla wagi i objętości są nadal pokazywane dla odniesienia (patrz niżej), ale są informacyjne, nie blokujące.
 </Note>
 
 ---
 
-## Śledzenie statusów per odcinek
+## Sekwencjonowanie przystanków
 
-Każde zlecenie podrzędne ma własny przepływ statusów, niezależny od innych przesyłek na ciężarówce. Gdy kierowca aktualizuje status dla konkretnego przystanku:
+Nowe przystanki są po prostu dołączane na koniec przejazdu w kolejności, w jakiej je dodajesz — Druma nie optymalizuje automatycznie trasy w miarę dodawania.
 
-- To zlecenie podrzędne aktualizuje się do nowego statusu
-- Odpowiedni klient widzi aktualizację w swoim portalu (jeśli włączone)
-- Przegląd kontenera pokazuje, które przystanki są ukończone, a które oczekują
+Aby zoptymalizować kolejność, kliknij **Auto-sekwencja** (pokazywane tylko przy 2+ przystankach): zmienia kolejność listy przystanków, aby zminimalizować całkowitą odległość (odbiory przed dostawami), i raportuje, ile odległości zaoszczędziła, albo że kolejność była już optymalna. Możesz też ręcznie przeciągać przystanki albo użyć strzałek góra/dół na każdym wierszu przystanku w dowolnym momencie.
 
 ---
 
-## ETA wieloprzystankowy
+## Śledzenie statusu per odcinek
 
-Druma używa routingu HERE do obliczania ETA dla każdego przystanku w sekwencji. ETA aktualizuje się automatycznie, gdy kierowca ukończy przystanek lub zgłosi opóźnienie.
+Każdy odcinek zlecenia ma własny przepływ statusów, niezależny od innych przesyłek na ciężarówce. Gdy kierowca aktualizuje swój status dla konkretnego przystanku, aktualizuje się tylko zlecenie tego odcinka — przegląd przejazdu pokazuje, które przystanki są ukończone, a które oczekujące.
 
-Portale klientów pokazują ETA dla ich konkretnej dostawy — nie całej trasy.
-
----
-
-## Fakturowanie per klient
-
-Każde zlecenie podrzędne jest fakturowane oddzielnie. Gdy będziesz gotowy do wystawienia faktury:
-
-1. Otwórz zlecenie podrzędne (nie kontener)
-2. Kliknij **Generuj fakturę**
-3. Druma wypełnia dane klienta i cenę ze zlecenia podrzędnego
-4. Wyślij jak każdą zwykłą fakturę
+Na przykład: jeśli ciężarówka ma cztery dostawy, a kierowca ukończy przystanki 1 i 2, te odcinki pokazują **Dostarczone**, podczas gdy przystanki 3 i 4 nadal pokazują **W drodze do dostawy**. Każdy klient widzi w swoim portalu tylko status własnej przesyłki.
 
 ---
 
-<Card title="Tworzenie zlecenia" icon="plus" href="/en/planner/creating-orders">
-  Pełny przewodnik po tworzeniu zleceń wszystkich typów.
-</Card>
+## Śledzenie metrów ładunkowych (LDM), wagi i objętości
 
-<Card title="Tablica planowania" icon="calendar" href="/en/planner/planning-board">
-  Zobacz, jak zlecenia grupowania pojawiają się na tablicy dyspozytorskiej.
-</Card>
+Każdy odcinek może mieć wartości **CBM**, **Waga (kg)** i **LDM** wpisane bezpośrednio na karcie swojego przystanku. LDM reprezentuje liniową długość powierzchni podłogi naczepy zajmowaną przez przesyłkę — standardową miarę w planowaniu grupażu w całej Europie.
+
+Przejazd grupażowy pokazuje paski postępu wypełnienia dla wymiarów, dla których przypisana ciężarówka/naczepa ma znaną pojemność — **Waga**, **Objętość (CBM)** i **Metry ładunkowe**:
+
+| Kolor | Poziom wypełnienia |
+|---|---|
+| Zielony | ≤70% pojemności |
+| Bursztynowy | 70–90% pojemności |
+| Czerwony | >90% pojemności (w tym powyżej 100%, pokazywane bez ograniczenia) |
+
+### Tryb podziału kosztów
+
+**Tryb podziału kosztów** kontroluje, jak wspólne koszty są dzielone między odcinki. Dostępne są cztery tryby: **CBM**, **Waga**, **LDM** i **Rozliczeniowy**. Kliknij przycisk trybu na karcie Podział kosztów przejazdu, aby przełączyć — wyzwala to automatyczne przeliczenie udziału kosztu każdego odcinka, procentu podziału, przydzielonego kosztu i marży.
+
+Wybierz tryb pasujący do Twojej umowy handlowej z klientami na tym przejeździe. CBM jest najczęstszy dla ładunków ogólnych, LDM dla ładunków krytycznych pod względem powierzchni podłogi, waga dla gęstych towarów, a Rozliczeniowy, gdy rozliczasz się na podstawie tego z wagi/objętości, które daje wyższą wartość.
+
+---
+
+## Manifest grupażowy
+
+Zanim kierowca wyruszy, wydrukuj manifest grupażowy — listę przystanków i ładunku dla przejazdu.
+
+<Steps>
+  <Step title="Otwórz przejazd grupażowy">
+    Otwórz panel szczegółów przejazdu.
+  </Step>
+  <Step title="Drukuj manifest">
+    Kliknij **Drukuj manifest**. Druma otwiera nową kartę przeglądarki z wydrukowalnym manifestem HTML — nie ma osobnego pobrania PDF.
+  </Step>
+  <Step title="Udostępnij kierowcy">
+    Wydrukuj go i przekaż, albo udostępnij przez wątek wiadomości aplikacji kierowcy.
+  </Step>
+</Steps>
+
+Manifest zawiera: kolejność przystanków, adres odbioru/dostawy, klienta, numer zlecenia, wagę i wszelkie notatki per przystanek. Nie zawiera kolumny opisu ładunku.
+
+---
+
+## Fakturowanie per odcinek
+
+Przejazd ma własną kartę **Faktury**, wylistowującą każdy odcinek z jego statusem faktury (**Niezafakturowany → Wygenerowana → Wysłana → Opłacona**) i przyciskiem **Generuj fakturę** per odcinek:
+
+<Steps>
+  <Step title="Otwórz kartę Faktury przejazdu">
+    Otwórz przejazd grupażowy i przejdź do karty **Faktury**.
+  </Step>
+  <Step title="Generuj fakturę">
+    Kliknij **Generuj fakturę** obok dowolnego jeszcze niezafakturowanego odcinka. Faktura jest tworzona tylko dla klienta tego odcinka, z jego konkretnym ładunkiem, ceną i referencją.
+  </Step>
+</Steps>
+
+Klienci na tej samej ciężarówce nigdy nie widzą nawzajem swoich faktur ani cen — każdy otrzymuje czysty, osobny dokument, a Ty możesz generować je pojedynczo, w miarę jak każdy odcinek jest gotowy do rozliczenia.
+
+---
+
+## Śledzenie
+
+Klienci śledzący przesyłkę grupażową widzą statyczną datę **Oczekiwana dostawa** na publicznej stronie śledzenia, nie na żywo, sekwencjonowane wieloprzystankowo ETA.
+
+---
+
+## Typowy przypadek użycia
+
+Masz czterech klientów potrzebujących przewozu ładunków z Bukaresztu w kierunku Wiednia w ten czwartek. Indywidualnie żaden z nich nie zapełnia ciężarówki. Razem — tak:
+
+- Klient A: 8 palet do Bratysławy
+- Klient B: 4 palety do Budapesztu
+- Klient C: 10 palet do Wiednia
+- Klient D: 6 palet do Linzu
+
+Tworzysz cztery zlecenia normalnie, następnie tworzysz przejazd grupażowy, dodajesz do niego wszystkie cztery zlecenia, przypisujesz swojego kierowcę, auto-sekwencjonujesz przystanki i drukujesz manifest. Każdy klient płaci za swoją część, każdy otrzymuje własną fakturę i aktualizacje statusu, a Ty prowadzisz w pełni załadowaną ciężarówkę.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Tworzenie zleceń" icon="plus" href="/pl/planner/creating-orders">
+    Dowiedz się, jak działają standardowe zlecenia w Druma — najpierw utworzysz poszczególne zlecenia, a następnie je zgrupujesz.
+  </Card>
+  <Card title="Tablica planowania" icon="calendar" href="/pl/planner/planning-board">
+    Zobacz wszystkie swoje zlecenia w tygodniowym widoku planowania przed zgrupowaniem ich w przejazd.
+  </Card>
+</CardGroup>

@@ -1,43 +1,95 @@
 ---
 title: "Zahlungsverfolgung"
-description: "Erfassen Sie vollständige und Teilzahlungen für Rechnungen in Druma, verfolgen Sie ausstehende Salden und exportieren Sie Zahlungsdaten für Ihren Buchhalter."
+description: "Erfassen Sie vollständige und Teilzahlungen für Rechnungen in Druma, verfolgen Sie offene Salden und exportieren Sie Zahlungsdaten für Ihren Buchhalter."
 icon: "money-bill-wave"
 ---
 
-## Eine Zahlung aufzeichnen
+## Übersicht
+
+Wurde eine Rechnung versendet und der Kunde zahlt, erfassen Sie die Zahlung in Druma, damit Ihr offener Saldo korrekt bleibt. Druma unterstützt vollständige Zahlungen, Teilzahlungen und mehrere Zahlungen gegen eine einzelne Rechnung — üblich, wenn Kunden in Raten zahlen oder eine Zahlung senden, die nicht ganz dem Rechnungsbetrag entspricht.
+
+## Eine Zahlung erfassen
 
 <Steps>
   <Step title="Die Rechnung öffnen">
-    Gehen Sie zu **Rechnungsstellung** und öffnen Sie die bezahlte Rechnung.
+    Gehen Sie zu **Rechnungsstellung** und suchen Sie die Rechnung, die Sie als bezahlt markieren möchten. Klicken Sie darauf, um die Rechnungsdetailseite zu öffnen.
   </Step>
-  <Step title="Auf Zahlung aufzeichnen klicken">
-    Klicken Sie auf das Menü **···** (Mehr Aktionen) und wählen Sie **Zahlung aufzeichnen**.
+  <Step title="Auf Zahlung erfassen klicken">
+    Klicken Sie oben auf der Rechnungsseite auf die Schaltfläche **Zahlung erfassen**.
   </Step>
   <Step title="Zahlungsdetails eingeben">
-    - **Betrag** — Der eingegangene Betrag (kann weniger als der Gesamtbetrag für Teilzahlungen sein)
-    - **Datum** — Datum des Zahlungseingangs
-    - **Zahlungsmethode** — Überweisung, Scheck, Bargeld
-    - **Referenz** — Bankrückbuchungsreferenz oder Schecknummer
+    Füllen Sie folgende Felder aus:
+
+    - **Zahlungsdatum** — das Datum, an dem das Geld auf Ihrem Konto einging (laut Kontoauszug)
+    - **Erhaltener Betrag** — der genaue erhaltene Betrag
+    - **Zahlungsmethode** — Überweisung, Bargeld, Karte oder Scheck
+    - **Bankreferenznummer** — die auf Ihrem Kontoauszug angezeigte Referenz für diese Überweisung (hilft später beim Abgleich)
+    - **Notizen** — optional, für alles andere Erwähnenswerte
   </Step>
-  <Step title="Zahlung speichern">
-    Klicken Sie auf **Zahlung speichern**. Der Rechnungsstatus aktualisiert sich auf Teilbezahlt oder Bezahlt.
+  <Step title="Die Zahlung speichern">
+    Klicken Sie auf **Zahlung speichern**. Der Rechnungsstatus aktualisiert sich sofort.
   </Step>
 </Steps>
 
----
+## Rechnungsstatus-Verlauf
+
+Während Zahlungen erfasst werden, ändert sich der Rechnungsstatus automatisch:
+
+| Status | Bedeutung |
+|---|---|
+| **Unbezahlt** | Noch keine Zahlung erfasst |
+| **Teilbezahlt** | Mindestens eine Zahlung erfasst, aber der Gesamtbetrag ist kleiner als der Rechnungsbetrag |
+| **Bezahlt** | Erfasste Gesamtzahlungen entsprechen dem Rechnungsbetrag |
+| **Überfällig** | Unbezahlt oder teilbezahlt, und das Fälligkeitsdatum ist verstrichen |
+| **Abgeschrieben** | Als uneinbringlich markiert — aus dem offenen Saldo entfernt |
+| **Storniert** | Die Rechnung wurde storniert (z. B. durch eine vollständige Gutschrift) und hat kein steuerliches oder saldorelevantes Gewicht mehr |
 
 ## Teilzahlungen
 
-Wenn ein Kunde weniger als den vollen Betrag zahlt, zeichnen Sie die Teilzahlung auf. Druma zeigt den verbleibenden ausstehenden Saldo an.
+Zahlt ein Kunde nur einen Teil der Rechnung — z. B. sendet er jetzt 50 % und den Rest im nächsten Monat — erfassen Sie den Teilbetrag. Die Rechnung wechselt zu **Teilbezahlt**, und Druma zeigt den verbleibenden Saldo deutlich auf der Rechnung.
 
-Sie können mehrere Teilzahlungen gegen eine einzige Rechnung aufzeichnen.
+Trifft die zweite Zahlung ein, öffnen Sie dieselbe Rechnung und klicken Sie erneut auf **Zahlung erfassen**. Geben Sie die neue Zahlung ein. Sie können so viele Teilzahlungen wie nötig erfassen. Der vollständige Zahlungsverlauf wird chronologisch auf der Rechnungsdetailseite angezeigt.
+
+<Note>
+Teilzahlungen sind auch nützlich, wenn ein Kunde einen leicht abweichenden Betrag zahlt — z. B. wegen an der Quelle abgezogener Überweisungsgebühren. Erfassen Sie, was tatsächlich ankam, und fügen Sie eine Notiz hinzu, die den Unterschied erklärt.
+</Note>
+
+## Beispiel mit mehreren Teilzahlungen
+
+Ein Kunde schuldet Ihnen 4.200 € für drei zusammengefasste Rechnungen. Er zahlt in drei Teilen über sechs Wochen:
+
+1. 15. März — 2.000 € erhalten. Status: Teilbezahlt. Verbleibend: 2.200 €.
+2. 1. April — 1.500 € erhalten. Status: Teilbezahlt. Verbleibend: 700 €.
+3. 22. April — 700 € erhalten. Status: Bezahlt. Saldo: 0 €.
+
+Alle drei Zahlungsdatensätze sind auf der Rechnung sichtbar, jeweils mit Datum und Bankreferenz.
+
+## Eine Rechnung abschreiben
+
+Zahlt ein Kunde nicht — ungeklärter Streit, Unternehmen aufgelöst, oder der Betrag ist zu gering, um ihn weiterzuverfolgen — können Sie sie abschreiben.
+
+Öffnen Sie die Rechnung → klicken Sie auf **Als abgeschrieben markieren** → geben Sie einen kurzen Grund ein (z. B. „Kunde insolvent — Forderung uneinbringlich" oder „Strittig — gemäß Handelsvereinbarung abgeschrieben"). Die Rechnung wird aus Ihrem offenen Saldo entfernt, und der Grund wird für Ihre Unterlagen gespeichert.
+
+<Warning>
+Das Abschreiben einer Rechnung storniert sie nicht rechtlich. Die Rechnung bleibt in Ihren Aufzeichnungen. Konsultieren Sie für buchhalterische Zwecke Ihren Buchhalter, wie abgeschriebene Beträge in Ihrer Steuererklärung zu behandeln sind — in manchen Fällen kann eine Gutschrift erforderlich sein.
+</Warning>
+
+## Zahlungshistorie pro Kunde
+
+Um alle Zahlungen eines bestimmten Kunden über alle Rechnungen hinweg zu sehen: Gehen Sie zu **Kunden** → Kunden auswählen → Tab **Zahlungshistorie**. Dies zeigt eine vollständige Liste jeder erfassten Zahlung, älteste zuerst, mit Rechnungsreferenzen und laufendem Saldo.
+
+## Zahlungsdaten exportieren
+
+Um Ihrem Buchhalter einen vollständigen Zahlungsbericht zu geben:
+
+Gehen Sie zu **Rechnungsstellung** → **Export** → **Zahlungen**. Wählen Sie den Datumsbereich und klicken Sie auf **CSV herunterladen**. Der Export enthält Rechnungsnummer, Kundenname, Zahlungsdatum, Betrag, Methode, Bankreferenz und offenen Saldo zum Zeitpunkt jeder Zahlung.
 
 ---
 
-## Zahlungshistorie anzeigen
+<Card title="Überfälligkeitsverwaltung" icon="bell" href="/de/invoicing/overdue-management">
+  Verwaltung überfälliger Rechnungen, Versand von Zahlungserinnerungen und Einrichtung automatischer Erinnerungspläne.
+</Card>
 
-Öffnen Sie eine Rechnung und klicken Sie auf den Tab **Zahlungshistorie**, um alle Zahlungen mit Datum, Betrag und Referenz zu sehen.
-
-<Card title="Überfälligkeitsverwaltung" icon="bell" href="/en/invoicing/overdue-management">
-  Verfolgen Sie überfällige Rechnungen und senden Sie Zahlungserinnerungen.
+<Card title="Bankabgleich" icon="building-columns" href="/de/invoicing/bank-reconciliation">
+  Gleichen Sie Bankzahlungs-E-Mails automatisch mit offenen Rechnungen ab, mit Drumas E-Mail-Parsing-Funktion.
 </Card>

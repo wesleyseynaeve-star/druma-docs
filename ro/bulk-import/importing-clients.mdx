@@ -1,16 +1,53 @@
 ---
 title: "Importul clientilor"
-description: "Incarca in masa clientii in Druma folosind un template CSV."
+description: "Incarca in masa companiile client in Druma folosind un template de tip foaie de calcul."
 icon: "file-import"
 ---
 
+Daca ai deja o lista de clienti in Excel sau alt sistem, importul in masa te scuteste de introducerea manuala a fiecarui client.
+
+## Descarcarea template-ului
+
 <Steps>
-  <Step title="Deschide pagina de import">Mergi la **Clienti -> Import** si apasa **Descarca Template**.</Step>
-  <Step title="Completeaza CSV-ul">Un client per rand: denumire companie, numar TVA, tara, adresa, nume contact, email contact, telefon contact, termene plata (zile), moneda, note.</Step>
-  <Step title="Incarca si revizuieste">Incarca CSV-ul. Randurile rosii au erori (format TVA invalid sau campuri obligatorii lipsa).</Step>
-  <Step title="Confirma importul">Apasa **Importa [X] clienti**.</Step>
+  <Step title="Deschide Import in masa">
+    Mergi la **Clienti** si apasa **Import in masa** din bara de instrumente — se deschide direct modalul de import pe pagina listei de Clienti; nu exista o pagina de import separata.
+  </Step>
+  <Step title="Descarca template-ul si completeaza-l">
+    Apasa **Descarca Template** — Druma genereaza un fisier `.xlsx`. Completeaza cate un client pe rand:
+
+    | Coloana | Obligatoriu | Exemplu |
+    |--------|----------|---------|
+    | Denumire companie | Da | Acme Logistics SRL |
+    | Numar TVA | Nu | RO12345678 |
+    | Denumire legala | Nu | Acme Logistics S.R.L. |
+    | Tara | Nu | Romania |
+    | Oras | Nu | Bucuresti |
+    | Email | Nu | billing@acme.ro |
+    | Telefon | Nu | +40 21 000 0000 |
+    | Termene de plata (zile) | Nu | 30 |
+    | Moneda | Nu | EUR |
+  </Step>
+  <Step title="Incarca si revizuieste">
+    Trage fisierul completat (CSV sau XLSX, pana la 5 MB) in modalul de import. Daca antetele coloanelor tale se potrivesc exact cu template-ul, Druma le mapeaza automat; altfel vei mapa manual fiecare coloana la campul potrivit. O previzualizare arata apoi primele 5 randuri — randurile fara Denumire companie sunt semnalate cu rosu.
+  </Step>
+  <Step title="Confirma importul">
+    Apasa **Importa**. Clientii sunt creati imediat si disponibili pentru folosire pe comenzi de indata. Un ecran de rezultat arata cate randuri au fost create, sarite sau esuate, cu detaliu de eroare per rand pentru orice a esuat.
+  </Step>
 </Steps>
 
-Clientii fara numar de TVA nu pot primi transmisii e-Factura ANAF. Adauga TVA-ul inainte de generarea primei facturi.
+## Deduplicare
 
-Druma potriveste clientii existenti dupa numarul de TVA la re-import.
+Druma verifica numarul de TVA al fiecarui rand fata de clientii tai existenti (normalizat cu majuscule, spatii eliminate). Daca gaseste o potrivire, acel rand este **sarit** — nu actualizeaza clientul existent. Randurile fara numar de TVA nu sunt niciodata sarite pe acest criteriu si creeaza intotdeauna un client nou.
+
+<Note>
+Importul in masa creeaza doar inregistrari noi de client — nu actualizeaza niciodata una existenta, chiar daca reimporti un fisier cu un numar de TVA care se potriveste. Pentru a modifica detaliile unui client care exista deja, editeaza-l direct in Druma.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Importul flotei" icon="truck" href="/ro/bulk-import/importing-fleet">
+    Adauga in masa camioanele tale in acelasi mod.
+  </Card>
+  <Card title="Onboarding soferi cu Smart Import" icon="id-card" href="/ro/bulk-import/importing-drivers">
+    Incarcarea de documente pe baza de AI a Druma pentru onboarding-ul unei liste de soferi.
+  </Card>
+</CardGroup>

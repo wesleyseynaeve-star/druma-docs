@@ -1,18 +1,121 @@
 ---
 title: "Certificate ADR"
-description: "Urmareste certificatele ADR si aplica verificarile la atribuirea comenzilor."
-icon: "triangle-exclamation"
+description: "Urmareste certificarea ADR pentru soferi si vehicule, aplica conformitatea la comenzile cu marfuri periculoase si gestioneaza suprataxa ADR automata."
+icon: "radiation"
 ---
 
-Soferii care transporta marfuri clasificate ADR trebuie sa detina un certificat ADR valid.
+ADR este Acordul European referitor la Transportul Rutier International al Marfurilor Periculoase. Daca firma ta transporta materiale periculoase — substante chimice, inflamabile, gaze, explozivi, materiale radioactive sau alte substante reglementate — atat soferii, cat si vehiculele tale trebuie sa detina certificate ADR valide. Druma urmareste aceste certificate si aplica conformitatea automat la momentul atribuirii comenzii.
 
-In profilul soferului, tabul Documente: adauga document tip **Certificat ADR** cu data expirarii.
+---
 
-## Verificarile pe tabla
+## Ce acopera certificarea ADR
 
-La atribuirea unei comenzi ADR:
-- Fara certificat ADR: **eroare**, atribuirea este blocata
-- Certificat expira in 7 zile: **avertisment**
-- Certificat expirat: **eroare**, atribuirea este blocata
+### Certificatul ADR al soferului
 
-Marcheaza comenzile ADR cu optiunea **ADR (Marfuri periculoase)** la crearea comenzii.
+Un certificat ADR de sofer dovedeste ca soferul a absolvit un training ADR aprobat si a promovat examenul necesar. Certificatele ADR sunt emise pentru clase specifice de marfuri periculoase, iar certificatul soferului trebuie sa acopere clasa de marfuri transportata. Certificatele sunt valabile cinci ani si trebuie reinnoite.
+
+### Certificatul ADR al vehiculului
+
+Anumite clase ADR — in special Clasa 1 (explozivi) si Clasa 7 (materiale radioactive) — necesita ca vehiculul insusi sa fie echipat si certificat special. Certificatul ADR al vehiculului confirma ca vehiculul indeplineste standardele de echipare si constructie pentru acele clase.
+
+Nu tot transportul ADR necesita un certificat de vehicul — pentru multe clase, este necesar doar certificatul soferului, impreuna cu ambalarea si placardele corecte.
+
+---
+
+## Adaugarea certificarii ADR la un sofer
+
+<Steps>
+  <Step title="Deschide inregistrarea soferului">
+    Mergi la **Flota → Soferi** si apasa numele soferului.
+  </Step>
+  <Step title="Mergi la tabul Certificate">
+    Apasa tabul **Certificate** pe pagina de detaliu a soferului.
+  </Step>
+  <Step title="Introdu certificatul ADR">
+    Sub **Certificat ADR**, introdu numarul certificatului in **Certificat ADR #** si seteaza **Expirare ADR**. Acestea sunt doar doua campuri simple — nu exista un flux separat "Adauga Certificat" si niciun selector pentru ce clase ADR acopera certificatul.
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza**. Randul si inregistrarea soferului arata acum statusul de expirare ADR printr-o eticheta de expirare.
+  </Step>
+</Steps>
+
+<Note>
+Druma nu stocheaza momentan o incarcare de scanare a certificatului sau o lista de clase acoperite pentru certificatul ADR al soferului — doar numarul certificatului si data expirarii.
+</Note>
+
+---
+
+## Adaugarea certificarii ADR la un vehicul
+
+<Steps>
+  <Step title="Deschide Prezentarea Documentelor">
+    Mergi la **Flota → Prezentare Documente** — aceasta este o pagina separata de nivel superior in Flota, nu un tab pe vizualizarea de detaliu a vehiculului.
+  </Step>
+  <Step title="Incarca certificatul de echipament ADR">
+    Apasa **Incarca Document**, selecteaza **ADR** ca tip de document, alege vehiculul, introdu data expirarii si incarca scanarea certificatului.
+  </Step>
+  <Step title="Salveaza">
+    Statusul ADR al vehiculului este acum urmarit alaturi de celelalte documente de flota, in grila Prezentarii Documentelor.
+  </Step>
+</Steps>
+
+---
+
+## Aplicarea ADR la nivel de comanda
+
+Cand creezi o comanda si o marchezi ca transport ADR, Druma verifica automat conformitatea cand incerci sa atribui un sofer si un vehicul.
+
+<Steps>
+  <Step title="Marcheaza comanda ca ADR">
+    La crearea sau editarea unei comenzi, activeaza marcajul **ADR** in sectiunea de detalii a marfii si selecteaza clasa ADR relevanta.
+  </Step>
+  <Step title="Atribuie un sofer">
+    Cand selectezi un sofer pentru comanda, Druma verifica daca soferul detine marcajul de competenta **ADR** (un simplu marcaj da/nu pe inregistrarea de competente a soferului, setat independent de campurile Certificat ADR # / Expirare ADR). Daca soferul nu are marcajul de competenta ADR, comanda arata o exceptie **Documentatie ADR lipsa / resursa incapabila**.
+  </Step>
+  <Step title="Atribuie un vehicul">
+    Cand selectezi un vehicul, Druma verifica daca **categoria de vehicul** atribuita este marcata **capabila ADR** — din nou un simplu marcaj da/nu pe categorie, nu pe expirarea certificatului vehiculului individual. Un vehicul fara categorie atribuita este tratat ca nerestrictionat (nu este blocat).
+  </Step>
+</Steps>
+
+<Note>
+Aceasta verificare este un marcaj boolean de capabilitate, nu o verificare de expirare sau pe clasa: nu se uita deloc la campurile **Certificat ADR #** / **Expirare ADR** ale soferului sau la documentul ADR incarcat al vehiculului, si nu verifica daca certificatul acopera clasa ADR specifica a comenzii. Mentinerea la zi a marcajului de competenta ADR al soferului si a categoriei de vehicul a camionului este ce mentine aceasta verificare relevanta — o data de expirare ADR depasita, singura, nu va bloca atribuirea.
+</Note>
+
+---
+
+## Suprataxa ADR
+
+Comenzile marcate ADR includ automat o suprataxa ADR ca element de linie pe factura. Tariful este o taxa fixa de **75 € per comanda**, configurata centralizat de Druma — momentan nu exista o setare per companie pentru a schimba aceasta suma.
+
+<Note>
+Daca unele contracte ADR sunt tarifate diferit, poti suprascrie suma suprataxei pe comenzi individuale, dupa crearea comenzii — mergi la tabul Financiar al comenzii si editeaza elementul de linie al suprataxei ADR.
+</Note>
+
+---
+
+## Alerte de expirare
+
+Alertele de expirare a certificatelor ADR ruleaza pe doua programe separate, in functie de daca certificatul este pe un sofer sau pe un vehicul:
+
+| Document | Critic | Avertisment |
+|---|---|---|
+| Certificat ADR sofer (campul Expirare ADR) | In 7 zile, sau deja expirat | In 30 de zile |
+| Document ADR vehicul (incarcat prin Prezentarea Documentelor) | In 14 zile, sau deja expirat | In 60 de zile |
+
+<Warning>
+Alertele de expirare a documentelor soferului (care acopera campul Expirare ADR) nu au un comutator vizibil de setari si, pentru companiile create de la mijlocul lui 2026, nu sunt initializate deloc cu marcajul de activare — practic, aceasta notificare momentan nu se declanseaza pentru majoritatea companiilor. Alertele documentelor de vehicul sunt conditionate de **Automatizari si Functii → Alerte expirare documente flota**, care este **dezactivat implicit** si trebuie activat pentru a primi notificari de expirare. In ambele cazuri, etichetele de expirat/critic se afiseaza in continuare corect pe inregistrarile soferului si vehiculului — doar notificarea proactiva este afectata.
+</Warning>
+
+Indiferent daca alertele sunt activate, un document ADR expirat nu blocheaza singur o atribuire de comanda — verificarea de atribuire se uita doar la marcajul de competenta ADR al soferului si la marcajul de categorie capabila ADR al vehiculului (vezi mai sus), nu la aceste date de expirare. Mentine datele de expirare la zi pentru propria ta vizibilitate, dar nu te baza pe ele pentru a opri o atribuire neconforma.
+
+---
+
+## Articole asociate
+
+<Card title="Documente flota" icon="folder-open" href="/ro/fleet-compliance/fleet-documents">
+  Ghid complet pentru urmarirea tuturor tipurilor de documente de vehicul si prezentarea de conformitate.
+</Card>
+
+<Card title="Crearea comenzilor" icon="plus" href="/ro/planner/creating-orders">
+  Cum creezi o comanda, marchezi marfa ADR si atribui soferi si vehicule.
+</Card>

@@ -4,34 +4,128 @@ description: "Hoe Druma koolstofemissies berekent per order en per voertuig, en 
 icon: "leaf"
 ---
 
-Grote verladers — retailers, fabrikanten, logistieke inkopers — vereisen steeds vaker dat hun transportproviders de koolstofvoetafdruk van elke zending rapporteren. Druma berekent automatisch CO2-emissies per order.
+Grote verladers — retailers, fabrikanten, logistieke inkopers — vereisen steeds vaker dat hun transportproviders de koolstofvoetafdruk van elke zending rapporteren. Druma berekent automatisch CO2-emissies per order en biedt downloadbare rapporten voor ESG-openbaarmakingen van klanten.
 
-## Berekeningsmethod­ologie
+---
 
-Druma volgt het **GLEC Framework v3** (Global Logistics Emissions Council), dat ook is afgestemd op **ISO 14083** — de internationale standaard voor het kwantificeren van broeikasgasemissies uit transportketens.
+## Berekeningsmethodologie
 
-De berekening is eenvoudig:
+Druma volgt het **GLEC Framework v4.0** (Global Logistics Emissions Council), dat ook is afgestemd op **ISO 14083** — de internationale standaard voor het kwantificeren en rapporteren van broeikasgasemissies uit transportketens (Tier 1-berekening met standaardfactoren). Dit is de methodologie die de meeste grote verladers en auditors erkennen en aanvaarden.
+
+In tegenstelling tot een pure afstandsschatting is de GLEC v4.0 Tier 1-methode gebaseerd op **tonkilometers** — ze vermenigvuldigt afstand met het werkelijke ladinggewicht, niet enkel het voertuigtype:
 
 ```
-CO2 (kg) = Afstand (km) × Emissiefactor (kg CO2/km)
+CO2e (kg) = Afstand (km) × (Gewicht (kg) ÷ 1000) × Emissiefactor (gCO2e/tonkm) ÷ 1000
 ```
 
-De emissiefactor varieert per Euro-klasse van het voertuig:
+Gewicht is een verplichte input voor de formule: dezelfde route leeg gereden of met volle lading geeft heel andere CO2e-cijfers. Zorg dat het ladinggewicht van de order nauwkeurig is ingevoerd — het beïnvloedt rechtstreeks de emissieberekening, niet enkel de facturering.
 
-| Euro-klasse | Emissiefactor (kg CO2/km) |
+---
+
+## Emissiefactoren per voertuigklasse en brandstoftype
+
+De emissiefactor wordt opgezocht in een referentietabel (`co2_emission_factors`, GLEC v4.0 Europese standaardwaarden) op basis van **voertuigklasse** en **brandstoftype** — niet op basis van de Euronorm van de truck, die voor deze berekening helemaal niet wordt geraadpleegd. De voertuigklasse wordt automatisch afgeleid uit de laadvermogen-/gewichtscapaciteit van de truck:
+
+| Laadvermogen truck | Voertuigklasse |
 |---|---|
-| Euro 3 | 0,900 |
-| Euro 4 | 0,820 |
-| Euro 5 | 0,760 |
-| Euro 6 | 0,700 |
+| Meer dan 30.000 kg | Opleggercombinatie 34t (typische FTL-truck) |
+| 15.000 – 30.000 kg | Bakwagen 16–26t |
+| Minder dan 15.000 kg | Bakwagen 12–16t |
 
-## CO2-rapporten genereren
+| Voertuigklasse | Brandstoftype | Emissiefactor (gCO2e/tonkm) |
+|---|---|---|
+| Opleggercombinatie 34t | Diesel | 62 |
+| Opleggercombinatie 34t | LNG | 54 |
+| Opleggercombinatie 34t | Elektrisch | 25 |
+| Opleggercombinatie 34t | HVO | 12 |
+| Bakwagen 16–26t | Diesel | 91 |
+| Bakwagen 16–26t | Elektrisch | 37 |
+| Bakwagen 12–16t | Diesel | 119 |
+| Bakwagen 12–16t | Elektrisch | 48 |
+| Opleggercombinatie 40t (megatrailer) | Diesel | 55 |
+| Opleggercombinatie 40t (megatrailer) | LNG | 48 |
+| Opleggercombinatie 40t (megatrailer) | Elektrisch | 22 |
 
-Ga naar **Rapporten → CO2-rapport** om:
-- Totale emissies per periode te bekijken
-- Emissies per klant, voertuig of route te filteren
-- Een CO2-rapport te exporteren als CSV of PDF voor klant ESG-openbaarmakingen
+<Note>
+Heeft de truck geen brandstoftype ingesteld, dan gaat Druma uit van diesel. Wordt er geen exacte factor voor de combinatie voertuigklasse/brandstoftype gevonden, dan valt Druma terug op de dieselfactor voor diezelfde voertuigklasse — er is geen gedrag dat "standaard naar een specifieke Euronorm" teruggrijpt, aangezien de Euronorm hier helemaal niet in de opzoeking voorkomt.
+</Note>
 
-<Card title="Rapporten overzicht" icon="chart-bar" href="/nl/reports/reports-overview">
-  Alle beschikbare rapporten in Druma.
+---
+
+## Waar de afstand vandaan komt
+
+De afstand gebruikt in de berekening is de **truck-geoptimaliseerde routeafstand** berekend door HERE Maps bij het aanmaken van de order. Dit is niet de hemelsbrede afstand — ze houdt rekening met wegen toegestaan voor vrachtwagens, gewichtsbeperkingen en hoogtelimieten.
+
+Overschrijft u de afstand handmatig op een order (bijvoorbeeld omdat de werkelijke route afweek van de berekende), dan gebruikt Druma de overschreven afstand voor de CO2-berekening.
+
+---
+
+## CO2-weergave per order
+
+Elke voltooide order toont zijn CO2-cijfer op de orderdetailpagina, onder de sectie **Financiën** of **Samenvatting**. U ziet in één oogopslag:
+
+- Routeafstand in km
+- Gebruikt ladinggewicht
+- Totaal kg CO2e voor de order
+
+---
+
+## Maandelijks vloottotaal
+
+Druma telt alle order-CO2-cijfers op tot een maandelijks vloottotaal. Om dit te bekijken:
+
+1. Ga naar **Rapporten → CO2-rapport**
+2. Stel het datumbereik in (bijv. een kalendermaand of aangepaste periode)
+3. Het rapport toont:
+   - Totale vloot-CO2 voor de periode
+   - Uitsplitsing per truck (welke voertuigen het meest uitstoten)
+   - Uitsplitsing per klant (hoeveel CO2 de zendingen van elke klant genereerden)
+
+---
+
+## Per-klant CO2 in het klantportaal
+
+Klanten met toegang tot het Druma-klantportaal kunnen het CO2-cijfer voor elk van hun zendingen rechtstreeks bekijken. Ze hoeven u niet te vragen — het is zichtbaar op elke voltooide order in hun portaalweergave.
+
+Dit is vooral nuttig voor klanten die **Scope 3-emissies** (emissies in de toeleveringsketen) moeten rapporteren als onderdeel van hun eigen ESG- of duurzaamheidsrapportageverplichtingen onder CSRD of vergelijkbare kaders.
+
+---
+
+## Het CO2-rapport exporteren
+
+De pagina CO2-rapport heeft geen knop "PDF downloaden". In plaats daarvan kunt u vanaf **Rapporten → CO2-rapport** (jaarweergave) exporteren in drie formaten:
+
+- **Jaarlijkse XLSX** — een spreadsheet met de CO2-cijfers per order van het jaar
+- **CSRD-gegevenspakket (.csv)** — een gegevensexport geformatteerd voor een CSRD/ESRS E1 Scope 3-openbaarmaking
+- **iXBRL (.xhtml)** — een inline XBRL-bestand voor de ESRS E1 Scope 3-tagset, met een in-app disclaimer dat het door uw duurzaamheidsauditor moet worden nagekeken vóór indiening
+
+De maandweergave biedt in plaats daarvan een generieke actie **afdrukken** en **exporteren** op de tabel, met de kolommen en periode die u op dat moment heeft geselecteerd.
+
+<Note>
+Los daarvan ontvangt elke klant met voltooide orders automatisch een maandelijks CO2-rapport per e-mail — een HTML-samenvatting van de emissies van hun zendingen van de vorige maand, automatisch gegenereerd en verstuurd op de 1e van elke maand. Dit is niets dat u vanaf de pagina CO2-rapport activeert; het draait op de achtergrond voor elke klant met leveringen in die periode.
+</Note>
+
+---
+
+## Waarom dit belangrijk is voor uw bedrijf
+
+Emissierapportage is niet langer enkel voor grote vervoerders. De trend verschuift stroomafwaarts:
+
+- **CSRD** (EU-richtlijn Duurzaamheidsrapportering) verplicht grote bedrijven Scope 3-emissies te rapporteren — inclusief transport dat ze inkopen
+- **Grote retailers en fabrikanten** wentelen deze rapportageverplichting af op hun leveranciers en dienstverleners
+- **Tenders en offerteaanvragen** vragen steeds vaker om een gedocumenteerde CO2-methodologie
+- **Groene vrachtprogramma's** zoals SmartWay Europe en Clean Cargo geven inkoopvoorkeur aan vervoerders met gedocumenteerde emissiegegevens
+
+Klaarstaande CO2-rapporten — met een erkende methodologie (GLEC v4.0/ISO 14083) — onderscheiden uw bedrijf in competitieve tenders.
+
+---
+
+## Gerelateerde artikelen
+
+<Card title="CO2-rapport" icon="chart-bar" href="/nl/reports/co2-report">
+  Gedetailleerde gids voor de filters, exportopties en het interpreteren van de gegevens van het CO2-rapport.
+</Card>
+
+<Card title="Vlootbeheer" icon="truck" href="/nl/planner/fleet-management">
+  Hoe u laadvermogen en brandstoftype van voertuigen instelt — de vlootgegevens die de CO2-berekeningen voeden.
 </Card>

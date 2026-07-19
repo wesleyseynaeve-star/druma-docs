@@ -1,36 +1,81 @@
 ---
 title: "Upozornění na poplatky za čekání"
-description: "Jak Druma automaticky upozorňuje plánovače, když čekací doba překračuje bezplatné pásmo, a jak odesílat oznámení klientům jedním kliknutím."
+description: "Druma automaticky sleduje, jak dlouho řidiči čekají na místech vyzvednutí a doručení, a pomáhá vám informovat klienty a generovat poplatky za čekání."
 icon: "bell"
 ---
 
-## Přehled
+Čekací doba je jedním z nejčastějších zdrojů ztracených tržeb v silniční přepravě. Řidiči přijedou včas, pak čekají hodiny, než klient naloží nebo vyloží — a poplatek se nikdy nedostane na fakturu. Upozornění na čekací dobu v Druma zajišťují, že každá hodina čekání je zaznamenána, doložena a vyúčtována.
 
-Druma automaticky sleduje čekací dobu na místech nakládky a doručení. Když čekací doba přesáhne nakonfigurované bezplatné pásmo, je okamžitě odesláno upozornění plánovači.
+## Kdy se spouští čas
 
-## Výchozí nastavení
+Když řidič v aplikaci Druma pro řidiče aktualizuje svůj stav na **Příjezd na nakládku** nebo **Příjezd na doručení**, čas čekání se spustí automaticky. Příjezd je časově orazítkován pomocí GPS polohy řidiče, která je zaznamenána a uložena jako důkaz.
 
-- **Bezplatné pásmo:** 2 hodiny po příjezdu
-- **Hodinová sazba:** €45/hodina po vypršení bezplatného pásma
+Není potřeba žádná ruční akce plánovače. Druma upozorní vaše plánovače v okamžiku příjezdu řidiče — viz níže — a samostatně vypočítá fakturovatelnou částku, jakmile uplyne bezplatné období.
 
-Obě hodnoty jsou přizpůsobitelné v **Nastavení** nebo na úrovni objednávky.
+## Co se stane při příjezdu řidiče
 
-## Upozornění plánovače
+Druma upozorní vaše plánovače **okamžitě**, když se stav řidiče změní na Příjezd na nakládku nebo Příjezd na doručení — nečeká, až nejprve vyprší bezplatné období:
 
-Jakmile vyprší bezplatné pásmo, plánovač obdrží:
-- Oznámení v aplikaci s názvem řidiče, číslem objednávky a naběhlou sazbou
-- E-mail s podrobnostmi
+1. Každý plánovač/dispečer ve společnosti dostane **oznámení v aplikaci**: „Řidič přijel na nakládku/doručení"
+2. Do fronty se zařadí také **oznámení v aplikaci pro klienta**, upozorňující, že po bezplatném období se mohou uplatnit poplatky za čekání
+3. Aktivitní záznam objednávky zaznamená příjezd se jménem řidiče, lokalitou a platným bezplatným časovým limitem
 
-## Oznámení klientovi jedním kliknutím
+Bezplatná čekací doba je ve výchozím nastavení **2 hodiny**, ale pochází z nákladového profilu vozidla (Nastavení → Ceníky) — ten určuje, kdy se příjezd stane fakturovatelným, ne kdy se spustí upozornění.
 
-Z upozornění nebo stránky objednávky klikněte na **Upozornit klienta**. Druma odešle profesionální e-mail s:
-- Časovým razítkem GPS příjezdu
-- Celkovou čekací dobou
-- Naběhlou sazbou
+## Informování klienta
 
-<Card title="Čekací poplatky" icon="hourglass" href="/en/planner/waiting-time">
-  Úplný průvodce sledováním a fakturací čekací doby.
-</Card>
----
+Druma může klientovi odeslat e-mail o čekací době — buď na podnět plánovače, nebo automaticky na eskalačních úrovních, jak čekání pokračuje. E-mail obsahuje:
 
-This page is being translated. In the meantime, please refer to the [English version](/en/automation/waiting-charge-alerts).
+- Čas příjezdu řidiče a, pokud nakládka/vykládka již začala, i toto časové razítko (prostý text — bez GPS souřadnic nebo odkazu na mapu)
+- Dosavadní bezplatnou a fakturovatelnou čekací dobu, podle vaší nakonfigurované hodinové sazby
+- Celkový dosud vypočítaný poplatek za čekání
+- Odkaz na nahranou fotografii nebo hlasovou poznámku řidiče, pokud byla k události čekání připojena (platný 1 hodinu)
+- U automatických eskalačních e-mailů odkazy jedním kliknutím „Potvrdit přijetí / Požádat o zpětné zavolání / Požádat o přeplánování" (platné 48 hodin)
+
+<Note>
+Tento e-mail slouží jako formální písemné oznámení, což je důležité, pokud potřebujete podpořit nárok na čekací dobu podle přepravní smlouvy.
+</Note>
+
+V současnosti neexistuje krok náhledu nebo úpravy — e-mail se generuje a odesílá podle výše uvedené šablony. E-mailová adresa klienta se čerpá z jeho kontaktního záznamu (přednostně kontakt finančního oddělení, jinak obecný e-mail klienta).
+
+## Poplatek na faktuře
+
+Když vygenerujete fakturu pro objednávku, poplatek za čekací dobu se automaticky přidá jako samostatná položka:
+
+- Popis: „Čekací doba — [místo] — [datum] — [X hodin Y minut]"
+- Sazba: vaše nakonfigurovaná hodinová sazba
+- Částka: vypočítána na nejbližších 15 minut
+
+Tuto položku můžete na faktuře před vystavením upravit nebo odstranit, pokud jste se s klientem dohodli jinak.
+
+## Konfigurace nastavení čekací doby
+
+Bezplatné hodiny čekání a hodinová sazba čekání pocházejí z vašeho nákladového profilu vozidla — přejděte do **Nastavení → Ceníky**, otevřete příslušný nákladový profil vlastní flotily nebo subdodavatele a nastavte tam **Bezplatné hodiny čekání** a **Sazbu čekání €/h**. Dnes neexistuje samostatná výjimka pro tyto hodnoty na úrovni klienta nebo objednávky — každá objednávka oceněná podle daného nákladového profilu používá podmínky čekání tohoto profilu.
+
+<Warning>
+Pokud změníte sazbu čekání nákladového profilu, ovlivní to pouze události čekání zaznamenané od tohoto okamžiku. Poplatky za čekání již přidané na otevřené faktury se automaticky neaktualizují.
+</Warning>
+
+## Zobrazení historie čekání
+
+Všechny události čekání jsou trvale uloženy u objednávky. Pro jejich kontrolu:
+
+- **Detail objednávky → záložka Aktivita** — zobrazuje každou změnu stavu s časovým razítkem
+- **Analytika → Čekání na místech** — návštěvy čekání, celkové hodiny, průměrná doba a fakturovatelné částky seskupené podle místa vyzvednutí/doručení a klienta, za vybratelné období (posledních 24 hodin až posledních 12 měsíců, nebo vlastní rozsah)
+
+Tato data jsou užitečná při vyjednávání smluvních podmínek. Pokud konkrétní klient soustavně způsobuje 3+ hodiny čekání na doručení, máte čísla na podporu přecenění sazby.
+
+## Časté dotazy
+
+**Co když řidič zapomněl nastavit stav „Příjezd"?** Plánovač může na objednávce ručně zaznamenat čas příjezdu — zadá skutečný čas a poznámku vysvětlující ruční zadání. Tento čas se použije pro výpočet čekání.
+
+**Co když klient poplatek zpochybní?** Sdílejte aktivitní záznam objednávky z Druma, který zobrazuje zaznamenaná časová razítka příjezdu a nakládky/vykládky, plus nahranou fotografii nebo hlasovou poznámku řidiče, pokud byla k události čekání připojena.
+
+<CardGroup cols={2}>
+  <Card title="Čekací doba v objednávkách" icon="clock" href="/cs/planner/waiting-time">
+    Jak plánovači ručně spravují čekací dobu v rámci workflow objednávky.
+  </Card>
+  <Card title="Generování faktur" icon="file-invoice" href="/cs/invoicing/generating-invoices">
+    Jak se poplatky za čekání zobrazují a upravují na fakturách.
+  </Card>
+</CardGroup>

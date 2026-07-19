@@ -1,39 +1,172 @@
 ---
 title: "Lieferantenrechnungen (Kreditoren)"
-description: "Verwalten Sie was Ihr Unternehmen schuldet — Unterauftragnehmer-Spediteure, Kraftstoffkarten, Werkstätten und andere Lieferanten."
+description: "Verwalten Sie, was Ihr Unternehmen schuldet — Unterauftragnehmer-Spediteure, Kraftstoffkarten, Werkstätten, Maut, Versicherung und Leasing — mit KI-gestützter Rechnungserfassung und einem Altkreditoren-Dashboard."
 icon: "building-2"
 ---
 
 ## Übersicht
 
-Neben Ausgangsrechnungen müssen Sie auch Eingangsrechnungen verwalten: Unterauftragnehmer, Kraftstoffanbieter, Werkstätten, Mautbetreiber und andere.
+Das Modul Kreditorenbuchhaltung (AP) verfolgt jede Eingangsrechnung, die Ihr Unternehmen von externen Lieferanten erhält. Dazu zählen Unterauftragnehmer-Spediteure, an die Sie Ladungen weiterleiten, Kraftstoffkartenanbieter (DKV, UTA, AS24), Werkstatt- und Reifenlieferanten, Mautbetreiber (ASFINAG, HU-GO), Versicherungen, Leasinggesellschaften und jede andere Geschäftsausgabe.
+
+Druma reduziert die manuelle Eingabe über zwei Mechanismen: **Unterauftragnehmer-Spediteure werden automatisch in Ihre Lieferantenliste gespiegelt** (keine Doppelerfassung), und ein **KI-gestützter E-Mail-Posteingang** kann Eingangsrechnungen direkt aus Lieferanten-E-Mails extrahieren und als Entwurf anlegen. Was nicht automatisch zugeordnet wird, landet in einer **Prüfwarteschlange** für eine schnelle menschliche Entscheidung.
+
+## Lieferantenstamm
+
+Der Lieferantenstamm ist das Register aller Unternehmen, von denen Sie einkaufen. Er ist die Grundlage für Rechnungsabgleich und Altkreditoren-Berichte.
+
+**Wo:** Finanzen → Weiterleitung → Tab **Lieferanten**
+
+Jeder Lieferantendatensatz enthält:
+
+| Feld | Beschreibung |
+|-------|-------------|
+| **Name** | Firmenname des Lieferanten |
+| **USt-IdNr.** | Wird für den Abgleich gegen extrahierte Rechnungsdaten verwendet |
+| **E-Mail** | Kontakt-E-Mail des Lieferanten — auch für den Abgleich mit der Absender-Whitelist verwendet |
+| **Lieferantentyp** | Spediteur / Kraftstoff / Werkstatt / Maut / Versicherung / Leasing / Sonstige |
+| **Land** | Registrierungsland des Lieferanten |
+
+### Lieferanten verwalten
+
+- **Einen Lieferanten hinzufügen:** Klicken Sie auf **+ Lieferant hinzufügen**, füllen Sie das Formular aus und speichern Sie.
+- **Einen Lieferanten bearbeiten:** Klicken Sie auf **Bearbeiten** bei einer Lieferantenzeile, um Details zu aktualisieren.
+- **Einen Lieferanten löschen:** Klicken Sie auf **Löschen**. Das Löschen wird blockiert, falls der Lieferant verknüpfte Eingangsrechnungen hat.
+
+<Note>
+Unterauftragnehmer-Spediteure, die Sie im Bereich Unterauftragnehmer hinzufügen, werden automatisch mit Typ **Spediteur** in die Lieferantenliste gespiegelt. Sie müssen sie hier nicht erneut hinzufügen. Änderungen am Unterauftragnehmer-Datensatz (Name, USt-IdNr., E-Mail) synchronisieren sich automatisch zum Lieferantendatensatz.
+</Note>
+
+## Lieferantenrechnungs-E-Mail-Posteingang
+
+Druma kann Lieferantenrechnungen per E-Mail empfangen, die Kernfelder per KI extrahieren und entweder automatisch eine Eingangsrechnung als Entwurf anlegen oder das Dokument in die Prüfwarteschlange leiten.
+
+### Einrichtung
+
+<Steps>
+  <Step title="Unternehmenseinstellungen öffnen">
+    Gehen Sie zu **Einstellungen** → **Unternehmen** und scrollen Sie zum Abschnitt **Lieferantenrechnungs-E-Mail**.
+  </Step>
+  <Step title="Den Posteingang aktivieren">
+    Aktivieren Sie **Lieferantenrechnungs-Posteingang aktivieren**. Druma richtet eine eigene Eingangs-E-Mail-Adresse für Ihr Unternehmen ein (z. B. `invoices-acme@in.druma.io`). Die Adresse wird sofort nach der Aktivierung angezeigt.
+  </Step>
+  <Step title="Die E-Mail-Adresse kopieren">
+    Klicken Sie auf das Kopiersymbol neben der Adresse. Teilen Sie diese Adresse mit Ihren Lieferanten und bitten Sie sie, PDF-Rechnungen dorthin zu senden. Sie können Rechnungen auch aus Ihrem eigenen Posteingang an diese Adresse weiterleiten.
+  </Step>
+  <Step title="Absenderadressen zur Whitelist hinzufügen">
+    Klicken Sie im Abschnitt **Absender-Whitelist** direkt darunter auf **+ Absender hinzufügen** und geben Sie die sendende E-Mail-Adresse jedes Lieferanten ein. Nur gelistete Absender werden verarbeitet — E-Mails von unbekannten Adressen werden als Spam-/Spoofing-Schutz stillschweigend verworfen.
+  </Step>
+</Steps>
+
+<Warning>
+Halten Sie die Lieferantenrechnungs-E-Mail-Adresse vertraulich. Veröffentlichen Sie sie nicht auf Ihrer Website oder in externen Dokumenten. Wer die Adresse kennt und nicht auf der Whitelist steht, wird blockiert, aber die Adresse selbst sollte als private Routing-Adresse behandelt werden.
+</Warning>
+
+<Note>
+Dieser eingehende Pfad hatte kürzlich Gateway-Routing-Probleme, die E-Mails an diese Adresse stillschweigend ablehnten, bevor sie Druma überhaupt erreichten. Melden Lieferanten, dass ihre Rechnungen nie ankommen, oder erscheint trotz gesendeter E-Mails nichts in der Prüfwarteschlange, prüfen Sie mit dem Support, ob das Routing-Problem für Ihre Umgebung vollständig behoben ist, bevor Sie Absender oder Whitelist verantwortlich machen.
+</Note>
+
+### Was passiert, wenn eine Rechnung eintrifft
+
+Sendet ein Lieferant ein PDF (oder Bild) von einem gelisteten Absender an Ihre Posteingangsadresse:
+
+1. Druma lädt den Anhang herunter und speichert ihn sicher.
+2. Die KI extrahiert: Lieferantenname, USt-IdNr., Rechnungsnummer, Rechnungsdatum, Gesamtbetrag, Währung und Ausgabenkategorie (Kraftstoff/Werkstatt/Maut/Versicherung/Leasing/Sonstige).
+3. Druma versucht, die extrahierten Daten anhand von USt-IdNr. und E-Mail-Adresse Ihrem Lieferantenstamm zuzuordnen.
+
+Das Ergebnis hängt von der Zuverlässigkeit der Zuordnung ab:
+
+| Ergebnis | Was passiert |
+|---------|-------------|
+| **Hochzuverlässige Spediteur-Rechnung** | Wird in die Spediteur-Rechnungswarteschlange geleitet (abgeglichen gegen eine Eingangsrechnung eines bestimmten unterauftragnehmerbasierten Auftrags) |
+| **Hochzuverlässige Lieferantenübereinstimmung** | Eingangsrechnung wird automatisch als Entwurf angelegt und mit dem Lieferanten verknüpft |
+| **Geringe Zuverlässigkeit oder unbekannter Lieferant** | Erscheint in der **Prüfwarteschlange** zur manuellen Zuordnung |
+
+<Note>
+Die KI-Extraktion liest die PDF-Textebene. Gescannte Bilder mit niedriger Auflösung oder handschriftlichem Text können zu niedrigeren Zuverlässigkeitswerten führen und landen häufiger in der Prüfwarteschlange. Bitten Sie Lieferanten, wo möglich native PDF-Exporte aus ihrer Buchhaltungssoftware zu senden.
+</Note>
+
+## Prüfwarteschlange
+
+Die Prüfwarteschlange ist der Ort, an dem alle Rechnungen — sowohl Spediteur- als auch allgemeine Lieferantenrechnungen —, die nicht automatisch angewendet werden konnten, für eine menschliche Entscheidung bereitgehalten werden.
+
+**Wo:** Finanzen → Weiterleitung → Tab **Rechnungswarteschlange**
+
+### Die Warteschlange lesen
+
+Jede Zeile in der Warteschlange zeigt:
+
+- **Quell-Abzeichen** — **Spediteur** (aus dem Spediteur-Rechnungsposteingang) oder **Lieferant** (aus dem Lieferantenrechnungsposteingang)
+- **Lieferantenname** — von der KI extrahiert oder aus dem Lieferantenstamm zugeordnet
+- **Betrag** und **Währung**
+- **Status** — Ausstehend / Angewendet / Abgelehnt
+- **Empfangsdatum**
+
+Nutzen Sie die Filter-Tabs oben, um zwischen den Ansichten **Ausstehend**, **Angewendet** und **Abgelehnt** zu wechseln. Sie können auch nach Lieferantentyp filtern, um sich auf eine bestimmte Kategorie zu konzentrieren (z. B. nur Kraftstoffrechnungen anzeigen).
+
+### Einen Warteschlangeneintrag bearbeiten
+
+<Steps>
+  <Step title="Die Zeile erweitern">
+    Klicken Sie irgendwo auf eine Warteschlangenzeile, um sie zu erweitern. Die erweiterte Ansicht zeigt alle KI-extrahierten Felder, den zugeordneten (oder vorgeschlagenen) Lieferanten, und die zugeordnete Eingangsrechnung, falls eine gefunden wurde.
+  </Step>
+  <Step title="Die extrahierten Daten prüfen">
+    Prüfen Sie extrahierten Lieferantennamen, USt-IdNr., Rechnungsnummer, Betrag und Datum gegen das PDF. Korrekturen können nicht inline vorgenommen werden — sind Daten falsch, korrigieren Sie sie nach der Genehmigung am Eingangsrechnungsdatensatz.
+  </Step>
+  <Step title="Eine Aktion wählen">
+
+    | Aktion | Wann verwenden |
+    |--------|------------|
+    | **Genehmigen** | Daten sehen korrekt aus und die Zuordnung stimmt — erstellt oder bestätigt die Eingangsrechnung |
+    | **Ablehnen** | Rechnung ist ungültig, ein Duplikat, oder gehört zu einem anderen Unternehmen — entfernt sie aus der Warteschlange |
+    | **Neu zuordnen** | Die vorgeschlagene Eingangsrechnung ist falsch — öffnet eine Suche, um die richtige zu wählen |
+    | **PDF ansehen** | Öffnet die ursprüngliche angehängte Datei in einem neuen Tab zur manuellen Prüfung |
+
+  </Step>
+</Steps>
+
+## Altkreditoren-Dashboard
+
+Das Altkreditoren-Dashboard zeigt alles, was Ihr Unternehmen über alle Lieferanten hinweg schuldet, gruppiert danach, wie lange die Schuld schon aussteht.
+
+**Wo:** Finanzen → Analytics → Tab **Altkreditoren**
+
+### Das Dashboard lesen
+
+Oben auf der Seite stehen drei Zusammenfassungskarten:
+
+- **Gesamt offen** — Summe aller unbezahlten Eingangsrechnungen
+- **Rechnungen nach Altersfenster** — Anzahl pro Zeitfenster
+- **Anzahl Lieferanten** — unterschiedliche Lieferanten mit offenen Salden
+
+Unter der Zusammenfassung listet eine sortierbare Tabelle jeden Lieferanten mit einer Zeile pro Rechnung. Klicken Sie auf einen Spaltenkopf zum Sortieren. Klicken Sie auf eine Lieferantenzeile, um sie zu erweitern und einzelne Rechnungen zu sehen.
+
+Altersfenster folgen der Standard-AP-Konvention:
+
+| Zeitfenster | Definition |
+|--------|-----------|
+| **0–30 Tage** | Aktuell — innerhalb der Standardzahlungsbedingungen |
+| **31–60 Tage** | Leicht überfällig |
+| **61–90 Tage** | Überfällig — Nachfassen empfohlen |
+| **90+ Tage** | Erheblich überfällig — eskalieren |
+
+<Note>
+Die Altkreditoren-Ansicht ist auf 500 Zeilen begrenzt. Hat Ihr Unternehmen mehr als 500 offene Eingangsrechnungen, erscheint oben in der Tabelle ein Kürzungshinweis-Banner. Nutzen Sie die Schaltfläche **CSV exportieren**, um den vollständigen Datensatz für die Analyse in Excel herunterzuladen.
+</Note>
+
+### Exportieren
+
+Klicken Sie auf **CSV exportieren**, um den vollständigen Altkreditoren-Bericht als CSV-Datei herunterzuladen. Der Export enthält alle Lieferantenzeilen unabhängig von der Anzeigebegrenzung von 500 Zeilen und eignet sich für den AP-Abgleich in Ihrem Buchhaltungssystem.
 
 ---
 
-## Lieferantenrechnung hinzufügen
+<Card title="Bankkontoauszug importieren" icon="file-up" href="/de/invoicing/bank-statement-import">
+  Laden Sie CAMT.053- oder MT940-Dateien hoch, um eingehende Zahlungen automatisch mit offenen Rechnungen abzugleichen.
+</Card>
 
-**Manuell:**
-1. Gehen Sie zu **Finanzen → Lieferantenrechnungen → Hinzufügen**.
-2. Füllen Sie Lieferant, Betrag, Datum und Kategorie aus.
-3. Laden Sie optional ein PDF hoch.
+<Card title="Zahlungsverfolgung" icon="circle-check" href="/de/invoicing/payment-tracking">
+  Erfassen und verfolgen Sie Zahlungen gegen Ausgangsrechnungen und sehen Sie offene Salden ein.
+</Card>
 
-**Per E-Mail:** Konfigurieren Sie den Lieferantenrechnungs-Posteingang in **Einstellungen → Integrationen**. Lieferanten senden Rechnungen direkt an Ihre Druma-E-Mail.
-
----
-
-## KI-Extraktion
-
-Druma verwendet KI, um aus eingegangenen Rechnungen automatisch zu lesen:
-- Lieferantenname und USt-IdNr.
-- Rechnungsdatum und Fälligkeitsdatum
-- Betrag und Währung
-
----
-
-## Einem Auftrag zuordnen
-
-Verknüpfen Sie Lieferantenrechnungen (insbesondere Unterauftragnehmer) mit Aufträgen für genaue Margenkalkulation.
-
-<Card title="Frachtspedition" icon="arrows-left-right" href="/en/planner/freight-forwarding">
-  Verwalten Sie den vollständigen Speditionsworkflow.
+<Card title="Überfällig-Dashboard" icon="triangle-alert" href="/de/invoicing/overdue-management">
+  Überwachen Sie überfällige Forderungen und senden Sie Zahlungserinnerungen an überfällige Kunden.
 </Card>

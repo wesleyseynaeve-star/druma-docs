@@ -1,53 +1,105 @@
 ---
 title: "CSRD emissziós exportok"
-description: "Flotta CO2 adatok exportálása XLSX, CSRD-kompatibilis CSV és iXBRL formátumban fenntarthatósági jelentéshez és ESRS E1 megfelelőséghez."
+description: "Exportáld a flotta CO2-adatait XLSX, CSRD-nek megfelelő CSV és iXBRL formátumban fenntarthatósági jelentéshez és ESRS E1 megfelelőséghez."
 ---
 
 ## Áttekintés
 
-A Druma három további exportformátumot támogat a CSRD-kötelezettségekkel rendelkező vállalatok számára.
+A szabványos havi CO2-jelentésen túl a Druma három további exportformátumot támogat azon cégek számára, akiknek Vállalati Fenntarthatósági Jelentéstételi Irányelv (CSRD) kötelezettségeik vannak — vagy akik olyan ügyfeleknek szállítanak kibocsátási adatot, akiknek ilyen kötelezettségeik vannak.
 
-**Jelentések → CO2 Jelentés → Export**
+Minden CSRD-export elérhető a **CO2-jelentés** oldalról:
+
+**Jelentések → CO2-jelentés → Éves (CSRD)**
 
 ---
 
 ## Éves mód
 
-Alapértelmezés szerint a CO2 Jelentés egy naptári hónapot mutat. Váltson **éves módba** a jobb felső sarokban lévő kapcsolóval az összes 12 hónap aggregálásához.
+Alapértelmezetten a CO2-jelentés a legutóbbi szállítmányokat mutatja (Havi nézet). Válts az **Éves (CSRD)** nézetre a jelentés-oldal tetején lévő kapcsolóval.
+
+Éves módban:
+- Megjelenik egy évválasztó
+- A teljes kiválasztott év szállítmányai betöltődnek (legfeljebb 5000 sorra korlátozva — szűkítsd ügyfél szerint, ha egy év csonkolva van)
+- Mind a három export-gomb — Éves XLSX, CSRD adatcsomag (.csv) és iXBRL — megjelenik a kapcsoló alatt
 
 <Note>
-A legtöbb CSRD-beadvány teljes naptári évet igényel. Exportálás előtt váltson éves módba.
+A legtöbb CSRD- és ESG-jelentési beadvány egy teljes naptári év adatait igényli. Válts Éves módba, mielőtt szabályozási vagy ügyfél-fenntarthatósági célból exportálnál.
 </Note>
 
 ---
 
 ## Export típusok
 
-### 1. XLSX flotta emissziós jelentés
+### 1. Éves XLSX
 
-Szabványos táblázatkezelő export megrendelésenként egy sorral (ID, Ügyfél, Eredet/cél ország, Távolság, Jármű, Euro norma, CO2 kg-ban és tCO2e-ben) és összefoglaló lappal.
+A szabványos táblázatkezelő export. A legjobb megosztásra beszerzési osztályokkal, fenntarthatósági csapatokkal vagy ESG-auditáló cégekkel. Két munkalap:
 
-Kattintson az **Export → XLSX** gombra.
+**Szállítmányok** — soronként egy rendelés, oszlopok: Rendelésszám, Felvételi dátum, Szállítási dátum, Felvételi cím, Szállítási cím, Távolság (km), Súly (kg), CO2 (kg), Módszer, Euro-szabvány, Ügyfél, Teherautó.
 
-### 2. CSRD-kompatibilis CSV
+**Módszertan** — céges név és ÁFA-szám, jelentési év, és az év teljes összesítései (összes szállítmány, összes távolság, összes CO2 kg-ban és tonnában), plusz egy egyszerű szöveges módszertani megjegyzés. Nincs havi, ügyfelenkénti vagy Euro-szabvány szerinti bontási fül — az összesítések flotta-szinten, az egész évre vonatkoznak.
 
-Sima CSV fájl a CSRD keretrendszerek oszlopkövetelményei szerint (VSME D melléklet / ESRS E1). Kompatibilis ESG szoftverekkel (Sweep, Workiva, Persefoni).
+**Hogyan exportáld:** Kattints az **Éves XLSX** gombra a CO2-jelentés oldalon (Éves mód).
 
-Kattintson az **Export → CSRD CSV** gombra.
+---
 
-### 3. iXBRL jelentés (Béta)
+### 2. CSRD adatcsomag (CSV)
+
+Egy sima CSV-fájl, ugyanazokkal a szállítmányonkénti adatokkal, mint az XLSX Szállítmányok munkalapja, gépileg olvasható formátumban — alkalmas ESG-jelentéskészítő szoftverbe való betöltésre.
+
+A fejlécek egyszerű snake_case mezőnevek, nem ESRS-taxonómia azonosítók:
+
+`order_number, pickup_date, delivery_date, pickup_address, delivery_address, distance_km, weight_kg, co2_kg, co2_method, euro_standard`
 
 <Note>
-Az iXBRL export béta verzióban van. Szabályozó szervnek való benyújtás előtt ellenőriztesse a fájlt a kijelölt könyvvizsgálójával.
+Ebben az exportban jelenleg nincs `fuel_type` oszlop — az üzemanyag-típust belsőleg az emissziós tényező kiválasztásához használjuk (lásd a [CO2-jelentés](/en/reports/co2-report#emissions-calculation-methodology) oldalt), de jelenleg nincs saját CSV-oszlopként megjelenítve.
 </Note>
 
-ESEF-kompatibilis géppel olvasható formátum az EU szabályozott piacokon notált vállalatoknak. Kattintson az **Export → iXBRL (Béta)** gombra.
+**Hogyan exportáld:** Kattints a **CSRD adatcsomag (.csv)** gombra a CO2-jelentés oldalon (Éves mód).
+
+---
+
+### 3. iXBRL jelentés (béta)
+
+<Note>
+Az iXBRL export béta állapotban van. A kimenet az **ESRS taxonómiát** használja (European Sustainability Reporting Standards — `xbrl.efrag.org/taxonomy/esrs`), nem az ESEF-et (amely egy külön, tőzsdén jegyzett vállalatok éves jelentés-benyújtási formátuma). Validáld a fájlt a kijelölt auditorod követelményei szerint, mielőtt bármely szabályozó testülethez benyújtanád. A Druma jelenleg nem garantálja az elfogadást egyetlen konkrét szabályozó által sem.
+</Note>
+
+Az iXBRL (Inline eXtensible Business Reporting Language) megjelöli a bruttó Scope 3, 9. kategória (downstream szállítás) CO2-értéket az évre, az ESRS E1 taxonómia szerint, egy egyszerű nyelvű összefoglaló mellett. Ez egy olyan komponensnek szánt, amelyet te (vagy az auditorod) beépítesz egy szélesebb CSRD éves jelentésbe — nem egy önálló szabályozási beadvány.
+
+Az exportált fájl egy HTML-dokumentum, amely mind ember által olvasható táblázatokat, mind gépileg megjelölt kibocsátási adatokat tartalmaz.
+
+**Hogyan exportáld:** Kattints az **iXBRL exportálása (.xhtml)** gombra a CO2-jelentés oldalon (Éves mód) — előbb egy auditor-felülvizsgálati nyilatkozat megerősítését kérjük.
+
+---
+
+## Megosztás ügyfelekkel
+
+Ha az ügyfeleidnek saját CSRD-kibocsátási adatra van szükségük tőled:
+
+1. Szűrd a CO2-jelentést egy konkrét ügyfélre az oldal tetején lévő **Ügyfél** szűrővel
+2. Válts Éves módba, és válaszd ki a jelentési évet
+3. Exportáld az ügyfeled preferált formátumában
+4. Csatold az ügyfeled fenntarthatósági csapatának küldött e-mailhez, vagy töltsd fel a beszállítói portáljukra
+
+<Note>
+Azok az ügyfelek, akiknek a kapcsolattartói rekordján be van kapcsolva a **CO2-jelentések fogadása** opció, már automatikusan kapnak egy havi CO2-összefoglalót e-mailben — lásd a [CO2-jelentés](/en/reports/co2-report#sharing-co2-data-with-clients) oldalt. Az ezen az oldalon lévő exportok mindenre valók, ami ezen túlmutat: egy teljes éves csomag, egy eseti megosztás, vagy az ügyfél saját ESG-jelentéskészítő szoftvere.
+</Note>
+
+---
+
+## Mi a Scope 3, 4. kategória?
+
+Az ügyfeleid a kiszervezett fuvarozásból származó kibocsátást **Scope 3, 4. kategóriaként** (Upstream szállítás) vagy **9. kategóriaként** (Downstream szállítás) rögzítik. A Drumából biztosított CO2-adat közvetlenül beépül ebbe a számításba.
+
+Ha kéznél vannak az éves, CSRD-nek megfelelő kibocsátási adataid — elismert módszertannal (GLEC Framework v4.0 / ISO 14083) —, ez preferált fuvarozóvá tesz azokban a pályázatokban és árajánlat-kérésekben, amelyek dokumentált kibocsátási módszertant kérnek.
+
+---
 
 <CardGroup cols={2}>
-  <Card title="CO2 Jelentés" href="/hu/reports/co2-report">
-    Havi CO2 jelentés generálása jármű, ügyfél és útvonal szerint.
+  <Card title="CO2-jelentés" href="/en/reports/co2-report">
+    A Havi és Éves (CSRD) nézetek, és hogyan számítjuk ki a CO2-t szállítmányonként — az összes CSRD-export alapja.
   </Card>
-  <Card title="Jelentések áttekintése" href="/hu/reports/reports-overview">
-    Minden elérhető jelentés a Druma-ban és automatikus kézbesítés beállítása.
+  <Card title="Jelentések áttekintése" href="/en/reports/reports-overview">
+    Az összes elérhető jelentés a Drumában, és hogyan ütemezd az automatikus kézbesítést.
   </Card>
 </CardGroup>

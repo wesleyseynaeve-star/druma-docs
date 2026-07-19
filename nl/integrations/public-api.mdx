@@ -1,44 +1,48 @@
 ---
-title: "Openbare API en Webhooks"
-description: "Koppel Druma aan uw eigen ERP, klantportaal of aangepaste applicaties met de REST API en webhook-gebeurtenismeldingen."
+title: "Openbare API"
+description: "Alleen-lezen REST-toegang tot uw orders; koppel Druma aan uw eigen ERP, klantportaal of rapportagetools."
 icon: "code"
 ---
 
-De Druma Openbare API laat u aangepaste integraties bouwen tussen Druma en uw eigen systemen — een ERP, een klantenzelfbedieningsportaal, een business intelligence-tool of interne tooling.
+De openbare API van Druma geeft u **alleen-lezen** REST-toegang tot uw orders — nuttig voor een zelfbedieningsportaal voor klanten, een BI-/rapportagetool, of interne tooling die uw team heeft gebouwd.
 
 <Warning>
-De Openbare API is een functie die standaard niet is ingeschakeld. Neem contact op met **support@druma.io** om toegang aan te vragen voor uw account.
+De openbare API is een functie die niet standaard is ingeschakeld. Neem contact op met **support@druma.io** om toegang aan te vragen — API-sleutels worden momenteel rechtstreeks door Druma uitgegeven; er is geen self-service sleutelgeneratiescherm in de app.
 </Warning>
 
-## API-sleutelbeheer
+## Authenticatie
 
-Zodra de Openbare API is ingeschakeld voor uw account, ga naar **Instellingen → API & Webhooks** om uw API-sleutel te genereren en te beheren.
-
-## Verificatie
-
-Druma gebruikt Bearer Token-verificatie. Voeg uw API-sleutel toe aan de Authorization-header van elke request:
+Elk API-verzoek moet uw API-sleutel bevatten in de header `X-API-Key`:
 
 ```
-Authorization: Bearer uw_api_sleutel
+X-API-Key: UW_API_SLEUTEL
 ```
+
+Verzoeken zonder geldige sleutel krijgen een `401 Unauthorized`-respons. Bearer-token-authenticatie (`Authorization: Bearer ...`) wordt **niet** ondersteund en geeft ook een 401.
 
 ## Beschikbare endpoints
 
-- `GET /orders` — lijst van orders met filtering op status, datum, klant
-- `GET /orders/{id}` — orderdetails inclusief stops en statusgeschiedenis
-- `POST /orders` — nieuwe order aanmaken
-- `PATCH /orders/{id}/status` — orderstatus bijwerken
-- `GET /clients` — klantlijst
-- `GET /fleet` — voertuig- en chauffeurslijst
+De API is alleen-lezen — alleen `GET`-verzoeken worden geaccepteerd. Alle responses zijn JSON.
 
-## Webhooks
+| Methode | Endpoint | Beschrijving |
+|---|---|---|
+| `GET` | `/orders` | Orders opsommen (gepagineerd, optioneel `status`-filter) |
+| `GET` | `/orders/{id}` | Orderdetail |
+| `GET` | `/orders/{id}/location` | Huidige truckpositie en laatste ETA |
+| `GET` | `/orders/{id}/documents` | Documentenlijst met tijdgebonden ondertekende downloadlinks |
 
-Configureer webhook-endpoints om realtime meldingen te ontvangen voor:
-- Order aangemaakt
-- Status bijgewerkt (voor elke statusovergang)
-- Afgeleverd
-- Factuur aangemaakt
+Elke andere resource, of elke niet-GET-methode, geeft een `404`/`405`-fout.
 
-<Card title="Client API-integratie" icon="plug" href="/nl/integrations/client-api">
-  Laat klanten orders rechtstreeks in Druma sturen.
-</Card>
+## Snelheidslimieten
+
+- **100 verzoeken per minuut** per API-sleutel
+- Overschrijdt u de limiet, dan krijgt u een `429 Too Many Requests`-respons met een `Retry-After`-header die aangeeft hoeveel seconden u moet wachten
+- Er worden geen andere snelheidslimiet-headers teruggegeven
+
+Voor hogere limieten, neem contact op met support@druma.io met uw use case.
+
+<CardGroup cols={1}>
+  <Card title="Overzicht integraties instellen" icon="plug" href="/nl/admin/integration-setup">
+    Overzicht van alle Druma-integraties en hoe u ze beheert vanuit het instellingenpaneel.
+  </Card>
+</CardGroup>

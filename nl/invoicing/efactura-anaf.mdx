@@ -4,35 +4,95 @@ description: "Hoe Druma automatisch facturen indient bij het verplichte Roemeens
 icon: "landmark"
 ---
 
-## Wat is e-Factura?
+## Wat e-Factura is
 
-e-Factura is het verplichte elektronische factureringssysteem van Roemenië, beheerd door ANAF. Sinds 2024 moeten alle B2B-transacties tussen Roemens BTW-geregistreerde bedrijven aan ANAF worden gerapporteerd in UBL XML-formaat.
+e-Factura is het verplichte elektronische factureringssysteem van Roemenië, beheerd door ANAF (de Roemeense nationale belastingdienst). Sinds 2024 moeten alle B2B-transacties tussen Roemeense BTW-geregistreerde bedrijven aan ANAF worden gerapporteerd in UBL XML-formaat — het standaard elektronische factuurformaat gebruikt doorheen Europa.
 
-Elke factuur die u uitreikt aan een Roemeens bedrijf met een CIF (BTW-registratienummer) moet elektronisch naar ANAF worden verzonden. Druma regelt dit automatisch.
+In gewone taal: elke factuur die u uitreikt aan een Roemeens bedrijf met een CIF (BTW-registratienummer) moet elektronisch naar ANAF worden verstuurd, niet enkel naar uw klant. Druma regelt dit automatisch nadat u de factuur genereert.
 
 ## Hoe Druma e-Factura verwerkt
 
-U hoeft niet in te loggen op het ANAF-portaal, XML-bestanden te genereren of iets handmatig te doen. Hier is wat er automatisch gebeurt:
+U hoeft niet in te loggen op het ANAF-portaal, XML-bestanden te genereren of iets handmatig te doen. Dit gebeurt automatisch:
 
-1. U genereert een factuur in Druma
-2. Druma detecteert of de klant een Roemens CIF heeft
-3. Druma genereert het UBL XML-bestand en dient dit in bij ANAF
-4. ANAF retourneert een indienings-ID en een verwerkingsstatus
-5. Druma slaat de ANAF-status op en toont deze naast de factuur
+1. U genereert een factuur voor een Roemeense klant met een CIF op zijn klantrecord
+2. Druma maakt het UBL XML-bestand aan in het juiste ANAF-formaat
+3. Druma dient de XML in bij ANAF via de SPV-API (Spațiul Privat Virtual)
+4. ANAF retourneert een indienings-ID en, na verwerking, een acceptatie- of afwijzingsstatus
+5. Het factuurrecord in Druma werkt bij om de huidige e-Factura-status te tonen
 
-## Factuurstatussen
+## e-Factura-statustracking
+
+Elke factuur die e-Factura-indiening vereist, toont een statusbadge op de factuurdetailpagina onder het tabblad **e-Factura**:
 
 | Status | Betekenis |
 |---|---|
-| Ingediend | Ingediend bij ANAF, wacht op verwerking |
-| Geaccepteerd | ANAF heeft de factuur geaccepteerd |
-| Geweigerd | ANAF heeft de factuur geweigerd — zie de foutmelding |
-| Fout | Technische fout — Druma zal automatisch opnieuw proberen |
+| **In behandeling** | Wacht op indiening (dient doorgaans binnen enkele minuten na factuurgeneratie in) |
+| **Ingediend** | XML naar ANAF verstuurd — wacht op verwerking door ANAF |
+| **Geaccepteerd** | ANAF heeft de factuur gevalideerd en geaccepteerd |
+| **Geweigerd** | ANAF vond een fout — zie de foutcode voor details |
 
-## Herhandelingslogica
+<Note>
+Het systeem van ANAF kent regelmatig downtime, vooral op weekdagochtenden en aan het einde van de maand. Toont uw factuur "Ingediend" langer dan enkele uren, dan ligt dit meestal aan ANAF zelf, niet aan een fout in Druma. De herhandelingswachtrij vangt dit automatisch op.
+</Note>
 
-Als een indiening mislukt, plaatst Druma de factuur in een herhandelingswachtrij met exponentieel uitstel (1 uur → 4 uur → 24 uur). U ziet een deadline-waarschuwing op de factuurlijstpagina voor facturen die de deadline naderen.
+## Automatische herhandelingswachtrij
+
+Mislukt een indiening omdat ANAF niet beschikbaar is, dan probeert Druma automatisch opnieuw met exponentieel uitstel, tot 3 pogingen in totaal (de originele poging plus 2 herhalingen):
+
+- Eerste herhaling: ongeveer **1 uur** na de mislukking (±25% variatie)
+- Tweede herhaling: ongeveer **2 uur** na de eerste herhaling (±25% variatie)
+
+Mislukt ook de derde poging, dan gaat de factuur direct naar status **Mislukt** — daarna is er geen verdere automatische herhaling. U kunt dan een **handmatige herindiening** triggeren vanaf het tabblad e-Factura op de factuurpagina.
+
+## e-Factura-status bekijken
+
+<Steps>
+  <Step title="Open de factuur">
+    Ga naar **Facturering** en klik op de factuur die u wilt controleren.
+  </Step>
+  <Step title="Klik op het tabblad e-Factura">
+    Het tabblad e-Factura toont de huidige status, het tijdstip van indiening, het ANAF-indienings-ID (zodra ontvangen) en eventuele foutmeldingen.
+  </Step>
+  <Step title="Lees bij weigering de foutcode">
+    Weigeringsberichten komen van ANAF en bevatten een foutcode en omschrijving. Veelvoorkomende foutcodes staan hieronder.
+  </Step>
+</Steps>
+
+## Veelvoorkomende weigeringsfouten
+
+| Fout | Waarschijnlijke oorzaak | Hoe op te lossen |
+|---|---|---|
+| **Ongeldig CIF** | Het BTW-nummer van de klant op zijn record is onjuist of niet BTW-geregistreerd | Ga naar **Klanten** → bewerk de klant → corrigeer het CIF-veld |
+| **Ongeldig adresformaat** | Straat-, stad- of provincieveld komt niet overeen met het door ANAF verwachte formaat | Bewerk het adres van de klant — zorg dat de provincie is ingesteld met de juiste Roemeense provincienaam |
+| **Ontbrekend verplicht veld** | Een verplicht XML-veld is leeg | Controleer de factuur op ontbrekende klantgegevens — meestal CIF, adres of klantnaam |
+| **Dubbele factuur** | ANAF heeft al een indiening met hetzelfde factuurnummer | Dit betekent meestal dat een vorige indiening slaagde maar Druma de bevestiging niet ontving — controleer rechtstreeks het ANAF SPV-portaal |
+
+## Handmatige herindiening
+
+Mislukken automatische herhalingen, of heeft u een fout gecorrigeerd en wilt u het onmiddellijk opnieuw proberen:
+
+Ga naar **Facturering** → open de factuur → **tabblad e-Factura** → klik op **Opnieuw indienen bij ANAF**. Druma verstuurt de XML onmiddellijk opnieuw.
+
+## Wanneer e-Factura NIET van toepassing is
+
+e-Factura-indiening is alleen vereist voor Roemeense BTW-geregistreerde klanten. Het is **niet** van toepassing op:
+
+- Grensoverschrijdende EU-facturen (klanten buiten Roemenië gevestigd)
+- Klanten zonder Roemeens CIF
+- Facturen aan particulieren (niet-zakelijk)
+
+Voor deze facturen genereert Druma een standaard PDF-factuur zonder de UBL XML-indieningsstap. Het tabblad e-Factura verschijnt niet op die facturen.
+
+<Warning>
+Zorg dat elke Roemeense B2B-klant in Druma het correcte CIF heeft ingevuld op het klantrecord. Zonder CIF kan Druma niet indienen bij e-Factura en riskeert u niet-naleving. U kunt CIF-nummers controleren en bijwerken onder Klanten → selecteer de klant → tabblad Details.
+</Warning>
+
+---
 
 <Card title="Facturen genereren" icon="file-invoice-dollar" href="/nl/invoicing/generating-invoices">
-  Hoe facturen worden aangemaakt van afgeleverde orders.
+  Hoe u facturen aanmaakt in Druma, inclusief meerdere valuta en batchfacturering.
+</Card>
+
+<Card title="SAGA & WinMENTOR-export" icon="database" href="/nl/invoicing/saga-export">
+  Hoe u factuurgegevens exporteert naar Roemeense boekhoudsoftware voor uw boekhouder.
 </Card>

@@ -1,41 +1,175 @@
 ---
 title: "Gestion des remorques"
-description: "Suivez les remorques indépendantes dans votre flotte — où elles se trouvent, ce qu'elles transportent et quand elles sont disponibles."
+description: "Gérez les remorques qui ne sont pas couplées en permanence à un seul tracteur, y compris l'affectation, la disponibilité, et les documents."
 icon: "trailer"
 ---
 
-## Vue d'ensemble
+## Avez-vous besoin d'une gestion de remorque indépendante ?
 
-Druma vous permet de gérer les remorques comme des actifs indépendants — séparés des tracteurs. Cela s'avère utile lorsque vous pratiquez l'échange de remorques, lorsque vous avez plus de remorques que de tracteurs, ou lorsque les remorques bougent entre plusieurs tracteurs.
+Avant de vous lancer, il vaut la peine de vérifier si cette fonctionnalité s'applique à votre exploitation.
 
-Accédez à **Flotte → Remorques** pour gérer vos remorques.
+**Vous avez besoin d'une gestion de remorque indépendante si :** vos tracteurs échangent régulièrement de remorques — par exemple, un chauffeur dépose une remorque chargée à un hub et en récupère une autre, ou les remorques se déplacent entre tracteurs selon la mission.
+
+**Vous n'en avez probablement pas besoin si :** chacun de vos camions utilise toujours la même remorque et qu'elles ne sont jamais séparées. Dans ce cas, définissez simplement le type de remorque sur la fiche véhicule et c'est terminé. Voir [Gestion de la flotte](/fr/planner/fleet-management) pour savoir comment faire.
+
+Si vous exploitez une opération d'échange de remorques ou multi-remorques, continuez la lecture.
+
+<Frame caption="Flotte → Remorques — 11 types initiaux, entièrement configurables par entreprise.">
+  <img src="/images/planner/trailer-management.png" alt="Page Gestion des remorques" />
+</Frame>
 
 ---
 
 ## Ajouter une remorque
 
-Cliquez sur **Ajouter une remorque** et renseignez :
+Accédez à **Flotte → Remorques** et cliquez sur **Ajouter une remorque**.
 
-- **Numéro de remorque / Plaque** — L'identifiant de la remorque.
-- **Type** — Bâchée, frigorifique, plateau, citerne, etc.
-- **Capacité de chargement** — Poids maximum et volume (m³).
-- **Mètres de plancher (LDM)** — Mètres de plancher disponibles pour les chargements groupés.
-- **Documents** — Dates d'expiration pour les documents réglementaires.
+Renseignez les détails de la remorque :
+
+- **Numéro de plaque ou ID** — la plaque d'immatriculation de la remorque. Si votre remorque n'a pas de plaque (certaines remorques internes n'en ont pas), utilisez votre propre code d'identification interne.
+- **Type de remorque** — choisissez le type correspondant à la carrosserie de la remorque. Druma initialise 11 types par défaut pour chaque entreprise :
+  - Tautliner
+  - Méga
+  - Caisse
+  - Frigo
+  - Plateau
+  - Citerne
+  - Surbaissé
+  - Bâchée
+  - Châssis conteneur
+  - Silo
+  - Porte-engins
+
+  La liste est entièrement configurable par entreprise — un admin peut renommer, désactiver, ou ajouter des types dans **Paramètres → Types de remorque**.
+- **Année de fabrication** — l'année de construction de la remorque. Utile pour suivre l'âge et planifier les remplacements.
+- **Capacité** — la capacité de charge utile de la remorque en kilogrammes.
+- **Certifiée ADR** — définissez sur **Oui** si cette remorque est certifiée pour le transport de marchandises dangereuses. La certification ADR est vérifiée automatiquement quand vous affectez cette remorque à une commande marquée ADR.
+- **Position actuelle** — saisissez une description en texte libre d'où se trouve la remorque en ce moment, comme « Dépôt Timișoara » ou « Entrepôt client Cluj ». Ceci se met à jour automatiquement ensuite à la livraison et au détachement du camion — voir [Suivi de la position des remorques](#suivi-de-la-position-des-remorques) ci-dessous.
+
+Cliquez sur **Enregistrer** une fois terminé.
 
 ---
 
-## Position actuelle de la remorque
+## Attacher une remorque à un camion
 
-Druma met automatiquement à jour la position d'une remorque lorsqu'une commande est livrée. La position affichée est la dernière adresse de livraison connue.
+Une remorque ne peut être affectée qu'à un seul camion à la fois. Il y a deux façons d'attacher une remorque :
 
-Si vous déplacez physiquement une remorque sans commande attachée, mettez à jour sa position manuellement via le profil de la remorque.
+### Option 1 — Lors de la création d'une commande
+
+Lors du remplissage d'une commande pour une mission **Camion propre**, après avoir sélectionné le tracteur, une liste déroulante **Remorque** apparaîtra. Recherchez par plaque ou ID et sélectionnez la remorque à utiliser pour cette mission. La remorque est automatiquement marquée comme affectée pour la durée de la commande.
+
+### Option 2 — Depuis la page de détail de la remorque
+
+<Steps>
+  <Step title="Ouvrez le profil de la remorque">
+    Accédez à **Flotte → Remorques** et cliquez sur la remorque à affecter.
+  </Step>
+  <Step title="Cliquez sur Affecter à un camion">
+    Trouvez la section **Affectation actuelle** et cliquez sur **Affecter à un camion**.
+  </Step>
+  <Step title="Sélectionnez le camion">
+    Recherchez le tracteur par numéro de plaque. Seuls les véhicules actifs s'affichent.
+  </Step>
+  <Step title="Définissez la période d'affectation">
+    Saisissez la date de début. Vous pouvez laisser la date de fin vide si vous ne savez pas encore quand la remorque sera détachée.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Confirmer l'affectation**. La remorque apparaîtra désormais comme affectée sur le tableau de planification.
+  </Step>
+</Steps>
 
 ---
 
-## Affecter une remorque à une commande
+## Détacher une remorque
 
-Lors de la création d'une commande avec une tracteur qui a une remorque indépendante, Druma vous demande de sélectionner quelle remorque est utilisée. Vous pouvez voir la position actuelle de chaque remorque pour choisir la plus proche.
+Quand une commande est terminée, Druma libère automatiquement l'affectation de la remorque. Vous pouvez aussi détacher une remorque manuellement à tout moment :
+
+<Steps>
+  <Step title="Ouvrez le profil de la remorque">
+    Accédez à Flotte → Remorques et cliquez sur la remorque.
+  </Step>
+  <Step title="Cliquez sur Détacher">
+    Dans la section Affectation actuelle, cliquez sur **Détacher la remorque**.
+  </Step>
+  <Step title="Confirmez">
+    Confirmez le détachement. Le statut de la remorque revient à **Disponible** et elle peut être affectée à un camion différent.
+  </Step>
+</Steps>
+
+<Warning>
+Si vous détachez une remorque alors qu'une commande est encore active (le chauffeur est en route), la commande reste liée à la remorque à des fins d'archivage. Le détachement n'affecte que les affectations futures.
+</Warning>
+
+---
+
+## Vue de disponibilité des remorques
+
+La liste des remorques dans **Flotte → Remorques** a trois onglets de filtre rapide :
+
+- **Toutes** — chaque remorque de votre flotte.
+- **Disponibles** — remorques actuellement non affectées à un camion ou une commande. Celles-ci sont prêtes à être dispatchées.
+- **Affectées** — remorques actuellement attachées à un camion ou en usage sur une commande active.
+
+Cliquez sur n'importe quelle remorque pour voir son historique complet d'affectation — sur quels camions elle a été, quelles commandes elle a terminées, et quand.
+
+---
+
+## Documents de remorque
+
+Les remorques ont besoin de leur propre paperasse — assurance, certificats d'inspection technique, et certificats ADR le cas échéant. Ceux-ci sont suivis séparément des documents véhicule.
+
+Pour ajouter un document à une remorque :
+
+<Steps>
+  <Step title="Ouvrez le profil de la remorque">
+    Accédez à Flotte → Remorques et sélectionnez la remorque.
+  </Step>
+  <Step title="Accédez à l'onglet Documents">
+    Cliquez sur l'onglet **Documents** du profil de la remorque.
+  </Step>
+  <Step title="Téléversez le document">
+    Cliquez sur **Ajouter un document**, sélectionnez le type de document, saisissez la date d'expiration, et téléversez un scan ou une photo du certificat.
+  </Step>
+</Steps>
+
+Druma vous alertera sur la Vue Aujourd'hui et par email quand un document de remorque approche de sa date d'expiration. La période d'avertissement par défaut est de 30 jours, que vous pouvez modifier dans **Paramètres → Notifications**.
+
+<Note>
+Si le certificat ADR d'une remorque expire et que vous avez des commandes marquées ADR qui lui sont affectées, Druma signalera la commande avec un avertissement. Cela ne bloquera pas le dispatch, mais l'avertissement est journalisé.
+</Note>
+
+---
+
+## Suivi de la position des remorques
+
+Druma suit les positions des remorques à travers trois sources, chacune enregistrée avec un indicateur de **source de position** :
+
+### Automatique : à la livraison
+
+Quand une commande est marquée **Livrée**, Druma met automatiquement à jour la position de la remorque vers la dernière adresse de déchargement. La source de position est définie sur **Livraison de commande**. Cela signifie qu'après chaque livraison terminée, la position de la remorque est à jour sans aucune saisie manuelle.
+
+### Automatique : au détachement du camion
+
+Quand vous détachez une remorque d'un camion (manuellement ou parce que le camion est réaffecté), la position de la remorque est définie sur la dernière position connue du camion. La source de position est définie sur **Détachement camion**.
+
+### Mise à jour manuelle
+
+Les répartiteurs peuvent mettre à jour la position de la remorque à tout moment depuis la page de profil de la remorque. Le champ **Position actuelle** prend en charge l'autocomplétion d'adresse HERE — commencez à taper une adresse et sélectionnez parmi les suggestions pour obtenir des coordonnées précises. La source de position est définie sur **Manuel**.
+
+<Note>
+Le suivi de position des remorques est aujourd'hui limité à ces trois sources — il n'y a pas d'intégration de traceur GPS mettant à jour automatiquement la position d'une remorque. Si vos remorques portent leur propre unité télématique, ces données ne sont actuellement pas connectées au champ de position de remorque de Druma.
+</Note>
+
+### Colonne Position dans la liste des remorques
+
+La liste des remorques sous **Flotte → Remorques** inclut une colonne **Position** montrant l'adresse actuelle de chaque remorque et un horodatage de la dernière mise à jour de position. Cela vous donne une vue de toute la flotte sur où se trouvent toutes vos remorques sans ouvrir les profils individuels.
+
+---
 
 <Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
-  Gérez les tracteurs et autres véhicules de votre flotte.
+  Gérez vos tracteurs et camions rigides — ajoutez des véhicules, définissez les dimensions, et suivez la disponibilité.
+</Card>
+
+<Card title="Documents de flotte" icon="file" href="/fr/fleet-compliance/fleet-documents">
+  Suivez et gérez tous les documents de conformité pour les véhicules et les remorques en un seul endroit.
 </Card>

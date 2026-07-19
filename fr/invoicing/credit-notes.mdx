@@ -1,44 +1,74 @@
 ---
 title: "Avoirs"
-description: "Comment émettre un avoir dans Druma pour corriger une erreur de facturation ou annuler une facture existante."
+description: "Comment créer un avoir dans Druma pour annuler ou corriger partiellement une facture envoyée — requis par la loi roumaine quand une facture doit changer."
 icon: "file-minus"
 ---
 
-## Qu'est-ce qu'un avoir ?
+## Quand vous avez besoin d'un avoir
 
-Un avoir est un document qui annule partiellement ou totalement une facture émise. Utilisez les avoirs pour :
-- Corriger un montant incorrect sur une facture envoyée
-- Annuler une facture entière
-- Accorder un remboursement partiel
+Une fois qu'une facture a été générée et envoyée, vous ne pouvez pas la modifier ni la supprimer — c'est une exigence légale en Roumanie. Si quelque chose est incorrect ou doit changer, le processus correct est d'émettre un avoir.
 
----
+Utilisez un avoir quand :
 
-## Émettre un avoir
+- Vous avez facturé le mauvais montant (erreur de prix, supplément mal calculé)
+- Des marchandises ont été retournées après livraison et un remboursement a été convenu
+- Vous avez accordé une remise au client après coup
+- La facture a été envoyée au mauvais client et doit être annulée
+- Un frais de temps d'attente a été contesté et vous l'annulez
+
+Un avoir réduit le solde restant du client du montant crédité. C'est un document distinct, numéroté, qui se rattache à la facture d'origine.
+
+## Créer un avoir
 
 <Steps>
-  <Step title="Ouvrez la facture">
-    Accédez à **Facturation** et trouvez la facture pour laquelle vous souhaitez émettre un avoir.
+  <Step title="Ouvrez la facture d'origine">
+    Accédez à **Facturation** et trouvez la facture à corriger. Cliquez dessus pour ouvrir la page de détail de la facture.
   </Step>
-  <Step title="Cliquez sur Émettre un avoir">
-    Cliquez sur le bouton **···** (actions) → **Émettre un avoir**.
+  <Step title="Cliquez sur Créer un avoir">
+    Cliquez sur le bouton **Créer un avoir**. Druma ouvre un court formulaire d'avoir référençant le numéro de la facture d'origine et son total.
   </Step>
-  <Step title="Sélectionnez la raison">
-    Choisissez la raison de l'avoir : erreur de prix, service non rendu, litige client, autre.
+  <Step title="Saisissez le montant">
+    Définissez le champ **Montant** au montant que vous créditez, jusqu'au total de la facture d'origine (affiché comme le **Maximum**). Laissez-le au montant complet pour un avoir total, ou réduisez-le pour un avoir partiel — il n'y a pas d'éditeur ligne par ligne, l'avoir est un montant unique que Druma répartit automatiquement entre sous-total et TVA.
   </Step>
-  <Step title="Sélectionnez les postes à créditer">
-    Choisissez si vous créditez la facture entière ou uniquement certains postes. Ajustez les montants si nécessaire.
+  <Step title="Sélectionnez une raison">
+    Choisissez une **Raison** dans la liste déroulante : Facture erronée (Annuler et réémettre), Ajustement de prix, Annulation, Facture en double, Problème de qualité / Remboursement, ou Autre. Utilisez le champ **Notes** séparé pour tout détail en texte libre (par exemple, « le tarif convenu était 850 €, pas 950 € »). La raison et les notes apparaissent toutes deux sur le PDF de l'avoir.
   </Step>
   <Step title="Générez l'avoir">
-    Cliquez sur **Générer l'avoir**. Druma crée un avoir numéroté (ex. : CN-2026-001) lié à la facture d'origine.
+    Cliquez sur **Créer l'avoir**. Si la raison est l'une des raisons d'annulation (Facture erronée, Ajustement de prix, Annulation, ou Facture en double) et que le montant est égal au total complet de la facture, Druma annule aussi la facture d'origine et propose une case à cocher **Créer un brouillon de facture corrigée** pour démarrer une facture de remplacement pré-remplie à partir de l'originale. Druma attribue un numéro d'avoir séquentiel avec le préfixe `CN-` (par exemple, `CN-000001`). Les numéros d'avoir sont dans leur propre série séparée — ils ne partagent pas de séquence avec les factures.
+  </Step>
+  <Step title="Envoyez au client">
+    Cliquez sur **Télécharger le PDF** pour obtenir le fichier d'avoir, puis envoyez-le par email au contact financier du client. Ou utilisez **Envoyer par email** pour que Druma l'envoie directement, pré-adressé au contact financier enregistré.
   </Step>
 </Steps>
 
----
+## Avoir total vs partiel
+
+**Avoir total :** saisissez un montant égal au total complet de la facture. Utilisez ceci quand vous devez annuler complètement une facture — mauvais client, commande entièrement erronée, facture envoyée par erreur. Si la raison est une raison d'annulation, Druma marque la facture d'origine comme annulée et vous permet de générer un brouillon de facture corrigée dans la même étape.
+
+**Avoir partiel :** saisissez un montant inférieur au total de la facture. Utilisez ceci quand seule une partie de la facture est erronée — par exemple, créditer uniquement le supplément ADR tout en laissant les frais de transport intacts. Druma répartit la TVA et le sous-total pour vous en fonction du montant saisi ; il n'y a pas de modification ligne par ligne.
 
 ## Numérotation des avoirs
 
-Les avoirs utilisent un compteur séparé de celui des factures. Le format par défaut est `CN-AAAA-NNN`.
+Les avoirs utilisent le préfixe `CN-` et leur propre série séquentielle (par exemple `CN-000001`, `CN-000002`, etc. — aucune année n'est incluse par défaut). Cette série est séparée de vos numéros de facture. Un modèle de numérotation personnalisé, incluant un jeton d'année, peut être configuré sous **Paramètres** → **Marque et formats** → **Numérotation des factures**.
+
+## Effet comptable
+
+Quand un avoir est généré :
+
+- Le solde restant du client est réduit du montant crédité
+- Si la facture d'origine était entièrement payée, l'avoir crée un solde créditeur sur le compte client qui peut être appliqué à de futures factures
+- L'avoir apparaît dans tous les exports comptables (SAGA, WinMENTOR) aux côtés de la facture d'origine
+
+<Warning>
+Les avoirs sont des documents légalement requis en Roumanie. Vous ne devez jamais modifier ni supprimer une facture envoyée. Si vous découvrez une erreur — même petite — suivez toujours le processus d'avoir. Les soumissions e-Factura de l'ANAF nécessitent aussi que l'avoir soit soumis afin que la facture d'origine soit formellement corrigée dans le système.
+</Warning>
+
+---
 
 <Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
-  Retour au guide de création de factures.
+  Comment créer des factures à partir de commandes livrées, y compris la facturation groupée et multi-devise.
+</Card>
+
+<Card title="Suivi des paiements" icon="money-bill-wave" href="/fr/invoicing/payment-tracking">
+  Enregistrer les paiements contre les factures et gérer les soldes restants.
 </Card>

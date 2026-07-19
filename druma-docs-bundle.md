@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-19 07:27 UTC
+Generated: 2026-07-19 19:58 UTC
 
 ---
 
@@ -2155,7 +2155,7 @@ The **Now** tab is a split, two-column layout:
 Assigning a truck is a drag: pick up a row on either side and drop it on the matching row on the other side.
 
 - Dragging a **truck** onto a load opens a confirmation sheet showing the truck, driver, and order details — including any cabotage, trailer, or relay-stop checks that need your input — before the assignment is committed.
-- Dragging a **delivering load** (an Incoming card that isn't free yet, just about to be) onto an Outgoing load doesn't assign a truck yet — there isn't one free to assign — it pencils in a preliminary link between the two, so you can plan a chain of loads for a truck before it's actually free. Use **Assign truck** on that row once you're ready to commit.
+- Dragging a **delivering load** (an Incoming card that isn't free yet, just about to be) onto an Outgoing load doesn't assign a truck yet — there isn't one free to assign — it pencils in a preliminary link between the two. Repeating this builds a whole **chain** of future reloads for one truck before it's even free for the first one; see **Preplan mode** below for the full chain workflow, including the automatic optimizer that watches penciled chains for a cheaper swap. Use **Assign truck** on that row once you're ready to commit.
 
 > **Note:** 
 Dragging works in **both directions** — drag an Incoming card onto an Outgoing load, or drag an Outgoing load onto an Incoming card. Either way lands on the same row.
@@ -2217,6 +2217,30 @@ The **Preplan** toggle in the toolbar switches what a drag-and-drop does:
 
 - **Off** (default) — dragging firmly assigns the truck immediately (opens the confirmation sheet).
 - **On** — dragging pencils in a preliminary combination without committing anything. Penciled combinations show a **Preliminary** badge, an estimated (or, where routing data is available, real PTV-routed) ETA, and an on-time/running-late verdict — so you can sketch out a week's worth of combinations before locking any of them in. Use **Assign truck** on a penciled row when you're ready to make it firm.
+
+**Building a chain.** A pencil doesn't have to stop at one truck and one load. Drag a **delivering** Incoming card — a truck that isn't free yet but is about to be — onto an Outgoing load, and Druma pencils a link chaining the new load after the one currently in transit. Drag again onto the new tail and you can plan a whole sequence of future reloads for a single truck days before it actually frees up — a Cluj → Sibiu → Timișoara run, pencilled in on Monday for a truck that's still driving toward Cluj.
+
+Each penciled row shows an **After #{order}** chip naming the load it's chained behind, so the sequence stays readable at a glance. Under the hood, a pencil anchors to a specific truck, to the predecessor order it chains after, or both — and an anchor can only ever feed one reload at a time: dragging a new load onto an anchor that's already spoken for re-homes the anchor to the new load and un-pencils the old one, instead of double-booking the same truck across two chains.
+
+> **Note:** 
+Nothing here touches the real order until a truck is actually assigned through the normal board gate — a drag with Preplan off, or **Assign truck** on a penciled row. Until then, a chain is pure planning scratch space and can be rearranged freely.
+
+
+**The Reload Reassignment Optimizer.** Once a chain exists, Druma keeps checking it in the background. For the **tail** of every chain — the last penciled reload, the one nothing else chains after yet — it asks: is there a different, not-yet-penciled reload whose pickup sits closer to where that truck will actually free up?
+
+For example: a truck is pencilled to reload in Cluj tomorrow. A closer, unpicked reload turns up with a pickup in Sibiu instead. If swapping the Sibiu load in would genuinely cut deadhead cost — valued in € using the truck's own cost profile, not just raw kilometres — Druma surfaces a suggestion chip right on that row, something like **"Cheaper reload available: −18 km · €22."** Click **Switch to #...** and the swap applies in one step: the Sibiu load gets penciled in, the Cluj load automatically loses its pencil (the same single-use-anchor rule chains rely on above), and a toast confirms **"Reload #... penciled instead."** This is the same suggestion-chip mechanic described below, applied specifically to chain tails.
+
+A few guardrails keep the suggestions trustworthy:
+
+- It only ever suggests a swap that saves **at least 15 km and at least €0** — never a swap that looks cheap only because a truck's cost profile is misconfigured to zero.
+- It's **EU 561/2006-aware** — it will never suggest a reload that would push the truck's driver over their remaining driving hours for the day.
+- Click the chip to expand it for the "why" and a real routed before/after impact, including a warning that the displaced load will become unassigned again.
+
+> **Note:** 
+The optimizer only ever proposes; nothing is applied without a click. It's also silent when there's nothing better to suggest — no chip means Druma didn't find a cheaper reload, not that it didn't check.
+
+
+**Chain safety on change.** If something upstream in a chain changes — the order is cancelled, its truck is unassigned, or its truck is switched — Druma checks whether anything is pencilled downstream of it. If nothing is, the change goes through with no fuss. If a downstream tail exists, you're prompted to choose: **Remove whole chain** (cascades the removal through every pencilled reload chained after it) or **Keep downstream orders** (severs just that one link and leaves the downstream loads as independent, still-reassignable pins). Either way, a pencilled plan never silently rots into a broken or orphaned state — you decide what happens to the rest of the chain, you're never left to manually hunt down dangling links yourself.
 
 ### Suggestion chips
 
@@ -3283,12 +3307,12 @@ The alert fires the moment the 2-hour (or custom) free period runs out. You can 
 
 From the order page or the waiting time alert, click **"Notify Client"**. Druma sends a professional email to your client contact that includes:
 
-- GPS-stamped arrival time (date, time, and coordinates)
-- A map pin showing exactly where the driver is
-- Total waiting time so far
-- The charge amount at the agreed rate
+- Arrival time and, once loading/unloading has started, that timestamp too (plain text — no GPS coordinates or map link)
+- Free waiting time and chargeable waiting time so far, at your configured hourly rate
+- The total waiting charge calculated so far
+- If the driver attached a photo or voice note, a time-limited link to it
 
-This puts the client on notice early, with hard evidence attached. Most clients respond much faster when they see a GPS timestamp — it's no longer your word against theirs.
+This puts the client on notice early, with a paper trail attached. Most clients respond much faster once they've seen a written notice — it's no longer your word against theirs.
 
 
 > **Note:** 
@@ -3338,57 +3362,36 @@ When you generate the invoice for the order, Druma automatically suggests the wa
 
 ---
 
-## Customising Per Client
+## Configuring Free Hours and the Hourly Rate
 
-If you have a client with a negotiated waiting rate or a longer free period, set it once in their profile and it applies to every order:
+Free waiting hours and the hourly waiting rate are set per **Rate Card** — the cost profile assigned to a truck (own-fleet or subcontracted) — not per client or per order:
 
 
-  ### Open client settings
-    Go to **Settings → Clients** and open the client's profile.
+  ### Open Rate Cards
+    Go to **Settings → Rate Cards** and open the relevant cost profile.
   
-  ### Find waiting time settings
-    Scroll to the **Waiting Time** section.
+  ### Find the waiting time fields
+    Locate **Free waiting hours** and **Waiting rate €/h**.
   
   ### Set your values
-    Enter the agreed free hours allowance and hourly rate.
+    Enter the agreed free hours allowance and hourly rate for this cost profile.
   
   ### Save
-    Click **Save**. All future orders for this client will use these values automatically.
+    Click **Save**. Every order priced against this cost profile now uses these values.
   
 
 
----
-
-## Customising Per Order
-
-For a one-off situation — a special contract, a spot load with different terms — override the values on a single order without changing the client default:
-
-
-  ### Open the order
-    Go to **Orders** and open the relevant order.
-  
-  ### Edit order settings
-    Click **Edit** and find the **Waiting Time** section.
-  
-  ### Override the values
-    Enter the specific free hours and rate for this order only.
-  
-  ### Save the order
-    Click **Save**. Order-level settings override both the system default and the client-level setting.
-  
-
-
-> **Warning:** 
-Order-level overrides take priority over everything else. If you've set a per-order rate, double-check it before generating the invoice — it won't match the client's usual rate.
+> **Note:** 
+There's no separate per-client or per-order override today — every order uses the waiting terms of the cost profile assigned to its truck, falling back to a company-wide default (**Settings → Company**) and then the platform default (2h / €45) if neither is set.
 
 
 ---
 
 ## Why GPS Evidence Changes the Game
 
-Before GPS-stamped waiting time, disputes were common: "Your driver arrived at 3pm, not 1pm." With Druma, you have an automatically recorded, timestamped GPS position captured at the moment the driver tapped "Arrived" — plus an email you sent to the client during the wait showing that exact data.
+Before GPS-stamped waiting time, disputes were common: "Your driver arrived at 3pm, not 1pm." With Druma, you have an automatically recorded, timestamped GPS position captured at the moment the driver tapped "Arrived" — plus the notification email you sent the client during the wait, carrying that same timestamp in writing.
 
-This combination — GPS timestamp plus the sent notification email — resolves the vast majority of waiting time disputes in your favour, without arguments.
+This combination — a GPS-backed timestamp on your side, plus a written notice already in the client's inbox — resolves the vast majority of waiting time disputes in your favour, without arguments.
 
 > **Note:** 
 In covered loading bays or areas with poor signal, GPS may fall back to network-based location, which is slightly less precise. The timestamp is always accurate regardless of GPS quality.

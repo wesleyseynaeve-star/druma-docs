@@ -1,63 +1,89 @@
 ---
-title: "Díjszabási sablonok"
-description: "Hogyan hozz létre és kezelj díjszabási sablonokat a Drumában a szokásos útvonalár-mentéshez és a rendeléslétrehozás felgyorsításához."
+title: "Árkártyák"
+description: "Hogyan definiálj jármű-költségprofilokat a Drumában, hogy a rendelések pontos becsült költséget és marginot mutassanak."
 icon: "tags"
 ---
 
-## Mik azok a díjszabási sablonok?
-
-A díjszabási sablonok mentett árképletek egy adott útvonalhoz és teherautó-típushoz. Amikor létrehozol egy rendelést egy olyan útvonalra, amelyhez sablon van beállítva, a Druma automatikusan kitölti a javasolt árat — így nem kell minden alkalommal fejből kiszámolni.
-
-A sablonok különösen hasznosak a rendszeres útvonalaknál: ha hetente többször is fuvarozol Budapestről Bécsbe 24 tonnás ponyvás teherautóval, egyszer beállítod az árat, és utána mindig automatikusan megjelenik.
-
-## Díjszabási sablon létrehozása
-
-<Steps>
-  <Step title="Lépj a Beállítások → Díjszabási sablonok menüpontra">
-    A bal oldali menüben kattints a **Beállítások**, majd a **Díjszabási sablonok** menüpontra.
-  </Step>
-  <Step title="Kattints az Új sablon gombra">
-    Kattints az **Új sablon** gombra a jobb felső sarokban.
-  </Step>
-  <Step title="Töltsd ki a sablon adatait">
-    Add meg:
-    - **Eredet ország és cél ország** — kötelező
-    - **Eredet város és cél város** — opcionális, de pontosabb egyezéshez ajánlott
-    - **Teherautó típusa** — például ponyvás, hűtős, platós
-    - **Ár** — az erre az útvonalra érvényes megállapított ár
-    - **Pénznem** — alapértelmezés szerint az EUR, de módosítható
-  </Step>
-  <Step title="Mentsd el a sablont">
-    Kattints a **Mentés** gombra. A sablon mostantól aktív, és minden rendeléslétrehozáskor figyelembe lesz véve.
-  </Step>
-</Steps>
-
-## Hogyan működnek a sablonok a rendeléslétrehozáskor
-
-Amikor megadsz egy felvételi és szállítási helyszínt az új rendelés űrlapon, a Druma összehasonlítja az útvonalat az összes aktív sablonnal. Ha egyezést talál:
-
-1. Az **Ajánlott ár** mezőben automatikusan megjelenik a sablon ára.
-2. A mező szerkeszthető marad — felülírhatod az árat az adott rendelésre vonatkozó tárgyalás eredménye szerint.
-3. Ha nincs egyező sablon, az ármező üresen marad.
-
-## Sablonok keresése és kezelése
-
-A **Beállítások → Díjszabási sablonok** oldalon:
-
-- **Keresés** az eredet, cél vagy teherautó típusa szerint
-- **Sablon szerkesztése** — kattints bármelyik soron az ár vagy részletek módosításához
-- **Sablon törlése** — a sablon törlése nem érinti a már létrehozott rendeléseket
-
-## Bevált gyakorlatok
-
-- **Legyél specifikus:** Egy Budapest–Bécs sablon pontosabb, mint egy Magyarország–Ausztria sablon.
-- **Sablonok devizánként:** Ha egyes ügyfeleket euróban, másokat lejben számítol, hozz létre különálló sablonokat mindkét pénznemhez.
-- **Rendszeres felülvizsgálat:** Az üzemanyagárak és piaci feltételek változnak. Évente legalább egyszer tekintsd át a sablonokat.
-
 <Note>
-A díjszabási sablonok az összes Tervező, Admin és Vállalati admin számára elérhetők a cégben. A sablonok vállalat-specifikusak — ha több cégfiókot kezelsz, mindegyiknek saját sablonkészlete van.
+Ez az oldal a **Beállítások → Árkártyák** menüpontot ismerteti — a jármű **költségprofilokat**, amelyeket a rendelés költségének és marginjának becslésére használunk. Ha az útvonalankénti **eladási** árakat keresed (eredet/cél alapú árajánlat-javaslatok, pl. "Románia → Németország, ponyvás — 1450 €"), az egy külön funkció, az **Útvonal-árazás**, a főalkalmazás **Árazás → Útvonal-árazás** menüpontjában — ezt az oldal nem ismerteti.
 </Note>
 
-<Card title="Rendelés létrehozása" icon="plus" href="/en/planner/creating-orders">
-  Hogyan hozz létre új fuvarozási rendelést és rendeld hozzá a megfelelő díjszabást.
+## Mi az az árkártya?
+
+A **Beállítások → Árkártyák** menüpontban lévő árkártya egy jármű-üzemeltetési kategória — a **saját flotta** vagy egy **alvállalkozó** — költségprofilja. Rögzíti, mennyibe kerül ténylegesen egy jármű üzemeltetése (fix költség, sofőrbér, üzemanyag, ADR/túlméret felár, útdíj), hogy a Druma megbecsülhesse egy rendelés költségét és marginját az ügyfélnek felszámított ár mellett.
+
+**Ki szerkesztheti:** Admin, Vállalati admin és Tervező szerepkörök.
+
+<Frame caption="Útvonal-árazás (Árazás → Útvonal-árazás) — a külön, eredet/cél alapú eladási ár funkció. Beállítások → Árkártyák (ez az oldal) a költségprofil oldala.">
+  <img src="/images/admin/rate-cards.png" alt="Útvonal-árazás oldal eredet, cél és pótkocsitípus szerinti árkártyákkal" />
+</Frame>
+
+## Árkártya létrehozása
+
+Lépj a **Beállítások → Árkártyák** menüpontra, és kattints az **Új kártya** gombra.
+
+### Név
+
+Adj a kártyának egy egyértelmű nevet, pl. "Saját flotta — standard" vagy "Alvállalkozó — RO/BG útvonalak".
+
+### Típus
+
+Válaszd a **Saját flotta** vagy az **Alvállalkozó** opciót — ez határozza meg, mely rendeléskategóriára vonatkozik a költségprofil.
+
+### Díj / km (€)
+
+Egy opcionális fix kilométerenkénti költségráta.
+
+### Költségalap
+
+Válaszd ki, hogyan számoljuk a fix üzemeltetési költséget:
+- **Napi díj** — add meg a **Napi fix költséget (€)** és a **Sofőrbér / nap (€)** értéket.
+- **Heti bérlés** — add meg a **Heti fix költséget (€)** és a **Sofőrbér / hét (€)** értéket.
+
+### Várakozási idő
+
+- **Ingyenes várakozási órák** — hány óra várakozási idő van beleszámítva, mielőtt díj lépne érvénybe.
+- **Várakozási díj €/óra** — az óránkénti költség, ha a várakozási idő túllépi az ingyenes órákat.
+
+### Felárak
+
+- **ADR-díj (€)** — veszélyesáru-szállításra vonatkozó pótköltség.
+- **Túlméret-díj (€)** — túlméretes rakományra vonatkozó pótköltség.
+
+### Üzemanyag
+
+- **Üzemanyag alapár (€/L)** — a költségszámításban használt üzemanyagár.
+- **Üzemanyag-fogyasztás (L/100km)** — a jármű várható fogyasztása, amelyet az alapárral és az útvonaltávolsággal együtt használunk az üzemanyagköltség becsléséhez.
+
+### Margincélok
+
+- **Célmargin %** — az e költségprofilt használó rendeléseknél elérni kívánt margin.
+- **Minimális margin %** — az a minimum elfogadható margin, amely alatt a Drumának jeleznie kell a rendelést.
+
+### Útdíj-szabályzat
+
+Válaszd ki az útdíjak alapértelmezett kezelését ehhez a költségprofilhoz:
+- **Beépítve a díjban** — az útdíj a díjadba be van építve, nem kerül külön kiszámlázásra.
+- **Áthárítva az ügyfélre** — az útdíj a felmerülés szerint kerül kiszámlázásra az ügyfélnek.
+- **Külön tétel** — az útdíj saját tételként jelenik meg a rendelésen/számlán.
+
+Ezt az alapértelmezést felülbírálhatod konkrét országokra vagy konkrét útdíjkezelőkre:
+
+- **Országonkénti útdíj-szabályzat felülbírálás** — válassz egy országot és egy szabályzatot (Ügyfélnek kiszámlázva / Beépítve a díjban / Nincs felszámítva). Hasznos, ha például a francia útdíjak áthárítottak, de a németek beépítettek.
+- **Kezelőnkénti útdíj-szabályzat felülbírálás** — add meg az útdíjkezelő nevét pontosan úgy, ahogy a nyugtákon szerepel (pl. `ASFINAG`, `HU-GO`, `Viapass`), és egy szabályzatot. A kezelő-szintű felülbírálás elsőbbséget élvez az ország-szintű szabályzattal szemben.
+
+### Mentés
+
+Kattints a **Változtatások mentése** gombra egy meglévő kártyánál, vagy a **Létrehozás** gombra egy új hozzáadásakor.
+
+## Árkártya szerkesztése vagy törlése
+
+Bontsd ki a listában egy kártyát, hogy bármelyik mezőjét helyben szerkeszd. Kattints a kártya melletti **X** gombra a törléshez — ez megerősítést kér, mivel a művelet nem visszavonható.
+
+Az árkártya költségprofilok a rendelés létrehozásakor vagy árazásakor megjelenő költség/margin becslésbe folynak be — ez egy külön számítási felület, nem ezen a beállítási oldalon.
+
+## Kapcsolódó oldalak
+
+<Card title="Vállalati beállítások" icon="building" href="/en/admin/company-setup">
+  Állítsd be a vállalati profilodat, amely az árkártyákkal együtt működik a Druma rendelésköltség-számításánál.
 </Card>

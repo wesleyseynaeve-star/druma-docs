@@ -6,52 +6,108 @@ icon: "route"
 
 ## Was ist ein Positionierungsauftrag?
 
-Ein Positionierungsauftrag verfolgt eine **nicht-umsatzwirksame Fahrt** — wenn Sie einen LKW von einem Standort zu einem anderen schicken, ohne für einen zahlenden Kunden Ladung zu transportieren. Häufige Szenarien:
+Ein Positionierungsauftrag verfolgt eine **nicht-umsatzwirksame Fahrt** — wenn Sie einen LKW von einem Standort zu einem anderen schicken, ohne Ladung für einen zahlenden Kunden zu transportieren. Häufige Szenarien:
 
 - Einen leeren LKW von einem Lieferpunkt zu einer anderen Stadt schicken, wo eine Abholung wartet.
 - Einen LKW am Ende einer Arbeitswoche zum Heimatdepot zurückbringen.
-- Ein Fahrzeug zu einem Fahrerwechsel oder einem Wartungstermin umstellen.
+- Ein Fahrzeug für einen Fahrerwechsel oder Wartungstermin umsetzen.
 
-Positionierungsaufträge werden nicht an Kunden fakturiert. Sie existieren, um volle Sichtbarkeit auf die Bewegungen Ihrer Flotte zu geben, Leerkilometer zu verfolgen und die wahren Kosten Ihres Betriebs zu berechnen.
+Positionierungsaufträge werden nicht an Kunden fakturiert. Sie existieren, um volle Sichtbarkeit über die Bewegungen Ihrer Flotte zu geben, Leerkilometer zu verfolgen, und die wahren Kosten Ihres Betriebs zu berechnen.
 
 ---
 
 ## Einen Positionierungsauftrag erstellen
 
 <Steps>
-  <Step title="Neuen Auftrag erstellen">
-    Gehen Sie zu **Aufträge → Neuer Auftrag**.
+  <Step title="Das Neuer-Auftrag-Formular öffnen">
+    Gehen Sie zu **Planer → Aufträge → Neuer Auftrag**.
   </Step>
   <Step title="Positionierung als Auftragstyp wählen">
-    Wählen Sie **Positionierung** aus dem Dropdown-Menü.
+    Wählen Sie im Feld **Auftragstyp** **Positionierung**. Dies ist die dritte Option neben Eigener LKW und Unterauftragnehmer.
   </Step>
-  <Step title="Details ausfüllen">
-    - **Abfahrtsort** — Wo der LKW aktuell ist
-    - **Zielort** — Wohin er fahren muss
-    - **Grundcode** — Warum die Fahrt stattfindet
-    - **LKW und Fahrer** — Wie bei normalen Aufträgen zuweisen
+  <Step title="Den Grund wählen">
+    Wählen Sie aus dem Dropdown einen **Positionierungsgrund**. Dies ist eine feste Liste von 5 Gründen — es gibt keine Einstellungsoberfläche, um sie hinzuzufügen oder zu ändern:
+    - Leerfahrt-Rückkehr
+    - Flottenumstellung
+    - Wartungstransfer
+    - Vorpositionierung
+    - Sonstiges
   </Step>
-  <Step title="Speichern">
-    Klicken Sie auf **Auftrag erstellen**.
+  <Step title="Die Route ausfüllen">
+    Geben Sie die Abholadresse (wo der LKW jetzt ist) und die Lieferadresse (wohin er muss) ein. Die PTV-Routing-Engine berechnet die Distanz automatisch.
+  </Step>
+  <Step title="Notizen hinzufügen (optional)">
+    Nutzen Sie das Feld **Positionierungsnotizen**, um zu erklären, warum diese Fahrt stattfindet. Dies ist nur für Planer sichtbar, nicht für den Fahrer.
+  </Step>
+  <Step title="Einen LKW zuweisen und speichern">
+    Wählen Sie LKW und Fahrer wie bei jedem anderen Auftrag. Als Entwurf speichern oder sofort bestätigen.
   </Step>
 </Steps>
 
 ---
 
-## Grundcodes für Positionierung
+## Wie sich Positionierungsaufträge unterscheiden
 
-- Leerfahrt zu Abholung
-- Rückkehr zum Depot
-- Fahrzeugaustausch
-- Wartungstransfer
-- Sonstiges
+| Merkmal | Regulärer Auftrag | Positionierungsauftrag |
+|---|---|---|
+| An Kunden fakturiert | Ja | Nein |
+| Erscheint auf der Planungstafel | Ja | Ja (mit **Repo**-Abzeichen) |
+| Zählt in Umsatzberichten | Ja | Nein |
+| Distanz erfasst als | `distance_km` | `distance_km_internal` |
+| Fahrer sieht in App | Ja | Ja |
+| Statusfluss | Vollständiger Lebenszyklus | Vollständiger Lebenszyklus |
+
+<Note>
+Positionierungsaufträge folgen demselben Status-Lebenszyklus wie reguläre Aufträge (Entwurf → Zugestellt). Der Fahrer tippt Status in seiner App wie gewohnt. Der einzige Unterschied ist, dass kein Kunde oder Preis angehängt ist.
+</Note>
 
 ---
 
-## Positionierungen auf der Planungstafel
+## Interne Stopps
 
-Positionierungsaufträge erscheinen auf der Planungstafel als **gestrichelte Blöcke** in Grau, damit Sie sie von umsatzwirksamen Aufträgen unterscheiden können.
+Während einer Positionierungsfahrt (oder jedes Auftrags) können Sie **interne Stopps** hinzufügen — ungeplante Stopps für Kraftstoff, Ruhe, Wartung oder andere betriebliche Bedürfnisse.
 
-<Card title="Fuhrparkverwaltung" icon="truck" href="/en/planner/fleet-management">
-  Verwalten Sie Fahrzeuge und deren Verfügbarkeit.
+Interne Stopps werden getrennt von Lade- und Entladestopps erfasst. Jeder interne Stopp hat:
+
+- **Adresse** — wo der Stopp gemacht wurde.
+- **Grundcode** — ausgewählt aus einer festen Systemliste: Ruhe, Tanken, Übernachtung, Persönlich, Anhängerparken, Sonstiges.
+- **Notizen** — Freitexterklärung.
+
+Interne Stopps erscheinen in der Stopp-Zeitleiste des Auftrags, sind aber visuell von Ladungsstopps unterschieden. Sie beeinflussen keine Liefer-ETA-Berechnungen.
+
+---
+
+## Grundcodes
+
+### Positionierungsgründe
+
+Die 5 Positionierungsgründe (Leerfahrt-Rückkehr, Flottenumstellung, Wartungstransfer, Vorpositionierung, Sonstiges) sind im Produkt festgelegt — es gibt derzeit keinen Einstellungsbildschirm, um sie hinzuzufügen, umzubenennen oder zu entfernen.
+
+### Interne-Stopp-Gründe
+
+Die 6 internen Stopp-Gründe (Ruhe, Tanken, Übernachtung, Persönlich, Anhängerparken, Sonstiges) sind ebenso festgelegt und gelten für alle Auftragstypen, nicht nur Positionierungsaufträge. Es gibt heute keine Oberfläche, um benutzerdefinierte Grundcodes zusätzlich hinzuzufügen, obwohl die zugrunde liegende Fähigkeit auf API-Ebene existiert.
+
+---
+
+## Positionierung auf der Planungstafel
+
+Positionierungsaufträge erscheinen auf der Planungstafel mit einem kleinen grauen **R**-Abzeichen, das sie leicht von umsatzwirksamen Ladungen unterscheidbar macht. Sie fließen in die Flottenauslastungsberechnung ein (der LKW ist im Einsatz), sind aber von Umsatz-KPIs ausgeschlossen.
+
+---
+
+## Berichterstattung
+
+Positionierungskilometer werden über das Feld `distance_km_internal` erfasst und erscheinen in:
+
+- **Streckenrentabilitäts-Bericht** — als separate „Leer-km"-Spalte, damit Sie die wahren Kosten der Bedienung jeder Strecke sehen.
+- **CO2-Bericht** — Positionierungsfahrten tragen zu Emissionen bei und werden separat von beladenen Fahrten ausgewiesen.
+
+---
+
+<Card title="Planungstafel" icon="calendar" href="/de/planner/planning-board">
+  Sehen Sie, wie Positionierungsaufträge neben regulären Ladungen auf der Dispositionstafel erscheinen.
+</Card>
+
+<Card title="Einen Auftrag erstellen" icon="plus" href="/de/planner/creating-orders">
+  Vollständiger Leitfaden zur Erstellung aller Auftragstypen — Eigener LKW, Unterauftragnehmer und Positionierung.
 </Card>

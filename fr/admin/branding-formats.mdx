@@ -1,84 +1,136 @@
 ---
 title: "Marque et formats de documents"
-description: "Personnalisez le logo, les couleurs de marque et le format de numérotation des factures, avoirs et commandes dans tous les documents générés par Druma."
+description: "Personnalisez vos couleurs de marque et le modèle de numérotation des factures, commandes et lignes en surbrillance dans Druma."
 icon: "palette"
 ---
 
-Les paramètres **Marque et formats** contrôlent la façon dont votre entreprise apparaît sur chaque document généré par Druma.
+Les paramètres **Marque et formats** contrôlent la façon dont votre entreprise apparaît sur les documents générés, ainsi que la construction des numéros de référence des factures et des commandes.
+
+Ces paramètres sont spécifiques à chaque entreprise. Si vous gérez plusieurs entreprises dans Druma, chacune a sa propre configuration de marque et de formats.
 
 **Qui peut modifier :** Uniquement les rôles Admin et Admin entreprise.
+
+<Frame caption="Marque et formats — 4 onglets : Marque, Facture, Commande, Mise en forme des lignes.">
+  <img src="/images/admin/branding-formats.png" alt="Panneau des paramètres de marque et formats" />
+</Frame>
 
 ---
 
 ## Accéder aux paramètres
 
-Accédez à **Paramètres → Marque et formats**. La page comporte trois onglets : **Marque**, **Format des factures** et **Format des commandes**.
+Accédez à **Paramètres → Marque et formats**. La page comporte quatre onglets : **Marque**, **Format des factures**, **Format des commandes** et **Mise en forme des lignes**.
 
 ---
 
 ## Onglet Marque
 
-### Logo
-
-Cliquez sur **Télécharger le logo** pour sélectionner un fichier image (PNG, JPG ou SVG). Le logo apparaît dans le coin supérieur gauche des factures PDF.
-
-Pour de meilleurs résultats, utilisez un logo avec fond transparent d'une largeur minimale de 300 px.
+Cet onglet contrôle les deux couleurs de marque utilisées sur les PDF générés et les modèles d'email.
 
 ### Couleur principale
 
-Cliquez sur le sélecteur de couleur **Couleur principale** et saisissez votre couleur de marque.
+Utilisée pour les bordures de document, les libellés et les totaux sur les factures PDF et les modèles d'email.
 
 ### Couleur d'accentuation
 
-Utilisée pour les éléments secondaires tels que les en-têtes de tableaux sur les PDF.
+Utilisée pour les en-têtes de tableaux et le texte du corps sur ces mêmes documents.
+
+Chaque couleur dispose d'un champ code hexadécimal et d'un sélecteur visuel, avec un aperçu en direct montrant les deux couleurs côte à côte.
 
 ### Enregistrement
 
-Cliquez sur **Enregistrer la marque**.
+Cliquez sur **Enregistrer les modifications** pour appliquer vos couleurs, ou **Réinitialiser** pour restaurer les couleurs par défaut.
 
 <Note>
-Les modifications de marque s'appliquent aux **nouveaux** documents uniquement. Les factures déjà générées ne sont pas mises à jour rétroactivement.
+Votre **logo** d'entreprise ne se configure pas sur cette page — il se télécharge sous **Paramètres → Entreprise**. Druma accepte les fichiers PNG, JPEG, SVG ou WebP jusqu'à 2 Mo ; il n'y a aucune exigence de largeur minimale ni de recommandation de fond transparent imposée.
 </Note>
 
 ---
 
 ## Onglet Format des factures
 
+Cet onglet contrôle le modèle de numéro de facture, le titre d'en-tête de facture, les intérêts de retard de paiement, les instructions de paiement, les conditions générales, le texte de pied de page, et les sections optionnelles affichées sur le PDF de facture.
+
 ### Jetons de format
+
+Les modèles de numéro sont construits à partir d'une chaîne combinant du texte fixe et des jetons dynamiques entre accolades :
 
 | Jeton | Ce qu'il insère |
 |---|---|
-| `{PREFIX}` | Un préfixe de texte fixe que vous définissez |
-| `{YYYY}` | Année sur quatre chiffres (ex. : `2026`) |
-| `{YY}` | Année sur deux chiffres (ex. : `26`) |
-| `{MM}` | Mois sur deux chiffres (ex. : `04`) |
-| `{NNN}` | Numéro séquentiel sur trois chiffres, complété par des zéros |
-| `{NNNN}` | Numéro séquentiel sur quatre chiffres |
+| `{PREFIX}` | Le préfixe que vous définissez (ex. `INV`, `ORD`, votre propre abréviation) |
+| `{YYYY}` | Année sur quatre chiffres (ex. `2026`) |
+| `{YY}` | Année sur deux chiffres (ex. `26`) |
+| `{MM}` | Mois sur deux chiffres (ex. `04`) |
+| `{DD}` | Jour sur deux chiffres (ex. `07`) |
+| `{YYMMDD}` | Année, mois et jour combinés sur deux chiffres (ex. `260407`) |
+| `{SEQ3}` | Numéro séquentiel complété à 3 chiffres (ex. `042`) |
+| `{SEQ4}` | Numéro séquentiel complété à 4 chiffres (ex. `0042`) |
+| `{SEQ5}` | Numéro séquentiel complété à 5 chiffres |
+| `{SEQ6}` | Numéro séquentiel complété à 6 chiffres |
 
-**Format par défaut :** `DR-{YYYY}-{NNN}` → produit `DR-2026-001`, `DR-2026-002`...
+Il n'existe pas de jeton `{NNN}`/`{NNNN}` — utilisez l'un des jetons `{SEQ3}`–`{SEQ6}` pour une séquence complétée par des zéros. Vous pouvez combiner librement les jetons avec des séparateurs comme `-` ou `/`.
 
-### Format du numéro d'avoir
+La séquence se réinitialise dès qu'un jeton de date du modèle (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` ou `{YYYY}`) change de valeur — en pratique, un modèle incluant `{YYMMDD}` se réinitialise **quotidiennement**, pas une fois par an. Un modèle n'utilisant que `{YYYY}` se réinitialise bien une fois par an, comme attendu.
 
-Les avoirs utilisent un compteur séparé. **Format par défaut :** `CN-{YYYY}-{NNN}`
+### Format du numéro de facture
+
+Saisissez votre modèle dans le champ **Format du numéro de facture**. Un aperçu en direct sous le champ se met à jour au fur et à mesure, montrant un exemple de numéro avec la date du jour et une valeur de séquence d'exemple.
+
+**Par défaut :** préfixe de facture `INV`, modèle `{PREFIX}-{YYMMDD}-{SEQ3}` → produit quelque chose comme `INV-260407-042`.
+
+**Exemples de personnalisation :**
+
+| Modèle | Exemple de résultat |
+|---|---|
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
+
+<Note>
+Les avoirs utilisent leur propre série de numérotation (préfixe `CN` par défaut) et leur propre compteur, mais n'ont actuellement pas de champ de modèle modifiable sur cette page.
+</Note>
 
 ### Enregistrement
 
-Cliquez sur **Enregistrer le format des factures**.
-
-<Warning>
-Changer le format en milieu d'année ne renumérotera pas les factures existantes.
-</Warning>
+Cliquez sur **Enregistrer les modifications**. Le nouveau format s'applique à la prochaine facture créée après l'enregistrement — les factures existantes conservent leur numéro de référence d'origine.
 
 ---
 
 ## Onglet Format des commandes
 
-Définit le modèle de numérotation pour les numéros de référence des commandes.
+Cet onglet définit le modèle de numérotation des numéros de référence de commande — l'identifiant affiché sur le tableau de planification, le panneau de détail de commande et les communications chauffeur ou client.
 
-**Format par défaut :** `DR-{YYYY}-{NNN}`
+### Format du numéro de commande
 
-Cliquez sur **Enregistrer le format des commandes**.
+Le même système de jetons s'applique que pour les factures. Saisissez un **Préfixe** et un **Modèle de numéro**, et observez l'aperçu en direct se mettre à jour sous les champs.
+
+**Par défaut :** préfixe de commande `ORD`, modèle `{PREFIX}-{YYMMDD}-{SEQ3}` → produit quelque chose comme `ORD-260407-042`.
+
+**Exemple :** un transporteur opérant en Belgique pourrait utiliser le préfixe `BE` avec le modèle `{PREFIX}-{YYYY}-{SEQ4}` pour produire des références comme `BE-2026-0042`.
+
+### Enregistrement
+
+Cliquez sur **Enregistrer les modifications**. Le nouveau format s'applique à toutes les commandes créées après l'enregistrement. Les commandes existantes conservent leurs numéros de référence d'origine.
+
+---
+
+## Onglet Mise en forme des lignes
+
+Cet onglet permet de mettre en surbrillance des lignes de tableau dans tout Druma selon des conditions simples — par exemple, colorer une ligne en rouge quand sa marge passe sous un seuil, ou quand elle est en retard.
+
+Chaque règle comporte un nom, un champ à évaluer (marge %, en retard, statut, jours depuis la création), une condition (inférieur à, au plus, supérieur à, au moins, égal à, différent de), une valeur de comparaison et une couleur de surbrillance. Cliquez sur **Ajouter une règle** pour en créer une, et **Enregistrer les modifications** pour appliquer vos règles.
+
+---
+
+## Pages associées
 
 <Card title="Configuration des intégrations" icon="plug" href="/fr/admin/integration-setup">
-  Connectez votre fournisseur eCMR (Druma eCMR natif, ou TransFollow en option de repli), SmartBill, les fournisseurs de cartes carburant et les logiciels de comptabilité.
+  Connectez votre fournisseur eCMR (le fournisseur natif in-house de Druma — TransFollow n'est maintenu que pour un petit nombre d'entreprises ayant une configuration héritée préexistante), les fournisseurs de cartes carburant et les logiciels de comptabilité.
+</Card>
+
+<Card title="Facturation électronique Peppol (Belgique)" icon="file-check-2" href="/fr/integrations/peppol-invoicing">
+  Acheminez automatiquement les factures vers vos clients professionnels belges via le réseau Peppol.
+</Card>
+
+<Card title="Envoi des factures" icon="send" href="/en/finance/sending-invoices">
+  Comment générer, envoyer et suivre les factures de vente dans Druma.
 </Card>

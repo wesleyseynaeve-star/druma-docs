@@ -1,44 +1,88 @@
 ---
 title: "eCMR létrehozása"
-description: "Hogyan generálódnak automatikusan az eCMR-ek a rendelésekhez a Drumában."
+description: "Hogyan generálja a Druma automatikusan az eCMR-dokumentumokat a határon átnyúló rendelésekhez, és hogyan hozz létre egyet manuálisan, ha szükséges."
 icon: "file-plus"
 ---
 
-## Automatikus generálás
+A Druma **saját, natív szolgáltatójával, házon belül** hozza létre az eCMR-dokumentumokat, alapértelmezetten. Nincs szükség külső szolgáltatói fiókra. A folyamat a jogosult rendeléseknél nagyrészt automatikus, de az eCMR-létrehozást manuálisan is elindíthatod a rendelés-részletező oldalról.
 
-Ha a TransFollow integráció be van konfigurálva, az eCMR automatikusan generálódik minden rendeléshez, amelyhez:
-- Van felvételi és szállítási cím
-- A rendelés állapota eléri a **Kiosztva** státuszt
-- A rendelés határon átnyúló (eCMR jogilag szükséges), vagy az eCMR manuálisan be van kapcsolva
+---
 
-Nem kell semmit tenniél — az eCMR automatikusan elkészül.
+## Mikor hozza létre a Druma automatikusan az eCMR-t?
 
-## Az eCMR tartalma
+A Druma automatikusan létrehoz egy eCMR-t, amint egy közúti rendelés **kiosztásra kerül** — abban a pillanatban, amikor jármű kerül hozzárendelésre, és a státusza "Hozzárendelve"-re vált. Nincs összehasonlítás a felvételi/szállítási országok között: minden kiosztott rendelés, amely nincs alvállalkozásba adva, és amelynek cége a natív eCMR-szolgáltatót futtatja, kap egy aláíratlan vázlat eCMR-t. Ez azt jelenti, hogy a belföldi rendelések is kapnak egyet — egyszerűen aláíratlan marad, amíg szükséged nem lesz rá.
 
-Az eCMR a következő adatokat tartalmazza, amelyeket automatikusan a rendelésből vesz:
-- Feladó neve, ÁFA-száma és címe
-- Átvevő neve és címe
-- Fuvarozó neve, ÁFA-száma és jármuadata
-- Rakomány leírása, súlya és mennyisége
-- Felvételi és szállítási helyszín
-- Különleges utasítások (ha van)
+A kiállítás után az eCMR-dokumentum megjelenik a rendelés-részletező oldal **Dokumentumok** fülén, ahol az **eCMR megtekintése** gombbal megnézheted a lepecsételt PDF-et, amint elkészült.
 
-## Az eCMR szerkesztése benyújtás előtt
+<Note>
+Az alvállalkozásba adott rendeléseknél kimarad az automatikus létrehozás — az alvállalkozó saját CMR-t állít ki, így a Druma nem írhat alá a nevében. Az olyan rendelések, amelyeknek már van eCMR-jük, sosem kapnak újat.
+</Note>
 
-A rendelés részletei panelben az **eCMR** fülre kattintva megtekintheted és szerkesztheted az automatikusan kitöltött adatokat, mielőtt a sofőr elindulna a felvételre.
+---
 
-## Kézi eCMR létrehozása
+## eCMR manuális létrehozása
 
-Ha egy rendeléshez manuálisan szeretnél eCMR-t létrehozni (pl. ha az automatikus generálás le van tiltva erre az útvonalra):
-1. Nyisd meg a rendelés részleteit.
-2. Az **eCMR** fülön kattints az **eCMR létrehozása** gombra.
-3. Ellenőrizd az adatokat.
-4. Kattints a **Megerősítés** gombra.
+Több szakaszos (gyűjtőfuvar) rendeléseknél minden közúti szakasz saját eCMR-t kap. Ha egy szakasznak még nincs, nyisd meg a rendelés **Rakomány / Megállók** fülét, és kattints a **eCMR létrehozása** gombra az adott szakasz mellett — nincs külön "eCMR fül": a gomb közvetlenül a szakasz során van.
 
-<Card title="Aláírási folyamat" icon="pencil" href="/en/ecmr/signing-flow">
-  Hogyan írja alá a három fél az eCMR-t.
+<Note>
+Amikor egy megerősített, határon átnyúló közúti szakaszt befejezettként jelölsz meg, a Druma ekkor is automatikusan létrehozza az eCMR-jét, ha még nincs.
+</Note>
+
+---
+
+## A rendelésből előre kitöltött adatok
+
+A Druma a már megadott rendelési adatokból tölti ki az eCMR mezőit. Íme, honnan érkezik mi:
+
+| eCMR mező | Forrás a Drumában |
+|---|---|
+| Feladó neve és címe | A rendelésen szereplő ügyfélrekord |
+| Fuvarozó neve és címe | A céged adatai |
+| Átvevő neve és címe | A rendelésen szereplő ügyfélrekord (a szállítási cím a szállítási megállóból) |
+| Felvételi cím | A rendelés felvételi helyszíne |
+| Szállítási cím | A rendelés szállítási helyszíne |
+| Áruleírás | A rendelés rakomány-leírás mezője |
+| Jármű rendszáma | A rendeléshez hozzárendelt jármű |
+| Sofőr neve | A rendeléshez hozzárendelt sofőr |
+| Különleges feltételek (ADR) | A rendelés ADR-jelzője és osztálya |
+
+Ha bármelyik adat hiányzik vagy hibás a rendelésen, először javítsd ki a rendelést, majd hozd létre az eCMR-t — nincs előtöltés-előnézeti lépés; a dokumentum azonnal íródik.
+
+---
+
+## Mielőtt megerősítenéd: mi nem módosítható
+
+<Warning>
+Amint egy eCMR kiállításra került egy rendeléshez (vagy szakaszhoz), a Druma nem állít ki hozzá másodikat — az eCMR létrehozása gombra való ismételt kattintás, vagy egy ismételten kiváltott szakasz-befejezési trigger egyszerűen a már létező dokumentumot adja vissza, nem egy újat bocsát ki. Ez egy idempotencia-védelem, nem mezőzár: nincs korlátozás magának a mögöttes rendelési adatnak a szerkesztésére.
+
+Ha egy már regisztrált eCMR-t javítanod kell, használd a Papír CMR tartalék folyamatot, és ha indokolt, hozz létre egy újat.
+</Warning>
+
+---
+
+## eCMR-szolgáltató: Natív (a TransFollow csak elavult)
+
+Alapértelmezés szerint a Druma a **natív eCMR-szolgáltatóját** használja — nincs szükség külső fiókra vagy API-kulcsra. A **Beállítások → Integrációk → eCMR-szolgáltató** menüpontban az egyetlen választható lehetőségek a **Natív** és a **Letiltva** — a TransFollow már nem választható, sem új, sem meglévő cégnek. Ha a cégednek korábbi TransFollow-konfigurációja van, az továbbra is a megszokott módon működik, és a következő mentéskor csendben Natívvá alakul.
+
+<Card title="eCMR-szolgáltatók" icon="right-left" href="/en/ecmr/ecmr-providers">
+  Mit csinál a natív szolgáltató, és mi történik a korábbi TransFollow-konfigurációkkal.
 </Card>
 
-<Card title="Az eCMR aláírása (Sofőr)" icon="pen" href="/en/driver/signing-ecmr">
-  A sofőr alkalmazásból történő aláírás útmutatója.
-</Card>
+---
+
+## Számlázás
+
+Az eCMR a Druma előfizetésed része, extra költség nélkül — nincs dokumentumonkénti díj és nincs felhasználási plafon. A felhasználási statisztikákat a **Beállítások → Számlázás → Felhasználás** menüpontban tekintheted meg.
+
+---
+
+## Következő lépések
+
+<CardGroup cols={2}>
+  <Card title="Az aláírási folyamat" icon="pen-to-square" href="/en/ecmr/signing-flow">
+    Hogyan írja alá a feladó, a sofőr és az átvevő, és melyik eszközön.
+  </Card>
+  <Card title="Mi az eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+    Háttér az eCMR-ről, jogi alapjáról, és hogyan bocsátja ki a Druma.
+  </Card>
+</CardGroup>

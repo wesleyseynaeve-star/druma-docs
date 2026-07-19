@@ -1,60 +1,153 @@
 ---
-title: "Temps d'attente"
-description: "Comment Druma suit le temps d'attente aux chargements et livraisons, et comment appliquer des suppléments pour les délais excessifs."
+title: "Frais de temps d'attente"
+description: "Suivez, calculez, et facturez automatiquement aux clients le temps d'attente des chauffeurs à l'aide de preuves d'arrivée horodatées GPS."
 icon: "hourglass"
 ---
 
 ## Qu'est-ce que le temps d'attente ?
 
-Le temps d'attente commence lorsqu'un chauffeur arrive à un site de chargement ou de livraison et se termine lorsque le chargement ou le déchargement commence effectivement. Si ce délai dépasse la franchise gratuite convenue (généralement 1 à 2 heures), votre entreprise peut facturer un supplément au client.
+Quand votre chauffeur arrive à un point de chargement ou de livraison et doit attendre — le quai de chargement est occupé, l'entrepôt n'est pas prêt, la paperasse douanière est retardée — ce temps vous coûte de l'argent. Le chauffeur est immobilisé, le camion ne bouge pas, et vous absorbez le coût.
+
+Les frais de temps d'attente (aussi appelés surestarie) vous permettent de facturer au client ce temps perdu une fois qu'une période de franchise gratuite est épuisée. Druma automatise l'ensemble — chronométrage, calcul, notification client, et facturation — et l'appuie de preuves GPS afin que les litiges soient faciles à gagner.
+
+**Paramètres par défaut de Druma :**
+- Franchise d'attente gratuite : **2 heures** après l'arrivée
+- Tarif de facturation : **45 €/heure** après expiration de la période gratuite
+
+Les deux valeurs sont entièrement personnalisables par client ou par commande individuelle.
 
 ---
 
-## Comment Druma suit le temps d'attente
+## Comment fonctionne le minuteur
 
-Le temps d'attente est automatiquement calculé à partir des mises à jour de statut du chauffeur :
+Le compteur démarre à l'instant où votre chauffeur touche son statut d'arrivée dans l'application Druma :
 
-| Événement chauffeur | Effet sur le temps d'attente |
+- **« Arrivé au chargement »** — démarre le minuteur d'attente à l'adresse de chargement
+- **« Arrivé à la livraison »** — démarre le minuteur d'attente à l'adresse de livraison
+
+À cet instant précis, Druma capture :
+- Une **coordonnée GPS** montrant où se trouve le chauffeur
+- Un **horodatage précis** de l'arrivée
+
+Cet horodatage GPS est votre preuve. Il ne peut pas être antidaté ni modifié par le chauffeur après coup.
+
+Une fois que le chauffeur touche le statut suivant (**« Chargement »** ou **« Déchargement »**), la période d'attente se termine et Druma calcule l'attente totale.
+
+---
+
+## Alerte automatique au planificateur
+
+Vous n'avez pas besoin de surveiller une horloge. Quand la franchise gratuite expire, Druma envoie une **notification in-app** automatique — à vos planificateurs, répartiteurs, et admins d'entreprise — montrant :
+
+- Quel chauffeur et camion
+- Quelle commande et quel lieu
+- Depuis combien de temps ils attendent au-delà de la période gratuite
+- Le frais accumulé jusqu'à présent
+
+L'alerte se déclenche dès que la période gratuite de 2 heures (ou personnalisée) expire. Vous pouvez agir immédiatement — notifier le client, appeler le site — avant que la facture ne s'alourdisse davantage.
+
+---
+
+## Notifier le client en un clic
+
+Depuis la page de commande ou l'alerte de temps d'attente, cliquez sur **« Notifier le client »**. Druma envoie un email professionnel à votre contact client incluant :
+
+- L'heure d'arrivée et, une fois le chargement/déchargement commencé, cet horodatage également (texte brut — sans coordonnées GPS ni lien de carte)
+- Le temps d'attente gratuit et le temps d'attente facturable jusqu'à présent, au tarif horaire configuré
+- Le frais total d'attente calculé jusqu'à présent
+- Si le chauffeur a joint une photo ou une note vocale, un lien à durée limitée vers celle-ci
+
+Cela avertit le client tôt, avec une trace écrite à l'appui. La plupart des clients répondent bien plus vite une fois qu'ils ont vu un avis écrit — ce n'est plus votre parole contre la leur.
+
+<Note>
+Envoyez la notification dès que la période gratuite expire, pas après que le chauffeur soit finalement parti. Une notification précoce donne au client une chance d'agir — et protège votre droit de facturer s'il ne le fait pas.
+</Note>
+
+---
+
+## Consulter les frais d'attente sur une commande
+
+Ouvrez n'importe quelle commande et accédez à l'onglet **Finances**. Vous verrez une section temps d'attente montrant :
+
+| Champ | Détails |
 |---|---|
-| Statut → Arrivé au chargement | Horloge démarrage au chargement |
-| Statut → Chargement commencé | Horloge arrêt au chargement |
-| Statut → Arrivé à la livraison | Horloge démarrage à la livraison |
-| Statut → Déchargement commencé | Horloge arrêt à la livraison |
+| Horodatage d'arrivée | Heure horodatée GPS où le chauffeur a touché « Arrivé » |
+| Période gratuite | 2h par défaut (ou votre paramètre personnalisé) |
+| Temps facturable | Heures et minutes au-delà de la période gratuite |
+| Tarif horaire | 45 €/h par défaut (ou votre tarif personnalisé) |
+| **Frais total** | Calculé automatiquement |
+
+Si l'attente s'est produite au chargement et à la livraison, les deux sont listées comme lignes séparées.
 
 ---
 
-## Voir le temps d'attente d'une commande
+## Ajouter le temps d'attente à une facture
 
-Ouvrez n'importe quelle commande et consultez la section **Temps d'attente** dans le panneau de détails. Elle affiche :
+Quand vous générez la facture de la commande, Druma suggère automatiquement le frais de temps d'attente comme ligne. Vous pouvez :
 
-- Heure d'arrivée et heure de début de chargement/déchargement.
-- Durée totale d'attente au chargement et à la livraison.
-- Si le temps d'attente dépasse votre franchise gratuite configurée.
-
----
-
-## Notifications de temps d'attente
-
-Druma peut envoyer automatiquement une notification au client lorsque le temps d'attente dépasse le seuil. Configurez le seuil dans **Paramètres → Entreprise → Temps d'attente**.
-
----
-
-## Suppléments de temps d'attente
-
-Pour facturer un supplément de temps d'attente :
+- **Le garder tel quel** — le montant est pré-rempli depuis la fiche de commande
+- **Ajuster le montant** — si vous avez convenu d'un tarif différent lors d'une conversation téléphonique
+- **Le retirer** — si vous avez décidé de renoncer au frais pour ce client
 
 <Steps>
   <Step title="Ouvrez la commande">
-    Accédez à la commande avec le temps d'attente excessif.
+    Accédez à **Commandes** et ouvrez la commande ayant un temps d'attente enregistré.
   </Step>
-  <Step title="Consultez le résumé du temps d'attente">
-    Vérifiez la durée totale enregistrée.
+  <Step title="Générez la facture">
+    Cliquez sur **Générer la facture** ou ouvrez le brouillon de facture existant lié à cette commande.
   </Step>
-  <Step title="Ajoutez un supplément à la facture">
-    Lors de la génération de la facture, ajoutez une ligne pour le supplément de temps d'attente.
+  <Step title="Vérifiez la ligne de temps d'attente">
+    Elle apparaît automatiquement avec le montant calculé. Ajustez ou retirez-la si nécessaire.
+  </Step>
+  <Step title="Envoyez la facture">
+    Finalisez et envoyez normalement. Le frais de temps d'attente est clairement détaillé pour le client.
   </Step>
 </Steps>
 
-<Card title="Générer des factures" icon="file-invoice" href="/fr/invoicing/generating-invoices">
-  Comment créer et envoyer des factures avec des lignes de supplément.
-</Card>
+---
+
+## Configurer les heures gratuites et le tarif horaire
+
+Les heures d'attente gratuites et le tarif horaire d'attente se définissent par **barème de tarifs** — le profil de coût attribué à un camion (flotte propre ou sous-traité) — et non par client ni par commande :
+
+<Steps>
+  <Step title="Ouvrez les Barèmes de tarifs">
+    Accédez à **Paramètres → Barèmes de tarifs** et ouvrez le profil de coût concerné.
+  </Step>
+  <Step title="Trouvez les champs de temps d'attente">
+    Repérez **Heures d'attente gratuites** et **Tarif d'attente €/h**.
+  </Step>
+  <Step title="Définissez vos valeurs">
+    Saisissez la franchise d'heures gratuites convenue et le tarif horaire pour ce profil de coût.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**. Toute commande tarifée avec ce profil de coût utilise désormais ces valeurs.
+  </Step>
+</Steps>
+
+<Note>
+Il n'existe pas aujourd'hui de dérogation distincte par client ou par commande — chaque commande utilise les conditions d'attente du profil de coût attribué à son camion, avec repli sur un défaut à l'échelle de l'entreprise (**Paramètres → Entreprise**) puis sur le défaut de la plateforme (2h / 45 €) si aucun des deux n'est défini.
+</Note>
+
+---
+
+## Pourquoi la preuve GPS change la donne
+
+Avant l'horodatage GPS du temps d'attente, les litiges étaient courants : « Votre chauffeur est arrivé à 15h, pas à 13h. » Avec Druma, vous disposez d'une position GPS horodatée, enregistrée automatiquement au moment où le chauffeur a touché « Arrivé » — plus l'email de notification envoyé au client pendant l'attente, qui reprend ce même horodatage par écrit.
+
+Cette combinaison — un horodatage appuyé par le GPS de votre côté, plus un avis écrit déjà dans la boîte de réception du client — résout la grande majorité des litiges de temps d'attente en votre faveur, sans discussion.
+
+<Note>
+Dans les quais de chargement couverts ou les zones à faible signal, le GPS peut se rabattre sur une localisation basée sur le réseau, légèrement moins précise. L'horodatage est toujours exact quelle que soit la qualité du GPS.
+</Note>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Vue Aujourd'hui" icon="map" href="/fr/planner/today-view">
+    Voyez tous les chauffeurs actifs, les temps d'attente en direct, et les alertes d'attente sur la carte.
+  </Card>
+  <Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
+    Ajoutez le temps d'attente et d'autres frais comme lignes sur les factures client.
+  </Card>
+</CardGroup>

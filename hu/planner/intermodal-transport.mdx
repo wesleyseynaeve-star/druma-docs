@@ -1,46 +1,166 @@
 ---
 title: "Intermodális és multimodális szállítás"
-description: "Kombinált közúti, tengeri, vasúti, légi vagy belvízi szakaszokat tartalmazó rendelések tervezése — szakaszonkénti fuvarozói hozzárendeléssel, költségkövetéssel, eCMR-rel és sofőr PWA-támogatással."
+description: "Tervezz olyan rendeléseket, amelyek közúti, tengeri, vasúti, légi vagy belvízi szakaszokat kombinálnak — szakaszonkénti fuvarozói hozzárendeléssel, költségkövetéssel, eCMR-rel és sofőr PWA-támogatással."
 icon: "git-merge"
 ---
 
-## Mi az intermodális szállítás?
+## Áttekintés
 
-Az intermodális szállítás több szállítási módot kombinál egyetlen rendelésen belül. Például:
-- **Ro-Ro:** A teherautó felgördül egy kompra (közút + tengeri)
-- **Vasúti oldalkocsi:** A pótkocsi vonattal kerül az ország másik felébe, és ott egy másik vontató veszi fel
-- **Repülős fő szakasz:** Az áru repülőn megy a fő szakaszon, a vontatás a reptérre és az oda-vissza
+Az intermodális szállítás több szállítási módon keresztül mozgatja a rakományt, egymás után — például egy teherautó előre-vontat egy pótkocsit egy román gyárból Calais-ig, ez átkel Folkestone-ba egy csatorna-alagúti RoRo komppal, és egy második teherautó végzi a szállítást az Egyesült Királyságbeli szállítási címig. Minden szakasz egy **szakasz** (leg). Egyetlen Druma-rendelés kezeli a teljes utat: ütemezés, fuvarozói hozzárendelés, költségek, eCMR és sofőr-láthatóság szakaszonként.
 
-Minden egyes szállítási módú szakasz egy-egy lépés a rendelésen belül.
+Ez különbözik a belső megállókkal rendelkező standard rendeléstől. A belső megállók egyetlen, folyamatos közúti út útpontjai, egy teherautóval. Az intermodális szakaszok külön szállítási események, amelyek eltérő módokat, eltérő fuvarozókat, és akár eltérő joghatósági országokat is használhatnak.
+
+<Note>
+A gyűjtőfuvar-menetek és az intermodális szakaszok külön fogalmak — a szakaszok egyetlen rendeléshez tartoznak, a gyűjtőfuvar több rendelést konszolidál egy teherautóra. Jelenleg nincs kombinált "intermodális gyűjtőfuvar" folyamat.
+</Note>
+
+---
+
+## Gyakorlati példa: Románia → Egyesült Királyság a Csatorna-alagúton keresztül
+
+| Szakasz | Mód | Útvonal | Fuvarozó |
+|---|---|---|---|
+| 1 | Közút | Bukarest → Calais | Saját flotta — RO-01 teherautó |
+| 2 | Tenger | Calais → Folkestone (Eurotunnel Le Shuttle) | Alvállalkozó: Eurotunnel |
+| 3 | Közút | Folkestone → Birmingham | Alvállalkozó: brit fuvarozó |
+
+A Druma nyomon követi a 2. szakasz foglalási hivatkozását és konténerszámát, külön eCMR-t generál az 1. és 3. szakaszhoz (mindkettő határon átnyúló), és a brit fuvarozónak csak a 3. szakaszhoz tartozó megállókat mutatja.
+
+---
 
 ## Intermodális rendelés létrehozása
 
+Nincs "Intermodális" kapcsoló, amit be kellene kapcsolni — a szakaszokat egy már létrehozott rendeléshez adod hozzá, és a Druma automatikusan intermodálisként kezeli a rendelést, amint szakaszai vannak.
+
 <Steps>
-  <Step title="Hozz létre egy rendelést a szokásos módon">
-    Lépj a **Rendelések → Új rendelés** menüpontra.
+  <Step title="Hozd létre vagy nyisd meg a rendelést">
+    Hozd létre a rendelést a szokásos módon (lásd [Rendelés létrehozása](/en/planner/creating-orders)), majd nyisd meg, és lépj a **Rakomány és megállók** fülére.
   </Step>
-  <Step title="Adj hozzá belső megállókat az egyes módváltásnál">
-    Kattints a **Megálló hozzáadása** gombra az egyes módváltó pontoknál (pl. kikötő, vasútállomás, repülőtér). Minden megállóhoz megadhatod:
-    - Szállítási mód (közút, vasút, tenger, levegő, belvízi)
-    - A szállításért felelős fuvarozó
-    - Tervezett dátum/időablak
+  <Step title="Adj hozzá szakaszokat">
+    A **Szállítási szakaszok** szekcióban kattints a **Szakasz hozzáadása** gombra az első szakasz létrehozásához. Adj hozzá annyi szakaszt, amennyit az út igényel — nincs korlát. Minden új szakasz eredete alapértelmezetten az előző szakasz célja (vagy a rendelés felvétele, az első szakasznál), így nem kell újra begépelned ugyanazt a címet.
   </Step>
-  <Step title="Rendelj hozzá fuvarozókat szakaszonként">
-    Minden szakaszhoz hozzárendelhetők különböző fuvarozók (saját teherautó, alvállalkozó, hajózási vonal stb.).
-  </Step>
-  <Step title="Mentés">
-    A rendelés egyetlen folyamatként jelenik meg, az összes szakaszon átívelő nyomkövetéssel.
+  <Step title="Töltsd ki az egyes szakaszokat">
+    Bontsd ki egy szakasz-kártyát a módjának, eredetének/céljának, tervezett kezdésének/befejezésének és fuvarozójának beállításához (lásd lentebb).
   </Step>
 </Steps>
 
-## eCMR intermodális szállításnál
+---
 
-Minden közúti szakasz saját eCMR-t kaphat. A tengeri, vasúti és légi szakaszok a vonatkozó szállítmányozói okmányokat (fuvarlevél, konnosszement) igényelnek — ezeket a Drumán kívül kell beszerezni és a dokumentumok részbe feltölteni.
+## Szakaszok kezelése
 
-## Sofőr PWA intermodális rendeléseknél
+Minden szakasz-kártya a következő mezőket tartalmazza:
 
-A sofőr az alkalmazásban az összes megállót és szakaszt látja. Minden közúti szakasznál frissítheti a státuszt, aláírhatja az eCMR-t és feltölthet dokumentumokat.
+| Mező | Megjegyzések |
+|---|---|
+| **Mód** | Közút, Tenger, Vasút, Légi vagy Belvízi |
+| **Eredet** | Szabad szöveg vagy cím-autokiegészítés |
+| **Cél** | Szabad szöveg vagy cím-autokiegészítés |
+| **Tervezett kezdés** | A szakasz kezdésének dátuma és ideje |
+| **Tervezett befejezés** | A szakasz várható befejezésének dátuma és ideje |
+| **Fuvarozó** | Saját flotta (csak közút) vagy alvállalkozó |
+| **Beszerzési ár** | Az e szakaszért fizetett költség |
+| **Költségbontás** | Üzemanyag, útdíj, komp vagy más tételek |
 
-<Card title="Csoportos szállítás" icon="boxes-stacked" href="/en/planner/groupage">
-  Több ügyfél rakományának kombinálása egyetlen teherautón.
+### Közúti szakaszok
+
+A közúti szakaszok hozzárendelhetők a saját flottádhoz (teherautó és sofőr) vagy egy alvállalkozó fuvarozóhoz — válaszd ki, melyiket egy rádiógombbal a szakasz-kártyán, majd válaszd ki a teherautót/sofőrt vagy az alvállalkozót egy legördülő menüből.
+
+### Nem közúti szakaszok (Tenger, Vasút, Légi, Belvízi)
+
+A nem közúti szakaszok csak alvállalkozó fuvarozóhoz rendelhetők — a saját flottád teherautói és sofőrjei nem rendelhetők hozzá egy tengeri vagy vasúti szakaszhoz. A fuvarozó mező az alvállalkozói listádban keres.
+
+### Szakasz-vezérlők
+
+- **Fel/le nyilak** — a szakaszok átrendezése. A szakasz-idővonal sáv (lásd lentebb) húzás közben frissül.
+- **Szakasz eltávolítása** — töröl egy szakaszt. Ehhez nincs státusz-alapú korlátozás a felületen, tehát kétszer ellenőrizd, mielőtt eltávolítanál egy már folyamatban lévő szakaszt.
+- **Szakasz befejezése** gomb — a szakaszt késznek jelöli. Akkor jelenik meg, amikor a szakasz státusza eléri az **Úton**, **Szállításnál** vagy **Lerakodás** állapotot — ez státuszhoz van kötve, nem dátumhoz.
+
+### Szakasz-idővonal sáv
+
+Egy kompakt, vízszintes sáv jelenik meg a szakaszok akkordeon felett. Sorrendben mutatja az összes szakaszt egy mód-jelvénnyel (közút, tenger, vasút stb.) és az eredet és cél városneveivel. Használd, hogy gyorsan ellenőrizd, az út sorrendje értelmes-e, mielőtt mentenéd.
+
+---
+
+## Tengeri / intermodális szakasz-részletek
+
+Bármely **Tenger**, **Vasút**, **Légi** vagy **Belvízi** módú szakasznál egy összecsukható **Tengeri / intermodális részletek** szakasz jelenik meg a szakasz-kártyán. Minden mező opcionális.
+
+| Mező | Formátum | Megjegyzések |
+|---|---|---|
+| Foglalási hivatkozás | Szabad szöveg | A fuvarozó foglalási megerősítő száma |
+| Konténerszám | Szabad szöveg | ISO konténer-azonosító |
+| Plombaszám | Szabad szöveg | |
+| Hajó neve | Szabad szöveg | Hajó vagy vonatjárat neve |
+| Út száma (voyage) | Szabad szöveg | |
+| Fuvarozó SCAC | 4 karakter | Standard Carrier Alpha Code |
+| Rakodási kikötő | 5 karakteres LOCODE | pl. `FRXXX` Calais-hoz |
+| Kirakodási kikötő | 5 karakteres LOCODE | pl. `GBFXT` Folkestone-hoz |
+| Végső határidő (cut-off) dátum/idő | Dátum + idő | Rakomány-átvételi határidő a rakodási kikötőnél |
+| ETD | Dátum + idő | Becsült indulási idő a rakodási kikötőből |
+| ETA a kirakodási kikötőnél | Dátum + idő | Becsült érkezési idő a kirakodási kikötőbe |
+
+<Warning>
+Ha a végső határidő a szakasz tervezett befejezésétől számított 48 órán belül van, a Druma egy borostyánsárga figyelmeztető bannert mutat a szakasz-kártyán. Nézd át az idővonalat, hogy a teherautó időben elérje a kikötőt.
+</Warning>
+
+Egy szakasz módjának **Közútra** való visszaállítása automatikusan törli a tengeri/intermodális részletmezőket.
+
+---
+
+## Tervezőtábla viselkedés
+
+### Jármű elérhetőség
+
+A tervezőtábla a jármű elérhetőségét a **közúti szakasz befejezési dátuma** alapján számolja, nem a rendelés végső szállítási dátuma alapján. Ez azt jelenti, hogy az 1. szakaszhoz (közút) rendelt teherautó szabadként jelenik meg abban a pillanatban, amikor az a szakasz véget ér — még akkor is, ha a rendelés utolsó szállítása napokkal később van, a 3. szakaszon, egy másik fuvarozóval.
+
+### Teherautó hozzárendelése egy intermodális rendeléshez
+
+Ha egy teherautót húzol egy intermodális rendelésre, egy **Intermodális szakasz** szekció jelenik meg a hozzárendelés-megerősítő lapon a standard folyamat helyett. Felsorolja a rendelés minden közúti szakaszát (sorrend, eredet → cél, tervezett dátumok) — egy szakasz-sorra kattintva közvetlenül kiválasztod; utána nincs külön "Hozzárendelés" gomb, amire kattintani kellene.
+
+<Note>
+Egy teherautó intermodális rendelésenként csak egy közúti szakaszhoz rendelhető. Több közúti szakasz eltérő teherautókkal való lefedéséhez ismételd meg a húzd-és-ejtsd folyamatot minden szakaszhoz.
+</Note>
+
+---
+
+## eCMR közúti szakaszonként
+
+Minden nemzetközi határt átlépő közúti szakasz saját eCMR-t kap. Egy létrehozásához nyisd meg a szakasz-kártyát, és kattints az **eCMR létrehozása** gombra. A Druma a natív, saját belső eCMR-szolgáltatójával regisztrálja a dokumentumot, a szakasz eredetével, céljával és hozzárendelt fuvarozójával előtöltve — egy határon átnyúló szakasz befejezése automatikusan kiváltja ezt ugyanígy. (Nincs szolgáltató-választás: a Natív az egyetlen út az új dokumentumokhoz; csak a már meglévő, korábbi TransFollow-sorok működnek tovább, az itt létrehozott szakaszoktól függetlenül.)
+
+Azok a szakaszok, amelyek egyetlen országon belül maradnak, nem igényelnek eCMR-t (hacsak a céged szabályzata nem írja elő). Az **eCMR létrehozása** gomb mindig elérhető, ha felül szeretnéd bírálni ezt.
+
+A háromfeles aláírási folyamat és a hitelesített PDF-letöltés ugyanúgy működik, mint a standard eCMR-nél — lásd az [eCMR-dokumentációt](/en/ecmr/what-is-ecmr) a részletekért.
+
+---
+
+## Sofőr PWA — szakaszra korlátozott nézet
+
+A sofőrök csak azokat a megállókat látják, amelyek a hozzájuk rendelt közúti szakaszhoz tartoznak. Ha a rendelésnek három szakasza van, és a sofőr az 1. szakaszt fedi le, csak az 1. szakasz felvételi és belső megállóit látja — nem az Egyesült Királyságbeli szállítási címet.
+
+Egy infó-banner a rakomány-részletező tetején ezt mutatja:
+
+> **1. szakasz / 3 — Közút: Bukarest → Calais**
+
+Ez tisztán tartja a sofőr nézetét, és elkerüli a zavart azokkal a megállókkal kapcsolatban, amelyek egy másik fuvarozóhoz tartoznak.
+
+A státusz-koppintások (felvételnél, rakodás, úton, szállításnál stb.) pontosan úgy működnek, mint egy standard rendelésnél, de csak a sofőr közúti szakaszának státuszát léptetik előre. A tervező szakaszonkénti előrehaladást lát a rendelés-részletező panelen.
+
+---
+
+## Költség- és margin-nyomon követés
+
+Minden szakasznak saját **Beszerzési ára** és **Költségbontása** van. A rendelés teljes költsége az összes szakasz összege. A rendelés-részletező panel margin-számítása a megállapodott eladási árat veti össze a teljes, több szakaszból álló költséggel, egy konszolidált margin-értéket adva a teljes intermodális útra.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/en/ecmr/what-is-ecmr">
+  Hogyan működik a natív eCMR-létrehozás, a háromfeles aláírás és a hitelesített PDF-ek.
+</Card>
+
+<Card title="Alvállalkozók" icon="truck" href="/en/forwarding/subcontractors">
+  Kezeld az alvállalkozói fuvarozói listádat — ugyanazok a fuvarozók jelennek meg az intermodális szakasz-hozzárendelésnél.
+</Card>
+
+<Card title="Tervezőtábla" icon="calendar" href="/en/planner/planning-board">
+  Hogyan jelenik meg a jármű-elérhetőség és az intermodális rendelés-blokk a diszpécseri idővonalon.
 </Card>

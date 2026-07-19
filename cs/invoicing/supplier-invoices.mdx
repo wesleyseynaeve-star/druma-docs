@@ -1,9 +1,172 @@
-﻿---
-title: "Faktury dodavatelů"
-description: "Jak spravovat příchozí faktury od dodavatelů v Druma — fronta pro AI extrakci a schvalování nákupních faktur."
-icon: "file-input"
+---
+title: "Faktury dodavatelů (závazky)"
+description: "Spravujte, co vaše společnost dluží — subdodavatelským dopravcům, palivovým kartám, servisům, mýtnému, pojišťovnám a leasingu — s AI asistovaným příjmem faktur a dashboardem stárnutí závazků."
+icon: "building-2"
 ---
 
-Druma poskytuje vyhrazenou emailovou schranku pro prijem faktur od dodavatelu. Prijate faktury jsou AI klasifikovany a umisteny do fronty pro kontrolu.
+## Přehled
 
-Prejdete do **Finance - Zasílatelstvi - Fronta faktur** pro zobrazeni cekajicich faktur.
+Modul Závazky (AP) sleduje každou nákupní fakturu, kterou vaše společnost obdrží od externích dodavatelů. Zahrnuje subdodavatelské dopravce, kterým přeposíláte zakázky, poskytovatele palivových karet (DKV, UTA, AS24), dodavatele servisu a pneumatik, provozovatele mýtného (ASFINAG, HU-GO), pojišťovny, leasingové společnosti a jakýkoli jiný firemní výdaj.
+
+Druma snižuje ruční zadávání pomocí dvou mechanismů: **subdodavatelští dopravci se automaticky zrcadlí do vašeho seznamu dodavatelů** (žádné dvojí zadávání) a **e-mailová schránka s podporou AI** dokáže extrahovat a vytvořit návrhy nákupních faktur přímo z e-mailů dodavatelů. Co se nespáruje automaticky, skončí ve **frontě ke kontrole** pro rychlé lidské rozhodnutí.
+
+## Hlavní seznam dodavatelů
+
+Hlavní seznam dodavatelů je registr všech společností, od kterých nakupujete. Je základem pro párování faktur a reportování stárnutí závazků.
+
+**Kde:** Finance → Forwarding → záložka **Dodavatelé**
+
+Každý záznam dodavatele obsahuje:
+
+| Pole | Popis |
+|-------|-------------|
+| **Název** | Název společnosti dodavatele |
+| **DIČ** | Používá se pro párování proti extrahovaným datům faktury |
+| **E-mail** | Kontaktní e-mail dodavatele — také použit pro párování bílé listiny odesílatelů |
+| **Typ dodavatele** | Dopravce / Palivo / Servis / Mýtné / Pojištění / Leasing / Ostatní |
+| **Země** | Země registrace dodavatele |
+
+### Správa dodavatelů
+
+- **Přidat dodavatele:** Klikněte na **+ Přidat dodavatele**, vyplňte formulář a uložte.
+- **Upravit dodavatele:** Klikněte na **Upravit** u jakéhokoli řádku dodavatele pro aktualizaci jeho údajů.
+- **Smazat dodavatele:** Klikněte na **Smazat**. Smazání je blokováno, pokud má dodavatel propojené nákupní faktury.
+
+<Note>
+Subdodavatelští dopravci, které přidáte v sekci Subdodavatelé, se automaticky zrcadlí do seznamu Dodavatelé s typem **Dopravce**. Nemusíte je zde přidávat znovu. Změny v záznamu subdodavatele (jméno, DIČ, e-mail) se automaticky synchronizují se záznamem dodavatele.
+</Note>
+
+## E-mailová schránka pro faktury dodavatelů
+
+Druma může přijímat faktury dodavatelů e-mailem, extrahovat klíčová pole pomocí AI a buď automaticky vytvořit návrh nákupní faktury, nebo dokument nasměrovat do fronty ke kontrole.
+
+### Nastavení
+
+<Steps>
+  <Step title="Otevřete nastavení společnosti">
+    Přejděte do **Nastavení** → **Společnost** a sjeďte na sekci **E-mail pro faktury dodavatelů**.
+  </Step>
+  <Step title="Povolte schránku">
+    Zapněte **Povolit schránku pro faktury dodavatelů**. Druma vytvoří vyhrazenou příchozí e-mailovou adresu pro vaši společnost (například `invoices-acme@in.druma.io`). Adresa se zobrazí ihned po povolení.
+  </Step>
+  <Step title="Zkopírujte e-mailovou adresu">
+    Klikněte na ikonu kopírování vedle adresy. Sdílejte tuto adresu se svými dodavateli a požádejte je, aby na ni posílali PDF faktury. Faktury z vlastní schránky můžete na tuto adresu také přeposílat.
+  </Step>
+  <Step title="Přidejte adresy odesílatelů na bílou listinu">
+    V sekci **Bílá listina odesílatelů** přímo pod tím klikněte na **+ Přidat odesílatele** a zadejte e-mailovou adresu odesílatele každého dodavatele. Zpracovávají se pouze odesílatelé na bílé listině — e-maily z neznámých adres jsou tiše zahozeny jako ochrana proti spamu a spoofingu.
+  </Step>
+</Steps>
+
+<Warning>
+Udržujte e-mailovou adresu pro faktury dodavatelů v tajnosti. Nezveřejňujte ji na svém webu ani v externích dokumentech. Kdokoli, kdo adresu zná a není na bílé listině, je zablokován, ale se samotnou adresou by se mělo zacházet jako se soukromou směrovací adresou.
+</Warning>
+
+<Note>
+Tato příchozí cesta nedávno měla problémy se směrováním brány, kvůli kterým byly e-maily na tuto adresu tiše odmítnuty ještě předtím, než se vůbec dostaly do Druma. Pokud dodavatelé hlásí, že jejich faktury nikdy nedorazí, nebo se ve frontě ke kontrole nic neobjeví i přes odeslané e-maily, než předpokládáte problém na straně odesílatele nebo bílé listiny, ověřte si u podpory, že je problém se směrováním pro vaše prostředí plně vyřešen.
+</Note>
+
+### Co se stane při příchodu faktury
+
+Když dodavatel z odesílatele na bílé listině pošle na vaši schránku PDF (nebo obrázek):
+
+1. Druma stáhne přílohu a bezpečně ji uloží.
+2. AI extrahuje: jméno dodavatele, DIČ, číslo faktury, datum faktury, celkovou částku, měnu a kategorii výdaje (palivo / servis / mýtné / pojištění / leasing / ostatní).
+3. Druma se pokusí spárovat extrahovaná data s vaším hlavním seznamem dodavatelů pomocí DIČ a e-mailové adresy.
+
+Výsledek závisí na jistotě shody:
+
+| Výsledek | Co se stane |
+|---------|-------------|
+| **Faktura dopravce s vysokou jistotou** | Nasměrována do fronty faktur dopravce (spárována s nákupní fakturou z konkrétní subdodávkové objednávky) |
+| **Shoda dodavatele s vysokou jistotou** | Automaticky vytvořen návrh nákupní faktury a propojen s dodavatelem |
+| **Nízká jistota nebo nerozpoznaný dodavatel** | Zobrazí se ve **frontě ke kontrole** k ručnímu spárování |
+
+<Note>
+Extrakce AI čte textovou vrstvu PDF. Skenované obrázky s nízkým rozlišením nebo ručně psaný text mohou vést k nižšímu skóre jistoty a častěji skončit ve frontě ke kontrole. Požádejte dodavatele, aby posílali nativní PDF exporty ze svého účetního softwaru, kde je to možné.
+</Note>
+
+## Fronta ke kontrole
+
+Fronta ke kontrole je místo, kde jsou uchovány všechny faktury — jak faktury dopravců, tak obecné faktury dodavatelů — které se nepodařilo automaticky použít, pro lidské rozhodnutí.
+
+**Kde:** Finance → Forwarding → záložka **Fronta faktur**
+
+### Čtení fronty
+
+Každý řádek ve frontě zobrazuje:
+
+- **Odznak zdroje** — **Dopravce** (ze schránky faktur dopravce) nebo **Dodavatel** (ze schránky faktur dodavatele)
+- **Jméno dodavatele** — extrahované AI nebo spárované z hlavního seznamu dodavatelů
+- **Částku** a **Měnu**
+- **Stav** — Čeká / Použito / Odmítnuto
+- **Datum přijetí**
+
+Použijte filtrovací záložky nahoře pro přepínání mezi zobrazeními **Čeká**, **Použito** a **Odmítnuto**. Můžete také filtrovat podle typu dodavatele pro zaměření na konkrétní kategorii (například zobrazit pouze faktury Palivo).
+
+### Zpracování položky fronty
+
+<Steps>
+  <Step title="Rozbalte řádek">
+    Klikněte kdekoli na řádek fronty pro jeho rozbalení. Rozbalené zobrazení ukazuje všechna AI-extrahovaná pole, spárovaného (nebo navrhovaného) dodavatele a spárovanou nákupní fakturu, pokud byla nalezena.
+  </Step>
+  <Step title="Zkontrolujte extrahovaná data">
+    Zkontrolujte extrahované jméno dodavatele, DIČ, číslo faktury, částku a datum proti PDF. Opravy nelze provádět přímo v řádku — pokud jsou data špatná, opravíte je po schválení na záznamu nákupní faktury.
+  </Step>
+  <Step title="Vyberte akci">
+
+    | Akce | Kdy použít |
+    |--------|------------|
+    | **Schválit** | Data vypadají správně a shoda je správná — vytvoří nebo potvrdí nákupní fakturu |
+    | **Odmítnout** | Faktura není platná, je duplicitní, nebo patří jiné společnosti — odstraní ji z fronty |
+    | **Přeřadit** | Navrhovaná nákupní faktura je špatná — otevře vyhledávání pro výběr správné |
+    | **Zobrazit PDF** | Otevře původní přiložený soubor na nové kartě pro ruční ověření |
+
+  </Step>
+</Steps>
+
+## Dashboard stárnutí závazků
+
+Dashboard stárnutí závazků zobrazuje vše, co vaše společnost dluží napříč všemi dodavateli, seskupené podle toho, jak dlouho je dluh nesplacený.
+
+**Kde:** Finance → Analytika → záložka **Stárnutí závazků**
+
+### Čtení dashboardu
+
+Horní část stránky zobrazuje tři souhrnné karty:
+
+- **Celkem nesplaceno** — součet všech nezaplacených nákupních faktur
+- **Faktury podle pásma stárnutí** — počet v každém pásmu
+- **Počet dodavatelů** — odlišní dodavatelé s nesplacenými zůstatky
+
+Pod souhrnem řaditelná tabulka uvádí každého dodavatele s řádkem na fakturu. Kliknutím na záhlaví sloupce seřadíte. Kliknutím na řádek dodavatele ho rozbalíte a zobrazíte jednotlivé faktury.
+
+Pásma stárnutí se řídí standardní konvencí AP:
+
+| Pásmo | Definice |
+|--------|-----------|
+| **0–30 dní** | Aktuální — v rámci standardních platebních podmínek |
+| **31–60 dní** | Mírně po splatnosti |
+| **61–90 dní** | Po splatnosti — doporučeno sledování |
+| **90+ dní** | Výrazně po splatnosti — eskalujte |
+
+<Note>
+Zobrazení Stárnutí závazků je omezeno na 500 řádků. Pokud má vaše společnost více než 500 nesplacených nákupních faktur, v horní části tabulky se zobrazí banner s upozorněním na oříznutí. Použijte tlačítko **Export CSV** pro stažení kompletního datasetu k analýze v Excelu.
+</Note>
+
+### Export
+
+Klikněte na **Export CSV** pro stažení kompletního reportu stárnutí závazků jako soubor CSV. Export zahrnuje všechny řádky dodavatelů bez ohledu na limit zobrazení 500 řádků, takže je vhodný pro odsouhlasení závazků ve vašem účetním systému.
+
+---
+
+<Card title="Import bankovního výpisu" icon="file-up" href="/cs/invoicing/bank-statement-import">
+  Nahrajte soubory CAMT.053 nebo MT940 pro automatické spárování příchozích plateb s otevřenými fakturami.
+</Card>
+
+<Card title="Sledování plateb" icon="circle-check" href="/cs/invoicing/payment-tracking">
+  Zaznamenávejte a sledujte platby k prodejním fakturám a zobrazte nesplacené zůstatky.
+</Card>
+
+<Card title="Přehled po splatnosti" icon="triangle-alert" href="/en/invoicing/overdue-dashboard">
+  Sledujte stárnutí pohledávek a odesílejte upomínky klientům po splatnosti.
+</Card>

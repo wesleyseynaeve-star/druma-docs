@@ -1,53 +1,152 @@
 ---
 title: "e-Transport Rumänien"
-description: "Wie Druma ANAF e-Transport-Erklärungen, UIT-Code-Generierung und GPS-Protokollierung für qualifizierende Warentransporte in und durch Rumänien automatisiert."
+description: "Wie Druma ANAF-e-Transport-Erklärungen, UIT-Code-Generierung und GPS-Protokollierung für qualifizierende Warentransporte in und durch Rumänien automatisiert."
 icon: "truck-fast"
+---
+
+e-Transport ist Rumäniens verpflichtendes elektronisches Melde- und GPS-Verfolgungssystem für den Straßengütertransport, verwaltet von ANAF (Agenția Națională de Administrare Fiscală). Druma automatisiert den Meldeprozess, generiert UIT-Codes und übernimmt die GPS-Positionsmeldung — das nimmt Ihnen die manuelle Last ab und senkt das Bußgeldrisiko.
+
 ---
 
 ## Was ist e-Transport?
 
-e-Transport ist ein rumänisches Regulierungssystem, das die Echtzeitverfolgung von Waren mit hohem Wert (über einem Schwellenwert) auf rumänischem Gebiet erfordert. Für qualifizierende Sendungen müssen:
+e-Transport verlangt von Transportbetreibern:
 
-1. Vor dem Transport ein UIT-Code (Unique Identification Token) bei ANAF beantragt werden
-2. GPS-Positionsdaten in Echtzeit an ANAF übermittelt werden
-3. Informationen über Waren, Wert und Route bereitgestellt werden
+1. **Den Transport bei ANAF zu melden**, bevor der LKW losfährt, und einen eindeutigen UIT-Code zu erhalten
+2. **GPS-Positionen in regelmäßigen Abständen** während des Transports zu protokollieren
+3. **Den UIT-Code im LKW mitzuführen** (ausgedruckt oder auf dem Telefon des Fahrers sichtbar)
 
----
-
-## Wann ist e-Transport erforderlich?
-
-e-Transport gilt für:
-- Interne Transporte in Rumänien
-- Internationale Transporte, die durch Rumänien fahren
-- Wenn der Warenwert einen bestimmten Schwellenwert überschreitet (konfigurierbar)
+Das System erlaubt ANAF und der Poliția Rutieră, in Echtzeit zu prüfen, dass ein Transport gemeldet wurde, wer die Ware befördert, und ob der LKW auf der gemeldeten Route unterwegs ist.
 
 ---
 
-## Drumas e-Transport-Automatisierung
+## Wann e-Transport gilt
 
-Druma automatisiert den gesamten e-Transport-Prozess:
-
-1. **Automatische Erkennung** — Prüft ob ein Auftrag e-Transport benötigt basierend auf Route und Warenwert
-2. **UIT-Beantragung** — Reicht die Erklärung bei ANAF ein und erhält den UIT-Code
-3. **GPS-Übertragung** — Sendet Fahrerpositionsdaten in Echtzeit an ANAF
-4. **Statusverfolgung** — Zeigt e-Transport-Status im Auftrag an
-
----
-
-## ANAF-Anmeldedaten konfigurieren
-
-Gehen Sie zu **Einstellungen → Integrationen → ANAF e-Transport** und geben Sie Ihre ANAF SPV-Zugangsdaten ein.
-
----
-
-## UIT-Code im Fahrer-PWA
-
-Wenn ein Auftrag e-Transport erfordert, zeigt die Fahrer-App den UIT-Code prominent an. Der Fahrer muss diesen Code bei Straßenkontrollen vorzeigen können.
+e-Transport gilt für den Warentransport **innerhalb Rumäniens oder im Transit durch Rumänien**, wenn die Ladung bestimmte Gewichts- und Wertschwellen überschreitet. Diese Schwellenwerte werden von ANAF festgelegt und regelmäßig per Regierungsverordnung aktualisiert.
 
 <Warning>
-Ohne gültigen UIT-Code vor der Abfahrt kann der Fahrer erhebliche Bußgelder erhalten. Stellen Sie sicher, dass die ANAF-Integration korrekt konfiguriert ist.
+Prüfen Sie stets die aktuellen ANAF-Schwellenwerte, bevor Sie annehmen, dass eine Sendung keine e-Transport-Meldung benötigt. Die Regeln wurden seit Systemstart mehrfach aktualisiert. Maßgebliche Quelle: [mfinante.gov.ro](https://www.mfinante.gov.ro) und das ANAF-e-Transport-Portal.
 </Warning>
 
-<Card title="Integrationseinrichtung" icon="plug" href="/en/admin/integration-setup">
-  Konfigurieren Sie Ihre ANAF-Anmeldedaten.
-</Card>
+Meldepflichtige Kategorien umfassten bisher: Waren mit Steuerrisiko (Lebensmittel, Alkohol, Tabak, Textilien, Baustoffe, Elektronik), Waren über einem Wertschwellenwert, sowie jeder internationale Transit durch Rumänien über einer bestimmten Tonnage. Ihr Buchhalter oder Transportrechtsberater kann die aktuell geltenden Kategorien für Ihre Warenarten bestätigen.
+
+---
+
+## Wer meldet: Ihr Kunde oder Sie?
+
+Nach OUG 41/2022 Art. 8 liegt die gesetzliche Meldepflicht gegenüber ANAF bei der **rumänischen Handelspartei** — dem in Rumänien registrierten Absender oder Empfänger der Ware, niemals beim Frachtführer als solchem. Für die meisten Transportunternehmen bedeutet das: **Ihr Kunde meldet und stellt Ihnen den UIT-Code bereit** (der Frachtführer-Ablauf — Drumas Standard). Nur wenn Ihr eigenes Unternehmen die rumänische Handelspartei ist — weil Sie eigene Ware verkaufen oder bewegen — melden Sie selbst (der Melder-Ablauf, pro Unternehmen aktivierbar unter Einstellungen → Integrationen → ANAF e-Transport).
+
+### Wann welcher Ablauf gilt
+
+| Situation | Ablauf |
+|---|---|
+| Ihr Unternehmen ist die rumänische Handelspartei (Absender oder Empfänger) | **Melder-Ablauf** — LKW zuweisen, Druma meldet automatisch bei ANAF |
+| Sie sind Frachtführer, und Ihr rumänischer Kunde ist die Handelspartei | **Frachtführer-Ablauf** — der Kunde stellt den UIT über Portal oder Telefon bereit |
+| Unterauftragnehmer-Auftrag (Sie leiten an einen anderen Frachtführer weiter) | Keiner von beiden — der Unterauftragnehmer oder dessen Kunde übernimmt die Meldung |
+
+---
+
+## Wie Druma e-Transport handhabt
+
+### Frachtführer-Ablauf (der Standard): Ihr Kunde meldet
+
+Liegt die Meldepflicht bei Ihrem Kunden, stößt Druma den Prozess automatisch an, damit der UIT Sie vor Abfahrt des LKW erreicht.
+
+<Steps>
+  <Step title="Hinweis in der Bestätigungs-E-Mail">
+    Sendet Druma die Auftragsbestätigung an den Kunden, erkennt es, dass die Route Rumänien berührt, und fügt einen deutlichen Hinweis hinzu, der den Kunden auffordert, den UIT-Code in seinem Portal einzutragen.
+  </Step>
+  <Step title="Eintrag im Kundenportal">
+    Der Kunde öffnet die Sendung im Druma-Kundenportal. Eine Karte **e-Transport (Rumänien)** erklärt die Anforderung und bietet ein Eingabefeld. Der Kunde gibt den von ANAF erhaltenen UIT-Code ein — Druma validiert das Format (8–30 Großbuchstaben/Ziffern) vor dem Speichern.
+  </Step>
+  <Step title="Manuelle Eingabe durch den Planer">
+    Stellt der Kunde den UIT per Telefon oder E-Mail bereit, kann der Planer ihn direkt im Auftragsdetailbereich unter dem **Tab Ladung** eingeben. Derselbe Abschnitt **e-Transport (Rumänien)** zeigt ein Eingabefeld, wenn kein UIT hinterlegt ist und der Auftragsstatus Bearbeitung erlaubt.
+  </Step>
+  <Step title="GPS-Übertragung aktiviert sich automatisch">
+    Sobald ein UIT-Code hinterlegt ist, greift Drumas GPS-Weiterleitungspipeline den Auftrag auf und beginnt, Positionen an ANAF zu übermitteln — keine zusätzliche Aktion des Planers nötig.
+  </Step>
+  <Step title="Der Fahrer sieht den UIT-Code">
+    Der UIT-Code erscheint in der Druma-App des Fahrers auf dem Bildschirm des aktiven Auftrags und bestätigt dem Fahrer vor Abfahrt, dass die Meldung vorliegt. Fragt ein Straßenkontrolleur, zeigt der Fahrer den Code auf seinem Telefon oder legt das ausgedruckte Auftragsdokument vor.
+  </Step>
+</Steps>
+
+### Melder-Ablauf: Ihr Unternehmen meldet
+
+Aktivieren Sie dies nur, wenn Ihr Unternehmen die rumänische Handelspartei ist, die gesetzlich bei ANAF meldet. Gehen Sie zu **Einstellungen → Integrationen → ANAF e-Transport** und aktivieren Sie die Melder-Einstellung.
+
+Sobald aktiviert:
+
+- Erstellen Sie einen Auftrag mit Abhol- oder Lieferstopp in Rumänien, zeigt das Auftragsformular ein Feld **Warenwert (RON)**. Dieser Wert ist für die Meldung erforderlich. Speichern ohne ihn zeigt eine Warnung — Sie können trotzdem speichern und den Wert später durch Bearbeiten des Auftrags nachtragen.
+- Weisen Sie dem Auftrag einen LKW zu, prüft Druma, ob der Auftrag im Anwendungsbereich liegt: Der Warenwert muss den Meldeschwellenwert erreichen oder überschreiten (Standard **10.000 RON**, pro Unternehmen konfigurierbar), und der Auftrag darf nicht unterauftragnehmerbasiert sein.
+- Sind alle Bedingungen erfüllt, **reicht Druma die Meldung automatisch ein**, sobald die LKW-Zuweisung gespeichert wird, und speichert den resultierenden UIT am Auftrag.
+
+**Schlägt die Meldung fehl** — z. B. wegen eines fehlenden Warenwerts, eines Adressfehlers bei einem Stopp, oder eines vorübergehenden ANAF-API-Problems — zeigt die Auftragsdetailseite eine Warnung **Meldung fehlgeschlagen**. Beheben Sie die zugrunde liegenden Daten und wiederholen Sie über die Option **e-Transport melden/erneut versuchen** im Aktionsmenü des Auftrags.
+
+<Note>
+Unternehmen ohne aktivierte Melder-Einstellung sehen die Aufforderung Warenwert (RON) nie und lösen keine automatischen Meldungen aus. Der Frachtführer-Ablauf steht sowohl meldenden als auch nicht meldenden Unternehmen immer zur Verfügung, für Aufträge, bei denen der Kunde die Pflicht trägt.
+</Note>
+
+---
+
+## GPS-Positionsprotokollierung
+
+e-Transport verlangt, dass GPS-Positionen während des aktiven Transports an ANAF übermittelt werden. Druma übernimmt dies automatisch über die ANAF-e-Transport-API — getrennt von den manuellen Statusaktualisierungen des Fahrers. Um ANAFs API nicht mit einem Positionsupdate bei jedem GPS-Ping zu überfluten, entprellt Druma ausgehende Übertragungen pro Auftrag auf **höchstens einmal alle 5 Minuten** und leitet dabei die jeweils aktuellste Position in diesem Takt weiter, statt jeden rohen Ping vom Telefon des Fahrers.
+
+**Wichtig:** Die GPS-Protokollierung funktioniert nur, wenn der Fahrer die Druma-App während der Fahrt **auf seinem Telefon geöffnet** hat. Schließt der Fahrer die App, oder sperrt sich der Bildschirm ohne im Hintergrund laufende App, kann die Positionsprotokollierung unterbrochen werden.
+
+<Steps>
+  <Step title="Fahrer vor Abfahrt anweisen">
+    Bestätigen Sie mit dem Fahrer vor Abfahrt des LKW, dass die Druma-App geöffnet ist und den aktiven Auftrag zeigt. Bestätigen Sie unter Android, dass die App die Hintergrund-Standortberechtigung hat.
+  </Step>
+  <Step title="Die App läuft während der Fahrt">
+    Die App übermittelt GPS-Koordinaten an Druma, während sie sich bewegt. Druma leitet höchstens einmal alle 5 Minuten pro Auftrag eine Position an die ANAF-e-Transport-API weiter.
+  </Step>
+  <Step title="Abschluss des Transports">
+    Markiert der Fahrer den Auftrag als geliefert, stoppt die GPS-Protokollierung für diesen UIT-Code.
+  </Step>
+</Steps>
+
+<Note>
+Die GPS-Protokollierung für e-Transport nutzt mobile Daten. Stellen Sie sicher, dass Fahrer eine aktive SIM mit Datenvolumen haben. Auf Strecken mit schwachem Signal puffert Druma Positionen und überträgt sie, sobald die Verbindung wiederhergestellt ist.
+</Note>
+
+---
+
+## Was der Fahrer tun muss
+
+Die Pflichten des Fahrers für die e-Transport-Compliance sind bei Nutzung von Druma minimal:
+
+1. **Die App während der Fahrt geöffnet halten** auf seinem Telefon
+2. **Den UIT-Code zeigen**, falls ein Straßenkontrolleur fragt (sichtbar am aktiven Auftrag in der App)
+3. **Nicht erheblich von der gemeldeten Route abweichen** — größere Routenabweichungen können eine geänderte Meldung erfordern, die der Disponent über die Druma-Weboberfläche vornimmt
+
+---
+
+## Sanktionen bei Nichteinhaltung
+
+ANAF-Bußgelder für e-Transport-Verstöße sind erheblich — Sanktionen gelten sowohl für den Frachtführer als auch für den Begünstigten des Transports (Kunde oder Absender). Häufige Verstöße umfassen:
+
+- Warentransport ohne gültigen UIT-Code
+- Lücken bei der GPS-Positionsprotokollierung während des Transports
+- Gemeldete Ladung stimmt nicht mit der tatsächlich transportierten überein
+
+Drumas Automatisierung beseitigt die häufigsten Compliance-Fehler: fehlende Meldungen und GPS-Protokollierungslücken. Die Verantwortung für korrekte Ladungsangaben (Gewicht, Wert, Art) bleibt jedoch beim Disponenten, der die Auftragsdaten eingibt.
+
+---
+
+## Verwandte Artikel
+
+<CardGroup cols={2}>
+  <Card title="Integrationseinrichtung" icon="gear" href="/de/admin/integration-setup">
+    Konfigurieren Sie Ihre ANAF-Zugangsdaten, den Warenwert-Schwellenwert und die e-Transport-Standardeinstellungen in Druma.
+  </Card>
+  <Card title="Fuhrparkdokumente" icon="folder-open" href="/de/fleet-compliance/fleet-documents">
+    Compliance bei Fahrzeugdokumenten, einschließlich der für den internationalen Transport erfassten CEMT-Genehmigung.
+  </Card>
+  <Card title="EU-Lenkzeitregeln" icon="clock" href="/de/fleet-compliance/eu-driving-hours">
+    Lenkzeitgrenzen nach Verordnung 561/2006 und wie Druma sie nachverfolgt.
+  </Card>
+  <Card title="Mobilitätspaket" icon="globe" href="/de/fleet-compliance/mobility-package">
+    Rückkehrpflichten für Fahrzeug und Fahrer sowie IMI-Entsendemeldungen.
+  </Card>
+</CardGroup>

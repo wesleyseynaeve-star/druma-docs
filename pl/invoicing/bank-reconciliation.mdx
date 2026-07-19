@@ -1,28 +1,34 @@
 ---
 title: "Uzgodnienie bankowe"
-description: "Automatycznie dopasowuj przychodzące e-maile z płatnościami bankowymi do otwartych faktur w Druma, przesyłając dalej e-maile z powiadomieniami z Twojego banku."
+description: "Automatycznie dopasowuj przychodzące e-maile z płatnościami bankowymi do otwartych faktur w Druma, przesyłając dalej e-maile z powiadomieniami z Twojego rumuńskiego banku."
 icon: "building-columns"
 ---
 
 ## Przegląd
 
-Ręczne dopasowywanie przelewów bankowych do faktur jest żmudne i podatne na błędy. Funkcja uzgodnienia bankowego Druma automatyzuje większość tego procesu, parsując e-maile z powiadomieniami o płatności, które banki wysyłają dla każdego przychodzącego przelewu.
+Ręczne dopasowywanie przelewów bankowych do faktur jest żmudne i podatne na błędy. Funkcja uzgodnienia bankowego Druma automatyzuje większość tego procesu, parsując e-maile z powiadomieniami o płatności, które rumuńskie banki wysyłają dla każdego przychodzącego przelewu. Przesyłasz te e-maile dalej na specjalną skrzynkę Druma, a Druma zajmuje się dopasowaniem.
 
 Nie jest wymagany dostęp do API banku. Nie ma nowego oprogramowania do zainstalowania. Tylko przekazywanie e-maili.
+
+<Frame caption="Finanse → Uzgodnienie — formaty wyciągów CAMT.053, MT940 i CODA.">
+  <img src="/images/invoicing/bank-reconciliation.png" alt="Strona Uzgodnienie bankowe" />
+</Frame>
 
 ## Jak to działa
 
 Gdy pieniądze trafiają na Twoje konto bankowe, bank wysyła automatyczny e-mail powiadomienia. Druma może odczytywać te e-maile i wyodrębniać kluczowe szczegóły:
+
 - Otrzymana kwota
 - Nazwa płatnika
 - Numer referencyjny płatności
 - Data przelewu
 
-Druma następnie przeszukuje Twoje otwarte faktury pod kątem dopasowania. Jeśli kwota i numer referencyjny się zgadzają, faktura jest automatycznie oznaczana jako opłacona.
+Druma następnie przeszukuje Twoje otwarte faktury pod kątem dopasowania. Jeśli kwota i numer referencyjny się zgadzają, faktura jest automatycznie oznaczana jako opłacona. Jeśli nie ma jednoznacznego dopasowania, płatność trafia do kolejki przeglądu do ręcznej obsługi.
 
 ## Obsługiwane banki
 
-Następujące banki są obsługiwane do parsowania e-maili:
+Następujące rumuńskie banki są obsługiwane do parsowania e-maili:
+
 - BRD – Groupe Société Générale
 - BCR – Banca Comercială Română
 - Raiffeisen Bank
@@ -30,48 +36,65 @@ Następujące banki są obsługiwane do parsowania e-maili:
 - ING Bank
 
 <Note>
-Jeśli Twojego banku nie ma na liście, możesz nadal używać Druma do ręcznego rejestrowania płatności — po prostu rejestruj płatności przez przycisk Zarejestruj płatność na każdej fakturze.
+Jeśli Twojego banku nie ma na liście, nadal możesz używać Druma do ręcznego rejestrowania płatności — po prostu rejestruj płatności przez przycisk Zarejestruj płatność na każdej fakturze. Ręczne uzgodnienie jest zawsze dostępne, niezależnie od konfiguracji banku.
 </Note>
 
 ## Konfiguracja przekazywania e-maili
 
 <Steps>
   <Step title="Znajdź adres skrzynki uzgodnienia Druma">
-    Przejdź do **Ustawienia — Integracje — Uzgodnienie bankowe**. Twój unikalny adres e-mail uzgodnienia Druma jest pokazany tutaj.
+    Przejdź do **Ustawienia** → **Firma** i włącz **Włącz skrzynkę płatności bankowych**. Twój unikalny adres e-mail uzgodnienia Druma jest pokazany tutaj — wygląda mniej więcej jak `reconcile-twojafirma@inbox.druma.io`.
   </Step>
   <Step title="Skopiuj adres e-mail">
-    Skopiuj pełny adres.
+    Skopiuj pełny adres. Będziesz go potrzebować w swoim kliencie e-mail lub ustawieniach powiadomień bankowych.
   </Step>
   <Step title="Skonfiguruj przekazywanie w swoim kliencie e-mail">
-    W koncie e-mail gdzie bank wysyła powiadomienia o płatnościach, utwórz regułę przekazywania:
-    - **Warunek:** e-maile z adresu powiadomień banku
+    W koncie e-mail, na które bank wysyła powiadomienia o płatnościach, utwórz regułę przekazywania:
+
+    - **Warunek:** e-maile z adresu powiadomień Twojego banku (np. `notificari@brd.ro`)
     - **Akcja:** przekaż dalej na adres uzgodnienia Druma
+
+    Dokładne kroki zależą od Twojego dostawcy e-mail. W Gmailu przejdź do Ustawienia → Filtry i zablokowane adresy → Utwórz nowy filtr. W Outlooku użyj Reguły → Nowa reguła.
   </Step>
   <Step title="Przetestuj z rzeczywistą płatnością">
-    Poczekaj na następną przychodzącą płatność i sprawdź **Faktury — Uzgodnienie** po kilku minutach.
+    Poczekaj na następną przychodzącą płatność. Gdy tylko bank wyśle e-mail powiadomienia, zostanie on automatycznie przekazany do Druma. Sprawdź **Fakturowanie** → **Uzgodnienie** po kilku minutach, aby zobaczyć, czy została dopasowana.
   </Step>
 </Steps>
 
 ## Automatyczne dopasowywanie
 
-Gdy przekazany e-mail dociera, Druma próbuje dopasować go do otwartej faktury używając:
-1. **Kwoty** — otrzymana kwota pasuje do zaległego salda faktury
-2. **Numeru referencyjnego** — referencja płatności pasuje do numeru faktury w Druma
+Gdy przekazany e-mail dociera, Druma próbuje dopasować go do otwartej faktury, używając:
 
-Jeśli oba pasują, faktura jest automatycznie oznaczana jako **Opłacona**.
+1. **Kwoty** — otrzymana kwota pasuje do zaległego salda faktury
+2. **Numeru referencyjnego** — referencja płatności w e-mailu pasuje do numeru faktury w Druma (klienci są proszeni o użycie numeru faktury jako referencji płatności)
+
+Jeśli oba pasują, faktura jest automatycznie oznaczana jako **Opłacona**. Nie jest wymagane żadne działanie z Twojej strony.
 
 ## Niedopasowane płatności
 
-Przejdź do **Faktury — Uzgodnienie — Niedopasowane płatności**. Dla każdej niedopasowanej płatności możesz:
-- **Powiąż z fakturą** — wyszukaj właściwą fakturę i połącz tę płatność z nią
-- **Ignoruj** — oznacz płatność jako niezwiązaną z fakturami Druma
+Niektóre płatności nie zostaną dopasowane automatycznie — na przykład, jeśli klient nie umieścił numeru faktury w referencji przelewu, albo kwota jest nieznacznie inna. Pojawiają się one w kolejce przeglądu:
+
+Przejdź do **Fakturowanie** → **Uzgodnienie** → **Niedopasowane płatności**. Każda niedopasowana płatność pokazuje kwotę, nazwę płatnika i referencję. Możesz:
+
+- **Powiąż z fakturą** — wyszukaj właściwą fakturę i połącz z nią tę płatność
+- **Ignoruj** — oznacz płatność jako niezwiązaną z fakturami Druma (na przykład płatność za coś spoza Druma)
+
+Gdy powiążesz płatność z fakturą, status faktury aktualizuje się dokładnie tak, jakbyś zarejestrował płatność ręcznie.
+
+## Deduplikacja
+
+Jeśli przypadkowo przekażesz ten sam e-mail powiadomienia dwa razy, Druma nie utworzy zduplikowanej płatności. Wykrywa duplikaty za pomocą nagłówka `Message-Id` e-maila, nie numeru referencyjnego banku — więc nawet jeśli pole referencji jest puste lub powtórzone, dokładnie ten sam e-mail nigdy nie jest przetwarzany dwukrotnie. Drugi e-mail jest po cichu ignorowany.
 
 <Note>
-Zachęcaj klientów do używania numeru faktury jako referencji przelewu bankowego. Ten pojedynczy nawyk dramatycznie zwiększa wskaźnik automatycznego dopasowania.
+Zachęcaj klientów do używania numeru faktury jako referencji przelewu bankowego. Ten pojedynczy nawyk dramatycznie zwiększa wskaźnik automatycznego dopasowania — większość płatności zostanie uzgodniona bez żadnej ręcznej pracy z Twojej strony.
 </Note>
+
+<Warning>
+E-maile z powiadomieniami bankowymi czasem zawierają poufne informacje finansowe. Upewnij się, że adres Twojej skrzynki uzgodnienia Druma pozostaje prywatny — nie udostępniaj go publicznie. Jest unikalny dla Twojej firmy i nie da się go odgadnąć, ale traktuj go jak hasło.
+</Warning>
 
 ---
 
-<Card title="Śledzenie płatności" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
-Jak ręcznie rejestrować płatności, obsługiwać częściowe płatności i eksportować dane.
+<Card title="Śledzenie płatności" icon="money-bill-wave" href="/pl/invoicing/payment-tracking">
+  Jak ręcznie rejestrować płatności, obsługiwać częściowe płatności i eksportować dane płatności.
 </Card>

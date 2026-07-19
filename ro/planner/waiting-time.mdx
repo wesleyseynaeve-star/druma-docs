@@ -1,21 +1,153 @@
 ---
-title: "Timp de asteptare"
-description: "Urmarirea si facturarea timpilor de asteptare."
-icon: "hourglass-half"
+title: "Taxe de timp de asteptare"
+description: "Urmareste, calculeaza si factureaza automat clientilor timpul de asteptare al soferilor, folosind dovezi de sosire marcate GPS."
+icon: "hourglass"
 ---
 
-Cronometrul porneste la **Sosit la Preluare/Livrare** si se opreste la **Inceput Incarcare/Descarcare**.
+## Ce este timpul de asteptare?
 
-## Configurarea
+Cand soferul tau ajunge la un punct de preluare sau livrare si trebuie sa astepte — rampa de incarcare este ocupata, depozitul nu este pregatit, actele vamale intarzie — acel timp te costa bani. Soferul sta, camionul nu se misca, iar tu absorbi costul.
 
-- **Global:** Setari -> Timp de asteptare
-- **Per client:** Termeni comerciali ai clientului
-- **Per comanda:** Sectiunea Financiar
+Taxele de timp de asteptare (numite si detention sau demurrage) iti permit sa facturezi clientul pentru acel timp pierdut, odata ce o perioada de alocatie gratuita este consumata. Druma automatizeaza totul — cronometrarea, calculul, notificarea clientului si facturarea — si il sustine cu dovezi GPS, ca disputele sa fie usor de castigat.
 
-## Notificarea clientului
+**Setarile implicite ale Druma:**
+- Alocatie gratuita de asteptare: **2 ore** dupa sosire
+- Tarif de taxare: **45 €/ora** dupa expirarea perioadei gratuite
 
-Apasa **Notifica Clientul** din alerta. Email formal cu ora GPS, durata si taxa estimata.
+Ambele valori sunt complet personalizabile per client sau per comanda individuala.
 
-## Pe factura
+---
 
-Taxa apare automat ca element separat la generarea facturii.
+## Cum functioneaza cronometrul
+
+Cronometrul porneste in clipa in care soferul tau apasa statusul sau de sosire in aplicatia Druma:
+
+- **"Sosit la Preluare"** — porneste cronometrul de asteptare la adresa de incarcare
+- **"Sosit la Livrare"** — porneste cronometrul de asteptare la adresa de livrare
+
+In acel moment exact, Druma captureaza:
+- O **coordonata GPS** care arata unde este soferul
+- Un **marcaj temporal precis** al sosirii
+
+Aceasta marca GPS este dovada ta. Nu poate fi datata retroactiv sau editata de sofer ulterior.
+
+Odata ce soferul apasa urmatorul status (**"Incarcare"** sau **"Descarcare"**), perioada de asteptare se termina si Druma calculeaza asteptarea totala.
+
+---
+
+## Alerta automata pentru planificator
+
+Nu trebuie sa urmaresti un cronometru. Cand alocatia gratuita expira, Druma trimite automat o **notificare in aplicatie** — catre planificatorii, dispecerii si adminii companiei tale — aratand:
+
+- Ce sofer si camion
+- Ce comanda si locatie
+- Cat timp a asteptat peste perioada gratuita
+- Taxa acumulata pana acum
+
+Alerta se declanseaza in momentul in care perioada gratuita de 2 ore (sau personalizata) se termina. Poti actiona imediat — notifica clientul, suna la locatie — inainte ca factura sa creasca si mai mult.
+
+---
+
+## Notificarea clientului cu un click
+
+Din pagina comenzii sau din alerta de timp de asteptare, apasa **"Notifica Clientul"**. Druma trimite un email profesional contactului tau de client, care include:
+
+- Ora de sosire si, dupa ce incarcarea/descarcarea a inceput, acel marcaj temporal de asemenea (text simplu — fara coordonate GPS sau link de harta)
+- Timpul de asteptare gratuit si timpul de asteptare facturabil de pana acum, la tariful orar configurat
+- Taxa totala de asteptare calculata pana acum
+- Daca soferul a atasat o fotografie sau o nota vocala, un link cu durata limitata catre aceasta
+
+Asta il pune pe client in cunostinta de cauza din timp, cu dovezi concrete atasate. Majoritatea clientilor raspund mult mai repede cand vad o notificare scrisa — nu mai este cuvantul tau impotriva al lor.
+
+<Note>
+Trimite notificarea in momentul in care perioada gratuita expira, nu dupa ce soferul in sfarsit pleaca. Notificarea din timp ii da clientului o sansa sa actioneze — si iti protejeaza dreptul de a factura, daca nu o face.
+</Note>
+
+---
+
+## Vizualizarea taxelor de asteptare pe o comanda
+
+Deschide orice comanda si mergi la tabul **Financiar**. Vei vedea o sectiune de timp de asteptare, aratand:
+
+| Camp | Detalii |
+|---|---|
+| Marcaj temporal de sosire | Ora marcata GPS la care soferul a apasat "Sosit" |
+| Perioada gratuita | Implicit 2h (sau setarea ta personalizata) |
+| Timp facturabil | Ore si minute peste perioada gratuita |
+| Tarif orar | Implicit 45 €/h (sau tariful tau personalizat) |
+| **Taxa totala** | Calculata automat |
+
+Daca asteptarea a avut loc atat la preluare cat si la livrare, ambele sunt listate ca elemente de linie separate.
+
+---
+
+## Adaugarea timpului de asteptare pe o factura
+
+Cand generezi factura pentru comanda, Druma sugereaza automat taxa de timp de asteptare ca un element de linie. Poti:
+
+- **Sa o pastrezi asa cum este** — suma este precompletata din inregistrarea comenzii
+- **Sa ajustezi suma** — daca ai convenit un tarif diferit intr-o conversatie telefonica
+- **Sa o elimini** — daca ai decis sa renunti la taxa pentru acest client
+
+<Steps>
+  <Step title="Deschide comanda">
+    Mergi la **Comenzi** si deschide comanda care are timp de asteptare inregistrat.
+  </Step>
+  <Step title="Genereaza factura">
+    Apasa **Genereaza Factura**, sau deschide ciorna de factura existenta, legata de aceasta comanda.
+  </Step>
+  <Step title="Revizuieste elementul de linie al timpului de asteptare">
+    Apare automat, cu suma calculata. Ajusteaza sau elimina, daca este necesar.
+  </Step>
+  <Step title="Trimite factura">
+    Finalizeaza si trimite normal. Taxa de timp de asteptare este listata clar, separat, pentru client.
+  </Step>
+</Steps>
+
+---
+
+## Configurarea orelor gratuite si a tarifului orar
+
+Orele gratuite de asteptare si tariful orar de asteptare se seteaza per **Fisa de Tarifare** — profilul de cost atribuit unui camion (flota proprie sau subcontractata) — nu per client sau per comanda:
+
+<Steps>
+  <Step title="Deschide Fisele de Tarifare">
+    Mergi la **Setari → Fise de Tarifare** si deschide profilul de cost relevant.
+  </Step>
+  <Step title="Gaseste campurile de timp de asteptare">
+    Localizeaza **Ore gratuite de asteptare** si **Tarif de asteptare €/h**.
+  </Step>
+  <Step title="Seteaza-ti valorile">
+    Introdu alocatia de ore gratuite convenita si tariful orar pentru acest profil de cost.
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza**. Toate comenzile facturate conform acestui profil de cost vor folosi acum aceste valori.
+  </Step>
+</Steps>
+
+<Note>
+Nu exista astazi o suprascriere separata per client sau per comanda — fiecare comanda foloseste termenii de asteptare ai profilului de cost atribuit camionului sau, revenind la un implicit la nivel de companie (**Setari → Companie**) si apoi la implicitul platformei (2h / 45 €) daca niciunul nu este setat.
+</Note>
+
+---
+
+## De ce dovezile GPS schimba jocul
+
+Inainte de timpul de asteptare marcat GPS, disputele erau comune: "Soferul tau a ajuns la ora 15:00, nu la 13:00." Cu Druma, ai o pozitie GPS inregistrata automat, cu marcaj temporal, capturata in momentul in care soferul a apasat "Sosit" — plus email-ul de notificare trimis clientului in timpul asteptarii, care poarta acelasi marcaj temporal, in scris.
+
+Aceasta combinatie — un marcaj temporal cu suport GPS de partea ta, plus o notificare scrisa deja aflata in inbox-ul clientului — rezolva marea majoritate a disputelor de timp de asteptare in favoarea ta, fara certuri.
+
+<Note>
+In rampe de incarcare acoperite sau zone cu semnal slab, GPS-ul poate reveni la o locatie bazata pe retea, usor mai putin precisa. Marcajul temporal este intotdeauna precis, indiferent de calitatea GPS.
+</Note>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Tablou de bord Acasa" icon="map" href="/ro/planner/today-view">
+    Vezi toti soferii activi, timpii de asteptare live si alertele de asteptare pe harta.
+  </Card>
+  <Card title="Generarea facturilor" icon="file-invoice-dollar" href="/ro/invoicing/generating-invoices">
+    Adauga timpul de asteptare si alte taxe ca elemente de linie pe facturile clientilor.
+  </Card>
+</CardGroup>

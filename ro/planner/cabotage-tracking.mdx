@@ -1,15 +1,110 @@
 ---
 title: "Urmarirea cabotajului"
-description: "Monitorizeaza operatiunile de cabotaj per camion."
+description: "Monitorizeaza operatiunile de cabotaj per camion, ca sa ramai in limitele UE si sa eviti amenzi mari la inspectiile rutiere."
 icon: "flag"
 ---
 
-## Regulile EU
+## Ce este cabotajul?
 
-Maxim **3 operatiuni de cabotaj** intr-o tara, in **7 zile** de la livrarea internationala. Dupa aceea: paraseste tara si asteapta **4 zile**.
+Cabotajul este atunci cand un camion inmatriculat intr-o tara efectueaza transport intern intr-o alta tara — adica atat preluarea, cat si livrarea, sunt in aceeasi tara straina.
+
+**Exemplu:** Un camion inmatriculat in Romania livreaza o marfa din Bucuresti la Munchen (international). Dupa acea livrare, camionul preia o marfa din Munchen si o livreaza la Frankfurt. Acea deplasare Munchen → Frankfurt, efectuata de un camion romanesc in intregime pe teritoriul Germaniei, este o **operatiune de cabotaj**.
+
+Cabotajul este legal in UE — dar strict limitat.
+
+---
+
+## Regulile UE de cabotaj
+
+Conform Regulamentului UE 1072/2009, dupa finalizarea unei livrari internationale intr-un stat membru:
+
+- Un camion strain poate efectua **pana la 3 operatiuni de cabotaj** in acea tara
+- Toate cele 3 operatiuni trebuie finalizate **in 7 zile** de la livrarea internationala
+- Dupa acele 3 operatiuni (sau 7 zile, oricare survine prima), camionul trebuie sa paraseasca acea tara
+- Exista o **perioada obligatorie de asteptare de 4 zile**, inainte ca vehiculul sa se poata intoarce in acea tara si sa faca din nou cabotaj
+
+**De ce conteaza:** Autoritatile de inspectie rutiera din tari precum Germania, Franta si Olanda verifica activ incalcarile de cabotaj. Amenzile pot ajunge la mii de euro per incalcare. Incalcarile repetate pot duce la probleme cu licenta de operare.
 
 <Warning>
-Perioada de asteptare de 4 zile este strict aplicata in tarile UE occidentale.
+Regulile de cabotaj au fost inasprite si mai mult prin Pachetul de Mobilitate UE. Perioada de racire de 4 zile este strict aplicata in tarile UE vestice. Verifica intotdeauna ca regulile curente se aplica — reglementarile se pot actualiza.
 </Warning>
 
-Druma detecteaza automat operatiunile de cabotaj. Vizualizeaza jurnalul la **Camioane -> Jurnal Cabotaj**.
+---
+
+## Cum urmareste Druma cabotajul
+
+Druma monitorizeaza cabotajul automat, pe baza datelor de comanda pe care le introduci. Iata ce urmareste:
+
+1. **Detectarea tarii** — la fiecare comanda, Druma verifica tara adresei de preluare si tara adresei de livrare
+2. **Marcaj de nerezident** — daca vehiculul este inmatriculat intr-o tara diferita de tarile de preluare si livrare, iar preluarea si livrarea sunt in aceeasi tara, comanda este marcata ca operatiune de cabotaj
+3. **Contor per camion** — Druma numara operatiunile de cabotaj per tara, per vehicul, pe o fereastra glisanta de 7 zile de la ultima livrare internationala eligibila
+4. **Monitorizarea perioadei de asteptare** — Druma urmareste cand expira fereastra de 7 zile si cand incepe si se termina perioada de asteptare de 4 zile
+
+---
+
+## Vizualizarea jurnalului de cabotaj
+
+Pentru a vedea istoricul complet de cabotaj al flotei tale:
+
+<Steps>
+  <Step title="Mergi la Planificare">
+    Apasa **Planificare** in navigarea de sus.
+  </Step>
+  <Step title="Deschide Cabotaj">
+    Apasa tabul **Cabotaj** (`/operations/cabotage`), alaturi de Planning Board, Comenzi si celelalte taburi de planificare.
+  </Step>
+  <Step title="Cauta sau sorteaza">
+    Foloseste caseta de cautare pentru a gasi un camion, o placa sau o tara specifica. Apasa un antet de coloana pentru a sorta.
+  </Step>
+</Steps>
+
+Jurnalul arata:
+- Fiecare operatiune de cabotaj (referinta comanda, tara, date)
+- Numarul de operatiuni in fereastra de 7 zile, per camion
+- Statusul perioadei de asteptare: activa, expirata, sau eligibila pentru operatiuni noi
+- Orice alerte declansate
+
+---
+
+## Alerte de cabotaj
+
+Druma te avertizeaza inainte sa depasesti limita, nu dupa — cu un avertisment in aplicatie, in momentul in care atribui un camion unei comenzi interne pe Planning Board:
+
+**Avertisment** — camionul este pe cale sa atinga numarul de operatiuni de cabotaj permise, in acea tara, in fereastra de 7 zile. Poti confirma in continuare atribuirea, dar ti se arata mai intai numarul si data de sfarsit a ferestrei.
+
+**Limita depasita** — camionul a folosit deja toate cele 3 operatiuni, iar atribuirea ar incalca Regulamentul UE 1072/2009. Avertismentul este afisat cu rosu, iar confirmarea lui este marcata ca **Atribuie (Incalcare Legala)**.
+
+**Perioada de asteptare activa** — camionul este inca in perioada sa obligatorie de asteptare de 4 zile, in acea tara. Avertismentul numeste data la care se termina perioada de asteptare, iar atribuirea este din nou marcata ca incalcare legala, daca continui.
+
+Aceste alerte apar la momentul atribuirii, ca sa poti prinde problema inainte ca vehiculul sa fie dispecerizat.
+
+---
+
+## Ce urmareste Druma vs. ce trebuie sa gestionezi tu
+
+Urmarirea cabotajului in Druma se bazeaza in intregime pe datele de comanda pe care le introduci in sistem. Este exacta atata timp cat comenzile tale sunt introduse corect si prompt.
+
+<Note>
+Urmarirea cabotajului in Druma este un instrument de asistenta pentru planificare — nu inlocuieste un sistem dedicat de conformitate a cabotajului sau consultanta juridica. Asigura-te intotdeauna ca soferii poarta documentatia corecta la inspectia rutiera: CMR-ul international original, cele trei CMR-uri de cabotaj (daca este cazul), si datele clar vizibile. Autoritatile de inspectie verifica documentatia pe hartie, nu TMS-ul tau.
+</Note>
+
+**Druma urmareste:**
+- Numarul de operatiuni per camion, per tara, per fereastra de 7 zile
+- Perioadele de asteptare
+- Marcajele de cabotaj la nivel de comanda
+
+**Tu trebuie sa gestionezi in continuare:**
+- Documentatia soferului la inspectia rutiera
+- Actualizarile legale, daca reglementarile UE se schimba
+- Operatiunile efectuate in afara Druma (de ex. curse neintroduse in sistem)
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+    Gestioneaza vehiculele tale, tarile de inmatriculare si profilurile camioanelor.
+  </Card>
+  <Card title="Ore de conducere UE" icon="clock" href="/ro/fleet-compliance/eu-driving-hours">
+    Urmareste orele soferilor si perioadele de odihna, ca sa ramai conform cu regulile UE de tahograf.
+  </Card>
+</CardGroup>

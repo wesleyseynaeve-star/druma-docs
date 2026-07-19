@@ -1,34 +1,41 @@
 ---
-title: "Routování HERE Maps"
-description: "Jak HERE Maps poskytuje automatické doplňování adres a výpočet tras optimalizovaných pro kamiony v Druma."
+title: "Vyhledávání adres HERE Maps"
+description: "HERE Maps zajišťuje automatické doplňování adres a geokódování napříč Druma. Směrování optimalizované pro kamiony, odhad mýtného a ETA místo toho počítá PTV."
 icon: "map"
 ---
 
-## Přehled
+Druma používá **HERE Maps** pro jednu klíčovou funkci: vyhledávání a ověřování adres při psaní. Bezpečné směrování pro kamiony, odhad mýtného a živé ETA počítá jiný poskytovatel, **PTV**, stručně popsaný na konci této stránky. Tato integrace funguje automaticky na pozadí — operátoři ani dispečeři nemusí nic nastavovat.
 
-HERE Maps poskytuje dvě klíčové funkce v Druma:
+## Není potřeba žádné nastavení
 
-1. **Automatické doplňování adres** — při psaní adres vyzvednutí a doručení do objednávek
-2. **Výpočet tras** — vzdálenost, odhadovaná doba jízdy a CO2 optimalizované pro kamiony (zohledňuje výšku, hmotnost a emisní normu vozidla)
+HERE je nakonfigurováno na úrovni platformy Druma. Na rozdíl od integrací jako TransFollow nebo SmartBill zde není žádný API klíč k zadání ani nastavení ke konfiguraci. Každý účet Druma má od prvního dne plný přístup k vyhledávání adres HERE.
 
-## Žádná konfigurace není potřeba
+## Automatické doplňování adres
 
-API klíč HERE Maps je spravován na úrovni platformy Druma. Není co konfigurovat — HERE Maps funguje automaticky ve všech objednávkách.
+Při zadávání adresy vyzvednutí nebo doručení na objednávce začněte psát název ulice nebo města a HERE navrhne odpovídající adresy v rozbalovací nabídce. Vyberte správnou adresu a všechna pole — ulice, číslo, město, PSČ a země — se vyplní automaticky.
 
-## Jak funguje výpočet trasy
-
-Při vytváření nebo potvrzení objednávky Druma:
-1. Odešle geocódy míst vyzvednutí a doručení do HERE Maps
-2. HERE vypočítá optimální trasu pro kamion (s omezeními pro výšku a hmotnost)
-3. Druma uloží vzdálenost, odhadovanou dobu jízdy a data CO2 k objednávce
+To zabraňuje chybám při zadávání adres, které způsobují problémy s navigací řidiče. Adresa potvrzená přes automatické doplňování HERE má vždy platné souřadnice, takže navigační aplikace řidiče k ní může přímo navést trasu.
 
 <Note>
-Pokud automatické doplňování adres přestane fungovat, kontaktujte podporu Druma — toto je problém na úrovni platformy.
+U venkovských nebo průmyslových adres, které se v automatickém doplňování neobjeví, můžete adresu zadat ručně a poté přetáhnout pin na mapě na správné místo. Souřadnice se uloží k objednávce a použijí pro směrování.
 </Note>
 
-<Card title="CO2 Reporting" icon="leaf" href="/en/fleet-compliance/co2-reporting">
-  Jak vzdálenosti HERE Maps přispívají k výpočtům CO2.
-</Card>
----
+## Reverzní geokódování
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/here-routing).
+HERE také převádí umístěný pin na mapě (zeměpisná šířka/délka) zpět na čitelnou adresu — používá se například, když plánovač přetáhne pin na mapě pro předvyplnění názvu a adresy místa.
+
+## Směrování, mýtné a ETA: zajišťuje PTV
+
+Směrování optimalizované pro kamiony (vyhýbání se nízkým mostům, hmotnostním omezením a dalším překážkám, které těžká vozidla nemohou projet), odhad nákladů na mýtné napříč evropskými mýtnými systémy a živé ETA zohledňující dopravu — to vše počítá **PTV Developer Routing API**, ne HERE. Druma předává PTV rozměry, hmotnost a počet náprav vašeho vozidla, takže trasy a odhady mýtného odrážejí vaše skutečné vozidlo.
+
+<Warning>
+Odhady nákladů na mýtné zůstávají přibližné bez ohledu na poskytovatele. Skutečné mýtné závisí na konkrétní zvolené trase, jaká konfigurace náprav je vaše vozidlo registrováno v mýtném systému každé země, a zda se sazby od poslední aktualizace dat nezměnily. Používejte tyto hodnoty jako vodítko, ne jako přesný podklad pro fakturaci.
+</Warning>
+
+Udržování technických údajů vozidla aktuálních ve **Vozový park → Vozidla → [vozidlo] → Technické údaje** je jediný nejúčinnější krok pro zlepšení přesnosti směrování, mýtného a ETA — bez ohledu na to, který poskytovatel výpočet provádí.
+
+<CardGroup cols={1}>
+  <Card title="Správa vozového parku" icon="truck" href="/cs/planner/fleet-management">
+    Jak spravovat záznamy vozidel, včetně rozměrů, které vstupují do směrování.
+  </Card>
+</CardGroup>

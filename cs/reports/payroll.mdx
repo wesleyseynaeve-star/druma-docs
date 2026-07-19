@@ -1,0 +1,85 @@
+---
+title: "Mzdy řidičů"
+description: "Generujte automatizované výpočty mezd za jednotlivého řidiče na základě ujetých km, aktivních dnů a hodin čekání."
+icon: "money-bill-wave"
+---
+
+## Přehled
+
+Druma počítá odměnu řidiče z provozních dat, která již zachycuje — ujeté kilometry, odpracované dny a zaznamenané hodiny čekání. Neexistuje samostatný systém sledování času; data plynou z objednávek a klepnutí na stavy.
+
+Mzdy řidičů najdete v sekci **Finance**. Dostupné pro role admin, company_admin a fleet_manager.
+
+<Frame caption="Finance → Mzdy — odměna za prázdné km je procento z naložené sazby, ne nezávislá sazba.">
+  <img src="/images/reports/payroll.png" alt="Stránka Mzdy" />
+</Frame>
+
+---
+
+## Složky odměny
+
+Každý běh mzdy počítá čtyři složky:
+
+| Složka | Základ |
+|---|---|
+| **Odměna za km** | Naložené km × sazba za km |
+| **Odměna za prázdné km** | Prázdné km × sazba za km × procento prázdných km (konfigurovatelný podíl z naložené sazby, ne samostatná sazba za prázdné km — výchozí 100 %, tj. placeno stejně jako naložené km) |
+| **Odměna za den** | Aktivní pracovní dny × denní sazba |
+| **Odměna za čekání** | Celkové hodiny čekání × hodinová sazba čekání |
+
+Celkem je součet všech čtyř složek v EUR.
+
+---
+
+## Generování běhu mzdy
+
+<Steps>
+  <Step title="Vyberte řidiče a období">
+    Vyberte řidiče z rozbalovací nabídky a nastavte datum začátku a konce období. Typická období jsou kalendářní měsíc nebo dvoutýdenní mzdový cyklus.
+  </Step>
+  <Step title="Klikněte na Generovat">
+    Druma vypočítá všechny čtyři složky odměny z objednávek a záznamů čekání ve vybraném období.
+  </Step>
+  <Step title="Zkontrolujte rozpis">
+    Výsledek zobrazuje každou složku samostatně, takže můžete čísla ověřit před exportem.
+  </Step>
+  <Step title="Exportujte do CSV">
+    Klikněte na **Export CSV** pro stažení souhrnu mzdy pro použití ve vašem účetním nebo mzdovém systému.
+  </Step>
+</Steps>
+
+---
+
+## Konfigurace sazeb
+
+Sazby odměny (sazba za km, denní sazba, procento prázdných km, hodinová sazba čekání) jsou uloženy za jednotlivého řidiče — s celofiremním výchozím pravidlem, které se použije na jakéhokoli řidiče bez vlastního nastavení — v podkladové tabulce pravidel mezd.
+
+<Note>
+V současnosti neexistuje žádná obrazovka v aplikaci pro zobrazení nebo úpravu těchto sazeb. Sazby musí být nastaveny přímo v databázi (nebo předdefinovány), dokud nevyjde uživatelské rozhraní sazeb ve Vozový park → Řidiči. Pokud řidič nemá žádné pravidlo a neexistuje žádné celofiremní výchozí nastavení, každá složka pro daného řidiče se vypočítá jako nula.
+</Note>
+
+---
+
+## Historické běhy
+
+Každý vygenerovaný běh mzdy se uloží a zobrazí v záznamu řidiče. Kterýkoli předchozí běh můžete znovu otevřít pro kontrolu nebo opětovný export.
+
+---
+
+## Graf měsíčních součtů
+
+Sloupcový graf pod výběrem řidiče zobrazuje celkové měsíční částky mzdy za vybraného řidiče za posledních 12 měsíců. Užitečné pro odhalení sezónních vzorců nebo měsíců s neobvykle vysokými poplatky za čekání.
+
+---
+
+<Note>
+Údaje o mzdách v Druma jsou informativní — Druma se neintegruje s mzdovými zpracovateli ani daňovými úřady. Export CSV je určen k importu do vašeho mzdového systému nebo k ruční kontrole účetním.
+</Note>
+
+<Card title="Čekací doba" icon="clock" href="/cs/planner/waiting-time">
+  Zjistěte, jak se zaznamenává čekací doba a jak vstupuje do výpočtů mezd.
+</Card>
+
+<Card title="Zmařená jízda" icon="triangle-exclamation" href="/cs/planner/wasted-journey">
+  Prázdné kilometry ze zmařených jízd se také zobrazují v záznamech mzdy řidiče.
+</Card>

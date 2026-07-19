@@ -1,46 +1,154 @@
 ---
 title: "Truck wisselen (estafette)"
-description: "Hoe u de trekker halverwege de rit wisselt terwijl de oplegger en lading op dezelfde order blijven — voor estafetteoperaties, pech en chauffeurswissel."
+description: "Hoe u de trekker halverwege de rit wisselt terwijl de oplegger en lading op dezelfde order blijven — voor estafetteoperaties, pech en chauffeurswissels."
 icon: "arrow-right-arrow-left"
 ---
 
-## Wanneer gebruikt u truck wisselen?
+## Wat is een trekkerestafette?
 
-Er zijn drie veelvoorkomende situaties:
-- **Estafetteoperatie** — Eén chauffeur rijdt de eerste helft, een andere neemt over halverwege
-- **Pech** — De originele truck heeft een storing; een vervangende truck neemt de oplegger over
-- **Chauffeurswissel** — Een chauffeur bereikt zijn rijurenlimieten en een andere neemt het over
+Een trekkerestafette (ook truckwissel genoemd) is wanneer u de trekker die een oplegger trekt verandert **tijdens een actieve order**. De oplegger en zijn lading blijven op dezelfde order — alleen de cabine en chauffeur veranderen.
+
+Veelvoorkomende scenario's:
+
+- **Estafetterijden** — chauffeur A neemt de lading van herkomst naar een tussenpunt, dan neemt chauffeur B de oplegger over en gaat verder naar de bestemming. Dit verlengt uw effectieve bereik zonder de rijtijdregelgeving te breken.
+- **Pech** — de oorspronkelijke truck heeft een mechanisch probleem en een vervangende trekker wordt gestuurd om de oplegger op te halen.
+- **Chauffeururenlimiet** — de huidige chauffeur heeft bijna geen wettelijke rijtijd meer over en een verse chauffeur met een andere truck neemt over.
+- **Geplande overdracht** — bij een depot of hub worden opleggers routinematig gewisseld tussen trekkers.
+
+<Note>
+Het kernprincipe: **de oplegger blijft bij de lading**. Wisselt u de truck op een order, dan koppelt Druma de oude trekker los maar houdt de oplegger gekoppeld. Dit behoudt de bewaarketen voor de goederen.
+</Note>
 
 ---
 
-## Een truck wisselen
+## Wanneer kunt u de truck wisselen?
+
+U kunt de truck wisselen op elke order die zich in één van deze actieve statussen bevindt:
+
+- In afwachting
+- Toegewezen
+- Vertrokken
+- Aangekomen bij ophaling
+- Laden
+- Onderweg
+- Aangekomen bij levering
+- Lossen
+
+De order moet van het type **Eigen truck** zijn. Uitbestede orders en capaciteitsverkooporders ondersteunen geen truckwissel — die worden beheerd door de externe vervoerder.
+
+---
+
+## Hoe u de truck wisselt
 
 <Steps>
-  <Step title="Open de order">
-    Ga naar de orderpagina of het planningsbord en klik op de order.
+  <Step title="Open het Planningsbord">
+    Ga naar **Planner → Planningsbord** en zoek de rij van de actieve order.
   </Step>
-  <Step title="Klik op Truck wisselen">
-    Zoek de knop **Truck wisselen** in het actiegedeelte van het orderdetailpaneel.
+  <Step title="Trigger Truck wisselen">
+    Sleep een andere truck op de rij van de order (of gebruik het actiemenu van de rij). Druma detecteert dat de order al een truck heeft toegewezen en biedt aan om te wisselen in plaats van de toewijzing gewoon te vervangen. Truck wisselen is alleen beschikbaar voor Eigen-truck-orders in een actieve status — het is niet beschikbaar vanuit het orderdetailpaneel.
   </Step>
-  <Step title="Selecteer de wissellocatie">
-    Voer het adres in waar de oplegger wordt overgedragen.
+  <Step title="Selecteer de doelstop">
+    Kies de stop waar de wissel plaatsvindt. Gebeurt de wissel bijvoorbeeld bij de tweede stop, selecteer dan stop 2. Alle stops vanaf dit punt worden afgehandeld door de nieuwe truck.
   </Step>
-  <Step title="Selecteer de nieuwe truck en chauffeur">
-    Kies het vervangende voertuig en de chauffeur die de rit overneemt.
+  <Step title="Selecteer de nieuwe truck">
+    Zoek de vervangende truck op kenteken. Alleen actieve, beschikbare trucks uit uw vloot worden getoond. De toegewezen chauffeur van de nieuwe truck wordt automatisch geselecteerd.
   </Step>
-  <Step title="Bevestig de wissel">
-    Klik op **Bevestig wissel**. Druma maakt automatisch een relaystop aan op de order.
+  <Step title="Voer een reden in en bevestig">
+    Voeg een korte reden toe voor de wissel (bijv. "Chauffeururenlimiet", "Pech bij Timișoara"). Klik op **Wissel bevestigen**.
   </Step>
 </Steps>
 
 ---
 
-## Wat er na de wissel gebeurt
+## Wat er gebeurt na een wissel
 
-- De originele order wordt bijgewerkt met twee segmenten: voor en na de wissel
-- De nieuwe chauffeur ontvangt een melding in hun app
-- Beide chauffeursegmenten worden bijgehouden voor rijtijdnaleving
+Wanneer u een truckwissel bevestigt, voert Druma automatisch verschillende acties uit:
 
-<Card title="Orderlevenscyclus" icon="circle-dot" href="/nl/planner/order-lifecycle">
-  Hoe orders worden bijgehouden bij tussentijdse truckwissels.
+1. **Een truckSegment wordt aangemaakt** voor de oorspronkelijke truck, dat vastlegt welke stops hij afhandelde (van de eerste stop tot het wisselpunt).
+2. **Een nieuw segment wordt aangemaakt** voor de vervangende truck, dat het wisselpunt tot het einde van de order dekt (open tot levering).
+3. **Alle stops vanaf het wisselpunt** worden bijgewerkt met de nieuwe truck en chauffeur.
+4. **De hoofdvelden truck en chauffeur van de order** worden bijgewerkt om de nieuwe toewijzing te weerspiegelen.
+5. **De oplegger blijft ongewijzigd** — hij blijft aan de order gekoppeld, ongeacht welke trekker hem trekt.
+
+---
+
+## De truckSegmentgeschiedenis bekijken
+
+Na een wissel toont het orderdetailpaneel een sectie **Truckesegmenten** met elke trekker die bij de order betrokken is geweest:
+
+| Truck | Chauffeur | Stops | Reden | Gewisseld op |
+|---|---|---|---|---|
+| B-201-TCL (Volvo FH) | Ion Ionescu | Stop 1 → Stop 2 | Chauffeururenlimiet | 12 apr 2026, 14:30 |
+| B-215-TCL (Scania R450) | Vasile Popa | Stop 2 → (lopend) | — | — |
+
+Elk segment registreert:
+- De naam en het kenteken van de truck
+- De chauffeur die reed
+- Het stopbereik (van → tot)
+- De reden voor de wissel
+- Het tijdstip van de overdracht
+
+---
+
+## Overschrijvingen per stop van truck en chauffeur
+
+Na een truckwissel kunnen individuele stops op de order een andere truck en chauffeur tonen dan de hoofdtoewijzing van de order. Dit is normaal — het betekent dat de stop werd afgehandeld door de vorige trekker voordat de wissel plaatsvond.
+
+Bekijkt u de stoptijdlijn van de order, dan toont elke stop welke truck en chauffeur eraan waren toegewezen. Heeft een stop geen overschrijving, dan erft ze de huidige truck en chauffeur van de order.
+
+---
+
+## Meerdere wissels
+
+U kunt de truck meer dan eenmaal wisselen op dezelfde order. Elke wissel maakt een nieuw segment aan. Nuttig voor lange internationale routes waar de lading meerdere estafettepunten passeert.
+
+Bijvoorbeeld, een lading Boekarest → Duisburg kan drie trekkers gebruiken:
+
+1. Truck A: Boekarest → Boedapest (stop 1 → stop 2)
+2. Truck B: Boedapest → Wenen (stop 2 → stop 3)
+3. Truck C: Wenen → Duisburg (stop 3 → stop 4)
+
+Elk segment wordt onafhankelijk bijgehouden met zijn eigen chauffeur, reden en tijdstempels.
+
+---
+
+## Een wissel annuleren (ongedaan maken)
+
+Heeft de vervangende truck nog geen werk verricht op de order, dan kunt u de wissel annuleren en de oorspronkelijke truck herstellen.
+
+Zoek de knop **Wissel ongedaan maken** op de orderrij in het planningsbord of de orderslijst — ze verschijnt alleen wanneer een annuleerbare wissel bestaat (estafettestop aanwezig en geen activiteit geregistreerd op de nieuwe truck).
+
+U kunt ook de oorspronkelijke truck terug op de order slepen op het planningsbord — Druma probeert dan eerst de wissel automatisch te annuleren voor het opnieuw toewijst.
+
+**De annulering wordt geblokkeerd als één van deze waar is:**
+- Een stop op of na het estafettepunt heeft een werkelijk aankomst- of vertrektijdstempel geregistreerd
+- Er werden chauffeursstatusgebeurtenissen geregistreerd na de wissel
+- De oorspronkelijke truck is nu toegewezen aan een andere actieve order
+
+Wordt de annulering geblokkeerd, dan toont Druma een bericht dat uitlegt waarom. U kunt in dat geval nog steeds handmatig herverdelen vanuit het orderdetailpaneel.
+
+---
+
+## Belangrijke opmerkingen
+
+<Warning>
+Een truck wisselen maakt **geen** nieuwe order aan. Het oorspronkelijke ordernummer, de klant, prijzen en alle commerciële voorwaarden blijven hetzelfde. Alleen de operationele toewijzing (welke truck en chauffeur) verandert.
+</Warning>
+
+- De **oplegger blijft altijd bij de lading**. Moet u ook de oplegger wijzigen, dan is dat een andere handeling — zie [Trailerbeheer](/nl/planner/trailer-management).
+- Truckwissels worden **gelogd in de auditgeschiedenis van de order** met de naam van de planner, tijdstempel en reden.
+- De chauffeurs-app werkt automatisch bij — de vertrekkende chauffeur ziet de order verdwijnen uit zijn actieve ladingen, en de binnenkomende chauffeur ontvangt een pushmelding met de opdrachtdetails.
+
+---
+
+<Card title="Vlootbeheer" icon="truck" href="/nl/planner/fleet-management">
+  Beheer uw trekkervloot — voeg voertuigen toe, volg beschikbaarheid en behandel onderhoudsblokkades.
+</Card>
+
+<Card title="Trailerbeheer" icon="trailer" href="/nl/planner/trailer-management">
+  Beheer opleggers onafhankelijk van trekkers — toewijzing, loskoppeling en locatiebewaking.
+</Card>
+
+<Card title="Planningsbord" icon="calendar" href="/nl/planner/planning-board">
+  Bekijk al uw orders en trucks op het visuele dispatchbord — de knop voor truckwissel is hier ook toegankelijk.
 </Card>

@@ -1,54 +1,98 @@
 ---
 title: "Streckenrentabilitätsbericht"
-description: "Sehen Sie die tatsächliche Marge auf jedem Ursprungs-/Ziel-Paar, mit Umsatz, geschätzten Kosten und Trend zum Vorjahreszeitraum."
+description: "Sehen Sie die tatsächliche Marge auf jedem Ursprungs-Ziel-Paar, mit Umsatz, geschätzten Kosten und Trend gegenüber dem Vorzeitraum."
 icon: "route"
 ---
 
-## Übersicht
+Viele Betreiber kennen ihren Umsatz pro Strecke, aber nicht ihre tatsächliche Marge, sobald Kraftstoff, Maut und Fahrerkosten mitgerechnet werden. Der Streckenrentabilitätsbericht rechnet das für jede von Ihnen befahrene Länderpaar-Kombination durch, damit Sie auf einen Blick sehen, welche Strecken funktionieren und welche Ihren Gewinn auffressen.
 
-Der Streckenrentabilitätsbericht zeigt Ihnen, welche Routen profitabel sind und welche nicht. Er hilft Ihnen, Preise zu optimieren, Kunden zu priorisieren und strategische Entscheidungen über Ihr Streckennetz zu treffen.
-
----
-
-## Bericht öffnen
+## Den Bericht öffnen
 
 Gehen Sie zu **Berichte → Streckenrentabilität**.
 
----
+Wählen Sie oben Ihren Datumsbereich. Der Bericht ist standardmäßig auf den aktuellen Monat eingestellt. Für einen aussagekräftigen Vergleich benötigen Sie in der Regel mindestens einen vollen Monat an Daten, idealerweise ein Quartal.
 
-## Strecken-Granularität
+<Frame caption="Streckenrentabilität — Marge pro Ursprungs-Ziel-Paar, mit dem festen 15-%-Schwellenwert zur Markierung unterdurchschnittlicher Strecken.">
+  <img src="/images/reports/lane-profitability.png" alt="Streckenrentabilitätsbericht" />
+</Frame>
 
-Wählen Sie, auf welcher Ebene Sie Strecken analysieren möchten:
-- **Land → Land** — Zum Beispiel: Rumänien → Deutschland
-- **Stadt → Stadt** — Zum Beispiel: Bukarest → München
+## Was der Bericht zeigt
 
----
+Jede Zeile der Tabelle ist ein Ursprungs-Ziel-Länderpaar. Für jede Strecke sehen Sie:
 
-## Berichtsspalten
-
-| Spalte | Beschreibung |
+| Spalte | Bedeutung |
 |---|---|
-| Herkunft | Ursprungsland oder -stadt |
-| Ziel | Zielland oder -stadt |
-| Aufträge | Anzahl der Aufträge |
-| Umsatz (€) | Gesamtverkaufspreis |
-| Geschätzte Kosten (€) | Kraftstoff, Fahrerstunden, Maut |
-| Marge (€) | Umsatz minus Kosten |
-| Marge (%) | Prozentsatz der Marge |
-| Durchschnittliche Distanz (km) | Mittlere Routendistanz |
+| **Umsatz** | Gesamter Rechnungsbetrag für Aufträge auf dieser Strecke im Zeitraum |
+| **Kraftstoffkosten** | Geschätzt: Distanz × Durchschnittsverbrauch × Kraftstoffpreis |
+| **Mautkosten** | PTV-Mautdaten für die Route |
+| **Fahrerkosten** | Tageskosten × Fahrtage, basierend auf dem von Ihnen konfigurierten Satz pro Fahrer |
+| **Gesamtkosten** | Summe aus Kraftstoff + Maut + Fahrerkosten |
+| **Marge €** | Umsatz minus Gesamtkosten |
+| **Marge %** | Marge als Prozentsatz des Umsatzes |
+| **Fahrten** | Anzahl abgeschlossener Aufträge auf dieser Strecke im Zeitraum |
+| **Ø Preis/Fahrt** | Durchschnittlicher Umsatz pro Auftrag |
+| **Trend** | Pfeil, der anzeigt, ob sich die Marge % gegenüber dem Vorzeitraum verbessert oder verschlechtert hat |
 
----
+Zeilen unter dem Zielmargen-Schwellenwert sind rot hervorgehoben. Dieser Schwellenwert ist derzeit fest auf **15 %** eingestellt — er ist noch nicht über die Einstellungen konfigurierbar.
 
-## Sortieren und Filtern
+## Wie Kostenschätzungen funktionieren
 
-Klicken Sie auf einen Spaltenheader, um nach diesem Feld zu sortieren. Verwenden Sie die Filterleiste, um nach Datumsbereich, Kundengruppe oder Fahrzeugtyp zu filtern.
+<Note>
+Kostenschätzungen in diesem Bericht sind Näherungswerte basierend auf Ihren konfigurierten Parametern. Sie sind nützlich, um die relative Leistung zwischen Strecken zu erkennen, aber die tatsächlichen Kosten können abweichen — besonders bei Mautkosten auf Strecken mit variablen Mautstraßen.
+</Note>
 
----
+**Kraftstoffkostenberechnung:**
+Distanz (aus PTV-Routing) × durchschnittlicher Flottenverbrauch (Liter/100km, festgelegt unter Einstellungen → Fuhrpark → Standardverbrauch) × Ihr Kraftstoffpreis (festgelegt unter Einstellungen → Fuhrpark → Kraftstoffpreis, oder aus Kraftstoffkartendaten importiert, falls Sie Kraftstoffkartenimport nutzen).
+
+**Mautkostenberechnung:**
+PTV-Mautdaten für die Route. Deckt die meisten europäischen Autobahn-Mautsysteme ab. Weniger genau bei Strecken durch Länder mit komplexen Vignettensystemen.
+
+**Fahrerkostenberechnung:**
+Anzahl der Fahrtage × der von Ihnen im Fahrerprofil festgelegte Tageskostensatz (Fuhrpark → Fahrer → [Fahrer] → Tageskostensatz). Ist kein Fahrer zugewiesen, verwendet Druma Ihren globalen Standard-Fahrertageskostensatz.
+
+Sie können all diese Eingaben in den Einstellungen aktualisieren, um die Genauigkeit zu verbessern. Der Bericht berechnet sofort neu, wenn Sie neue Werte speichern.
+
+## Unrentable Strecken erkennen
+
+Sortieren Sie die Tabelle nach **Marge %** aufsteigend — die am schlechtesten abschneidenden Strecken steigen nach oben.
+
+Rote Zeilen sind Strecken unter Ihrer Zielmarge. Häufige Gründe:
+
+- **Langstrecken** — sehen umsatzmäßig profitabel aus, haben aber hohe Kraftstoff- und Fahrerkosten
+- **Strecken mit hoher Maut** — bestimmte Routen durch Frankreich, Österreich oder die Schweiz haben deutlich höhere Maut als Alternativen
+- **Unterpreiste Bestandskunden** — vor Jahren vereinbarte Sätze, die nie neu verhandelt wurden
+- **Strecken mit geringem Volumen** — weniger Fahrten bedeutet, Fixkosten schlagen härter zu
+
+## In eine Strecke eintauchen
+
+Klicken Sie auf eine Streckenzeile, um die einzelnen Aufträge zu sehen, aus denen sich die Zahlen dieser Strecke zusammensetzen. Sie sehen Umsatz, geschätzte Kosten und Marge jedes Auftrags — und können bestimmte Ausreißer-Aufträge erkennen (z. B. einen einzelnen Auftrag zu einem viel niedrigeren Satz als der Rest).
+
+Von der Auftragsliste aus können Sie zum vollständigen Auftragsdetail durchklicken. Nützlich, um zu untersuchen, warum eine bestimmte Strecke in einem gegebenen Monat unterdurchschnittlich abschnitt.
+
+## Den Bericht filtern
+
+Nutzen Sie die Filter oben auf der Seite:
+
+- **Ursprungsland** — auf ein oder mehrere bestimmte Ursprungsländer filtern
+- **Zielland** — auf ein oder mehrere bestimmte Zielländer filtern
+- **Kunde** — Streckenrentabilität für einen einzelnen Kunden sehen
+- **LKW** — sehen, welche LKW welche Strecken am profitabelsten befahren
 
 ## Exportieren
 
-Klicken Sie auf **Als CSV exportieren**, um einen vollständigen Datensatz für weitere Analyse in Excel zu erhalten.
+Klicken Sie auf **Export → CSV**, um den vollständigen Bericht als Tabelle herunterzuladen. Die CSV enthält alle Spalten und, falls Sie Filter angewendet haben, alle Aufträge in der aufgeschlüsselten Ansicht.
 
-<Card title="Berichtsübersicht" icon="chart-bar" href="/en/reports/reports-overview">
-  Alle in Druma verfügbaren Berichte.
-</Card>
+Die CSV ist das beste Format für weitere Analysen in Excel — z. B. um eigene Pivot-Tabellen nach Kunde oder LKW zu erstellen.
+
+<Warning>
+Treffen Sie Preisentscheidungen nicht allein basierend auf diesem Bericht, ohne andere Faktoren zu berücksichtigen: Rückladungen, strategische Kundenbeziehungen, und saisonale Volumenschwankungen beeinflussen alle den wahren Wert einer Strecke.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Berichte-Übersicht" icon="chart-bar" href="/de/reports/reports-overview">
+    Alle verfügbaren Berichte in Druma und wie Sie sie planen.
+  </Card>
+  <Card title="Preistabellen" icon="tag" href="/de/admin/rate-cards">
+    Richten Sie Preistabellen pro Strecke ein, die in die Erkennung anomaler Preise und Margenziele einfließen.
+  </Card>
+</CardGroup>

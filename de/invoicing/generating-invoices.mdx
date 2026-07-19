@@ -1,68 +1,111 @@
 ---
 title: "Rechnungen erstellen"
-description: "Erstellen Sie Rechnungen aus zugestellten Aufträgen in Druma — einzeln oder als Batch, in mehreren Währungen, mit automatischer Zuschlagsberechnung und Versand mit einem Klick."
+description: "Erstellen Sie Rechnungen aus zugestellten Aufträgen in Druma — einzeln oder als Sammelrechnung, in mehreren Währungen, mit automatischer Zuschlagsberechnung und Versand mit einem Klick."
 icon: "file-invoice-dollar"
 ---
 
-## Rechnungen in Druma verstehen
+## Übersicht
 
-In Druma werden Rechnungen aus abgeschlossenen Aufträgen generiert. Wenn ein Auftrag den Status **Zugestellt** erreicht, können Sie sofort eine Rechnung erstellen. Druma füllt alle Details vorab aus: Kundendaten, Auftragsdetails, vereinbarter Preis, USt-IdNr. und die nächste Rechnungsnummer.
+Ist ein Auftrag zugestellt, können Sie direkt in Druma eine Rechnung erstellen. Der schnellste Weg führt über die Auftragsdetailseite selbst. Sie können auch mehrere Aufträge desselben Kunden zu einer einzigen Rechnung zusammenfassen — ideal für wöchentliche oder monatliche Abrechnungszyklen.
 
----
+## Zwei Wege zum Start
 
-## Eine Rechnung erstellen
+**Über die Auftragsdetailseite (am schnellsten):**
+Öffnen Sie den zugestellten Auftrag → klicken Sie oben rechts auf **Rechnung erstellen**. Druma füllt die Rechnung mit den Details dieses Auftrags vor und führt Sie direkt zum Prüfbildschirm.
+
+<Frame caption="Die Rechnungsliste — Zahlungsstatus (aus Fälligkeitsdatum/bezahltem Betrag abgeleitet) wird getrennt von E-Rechnungskanal und E-Status verfolgt.">
+  <img src="/images/invoicing/generating-invoices.png" alt="Rechnungsliste mit Status- und Zahlungsspalten" />
+</Frame>
+
+**Über das Rechnungsstellungsmodul:**
+Gehen Sie zu **Rechnungsstellung** → **Neue Rechnung** → suchen Sie den Kunden → wählen Sie den oder die Aufträge, die Sie einbeziehen möchten.
+
+## Schritt für Schritt: Eine Rechnung erstellen
 
 <Steps>
-  <Step title="Zum zugestellten Auftrag navigieren">
-    Gehen Sie zu **Planer → Aufträge** und öffnen Sie einen Auftrag mit dem Status **Zugestellt**.
+  <Step title="Auftrag(e) auswählen">
+    Wählen Sie, welche zugestellten Aufträge Sie einbeziehen. Sie können mehrere Aufträge desselben Kunden zu einer Rechnung zusammenfassen — haken Sie jeden im Auftragsauswähler an. Alle Aufträge müssen den Status **Zugestellt** haben und zum selben Kunden gehören.
   </Step>
-  <Step title="Auf Rechnung erstellen klicken">
-    Klicken Sie auf die Schaltfläche **Rechnung erstellen** im Auftragskopf.
-  </Step>
-  <Step title="Rechnungsdetails überprüfen">
-    Druma füllt vorab aus:
-    - Kundendaten und Adresse
-    - Ihre Unternehmensdaten und USt-IdNr.
-    - Vereinbarter Preis aus dem Auftrag
-    - Nächste Rechnungsnummer
-    - Fälligkeitsdatum basierend auf Standard-Zahlungsbedingungen
+  <Step title="Die Positionen prüfen">
+    Druma füllt die Positionen automatisch aus den Auftragsdaten. Prüfen und passen Sie jede an:
 
-    Überprüfen Sie alle Details und nehmen Sie bei Bedarf Anpassungen vor.
+    - **Transportgebühr** — aus dem bei Auftragserstellung vereinbarten Preis übernommen
+    - **Wartezeitgebühr** — automatisch berechnet, falls der Fahrer Wartezeit über die kostenlose Zeit hinaus protokolliert hat
+    - **ADR-Zuschlag** — automatisch hinzugefügt, falls der Auftrag als ADR-Ladung markiert war, zu Ihrem konfigurierten ADR-Zuschlagssatz (Standard 75 €, falls keiner festgelegt ist)
+    - **Kraftstoffzuschlag** — enthalten, falls Sie eine Kraftstoffzuschlagsregel in den Einstellungen konfiguriert haben
+    - **Sonstige Zuschläge** — fügen Sie nach Bedarf beliebige benutzerdefinierte Positionen hinzu (Mauterstattung, Fähre, zusätzliche Stopps)
+
+    Sie können jeden Betrag bearbeiten, neue Zeilen hinzufügen oder nicht zutreffende Zeilen entfernen.
   </Step>
-  <Step title="Rechnungsposition hinzufügen (optional)">
-    Klicken Sie auf **Position hinzufügen**, um manuelle Positionen wie Wartezeitzuschläge, Kraftstoffzuschläge oder andere Gebühren hinzuzufügen.
+  <Step title="Rechnungsdatum und Fälligkeitsdatum festlegen">
+    Das Rechnungsdatum ist standardmäßig heute. Das Fälligkeitsdatum wird automatisch aus den Zahlungsbedingungen im Kundendatensatz berechnet — „netto 30" bedeutet z. B., dass das Fälligkeitsdatum 30 Tage nach dem Rechnungsdatum liegt. Überschreiben Sie bei Bedarf beide Daten manuell.
   </Step>
-  <Step title="Senden oder exportieren">
-    - Klicken Sie auf **Senden**, um die Rechnung direkt an die E-Mail des Kunden zu senden.
-    - Klicken Sie auf **Exportieren**, um ein PDF herunterzuladen.
-    - Klicken Sie auf **An SmartBill übertragen**, wenn SmartBill verbunden ist.
+  <Step title="Die PDF-Vorschau prüfen">
+    Klicken Sie auf **PDF-Vorschau**, um genau zu sehen, was der Kunde erhält. Prüfen Sie Kundenname, USt-IdNr., Adressen, Positionen, Summen und Ihre Bankdaten. Korrigieren Sie alles vor der Erstellung — das ist jetzt deutlich einfacher als danach.
+  </Step>
+  <Step title="Die Rechnung erstellen">
+    Klicken Sie auf **Erstellen**. Druma vergibt eine fortlaufende Rechnungsnummer (z. B. INV-000047) und sperrt das Dokument. Nach der Erstellung können Sie Beträge nicht mehr direkt bearbeiten — nutzen Sie für Korrekturen eine Gutschrift.
+  </Step>
+  <Step title="Die Rechnung versenden">
+    Wählen Sie, wie Sie versenden:
+
+    - **E-Mail aus Druma** — klicken Sie auf **Per E-Mail senden**. Druma füllt die E-Mail mit dem Finanzkontakt des Kunden vor und hängt das PDF an. Prüfen Sie die Nachricht und klicken Sie auf Senden.
+    - **Herunterladen und manuell senden** — klicken Sie auf **PDF herunterladen** und versenden Sie es über Ihren eigenen E-Mail-Client, WhatsApp, oder wie auch immer Sie mit diesem Kunden kommunizieren.
   </Step>
 </Steps>
 
----
+## Automatische Zuschlagspositionen (Auftrags-Extras)
 
-## Sammelabrechnung
+Zusätzlich zur Haupttransportgebühr fügt Druma automatisch Zuschlagspositionen zur Rechnung hinzu, basierend darauf, was während des Auftrags passiert ist:
 
-Um Rechnungen für mehrere Aufträge auf einmal zu erstellen:
-
-1. Gehen Sie zu **Rechnungsstellung → Abzurechnen**.
-2. Aktivieren Sie das Kontrollkästchen neben jedem Auftrag, der abgerechnet werden soll.
-3. Klicken Sie auf **Ausgewählte abrechnen**.
-4. Überprüfen Sie die Sammelrechnung und senden Sie.
-
----
-
-## Rechnungsstatus
-
-| Status | Bedeutung |
+| Zuschlag | Wann er hinzugefügt wird |
 |---|---|
-| Entwurf | Erstellt, aber noch nicht gesendet |
-| Gesendet | An den Kunden gesendet |
-| Überfällig | Fälligkeitsdatum überschritten ohne Zahlung |
-| Teilbezahlt | Teilzahlung eingegangen |
-| Bezahlt | Vollständig bezahlt |
-| Storniert | Gutschrift ausgestellt |
+| **Wartezeitgebühr** | Wenn der Fahrer Wartezeit über die kostenlose Zeit hinaus protokolliert hat |
+| **Maut (Weitergabe)** | Wenn vom Fahrer protokollierte Mautbelege existieren und Ihre Preistabellenrichtlinie für dieses Land „Weitergabe" ist |
+| **Fehlfahrtgebühr** | Wenn eine Fehlfahrt am Auftrag erfasst wurde |
+| **ADR-Zuschlag** | Wenn der Auftrag als ADR-/Gefahrgutladung markiert war |
 
-<Card title="Zahlungsverfolgung" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
-  Zahlungen gegen Rechnungen aufzeichnen und verfolgen.
+Diese Positionen erscheinen automatisch im Rechnungseditor — keine manuelle Eingabe nötig.
+
+**Sie können:**
+- **Eine Position von der Rechnung ausschließen** — klicken Sie auf den Schalter **Ausschließen** in der Positionszeile. Die Gebühr verschwindet von der Rechnung, bleibt aber am Auftragsdatensatz zur internen Kostenverfolgung.
+- **Ausgeschlossene Positionen wiederherstellen** — klicken Sie unten im Positionsbereich auf **Ausgeblendete Gebühren wiederherstellen**, um ausgeschlossene automatische Positionen zurückzubringen.
+- **Benutzerdefinierte Positionen hinzufügen** — nutzen Sie die Schaltfläche **+ Position hinzufügen**, um Palettentausch-Gebühren, Zollabfertigungskosten, Bearbeitungsgebühren oder andere Extras hinzuzufügen. Wählen Sie aus dem **Extras-Katalog** Ihres Unternehmens oder geben Sie eine benutzerdefinierte Beschreibung und einen Betrag ein.
+
+Um den Extras-Katalog zu verwalten (unternehmensweite Positionsvorlagen): **Einstellungen → Extras-Katalog**.
+
+## Rechnungsnummerierung
+
+Rechnungsnummern sind fortlaufend und verwenden ein konfigurierbares Präfix. Das Standardformat (ohne konfiguriertes benutzerdefiniertes Muster) ist `{Präfix}-{6-stellige Sequenz}` — z. B. `INV-000001`, `INV-000002`, `INV-000003`. Ein Muster mit Jahres-Token (`{YYYY}`) ist verfügbar, wenn Sie ein benutzerdefiniertes Nummerierungsmuster konfigurieren.
+
+Um das Präfix zu ändern oder ein benutzerdefiniertes Nummerierungsmuster zu konfigurieren (einschließlich Jahres-Token): **Einstellungen** → **Branding & Formate** → **Rechnungsnummerierung**.
+
+## Rechnungen in mehreren Währungen
+
+Druma unterstützt Rechnungsstellung in EUR, GBP, CHF, USD, RON und PLN. Wählen Sie die Währung bei der Rechnungserstellung. Für jede Währung außer RON ruft Druma automatisch den Wechselkurs der **BNR (Nationalbank Rumäniens)** für das Rechnungsdatum ab und fügt ihn dem PDF hinzu.
+
+Das ist wichtig für die rumänische Buchhaltungs-Compliance und die e-Factura-Einreichung — das RON-Äquivalent jedes Fremdwährungsbetrags muss auf der Rechnung erscheinen.
+
+## Sammelrechnungsstellung — Kernregeln
+
+- Sie können nur Aufträge **desselben Kunden** in einer Rechnung zusammenfassen
+- Alle zusammengefassten Aufträge müssen den Status **Zugestellt** haben
+- Aufträge in unterschiedlichen Währungen müssen separat abgerechnet werden
+
+<Warning>
+Sobald eine Rechnung erstellt ist (Status wechselt aus Entwurf), können Sie sie nicht mehr direkt bearbeiten. Haben Sie einen Fehler gemacht — falscher Betrag, falscher Kunde, falsche Position — müssen Sie eine Gutschrift erstellen, um ihn zu stornieren, und dann eine korrigierte Rechnung ausstellen. Das ist in Rumänien gesetzlich vorgeschrieben. Versuchen Sie nicht, eine versendete Rechnung zu löschen oder zu überschreiben.
+</Warning>
+
+---
+
+<Card title="Gutschriften" icon="file-minus" href="/de/invoicing/credit-notes">
+  Wie Sie eine versendete Rechnung mit einer Gutschrift stornieren oder teilweise korrigieren.
+</Card>
+
+<Card title="e-Factura / ANAF-Einreichung" icon="landmark" href="/de/invoicing/efactura-anaf">
+  Wie Druma Rechnungen automatisch bei ANAFs e-Factura-System für rumänische Kunden einreicht.
+</Card>
+
+<Card title="Zahlungsverfolgung" icon="money-bill-wave" href="/de/invoicing/payment-tracking">
+  Zahlungen gegen Rechnungen erfassen und offene Salden verfolgen.
 </Card>

@@ -6,33 +6,91 @@ icon: "building-columns"
 
 ## Overzicht
 
-Handmatig bankoverschrijvingen koppelen aan facturen is tijdrovend en foutgevoelig. De bankafstemmingsfunctie van Druma automatiseert het meeste hiervan door de betalingsmeldingse-mails te verwerken die Roemeense banken sturen voor elke inkomende overschrijving.
+Handmatig bankoverschrijvingen koppelen aan facturen is tijdrovend en foutgevoelig. De bankafstemmingsfunctie van Druma automatiseert het meeste hiervan door de betalingsmeldingse-mails te verwerken die Roemeense banken sturen voor elke inkomende overschrijving. U stuurt die e-mails door naar een speciale Druma-inbox, en Druma doet de koppeling.
 
-U stuurt die e-mails door naar een speciale Druma-inbox, en Druma doet de koppeling.
+Geen bank-API-toegang vereist. Geen nieuwe software te installeren. Gewoon e-mail doorsturen.
 
 ## Hoe het werkt
 
-Wanneer geld op uw bankrekening arriveert, stuurt uw bank u een automatische meldingse-mail. Druma leest deze e-mails en extraheert de belangrijkste details: bedrag, betalingsdatum, betalersnaam en eventuele factuurreferentie in de mededeling.
+Wanneer geld op uw bankrekening arriveert, stuurt uw bank u een automatische meldingse-mail. Druma kan deze e-mails lezen en de belangrijkste details extraheren:
 
-Druma vergelijkt het bedrag en de verwijzing met uw openstaande facturen:
-- Als de overeenkomst zeker is, wordt de betaling automatisch geregistreerd
-- Als de overeenkomst onduidelijk is, verschijnt de betaling in de **Afstemmingswachtrij** voor handmatige beoordeling
+- Ontvangen bedrag
+- Naam betaler
+- Betalingsreferentienummer
+- Overschrijvingsdatum
+
+Druma doorzoekt vervolgens uw openstaande facturen naar een overeenkomst. Komen bedrag en referentienummer overeen, dan wordt de factuur automatisch als betaald gemarkeerd. Is er geen duidelijke overeenkomst, dan komt de betaling in een reviewwachtrij voor handmatige afhandeling.
 
 ## Ondersteunde banken
 
-BRD, BCR, Raiffeisen Bank Roemenië, UniCredit Roemenië, ING Roemenië.
+De volgende Roemeense banken worden ondersteund voor e-mailverwerking:
 
-## Instellen
+- BRD – Groupe Société Générale
+- BCR – Banca Comercială Română
+- Raiffeisen Bank
+- UniCredit Bank
+- ING Bank
+
+<Note>
+Staat uw bank niet op deze lijst, dan kunt u Druma nog steeds gebruiken voor handmatige betalingsregistratie — registreer betalingen gewoon via de knop Betaling registreren op elke factuur. Handmatige afstemming is altijd beschikbaar, ongeacht de bankinstelling.
+</Note>
+
+## E-mail doorsturen instellen
 
 <Steps>
-  <Step title="Genereer uw Druma-e-mailinbox">
-    Ga naar **Instellingen → Bedrijf → Bankafstemmings-e-mail** en schakel de inbox in.
+  <Step title="Vind uw Druma-afstemmingsinboxadres">
+    Ga naar **Instellingen → Bedrijf** en schakel **Bankbetalingsinbox inschakelen** in. Uw unieke Druma-afstemmingse-mailadres wordt hier getoond — het ziet er ongeveer uit als `reconcile-uwbedrijf@inbox.druma.io`.
   </Step>
-  <Step title="Stel e-mail doorsturen in">
-    Configureer in uw zakelijke e-mailclient een doorstuuregel om betalingsmeldingen van uw bank door te sturen naar het Druma-e-mailadres.
+  <Step title="Kopieer het e-mailadres">
+    Kopieer het volledige adres. U heeft het nodig in uw e-mailclient of bankmeldingsinstellingen.
+  </Step>
+  <Step title="Stel doorsturen in uw e-mailclient in">
+    Maak in het e-mailaccount waarnaar uw bank betalingsmeldingen stuurt een doorstuurregel:
+
+    - **Voorwaarde:** e-mails van het meldingsadres van uw bank (bijvoorbeeld `notificari@brd.ro`)
+    - **Actie:** doorsturen naar uw Druma-afstemmingsadres
+
+    De precieze stappen hangen af van uw e-mailprovider. In Gmail: Instellingen → Filters en geblokkeerde adressen → Nieuw filter maken. In Outlook: Regels → Nieuwe regel.
+  </Step>
+  <Step title="Test met een echte betaling">
+    Wacht op de volgende inkomende betaling. Zodra uw bank de meldingse-mail verstuurt, wordt ze automatisch doorgestuurd naar Druma. Controleer binnen enkele minuten **Facturering → Afstemming** om te zien of ze werd gekoppeld.
   </Step>
 </Steps>
 
-<Card title="Bankafschrift importeren" icon="file-up" href="/nl/invoicing/bank-statement-import">
-  Upload CAMT.053 of MT940-bestanden voor bulkafstemming.
+## Automatische koppeling
+
+Komt een doorgestuurde e-mail binnen, dan probeert Druma ze te koppelen aan een openstaande factuur met behulp van:
+
+1. **Bedrag** — het ontvangen bedrag komt overeen met het openstaande saldo van de factuur
+2. **Referentienummer** — de betalingsreferentie in de e-mail komt overeen met een factuurnummer in Druma (klanten wordt gevraagd het factuurnummer als betalingsreferentie te gebruiken)
+
+Komen beide overeen, dan wordt de factuur automatisch gemarkeerd als **Betaald**. Geen actie van u vereist.
+
+## Niet-gekoppelde betalingen
+
+Sommige betalingen worden niet automatisch gekoppeld — bijvoorbeeld als de klant het factuurnummer niet in de overschrijvingsreferentie opnam, of als het bedrag lichtjes afwijkt. Deze verschijnen in de reviewwachtrij:
+
+Ga naar **Facturering → Afstemming → Niet-gekoppelde betalingen**. Elke niet-gekoppelde betaling toont het bedrag, de naam van de betaler en de referentie. U kunt:
+
+- **Koppelen aan factuur** — zoek de juiste factuur en koppel deze betaling eraan
+- **Negeren** — markeer de betaling als niet-gerelateerd aan Druma-facturen (bijvoorbeeld een betaling voor iets buiten Druma)
+
+Koppelt u een betaling aan een factuur, dan wordt de factuurstatus bijgewerkt alsof u de betaling handmatig had geregistreerd.
+
+## Deduplicatie
+
+Stuurt u per ongeluk dezelfde meldingse-mail tweemaal door, dan maakt Druma geen dubbele betaling aan. Het detecteert duplicaten via de `Message-Id`-header van de e-mail, niet het bankreferentienummer — dus zelfs als het referentieveld leeg is of hergebruikt wordt, wordt exact dezelfde e-mail nooit tweemaal verwerkt. De tweede e-mail wordt stilzwijgend genegeerd.
+
+<Note>
+Moedig uw klanten aan het factuurnummer als bankoverschrijvingsreferentie te gebruiken. Deze ene gewoonte verhoogt de automatische koppelingsgraad drastisch — de meeste betalingen worden afgestemd zonder handmatig werk van uw kant.
+</Note>
+
+<Warning>
+Bankmeldingse-mails bevatten soms vertrouwelijke financiële informatie. Zorg dat uw Druma-afstemmingsinboxadres privé blijft — deel het niet publiek. Het is uniek voor uw bedrijf en kan niet worden geraden, maar behandel het als een wachtwoord.
+</Warning>
+
+---
+
+<Card title="Betalingsopvolging" icon="money-bill-wave" href="/nl/invoicing/payment-tracking">
+  Hoe u betalingen handmatig registreert, deelbetalingen afhandelt en betalingsgegevens exporteert.
 </Card>

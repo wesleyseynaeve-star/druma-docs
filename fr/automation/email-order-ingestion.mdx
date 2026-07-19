@@ -1,52 +1,88 @@
 ---
 title: "Ingestion de commandes par email"
-description: "Comment Druma extrait automatiquement des brouillons de commandes depuis les emails entrants des clients et des courtiers via l'IA."
-icon: "mail"
+description: "Laissez Druma lire les emails entrants des clients et courtiers et créer automatiquement des brouillons de commande à réviser par vos planificateurs."
+icon: "envelope-open-text"
 ---
 
-## Vue d'ensemble
+Plutôt que de ressaisir manuellement les ordres de transport arrivant par email, Druma peut les lire pour vous. Les clients et courtiers envoient leurs confirmations de tarif, listes de chargement ou instructions en texte brut à l'adresse de boîte de réception Druma unique de votre entreprise, et l'IA extrait les détails clés dans un brouillon de commande prêt à être vérifié et confirmé par votre planificateur.
 
-L'ingestion de commandes par email permet à Druma d'analyser automatiquement les emails de demande de transport que vous recevez et d'en extraire un brouillon de commande pré-rempli. Cela réduit considérablement le temps de saisie manuelle.
+## Votre adresse de boîte de réception Druma
 
----
+Chaque entreprise reçoit une adresse email de boîte de réception unique. Trouvez la vôtre depuis la page **Commandes** — cliquez sur le bouton **Boîte de réception commandes** dans la barre d'outils pour l'afficher (avec un bouton de copie). Elle ne se configure pas depuis une page Paramètres.
 
-## Comment ça fonctionne
+Partagez cette adresse avec les clients et courtiers depuis lesquels vous voulez recevoir des commandes. Vous pouvez aussi la définir comme destination de transfert depuis votre boîte logistique existante si vous préférez garder une seule adresse principale en externe.
 
-1. Votre client ou courtier envoie un email de demande de transport à votre adresse email d'ingestion Druma.
-2. Druma analyse l'email avec l'IA (Gemini) pour extraire :
-   - Adresse de chargement et date
-   - Adresse de livraison et date
-   - Description des marchandises, poids et volume
-   - Prix proposé (si indiqué)
-   - Références (numéros de commande, etc.)
-3. Un brouillon de commande est créé automatiquement dans Druma avec les données extraites.
-4. Vous recevez une notification et pouvez examiner, compléter et confirmer le brouillon.
+## Ce que l'IA extrait
 
----
+Lorsqu'un email arrive, Druma lit à la fois le corps de l'email et toutes les pièces jointes. Elle tente d'extraire :
 
-## Configuration
+- Adresse de chargement (rue, ville, pays, code postal)
+- Adresse de livraison
+- Date et plage horaire de chargement demandées
+- Date de livraison demandée
+- Description de la marchandise (type, poids, dimensions, palettes)
+- Numéros de référence (numéro de bon de commande client, référence courtier)
+- Prix ou tarif si mentionné
+
+Formats de pièce jointe pris en charge :
+
+- **PDF** — confirmations de tarif, copies CMR, ordres de chargement (extraction de texte, avec repli sur vision pour les PDF scannés/basés image)
+- **DOCX** (Word) — confirmations de tarif envoyées en documents Word
+- **Texte brut (.txt)** et **corps d'email brut** — emails non structurés de courtiers
+- **Images** (JPEG, PNG, WebP, HEIC/HEIF) — une photo d'un ordre imprimé ou d'une confirmation de tarif est envoyée directement à l'IA
+
+Il n'y a actuellement pas d'analyse Excel/CSV — une pièce jointe tableur n'est pas lue par le pipeline d'extraction.
+
+## Réviser les brouillons de commande
+
+Les commandes extraites arrivent dans votre liste **Commandes** avec le statut **Brouillon**, pas directement comme commandes actives. C'est volontaire — vous devez réviser chaque brouillon avant qu'il n'entre dans votre système. Les emails qui n'ont pas pu être extraits automatiquement (confiance faible, expéditeur non reconnu, ou échec d'analyse) ne créent pas de brouillon du tout — ils attendent dans une bannière repliable **« N emails en attente d'extraction »** en haut de la page Commandes.
 
 <Steps>
-  <Step title="Activez l'ingestion par email">
-    Accédez à **Paramètres → Automatisation → Ingestion de commandes par email** et activez la fonctionnalité.
+  <Step title="Ouvrez la page Commandes">
+    Les brouillons de commande apparaissent dans votre liste de commandes normale avec un badge « Brouillon » et un score de confiance IA. Les emails encore en attente d'extraction apparaissent séparément dans la bannière d'extraction en attente, où vous pouvez cliquer sur **Extraire** pour réessayer ou **Ignorer** pour les abandonner.
   </Step>
-  <Step title="Copiez votre adresse email d'ingestion">
-    Druma génère une adresse email unique pour votre entreprise.
+  <Step title="Vérifiez chaque champ">
+    Cliquez sur le brouillon pour l'ouvrir. Vérifiez les adresses de chargement et de livraison sur la carte, confirmez que les dates ont un sens, et vérifiez les détails de la marchandise. Corrigez tout ce que l'IA a mal lu ou manqué.
   </Step>
-  <Step title="Configurez la liste blanche des expéditeurs">
-    Ajoutez les adresses email ou domaines depuis lesquels vous attendez des demandes. Les emails d'expéditeurs non autorisés sont ignorés.
+  <Step title="Affectez camion et chauffeur">
+    Utilisez le panneau d'affectation à droite pour choisir un véhicule et un chauffeur disponibles pour ce chargement.
   </Step>
-  <Step title="Partagez l'adresse avec vos clients et courtiers">
-    Demandez-leur d'envoyer les demandes de transport à cette adresse.
+  <Step title="Confirmez la commande">
+    Cliquez sur **Confirmer la commande**. Le brouillon passe dans vos commandes actives et le chauffeur reçoit une notification.
   </Step>
 </Steps>
 
----
+<Warning>
+L'extraction par IA n'est pas fiable à 100 %. Les adresses écrites dans des formats inhabituels, les PDF scannés en basse qualité et les emails mélangeant plusieurs langues augmentent tous le risque d'erreurs. Vérifiez toujours les champs extraits avant de confirmer.
+</Warning>
 
-## Examiner les commandes extraites
+## Liste blanche des expéditeurs
 
-Les brouillons extraits apparaissent dans **Commandes** avec le statut **Brouillon (extrait par email)**. Vérifiez toujours les données extraites avant de confirmer — l'IA fait de son mieux mais ne remplace pas votre jugement professionnel.
+Druma peut restreindre quels expéditeurs sont autorisés à créer des brouillons de commande, mais il n'existe actuellement **aucune page dans l'application** pour gérer cette liste blanche vous-même. Si votre entreprise n'a aucune entrée de liste blanche configurée, Druma traite les emails de **n'importe quel** expéditeur atteignant votre adresse de boîte de réception. Si vous voulez restreindre les commandes entrantes à des domaines client/courtier spécifiques, contactez support@druma.io pour faire ajouter des entrées.
 
-<Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">
-  Créer des commandes manuellement si vous préférez.
-</Card>
+<Note>
+Lorsqu'une liste blanche est configurée et qu'un email arrive d'un expéditeur qui n'y figure pas, cet email est mis en file dans la bannière d'extraction en attente (non traité automatiquement) et vos planificateurs sont notifiés, plutôt que d'être silencieusement rejeté.
+</Note>
+
+## Conseils pour une meilleure extraction
+
+- Demandez à vos courtiers d'envoyer des PDF structurés plutôt que des images scannées si possible
+- Les confirmations de tarif avec des en-têtes de section clairs (Chargement, Livraison, Marchandise) s'extraient le plus précisément
+- Si le format d'un courtier spécifique s'extrait systématiquement mal, contactez support@druma.io — des règles d'extraction spécifiques au format peuvent être ajoutées
+
+## Questions courantes
+
+**Que se passe-t-il si un email contient plusieurs chargements ?** Si un email comporte deux pièces jointes PDF/DOCX de commande ou plus, Druma extrait chacune indépendamment et crée un brouillon séparé par pièce jointe confirmée comme étant un véritable ordre de transport (les documents justificatifs comme les certificats d'assurance sont rattachés au premier brouillon plutôt que de générer les leurs). Cela ne s'applique qu'aux **pièces jointes documents multiples** — un tableur unique listant plusieurs chargements n'est pas divisé en plusieurs brouillons, l'analyse de tableur n'étant pas prise en charge.
+
+**Puis-je déclencher manuellement une nouvelle extraction ?** Seulement pour un email encore en attente dans la bannière d'extraction — cliquez sur **Extraire** à côté. Il n'y a pas d'action de ré-extraction sur un brouillon déjà créé.
+
+**Qu'advient-il de l'email original ?** Il est stocké et lié au brouillon de commande. Vous pouvez le consulter à tout moment depuis la page de détail de la commande.
+
+<CardGroup cols={2}>
+  <Card title="Créer des commandes manuellement" icon="plus" href="/fr/planner/creating-orders">
+    Découvrez comment créer des commandes directement dans Druma quand vous n'utilisez pas l'ingestion par email.
+  </Card>
+  <Card title="Travailler avec les courtiers" icon="handshake" href="/fr/planner/brokers">
+    Gérez les relations avec les courtiers, les confirmations de tarif et le suivi des commissions.
+  </Card>
+</CardGroup>

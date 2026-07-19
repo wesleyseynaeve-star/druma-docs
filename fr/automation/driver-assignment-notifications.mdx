@@ -1,43 +1,72 @@
 ---
 title: "Notifications d'affectation de chauffeur"
-description: "Comment Druma notifie automatiquement les chauffeurs lors de l'affectation d'une nouvelle commande — notifications push et rappels programmés."
-icon: "bell-ring"
+description: "Druma envoie automatiquement des notifications push aux chauffeurs lors de leur affectation à une commande, pour qu'ils connaissent toujours leur prochaine mission sans appel du dispatch."
+icon: "bell-concierge"
 ---
 
-## Vue d'ensemble
+Lorsqu'un planificateur affecte un chauffeur à une commande, Druma se charge de le prévenir. Deux notifications push automatiques sont envoyées — une la veille au soir du départ, une le matin même — afin que le chauffeur ait les détails de la mission au bon moment, sans que le dispatch ait besoin d'appeler.
 
-Lorsque vous affectez un chauffeur à une commande confirmée, Druma envoie automatiquement une notification push à son application mobile. Des rappels supplémentaires sont envoyés la veille au soir et le matin du chargement.
+## Quand les notifications sont envoyées
 
----
+Druma envoie deux notifications par commande :
 
-## Notifications push automatiques
+| Notification | Moment | Message |
+|---|---|---|
+| Rappel du soir | 18h00 UTC la veille du chargement | « Rappel : chargement demain » / « Demain : — à [ville de chargement] → [ville de livraison] » |
+| Rappel du matin | 06h00 UTC le jour du chargement | « Chargement aujourd'hui » / « Chargement aujourd'hui à — à [ville de chargement] » |
 
-**À l'affectation :**
-Le chauffeur reçoit une notification push immédiate avec les détails de la mission — adresse de chargement, heure et client.
+Les deux horaires sont **fixes en UTC** — ils ne sont pas ajustés au fuseau horaire local du chauffeur ni de la commande. L'espace réservé pour l'heure de chargement dans le message n'est actuellement pas rempli (il s'affiche comme un simple tiret cadratin « — ») — la notification indique seulement au chauffeur la ville de chargement (et, pour le rappel du soir, la ville de livraison), pas une heure précise.
 
-**Rappels programmés :**
-- **18h00 la veille** — Rappel pour les missions du lendemain.
-- **06h00 le matin du chargement** — Rappel final pour les missions du jour.
+Les deux notifications sont envoyées dans la langue configurée du chauffeur (le champ `language` de son profil), avec repli sur l'anglais si non défini. Druma prend en charge les 10 langues de la plateforme, y compris le roumain, le bulgare, le hongrois, le polonais, le tchèque et le slovaque.
 
----
+## Ce que voit le chauffeur
 
-## Conditions requises
+Lorsque le chauffeur touche la notification, l'application chauffeur Druma s'ouvre directement sur la commande. Il peut voir :
 
-- Le chauffeur doit avoir l'application Druma installée et les notifications activées.
-- Le chauffeur doit avoir accepté les autorisations de notification lors de l'installation de l'application.
+- L'adresse complète de chargement avec un bouton « Naviguer » (ouvre Google Maps ou Waze)
+- Le nom et le numéro de téléphone du contact de chargement
+- La plage horaire de chargement demandée
+- L'adresse complète de livraison
+- La description des marchandises, le poids et le nombre de palettes
+- Toute note ajoutée par votre planificateur pour cette commande précise
+- Les documents CMR / eCMR lorsqu'ils sont disponibles
 
----
+Le chauffeur n'a pas besoin de rechercher sa commande — la notification l'y amène directement.
 
-## Notifications par SMS (secours)
+## Conditions requises pour que les notifications fonctionnent
 
-Si le chauffeur n'a pas l'application installée ou les notifications activées, Druma peut envoyer un SMS de rappel. Configurez cette option dans **Paramètres → Notifications**.
+Les notifications push nécessitent que le chauffeur ait la PWA Druma installée sur son téléphone et qu'il ait accepté les notifications du navigateur.
 
----
+**Android (Chrome) :**
+Lorsque le chauffeur ouvre pour la première fois le portail chauffeur Druma sur Chrome, le navigateur demande automatiquement l'autorisation de notification. Le chauffeur touche Autoriser. Aucune configuration supplémentaire n'est nécessaire.
 
-## Désactiver les notifications pour un chauffeur spécifique
+**iOS (Safari) :**
+iOS gère les notifications différemment. Le chauffeur doit :
+1. Ouvrir le portail chauffeur Druma dans Safari
+2. Toucher le bouton Partager (le carré avec une flèche)
+3. Sélectionner **Sur l'écran d'accueil**
+4. Ouvrir l'application depuis l'icône de l'écran d'accueil
+5. Lorsque demandé, toucher Autoriser pour les notifications
 
-Dans le profil du chauffeur dans **Flotte → Chauffeurs**, vous pouvez désactiver les notifications push pour un chauffeur spécifique si nécessaire.
+<Note>
+Sur iOS, l'autorisation de notification n'est demandée qu'une fois l'application ajoutée à l'écran d'accueil et ouverte depuis là. Si un chauffeur signale ne pas recevoir de notifications sur iPhone, c'est la cause la plus fréquente — vérifiez s'il l'a installée depuis l'écran d'accueil.
+</Note>
 
-<Card title="Gestion des chauffeurs" icon="id-card" href="/fr/planner/driver-management">
-  Gérer les profils et les préférences des chauffeurs.
-</Card>
+## Que faire si un chauffeur n'a pas de smartphone ?
+
+Les notifications push sont un complément à votre processus de dispatch existant, pas un remplacement. Si un chauffeur n'a pas de smartphone capable de faire tourner la PWA — ou n'est simplement pas à l'aise avec les applications — le répartiteur doit l'appeler comme d'habitude.
+
+L'affectation est tout de même enregistrée dans Druma, que le chauffeur utilise l'application ou non. La commande, l'itinéraire et les documents sont tous stockés et imprimables depuis le poste de travail.
+
+## Notifications pour les commandes à arrêts multiples
+
+Pour les commandes avec plusieurs points de chargement ou de livraison, Druma envoie une seule notification par commande. Le texte de la notification référence la première ville de chargement et la dernière ville de livraison. Le chauffeur voit tous les arrêts dans le bon ordre lorsqu'il ouvre la commande.
+
+<CardGroup cols={2}>
+  <Card title="Gestion des chauffeurs" icon="id-card" href="/fr/planner/driver-management">
+    Comment ajouter des chauffeurs, configurer leurs profils et gérer les documents.
+  </Card>
+  <Card title="Installer l'application chauffeur" icon="mobile" href="/fr/driver/installing-the-app">
+    Guide étape par étape pour installer la PWA Druma sur Android et iOS.
+  </Card>
+</CardGroup>

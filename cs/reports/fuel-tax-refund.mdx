@@ -1,0 +1,79 @@
+---
+title: "Vratka spotřební daně z paliva"
+description: "Sledujte a generujte žádosti o vratku spotřební daně z paliva EU pro Belgii a Rumunsko na základě importovaných dat palivových karet."
+icon: "gas-pump"
+---
+
+## Co je vratka spotřební daně z paliva?
+
+Několik členských států EU umožňuje profesionálním provozovatelům silniční přepravy nárokovat zpět část spotřební daně zaplacené za naftu. Druma podporuje dva systémy:
+
+- **Belgie — Gasoil professionnel**: Belgičtí dopravci mohou nárokovat zpět část spotřební daně z nafty použité pro profesionální přepravu. Žádosti se podávají čtvrtletně u SPF Finances.
+- **Rumunsko — vratka nafty TICAD**: Rumunští dopravci mohou nárokovat zpět část akcízu z nafty použité v mezinárodní a vnitrostátní silniční přepravě. Žádosti se podávají u ANAF.
+
+Vratku spotřební daně z paliva najdete v sekci **Finance**. Dostupné pouze pro role **admin** a **company_admin** — fleet_manager k tomuto reportu přístup nemá.
+
+<Frame caption="Finance → Daň z paliva — systémy Belgie a Rumunsko.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Stránka Vratka spotřební daně z paliva" />
+</Frame>
+
+---
+
+## Předpoklady
+
+Tento report vyžaduje nejprve importovaná data palivových karet. Bez záznamů tankování nejsou žádné litry, vůči kterým by se počítalo.
+
+<Card title="Import palivových karet" icon="credit-card" href="/cs/integrations/fuel-card-import">
+  Importujte natankování od DKV, UTA, AS24 a dalších poskytovatelů.
+</Card>
+
+---
+
+## Generování žádosti o vratku
+
+<Steps>
+  <Step title="Vyberte zemi a období">
+    Vyberte **Belgie** nebo **Rumunsko** z rozbalovací nabídky země, poté nastavte období žádosti (obvykle čtvrtletí pro Belgii, měsíc nebo čtvrtletí pro Rumunsko).
+  </Step>
+  <Step title="Klikněte na Generovat">
+    Druma načte všechny záznamy natankování za dané období způsobilé podle vybraného systému, vypočítá celkové způsobilé litry a vynásobí je aktuální sazbou vratky pro danou zemi.
+  </Step>
+  <Step title="Zkontrolujte žádost">
+    Výsledek zobrazuje způsobilé litry, sazbu vratky na litr a celkovou částku vratky v EUR. Zkontrolujte před podáním.
+  </Step>
+  <Step title="Nastavte stav a referenci">
+    Změňte stav na **Podáno** a zadejte referenční číslo od úřadu, které obdržíte po podání. Tím propojíte záznam v Druma s vaším oficiálním podáním.
+  </Step>
+</Steps>
+
+---
+
+## Životní cyklus stavu žádosti
+
+```
+Návrh → Podáno → Proplaceno
+              → Zamítnuto
+```
+
+- **Návrh** — vypočítáno, ale zatím nepodáno úřadu
+- **Podáno** — odesláno na SPF Finances (BE) nebo ANAF (RO); zaznamenáno referenční číslo
+- **Proplaceno** — platba přijata; zadejte datum proplacení
+- **Zamítnuto** — žádost byla zamítnuta; přidejte poznámku s důvodem pro další sledování
+
+---
+
+## Graf částek vratky
+
+Plošný graf zobrazuje částky vratky podle období za posledních 12 měsíců. Užitečné pro odhalení sezónních vzorců spotřeby paliva a pro plánování cash flow.
+
+---
+
+## Export CSV
+
+Klikněte na **Export CSV** pro stažení podrobností žádosti — rozpis podle jednotlivých natankování, způsobilé litry, sazba a vypočítaná vratka — pro účely podání nebo auditu.
+
+---
+
+<Warning>
+Druma počítá způsobilé litry z vašich importovaných dat palivových karet. Je vaší odpovědností ověřit, že jsou všechna natankování správně importována a že sazba vratky odpovídá aktuální zveřejněné sazbě od příslušného daňového úřadu, než žádost podáte.
+</Warning>

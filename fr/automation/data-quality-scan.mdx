@@ -1,44 +1,67 @@
 ---
-title: "Analyse de qualité des données"
-description: "Comment Druma analyse automatiquement vos données chaque nuit pour détecter les problèmes de qualité et vous alerter avant qu'ils ne deviennent des problèmes opérationnels."
-icon: "search"
+title: "Analyse nocturne de qualité des données"
+description: "Chaque nuit, Druma vérifie vos données pour neuf types de problèmes courants afin que vous puissiez les corriger avant qu'ils ne causent des retards ou des pertes de revenus."
+icon: "magnifying-glass-chart"
 ---
 
-## Vue d'ensemble
+Des données de mauvaise qualité coûtent cher. Un client sans numéro de TVA bloque votre soumission e-Factura. Une commande livrée et non facturée depuis une semaine, c'est de l'argent que vous n'avez pas encaissé. Une facture en retard sans relance, c'est une relation client qui se dégrade. L'analyse nocturne de qualité des données détecte ces problèmes avant qu'ils ne vous coûtent cher.
 
-L'analyse de qualité des données est une vérification nocturne automatisée qui identifie les problèmes potentiels dans vos données — commandes incomplètes, documents manquants, informations clients incorrectes — avant qu'ils n'affectent vos opérations.
+Chaque nuit, Druma exécute neuf contrôles automatisés sur l'ensemble de vos données et écrit les résultats sur la page **Qualité des données** sous **Outils**.
 
-Accédez à **Outils → Qualité des données** pour voir le tableau de bord.
+## Les neuf contrôles
 
----
+### 1. TVA manquante
+Clients utilisés dans une commande récente non-brouillon et sans numéro de TVA enregistré. La soumission e-Factura roumaine exige un numéro de TVA valide pour chaque client — s'il manque, les factures de ce client ne peuvent pas être soumises automatiquement à l'ANAF.
 
-## Types de problèmes détectés
+### 2. Facture non soumise à l'ANAF
+Factures envoyées sans statut de soumission e-Factura enregistré.
 
-| Gravité | Exemples |
-|---|---|
-| **Critique** | Commandes livrées sans facture générée, documents ADR expirés sur des commandes actives |
-| **Avertissement** | Commandes sans numéro de référence client, chauffeurs sans CPC valide |
-| **Information** | Clients sans adresse email de contact, tarifs de barèmes non mis à jour depuis 6 mois |
+### 3. Livrée, non facturée depuis 7+ jours
+Commandes marquées livrées il y a plus de 7 jours et toujours sans facture liée. C'est du revenu que vous avez gagné mais pas encore facturé.
 
----
+### 4. Brouillon de commande dormant
+Brouillons de commande restés inchangés depuis plus de 7 jours — typiquement des commandes extraites par email qu'un planificateur a oublié de confirmer ou de supprimer.
 
-## Examiner les problèmes
+### 5. Client sans email
+Clients sans adresse email enregistrée.
 
-<Steps>
-  <Step title="Ouvrez le tableau de bord Qualité des données">
-    Accédez à **Outils → Qualité des données**.
-  </Step>
-  <Step title="Filtrez par gravité">
-    Commencez par les problèmes **Critiques**, puis **Avertissements**.
-  </Step>
-  <Step title="Cliquez sur un problème">
-    Chaque problème contient un lien direct vers l'enregistrement concerné pour correction rapide.
-  </Step>
-  <Step title="Marquez comme résolu ou ignorez">
-    Après correction, marquez le problème comme résolu. Vous pouvez aussi ignorer les problèmes qui ne s'appliquent pas à votre cas.
-  </Step>
-</Steps>
+### 6. Commande confirmée, sans prix convenu
+Commandes au statut **Confirmée** ou **Assignée** où le prix convenu est encore manquant ou nul.
 
-<Card title="Documents de flotte" icon="file-check" href="/fr/fleet-compliance/fleet-documents">
-  Résolvez proactivement les problèmes d'expiration de documents.
-</Card>
+### 7. Facture en retard de 60+ jours
+Factures impayées de plus de 60 jours après leur date d'échéance.
+
+### 8. Commande terminée, sans facture après 14 jours
+Commandes livrées toujours non facturées après 14 jours — une version à plus long horizon du contrôle 3, signalée à titre informatif plutôt que critique.
+
+### 9. Client dormant
+Clients sans commande au cours des 90 derniers jours.
+
+## Consulter les résultats
+
+Accédez à **Outils → Qualité des données**.
+
+La page affiche :
+
+- Une barre KPI avec le nombre total de problèmes ouverts, plus les comptes par gravité (Critique, Avertissement, Info)
+- Un graphique à barres empilées des problèmes par gravité sur les 30 derniers jours
+- Un tableau filtrable (Ouvert / Résolu / Ignoré / Tous) listant chaque problème avec son type d'entité, sa référence, sa description, sa gravité, l'action suggérée, son statut et sa date de création
+- Des actions **Résoudre** et **Ignorer** sur chaque problème ouvert
+
+<Note>
+L'analyse de qualité des données s'exécute à **03h00 UTC** chaque nuit. Les résultats affichés sur la page reflètent l'état de vos données à ce moment-là. Les problèmes que vous corrigez dans la journée disparaîtront lors de l'analyse de la nuit suivante (une fois que vous marquez aussi le problème **Résolu**, ou dès qu'il ne correspond plus à la requête sous-jacente).
+</Note>
+
+## Corriger les problèmes
+
+La page Qualité des données vous indique ce qui ne va pas et suggère une action, mais elle ne renvoie pas directement vers l'enregistrement concerné — utilisez la référence affichée (nom du client, numéro de commande, numéro de facture) pour le retrouver vous-même dans Clients, Opérations ou Finance, corrigez le problème, puis revenez cliquer sur **Résoudre**.
+
+Il n'existe pas d'outil de correction en masse — chaque problème se résout individuellement. C'est voulu : les corrections de données doivent être délibérées.
+
+Cliquer sur **Ignorer** sur un problème le retire du filtre **Ouvert** sans le marquer résolu — utilisez cette option pour les problèmes que vous avez décidé de ne pas traiter. Les problèmes ignorés et résolus sont exclus de la ré-analyse de la nuit suivante des problèmes ouverts (chaque analyse remplace l'ensemble actuel des problèmes ouverts, non ignorés).
+
+<CardGroup cols={1}>
+  <Card title="Vue d'ensemble des rapports" icon="chart-bar" href="/fr/reports/reports-overview">
+    Découvrez tous les rapports disponibles dans Druma et comment les programmer pour un envoi régulier par email.
+  </Card>
+</CardGroup>

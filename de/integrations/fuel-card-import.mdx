@@ -1,56 +1,103 @@
 ---
 title: "Kraftstoffkartenimport"
-description: "Importieren Sie monatliche Kraftstofftransaktionsdaten von DKV, UTA, AS24, Shell Card und SmartDiesel, um reale Kraftstoffkosten pro Fahrzeug zu verfolgen."
+description: "Importieren Sie Kraftstofftransaktionsdaten von DKV, UTA, AS24, Shell und anderen großen europäischen Kraftstoffkartenanbietern, um reale Kraftstoffkosten pro Fahrzeug zu verfolgen."
 icon: "gas-pump"
 ---
 
-## Übersicht
+Kraftstoff ist typischerweise der größte variable Kostenpunkt im Straßengüterverkehr. Druma lässt Sie Transaktionsdaten der großen Kraftstoffkartenanbieter importieren und verknüpft jeden Tankvorgang mit dem richtigen Fahrzeug, damit Ihre Kostenberichte tatsächliche Kraftstoffausgaben statt Schätzungen widerspiegeln.
 
-Kraftstoffkosten sind einer der größten variablen Kostenpunkte im Straßengüterverkehr. Druma importiert Kraftstofftransaktionsdaten aus CSV-Exporten Ihrer Kraftstoffkartenanbieter und verknüpft jede Transaktion automatisch mit dem richtigen Fahrzeug.
-
----
+<Frame caption="Fuhrpark → Kraftstoff — Kennzeichenabgleich ist normalisiert, nicht exakt.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Seite Fuhrpark-Kraftstoff" />
+</Frame>
 
 ## Unterstützte Anbieter
 
-| Anbieter | Format |
-|---|---|
-| DKV | DKV-Standard-CSV |
-| UTA | UTA-CSV |
-| AS24 | AS24-Exportformat |
-| Shell Card | Shell-Transaktions-CSV |
-| SmartDiesel | SmartDiesel-Format |
+Druma erkennt den Anbieter automatisch anhand der Spaltenüberschriften und des Dateinamens. Unterstützte Anbieter:
 
----
+- **DKV**
+- **UTA**
+- **AS24**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
 
-## Kraftstoffdaten importieren
+Jede andere CSV- oder XLSX-Datei mit Standard-Spaltennamen (Datum, Betrag, Liter, Karte/Kennzeichen) wird ebenfalls akzeptiert, auch ohne erkannten Anbieter-Treffer. Nutzen Sie mehrere Karten in Ihrer Flotte, können Sie von jedem Anbieter separat importieren.
+
+## So importieren Sie
 
 <Steps>
-  <Step title="CSV aus Anbieterportal exportieren">
-    Melden Sie sich in Ihrem Kraftstoffladenanbieter-Portal an und exportieren Sie Transaktionen für den Monat.
+  <Step title="Datei vom Anbieter herunterladen">
+    Melden Sie sich im Online-Portal Ihres Kraftstoffkartenanbieters an und exportieren Sie die Transaktionshistorie als CSV oder XLSX. Jedes Anbieterportal ist anders, aber diese Option findet sich meist unter Berichte oder Kontoauszüge.
   </Step>
-  <Step title="Zu Einstellungen → Integrationen → Kraftstoffkartenimport gehen">
-    Klicken Sie auf die Karte Ihres Anbieters.
+  <Step title="Drumas Kraftstoffimport öffnen">
+    Gehen Sie in Druma zu **Fuhrpark → Kraftstoff** und klicken Sie auf **Kraftstoff importieren**.
   </Step>
-  <Step title="Anbieter auswählen">
-    Wählen Sie Ihren Anbieter aus dem Dropdown-Menü.
+  <Step title="Die Datei hochladen">
+    Ziehen Sie die CSV-/XLSX-Datei hinein oder wählen Sie sie aus (max. 5 MB). Druma erkennt den Anbieter automatisch aus der Datei und zeigt eine Vorschau der geparsten Zeilen — einschließlich etwaiger Mautpositionen, die im selben Kontoauszug gemischt sind.
   </Step>
-  <Step title="CSV hochladen">
-    Klicken Sie auf **CSV hochladen** und wählen Sie Ihre Datei.
-  </Step>
-  <Step title="Ergebnisse überprüfen">
-    Druma zeigt übereinstimmende und nicht übereinstimmende Transaktionen.
+  <Step title="Prüfen und bestätigen">
+    Prüfen Sie die Vorschau — Zeilen ohne passendes Fahrzeug sind markiert und vom Import ausgeschlossen. Klicken Sie auf **N Zeilen importieren** (mit der tatsächlichen Zeilenzahl), um zu bestätigen.
   </Step>
 </Steps>
 
----
+## Was importiert wird
 
-## Nicht übereinstimmende Transaktionen
+Für jede Transaktion extrahiert Druma:
 
-Wenn das Kennzeichen einer Transaktion keinem Fahrzeug in Ihrem System entspricht, wird sie als **nicht zugeordnet** markiert. Häufige Ursachen:
-- Falsch eingetipptes Kennzeichen an der Tankstelle
-- Neues Fahrzeug noch nicht zu Druma hinzugefügt
-- Kraftstoff mit einer anderen Karte getankt
+| Feld | Quelle |
+|---|---|
+| Datum (ohne Uhrzeit) | Transaktionsdatumsspalte aus der Datei |
+| Fahrzeug | Zugeordnet nach Kraftstoffkartennummer, dann nach Kennzeichen |
+| Tankstellenname | Standortfeld aus der Datei |
+| Getankte Liter | Mengenfeld aus der Datei |
+| Betrag | Wertfeld aus der Datei — als EUR angenommen, sofern keine Währungsspalte vorhanden ist |
+| Transaktions-ID | Eindeutige Transaktionsreferenz des Anbieters, zur Duplikaterkennung verwendet |
 
-<Card title="Fuhrparkdokumente" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
-  Verfolgen Sie Fahrzeugdokumente und Compliance.
-</Card>
+Manuelle Einzeleintrag-Tankvorgänge (über **Tankvorgang hinzufügen**) akzeptieren nur einen Betrag in EUR — dieses Formular hat keine Währungsauswahl. RON-Beträge werden nur über den separaten E-Mail-/Ablageordner-Auto-Ingest-Pfad unten automatisch umgerechnet.
+
+## Transaktionen mit Fahrzeugen abgleichen
+
+Druma ordnet jede Transaktion zunächst nach **Kraftstoffkartennummer**, dann nach **Kennzeichen** einem Fahrzeug zu. Sowohl Kartennummer als auch Kennzeichen werden vor dem Vergleich normalisiert — in Großbuchstaben, mit entfernten Leerzeichen, Bindestrichen und anderen nicht-alphanumerischen Zeichen — sodass „B 123 ABC" und „B123ABC" demselben Fahrzeug zugeordnet werden.
+
+Passt eine Transaktion immer noch zu keinem Fahrzeug, wird sie in der Vorschau als **nicht zugeordnet** markiert und vom Import ausgeschlossen. Häufige Gründe:
+
+- Das Fahrzeug wurde kürzlich hinzugefügt und ist noch nicht in Druma
+- Weder Kartennummer noch Kennzeichen der Transaktion passen zu einem Flottendatensatz
+- Ein Fahrer nutzte seine Karte in einem gemieteten oder untervergebenen Fahrzeug
+
+## Duplikaterkennung
+
+Importieren Sie versehentlich dieselbe Datei zweimal, erkennt Druma Duplikate anhand eines Dedup-Schlüssels aus Transaktionsdatum, Betrag, Litern, Karte, Kennzeichen und Anbieter-Transaktions-ID — Duplikate werden automatisch auf Datenbankebene übersprungen. Die Erfolgsmeldung berichtet nur, wie viele Kraftstofftankungen (und Mautpositionen) importiert wurden; sie meldet keine separate Anzahl übersprungener Duplikate.
+
+<Note>
+Importieren Sie immer den vollständigen Kontoauszug statt eines Teilexports. Teilimporte können Lücken in Ihren Kraftstoffkostendaten verursachen, die die Streckenrentabilitätsberechnung beeinträchtigen.
+</Note>
+
+## Automatischer Import per E-Mail
+
+Zusätzlich zum manuellen Upload kann Druma Kraftstoffabrechnungen automatisch von einer eingehenden E-Mail-Adresse übernehmen (mit einem geplanten Sweep als Rückfalloption), unter Wiederverwendung desselben Parsers wie das manuelle Import-Modal. Kontaktieren Sie den Druma-Support, um dies für Ihr Konto einzurichten.
+
+## Wo importierte Kraftstoffdaten erscheinen
+
+Nach dem Import erscheinen Transaktionen unter:
+
+- **Fuhrpark → Kraftstoff** — vollständige Transaktionshistorie Ihrer Flotte, filter- und durchsuchbar nach Kennzeichen, Anbieter und Standort
+- **Streckenrentabilitäts-Bericht** — importierte Kraftstoffkosten ersetzen die geschätzte Kraftstoffberechnung bei Aufträgen, für die tatsächliche Kraftstoffdaten vorliegen
+
+## Warum CSV-Import statt Live-API?
+
+Kraftstoffkartenanbieter in ganz Europa haben uneinheitlichen und oft eingeschränkten API-Zugang. Manche bieten APIs nur für Großkunden an, andere haben länderspezifische Portale ohne API-Zugang, und API-Formate variieren erheblich. CSV-Export ist universell bei allen Anbietern und Kontotypen verfügbar, was ihn zum zuverlässigsten Ansatz für einen rumänischen Betreiber mit gemischter Flotte macht (ADR-016).
+
+<CardGroup cols={2}>
+  <Card title="Streckenrentabilitäts-Bericht" icon="route" href="/de/reports/lane-profitability">
+    Wie importierte Kraftstoffkosten in die Margenberechnung pro Strecke einfließen.
+  </Card>
+  <Card title="Fuhrparkverwaltung" icon="truck" href="/de/planner/fleet-management">
+    Verwaltung von Fahrzeugdatensätzen, einschließlich der für den Kraftstofftransaktionsabgleich verwendeten Kennzeichen.
+  </Card>
+</CardGroup>

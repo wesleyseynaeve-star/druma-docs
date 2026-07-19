@@ -1,53 +1,116 @@
 ---
 title: "Banki kivonat importálása"
-description: "CAMT.053 vagy MT940 bankikivonatok feltöltése a befizetések automatikus egyeztetéséhez a nyitott számlákkal — nincs szükség manuális adatbevitelre."
+description: "Töltsd fel a CAMT.053, MT940 vagy CODA banki kivonat fájljaidat a fizetések automatikus egyeztetéséhez a nyitott számlákkal — nincs szükség manuális adatbevitelre."
 icon: "file-up"
 ---
 
-## Mikor használd a banki kivonat importját?
+## Áttekintés
 
-A banki kivonat importja hasznos, ha:
-- Nem tudod beállítani az automatikus e-mail továbbítást a bankodnál
-- Hónapvégi tömeges egyeztetést szeretnél elvégezni
-- A banki rendszer CAMT.053 vagy MT940 fájlokat exportál
+Ahelyett hogy egyenként rögzítenéd a fizetéseket, feltöltheted a banki kivonatodat közvetlenül a Drumába. A Druma feldolgozza a fájlban szereplő minden jóváírási tranzakciót, egyeztetési logikát futtat a nyitott számláiddal szemben, és automatikusan alkalmazza a magabiztos egyezéseket. A nem egyező tranzakciók az Egyeztetés sorba kerülnek gyors manuális felülvizsgálatra.
 
-## Támogatott fájlformátumok
+Ez a leggyorsabb módja annak, hogy egyszerre nagy mennyiségű bejövő fizetést egyeztess — ideális hét vagy hónap végén.
+
+## Támogatott formátumok és bankok
+
+A Druma három szabványos formátumot fogad el:
 
 | Formátum | Leírás |
-|---|---|
-| **CAMT.053** | ISO 20022 XML banki kivonat — az EU-s bankok által legjobban támogatott |
-| **MT940** | SWIFT hagyományos üzenetformátum |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — a legtöbb EU-s bank online bankolásán keresztül exportálva |
+| **MT940 SWIFT** | SWIFT hagyományos formátum — még mindig gyakori vállalati banki API-knál |
+| **CODA** | Rögzített szélességű formátum, amelyet a belga bankok használnak |
 
-## Banki kivonat importálása
+Mindhárom formátumot támogatja a BRD, a BCR, a Raiffeisen Bank, az UniCredit és az ING Románia, valamint az EU-s bankok többsége — a CODA kifejezetten a belga banki exportokat fedi le. A Druma automatikusan felismeri a formátumot feltöltéskor. Ha a felismerés meghiúsul, válaszd ki a megfelelő formátumot a **Formátum** legördülő menüből az importálási ablakon belül.
+
+**Maximális fájlméret:** 10 MB feltöltésenként.
+
+<Note>
+Ugyanannak a kivonatfájlnak az újratöltése biztonságos. A Druma minden tranzakciót egyedi ujjlenyomattal lát el, és csendben kihagyja a duplikátumokat — sosem fogsz kétszer rögzíteni egy fizetést.
+</Note>
+
+## Hogyan importálj egy kivonatot?
 
 <Steps>
-  <Step title="Töltsd le a bankikivonát fájlodat">
-    A bankod online banki felületéről töltsd le a banki kivonatot CAMT.053 XML vagy MT940 formátumban a kívánt időszakra.
+  <Step title="Nyisd meg az importálási párbeszédablakot">
+    Lépj a **Pénzügy** → **Egyeztetés** → **Fizetések** fülre. Kattints az **Kivonat importálása** gombra az oldal jobb felső sarkában.
   </Step>
-  <Step title="Lépj a Számlázás → Egyeztetés menüpontra">
-    Kattints a **Banki kivonat importálása** gombra.
+  <Step title="Válaszd ki a fájlt">
+    Kattints a **Fájl kiválasztása** gombra, és válaszd ki az exportált banki kivonatodat. Elfogadott kiterjesztések: `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940), és `.cod`/`.coda` (CODA). A fájlnak legfeljebb 10 MB méretűnek kell lennie.
   </Step>
-  <Step title="Töltsd fel a fájlt">
-    Húzd rá a fájlt a feltöltési területre, vagy kattints a **Tallózás** gombra. A Druma elfogadja az .xml és .sta fájlokat.
+  <Step title="Erősítsd meg a formátumot">
+    A Druma automatikusan felismeri a formátumot, és egy címkét mutat a fájlnév alatt. Ha a címke helytelen, nyisd meg a **Formátum** legördülő menüt, és folytatás előtt válaszd ki manuálisan a helyes formátumot.
   </Step>
-  <Step title="Feldolgozás áttekintése">
-    A Druma elemzi a fájlt és megmutatja:
-    - Az összes felismert tranzakciót
-    - Az automatikusan egyeztetett tételeket (összeg + hivatkozás alapján)
-    - A nem egyeztetett tételeket, amelyek manuális beavatkozást igényelnek
+  <Step title="Futtasd az importálást">
+    Kattints az **Importálás** gombra. A Druma feldolgozza a fájlban szereplő összes jóváírási tranzakciót, és egyeztetési logikát futtat a céged összes nyitott számlájával szemben. Ez jellemzően néhány másodperc alatt lezajlik.
   </Step>
-  <Step title="Nem egyeztetett tételek kezelése">
-    Minden nem egyeztetett tételnél manuálisan rendeld hozzá a megfelelő számlához, vagy jelöld meg "Nem vonatkozik"-ként.
-  </Step>
-  <Step title="Egyeztetés megerősítése">
-    Kattints az **Egyeztetés megerősítése** gombra. A Druma frissíti az összes érintett számla fizetési státuszát.
+  <Step title="Nézd át az eredmény-összefoglalót">
+    A feldolgozás befejeztével egy összefoglaló ablak mutatja az eredményt. Nézd át az egyes kategóriákat bezárás előtt — lásd a bontást lentebb.
   </Step>
 </Steps>
 
-<Note>
-Ha a bankikivonát egyszerre több hónapot tartalmaz, a Druma csak azokat a tranzakciókat dolgozza fel, amelyek a Druma rendszerben lévő nyitott számlákkal egyeznek meg. A korábban már rögzített fizetések automatikusan ki lesznek szűrve.
-</Note>
+## Az eredmény-összefoglaló értelmezése
 
-<Card title="Banki egyeztetés" icon="building-columns" href="/en/invoicing/bank-reconciliation">
-  Az e-mail alapú automatikus egyeztetési módszer.
+Minden importálás után a Druma egy eredmény-összefoglalót mutat a következő számlálókkal:
+
+| Mező | Mit jelent |
+|-------|---------------|
+| **Feldolgozva** | A fájlban talált jóváírási tranzakciók teljes száma |
+| **Automatikusan egyeztetve** | Egy számlához nagy megbízhatósággal egyeztetett tranzakciók — a fizetés automatikusan alkalmazva |
+| **Felülvizsgálat szükséges** | Olyan tranzakciók, ahol egy lehetséges egyezést találtunk, de a megbízhatóság a küszöb alatt volt — ezek az Egyeztetés sorban jelennek meg |
+| **Kihagyott duplikátumok** | Már korábban, ugyanannak a fájlnak egy korábbi feltöltéséből rögzített tranzakciók — csendben figyelmen kívül hagyva |
+| **Hibák** | Olyan tranzakciók, amelyeket nem sikerült feldolgozni (hibás formátumú sorok, nem támogatott pénznem, hiányzó hivatkozás) |
+
+Egy egészséges importálás magas **Automatikusan egyeztetve** számmal és alacsony **Felülvizsgálat szükséges** számmal rendelkezik. Ha sok sor igényel felülvizsgálatot, az általában azt jelenti, hogy a számlahivatkozások nincsenek benne a fizetési leírásokban — kérd meg az ügyfeleket, hogy tüntessék fel a számlaszámukat a banki átutalás hivatkozás mezőjében.
+
+## Egyeztetési logika
+
+A Druma minden banki tranzakciót egy számlához egyeztet a következő jelzések alapján, prioritási sorrendben:
+
+1. **Számlaszám a tranzakció hivatkozásában** — pontos vagy részleges (fuzzy-normalizált) egyezés egy nyitott számlaszámmal szemben. Önmagában ez az egyezés elég a fizetés automatikus alkalmazásához — nincs szükség más jelzésre.
+2. **Összeg-egyezés** — ha nincs számlaszám-egyezés, a Druma megkeres egy olyan nyitott számlát, amelynek fennmaradó egyenlege a beállított tűréshatáron belül van (alapértelmezett ±2%) a tranzakció összegéhez képest, **és** amelynek fizetési határideje ±30 napon belül van a tranzakció dátumához képest. Ez megakadályozza, hogy egy véletlenszerű összeg-egyezés egy hónapokra lévő, nem kapcsolódó számlához kapcsolódjon.
+3. **Ügyfélnév** — csak döntőbíróként használva, amikor a fenti összeg-egyezés több jelölt számlát ad vissza; a Druma leszűkíti arra a jelöltre, amelynek ügyfélneve megjelenik a tranzakció küldőjének nevében.
+
+Egy számlaszám-egyezés automatikusan alkalmazza a fizetést (teljesen vagy részlegesen, az összegtől függően). Egy **csak összeg-alapú egyezés soha nem kerül automatikusan alkalmazásra** — még akkor sem, ha egyértelműen egyetlen számlát azonosít — mindig az Egyeztetés sorba kerül manuális megerősítésre, mivel nincs hivatkozás, amely bizonyítaná, hogy valóban az adott számla fizetése. Ha egyáltalán nincs jelzés → nem egyeztetettként sorba kerül.
+
+## Nem egyeztetett tranzakciók kezelése
+
+Bármely tranzakció, amelyet nem sikerült magabiztosan egyeztetni, az **Egyeztetés** sorban jelenik meg, ugyanazon a **Fizetések** fülön. Minden sor mutat egy **Kivonat** forrás-jelvényt (megkülönböztetve az e-mail-feldolgozáson keresztül érkezett tranzakcióktól, amelyek **E-mail** jelvényt mutatnak).
+
+<Steps>
+  <Step title="Nyisd meg az Egyeztetés sort">
+    Maradj a **Pénzügy** → **Egyeztetés** → **Fizetések** fülön. A nem egyeztetett sorok az összefoglaló alatt jelennek meg **Függőben** státusszal.
+  </Step>
+  <Step title="Bontsd ki a tranzakciót">
+    Kattints egy sorra a kibontásához. A Druma megmutatja a teljes tranzakció-részleteket: dátum, összeg, banki hivatkozási szöveg, és bármely jelölt számlát, amelyet figyelembe vett.
+  </Step>
+  <Step title="Egyeztesd manuálisan">
+    Kattints az **Egyeztetés** gombra a helyes számla mellett. A Druma alkalmazza a fizetést, és a tranzakciót **Alkalmazva** státuszra váltja.
+  </Step>
+  <Step title="Vesd el, ha nem releváns">
+    Ha a tranzakció nem egy ügyfélfizetés (például egy belső átutalás vagy egy banki díj), kattints az **Elvetés** gombra. A sor **Elutasítva** státuszra vált, és nem érint egyetlen számlát sem.
+  </Step>
+</Steps>
+
+<Warning>
+Egy tranzakció elvetése egy puha művelet — csak a Drumában jelöli elutasítottként a sort. Nincs hatással a tényleges bankszámládra vagy könyvelőrendszeredre. Ha véletlenül elvetesz valamit, vedd fel a kapcsolatot az ügyfélszolgálattal — jelenleg nincs önkiszolgáló visszavonás az elutasított egyeztetési sorokhoz.
+</Warning>
+
+## Tippek a magasabb automatikus egyeztetési arányhoz
+
+- **Kérd meg az ügyfeleket, hogy tüntessék fel a számlaszámot** az átutalásuk fizetési hivatkozás mezőjében. Egy olyan hivatkozás, mint `INV-000047`, pontos egyezést ad a Drumának az első jelzésen.
+- **Tartsd konzisztensnek az ügyfélneveket** az ügyféltörzsed és aközött, ahogy az ügyfelek azonosítják magukat a banki átutalásokon — a Druma csak az azonos összegű, több számla közötti egyértelműsítéshez esik vissza az ügyfélnév-egyezésre, így egy közeli egyezés ott megmentheti az egyébként kétértelmű összeg-egyezést.
+- **Használj konzisztensen nettó fizetési feltételeket.** A levont díjakkal (banki vagy faktoring) érkező fizetések a ±2%-os tűréshatáron belül vannak a kb. 5000 € alatti számláknál. Nagyobb számláknál erősítsd meg az ügyfelekkel, hogy a teljes összeget küldik.
+
+---
+
+<Card title="Fizetéskövetés" icon="circle-check" href="/en/invoicing/payment-tracking">
+  Rögzíts és kövess fizetéseket manuálisan, vagy tekintsd meg a teljes fizetési előzményt számlánként.
+</Card>
+
+<Card title="Lejárt számlák irányítópultja" icon="triangle-alert" href="/en/invoicing/overdue-dashboard">
+  Tekintsd meg a korosított adósokat, és küldj fizetési emlékeztetőket a fizetési határidőn túli számlákhoz.
+</Card>
+
+<Card title="Jóváíró számlák" icon="file-minus" href="/en/invoicing/credit-notes">
+  Állíts ki egy jóváíró számlát egy elküldött számla visszavonásához vagy részleges javításához.
 </Card>

@@ -4,96 +4,213 @@ description: "A Druma mind a nyolc felhasználói szerepkörének teljes leírá
 icon: "shield-halved"
 ---
 
-## A nyolc szerepkör
+## Miért fontosak a szerepkörök?
 
-A Druma nyolc különálló szerepkörrel rendelkezik. Minden szerepkör pontosan azokhoz a funkciókhoz biztosít hozzáférést, amelyekre az adott szerepkörnek szüksége van — nincs több, nincs kevesebb.
+Ha minden csapattag a megfelelő szerepkört kapja:
+- Mindenki csak azt látja, ami releváns a munkájához
+- Az érzékeny adatok (számlázás, ügyfél-pénzügyek) védve maradnak
+- Kevésbé valószínű a rendelések vagy beállítások véletlen módosítása
+- Egyértelmű auditnyomod van arról, hogy ki mit tett
 
-### Admin
+A Drumának **nyolc szerepköre** van. Hat a belső csapatodnak szól (webes platform), kettő pedig külső felhasználóknak (sofőrök és ügyfelek), akik dedikált linkeken keresztül férnek hozzá a Drumához, nem a webes platformon.
 
-A szervezet legmagasabb szintű hozzáférése. Az Adminok hozzáférnek mindenhez, beleértve a számlázást, az előfizetés-kezelést, az ÁFA-számok módosítását, a naplót és az összes többi funkciót.
+<Frame caption="Beállítások → Felhasználók — szerepkör-jelvények csapattagonként.">
+  <img src="/images/admin/user-roles.png" alt="Felhasználók és szerepkörök beállítási panel" />
+</Frame>
 
-**Kinek add:** Az üzlettulajdonosnak vagy a számvitelért felelős személynek.
+## Szerepkör-jogosultságok áttekintése
 
-### Vállalati admin
-
-Megegyezik az Admin hozzáférésével, kivéve a számlázást. A Vállalati adminok módosíthatják a vállalati beállításokat, meghívhatják a felhasználókat, konfigurálhatják az integrációkat, és teljes körűen kezelhetik a műveleteket.
-
-**Kinek adja:** Az operatív vezetőknek vagy a megbízható senior munkatársaknak.
-
-### Tervező
-
-Rendelések létrehozása és kezelése, tervezőtáblán való munkavégzés, számlák generálása, jelentések lekérése. Csak olvasható flottahozzáféréssel rendelkezik.
-
-**Kinek adja:** A diszpécsereknek és a napi műveletek koordinálóinak.
-
-### Diszpécser
-
-Csak megfigyelési jogosultság. Látja az irányítópultot, az élő térképet, a sofőrórákat és a flottát — de nem szerkeszthet semmit és nem hozhat létre rendeléseket.
-
-**Kinek adja:** Az éjszakai műszak operátoroknak vagy a nem szerkesztési jogú felügyelőknek.
-
-### Flottakezelő
-
-Teljes flottakezelés: járművek, pótkocsik, sofőrök, dokumentumok, üzemanyag, kabotázs és díjszabási sablonok. Nem fér hozzá a rendelésekhez, számlázáshoz vagy az ügyfélpanelekhez.
-
-**Kinek adja:** A járműfelelős vagy flottakoordinátori pozícióban lévő személyeknek.
-
-### Ügyfélszolgálat
-
-Rendelések, számlázás és ügyfelek kezelése, jelentések megtekintése. Meghívhat új felhasználókat, de nem rendelhet hozzá járműveket a tervezőtáblán.
-
-**Kinek adja:** A belső ügyfélszolgálatos munkatársaknak vagy az értékesítési csapatnak.
-
-### Sofőr
-
-Kizárólag a mobilalkalmazáshoz fér hozzá. Nem jelentkezik be a webalkalmazásba. A sofőrök rendelnek állapotot frissítenek, eCMR-t írnak alá, és fotókat töltenek fel.
-
-**Hogyan adjuk hozzá:** Nem meghívón keresztül. Lépj a Flotta → Sofőrök menüpontra, és másold ki a személyes PWA-linket.
-
-### Ügyfél
-
-Kizárólag az ügyfélportálhoz fér hozzá. Megtekintheti a szállítmányokat, nyomon követheti a szállításokat, és letöltheti a dokumentumokat.
-
-**Hogyan adjuk hozzá:** Nem meghívón keresztül. Az Ügyfelek oldalon másold ki az ügyfél portál-linkjét.
-
----
-
-## Jogosultsági mátrix
-
-| Funkció | Admin | Váll. admin | Tervező | Diszpécser | Flottakez. | Ügyfélszolg. | Sofőr | Ügyfél |
+| Jogosultság | Admin | Váll. admin | Tervező | Diszpécser | Flottakez. | Ügyfélszolg. | Sofőr | Ügyfél |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Számlázás | Igen | - | - | - | - | - | - | - |
+| Számlázás oldal megtekintése | Igen | Igen | Igen | Igen | Igen | Igen | - | - |
+| Számlázás szerkesztése (időszak, jármű-plafon, felhasználási plafonok) | Igen | Igen | - | - | - | - | - | - |
 | Vállalati beállítások | Igen | Igen | - | - | - | - | - | - |
-| Felhasználók kezelése | Igen | Igen | - | - | - | Meghív | - | - |
-| Integrációk | Igen | Igen | - | - | - | - | - | - |
-| Díjszabási sablonok | Igen | Igen | - | - | Igen | - | - | - |
-| Rendelések létrehozása | Igen | Igen | Igen | - | - | Igen | - | - |
-| Rendelések megtekintése | Igen | Igen | Igen | - | - | Igen | - | - |
+| Felhasználók és meghívások kezelése | Igen | Igen | - | - | - | Meghív | - | - |
+| Integrációk és API-beállítások | Igen | Igen | - | - | - | - | - | - |
+| Árkártyák | Igen | Igen | - | - | Igen | - | - | - |
+| Rendelések létrehozása és szerkesztése | Igen | Igen | Igen | - | - | Igen | - | - |
+| Összes rendelés megtekintése | Igen | Igen | Igen | - | - | Igen | - | - |
 | Jármű/sofőr hozzárendelése | Igen | Igen | Igen | - | - | - | - | - |
 | Irányítópult / Ma | Igen | Igen | Igen | Igen | - | - | - | - |
 | Élő térkép | Igen | Igen | Igen | Igen | - | - | - | - |
-| Flotta (járművek) | Igen | Igen | Olvasás | Olvasás | Teljes | - | - | - |
-| Flotta (sofőrök) | Igen | Igen | Olvasás | Olvasás | Teljes | - | - | - |
+| Flottakezelés (járművek) | Igen | Igen | Olvasás | Olvasás | Teljes | - | - | - |
+| Flottakezelés (sofőrök) | Igen | Igen | Olvasás | Olvasás | Teljes | - | - | - |
 | Sofőrórák | Igen | Igen | Igen | Igen | Igen | - | - | - |
-| Számlák generálása/küldése | Igen | Igen | Igen | - | - | Igen | - | - |
-| Jelentések | Igen | Igen | Igen | - | - | Igen | - | - |
-| Sofőr alkalmazás | - | - | - | - | - | - | Igen | - |
-| Ügyfélportál | - | - | - | - | - | - | - | Igen |
+| Számlák generálása és küldése | Igen | Igen | Igen | - | - | Igen | - | - |
+| Jelentések és exportok | Igen | Igen | Igen | - | - | Igen | - | - |
+| Sofőralkalmazás (rendelésfrissítés, eCMR) | - | - | - | - | - | - | Igen | - |
+| Ügyfélportál (szállítmányok nyomon követése) | - | - | - | - | - | - | - | Igen |
+
+## Részletes szerepkör-leírások
+
+### Admin
+
+Az Admin **teljes rendszerhozzáféréssel** rendelkezik, beleértve a platform-szintű számlázási konfigurációt is. Ez a szerepkör az üzlettulajdonosnak vagy a Druma-fiókért végső soron felelős személynek szól.
+
+Az Admin mindent megtehet, amit egy Vállalati admin, plusz:
+- Hozzáfér a **Számlázási entitásokhoz** és a **Számlázási konfigurációhoz** — kizárólag Adminnak fenntartott, platform-szintű számlázási felületek
+
+*Valós példa: Vasile a fuvarozó cég tulajdonosa. Ő az Admin. Ő irányítja az előfizetést, kezeli a számlázást, és rálátása van a platform minden elemére.*
 
 ---
 
+### Vállalati admin
+
+A Vállalati admin szinte mindenhez teljes hozzáféréssel rendelkezik, **beleértve a Számlázás oldalt is** — ez a megfelelő szerepkör egy megbízható üzemeltetési vezetőnek vagy senior diszpécsernek, aki a platform napi beállításait vezeti, és magát az előfizetést is kezelheti (számlázási időszak, jármű-plafon, funkciónkénti felhasználási plafonok). A két platform-szintű számlázási felület (**Számlázási entitások**, **Számlázási konfiguráció**) kizárólag Admin számára marad elérhető.
+
+A Vállalati admin:
+- Mindent konfigurálhat a Beállításokban, beleértve a Számlázást
+- Meghívhat és kezelhet más felhasználókat
+- Beállíthat integrációkat (SmartBill, SAGA, natív eCMR, ANAF, Timocom stb.)
+- Kezelheti a vállalati profilt, az árkártyákat és az alapértelmezett beállításokat
+- Létrehozhat és kezelhet rendeléseket, számlákat, flottát és jelentéseket
+- Megtekintheti az auditnaplókat
+
+*Valós példa: Mihaela Vasile üzemeltetési vezetője. Ő Vállalati admin. Új sofőröket vesz fel, frissíti a jármű-dokumentumokat, meghív új diszpécsereket, naprakészen tartja a vállalati profilt, és a Számlázás oldalon átválthatja a számlázási időszakot vagy módosíthatja a jármű-plafont — de a platform-szintű számlázási konfigurációs képernyők Vasilénél maradnak.*
+
+---
+
+### Tervező
+
+A Tervező a fő operatív szerepkör — a diszpécser, aki a napi fuvarozási munkát viszi. A Tervezők teljes hozzáféréssel rendelkeznek a rendelésekhez, a tervezőtáblához és a számlázáshoz, csak olvasási hozzáféréssel a flottához, de nem módosíthatják a céges szintű beállításokat, és nem kezelhetik a felhasználókat.
+
+A Tervező:
+- Létrehozhat, szerkeszthet és törölhet fuvarozási rendeléseket
+- Járműveket és sofőröket rendelhet hozzá a tervezőtáblán
+- Generálhat és küldhet számlákat
+- Megtekintheti a flottajárműveket és sofőröket (csak olvasás)
+- Hozzáférhet az irányítópulthoz, az élő térképhez és a sofőrórákhoz
+- Dolgozhat jelentésekkel és exportokkal
+
+*Valós példa: Radu diszpécser. Ő hozza létre az összes rendelést, rendel hozzá teherautókat, figyeli a szállításokat, és küld számlát, amikor egy rendelés lezárul. Nincs szüksége a vállalati beállítások módosítására vagy a felhasználói hozzáférés kezelésére.*
+
+---
+
+### Diszpécser
+
+A Diszpécser egy **megfigyelésre fókuszáló szerepkör** azok számára, akiknek valós időben kell figyelniük a műveleteket, de nem hoznak létre és nem szerkesztenek rendeléseket. A Diszpécser látja az irányítópultot, az élő térképet, a sofőrórákat és a flottát (csak olvasás) — semmi mást.
+
+A Diszpécser:
+- Megtekintheti az irányítópultot és a napi műveletek áttekintését
+- Figyelheti az élő térképet a jármű-pozíciókkal
+- Ellenőrizheti a sofőrórákat és a megfelelést
+- Megtekintheti a flottajárműveket és sofőröket (csak olvasás)
+
+A Diszpécser nem:
+- Hozhat létre, szerkeszthet vagy törölhet rendeléseket
+- Férhet hozzá a tervezőtáblához
+- Generálhat vagy tekinthet meg számlákat
+- Tekinthet meg jelentéseket vagy exportokat
+- Módosíthat bármilyen beállítást
+
+*Valós példa: Bogdan éjszakai műszakban dolgozik. Az élő térképet és a sofőróra-irányítópultot figyeli, hogy minden sofőr menetrend szerint és megfelelően haladjon. Ha valami elromlik, felhívja a nappali diszpécsert — nincs szüksége a rendelések vagy számlák módosítására.*
+
+---
+
+### Flottakezelő
+
+A Flottakezelő **teljes irányítással rendelkezik a flottaműveletek felett** — járművek, pótkocsik, sofőrök, dokumentumok, üzemanyagkártya-importok, kabotázs-követés és árkártyák. A sofőrórákat is látja. Nem fér hozzá a rendelésekhez, a számlázáshoz, a tervezőtáblához vagy a jelentésekhez.
+
+A Flottakezelő:
+- Hozzáadhat, szerkeszthet és eltávolíthat járműveket, pótkocsikat és sofőröket
+- Kezelheti a flottadokumentumokat (ITP, biztosítás, CEMT, ADR-tanúsítványok)
+- Importálhat üzemanyagkártya-adatokat (DKV, UTA, AS24)
+- Nyomon követheti a kabotázs-megfelelést
+- Kezelheti az árkártyákat
+- Megtekintheti a sofőrórákat
+
+A Flottakezelő nem:
+- Hozhat létre, szerkeszthet vagy tekinthet meg rendeléseket
+- Férhet hozzá a tervezőtáblához
+- Generálhat vagy tekinthet meg számlákat
+- Tekinthet meg jelentéseket vagy exportokat
+- Módosíthat vállalati beállításokat vagy kezelhet felhasználókat
+
+*Valós példa: Ion felel a flottáért. Ő intézi a jármű-vizsgákat, biztosítás-megújításokat, sofőr-jogosítvány követést és az üzemanyagkártya-importokat. Nincs szüksége a rendelések vagy számlák megtekintésére — az a tervező feladata.*
+
+---
+
+### Ügyfélszolgálat
+
+Az Ügyfélszolgálat szerepkör **operatív hozzáférést biztosít a rendelésekhez, számlázáshoz, ügyfelekhez és jelentésekhez**. Az Ügyfélszolgálat felhasználók létrehozhatnak és szerkeszthetnek rendeléseket, generálhatnak számlákat, kezelhetik az ügyfélkapcsolatokat és meghívhatnak új felhasználókat. Nem rendelhetnek hozzá járműveket a tervezőtáblán, és nem kezelhetik a flottát.
+
+Az Ügyfélszolgálat felhasználó:
+- Létrehozhat, szerkeszthet és megtekinthet minden rendelést
+- Generálhat és küldhet számlákat
+- Kezelheti az ügyfeleket és az ügyfélportál-beállításokat
+- Hozzáférhet jelentésekhez és exportokhoz
+- Meghívhat új felhasználókat
+
+Az Ügyfélszolgálat felhasználó nem:
+- Rendelhet hozzá járműveket vagy sofőröket a tervezőtáblán
+- Kezelheti a flottát (járművek, pótkocsik, sofőrök)
+- Tekintheti meg az élő térképet vagy az irányítópultot
+- Módosíthatja a vállalati beállításokat vagy integrációkat
+
+*Valós példa: Elena végigviszi az ügyfélkapcsolatokat. Rendeléseket hoz létre, amikor egy ügyfél telefonál, számlát generál kiszállítás után, és jelentéseket küld. Amikor egy új csapattag csatlakozik, meghívót küldhet neki — de a flottakezelést és a tervezést az üzemeltetési csapatra hagyja.*
+
+---
+
+### Sofőr
+
+A Sofőr szerepkör eltér az összes többitől — **a sofőrök soha nem férnek hozzá a Druma webes platformhoz**. Ehelyett a Druma Sofőralkalmazásba jelentkeznek be az okostelefonjukon, egy **telefonszámmal és PIN-kóddal**, amelyet te állítasz be nekik a Flotta → Sofőrök menüpontban.
+
+A sofőralkalmazáson keresztül egy sofőr:
+- Láthatja a napi és a következő napokra kiosztott rendeléseit
+- Frissítheti a rendelés státuszát: Felrakva, Elindult, Lerakási ponton, Kiszállítva
+- Feltölthet fotókat (rakomány állapota, kézbesítési igazolás, kárjelentés)
+- Digitálisan aláírhatja az eCMR-dokumentumokat a képernyőn
+- Megtekintheti a felvételi és szállítási címeket, valamint az elérhetőségeket
+
+A sofőrök nem láthatják más sofőrök rendeléseit, az ügyfél-pénzügyeket vagy a vállalati beállításokat.
+
+<Warning>
+Ne próbáld meghívni a sofőröket a Beállítások → Felhasználók menüponton keresztül. A sofőröknek nincs szükségük meghívó e-mailre. Lépj a Flotta → Sofőrök menüpontra, nyisd meg a sofőr profilját, add meg a telefonszámát, és generálj PIN-kódot a **Telefon + PIN bejelentkezés** alatt. Add át a PIN-kódot közvetlenül a sofőrnek — az első bejelentkezéskor személyre szabja (saját PIN-kódot választ).
+</Warning>
+
+*Valós példa: Gheorghe távolsági sofőr. Minden reggel megnyitja a Druma-alkalmazást a telefonján, hogy lássa a rendelése részleteit, minden megállónál frissíti a státuszát, és a szállítási ponton digitálisan aláírja az eCMR-t.*
+
+---
+
+### Ügyfél
+
+A sofőrökhöz hasonlóan az ügyfelek sem férnek hozzá a Druma webes platformhoz. Minden ügyfélcégnek van egy **privát portál-linkje**, amely megmutatja az összes, a céged felé fennálló szállítmányát.
+
+Az ügyfélportálon keresztül egy ügyfél:
+- Láthatja az összes jelenlegi és korábbi rendelését a cégeddel
+- Nyomon követheti az élő kiszállítási státuszt
+- Letöltheti az eCMR-dokumentumokat, a kézbesítési igazolást és a számlákat
+- Megtekintheti a becsült érkezési időket
+
+Az ügyfelek nem láthatják más ügyfelek adatait, a belső rendelési jegyzeteidet, a költségeidet, vagy bármit a saját szállítmányaikon túl.
+
+*Valós példa: A Schmidt GmbH rendszeresen küld rakományt a céged felé. Egyszer megosztod velük a portál-linket. Ettől kezdve a logisztikai vezetőjük bármikor megnyithatja a linket, ha egy szállítmányt szeretne ellenőrizni — anélkül, hogy felhívna téged.*
+
 ## Több szerepkör hozzárendelése
 
-Egy személy több szerepkört is kaphat. Ez kisebb cégekben hasznos, ahol egy személy több feladatot lát el.
+Egy felhasználó több szerepkört is birtokolhat egyszerre. Ezt a felhasználó meghívásakor vagy a profilja későbbi szerkesztésekor állíthatod be.
 
-**Példa:** A diszpécseri és tervezői feladatokat ellátó személy kaphat egyszerre Tervező és Diszpécser szerepkört.
-
-A több szerepkör a meghíváskor, vagy a **Beállítások → Felhasználók** oldalon egy meglévő felhasználó profiljának szerkesztésekor rendelhető hozzá.
+Gyakori több-szerepkörös kombinációk:
+- **Vállalati admin + Tervező** — tulajdonos vagy senior diszpécser, aki a platformot is kezeli
+- **Tervező + Ügyfélszolgálat** — kisebb csapatban a diszpécser, aki az ügyfélkérdéseket is kezeli
 
 <Note>
-A több szerepkör körültekintő használata javasolt. A minimálisan szükséges hozzáférési szinttel kezdj — a szükség esetén bővíteni könnyebb, mint a már kiosztott jogosultságokat visszavonni.
+A több szerepkör hozzárendelését csak mértékkel használd. Kisebb csapatban ésszerű lehet, de ha mindenki széles hozzáférést kap, nehezebb nyomon követni a változásokat, és nő a hibalehetőség. Kezdd a legszűkebb szerepkörrel, amely lefedi a személy feladatait.
 </Note>
 
+## Több cég támogatása
+
+Egyetlen e-mail-cím **több Druma céges fiókhoz** is tartozhat. Ez akkor hasznos, ha:
+- Több jogi entitást kezelsz (egy holdingcég külön fuvarozókkal)
+- Egy külső könyvelő több, Drumát használó ügyfeleddel dolgozik
+- Egy sofőr-ügynökség több fuvarozónak biztosít sofőröket
+
+A cégek közötti váltáshoz kattints a céged nevére a platform jobb felső sarkában, és válaszd ki a másik céget a legördülő menüből. Minden cég adata teljesen elkülönül — az A cég felhasználói nem látják a B cég rendeléseit vagy ügyfeleit.
+
 <Card title="Csapat meghívása" icon="users" href="/en/getting-started/invite-your-team">
-  Lépésről lépésre útmutató a csapattagok meghívásához és a megfelelő szerepkör kiválasztásához.
+  Lépésről lépésre útmutató a felhasználók meghívásához és a sofőrök telefon + PIN bejelentkezésének beállításához.
+</Card>
+
+<Card title="Vállalati beállítások" icon="building" href="/en/admin/company-setup">
+  Állítsd be a jogi adataidat, a logódat és a számlabeállításokat.
 </Card>

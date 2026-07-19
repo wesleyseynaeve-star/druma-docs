@@ -1,13 +1,140 @@
 ---
-title: "Atelier si intretinere"
-description: "Gestioneaza perioadele de indisponibilitate a vehiculelor."
+title: "Service si mentenanta"
+description: "Creeaza si gestioneaza ordine de lucru pentru vehicule, seteaza programe de mentenanta, rezolva defecte de pe planning board si blocheaza automat camioanele cu defectiuni critice de siguranta."
 icon: "wrench"
 ---
 
-Cand un vehicul este la atelier:
+## Prezentare generala
 
-Mergi la **Camioane -> Vehicule -> [vehicul]** -> apasa **Marcheaza ca Indisponibil** -> selecteaza motivul (atelier/reparatii, inspectie ITP, accident, altele) -> seteaza perioada -> Salveaza.
+Modulul Service si Mentenanta ofera fleet managerilor o modalitate structurata de a urmari fiecare lucrare de mentenanta — de la schimburi de ulei de rutina pana la reparatii de defectiuni critice de siguranta. Ordinele de lucru se leaga direct de planning board (blocand camioanele cand este necesar) si de fluxul de inspectie post-cursa (defectiunile critice de siguranta pot crea ordine de lucru automat sau cu un singur click).
 
-Vehiculele indisponibile apar cu un indicator vizual pe tabla si nu pot fi atribuite la comenzi noi.
+Gasesti modulul sub **Flota → Ordine de Lucru** si **Flota → Mentenanta**.
 
-Cand revine: deschide profilul si apasa **Marcheaza ca Disponibil**.
+<Frame caption="Flota → Ordine de Lucru — lucrari urmarite de la Deschis pana la Finalizat, dupa Tipul de Serviciu.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Pagina Ordine de Lucru cu lucrarile de mentenanta dupa status si tip de serviciu" />
+</Frame>
+
+---
+
+## Ordine de lucru
+
+### Ce este un ordin de lucru
+
+Un ordin de lucru este o inregistrare a unei lucrari de mentenanta pe un camion specific. Captureaza ce trebuie facut, costurile de piese si manopera si statusul curent al lucrarii. Fiecare defectiune critica de siguranta a unui vehicul ar trebui sa aiba un ordin de lucru corespunzator, inainte ca camionul sa revina in serviciu.
+
+### Crearea unui ordin de lucru
+
+<Steps>
+  <Step title="Deschide tabul Ordine de Lucru">
+    Mergi la **Flota → Ordine de Lucru** si apasa **Creeaza Ordin de Lucru**.
+  </Step>
+  <Step title="Completeaza detaliile">
+    Selecteaza camionul si completeaza:
+
+    - **Tip de Serviciu** — alege unul din: Schimb Ulei, Service Frane, Schimb Anvelope, Inspectie, Reparatie, Recertificare ADR, Calibrare Tahograf, Altele, plus trei tipuri specifice reefer pentru remorci (Service Filtru si Ulei, Service Complet Reefer, Inspectie ATP)
+    - **Descriere** — ce trebuie facut
+    - **Atribuit catre** — service-ul sau tehnicianul responsabil (text liber)
+    - **Data programata** — cand este planificata lucrarea
+  </Step>
+  <Step title="Adauga elemente de linie">
+    Adauga unul sau mai multe elemente de linie pentru piese si manopera. Fiecare element de linie are o descriere, cantitate, cost unitar si tip (Piese / Manopera). **Costul total** este calculat automat din toate elementele de linie.
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza**. Ordinul de lucru este creat in status **Deschis**.
+  </Step>
+</Steps>
+
+### Masina de stari
+
+| Status | Semnificatie | Actiuni urmatoare |
+|---|---|---|
+| **Deschis** | Lucrare creata, inca neinceputa | Incepe Ordinul de Lucru, Anuleaza |
+| **In Desfasurare** | Lucrarea a inceput | Marcheaza Finalizat, Anuleaza |
+| **Finalizat** | Lucrarea este gata, camionul este liber | — |
+| **Anulat** | Lucrarea nu va fi finalizata | — |
+
+Apasa **Incepe Ordinul de Lucru** pentru a trece din Deschis in In Desfasurare. Apasa **Marcheaza Finalizat** cand lucrarea este gata. Un ordin de lucru finalizat sau anulat ridica orice auto-blocare de pe camion.
+
+<Note>
+Doar ordinele de lucru in status **Deschis** sau **In Desfasurare** mentin un camion blocat pe planning board. Finalizarea sau anularea ordinului de lucru readuce imediat camionul in lista de atribuire.
+</Note>
+
+---
+
+## Crearea unui ordin de lucru dintr-un defect
+
+Cand un sofer trimite o inspectie post-cursa cu o defectiune **Critica de Siguranta**, defectiunea apare in **Flota → Defecte**. Fiecare rand critic de siguranta are un buton **Creeaza Ordin de Lucru**.
+
+Apasarea lui deschide formularul de ordin de lucru pre-completat cu camionul inspectat si legat de tichetul de defect de origine. Nu exista un tip de ordin de lucru "Critic de Siguranta" — alege **Tipul de Serviciu** care se potriveste reparatiei (de ex. Reparatie, Service Frane), introdu o descriere, apoi adauga elemente de linie si o data programata si salveaza.
+
+---
+
+## Programe de mentenanta
+
+Programele de mentenanta iti permit sa urmaresti intervalele de service recurente per camion — ca sa stii mereu cand este scadenta urmatoarea schimbare de ulei, inlocuire de curea sau inspectie statutara.
+
+Mergi la **Flota → Mentenanta** pentru a gestiona programele.
+
+### Adaugarea unui program
+
+Apasa **Adauga Program** si configureaza:
+
+| Camp | Descriere |
+|---|---|
+| **Camion** | Carui vehicul i se aplica acest program |
+| **Tip de service** | Descriere in text liber (de ex. "Schimb ulei", "Rotatie anvelope") |
+| **Tip interval** | **km** (bazat pe distanta), **zile** (bazat pe calendar) sau **ore de motor** |
+| **Valoare interval** | Intervalul numeric (de ex. 15.000 km, 90 de zile, 500 de ore) |
+| **Ultima efectuare** | Data si citirea kilometrajului/orelor la ultimul service |
+
+Druma calculeaza data sau kilometrajul **Urmatoarei Scadente** din valorile ultimei efectuari si interval. Lista de programe este sortata dupa data urmatoarei scadente, ca elementele restante sa apara primele.
+
+Poti edita sau sterge orice program. Druma nu creeaza automat ordine de lucru din programe — programul este un instrument de planificare; creezi ordinul de lucru manual cand serviciul este scadent.
+
+---
+
+## Planning board: eticheta de cheie
+
+Cand un camion are unul sau mai multe ordine de lucru **Deschise** sau **In Desfasurare**, o eticheta chihlimbarie de cheie apare pe cardul acelui camion, pe planning board. Eticheta este un semnal rapid pentru dispeceri ca vehiculul are mentenanta restanta.
+
+### Rezolvare Rapida Service
+
+Apasa eticheta de cheie pentru a deschide modalul **Rezolvare Rapida Service**. De aici poti:
+
+- **Marcheaza Finalizat** — inchide ordinul de lucru si elimina blocarea, fara sa parasesti planning board-ul
+- **Anuleaza** — anuleaza ordinul de lucru si elimina blocarea
+
+Este conceput pentru situatiile in care trebuie doar sa elimini rapid o blocare (de ex. reparatia este gata si trebuie sa reatribui camionul), fara sa navighezi la tabul complet de Ordine de Lucru.
+
+---
+
+## Indisponibilitate automata pentru defectiuni critice de siguranta
+
+Daca comutatorul **Creeaza automat indisponibilitate vehicul pentru defecte critice de siguranta** este activat in **Setari → Lista de Verificare Post-Cursa**, trimiterea unei defectiuni critice de siguranta, automat:
+
+1. Creeaza o inregistrare de indisponibilitate a vehiculului pentru camion
+2. Elimina camionul din lista de atribuire de pe planning board
+3. Arata eticheta chihlimbarie de cheie pe cardul camionului
+
+Camionul ramane indisponibil pana cand ordinul de lucru asociat este marcat **Finalizat** sau **Anulat**. Comenzile viitoare deja atribuite camionului nu sunt dezatribuite automat — dispecerul primeste o notificare si trebuie sa le revizuiasca manual.
+
+<Warning>
+Daca un sofer trimite o defectiune critica de siguranta la finalul unui schimb si nimeni nu verifica planning board-ul inainte de dimineata, camionul nu va aparea ca disponibil pentru atribuire. Fa-ti un obicei din a verifica **Flota → Defecte** ca parte a verificarii de dimineata.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Inspectia post-cursa a vehiculului (DVIR)" icon="clipboard-check" href="/ro/fleet-compliance/post-trip-dvir">
+    Cum raporteaza soferii defectiuni la finalul unei curse, nivelurile de gravitate si cum declanseaza defectiunile critice de siguranta ordine de lucru.
+  </Card>
+  <Card title="Documente flota" icon="file-text" href="/ro/fleet-compliance/fleet-documents">
+    Urmareste expirarea ITP, asigurarii, CEMT si certificatului ADR — cu avertismente pe planning board cand documentele sunt aproape de expirare.
+  </Card>
+  <Card title="Anvelope flota" icon="circle" href="/ro/fleet-compliance/tyres">
+    Urmareste starea anvelopelor, adancimea profilului si costurile de inlocuire per vehicul.
+  </Card>
+  <Card title="Incidente flota" icon="triangle-exclamation" href="/ro/fleet-compliance/incidents">
+    Inregistreaza accidente, evenimente de daune si dosare de asigurare pentru flota ta.
+  </Card>
+</CardGroup>

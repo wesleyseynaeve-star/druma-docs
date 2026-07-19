@@ -1,16 +1,101 @@
 ---
-title: "Cursa zadarnica"
-description: "Inregistreaza si factureaza cursele zadarnice."
-icon: "ban"
+title: "Cursa irosita"
+description: "Cum declari o cursa irosita cand o cursa este anulata dupa ce soferul a plecat deja, si ce se inregistreaza pe comanda."
+icon: "triangle-exclamation"
 ---
 
-O cursa zadarnica apare cand soferul ajunge la preluare si incarcatura nu este disponibila.
+## Ce este o cursa irosita?
+
+O cursa irosita se intampla cand un sofer a plecat deja intr-o misiune — sau este pe la jumatatea ei — iar cursa este anulata sau devine imposibil de finalizat. Cauze comune includ:
+
+- Clientul anuleaza comanda dupa ce soferul este deja in tranzit.
+- Forta majora — drumuri inchise, probleme la frontiera, sau vreme severa.
+- O decizie a companiei de a intrerupe cursa (de ex., defectiune de vehicul).
+
+Spre deosebire de o anulare simpla (care se aplica comenzilor inca in status Ciorna sau In asteptare), o cursa irosita afecteaza comenzi care sunt deja **active** — soferul a plecat din depozit si a suportat costuri reale.
+
+---
+
+## Cand poti declara o cursa irosita?
+
+Poti declara o cursa irosita pe orice comanda care se afla in unul din aceste statusuri active:
+
+- Plecat
+- Sosit la Preluare
+- Incarcare
+- In Tranzit
+- Sosit la Livrare
+- Descarcare
+
+Comenzile in status Ciorna, In asteptare sau Atribuita ar trebui anulate normal — nicio declaratie de cursa irosita nu este necesara, deoarece soferul inca nu s-a miscat.
+
+<Warning>
+Declararea unei curse irosite **nu poate fi anulata**. Comanda trece permanent in statusul **Cursa Irosita**. Asigura-te ca ai confirmat situatia cu soferul, inainte sa continui.
+</Warning>
+
+---
+
+## Cum declari o cursa irosita
 
 <Steps>
-  <Step title="Deschide comanda">Mergi la Comenzi si deschide comanda afectata.</Step>
-  <Step title="Apasa Inregistreaza Cursa Zadarnica">In meniul de actiuni al comenzii.</Step>
-  <Step title="Completeaza detaliile">Ora de sosire, motivul, note.</Step>
-  <Step title="Salveaza">Taxa se adauga automat pe comanda.</Step>
+  <Step title="Deschide comanda">
+    Mergi la **Planner → Comenzi** si apasa comanda pe care trebuie sa o marchezi ca cursa irosita. Panoul de detaliu al comenzii se deschide in dreapta.
+  </Step>
+  <Step title="Apasa Declara Cursa Irosita">
+    In panoul de detaliu al comenzii, gaseste butonul **Declara Cursa Irosita**. Acest buton apare doar pentru comenzile intr-un status activ (de la Plecat pana la Descarcare).
+  </Step>
+  <Step title="Completeaza detaliile">
+    Modalul de cursa irosita cere:
+    - **Cod de motiv** — Selecteaza motivul din lista (de ex., anulare client, forta majora, decizie companie).
+    - **Comentariu** — Adauga o explicatie in text liber a ce s-a intamplat.
+    - **Anulat de** — Alege cine a initiat anularea: Client, Decizie Proprie, sau Forta Majora.
+    - **Locatia soferului** — Unde este soferul chiar acum. Acesta este un camp obligatoriu.
+    - **Kilometri morti** — Numarul de kilometri pe care soferul i-a parcurs deja, fara niciun venit de aratat pentru ei.
+    - **Factureaza clientul** — Activeaza asta daca intentionezi sa il facturezi pe client pentru cursa irosita.
+  </Step>
+  <Step title="Confirma">
+    Apasa **Declara Cursa Irosita** pentru a confirma. Statusul comenzii se schimba imediat in **Cursa Irosita**.
+  </Step>
 </Steps>
 
-Taxa apare ca element separat pe factura, editabil inainte de emitere.
+---
+
+## Ce se intampla dupa declaratie
+
+Odata ce o comanda este marcata ca o cursa irosita:
+
+1. **Statusul comenzii se schimba in Cursa Irosita** — apare cu o eticheta rosie in lista de comenzi si pe tabla de planificare.
+2. **Soferul este eliberat** — camionul devine disponibil pentru atribuiri noi, pe tabla de planificare.
+3. **Evenimentul este inregistrat pe comanda** — codul de motiv, cine a anulat (client, decizie proprie, sau forta majora), locatia soferului, kilometrii morti si (daca ai activat "Factureaza clientul") o suma de facturare catre client sunt toate salvate direct pe inregistrarea comenzii.
+
+<Note>
+Declararea unei curse irosite nu genereaza automat o inregistrare separata de salarizare sau o inregistrare de sine statatoare a taxei. Ce este inregistrat traieste pe comanda insasi — foloseste acea informatie manual pentru salarizarea soferului si, daca ai activat "Factureaza clientul", cand construiesti factura clientului.
+</Note>
+
+---
+
+## Facturarea clientului
+
+Daca cursa irosita a fost cauzata de o anulare a clientului, poate vrei sa recuperezi costurile. Cand activezi **Factureaza clientul** in modalul de cursa irosita, introduci suma de facturare a clientului direct (precompletata din pretul convenit al comenzii, daca exista unul). Aceasta suma este salvata pe comanda, ca sa o aduci in factura mai tarziu — nu este auto-convertita intr-un element de linie de factura de la sine.
+
+<Note>
+Daca il facturezi pe client depinde de termenii tai contractuali. Druma inregistreaza suma — depinde de tine sa decizi daca si cum sa o facturezi.
+</Note>
+
+---
+
+## Cursa irosita pe tabla de planificare
+
+Comenzile cu statusul **Cursa Irosita** apar cu o pastila rosie pe tabla de planificare. Le poti filtra folosind jetonul de filtru **Cursa Irosita** din panoul de comenzi.
+
+Comenzile de cursa irosita sunt excluse din calculele de utilizare a flotei si din KPI-urile de incarcatura activa.
+
+---
+
+<Card title="Ciclul de viata al comenzii" icon="circle-dot" href="/ro/planner/order-lifecycle">
+  Vezi cum se incadreaza Cursa Irosita in fluxul complet de status al comenzii — inclusiv ce statusuri pot tranzitiona spre ea.
+</Card>
+
+<Card title="Crearea unei comenzi" icon="plus" href="/ro/planner/creating-orders">
+  Afla cum creezi comenzi si intelege diferitele tipuri de comanda.
+</Card>

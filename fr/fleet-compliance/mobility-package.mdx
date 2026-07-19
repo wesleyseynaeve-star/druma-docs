@@ -1,0 +1,142 @@
+---
+title: "Conformité au Paquet Mobilité"
+description: "Comment Druma suit les obligations du Paquet Mobilité de l'UE — retour véhicule toutes les 8 semaines (Règl. 2020/1055), retour chauffeur toutes les 4 semaines (Règl. 2020/1054), et déclarations de détachement IMI (Dir. 2020/1057)."
+icon: "globe"
+---
+
+Le Paquet Mobilité de l'UE, en vigueur depuis février 2022, a introduit trois obligations contraignantes pour les opérateurs de transport routier transfrontalier. Le non-respect est vérifié lors des contrôles routiers et peut entraîner des amendes dans tout État membre de l'UE où le camion est arrêté.
+
+---
+
+## Les trois règles
+
+| Règlement | Obligation | Échéance |
+|---|---|---|
+| **Règlement 2020/1055** | Le véhicule doit retourner dans le pays d'origine de l'opérateur | Au moins toutes les **8 semaines** |
+| **Règlement 2020/1054** | Le chauffeur doit rentrer chez lui (ou à un lieu de son choix) | Au moins toutes les **4 semaines**, pour le repos hebdomadaire régulier |
+| **Directive 2020/1057** | Les déclarations de détachement doivent être soumises via IMI | Avant que le chauffeur ne commence à travailler dans l'État membre d'accueil |
+
+<Warning>
+Le retour du véhicule signifie que le véhicule traverse physiquement à nouveau la frontière du pays où la licence d'exploitation est détenue — pas simplement un bref arrêt dans une zone frontalière. Le retour du chauffeur signifie que le chauffeur prend son repos hebdomadaire régulier (minimum 45 heures consécutives) au lieu choisi, pas un repos réduit. Les deux exigences sont interprétées strictement.
+</Warning>
+
+---
+
+## Où trouver le tableau de bord Paquet Mobilité
+
+Accédez à **Analytique → Paquet Mobilité**. La page est divisée en trois sections : Retours véhicule, Retours chauffeur, et Déclarations IMI.
+
+---
+
+## Retours véhicule
+
+Le tableau Retours véhicule affiche une ligne par camion avec la dernière date à laquelle le véhicule est retourné au pays d'origine, le nombre de jours écoulés depuis ce retour, et un badge de statut.
+
+| Statut | Condition |
+|---|---|
+| **OK** | Moins de 6 semaines depuis le dernier retour |
+| **Avertissement** | 6–8 semaines depuis le dernier retour (14 jours ou moins restant avant l'échéance de 8 semaines) |
+| **En retard** | Plus de 8 semaines depuis le dernier retour |
+
+Un véhicule **En retard** doit retourner au pays d'origine immédiatement pour rétablir la conformité. Planifiez les legs de retour de manière proactive — dès qu'un camion est signalé **Avertissement**, commencez à programmer un trajet retour.
+
+<Note>
+Le « dernier retour » n'est pas dérivé d'un flux GPS en direct ni d'un événement dédié de suivi de retour. Il est déduit des **arrêts de commande terminés** : le dernier arrêt de chargement ou de déchargement, sur une commande livrée ou facturée, qui se situe dans le pays de base de l'entreprise (`companies.country`). C'est un indicateur pratique, pas une observation directe — un camion ayant physiquement traversé le pays de base sans arrêt de commande là-bas (par ex. en transit à vide, ou un arrêt que le chauffeur n'a pas enregistré) ne sera pas comptabilisé comme étant retourné. Si vos véhicules ne chargent ou ne déchargent pas systématiquement dans le pays de base dans le cadre de commandes normales, enregistrez les retours manuellement à la place.
+</Note>
+
+---
+
+## Retours chauffeur
+
+Le tableau Retours chauffeur affiche une ligne par chauffeur avec la dernière date de retour enregistrée, les jours écoulés, et un badge de statut.
+
+| Statut | Condition |
+|---|---|
+| **OK** | Moins de 3 semaines depuis le dernier retour |
+| **Avertissement** | 3–4 semaines depuis le dernier retour |
+| **En retard** | Plus de 4 semaines depuis le dernier retour |
+
+Comme pour les retours véhicule, les données de retour chauffeur ne sont pas dérivées des données de période de repos du tachygraphe — Druma ne distingue pas du tout le repos régulier du repos réduit, ni le repos dans le véhicule du repos à un arrêt approprié, à cette fin. Il utilise le même indicateur d'arrêt de commande terminé : le dernier arrêt de chargement ou de déchargement, sur une commande livrée ou facturée pour ce chauffeur, dans le pays de base de l'entreprise. Il n'existe pas non plus encore de champ « pays d'origine du chauffeur » séparé — le pays de base de l'entreprise sert de substitut au domicile/centre opérationnel du chauffeur.
+
+Si les commandes de vos chauffeurs ne les font pas naturellement passer par le pays de base, cet indicateur sous-détectera les retours éligibles — enregistrez les retours manuellement en modifiant la fiche du chauffeur à la place.
+
+---
+
+## Déclarations de détachement IMI
+
+La section Déclarations IMI liste toutes les déclarations de détachement actives et historiques pour les chauffeurs travaillant dans d'autres États membres de l'UE. Chaque entrée montre :
+
+- Nom du chauffeur
+- Pays d'accueil
+- Dates de début et de fin de la déclaration
+- Numéro de référence IMI (si saisi)
+- Badge de statut
+
+| Statut | Signification |
+|---|---|
+| **Active** | La déclaration est valide et à jour |
+| **Expire bientôt** | Expire sous 30 jours — action requise |
+| **Expirée** | Date de fin dépassée |
+| **Retirée** | Retirée manuellement |
+
+Les déclarations marquées **Expire bientôt** sont mises en évidence avec un badge ambre afin que vous puissiez les renouveler ou les prolonger avant la date d'expiration.
+
+---
+
+## Créer une déclaration de détachement
+
+<Steps>
+  <Step title="Ouvrez Déclarations IMI">
+    Accédez à **Analytique → Paquet Mobilité** et sélectionnez l'onglet **Déclarations IMI**.
+  </Step>
+  <Step title="Cliquez sur Nouvelle déclaration">
+    Cliquez sur le bouton **Nouvelle déclaration**.
+  </Step>
+  <Step title="Renseignez les détails">
+    Saisissez le chauffeur, le pays d'accueil où le chauffeur est détaché, et les dates de début et de fin de la période de détachement.
+  </Step>
+  <Step title="Soumettez sur le portail IMI">
+    Druma ne soumet **pas** directement à IMI — vous devez le faire séparément via le [système IMI](https://ec.europa.eu/imi-net/). Une fois soumis et votre numéro de référence IMI reçu, revenez dans Druma pour le saisir.
+  </Step>
+  <Step title="Ajoutez le numéro de référence IMI">
+    Modifiez la déclaration dans Druma et saisissez le numéro de référence IMI. Cela relie votre fiche Druma à la soumission officielle.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**. Druma suivra l'expiration et marquera la déclaration comme **Expire bientôt** à l'approche de la date de fin.
+  </Step>
+</Steps>
+
+<Note>
+Une déclaration de détachement est requise chaque fois qu'un chauffeur travaille dans un État membre d'accueil, pas une seule fois par chauffeur. Si un chauffeur se rend régulièrement en Allemagne, une nouvelle déclaration est requise pour chaque période de détachement. Les déclarations ne peuvent pas se chevaucher pour le même chauffeur et le même pays d'accueil.
+</Note>
+
+---
+
+## Comment les dates de retour sont suivies
+
+| Type de donnée | Source |
+|---|---|
+| Dates de retour véhicule | Arrêt de commande terminé le plus récent (chargement ou déchargement, sur une commande livrée/facturée) dans le pays de base de l'entreprise |
+| Dates de retour chauffeur | Même indicateur d'arrêt de commande terminé, limité aux commandes de ce chauffeur |
+| Dérogation manuelle | Modifiez directement la fiche du chauffeur ou du véhicule |
+
+Comme les deux systèmes de suivi reposent sur des arrêts de commande plutôt que sur un flux de position en direct, ils ne voient la présence dans un pays qu'à travers les commandes terminées — pas via les traces GPS ou les données tachygraphe. Si votre exploitation ne fait pas naturellement passer les camions/chauffeurs par le pays de base dans le cadre de commandes normales, enregistrez les dates de retour manuellement pour garder les badges de statut et les comptes à rebours précis.
+
+---
+
+## Articles associés
+
+<CardGroup cols={2}>
+  <Card title="Règles de conduite UE" icon="clock" href="/fr/fleet-compliance/eu-driving-hours">
+    Limites de conduite du règlement 561/2006 — distinctes du Paquet Mobilité mais appliquées en parallèle.
+  </Card>
+  <Card title="Temps de travail des chauffeurs (WTD)" icon="clock" href="/fr/fleet-compliance/driver-working-time">
+    Limites de temps de travail de 60 heures et de moyenne de 48 heures de la Directive 2002/15/CE.
+  </Card>
+  <Card title="Archive Tachygraphe" icon="hard-drive" href="/fr/fleet-compliance/tacho-archive">
+    Stockage des fichiers DDD/TGD pour respecter l'exigence de fréquence de téléchargement du Règl. 165/2014.
+  </Card>
+  <Card title="Documents de flotte" icon="folder-open" href="/fr/fleet-compliance/fleet-documents">
+    Conformité et suivi d'expiration des documents véhicule.
+  </Card>
+</CardGroup>

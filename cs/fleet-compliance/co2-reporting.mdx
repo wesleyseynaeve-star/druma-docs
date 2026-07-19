@@ -1,41 +1,131 @@
 ---
 title: "Reporting CO2"
-description: "Jak Druma vypočítává emise CO2 pro každou objednávku a generuje reporty emisí vozového parku."
+description: "Jak Druma vypočítává emise CO2 na objednávku a na vozidlo a jak generovat reporty CO2 pro klienty a ESG výkaznictví."
 icon: "leaf"
 ---
 
-## Přehled
+Velcí odesílatelé — maloobchodníci, výrobci, logistické firmy — stále častěji vyžadují, aby jejich přepravci reportovali uhlíkovou stopu každé zásilky. Druma automaticky vypočítává emise CO2 na objednávku a poskytuje stažitelné reporty pro ESG výkaznictví klientů.
 
-Druma automaticky vypočítává emise CO2 pro každou dokončenou objednávku na základě:
-- Vzdálenosti trasy vypočítané HERE Maps
-- Emisní normy Euro vozidla
-- Průměrné spotřeby paliva pro danou třídu vozidla
-
-## Zobrazení reportu CO2
-
-Přejděte do **Reporty → CO2** pro přístup k přehledu emisí. Report zobrazuje:
-- Celkové emise CO2 za zvolené období
-- Emise podle vozidla
-- Emise podle klienta nebo trasy
-- Srovnání s předchozím obdobím
-
-## Použití v klientských reportech
-
-Data CO2 jsou k dispozici klientům jejich portálu pro sledování uhlíkové stopy zásilek. Emise jsou reportovány v kg CO2 na zásilku.
+---
 
 ## Metodika výpočtu
 
-Druma používá standardizovaný výpočetní model:
-- EURO 3: 900 g CO2/km
-- EURO 4: 850 g CO2/km
-- EURO 5: 820 g CO2/km
-- EURO 6: 780 g CO2/km
+Druma se řídí **rámcem GLEC v4.0** (Global Logistics Emissions Council), který je také v souladu s **ISO 14083** — mezinárodní normou pro kvantifikaci a reportování emisí skleníkových plynů z přepravních řetězců (výpočet Tier 1 s výchozími faktory). Jde o metodiku, kterou uznává a přijímá většina velkých odesílatelů a auditorů.
 
-Hodnoty jsou průměry pro plně naložené návěsové soupravy a slouží pro srovnávací účely.
+Na rozdíl od čistě vzdálenostního odhadu je metoda GLEC v4.0 Tier 1 založena na **tunokilometrech** — násobí vzdálenost skutečnou hmotností nákladu, ne pouze typem vozidla:
 
-<Card title="Report profitability tras" icon="chart-bar" href="/en/reports/lane-profitability">
-  Kombinujte data CO2 s finančními výsledky pro komplexní pohled na trasy.
-</Card>
+```
+CO2e (kg) = Vzdálenost (km) × (Hmotnost (kg) ÷ 1000) × Emisní faktor (gCO2e/tunokm) ÷ 1000
+```
+
+Hmotnost je povinný vstup vzorce: stejná trasa jetá prázdná a jetá s plným nákladem produkuje velmi odlišné hodnoty CO2e. Ujistěte se, že hmotnost nákladu objednávky je zadána přesně — přímo ovlivňuje výpočet emisí, ne jen fakturaci.
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/fleet-compliance/co2-reporting).
+## Emisní faktory podle třídy vozidla a typu paliva
+
+Emisní faktor se vyhledává v referenční tabulce (`co2_emission_factors`, výchozí hodnoty GLEC v4.0 pro Evropu) podle **třídy vozidla** a **typu paliva** — ne podle emisní normy Euro vozidla, která se pro tento výpočet vůbec nekonzultuje. Třída vozidla se odvozuje automaticky z nosnosti/hmotnostní kapacity vozidla:
+
+| Nosnost vozidla | Třída vozidla |
+|---|---|
+| Nad 30 000 kg | Návěsová souprava 34t (typický kamion FTL) |
+| 15 000 – 30 000 kg | Valníkové vozidlo 16–26t |
+| Pod 15 000 kg | Valníkové vozidlo 12–16t |
+
+| Třída vozidla | Typ paliva | Emisní faktor (gCO2e/tunokm) |
+|---|---|---|
+| Návěsová souprava 34t | Diesel | 62 |
+| Návěsová souprava 34t | LNG | 54 |
+| Návěsová souprava 34t | Elektrické | 25 |
+| Návěsová souprava 34t | HVO | 12 |
+| Valníkové 16–26t | Diesel | 91 |
+| Valníkové 16–26t | Elektrické | 37 |
+| Valníkové 12–16t | Diesel | 119 |
+| Valníkové 12–16t | Elektrické | 48 |
+| Návěsová souprava 40t (mega návěs) | Diesel | 55 |
+| Návěsová souprava 40t (mega návěs) | LNG | 48 |
+| Návěsová souprava 40t (mega návěs) | Elektrické | 22 |
+
+<Note>
+Pokud vozidlo nemá nastavený typ paliva, Druma předpokládá diesel. Pokud není nalezen přesný faktor pro danou kombinaci třídy vozidla/typu paliva, Druma použije záložní dieselový faktor pro stejnou třídu vozidla — neexistuje chování „výchozí na konkrétní normu Euro", protože norma Euro v tomto vyhledávání vůbec nefiguruje.
+</Note>
+
+---
+
+## Odkud pochází vzdálenost
+
+Vzdálenost použitá ve výpočtu je **vzdálenost trasy optimalizované pro kamiony** vypočítaná HERE Maps při vytvoření objednávky. Nejde o vzdálenost vzdušnou čarou — zohledňuje silnice povolené pro kamiony, hmotnostní omezení a výškové limity.
+
+Pokud vzdálenost na objednávce ručně přepíšete (například protože se skutečná trasa lišila od vypočítané), Druma pro výpočet CO2 použije přepsanou vzdálenost.
+
+---
+
+## Zobrazení CO2 na úrovni objednávky
+
+Každá dokončená objednávka zobrazuje svou hodnotu CO2 na stránce detailu objednávky, v sekci **Finance** nebo **Souhrn**. Na první pohled uvidíte:
+
+- Vzdálenost trasy v km
+- Použitou hmotnost nákladu
+- Celkové kg CO2e za objednávku
+
+---
+
+## Měsíční celkový součet za flotilu
+
+Druma agreguje hodnoty CO2 všech objednávek do měsíčního celkového součtu za flotilu. Pro zobrazení:
+
+1. Přejděte do **Reporty → Report CO2**
+2. Nastavte časový rozsah (např. kalendářní měsíc nebo vlastní období)
+3. Report zobrazuje:
+   - Celkové CO2 flotily za období
+   - Rozpis podle vozidla (která vozidla mají nejvyšší emise)
+   - Rozpis podle klienta (kolik CO2 vygenerovaly zásilky každého klienta)
+
+---
+
+## CO2 podle klienta v klientském portálu
+
+Klienti s přístupem do klientského portálu Druma mohou přímo zobrazit hodnotu CO2 pro každou svou zásilku. Nemusí se vás ptát — je viditelná u každé dokončené objednávky v jejich zobrazení portálu.
+
+To je obzvláště užitečné pro klienty, kteří potřebují reportovat **emise scope 3** (emise dodavatelského řetězce) jako součást vlastních povinností ESG nebo výkaznictví udržitelnosti podle CSRD nebo podobných rámců.
+
+---
+
+## Export reportu CO2
+
+Stránka Report CO2 nemá tlačítko „Stáhnout PDF". Místo toho z **Reporty → Report CO2** (roční zobrazení) můžete exportovat ve třech formátech:
+
+- **Roční XLSX** — tabulkový sešit s hodnotami CO2 jednotlivých objednávek za rok
+- **Datový balíček CSRD (.csv)** — datový export formátovaný pro napojení na výkaznictví CSRD / ESRS E1 scope 3
+- **iXBRL (.xhtml)** — soubor inline XBRL pro sadu tagů ESRS E1 scope 3, s upozorněním v aplikaci, že musí být před podáním zkontrolován vaším auditorem udržitelnosti
+
+Měsíční zobrazení místo toho nabízí obecnou akci **tisk** a **export** v tabulce, pokrývající sloupce a časový rozsah, které máte aktuálně vybrané.
+
+<Note>
+Samostatně každý klient s dokončenými objednávkami automaticky obdrží měsíční report CO2 e-mailem — HTML souhrn emisí jeho zásilek za předchozí měsíc, generovaný a odesílaný automaticky 1. den každého měsíce. Toto nespouštíte ze stránky Report CO2; běží na pozadí pro každého klienta s doručeními v daném období.
+</Note>
+
+---
+
+## Proč na tom záleží pro vaše podnikání
+
+Reportování emisí už není jen pro velké dopravce. Trend se posouvá dolů v dodavatelském řetězci:
+
+- **CSRD** (směrnice EU o podnikovém výkaznictví udržitelnosti) vyžaduje, aby velké společnosti reportovaly emise scope 3 — což zahrnuje jimi nakupovanou přepravu
+- **Velcí maloobchodníci a výrobci** přenášejí tento požadavek na výkaznictví na své dodavatele a poskytovatele služeb
+- **Tendry a poptávky** stále častěji vyžadují zdokumentovanou metodiku CO2
+- **Programy zelené přepravy** jako SmartWay Europe a Clean Cargo dávají při zadávání zakázek přednost dopravcům se zdokumentovanými daty o emisích
+
+Mít reporty CO2 připravené — s uznávanou metodikou (GLEC v4.0 / ISO 14083) — odlišuje vaši společnost v konkurenčních tendrech.
+
+---
+
+## Související články
+
+<Card title="Report CO2" icon="chart-bar" href="/cs/reports/co2-report">
+  Podrobný průvodce filtry Reportu CO2, možnostmi exportu a interpretací dat.
+</Card>
+
+<Card title="Správa vozového parku" icon="truck" href="/cs/planner/fleet-management">
+  Jak nastavit nosnost vozidla a typ paliva — data flotily, která vstupují do výpočtů CO2.
+</Card>

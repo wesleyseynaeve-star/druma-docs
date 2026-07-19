@@ -1,98 +1,95 @@
 ---
 title: "Raport emisji CO2"
-description: "Śledź emisje CO2 całej swojej floty według ciężarówki, klienta i trasy za pomocą metodologii GLEC Framework v3 / ISO 14083 — z możliwością eksportu PDF dla klientów."
-icon: "leaf"
+description: "Miesięczne dane emisji floty obliczane wg standardów GLEC Framework v4.0 i ISO 14083, gotowe do udostępnienia klientom na potrzeby ich raportów ESG."
+icon: "cloud"
 ---
 
-Raport CO2 oblicza emisje dwutlenku węgla Twojej floty dla dostarczonych zleceń. Wyniki są prezentowane w podziale na ciężarówkę, klienta i trasę, a każdy klient może otrzymać certyfikowany raport PDF jako dowód emisji.
+Klienci — szczególnie duzi sprzedawcy detaliczni, producenci i firmy logistyczne — coraz częściej potrzebują danych o emisjach CO2 od swoich dostawców transportu na potrzeby własnych raportów ESG i zrównoważonego rozwoju. Druma automatycznie oblicza emisje Twojej floty z danych zleceń i pojazdów i tworzy raport, który możesz udostępnić bezpośrednio klientom.
 
----
+## Otwieranie raportu
 
-## Metodologia
+Przejdź do **Raporty → Raport CO2**.
 
-Druma stosuje **GLEC Framework v3 / ISO 14083** do obliczania emisji CO2.
+Domyślnie widzisz widok **Miesięczny** — najnowsze przesyłki z obliczoną wartością CO2, od najnowszych. Przełącz na **Roczny (CSRD)** i wybierz **rok**, aby zbudować zbiór danych za pełny rok na potrzeby eksportów zrównoważonego rozwoju. Opcjonalnie zawęź dowolny widok do jednego klienta filtrem **Klient**.
 
-Kluczowe założenia metodologii:
-- Emisje są obliczane na podstawie **zużytego paliwa × współczynnik emisji** (TTW — Tank-to-Wheel)
-- Współczynnik emisji dla oleju napędowego: **2,68 kg CO2/litr**
-- Zużycie paliwa pobierane jest ze zlecenia (faktyczne z importu kart paliwowych lub szacowane z karty stawek)
-- Jeśli brak faktycznych danych o paliwie: zużycie szacowane na podstawie **dystansu × średnie zużycie** skonfigurowanego dla pojazdu
+<Frame caption="Miesięczny Raport CO2 — dystans, waga i CO2 (kg) per zlecenie, kolumna Metoda każdego wiersza pokazuje wersję współczynnika GLEC.">
+  <img src="/images/reports/co2-report.png" alt="Miesięczny raport CO2 z wykresem emisji i tabelą per zlecenie" />
+</Frame>
 
----
+## Co pokazuje raport
 
-## Dostęp do raportu
+Strona ma dwa tryby widoku, przełączane na górze: **Miesięczny** i **Roczny (CSRD)**.
 
-Przejdź do **Raporty → CO2**.
+### Widok miesięczny
 
----
+Tabela per przesyłka — jeden wiersz na zlecenie, z dystansem, wagą, obliczonym CO2, metodą obliczenia, klientem i pojazdem. Filtruj do jednego klienta listą rozwijaną **Klient** i użyj wykresu trendu nad tabelą, aby zobaczyć łączne tCO2e wg miesiąca. Pasek KPI pokazuje łączne CO2 za okres, średnie CO2 na zlecenie i ile zleceń ma obliczoną wartość CO2.
 
-## Filtry
+<Note>
+Widok miesięczny jest ograniczony do pierwszych **500 wierszy** dla danego filtra (konwencja stron raportowych stosowana w całej Druma). Jeśli miesiąc jest obcięty, zawęź zakres dat lub filtr klienta po pełny obraz — pojawia się wtedy baner ostrzeżenia na stronie.
+</Note>
 
-| Filtr | Opis |
-|-------|------|
-| **Zakres dat** | Wybierz przedział dat dostawy. Domyślnie: bieżący rok. |
-| **Widok** | Przełącz między **Ciężarówka**, **Klient** i **Trasa**. |
-| **Klient** | Ogranicz do konkretnego klienta (dostępny tylko w widoku Klient). |
+### Widok roczny (CSRD)
 
----
+Ta sama struktura per przesyłka, rozszerzona o datę dostawy, pełne adresy odbioru/dostawy i kolumnę normy Euro pojazdu (dla odniesienia — sama wartość CO2 nie jest obliczana z normy Euro, patrz niżej). Ten widok jest ograniczony do 5000 przesyłek na rok; ostrzeżenie o obcięciu pojawia się, jeśli rok ma więcej.
 
-## Widoki raportu
+## Metodologia obliczania emisji
 
-### Widok: Ciężarówka
+Druma stosuje domyślne współczynniki emisji **GLEC Framework v4.0**, zgodne z **ISO 14083** (metoda Tier 1) — międzynarodowym standardem kwantyfikacji i raportowania emisji gazów cieplarnianych z łańcuchów transportowych.
 
-Tabela pokazuje każdą ciężarówkę z kolumnami:
+CO2 na zlecenie **nie** jest oparte na normie emisji Euro pojazdu. Jest oparte na **klasie wagowej** i **typie paliwa** pojazdu:
 
-| Kolumna | Opis |
-|---------|------|
-| **Pojazd** | Numer rejestracyjny ciężarówki |
-| **Liczba zleceń** | Dostarczone zlecenia w wybranym okresie |
-| **Dystans (km)** | Łączny dystans |
-| **Zużycie paliwa (l)** | Faktyczne lub szacowane zużycie |
-| **CO2 (kg)** | Łączna emisja |
-| **CO2 na km (g/km)** | Intensywność emisji |
+| Klasa pojazdu | Typ paliwa | Współczynnik emisji (gCO2e / tonokm) |
+|---|---|---|
+| Ciągnik siodłowy 32–34t (standardowa ciężarówka FTL) | Diesel | 62 |
+| Ciągnik siodłowy 32–34t | LNG | 54 |
+| Ciągnik siodłowy 32–34t | Elektryczny | 25 |
+| Ciągnik siodłowy 32–34t | HVO | 12 |
+| Pojazd sztywny 16–26t | Diesel | 91 |
+| Pojazd sztywny 16–26t | Elektryczny | 37 |
+| Pojazd sztywny 12–16t | Diesel | 119 |
+| Pojazd sztywny 12–16t | Elektryczny | 48 |
 
-### Widok: Klient
+Klasa pojazdu jest wyprowadzana automatycznie z zarejestrowanej maksymalnej ładowności/wagi pojazdu (ponad 30t → ciągnik siodłowy 32–34t; ponad 15t → pojazd sztywny 16–26t; w przeciwnym razie pojazd sztywny 12–16t). Typ paliwa pochodzi z rekordu pojazdu i domyślnie to diesel, jeśli nie ustawiono; jeśli dla nietypowego typu paliwa w danej klasie nie ma jeszcze współczynnika, Druma używa zamiast tego współczynnika diesla dla tej samej klasy, zamiast zostawić zlecenie bez obliczenia.
 
-Tabela pokazuje emisje per klient. Każdy wiersz klienta można rozwinąć, aby zobaczyć szczegółowe dane per zlecenie.
+Wzór (Well-to-Wheel, ISO 14083 Tier 1):
 
-### Widok: Trasa
+```
+CO2e (kg) = dystans (km) × [waga (kg) ÷ 1000] × współczynnik emisji (gCO2e/tkm) ÷ 1000
+```
 
-Agregacja par kraj–kraj z łączną emisją CO2 i liczbą zleceń.
+Dystans pochodzi z routingu ciężarówkowego PTV (ten sam dystans pokazany na zleceniu). Waga to zarejestrowana waga ładunku zlecenia; jeśli zlecenie nie ma zarejestrowanej wagi, Druma szacuje połowę maksymalnej ładowności pojazdu jako konserwatywny przeciętny ładunek.
 
----
+## Udostępnianie danych CO2 klientom
 
-## Udostępnianie raportu klientowi
+Druma automatycznie wysyła miesięczne podsumowanie CO2 e-mailem do każdego kontaktu klienta z włączoną opcją **Otrzymuje raporty CO2** (ustawianą per kontakt na karcie **Kontakty** klienta) — nie jest potrzebny ręczny eksport dla tego odbiorcy.
 
-Kliknij **Eksportuj PDF** obok wiersza klienta (w widoku Klient), aby wygenerować certyfikowany raport emisji CO2 dla tego klienta. PDF zawiera:
+Po cokolwiek poza tym automatycznym e-mailem — pełny roczny pakiet zgodny z ESRS, doraźne udostępnienie zespołowi ds. zrównoważonego rozwoju klienta, albo Twój własny rekord wewnętrzny — przełącz się na widok **Roczny (CSRD)** i użyj przycisków eksportu opisanych w [Eksporty emisji CSRD](/pl/reports/csrd-exports): Roczny XLSX, Pakiet danych CSRD (CSV) i iXBRL. Widok miesięczny ma też ogólny przycisk drukuj/eksportuj dla widocznej tabeli.
 
-- Dane Twojej firmy i logo
-- Dane klienta
-- Okres raportowania
-- Podsumowanie emisji CO2 ze wszystkich zleceń
-- Metodologię obliczeniową (GLEC Framework v3)
-- Zestawienie per zlecenie
+### Co oznacza Zakres 3
 
-Możesz wysłać ten PDF bezpośrednio do klienta jako dowód emisji na potrzeby ESG lub korporacyjnej sprawozdawczości środowiskowej.
+Twoi klienci rejestrują emisje z transportu, który zlecają na zewnątrz, jako **emisje zakresu 3** (Kategoria 4: Transport upstream, lub Kategoria 9: Transport downstream). Dane, które dostarczasz, zasilają bezpośrednio tę kalkulację. Posiadanie tych danych gotowych oszczędza czas Twoim klientom i czyni Cię bardziej atrakcyjnym przewoźnikiem.
 
----
+## Jak poprawić swój wynik CO2
 
-## Eksport CSV
+Ponieważ obliczenie jest napędzane **typem paliwa** i **klasą wagową pojazdu**, nie samym dystansem, największą dźwignią jest sama ciężarówka. Na najczęstszej klasie FTL (ciągnik siodłowy, 32–34t), przejście z diesla (62 gCO2e/tkm) na HVO (12 gCO2e/tkm) lub elektryczny (25 gCO2e/tkm) obniża współczynnik odpowiednio o 81% lub 60%. Na przykład, przejazd 1000 km z ładunkiem 24t:
 
-Kliknij **Eksportuj CSV**, aby pobrać dane aktywnego widoku (Ciężarówka / Klient / Trasa) jako plik CSV zakodowany w UTF-8.
+- Diesel: 1000 km × 24t × 62 gCO2e/tkm ÷ 1000 = **1488 kg CO2**
+- HVO na tej samej klasie pojazdu: 1000 km × 24t × 12 gCO2e/tkm ÷ 1000 = **288 kg CO2** — redukcja o 1200 kg (81%) na przejazd
 
----
+Inne usprawnienia, które Druma pomaga śledzić:
 
-## Limity wierszy
-
-Raport jest ograniczony do **500 wierszy** na widok. Dla dużych flot zawęź zakres dat lub filtruj do konkretnego klienta.
-
----
+- **Optymalizacja tras** — krótsze trasy z routingu ciężarówkowego PTV oznaczają niższe łączne emisje
+- **Konsolidacja ładunków** — mniej, ale pełniejszych przejazdów zmniejsza łączne tonokilometry w całej flocie
+- **Redukcja pustych przebiegów** — martwe kilometry to CO2 bez przychodu, który mógłby je zrównoważyć
 
 <CardGroup cols={2}>
-  <Card title="Raport rentowności trasy" icon="route" href="/pl/reports/lane-profitability">
-    Przychody, koszty i marże według trasy.
+  <Card title="Eksporty emisji CSRD" icon="download" href="/pl/reports/csrd-exports">
+    Eksportuj roczne dane CO2 w formatach XLSX, CSV zgodnym z CSRD i iXBRL do raportowania zrównoważonego rozwoju i zgodności z ESRS E1.
   </Card>
-  <Card title="Faktury paliwowe" icon="gas-pump" href="/pl/planner/toll-actuals">
-    Import i śledzenie faktycznych danych o paliwie z kart paliwowych.
+  <Card title="Raportowanie CO2 (Ustawienia floty)" icon="truck" href="/pl/fleet-compliance/co2-reporting">
+    Jak typ paliwa i klasa wagowa pojazdu zasilają obliczenie CO2, i co sprawdzić w rekordach floty.
+  </Card>
+  <Card title="Przegląd raportów" icon="chart-bar" href="/pl/reports/reports-overview">
+    Wszystkie dostępne raporty w Druma i jak zaplanować automatyczne dostarczanie.
   </Card>
 </CardGroup>

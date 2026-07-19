@@ -1,94 +1,108 @@
 ---
 title: "Számlázás és előfizetés"
-description: "Druma előfizetés, helyek és számlázás kezelése a Stripe Ügyfélportálon keresztül."
+description: "Hogyan számláz a Druma — jármű-szám alapú sávok, az AI-felhasználási keret és a natív e-Factura számlázás."
 icon: "credit-card"
 ---
 
-A Druma egy helyszín-alapú előfizetési modellt alkalmaz, kétféle hellyel — jármű-helyek és felhasználói helyek — mennyiségi sávokkal árazva. Választhatsz havi vagy éves számlázást. Mindent a Stripe Ügyfélportálon keresztül kezelhetsz, amely közvetlenül a Drumából érhető el.
+A Druma a számlázás **kibocsátója**: minden platformdíj natív **román e-Factura** (ANAF/SPV) számlaként kerül kiállításra, és **banki átutalással**, halasztott fizetési határidővel fizetendő — nincs bankkártya-tárolás, nincs Stripe checkout, és nincs felhasználónkénti (seat) árazás. Az irodai felhasználók, a sofőrök és az ügyfélportál-fiókok mindig ingyenesek; azért fizetsz, ami az aktív járműveid száma (ha saját flottával rendelkezel), vagy a platformhasználatod (ha tisztán fuvarszervező/bróker vagy).
 
 <Note>
-Az aktuális árakért látogasd meg a [druma.io](https://druma.io) oldalt, vagy lépj kapcsolatba a support@druma.io e-mail-címen.
+Az aktuális árakért látogasd meg a [druma.io](https://druma.io) oldalt, vagy írj a support@druma.io címre.
 </Note>
+
+<Frame caption="Beállítások → Számlázás — jármű-szám alapú sávos árazás, költségbontás és az AI-felhasználási keret. Nincs Stripe-portál, nincs felhasználónkénti árazás.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Számlázási beállítások panel, amely az előfizetés költségbontását mutatja" />
+</Frame>
 
 ---
 
 ## Ingyenes próbaidőszak
 
-Minden új cég **30 napos ingyenes próbaidőszakot** kap. A kezdéshez nem szükséges bankkártya. Az összes funkció — beleértve az eCMR-t (tesztmódban) — teljes mértékben elérhető a próbaidőszak alatt. A próbaidőszak végén fizetési módot kell megadni és ki kell választani a helyek számát.
+Minden új cég **30 napos ingyenes próbaidőszakot** kap. A kezdéshez nem szükséges bankkártya vagy banki adat, és minden funkció teljes mértékben elérhető a próbaidőszak alatt.
 
 ---
 
-## Számla megtekintése
+## Árazási modell
 
-<Steps>
-  <Step title="Nyisd meg a Számlázás oldalt">
-    Lépj a **Beállítások → Számlázás** menüpontra.
-  </Step>
-  <Step title="Nyisd meg a Stripe Ügyfélportált">
-    Kattints a **Számlázási portál megnyitása** gombra. A Stripe tárolt ügyfélportáljára leszel átirányítva, ahol a Druma soha nem tárolja közvetlenül a bankkártyaadatait.
-  </Step>
-  <Step title="Számlákat tekints meg">
-    A Stripe portálban kattints a **Számlázási előzmények** gombra, hogy letöltsd a PDF-számlákat bármely korábbi hónapból.
-  </Step>
-</Steps>
+A cégedet a két archetípus egyike szerint számlázzuk:
 
-![Számlázási beállítások oldal](/images/placeholder.png)
+<Tabs>
+  <Tab title="Saját flottás fuvarozó">
+    Ha saját járműveket üzemeltetsz, a következőket fizeted:
+    - Egy fix **25 €/hó céges alapdíjat**.
+    - Egy **sávos, aktív jármű szerinti díjat**. A parkoltatott (inaktív) járművek mindig ingyenesek; a számlázás minimum **3 aktív jármű** alapján történik. Az aktív járművek teljes száma határozza meg a sávot, és **az összes** aktív jármű az adott sáv díja szerint kerül számlázásra (nem sávonkénti/kumulatív számítás).
+    - Egy **céges szintű, közös AI-keretet** (lásd lent).
 
----
+    | Sáv | Aktív járművek | Havi / jármű | Éves / jármű |
+    |------|---------------|------------------|-----------------|
+    | Starter | 3–9 | 41 € | 34 € |
+    | Growth | 10–24 | 38 € | 32 € |
+    | Scale | 25–49 | 36 € | 30 € |
+    | Pro | 50–74 | 34 € | 28 € |
+    | Enterprise | 75+ | 30 € | 25 € |
+  </Tab>
+  <Tab title="Fuvarszervező / bróker">
+    Ha nincs saját flottád, nincs jármű-keret és nincs alapdíj — tisztán a felhasználás alapján fizetsz: **25 €/hó vagy a mért felhasználási költséged × 2,5, amelyik nagyobb**.
+  </Tab>
+</Tabs>
 
-## Helyek hozzáadása vagy eltávolítása
-
-A helyek számát bármikor módosíthatod. A változások a következő számlázási ciklus elején lépnek érvénybe.
-
-<Steps>
-  <Step title="Lépj a Beállítások → Számlázás menüpontra">
-    Kattints a **Licencek kezelése** gombra.
-  </Step>
-  <Step title="Módosítsd a jármű-helyeket">
-    Használd a + és – vezérlőket a szükséges jármű-helyek számának beállításához.
-  </Step>
-  <Step title="Módosítsd a felhasználói helyeket">
-    Állítsd be a nem-sofőr belső munkatársak számát.
-  </Step>
-  <Step title="Mentsd el a konfigurációt">
-    Kattints a **Konfiguráció mentése** gombra. A változások szinkronizálódnak a Stripe-pal.
-  </Step>
-</Steps>
-
-<Warning>
-A helyek csökkentése — például 10-ről 8-ra — csak akkor lehetséges, ha valóban 8 vagy kevesebb aktív jármű/felhasználó van a fiókodban. Ha megpróbálod a helyek számát a jelenlegi aktív elemek száma alá csökkenteni, a Druma figyelmeztet.
-</Warning>
+Az archetípusodat a fiókodon állítjuk be; ha úgy gondolod, hogy tévesen van beállítva, írj a support@druma.io címre.
 
 ---
 
-## Számlázási időszakok
+## A Számlázás oldal
 
-### Havi számlázás
+Lépj a **Beállítások → Számlázás** menüpontra a csomagod, a költségbontás, az AI-felhasználás és a számlaelőzmények megtekintéséhez.
 
-Havi számla minden hónap 1-jén. A ciklus közbeni helyfelvételek arányosan kerülnek kiszámlázásra az aktuális ciklus fennmaradó részére.
+### Csomag áttekintés
 
-### Éves számlázás
+Az oldal tetején látod a fiókod állapotát (**Aktív**, **Próbaidőszak**, **Lejárt tartozás** vagy **Felfüggesztve**), az archetípusodat, a számlázási időszakot, az aktuálisan aktív járművek számát, a következő számla dátumát és a folyó időszakra becsült összeget. Ha van nyitott, kifizetetlen egyenleged egy korábbi számlán, egy banner mutatja a hátralék összegét és a késés napjainak számát.
 
-Az éves helyek előre kerülnek kiszámlázásra egy évre. Az éves számlázás körülbelül 2 hónapnyi megtakarítást jelent a havival szemben. Helyek hozzáadása egy meglévő éves előfizetéshez egy arányos számlát generál a megvásárlástól számított 1 évre.
+### Havi vs. éves számlázás
+
+A saját flottás cégek a **Havi** és **Éves** számlázás között válthatnak az időszak-kapcsolóval a Számlázás oldalon.
+
+- **Éves**: 10 hónapot fizetsz, 12-t kapsz — a céges alapdíj és a jármű-előfizetés előre, egyetlen e-Factura számlán kerül kiszámlázásra az egész évre. A felhasználási túllépés (AI-keret túllépése) továbbra is havonta, utólag kerül kiszámlázásra.
+- **Havi**: az előfizetés havonta megújul. Ha ciklus közben veszel fel járműveket, a többletköltség a következő számlán, utólag kerül kiszámlázásra.
+
+A fuvarszervező/bróker cégek mindig havonta, felhasználás alapján kerülnek számlázásra — nincs éves opció, mivel nincs előre fizetendő jármű-előfizetés.
+
+### Költségbontás
+
+A csomag-áttekintés alatt egy tételes táblázat pontosan mutatja, miből áll össze a becsült díjad: a platform alapdíja, a jármű-szám × sávdíj, és (éves csomagok esetén) a "fizess 10-et, kapj 12-t" bontás. Az árak ÁFA nélkül szerepelnek.
+
+### Jármű-számlázási plafon
+
+A saját flottás cégek (számlázás-szerkesztési jogosultsággal) beállíthatnak egy opcionális **jármű-számlázási plafont** — egy maximális aktív jármű-számot, amely után nem szeretnél tovább fizetni, **3 és 500 között**. Ha az aktív járműveid száma eléri vagy meghaladja a plafont, az oldal figyelmeztetést mutat, mielőtt további járműveket aktiválnál. Üresen hagyva nincs plafon.
+
+### Felhasználás és keret (AI-keret)
+
+Minden aktív-jármű céges fiók egy **közös AI-keretet** kap: `5 € alap + 1,00 € × aktív járművek`. Minden mért AI-felhasználás a fiókodon belül — dokumentum-kinyerés, eCMR-lepecsételés, Ask Druma, KPI-elemzések — ezt az **egyetlen, közös keretet** csökkenti; a jármű-szám csak a keret méretét határozza meg, nem rendeli hozzá a felhasználást egyes járművekhez. Egy folyamatjelző sáv mutatja, hogy a folyó hónap keretéből mennyit használtál fel.
+
+A kereten felüli felhasználás nincs blokkolva — a Druma soha nem vág le hónap közben. Egyszerűen túllépésként kerül kiszámlázásra, **költség × 2,5** áron, a következő számládon.
+
+### Funkciónkénti AI-plafonok
+
+A keret alatt egy **AI-funkciók és felhasználás** szakasz felsorolja az egyes bekapcsolt, mért AI-funkciókat, azok havi felhasználásával és egy szerkeszthető havi maximummal (€-ban), hogy korlátozhasd az adott funkció elszabaduló költségét.
+
+### Számlák
+
+Egy **Számlák** táblázat listázza a platform-számláidat időszak szerint, ÁFA-val és bruttó összeggel, státusszal (Előnézet, Kiállítva, Fizetve, Lejárt), fizetési határidővel, és — ahol elérhető — egy hivatkozással a számla megtekintéséhez. A számlák román e-Factura formában, EUR-ban kerülnek kiállításra, az ÁFA-sor RON-ban is feltüntetve, a Román Nemzeti Bank (BNR) árfolyamán.
+
+### Fizetés
+
+Egy **Fizetés** szakasz mutatja a fizetendő banki adatokat (kedvezményezett, IBAN, közlemény) és a fizetési határidődet. Nincs bankkártyás fizetési opció — minden e-Factura számlát banki átutalással kell rendezni a feltüntetett közleménnyel.
 
 ---
 
-## eCMR számlázás
+## Felfüggesztett fiókok
 
-Az eCMR a Druma előfizetés részét képezi, nincs extra költsége. Nincs dokumentumonkénti díj és nincs felhasználási korlát — annyi eCMR-t írhatsz alá, amennyire az üzemeltetésednek szüksége van.
-
-A jelenlegi időszak eCMR-felhasználási statisztikáit a **Beállítások → Számlázás** oldalon, a **Felhasználás** részben tekintheted meg.
+Ha a fiókod fel van függesztve, a teljes alkalmazás-hozzáférés helyett egyetlen képernyő jelenik meg, amely a fennálló tartozás rendezésére kér; egy gomb közvetlenül a **Beállítások → Számlázás** oldalra visz. A bejelentkezés továbbra is működik — csak maga a munkaterület van blokkolva. Ha úgy gondolod, hogy a fiókodat tévesen függesztették fel, írj a support@druma.io címre.
 
 ---
 
-## Fiók felfüggesztése
+## Segítségre van szükséged a számlázással kapcsolatban?
 
-Ha a próbaidőszak fizetés nélkül lejár, vagy ha egy kifizetés sikertelen, és a türelmi idő is eltelik, a fiók felfüggesztett állapotba kerül. Felfüggesztett állapotban nem hozhatók létre új rendelések. A beállítások és a számlázás oldalak még elérhetők maradnak a fizetési mód frissítéséhez.
-
-<Card title="Vállalati beállítások" icon="building" href="/en/admin/company-setup">
-  Céginformációk, logó és számla beállítások módosítása.
-</Card>
-
-<Card title="Mi az a Druma?" icon="truck" href="/en/getting-started/what-is-druma">
-  Visszatérés az áttekintőhöz.
+<Card title="Kapcsolat az ügyfélszolgálattal" icon="headset" href="mailto:support@druma.io">
+  Számlázási kérdések, viták vagy számlaigénylés esetén írj a support@druma.io címre. Add meg a céged nevét és ÁFA-számát. Egy munkanapon belül válaszolunk.
 </Card>

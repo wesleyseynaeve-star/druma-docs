@@ -1,6 +1,6 @@
 ---
 title: "Integraties instellen"
-description: "Koppel Druma aan uw eCMR-provider, HERE Maps, brandstofkaartproviders, boekhoudsoftware, SmartBill en telematica-/reeferproviders via Instellingen → Integraties."
+description: "Koppel Druma aan uw eCMR-provider, HERE Maps/PTV-routing, brandstofkaartproviders, boekhoudsoftware, SmartBill, Peppol en telematica-/reeferproviders via Instellingen → Integraties."
 icon: "plug"
 ---
 
@@ -10,79 +10,164 @@ Elke integratie wordt geconfigureerd op één plek: **Instellingen → Integrati
 
 ## 1. eCMR-provider
 
-Druma geeft elektronische vrachtbrieven **in-house uit via de native provider** — geen extern account of API-sleutel nodig. Elk afgerond document wordt met een PAdES digitale handtekening verzegeld.
+Druma geeft elektronische vrachtbrieven **in-house uit via de native provider** — geen extern account, API-sleutel of setup nodig. eCMR is standaard beschikbaar voor grensoverschrijdende orders en Druma verzegelt elk afgerond document met een PAdES digitale handtekening.
 
-De eCMR-providerkaart heeft nog maar twee opties: **Native** en **Uitgeschakeld**. TransFollow kan **niet meer** nieuw geselecteerd worden — het bestaat alleen nog als legacy-pad voor een klein aantal bedrijven met een bestaande configuratie.
+De eCMR-providerkaart heeft nog maar twee opties: **Native** en **Uitgeschakeld**. TransFollow is geen selecteerbare optie meer — het bestaat alleen als legacy-pad voor een klein aantal bedrijven met een bestaande configuratie (zie hieronder).
 
 <Steps>
   <Step title="Open de eCMR-providerkaart">
-    Ga naar **Instellingen → Integraties → eCMR-provider**. **Native** staat standaard aan.
+    Ga naar **Instellingen → Integraties** en open de kaart **eCMR-provider**. **Native** staat standaard geselecteerd.
   </Step>
   <Step title="Test de verbinding">
-    Klik op **Verbinding testen**. Druma controleert of het ondertekeningscertificaat gereed is.
+    Klik op **Verbinding testen**. Druma controleert of het ondertekeningscertificaat is geconfigureerd en gereed.
   </Step>
   <Step title="Opslaan">
-    Klik op **Opslaan**.
+    Klik op **Opslaan**. eCMR-aanmaak is actief voor grensoverschrijdende orders.
   </Step>
 </Steps>
 
 <Note>
-Heeft uw bedrijf nog een bestaande TransFollow-configuratie? Die blijft werken en wordt hier als **Native** getoond; ze migreert stil naar de echte native provider bij de volgende keer opslaan — er is niets om te wisselen. Zie [eCMR-providers](/nl/ecmr/ecmr-providers).
+De meeste bedrijven hoeven dit nooit te wijzigen — Native is de enige echte optie. Heeft uw bedrijf een bestaande TransFollow-configuratie, dan blijft die werken zoals voorheen en wordt hier als **Native** getoond; ze migreert stilzwijgend naar de echte native provider bij de volgende keer opslaan — er is niets om te wisselen of te configureren. Zie [eCMR-providers](/nl/ecmr/ecmr-providers) voor details.
 </Note>
 
 ---
 
-## 2. HERE Maps
+## 2. HERE Maps & PTV-routing
 
-Adresautocomplete en vrachtwagen-geoptimaliseerde routeberekening. **Geen installatie nodig** — beheerd op platformniveau, inbegrepen in uw abonnement.
+HERE Maps verzorgt adresautocomplete bij het aanmaken van orders. Vrachtwagen-geoptimaliseerde routeberekening, afstand, ETA en tolschatting worden verzorgd door **PTV**, een aparte routingprovider.
+
+**Geen setup nodig voor beide.** Beide API-sleutels worden op platformniveau beheerd door Druma. Er is niets te configureren en er wordt niet apart gefactureerd voor HERE- of PTV-gebruik — beide zijn inbegrepen in uw abonnement.
+
+<Note>
+Werkt adresautocomplete of routing niet meer, dan is dit een platformniveau-probleem. Neem contact op met Druma-support in plaats van HERE of PTV zelf opnieuw te configureren.
+</Note>
 
 ---
 
 ## 3. Brandstofkaartimport
 
-Geen directe API-koppeling: exporteer een CSV vanuit het portaal van uw provider (**DKV, UTA, AS24, Shell Card, SmartDiesel**) en upload die in Druma. Transacties worden automatisch gematcht op kenteken; niet-gematchte transacties verschijnen in een aparte lijst.
+Druma koppelt niet rechtstreeks met brandstofkaartprovider-API's. In plaats daarvan downloadt u een CSV-export uit het webportaal van uw provider en uploadt u die in Druma, zodat brandstofkosten automatisch aan voertuigen en orders gekoppeld blijven.
+
+**Ondersteunde providers:** DKV, UTA, AS24, Shell, TotalEnergies, BP, Circle K, Eurowag, WEG, MOL, E100.
+
+<Steps>
+  <Step title="Exporteer vanuit het providerportaal">
+    Log in op het webportaal van uw brandstofkaartprovider en exporteer transacties als CSV.
+  </Step>
+  <Step title="Open Brandstofkaartimport">
+    Ga naar **Vloot → Brandstof** en open het importdialoog.
+  </Step>
+  <Step title="Selecteer uw provider">
+    Kies uw provider uit de vervolgkeuzelijst zodat Druma het juiste CSV-kolomformaat verwacht.
+  </Step>
+  <Step title="Upload de CSV">
+    Klik op **CSV uploaden**, selecteer uw bestand en klik op **Importeren**. Druma matcht transacties met voertuigen op kenteken.
+  </Step>
+</Steps>
+
+<Note>
+Komt het kenteken van een transactie niet overeen met een voertuig in uw wagenpark, dan toont Druma deze als **niet-gematcht**. Controleer deze lijst regelmatig — ze vangt vaak brandstofkaartfraude of foutieve kentekens op.
+</Note>
 
 ---
 
 ## 4. SAGA / WinMENTOR boekhouding
 
-Voor SAGA en WinMENTOR Classic exporteert u een bestand via **Rapporten → Boekhoudexport**. WinMENTOR Enterprise ondersteunt directe REST API-koppeling (endpoint-URL + inloggegevens).
+Druma exporteert factuur- en ordergegevens in formaten compatibel met SAGA en WinMENTOR, de twee meest gebruikte Roemeense boekhoudpakketten.
+
+Voor **SAGA Classic en WinMENTOR Classic** is geen API-sleutel nodig. SAGA exporteert als DBF-bestanden; WinMENTOR Classic als pipe-gescheiden `.txt`-bestanden. Beide formaten worden automatisch eenmaal per maand gegenereerd en per e-mail (als ZIP, 7 dagen geldige link) verstuurd naar uw geconfigureerd boekhoudadres — configureer de exportdag onder **Instellingen → Automatiseringen & Functies → SAGA-exportconfiguratie**. Er is geen handmatige exportgeschiedenislijst; elke maandexport bestaat alleen als de gemailde ZIP.
+
+<Note>
+Er is momenteel geen directe REST API-koppeling voor WinMENTOR Enterprise of enig ander boekhoudpakket — SAGA en WinMENTOR Classic zijn de enige twee ondersteunde formaten, beide bestandsgebaseerd.
+</Note>
 
 ---
 
 ## 5. SmartBill
 
-Roemeens cloud-factureringsplatform: met API-sleutel en CIF ingesteld, stuurt Druma elke bevestigde factuur automatisch door.
+SmartBill is een Roemeens cloud-factureringsplatform. Met deze integratie actief stuurt Druma een factuur automatisch naar SmartBill wanneer u ze **verstuurt** (niet bij aanmaak of bevestiging) — geen handmatige heringave.
 
-<Warning>
-Als uw SmartBill-abonnement verloopt of de API-sleutel wordt vernieuwd, stopt de koppeling stil. Controleer periodiek of de status groen is.
-</Warning>
+Vereist: **E-mail**, **API-token**, **BTW-nummer (CIF)** en **factuurserie** uit uw SmartBill-account, ingevuld onder **Instellingen → Integraties → SmartBill**.
+
+<Note>
+SmartBill kent bij het versturen een eigen factuurnummer toe — het hergebruikt Druma's nummer niet. De status is simpelweg verzonden of fout; Druma volgt SmartBill's status Concept/Uitgegeven/Betaald niet op, en er is geen webhook die beide systemen na het versturen gesynchroniseerd houdt. Verloopt uw SmartBill-abonnement of wordt uw API-sleutel vernieuwd, dan begint het versturen te falen — controleer periodiek of de status in **Instellingen → Integraties** groen is.
+</Note>
 
 ---
 
 ## 6. Peppol e-facturering (België)
 
-Verplicht sinds januari 2026 voor KBO-geregistreerde Belgische bedrijven die B2B-facturen naar andere Belgische bedrijven sturen. Vul uw KBO- en BTW-nummer in en registreer op het Peppol-netwerk; routering verloopt daarna automatisch.
+Peppol is het pan-Europese e-facturatienetwerk. Belgische bedrijven (KBO-geregistreerd) zijn verplicht facturen naar andere Belgische bedrijven via Peppol te sturen — verplicht sinds januari 2026.
+
+Vul uw **KBO-nummer** en **BTW-nummer** in bij de kaart **Peppol e-facturering** en klik op **Registreren op Peppol**. Druma dient uw registratie in bij het e-invoice.be-toegangspunt; dit is meestal binnen enkele minuten voltooid. Eenmaal actief routeert Peppol automatisch naar geschikte Belgische klanten.
+
+<Note>
+Zie [Peppol e-facturering](/nl/integrations/peppol-invoicing) voor volledige details over de routering, wat er gebeurt als een ontvanger niet op het Peppol-netwerk zit, en hoe u afwijzingen afhandelt.
+</Note>
 
 ---
 
 ## 7. Leveranciersfactuur-e-mailinbox
 
-Een toegewijd e-mailadres voor leveranciersfacturen (brandstofkaart, werkplaats, tol). Voeg afzenders toe aan de whitelist; ontvangen facturen worden AI-geclassificeerd en landen in **Finance → Forwarding → Factuurwachtrij**.
+Geeft uw bedrijf een eigen e-mailadres voor leveranciersfacturen — van brandstofkaartproviders, werkplaatsen, tolexploitanten of andere leveranciers. Ontvangen facturen worden AI-geclassificeerd en naar een reviewwachtrij geleid.
+
+Schakel de inbox in bij **Instellingen → Bedrijf → Leveranciersfactuur-e-mail**, voeg afzenderadressen/-domeinen toe aan de **witte lijst** (bijv. `invoices@dkv.com` of `@uta.eu` — mail van niet-gewhiteliste afzenders wordt geweigerd) en deel het gegenereerde adres met uw leveranciers. Ontvangen facturen verschijnen in **Finance → Forwarding → Factuurwachtrij**.
+
+<Note>
+Zie [Leveranciersfacturen](/nl/invoicing/supplier-invoices) voor volledige details over de reviewwachtrij, automatisch matchen en niet-gematchte facturen.
+</Note>
 
 ---
 
-## 8. Telematica, tachograaf en reefer
+## 8. Telematica, tachograaf & reeferproviders
 
-Koppel GPS-, tachograaf- en reefertemperatuurproviders zodat gegevens automatisch in Druma stromen.
+Druma koppelt rechtstreeks met de GPS-, tachograaf- (rijuren) en trailerreeferproviders van uw vrachtwagens vanuit **Instellingen → Integraties**, zodat live posities, EU 561/2006-rijurengegevens en ladingtemperatuur automatisch in Druma binnenkomen.
 
-- **GPS/tachograaf (rFMS):** Scania, Volvo, DAF, MAN, Mercedes-Benz, IVECO en Renault leveren automatische tachograafdownload via het rFMS-standaard. Webfleet, Geotab en Samsara leveren GPS (Samsara geen tachograafgegevens); Frotcom is nog in **bèta**; Continental VDO en Webeye/Eurowag vereisen partnergoedkeuring van de leverancier vooraf.
-- **Reefer/trailertemperatuur:** Mapon (volledig publiek), Orbcomm (accounttoken nodig), Thermo King TracKing en Carrier Lynx Fleet (beide partner-gated — API-toegang moet eerst bij de leverancier worden aangevraagd).
+### GPS & tachograaf (telematica)
+
+| Provider | Inloggegevens | Waar u ze verkrijgt |
+|---|---|---|
+| **Scania/Volvo/DAF/MAN/Mercedes-Benz/IVECO/Renault (rFMS)** | Client ID, Client Secret, OEM-selector | Uitgegeven door het ontwikkelaars-/wagenparkportaal van uw truckfabrikant. Scania vereist bovendien een Communicator-boordunit plus een Location- of Performance-abonnement. Scania en Volvo zijn het meest gevestigd; de overige rFMS-merken worden nog gevalideerd. |
+| **Webfleet** | Account, gebruikersnaam, wachtwoord, API-sleutel | Van een Webfleet-gebruiker met "expert"-profiel en externe toegang; de API-sleutel via Webfleet-support of het WEBFLEET.connect-partnerprogramma. |
+| **Geotab** | Database, gebruikersnaam, wachtwoord | Maak een serviceaccount (alleen-lezen) aan onder MyGeotab → Administration → Users. |
+| **Samsara** | API-token, Base URL (optioneel) | Genereer een token in het Samsara-dashboard onder Instellingen → API-tokens. Alleen GPS-posities — geen tachograaf/rijurengegevens. |
+| **Frotcom** | Gebruikersnaam, wachtwoord, provider | Uw Frotcom-accountgegevens, met API-toegang ingeschakeld door Frotcom-support. Momenteel in **bèta**. |
+| **Continental VDO** | Client ID, Secret, Account-/bedrijfs-ID | Vereist een Continental-partnerovereenkomst — **partner-gated**, geen publieke self-service-registratie. |
+| **Webeye/Eurowag** | Gebruikersnaam, Secret | Gegenereerd in selfcare.eurowag.com. Uw bedrijf moet eerst als partner goedgekeurd zijn — **partner-gated**. |
+
+<Note>
+Scania, Webfleet, Geotab en Samsara zijn gevestigde integraties. Frotcom is in bèta. Continental VDO en Webeye/Eurowag vereisen leveranciersgoedkeuring als partner voordat de koppeling live gegevens teruggeeft.
+</Note>
+
+### Reefer/trailertemperatuur
+
+| Provider | Inloggegevens | Waar u ze verkrijgt |
+|---|---|---|
+| **Mapon** | API-sleutel, Base URL (optioneel) | Genereer een API-sleutel in het Mapon-platform onder Instellingen → API. Volledig publieke API — werkt direct. |
+| **Orbcomm** | Access token, of gebruikersnaam + wachtwoord | Via uw ORBCOMM Platform API-account. |
+| **Thermo King TracKing** | API-sleutel, of gebruikersnaam + wachtwoord | Via uw Thermo King-dealer of het TracKing-portaal — partner-gated, geen publieke self-service. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (of legacy API-sleutel) | Via Carrier Transicold of uw Carrier-dealer — geen publieke self-service. |
+
+<Note>
+Mapon is volledig publiek en werkt direct. Orbcomm heeft een accounttoken van ORBCOMM nodig. Thermo King TracKing en Carrier Lynx Fleet zijn partner-only — API-toegang moet eerst bij de leverancier worden aangevraagd, ook al is het inlogformulier voor alle vier beschikbaar.
+</Note>
+
+---
+
+## Verdiepende artikelen
 
 <Card title="Wat is eCMR?" icon="file-contract" href="/nl/ecmr/what-is-ecmr">
   Hoe eCMR werkt, wie ondertekent en wanneer het van toepassing is.
 </Card>
 
+<Card title="Een eCMR aanmaken" icon="file-plus" href="/nl/ecmr/creating-ecmr">
+  Stapsgewijze gids voor het uitgeven van eCMR-documenten vanuit een order.
+</Card>
+
+<Card title="Details brandstofkaartimport" icon="gas-pump" href="/nl/fleet-compliance/fleet-documents">
+  Hoe brandstofkosten worden gekoppeld aan voertuigen en orders.
+</Card>
+
 <Card title="CO2-rapportage" icon="leaf" href="/nl/fleet-compliance/co2-reporting">
-  Hoe HERE-routeafstanden uw CO2-berekeningen voeden.
+  Hoe PTV-routeafstanden uw CO2-berekeningen voeden.
 </Card>

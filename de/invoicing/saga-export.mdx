@@ -1,57 +1,126 @@
 ---
 title: "SAGA & WinMENTOR Export"
-description: "So exportieren Sie Druma-Rechnungs- und Kundendaten nach SAGA C und WinMENTOR für die rumänische Buchhaltung, einschließlich automatischer nächtlicher Exporte."
+description: "So exportieren Sie Druma-Rechnungs- und Kundendaten nach SAGA C und WinMENTOR Classic für die rumänische Buchhaltung, einschließlich des automatischen monatlichen Exports an Ihren Buchhalter."
 icon: "database"
 ---
 
 ## Übersicht
 
-Druma kann Rechnungs- und Auftragsdaten in Formate exportieren, die mit SAGA C und WinMENTOR Classic kompatibel sind. Sie können Daten manuell exportieren oder automatische nächtliche Exporte einrichten.
+SAGA C und WinMENTOR Classic sind die zwei gängigsten Buchhaltungssoftwarepakete rumänischer Unternehmen. Druma exportiert Rechnungs- und Kundendaten in den von beiden Paketen erwarteten Formaten, damit Ihr Buchhalter direkt importieren kann, ohne Daten manuell neu einzugeben.
 
----
+<Frame caption="Finanzen → Export-Builder — Exporte mit benutzerdefiniertem Profil; SAGA/WinMENTOR selbst ist ein monatlich versendetes ZIP, keine Schaltfläche hier.">
+  <img src="/images/invoicing/saga-export.png" alt="Seite Export-Builder" />
+</Frame>
 
-## Manueller Export
+## SAGA-C-Export
+
+SAGA verwendet DBF-(dBase-)Dateien für den Datenimport. Druma erzeugt ein vollständiges Exportpaket, nicht nur Kunden- und Rechnungsdaten:
+
+- **CLI_\<Datum>.dbf** (Clienti) — Kundenstammdaten (Name, CIF, Adresse, Zahlungsbedingungen)
+- **ART_\<Datum>.dbf** (Articole) — die auf Ausgangsrechnungen verwendete Dienstleistungsposition, standardmäßig enthalten
+- **IE_\<Datum>_\<Datum>.dbf** (Iesiri) — Ausgangsrechnungsdaten (Rechnungsnummer, Datum, Beträge, MwSt., Kundenreferenz)
+- **INT_\<Datum>.dbf** (Intrari) — Eingangsrechnungen, wenn der Zeitraum unterauftragnehmerbasierte Aufträge enthält
+- **NC_\<Datum>_\<Datum>.xml** (Incasari) — im Zeitraum erfasste Zahlungen (diese eine Datei ist XML, kein DBF)
+- **README.txt** — eine Klartext-Zusammenfassung des Exports plus Importanleitung für Ihren Buchhalter
+
+### So exportieren Sie für SAGA
 
 <Steps>
-  <Step title="Zu Berichte → Buchhaltungsexport gehen">
-    Wählen Sie den Datumsbereich aus.
+  <Step title="Zum Modul Rechnungsstellung gehen">
+    Klicken Sie im Hauptnavigationsmenü auf **Rechnungsstellung**.
   </Step>
-  <Step title="Format auswählen">
-    Wählen Sie zwischen SAGA C, WinMENTOR Classic oder dem allgemeinen CSV-Format.
+  <Step title="Das Exportmenü öffnen">
+    Klicken Sie oben rechts auf dem Rechnungsstellungsbildschirm auf die Schaltfläche **Export**.
   </Step>
-  <Step title="Exportieren">
-    Klicken Sie auf **Exportieren**. Eine ZIP-Datei wird heruntergeladen, die alle erforderlichen Dateien enthält.
+  <Step title="SAGA wählen">
+    Wählen Sie **SAGA C** aus den Exportformat-Optionen.
   </Step>
-  <Step title="In SAGA oder WinMENTOR importieren">
-    Verwenden Sie den Standard-Importassistenten in Ihrer Buchhaltungssoftware, um die Datei zu importieren.
+  <Step title="Den Datumsbereich festlegen">
+    Wählen Sie Start- und Enddatum für die zu exportierenden Rechnungen. Die meisten Buchhalter möchten einen Monatsexport.
+  </Step>
+  <Step title="Das ZIP herunterladen">
+    Klicken Sie auf **Herunterladen**. Druma erstellt eine ZIP-Datei mit den oben aufgelisteten DBF-Dateien (plus dem Incasari-XML und README.txt) und lädt sie auf Ihren Computer herunter.
   </Step>
 </Steps>
 
----
-
-## SAGA-Exportformat
-
-Der SAGA-Export enthält:
-- **Facturas.dbf** — Ausgangsrechnungen
-- **Intrari.dbf** — Eingangsrechnungen (Einkaufsrechnungen)
-- **Plati.dbf** — Zahlungsdatensätze
-
----
-
-## Automatischer nächtlicher Export
+### Import in SAGA C
 
 <Steps>
-  <Step title="Zu Einstellungen → Unternehmen gehen">
-    Scrollen Sie zum Abschnitt **Automatischer Buchhaltungsexport**.
+  <Step title="SAGA C auf dem Computer Ihres Buchhalters öffnen">
+    Melden Sie sich bei der Firmendatei an, in die Sie importieren möchten.
   </Step>
-  <Step title="Export aktivieren">
-    Schalten Sie **Nächstlicher Export aktivieren** ein.
+  <Step title="Zum Import gehen">
+    Navigieren Sie in SAGA zu **Import** → **Facturi furnizori / clienti** (je nach Ihrer Einrichtung).
   </Step>
-  <Step title="Format und E-Mail konfigurieren">
-    Wählen Sie das Exportformat und geben Sie die E-Mail-Adresse ein, an die der Export gesendet werden soll.
+  <Step title="Die DBF-Dateien auswählen">
+    Navigieren Sie zum von Druma heruntergeladenen ZIP und wählen Sie die relevante .dbf-Datei.
+  </Step>
+  <Step title="Feldzuordnung prüfen">
+    SAGA zeigt eine Feldzuordnungs-Vorschau. Bestätigen Sie, dass die Spalten den erwarteten SAGA-Feldern entsprechen — sie sollten automatisch mit Drumas Export übereinstimmen.
+  </Step>
+  <Step title="Den Import bestätigen">
+    Klicken Sie auf **Importieren**. SAGA verarbeitet die Datensätze. Prüfen Sie das Importprotokoll auf Fehler.
   </Step>
 </Steps>
 
-<Card title="SmartBill-Integration" icon="receipt" href="/en/integrations/smartbill">
-  Verbinden Sie Druma mit SmartBill für automatischen Rechnungsexport.
+## WinMENTOR-Classic-Export
+
+WinMENTOR Classic verwendet **keine** DBF-Dateien wie SAGA — Druma exportiert stattdessen pipe-getrennte (`|`) Klartextdateien, passend zu WinMENTORs Format „Import aus Textdatei":
+
+- **Iesiri_\<Datum>_\<Datum>.txt** — Ausgangsrechnungsdaten
+- **Clienti_\<Datum>.txt** — Kundenstammdaten für im Zeitraum abgerechnete Kunden
+- **Articole_\<Datum>.txt** — die auf Ausgangsrechnungen verwendete Dienstleistungsposition
+- **Incasari_\<Datum>_\<Datum>.txt** — im Zeitraum erfasste Zahlungen (nur enthalten, falls vorhanden)
+- **README.txt** — Importanleitung für Ihren Buchhalter
+
+<Steps>
+  <Step title="Das Exportmenü in Rechnungsstellung öffnen">
+    Gehen Sie zu **Rechnungsstellung** → **Export**.
+  </Step>
+  <Step title="WinMENTOR Classic wählen">
+    Wählen Sie **WinMENTOR Classic** aus der Formatliste. Dies erzeugt die obigen pipe-getrennten `.txt`-Dateien statt SAGAs DBF-Dateien — verwenden Sie nicht die SAGA-Option für WinMENTOR.
+  </Step>
+  <Step title="Datumsbereich festlegen und herunterladen">
+    Wählen Sie Ihren Datumsbereich und klicken Sie auf **Herunterladen**.
+  </Step>
+</Steps>
+
+Importieren Sie die Dateien in WinMENTOR über **Import/Export → Import din fisier text**, mit dem Trennzeichen Pipe (`|`).
+
+## Automatischer monatlicher Export (SAGA und WinMENTOR Classic)
+
+Statt eines manuellen nächtlichen Downloads sendet Druma den Export automatisch einmal im Monat per E-Mail an Ihren Buchhalter:
+
+<Steps>
+  <Step title="Zu den Einstellungen gehen">
+    Navigieren Sie zu **Einstellungen** → **Automatisierung** und finden Sie den Abschnitt **SAGA-Exportkonfiguration**.
+  </Step>
+  <Step title="Die E-Mail des Buchhalters und den Exporttag festlegen">
+    Geben Sie die **Buchhalter-E-Mail** (und optional CC) ein, wählen Sie dann den **Tag im Monat**, an dem der Export laufen soll (1–28).
+  </Step>
+  <Step title="Speichern">
+    Klicken Sie auf **SAGA-Konfiguration speichern**. Ein Hintergrundjob prüft täglich um **06:00 UTC**, ob heute Ihr konfigurierter Tag ist — trifft das zu, erstellt Druma den Export für den **vorherigen Kalendermonat** und sendet ihn direkt per E-Mail an Ihren Buchhalter, ohne manuellen Download-Schritt.
+  </Step>
+</Steps>
+
+<Note>
+Es gibt keine In-App-Liste „Exportverlauf" — der Export jedes Monats kommt als E-Mail mit einem sicheren Download-Link zum ZIP, **7 Tage** gültig. Läuft der Link ab, oder benötigen Sie einen außerplanmäßigen oder benutzerdefinierten Zeitraumexport, verwenden Sie stattdessen den manuellen **Export**-Ablauf oben (oder **Finanzen** → **Export-Builder** für ein benutzerdefiniertes Spaltenlayout).
+</Note>
+
+## Mehrwährungsrechnungen und BNR-Wechselkurse
+
+Für Rechnungen in EUR, USD, GBP, CHF oder PLN fügt Druma den BNR-Wechselkurs (Nationalbank Rumäniens) für das Rechnungsdatum in den DBF-/Textexport ein. So hat die Software Ihres Buchhalters sofort die RON-Äquivalentbeträge — keine manuelle Kursrecherche nötig.
+
+<Warning>
+Prüfen Sie immer mit Ihrem Buchhalter, welches Exportformat er benötigt — SAGA C oder WinMENTOR Classic. Das falsche Format zu verwenden, führt zu Importfehlern oder stillschweigend falschen Daten.
+</Warning>
+
+---
+
+<Card title="Integrationseinrichtung" icon="plug" href="/de/admin/integration-setup">
+  Wie Sie alle Druma-Integrationen konfigurieren, einschließlich Buchhaltungssoftware und API-Verbindungen.
+</Card>
+
+<Card title="Rechnungen erstellen" icon="file-invoice-dollar" href="/de/invoicing/generating-invoices">
+  Wie Sie Rechnungen in Druma erstellen, bevor Sie sie in Ihre Buchhaltungssoftware exportieren.
 </Card>

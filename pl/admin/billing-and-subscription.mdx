@@ -1,147 +1,108 @@
 ---
 title: "Rozliczenia i subskrypcja"
-description: "Zarządzaj subskrypcją Druma, miejscami i rozliczeniami przez portal klienta Stripe."
+description: "Jak Druma rozlicza Twoją firmę — progi cenowe wg liczby pojazdów, pula użycia AI i natywne fakturowanie e-Factura."
 icon: "credit-card"
 ---
 
-Druma używa modelu subskrypcji opartego na miejscach z dwoma rodzajami miejsc — miejscami na pojazdy i miejscami użytkowników — wycenianych według progów wolumenowych. Możesz wybrać rozliczenie miesięczne lub roczne. Wszystkim zarządzasz przez portal klienta Stripe, dostępny bezpośrednio z Druma.
+Druma jest **wystawcą faktury** za Twoją subskrypcję: każda opłata platformowa jest wystawiana jako natywna **rumuńska e-Factura** (ANAF/SPV) i płatna **przelewem bankowym** z odroczonym terminem — nie ma karty zapisanej w systemie, nie ma płatności przez Stripe i nie ma opłat za miejsca użytkowników. Użytkownicy biurowi, kierowcy i konta portalu klienta są zawsze bezpłatne; płacisz za aktywne pojazdy (jeśli prowadzisz własną flotę) lub za użycie platformy (jeśli jesteś czystym spedytorem/brokerem).
 
 <Note>
 Aktualne ceny znajdziesz na [druma.io](https://druma.io) lub kontaktując się z support@druma.io.
 </Note>
 
+<Frame caption="Ustawienia → Rozliczenia — progi cenowe wg liczby pojazdów, podział kosztów i pula użycia AI. Bez portalu Stripe, bez opłat za miejsca.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Panel ustawień rozliczeń pokazujący podział kosztów subskrypcji" />
+</Frame>
+
 ---
 
 ## Bezpłatny okres próbny
 
-Każda nowa firma otrzymuje **30-dniowy bezpłatny okres próbny**. Karta kredytowa nie jest wymagana. Wszystkie funkcje — w tym eCMR (w trybie testowym) — są w pełni dostępne podczas okresu próbnego. Po jego zakończeniu zostaniesz poproszony o dodanie metody płatności i wybranie liczby miejsc.
+Każda nowa firma otrzymuje **30-dniowy bezpłatny okres próbny**. Nie są wymagane dane karty ani dane bankowe, a wszystkie funkcje są w pełni dostępne podczas okresu próbnego.
 
 ---
 
-## Przeglądanie rachunków
+## Model cenowy
 
-<Steps>
-  <Step title="Otwórz stronę Rozliczenia">
-    Przejdź do **Ustawienia — Rozliczenia**.
-  </Step>
-  <Step title="Otwórz portal klienta Stripe">
-    Kliknij **Otwórz portal rozliczeniowy**. Zostaniesz przekierowany do hostowanego portalu klienta Stripe, gdzie Druma nigdy nie przechowuje bezpośrednio Twoich danych karty.
-  </Step>
-  <Step title="Przeglądaj faktury">
-    W portalu Stripe kliknij **Historia faktur**, aby pobrać faktury PDF za dowolny miniony miesiąc.
-  </Step>
-</Steps>
+Twoja firma jest rozliczana według jednego z dwóch archetypów:
 
-![Strona ustawień rozliczeń](/images/placeholder.png)
+<Tabs>
+  <Tab title="Przewoźnik z własną flotą">
+    Jeśli prowadzisz własne pojazdy, płacisz:
+    - Stałą **opłatę bazową firmy 25 €/miesiąc**.
+    - **Opłatę progową za aktywny pojazd**. Zaparkowane pojazdy są zawsze bezpłatne; rozliczenie ma minimum **3 aktywnych pojazdów**. Całkowita liczba aktywnych pojazdów wyznacza jeden próg, a **wszystkie** aktywne pojazdy są rozliczane według stawki tego progu (nie jest to kalkulacja marginalna/narastająca).
+    - **Firmową, wspólną pulę AI** (patrz niżej).
 
----
+    | Próg | Aktywne pojazdy | Miesięcznie / pojazd | Rocznie / pojazd |
+    |------|---------------|------------------|-----------------|
+    | Starter | 3–9 | 41 € | 34 € |
+    | Growth | 10–24 | 38 € | 32 € |
+    | Scale | 25–49 | 36 € | 30 € |
+    | Pro | 50–74 | 34 € | 28 € |
+    | Enterprise | 75+ | 30 € | 25 € |
+  </Tab>
+  <Tab title="Spedytor / broker">
+    Jeśli nie prowadzisz własnej floty, nie ma puli pojazdów ani opłaty bazowej — płacisz wyłącznie za użycie: **wyższą z kwot: 25 €/miesiąc lub koszt zmierzonego użycia × 2,5**.
+  </Tab>
+</Tabs>
 
-## Dodawanie lub usuwanie miejsc
-
-Możesz dostosowywać liczbę miejsc w dowolnym momencie. Zmiany wchodzą w życie na początku następnego cyklu rozliczeniowego.
-
-<Steps>
-  <Step title="Przejdź do Ustawienia — Rozliczenia">
-    Kliknij **Zarządzaj licencjami**.
-  </Step>
-  <Step title="Dostosuj miejsca na pojazdy">
-    Użyj kontrolek + i -, aby ustawić potrzebną liczbę miejsc na pojazdy.
-  </Step>
-  <Step title="Dostosuj miejsca użytkowników">
-    Ustaw liczbę miejsc użytkowników. Jeśli masz więcej aktywnych użytkowników niż miejsc, Druma poprosi Cię o dodanie miejsc przed zezwoleniem na nowe zaproszenia.
-  </Step>
-  <Step title="Potwierdź zmiany">
-    Kliknij **Zapisz zmiany**. Zaktualizowana kwota faktury jest pokazana przed potwierdzeniem.
-  </Step>
-</Steps>
-
-<Warning>
-Zmniejszenie liczby miejsc poniżej liczby aktualnie aktywnych pojazdów lub użytkowników jest niedozwolone. Najpierw zarchiwizuj pojazdy lub dezaktywuj użytkowników, a następnie zmniejsz liczbę miejsc.
-</Warning>
+Twój archetyp jest ustawiony na koncie; skontaktuj się z support@druma.io, jeśli uważasz, że jest ustawiony nieprawidłowo.
 
 ---
 
-## Zakończenie okresu próbnego, okres karencji i zawieszenie
+## Strona Rozliczenia
 
-### Co się dzieje po zakończeniu okresu próbnego
+Przejdź do **Ustawienia → Rozliczenia**, aby zobaczyć swój plan, podział kosztów, użycie AI i historię faktur.
 
-W 31. dniu po rejestracji Druma wysyła e-mail z prośbą o dodanie metody płatności. Jeśli metoda płatności nie zostanie dodana w ciągu **7 dni**, konto wchodzi w okres karencji.
+### Przegląd planu
 
-### Okres karencji (7 dni)
+Góra strony pokazuje status konta (**Aktywne**, **Okres próbny**, **Zaległość**, **Zawieszone**), archetyp, interwał rozliczeniowy, liczbę aktualnie aktywnych pojazdów, datę kolejnej faktury oraz prognozowaną kwotę bieżącego okresu. Jeśli masz otwarte, niezapłacone saldo na wcześniejszej fakturze, baner pokazuje zaległą kwotę i liczbę dni opóźnienia.
 
-W trakcie 7-dniowego okresu karencji:
-- Wszystkie istniejące dane są zachowane.
-- Możesz nadal logować się i przeglądać dane.
-- Tworzenie nowych zleceń i wydawanie dokumentów eCMR jest **zablokowane**.
+### Rozliczenie miesięczne vs roczne
 
-Na górze każdej strony będzie widoczny baner z linkiem do dodania metody płatności.
+Firmy z własną flotą mogą przełączać się między rozliczeniem **miesięcznym** a **rocznym** za pomocą przełącznika interwału na stronie Rozliczenia.
 
-### Zawieszenie (tryb tylko do odczytu)
+- **Roczne**: płacisz za 10 miesięcy, otrzymujesz 12 — opłata bazowa i subskrypcja za pojazd są opłacane z góry na cały rok jako jedna e-Factura. Nadwyżka użycia (pula AI) wciąż jest rozliczana miesięcznie z dołu.
+- **Miesięczne**: subskrypcja odnawia się co miesiąc. Dodanie pojazdów w trakcie cyklu jest rozliczane z dołu na kolejnej fakturze.
 
-Po wygaśnięciu okresu karencji bez płatności konto zostaje zawieszone:
-- Logowanie nadal działa — dane nie są usuwane.
-- Konto jest **tylko do odczytu**: brak edycji, brak nowych zleceń, brak eksportów.
-- Kierowcy nie mogą otrzymywać nowych dyspozycji przez aplikację mobilną.
+Firmy spedycyjne/brokerskie są zawsze rozliczane miesięcznie, w modelu pay-as-you-go — nie ma opcji rocznej, bo nie ma subskrypcji za pojazd do opłacenia z góry.
 
-<Warning>
-Zawieszenie nie oznacza usunięcia danych. Masz czas na reaktywację. Jednak nie pozwól na długotrwałe zawieszenie — kierowcy nie będą mogli otrzymywać aktualizacji zleceń.
-</Warning>
+### Podział kosztów
 
-### Jak reaktywować
+Poniżej przeglądu planu tabela pozycji pokazuje dokładnie, jak zbudowana jest prognozowana opłata: opłata bazowa platformy, liczba pojazdów × stawka progu oraz (dla planów rocznych) ujęcie "płać za 10, otrzymaj 12". Ceny podane są bez VAT.
 
-Przejdź do **Ustawienia — Rozliczenia** i kliknij **Reaktywuj subskrypcję**. Dodaj metodę płatności, jeśli nie ma jej jeszcze w systemie. Konto jest natychmiast przywracane do pełnego dostępu.
+### Limit rozliczanych pojazdów
 
----
+Firmy z własną flotą (z uprawnieniem do edycji rozliczeń) mogą ustawić opcjonalny **limit rozliczanych pojazdów** — maksymalną liczbę aktywnych pojazdów, za które chcą być rozliczane, między **3 a 500**. Jeśli liczba aktywnych pojazdów osiągnie lub przekroczy limit, strona pokazuje ostrzeżenie przed aktywacją kolejnych pojazdów. Pozostaw puste pole, aby nie ustawiać limitu.
 
-## Rozliczenie miesięczne vs roczne
+### Użycie i pula AI
 
-Druma oferuje zarówno rozliczenie **miesięczne**, jak i **roczne**. Rozliczenie roczne daje **2 miesiące gratis** — płacisz za 10 miesięcy i otrzymujesz 12 miesięcy dostępu.
+Każda firma z aktywnymi pojazdami otrzymuje **wspólną pulę AI**: `5 € bazowo + 1,00 € × aktywne pojazdy`. Całe zmierzone użycie AI na koncie — ekstrakcja dokumentów, pieczętowanie eCMR, Ask Druma, wnioski KPI — pobiera z tej **jednej, wspólnej puli**; liczba pojazdów tylko ustala rozmiar puli, nie przypisuje użycia do poszczególnych pojazdów. Pasek postępu pokazuje, ile z puli bieżącego miesiąca wykorzystano.
 
-Możesz przełączać się między rozliczeniem miesięcznym i rocznym na stronie **Ustawienia — Rozliczenia** za pomocą przełącznika Miesięcznie / Rocznie.
+Użycie ponad pulę nie jest blokowane — Druma nigdy nie odcina dostępu w trakcie miesiąca. Jest po prostu rozliczane jako nadwyżka według stawki **koszt × 2,5** na kolejnej fakturze.
 
----
+### Limity per funkcja AI
 
-## Aktywacja płatnej subskrypcji
+Poniżej puli sekcja **Funkcje AI i użycie** wylistowuje każdą włączoną, opcjonalną, zmierzoną funkcję AI wraz z użyciem w tym miesiącu i edytowalnym miesięcznym maksimum (w €), aby ograniczyć niekontrolowane wydatki na daną funkcję.
 
-Gdy Twój okres próbny dobiegnie końca, przejdź do **Ustawienia — Rozliczenia** i kliknij **Subskrybuj teraz**. Zostaniesz przeniesiony na stronę kasy Stripe, aby wprowadzić dane płatności i potwierdzić liczbę miejsc.
+### Faktury
 
-Po zakończeniu kasy:
+Tabela **Faktury** wylistowuje faktury platformowe wg okresu, z kwotami VAT i łącznymi, statusem (Wersja robocza, Wystawiona, Opłacona, Zaległa), terminem płatności i linkiem do podglądu faktury, gdzie dostępny. Faktury są wystawiane jako rumuńska e-Factura w EUR, z pozycją VAT pokazaną również w RON według kursu Narodowego Banku Rumunii (BNR).
 
-1. Druma sprawdza aktywację subskrypcji przez maksymalnie 30 sekund i wyświetla niebieski baner **"Aktywowanie subskrypcji…"** podczas oczekiwania.
-2. Po aktywacji strona rozliczeń aktualizuje się, pokazując plan, liczbę miejsc i datę następnej faktury.
-3. Jeśli strona przekroczy limit czasu przed potwierdzeniem aktywacji, powiadomienie informuje, aby sprawdzić za kilka minut — subskrypcja nadal jest przetwarzana po stronie Stripe.
+### Płatność
+
+Sekcja **Płatność** pokazuje dane bankowe do zapłaty (beneficjent, IBAN, tytuł płatności) oraz Twoje warunki płatności. Nie ma opcji płatności kartą — rozliczaj każdą e-Factura przelewem bankowym, używając podanego tytułu.
 
 ---
 
-## Zawieszenie
+## Konta zawieszone
 
-Jeśli subskrypcja wygaśnie — nieudana płatność, zakończony okres próbny bez subskrypcji lub odrzucona karta — konto wchodzi w stan **zawieszenia**.
-
-**Co się zmienia po zawieszeniu:**
-- Dostęp do planowania, zleceń, fakturowania i funkcji floty jest zablokowany
-- Kierowcy nie mogą otrzymywać nowych dyspozycji przez aplikację mobilną
-- Logowanie nadal działa — dane nie są usuwane
-
-**Co nadal działa:**
-- **Ustawienia — Rozliczenia** pozostają dostępne, aby można było zaktualizować dane płatności i reaktywować
-- **Okno modalne Ustawień** pozostaje otwarte z tego samego powodu
-
-**Aby reaktywować:**
-- Kliknij **Zaktualizuj metodę płatności** na ekranie zawieszenia, lub
-- Przejdź do **Ustawienia — Rozliczenia — Portal Stripe**, aby zarządzać metodą płatności bezpośrednio
-
----
-
-## Rozliczenie eCMR
-
-eCMR jest wliczone w subskrypcję Druma bez dodatkowych kosztów. Nie ma opłaty za dokument ani limitu użycia — podpisuj tyle eCMR, ile potrzebuje Twoja firma.
-
-Statystyki użycia eCMR za bieżący okres możesz nadal przeglądać w **Ustawienia — Rozliczenia** w sekcji **Użycie**.
+Jeśli Twoje konto jest zawieszone, cały dostęp do aplikacji jest zastąpiony jednym ekranem z prośbą o uregulowanie zaległego salda; przycisk otwiera bezpośrednio **Ustawienia → Rozliczenia**. Logowanie nadal działa — zablokowany jest tylko dostęp do przestrzeni roboczej. Jeśli uważasz, że konto zostało zawieszone przez pomyłkę, skontaktuj się z support@druma.io.
 
 ---
 
 ## Potrzebujesz pomocy z rozliczeniami?
 
 <Card title="Kontakt z pomocą techniczną" icon="headset" href="mailto:support@druma.io">
-  W przypadku pytań dotyczących rozliczeń, sporów lub wniosków o fakturę VAT, napisz na support@druma.io. Podaj nazwę firmy i CIF. Odpowiadamy w ciągu jednego dnia roboczego.
+  W przypadku pytań dotyczących rozliczeń, sporów lub wniosków o fakturę, napisz na support@druma.io. Podaj nazwę firmy i numer VAT. Odpowiadamy w ciągu jednego dnia roboczego.
 </Card>

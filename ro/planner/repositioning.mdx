@@ -1,42 +1,113 @@
 ---
 title: "Comenzi de repozitionare"
-description: "Cum creezi si gestionezi comenzi de repozitionare - miscari fara venit, pentru a aduce un camion unde e nevoie pentru urmatoarea cursa."
+description: "Cum creezi si gestionezi comenzi de repozitionare — miscari fara venit, pentru a aduce un camion unde e nevoie pentru urmatoarea cursa."
 icon: "route"
 ---
 
-O comanda de repozitionare urmareste o **miscare fara venit**: camion gol de la un punct de livrare catre alt oras cu preluare in asteptare, retur la depozit la finalul saptamanii, sau relocare pentru schimb de sofer/programare de service. Nu se factureaza clientilor - exista pentru vizibilitate completa asupra miscarilor flotei si pentru costul real al operatiunilor.
+## Ce este o comanda de repozitionare?
+
+O comanda de repozitionare urmareste o **miscare fara venit** — cand trimiti un camion dintr-o locatie in alta, fara sa transporti marfa pentru un client platitor. Scenarii comune includ:
+
+- Trimiterea unui camion gol de la un punct de livrare catre un alt oras, unde o preluare asteapta.
+- Mutarea unui camion inapoi la depozitul de origine, la finalul unei saptamani de lucru.
+- Relocarea unui vehicul pentru a acoperi un schimb de sofer sau o programare de service.
+
+Comenzile de repozitionare nu sunt facturate clientilor. Exista pentru a-ti oferi vizibilitate completa asupra miscarilor flotei tale, a urmari kilometrii morti si a calcula costul real al operatiunilor tale.
+
+---
 
 ## Crearea unei comenzi de repozitionare
 
 <Steps>
-  <Step title="Deschide formularul de comanda noua">Planner -> Comenzi -> Comanda Noua.</Step>
-  <Step title="Selecteaza Repozitionare ca tip">A treia optiune, alaturi de Camion propriu si Subcontractat.</Step>
-  <Step title="Alege motivul">Din lista de **Motive de Repozitionare** (pana la 6 coduri configurabile in Setari): retur la depozit, pre-pozitionare pentru urmatoarea cursa, schimb de sofer, programare de service, solicitare client (fara taxa), conformitate transfrontaliera.</Step>
-  <Step title="Completeaza ruta">Adresa de plecare si destinatia - motorul HERE calculeaza automat distanta.</Step>
-  <Step title="Adauga note (optional)">Campul **Note de Repozitionare**, vizibil doar planificatorilor.</Step>
-  <Step title="Atribuie camion si salveaza">Ca la orice comanda - Ciorna sau Confirma direct.</Step>
+  <Step title="Deschide formularul de comanda noua">
+    Mergi la **Planner → Comenzi → Comanda Noua**.
+  </Step>
+  <Step title="Selecteaza Repozitionare ca tip de comanda">
+    In campul **Tip Comanda**, alege **Repozitionare**. Este a treia optiune, alaturi de Camion Propriu si Subcontractat.
+  </Step>
+  <Step title="Selecteaza motivul">
+    Alege un **Motiv de Repozitionare** din lista. Este o lista fixa de 5 motive — nu exista o interfata de Setari pentru a le adauga sau schimba:
+    - Retur Gol (Empty Return)
+    - Relocare Flota
+    - Transfer pentru Service
+    - Pre-Pozitionare
+    - Altele
+  </Step>
+  <Step title="Completeaza ruta">
+    Introdu adresa de preluare (unde este acum camionul) si adresa de livrare (unde trebuie sa ajunga). Motorul de rutare PTV calculeaza automat distanta.
+  </Step>
+  <Step title="Adauga note (optional)">
+    Foloseste campul **Note de Repozitionare** pentru a explica de ce se intampla aceasta miscare. Este vizibil doar planificatorilor, nu si soferului.
+  </Step>
+  <Step title="Atribuie un camion si salveaza">
+    Selecteaza camionul si soferul, ca la orice comanda. Salveaza ca Ciorna sau Confirma imediat.
+  </Step>
 </Steps>
 
-## Cum difera de o comanda obisnuita
+---
 
-Nu se factureaza clientului si nu conteaza in rapoartele de venit, dar apare pe tabla de planificare (cu insigna **Repo**, violet) si urmeaza acelasi ciclu de viata complet (Ciorna -> Livrat) - soferul apasa statusurile normal. Distanta se contorizeaza separat, ca kilometri interni morti, nu ca `distance_km` obisnuit.
+## Cum difera comenzile de repozitionare
+
+| Functie | Comanda obisnuita | Comanda de repozitionare |
+|---|---|---|
+| Facturata clientului | Da | Nu |
+| Apare pe tabla de planificare | Da | Da (cu eticheta **Repo**) |
+| Conteaza in rapoartele de venit | Da | Nu |
+| Distanta urmarita | `distance_km` | `distance_km_internal` |
+| Soferul o vede in aplicatie | Da | Da |
+| Flux de status | Ciclu de viata complet | Ciclu de viata complet |
+
+<Note>
+Comenzile de repozitionare urmeaza acelasi ciclu de viata al statusului ca si comenzile obisnuite (Ciorna → Livrat). Soferul apasa statusurile in aplicatia sa, ca de obicei. Singura diferenta este ca niciun client sau pret nu este atasat.
+</Note>
+
+---
 
 ## Opriri interne
 
-In orice comanda, poti adauga **opriri interne** - opriri neplanificate pentru combustibil, odihna, service sau alte nevoi operationale, fiecare cu adresa, cod de motiv (pana la 6 coduri configurabile: Combustibil, Odihna, Service, Control Frontiera, Cantar, Altele) si note. Apar in cronologia comenzii, vizual distincte de opririle de marfa, si nu afecteaza calculul ETA de livrare.
+In timpul unei miscari de repozitionare (sau al oricarei comenzi), poti adauga **opriri interne** — opriri neplanificate pentru combustibil, odihna, service, sau alte nevoi operationale.
 
-## Configurarea codurilor de motiv
+Opririle interne sunt urmarite separat de opririle de incarcare si descarcare. Fiecare oprire interna are:
 
-Codurile de motiv pentru repozitionare si pentru opriri interne se configureaza in **Setari -> Companie** - opririle interne se aplica tuturor tipurilor de comanda, nu doar repozitionarilor.
+- **Adresa** — unde a fost facuta oprirea.
+- **Cod de motiv** — selectat dintr-o lista fixa a sistemului: Odihna, Alimentare, Peste Noapte, Personal, Parcare Remorca, Altele.
+- **Note** — explicatie in text liber.
+
+Opririle interne apar in cronologia de opriri a comenzii, dar sunt distinse vizual de opririle de marfa. Nu afecteaza calculele ETA de livrare.
+
+---
+
+## Coduri de motiv
+
+### Motive de repozitionare
+
+Cele 5 motive de repozitionare (Retur Gol, Relocare Flota, Transfer pentru Service, Pre-Pozitionare, Altele) sunt fixe in produs — momentan nu exista un ecran de Setari pentru a le adauga, redenumi sau elimina.
+
+### Motive de oprire interna
+
+La fel, cele 6 motive de oprire interna (Odihna, Alimentare, Peste Noapte, Personal, Parcare Remorca, Altele) sunt fixe si se aplica tuturor tipurilor de comanda, nu doar comenzilor de repozitionare. Momentan nu exista o interfata pentru a adauga coduri de motiv personalizate peste acestea, desi capacitatea de baza exista la nivel de API.
+
+---
+
+## Repozitionarea pe tabla de planificare
+
+Comenzile de repozitionare apar pe tabla de planificare cu o mica eticheta gri **R**, ceea ce le face usor de distins de incarcaturile generatoare de venit. Sunt incluse in calculele de utilizare a flotei (camionul este in folosinta), dar excluse din KPI-urile de venit.
+
+---
 
 ## Raportare
 
-Kilometrii de repozitionare apar separat in **Raportul de Profitabilitate pe Ruta** (coloana "km morti") si in **Raportul CO2**.
+Kilometrii de repozitionare sunt urmariti prin campul `distance_km_internal` si apar in:
+
+- **Raportul de Profitabilitate pe Ruta** — ca o coloana separata "km morti", ca sa vezi costul real de a servi fiecare ruta.
+- **Raportul CO2** — miscarile de repozitionare contribuie la emisii si sunt raportate separat de calatoriile incarcate.
+
+---
 
 <Card title="Tabla de planificare" icon="calendar" href="/ro/planner/planning-board">
-  Cum apar comenzile de repozitionare pe tabloul de dispecerizare.
+  Vezi cum apar comenzile de repozitionare pe tabloul de dispecerizare, alaturi de incarcaturile obisnuite.
 </Card>
 
 <Card title="Crearea unei comenzi" icon="plus" href="/ro/planner/creating-orders">
-  Ghid complet pentru toate tipurile de comanda - Camion propriu, Subcontractat si Repozitionare.
+  Ghid complet pentru crearea comenzilor de toate tipurile — Camion Propriu, Subcontractat si Repozitionare.
 </Card>

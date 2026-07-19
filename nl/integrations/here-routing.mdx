@@ -1,30 +1,41 @@
 ---
-title: "HERE Maps Routering"
-description: "HERE Maps zorgt voor adresautocomplete, vrachtwagen-geoptimaliseerde routering, tolkostenschatting en ETA-berekening in heel Druma."
+title: "HERE Maps adresopzoeking"
+description: "HERE Maps verzorgt adresautocomplete en geocodering in heel Druma. Vrachtwagen-geoptimaliseerde routering, tolschatting en ETA worden in plaats daarvan berekend door PTV."
 icon: "map"
 ---
 
-Druma gebruikt HERE Maps voor drie kernfuncties: adressen vinden en valideren, veilige vrachtwagenroutes berekenen en tolkosten schatten.
+Druma gebruikt **HERE Maps** voor één kernfunctie: adressen vinden en valideren terwijl u typt. Vrachtwagenveilige routering, tolkostenschatting en live ETA worden berekend door een andere provider, **PTV**, kort beschreven aan het einde van deze pagina. Deze integratie werkt automatisch op de achtergrond — geen installatie vereist van operators of dispatchers.
 
 ## Geen installatie vereist
 
-HERE is geconfigureerd op Druma-platformniveau. In tegenstelling tot integraties zoals TransFollow of SmartBill is er geen API-sleutel in te voeren en geen instellingen te configureren. Elk Druma-account heeft volledige toegang tot HERE-routering vanaf dag één.
+HERE is geconfigureerd op Druma-platformniveau. In tegenstelling tot integraties zoals TransFollow of SmartBill is er geen API-sleutel in te voeren en geen instellingen te configureren. Elk Druma-account heeft vanaf dag één volledige toegang tot HERE-adresopzoeking.
 
 ## Adresautocomplete
 
-Bij het invoeren van een ophaal- of afleveradres op een order, begin met typen en HERE suggereert overeenkomende adressen. Selecteer het juiste adres en alle velden worden automatisch ingevuld.
+Bij het invoeren van een ophaal- of afleveradres op een order, begin met typen van de straatnaam of stad en HERE suggereert overeenkomende adressen in een vervolgkeuzelijst. Selecteer het juiste adres en alle velden — straat, nummer, stad, postcode en land — worden automatisch ingevuld.
 
-## Routeberekening
+Dit voorkomt adresinvoerfouten die navigatieproblemen voor de chauffeur veroorzaken. Een adres bevestigd via HERE-autocomplete heeft altijd geldige coördinaten, zodat de navigatie-app van de chauffeur er rechtstreeks naartoe kan routeren.
 
-Nadat beide adressen zijn ingevoerd, berekent Druma automatisch:
-- **Routeafstand (km)** — de aanbevolen vrachtwagenroute, waarbij laagbruggen, gewichtsbeperkingen en gevaarlijke goederenrestricties worden vermeden
-- **Geschatte rijtijd** — op basis van gemiddelde vrachtwagensnelheden
-- **Tolkosten** — per land, op basis van uw voertuigklasse
+<Note>
+Voor landelijke of industriële adressen die niet in de autocomplete verschijnen, kunt u het adres handmatig invoeren en dan de kaartpin naar de juiste locatie slepen. De coördinaten worden bij de order opgeslagen en gebruikt voor routering.
+</Note>
 
-## CO2-berekeningen
+## Omgekeerde geocodering
 
-De HERE-routeafstand wordt gebruikt in Druma's CO2-emissieberekeningen (GLEC Framework v3).
+HERE zet ook een geplaatste kaartpin (breedte-/lengtegraad) terug om in een leesbaar adres — gebruikt bijvoorbeeld wanneer een planner een pin op de kaart sleept om de naam en het adres van een locatie vooraf in te vullen.
 
-<Card title="CO2-rapportage" icon="leaf" href="/nl/fleet-compliance/co2-reporting">
-  Hoe HERE-afstanden worden gebruikt in emissieberekeningen.
-</Card>
+## Routering, tol en ETA: door PTV verzorgd
+
+Vrachtwagen-geoptimaliseerde routering (laagbruggen, gewichtsbeperkingen en andere gevaren vermijden die zware voertuigen niet kunnen nemen), tolkostenschatting over Europese tolsystemen heen, en live verkeersbewuste ETA worden allemaal berekend door de **PTV Developer Routing API**, niet HERE. Druma geeft de afmetingen, het gewicht en het aantal assen van uw voertuig door aan PTV zodat routes en tolschattingen uw werkelijke truck weerspiegelen.
+
+<Warning>
+Tolkostenschattingen blijven benaderingen, ongeacht de provider. De werkelijke tol hangt af van de specifieke gereden route, onder welke asconfiguratie uw truck geregistreerd staat in het tolsysteem van elk land, en of tarieven zijn gewijzigd sinds de laatste gegevensupdate. Gebruik deze cijfers als richtlijn, niet als exacte factuurinput.
+</Warning>
+
+De technische voertuiggegevens actueel houden in **Vloot → Voertuigen → [voertuig] → Technische details** is de meest effectieve stap om de nauwkeurigheid van routering, tol en ETA te verbeteren — ongeacht welke provider de berekening doet.
+
+<CardGroup cols={1}>
+  <Card title="Vlootbeheer" icon="truck" href="/nl/planner/fleet-management">
+    Hoe u uw voertuigrecords beheert, inclusief de afmetingen die de routering voeden.
+  </Card>
+</CardGroup>

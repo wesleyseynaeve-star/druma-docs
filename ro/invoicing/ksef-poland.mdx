@@ -27,7 +27,7 @@ Nu trebuie sa te autentifici in portalul KAS, sa produci XML-uri sau sa trimiti 
 Fiecare factura supusa KSeF arata un status in sectiunea **KSeF** a facturii: **In asteptare** (trimitere in coada), **Trimisa** (asteapta procesarea KAS, de obicei 1-5 minute), **Acceptata** (numarul KSeF si UPO disponibile), **Esuata** (eroare de validare) sau **Respinsa** (respingere formala KAS - vezi codul motiv in UPO).
 
 <Note>
-Facturile esuate sunt reincercate automat la fiecare 30 de minute, timp de pana la 24 de ore. Dupa 24 de ore, foloseste reincercarea manuala din panoul facturii dupa ce ai rezolvat eroarea.
+Un job din fundal verifica trimiterile esuate la fiecare 30 de minute, dar fiecare factura reincearca de fapt pe un program de backoff exponential — aproximativ 1 ora dupa primul esec, apoi aproximativ 2 ore dupa aceea (±25% variatie). Daca si a treia incercare (trimiterea originala plus aceste 2 reincercari) esueaza, factura trece direct in statusul **Esuata**, de regula in aproximativ 3 ore de la primul esec — nu va mai reincerca automat dupa aceea. Declanseaza o reincercare manuala din panoul de detaliu al facturii, dupa ce ai rezolvat eroarea de baza.
 </Note>
 
 ## Configurarea KSeF

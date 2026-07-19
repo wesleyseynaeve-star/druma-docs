@@ -1,34 +1,93 @@
 ---
 title: "Urmarirea transporturilor"
-description: "Cum acceseaza clientii portalul Druma pentru a vedea statusul live al comenzilor, pozitia camionului, ETA si istoricul livrarilor."
+description: "Cum acceseaza clientii portalul Druma pentru a vedea statusul comenzilor, ETA-urile si cronologia completa de livrare."
 icon: "map-location-dot"
 ---
 
-## Ce este portalul clientului?
+## Ce este portalul de client
 
-Portalul clientului ofera clientilor tai o fereastra dedicata in transporturile lor — fara sa fie nevoie sa te sune sau sa trimita email pentru actualizari.
+Portalul de client ofera clientilor tai o fereastra dedicata in transporturile lor — fara sa fie nevoie sa te sune sau sa trimita email pentru actualizari. Pot vedea exact unde este marfa lor, cand este asteptata sa soseasca si un istoric complet al evenimentelor de status. Tu controlezi accesul; ei doar apasa un link.
 
-## Doua metode de acces
+## Oferirea accesului clientilor
 
-- **Link magic** — metoda recomandata. Generezi un URL unic din inregistrarea clientului in Druma. Linkul este valabil 30 de zile.
-- **Link token** — URL permanent pe care il poti copia si distribui manual. Nu expira.
+Exista un singur link de acces per client — nu se creeaza un cont separat si nu exista mai multe tipuri de link intre care sa alegi. Din pagina **Clienti**, selecteaza clientul si apasa **Genereaza link portal**. Link-ul este valabil **90 de zile** de la generare; apasa **Retrimite link** oricand pentru a retrimite acelasi link, sau **Revoca** pentru a opri accesul imediat. Fiecare link este limitat doar la comenzile clientului respectiv.
 
-Pentru a genera oricare link: mergi la **Clienti** -> selecteaza clientul -> tabul **Acces Portal**.
+<Frame caption="Lista Transporturi a clientului — statusul este o eticheta simpla, nu o harta GPS live.">
+  <img src="/images/client-portal/tracking-shipments.png" alt="Lista Transporturi din portalul de client" />
+</Frame>
+
+## Pas cu pas: cum urmareste un client un transport
+
+<Steps>
+  <Step title="Clientul deschide link-ul portalului">
+    Clientul apasa link-ul pe care i l-ai trimis. Nu exista cont de creat sau parola de retinut — dar nici link-ul singur nu este suficient: clientul introduce adresa sa de email, Druma trimite un cod de verificare din 6 cifre la acea adresa (valabil 10 minute), iar el il introduce pentru a-si confirma identitatea inainte sa vada orice date.
+  </Step>
+  <Step title="Clientul ajunge pe lista Transporturi">
+    Portalul se deschide direct pe pagina **Transporturi** — un tabel cu comenzile clientului, cu referinta, ruta, eticheta de status, data de preluare si ETA pentru fiecare. O casuta de cautare ii permite sa sara direct la o comanda dupa referinta, origine sau destinatie.
+  </Step>
+  <Step title="Clientul filtreaza pentru a gasi comanda potrivita">
+    Taburile de filtrare de deasupra tabelului — **Toate**, **Active**, **Livrate**, **Intarziate**, **Anulate** — restrang lista, fiecare cu un numar live. Aceasta este metoda cea mai rapida pentru un client cu multe transporturi sa gaseasca cel despre care intreaba.
+  </Step>
+  <Step title="Clientul deschide o comanda pentru detalii">
+    Apasarea unui rand deschide panoul de detaliu al comenzii. Arata o **cronologie de status** in patru pasi (Comandat → Expediat → In tranzit → Livrat), lista completa a opririlor de ruta cu adrese si ferestre orare, si un card de urmarire care arata daca transportul este in prezent pe drum, pe baza statusului comenzii — nu o harta live sau un pin GPS.
+  </Step>
+  <Step title="Clientul verifica marfa, transportul si informatiile e-Transport">
+    Sub cronologie, panoul arata detaliile marfii (greutate, paleti, volum), soferul si placile camionului/remorcii atribuite si — pentru transporturile care ating Romania — un card e-Transport unde clientul poate vedea sau introduce codul UIT ANAF.
+  </Step>
+  <Step title="Clientul descarca documentele">
+    Sectiunea **Documente** din acelasi panou listeaza CMR-ul/eCMR-ul si Dovada de Livrare pentru acea comanda, plus orice fisiere suplimentare incarcate de tine. Clientul apasa **Descarca** pentru a deschide fiecare. Vezi [Descarcarea documentelor](/ro/client-portal/downloading-documents) pentru fluxul complet de documente.
+  </Step>
+</Steps>
 
 ## Ce vede clientul tau
 
-- **Lista de comenzi** — toate comenzile active si recent finalizate
-- **Harta live** — ultima pozitie cunoscuta a camionului pentru fiecare comanda activa
-- **Cronologie de statusuri** — fiecare eveniment de status cu timestamp
-- **ETA** — estimarea orei de sosire, actualizata cand soferul raporteaza o intarziere
-- **Rapoarte de intarziere** — banner cu motivul si ETA actualizat
+Odata ce deschid portalul, clientii ajung pe lista lor de comenzi. Iata tot ce le este disponibil:
+
+**Lista de comenzi** — toate comenzile active si recent finalizate ale companiei lor. Fiecare rand arata referinta comenzii, ruta (origine → destinatie), eticheta curenta de status (de exemplu, *In tranzit*, *Livrat*, *Asteptare*) si ETA.
+
+**Card de urmarire** — un card de status pe vizualizarea de detaliu a comenzii care arata daca transportul este in prezent pe drum, pe baza statusului curent al comenzii. Nu este o harta interactiva si nu marcheaza o pozitie GPS live — se actualizeaza cand statusul comenzii se schimba, de exemplu cand soferul marcheaza incarcatura ca plecata sau sosita.
+
+**Cronologie de status** — apasa orice comanda pentru a deschide vizualizarea de detaliu. Cronologia este un tracker simplu in patru pasi — Comandat → Expediat → In tranzit → Livrat — care arata la ce etapa a ajuns comanda. Nu listeaza evenimente individuale de status cu marcaje temporale sau locatii, doar etapa curenta dintre aceste patru.
+
+**ETA** — afisat atat pe lista de comenzi cat si pe pagina de detaliu. ETA este calculat din ultima pozitie cunoscuta si ora planificata de livrare. Daca soferul raporteaza o intarziere, ETA se actualizeaza si clientul vede o nota de intarziere.
+
+**Rapoarte de intarziere** — daca un sofer raporteaza o intarziere, notificarea automata a clientului depinde de o setare de companie care este dezactivata implicit. Cand este activata, clientul primeste o intrare in panoul sau de **Notificari** cu motivul. Altfel, planificatorul decide daca si cand sa informeze clientul.
+
+## Filtrarea comenzilor
+
+Clientii isi pot filtra lista de comenzi dupa:
+
+- **Interval de date** — util pentru clientii care expediaza frecvent si vor sa gaseasca livrarile dintr-o anumita saptamana
+- **Status comanda** — arata doar comenzile *In tranzit*, *Livrate*, *Asteptare* etc.
+
+Filtrele se afla in partea de sus a listei de comenzi.
+
+## Compatibil cu mobilul
+
+Portalul este complet responsive. Clientii de pe telefon sau tableta primesc aceleasi informatii ca pe desktop — cardurile se stivuiesc vertical, cronologia se adapteaza si butoanele sunt dimensionate pentru atingere. Nu este nevoie de nicio aplicatie de descarcat.
+
+## Ce nu pot vedea clientii
+
+Portalul este limitat in mod intentionat la informatii operationale:
+
+- **Fara preturi** — clientii nu pot vedea tariful de transport agreat sau vreo suprataxa
+- **Fara detalii de factura** — facturile apar in tabul Documente doar dupa ce le-ai trimis prin Druma (vezi [Descarcarea documentelor](/ro/client-portal/downloading-documents))
+- **Fara datele altor clienti** — fiecare link de portal este limitat la o singura companie client
 
 <Note>
-Pozitia GPS se actualizeaza cand soferul apasa un buton de status in aplicatia Druma, nu in timp real continuu.
+Portalul de client arata statusul comenzii, nu o pozitie GPS live — cardul de urmarire se actualizeaza doar cand statusul comenzii se schimba. Asigura-te ca soferii tai apasa statusurile prompt (Plecat, Sosit, Incarcat, Descarcat) ca clientii sa vada actualizari la timp. Ajuta sa ii instruiesti pe soferii noi despre asta la onboarding.
 </Note>
 
 <Warning>
-Linkurile token nu expira. Daca un contact al clientului pleaca, revoca linkul din tabul Acces Portal si emite unul nou.
+Link-ul de portal este valabil implicit 90 de zile. Daca un contact al clientului paraseste compania sau vrei sa taie accesul mai devreme, mergi la inregistrarea clientului din pagina **Clienti** si apasa **Revoca** — link-ul inceteaza sa functioneze imediat. Apasa **Genereaza link portal** dupa aceea daca vrei sa emiti unul nou.
 </Warning>
 
-<Card title="Descarcarea documentelor" icon="file-arrow-down" href="/en/client-portal/downloading-documents">Cum descarca clientii eCMR, CMR, POD si facturile.</Card>
+---
+
+<Card title="Descarcarea documentelor" icon="file-arrow-down" href="/ro/client-portal/downloading-documents">
+  Cum descarca clientii eCMR-ul, scanarile CMR, fotografiile POD si facturile din portalul lor.
+</Card>
+
+<Card title="Gestionarea contactelor" icon="address-book" href="/ro/client-portal/managing-contacts">
+  Adauga contacte la o companie client, seteaza cine primeste ce notificari si ofera acces la portal fiecarei persoane.
+</Card>

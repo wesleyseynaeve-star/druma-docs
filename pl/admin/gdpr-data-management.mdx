@@ -6,7 +6,11 @@ icon: "lock"
 
 _Ostatnia aktualizacja: 10 lipca 2026._
 
-Dla **danych operacyjnych** (zlecenia, klienci, kierowcy, dokumenty i powiązane rekordy przechowywane przez Twoją firmę na platformie) Druma pełni rolę **podmiotu przetwarzającego** ("processor") — administratorem danych ("controller") jest Twoja firma, a przetwarzanie reguluje Umowa Powierzenia Przetwarzania Danych (DPA) między Twoją firmą a Druma. Dla **danych konta i rozliczeń** (szczegóły subskrypcji Druma i administrujących nią użytkowników) Druma pełni rolę **administratora danych** we własnym zakresie. Ten artykuł wyjaśnia dokładnie, co jest przechowywane, jak długo jest zatrzymywane, kto je przetwarza i jakie działania możesz podjąć zgodnie z RODO.
+Dla **danych operacyjnych** (zlecenia, klienci, kierowcy, dokumenty i powiązane rekordy przechowywane przez Twoją firmę na platformie) Druma pełni rolę **podmiotu przetwarzającego** — administratorem danych jest Twoja firma, a przetwarzanie reguluje Umowa Powierzenia Przetwarzania Danych (DPA) między Twoją firmą a Druma. Dla **danych konta i rozliczeń** (szczegóły subskrypcji Druma i administrujących nią użytkowników) Druma pełni rolę **administratora danych** we własnym zakresie. Ten artykuł wyjaśnia dokładnie, co jest przechowywane, jak długo jest zatrzymywane, kto je przetwarza i jakie działania możesz podjąć zgodnie z RODO.
+
+<Frame caption="Ustawienia → RODO i prywatność — każda rola może przeglądać; tylko Admin może działać.">
+  <img src="/images/admin/gdpr-data-management.png" alt="Panel ustawień RODO i prywatności" />
+</Frame>
 
 ---
 
@@ -27,16 +31,21 @@ Dla **danych operacyjnych** (zlecenia, klienci, kierowcy, dokumenty i powiązane
 - Dane importu kart paliwowych powiązane z pojazdami
 
 ### Dokumenty eCMR
-- Elektroniczne listy przewozowe wydawane i pieczętowane PAdES **wewnętrznie przez natywnego providera Druma**, w tym dane podpisów i certyfikowane PDF. TransFollow pozostaje dostępny jako zapasowy (legacy) provider dla firm, które korzystały z niego przed wprowadzeniem natywnego rozwiązania.
+- Elektroniczne listy przewozowe wydawane i pieczętowane PAdES **wewnętrznie przez natywnego dostawcę Druma**, wraz z danymi podpisów i certyfikowanymi PDF-ami. TransFollow pozostaje dostępny jako zapasowa (legacy) ścieżka dla firm, które korzystały z niego przed wprowadzeniem natywnego dostawcy.
 
 ### Dane pozycji GPS
-- Druma przechowuje **tylko bieżącą pozycję GPS** — ostatnią znana lokalizację wysłaną przez aplikację kierowcy. **Nie jest przechowywana ani dostępna żadna historia pozycji.** W momencie otrzymania nowej pozycji poprzednia jest nadpisywana.
+- **Śledzenie na żywo**: Druma przechowuje tylko bieżącą pozycję pojazdu, stale nadpisywaną nowymi sygnałami GPS — dla mapy na żywo nie jest przechowywany żaden historyczny log pozycji.
+- **Znaczniki GPS zdarzeń zlecenia**: gdy kierowca zgłasza zmianę statusu, opóźnienie lub incydent, może zostać przechwycona pojedyncza współrzędna GPS i dołączona do tego konkretnego zdarzenia zlecenia. Znaczniki te są zachowywane jako część rekordu zlecenia (patrz okres przechowywania danych operacyjnych poniżej), a nie jako osobna, ciągła historia pozycji.
+- **Rumuński e-Transport**: dla przesyłek wymagających deklaracji ANAF e-Transport, współrzędne GPS przekazywane do ANAF są logowane osobno i usuwane po **30 dniach**.
+
+### Dane archiwum tachografu
+- Surowe pliki DDD (jednostka pokładowa) i TGD (karta kierowcy), pobierane automatycznie przez podłączonego dostawcę telematyki lub przesyłane ręcznie, przechowywane w Archiwum tachografu w celu spełnienia obowiązków zatrzymywania danych z Rozporządzenia UE 165/2014. Zobacz [Archiwum tachografu](/pl/fleet-compliance/tacho-archive).
 
 ### Dzienniki audytu
 - Dziennik znaczących działań użytkownika: zdarzenia logowania, zmiany statusu zleceń, zmiany ról użytkowników, przesyłanie dokumentów i zdarzenia rozliczeniowe
 
 <Note>
-Druma nie przechowuje danych tachografu, nagrań rozmów, danych biometrycznych kierowców ani informacji o ich zdrowiu.
+Druma nie przechowuje nagrań rozmów, danych biometrycznych kierowców ani informacji o ich zdrowiu.
 </Note>
 
 ---
@@ -47,12 +56,17 @@ Druma nie przechowuje danych tachografu, nagrań rozmów, danych biometrycznych 
 |---|---|
 | Dane operacyjne (zlecenia, klienci, kierowcy, pojazdy) | Czas trwania subskrypcji + 90 dni po anulowaniu |
 | Dane kont użytkowników | Czas trwania subskrypcji + 90 dni po anulowaniu |
-| Dzienniki audytu | 18 miesięcy od daty zarejestrowanego zdarzenia |
+| Dzienniki audytu | 12 miesięcy od daty zarejestrowanego zdarzenia |
 | Dokumenty eCMR | 10 lat (wymóg prawny zgodnie z Protokołem e-CMR) |
-| Dane pozycji GPS | Nadpisywane w czasie rzeczywistym — brak zachowanej historii |
-| Rekordy rozliczeń | 7 lat (wymóg rumuńskiego prawa rachunkowego) |
+| Dane pozycji GPS (śledzenie na żywo) | Nieprzechowywane — zachowywana jest tylko bieżąca pozycja, nadpisywana przy każdej aktualizacji |
+| Znaczniki GPS zdarzeń zlecenia | Przechowywane razem ze zleceniem (patrz okres przechowywania danych operacyjnych powyżej) |
+| Dane GPS przekazywane do ANAF e-Transport | 30 dni, następnie automatycznie usuwane |
+| Pliki tachografu (DDD/TGD) | Przechowywane bezterminowo (12 miesięcy to prawne minimum, nie cel usunięcia) |
+| Rekordy rozliczeń | 10 lat (górna granica prawa fiskalnego UE) |
 
-Po upływie okresu przechowywania dane są trwale usuwane ze wszystkich systemów, w tym kopii zapasowych.
+<Note>
+Po upływie 90-dniowego okna przechowywania opisanego niżej, zaplanowane czyszczenie Druma usuwa **zlecenia starsze niż 3 lata**, wiadomości i notatki zleceń, klientów, pojazdy i naczepy oraz usuwa integracje i preferencje firmy. Celowo **nie usuwa faktur ani podpisów eCMR** — oba są zachowywane zgodnie z powyższymi prawnymi zasadami przechowywania niezależnie od usunięcia konta. Zlecenia młodsze niż 3 lata w momencie czyszczenia również nie są przez ten proces usuwane.
+</Note>
 
 ---
 
@@ -61,18 +75,18 @@ Po upływie okresu przechowywania dane są trwale usuwane ze wszystkich systemó
 Możesz w dowolnym momencie zażądać pełnego eksportu danych swojej firmy.
 
 <Steps>
-  <Step title="Przejdź do Ustawienia — Dane i prywatność">
-    Dostęp do tej sekcji mają tylko role Admin i Administrator firmy.
+  <Step title="Przejdź do Ustawienia → RODO i prywatność">
+    Każda rola może otworzyć tę stronę i przeglądać jej zawartość. Tylko rola **Admin** może zażądać eksportu, edytować politykę przechowywania lub rozwiązywać żądania podmiotów danych — **Administrator firmy** ma dostęp tylko do odczytu przesłanych dokumentów RODO, a inne role mogą przeglądać stronę, ale nie mogą na niej działać.
   </Step>
   <Step title="Kliknij Żądaj eksportu">
     Kliknij przycisk **Żądaj eksportu**. Druma przygotuje archiwum ZIP ze wszystkimi danymi Twojej firmy w formacie czytelnym maszynowo (JSON i CSV).
   </Step>
   <Step title="Odbierz eksport">
-    Otrzymasz e-mail z linkiem do pobierania w ciągu **24 godzin**. Link wygasa po 7 dniach.
+    Otrzymasz e-mail z linkiem do pobrania w ciągu **około 15 minut** (eksport przetwarza zadanie w tle uruchamiane co 15 minut). Link wygasa po 7 dniach.
   </Step>
 </Steps>
 
-Eksport zawiera: zlecenia, klientów, kierowców, pojazdy, faktury, listę użytkowników i dzienniki audytu. Nie zawiera certyfikowanych PDF eCMR — te można pobrać indywidualnie z karty eCMR każdego zlecenia.
+Eksport zawiera: zlecenia, klientów, faktury, pojazdy floty, wewnętrzne wiadomości do zleceń, wpisy dziennika audytu, rekordy zgód i rekordy podpisów cyfrowych eCMR. Plik `drivers.csv` w eksporcie jest filtrowany tylko do kont użytkowników z rolą **kierowca** — nie jest to pełna lista Twoich użytkowników biurowych. Nie zawiera certyfikowanych PDF-ów eCMR — te można pobrać indywidualnie z karty eCMR każdego zlecenia.
 
 ---
 
@@ -83,17 +97,17 @@ Usunięcie konta jest trwałe i nieodwracalne po 90-dniowym okresie przechowywan
 </Warning>
 
 <Steps>
-  <Step title="Przejdź do Ustawienia — Dane i prywatność">
-    Przewiń do sekcji **Usuń konto**.
+  <Step title="Przejdź do Ustawienia → RODO i prywatność">
+    Przewiń do sekcji **Usuń konto**. Tylko rola **Admin** może to rozpocząć.
   </Step>
   <Step title="Kliknij Usuń konto">
     Zostaniesz poproszony o wpisanie nazwy firmy, aby potwierdzić zrozumienie działania.
   </Step>
   <Step title="Rozpoczyna się 90-dniowy okres przechowywania">
-    Twoje konto jest natychmiast dezaktywowane — nikt nie może się zalogować. Druma przechowuje dane przez 90 dni na wypadek potrzeby regulacyjnej lub prawnej.
+    Twoje konto jest natychmiast dezaktywowane — nikt nie może się zalogować. Druma przechowuje dane przez 90 dni na wypadek potrzeby regulacyjnej lub prawnej. W dowolnym momencie tego okna możesz anulować zaplanowane usunięcie z tej samej strony.
   </Step>
-  <Step title="Trwałe usunięcie">
-    Po 90 dniach wszystkie dane operacyjne są trwale usuwane ze wszystkich systemów i kopii zapasowych. Dokumenty eCMR są przechowywane przez pełny 10-letni okres prawny nawet po usunięciu konta, zgodnie z wymogami prawnymi.
+  <Step title="Zaplanowane czyszczenie">
+    Po 90 dniach Druma usuwa zlecenia starsze niż 3 lata, wiadomości i notatki zleceń, klientów, pojazdy, naczepy i integracje firmy oraz usuwa sam rekord firmy. **Faktury i podpisy cyfrowe eCMR nie są usuwane** przez ten proces — są przechowywane przez pełny prawny okres (patrz tabela okresów przechowywania powyżej) niezależnie od usunięcia konta. Zlecenia młodsze niż 3 lata w momencie czyszczenia również nie są usuwane na tym etapie.
   </Step>
 </Steps>
 
@@ -117,13 +131,13 @@ Druma udostępnia dane następującym zewnętrznym podmiotom przetwarzającym w 
 | Sentry | Monitorowanie błędów i raportowanie awarii |
 | Google Firebase Cloud Messaging | Powiadomienia push do aplikacji kierowcy |
 | WhatsApp Business Cloud API (Meta) | Wiadomości do kierowców — tylko jeśli firma włączy powiadomienia WhatsApp |
-| Dostawcy telematyki (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Dane GPS i tachografu — tylko dostawca podłączony przez firmę |
-| Dostawcy telematyki chłodni (Mapon, Orbcomm, Thermo King) | Dane temperatury chłodni — tylko dostawca podłączony przez firmę |
-| TransFollow | Wyłącznie zapasowy (legacy) provider eCMR — domyślnym providerem wydawania, podpisywania i archiwizacji jest natywne rozwiązanie Druma |
+| Dostawcy telematyki (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | Dane GPS i tachografu — tylko dostawca podłączony przez firmę |
+| Dostawcy telematyki chłodni (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Dane temperatury chłodni — tylko dostawca podłączony przez firmę |
+| TransFollow | Wyłącznie zapasowy (legacy) provider eCMR — domyślnym dostawcą wydawania, podpisywania i archiwizacji jest natywne, wewnętrzne rozwiązanie Druma |
 
 Wszystkie podmioty przetwarzające są zobowiązane umownie do przetwarzania danych wyłącznie zgodnie z instrukcjami i zgodnie z RODO.
 
-Jeśli Twoja firma włączy opcjonalną funkcję **Druma Copilot** z własnym kluczem API dostawcy AI ("bring your own key"), prompty i zapytywane dane są wysyłane bezpośrednio do wybranego dostawcy AI (OpenAI, Anthropic lub Google) na podstawie własnej umowy Twojej firmy z tym dostawcą — może to oznaczać transfer danych poza UE. Druma Copilot jest **domyślnie wyłączony** i aktywuje się dopiero po podaniu własnego klucza przez firmę.
+Jeśli Twoja firma włączy opcjonalną funkcję **Druma Copilot** z własnym kluczem API dostawcy AI ("bring your own key"), Twoje prompty i zapytywane dane są wysyłane bezpośrednio do wybranego dostawcy AI (OpenAI, Anthropic lub Google) na podstawie własnej umowy Twojej firmy z tym dostawcą — może to oznaczać transfer danych poza UE. Druma Copilot jest **domyślnie wyłączony** i aktywuje się dopiero po podaniu własnego klucza przez firmę.
 
 ---
 

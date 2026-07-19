@@ -1,33 +1,184 @@
 ---
 title: "Tabla de planificare"
-description: "Tabloul de dispecerizare vizuala pentru gestionarea flotei si comenzilor."
+description: "Tabla vizuala de dispecerizare — potriveste camioanele care se elibereaza cu incarcaturile care au nevoie de unul, atribuie printr-o tragere si preplanifica combinatii inainte sa devina ferme."
 icon: "calendar"
 ---
 
-Mergi la **Planificare** pentru a deschide tabla.
+## Prezentare generala
 
-## Coduri de culoare
+Tabla de planificare este principalul tau instrument de dispecerizare. Mergi la **Planner → Tabla de planificare** pentru a o deschide.
 
-| Culoare | Status |
-|---------|--------|
-| Gri | Ciorna |
-| Albastru | Confirmata |
-| Verde | In tranzit |
-| Galben | Asteptare |
-| Rosu | Depasit termenul |
+Tabla are trei moduri, comutate din taburile din partea de sus:
 
-## Atribuirea comenzilor
+| Mod | Pentru ce este folosit |
+|---|---|
+| **Acum** | Vizualizarea principala de dispecerizare — doua coloane care potrivesc capacitatea cu cererea. Aici atribui si reatribui camioane. |
+| **Cronologie** | O vizualizare de tip Gantt a programului fiecarui camion, pentru a identifica goluri si conflicte pe parcursul unei zile, a trei zile sau a unei saptamani. |
+| **Harta** | Aceleasi incarcaturi neatribuite si soferi disponibili, plasati geografic. |
 
-Trage o comanda din panoul Comenzi neatribuite pe randul camionului dorit, apoi confirma in popup.
+<Warning>
+Tabla de planificare este proiectata pentru ecrane desktop de 1280 pixeli latime sau mai mult. Pe un telefon sau o tableta, un flux simplificat de carduri inlocuieste layout-ul cu doua coloane, iar tragerea si plasarea (drag-and-drop) nu sunt disponibile.
+</Warning>
 
-## Cautarea incarcarilor de retur
+---
 
-Cand o comanda ajunge la Livrat, apare butonul Gaseste incarcatura de retur cu potriviri interne si rezultate Timocom.
+## Acum — vizualizarea de dispecerizare pe doua coloane
 
-## Insignele de tip comanda
+Tabul **Acum** este un layout impartit, pe doua coloane:
 
-| Insigna | Tip |
-|---------|-----|
-| Repo (violet) | Repozitionare |
-| Sub (portocaliu) | Subcontractat |
-| Cap (cyan) | Vanzare capacitate |
+- **Sosiri** (stanga) — ce se elibereaza ca si capacitate: camioane care sunt libere chiar acum, si camioane pe cale sa se elibereze pentru ca incarcatura lor curenta se livreaza in intervalul de date vizibil.
+- **Plecari** (dreapta) — comenzi care inca au nevoie de un camion (preluari neatribuite), plus comenzi deja atribuite, toate grupate la fel ca Sosiri, astfel incat un camion care se elibereaza intr-o zona sa se alinieze vizual cu incarcaturile care se preiau in aceeasi zona.
+
+<Frame caption="Vizualizarea Acum — capacitatea Sosiri in stanga, incarcaturile Plecari in dreapta, cu comutatoarele de densitate si Preplanificare in bara de instrumente.">
+  <img src="/images/planner/planning-board-split.png" alt="Vizualizarea Acum a Tablei de planificare, aratand coloanele Sosiri si Plecari" />
+</Frame>
+
+Atribuirea unui camion se face printr-o tragere: apuca un rand de pe oricare parte si plaseaza-l pe randul potrivit de pe cealalta parte.
+
+- Tragerea unui **camion** peste o incarcatura deschide un panou de confirmare care arata camionul, soferul si detaliile comenzii — inclusiv orice verificari de cabotaj, remorca sau opriri de releu care necesita interventia ta — inainte ca atribuirea sa fie confirmata.
+- Tragerea unei **incarcaturi care se livreaza** (un card Sosiri care inca nu este liber, ci pe cale sa devina) peste o incarcatura Plecari nu atribuie inca un camion — nu exista unul liber de atribuit — ci noteaza o legatura preliminara intre cele doua. Repetarea acestui pas construieste un intreg **lant** de reincarcari viitoare pentru un singur camion, inainte chiar ca acesta sa fie liber pentru prima dintre ele; vezi **Modul Preplanificare** mai jos pentru fluxul complet de construire a lantului, inclusiv optimizatorul automat care urmareste lanturile notate, in cautarea unui schimb mai ieftin. Foloseste **Aloca camion** pe acel rand cand esti gata sa confirmi.
+
+<Note>
+Tragerea functioneaza in **ambele directii** — trage un card Sosiri peste o incarcatura Plecari, sau trage o incarcatura Plecari peste un card Sosiri. In ambele cazuri, rezultatul ajunge pe acelasi rand.
+</Note>
+
+### Intervalul de date
+
+Tabla arata un orizont glisant de 7 zile. Foloseste sagetile de langa eticheta datei pentru a naviga o saptamana intreaga inainte sau inapoi, sau apasa **Azi** pentru a reveni la fereastra curenta de 7 zile.
+
+### Densitate: Compact vs Confortabil
+
+Un comutator din bara de instrumente schimba cate detalii arata fiecare rand:
+
+- **Compact** (implicit) — randuri dense, pe o singura linie, cu coloane sortabile si reordonabile, cel mai apropiat de un tabel de calcul. Cel mai bun pentru scanare rapida si planificare in masa.
+- **Confortabil** — carduri mai bogate, cu mai multe detalii vizuale per camion sau comanda. Cel mai bun pentru o privire mai atenta asupra unui numar mic de curse.
+
+Ambele densitati arata aceleasi date de baza si suporta aceeasi tragere-si-plasare, aceleasi filtre si grupari — comutarea intre ele este pur cosmetica.
+
+### Grupare si restrangere
+
+Foloseste comanda **Grupare dupa** din bara de instrumente pentru a organiza ambele coloane dupa grup de zone, tara, oras, grup de planificare sau data — Sosiri si Plecari se grupeaza intotdeauna dupa aceeasi axa, astfel incat potrivirea capacitatii cu cererea ramane aliniata vizual. Anteturile grupurilor pot fi restranse; restrange o sectiune pe oricare parte, iar sectiunea corespunzatoare de pe cealalta parte se restrange si ea, pastrand cele doua coloane sincronizate. Apasa **Extinde tot** pentru a reseta dintr-o data toate grupurile restranse.
+
+<Note>
+Grupurile de zone sunt propriile tale grupari ierarhice de coduri postale (configurate in Setari), utile pentru a alinia dintr-o privire "care dintre depozitele/regiunile mele are un camion care se elibereaza" cu "care regiune are incarcaturi de preluat".
+</Note>
+
+### Coloane
+
+Apasa **Coloane** pentru a alege ce campuri arata fiecare parte si trage pentru a le reordona. Sosiri si Plecari pastreaza seturi independente de coloane — un camp pe care il adaugi sau il ascunzi pe o parte nu il afecteaza pe celalalt. Campurile de baza (Status, identitate, ETA) sunt intotdeauna afisate si nu pot fi ascunse sau reordonate; tot restul (defalcari pe cod postal/oras/tara, numele soferului, numar de inmatriculare, remorca, status de cabotaj, subcontractor si altele) este optional.
+
+### Vizualizari salvate
+
+Meniul **Vizualizari** iti permite sa salvezi filtrul, gruparea si configuratia de coloane curente ca o vizualizare denumita, sa comuti intre vizualizarile salvate si sa marchezi una ca implicita — aceasta se aplica apoi automat data urmatoare cand tu (sau oricine altcineva cu acces la aceeasi vizualizare) deschide tabla.
+
+### Filtre si cautare
+
+Apasa **Filtre** pentru a deschide panoul de filtre — status, interval de date de preluare/livrare, zona si tara, oras sau cod postal de incarcare/livrare. Filtrele active apar ca etichete detasabile sub bara de instrumente; apasa **Sterge tot** pentru a le reseta. Fiecare coloana are si propria casuta de cautare rapida, pentru filtrare dupa numarul comenzii, adresa sau numele soferului, in cadrul acelei parti.
+
+### Cadrane de triaj
+
+Deasupra fiecarei coloane, cadrane mici rezuma dintr-o privire ce contine:
+
+- **Sosiri** — cate camioane/incarcaturi se incadreaza in fiecare categorie de capacitate.
+- **Plecari** — numarul de incarcaturi **Neplanificat**, **Intarziat** si **La timp**, pentru incarcaturile care au deja un plan preliminar sau ferm.
+
+Apasa un cadran pentru a filtra acea coloana doar la acea categorie; apasa-l din nou pentru a sterge filtrul.
+
+### Aloca camion / Elimina camionul / Scoate la vanzare
+
+Fiecare rand Plecari care are un camion (ferm sau notat) arata butoane de actiune:
+
+- **Aloca camion** — confirma o combinatie notata ca atribuire ferma.
+- **Elimina camionul** — anuleaza planul si trimite comanda inapoi la neatribuite.
+- **Scoate la vanzare** — ofera incarcatura unui subcontractor/transportator, in loc sa o rulezi cu flota proprie. O incarcatura vanduta arata o eticheta **De vanzare** sau **Vandut · [transportator]**; daca transportatorul intarzie, apare si o eticheta **Intarziat**. Poti recupera o incarcatura vanduta inapoi in flota proprie, atata timp cat nu a inceput incarcarea.
+
+### Modul Preplanificare
+
+Comutatorul **Preplanificare** din bara de instrumente schimba ce face o tragere-si-plasare:
+
+- **Dezactivat** (implicit) — tragerea atribuie ferm camionul imediat (deschide panoul de confirmare).
+- **Activat** — tragerea noteaza o combinatie preliminara, fara sa confirme nimic. Combinatiile notate arata o eticheta **Preliminar**, un ETA estimat (sau, unde exista date de rutare, un ETA real rutat prin PTV) si un verdict la timp/intarziat — astfel incat poti schita o saptamana intreaga de combinatii, inainte sa confirmi vreuna dintre ele. Foloseste **Aloca camion** pe un rand notat, cand esti gata sa il faci ferm.
+
+**Construirea unui lant.** O notare nu trebuie sa se opreasca la un singur camion si o singura incarcatura. Trage un card Sosiri **care se livreaza** — un camion care inca nu este liber, dar este pe cale sa devina — peste o incarcatura Plecari, iar Druma noteaza o legatura care inlantuie noua incarcatura dupa cea aflata in prezent in tranzit. Trage din nou peste noua coada a lantului si poti planifica o intreaga secventa de reincarcari viitoare pentru un singur camion, cu zile inainte ca acesta sa se elibereze cu adevarat — o cursa Cluj → Sibiu → Timisoara, notata luni pentru un camion care inca se indreapta spre Cluj.
+
+Fiecare rand notat arata o eticheta **Dupa #{comanda}**, care numeste incarcatura dupa care este inlantuit, astfel incat secventa ramane usor de citit dintr-o privire. In spatele scenei, o notare se ancoreaza de un camion anume, de comanda predecesoare dupa care se inlantuie, sau de ambele — iar o ancora poate alimenta o singura reincarcare, la un moment dat: tragerea unei incarcaturi noi peste o ancora deja ocupata muta ancora catre noua incarcatura si anuleaza notarea celei vechi, in loc sa dubleze rezervarea aceluiasi camion pe doua lanturi.
+
+<Note>
+Nimic din toate acestea nu atinge comanda reala pana cand un camion nu este efectiv atribuit prin poarta normala a tablei — o tragere cu Preplanificarea dezactivata, sau **Aloca camion** pe un rand notat. Pana atunci, un lant este un spatiu pur de schita pentru planificare si poate fi rearanjat liber.
+</Note>
+
+**Optimizatorul de reasignare a reincarcarilor.** Odata ce exista un lant, Druma continua sa il verifice in fundal. Pentru **coada** fiecarui lant — ultima reincarcare notata, cea dupa care nimic altceva nu este inca inlantuit — se intreaba: exista o reincarcare diferita, inca nenotata, a carei preluare este mai aproape de locul unde acel camion se va elibera cu adevarat?
+
+De exemplu: un camion este notat sa reincarce maine in Cluj. Apare o reincarcare mai apropiata, neselectata, cu o preluare in Sibiu. Daca inlocuirea cu incarcatura din Sibiu ar reduce cu adevarat costul kilometrilor goi — evaluat in € folosind propriul profil de cost al camionului, nu doar kilometrii bruti — Druma afiseaza un jeton de sugestie direct pe acel rand, ceva de genul **"Reincarcare mai ieftina disponibila: −18 km · €22."** Apasa **Comuta la #...**, iar schimbul se aplica intr-un singur pas: incarcatura din Sibiu este notata, incarcatura din Cluj isi pierde automat notarea (aceeasi regula de ancora cu utilizare unica, de mai sus), iar un mesaj toast confirma **"Reincarcarea #... a fost notata in loc."** Acesta este acelasi mecanism de jeton de sugestie descris mai jos, aplicat specific cozilor de lant.
+
+Cateva plase de siguranta pastreaza increderea in aceste sugestii:
+
+- Sugereaza un schimb doar daca economiseste **cel putin 15 km si cel putin €0** — niciodata un schimb care pare ieftin doar pentru ca profilul de cost al unui camion este configurat gresit la zero.
+- Tine cont de **Regulamentul UE 561/2006** — nu va sugera niciodata o reincarcare care ar impinge soferul camionului peste orele de conducere ramase pentru ziua respectiva.
+- Apasa jetonul pentru a-l extinde si a vedea "de ce"-ul, plus un impact real, rutat, de tip inainte/dupa, inclusiv un avertisment ca incarcatura inlocuita va deveni din nou neatribuita.
+
+<Note>
+Optimizatorul doar propune; nimic nu se aplica fara un clic. De asemenea, este tacut cand nu are nimic mai bun de sugerat — lipsa unui jeton inseamna ca Druma nu a gasit o reincarcare mai ieftina, nu ca nu a verificat.
+</Note>
+
+**Siguranta lantului la modificari.** Daca ceva din amonte, intr-un lant, se schimba — comanda este anulata, camionul ei este dezasignat, sau camionul ei este schimbat — Druma verifica daca exista ceva notat in aval de acel punct. Daca nu exista nimic, modificarea trece fara probleme. Daca exista o coada in aval, esti intrebat sa alegi: **Elimina intregul lant** (propaga eliminarea prin fiecare reincarcare notata, inlantuita dupa acesta) sau **Pastreaza comenzile din aval** (rupe doar acea legatura si lasa incarcaturile din aval ca ancore independente, inca reasignabile). Oricum ai alege, un plan notat nu se degradeaza niciodata in tacere intr-o stare rupta sau orfana — tu decizi ce se intampla cu restul lantului, nu esti niciodata pus sa cauti manual legaturile ramase in aer.
+
+### Jetoane de sugestie
+
+Acolo unde planificarea automata a Druma are o recomandare de incredere pentru o comanda neatribuita, apare un jeton de sugestie direct pe acel rand. Apasa-l pentru a aplica direct camionul sugerat, sau respinge-l daca nu se potriveste.
+
+### Evidentiere incrucisata intre coloane
+
+Apasa orice rand pentru a-i fixa evidentierea. Daca acel rand face parte dintr-o combinatie notata sau ferma, Druma evidentiaza randul (sau randurile) corespunzatoare de pe cealalta coloana si le deruleaza in vizor — astfel incat apasarea unui camion din Sosiri iti arata exact cu ce incarcatura (sau incarcaturi) este potrivit in Plecari, si invers.
+
+### Comenzi virtuale
+
+Apasa **Virtual** pentru a crea o comanda-substitut, care rezerva un camion pentru o incarcatura asteptata, ce nu are inca o rezervare ferma — util cand preplanifici inaintea unei comenzi confirmate.
+
+---
+
+## Conflicte si blocaje
+
+Daca o atribuire propusa ar crea o problema — o limita de cabotaj, o nepotrivire de remorca, o oprire de releu nerezolvata — Druma o semnaleaza ca blocaj in panoul de confirmare, in loc sa lase atribuirea sa treaca in tacere. Unele blocaje necesita o confirmare explicita inainte sa poti continua; altele sunt doar informative.
+
+---
+
+## Vizualizarea detaliilor comenzii
+
+**Apasa** orice rand pentru a deschide un panou de detalii. De acolo poti edita comanda, ii poti schimba statusul sau poti suna soferul.
+
+---
+
+## Vizualizarea Cronologie
+
+Comuta la tabul **Cronologie** pentru o vizualizare de tip Gantt: fiecare camion este un rand, iar programul sau este desenat ca segmente pozitionate in timp — etape de conducere si ferestre de incarcare/descarcare. Segmentele planificate (inca nereale) sunt desenate cu un model hasurat; segmentele reale/confirmate sunt desenate plin. Un segment fara niciun marcaj temporal confirmat inca este afisat cu opacitate redusa si un contur punctat, pentru a-l marca drept estimat.
+
+<Frame caption="Vizualizarea Cronologie — fiecare rand este un camion; o linie rosie marcheaza ora curenta.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Vizualizarea Cronologie a Tablei de planificare, aratand camioanele ca randuri cu segmente pozitionate in timp" />
+</Frame>
+
+Foloseste comenzile de navigare a datei pentru a te deplasa prin program, si **selectorul de interval** pentru a alege cat timp este vizibil:
+
+| Interval | Cel mai bun pentru |
+|---|---|
+| **1 zi** | Planificare detaliata in cadrul zilei — vezi ferestrele exacte de incarcare si descarcare |
+| **3 zile** | Identificarea golurilor si conflictelor pe urmatoarele 72 de ore |
+| **1 saptamana** | O vedere de ansamblu a capacitatii — care camioane sunt libere pe parcursul intregii saptamani |
+
+Cronologie foloseste acelasi panou de Filtre ca vizualizarea Acum, asa ca un filtru de status, data, zona sau locatie se pastreaza la comutarea intre taburi.
+
+---
+
+## Vizualizarea Harta
+
+Comuta la tabul **Harta** pentru a vedea incarcaturile neatribuite si soferii disponibili plasati geografic, in loc de randuri. Este util pentru o citire spatiala rapida de tipul "ce este aproape de ce", inainte sa comuti inapoi la Acum, pentru a atribui efectiv. Actiunile **Auto Suggest** si **Virtual** sunt disponibile si aici.
+
+---
+
+<Card title="Vizualizarea Astazi" icon="sun" href="/ro/planner/today-view">
+  Pentru fluxul tau de lucru zilnic de dimineata — comenzi active, pozitii live ale camioanelor si alerte de status, toate intr-un singur ecran.
+</Card>
+
+<Card title="Crearea unei comenzi" icon="plus" href="/ro/planner/creating-orders">
+  Esti nou in Druma? Incepe de aici, ca sa afli cum sa iti creezi prima comanda.
+</Card>

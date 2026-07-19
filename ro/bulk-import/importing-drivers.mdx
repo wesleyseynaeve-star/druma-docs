@@ -1,42 +1,47 @@
 ---
 title: "Importul soferilor"
-description: "Incarca in masa soferii in Druma folosind un template CSV."
+description: "Adauga in masa lista de soferi cu Smart Import — instrumentul Druma de extragere AI din documente — in loc sa adaugi soferii unul cate unul."
 icon: "file-import"
 ---
 
-Adauga toata echipa de soferi deodata prin import CSV - esential la onboarding-ul unei flote de 10+ soferi.
+Druma **nu are** un import in masa cu template CSV pentru soferi. In schimb, foloseste **Smart Import** — un instrument pe baza de AI care citeste orice documente ai deja despre soferi (o lista PDF, o lista scanata, poze cu permise, o foaie de calcul formatata neobisnuit din sistemul anterior) si le transforma in inregistrari de sofer, pe care le revizuiesti inainte de a le salva.
+
+## Unde il gasesti
+
+Mergi la **Instrumente → Smart Import**. Este un instrument comun pentru onboarding-ul datelor de companie, flota, soferi, clienti si asigurari — nu o pagina limitata la Flota → Soferi.
+
+## Flux de lucru
 
 <Steps>
-  <Step title="Deschide pagina de import">
-    Mergi la **Flota -> Soferi -> Import** si apasa **Descarca Template**.
+  <Step title="Incarca documentele soferilor">
+    Apasa **Incarca Documente** sau trage fisierele in zona de drop. Formate acceptate: PDF, imagini (JPEG, PNG, WebP, HEIC/HEIF), XLSX si CSV, pana la 20 MB per fisier si pana la 20 de fisiere per sesiune.
   </Step>
-  <Step title="Completeaza CSV-ul">
-    Un sofer per rand: `full_name` (obligatoriu), `phone` (obligatoriu, format international, ex. `+40721000000`), `email`, `license_number`, `license_category`, `license_expiry`, `cpc_expiry`, `tachograph_card`, `adr_expiry`, `country`, `active` (obligatoriu, true/false). Datele trebuie in format `AAAA-LL-ZZ`.
+  <Step title="Asteapta extragerea AI">
+    Druma trimite fiecare fisier catre Gemini pentru extragere — cateva secunde per fisier. Fisierele sunt procesate pe server si nu sunt stocate permanent dupa extragere; se salveaza doar inregistrarile pe care alegi sa le imporți.
   </Step>
-  <Step title="Incarca si revizuieste">
-    Verifica randurile rosii in previzualizare (de obicei numar de telefon lipsa sau format de data invalid).
+  <Step title="Deschide cardul categoriei Soferi">
+    Dashboard-ul de Revizuire arata cate un card pentru fiecare tip de date gasit in documentele tale, inclusiv **Soferi**, daca s-au detectat. Apasa-l ca sa vezi randurile extrase intr-un tabel editabil: nume complet, telefon, email, numar si data de expirare permis, certificat ADR si expirare, numar CPC si expirare, numar card tahograf si limba.
   </Step>
-  <Step title="Confirma importul">
-    Apasa **Importa [X] soferi**. Soferii apar imediat in lista.
+  <Step title="Revizuieste increderea si duplicatele">
+    Fiecare camp are un indicator de incredere colorat (verde/galben/rosu) — verifica intotdeauna cu atentie campurile galbene si rosii. Randurile sunt verificate fata de soferii tai existenti dupa **numele complet (fara sensibilitate la majuscule)**; o potrivire este semnalata **Duplicat**, cu optiunea implicita **Sari** (poti alege in schimb **Suprascrie**, daca vrei ca datele extrase sa inlocuiasca ce e deja inregistrat).
+  </Step>
+  <Step title="Editeaza si importa">
+    Apasa orice celula ca sa o corectezi inline, apoi apasa **Importa Soferi**. Numele complet este singurul camp obligatoriu — randurile fara el nu sunt importate.
   </Step>
 </Steps>
 
-## Numarul de telefon este critic
+<Warning>
+Nu exista anulare pentru un import. Daca au fost importate date incorecte, editeaza inregistrarile soferilor individual ulterior.
+</Warning>
 
-Numarul de telefon este modul in care soferii se autentifica in aplicatie - impreuna cu un PIN pe care il configurezi dupa import. Trebuie sa fie in format international. Fara un numar valid, soferul nu se poate autentifica.
+## Numarul de telefon si autentificarea in aplicatie
 
-<Note>
-Importul seteaza doar numarul de telefon - nu creeaza si PIN-ul de autentificare. Nu exista inca un pas de generare PIN in masa, asa ca dupa import, mergi la **Flota -> Soferi**, deschide profilul fiecarui sofer pe rand si, sub **Autentificare Telefon + PIN**, apasa **Seteaza PIN** (sau **Genereaza** pentru un cod aleatoriu de 6 cifre), apoi **Salveaza PIN**. Comunica PIN-ul direct fiecarui sofer - il va personaliza la prima autentificare.
-</Note>
+Smart Import creeaza inregistrarea de profil a soferului (nume, telefon, detalii permis/CPC/ADR/tahograf) — nu creeaza si autentificarea sa in aplicatie. Dupa import, mergi la **Flota → Soferi**, deschide profilul fiecarui sofer pe rand si, sub **Autentificare Telefon + PIN**, apasa **Seteaza PIN** (sau **Genereaza** pentru un cod aleatoriu de 6 cifre), apoi **Salveaza PIN**. Comunica-i fiecarui sofer PIN-ul direct — il poate personaliza la prima autentificare.
 
-## Alerte de expirare
-
-Daca completezi datele de expirare a permisului, CPC-ului sau certificatului ADR la import, Druma incepe imediat sa le urmareasca si te alerteaza cu 30 si 60 de zile inainte de expirare.
-
-<Card title="Gestionarea soferilor" icon="id-card" href="/ro/planner/driver-management">
-  Gestioneaza profiluri individuale si configureaza autentificarea telefon + PIN.
+<Card title="Onboarding clienti si flota" icon="brain" href="/ro/tools/smart-import">
+  Smart Import gestioneaza si documentele de companie, flota, clienti si asigurari, in acelasi flux.
 </Card>
 
-<Card title="Instalarea aplicatiei soferului" icon="mobile" href="/ro/driver/installing-the-app">
-  Ghid pas cu pas pentru soferi la instalarea aplicatiei pe telefon.
+<Card title="Gestionarea soferilor" icon="id-card" href="/ro/planner/driver-management">
+  Gestioneaza profiluri individuale de sofer si configureaza autentificarea telefon + PIN.
 </Card>

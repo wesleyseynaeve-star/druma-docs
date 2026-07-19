@@ -1,49 +1,113 @@
 ---
-title: "Wagenpark Banden"
+title: "Wagenparkbanden"
 description: "Bandenmontering, profieldiepte, conditie en vervangingskosten bijhouden voor elk voertuig in uw wagenpark."
 ---
 
 ## Overzicht
 
-Het tabblad Banden in Wagenpark houdt bandenmontering, conditie en vervangingshistorie bij voor elk voertuig.
+De pagina Vloot → Banden houdt bandenmontering, conditie en vervangingshistorie bij voor elk voertuig. Ze geeft wagenparkbeheerders zicht op bandenkosten en slijtagecycli zonder op papieren registraties te vertrouwen.
 
-**Toegang:** Wagenpark → Vrachtwagens → voertuig openen → tabblad **Banden**.
+**Toegang:** Vloot → **Banden** — een op zichzelf staande hoofdpagina binnen Vloot, geen tabblad op de voertuigdetailweergave.
 
 ---
 
 ## Bandengegevens
 
+Bandposities worden vrij per voertuig toegevoegd — er is geen vast positieschema of maximum aan het aantal posities dat een voertuig kan hebben; voeg precies de posities toe die dat voertuig daadwerkelijk heeft. Elk bandenrecord bevat:
+
 | Veld | Beschrijving |
 |---|---|
 | **Positie** | As en zijde (bijv. Vooras Links, Aandrijfas Rechts Binnen) |
-| **Merk en model** | Fabrikant en product |
-| **Maat** | Bandenmaat aanduiding (bijv. 315/70 R22.5) |
-| **Serienummer** | DOT-code van de band |
-| **Montagedatum** | Wanneer de band is gemonteerd |
+| **Merk en model** | Fabrikant en productnaam van de band |
+| **Maat** | Bandenmaataanduiding (bijv. 315/70 R22.5) |
+| **Serienummer** | DOT-code van de band, voor traceerbaarheid |
+| **Montagedatum** | Wanneer deze band gemonteerd werd |
 | **Profieldiepte (mm)** | Actueel gemeten profieldiepte |
 | **Conditie** | Goed / Monitoren / Vervangen |
-| **Notities** | Vrije tekstnotities |
+| **Notities** | Vrije tekstnotities (schade, lekgeschiedenis, enz.) |
 
 ---
 
-## Bandencondtie-meldingen
+## Een bandenrecord toevoegen
 
-| Conditie | Melding |
-|---|---|
-| **Monitoren** | Gele indicator op de voertuigtegel |
-| **Vervangen** | Rode indicator; e-mailmelding aan Wagenparkmanager en Admin |
+<Steps>
+  <Step title="Open Vloot → Banden">
+    Ga naar de op zichzelf staande pagina **Vloot → Banden**.
+  </Step>
+  <Step title="Selecteer het voertuig">
+    Kies het voertuig waarvoor u een bandenrecord wilt toevoegen.
+  </Step>
+  <Step title="Klik op Band toevoegen">
+    Klik op **+ Band toevoegen**. Er opent een formulier.
+  </Step>
+  <Step title="Vul de gegevens in">
+    Selecteer de positie uit de vervolgkeuzelijst en vul merk, maat, serienummer, montagedatum, profieldiepte en conditie in.
+  </Step>
+  <Step title="Opslaan">
+    Klik op **Opslaan**. Het bandenrecord verschijnt in het positieraster.
+  </Step>
+</Steps>
+
+---
+
+## Bandconditiewaarschuwingen
+
+Druma bewaakt de bandconditie en waarschuwt wagenparkbeheerders automatisch:
+
+| Conditie | Wat het triggert | Waarschuwing |
+|---|---|---|
+| **Monitoren** | Conditie ingesteld op Monitoren, of profieldiepte onder 4 mm | Gele indicator op de voertuigtegel in de Vlootlijst |
+| **Vervangen** | Conditie ingesteld op Vervangen, of profieldiepte onder 2 mm | Rode indicator op de voertuigtegel; e-mailmelding aan Wagenparkbeheerder en Admin |
 
 <Warning>
-Profieldiepte onder **3 mm** activeert automatisch de status **Vervangen** — onder het wettelijk EU-minimum voor bedrijfsvoertuigen.
+Profieldiepte onder **2 mm** activeert automatisch een vlag **Vervangen**; onder **4 mm** activeert **Monitoren**. Dispatch geen voertuig met banden gemarkeerd als Vervangen.
 </Warning>
 
-Bij vervanging: bewerk het record → stel conditie in op **Vervangen** → voer **Vervangingskosten (€)** in → Opslaan. De kosten worden opgeteld bij het voertuigkostenrapport.
+---
+
+## Bandconditie bijwerken
+
+Om de conditie van een band na een inspectie bij te werken:
+
+1. Open **Vloot → Banden** en selecteer het voertuig
+2. Klik op **Bewerken** bij de bandenrij
+3. Werk het veld **Profieldiepte** en/of **Conditie** bij
+4. Opslaan
+
+Dit heft de waarschuwing op zodra de band vervangen is of de conditie gecorrigeerd is.
+
+---
+
+## Een bandenvervanging registreren
+
+Wanneer een band fysiek vervangen wordt:
+
+1. Bewerk het bestaande bandenrecord voor die positie
+2. Stel **Conditie** in op **Vervangen**
+3. Voer de **Vervangingskosten (€)** in
+4. Klik op **Opslaan**
+
+U kunt ook op **+ Band toevoegen** klikken bij dezelfde positie om de nieuwe band toe te voegen (Druma markeert het oude record dan als historisch).
+
+De vervangingskosten worden opgeteld bij het onderhoudskostenrapport van het voertuig — wat u een totaal-eigendomskostenbeeld geeft naast brandstof- en werkplaatskosten.
+
+---
+
+## Bandenhistorie
+
+Druma houdt een historie bij van alle bandenrecords per positie, inclusief vervangen banden. Om de historie voor een specifieke positie te bekijken:
+
+1. Open **Vloot → Banden** en selecteer het voertuig
+2. Klik op de positie in het raster
+3. Het historiepaneel toont alle ooit op die positie gemonteerde banden met hun montagedatums, conditiestatus en vervangingskosten
+
+---
 
 <CardGroup cols={2}>
-  <Card title="Werkplaats & Onderhoud" href="/nl/fleet-compliance/workshop-maintenance">
-    Werkorders aanmaken voor bandenvervangingen.
+  <Card title="Werkplaats & onderhoud" href="/nl/fleet-compliance/workshop-maintenance">
+    Werkorders aanmaken voor bandenvervangingen en andere onderhoudsjobs.
   </Card>
-  <Card title="Wagenparkdocumenten" href="/nl/fleet-compliance/fleet-documents">
-    Verzekering, APK en andere nalevingsdocumenten bijhouden.
+  <Card title="Vlootdocumenten" href="/nl/fleet-compliance/fleet-documents">
+    Verzekering, ITP en andere nalevingsdocumenten van voertuigen bijhouden naast uw bandenrecords.
   </Card>
 </CardGroup>

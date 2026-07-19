@@ -1,26 +1,89 @@
 ---
-title: "Tarife"
-description: "Salveaza preturile standard pe rute pentru sugestii automate de preturi."
+title: "Fise de tarifare"
+description: "Cum sa definesti profiluri de cost pentru vehicule in Druma, ca sa afisezi un cost si o marja estimate corect pentru comenzi."
 icon: "tags"
 ---
 
-Un tarif este o colectie de preturi pe rute. Cand creezi o comanda, Druma sugereaza pretul corect automat.
+<Note>
+Aceasta pagina descrie **Setari → Fise de Tarifare** — **profiluri de cost** pentru vehicule, folosite pentru a estima costul si marja unei comenzi. Daca cauti preturile de **vanzare** pe ruta (sugestii de pret pe baza origine/destinatie, de ex. "Romania → Germania, Prelata — 1.450 €"), aceea este o functie separata numita **Lane Pricing**, sub **Pricing → Lane Pricing** in aplicatia principala — nu este acoperita aici.
+</Note>
 
-## Crearea unui tarif
+## Ce este o fisa de tarifare?
 
-Mergi la **Setari -> Tarife** si apasa **Tarif Nou** (Nume, Moneda implicita, Intrari).
+O fisa de tarifare din **Setari → Fise de Tarifare** este un profil de cost pentru o categorie de operare a vehiculelor — fie **flota proprie**, fie un transportator **subcontractat**. Captureaza cat te costa efectiv sa rulezi un vehicul (cost fix, salariu sofer, combustibil, suprataxe ADR/gabarit depasit, taxe de drum), astfel incat Druma sa poata estima costul si marja unei comenzi alaturi de pretul pe care il ceri clientului.
 
-## Intrari tarif
+**Cine poate edita:** rolurile Admin, Company Admin si Planner.
 
-| Camp | Descriere |
-|------|-----------|
-| Tara de origine | Tara de preluare |
-| Tara de destinatie | Tara de livrare |
-| Tip pret | Suma forfetara sau pret per km |
-| Suma | Pretul in moneda selectata |
-| Tip remorca | Optional |
-| ADR supliment | Supliment pentru marfuri periculoase |
+<Frame caption="Lane Pricing (Pricing → Lane Pricing) — functia separata de pret de vanzare, pe baza origine/destinatie. Setari → Fise de Tarifare (aceasta pagina) este partea de profil de cost.">
+  <img src="/images/admin/rate-cards.png" alt="Pagina Lane Pricing cu fise de tarifare pe origine, destinatie si tip de remorca" />
+</Frame>
 
-## Atribuirea tarifelor la clienti
+## Crearea unei fise de tarifare
 
-Mergi la **Clienti** - deschide clientul - tabul **Termeni comerciali** - selecteaza tariful - Salveaza.
+Mergi la **Setari → Fise de Tarifare** si apasa **Fisa Noua**.
+
+### Nume
+
+Da fisei un nume clar, de ex. "Flota proprie — standard" sau "Subcontractant — rute RO/BG".
+
+### Tip
+
+Alege **Flota Proprie** sau **Subcontractat** — determina categoria de comanda careia i se aplica profilul de cost.
+
+### Tarif / km (€)
+
+O rata de cost fixa, optionala, per kilometru.
+
+### Baza de cost
+
+Alege cum se calculeaza costul fix de operare:
+- **Tarif zilnic** — introdu un **Cost fix zilnic (€)** si un **Salariu sofer / zi (€)**.
+- **Chirie saptamanala** — introdu un **Cost fix saptamanal (€)** si un **Salariu sofer / saptamana (€)**.
+
+### Timp de asteptare
+
+- **Ore de asteptare gratuite** — cate ore de asteptare sunt incluse inainte sa se aplice o taxa.
+- **Tarif asteptare €/h** — costul orar odata ce orele de asteptare gratuite sunt depasite.
+
+### Suprataxe
+
+- **Taxa ADR (€)** — cost suplimentar aplicat transporturilor de marfuri periculoase.
+- **Taxa gabarit depasit (€)** — cost suplimentar aplicat incarcaturilor supradimensionate.
+
+### Combustibil
+
+- **Pret de baza combustibil (€/L)** — pretul combustibilului folosit in calculele de cost.
+- **Consum combustibil (L/100km)** — consumul asteptat al vehiculului, folosit impreuna cu pretul de baza si distanta rutei pentru a estima costul de combustibil.
+
+### Tinte de marja
+
+- **Marja tinta %** — marja pe care o urmaresti la comenzile care folosesc acest profil de cost.
+- **Marja minima %** — marja minima acceptabila inainte ca Druma sa semnaleze comanda.
+
+### Politica de taxe de drum
+
+Alege gestionarea implicita a taxelor de drum pentru acest profil de cost:
+- **Inclusa in tarif** — taxele de drum sunt absorbite in tariful tau, nu facturate separat.
+- **Transferata catre client** — taxele de drum sunt facturate clientului pe masura ce apar.
+- **Linie separata** — taxele de drum apar ca linie proprie pe comanda/factura.
+
+Poti suprascrie aceasta valoare implicita pentru tari sau operatori de taxe de drum specifici:
+
+- **Suprascrieri de politica pe tara** — alegi o tara si o politica (Facturata clientului / Inclusa in tarif / Netaxata). Util cand, de exemplu, taxele franceze sunt transferate dar cele germane sunt incluse.
+- **Suprascrieri de politica pe operator** — introduci numele operatorului de taxe de drum exact cum apare pe chitante (de ex. `ASFINAG`, `HU-GO`, `Viapass`) si o politica. O suprascriere la nivel de operator are prioritate fata de politica la nivel de tara.
+
+### Salvare
+
+Apasa **Salveaza modificarile** pe o fisa existenta, sau **Creeaza** cand adaugi una noua.
+
+## Editarea sau stergerea unei fise de tarifare
+
+Extinde o fisa din lista pentru a-i edita orice camp inline. Apasa **X** langa o fisa pentru a o sterge — ti se va cere confirmarea, deoarece actiunea nu poate fi anulata.
+
+Profilurile de cost din fisele de tarifare alimenteaza estimarea de cost/marja a comenzii afisata la crearea sau stabilirea pretului unei comenzi — aceea este o suprafata de calcul separata fata de aceasta pagina de setari, neacoperita aici.
+
+## Pagini asociate
+
+<Card title="Configurarea companiei" icon="building" href="/ro/admin/company-setup">
+  Configureaza profilul companiei tale, care functioneaza impreuna cu fisele de tarifare cand Druma calculeaza costurile comenzilor.
+</Card>

@@ -1,39 +1,98 @@
 ---
-title: "Report profitability tras"
-description: "Analyzujte, které trasy jsou nejziskovější v Druma — výnosy, náklady, marže a objem objednávek za trasu."
-icon: "chart-line"
+title: "Report ziskovosti tras"
+description: "Zobrazte skutečnou marži na každé dvojici původ-cíl, kterou provozujete, s tržbami, odhadovanými náklady a trendem oproti předchozímu období."
+icon: "route"
 ---
 
-## Přehled
+Mnoho operátorů zná své tržby za trasu, ale ne skutečnou marži po započtení paliva, mýtného a nákladů na řidiče. Report ziskovosti tras provede tento výpočet za každou kombinaci dvojice zemí, kterou provozujete, takže na první pohled vidíte, které trasy fungují a které vám ukrajují ze zisku.
 
-Report profitability tras zobrazuje výkonnost každé trasy (kombinace zemí původu a cíle), kterou vaše společnost provozuje. Rychle identifikujte trasy s nízkou marží nebo vysokým objemem.
+## Otevření reportu
 
-Přejděte do **Reporty → Profitabilita tras**.
+Přejděte do **Reporty → Ziskovost tras**.
 
-## Sloupce reportu
+V horní části vyberte časový rozsah. Report ve výchozím nastavení zobrazuje aktuální měsíc. Pro smysluplné srovnání obecně chcete alespoň celý měsíc dat, ideálně čtvrtletí.
 
-| Sloupec | Popis |
+<Frame caption="Ziskovost tras — marže za dvojici původ-cíl, s pevným prahem 15 % používaným k označení podprůměrných tras.">
+  <img src="/images/reports/lane-profitability.png" alt="Report ziskovosti tras" />
+</Frame>
+
+## Co report zobrazuje
+
+Každý řádek tabulky je jedna dvojice zemí původ-cíl. Pro každou trasu vidíte:
+
+| Sloupec | Co znamená |
 |---|---|
-| Trasa | Originální → Cílová země nebo město |
-| Objednávky | Počet objednávek ve zvoleném období |
-| Výnosy | Celkové fakturované tržby |
-| Variabilní náklady | Palivo + mýtné + čas řidiče |
-| Fixní náklady | Denní fixní náklady vozidla × počet dnů |
-| Hrubá marže | Výnosy − Variabilní náklady |
-| Čistá marže | Výnosy − Celkové náklady |
-| Marže % | Čistá marže jako % výnosů |
+| **Tržby** | Celková fakturovaná částka za objednávky na této trase v daném období |
+| **Náklady na palivo** | Odhad: vzdálenost × průměrná spotřeba × cena paliva |
+| **Náklady na mýtné** | Data mýtného PTV pro danou trasu |
+| **Náklady na řidiče** | Denní náklad × počet dnů jízdy, na základě sazby na řidiče, kterou nakonfigurujete |
+| **Celkové náklady** | Součet paliva + mýtného + nákladů na řidiče |
+| **Marže €** | Tržby minus celkové náklady |
+| **Marže %** | Marže jako procento tržeb |
+| **Jízdy** | Počet dokončených objednávek na této trase v daném období |
+| **Prům. cena/jízda** | Průměrné tržby na objednávku |
+| **Trend** | Šipka udávající, zda se marže % zlepšila nebo zhoršila oproti předchozímu období |
 
-## Přepínání granularity
+Řádky pod cílovým prahem marže jsou zvýrazněny červeně. Tento práh je aktuálně pevně nastaven na **15 %** — zatím není konfigurovatelný z Nastavení.
 
-Použijte přepínač **Země / Město** v horní části reportu pro přepínání mezi pohledem na úrovni zemí (pro strategické rozhodování) a pohledem na úrovni měst (pro detailní analýzu).
+## Jak fungují odhady nákladů
+
+<Note>
+Odhady nákladů v tomto reportu jsou přibližné, založené na vašich nakonfigurovaných parametrech. Jsou užitečné pro identifikaci relativní výkonnosti mezi trasami, ale skutečné náklady se mohou lišit — zejména u nákladů na mýtné na trasách s proměnlivými mýtnými silnicemi.
+</Note>
+
+**Výpočet nákladů na palivo:**
+Vzdálenost (ze směrování PTV) × průměrná spotřeba flotily (litry/100 km, nastaveno v Nastavení → Flotila → Výchozí spotřeba) × vaše cena paliva (nastavena v Nastavení → Flotila → Cena paliva, nebo importována z dat palivových karet, pokud používáte import palivových karet).
+
+**Výpočet nákladů na mýtné:**
+Data mýtného HERE Maps pro danou trasu. Pokrývá většinu evropských systémů dálničního mýtného. Méně přesné pro trasy skrz země se složitými systémy dálničních známek.
+
+**Výpočet nákladů na řidiče:**
+Počet dnů jízdy × denní sazba nákladu, kterou jste nastavili pro každého řidiče v jeho profilu (Vozový park → Řidiči → [řidič] → Denní sazba nákladu). Pokud není přiřazen žádný řidič, Druma použije váš globální výchozí denní náklad řidiče.
+
+Všechny tyto vstupy můžete aktualizovat v Nastavení pro zlepšení přesnosti. Report se okamžitě přepočítá při uložení nových hodnot.
+
+## Identifikace neziskových tras
+
+Seřaďte tabulku podle **Marže %** vzestupně — nejhůře fungující trasy se dostanou nahoru.
+
+Červené řádky jsou trasy pod vaším cílovým prahem marže. Časté důvody:
+
+- **Dálkové trasy** — vypadají ziskově z hlediska tržeb, ale mají vysoké náklady na palivo a řidiče
+- **Trasy s vysokým mýtným** — určité trasy přes Francii, Rakousko nebo Švýcarsko mají výrazně vyšší mýtné než alternativy
+- **Podceněné dlouhodobé klienty** — sazby sjednané před lety, které nebyly znovu vyjednány
+- **Trasy s nízkým objemem** — méně jízd znamená, že fixní náklady dopadají tvrději
+
+## Prohloubení do trasy
+
+Kliknutím na jakýkoli řádek trasy zobrazíte jednotlivé objednávky tvořící čísla dané trasy. Vidíte tržby, odhadovaný náklad a marži každé objednávky — a identifikujete konkrétní objednávky, které jsou odlehlé (například jedna objednávka za mnohem nižší sazbu než ostatní).
+
+Ze seznamu objednávek se můžete proklikat na úplný detail objednávky. Užitečné při zkoumání, proč konkrétní trasa podprůměrně fungovala v daném měsíci.
+
+## Filtrování reportu
+
+Použijte filtry v horní části stránky:
+
+- **Země původu** — filtrovat na jednu nebo více konkrétních zemí původu
+- **Země cíle** — filtrovat na jednu nebo více konkrétních zemí cíle
+- **Klient** — zobrazit ziskovost tras za jednoho klienta
+- **Vozidlo** — zjistit, která vozidla provozují které trasy nejziskověji
 
 ## Export
 
-Klikněte na **Export CSV** pro stažení reportu s UTF-8 BOM pro správné zobrazení v Excelu.
+Klikněte na **Export → CSV** pro stažení celého reportu jako tabulky. CSV zahrnuje všechny sloupce a všechny objednávky v prohloubeném zobrazení, pokud jste aplikovali filtry.
 
-<Card title="Přehled reportů" icon="chart-bar" href="/en/reports/reports-overview">
-  Přehled všech dostupných reportů.
-</Card>
----
+CSV je nejlepší formát pro další analýzu v Excelu — například vytváření vlastních kontingenčních tabulek podle klienta nebo vozidla.
 
-This page is being translated. In the meantime, please refer to the [English version](/en/reports/lane-profitability).
+<Warning>
+Nedělejte cenová rozhodnutí pouze na základě tohoto reportu bez zvážení dalších faktorů: zpáteční jízdy, strategické vztahy s klienty a sezónní kolísání objemu — to vše ovlivňuje skutečnou hodnotu trasy.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Přehled reportů" icon="chart-bar" href="/cs/reports/reports-overview">
+    Všechny dostupné reporty v Druma a jak je naplánovat.
+  </Card>
+  <Card title="Ceníky" icon="tag" href="/cs/admin/rate-cards">
+    Nastavte ceníky za trasu, které vstupují do detekce anomální cenotvorby a cílů marže.
+  </Card>
+</CardGroup>

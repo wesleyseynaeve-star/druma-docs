@@ -1,58 +1,111 @@
 ---
 title: "Számlák generálása"
-description: "Számlák létrehozása kiszállított rendelésekből a Drumában — egyenként vagy kötegelt, többdevizás, automatikus felár-számítással és egy kattintásos küldéssel."
+description: "Hozz létre számlákat kiszállított rendelésekből a Drumában — egyenként vagy kötegelten, több pénznemben, automatikus felár-számítással és egykattintásos küldéssel."
 icon: "file-invoice-dollar"
 ---
 
-## Számlák automatikus vs. kézi generálása
+## Áttekintés
 
-A Druma kétféle számlázási módszert támogat:
+Miután egy rendelés kiszállításra került, közvetlenül a Drumában generálhatsz hozzá számlát. A leggyorsabb út magáról a rendelés-részletező oldalról indul. Több, ugyanattól az ügyféltől származó rendelést is összevonhatsz egyetlen számlába — ideális a heti vagy havi számlázási ciklusokhoz.
 
-**Kézi generálás:** A tervező a kiszállítás után manuálisan hozza létre a számlát.
+## Két kiindulási pont
 
-**Automatikus generálás:** Ha az automatikus számlázás engedélyezve van (ügyfelenként konfigurálható), a Druma automatikusan generálja a számlát a kiszállítás után 0–24 órával (konfigurálható késleltetéssel).
+**A rendelés-részletező oldalról (leggyorsabb):**
+Nyisd meg a kiszállított rendelést → kattints a **Számla generálása** gombra a jobb felső sarokban. A Druma előtölti a számlát az adott rendelés adataival, és egyenesen az áttekintő képernyőre visz.
 
-## Számla kézi generálása
+<Frame caption="A Számlák lista — a Fizetési státusz (a fizetési határidőből/kifizetett összegből származtatva) külön van nyomon követve az E-számla csatornától és az E-státusztól.">
+  <img src="/images/invoicing/generating-invoices.png" alt="Számlák lista státusz és fizetési oszlopokkal" />
+</Frame>
+
+**A Számlázás modulból:**
+Lépj a **Számlázás** → **Új számla** menüpontra → keress egy ügyfelet → válaszd ki a felvenni kívánt rendelést vagy rendeléseket.
+
+## Lépésről lépésre: számla létrehozása
 
 <Steps>
-  <Step title="Lépj a Számlázás menüpontra">
-    Kattints a **Számlázás** menüpontra a bal oldali navigációban.
+  <Step title="Válaszd ki a rendelést vagy rendeléseket">
+    Válaszd ki, mely kiszállított rendelést vagy rendeléseket vedd fel. Több, ugyanattól az ügyféltől származó rendelést is összevonhatsz egyetlen számlába — jelöld be mindegyiket a rendelés-választóban. Minden rendelésnek **Kiszállítva** státuszúnak kell lennie, és ugyanahhoz az ügyfélhez kell tartoznia.
   </Step>
-  <Step title="Kattints a Számla generálása gombra">
-    Kattints a **Számla generálása** gombra a jobb felső sarokban.
+  <Step title="Nézd át a tételeket">
+    A Druma automatikusan kitölti a tételeket a rendelés adataiból. Nézd át és igazítsd mindegyiket:
+
+    - **Fuvardíj** — a rendelés létrehozásakor beállított megállapodott árból származik
+    - **Várakozási díj** — automatikusan kiszámítva, ha a sofőr az ingyenes időszakon túli várakozási időt rögzített
+    - **ADR-felár** — automatikusan hozzáadva, ha a rendelést ADR-rakományként jelölték meg, a céged beállított ADR-felár díja alapján (alapértelmezett 75 €, ha nem állítottál be sajátot)
+    - **Üzemanyag-felár** — belefoglalva, ha van üzemanyag-felár szabályod beállítva a Beállításokban
+    - **Egyéb felárak** — adj hozzá bármilyen egyedi tételt szükség szerint (útdíj-visszatérítés, komp, extra megállók)
+
+    Bármilyen összeget szerkeszthetsz, új sorokat adhatsz hozzá, vagy eltávolíthatsz nem alkalmazandó sorokat.
   </Step>
-  <Step title="Válaszd ki a rendelést/rendeléseket">
-    Keress egy ügyfelet, majd válaszd ki a számlázásra szánt teljesített rendeléseket. Egy számlán több rendelés is szerepelhet.
+  <Step title="Állítsd be a számla dátumát és a fizetési határidőt">
+    A számla dátuma alapértelmezetten a mai nap. A fizetési határidő automatikusan az ügyfélrekordon szereplő fizetési feltételekből kerül kiszámításra — például a 30 napos nettó azt jelenti, hogy a határidő a számla dátumától számított 30 nap. Szükség esetén bármelyik dátumot manuálisan felülírhatod.
   </Step>
-  <Step title="Ellenőrizd a számla részleteit">
-    A Druma előre kitölti:
-    - Ügyfél neve, jogi neve és ÁFA-száma
-    - A te céged adatai
-    - Az egyes rendelések tételei a megállapodott árral
-    - A sorszámot (az előző számlától folytatva)
-    - Fizetési határidőt (az ügyfél alapértelmezett feltételei alapján)
-    - ÁFA összeget (az ügyfél és a te ÁFA-beállításaid alapján)
+  <Step title="Nézd át a PDF-előnézetet">
+    Kattints a **PDF előnézet** gombra, hogy pontosan lásd, mit fog kapni az ügyfél. Ellenőrizd az ügyfél nevét, ÁFA-számát, címeit, tételeit, összegeit és a banki adataidat. Javíts mindent generálás előtt — most sokkal könnyebb korrigálni, mint utána.
   </Step>
-  <Step title="Felár hozzáadása (opcionális)">
-    Szükség esetén adj hozzá várakozási díjat, útdíjat, üzemanyag-felárat vagy egyéb tételeket.
+  <Step title="Generáld a számlát">
+    Kattints a **Generálás** gombra. A Druma sorszámozott számlaszámot rendel hozzá (például INV-000047), és lezárja a dokumentumot. Generálás után nem szerkesztheted közvetlenül az összegeket — használj jóváíró számlát bármilyen javításhoz.
   </Step>
-  <Step title="Számla küldése vagy exportálása">
-    - **Küldés e-mailben** — a Druma e-mailt küld a PDF-számlával az ügyfél kapcsolattartójának
-    - **PDF letöltése** — töltsd le a PDF-et a helyi küldéshez
-    - **SmartBill-be küldés** — ha a SmartBill csatlakoztatva van, kattints ide az automatikus szinkronizáláshoz
+  <Step title="Küldd el a számlát">
+    Válaszd ki a küldési módot:
+
+    - **E-mail a Drumából** — kattints a **Küldés e-mailben** gombra. A Druma előtölti az e-mailt az ügyfél pénzügyi kapcsolattartójával, és csatolja a PDF-et. Nézd át az üzenetet, és kattints a Küldésre.
+    - **Letöltés és manuális küldés** — kattints a **PDF letöltése** gombra, és küldd el a saját e-mail-kliensedből, WhatsAppon, vagy ahogy szoktál kommunikálni az ügyféllel.
   </Step>
 </Steps>
 
-## Kötegelt számlázás
+## Automatikus felár-sorok (rendelési extrák)
 
-Több rendelés egyetlen számlán való kombinálásához egyszerűen jelölj ki több rendelést a 3. lépésben.
+A fő fuvardíj mellett a Druma automatikusan hozzáad felár-sorokat a számlához, a rendelés során történtek alapján:
 
-Hasonlóképpen, ha egy ügyfélnek több kiszállítása volt ugyanazon a héten, kijelölhetsz mindegyiket és egyetlen összesített számlát hozhatsz létre.
+| Felár | Mikor kerül hozzáadásra |
+|---|---|
+| **Várakozási díj** | Amikor a sofőr az ingyenes időszakon túli várakozási időt rögzített |
+| **Útdíj (áthárítás)** | Amikor sofőr által rögzített útdíj-nyugták léteznek, és az árkártya-szabályzatod az adott országra áthárítást ír elő |
+| **Elveszett fuvar díja** | Amikor egy elveszett fuvart rögzítettek a rendelésen |
+| **ADR-felár** | Amikor a rendelést ADR/veszélyesáru-rakományként jelölték meg |
 
-## Számla szerkesztése küldés előtt
+Ezek a sorok automatikusan megjelennek a számla-szerkesztőben — nincs szükség manuális rögzítésre.
 
-A számla előnézete szerkeszthető — módosíthatod az egyedi tételárakat, megváltoztathatod a pénznemet, vagy beírhatod saját referencia-számodat.
+**Megteheted:**
+- **Egy sor kizárása a számláról** — kattints a **Kizárás** kapcsolóra a sor során. A díj eltűnik a számláról, de megmarad a rendelés-rekordon belső költségkövetéshez.
+- **Kizárt sorok visszaállítása** — kattints a **Rejtett díjak visszaállítása** gombra a tételek szakasz alján, hogy visszahozd bármelyik kizárt automatikus sort.
+- **Egyedi sorok hozzáadása** — használd a **+ Sor hozzáadása** gombot raklap-csere díjak, vámkezelési díjak, kezelési díjak vagy bármilyen más extra hozzáadásához. Válassz a céged **extrák katalógusából**, vagy adj meg egyedi leírást és összeget.
 
-<Card title="Fizetési nyomon követés" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
-  Beérkező fizetések rögzítése és a lejárt összegek nyomon követése.
+Az extrák katalógus (céges szintű tétel-sablonok) kezeléséhez: **Beállítások → Extrák katalógusa**.
+
+## Számla-sorszámozás
+
+A számlaszámok sorszámozottak, és konfigurálható előtagot használnak. Az alapértelmezett formátum (egyedi minta konfigurálása nélkül) `{előtag}-{6-jegyű sorszám}` — például `INV-000001`, `INV-000002`, `INV-000003`. Egy év-jelet (`{YYYY}`) tartalmazó minta is elérhető, ha egyedi sorszámozási mintát konfigurálsz.
+
+Az előtag módosításához vagy egy egyedi sorszámozási minta (beleértve egy év-jelet) konfigurálásához: **Beállítások** → **Arculat és formátumok** → **Számla-sorszámozás**.
+
+## Több pénznemű számlák
+
+A Druma támogatja a számlázást EUR, GBP, CHF, USD, RON és PLN pénznemben. Válaszd ki a pénznemet a számla létrehozásakor. Bármely, a RON-tól eltérő pénznemnél a Druma automatikusan lekéri az árfolyamot a **BNR-től (Román Nemzeti Bank)** a számla dátumára, és feltünteti a PDF-en.
+
+Ez fontos a román könyvelési megfelelőség és az e-Factura benyújtás szempontjából — bármely külföldi pénznemű összeg RON-egyenértékének szerepelnie kell a számlán.
+
+## Kötegelt számlázás — a legfontosabb szabályok
+
+- Csak **ugyanattól az ügyféltől** származó rendeléseket köthetsz egy számlába
+- Minden kötegelt rendelésnek **Kiszállítva** státuszúnak kell lennie
+- A különböző pénznemű rendeléseket külön kell számlázni
+
+<Warning>
+Amint egy számla generálásra kerül (a státusz kilép a Vázlatból), nem szerkesztheted közvetlenül. Ha hibáztál — rossz összeg, rossz ügyfél, rossz tétel —, egy jóváíró számlával kell visszavonnod, majd egy javított számlát kiállítanod. Ez jogi követelmény Romániában. Ne próbálj meg egy elküldött számlát törölni vagy felülírni.
+</Warning>
+
+---
+
+<Card title="Jóváíró számlák" icon="file-minus" href="/en/invoicing/credit-notes">
+  Hogyan vonj vissza vagy javíts részlegesen egy elküldött számlát jóváíró számlával.
+</Card>
+
+<Card title="e-Factura / ANAF benyújtás" icon="landmark" href="/en/invoicing/efactura-anaf">
+  Hogyan nyújtja be automatikusan a Druma a számlákat az ANAF e-Factura rendszerébe román ügyfeleknél.
+</Card>
+
+<Card title="Fizetéskövetés" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
+  Fizetések rögzítése a számlákon, és a fennmaradó egyenlegek nyomon követése.
 </Card>

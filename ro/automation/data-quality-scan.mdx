@@ -1,27 +1,67 @@
 ---
-title: "Scanarea de calitate a datelor"
-description: "In fiecare noapte Druma verifica datele pentru 9 tipuri de probleme si trimite un sumar."
+title: "Scanarea nocturna de calitate a datelor"
+description: "In fiecare noapte Druma verifica datele pentru noua tipuri de probleme frecvente, ca sa le rezolvi inainte sa cauzeze intarzieri sau venituri pierdute."
 icon: "magnifying-glass-chart"
 ---
 
-In fiecare noapte, Druma ruleaza 9 verificari automate pe intregul set de date si trimite un email rezumat catre toti Adminii de companie.
+Datele proaste costa bani. Un client fara numar de TVA iti blocheaza trimiterea e-Factura. O comanda livrata si nefacturata de o saptamana este bani pe care nu i-ai incasat inca. O factura restanta fara nicio urmarire este o relatie cu clientul care se raceste. Scanarea nocturna de calitate a datelor gaseste aceste probleme inainte sa te coste.
 
-## Cele 9 verificari
+In fiecare noapte, Druma ruleaza noua verificari automate pe tot setul tau de date si scrie rezultatele in pagina **Calitate Date**, sub **Instrumente**.
 
-1. **Numere de TVA lipsa** - clienti fara TVA valid (blocheaza e-Factura ANAF)
-2. **Comenzi nefacturate** - comenzi livrate nefacturate de peste 7 zile
-3. **Documente expirate** - vehicule sau soferi cu documente expirate sau care expira in 14 zile
-4. **Comenzi duplicate** - aceeasi combinatie client/data/ruta de doua ori
-5. **Adrese incomplete** - comenzi cu adrese de preluare/livrare incomplete
-6. **Sofer neatribuit** - comenzi confirmate fara sofer atribuit
-7. **Comenzi ciorna stale** - comenzi ciorna mai vechi de 14 zile fara activitate
-8. **Plati nepotrivite** - tranzactii bancare nelegate de o factura de peste 7 zile
-9. **Preturi anomale** - comenzi cu pret semnificativ sub tariful configurat
+## Cele noua verificari
+
+### 1. TVA lipsa
+Clienti folositi intr-o comanda recenta, non-ciorna, fara numar de TVA inregistrat. Trimiterea e-Factura romaneasca necesita un numar de TVA valid pentru fiecare client — daca lipseste, facturile pentru acel client nu pot fi trimise automat la ANAF.
+
+### 2. Factura netrimisa la ANAF
+Facturi trimise clientului fara status de trimitere e-Factura inregistrat.
+
+### 3. Livrata, nefacturata de 7+ zile
+Comenzi marcate livrate de peste 7 zile care inca nu au nicio factura asociata. Este venit castigat, dar nefacturat inca.
+
+### 4. Comanda ciorna stagnanta
+Comenzi ciorna neatinse de peste 7 zile — de regula comenzi preluate din email si uitate, pe care un planificator nu le-a confirmat sau sters.
+
+### 5. Client fara email
+Clienti fara nicio adresa de email inregistrata.
+
+### 6. Comanda confirmata, fara pret agreat
+Comenzi in status **Confirmata** sau **Atribuita** unde pretul agreat lipseste inca sau este zero.
+
+### 7. Factura restanta de 60+ zile
+Facturi neplatite cu peste 60 de zile peste scadenta.
+
+### 8. Comanda finalizata, fara factura dupa 14 zile
+Comenzi livrate inca nefacturate dupa 14 zile — o versiune cu orizont mai lung a verificarii 3, semnalata ca informativa, nu critica.
+
+### 9. Client inactiv
+Clienti fara nicio comanda in ultimele 90 de zile.
 
 ## Vizualizarea rezultatelor
 
-Mergi la **Rapoarte -> Calitate Date** pentru a vedea problemele grupate pe categorii, cu link direct la inregistrarile afectate.
+Mergi la **Instrumente → Calitate Date**.
 
-## Configurarea
+Pagina arata:
 
-In **Setari -> Automatizare -> Calitate Date** poti ajusta pragurile per verificare sau dezactiva verificarile irelevante.
+- O bara KPI cu numarul total de probleme deschise, plus numarul pe severitate (Critic, Avertisment, Info)
+- Un grafic cu bare stivuite al problemelor pe severitate, in ultimele 30 de zile
+- Un tabel filtrabil (Deschise / Rezolvate / Ignorate / Toate) care listeaza fiecare problema cu tipul entitatii, referinta, descrierea, severitatea, actiunea sugerata, statusul si data crearii
+- Actiuni **Rezolva** si **Ignora** pe fiecare problema deschisa
+
+<Note>
+Scanarea de calitate a datelor ruleaza la **03:00 UTC** in fiecare noapte. Rezultatele afisate pe pagina reflecta starea datelor tale la acel moment. Problemele rezolvate in timpul zilei se sterg la scanarea urmatoare (dupa ce marchezi problema **Rezolvata**, sau daca nu mai corespunde interogarii de baza).
+</Note>
+
+## Rezolvarea problemelor
+
+Pagina de Calitate Date iti spune ce nu e in regula si sugereaza o actiune, dar nu face link direct catre inregistrarea de baza — foloseste referinta afisata (nume client, numar comanda, numar factura) ca sa o gasesti singur in Clienti, Operatiuni sau Finante, rezolvi problema, apoi revii si apesi **Rezolva**.
+
+Nu exista un instrument de rezolvare in masa — fiecare problema se rezolva individual. Este intentionat: corectiile de date trebuie sa fie deliberate.
+
+Apasarea **Ignora** pe o problema o scoate din filtrul **Deschise** fara sa o marcheze rezolvata — foloseste-o pentru problemele pe care ai decis sa nu actionezi. Problemele ignorate si rezolvate sunt excluse din re-scanarea urmatoare a problemelor deschise (fiecare scanare inlocuieste setul curent de probleme deschise, neignorate).
+
+<CardGroup cols={1}>
+  <Card title="Prezentare rapoarte" icon="chart-bar" href="/ro/reports/reports-overview">
+    Vezi toate rapoartele disponibile in Druma si cum le programezi pentru livrare regulata prin email.
+  </Card>
+</CardGroup>

@@ -1,50 +1,136 @@
 ---
 title: "Werkplaats & Onderhoud"
-description: "Maak en beheer voertuigwerkopdrachten, stel onderhoudsschema's in, los defecten op vanuit het planningsbord en blokkeer automatisch trucks met veiligheidskritieke storingen."
+description: "Maak en beheer voertuigwerkorders, stel onderhoudsschema's in, los defecten op vanuit het planningsbord en blokkeer automatisch trucks met veiligheidskritieke storingen."
 icon: "wrench"
 ---
 
 ## Overzicht
 
-De module Werkplaats & Onderhoud geeft wagenparkbeheerders een gestructureerde manier om elk onderhoudsjob bij te houden. Werkopdrachten zijn direct gekoppeld aan het planningsbord (trucks blokkeren wanneer nodig) en aan de ritinspectie na aflevering.
+De module Werkplaats & Onderhoud geeft wagenparkbeheerders een gestructureerde manier om elke onderhoudsjob bij te houden — van routineuze olieverversingen tot veiligheidskritieke defectherstellingen. Werkorders zijn direct gekoppeld aan het planningsbord (trucks blokkeren wanneer nodig) en aan de ritinspectie na aflevering (veiligheidskritieke defecten kunnen automatisch of met één klik werkorders aanmaken).
 
-Zoek de module onder **Vloot → Werkopdrachten** en **Vloot → Onderhoud**.
+Vind de module onder **Vloot → Werkorders** en **Vloot → Onderhoud**.
 
-## Werkopdrachten
+---
 
-### Een werkopdracht aanmaken
+## Werkorders
+
+### Wat een werkorder is
+
+Een werkorder is een record van een onderhoudsjob op een specifieke truck. Ze legt vast wat gedaan moet worden, de onderdelen- en arbeidskosten, en de huidige status van de job. Elk veiligheidskritiek voertuigdefect moet een bijbehorende werkorder hebben voordat de truck weer in dienst gaat.
+
+### Een werkorder aanmaken
 
 <Steps>
-  <Step title="Ga naar Vloot → Werkopdrachten">
-    Open de werkopdrachtenlijst.
+  <Step title="Open het tabblad Werkorders">
+    Ga naar **Vloot → Werkorders** en klik op **Werkorder aanmaken**.
   </Step>
-  <Step title="Klik op Nieuwe werkopdracht">
-    Klik op **+ Nieuwe werkopdracht**.
+  <Step title="Vul de gegevens in">
+    Selecteer de truck en vul in:
+
+    - **Servicetype** — kies uit: olieverversing, remonderhoud, bandenwissel, inspectie, reparatie, ADR-herkeuring, tachograafkalibratie, overig, plus drie reefer-specifieke types voor trailers (filter- en oliebeurt, volledige reeferservice, ATP-inspectie)
+    - **Beschrijving** — wat er gedaan moet worden
+    - **Toegewezen aan** — de werkplaats of technicus verantwoordelijk (vrije tekst)
+    - **Geplande datum** — wanneer het werk gepland is
   </Step>
-  <Step title="Selecteer het voertuig">
-    Kies de truck waarvoor de werkopdracht is.
-  </Step>
-  <Step title="Beschrijf het werk">
-    Voer een beschrijving in, selecteer de categorie (Preventief, Correctief, Verplichte keuring) en stel de prioriteit in.
-  </Step>
-  <Step title="Stel de geplande datum in">
-    Stel in wanneer het werk moet worden uitgevoerd. Als de datum vóór een geplande rit ligt, markeert Druma het conflict.
+  <Step title="Voeg regelposten toe">
+    Voeg één of meer regelposten toe voor onderdelen en arbeid. Elke regelpost heeft een beschrijving, aantal, eenheidskost en type (Onderdelen/Arbeid). De **totaalkost** wordt automatisch berekend uit alle regelposten.
   </Step>
   <Step title="Opslaan">
-    Klik op **Opslaan**.
+    Klik op **Opslaan**. De werkorder wordt aangemaakt met status **Open**.
   </Step>
 </Steps>
 
-### Veiligheidskritieke storingen
+### Statusmachine
 
-Werkopdrachten gemarkeerd als **Veiligheidskritiek** blokkeren de truck automatisch op het planningsbord. De truck kan niet worden toegewezen aan nieuwe orders totdat de werkopdracht is gemarkeerd als voltooid.
+| Status | Betekenis | Volgende acties |
+|---|---|---|
+| **Open** | Job aangemaakt, nog niet gestart | Werkorder starten, Annuleren |
+| **In uitvoering** | Werk is begonnen | Markeer als voltooid, Annuleren |
+| **Voltooid** | Werk is klaar, truck vrijgegeven | — |
+| **Geannuleerd** | Job wordt niet voltooid | — |
+
+Klik op **Werkorder starten** om van Open → In uitvoering te gaan. Klik op **Markeer als voltooid** wanneer de job klaar is. Een voltooide of geannuleerde werkorder heft elke auto-blokkering op de truck op.
+
+<Note>
+Alleen werkorders met status **Open** of **In uitvoering** houden een truck geblokkeerd op het planningsbord. Het voltooien of annuleren van de werkorder herstelt de truck onmiddellijk naar de toewijsbare lijst.
+</Note>
+
+---
+
+## Een werkorder aanmaken vanuit een defect
+
+Wanneer een chauffeur een ritinspectie na aflevering indient met een **veiligheidskritiek** defect, verschijnt het defect in **Vloot → Defecten**. Elke veiligheidskritieke rij heeft een knop **Werkorder aanmaken**.
+
+Klikken erop opent het werkorderformulier vooraf ingevuld met de geïnspecteerde truck en gekoppeld aan het originele defectticket. Er is geen werkordertype "Veiligheidskritiek" — kies het **Servicetype** dat bij de reparatie past (bijv. reparatie, remonderhoud), voer een beschrijving in, voeg dan regelposten en een geplande datum toe, en sla op.
+
+---
 
 ## Onderhoudsschema's
 
-Stel terugkerende onderhoudsschema's in per voertuig voor preventief onderhoud:
-- **Kilometeragegebaseerd** — bijv. elke 30.000 km olie verversen
-- **Tijdgebaseerd** — bijv. jaarlijkse keuring
+Onderhoudsschema's laten u terugkerende serviceintervallen per truck bijhouden — zodat u altijd weet wanneer de volgende olieverversing, riemvervanging of wettelijke keuring verschuldigd is.
 
-<Card title="Vlootdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
-  Voertuigdocumenten en keuringsvervaldata bijhouden.
-</Card>
+Ga naar **Vloot → Onderhoud** om schema's te beheren.
+
+### Een schema toevoegen
+
+Klik op **Schema toevoegen** en configureer:
+
+| Veld | Beschrijving |
+|---|---|
+| **Truck** | Op welk voertuig dit schema van toepassing is |
+| **Servicetype** | Vrije tekstomschrijving (bijv. "Olieverversing", "Bandenrotatie") |
+| **Intervaltype** | **km** (afstandsgebaseerd), **dagen** (kalendergebaseerd), of **motoruren** |
+| **Intervalwaarde** | De numerieke interval (bijv. 15.000 km, 90 dagen, 500 uur) |
+| **Laatst uitgevoerd** | Datum en kilometerstand/urenstand van de laatste service |
+
+Druma berekent de **volgende vervaldatum** of het volgende km-punt op basis van de laatst-uitgevoerd-waarden en het interval. De schemalijst sorteert op volgende vervaldatum, zodat achterstallige items bovenaan verschijnen.
+
+U kunt elk schema bewerken of verwijderen. Druma maakt geen werkorders automatisch aan vanuit schema's — het schema is een planningshulpmiddel; u maakt de werkorder handmatig aan wanneer de service verschuldigd is.
+
+---
+
+## Planningsbord: de sleutelbadge
+
+Heeft een truck één of meer werkorders met status **Open** of **In uitvoering**, dan verschijnt een amberkleurige sleutelbadge op de kaart van die truck op het planningsbord. De badge is een snel signaal voor dispatchers dat het voertuig openstaand onderhoud heeft.
+
+### Werkplaats snel oplossen
+
+Klik op de sleutelbadge om de modal **Werkplaats snel oplossen** te openen. Vanaf hier kunt u:
+
+- **Markeer als voltooid** — sluit de werkorder en verwijdert de blokkering zonder het planningsbord te verlaten
+- **Annuleren** — annuleert de werkorder en verwijdert de blokkering
+
+Dit is bedoeld voor situaties waarin u gewoon snel een blokkering wilt opheffen (bijv. de reparatie is klaar en u moet de truck herverdelen) zonder naar het volledige tabblad Werkorders te navigeren.
+
+---
+
+## Automatische onbeschikbaarheid bij veiligheidskritieke defecten
+
+Is de schakelaar **Voertuig automatisch onbeschikbaar maken bij veiligheidskritieke defecten** ingeschakeld in **Instellingen → Checklist na rit**, dan doet het indienen van een veiligheidskritiek defect automatisch het volgende:
+
+1. Maakt een onbeschikbaarheidsrecord voor de truck aan
+2. Verwijdert de truck van de toewijsbare lijst op het planningsbord
+3. Toont de amberkleurige sleutelbadge op de kaart van de truck
+
+De truck blijft onbeschikbaar tot de gekoppelde werkorder gemarkeerd is als **Voltooid** of **Geannuleerd**. Toekomstige orders al toegewezen aan de truck worden niet automatisch losgekoppeld — de dispatcher ontvangt een melding en moet ze handmatig nakijken.
+
+<Warning>
+Dient een chauffeur aan het einde van een dienst een veiligheidskritiek defect in en controleert niemand het planningsbord voor de ochtend, dan verschijnt de truck niet als toewijsbaar. Maak er een gewoonte van om **Vloot → Defecten** te controleren als onderdeel van de dagelijkse ochtendcheck.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Voertuiginspectie na rit (DVIR)" icon="clipboard-check" href="/nl/fleet-compliance/post-trip-dvir">
+    Hoe chauffeurs defecten melden aan het einde van een rit, ernstniveaus en hoe veiligheidskritieke defecten werkorders triggeren.
+  </Card>
+  <Card title="Vlootdocumenten" icon="file-text" href="/nl/fleet-compliance/fleet-documents">
+    ITP, verzekering, CEMT en ADR-certificaatverval bijhouden — met waarschuwingen op het planningsbord wanneer documenten bijna verlopen.
+  </Card>
+  <Card title="Wagenparkbanden" icon="circle" href="/nl/fleet-compliance/tyres">
+    Bandconditie, profieldiepte en vervangingskosten per voertuig bijhouden.
+  </Card>
+  <Card title="Wagenparkincidenten" icon="triangle-exclamation" href="/nl/fleet-compliance/incidents">
+    Ongelukken, schadegebeurtenissen en schadeclaims van uw wagenpark loggen.
+  </Card>
+</CardGroup>

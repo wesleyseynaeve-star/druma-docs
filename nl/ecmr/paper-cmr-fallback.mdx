@@ -1,66 +1,60 @@
 ---
 title: "Papieren CMR als terugvaloptie"
-description: "Hoe u een order overschakelt van eCMR naar papieren CMR wanneer digitale ondertekening niet mogelijk is, en hoe u de reden registreert."
+description: "Wanneer digitale eCMR-ondertekening niet mogelijk is, en hoe u in plaats daarvan een papieren CMR bij de order houdt."
 icon: "file-alt"
 ---
 
-eCMR is niet altijd mogelijk: een ontvanger weigert, een telefoon raakt leeg, internet valt weg, of papier is simpelweg de enige praktische optie. Druma vangt dit op met een per-order terugvalproces dat uw administratie en compliance intact houdt.
+eCMR is niet altijd mogelijk. Ontvangers kunnen weigeren, telefoons raken leeg, internetverbindingen vallen weg, of de chauffeur komt gewoon een situatie tegen waarin papier de enige praktische optie is. Gebruik in deze gevallen simpelweg een papieren CMR voor de zending en koppel de ondertekende scan aan de order in Druma.
+
+---
 
 ## Wanneer terugvallen op papieren CMR
 
-- De ontvanger **weigert digitaal te tekenen** — daar heeft hij recht op
-- **Geen internetverbinding** bij ophaling of aflevering
-- De **telefoon van de chauffeur is leeg** of beschadigd
-- De ontvanger **staat op papier** om interne redenen
-- Een **Druma-storing** (of, bij een legacy TransFollow-configuratie, een TransFollow-storing) verhindert eCMR
-- Elke andere situatie waarin digitaal ondertekenen niet praktisch is
+Gebruik een papieren CMR in plaats van eCMR wanneer:
+
+- De ontvanger **weigert digitaal te tekenen** — hij heeft het recht op papier aan te dringen
+- **Geen internetverbinding** beschikbaar is bij ophaling of aflevering (het eCMR-ondertekeningsproces vereist connectiviteit)
+- De **telefoonbatterij van de chauffeur leeg** is of het toestel beschadigd is
+- De **ontvanger op papier staat** om interne of bedrijfsredenen
+- Een **Druma-systeemstoring** (of, bij een bestaande legacy TransFollow-configuratie, een TransFollow-storing) verhindert dat eCMR functioneert
+- Elke andere situatie waarin het digitale ondertekeningsproces niet praktisch is
 
 <Note>
-Terugvallen op papier voor één order heeft geen invloed op andere orders — de keuze wordt per order gemaakt, niet per chauffeur of route.
+Terugvallen op papier voor één order heeft geen invloed op andere orders. De beslissing wordt per order gemaakt, niet per chauffeur of route.
 </Note>
 
-## Een order overschakelen
+---
+
+## Wat vandaag daadwerkelijk beschikbaar is
+
+<Note>
+Er is momenteel geen aparte knop "Overschakelen naar papieren CMR", reden-vervolgkeuzelijst of statuslabel in Druma. Een order markeren als papieren-CMR-terugval is een mogelijkheid die de backend ondersteunt, maar geen scherm in de app legt dit vandaag bloot. Hieronder staat wat u vandaag daadwerkelijk kunt doen.
+</Note>
+
+Is eCMR niet praktisch voor een order, voltooi dan simpelweg het digitale ondertekeningsproces niet — er is niets om "uit te schakelen". Gebruik in plaats daarvan een papieren CMR voor de zending en koppel de ondertekende scan aan de order:
 
 <Steps>
-  <Step title="Open de order en het tabblad eCMR">
-    In de app (chauffeur) of het webplatform (planner).
+  <Step title="Open de orderdocumenten">
+    Ga op de orderdetailpagina naar het tabblad **Documenten**.
   </Step>
-  <Step title="Tik op Overschakelen naar papieren CMR">
-    Naast de ondertekeningsknoppen.
+  <Step title="Upload de scan">
+    Tik of klik op **Document uploaden**, selecteer **CMR** als documenttype (er is geen apart type "Papieren CMR") en koppel de foto of PDF van het ondertekende papieren formulier.
   </Step>
-  <Step title="Selecteer een reden">
-    Handtekening geweigerd, technische storing, voorkeur ontvanger, geen internetverbinding, of anders.
-  </Step>
-  <Step title="Bevestig">
-    De eCMR-status wijzigt naar "Papieren CMR — [reden]". Was er al een eCMR geregistreerd — via de native provider, of via TransFollow bij een legacy-configuratie — dan wordt die op dit moment geannuleerd. De annulering wordt vastgelegd in het eCMR-auditspoor.
+  <Step title="Opslaan">
+    De gescande CMR is nu aan de order gekoppeld en zichtbaar voor dispatchers, klanten (indien u deelt via het klantportaal) en auditors.
   </Step>
 </Steps>
 
-## Reden vastleggen
+Heeft uw bedrijf AI-validatie van geüploade papieren CMR's ingeschakeld voor een order (`paper_cmr_fallback`-vlag), dan controleert Druma de scan automatisch tegen de ordergegevens en toont een validatiekaart aan de planner ter goedkeuring — zie het tabblad Documenten voor die status zodra geüpload.
 
-De gekozen reden is zichtbaar voor planners op het eCMR-tabblad — nuttig voor audits, het herkennen van patronen (bijv. een klant die stelselmatig weigert) en ter bescherming van de chauffeur (aantoonbaar gegronde reden, geen willekeur).
+---
 
-## De papieren CMR uploaden
+## Gerelateerde artikelen
 
-Zodra u de ondertekende papieren CMR heeft, fotografeer of scan deze en upload via het tabblad **Documenten** van de order, met documenttype **Papieren CMR**.
+<Card title="Wat is eCMR?" icon="file-contract" href="/nl/ecmr/what-is-ecmr">
+  Begrijp de juridische basis voor eCMR en wanneer het van toepassing is.
+</Card>
 
-## Grensdetectie en fail-open gedrag
-
-Druma bepaalt grensoverschrijding op basis van ophaal- en afleverland. Is dit **onduidelijk** (bijv. afleverland niet ingevuld), dan valt Druma standaard terug op **"eCMR niet vereist"** in plaats van de chauffeur te blokkeren — bewust fail-open, zodat onvolledige data-invoer nooit vertrek verhindert.
-
-<Warning>
-Is eCMR wettelijk vereist voor een route maar werd er geen aangemaakt door ontbrekende landgegevens, dan moet de planner de eCMR handmatig aanmaken zodra de data hersteld is. Laat chauffeurs nooit vertrekken op een grensoverschrijdende route met een onvolledig orderrecord.
-</Warning>
-
-## Wat er gebeurt met een geannuleerde eCMR
-
-Bij annulering na registratie: de eCMR wordt gemarkeerd als geannuleerd in Druma (native provider), of Druma stuurt een annuleringsverzoek naar TransFollow (legacy-configuraties). In beide gevallen blijft het documentnummer bewaard voor auditdoeleinden en wordt geen gecertificeerde PDF uitgegeven.
-
-<CardGroup cols={2}>
-  <Card title="Wat is eCMR?" icon="file-contract" href="/nl/ecmr/what-is-ecmr">
-    De juridische basis voor eCMR en wanneer het van toepassing is.
-  </Card>
-  <Card title="Documenten uploaden" icon="upload" href="/nl/driver/uploading-documents">
-    Gescande documenten — inclusief papieren CMR — aan een order koppelen.
-  </Card>
-</CardGroup>
+<Card title="Documenten uploaden" icon="upload" href="/nl/driver/uploading-documents">
+  Hoe u gescande documenten — inclusief papieren CMR — aan een order koppelt.
+</Card>

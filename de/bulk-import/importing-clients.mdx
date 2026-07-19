@@ -1,49 +1,53 @@
 ---
 title: "Kunden importieren"
-description: "Laden Sie Ihre Kundenunternehmen in Druma per CSV-Vorlage hoch."
+description: "Laden Sie Ihre Kundenunternehmen per Tabellenvorlage in Druma hoch."
 icon: "file-import"
 ---
 
-## CSV-Vorlage herunterladen
+Wenn Sie bereits eine Kundenliste in Excel oder einem anderen System haben, erspart Ihnen der Massenimport die manuelle Einzeleingabe.
 
-Gehen Sie zu **Kunden** und klicken Sie auf **Importieren → Vorlage herunterladen**.
-
----
-
-## Erforderliche Spalten
-
-| Spalte | Beschreibung |
-|---|---|
-| `company_name` | Unternehmensname (Pflicht) |
-| `vat_number` | USt-IdNr. (Pflicht, für Deduplizierung) |
-| `address` | Vollständige Adresse |
-| `country` | Ländercode (z. B. DE, RO, NL) |
-| `contact_name` | Ansprechpartner-Name |
-| `contact_email` | Ansprechpartner-E-Mail |
-| `payment_terms_days` | Standard-Zahlungsbedingungen in Tagen |
-
----
-
-## Import-Prozess
+## Die Vorlage herunterladen
 
 <Steps>
-  <Step title="Vorlage ausfüllen">
-    Füllen Sie die CSV mit Ihren Kundendaten aus.
+  <Step title="Massenimport öffnen">
+    Gehen Sie zu **Kunden** und klicken Sie in der Symbolleiste auf **Massenimport** — dies öffnet das Import-Modal direkt auf der Kundenliste; es gibt keine separate Importseite.
   </Step>
-  <Step title="Hochladen">
-    Gehen Sie zu **Kunden → Importieren → CSV hochladen**.
+  <Step title="Vorlage herunterladen und ausfüllen">
+    Klicken Sie auf **Vorlage herunterladen** — Druma erzeugt eine `.xlsx`-Datei. Füllen Sie einen Kunden pro Zeile aus:
+
+    | Spalte | Pflicht | Beispiel |
+    |--------|---------|----------|
+    | Firmenname | Ja | Acme Logistics SRL |
+    | USt-IdNr. | Nein | RO12345678 |
+    | Rechtlicher Name | Nein | Acme Logistics S.R.L. |
+    | Land | Nein | Rumänien |
+    | Stadt | Nein | Bukarest |
+    | E-Mail | Nein | billing@acme.ro |
+    | Telefon | Nein | +40 21 000 0000 |
+    | Zahlungsbedingungen (Tage) | Nein | 30 |
+    | Währung | Nein | EUR |
   </Step>
-  <Step title="Überprüfen und importieren">
-    Überprüfen Sie die Vorschau und klicken Sie auf **Importieren bestätigen**.
+  <Step title="Hochladen und prüfen">
+    Ziehen Sie Ihre ausgefüllte Datei (CSV oder XLSX, bis 5 MB) in das Import-Modal. Stimmen Ihre Spaltenüberschriften exakt mit der Vorlage überein, ordnet Druma sie automatisch zu; andernfalls ordnen Sie jede Spalte manuell dem richtigen Feld zu. Eine Vorschau zeigt dann die ersten 5 Zeilen — Zeilen ohne Firmenname sind rot markiert.
+  </Step>
+  <Step title="Import bestätigen">
+    Klicken Sie auf **Importieren**. Kunden werden sofort angelegt und stehen direkt für Aufträge zur Verfügung. Ein Ergebnisbildschirm zeigt, wie viele Zeilen angelegt, übersprungen oder fehlgeschlagen sind, mit zeilengenauen Fehlerdetails für alles Fehlgeschlagene.
   </Step>
 </Steps>
 
----
-
 ## Deduplizierung
 
-Druma dedupliziert anhand der USt-IdNr. Wenn ein Kunde mit derselben USt-IdNr. bereits vorhanden ist, wird er übersprungen.
+Druma prüft die USt-IdNr. jeder Zeile gegen Ihre bestehenden Kunden (normalisiert auf Großschreibung, Leerzeichen entfernt). Bei einem Treffer wird die Zeile **übersprungen** — der bestehende Kunde wird nicht aktualisiert. Zeilen ohne USt-IdNr. werden auf dieser Grundlage nie übersprungen und legen immer einen neuen Kunden an.
 
-<Card title="Smart Import" icon="brain" href="/en/tools/smart-import">
-  KI-gestützte Alternative zum Importieren aus unstrukturierten Dokumenten.
-</Card>
+<Note>
+Der Massenimport legt ausschließlich neue Kundendatensätze an — er aktualisiert nie einen bestehenden, selbst wenn Sie eine Datei mit übereinstimmender USt-IdNr. erneut importieren. Um Details eines bereits bestehenden Kunden zu ändern, bearbeiten Sie ihn direkt in Druma.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Ihre Flotte importieren" icon="truck" href="/de/bulk-import/importing-fleet">
+    Fügen Sie Ihre LKW auf dieselbe Weise als Massenimport hinzu.
+  </Card>
+  <Card title="Fahrer mit Smart Import einbinden" icon="id-card" href="/de/bulk-import/importing-drivers">
+    Drumas KI-gestützter Dokumentenupload zum Einbinden eines Fahrerbestands.
+  </Card>
+</CardGroup>

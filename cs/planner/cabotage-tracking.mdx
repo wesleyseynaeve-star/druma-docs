@@ -1,37 +1,110 @@
 ---
 title: "Sledování kabotáže"
-description: "Sledujte pravidla kabotáže EU pro každý kamion a každou zemi — Druma automaticky upozorní, když se blížíte nebo překračujete zákonné limity."
-icon: "map"
+description: "Sledujte kabotážní operace za jednotlivé vozidlo, abyste zůstali v limitech EU a vyhnuli se vysokým pokutám při silničních kontrolách."
+icon: "flag"
 ---
 
 ## Co je kabotáž?
 
-Kabotáž je domácí přeprava nákladu cizím dopravcem. Pravidla EU (nařízení 1072/2009) omezují, kolik jízd kabotáže může zahraniční kamion provést:
+Kabotáž nastává, když vozidlo registrované v jedné zemi provádí domácí přepravu uvnitř jiné země — tedy vyzvednutí i doručení jsou v rámci stejné cizí země.
 
-- Maximálně **3 kabotážní jízdy** v jedné zemi během **7 po sobě jdoucích dnů**
-- Jízdy musí být po mezinárodní zásilce, nikoli samostatně
+**Příklad:** Rumunsky registrované vozidlo doveze zásilku z Bukurešti do Mnichova (mezinárodní). Po tomto doručení vozidlo vyzvedne náklad v Mnichově a doveze ho do Frankfurtu. Tato jízda Mnichov → Frankfurt, kterou provádí rumunské vozidlo zcela uvnitř Německa, je **kabotážní operace**.
 
-Druma automaticky sleduje kabotážní jízdy pro každý kamion a každou zemi a upozorní vás, než překročíte limit.
+Kabotáž je v EU legální — ale přísně omezená.
+
+---
+
+## Pravidla kabotáže EU
+
+Podle nařízení EU 1072/2009 může po dokončení mezinárodního doručení do členského státu:
+
+- Zahraniční vozidlo provést **až 3 kabotážní operace** v dané zemi
+- Všechny 3 operace musí být dokončeny **do 7 dnů** od mezinárodního doručení
+- Po těchto 3 operacích (nebo 7 dnech, podle toho, co nastane dřív) musí vozidlo tuto zemi opustit
+- Před návratem vozidla do dané země a provedením další kabotáže platí povinná **4denní přestávka**
+
+**Proč na tom záleží:** Orgány silniční kontroly v zemích jako Německo, Francie a Nizozemsko aktivně kontrolují porušení pravidel kabotáže. Pokuty mohou dosáhnout několika tisíc eur za porušení. Opakovaná porušení mohou vést k problémům s provozní licencí.
+
+<Warning>
+Pravidla kabotáže byla dále zpřísněna v rámci Mobility Package EU. 4denní přestávka je přísně vymáhána v zemích západní EU. Vždy si ověřte, že platí aktuální pravidla — předpisy se mohou měnit.
+</Warning>
 
 ---
 
 ## Jak Druma sleduje kabotáž
 
-Druma automaticky zaznamená kabotážní jízdu, když:
-- Místo vyzvednutí i místo doručení jsou ve stejné zemi
-- Kamion je zahraniční vůči této zemi
+Druma sleduje kabotáž automaticky na základě dat objednávek, která zadáte. Zde je, co kontroluje:
 
-Záznamy jsou viditelné v **Flotila → Kabotáž**.
+1. **Rozpoznání země** — u každé objednávky Druma zkontroluje zemi adresy vyzvednutí a zemi adresy doručení
+2. **Příznak nerezidenta** — pokud je vozidlo registrováno v jiné zemi než jak vyzvednutí, tak doručení, a vyzvednutí i doručení jsou ve stejné zemi, objednávka je označena jako kabotážní operace
+3. **Počítadlo za vozidlo** — Druma počítá kabotážní operace za zemi, za vozidlo, za klouzavé 7denní okno po posledním kvalifikujícím mezinárodním doručení
+4. **Sledování přestávky** — Druma sleduje, kdy vyprší 7denní okno a kdy začíná a končí 4denní přestávka
 
 ---
 
-## Varování na plánovací tabuli
+## Zobrazení záznamu kabotáže
 
-Pokud by přiřazení objednávky překročilo limit kabotáže pro daný kamion v dané zemi, plánovací tabule zobrazí varování před potvrzením přiřazení.
+Pro zobrazení úplné historie kabotáže vaší flotily:
 
-<Card title="Vozový park" icon="truck" href="/en/planner/fleet-management">
-  Správa vašich vozidel a jejich nastavení.
-</Card>
+<Steps>
+  <Step title="Přejděte do Plánování">
+    Klikněte na **Plánování** v horní navigaci.
+  </Step>
+  <Step title="Otevřete Kabotáž">
+    Klikněte na záložku **Kabotáž** (`/operations/cabotage`), vedle Plánovací tabule, Objednávek a dalších záložek plánování.
+  </Step>
+  <Step title="Vyhledejte nebo seřaďte">
+    Použijte vyhledávací pole pro nalezení konkrétního vozidla, značky nebo země. Kliknutím na záhlaví sloupce seřadíte.
+  </Step>
+</Steps>
+
+Záznam zobrazuje:
+- Každou kabotážní operaci (reference objednávky, země, data)
+- Počet operací v rámci 7denního okna za vozidlo
+- Stav přestávky: aktivní přestávka, přestávka vypršela, nebo způsobilé pro nové operace
+- Jakákoli spuštěná upozornění
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/cabotage-tracking).
+## Upozornění na kabotáž
+
+Druma vás upozorní předtím, než limit překročíte, ne až poté — s upozorněním v aplikaci v okamžiku, kdy přiřadíte vozidlo k domácí objednávce na Plánovací tabuli:
+
+**Varování** — vozidlo se blíží svému povolenému počtu kabotážních operací v dané zemi v rámci 7denního okna. Přiřazení stále můžete potvrdit, ale nejprve se vám zobrazí počet a datum konce okna.
+
+**Limit překročen** — vozidlo již vyčerpalo všechny 3 operace a přiřazení by porušilo nařízení EU 1072/2009. Varování se zobrazuje červeně a potvrzení je označeno jako **Přiřadit (porušení zákona)**.
+
+**Aktivní přestávka** — vozidlo je stále v rámci své povinné 4denní přestávky v dané zemi. Varování uvádí datum konce přestávky a přiřazení je při pokračování opět označeno jako porušení zákona.
+
+Tato upozornění se zobrazují v okamžiku přiřazení, takže problém zachytíte dřív, než je vozidlo vysláno.
+
+---
+
+## Co Druma sleduje vs. co stále musíte spravovat sami
+
+Sledování kabotáže v Druma je založeno zcela na datech objednávek, která do systému zadáte. Je přesné, pokud jsou vaše objednávky zadávány správně a včas.
+
+<Note>
+Sledování kabotáže v Druma je nástroj pro pomoc s plánováním — nenahrazuje vyhrazený systém souladu s kabotáží ani právní poradenství. Vždy zajistěte, aby řidiči vezli správnou dokumentaci při silniční kontrole: originál mezinárodního CMR, tři kabotážní CMR (je-li relevantní) a jasně viditelná data. Kontrolní orgány kontrolují papírovou dokumentaci, ne váš TMS.
+</Note>
+
+**Druma sleduje:**
+- Počet operací za vozidlo za zemi za 7denní okno
+- Doby přestávky
+- Příznaky kabotáže na úrovni objednávky
+
+**Stále musíte spravovat sami:**
+- Dokumentaci řidiče při silniční kontrole
+- Právní aktualizace při změně předpisů EU
+- Operace prováděné mimo Druma (např. zásilky nezadané do systému)
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Správa vozového parku" icon="truck" href="/cs/planner/fleet-management">
+    Spravujte svá vozidla, země registrace a profily vozidel.
+  </Card>
+  <Card title="Hodiny řízení EU" icon="clock" href="/cs/fleet-compliance/eu-driving-hours">
+    Sledujte hodiny řidičů a doby odpočinku pro soulad s pravidly tachografu EU.
+  </Card>
+</CardGroup>

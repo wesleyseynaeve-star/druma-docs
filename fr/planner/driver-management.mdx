@@ -1,56 +1,149 @@
 ---
 title: "Gestion des chauffeurs"
-description: "Comment ajouter des chauffeurs, partager leur lien d'application et suivre leurs documents dans Druma."
+description: "Comment ajouter des chauffeurs dans Druma, partager l'application mobile avec eux, et gérer leurs permis et documents."
 icon: "id-card"
 ---
 
 ## Vue d'ensemble
 
-Accédez à **Flotte → Chauffeurs** pour gérer vos chauffeurs. Chaque chauffeur que vous ajoutez reçoit un lien PWA unique — leur accès à l'application Druma sur leur téléphone.
+Vos chauffeurs sont les personnes qui mettent réellement à jour les commandes sur le terrain. Pour cela, ils ont besoin d'un accès à l'application chauffeur Druma — une simple application web mobile (PWA) qui fonctionne sur n'importe quel smartphone sans avoir besoin d'installer quoi que ce soit depuis un app store.
+
+Gérer les chauffeurs dans Druma signifie : ajouter leurs détails, partager le lien de l'application avec eux, et tenir à jour leurs enregistrements de permis et de documents.
+
+Accédez à **Flotte → Chauffeurs** pour gérer vos chauffeurs.
+
+<Frame caption="Flotte → Chauffeurs — permis, certificats, compatibilité, et paie vivent tous sur le profil du chauffeur.">
+  <img src="/images/planner/driver-management.png" alt="Page Flotte Chauffeurs listant les chauffeurs" />
+</Frame>
 
 ---
 
-## Ajouter un chauffeur
+## Ajouter un nouveau chauffeur
 
-Cliquez sur **Ajouter un chauffeur** et renseignez :
-
-- **Nom complet** — Tel qu'il apparaîtra sur les documents.
-- **Numéro de téléphone** — Numéro de contact principal.
-- **Numéro de permis de conduire et date d'expiration** — Druma vous alertera avant l'expiration.
-- **Date d'expiration CPC** — Certificat de compétence professionnelle.
-- **Date d'expiration du certificat ADR** — Si le chauffeur est certifié pour les marchandises dangereuses.
-- **Numéro de carte conducteur tachygraphe** — Pour le suivi des heures de conduite.
-
----
-
-## Partager le lien de l'application chauffeur
-
-Après avoir enregistré le profil d'un chauffeur, Druma génère automatiquement un **lien PWA** unique. Ce lien est l'accès du chauffeur à son application mobile.
+Cliquez sur **Ajouter un chauffeur** dans le coin supérieur droit.
 
 <Steps>
-  <Step title="Ouvrez le profil du chauffeur">
-    Accédez à Flotte → Chauffeurs et cliquez sur le chauffeur.
+  <Step title="Saisissez le nom complet du chauffeur">
+    Utilisez le nom exactement comme il apparaît sur son permis de conduire. C'est ce qui apparaît sur les commandes, documents CMR, et rapports.
   </Step>
-  <Step title="Copiez le lien PWA">
-    Trouvez la section **Lien de l'application chauffeur** et cliquez sur **Copier le lien**.
+  <Step title="Saisissez son numéro de téléphone">
+    C'est le champ le plus important. Le numéro de téléphone est la façon dont le chauffeur accède à l'application Druma — sa connexion est liée à ce numéro. Utilisez le format international avec l'indicatif pays (par ex., +40721234567 pour la Roumanie).
   </Step>
-  <Step title="Envoyez le lien au chauffeur">
-    Envoyez le lien par WhatsApp, SMS ou toute autre application de messagerie.
+  <Step title="Saisissez l'adresse email (optionnel)">
+    Si le chauffeur a un email professionnel, saisissez-le ici. L'email est optionnel — l'application fonctionne avec le numéro de téléphone seul.
+  </Step>
+  <Step title="Saisissez les détails du permis">
+    - **Numéro de permis** — le numéro imprimé sur son permis de conduire.
+    - **Date d'expiration du permis** — Druma vous alertera avant l'expiration du permis.
+
+    <Note>
+    Il n'y a pas de champ pour enregistrer la catégorie de permis (CE/C) — Druma ne suit que le numéro de permis et la date d'expiration.
+    </Note>
+  </Step>
+  <Step title="Saisissez les détails de la carte tachygraphe (optionnel)">
+    Si vous voulez suivre le numéro de carte tachygraphe numérique du chauffeur, saisissez-le ici. C'est optionnel mais utile pour le recoupement avec un logiciel d'analyse tachygraphe.
+  </Step>
+  <Step title="Ajoutez des notes">
+    Utilisez le champ **Notes** pour tout ce qui est pertinent — langues parlées, compétences spéciales (certifié ADR, opérateur de grue), ou toute note opérationnelle pour l'équipe dispatch.
+  </Step>
+  <Step title="Enregistrez le chauffeur">
+    Cliquez sur **Enregistrer**. Le chauffeur apparaît maintenant dans la liste déroulante d'affectation de chauffeur lors de la création de commandes.
   </Step>
 </Steps>
 
-<Warning>
-Ce lien est unique à ce chauffeur. Ne partagez pas le lien d'un chauffeur avec un autre.
-</Warning>
+---
+
+## Configurer l'application chauffeur (connexion téléphone + PIN)
+
+Une fois qu'un chauffeur est enregistré, il a besoin d'un PIN avant de pouvoir se connecter — l'application chauffeur est une Progressive Web App (PWA), partagée à une adresse commune pour chaque chauffeur, et les chauffeurs se connectent avec leur numéro de téléphone et un PIN plutôt qu'un lien personnel.
+
+<Steps>
+  <Step title="Ouvrez le profil du chauffeur">
+    Accédez à Flotte → Chauffeurs et cliquez sur le nom du chauffeur.
+  </Step>
+  <Step title="Définissez un PIN">
+    Trouvez la section **Connexion téléphone + PIN** et cliquez sur **Définir le PIN** — saisissez-en un vous-même, ou cliquez sur **Générer** pour un code aléatoire à 6 chiffres — puis cliquez sur **Enregistrer le PIN**.
+  </Step>
+  <Step title="Communiquez le PIN au chauffeur">
+    Partagez le PIN directement avec le chauffeur (en personne ou par un message rapide) — il n'y a pas de lien à envoyer.
+  </Step>
+  <Step title="Le chauffeur installe et se connecte">
+    Le chauffeur installe l'application chauffeur Druma (voir [Installer l'application chauffeur](/fr/driver/installing-the-app)) et se connecte avec son numéro de téléphone et ce PIN. À la première connexion, il est invité à personnaliser le PIN — en choisissant son propre code à 6 chiffres pour remplacer celui que vous avez défini.
+  </Step>
+</Steps>
+
+<Note>
+Si un chauffeur perd son téléphone, n'essayez pas de renvoyer quoi que ce soit — ouvrez son profil et cliquez sur **Révoquer les sessions des appareils** pour forcer une nouvelle connexion sur tout nouvel appareil.
+</Note>
 
 ---
 
-## Suivi des documents des chauffeurs
+## Notifications push
 
-Druma suit automatiquement les dates d'expiration du permis de conduire, du CPC et du certificat ADR. Vous recevrez des alertes lorsqu'une date d'expiration approche.
+Quand une commande est confirmée et qu'un chauffeur est assigné, il reçoit une notification push pour l'informer qu'il a une nouvelle mission.
 
-Consultez tous les documents des chauffeurs et leurs statuts dans **Flotte → Chauffeurs → onglet Documents**.
+- **Android** — les notifications push fonctionnent automatiquement via FCM (Firebase Cloud Messaging) quand le chauffeur enregistre l'application sur son écran d'accueil.
+- **iPhone (iOS)** — les notifications push sont disponibles via Safari sur iOS 16.4 et ultérieur. Le chauffeur doit d'abord enregistrer l'application sur son écran d'accueil, puis autoriser les notifications quand demandé.
+
+Si un chauffeur signale ne pas recevoir de notifications, vérifiez que :
+1. Il a bien enregistré l'application sur son écran d'accueil (pas seulement mis en favori dans le navigateur).
+2. Il a autorisé les notifications quand l'application l'a demandé — il peut vérifier cela dans Paramètres → Notifications de son téléphone.
+
+---
+
+## Double équipage (deux chauffeurs, un camion)
+
+Pour les longs trajets internationaux où deux chauffeurs partagent la cabine, Druma prend en charge le double équipage — configuré sur le **camion**, pas sur la commande.
+
+Ouvrez le profil du camion et trouvez la section **Affectation** : elle a une liste déroulante **Chauffeur principal** et **Deuxième chauffeur**, toutes deux toujours visibles (il n'y a pas de bascule pour l'activer). Définissez les deux et chaque commande affectée ensuite à ce camion porte les deux chauffeurs.
+
+<Note>
+Les deux chauffeurs doivent être ajoutés dans Druma et avoir un accès PWA actif pour que le double équipage fonctionne correctement. Les heures de conduite sont suivies séparément pour chaque chauffeur.
+</Note>
+
+---
+
+## Suivi d'expiration des documents
+
+Druma suit cinq documents de chauffeur datés d'expiration, chacun affichant un badge **Expire bientôt** ou **Expiré** à côté de son champ de date :
+
+- **Permis de conduire** et numéro/expiration du **CPC (Certificat de compétence professionnelle)** — sur l'onglet **Permis** du profil chauffeur.
+- **Certificat ADR**, **Certificat médical**, et numéro/expiration de la **carte tachygraphe** — sur l'onglet **Certificats** du profil chauffeur, qui affiche aussi un résumé global d'expiration des documents pour le chauffeur.
+
+<Steps>
+  <Step title="Ouvrez le profil du chauffeur">
+    Accédez à Flotte → Chauffeurs et cliquez sur le nom du chauffeur.
+  </Step>
+  <Step title="Accédez à l'onglet concerné">
+    **Permis** pour le permis de conduire et le CPC, ou **Certificats** pour l'ADR, le médical, et la carte tacho.
+  </Step>
+  <Step title="Saisissez ou mettez à jour la date d'expiration">
+    Enregistrez le profil — le badge et tout statut récapitulatif se mettent à jour immédiatement.
+  </Step>
+</Steps>
+
+<Note>
+Un document est signalé **Expire bientôt** dans les 30 jours de sa date d'expiration, et **Expiré** une fois cette date passée — c'est un seuil fixe sans interface de paramètres pour l'ajuster.
+</Note>
+
+---
+
+## Désactiver un chauffeur
+
+Si un chauffeur quitte votre entreprise ou n'est plus disponible, vous pouvez désactiver son compte :
+
+- Ouvrez le profil du chauffeur.
+- Cliquez sur la bascule **Actif** pour la faire passer à **Inactif**.
+- Les chauffeurs inactifs n'apparaissent plus dans la liste déroulante d'affectation et ne peuvent plus se connecter à l'application chauffeur.
+
+Leur historique de commande est entièrement préservé. Vous pouvez réactiver le chauffeur à tout moment.
+
+---
+
+<Card title="Installer l'application chauffeur" icon="mobile" href="/fr/driver/installing-the-app">
+  Instructions étape par étape pour aider vos chauffeurs à installer et configurer la PWA Druma sur leur téléphone.
+</Card>
 
 <Card title="Heures des chauffeurs" icon="clock" href="/fr/planner/driver-hours">
-  Suivez le temps de conduite et de repos conformément au règlement EU 561/2006.
+  Suivez les limites d'heures de conduite UE et recevez des alertes quand les chauffeurs approchent leurs limites hebdomadaires.
 </Card>

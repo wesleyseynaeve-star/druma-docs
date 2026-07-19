@@ -1,38 +1,137 @@
 ---
 title: "Průběh podepisování eCMR"
-description: "Jak procházejí tři podpisy eCMR — odesílatel, řidič a příjemce — a co se stane, když někdo odmítne podepsat."
-icon: "pen"
+description: "Jak Druma shromažďuje všechny tři vyžadované podpisy — odesílatel, řidič a příjemce — napříč webovou aplikací plánovače a telefonem řidiče."
+icon: "pen-to-square"
 ---
 
-## Tři podpisy eCMR
+Aby bylo eCMR právně kompletní, vyžaduje tři podpisy: odesílatele, řidiče/dopravce a příjemce. Zde je, jak každý krok v praxi funguje u nativního poskytovatele Druma — všimněte si, že odesílatel a řidič **ne**podepisují na stejném zařízení.
 
-Platný eCMR vyžaduje tři podpisy v pořadí:
-
-1. **Odesílatel** — potvrdí, že zboží bylo naloženo
-2. **Řidič** — potvrdí přijmutí zboží
-3. **Příjemce** — potvrdí doručení
-
-## Průběh podpisu odesílatele
-
-Po vydání eCMR obdrží odesílatel e-mail s odkazem pro podpis nebo QR kódem. Klepnutím na odkaz se zobrazí podrobnosti eCMR a formulář podpisu. Po podpisu odesílatel obdrží potvrzení e-mailem.
-
-## Průběh podpisu řidiče
-
-Řidič vidí eCMR ve své aplikaci. Na záložce eCMR objednávky klepne na **Podepsat jako řidič** a podepíše prstem.
-
-## Průběh podpisu příjemce
-
-Při doručení řidič předá telefon příjemci. Příjemce klepne na **Podepsat jako příjemce** a podepíše. Po třetím podpisu se vygeneruje certifikované PDF a odešle se všem stranám.
-
-## Co se stane po dokončení všech tří podpisů
-
-- Certifikované PDF eCMR se automaticky stáhne a uloží na objednávku
-- Všechny tři strany obdrží e-mail s kopií podepsaného dokumentu
-- Fakturace eCMR se zaznamená
-
-<Card title="Záložní papírový CMR" icon="file" href="/en/ecmr/paper-cmr-fallback">
-  Co dělat, když eCMR nelze dokončit digitálně.
-</Card>
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/ecmr/signing-flow).
+## Přehled třístranného procesu podepisování
+
+```
+Webová aplikace plánovače (kancelář/počítač)   Telefon řidiče        Vlastní zařízení příjemce
+─────────────────────────────────────────    ──────────────────    ───────────────────────
+1. Podepisuje odesílatel (záložka Dokumenty)  2. Podepisuje řidič    3. Podepisuje příjemce
+        ↓                                          ↓                       ↓
+                                Pečeť PAdES aplikována po dokončení všech tří
+                                       Vydáno certifikované PDF
+```
+
+Tři podpisy jsou na sobě nezávislé — neexistuje vynucené pořadí. Jakmile existují všechny tři, Druma sestaví certifikované PDF a aplikuje pečeť PAdES.
+
+---
+
+## Krok 1 — Podepisuje odesílatel (webová aplikace plánovače)
+
+Podpis odesílatele se zachycuje ve webové aplikaci Druma, ne na telefonu řidiče. Kdokoli má objednávku otevřenou — obvykle plánovač nebo dispečer — ho zachytí ze záložky **Dokumenty** stránky detailu objednávky.
+
+<Steps>
+  <Step title="Otevřete záložku Dokumenty objednávky">
+    Ve webové aplikaci Druma otevřete objednávku a přejděte na záložku **Dokumenty**. Sekce **Podpisy odesílatele / řidiče** zobrazuje aktuální stav všech tří stran.
+  </Step>
+  <Step title="Klikněte na Podepsat jako odesílatel">
+    Klikněte na **Podepsat jako odesílatel**. Otevře se podpisová plocha přímo v panelu detailu objednávky.
+  </Step>
+  <Step title="Nakreslete podpis a potvrďte jméno">
+    Nakreslete podpis a zadejte jméno tiskacím písmem — výchozí je jméno přihlášeného uživatele, ale lze ho změnit, aby odráželo skutečného podepisujícího (např. vedoucího skladu přítomného při vyzvednutí, který si vezme zařízení operátora, nebo podpis osobně, pokud je operátor na místě).
+  </Step>
+  <Step title="Odešlete">
+    Klikněte na **Odeslat podpis**. Odznak Odesílatel se zbarví zeleně a zobrazí datum podpisu.
+  </Step>
+</Steps>
+
+---
+
+## Krok 2 — Podepisuje řidič (telefon řidiče)
+
+Řidič podepisuje samostatně, na svém vlastním telefonu, kdykoli — není vyžadováno, aby předtím existoval podpis odesílatele.
+
+<Steps>
+  <Step title="Řidič otevře Podepsat eCMR">
+    V aplikaci pro řidiče řidič na objednávce klepne na **Podepsat eCMR**.
+  </Step>
+  <Step title="Řidič podepisuje">
+    Řidič nakreslí podpis, potvrdí jméno tiskacím písmem a klepne na **Odeslat podpis**. Panel zobrazuje odznaky stavu pouze pro čtení u všech tří stran, ale řidič může odeslat pouze svůj vlastní.
+  </Step>
+</Steps>
+
+<Note>
+Aplikace pro řidiče neblokuje postup podle stavu podpisu odesílatele — řidič může posunout objednávku dál bez ohledu na to, zda odesílatel již podepsal.
+</Note>
+
+---
+
+## Krok 3 — Příjemce podepisuje při doručení
+
+Příjemce podepisuje na **vlastním zařízení** přes sdílený odkaz nebo QR kód. Tento odkaz se generuje a zobrazuje z **webové aplikace plánovače** (záložka Dokumenty stránky detailu objednávky) — ne z telefonu řidiče.
+
+<Steps>
+  <Step title="Vygenerujte odkaz pro příjemce">
+    Ve webové aplikaci Druma otevřete záložku Dokumenty objednávky a klikněte na **Odkaz pro podpis příjemce** pro vygenerování sdíleného odkazu a QR kódu.
+  </Step>
+  <Step title="Odešlete ho příjemci">
+    Zkopírujte odkaz a odešlete ho příjemci (např. přes WhatsApp, SMS nebo e-mail) před doručením nebo při něm, nebo zobrazte QR kód, pokud je náhodou přítomen plánovač. Na jeho straně není potřeba žádný účet Druma ani stahování aplikace.
+  </Step>
+  <Step title="Příjemce zkontroluje dokument">
+    Na svém vlastním zařízení příjemce vidí zobrazení CMR pouze pro čtení — zboží, adresy, hmotnost a jakékoli již zachycené podpisy.
+  </Step>
+  <Step title="Příjemce podepisuje (a volitelně přidá výhrady)">
+    Příjemce nakreslí podpis a zadá jméno. Pokud existují jakékoli problémy s doručením — poškození, manko nebo nesrovnalost — může před potvrzením přidat poznámku do pole **Výhrady / pozorování** (políčko CMR 24).
+  </Step>
+  <Step title="Vydáno certifikované PDF">
+    Jakmile jsou všechny tři podpisy dokončeny, Druma sestaví certifikované PDF eCMR a aplikuje **digitální pečeť PAdES**. Je dostupné přes tlačítko **Zobrazit eCMR** v záložce Dokumenty objednávky.
+  </Step>
+</Steps>
+
+<Note>
+Sdílený odkaz pro příjemce vyprší po 30 dnech. Pokud vyprší dřív, než příjemce podepíše, vygenerujte nový ze záložky Dokumenty.
+</Note>
+
+<Note>
+Pokud je vaše společnost stále na **existující konfiguraci TransFollow** (TransFollow už nelze nově vybrat — viz [Poskytovatelé eCMR](/cs/ecmr/ecmr-providers)), postup podepisování příjemce je vlastní QR postup TransFollow, ne zde popsaný nativní sdílený odkaz.
+</Note>
+
+---
+
+## Přijetí s výhradami (políčko CMR 24)
+
+Příjemce nemusí odmítnout doručení, pokud zboží dorazí poškozené nebo neúplné. Správná právní cesta je **přijmout s výhradami**: příjemce přijme doručení, ale zaznamená svá pozorování do políčka CMR 24. To chrání právo příjemce podat později reklamaci podle článku 30 CMR.
+
+Když příjemce přidá výhrady:
+
+- Poznámky se propíší do zapečetěného PDF pod políčkem 24 („Výhrady a pozorování příjemce"), čímž se stanou součástí právního záznamu odolného proti manipulaci.
+- Stránka detailu objednávky v Druma zobrazí **oranžový banner „Výhrady příjemce"**, aby o tom váš tým okamžitě věděl.
+- Objednávka stále postoupí do stavu Doručeno — přijetí s výhradami není totéž jako odmítnutí.
+
+<Note>
+Pokud příjemce odmítne podepsat úplně, použijte místo toho proces Záložní papírové CMR. Odmítnutí je samostatná cesta odlišná od přijetí s výhradami.
+</Note>
+
+---
+
+## Sledování stavu podpisu
+
+Kdykoli — před, během nebo po procesu podepisování — můžete zkontrolovat, které strany podepsaly:
+
+1. Otevřete objednávku ve webové aplikaci Druma
+2. Přejděte na záložku **Dokumenty**
+3. Sekce **Podpisy odesílatele / řidiče** zobrazuje odznak pro Odesílatele, Řidiče a Příjemce — po podpisu zelený se zaškrtnutím, jinak šedý. Pouze řádek Odesílatel zobrazuje časové razítko podpisu.
+
+Dispečeři v kanceláři mohou sledovat stav podpisu v reálném čase bez telefonování řidiči.
+
+---
+
+## Co když je podepisující nedostupný?
+
+Pokud odesílatel nebo příjemce odmítne podepsat, není přítomen, nebo technický problém brání podpisu:
+
+<CardGroup cols={2}>
+  <Card title="Záložní papírové CMR" icon="file-alt" href="/cs/ecmr/paper-cmr-fallback">
+    Co dělat, když eCMR není pro zásilku praktické.
+  </Card>
+  <Card title="Nahrávání dokumentů" icon="upload" href="/en/ecmr/uploading-documents">
+    Jak nahrát naskenované papírové CMR nebo jiný doklad o doručení k objednávce.
+  </Card>
+</CardGroup>

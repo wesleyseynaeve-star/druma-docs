@@ -1,115 +1,137 @@
 ---
 title: "Przepływ podpisywania eCMR"
-description: "Jak kierowca zbiera wszystkie trzy wymagane podpisy — nadawcy, przewoźnika i odbiorcy — za pomocą aplikacji mobilnej Druma."
+description: "Jak Druma zbiera wszystkie trzy wymagane podpisy — nadawcy, kierowcy i odbiorcy — między platformą webową planisty a telefonem kierowcy."
 icon: "pen-to-square"
 ---
 
-eCMR wymaga trzech podpisów, aby był prawnie kompletny: nadawca podpisuje przy odbiorze, kierowca/przewoźnik podpisuje przy odbiorze, a odbiorca podpisuje przy dostawie. Cały proces odbywa się na telefonie kierowcy.
+eCMR wymaga trzech podpisów, aby być prawnie kompletny: nadawcy, kierowcy/przewoźnika i odbiorcy. Oto jak każdy krok działa w praktyce z natywnym dostawcą Druma — zwróć uwagę, że nadawca i kierowca **nie** podpisują na tym samym urządzeniu.
 
 ---
 
 ## Przegląd trójstronnego procesu podpisywania
 
 ```
-Miejsce odbioru                    Miejsce dostawy
-─────────────────────────────      ──────────────────────────
-1. Nadawca podpisuje       →       3. Odbiorca podpisuje
-2. Kierowca podpisuje      →              ↓
-                                    Wydano certyfikowany PDF
+Platforma webowa planisty (biuro)     Telefon kierowcy       Własne urządzenie odbiorcy
+──────────────────────────────────    ──────────────────    ───────────────────────
+1. Podpisuje nadawca (karta Dokumenty) 2. Podpisuje kierowca  3. Podpisuje odbiorca
+        ↓                                      ↓                       ↓
+                              Pieczęć PAdES nakładana, gdy wszystkie trzy są gotowe
+                                       Wydawany certyfikowany PDF
 ```
 
-Kroki 1 i 2 odbywają się w tym samym czasie i miejscu (odbiór). Krok 3 odbywa się później w miejscu dostawy.
+Trzy podpisy są od siebie niezależne — nie ma wymuszonej kolejności. Gdy wszystkie trzy istnieją, Druma buduje certyfikowany PDF i nakłada pieczęć PAdES.
 
 ---
 
-## Krok 1 — Nadawca podpisuje przy odbiorze
+## Krok 1 — Podpisuje nadawca (platforma webowa planisty)
+
+Podpis nadawcy jest przechwytywany na platformie webowej Druma, nie na telefonie kierowcy. Osoba, która ma otwarte zlecenie — zwykle planista lub dyspozytor — rejestruje go z karty **Dokumenty** strony szczegółów zlecenia.
 
 <Steps>
-  <Step title="Kierowca otwiera eCMR">
-    W miejscu odbioru kierowca otwiera zlecenie w aplikacji Druma i klika sekcję **eCMR**.
+  <Step title="Otwórz kartę Dokumenty zlecenia">
+    Na platformie webowej Druma otwórz zlecenie i przejdź do karty **Dokumenty**. Sekcja **Podpisy nadawcy/kierowcy** pokazuje bieżący status wszystkich trzech stron.
   </Step>
-  <Step title="Kierowca podaje telefon nadawcy">
-    Przedstawiciel nadawcy (kierownik magazynu, nadzorca załadunku) bierze telefon kierowcy.
+  <Step title="Kliknij Podpisz jako nadawca">
+    Kliknij **Podpisz jako nadawca**. Otwiera to pad podpisu bezpośrednio w panelu szczegółów zlecenia.
   </Step>
-  <Step title="Nadawca przegląda dokument">
-    Nadawca przewija pola eCMR i potwierdza, że opis towarów, ilość i stan zgadzają się z tym, co jest ładowane.
+  <Step title="Narysuj podpis i potwierdź imię">
+    Narysuj podpis i wpisz imię drukowanymi literami — domyślnie jest to imię zalogowanej osoby, ale można je zmienić, aby odzwierciedlało faktycznego sygnatariusza (np. kierownika magazynu obecnego przy odbiorze, przekazującego urządzenie operatora, albo podpisującego osobiście, jeśli operator jest na miejscu).
   </Step>
-  <Step title="Nadawca podpisuje palcem">
-    Nadawca klika **Podpisz jako nadawca**, rysuje podpis na pad podpisu, wpisuje pełne imię i nazwisko i rolę, a następnie klika **Potwierdź**.
+  <Step title="Prześlij">
+    Kliknij **Prześlij podpis**. Odznaka Nadawcy zmienia kolor na zielony i pokazuje datę podpisania.
   </Step>
 </Steps>
 
 ---
 
-## Krok 2 — Kierowca/Przewoźnik podpisuje przy odbiorze
+## Krok 2 — Podpisuje kierowca (telefon kierowcy)
+
+Kierowca podpisuje osobno, na własnym telefonie, w dowolnym momencie — nie ma wymogu, aby podpis nadawcy istniał wcześniej.
 
 <Steps>
-  <Step title="Kierowca odbiera telefon">
-    Aplikacja automatycznie przechodzi do ekranu podpisu przewoźnika.
+  <Step title="Kierowca otwiera Podpisz eCMR">
+    W aplikacji kierowcy kierowca stuka **Podpisz eCMR** na zleceniu.
   </Step>
   <Step title="Kierowca podpisuje">
-    Kierowca rysuje podpis, potwierdza imię i klika **Potwierdź**.
-  </Step>
-  <Step title="Podpisy przy odbiorze zablokowane">
-    Oba podpisy są teraz przesyłane do TransFollow i zablokowane. Status eCMR zmienia się na "Oczekuje na podpis odbiorcy."
+    Kierowca rysuje podpis, potwierdza imię drukowanymi literami i stuka **Prześlij podpis**. Arkusz pokazuje odznaki statusu tylko do odczytu dla wszystkich trzech stron, ale kierowca może przesłać tylko swój.
   </Step>
 </Steps>
 
 <Note>
-Kierowca musi podpisać natychmiast po nadawcy. Aplikacja nie pozwoli kierowcy przejść do kroku dostawy do czasu ukończenia obu podpisów przy odbiorze.
+Aplikacja kierowcy nie blokuje postępu w oparciu o status podpisu nadawcy — kierowca może przesuwać zlecenie do przodu niezależnie od tego, czy nadawca już podpisał.
 </Note>
 
 ---
 
 ## Krok 3 — Odbiorca podpisuje przy dostawie
 
-<Steps>
-  <Step title="Kierowca przybywa do dostawy">
-    W miejscu dostawy kierowca otwiera zlecenie w aplikacji i klika sekcję **eCMR**.
-  </Step>
-  <Step title="Kierowca podaje telefon odbiorcy">
-    Przedstawiciel odbiorcy bierze telefon kierowcy.
-  </Step>
-  <Step title="Odbiorca przegląda i podpisuje">
-    Odbiorca przegląda dokument, klika **Podpisz jako odbiorca**, rysuje podpis, wpisuje imię i rolę, a następnie klika **Potwierdź**.
-  </Step>
-  <Step title="Wydano certyfikowany PDF">
-    Wszystkie trzy podpisy są kompletne. TransFollow natychmiast generuje certyfikowany eCMR PDF.
-  </Step>
-</Steps>
-
----
-
-## Opcja kodu QR: Odbiorca podpisuje na własnym urządzeniu
+Odbiorca podpisuje na **własnym urządzeniu** przez link udostępniania lub kod QR. Ten link jest generowany i pokazywany z **platformy webowej planisty** (karta Dokumenty strony szczegółów zlecenia) — nie z telefonu kierowcy.
 
 <Steps>
-  <Step title="Kliknij Kod QR">
-    Na ekranie podpisu odbiorcy kierowca klika **Pokaż kod QR**.
+  <Step title="Wygeneruj link odbiorcy">
+    Na platformie webowej Druma otwórz kartę Dokumenty zlecenia i kliknij **Link do podpisu odbiorcy**, aby wygenerować link udostępniania i kod QR.
   </Step>
-  <Step title="Odbiorca skanuje kod">
-    Odbiorca skanuje kod QR własnym telefonem. Otwiera się bezpieczna, jednorazowa strona internetowa z dokumentem eCMR.
+  <Step title="Wyślij go odbiorcy">
+    Skopiuj link i wyślij go odbiorcy (np. przez WhatsApp, SMS lub e-mail) przed lub przy dostawie, albo pokaż kod QR, jeśli akurat obecny jest planista. Nie jest potrzebne konto Druma ani pobieranie aplikacji po ich stronie.
   </Step>
-  <Step title="Odbiorca podpisuje na własnym telefonie">
-    Odbiorca przegląda, podpisuje, wpisuje imię i klika Potwierdź. Podpis jest przesyłany bezpośrednio do TransFollow.
+  <Step title="Odbiorca przegląda dokument">
+    Na własnym urządzeniu odbiorca widzi widok CMR tylko do odczytu — towary, adresy, wagę i wszelkie już zebrane podpisy.
+  </Step>
+  <Step title="Odbiorca podpisuje (i opcjonalnie dodaje zastrzeżenia)">
+    Odbiorca rysuje podpis i wpisuje imię. Jeśli są jakiekolwiek problemy z dostawą — uszkodzenie, brak lub rozbieżność — może dodać notatkę w polu **Zastrzeżenia / obserwacje** (pole CMR 24) przed potwierdzeniem.
+  </Step>
+  <Step title="Wydawany certyfikowany PDF">
+    Gdy wszystkie trzy podpisy są kompletne, Druma buduje certyfikowany PDF eCMR i nakłada **cyfrową pieczęć PAdES**. Jest dostępny przez przycisk **Zobacz eCMR** w karcie Dokumenty zlecenia.
   </Step>
 </Steps>
 
 <Note>
-Link kodu QR wygasa po 30 minutach. Jeśli odbiorca nie podpisze w tym czasie, kierowca może wygenerować nowy kod QR.
+Link udostępniania dla odbiorcy wygasa po 30 dniach. Jeśli wygaśnie, zanim odbiorca podpisze, wygeneruj nowy z karty Dokumenty.
+</Note>
+
+<Note>
+Jeśli Twoja firma jest wciąż na **wcześniejszej konfiguracji TransFollow** (TransFollow nie może już zostać nowo wybrany — zobacz [Dostawcy eCMR](/pl/ecmr/ecmr-providers)), przepływ podpisywania odbiorcy to własny przepływ QR TransFollow, a nie natywny link udostępniania opisany tutaj.
+</Note>
+
+---
+
+## Akceptacja z zastrzeżeniami (pole CMR 24)
+
+Odbiorca nie musi odmawiać dostawy, jeśli towary docierają uszkodzone lub niekompletne. Właściwą prawnie ścieżką jest **akceptacja z zastrzeżeniami**: odbiorca akceptuje dostawę, ale zapisuje swoje obserwacje w polu CMR 24. Chroni to prawo odbiorcy do późniejszego złożenia roszczenia na mocy artykułu 30 CMR.
+
+Gdy odbiorca dodaje zastrzeżenia:
+
+- Uwagi są odciskane w opieczętowanym PDF w polu 24 ("Zastrzeżenia i obserwacje odbiorcy"), stając się częścią odpornego na manipulacje zapisu prawnego.
+- Strona szczegółów zlecenia w Druma pokazuje **bursztynowy baner "Zastrzeżenia odbiorcy"**, aby Twój zespół natychmiast o tym wiedział.
+- Zlecenie nadal przechodzi do statusu Dostarczone — akceptacja z zastrzeżeniami to nie to samo co odmowa.
+
+<Note>
+Jeśli odbiorca całkowicie odmawia podpisania, użyj zamiast tego procesu Papierowy CMR jako alternatywa. Odmowa to osobna ścieżka od akceptacji z zastrzeżeniami.
 </Note>
 
 ---
 
 ## Śledzenie statusu podpisu
 
-W dowolnym momencie możesz sprawdzić, które strony podpisały:
+W dowolnym momencie — przed, w trakcie lub po procesie podpisywania — możesz sprawdzić, które strony podpisały:
 
-1. Otwórz zlecenie w Druma (aplikacja internetowa lub mobilna)
-2. Kliknij kartę **eCMR**
-3. Panel statusu pokazuje trzy wiersze — Nadawca, Przewoźnik, Odbiorca — każdy z "Podpisano ✓" ze znacznikiem czasu lub "Oczekujące"
+1. Otwórz zlecenie na platformie webowej Druma
+2. Przejdź do karty **Dokumenty**
+3. Sekcja **Podpisy nadawcy/kierowcy** pokazuje odznakę dla każdego z Nadawcy, Kierowcy i Odbiorcy — zieloną z znacznikiem po podpisaniu, szarą w przeciwnym razie. Tylko wiersz Nadawcy pokazuje znacznik czasu podpisania.
+
+Dyspozytorzy w biurze mogą monitorować status podpisu w czasie rzeczywistym bez dzwonienia do kierowcy.
 
 ---
 
-<Card title="Papierowy CMR jako alternatywa" icon="file-alt" href="/en/ecmr/paper-cmr-fallback">
-  Jak przełączyć zlecenie z eCMR na papierowy CMR w połowie procesu.
-</Card>
+## Co jeśli sygnatariusz jest niedostępny?
+
+Jeśli nadawca lub odbiorca odmawia podpisania, nie jest obecny, albo problem techniczny uniemożliwia podpisanie:
+
+<CardGroup cols={2}>
+  <Card title="Papierowy CMR jako alternatywa" icon="file-alt" href="/pl/ecmr/paper-cmr-fallback">
+    Co zrobić, gdy eCMR nie jest praktyczny dla przesyłki.
+  </Card>
+  <Card title="Przesyłanie dokumentów" icon="upload" href="/pl/driver/uploading-documents">
+    Jak przesłać zeskanowany papierowy CMR lub inny dokument dostawy do zlecenia.
+  </Card>
+</CardGroup>

@@ -6,57 +6,93 @@ icon: "landmark"
 
 ## Czym jest e-Factura
 
-e-Factura to rumuński obowiązkowy system fakturowania elektronicznego, obsługiwany przez ANAF (Rumuński Krajowy Urząd Podatkowy). Od 2024 roku wszystkie transakcje B2B między rumuńskimi firmami zarejestrowanymi do VAT muszą być raportowane do ANAF w formacie UBL XML.
+e-Factura to rumuński obowiązkowy system fakturowania elektronicznego, obsługiwany przez ANAF (Rumuński Krajowy Urząd Podatkowy). Od 2024 roku wszystkie transakcje B2B między rumuńskimi firmami zarejestrowanymi do VAT muszą być raportowane do ANAF w formacie UBL XML — standardowym formacie faktury elektronicznej używanym w całej Europie.
 
-Każda faktura wystawiona dla rumuńskiej firmy z CIF musi być wysłana do ANAF elektronicznie, nie tylko do klienta. Druma obsługuje to automatycznie po wygenerowaniu faktury.
+Mówiąc wprost: każda faktura, którą wystawiasz rumuńskiej firmie z CIF (numerem rejestracji VAT), musi zostać wysłana do ANAF elektronicznie, nie tylko do Twojego klienta. Druma obsługuje to automatycznie po wygenerowaniu faktury.
 
 ## Jak Druma obsługuje e-Factura
 
 Nie musisz logować się do portalu ANAF, generować plików XML ani nic robić ręcznie. Oto co dzieje się automatycznie:
 
-1. Generujesz fakturę dla rumuńskiego klienta posiadającego CIF na rekordzie klienta
+1. Generujesz fakturę dla rumuńskiego klienta posiadającego CIF na swoim rekordzie klienta
 2. Druma tworzy plik UBL XML w prawidłowym formacie ANAF
-3. Druma składa XML do ANAF przez API SPV
-4. ANAF zwraca identyfikator składania i status akceptacji lub odrzucenia
+3. Druma składa XML do ANAF przez API SPV (Spațiul Privat Virtual)
+4. ANAF zwraca identyfikator złożenia oraz, po przetworzeniu, status akceptacji lub odrzucenia
 5. Rekord faktury w Druma aktualizuje się, pokazując bieżący status e-Factura
 
 ## Śledzenie statusu e-Factura
 
+Każda faktura wymagająca złożenia e-Factura pokazuje odznakę statusu na stronie szczegółów faktury pod kartą **e-Factura**:
+
 | Status | Co oznacza |
 |---|---|
-| **Oczekujące** | Czeka na złożenie (zwykle składa się w ciągu kilku minut) |
-| **Złożone** | XML wysłany do ANAF — czeka na przetworzenie |
+| **Oczekujące** | Czeka na złożenie (zwykle składa się w ciągu kilku minut od wygenerowania faktury) |
+| **Złożone** | XML wysłany do ANAF — czeka na przetworzenie przez ANAF |
 | **Zaakceptowane** | ANAF zweryfikował i zaakceptował fakturę |
 | **Odrzucone** | ANAF znalazł błąd — sprawdź kod błędu po szczegóły |
 
+<Note>
+System ANAF regularnie doświadcza przestojów, szczególnie w poranki dni roboczych i na koniec miesiąca. Jeśli Twoja faktura pokazuje "Złożone" przez ponad kilka godzin, zwykle jest to problem po stronie ANAF, nie błąd w Druma. Kolejka ponowień obsługuje to automatycznie.
+</Note>
+
 ## Automatyczna kolejka ponowień
 
-Jeśli składanie się nie powiedzie z powodu niedostępności ANAF, Druma ponawia automatycznie:
-- Pierwsze ponowienie: **1 godzinę** po niepowodzeniu
-- Drugie ponowienie: **4 godziny** po pierwszym ponowieniu
-- Trzecie ponowienie: **24 godziny** po drugim ponowieniu
+Jeśli złożenie się nie powiedzie z powodu niedostępności ANAF, Druma ponawia automatycznie, używając wykładniczego wycofania, maksymalnie 3 próby łącznie (oryginalna próba plus 2 ponowienia):
+
+- Pierwsze ponowienie: mniej więcej **1 godzinę** po niepowodzeniu (±25% losowego odchylenia)
+- Drugie ponowienie: mniej więcej **2 godziny** po pierwszym ponowieniu (±25% losowego odchylenia)
+
+Jeśli trzecia próba również się nie powiedzie, faktura przechodzi bezpośrednio do statusu **Nieudane** — nie ma dalszych automatycznych ponowień po tym. Możesz wtedy uruchomić **Ręczne ponowienie** z karty e-Factura na stronie faktury.
+
+## Przeglądanie statusu e-Factura
+
+<Steps>
+  <Step title="Otwórz fakturę">
+    Przejdź do **Fakturowanie** i kliknij fakturę, którą chcesz sprawdzić.
+  </Step>
+  <Step title="Kliknij kartę e-Factura">
+    Karta e-Factura pokazuje bieżący status, znacznik czasu złożenia, identyfikator złożenia ANAF (po otrzymaniu) i wszelkie komunikaty błędów.
+  </Step>
+  <Step title="Jeśli odrzucone, przeczytaj kod błędu">
+    Komunikaty odrzucenia pochodzą od ANAF i zawierają kod błędu oraz opis. Typowe są wylistowane niżej.
+  </Step>
+</Steps>
 
 ## Typowe błędy odrzucenia
 
 | Błąd | Prawdopodobna przyczyna | Jak naprawić |
 |---|---|---|
-| **Nieprawidłowy CIF** | Numer VAT klienta jest błędny | Przejdź do **Klienci** — edytuj klienta — popraw pole CIF |
-| **Nieprawidłowy format adresu** | Pole ulicy, miasta lub województwa nie pasuje do oczekiwanego formatu ANAF | Edytuj adres klienta |
-| **Brakujące obowiązkowe pole** | Wymagane pole XML jest puste | Sprawdź fakturę pod kątem brakujących danych klienta |
+| **Nieprawidłowy CIF** | Numer VAT klienta na jego rekordzie jest błędny lub nie jest zarejestrowany do VAT | Przejdź do **Klienci** → edytuj klienta → popraw pole CIF |
+| **Nieprawidłowy format adresu** | Pole ulicy, miasta lub województwa nie pasuje do oczekiwanego formatu ANAF | Edytuj adres klienta — upewnij się, że województwo (județ) jest ustawione i używa prawidłowej rumuńskiej nazwy |
+| **Brakujące obowiązkowe pole** | Wymagane pole XML jest puste | Sprawdź fakturę pod kątem brakujących danych klienta — zwykle CIF, adres lub nazwa klienta |
+| **Zduplikowana faktura** | ANAF ma już złożenie z tym samym numerem faktury | Zwykle oznacza to, że wcześniejsze złożenie się powiodło, ale Druma nie otrzymała potwierdzenia — sprawdź bezpośrednio portal ANAF SPV |
 
-## Kiedy e-Factura NIE MA zastosowania
+## Ręczne ponowienie
 
-Składanie e-Factura jest wymagane tylko dla rumuńskich klientów zarejestrowanych do VAT. Nie dotyczy:
-- Faktur transgranicznych w UE (klienci spoza Rumunii)
+Jeśli automatyczne ponowienia zawiodą albo poprawiłeś błąd i chcesz spróbować ponownie natychmiast:
+
+Przejdź do **Fakturowanie** → otwórz fakturę → **karta e-Factura** → kliknij **Wyślij ponownie do ANAF**. Druma natychmiast ponownie wysyła XML.
+
+## Kiedy e-Factura NIE ma zastosowania
+
+Składanie e-Factura jest wymagane tylko dla rumuńskich klientów zarejestrowanych do VAT. **Nie** dotyczy:
+
+- Transgranicznych faktur UE (klienci spoza Rumunii)
 - Klientów bez rumuńskiego CIF
-- Faktur dla osób prywatnych (niekomercyjnych)
+- Faktur dla osób prywatnych (niebiznesowych)
+
+Dla tych faktur Druma generuje standardową fakturę PDF bez kroku składania UBL XML. Karta e-Factura nie pojawi się na tych fakturach.
 
 <Warning>
-Upewnij się, że każdy rumuński klient B2B w Druma ma wpisany prawidłowy CIF na rekordzie klienta. Bez CIF Druma nie może składać do e-Factura i możesz być niezgodny z przepisami.
+Upewnij się, że każdy rumuński klient B2B w Druma ma wpisany prawidłowy CIF na rekordzie klienta. Bez CIF Druma nie może składać do e-Factura i możesz być niezgodny z przepisami. Możesz sprawdzić i zaktualizować numery CIF w Klienci → wybierz klienta → karta Szczegóły.
 </Warning>
 
 ---
 
-<Card title="Generowanie faktur" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-Jak tworzyć faktury w Druma, w tym wielowalutowe i zbiorcze.
+<Card title="Generowanie faktur" icon="file-invoice-dollar" href="/pl/invoicing/generating-invoices">
+  Jak tworzyć faktury w Druma, w tym wielowalutowe i zbiorcze.
+</Card>
+
+<Card title="Eksport SAGA i WinMENTOR" icon="database" href="/pl/invoicing/saga-export">
+  Jak eksportować dane faktur do rumuńskiego oprogramowania księgowego dla Twojego księgowego.
 </Card>

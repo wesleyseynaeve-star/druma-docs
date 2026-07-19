@@ -1,38 +1,47 @@
 ---
 title: "Sofőrök importálása"
-description: "Sofőrök tömeges importálása CSV vagy XLSX fájlból a Druma Tömeges importálás funkciójával."
-icon: "id-card"
+description: "Onboardold a sofőrállományodat tömegesen a Smart Import segítségével — a Druma AI-alapú dokumentumkinyerő eszközével —, ahelyett hogy egyesével adnál hozzá sofőröket."
+icon: "file-import"
 ---
 
-## A sofőrök tömeges importálása
+A Drumában nincs CSV-sablon alapú tömeges importálás a sofőrökhöz. Ehelyett használd a **Smart Importot** — egy AI-alapú eszközt, amely beolvassa a már meglévő sofőr-dokumentumaidat (egy PDF-listát, egy szkennelt névsort, jogosítványfotókat, egy szokatlan formátumú táblázatot a korábbi rendszeredből), és sofőrrekordokká alakítja, amelyeket mentés előtt ellenőrizhetsz.
 
-A sofőrök tömeges importálása lehetővé teszi a meglévő sofőrlista gyors áttelepítését.
+## Hol találod
 
-## A sablon letöltése
+Lépj az **Eszközök → Smart Import** menüpontra. Ez egy közös eszköz céges, flotta-, sofőr-, ügyfél- és biztosítási adatok onboardolásához — nem a Flotta → Sofőrök menüponthoz kötött oldal.
 
-1. Lépj a **Flotta → Sofőrök** menüpontra.
-2. Kattints a **Tömeges importálás** gombra.
-3. Kattints a **Sablon letöltése** gombra.
+## A folyamat
 
-| Oszlop | Kötelező | Leírás |
-|---|---|---|
-| `full_name` | Igen | Sofőr teljes neve |
-| `phone` | Nem | Telefonszám (push-értesítésekhez) |
-| `licence_number` | Nem | Jogosítvány száma |
-| `licence_expiry` | Nem | Jogosítvány lejárata (ÉÉÉÉ-HH-NN) |
-| `cpc_expiry` | Nem | CPC tanúsítvány lejárata |
-| `tacho_card` | Nem | Tachográf kártya száma |
+<Steps>
+  <Step title="Töltsd fel a sofőr-dokumentumaidat">
+    Kattints a **Dokumentumok feltöltése** gombra, vagy húzd a fájlokat a feltöltési zónába. Támogatott formátumok: PDF, képek (JPEG, PNG, WebP, HEIC/HEIF), XLSX és CSV, legfeljebb 20 MB fájlonként, és legfeljebb 20 fájl munkamenetenként.
+  </Step>
+  <Step title="Várd meg az AI-kinyerést">
+    A Druma minden fájlt elküld a Geminihez kinyerésre — fájlonként néhány másodperc. A fájlok a szerveroldalon kerülnek feldolgozásra, és nem tárolódnak véglegesen a kinyerés után; csak azok a rekordok mentődnek, amelyeket importálásra kiválasztasz.
+  </Step>
+  <Step title="Nyisd meg a Sofőrök kategória kártyát">
+    A Felülvizsgálati irányítópult egy kártyát mutat minden, a dokumentumaidban talált adattípushoz, köztük a **Sofőrök** kártyát, ha talált ilyet. Kattints rá, hogy egy szerkeszthető táblázatban lásd a kinyert sorokat: teljes név, telefonszám, e-mail, jogosítványszám és lejárat, ADR-tanúsítvány és lejárat, CPC-szám és lejárat, tachográf-kártyaszám és nyelv.
+  </Step>
+  <Step title="Ellenőrizd a megbízhatóságot és a duplikátumokat">
+    Minden mezőnek van egy színkódolt megbízhatósági jelzése (zöld/borostyán/piros) — mindig ellenőrizd duplán a borostyán és piros mezőket. A sorokat a Druma összeveti a meglévő sofőrjeiddel **teljes név alapján (kis- és nagybetűre nem érzékeny)**; egyezés esetén **Duplikátumként** jelöli, alapértelmezetten **Kihagyás**-ra állítva (választhatod a **Felülírás** opciót is, ha azt szeretnéd, hogy a kinyert adat lecserélje a nyilvántartásban lévőt).
+  </Step>
+  <Step title="Szerkeszd és importáld">
+    Kattints bármelyik cellára a helyszíni javításhoz, majd kattints a **Sofőrök importálása** gombra. A teljes név az egyetlen kötelező mező — az ezt nélkülöző sorok nem kerülnek importálásra.
+  </Step>
+</Steps>
 
-## Megjegyzések
+<Warning>
+Az importálás nem vonható vissza. Ha hibás adat került importálásra, utólag egyenként szerkeszd a sofőrrekordokat.
+</Warning>
 
-- A `phone` mező opcionális az importálásnál, de szükséges a push-értesítésekhez és a PWA-link aktiválásához
-- A PWA-linkek automatikusan generálódnak az importálás során — a linkeket a sofőr profilján találod az importálás befejezése után
-- Nincs ÁFA-alapú deduplikáció — a sofőrök névvel kerülnek duplikálás-ellenőrzésre
+## Telefonszám és alkalmazás-bejelentkezés
 
-## Importálás elvégzése
+A Smart Import létrehozza a sofőr profilrekordját (név, telefonszám, jogosítvány/CPC/ADR/tachográf adatok) — de nem hozza létre az alkalmazás-bejelentkezését. Importálás után lépj a **Flotta → Sofőrök** menüpontra, nyisd meg egyenként minden sofőr profilját, és a **Telefon + PIN bejelentkezés** alatt kattints a **PIN beállítása** gombra (vagy a **Generálás** gombra egy véletlenszerű 6-jegyű kódhoz), majd a **PIN mentése** gombra. Add át közvetlenül minden sofőrnek a PIN-kódját — az első bejelentkezéskor személyre szabhatják.
 
-Az importálás folyamata ugyanaz, mint a Flotta importálásnál. Lásd az [Flotta importálása](/en/bulk-import/importing-fleet) oldalt a lépésenkénti útmutatóhoz.
+<Card title="Ügyfelek és flotta onboardolása" icon="brain" href="/en/tools/smart-import">
+  A Smart Import ugyanebben a folyamatban céges, flotta-, ügyfél- és biztosítási dokumentumokat is kezel.
+</Card>
 
 <Card title="Sofőrkezelés" icon="id-card" href="/en/planner/driver-management">
-  Sofőrök egyenkénti hozzáadása és PWA-linkek kezelése.
+  Egyedi sofőrprofilok kezelése és telefon + PIN bejelentkezés beállítása.
 </Card>

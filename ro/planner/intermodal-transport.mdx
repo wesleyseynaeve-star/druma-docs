@@ -1,12 +1,166 @@
 ---
-title: "Transport intermodal"
-description: "Gestioneaza operatiunile intermodale in Druma."
-icon: "train"
+title: "Transport intermodal si multimodal"
+description: "Planifica comenzi care combina segmente rutiere, maritime, feroviare, aeriene sau fluviale — cu atribuire de transportator per segment, urmarirea costurilor, eCMR si suport PWA pentru sofer."
+icon: "git-merge"
 ---
 
-Druma gestioneaza segmentele rutiere ca comenzi standard cu stopuri interne pentru punctele de transfer.
+## Prezentare generala
 
-1. Comanda 1: preluare -> terminal feroviar/portuar
-2. Comanda 2: terminal -> destinatie finala
+Transportul intermodal muta marfa prin mai multe moduri de transport, in secventa — de exemplu, un camion preia o remorca de la o fabrica romaneasca pana la Calais, aceasta trece la Folkestone cu un feribot RoRo prin Tunelul Manecii, iar un al doilea camion se ocupa de segmentul final pana la adresa de livrare din UK. Fiecare segment este un **segment (leg)**. O singura comanda Druma gestioneaza intreaga calatorie: programarea, atribuirea transportatorului, costurile, eCMR-ul si vizibilitatea pentru sofer, per segment.
 
-Documentele CMR se aplica numai segmentelor rutiere.
+Aceasta difera de o comanda standard cu opriri interne. Opririle interne sunt puncte de trecere pe o singura calatorie rutiera continua, cu un singur camion. Segmentele intermodale sunt evenimente de transport distincte, care pot folosi moduri diferite, transportatori diferiti si chiar tari de jurisdictie diferite.
+
+<Note>
+Cursele de grupaj si segmentele intermodale sunt concepte separate — segmentele apartin unei singure comenzi, grupajul consolideaza mai multe comenzi pe un singur camion. Momentan nu exista un flux combinat de "grupaj intermodal".
+</Note>
+
+---
+
+## Exemplu practic: Romania → UK, prin Tunelul Manecii
+
+| Segment | Mod | Ruta | Transportator |
+|---|---|---|---|
+| 1 | Rutier | Bucuresti → Calais | Flota proprie — camion RO-01 |
+| 2 | Maritim | Calais → Folkestone (Eurotunnel Le Shuttle) | Subcontractant: Eurotunnel |
+| 3 | Rutier | Folkestone → Birmingham | Subcontractant: transportator UK |
+
+Druma urmareste referinta de rezervare si numarul containerului pentru segmentul 2, genereaza un eCMR separat pentru segmentele 1 si 3 (ambele trec granite), si ii arata transportatorului UK doar opririle relevante pentru segmentul 3.
+
+---
+
+## Crearea unei comenzi intermodale
+
+Nu exista un comutator "Intermodal" de activat — segmentele se adauga la o comanda deja creata, iar Druma trateaza comanda ca intermodala automat, odata ce are segmente.
+
+<Steps>
+  <Step title="Creeaza sau deschide comanda">
+    Creeaza comanda normal (vezi [Crearea unei comenzi](/ro/planner/creating-orders)), apoi deschide-o si mergi la tabul sau **Marfa si Opriri**.
+  </Step>
+  <Step title="Adauga segmente">
+    In sectiunea **Segmente de transport**, apasa **Adauga segment** pentru a crea primul segment. Adauga cate sunt necesare pentru calatorie — nu exista o limita. Originea fiecarui segment nou este implicit destinatia segmentului anterior (sau preluarea comenzii, pentru primul segment), ca sa nu retastezi aceeasi adresa.
+  </Step>
+  <Step title="Completeaza fiecare segment">
+    Extinde un card de segment, pentru a-i seta modul, originea/destinatia, inceputul/sfarsitul planificat si transportatorul (vezi mai jos).
+  </Step>
+</Steps>
+
+---
+
+## Gestionarea segmentelor
+
+Fiecare card de segment are urmatoarele campuri:
+
+| Camp | Note |
+|---|---|
+| **Mod** | Rutier, Maritim, Feroviar, Aerian sau Fluvial |
+| **Origine** | Text liber sau autocompletare adresa |
+| **Destinatie** | Text liber sau autocompletare adresa |
+| **Inceput planificat** | Data si ora la care incepe segmentul |
+| **Sfarsit planificat** | Data si ora asteptata la care se termina segmentul |
+| **Transportator** | Flota proprie (doar rutier) sau subcontractant |
+| **Tarif de cumparare** | Costul pe care il platesti pentru acest segment |
+| **Detaliere cost** | Combustibil, taxe de drum, feribot sau alte elemente de linie |
+
+### Segmente rutiere
+
+Segmentele rutiere pot fi atribuite propriei tale flote (camion si sofer) sau unui transportator subcontractat — alegi prin butoane radio pe cardul segmentului, apoi selectezi camionul/soferul sau subcontractantul dintr-o lista derulanta.
+
+### Segmente non-rutiere (Maritim, Feroviar, Aerian, Fluvial)
+
+Segmentele non-rutiere pot fi atribuite doar unui transportator subcontractat — propriile tale camioane si sofer nu pot fi atribuite unui segment maritim sau feroviar. Campul de transportator cauta in lista ta de subcontractanti.
+
+### Controale de segment
+
+- **Sagetile sus/jos** — reordoneaza segmentele. Fasia de cronologie a segmentelor (vezi mai jos) se actualizeaza pe masura ce tragi.
+- **Elimina segment** — sterge un segment. Nu exista o restrictie bazata pe status in interfata pentru asta, deci verifica de doua ori inainte sa elimini un segment deja in desfasurare.
+- **Buton Finalizeaza segment** — marcheaza segmentul ca gata. Este afisat odata ce statusul segmentului ajunge la **In Tranzit**, **La Livrare** sau **Descarcare** — este conditionat de status, nu de vreo data.
+
+### Fasia de cronologie a segmentelor
+
+O fasie orizontala compacta apare deasupra acordeonului de segmente. Arata toate segmentele in secventa, cu o eticheta de mod (rutier, maritim, feroviar etc.) si numele oraselor pentru origine si destinatie. Foloseste-o pentru a verifica rapid ca secventa calatoriei are sens, inainte de salvare.
+
+---
+
+## Detalii de segment maritim / intermodal
+
+Pentru orice segment cu modul **Maritim**, **Feroviar**, **Aerian** sau **Fluvial**, o sectiune extensibila **Detalii maritime / intermodale** apare pe cardul segmentului. Toate campurile sunt optionale.
+
+| Camp | Format | Note |
+|---|---|---|
+| Referinta Rezervare | Text liber | Numarul de confirmare de rezervare al transportatorului |
+| Numar Container | Text liber | ID container ISO |
+| Numar Sigiliu | Text liber | |
+| Numele Vasului | Text liber | Numele navei sau al serviciului de tren |
+| Numar Cursa (Voyage) | Text liber | |
+| SCAC Transportator | 4 caractere | Codul Alpha Standard al Transportatorului |
+| Port de Incarcare | LOCODE de 5 caractere | de ex. `FRXXX` pentru Calais |
+| Port de Descarcare | LOCODE de 5 caractere | de ex. `GBFXT` pentru Folkestone |
+| Data/ora limita (Cut-off) | Data + ora | Termenul limita de acceptare a marfii la Portul de Incarcare |
+| ETD | Data + ora | Ora estimata de plecare din Portul de Incarcare |
+| ETA la POD | Data + ora | Ora estimata de sosire la Portul de Descarcare |
+
+<Warning>
+Daca data limita (cut-off) este in urmatoarele 48 de ore fata de sfarsitul planificat al segmentului, Druma arata un banner de avertisment chihlimbariu pe cardul segmentului. Revizuieste cronologia, ca sa te asiguri ca vehiculul ajunge la port la timp.
+</Warning>
+
+Comutarea modului unui segment inapoi la **Rutier** sterge automat campurile de detaliu maritim/intermodal.
+
+---
+
+## Comportamentul pe tabla de planificare
+
+### Disponibilitatea camionului
+
+Tabla de planificare calculeaza disponibilitatea camionului pe baza **datei de sfarsit a segmentului rutier**, nu a datei finale de livrare a comenzii. Asta inseamna ca un camion atribuit segmentului 1 (rutier) este afisat ca liber din momentul in care se termina acel segment — chiar daca ultima livrare a comenzii este cu zile mai tarziu, pe segmentul 3, cu un alt transportator.
+
+### Atribuirea unui camion la o comanda intermodala
+
+Tragerea unui camion pe o comanda intermodala arata o sectiune **Segment intermodal** in fisa de confirmare a atribuirii, in loc de fluxul standard. Listeaza fiecare segment rutier al comenzii (secventa, origine → destinatie, date planificate) — apasarea unui rand de segment il selecteaza direct; nu exista un buton separat "Atribuie" de apasat dupa aceea.
+
+<Note>
+Un camion poate fi atribuit doar unui singur segment rutier per comanda intermodala. Pentru a acoperi mai multe segmente rutiere cu camioane diferite, repeta procesul de tragere-si-plasare pentru fiecare segment.
+</Note>
+
+---
+
+## eCMR per segment rutier
+
+Fiecare segment rutier care traverseaza o frontiera internationala primeste propriul eCMR. Pentru a crea unul, deschide cardul segmentului si apasa **Creeaza eCMR**. Druma inregistreaza documentul folosind furnizorul sau nativ, intern, de eCMR, cu originea, destinatia si transportatorul atribuit ale segmentului precompletate — finalizarea unui segment transfrontalier declanseaza automat acest lucru, in acelasi mod. (Nu exista o alegere de furnizor de facut: Nativ este singura cale pentru documente noi; doar randurile mostenite, preexistente, TransFollow inca functioneaza, fara legatura cu segmentele create aici.)
+
+Segmentele care raman in interiorul unei singure tari nu necesita un eCMR (cu exceptia cazului in care politica companiei tale il impune). Butonul **Creeaza eCMR** este intotdeauna disponibil, daca trebuie sa suprascrii asta.
+
+Fluxul de semnare in trei parti si descarcarea PDF-ului certificat functioneaza identic cu eCMR-ul standard — vezi [documentatia eCMR](/ro/ecmr/what-is-ecmr) pentru detalii.
+
+---
+
+## PWA sofer — vedere limitata la segment
+
+Soferii vad doar opririle care apartin segmentului lor rutier atribuit. Daca o comanda are trei segmente si soferul acopera segmentul 1, vede doar preluarea si orice opriri interne pentru segmentul 1 — nu adresa de livrare din UK.
+
+Un banner de informatii in partea de sus a detaliului incarcaturii scrie:
+
+> **Segment 1 din 3 — Rutier: Bucuresti → Calais**
+
+Asta mentine vederea soferului curata si evita confuzia despre opriri care apartin unui alt transportator.
+
+Atingerile de status (la preluare, incarcare, in tranzit, la livrare etc.) functioneaza exact ca pe o comanda standard, dar avanseaza doar statusul segmentului rutier al soferului. Planificatorul vede progresul per segment in panoul de detaliu al comenzii.
+
+---
+
+## Urmarirea costului si marjei
+
+Fiecare segment are propriul **Tarif de cumparare** si **Detaliere cost**. Costul total al comenzii este suma pe toate segmentele. Calculul de marja din panoul de detaliu al comenzii compara pretul de vanzare convenit fata de costul total pe mai multe segmente, oferindu-ti o cifra de marja consolidata pentru intreaga calatorie intermodala.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/ro/ecmr/what-is-ecmr">
+  Cum functioneaza crearea eCMR nativ, semnaturile in trei parti si PDF-urile certificate.
+</Card>
+
+<Card title="Subcontractanti" icon="truck" href="/ro/planner/subcontractors">
+  Gestioneaza-ti lista de transportatori subcontractanti — aceiasi transportatori apar in atribuirea segmentelor intermodale.
+</Card>
+
+<Card title="Tabla de planificare" icon="calendar" href="/ro/planner/planning-board">
+  Cum apar disponibilitatea camionului si blocurile de comenzi intermodale pe cronologia de dispecerizare.
+</Card>

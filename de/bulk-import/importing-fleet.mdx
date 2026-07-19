@@ -1,57 +1,58 @@
 ---
 title: "Flotte importieren"
-description: "Laden Sie Ihre Fahrzeuge in Druma per CSV-Vorlage hoch, anstatt sie einzeln hinzuzufügen."
+description: "Laden Sie Ihre Fahrzeuge per Tabellenvorlage in Druma hoch, statt sie einzeln hinzuzufügen."
 icon: "file-import"
 ---
 
-## Übersicht
+Nutzen Sie den Massenimport, um alle Fahrzeuge auf einmal hinzuzufügen — ideal beim Einstieg oder bei der Migration von einem anderen System.
 
-Wenn Sie eine große Flotte einrichten, ist das einzelne Hinzufügen von Fahrzeugen zeitaufwändig. Der Flottenimport ermöglicht es Ihnen, alle Fahrzeuge auf einmal über eine CSV-Vorlage hochzuladen.
-
----
-
-## CSV-Vorlage herunterladen
-
-Gehen Sie zu **Fuhrpark → Fahrzeuge** und klicken Sie auf **Importieren → Vorlage herunterladen**.
-
----
-
-## Erforderliche Spalten
-
-| Spalte | Beschreibung |
-|---|---|
-| `licence_plate` | Kennzeichen (Pflicht) |
-| `vehicle_type` | Plane, Kühlfahrzeug, Tieflader, Tanker, Kofferaufbau |
-| `euro_standard` | 3, 4, 5 oder 6 |
-| `payload_kg` | Maximale Nutzlast in Kilogramm |
-| `volume_m3` | Ladekapazität in Kubikmeter |
-| `ldm` | Lademeter (optionell) |
-
----
-
-## Import-Prozess
+## Die Vorlage herunterladen
 
 <Steps>
-  <Step title="Vorlage ausfüllen">
-    Füllen Sie die CSV-Vorlage mit Ihren Fahrzeugdaten aus.
+  <Step title="Massenimport öffnen">
+    Gehen Sie zu **Fuhrpark → LKW** und klicken Sie in der Symbolleiste auf **Massenimport** — dies öffnet das Import-Modal direkt auf der LKW-Liste; es gibt keine separate Importseite.
   </Step>
-  <Step title="Hochladen">
-    Gehen Sie zu **Fuhrpark → Fahrzeuge → Importieren → CSV hochladen**.
+  <Step title="Vorlage herunterladen und ausfüllen">
+    Klicken Sie auf **Vorlage herunterladen** — Druma erzeugt eine `.xlsx`-Datei. Füllen Sie einen LKW pro Zeile aus:
+
+    | Spalte | Pflicht | Beispiel |
+    |--------|---------|----------|
+    | Kennzeichen | Ja | B-123-ABC |
+    | Name | Nein | LKW 1 |
+    | Marke | Nein | Volvo |
+    | Modell | Nein | FH |
+    | Baujahr | Nein | 2020 |
+    | Euro-Klasse | Nein | euro6 |
+    | Kraftstoffart | Nein | Diesel |
+    | Anhängertyp | Nein | Tautliner |
   </Step>
-  <Step title="Überprüfen">
-    Druma zeigt eine Vorschau der importierten Daten. Überprüfen Sie auf Fehler.
+  <Step title="Hochladen und prüfen">
+    Ziehen Sie Ihre ausgefüllte Datei (CSV oder XLSX, bis 5 MB) in das Import-Modal. Stimmen Ihre Spaltenüberschriften exakt mit der Vorlage überein, ordnet Druma sie automatisch zu; andernfalls ordnen Sie jede Spalte manuell zu. Eine Vorschau zeigt dann die ersten 5 Zeilen — Zeilen ohne Kennzeichen sind rot markiert.
   </Step>
-  <Step title="Importieren">
-    Klicken Sie auf **Importieren bestätigen**.
+  <Step title="Import bestätigen">
+    Klicken Sie auf **Importieren**. LKW werden sofort angelegt und erscheinen in Ihrer Flottenliste. Ein Ergebnisbildschirm zeigt, wie viele Zeilen angelegt, übersprungen oder fehlgeschlagen sind, mit zeilengenauen Fehlerdetails für alles Fehlgeschlagene.
   </Step>
 </Steps>
 
----
-
 ## Deduplizierung
 
-Wenn ein Kennzeichen bereits in Ihrem System vorhanden ist, wird die Zeile übersprungen. Vorhandene Fahrzeuge werden nicht überschrieben.
+Druma prüft das Kennzeichen jeder Zeile gegen Ihre bestehenden LKW (normalisiert auf Großschreibung, Leerzeichen entfernt). Bei einem Treffer wird die Zeile **übersprungen** — der bestehende LKW wird nicht aktualisiert.
 
-<Card title="Fuhrparkverwaltung" icon="truck" href="/en/planner/fleet-management">
-  Fahrzeuge manuell verwalten.
-</Card>
+<Note>
+Der Massenimport legt ausschließlich neue LKW-Datensätze an — er aktualisiert nie einen bestehenden, selbst wenn Sie eine Datei mit übereinstimmendem Kennzeichen erneut importieren. Um Details eines bereits bestehenden LKW zu ändern, bearbeiten Sie ihn direkt unter Fuhrpark → LKW.
+</Note>
+
+Dieser Import enthält keine Spalten für Anhängerabmessungen, Gewicht, Achszahl, Nutzlast, Tageskosten, ADR-Ablauf oder ein Aktiv/Inaktiv-Kennzeichen — diese werden nach dem Import direkt am LKW-Datensatz konfiguriert (Kostenprofilfelder liegen im [LKW-Kostenprofil](/de/admin/rate-cards) unter Einstellungen → Preistabellen, nicht am LKW-Datensatz).
+
+## Nach dem Import
+
+Prüfen Sie Ihre Flottenliste und fügen Sie dann Fahrzeugdokumente (Versicherung, TÜV/ITP) für jeden LKW hinzu.
+
+<CardGroup cols={2}>
+  <Card title="Fuhrparkverwaltung" icon="truck" href="/de/planner/fleet-management">
+    Fügen Sie Fahrzeuge manuell hinzu und verwalten Sie einzelne Fahrzeugeinstellungen.
+  </Card>
+  <Card title="Fuhrparkdokumente" icon="folder-open" href="/de/fleet-compliance/fleet-documents">
+    Laden Sie Versicherung, Zulassung und Compliance-Dokumente für jedes Fahrzeug hoch.
+  </Card>
+</CardGroup>

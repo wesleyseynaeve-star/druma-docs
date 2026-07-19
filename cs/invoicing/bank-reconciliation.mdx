@@ -1,41 +1,100 @@
 ---
 title: "Bankovní odsouhlasení"
-description: "Jak párovat příchozí bankovní platby s otevřenými fakturami v Druma — ruční párování, auto-párování a zpracování neshodných plateb."
-icon: "bank"
+description: "Automaticky párujte příchozí e-maily o bankovních platbách s otevřenými fakturami v Druma přeposíláním oznamovacích e-mailů z vaší rumunské banky."
+icon: "building-columns"
 ---
 
 ## Přehled
 
-Bankovní odsouhlasení porovnává příchozí platby z vašeho bankovního výpisu s otevřenými fakturami v Druma. Cílem je zajistit, aby každá přijatá platba byla propojena se správnou fakturou.
+Ruční párování bankovních převodů s fakturami je zdlouhavé a náchylné k chybám. Funkce bankovního odsouhlasení Druma většinu z toho automatizuje analýzou e-mailů s oznámením o platbě, které rumunské banky posílají u každého příchozího převodu. Tyto e-maily přeposíláte na speciální schránku Druma a Druma provede párování.
 
-## Fronta nespárovaných plateb
+Není potřeba žádný přístup k API banky. Není potřeba instalovat žádný nový software. Jen přeposílání e-mailů.
 
-Přejděte do **Fakturace → Odsouhlasení** pro zobrazení fronty nespárovaných plateb. Každý záznam zobrazuje:
-- Datum platby a přijatou částku
-- Bankovní referenci a popis
-- Navrhované odpovídající faktury (pokud je automatické párování nalezlo)
+<Frame caption="Finance → Odsouhlasení — formáty výpisů CAMT.053, MT940 a CODA.">
+  <img src="/images/invoicing/bank-reconciliation.png" alt="Stránka Bankovní odsouhlasení" />
+</Frame>
 
-## Ruční párování
+## Jak to funguje
+
+Když na váš bankovní účet dorazí peníze, banka vám pošle automatický oznamovací e-mail. Druma dokáže tyto e-maily přečíst a extrahovat klíčové údaje:
+
+- Přijatou částku
+- Jméno plátce
+- Referenční číslo platby
+- Datum převodu
+
+Druma poté prohledá vaše otevřené faktury a hledá shodu. Pokud se shoduje částka a referenční číslo, faktura se automaticky označí jako zaplacená. Pokud shoda není jasná, platba se zařadí do fronty ke kontrole pro ruční vyřízení.
+
+## Podporované banky
+
+Pro analýzu e-mailů jsou podporovány následující rumunské banky:
+
+- BRD – Groupe Société Générale
+- BCR – Banca Comercială Română
+- Raiffeisen Bank
+- UniCredit Bank
+- ING Bank
+
+<Note>
+Pokud vaše banka není na tomto seznamu, můžete v Druma stále používat ruční zaznamenávání plateb — jednoduše zaznamenejte platby tlačítkem Zaznamenat platbu na každé faktuře. Ruční odsouhlasení je vždy k dispozici bez ohledu na nastavení banky.
+</Note>
+
+## Nastavení přeposílání e-mailů
 
 <Steps>
-  <Step title="Vyberte nespárovanou platbu">
-    Klikněte na platbu ve frontě.
+  <Step title="Najděte svou adresu schránky odsouhlasení Druma">
+    Přejděte do **Nastavení** → **Společnost** a zapněte **Povolit schránku bankovních plateb**. Vaše jedinečná e-mailová adresa odsouhlasení Druma se zobrazí zde — vypadá přibližně jako `reconcile-vasespolecnost@inbox.druma.io`.
   </Step>
-  <Step title="Vyhledejte fakturu">
-    Vyhledejte fakturu podle čísla, klienta nebo částky.
+  <Step title="Zkopírujte e-mailovou adresu">
+    Zkopírujte celou adresu. Budete ji potřebovat ve svém e-mailovém klientovi nebo nastavení oznámení banky.
   </Step>
-  <Step title="Potvrďte spárování">
-    Klikněte na **Spárovat**. Platba je přiřazena k faktuře a stav faktury se aktualizuje.
+  <Step title="Nastavte přeposílání ve svém e-mailovém klientovi">
+    V e-mailovém účtu, kam vám banka posílá oznámení o platbách, vytvořte pravidlo přeposílání:
+
+    - **Podmínka:** e-maily z oznamovací adresy vaší banky (například `notificari@brd.ro`)
+    - **Akce:** přeposlat na vaši adresu odsouhlasení Druma
+
+    Přesné kroky závisí na vašem poskytovateli e-mailu. V Gmailu přejděte do Nastavení → Filtry a blokované adresy → Vytvořit nový filtr. V Outlooku použijte Pravidla → Nové pravidlo.
+  </Step>
+  <Step title="Otestujte na skutečné platbě">
+    Počkejte na další příchozí platbu. Jakmile banka odešle oznamovací e-mail, automaticky se přepošle do Druma. Zkontrolujte **Fakturace** → **Odsouhlasení** během několika minut, zda byla spárována.
   </Step>
 </Steps>
 
-## Zamítnutí nebo ignorování platby
+## Automatické párování
 
-Pokud platba neodpovídá žádné faktuře (vrácení, interní převod atd.), klikněte na **Zamítnout** pro její odebrání z fronty odsouhlasení.
+Když dorazí přeposlaný e-mail, Druma se ho pokusí spárovat s otevřenou fakturou pomocí:
 
-<Card title="Sledování plateb" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
-  Ruční zaznamenávání plateb bez importu bankovního výpisu.
-</Card>
+1. **Částky** — přijatá částka odpovídá nezaplacenému zůstatku faktury
+2. **Referenčního čísla** — platební reference v e-mailu odpovídá číslu faktury v Druma (klienti jsou vyzváni, aby jako platební referenci použili číslo faktury)
+
+Pokud se obojí shoduje, faktura se automaticky označí jako **Zaplaceno**. Z vaší strany není potřeba žádná akce.
+
+## Nespárované platby
+
+Některé platby se nespárují automaticky — například pokud klient do reference převodu nezahrnul číslo faktury, nebo pokud se částka mírně liší. Ty se zobrazí ve frontě ke kontrole:
+
+Přejděte do **Fakturace** → **Odsouhlasení** → **Nespárované platby**. Každá nespárovaná platba zobrazuje částku, jméno plátce a referenci. Můžete:
+
+- **Propojit s fakturou** — vyhledat správnou fakturu a propojit s ní tuto platbu
+- **Ignorovat** — označit platbu jako nesouvisející s fakturami Druma (například platbu za něco mimo Druma)
+
+Jakmile propojíte platbu s fakturou, stav faktury se aktualizuje, stejně jako kdybyste platbu zaznamenali ručně.
+
+## Deduplikace
+
+Pokud omylem přepošlete stejný oznamovací e-mail dvakrát, Druma nevytvoří duplicitní platbu. Duplicity detekuje pomocí hlavičky e-mailu `Message-Id`, ne podle bankovní reference — takže i když je pole reference prázdné nebo opakovaně použité, přesně stejný e-mail se nikdy nezpracuje dvakrát. Druhý e-mail se tiše ignoruje.
+
+<Note>
+Povzbuzujte své klienty, aby jako referenci bankovního převodu používali číslo faktury. Tento jediný zvyk dramaticky zvyšuje míru automatického párování — většina plateb bude odsouhlasena bez jakékoli ruční práce z vaší strany.
+</Note>
+
+<Warning>
+Oznamovací e-maily banky někdy obsahují důvěrné finanční informace. Ujistěte se, že vaše adresa schránky odsouhlasení Druma zůstává soukromá — nesdílejte ji veřejně. Je jedinečná pro vaši společnost a nelze ji uhodnout, ale zacházejte s ní jako s heslem.
+</Warning>
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/bank-reconciliation).
+<Card title="Sledování plateb" icon="money-bill-wave" href="/cs/invoicing/payment-tracking">
+  Jak ručně zaznamenávat platby, zpracovávat částečné platby a exportovat data plateb.
+</Card>

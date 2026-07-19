@@ -1,49 +1,90 @@
 ---
 title: "SAGA C und WinMENTOR Integration"
-description: "Exportieren Sie Druma-Rechnungen nach SAGA C oder WinMENTOR Classic mit DBF-Dateien oder übertragen Sie automatisch an WinMENTOR Enterprise über die REST-API."
+description: "Exportieren Sie Druma-Rechnungen als Dateipakete nach SAGA C oder WinMENTOR Classic, die Sie in Ihre Buchhaltungssoftware importieren."
 icon: "calculator"
 ---
 
+Die meisten rumänischen Transportunternehmen erledigen ihre Buchhaltung in SAGA C oder WinMENTOR Classic. Druma integriert sich mit beiden und erlaubt es, Rechnungen von Druma in Ihre Buchhaltungssoftware zu übertragen, ohne Daten manuell neu einzugeben.
+
 ## SAGA C
 
-SAGA C ist eine der beliebtesten Buchhaltungssoftware in Rumänien.
+SAGA C ist die am weitesten verbreitete Buchhaltungssoftware für rumänische KMU. Druma exportiert Rechnungen im DBF-Format, das SAGA C erwartet.
 
-**Export-Format:** Druma generiert die SAGA-kompatiblen DBF-Dateien:
-- **Facturas.dbf** — Ausgangsrechnungen
-- **Intrari.dbf** — Eingangsrechnungen
-- **Clienti.dbf** — Kundenliste
-
-**Exportprozess:** Gehen Sie zu **Berichte → Buchhaltungsexport**, wählen Sie den Datumsbereich und das Format **SAGA C**, und laden Sie die ZIP-Datei herunter.
-
----
-
-## WinMENTOR Classic
-
-WinMENTOR Classic verwendet ebenfalls DBF- oder CSV-Importe.
-
-**Exportprozess:** Wählen Sie im Buchhaltungsexport das Format **WinMENTOR Classic**.
-
----
-
-## WinMENTOR Enterprise (REST-API)
-
-WinMENTOR Enterprise unterstützt direkte API-Integration für automatischen Datentransfer.
+### Export aus Druma
 
 <Steps>
-  <Step title="Zu Einstellungen → Integrationen gehen">
-    Öffnen Sie die Karte **WinMENTOR Enterprise**.
+  <Step title="Das Exportmenü öffnen">
+    Gehen Sie in Druma zu **Rechnungsstellung → Export → SAGA C**.
   </Step>
-  <Step title="API-Endpunkt eingeben">
-    Geben Sie den REST-API-Endpunkt ein: `https://ihrunternehmen.winmentor.ro/api/`
+  <Step title="Datumsbereich wählen">
+    Wählen Sie den zu exportierenden Zeitraum — typischerweise den aktuellen oder den vorherigen Monat. Alle in diesem Zeitraum ausgestellten Rechnungen werden einbezogen.
   </Step>
-  <Step title="Zugangsdaten eingeben">
-    Geben Sie den API-Benutzernamen und das Passwort ein.
-  </Step>
-  <Step title="Verbindung testen und speichern">
-    Klicken Sie auf **Verbindung testen**, dann auf **Speichern**.
+  <Step title="Die ZIP-Datei herunterladen">
+    Klicken Sie auf **ZIP herunterladen**. Je nach Inhalt des gewählten Zeitraums enthält die Datei:
+    - `CLI_<Datum>.dbf` — Kundenstammdaten
+    - `ART_<Datum>.dbf` — die Frachtdienstleistungsposition (standardmäßig nur beim ersten Export enthalten; danach automatisch deaktiviert, da SAGA sie nur einmal benötigt)
+    - `IE_<Datum>_<Datum>.dbf` — Ausgangsrechnungen (Iesiri) mit MwSt.-Aufschlüsselung
+    - `INT_<Datum>.dbf` — Eingangsrechnungen (Intrari) für unterauftragnehmerbasierte Aufträge, nur vorhanden, falls der Zeitraum welche enthält
+    - `NC_<Datum>_<Datum>.xml` — Zahlungen (Incasari), nur vorhanden, falls der Zeitraum welche enthält
+    - `README.txt` — Importanleitung auf Rumänisch
   </Step>
 </Steps>
 
-<Card title="Rechnungen erstellen" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-  Erstellen Sie Rechnungen, die nach SAGA oder WinMENTOR exportiert werden können.
-</Card>
+### Import in SAGA C
+
+<Steps>
+  <Step title="SAGA C öffnen">
+    Melden Sie sich in SAGA C für Ihr Unternehmen an.
+  </Step>
+  <Step title="Zum Import navigieren">
+    Gehen Sie zu **Utilitare → Import date**.
+  </Step>
+  <Step title="Die Dateien in Reihenfolge importieren">
+    Importieren Sie zuerst `CLI_*.dbf` (Clienti) — nur beim ersten Export oder bei neuen Kunden nötig. Dann `ART_*.dbf` (Articole), falls vorhanden, dann `IE_*.dbf` (Iesiri/Rechnungen), dann `INT_*.dbf` (Intrari/Eingangsrechnungen), falls vorhanden, dann `NC_*.xml` (Incasari/Zahlungen), falls vorhanden.
+  </Step>
+  <Step title="Verifizieren">
+    Prüfen Sie die importierten Dokumente unter **Documente → Iesiri** (Rechnungen) und **Documente → Incasari** (Zahlungen).
+  </Step>
+</Steps>
+
+### BNR-Wechselkurse
+
+Für in anderen Währungen als RON ausgestellte Rechnungen fügt Druma automatisch den am Rechnungsdatum gültigen BNR-Wechselkurs (Nationalbank Rumäniens) ein. Dieser ist in die DBF-Datei eingebettet und wird automatisch in SAGA C importiert — keine manuelle Kurseingabe nötig.
+
+## WinMENTOR Classic
+
+WinMENTOR Classic verwendet ein anderes Format als SAGA C: pipe-getrennte (`|`) `.txt`-Dateien statt DBF. Wählen Sie im Export-Dropdown **WinMENTOR Classic** statt SAGA C.
+
+Das ZIP enthält:
+- `Iesiri_<Datum>_<Datum>.txt` — Ausgangsrechnungen
+- `Clienti_<Datum>.txt` — Kundenstammdaten für von diesen Rechnungen betroffene Kunden
+- `Articole_<Datum>.txt` — die Frachtdienstleistungsposition
+- `Incasari_<Datum>_<Datum>.txt` — Zahlungen, nur vorhanden, falls der Zeitraum welche enthält
+- `README.txt` — Importanleitung auf Rumänisch
+
+Zum Importieren: Gehen Sie in WinMENTOR zu **Utilitare → Import/Export → Import din fisier text**, wählen Sie jede Datei nacheinander aus, und bestätigen Sie, dass das Trennzeichen `|` ist. Verifizieren Sie die importierten Dokumente unter **Documente → Vanzari**.
+
+<Note>
+Derzeit gibt es keine direkte REST-API-Integration für WinMENTOR Enterprise oder ein anderes Buchhaltungspaket — SAGA C und WinMENTOR Classic sind die einzigen zwei unterstützten Formate, beide dateibasiert.
+</Note>
+
+## Automatischer monatlicher Export (SAGA C)
+
+Statt jeden Zeitraum manuell zu exportieren, können Sie Druma anweisen, einen SAGA-Export automatisch per E-Mail an Ihren Buchhalter zu senden:
+
+**Einstellungen → Automatisierungen & Funktionen → SAGA-Exportkonfiguration**
+
+Konfigurieren Sie die **Buchhalter-E-Mail** (und optional CC) sowie einen **Tag im Monat** (1–28), an dem der Export laufen soll. Ein geplanter Job prüft täglich und exportiert am konfigurierten Tag den **vorherigen vollständigen Monat** und sendet das ZIP per E-Mail an den Buchhalter, mit einer Zusammenfassung der Rechnungs-/Einkaufs-/Zahlungsanzahl und etwaigen Validierungswarnungen.
+
+<Note>
+Die E-Mail enthält einen Download-Link zum ZIP, der **nach 7 Tagen abläuft**. Es gibt keine In-App-Liste „Exportverlauf" — die Datei jedes Monats ist nur über diesen versendeten Link erreichbar (oder durch erneutes Ausführen des manuellen Exports für denselben Zeitraum unter Rechnungsstellung → Export).
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Rechnungen erstellen" icon="file-invoice" href="/de/invoicing/generating-invoices">
+    Wie Sie Rechnungen aus abgeschlossenen Aufträgen in Druma erstellen.
+  </Card>
+  <Card title="ANAF e-Factura" icon="building-columns" href="/de/invoicing/efactura-anaf">
+    Elektronische Einreichung von Rechnungen bei ANAF über das e-Factura-System.
+  </Card>
+</CardGroup>

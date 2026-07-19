@@ -1,43 +1,140 @@
 ---
 title: "Werkstatt & Wartung"
-description: "Erstellen und verwalten Sie Fahrzeugarbeitsaufträge, legen Sie Wartungspläne fest und blockieren Sie LKW mit sicherheitskritischen Mängeln."
+description: "Erstellen und verwalten Sie Fahrzeugarbeitsaufträge, legen Sie Wartungspläne fest, lösen Sie Mängel von der Planungstafel aus, und sperren Sie LKW mit sicherheitskritischen Fehlern automatisch."
 icon: "wrench"
 ---
 
-## Einen Arbeitsauftrag erstellen
+## Übersicht
 
-<Steps>
-  <Step title="Zu Fuhrpark → Wartung gehen">
-    Klicken Sie auf **Arbeitsauftrag erstellen**.
-  </Step>
-  <Step title="Details ausfüllen">
-    - **Fahrzeug** — LKW auswählen
-    - **Beschreibung** — Was repariert wird
-    - **Priorität** — Normal, Hoch, Sicherheitskritisch
-    - **Geplantes Datum** und geschätzte Dauer
-  </Step>
-  <Step title="Fahrzeug sperren">
-    Aktivieren Sie **Fahrzeug für Disposition sperren** während der Reparatur.
-  </Step>
-</Steps>
+Das Modul Werkstatt & Wartung gibt Fuhrparkmanagern eine strukturierte Möglichkeit, jede Wartungsarbeit zu verfolgen — vom routinemäßigen Ölwechsel bis zur Reparatur sicherheitskritischer Mängel. Arbeitsaufträge sind direkt mit der Planungstafel verknüpft (LKW bei Bedarf sperren) und mit dem Nachreise-Inspektionsablauf (sicherheitskritische Mängel können automatisch oder mit einem Klick Arbeitsaufträge erstellen).
+
+Sie finden das Modul unter **Fuhrpark → Arbeitsaufträge** und **Fuhrpark → Wartung**.
+
+<Frame caption="Fuhrpark → Arbeitsaufträge — Aufträge von Offen bis Abgeschlossen verfolgt, nach Servicetyp.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Seite Arbeitsaufträge mit Wartungsarbeiten nach Status und Servicetyp" />
+</Frame>
 
 ---
 
-## Aus DVIR-Mängeln
+## Arbeitsaufträge
 
-1. Gehen Sie zu **Fuhrpark → Mängel**.
-2. Öffnen Sie den sicherheitskritischen Mangel.
-3. Klicken Sie auf **Arbeitsauftrag erstellen**.
+### Was ein Arbeitsauftrag ist
+
+Ein Arbeitsauftrag ist ein Datensatz einer Wartungsarbeit an einem bestimmten LKW. Er erfasst, was zu tun ist, die Teile- und Arbeitskosten, und den aktuellen Status der Arbeit. Jeder sicherheitskritische Fahrzeugmangel sollte einen entsprechenden Arbeitsauftrag haben, bevor der LKW wieder in Betrieb geht.
+
+### Einen Arbeitsauftrag erstellen
+
+<Steps>
+  <Step title="Den Tab Arbeitsaufträge öffnen">
+    Gehen Sie zu **Fuhrpark → Arbeitsaufträge** und klicken Sie auf **Arbeitsauftrag erstellen**.
+  </Step>
+  <Step title="Details ausfüllen">
+    Wählen Sie den LKW und füllen Sie aus:
+
+    - **Servicetyp** — wählen Sie einen aus: Ölwechsel, Bremsenservice, Reifenwechsel, Inspektion, Reparatur, ADR-Rezertifizierung, Tacho-Kalibrierung, Sonstiges, plus drei kühlfahrzeugspezifische Typen für Anhänger (Filter- & Ölservice, Vollständiger Kühlservice, ATP-Inspektion)
+    - **Beschreibung** — was zu tun ist
+    - **Zugewiesen an** — die verantwortliche Werkstatt oder der Techniker (Freitext)
+    - **Geplantes Datum** — wann die Arbeit geplant ist
+  </Step>
+  <Step title="Positionen hinzufügen">
+    Fügen Sie eine oder mehrere Positionen für Teile und Arbeit hinzu. Jede Position hat eine Beschreibung, Menge, Einzelkosten und einen Typ (Teile / Arbeit). Die **Gesamtkosten** werden automatisch aus allen Positionen berechnet.
+  </Step>
+  <Step title="Speichern">
+    Klicken Sie auf **Speichern**. Der Arbeitsauftrag wird im Status **Offen** angelegt.
+  </Step>
+</Steps>
+
+### Statusmaschine
+
+| Status | Bedeutung | Nächste Aktionen |
+|---|---|---|
+| **Offen** | Auftrag erstellt, noch nicht begonnen | Arbeitsauftrag starten, Stornieren |
+| **In Bearbeitung** | Arbeit hat begonnen | Als abgeschlossen markieren, Stornieren |
+| **Abgeschlossen** | Arbeit ist erledigt, LKW freigegeben | — |
+| **Storniert** | Auftrag wird nicht abgeschlossen | — |
+
+Klicken Sie auf **Arbeitsauftrag starten**, um von Offen → In Bearbeitung zu wechseln. Klicken Sie auf **Als abgeschlossen markieren**, wenn die Arbeit erledigt ist. Ein abgeschlossener oder stornierter Arbeitsauftrag hebt jede automatische Sperre am LKW auf.
+
+<Note>
+Nur Arbeitsaufträge im Status **Offen** oder **In Bearbeitung** halten einen LKW auf der Planungstafel gesperrt. Das Abschließen oder Stornieren des Arbeitsauftrags stellt den LKW sofort wieder in die zuweisbare Liste.
+</Note>
+
+---
+
+## Einen Arbeitsauftrag aus einem Mangel erstellen
+
+Reicht ein Fahrer eine Nachreise-Inspektion mit einem **sicherheitskritischen** Mangel ein, erscheint der Mangel unter **Fuhrpark → Mängel**. Jede sicherheitskritische Zeile hat eine Schaltfläche **Arbeitsauftrag erstellen**.
+
+Ein Klick öffnet das Arbeitsauftragsformular, vorausgefüllt mit dem inspizierten LKW und verknüpft mit dem ursprünglichen Mangel-Ticket. Es gibt keinen Arbeitsauftragstyp „Sicherheitskritisch" — wählen Sie den **Servicetyp**, der zur Reparatur passt (z. B. Reparatur, Bremsenservice), geben Sie eine Beschreibung ein, fügen Sie dann Positionen und ein geplantes Datum hinzu und speichern Sie.
 
 ---
 
 ## Wartungspläne
 
-Für regelmäßige Wartung nach Kilometern oder Datum:
-1. Gehen Sie zu **Fuhrpark → Wartungspläne**.
-2. Klicken Sie auf **Plan hinzufügen** und legen Sie das Intervall fest.
-3. Druma erstellt automatisch Erinnerungen.
+Mit Wartungsplänen verfolgen Sie wiederkehrende Serviceintervalle pro LKW — damit Sie immer wissen, wann der nächste Ölwechsel, Riemenwechsel oder die gesetzliche Inspektion fällig ist.
 
-<Card title="Fuhrparkdokumente" icon="folder-open" href="/en/fleet-compliance/fleet-documents">
-  Versicherungen, ITP und andere Compliance-Dokumente verfolgen.
-</Card>
+Gehen Sie zu **Fuhrpark → Wartung**, um Pläne zu verwalten.
+
+### Einen Plan hinzufügen
+
+Klicken Sie auf **Plan hinzufügen** und konfigurieren Sie:
+
+| Feld | Beschreibung |
+|---|---|
+| **LKW** | Für welches Fahrzeug dieser Plan gilt |
+| **Servicetyp** | Freitextbeschreibung (z. B. „Ölwechsel", „Reifenrotation") |
+| **Intervalltyp** | **km** (distanzbasiert), **Tage** (kalenderbasiert), oder **Motorstunden** |
+| **Intervallwert** | Der numerische Intervallwert (z. B. 15.000 km, 90 Tage, 500 Stunden) |
+| **Zuletzt durchgeführt** | Datum und Kilometerstand/Stundenzähler des letzten Service |
+
+Druma berechnet das **nächste Fälligkeitsdatum** oder die nächste Fälligkeits-km-Zahl aus den zuletzt durchgeführten Werten und dem Intervall. Die Planliste sortiert nach Fälligkeitsdatum, sodass überfällige Punkte oben erscheinen.
+
+Sie können jeden Plan bearbeiten oder löschen. Druma erstellt aus Plänen keine automatischen Arbeitsaufträge — der Plan ist ein Planungswerkzeug; Sie erstellen den Arbeitsauftrag manuell, wenn der Service fällig ist.
+
+---
+
+## Planungstafel: das Schraubenschlüssel-Abzeichen
+
+Hat ein LKW einen oder mehrere Arbeitsaufträge im Status **Offen** oder **In Bearbeitung**, erscheint ein gelbes Schraubenschlüssel-Abzeichen auf der Karte dieses LKW auf der Planungstafel. Das Abzeichen ist ein schnelles Signal an Disponenten, dass das Fahrzeug ausstehende Wartung hat.
+
+### Werkstatt-Schnelllösung
+
+Klicken Sie auf das Schraubenschlüssel-Abzeichen, um das Modal **Werkstatt-Schnelllösung** zu öffnen. Von dort können Sie:
+
+- **Als abgeschlossen markieren** — schließt den Arbeitsauftrag und entfernt die Sperre, ohne die Planungstafel zu verlassen
+- **Stornieren** — storniert den Arbeitsauftrag und entfernt die Sperre
+
+Dies ist für Situationen gedacht, in denen Sie schnell eine Sperre aufheben müssen (z. B. die Reparatur ist fertig und Sie müssen den LKW neu zuweisen), ohne zum vollständigen Tab Arbeitsaufträge zu navigieren.
+
+---
+
+## Automatische Nichtverfügbarkeit bei sicherheitskritischen Mängeln
+
+Ist der Schalter **Fahrzeug-Nichtverfügbarkeit bei sicherheitskritischen Mängeln automatisch anlegen** unter **Einstellungen → Nachreise-Checkliste** aktiviert, geschieht beim Einreichen eines sicherheitskritischen Mangels automatisch:
+
+1. Ein Nichtverfügbarkeits-Datensatz für den LKW wird erstellt
+2. Der LKW wird von der zuweisbaren Liste auf der Planungstafel entfernt
+3. Das gelbe Schraubenschlüssel-Abzeichen erscheint auf der Karte des LKW
+
+Der LKW bleibt nicht verfügbar, bis der verknüpfte Arbeitsauftrag als **Abgeschlossen** oder **Storniert** markiert wird. Bereits zugewiesene künftige Aufträge werden nicht automatisch abgezogen — der Disponent erhält eine Benachrichtigung und muss sie manuell prüfen.
+
+<Warning>
+Reicht ein Fahrer am Ende einer Schicht einen sicherheitskritischen Mangel ein und niemand prüft die Planungstafel vor dem Morgen, erscheint der LKW nicht als zuweisbar. Machen Sie es sich zur Gewohnheit, **Fuhrpark → Mängel** als Teil der morgendlichen Tagesprüfung zu kontrollieren.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Fahrzeuginspektion nach der Fahrt (DVIR)" icon="clipboard-check" href="/de/fleet-compliance/post-trip-dvir">
+    Wie Fahrer Mängel am Ende einer Fahrt melden, Schweregrade, und wie sicherheitskritische Mängel Arbeitsaufträge auslösen.
+  </Card>
+  <Card title="Fuhrparkdokumente" icon="file-text" href="/de/fleet-compliance/fleet-documents">
+    Verfolgen Sie den Ablauf von ITP, Versicherung, CEMT und ADR-Zertifikat — mit Planungstafel-Warnungen bei nahendem Ablauf.
+  </Card>
+  <Card title="Fuhrpark-Reifen" icon="circle" href="/de/fleet-compliance/tyres">
+    Verfolgen Sie Reifenzustand, Profiltiefe und Ersatzkosten pro Fahrzeug.
+  </Card>
+  <Card title="Fuhrpark-Vorfälle" icon="triangle-exclamation" href="/de/fleet-compliance/incidents">
+    Protokollieren Sie Unfälle, Schadenereignisse und Versicherungsansprüche für Ihre Flotte.
+  </Card>
+</CardGroup>

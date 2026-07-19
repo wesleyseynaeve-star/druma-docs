@@ -4,31 +4,78 @@ description: "Druma verfolgt automatisch, wie lange Fahrer an Abhol- und Liefero
 icon: "bell"
 ---
 
-## Übersicht
+Wartezeit ist eine der häufigsten Quellen für entgangenen Umsatz im Straßengüterverkehr. Fahrer kommen pünktlich an, warten dann stundenlang, während der Kunde lädt oder entlädt — und die Gebühr schafft es nie auf die Rechnung. Drumas Wartezeitwarnungen sorgen dafür, dass jede Wartestunde erfasst, dokumentiert und abgerechnet wird.
 
-Druma stellt automatisch die Wartezeitkuhr auf den Nullpunkt, wenn ein Fahrer ankommt, und beginnt mit der Akkumulierung von kostenpflichtiger Zeit, sobald die kostenlose Wartezeit abläuft.
+## Wie die Uhr startet
 
-Wenn die kostenlose Wartezeit überschritten wird, erhalten Sie eine Warnung und können:
-- Den Kunden automatisch benachrichtigen
-- Den Wartezeitzuschlag auf der Rechnung berechnen
+Aktualisiert ein Fahrer seinen Status in der Druma-Fahrer-App auf **Angekommen bei Abholung** oder **Angekommen bei Lieferung**, startet die Wartezeituhr automatisch. Die Ankunft wird mit dem GPS-Standort des Fahrers zeitgestempelt, der als Nachweis erfasst und gespeichert wird.
 
----
+Es ist keine manuelle Aktion des Planers nötig. Druma benachrichtigt Ihre Planer in dem Moment, in dem der Fahrer ankommt — siehe unten — und berechnet separat den abrechenbaren Betrag, sobald die kostenlose Zeit abgelaufen ist.
 
-## Warnauslöser
+## Was bei Ankunft des Fahrers passiert
 
-Warnungen werden gesendet, wenn:
-- 30 Minuten der kostenlosen Wartezeit verstrichen sind (1,5 Stunden von 2 Stunden frei)
-- Die kostenlose Wartezeit vollständig verstrichen ist
-- Die kostenpflichtige Zeit 1 Stunde überschreitet
+Druma benachrichtigt Ihre Planer **sofort**, wenn sich der Fahrerstatus auf Angekommen bei Abholung oder Angekommen bei Lieferung ändert — es wartet nicht erst, bis die kostenlose Zeit abgelaufen ist:
 
----
+1. Jeder Planer/Disponent im Unternehmen erhält eine **In-App-Benachrichtigung**: „Fahrer bei Abholung/Lieferung angekommen"
+2. Zusätzlich wird eine **kundenseitige In-App-Benachrichtigung** eingereiht, die darauf hinweist, dass nach Ablauf der kostenlosen Zeit Wartegebühren anfallen können
+3. Das Aktivitätsprotokoll des Auftrags erfasst die Ankunft mit Fahrername, Standort und der geltenden kostenlosen Stundenzahl
 
-## Automatische Kundenbenachrichtigungen
+Die kostenlose Wartezeit beträgt standardmäßig **2 Stunden**, stammt aber aus dem LKW-Kostenprofil (Einstellungen → Preistabellen) — dies bestimmt, ab wann die Ankunft kostenpflichtig wird, nicht wann die Warnung ausgelöst wird.
 
-Gehen Sie zu **Einstellungen → Benachrichtigungen**, um automatische Kundennachrichten zu konfigurieren, wenn:
-- Die kostenlose Wartezeit abläuft
-- Die kostenpflichtige Zeit einen konfigurierten Schwellenwert überschreitet
+## Den Kunden benachrichtigen
 
-<Card title="Wartezeitzuschläge" icon="hourglass" href="/en/planner/waiting-time">
-  Vollständiger Leitfaden zur Wartezeit-Verfolgung und Abrechnung.
-</Card>
+Druma kann dem Kunden eine Wartezeit-E-Mail senden — entweder von einem Planer ausgelöst oder automatisch bei Eskalationsstufen, während die Wartezeit andauert. Die E-Mail enthält:
+
+- Die Ankunftszeit des Fahrers und, falls Be-/Entladung begonnen hat, auch diesen Zeitstempel (Klartext — keine GPS-Koordinaten oder Kartenlink)
+- Kostenlose Wartezeit und bisherige kostenpflichtige Wartezeit zu Ihrem konfigurierten Stundensatz
+- Die bisher berechnete Gesamt-Wartegebühr
+- Einen Link zum hochgeladenen Foto oder zur Sprachnotiz des Fahrers, falls dem Wartezeitereignis eines angehängt wurde (1 Stunde gültig)
+- Bei automatischen Eskalations-E-Mails: Ein-Klick-Links „Empfang bestätigen / Rückruf anfordern / Umplanung anfordern" (48 Stunden gültig)
+
+<Note>
+Diese E-Mail dient als formelle schriftliche Benachrichtigung — wichtig, wenn Sie einen Wartezeit-Anspruch aus dem Transportvertrag belegen müssen.
+</Note>
+
+Es gibt derzeit keinen Vorschau- oder Bearbeitungsschritt — die E-Mail wird aus der obigen Vorlage erzeugt und versendet. Die E-Mail-Adresse des Kunden stammt aus dessen Kontaktdatensatz (bevorzugt der Finanzabteilungskontakt, sonst die allgemeine Kunden-E-Mail).
+
+## Die Gebühr auf der Rechnung
+
+Beim Erstellen der Rechnung für den Auftrag wird die Wartezeitgebühr automatisch als separate Position hinzugefügt:
+
+- Beschreibung: „Wartezeit — [Ort] — [Datum] — [X Stunden Y Minuten]"
+- Satz: Ihr konfigurierter Stundensatz
+- Betrag: auf die nächsten 15 Minuten gerundet berechnet
+
+Sie können diese Position vor Ausstellung der Rechnung bearbeiten oder entfernen, falls mit dem Kunden anders vereinbart.
+
+## Wartezeit-Einstellungen konfigurieren
+
+Kostenlose Wartestunden und der Stundensatz für Wartezeit stammen aus Ihrem LKW-Kostenprofil — gehen Sie zu **Einstellungen → Preistabellen**, öffnen Sie das relevante Kostenprofil für Eigenflotte oder Unterauftragnehmer, und legen Sie dort **Kostenlose Wartestunden** und **Wartetarif €/h** fest. Es gibt derzeit keine separate Überschreibung pro Kunde oder Auftrag für diese Werte — jeder gegen ein bestimmtes Kostenprofil bepreiste Auftrag verwendet dessen Wartezeitbedingungen.
+
+<Warning>
+Ändern Sie den Wartetarif eines Kostenprofils, betrifft dies nur ab diesem Zeitpunkt erfasste Wartezeitereignisse. Bereits offenen Rechnungen hinzugefügte Wartegebühren werden nicht automatisch aktualisiert.
+</Warning>
+
+## Wartezeitverlauf einsehen
+
+Alle Wartezeitereignisse werden dauerhaft im Auftrag gespeichert. Zur Überprüfung:
+
+- **Auftragsdetailseite → Tab Aktivität** — zeigt jede Statusänderung mit Zeitstempel
+- **Analytics → Standort-Wartezeit** — Wartebesuche, Gesamtstunden, Durchschnittsdauer und abrechenbare Beträge, gruppiert nach Abhol-/Lieferort und Kunde, über einen wählbaren Zeitraum (letzte 24 Stunden bis letzte 12 Monate, oder ein benutzerdefinierter Bereich)
+
+Diese Daten sind bei Vertragsverhandlungen nützlich. Verursacht ein Kunde konsequent 3+ Stunden Wartezeit pro Lieferung, haben Sie die Zahlen für eine Tarifverhandlung.
+
+## Häufige Fragen
+
+**Was, wenn der Fahrer vergessen hat, „Angekommen" zu setzen?** Der Planer kann eine Ankunftszeit manuell im Auftrag protokollieren — die tatsächliche Zeit und eine Notiz zur manuellen Eingabe eintragen. Diese Zeit wird für die Wartezeitberechnung verwendet.
+
+**Was, wenn der Kunde die Gebühr anfechtet?** Teilen Sie das Aktivitätsprotokoll des Auftrags aus Druma, das die erfasste Ankunft sowie Be-/Entlade-Zeitstempel zeigt, plus das hochgeladene Foto oder die Sprachnotiz des Fahrers, falls dem Wartezeitereignis eines angehängt wurde.
+
+<CardGroup cols={2}>
+  <Card title="Wartezeit in Aufträgen" icon="clock" href="/de/planner/waiting-time">
+    Wie Planer Wartezeit manuell im Auftragsworkflow verwalten.
+  </Card>
+  <Card title="Rechnungen erstellen" icon="file-invoice" href="/de/invoicing/generating-invoices">
+    Wie Wartegebühren auf Rechnungen erscheinen und bearbeitet werden können.
+  </Card>
+</CardGroup>

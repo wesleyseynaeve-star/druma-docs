@@ -1,44 +1,67 @@
 ---
 title: "Nächtlicher Datenqualitätsscan"
-description: "Jede Nacht prüft Druma Ihre Daten auf neun Arten häufiger Probleme und sendet eine Zusammenfassung per E-Mail, damit Sie Probleme beheben können, bevor sie zu Verzögerungen oder Umsatzverlusten führen."
+description: "Jede Nacht prüft Druma Ihre Daten auf neun Arten häufiger Probleme, damit Sie diese beheben können, bevor sie zu Verzögerungen oder Umsatzverlusten führen."
 icon: "magnifying-glass-chart"
 ---
 
-## Übersicht
+Schlechte Daten kosten Geld. Ein Kunde ohne USt-IdNr. blockiert Ihre e-Factura-Übermittlung. Ein gelieferter Auftrag, der eine Woche unverrechnet bleibt, ist noch nicht eingenommener Umsatz. Eine überfällige Rechnung ohne Nachfassen lässt eine Kundenbeziehung abkühlen. Der nächtliche Datenqualitätsscan findet diese Probleme, bevor sie Sie etwas kosten.
 
-Der nächtliche Datenqualitätsscan läuft automatisch um 09:00 Uhr UTC. Er prüft Ihr System auf häufige Probleme und zeigt Ergebnisse im Dashboard an, damit Ihr Team Probleme proaktiv beheben kann.
+Jede Nacht führt Druma neun automatisierte Prüfungen über Ihren gesamten Datenbestand aus und schreibt die Ergebnisse auf die Seite **Datenqualität** unter **Tools**.
 
----
+## Die neun Prüfungen
 
-## Was geprüft wird
+### 1. Fehlende USt-IdNr.
+Kunden aus einem kürzlichen, nicht als Entwurf gespeicherten Auftrag ohne hinterlegte USt-IdNr. Die rumänische e-Factura-Übermittlung erfordert eine gültige USt-IdNr. für jeden Kunden — fehlt sie, können Rechnungen für diesen Kunden nicht automatisch an ANAF übermittelt werden.
 
-| Prüfung | Schweregrad |
-|---|---|
-| Aufträge ohne Preis | Kritisch |
-| Rechnungen überfällig über 60 Tage | Kritisch |
-| Fahrzeugdokumente abgelaufen | Kritisch |
-| Fahrerdokumente abgelaufen | Kritisch |
-| Aufträge ohne Fahrerzuweisung | Warnung |
-| Fahrzeuge ohne Versicherung | Warnung |
-| Fehlende Kundenkontakte | Info |
-| Keine Aktivität für 7+ Tage | Info |
-| Lieferungen ohne Liefernachweis | Warnung |
+### 2. Rechnung nicht an ANAF übermittelt
+Versendete Rechnungen ohne erfassten e-Factura-Übermittlungsstatus.
 
----
+### 3. Geliefert, seit 7+ Tagen nicht verrechnet
+Als geliefert markierte Aufträge, die vor mehr als 7 Tagen abgeschlossen wurden und noch keine verknüpfte Rechnung haben. Das ist bereits verdienter, aber noch nicht abgerechneter Umsatz.
+
+### 4. Veralteter Auftragsentwurf
+Auftragsentwürfe, die seit mehr als 7 Tagen unbearbeitet liegen geblieben sind — typischerweise vergessene, per E-Mail eingegangene Aufträge, die ein Planer nie bestätigt oder gelöscht hat.
+
+### 5. Kunde ohne E-Mail
+Kunden ohne hinterlegte E-Mail-Adresse.
+
+### 6. Bestätigter Auftrag ohne vereinbarten Preis
+Aufträge im Status **Bestätigt** oder **Zugewiesen**, bei denen der vereinbarte Preis noch fehlt oder null ist.
+
+### 7. Rechnung seit 60+ Tagen überfällig
+Unbezahlte Rechnungen, die mehr als 60 Tage über ihr Fälligkeitsdatum hinaus sind.
+
+### 8. Abgeschlossener Auftrag, nach 14 Tagen keine Rechnung
+Gelieferte Aufträge, die nach 14 Tagen immer noch unverrechnet sind — eine längerfristige Variante von Prüfung 3, als informativ statt kritisch markiert.
+
+### 9. Inaktiver Kunde
+Kunden ohne Aufträge in den letzten 90 Tagen.
 
 ## Ergebnisse anzeigen
 
-Gehen Sie zu **Tools → Datenqualität**, um:
-- Alle gefundenen Probleme nach Schweregrad gruppiert zu sehen
-- Auf einen Klick direkt zur betroffenen Ressource zu navigieren
-- Probleme als gelöst oder ignoriert zu markieren
+Gehen Sie zu **Tools → Datenqualität**.
 
----
+Die Seite zeigt:
 
-## E-Mail-Benachrichtigungen
+- Eine KPI-Leiste mit der Gesamtzahl offener Probleme, plus Zählung nach Schweregrad (Kritisch, Warnung, Info)
+- Ein gestapeltes Balkendiagramm der Probleme nach Schweregrad über die letzten 30 Tage
+- Eine filterbare Tabelle (Offen / Gelöst / Ignoriert / Alle) mit jedem Problem samt Entitätstyp, Referenz, Beschreibung, Schweregrad, vorgeschlagener Aktion, Status und Erstellungsdatum
+- Aktionen **Lösen** und **Ignorieren** für jedes offene Problem
 
-Admins und Unternehmensadministratoren erhalten eine tägliche E-Mail-Zusammenfassung kritischer Probleme.
+<Note>
+Der Datenqualitätsscan läuft jede Nacht um **03:00 UTC**. Die auf der Seite angezeigten Ergebnisse spiegeln den Datenstand zu diesem Zeitpunkt wider. Tagsüber behobene Probleme verschwinden erst beim nächsten nächtlichen Scan (sobald Sie das Problem zusätzlich als **Gelöst** markieren, oder es die zugrunde liegende Abfrage nicht mehr erfüllt).
+</Note>
 
-<Card title="Heute-Ansicht" icon="sun" href="/en/planner/today-view">
-  Tagesoperationsübersicht neben Datenqualitätswarnungen.
-</Card>
+## Probleme beheben
+
+Die Seite Datenqualität zeigt, was falsch ist, und schlägt eine Aktion vor, verlinkt aber nicht direkt zum betroffenen Datensatz — verwenden Sie die angezeigte Referenz (Kundenname, Auftragsnummer, Rechnungsnummer), um den Datensatz selbst in Kunden, Betrieb oder Finanzen zu finden, das Problem zu beheben und dann zurückzukehren und auf **Lösen** zu klicken.
+
+Es gibt kein Sammel-Korrektur-Werkzeug — jedes Problem wird einzeln gelöst. Das ist Absicht: Datenkorrekturen sollen bewusst erfolgen.
+
+Ein Klick auf **Ignorieren** entfernt ein Problem aus dem Filter **Offen**, ohne es als gelöst zu markieren — nutzen Sie dies für Probleme, bei denen Sie sich entschieden haben, nicht zu handeln. Ignorierte und gelöste Probleme sind vom nächsten nächtlichen Re-Scan offener Probleme ausgeschlossen (jeder Scan ersetzt die aktuelle Menge offener, nicht ignorierter Probleme).
+
+<CardGroup cols={1}>
+  <Card title="Berichte-Übersicht" icon="chart-bar" href="/de/reports/reports-overview">
+    Sehen Sie alle verfügbaren Berichte in Druma und wie Sie sie für regelmäßigen E-Mail-Versand planen.
+  </Card>
+</CardGroup>

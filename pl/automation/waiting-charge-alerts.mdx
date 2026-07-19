@@ -1,60 +1,81 @@
 ---
 title: "Alerty opłat za czas oczekiwania"
-description: "Druma automatycznie śledzi jak długo kierowcy czekają w miejscach odbioru i dostawy oraz pomaga powiadamiać klientów i generować opłaty za oczekiwanie."
+description: "Druma automatycznie śledzi, jak długo kierowcy czekają w miejscach odbioru i dostawy, i pomaga powiadamiać klientów oraz generować opłaty za oczekiwanie."
 icon: "bell"
 ---
 
-Czas oczekiwania to jedno z najczęstszych źródeł utraty przychodów w transporcie drogowym. Kierowcy przyjeżdżają na czas, a potem siedzą godzinami podczas gdy klient ładuje lub rozładowuje — a opłata nigdy nie trafia na fakturę. Alerty czasu oczekiwania Druma zapewniają, że każda godzina oczekiwania jest śledzona, udokumentowana i rozliczana.
+Czas oczekiwania to jedno z najczęstszych źródeł utraty przychodów w transporcie drogowym. Kierowcy przyjeżdżają na czas, a potem siedzą godzinami, podczas gdy klient ładuje lub rozładowuje — a opłata nigdy nie trafia na fakturę. Alerty czasu oczekiwania Druma zapewniają, że każda godzina oczekiwania jest śledzona, udokumentowana i rozliczana.
 
-## Jak zegar się uruchamia
+## Jak uruchamia się zegar
 
-Gdy kierowca aktualizuje status w aplikacji na **Dotarł do odbioru** lub **Dotarł do dostawy**, zegar oczekiwania uruchamia się automatycznie. Przybycie jest ostemplowane czasem z wykorzystaniem lokalizacji GPS kierowcy, która jest rejestrowana i przechowywana jako dowód.
+Gdy kierowca aktualizuje status w aplikacji kierowcy Druma na **Dotarł do odbioru** lub **Dotarł do dostawy**, zegar oczekiwania uruchamia się automatycznie. Przybycie jest ostemplowane czasem z użyciem lokalizacji GPS kierowcy, która jest rejestrowana i przechowywana jako dowód.
 
-## Co się dzieje gdy bezpłatny okres wygasa
+Nie jest wymagane żadne ręczne działanie planisty. Druma powiadamia planistów w momencie przybycia kierowcy (patrz niżej) i osobno oblicza kwotę do naliczenia po upłynięciu bezpłatnego okresu.
 
-Domyślny bezpłatny okres oczekiwania to **2 godziny**. Po tym czasie:
+## Co się dzieje, gdy kierowca przyjeżdża
 
-1. Planista otrzymuje **powiadomienie push**: "Kierowca czeka 2h w [lokalizacja] — [nazwa klienta]"
-2. **Czerwona odznaka alertu** pojawia się na karcie zlecenia w widoku Dziś
-3. Strona szczegółów zlecenia pokazuje żywy licznik oczekiwania w kolorze czerwonym
+Druma powiadamia planistów **natychmiast**, gdy status kierowcy zmienia się na Dotarł do odbioru lub Dotarł do dostawy — nie czeka na upłynięcie bezpłatnego okresu:
+
+1. Każdy planista/dyspozytor w firmie otrzymuje **powiadomienie w aplikacji**: "Kierowca dotarł do miejsca odbioru/dostawy"
+2. Kolejkowane jest też **powiadomienie widoczne dla klienta**, informujące, że po bezpłatnym okresie mogą zostać naliczone opłaty za oczekiwanie
+3. Dziennik aktywności zlecenia rejestruje przybycie wraz z imieniem kierowcy, lokalizacją i obowiązującym limitem bezpłatnych godzin
+
+Domyślny bezpłatny okres oczekiwania to **2 godziny**, ale pochodzi z profilu kosztowego pojazdu (Ustawienia → Karty stawek) — to on decyduje, kiedy przybycie staje się płatne, nie kiedy uruchamia się alert.
 
 ## Powiadamianie klienta
 
-Z alertu kliknij **Powiadom klienta**. Druma wstępnie wypełnia formalny e-mail powiadomienia do kontaktu logistycznego klienta zawierający:
+Druma może wysłać klientowi e-mail o czasie oczekiwania — uruchomiony przez planistę albo automatycznie na kolejnych progach eskalacji w miarę trwania oczekiwania. E-mail zawiera:
 
-- Czas przybycia kierowcy z ostemplowaniem GPS i linkiem do mapy
-- Jak długo kierowca czeka w momencie wysyłania
-- Szacowaną opłatę obliczoną według skonfigurowanej stawki godzinowej (domyślnie 45 €/h)
+- Czas przybycia kierowcy oraz, jeśli rozpoczął się załadunek/rozładunek, także ten znacznik czasu (zwykły tekst — bez współrzędnych GPS ani linku do mapy)
+- Bezpłatny czas oczekiwania i dotychczasowy płatny czas oczekiwania, wg skonfigurowanej stawki godzinowej
+- Łączną dotychczas obliczoną opłatę za oczekiwanie
+- Link do przesłanego zdjęcia lub notatki głosowej kierowcy, jeśli została dołączona do zdarzenia oczekiwania (ważny 1 godzinę)
+- Przy automatycznych e-mailach eskalacyjnych — linki "Potwierdź odbiór / Poproś o oddzwonienie / Poproś o zmianę terminu" jednym kliknięciem (ważne 48 godzin)
 
 <Note>
-Ten e-mail działa jako formalne pisemne powiadomienie, ważne jeśli musisz poprzeć roszczenie o czas oczekiwania w ramach umowy transportowej.
+Ten e-mail działa jako formalne pisemne powiadomienie, co jest ważne, jeśli musisz poprzeć roszczenie o czas oczekiwania w ramach umowy przewozowej.
 </Note>
+
+Obecnie nie ma kroku podglądu ani edycji — e-mail jest generowany i wysyłany na podstawie powyższego szablonu. Adres e-mail klienta pobierany jest z jego rekordu kontaktowego (preferowany kontakt działu finansowego, z powrotem do ogólnego e-maila klienta).
 
 ## Opłata na fakturze
 
-Gdy generujesz fakturę dla zlecenia, opłata za czas oczekiwania jest automatycznie dodawana jako oddzielna pozycja.
+Gdy generujesz fakturę dla zlecenia, opłata za czas oczekiwania jest automatycznie dodawana jako osobna pozycja:
+
+- Opis: "Czas oczekiwania — [lokalizacja] — [data] — [X godzin Y minut]"
+- Stawka: Twoja skonfigurowana stawka godzinowa
+- Kwota: obliczona z dokładnością do 15 minut
+
+Możesz edytować lub usunąć tę pozycję na fakturze przed jej wystawieniem, jeśli uzgodniłeś inaczej z klientem.
 
 ## Konfigurowanie ustawień czasu oczekiwania
 
-<Steps>
-  <Step title="Ustawienia globalne">
-    Przejdź do **Ustawienia — Czas oczekiwania**. Ustaw domyślny bezpłatny okres i stawkę godzinową.
-  </Step>
-  <Step title="Ustawienia per klient">
-    Otwórz rekord klienta — karta **Warunki handlowe**. Zastąp bezpłatny okres i stawkę dla tego konkretnego klienta.
-  </Step>
-  <Step title="Ustawienia per zlecenie">
-    W indywidualnym zleceniu otwórz sekcję **Finanse** i edytuj parametry czasu oczekiwania.
-  </Step>
-</Steps>
+Bezpłatne godziny oczekiwania i stawka godzinowa oczekiwania pochodzą z profilu kosztowego pojazdu — przejdź do **Ustawienia → Karty stawek**, otwórz odpowiedni profil kosztowy własnej floty lub podwykonawcy i ustaw tam **Bezpłatne godziny oczekiwania** i **Stawka oczekiwania €/h**. Obecnie nie ma osobnego nadpisania tych wartości per klient ani per zlecenie — każde zlecenie wycenione według danego profilu kosztowego używa warunków oczekiwania tego profilu.
 
----
+<Warning>
+Jeśli zmienisz stawkę oczekiwania w profilu kosztowym, dotyczy to tylko zdarzeń oczekiwania zarejestrowanych od tego momentu. Opłaty za oczekiwanie już dodane do otwartych faktur nie są aktualizowane automatycznie.
+</Warning>
+
+## Przeglądanie historii oczekiwania
+
+Wszystkie zdarzenia oczekiwania są trwale przechowywane w zleceniu. Aby je przejrzeć:
+
+- **Strona szczegółów zlecenia → karta Aktywność** — pokazuje każdą zmianę statusu ze znacznikiem czasu
+- **Analityka → Oczekiwanie na miejscach** — wizyty oczekiwania, łączne godziny, średni czas trwania i kwoty do rozliczenia, pogrupowane wg miejsca odbioru/dostawy i klienta, w wybieralnym okresie (od ostatnich 24 godzin do ostatnich 12 miesięcy lub zakresu niestandardowego)
+
+Te dane są przydatne przy negocjowaniu warunków umowy. Jeśli klient konsekwentnie powoduje 3+ godziny oczekiwania na dostawę, masz liczby na poparcie renegocjacji stawki.
+
+## Częste pytania
+
+**Co jeśli kierowca zapomniał ustawić status "Dotarł"?** Planista może ręcznie zalogować czas przybycia w zleceniu — wpisując faktyczną godzinę i notatkę wyjaśniającą ręczny wpis. Ten czas jest używany do kalkulacji oczekiwania.
+
+**Co jeśli klient kwestionuje opłatę?** Udostępnij dziennik aktywności zlecenia z Druma, który pokazuje zarejestrowane znaczniki czasu przybycia i załadunku/rozładunku, a także przesłane zdjęcie lub notatkę głosową kierowcy, jeśli zostały dołączone do zdarzenia oczekiwania.
 
 <CardGroup cols={2}>
-  <Card title="Czas oczekiwania w zleceniach" icon="clock" href="/en/orders/waiting-time">
-    Jak planiści zarządzają czasem oczekiwania ręcznie w przepływie pracy zlecenia.
+  <Card title="Czas oczekiwania w zleceniach" icon="clock" href="/pl/planner/waiting-time">
+    Jak planiści zarządzają czasem oczekiwania ręcznie w ramach przepływu pracy zlecenia.
   </Card>
-  <Card title="Generowanie faktur" icon="file-invoice" href="/en/invoicing/generating-invoices">
+  <Card title="Generowanie faktur" icon="file-invoice" href="/pl/invoicing/generating-invoices">
     Jak opłaty za oczekiwanie pojawiają się i mogą być edytowane na fakturach.
   </Card>
 </CardGroup>

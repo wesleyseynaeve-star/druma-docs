@@ -1,10 +1,10 @@
 ---
 title: "SAGA C en WinMENTOR-integratie"
-description: "Exporteer Druma-facturen naar SAGA C of WinMENTOR Classic met DBF-bestanden, of push naar WinMENTOR Enterprise automatisch via REST API."
+description: "Exporteer Druma-facturen naar SAGA C of WinMENTOR Classic als bestandspakketten die u importeert in uw boekhoudsoftware."
 icon: "calculator"
 ---
 
-De meeste Roemeense transportbedrijven verwerken hun boekhouding in SAGA C of WinMENTOR. Druma integreert met beide.
+De meeste Roemeense transportbedrijven verwerken hun boekhouding in SAGA C of WinMENTOR Classic. Druma integreert met beide, waardoor u facturen van Druma naar uw boekhoudsoftware kunt verplaatsen zonder gegevens handmatig opnieuw in te voeren.
 
 ## SAGA C
 
@@ -13,43 +13,78 @@ SAGA C is de meest gebruikte boekhoudsoftware voor Roemeense mkb-bedrijven. Drum
 ### Exporteren vanuit Druma
 
 <Steps>
-  <Step title="Ga naar Rapporten → Boekhoudexport">
-    Open de exportmodule.
+  <Step title="Open het exportmenu">
+    Ga in Druma naar **Facturering → Export → SAGA C**.
   </Step>
-  <Step title="Selecteer SAGA C als formaat">
-    Kies het datumbereik en selecteer **SAGA C**.
+  <Step title="Selecteer het datumbereik">
+    Kies de periode die u wilt exporteren — doorgaans de huidige of vorige maand. Alle uitgegeven facturen in die periode worden meegenomen.
   </Step>
-  <Step title="Download">
-    Klik op **Exporteren**. U ontvangt een ZIP-bestand met twee DBF-bestanden: Clienti.dbf en Facturi.dbf.
-  </Step>
-  <Step title="Importeer in SAGA">
-    Open SAGA C en gebruik de standaard importwizard.
+  <Step title="Download het ZIP-bestand">
+    Klik op **ZIP downloaden**. Afhankelijk van wat er in de geselecteerde periode zit, bevat het bestand:
+    - `CLI_<datum>.dbf` — klantstamgegevens
+    - `ART_<datum>.dbf` — de vrachtdienst-regelpost (standaard alleen in uw eerste export meegenomen; daarna automatisch uitgeschakeld, aangezien SAGA het maar één keer nodig heeft)
+    - `IE_<datum>_<datum>.dbf` — verkoopfacturen (Iesiri) met BTW-uitsplitsing
+    - `INT_<datum>.dbf` — aankoopfacturen (Intrari) voor uitbestede orders, alleen aanwezig als de periode er heeft
+    - `NC_<datum>_<datum>.xml` — betalingen (Incasari), alleen aanwezig als de periode er heeft
+    - `README.txt` — importinstructies in het Roemeens
   </Step>
 </Steps>
+
+### Importeren in SAGA C
+
+<Steps>
+  <Step title="Open SAGA C">
+    Log in op SAGA C voor uw bedrijf.
+  </Step>
+  <Step title="Navigeer naar import">
+    Ga naar **Utilitare → Import date**.
+  </Step>
+  <Step title="Importeer de bestanden in volgorde">
+    Importeer eerst `CLI_*.dbf` (Clienti) — alleen nodig bij de eerste export of wanneer nieuwe klanten verschijnen. Dan `ART_*.dbf` (Articole) indien aanwezig, dan `IE_*.dbf` (Iesiri/facturen), dan `INT_*.dbf` (Intrari/aankoopfacturen) indien aanwezig, dan `NC_*.xml` (Incasari/betalingen) indien aanwezig.
+  </Step>
+  <Step title="Verifieer">
+    Controleer de geïmporteerde documenten in **Documente → Iesiri** (facturen) en **Documente → Incasari** (betalingen).
+  </Step>
+</Steps>
+
+### BNR-wisselkoersen
+
+Voor facturen uitgegeven in andere valuta dan RON, neemt Druma automatisch de BNR-wisselkoers (Nationale Bank van Roemenië) geldig op de factuurdatum mee. Deze wordt ingebed in het DBF-bestand en automatisch geïmporteerd in SAGA C — geen handmatige koersinvoer nodig.
 
 ## WinMENTOR Classic
 
-Hetzelfde proces als SAGA maar selecteer **WinMENTOR Classic** als formaat.
+WinMENTOR Classic gebruikt een ander formaat dan SAGA C: pipe-gescheiden (`|`) `.txt`-bestanden in plaats van DBF. Selecteer **WinMENTOR Classic** in de exportvervolgkeuzelijst in plaats van SAGA C.
 
-## WinMENTOR Enterprise (REST API)
+De ZIP bevat:
+- `Iesiri_<datum>_<datum>.txt` — verkoopfacturen
+- `Clienti_<datum>.txt` — klantstamgegevens voor klanten op die facturen
+- `Articole_<datum>.txt` — de vrachtdienst-regelpost
+- `Incasari_<datum>_<datum>.txt` — betalingen, alleen aanwezig als de periode er heeft
+- `README.txt` — importinstructies in het Roemeens
 
-WinMENTOR Enterprise ondersteunt directe API-integratie.
+Om te importeren: ga in WinMENTOR naar **Utilitare → Import/Export → Import din fisier text**, selecteer elk bestand na elkaar, en bevestig dat het scheidingsteken `|` is. Verifieer de geïmporteerde documenten onder **Documente → Vanzari**.
 
-<Steps>
-  <Step title="Open de WinMENTOR Enterprise-kaart">
-    Ga naar **Instellingen → Integraties → WinMENTOR Enterprise**.
-  </Step>
-  <Step title="Voer het REST-eindpunt in">
-    Voer de REST API-eindpunt URL in die is verstrekt door uw WinMENTOR Enterprise-beheerder.
-  </Step>
-  <Step title="Voer inloggegevens in">
-    Voer de API-gebruikersnaam en het wachtwoord in.
-  </Step>
-  <Step title="Test en sla op">
-    Klik op **Verbinding testen**, dan op **Opslaan**.
-  </Step>
-</Steps>
+<Note>
+Er is momenteel geen directe REST API-integratie voor WinMENTOR Enterprise of enig ander boekhoudpakket — SAGA C en WinMENTOR Classic zijn de enige twee ondersteunde formaten, beide bestandsgebaseerd.
+</Note>
 
-<Card title="SAGA & WinMENTOR Export" icon="database" href="/nl/invoicing/saga-export">
-  Hoe factuurexports worden gegenereerd.
-</Card>
+## Automatische maandelijkse export (SAGA C)
+
+In plaats van elke periode handmatig te exporteren, kunt u Druma automatisch een SAGA-export laten mailen naar uw boekhouder:
+
+**Instellingen → Automatiseringen & Functies → SAGA-exportconfiguratie**
+
+Configureer het **e-mailadres van de boekhouder** (en optionele CC), en een **dag van de maand** (1–28) om te draaien. Een geplande taak controleert dagelijks en exporteert op de geconfigureerde dag de **vorige volledige maand** en mailt de ZIP naar de boekhouder met een samenvatting van factuur-/aankoop-/betalingsaantallen en eventuele validatiewaarschuwingen.
+
+<Note>
+De e-mail bevat een downloadlink naar de ZIP die **na 7 dagen vervalt**. Er is geen in-app "Exportgeschiedenis"-lijst — het bestand van elke maand is alleen bereikbaar via die gemailde link (of door de handmatige export voor dezelfde periode opnieuw te draaien vanuit Facturering → Export).
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Facturen genereren" icon="file-invoice" href="/nl/invoicing/generating-invoices">
+    Hoe u facturen genereert vanuit voltooide orders in Druma.
+  </Card>
+  <Card title="ANAF e-Factura" icon="building-columns" href="/nl/invoicing/efactura-anaf">
+    Facturen elektronisch indienen bij ANAF via het e-Factura-systeem.
+  </Card>
+</CardGroup>

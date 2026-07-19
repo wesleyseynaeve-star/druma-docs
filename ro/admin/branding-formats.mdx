@@ -1,33 +1,109 @@
 ---
 title: "Branding si formate documente"
-description: "Personalizeaza logo-ul, culorile si formatul de numerotare pentru documente."
+description: "Personalizeaza culorile brandului si formatul de numerotare pentru facturi, comenzi si randurile evidentiate din Druma."
 icon: "palette"
 ---
 
-Mergi la **Setari -> Branding si Formate**. Trei taburi: Branding, Format Factura, Format Comanda.
+Setarile **Branding si Formate** controleaza cum apare compania ta pe documentele generate si cum se construiesc numerele de referinta pentru facturi si comenzi.
+
+Aceste setari sunt specifice fiecarei companii. Daca administrezi mai multe companii in Druma, fiecare are propria configuratie de branding si format.
+
+**Cine poate edita:** doar rolurile Admin si Company Admin.
+
+<Frame caption="Branding si Formate — 4 taburi: Branding, Format Factura, Format Comanda, Formatare randuri.">
+  <img src="/images/admin/branding-formats.png" alt="Panoul de setari Branding si Formate" />
+</Frame>
+
+---
+
+## Accesarea setarilor
+
+Mergi la **Setari → Branding si Formate**. Pagina are patru taburi: **Branding**, **Format Factura**, **Format Comanda** si **Formatare randuri**.
+
+---
 
 ## Tabul Branding
 
-- **Logo** - PNG, JPG sau SVG, minim 300 px latime. Apare pe facturile PDF si email-uri.
-- **Culoarea principala** - pentru facturile PDF
-- **Culoarea accent** - pentru elementele secundare
+Controleaza cele doua culori de brand folosite pe PDF-urile generate si sabloanele de email: **culoarea principala** (borduri, etichete, totaluri) si **culoarea accent** (antete de tabel, text de continut). Fiecare culoare are un camp cod hex plus un selector vizual, cu previzualizare live.
+
+Apasa **Salveaza modificarile** sau **Reseteaza la implicit**.
 
 <Note>
-Modificarile se aplica numai documentelor noi.
+Logo-ul companiei NU se configureaza pe aceasta pagina — se incarca la **Setari → Companie**. Druma accepta fisiere PNG, JPEG, SVG sau WebP de pana la 2 MB; nu exista o cerinta minima de latime sau de fundal transparent impusa.
 </Note>
+
+---
 
 ## Tabul Format Factura
 
-Token-uri: `{PREFIX}`, `{YYYY}`, `{YY}`, `{MM}`, `{NNN}`, `{NNNN}`
+Controleaza patternul numarului de factura, titlul antetului, dobanda de intarziere, instructiunile de plata, termenii si conditiile, textul de subsol si sectiunile optionale afisate pe PDF-ul facturii.
 
-**Format implicit:** `DR-{YYYY}-{NNN}` produce `DR-2026-001`
+### Token-uri de format
 
-Note de credit: format implicit `CN-{YYYY}-{NNN}`
+| Token | Ce insereaza |
+|---|---|
+| `{PREFIX}` | Prefixul definit de tine (ex: `INV`, `ORD`, propria abreviere) |
+| `{YYYY}` | An pe 4 cifre (ex: `2026`) |
+| `{YY}` | An pe 2 cifre (ex: `26`) |
+| `{MM}` | Luna pe 2 cifre (ex: `04`) |
+| `{DD}` | Ziua pe 2 cifre (ex: `07`) |
+| `{YYMMDD}` | An, luna, zi combinate pe 2 cifre fiecare (ex: `260407`) |
+| `{SEQ3}` | Numar secvential, completat cu zerouri la 3 cifre (ex: `042`) |
+| `{SEQ4}` | Numar secvential, completat cu zerouri la 4 cifre (ex: `0042`) |
+| `{SEQ5}` / `{SEQ6}` | Numar secvential, completat cu zerouri la 5 / 6 cifre |
+
+Nu exista token `{NNN}`/`{NNNN}` — foloseste unul din token-urile `{SEQ3}`–`{SEQ6}` pentru o secventa cu zerouri. Poti combina token-urile liber cu separatori precum `-` sau `/`.
+
+Secventa se reseteaza de fiecare data cand un token de data din pattern (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` sau `{YYYY}`) isi schimba valoarea — practic, un pattern cu `{YYMMDD}` se reseteaza **zilnic**, nu anual. Un pattern care foloseste doar `{YYYY}` se reseteaza o data pe an, cum te-ai astepta.
+
+**Implicit:** prefix `INV`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produce ceva de genul `INV-260407-042`.
+
+| Sablon | Exemplu rezultat |
+|---|---|
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
+
+<Note>
+Notele de credit folosesc propria serie de numerotare (prefix implicit `CN`) si propriul contor, dar nu au momentan un camp de pattern editabil pe aceasta pagina.
+</Note>
+
+Apasa **Salveaza modificarile**. Noul format se aplica urmatoarei facturi create dupa salvare — facturile existente pastreaza numarul de referinta cu care au fost emise.
+
+---
 
 ## Tabul Format Comanda
 
-**Format implicit:** `DR-{YYYY}-{NNN}`
+Defineste patternul de numerotare pentru numerele de referinta ale comenzilor — identificatorul afisat pe planning board, in panoul de detaliu al comenzii si in comunicarile cu soferii sau clientii.
 
-<Warning>
-Schimbarea formatului la mijlocul anului nu renumeroteaza facturile existente.
-</Warning>
+Acelasi sistem de token-uri ca la facturi. Introdu un **Prefix** si un **Pattern numar**; previzualizarea live se actualizeaza sub campuri.
+
+**Implicit:** prefix `ORD`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produce ceva de genul `ORD-260407-042`.
+
+**Exemplu:** un transportator din Belgia ar putea folosi prefixul `BE` cu patternul `{PREFIX}-{YYYY}-{SEQ4}` pentru referinte de tipul `BE-2026-0042`.
+
+Apasa **Salveaza modificarile**. Noul format se aplica tuturor comenzilor create dupa salvare; comenzile existente isi pastreaza numarul original.
+
+---
+
+## Tabul Formatare randuri
+
+Iti permite sa evidentiezi randurile din tabelele Druma pe baza unor conditii simple — de exemplu, colorezi un rand cu rosu cand marja scade sub un prag, sau cand este restant.
+
+Fiecare regula are un nume, un camp de evaluat (marja %, este restant, status, zile de la creare), o conditie (mai mic decat, cel mult, mai mare decat, cel putin, egal, diferit), o valoare de comparat si o culoare de evidentiere. Apasa **Adauga regula** pentru a crea una si **Salveaza modificarile** pentru a aplica regulile.
+
+---
+
+## Pagini asociate
+
+<Card title="Configurare integrari" icon="plug" href="/ro/admin/integration-setup">
+  Conecteaza-ti furnizorul eCMR (furnizorul nativ, intern, al Druma — TransFollow ramane disponibil doar ca fallback mostenit pentru companiile care il foloseau deja), furnizorii de carduri de carburant si software-ul de contabilitate.
+</Card>
+
+<Card title="Facturare electronica Peppol (Belgia)" icon="file-check-2" href="/ro/integrations/peppol-invoicing">
+  Trimite automat facturi catre clientii belgieni prin reteaua Peppol.
+</Card>
+
+<Card title="Trimiterea facturilor" icon="send" href="/en/finance/sending-invoices">
+  Cum generezi, trimiti si urmaresti facturile de vanzare in Druma.
+</Card>

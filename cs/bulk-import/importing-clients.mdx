@@ -1,49 +1,53 @@
 ---
 title: "Import klientů"
-description: "Jak importovat klienty hromadně do Druma pomocí CSV šablony — 14 sloupců včetně kontaktů, DIČ a platebních podmínek."
-icon: "users"
+description: "Hromadně nahrajte firemní klienty do Druma pomocí šablony tabulky."
+icon: "file-import"
 ---
 
-## Přehled
+Pokud máte existující seznam klientů v Excelu nebo jiném systému, hromadný import vám ušetří ruční zadávání každého klienta.
 
-Importujte stávající databázi klientů do Druma najednou pomocí CSV souboru. Import automaticky deduplikuje záznamy podle DIČ.
-
-## Šablona
-
-Šablona CSV pro import klientů obsahuje 14 sloupců:
-
-| Sloupec | Povinný | Popis |
-|---|---|---|
-| company_name | Ano | Právní název společnosti |
-| vat_number | Ano | DIČ (slouží pro dedup) |
-| country | Ano | Dvoupísmenný kód země (CZ, SK atd.) |
-| address | Ne | Ulice a číslo popisné |
-| city | Ne | Město |
-| postal_code | Ne | PSČ |
-| contact_name | Ne | Jméno primárního kontaktu |
-| contact_email | Ne | E-mail kontaktu |
-| contact_phone | Ne | Telefon kontaktu |
-| payment_terms_days | Ne | Výchozí platební podmínky ve dnech |
-| currency | Ne | Výchozí měna (EUR, CZK atd.) |
-| notes | Ne | Interní poznámky |
-
-## Postup importu
+## Stažení šablony
 
 <Steps>
-  <Step title="Přejděte do Klienti → Import">
-    Klikněte na **Import** na stránce klientů.
+  <Step title="Otevřete Hromadný import">
+    Přejděte do **Klienti** a klikněte na **Hromadný import** v panelu nástrojů — otevře se importní modální okno přímo na stránce seznamu klientů; neexistuje samostatná stránka pro import.
   </Step>
-  <Step title="Stáhněte a vyplňte šablonu">
-    Stáhněte CSV šablonu a vyplňte ji.
+  <Step title="Stáhněte šablonu a vyplňte ji">
+    Klikněte na **Stáhnout šablonu** — Druma vygeneruje soubor `.xlsx`. Vyplňte jednoho klienta na řádek:
+
+    | Sloupec | Povinný | Příklad |
+    |--------|----------|---------|
+    | Company name (Název společnosti) | Ano | Acme Logistics SRL |
+    | VAT number (DIČ) | Ne | RO12345678 |
+    | Legal name (Právní název) | Ne | Acme Logistics S.R.L. |
+    | Country (Země) | Ne | Romania |
+    | City (Město) | Ne | Bucharest |
+    | Email | Ne | billing@acme.ro |
+    | Phone (Telefon) | Ne | +40 21 000 0000 |
+    | Payment terms (Platební podmínky, dny) | Ne | 30 |
+    | Currency (Měna) | Ne | EUR |
   </Step>
-  <Step title="Nahrajte a potvrďte">
-    Nahrajte soubor, zkontrolujte náhled a klikněte na **Importovat**.
+  <Step title="Nahrajte a zkontrolujte">
+    Přetáhněte vyplněný soubor (CSV nebo XLSX, do 5 MB) do importního okna. Pokud vaše záhlaví sloupců přesně odpovídá šabloně, Druma je namapuje automaticky; jinak namapujete každý sloupec na správné pole ručně. Poté se zobrazí náhled prvních 5 řádků — řádky s chybějícím Company name (Název společnosti) jsou označeny červeně.
+  </Step>
+  <Step title="Potvrďte import">
+    Klikněte na **Importovat**. Klienti se vytvoří okamžitě a jsou ihned k dispozici pro použití v objednávkách. Výsledková obrazovka zobrazí počet vytvořených, přeskočených a chybných řádků, s podrobnostmi chyby na úrovni řádku pro vše, co selhalo.
   </Step>
 </Steps>
 
-<Card title="Správa kontaktů klientů" icon="users" href="/en/client-portal/managing-contacts">
-  Přidávejte kontakty ručně po importu klientů.
-</Card>
----
+## Deduplikace
 
-This page is being translated. In the meantime, please refer to the [English version](/en/bulk-import/importing-clients).
+Druma zkontroluje DIČ každého řádku proti vašim existujícím klientům (normalizováno na velká písmena, ořezané mezery). Pokud je nalezena shoda, daný řádek je **přeskočen** — neaktualizuje existujícího klienta. Řádky bez DIČ nejsou na tomto základě nikdy přeskočeny a vždy vytvoří nového klienta.
+
+<Note>
+Hromadný import vždy vytváří pouze nové záznamy klientů — nikdy neaktualizuje existující, i když znovu importujete soubor se shodným DIČ. Pro změnu údajů u již existujícího klienta ho upravte přímo v Druma.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Import vaší flotily" icon="truck" href="/cs/bulk-import/importing-fleet">
+    Hromadně přidejte svá vozidla stejným způsobem.
+  </Card>
+  <Card title="Onboarding řidičů pomocí Smart Import" icon="id-card" href="/cs/bulk-import/importing-drivers">
+    AI řízené nahrávání dokumentů Druma pro onboarding seznamu řidičů.
+  </Card>
+</CardGroup>

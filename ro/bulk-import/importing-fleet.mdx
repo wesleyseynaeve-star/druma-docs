@@ -1,21 +1,58 @@
 ---
 title: "Importul flotei"
-description: "Incarca in masa vehiculele in Druma folosind un template CSV."
+description: "Incarca in masa vehiculele in Druma folosind un template de tip foaie de calcul, in loc sa le adaugi unul cate unul."
 icon: "file-import"
 ---
 
+Foloseste importul in masa ca sa adaugi toate vehiculele deodata — ideal la pornire sau la migrarea dintr-un alt sistem.
+
+## Descarcarea template-ului
+
 <Steps>
-  <Step title="Deschide pagina de import">Mergi la **Camioane -> Vehicule -> Import** si apasa **Descarca Template**.</Step>
-  <Step title="Completeaza CSV-ul">Un vehicul per rand: numar inmatriculare, tip (tractor/rigid/van), tip remorca, standard Euro, inaltime (m), greutate (tone), numar axe, capacitate utila (kg), cost zilnic EUR, data expirare ADR, activ (true/false).</Step>
-  <Step title="Incarca fisierul">Salveaza ca CSV si incarca in Druma.</Step>
-  <Step title="Revizuieste">Druma afiseaza un tabel de previzualizare. Randurile cu erori sunt rosii.</Step>
-  <Step title="Confirma importul">Apasa **Importa [X] vehicule**.</Step>
+  <Step title="Deschide Import in masa">
+    Mergi la **Flota → Camioane** si apasa **Import in masa** din bara de instrumente — se deschide direct modalul de import pe pagina listei de Camioane; nu exista o pagina de import separata.
+  </Step>
+  <Step title="Descarca template-ul si completeaza-l">
+    Apasa **Descarca Template** — Druma genereaza un fisier `.xlsx`. Completeaza cate un camion pe rand:
+
+    | Coloana | Obligatoriu | Exemplu |
+    |--------|----------|---------|
+    | Numar inmatriculare | Da | B-123-ABC |
+    | Nume | Nu | Camion 1 |
+    | Marca | Nu | Volvo |
+    | Model | Nu | FH |
+    | An | Nu | 2020 |
+    | Standard Euro | Nu | euro6 |
+    | Tip combustibil | Nu | diesel |
+    | Tip remorca | Nu | tautliner |
+  </Step>
+  <Step title="Incarca si revizuieste">
+    Trage fisierul completat (CSV sau XLSX, pana la 5 MB) in modalul de import. Daca antetele coloanelor tale se potrivesc exact cu template-ul, Druma le mapeaza automat; altfel vei mapa manual fiecare coloana la campul potrivit. O previzualizare arata apoi primele 5 randuri — randurile fara numar de inmatriculare sunt semnalate cu rosu.
+  </Step>
+  <Step title="Confirma importul">
+    Apasa **Importa**. Camioanele sunt create imediat si apar in lista flotei tale. Un ecran de rezultat arata cate randuri au fost create, sarite sau esuate, cu detaliu de eroare per rand pentru orice a esuat.
+  </Step>
 </Steps>
 
-Numerele de inmatriculare trebuie sa fie unice. Daca re-importi un numar existent, Druma actualizeaza acel vehicul in loc sa creeze unul nou.
+## Deduplicare
 
-<Warning>
-`activ = false` marcheaza vehiculul ca inactiv - va disparea din meniurile de atribuire.
-</Warning>
+Druma verifica numarul de inmatriculare al fiecarui rand fata de camioanele tale existente (normalizat cu majuscule, spatii eliminate). Daca gaseste o potrivire, acel rand este **sarit** — nu actualizeaza camionul existent.
 
-<Card title="Documente flota" icon="folder-open" href="/en/fleet-compliance/fleet-documents">Incarca documentele de asigurare si ITP dupa import.</Card>
+<Note>
+Importul in masa creeaza doar inregistrari noi de camion — nu actualizeaza niciodata unul existent, chiar daca reimporti un fisier cu un numar de inmatriculare care se potriveste. Pentru a modifica detaliile unui camion care exista deja, editeaza-l direct in Flota → Camioane.
+</Note>
+
+Nu exista in acest import coloane pentru dimensiunile remorcii, greutate, numar de axe, capacitate utila, cost zilnic, data de expirare ADR sau un indicator activ/inactiv — acestea se configureaza pe inregistrarea vehiculului insasi, dupa import (campurile de profil de cost se afla pe [profilul de cost al vehiculului](/ro/admin/rate-cards), in Setari → Fise de Tarifare, nu pe inregistrarea vehiculului).
+
+## Dupa import
+
+Verifica lista flotei, apoi adauga documentele vehiculelor (asigurare, ITP) pentru fiecare camion.
+
+<CardGroup cols={2}>
+  <Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+    Adauga vehicule manual si gestioneaza setarile individuale ale vehiculelor.
+  </Card>
+  <Card title="Documente flota" icon="folder-open" href="/ro/fleet-compliance/fleet-documents">
+    Incarca documentele de asigurare, inmatriculare si conformitate pentru fiecare vehicul.
+  </Card>
+</CardGroup>

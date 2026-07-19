@@ -1,39 +1,91 @@
 ---
 title: "CO2-emissierapport"
-description: "Maandelijkse vlootemissiegegevens berekend volgens GLEC Framework v3 en ISO 14083-normen, klaar om te delen met klanten voor hun ESG-rapporten."
+description: "Maandelijkse vlootemissiegegevens berekend volgens GLEC Framework v4.0 en ISO 14083-normen, klaar om te delen met klanten voor hun ESG-rapporten."
 icon: "cloud"
 ---
 
-Klanten — met name grote retailers, fabrikanten en logistieke bedrijven — hebben steeds vaker CO2-emissiegegevens nodig van hun transportproviders voor hun eigen ESG- en duurzaamheidsrapporten. Druma berekent de emissies van uw vloot automatisch en produceert een rapport dat u direct kunt delen.
+Klanten — met name grote retailers, fabrikanten en logistieke bedrijven — hebben steeds vaker CO2-emissiegegevens nodig van hun transportproviders voor hun eigen ESG- en duurzaamheidsrapporten. Druma berekent de emissies van uw vloot automatisch uit uw order- en voertuiggegevens en produceert een rapport dat u direct met klanten kunt delen.
 
 ## Het rapport openen
 
 Ga naar **Rapporten → CO2-rapport**.
 
-Selecteer de **maand** en het **jaar** waarvoor u wilt rapporteren. Klik op **Genereren**.
+Standaard ziet u de weergave **Maandelijks** — de meest recente zendingen met een berekend CO2-cijfer, nieuwste eerst. Schakel naar **Jaarlijks (CSRD)** en kies een **jaar** om een volledig-jaar-dataset op te bouwen voor duurzaamheidsexports. Beperk optioneel elke weergave tot één klant met het filter **Klant**.
 
 ## Wat het rapport toont
 
-### Totale vlootemissies
+De pagina heeft twee weergavemodi, bovenaan te wisselen: **Maandelijks** en **Jaarlijks (CSRD)**.
 
-Totale CO2-emissies van alle voertuigen in de geselecteerde maand, uitgedrukt in kilogram CO2-equivalent.
+### Maandelijkse weergave
 
-### Uitsplitsing per truck
+Een tabel per zending — één rij per order, met afstand, gewicht, berekende CO2, berekeningsmethode, klant en truck. Filter op één klant met de vervolgkeuzelijst **Klant**, en gebruik de trendgrafiek boven de tabel om totale tCO2e per maand te zien. De KPI-balk toont totale CO2 voor de periode, gemiddelde CO2 per order, en hoeveel orders een berekend CO2-cijfer hebben.
 
-Emissies per voertuig: kenteken, Euro-klasse, gereden kilometers, berekende emissies.
+<Note>
+De maandweergave is beperkt tot de eerste **500 rijen** voor een gegeven filter (de rapportagepaginaconventie gebruikt doorheen Druma). Is een maand afgekapt, verfijn dan uw datumbereik of klantfilter voor een volledig beeld — een waarschuwingsbanner verschijnt op de pagina wanneer dit gebeurt.
+</Note>
 
-### Uitsplitsing per klant
+### Jaarlijkse (CSRD) weergave
 
-Emissies toegerekend aan elke klant op basis van hun aandeel in het totale getransporteerde volume.
+Dezelfde structuur per zending, uitgebreid met leverdatum, volledige ophaal-/afleveradressen, en de kolom Euronorm van de truck (ter referentie — het CO2-cijfer zelf wordt niet berekend op basis van de Euronorm, zie hieronder). Deze weergave is beperkt tot 5.000 zendingen per jaar; een afkappingswaarschuwing verschijnt als het jaar er meer heeft.
 
-## Het rapport exporteren
+## Berekeningsmethodologie voor emissies
 
-Klik op **PDF exporteren** voor een geformatteerd rapport geschikt voor het verzenden naar klanten. Klik op **CSV exporteren** voor ruwe gegevens voor uw eigen ESG-berekeningsprogramma.
+Druma volgt de standaard emissiefactoren van het **GLEC Framework v4.0**, afgestemd op **ISO 14083** (Tier 1-methode) — de internationale standaard voor het kwantificeren en rapporteren van broeikasgasemissies uit transportketens.
 
-## Berekenings­methodologie
+CO2 per order is **niet** gebaseerd op de Euro-emissienorm van de truck. Ze is gebaseerd op de **gewichtsklasse** en het **brandstoftype** van de truck:
 
-Druma volgt het **GLEC Framework v3**, afgestemd op **ISO 14083**. De emissiefactor is gebaseerd op de Euro-klasse van elk voertuig, vermenigvuldigd met de HERE-geplande routeafstand.
+| Voertuigklasse | Brandstoftype | Emissiefactor (gCO2e/tonkm) |
+|---|---|---|
+| Opleggercombinatie 32–34t (standaard FTL-truck) | Diesel | 62 |
+| Opleggercombinatie 32–34t | LNG | 54 |
+| Opleggercombinatie 32–34t | Elektrisch | 25 |
+| Opleggercombinatie 32–34t | HVO | 12 |
+| Bakwagen 16–26t | Diesel | 91 |
+| Bakwagen 16–26t | Elektrisch | 37 |
+| Bakwagen 12–16t | Diesel | 119 |
+| Bakwagen 12–16t | Elektrisch | 48 |
 
-<Card title="CO2-rapportage" icon="leaf" href="/nl/fleet-compliance/co2-reporting">
-  Hoe emissies worden berekend en geconfigureerd.
-</Card>
+De voertuigklasse wordt automatisch afgeleid uit het geregistreerde maximale laadvermogen/gewicht van de truck (boven 30t → opleggercombinatie 32–34t; boven 15t → bakwagen 16–26t; anders bakwagen 12–16t). Het brandstoftype komt uit het voertuigrecord en staat standaard op diesel indien niet ingesteld; bestaat er nog geen factor voor een ongebruikelijk brandstoftype op die klasse, dan valt Druma terug op de dieselfactor voor dezelfde klasse in plaats van de order onberekend te laten.
+
+De formule (Well-to-Wheel, ISO 14083 Tier 1):
+
+```
+CO2e (kg) = afstand (km) × [gewicht (kg) ÷ 1.000] × emissiefactor (gCO2e/tkm) ÷ 1.000
+```
+
+De afstand komt van PTV-vrachtwagenroutering (dezelfde afstand getoond op de order). Het gewicht is het geregistreerde ladinggewicht van de order; heeft een order geen geregistreerd gewicht, dan schat Druma de helft van het maximale laadvermogen van de truck als conservatieve gemiddelde lading.
+
+## CO2-gegevens delen met klanten
+
+Druma mailt automatisch een maandelijkse CO2-samenvatting naar elk klantcontact met **Ontvangt CO2-rapporten** ingeschakeld (per contact ingesteld op het tabblad **Contacten** van de klant) — geen handmatige export nodig voor die ontvanger.
+
+Voor alles voorbij die automatische e-mail — een volledig-jaar ESRS-conform pakket, een ad-hoc deling met het duurzaamheidsteam van een klant, of uw eigen interne administratie — schakel naar de weergave **Jaarlijks (CSRD)** en gebruik de exportknoppen beschreven in [CSRD-emissie-exports](/nl/reports/csrd-exports): jaarlijkse XLSX, CSRD-gegevenspakket (CSV) en iXBRL. De maandweergave heeft ook een generieke afdruk-/exportknop voor de zichtbare tabel.
+
+### Wat Scope 3 betekent
+
+Uw klanten registreren emissies van transport dat ze uitbesteden als **Scope 3-emissies** (Categorie 4: Upstream-transport, of Categorie 9: Downstream-transport). De gegevens die u aanlevert voeden rechtstreeks die berekening. Deze gegevens klaar hebben bespaart uw klanten tijd en maakt u een aantrekkelijkere vervoerder.
+
+## Hoe u uw CO2-score verbetert
+
+Omdat de berekening gedreven wordt door **brandstoftype** en **gewichtsklasse van het voertuig**, niet enkel afstand, is de truck zelf de grootste hefboom. Voor de meest voorkomende FTL-klasse (opleggercombinatie, 32–34t), verlaagt overschakelen van diesel (62 gCO2e/tkm) naar HVO (12 gCO2e/tkm) of elektrisch (25 gCO2e/tkm) de factor met respectievelijk 81% of 60%. Bijvoorbeeld, een rit van 1.000 km met 24t lading:
+
+- Diesel: 1.000 km × 24t × 62 gCO2e/tkm ÷ 1.000 = **1.488 kg CO2**
+- HVO op dezelfde truckklasse: 1.000 km × 24t × 12 gCO2e/tkm ÷ 1.000 = **288 kg CO2** — een vermindering van 1.200 kg (81%) per rit
+
+Andere verbeteringen die Druma u kan helpen bijhouden:
+
+- **Routeoptimalisatie** — kortere routes vanuit PTV-vrachtwagenroutering betekenen lagere totale emissies
+- **Ladingconsolidatie** — minder, vollere ritten verlagen de totale tonkilometers over de vloot
+- **Lege ritten verminderen** — lege kilometers zijn CO2 zonder omzet om ze te compenseren
+
+<CardGroup cols={2}>
+  <Card title="CSRD-emissie-exports" icon="download" href="/nl/reports/csrd-exports">
+    Exporteer jaarlijkse CO2-gegevens in XLSX-, CSRD-conform CSV- en iXBRL-formaten voor duurzaamheidsrapportage en ESRS E1-naleving.
+  </Card>
+  <Card title="CO2-rapportage (vlootinstellingen)" icon="truck" href="/nl/fleet-compliance/co2-reporting">
+    Hoe brandstoftype en gewichtsklasse van de truck de CO2-berekening voeden, en wat te controleren op uw vlootrecords.
+  </Card>
+  <Card title="Rapporten-overzicht" icon="chart-bar" href="/nl/reports/reports-overview">
+    Alle beschikbare rapporten in Druma en hoe u geautomatiseerde levering plant.
+  </Card>
+</CardGroup>

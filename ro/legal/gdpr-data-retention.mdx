@@ -17,8 +17,8 @@ Aceasta pagina explica exact ce date pastreaza Druma despre compania ta, cat tim
 | Comenzi de transport si inregistrari de expediere | Durata abonamentului + 90 zile | Contract |
 | Date clienti | Durata abonamentului + 90 zile | Contract |
 | Date soferi | Durata abonamentului + 90 zile | Contract |
-| Facturi si inregistrari financiare | 7 ani de la data facturii | Legea contabilitatii din Romania |
-| Documente eCMR (semnate) | 10 ani de la data semnarii | Protocolul e-CMR (cerinta legala) |
+| Facturi si inregistrari financiare | Arhivate la 3 ani, sterse definitiv la 10 ani de la data facturii | Legea fiscala UE / Legea Contabilitatii din Romania |
+| Documente eCMR (semnate) | Sterse definitiv la 7 ani de la data livrarii transportului, printr-o purjare anuala de sine statatoare — independenta de statusul contului tau | Protocolul Aditional la Conventia CMR |
 | Jurnale de audit | 18 luni | Interes legitim |
 | Pozitie GPS (urmarire live) | Nu se retine - doar pozitia curenta, suprascrisa la fiecare actualizare | Contract |
 | Coordonate GPS asociate unui eveniment de comanda | Retinute impreuna cu comanda (vezi randul de mai sus) | Contract |
@@ -28,7 +28,7 @@ Aceasta pagina explica exact ce date pastreaza Druma despre compania ta, cat tim
 | Inregistrari de facturare (Stripe) | 7 ani | Legislatie fiscala |
 
 <Note>
-Documentele eCMR au o cerinta de retentie de 10 ani conform Protocolului Aditional la Conventia CMR. Aceasta perioada nu poate fi scurtata nici daca inchizi contul.
+Semnaturile si documentele eCMR sunt sterse definitiv automat **la 7 ani de la data livrarii transportului**, printr-un job de purjare anual — acesta ruleaza indiferent daca contul tau este deschis sau inchis. Separat, daca contul unui utilizator individual este sters, orice semnatura eCMR pe care a creat-o in **ultimii 3 ani** este anonimizata (nu stearsa), in loc sa fie eliminata imediat, deci supravietuieste — fara date personale atasate — pana cand pragul de 7 ani de mai sus o ajunge din urma.
 </Note>
 
 ## Date GPS: ce stocam
@@ -56,10 +56,14 @@ Fiecare actiune semnificativa in Druma (comanda creata, factura trimisa, autenti
 
 Cand anulezi abonamentul:
 
-1. Contul intra intr-o perioada de gratie de 90 de zile - datele sunt pastrate si accesibile
-2. Dupa 90 de zile, toate datele operationale sunt sterse definitiv
-3. Facturile si inregistrarile financiare sunt pastrate 7 ani (cerinta legala)
-4. Documentele eCMR sunt pastrate 10 ani (cerinta legala)
+1. Contul tau intra intr-o **perioada de gratie de 90 de zile** - datele sunt pastrate si accesibile.
+2. Dupa 90 de zile, daca intregul cont al companiei tale este sters: mesajele de comanda si notele interne sunt sterse imediat, comenzile **mai vechi de 3 ani** sunt sterse, iar clientii, camioanele si remorcile sunt sterse. Comenzile **mai noi de 3 ani nu sunt sterse la acest pas** — ele, impreuna cu facturile si semnaturile eCMR asociate, continua sa "imbatraneasca" conform regulilor de retentie de sine statatoare de mai jos, in loc sa fie sterse in ziua 90.
+3. Facturile si inregistrarile financiare sunt arhivate la 3 ani si sterse definitiv la 10 ani de la data facturii — acest calendar ruleaza independent de momentul in care ai anulat.
+4. Semnaturile si documentele eCMR sunt sterse definitiv la 7 ani de la data livrarii transportului — de asemenea independent de data anularii tale.
+
+<Note>
+Daca este eliminat contul unui singur membru al echipei (nu intreaga companie), se aplica o regula separata, mai restransa: comenzile si semnaturile eCMR pe care le-a creat in ultimii 3 ani sunt anonimizate (campurile personale eliminate, inregistrarile pastrate pentru datele de afaceri), iar facturile pe care le-a creat in ultimii 10 ani sunt anonimizate. Inregistrarile din afara acestor ferestre sunt sterse odata cu inregistrarea utilizatorului.
+</Note>
 
 ## Solicitarea unui export de date
 
@@ -72,7 +76,7 @@ Datele sunt livrate ca fisier ZIP (format JSON si CSV) la adresa de email a cont
 ## Solicitarea stergerii contului
 
 <Warning>
-Stergerea contului este ireversibila. Toate datele operationale sunt sterse definitiv dupa perioada de retentie de 90 de zile. Datele obligatorii legal (facturi, eCMR) sunt pastrate conform legii.
+Stergerea contului este ireversibila. Odata ce trece perioada de retentie de 90 de zile, datele operationale mai vechi (comenzi de peste 3 ani, plus clienti/camioane/remorci) sunt sterse definitiv; comenzile, facturile si datele eCMR mai recente sunt anonimizate sau pastrate conform calendarelor lor proprii, cerute legal, in loc sa fie sterse imediat — vezi "Dupa anularea contului" de mai sus.
 </Warning>
 
 Pentru a sterge contul: **Setari -> Date si Confidentialitate -> Sterge Contul** -> confirma tastand numele companiei.
@@ -91,7 +95,7 @@ Alternativ, trimite un email la privacy@druma.io de la adresa de email a proprie
 | PTV Group | Date de ruta, distanta si ETA (coordonate ridicare/livrare) | UE |
 | HERE Technologies | Geocodare si autocompletare adrese | UE |
 | Google Vertex AI | Extragere AI din email si documente | europe-west1 (fara antrenare de model) |
-| Google Cloud Translation | Traducere la cerere a continutului interfetei/documentelor | Google Cloud (fara garantie de rezidenta UE) |
+| Google Cloud Translation | Traducere la cerere a continutului interfetei/documentelor | Google Cloud |
 | Sentry | Monitorizare erori si raportare crash-uri | UE |
 | Google Firebase Cloud Messaging | Notificari push in aplicatia soferului | Google Cloud |
 | WhatsApp Business Cloud API (Meta) | Mesagerie soferi (doar daca este activata) | Meta (SUA/UE) |

@@ -1,58 +1,98 @@
 ---
-title: "Rentabilité par ligne"
-description: "Analysez quelles lignes (routes) sont rentables, identifiez les pertes et optimisez votre stratégie de tarification."
-icon: "chart-line"
+title: "Rapport de rentabilité par ligne"
+description: "Voyez la marge réelle sur chaque paire origine-destination que vous exploitez, avec le revenu, les coûts estimés, et la tendance par rapport à la période précédente."
+icon: "route"
 ---
 
-## Vue d'ensemble
+Beaucoup d'opérateurs connaissent leur revenu par ligne mais pas leur marge réelle une fois le carburant, les péages, et les coûts chauffeur comptés. Le rapport de rentabilité par ligne fait le calcul pour chaque combinaison de paire de pays que vous exploitez, afin que vous puissiez voir en un coup d'œil quelles lignes fonctionnent bien et lesquelles rongent votre profit.
 
-Le rapport de rentabilité par ligne décompose vos performances financières par itinéraire. Il vous montre quelles lignes génèrent les meilleures marges et lesquelles coûtent plus qu'elles ne rapportent.
+## Ouvrir le rapport
 
 Accédez à **Rapports → Rentabilité par ligne**.
 
----
+Sélectionnez votre plage de dates en haut. Le rapport est par défaut sur le mois en cours. Pour une comparaison significative, vous voulez généralement au moins un mois complet de données, idéalement un trimestre.
 
-## Colonnes du rapport
+<Frame caption="Rentabilité par ligne — marge par paire origine-destination, avec le seuil fixe de 15 % utilisé pour signaler les lignes sous-performantes.">
+  <img src="/images/reports/lane-profitability.png" alt="Rapport de rentabilité par ligne" />
+</Frame>
 
-| Colonne | Description |
+## Ce que montre le rapport
+
+Chaque ligne du tableau est une paire de pays origine-destination. Pour chaque ligne, vous voyez :
+
+| Colonne | Signification |
 |---|---|
-| **Ligne** | Pays ou ville d'origine → Pays ou ville de destination |
-| **Nb commandes** | Nombre de commandes sur cette ligne |
-| **Revenu total** | Revenus cumulés de toutes les commandes |
-| **Coût total** | Coûts variables (carburant, péage) + coûts fixes alloués |
-| **Marge brute** | Revenu - Coûts variables |
-| **Marge nette** | Revenu - Coûts totaux |
-| **% Marge** | Marge nette en pourcentage du revenu |
-| **CO2 total** | Émissions cumulées pour cette ligne |
-| **Livraison à l'heure** | Pourcentage de livraisons dans les délais |
+| **Revenu** | Montant total facturé pour les commandes sur cette ligne durant la période |
+| **Coût carburant** | Estimé : distance × consommation moyenne × prix du carburant |
+| **Coût péage** | Données de péage PTV pour l'itinéraire |
+| **Coût chauffeur** | Coût journalier × jours de trajet, basé sur le tarif par chauffeur que vous configurez |
+| **Coûts totaux** | Somme carburant + péages + coût chauffeur |
+| **Marge €** | Revenu moins coûts totaux |
+| **Marge %** | Marge en pourcentage du revenu |
+| **Trajets** | Nombre de commandes terminées sur cette ligne durant la période |
+| **Prix moy./trajet** | Revenu moyen par commande |
+| **Tendance** | Flèche indiquant si la marge % s'est améliorée ou dégradée par rapport à la période précédente |
 
----
+Les lignes sous le seuil de marge cible sont surlignées en rouge. Ce seuil est actuellement fixé à **15 %** — il n'est pas encore configurable depuis les Paramètres.
 
-## Granularité
-
-Basculez entre :
-- **Par pays** — Vue agrégée (ex. : Roumanie → Allemagne)
-- **Par ville** — Vue détaillée (ex. : Bucarest → Munich)
-
----
-
-## Filtres
-
-Utilisez les filtres pour analyser :
-- Une période spécifique (mois, trimestre, année)
-- Un type de remorque spécifique
-- Un client spécifique
-
----
-
-## Export
-
-Cliquez sur **Exporter CSV** pour télécharger les données brutes pour analyse approfondie dans Excel. Le fichier inclut l'encodage UTF-8 BOM pour la compatibilité avec Excel.
+## Comment fonctionnent les estimations de coût
 
 <Note>
-Le rapport est limité à 500 lignes par requête pour les performances. Si votre historique est plus important, exportez par périodes.
+Les estimations de coût dans ce rapport sont des approximations basées sur vos paramètres configurés. Elles sont utiles pour identifier la performance relative entre les lignes, mais les coûts réels peuvent différer — particulièrement pour les coûts de péage sur les itinéraires avec des routes à péage variable.
 </Note>
 
-<Card title="Vue d'ensemble des rapports" icon="chart-bar" href="/fr/reports/reports-overview">
-  Voir tous les rapports disponibles dans Druma.
-</Card>
+**Calcul du coût carburant :**
+Distance (depuis le routage PTV) × consommation moyenne de la flotte (litres/100km, définie dans Paramètres → Flotte → Consommation par défaut) × votre prix du carburant (défini dans Paramètres → Flotte → Prix du carburant, ou importé depuis les données de cartes carburant si vous utilisez l'import de cartes carburant).
+
+**Calcul du coût péage :**
+Données de péage PTV pour l'itinéraire. Couvre la plupart des systèmes de péage autoroutier européens. Moins précis pour les itinéraires traversant des pays avec des systèmes de vignette complexes.
+
+**Calcul du coût chauffeur :**
+Nombre de jours de trajet × le tarif de coût journalier que vous avez défini pour chaque chauffeur dans son profil (Flotte → Chauffeurs → [chauffeur] → Tarif de coût journalier). Si aucun chauffeur n'est assigné, Druma utilise votre coût journalier chauffeur par défaut global.
+
+Vous pouvez mettre à jour toutes ces entrées dans Paramètres pour améliorer la précision. Le rapport se recalcule immédiatement quand vous enregistrez de nouvelles valeurs.
+
+## Identifier les lignes non rentables
+
+Triez le tableau par **Marge %** croissante — les lignes les moins performantes remontent en haut.
+
+Les lignes rouges sont sous votre marge cible. Raisons courantes :
+
+- **Lignes longue distance** — semblent rentables en revenu mais ont des coûts carburant et chauffeur élevés
+- **Lignes à péages lourds** — certains itinéraires à travers la France, l'Autriche, ou la Suisse ont des péages significativement plus élevés que les alternatives
+- **Clients historiques sous-tarifés** — tarifs convenus il y a des années et jamais renégociés
+- **Lignes à faible volume** — moins de trajets signifie que les coûts fixes pèsent plus lourd
+
+## Explorer une ligne en détail
+
+Cliquez sur n'importe quelle ligne pour voir les commandes individuelles qui composent les chiffres de cette ligne. Vous pouvez voir le revenu, le coût estimé, et la marge de chaque commande — et identifier des commandes spécifiques qui sont des anomalies (par exemple, une seule commande à un tarif bien plus bas que le reste).
+
+Depuis la liste des commandes, vous pouvez cliquer pour accéder au détail complet de la commande. Utile pour enquêter sur pourquoi une ligne spécifique a sous-performé un mois donné.
+
+## Filtrer le rapport
+
+Utilisez les filtres en haut de la page :
+
+- **Pays d'origine** — filtrez sur un ou plusieurs pays d'origine spécifiques
+- **Pays de destination** — filtrez sur un ou plusieurs pays de destination spécifiques
+- **Client** — voyez la rentabilité par ligne pour un seul client
+- **Camion** — voyez quels camions exploitent quelles lignes le plus rentablement
+
+## Exporter
+
+Cliquez sur **Exporter → CSV** pour télécharger le rapport complet sous forme de tableur. Le CSV inclut toutes les colonnes et toutes les commandes de la vue explorée si vous avez appliqué des filtres.
+
+Le CSV est le meilleur format pour une analyse plus poussée dans Excel — par exemple, construire vos propres tableaux croisés dynamiques par client ou par camion.
+
+<Warning>
+Ne prenez pas de décisions de tarification basées uniquement sur ce rapport sans considérer d'autres facteurs : les frets retour, les relations client stratégiques, et la variation saisonnière de volume affectent tous la valeur réelle d'une ligne.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Vue d'ensemble des rapports" icon="chart-bar" href="/fr/reports/reports-overview">
+    Tous les rapports disponibles dans Druma et comment les programmer.
+  </Card>
+  <Card title="Barèmes de tarifs" icon="tag" href="/fr/admin/rate-cards">
+    Configurez des barèmes de tarifs par ligne qui alimentent la détection de tarification anormale et les objectifs de marge.
+  </Card>
+</CardGroup>

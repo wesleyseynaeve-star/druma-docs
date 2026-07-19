@@ -1,15 +1,122 @@
-﻿---
-title: "Skutečné mýtné a odsouhlasení"
-description: "Porovnejte odhadované mýtné HERE se skutečnostmi zaznamenanými řidičem a konfigurujte politiku přeúčtování klientům."
+---
+title: "Účtenky za mýtné a odsouhlasení"
+description: "Porovnejte mýtné odhadované PTV se skutečnostmi zaznamenanými řidičem za jednotlivou zemi, importujte řádky mýtného z palivových karet a nakonfigurujte politiku přeúčtování klientům."
 icon: "receipt"
 ---
 
-Druma resí rozdíl mezi odhadovanym a skutecnym mytnem tim, ze umoznuje ridiciem zaznamenávat mytne primo z aplikace.
+## Přehled
 
-## Zaznam mytneho ridicem
+Náklady na mýtné jsou významnou a často nepřehlednou součástí silniční přepravy. Směrovací API PTV vám při vytvoření objednávky poskytne odhad mýtného za jednotlivou zemi, ale skutečně zaplacená částka na silnici se běžně liší — různé kategorie vozidel, chybějící dálniční známky, sezónní sazby a odchylky při přechodu hranic způsobují posun.
 
-Behem aktivni zasilky zobrazuje aplikace ridicí tlacítko **Zaznamenat mytne**. Ridic zada castku, zemi a volitelne fotku uctenko.
+Druma tuto mezeru uzavírá tím, že umožňuje řidičům zaznamenávat účtenky za mýtné přímo z PWA, poté zobrazuje barevně odlišený panel odsouhlasení v detailu objednávky, aby plánovači zachytili velké odchylky dřív, než ovlivní marže nebo faktury klientů.
 
-## Panel odsouhlasení
+---
 
-Otevrte podrobnosti objednavky a sjedte na sekci **Odsouhlaseni mytneho**. Odchylky jsou barevne kodovany: zelena (do 5%), zluta (6-15%), cervena (nad 15%).
+## Jak řidiči zaznamenávají účtenky za mýtné
+
+Během aktivní zásilky zobrazuje PWA řidiče na obrazovce detailu zakázky tlačítko **Zaznamenat mýtné**. Klepnutím se otevře list **Účtenka za mýtné**.
+
+<Steps>
+  <Step title="Klepněte na Zaznamenat mýtné">
+    Tlačítko je viditelné vždy, když je stav zakázky u_vyzvednutí, nakládka, na_cestě, u_doručení nebo vykládka — jakýkoli stav, kdy je vozidlo na silnici.
+  </Step>
+  <Step title="Zadejte podrobnosti mýtného">
+    Vyplňte:
+    - **Částka (EUR)** — povinné pole: zaplacené mýtné, přepočtené na EUR
+    - **Místní částka** (volitelné) — částka v místní měně, plus kód měny a směnný kurz, pokud chcete zaznamenat i původní hodnoty
+    - **Země** — předvyplněná podle aktuální GPS pozice, ale upravitelná
+    - **Poznámky** (volitelné) — reference dálnice, číslo brány, nebo jakýkoli komentář řidiče
+  </Step>
+  <Step title="Připojte fotografii účtenky (volitelné)">
+    Klepněte na ikonu fotoaparátu nebo souboru pro připojení fotografie účtenky. Podporované formáty: JPEG, PNG, WebP, HEIC, PDF. Maximální velikost souboru: 5 MB.
+  </Step>
+  <Step title="Potvrďte">
+    Klepněte na **Uložit**. Účtenka se okamžitě uloží.
+  </Step>
+</Steps>
+
+### Podpora offline
+
+Účtenky za mýtné fungují offline. Pokud je řidič v oblasti bez připojení, účtenka se zařadí do lokální fronty a automaticky se synchronizuje, jakmile se zařízení znovu připojí. Plánovač ji uvidí v panelu odsouhlasení, jakmile synchronizace dokončí.
+
+---
+
+## Panel odsouhlasení (pohled plánovače)
+
+Otevřete panel detailu jakékoli objednávky a sjeďte na sekci **Odsouhlasení mýtného**. Panel zobrazuje tabulku s jedním řádkem za zemi, kde existuje buď odhad PTV, nebo zaznamenaná skutečnost.
+
+### Barevné odlišení odchylky
+
+| Barva | Podmínka | Co to znamená |
+|---|---|---|
+| Zelená | Odchylka ≤ 5 % | Skutečnost je v očekávaném rozsahu |
+| Oranžová | Odchylka 6–15 % | Střední odchylka — stojí za kontrolu |
+| Červená | Odchylka > 15 % | Významná odchylka — zkontrolujte účtenky |
+| Šedá | Žádný odhad PTV | PTV nemělo data o mýtném pro tento segment země |
+
+Odchylka se počítá jako `(skutečnost − odhad) / odhad`. Kladná odchylka znamená, že řidič zaplatil více, než bylo odhadováno; záporná odchylka znamená méně.
+
+### Seznam účtenek
+
+Pod souhrnnou tabulkou je uvedena každá jednotlivá účtenka s:
+- Datem a časem zaznamenání
+- Zemí a částkou
+- Poznámkami (pokud nějaké jsou)
+- Miniaturou, pokud byla připojena fotografie — kliknutím otevřete obrázek v plné velikosti
+
+Plánovači mohou přidávat účtenky ručně pomocí tlačítka **Přidat účtenku** ve spodní části sekce — užitečné, když řidič zapomněl mýtné zaznamenat, ale má papírovou účtenku.
+
+---
+
+## Import palivových karet — automatické oddělení mýtného
+
+Výpisy palivových karet DKV, UTA a AS24 často sdružují transakce paliva a mýtného ve stejném exportním souboru. Když importujete soubor palivové karty ve **Vozový park → Palivové karty**, Druma automaticky oddělí řádky mýtného od řádků paliva:
+
+- **Řádky paliva** se přidají do evidence paliva vozidla jako obvykle
+- **Řádky mýtného** se nasměrují do účtenek za mýtné a spárují s objednávkou aktivní k danému datu pro dané vozidlo
+
+Opětovný import stejného souboru je bezpečný — duplicitní záznamy (spárované podle reference transakce a částky) se automaticky přeskočí.
+
+<Note>
+Párování mýtného z importů palivových karet používá vozidlo a datum k nalezení aktivní objednávky. Pokud mělo vozidlo ve stejný den více objednávek, import připojí účtenku k první odpovídající objednávce a označí řádek pro ruční kontrolu v souhrnu importu.
+</Note>
+
+---
+
+## Politika přeúčtování za jednotlivou zemi
+
+Ne každé mýtné se fakturuje klientovi. Některé společnosti absorbují mýtné pro určité koridory jako součást své sazby; jiné ho přeúčtovávají v plné výši. Druma vám umožňuje toto nakonfigurovat na úrovni ceníku.
+
+Přejděte do **Nastavení → Ceníky** a otevřete jakýkoli ceník. Ve spodní části je tabulka výjimek **Politika mýtného podle země**. Pro každou zemi:
+
+| Politika | Chování |
+|---|---|
+| Přeúčtovat | Skutečné mýtné se zobrazí jako řádek doplňků objednávky na faktuře |
+| Absorbovat | Mýtné se sleduje interně, ale nezobrazuje se na faktuře klienta |
+| (prázdné) | Použije se výchozí politika mýtného ceníku nejvyšší úrovně |
+
+Země neuvedené v tabulce výjimek dědí výchozí nastavení ceníku.
+
+### Automatický řádek faktury
+
+Když je země nastavena na **Přeúčtovat**, zaznamenané účtenky za mýtné pro danou zemi se automaticky sečtou a při generování se přidají jako řádek doplňků objednávky na faktuře. Řádek je označen názvem země.
+
+Pokud potřebujete vyloučit konkrétní účtenku z faktury — například protože je pokryta samostatnou dohodou o příplatku — otevřete editor faktury a přepněte **Vyloučit z faktury** u daného řádku doplňků.
+
+---
+
+## Tipy pro přesné odsouhlasení
+
+- Požádejte řidiče, aby mýtné zaznamenávali ihned po každé platbě, ne až na konci jízdy, aby účtenky zůstaly spárované se správným dnem a zemí.
+- Pokud PTV zobrazuje šedou (žádný odhad) pro zemi, kterou vaše vozidla často projíždějí, řešte to v **Nastavení → Ceníky** ručním příplatkem za zemi, aby byly marže chráněny i bez dat PTV.
+- Velké oranžové nebo červené odchylky opakovaně u stejné země jsou signálem k úpravě základního odhadu mýtného ve vašem ceníku.
+
+---
+
+<Card title="Ceníky" icon="sliders-horizontal" href="/cs/admin/rate-cards">
+  Nakonfigurujte politiku přeúčtování mýtného, základní příplatky a výjimky za jednotlivou zemi.
+</Card>
+
+<Card title="Palivové karty a importy" icon="fuel" href="/cs/integrations/fuel-card-import">
+  Importujte výpisy DKV, UTA a AS24 pro automatické naplnění záznamů paliva a mýtného.
+</Card>

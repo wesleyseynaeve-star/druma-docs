@@ -1,41 +1,113 @@
 ---
-title: "Repositionnement"
-description: "Suivez les déplacements sans revenu pour positionner un camion pour sa prochaine mission — kilomètres à vide, raison et coûts internes."
+title: "Commandes de repositionnement"
+description: "Comment créer et gérer des commandes de repositionnement — déplacements sans revenu pour amener un camion là où il doit être pour la prochaine mission."
 icon: "route"
 ---
 
 ## Qu'est-ce qu'une commande de repositionnement ?
 
-Un repositionnement est un déplacement sans revenu pour déplacer un camion vers l'endroit où il sera nécessaire pour la prochaine mission. Il n'y a pas de client, pas de marchandises et pas de revenus — mais il y a des coûts réels (carburant, temps du chauffeur).
+Une commande de repositionnement suit un **déplacement sans revenu** — quand vous envoyez un camion d'un lieu à un autre sans transporter de cargaison pour un client payant. Les scénarios courants incluent :
+
+- Envoyer un camion vide d'un point de livraison vers une ville différente où un chargement attend.
+- Ramener un camion au dépôt d'origine à la fin d'une semaine de travail.
+- Relocaliser un véhicule pour couvrir un échange de chauffeur ou un rendez-vous de maintenance.
+
+Les commandes de repositionnement ne sont pas facturées aux clients. Elles existent pour vous donner une visibilité complète sur les déplacements de votre flotte, suivre les kilomètres morts, et calculer le coût réel de vos opérations.
 
 ---
 
 ## Créer une commande de repositionnement
 
 <Steps>
-  <Step title="Accédez à Commandes → Nouvelle commande">
-    Sélectionnez **Repositionnement** comme type de commande.
+  <Step title="Ouvrez le formulaire de nouvelle commande">
+    Accédez à **Planificateur → Commandes → Nouvelle commande**.
   </Step>
-  <Step title="Définissez l'origine et la destination">
-    Où se trouve le camion maintenant et où il doit aller.
+  <Step title="Sélectionnez Repositionnement comme type de commande">
+    Dans le champ **Type de commande**, choisissez **Repositionnement**. C'est la troisième option aux côtés de Camion propre et Sous-traitée.
   </Step>
-  <Step title="Sélectionnez un code de raison">
-    Options : retour à la base, pré-positionnement pour chargement, transfert inter-dépôts, autre.
+  <Step title="Sélectionnez la raison">
+    Choisissez une **Raison de repositionnement** dans la liste déroulante. C'est une liste fixe de 5 raisons — il n'y a pas d'interface Paramètres pour les ajouter ou les modifier :
+    - Retour à vide
+    - Relocalisation de flotte
+    - Transfert de maintenance
+    - Pré-positionnement
+    - Autre
   </Step>
-  <Step title="Affectez le camion et le chauffeur">
-    Sélectionnez le véhicule et le chauffeur.
+  <Step title="Renseignez l'itinéraire">
+    Saisissez l'adresse de chargement (où se trouve le camion maintenant) et l'adresse de livraison (où il doit aller). Le moteur de routage PTV calcule automatiquement la distance.
   </Step>
-  <Step title="Enregistrer">
-    Cliquez sur **Créer**. Le repositionnement apparaît sur le tableau de planification avec un badge violet **Repo**.
+  <Step title="Ajoutez des notes (optionnel)">
+    Utilisez le champ **Notes de repositionnement** pour expliquer pourquoi ce déplacement a lieu. Ceci n'est visible que par les planificateurs, pas par le chauffeur.
+  </Step>
+  <Step title="Affectez un camion et enregistrez">
+    Sélectionnez le camion et le chauffeur comme pour toute commande. Enregistrez en Brouillon ou Confirmez immédiatement.
   </Step>
 </Steps>
 
 ---
 
-## Sur le tableau de planification
+## En quoi les commandes de repositionnement diffèrent
 
-Les commandes de repositionnement apparaissent avec le badge **Repo** (violet) pour les distinguer des missions génératrices de revenus. La distance est suivie comme kilomètres internes à vide.
+| Fonctionnalité | Commande régulière | Commande de repositionnement |
+|---|---|---|
+| Facturée au client | Oui | Non |
+| Apparaît sur le tableau de planification | Oui | Oui (avec le badge **Repo**) |
+| Compte dans les rapports de revenu | Oui | Non |
+| Distance suivie | `distance_km` | `distance_km_internal` |
+| Le chauffeur la voit dans l'application | Oui | Oui |
+| Flux de statut | Cycle de vie complet | Cycle de vie complet |
+
+<Note>
+Les commandes de repositionnement suivent le même cycle de vie de statut que les commandes régulières (Brouillon → Livrée). Le chauffeur touche les statuts dans son application normalement. La seule différence est qu'aucun client ni prix n'y est rattaché.
+</Note>
+
+---
+
+## Arrêts internes
+
+Pendant un déplacement de repositionnement (ou n'importe quelle commande), vous pouvez ajouter des **arrêts internes** — des arrêts non planifiés pour carburant, repos, maintenance, ou autres besoins opérationnels.
+
+Les arrêts internes sont suivis séparément des arrêts de chargement et de déchargement. Chaque arrêt interne a :
+
+- **Adresse** — où l'arrêt a été fait.
+- **Code de raison** — sélectionné dans une liste système fixe : Repos, Ravitaillement, Nuit, Personnel, Stationnement remorque, Autre.
+- **Notes** — explication en texte libre.
+
+Les arrêts internes apparaissent dans la chronologie des arrêts de la commande mais sont visuellement distingués des arrêts de cargaison. Ils n'affectent pas les calculs d'ETA de livraison.
+
+---
+
+## Codes de raison
+
+### Raisons de repositionnement
+
+Les 5 raisons de repositionnement (Retour à vide, Relocalisation de flotte, Transfert de maintenance, Pré-positionnement, Autre) sont fixes dans le produit — il n'y a actuellement pas d'écran Paramètres pour les ajouter, les renommer, ou les supprimer.
+
+### Raisons d'arrêt interne
+
+Les 6 raisons d'arrêt interne (Repos, Ravitaillement, Nuit, Personnel, Stationnement remorque, Autre) sont également fixes et s'appliquent à tous les types de commande, pas seulement aux commandes de repositionnement. Il n'y a actuellement pas d'interface pour ajouter des codes de raison personnalisés en plus de ceux-ci, bien que la capacité sous-jacente existe au niveau de l'API.
+
+---
+
+## Repositionnement sur le tableau de planification
+
+Les commandes de repositionnement apparaissent sur le tableau de planification avec un petit badge gris **R**, ce qui les rend faciles à distinguer des chargements générateurs de revenus. Elles sont incluses dans les calculs d'utilisation de flotte (le camion est en usage) mais exclues des KPI de revenu.
+
+---
+
+## Reporting
+
+Les kilomètres de repositionnement sont suivis via le champ `distance_km_internal` et apparaissent dans :
+
+- **Rapport de rentabilité par ligne** — comme une colonne « km morts » séparée afin que vous puissiez voir le coût réel de desservir chaque ligne.
+- **Rapport CO2** — les déplacements de repositionnement contribuent aux émissions et sont reportés séparément des trajets chargés.
+
+---
 
 <Card title="Tableau de planification" icon="calendar" href="/fr/planner/planning-board">
-  Voyez vos repositionnements aux côtés de vos commandes régulières.
+  Voyez comment les commandes de repositionnement apparaissent sur le tableau de dispatch aux côtés des chargements réguliers.
+</Card>
+
+<Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">
+  Guide complet pour créer des commandes de tous types — Camion propre, Sous-traitée, et Repositionnement.
 </Card>

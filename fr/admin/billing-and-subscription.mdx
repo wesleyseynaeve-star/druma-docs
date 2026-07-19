@@ -1,110 +1,108 @@
 ---
 title: "Facturation et abonnement"
-description: "Gérez votre abonnement Druma, vos sièges et votre facturation via le portail client Stripe."
+description: "Comment Druma facture votre entreprise — paliers par nombre de camions, pool d'usage IA, et facturation e-Factura native."
 icon: "credit-card"
 ---
 
-Druma utilise un modèle d'abonnement basé sur les sièges — sièges véhicules et sièges utilisateurs — tarifés par paliers de volume. Facturation mensuelle ou annuelle disponible.
+Druma est **l'émetteur** de votre abonnement : chaque charge de plateforme est facturée sous forme d'**e-Factura roumaine** native (ANAF/SPV) et payée par **virement bancaire** à terme net — il n'y a ni carte enregistrée, ni paiement Stripe, ni tarification par siège utilisateur. Les utilisateurs bureau, les chauffeurs et les comptes du portail client sont toujours gratuits ; ce que vous payez, ce sont vos camions actifs (si vous exploitez votre propre flotte) ou votre usage de la plateforme (si vous êtes un pur transitaire/courtier).
 
 <Note>
 Pour les tarifs actuels, visitez [druma.io](https://druma.io) ou contactez support@druma.io.
 </Note>
 
+<Frame caption="Paramètres → Facturation — tarification par palier de camions, détail des coûts et pool d'usage IA. Pas de portail Stripe, pas de tarification par siège.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Panneau de facturation affichant le détail du coût de l'abonnement" />
+</Frame>
+
 ---
 
 ## Essai gratuit
 
-Chaque nouvelle entreprise bénéficie d'un **essai gratuit de 30 jours**. Aucune carte bancaire requise. Toutes les fonctionnalités — y compris l'eCMR (en mode simulation) — sont disponibles pendant l'essai.
+Chaque nouvelle entreprise bénéficie d'un **essai gratuit de 30 jours**. Aucune carte bancaire ni coordonnée bancaire n'est requise pour démarrer, et toutes les fonctionnalités sont pleinement disponibles pendant l'essai.
 
 ---
 
-## Consulter votre facture
+## Modèle de tarification
 
-<Steps>
-  <Step title="Ouvrez la page Facturation">
-    Accédez à **Paramètres → Facturation**.
-  </Step>
-  <Step title="Ouvrez le portail client Stripe">
-    Cliquez sur **Ouvrir le portail de facturation**.
-  </Step>
-  <Step title="Consulter les factures">
-    Dans le portail Stripe, cliquez sur **Historique des factures** pour télécharger des factures PDF.
-  </Step>
-</Steps>
+Votre entreprise est facturée selon l'un des deux profils suivants :
 
----
+<Tabs>
+  <Tab title="Transporteur avec flotte propre">
+    Si vous exploitez vos propres camions, vous payez :
+    - Un **forfait entreprise fixe de 25 €/mois**.
+    - Un **tarif par camion actif, par palier**. Les camions à l'arrêt sont toujours gratuits ; la facturation applique un plancher de **3 camions actifs minimum**. Le nombre total de camions actifs détermine un seul palier, et **tous** les camions actifs sont facturés à ce tarif (ce n'est pas un calcul marginal/cumulatif).
+    - Un **quota IA mutualisé au niveau entreprise** (voir ci-dessous).
 
-## Ajouter ou supprimer des sièges
+    | Palier | Camions actifs | Mensuel / camion | Annuel / camion |
+    |------|---------------|------------------|-----------------|
+    | Starter | 3–9 | 41 € | 34 € |
+    | Growth | 10–24 | 38 € | 32 € |
+    | Scale | 25–49 | 36 € | 30 € |
+    | Pro | 50–74 | 34 € | 28 € |
+    | Enterprise | 75+ | 30 € | 25 € |
+  </Tab>
+  <Tab title="Transitaire / courtier">
+    Si vous n'exploitez pas votre propre flotte, il n'y a ni pool de camions ni forfait de base — vous payez uniquement à l'usage : **le plus élevé entre 25 €/mois et votre coût d'usage mesuré × 2,5**.
+  </Tab>
+</Tabs>
 
-<Steps>
-  <Step title="Accédez à Paramètres → Facturation">
-    Cliquez sur **Gérer les sièges**.
-  </Step>
-  <Step title="Ajustez les sièges véhicules">
-    Utilisez les contrôles + et – pour définir le nombre de sièges véhicules.
-  </Step>
-  <Step title="Ajustez les sièges utilisateurs">
-    Définissez le nombre de sièges utilisateurs.
-  </Step>
-  <Step title="Confirmez les modifications">
-    Cliquez sur **Enregistrer la configuration**.
-  </Step>
-</Steps>
-
-<Warning>
-Réduire les sièges en dessous du nombre de véhicules ou d'utilisateurs actifs n'est pas autorisé. Archivez d'abord les véhicules ou désactivez les utilisateurs.
-</Warning>
+Votre profil est défini sur votre compte ; contactez support@druma.io si vous pensez que le vôtre est mal configuré.
 
 ---
 
-## Fin de l'essai, période de grâce et suspension
+## La page Facturation
 
-### Fin de l'essai
+Allez dans **Paramètres → Facturation** pour voir votre plan, le détail des coûts, l'usage IA et l'historique des factures.
 
-Au 31ème jour, Druma envoie un email vous demandant d'ajouter un mode de paiement. Sans paiement dans les **7 jours**, votre compte entre en période de grâce.
+### Aperçu du plan
 
-### Période de grâce (7 jours)
+Le haut de la page affiche le statut de votre compte (**Actif**, **Essai**, **En retard** ou **Suspendu**), votre profil, votre intervalle de facturation, le nombre de camions actuellement actifs, la date de votre prochaine facture, et le montant projeté pour la période en cours. Si vous avez un solde impayé sur une facture antérieure, une bannière affiche le montant dû et le nombre de jours de retard.
 
-- Toutes les données existantes sont préservées.
-- Vous pouvez vous connecter et consulter les données.
-- La création de nouvelles commandes et l'émission d'eCMR sont **bloquées**.
+### Facturation mensuelle vs annuelle
 
-### Suspension (mode lecture seule)
+Les entreprises avec flotte propre peuvent basculer entre **Mensuel** et **Annuel** via le sélecteur d'intervalle sur la page Facturation.
 
-Après la période de grâce sans paiement :
-- La connexion fonctionne toujours — vos données ne sont pas supprimées.
-- Le compte est **en lecture seule** : aucune modification, aucune nouvelle commande.
+- **Annuel** : payez 10 mois, obtenez-en 12 — le forfait entreprise et l'abonnement par camion sont prépayés en une seule e-Factura pour l'année. Le dépassement d'usage (pool IA) reste facturé mensuellement à terme échu.
+- **Mensuel** : l'abonnement se renouvelle chaque mois. Si vous ajoutez des camions en cours de cycle, le coût supplémentaire est facturé à terme échu sur la facture suivante.
 
-<Warning>
-La suspension ne signifie pas que vos données sont supprimées. Cependant, les chauffeurs ne pourront pas recevoir de mises à jour de commandes.
-</Warning>
+Les transitaires/courtiers sont toujours facturés mensuellement, à l'usage — il n'y a pas d'option annuelle puisqu'il n'y a pas d'abonnement camion à prépayer.
 
-### Comment réactiver
+### Détail des coûts
 
-Accédez à **Paramètres → Facturation** et cliquez sur **Réactiver l'abonnement**.
+Sous l'aperçu du plan, un tableau ligne par ligne montre exactement comment votre charge projetée est construite : le forfait de base de la plateforme, le nombre de camions × tarif du palier, et (pour les plans annuels) le principe « 10 mois payés, 12 mois offerts ». Les prix affichés sont hors TVA.
+
+### Plafond de facturation des camions
+
+Les entreprises avec flotte propre (disposant du droit de modifier la facturation) peuvent définir un **plafond de facturation des camions** optionnel — un nombre maximal de camions actifs que vous souhaitez voir facturés, entre **3 et 500**. Si votre nombre de camions actifs atteint ou dépasse ce plafond, la page affiche un avertissement avant d'activer davantage de camions. Laissez le champ vide pour ne pas définir de plafond.
+
+### Usage et quota (pool IA)
+
+Chaque entreprise avec camions actifs bénéficie d'un **quota IA mutualisé** : `5 € de base + 1,00 € × camions actifs`. Tout l'usage IA mesuré sur votre compte — extraction de documents, scellement eCMR, Ask Druma, insights KPI — puise dans ce **pool unique et partagé** ; le nombre de camions ne fait que dimensionner le pool, il n'attribue pas l'usage camion par camion. Une barre de progression indique la part du pool du mois en cours déjà consommée.
+
+L'usage au-delà du pool n'est jamais bloqué — Druma ne vous coupe jamais en cours de mois. Il est simplement facturé en dépassement au **coût × 2,5** sur votre prochaine facture.
+
+### Plafonds IA par fonctionnalité
+
+Sous le pool, une section **Fonctionnalités IA et usage** liste chaque fonctionnalité IA mesurée et activée en option, avec son usage du mois et un plafond mensuel modifiable (en €) pour limiter les dérapages sur cette fonctionnalité précise.
+
+### Factures
+
+Un tableau **Factures** liste vos factures de plateforme par période, avec la TVA et les montants totaux, le statut (Aperçu, Émise, Payée, En retard), la date d'échéance, et un lien pour consulter la facture lorsque disponible. Les factures sont émises en e-Factura roumaine en EUR, avec la ligne de TVA également affichée en RON au taux de change de la Banque nationale de Roumanie (BNR).
+
+### Paiement
+
+Une section **Paiement** affiche les coordonnées bancaires à utiliser (bénéficiaire, IBAN, référence de paiement) et vos conditions de paiement net. Il n'y a pas d'option de paiement par carte — réglez chaque e-Factura par virement bancaire en utilisant la référence indiquée.
+
+---
+
+## Comptes suspendus
+
+Si votre compte est suspendu, tout accès à l'application est remplacé par un écran unique vous demandant de régler le solde impayé ; un bouton ouvre directement **Paramètres → Facturation**. La connexion fonctionne toujours — seul l'espace de travail lui-même est bloqué. Si vous pensez que votre compte a été suspendu par erreur, contactez support@druma.io.
 
 ---
 
-## Facturation mensuelle vs annuelle
-
-La facturation annuelle offre **2 mois gratuits** — vous payez 10 mois pour 12 mois d'accès.
-
----
-
-## Activation d'un abonnement payant
-
-Cliquez sur **S'abonner maintenant** dans **Paramètres → Facturation**. Vous êtes redirigé vers la page de paiement Stripe.
-
----
-
-## Facturation eCMR
-
-L'eCMR est inclus dans votre abonnement Druma sans frais supplémentaires. Il n'y a pas de facturation par document ni de plafond d'utilisation — signez autant d'eCMR que votre activité l'exige.
-
-Vous pouvez toujours consulter vos statistiques d'utilisation eCMR pour la période en cours sous **Paramètres → Facturation** dans la section **Utilisation**.
-
----
+## Besoin d'aide avec la facturation ?
 
 <Card title="Contacter le support" icon="headset" href="mailto:support@druma.io">
-  Pour les questions de facturation, envoyez un email à support@druma.io.
+  Pour toute question de facturation, litige ou demande de facture, envoyez un email à support@druma.io. Indiquez le nom de votre entreprise et votre numéro de TVA. Nous répondons sous un jour ouvré.
 </Card>

@@ -1,0 +1,75 @@
+---
+title: "Brandstofaccijnsteruggave"
+description: "Volg en genereer EU-brandstofaccijnsteruggaveclaims voor België en Roemenië op basis van geïmporteerde brandstofkaartgegevens."
+icon: "gas-pump"
+---
+
+## Wat is de brandstofaccijnsteruggave?
+
+Verschillende EU-lidstaten laten professionele wegtransportoperators toe een deel van de accijns op diesel terug te vorderen. Druma ondersteunt twee regelingen:
+
+- **België — Gasoil professionnel**: Belgische vervoerders kunnen een deel van de accijns op diesel gebruikt voor professioneel transport terugvorderen. Claims worden per kwartaal ingediend bij de SPF Finances.
+- **Roemenië — TICAD dieselteruggave**: Roemeense vervoerders kunnen een deel van de accijns op diesel gebruikt in internationaal en nationaal wegtransport terugvorderen. Claims worden ingediend bij ANAF.
+
+Brandstofaccijnsteruggave vindt u onder de sectie **Finance**. Toegankelijk voor alleen de rollen **admin** en **company_admin** — fleet_manager heeft geen toegang tot dit rapport.
+
+---
+
+## Vereisten
+
+Dit rapport vereist dat brandstofkaartgegevens eerst zijn geïmporteerd. Zonder tankbeurtrecords zijn er geen liters om tegen te berekenen.
+
+<Card title="Brandstofkaartimport" icon="credit-card" href="/nl/integrations/fuel-card-import">
+  Importeer tankbeurten van DKV, UTA, AS24 en andere providers.
+</Card>
+
+---
+
+## Een teruggaveclaim genereren
+
+<Steps>
+  <Step title="Selecteer land en periode">
+    Kies **België** of **Roemenië** uit de landvervolgkeuzelijst, stel dan de claimperiode in (doorgaans een kwartaal voor België, een maand of kwartaal voor Roemenië).
+  </Step>
+  <Step title="Klik op Genereren">
+    Druma haalt alle tankbeurtrecords op voor de periode die in aanmerking komen onder de geselecteerde regeling, berekent het totaal aantal in aanmerking komende liters, en vermenigvuldigt met het huidige teruggavetarief voor dat land.
+  </Step>
+  <Step title="Controleer de claim">
+    Het resultaat toont in aanmerking komende liters, teruggavetarief per liter en totaal teruggavebedrag in EUR. Controleer voor indiening.
+  </Step>
+  <Step title="Stel status en referentie in">
+    Wijzig de status naar **Ingediend** en voer het overheidsreferentienummer in dat u na indiening ontvangt. Dit koppelt het Druma-record aan uw officiële indiening.
+  </Step>
+</Steps>
+
+---
+
+## Claimstatuslevenscyclus
+
+```
+Concept → Ingediend → Terugbetaald
+                    → Afgewezen
+```
+
+- **Concept** — berekend maar nog niet ingediend bij de autoriteit
+- **Ingediend** — verstuurd naar SPF Finances (BE) of ANAF (RO); referentienummer geregistreerd
+- **Terugbetaald** — betaling ontvangen; voer de terugbetalingsdatum in
+- **Afgewezen** — claim werd afgewezen; voeg een notitie toe met de reden voor opvolging
+
+---
+
+## Grafiek teruggavebedragen
+
+Een vlakdiagram toont teruggavebedragen per periode over de afgelopen 12 maanden. Nuttig om seizoensgebonden brandstofverbruikpatronen te herkennen en voor cashflowplanning.
+
+---
+
+## CSV-export
+
+Klik op **CSV exporteren** om de claimdetails te downloaden — uitsplitsing per tankbeurt, in aanmerking komende liters, tarief en berekende teruggave — voor indiening- of auditdoeleinden.
+
+---
+
+<Warning>
+Druma berekent in aanmerking komende liters uit uw geïmporteerde brandstofkaartgegevens. Het is uw verantwoordelijkheid te verifiëren dat alle tankbeurten correct zijn geïmporteerd en dat het teruggavetarief overeenkomt met het huidige gepubliceerde tarief van de relevante belastingautoriteit voordat u een claim indient.
+</Warning>

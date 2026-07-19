@@ -1,108 +1,89 @@
 ---
 title: "Ceníky"
-description: "Jak vytvářet a spravovat ceníky v Druma pro uložení standardních cen tras a urychlení vytváření objednávek."
+description: "Jak definovat nákladové profily vozidel v Druma, aby objednávky zobrazovaly přesný odhadovaný náklad a marži."
 icon: "tags"
 ---
 
+<Note>
+Tato stránka popisuje **Nastavení → Ceníky** — **nákladové profily** vozidel používané k odhadu nákladu a marže objednávky. Pokud hledáte **prodejní** ceny podle trasy (návrhy cen podle původu/cíle, např. „Rumunsko → Německo, Plachta — 1 450 €"), jde o samostatnou funkci **Ceny tras** pod **Ceny → Ceny tras** v hlavní aplikaci — ta na této stránce popsána není.
+</Note>
+
 ## Co je ceník?
 
-Ceník je uložená cenová šablona pro trasu, na které pravidelně jezdíte. Pokud přepravujete zboží z Česka do Německa každý týden, nechcete pokaždé počítat cenu od nuly. Místo toho uložíte ceník pro tuto trasu — a Druma automaticky navrhne cenu při vytváření nové objednávky na stejné trase.
+Ceník v **Nastavení → Ceníky** je nákladový profil pro kategorii provozu vozidla — buď **vlastní flotilu**, nebo **subdodavatelského** dopravce. Zachycuje, co vás provoz vozidla skutečně stojí (fixní náklady, mzda řidiče, palivo, příplatky ADR/nadměrný náklad, mýtné), aby Druma mohla odhadnout náklad a marži objednávky vedle ceny účtované klientovi.
 
-Ceníky jsou výchozím bodem, nikoli pravidlem. Vaši plánovači mohou vždy přepsat navrženou cenu na jednotlivých objednávkách.
+**Kdo může upravovat:** Role Správce, Správce společnosti a Plánovač.
 
-## Jak ceníky fungují v praxi
-
-Když plánovač vytvoří novou objednávku, Druma zkontroluje, zda nějaké aktivní ceníky odpovídají vybrané zemi původu, zemi určení a typu návěsu. Pokud existuje shoda, Druma zobrazí výzvu:
-
-*„Ceník odpovídá této trase: Česko → Německo, Plachta — paušální sazba €1 450. Použít?"*
-
-Plánovač může kliknout na **Použít** pro použití této ceny, nebo ignorovat návrh a ručně zadat jinou cenu.
+<Frame caption="Ceny tras (Ceny → Ceny tras) — samostatná funkce prodejních cen podle původu/cíle. Nastavení → Ceníky (tato stránka) je nákladová strana.">
+  <img src="/images/admin/rate-cards.png" alt="Stránka Ceny tras s ceníky podle původu, cíle a typu návěsu" />
+</Frame>
 
 ## Vytvoření ceníku
 
-Přejděte do **Nastavení → Ceníky** a klikněte na **Přidat ceník**.
-
-![Formulář ceníku](/images/placeholder.png)
-
-Vyplňte následující pole:
+Přejděte do **Nastavení → Ceníky** a klikněte na **Nový ceník**.
 
 ### Název
 
-Dejte ceníku jasný, popisný název, aby ho plánovači na první pohled poznali.
+Dejte ceníku jasný název, např. „Vlastní flotila — standard" nebo „Subdodavatel — trasy RO/BG".
 
-*Příklady: „CZ→DE Tautliner", „Česko do Německa Frigo", „SK do ES Valník"*
+### Typ
 
-### Země původu a země určení
+Vyberte **Vlastní flotila** nebo **Subdodavatelský** — určuje, na jakou kategorii objednávek se nákladový profil vztahuje.
 
-Vyberte zemi, kde je náklad naložen, a zemi, kde je doručen. Ceníky se shodují na úrovni zemí, takže jeden ceník pokrývá všechna města v rámci těchto zemí.
+### Sazba / km (€)
 
-<Note>
-Pokud potřebujete různé ceny pro různé regiony ve stejné zemi — například jinou sazbu pro jižní Německo versus severní Německo — vytvořte dva samostatné ceníky s více specifickými názvy. Plánovač uvidí oba návrhy a může vybrat ten správný.
-</Note>
+Volitelná paušální sazba nákladu na kilometr.
 
-### Typ návěsu
+### Základ nákladů
 
-Vyberte typ návěsu používaného na této trase. Možnosti zahrnují:
+Vyberte způsob výpočtu fixních provozních nákladů:
+- **Denní sazba** — zadejte **denní fixní náklad (€)** a **mzdu řidiče / den (€)**.
+- **Týdenní pronájem** — zadejte **týdenní fixní náklad (€)** a **mzdu řidiče / týden (€)**.
 
-- Plachta (tautliner)
-- Chladírenský (frigo / reefer)
-- Valník (flatbed)
-- Cisterna
-- Skříňový kamion
-- Mega návěs
-- Nízkoložný
-- Ostatní
+### Čekací doba
 
-Druma navrhne ceník pouze tehdy, když typ návěsu v objednávce odpovídá ceníku. Tím se zabraňuje navrhování sazby pro frigo pro objednávku na valníku.
+- **Bezplatné hodiny čekání** — kolik hodin čekání je zahrnuto, než se uplatní poplatek.
+- **Sazba čekání €/h** — hodinový náklad po překročení bezplatných hodin čekání.
 
-### Typ ceny
+### Příplatky
 
-Vyberte způsob výpočtu ceny:
+- **Poplatek ADR (€)** — dodatečný náklad u zásilek s nebezpečným zbožím.
+- **Poplatek za nadměrný náklad (€)** — dodatečný náklad u nadměrných nákladů.
 
-- **Paušální základní cena** — pevná částka za celou trasu bez ohledu na přesnou vzdálenost. Nejběžnější pro pravidelné trasy, kde máte sjednané sazby.
-- **Za kilometr** — sazba násobená vzdáleností vypočítanou Druma pro trasu. Užitečné pro proměnlivé trasy.
+### Palivo
 
-### Cena a měna
+- **Základní cena paliva (€/l)** — cena paliva použitá ve výpočtech nákladů.
+- **Spotřeba paliva (l/100 km)** — očekávaná spotřeba vozidla, použitá spolu se základní cenou paliva a vzdáleností trasy k odhadu nákladu na palivo.
 
-Zadejte částku a vyberte měnu (EUR, CZK, USD, GBP atd.).
+### Cíle marže
 
-### Příplatek za palivo %
+- **Cílová marže %** — marže, kterou chcete u objednávek s tímto nákladovým profilem dosáhnout.
+- **Minimální marže %** — minimální přijatelná marže, než má Druma objednávku označit.
 
-Pokud na základní sazbu přidáváte příplatek za palivo, zadejte procento zde. Druma toto procento přidá k základní ceně při výpočtu navrhovaného celku.
+### Politika mýtného
 
-*Příklad: Základní cena €1 200, příplatek za palivo 8 % → navrhovaná cena €1 296*
+Vyberte výchozí způsob zpracování mýtného pro tento nákladový profil:
+- **Zahrnuto v sazbě** — mýtné je součástí vaší sazby, neúčtuje se zvlášť.
+- **Přeúčtováno klientovi** — mýtné je klientovi účtováno tak, jak vzniká.
+- **Samostatná položka** — mýtné se zobrazuje jako vlastní položka na objednávce/faktuře.
 
-Pokud příplatky za palivo nepoužíváte, ponechte toto pole na 0.
+Toto výchozí nastavení můžete přepsat pro konkrétní země nebo konkrétní provozovatele mýtného:
 
-### Poznámky
+- **Výjimky politiky mýtného podle země** — vyberte zemi a politiku (Účtováno klientovi / Zahrnuto v sazbě / Neúčtováno). Užitečné, když je například francouzské mýtné přeúčtováno, ale německé zahrnuto.
+- **Výjimky politiky mýtného podle provozovatele** — zadejte název provozovatele mýtného přesně tak, jak je uveden na účtenkách (např. `ASFINAG`, `HU-GO`, `Viapass`), a politiku. Výjimka na úrovni provozovatele má přednost před politikou na úrovni země.
 
-Přidejte jakékoli interní poznámky k tomuto ceníku — například „Dohodnuto s klientem Schmidt GmbH do prosince 2026" nebo „Vyžaduje nakládací čelo". Tyto poznámky jsou viditelné pro plánovače při navrhování ceníku, ale nezobrazují se na fakturách ani dokumentech pro klienty.
+### Uložení
 
-## Úprava ceníku
+Klikněte na **Uložit změny** u existujícího ceníku, nebo **Vytvořit** při přidávání nového.
 
-Přejděte do **Nastavení → Ceníky**, najděte ceník v seznamu a klikněte na **ikonu úpravy** (tužka). Změňte jakákoli pole a klikněte na **Uložit**. Aktualizovaná cena se vztahuje na nové objednávky od tohoto okamžiku — nepřepisuje žádné dříve vytvořené objednávky.
+## Úprava nebo smazání ceníku
 
-## Deaktivace ceníku
+Rozbalte ceník v seznamu pro úpravu jeho polí přímo na místě. Kliknutím na **X** vedle ceníku ho smažete — budete požádáni o potvrzení, protože tuto akci nelze vrátit zpět.
 
-Pokud sazba již není platná — například se zvýšily náklady na palivo a potřebujete přejednat — můžete ceník deaktivovat bez jeho smazání.
+Nákladové profily ceníků vstupují do odhadu nákladu/marže objednávky zobrazeného při vytváření nebo oceňování objednávky — jde o samostatný výpočetní prvek odlišný od této stránky nastavení, který zde není popsán.
 
-Přejděte do **Nastavení → Ceníky**, najděte ceník a přepněte přepínač **Aktivní** na vypnuto. Deaktivované ceníky se již při vytváření objednávek nenavrhují, ale zůstávají ve vašem seznamu pro reference. Kdykoli je můžete znovu aktivovat.
+## Související stránky
 
-<Note>
-Deaktivace ceníku je lepší než jeho smazání, zejména pokud byste mohli tuto trasu v budoucnu znovu aktivovat nebo chcete vidět historické sazby, které jste používali.
-</Note>
-
-## Ceníky jsou návrhy, nikoli pravidla
-
-I s nakonfigurovanými ceníky mohou plánovači vždy zadat jinou cenu na jakékoli objednávce. Ceník je zde pro úsporu času a zajištění konzistence — nikoli pro uzamčení cen.
-
-<Card title="Vytváření objednávek" icon="file-lines" href="/en/planner/creating-orders">
-  Podívejte se, jak se návrhy ceníků zobrazují při vytváření nové přepravní objednávky.
+<Card title="Nastavení společnosti" icon="building" href="/cs/admin/company-setup">
+  Nakonfigurujte firemní profil, který funguje spolu s ceníky při výpočtu nákladů objednávek v Druma.
 </Card>
-
-<Card title="Nastavení společnosti" icon="building" href="/en/admin/company-setup">
-  Nakonfigurujte výchozí měnu a platební podmínky, které fungují spolu s ceníky.
-</Card>
----
-
-This page is being translated. In the meantime, please refer to the [English version](/en/admin/rate-cards).

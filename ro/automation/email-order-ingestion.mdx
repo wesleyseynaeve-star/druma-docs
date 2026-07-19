@@ -1,36 +1,88 @@
 ---
 title: "Preluare comenzi prin email"
-description: "Lasa Druma sa citeasca emailurile primite de la clienti si brokeri si sa creeze automat comenzi ciorna."
+description: "Lasa Druma sa citeasca email-urile primite de la clienti si brokeri si sa creeze automat comenzi ciorna pe care planificatorii tai le revizuiesc."
 icon: "envelope-open-text"
 ---
 
-In loc sa retastezi manual comenzile care sosesc prin email, Druma le poate citi pentru tine.
+In loc sa retastezi manual comenzile care sosesc prin email, Druma le poate citi pentru tine. Clientii si brokerii isi trimit confirmarile de tarif, listele de marfa sau instructiunile in text simplu la adresa ta unica de inbox Druma, iar AI-ul extrage detaliile cheie intr-o comanda ciorna, gata de verificat si confirmat de planificatorul tau.
 
-## Adresa ta Druma de inbox
+## Adresa ta de inbox Druma
 
-Fiecare companie primeste o adresa unica de email de forma `compania@in.druma.io`. Gaseste-o la:
+Fiecare companie primeste o adresa unica de email de inbox. O gasesti din pagina **Comenzi** — apasa butonul **Inbox comenzi** din bara de instrumente ca sa o vezi (cu buton de copiere). Nu se configureaza dintr-o pagina de Setari.
 
-**Setari -> Automatizare -> Preluare Email -> Adresa Inbox**
+Distribuie aceasta adresa clientilor si brokerilor de la care vrei sa primesti comenzi. O poti seta si ca destinatie de redirectionare din inbox-ul tau existent de logistica, daca preferi sa pastrezi o singura adresa principala in exterior.
 
 ## Ce extrage AI-ul
 
-Din email-uri si atasamente (PDF, Excel, CSV): adresa de preluare, adresa de livrare, data si fereastra de timp, descrierea marfii (tip, greutate, dimensiuni, paleti), numerele de referinta, pretul (daca este mentionat).
+Cand soseste un email, Druma citeste atat corpul email-ului cat si orice atasament. Incearca sa extraga:
+
+- Adresa de preluare (strada, oras, tara, cod postal)
+- Adresa de livrare
+- Data si fereastra orara solicitata de preluare
+- Data solicitata de livrare
+- Descrierea marfii (tip, greutate, dimensiuni, paleti)
+- Numere de referinta (numar PO client, referinta broker)
+- Pretul, daca este mentionat
+
+Formate de atasament acceptate:
+
+- **PDF** — confirmari de tarif, copii CMR, comenzi de marfa (extragere din text, cu fallback pe viziune AI pentru PDF-uri scanate/tip imagine)
+- **DOCX** (Word) — confirmari de tarif trimise ca documente Word
+- **Text simplu (.txt)** si **corpul email-ului simplu** — email-uri nestructurate de la brokeri
+- **Imagini** (JPEG, PNG, WebP, HEIC/HEIF) — o poza a unei comenzi tiparite sau a unei confirmari de tarif este trimisa direct catre AI
+
+Momentan nu exista analiza Excel/CSV — un atasament de tip foaie de calcul nu este citit de pipeline-ul de extragere.
 
 ## Revizuirea comenzilor ciorna
 
-Comenzile extrase apar in **Comenzi -> Inbox**, nu direct in lista activa.
+Comenzile extrase ajung in lista ta de **Comenzi** cu status **Ciorna**, nu direct ca si comenzi active. Este intentionat — trebuie sa revizuiesti fiecare ciorna inainte sa intre in sistemul tau. Email-urile care nu au putut fi extrase automat (incredere scazuta, expeditor nerecunoscut sau eroare de analiza) nu creeaza deloc o ciorna — asteapta intr-un banner extensibil **"N email-uri in asteptare pentru extragere"** in partea de sus a paginii Comenzi.
 
 <Steps>
-  <Step title="Deschide Comenzi -> Inbox">Comenzile ciorna cu scor de incredere AI pentru fiecare camp.</Step>
-  <Step title="Verifica fiecare camp">Adresele pe harta, datele, detaliile marfii.</Step>
-  <Step title="Atribuie camion si sofer">Alege vehiculul si soferul disponibili.</Step>
-  <Step title="Confirma comanda">Comanda trece in lista activa si soferul primeste notificarea.</Step>
+  <Step title="Deschide pagina Comenzi">
+    Comenzile ciorna apar in lista ta normala de comenzi cu o eticheta "Ciorna" si un scor de incredere AI. Email-urile inca in asteptare de extragere apar separat in bannerul de extragere in asteptare, unde poti apasa **Extrage** ca sa incerci din nou sau **Renunta** ca sa le elimini.
+  </Step>
+  <Step title="Verifica fiecare camp">
+    Apasa pe ciorna ca sa o deschizi. Verifica adresele de preluare si livrare pe harta, confirma ca datele au sens si verifica detaliile marfii. Corecteaza orice ce AI-ul a citit gresit sau a omis.
+  </Step>
+  <Step title="Atribuie camion si sofer">
+    Foloseste panoul de atribuire din dreapta ca sa alegi un vehicul si un sofer disponibili pentru aceasta marfa.
+  </Step>
+  <Step title="Confirma comanda">
+    Apasa **Confirma Comanda**. Ciorna trece in comenzile tale active si soferul primeste o notificare.
+  </Step>
 </Steps>
 
 <Warning>
-Extragerea AI nu este 100% precisa. Verifica intotdeauna campurile extrase inainte de confirmare.
+Extragerea AI nu este 100% precisa. Adresele scrise in formate neobisnuite, PDF-urile scanate cu calitate slaba a imaginii si email-urile care amesteca mai multe limbi cresc toate sansa de erori. Verifica intotdeauna campurile extrase inainte de confirmare.
 </Warning>
 
 ## Lista alba de expeditori
 
-Adauga domeniile de email ale clientilor si brokerilor tai in **Setari -> Automatizare -> Preluare Email -> Expeditori Autorizati**.
+Druma poate restrictiona ce expeditori au voie sa creeze comenzi ciorna, dar momentan **nu exista o pagina in aplicatie** pentru a gestiona singur aceasta lista alba. Daca compania ta nu are nicio intrare de lista alba configurata, Druma proceseaza email-uri de la **orice** expeditor care ajunge la adresa ta de inbox. Daca vrei ca preluarea comenzilor sa fie restrictionata la anumite domenii de client/broker, contacteaza support@druma.io ca sa adauge intrari.
+
+<Note>
+Cand o lista alba este configurata si soseste un email de la un expeditor care nu este pe ea, acel email este pus in asteptare in bannerul de extragere (nu este procesat automat), iar planificatorii tai sunt notificati, in loc sa fie eliminat silentios.
+</Note>
+
+## Sfaturi pentru o extragere mai buna
+
+- Cere brokerilor tai sa trimita PDF-uri structurate, nu imagini scanate, unde este posibil
+- Confirmarile de tarif cu antete de sectiune clare (Preluare, Livrare, Marfa) se extrag cel mai precis
+- Daca formatul unui anumit broker se extrage constant prost, contacteaza support@druma.io — se pot adauga reguli de extragere specifice formatului
+
+## Intrebari frecvente
+
+**Ce se intampla daca un email are mai multe incarcaturi?** Daca un email are doua sau mai multe atasamente PDF/DOCX de comanda, Druma extrage fiecare independent si creeaza o ciorna separata per atasament confirmat ca fiind o comanda reala de transport (documentele suport precum certificatele de asigurare sunt atasate primei ciorne, in loc sa genereze propriile ciorne). Asta se aplica doar **atasamentelor multiple de documente** — o singura foaie de calcul cu mai multe incarcaturi nu este impartita in mai multe ciorne, deoarece analiza foilor de calcul nu este acceptata.
+
+**Pot declansa manual re-extragerea?** Doar pentru un email inca in asteptare in bannerul de extragere — apasa **Extrage** langa el. Nu exista actiune de re-extragere pe o ciorna deja creata.
+
+**Ce se intampla cu email-ul original?** Este stocat si legat de comanda ciorna. Il poti vedea oricand din pagina de detaliu a comenzii.
+
+<CardGroup cols={2}>
+  <Card title="Crearea manuala a comenzilor" icon="plus" href="/ro/planner/creating-orders">
+    Afla cum creezi comenzi direct in Druma cand nu folosesti preluarea prin email.
+  </Card>
+  <Card title="Lucrul cu brokerii" icon="handshake" href="/ro/planner/brokers">
+    Gestioneaza relatiile cu brokerii, confirmarile de tarif si urmarirea comisioanelor.
+  </Card>
+</CardGroup>

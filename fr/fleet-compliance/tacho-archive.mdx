@@ -1,0 +1,118 @@
+---
+title: "Archive Tachygraphe"
+description: "Comment Druma stocke les fichiers tachygraphe DDD et TGD pour respecter les exigences de fréquence de téléchargement et de conservation du Règlement UE 165/2014 — téléchargement automatique nocturne et téléversement manuel."
+icon: "hard-drive"
+---
+
+Le Règlement UE 165/2014 exige que les opérateurs de transport téléchargent les données tachygraphe des unités embarquées et des cartes chauffeur à des intervalles définis, et conservent ces données pendant au moins 12 mois. Druma stocke ces fichiers dans l'Archive Tacho afin que vous puissiez prouver la conformité lors d'un contrôle routier ou d'un audit des autorités sans maintenir un système de classement séparé.
+
+---
+
+## Exigences de fréquence de téléchargement
+
+| Type de fichier | Fréquence de téléchargement requise |
+|---|---|
+| Données d'unité embarquée (VU / `.ddd`) | Au moins tous les **90 jours** |
+| Données de carte chauffeur (DDC / `.tgd`) | Au moins tous les **28 jours** |
+
+Manquer une échéance de téléchargement est une infraction réglementaire directe, que le chauffeur ait ou non causé une infraction durant la période. Les inspecteurs vérifient que les données ont été téléchargées à temps, pas seulement qu'elles ont finalement été récupérées.
+
+---
+
+## Où trouver l'Archive Tacho
+
+Accédez à **Flotte → Archive Tacho**. La page liste tous les fichiers tachygraphe stockés, triés par date de téléversement. Chaque ligne montre :
+
+- Nom du chauffeur ou du véhicule
+- Type de fichier (VU ou DDC)
+- Plage de dates couverte par le fichier
+- Jours depuis le dernier téléchargement
+- Badge de statut
+
+### Badges de statut
+
+| Badge | Signification |
+|---|---|
+| **OK** | Dans le délai de téléchargement |
+| **Échéance proche** | À moins de 5 jours de l'échéance |
+| **En retard** | L'échéance est dépassée |
+
+Les fichiers marqués **En retard** nécessitent une action immédiate — téléchargez le fichier depuis le véhicule ou la carte chauffeur et téléversez-le pour lever le statut en retard.
+
+---
+
+## Téléchargement automatique
+
+Pour les camions connectés via rFMS (l'interface télématique OEM standardisée), Druma récupère automatiquement les nouveaux fichiers DDD et TGD chaque nuit. Aucune action manuelle n'est requise pour les véhicules et chauffeurs connectés.
+
+Intégrations de téléchargement automatique prises en charge :
+
+| Fournisseur | Nom de l'intégration | Statut |
+|---|---|---|
+| Scania | rFMS | En production |
+| Volvo | rFMS | En production |
+| DAF | rFMS | En production |
+| MAN | rFMS | En production |
+| Mercedes-Benz | rFMS | En production |
+| IVECO | rFMS | En production |
+| Renault | rFMS | En production |
+| Webfleet | TachoShare | Pas encore implémenté — en attente d'accès au compte partenaire Webfleet |
+
+Pour activer le téléchargement automatique, accédez à **Paramètres → Intégrations** et connectez votre fournisseur télématique OEM compatible rFMS. Une fois connecté, Druma récupère les fichiers disponibles pendant la fenêtre de synchronisation nocturne et met à jour les badges de statut en conséquence.
+
+<Note>
+Le téléchargement automatique dépend du fait que le fournisseur télématique rende le fichier disponible à distance. Certains modèles d'unité embarquée ou cartes chauffeur plus anciens peuvent ne pas prendre en charge la récupération à distance — pour ceux-ci, un téléversement manuel est requis. Webfleet TachoShare est sur la feuille de route mais pas encore en production ; les véhicules Webfleet connectés nécessitent actuellement un téléversement manuel.
+</Note>
+
+---
+
+## Téléversement manuel
+
+Pour les véhicules et chauffeurs non couverts par une intégration automatique, téléversez les fichiers directement depuis un outil de téléchargement tachygraphe (par ex. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+<Steps>
+  <Step title="Ouvrez l'Archive Tacho">
+    Accédez à **Flotte → Archive Tacho**.
+  </Step>
+  <Step title="Cliquez sur Téléverser un fichier">
+    Cliquez sur le bouton **Téléverser un fichier** en haut à droite.
+  </Step>
+  <Step title="Sélectionnez le chauffeur ou le véhicule">
+    Choisissez s'il s'agit d'un fichier de carte chauffeur (DDC) ou d'un fichier d'unité embarquée (VU), puis sélectionnez le chauffeur ou le véhicule dans la liste.
+  </Step>
+  <Step title="Choisissez le fichier">
+    Sélectionnez le fichier `.ddd`, `.tgd`, `.v1b`, ou `.c1b` sur votre ordinateur. Taille de fichier maximale : **10 Mo**.
+  </Step>
+  <Step title="Confirmez le téléversement">
+    Cliquez sur **Téléverser**. Druma analyse l'en-tête du fichier pour extraire la plage de dates et stocke le fichier dans l'archive. Le compteur de retard se réinitialise pour le chauffeur ou le véhicule sélectionné.
+  </Step>
+</Steps>
+
+<Warning>
+Seuls les fichiers `.ddd`, `.tgd`, `.v1b` et `.c1b` sont acceptés — `.v1b`/`.c1b` sont les équivalents Génération 2 du tachygraphe intelligent pour `.ddd`/`.tgd`. Les fichiers exportés dans d'autres formats (CSV, PDF) ne peuvent pas être téléversés et ne satisfont pas l'exigence de conservation des données de l'UE. Conservez toujours le fichier binaire d'origine.
+</Warning>
+
+---
+
+## Conservation
+
+Druma conserve tous les fichiers tachygraphe téléversés et téléchargés automatiquement pendant le minimum légal requis de 12 mois. Les fichiers de plus de 12 mois sont soumis à un archivage automatisé. Contactez le support si vous devez récupérer des fichiers au-delà de la fenêtre de conservation standard.
+
+---
+
+## Articles associés
+
+<CardGroup cols={2}>
+  <Card title="Règles de conduite UE" icon="clock" href="/fr/fleet-compliance/eu-driving-hours">
+    Limites de conduite journalières et hebdomadaires du règlement 561/2006 suivies à partir des données tachygraphe.
+  </Card>
+  <Card title="Temps de travail des chauffeurs (WTD)" icon="clock" href="/fr/fleet-compliance/driver-working-time">
+    Limites de temps de travail de la Directive 2002/15/CE et comment Druma les surveille.
+  </Card>
+  <Card title="Documents de flotte" icon="folder-open" href="/fr/fleet-compliance/fleet-documents">
+    Conformité et suivi d'expiration des documents véhicule.
+  </Card>
+  <Card title="Paquet Mobilité" icon="globe" href="/fr/fleet-compliance/mobility-package">
+    Obligations de retour des véhicules et chauffeurs, et déclarations de détachement IMI.
+  </Card>
+</CardGroup>

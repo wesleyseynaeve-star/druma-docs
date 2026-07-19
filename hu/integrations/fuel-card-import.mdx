@@ -1,49 +1,103 @@
 ---
-title: "Üzemanyagkártya importálás"
-description: "DKV, UTA és AS24 üzemanyagkártya-adatok importálása a Drumába — tényleges üzemanyagköltségek és rendelési árrés számítás."
-icon: "fuel"
+title: "Üzemanyagkártya-importálás"
+description: "Importálj üzemanyag-tranzakciós adatokat a DKV, UTA, AS24, Shell és más nagy európai üzemanyagkártya-szolgáltatóktól, hogy nyomon kövesd a tényleges üzemanyagköltségeket járművenként."
+icon: "gas-pump"
 ---
 
-## Támogatott üzemanyagkártya-szolgáltatók
+Az üzemanyag jellemzően a legnagyobb változó költség a közúti fuvarozásban. A Druma lehetővé teszi, hogy tranzakciós adatokat importálj a nagy üzemanyagkártya-szolgáltatóktól, minden tankolást a megfelelő járműhöz kapcsolva, így a költségjelentéseid a tényleges üzemanyag-kiadást tükrözik, nem becsléseket.
 
-| Szolgáltató | Formátum |
-|---|---|
-| DKV | CSV exportálás a DKV portálból |
-| UTA | CSV exportálás az UTA portálból |
-| AS24 | CSV exportálás az AS24 portálból |
+<Frame caption="Flotta → Üzemanyag — a rendszám-párosítás normalizált, nem pontos egyezés.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Flotta Üzemanyag oldal" />
+</Frame>
 
-## Beállítás
+## Támogatott szolgáltatók
+
+A Druma automatikusan felismeri a szolgáltatót a fájl oszlopfejlécei és fájlneve alapján. Támogatott szolgáltatók:
+
+- **DKV**
+- **UTA**
+- **AS24**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
+
+Bármely más CSV- vagy XLSX-fájl szabványos oszlopnevekkel (dátum, összeg, liter, kártya/rendszám) is elfogadott, még felismert szolgáltató-egyezés nélkül is. Ha több kártyát használsz a flottádban, minden szolgáltatótól külön importálhatsz.
+
+## Hogyan importálj?
 
 <Steps>
-  <Step title="Lépj a Beállítások → Integrációk → Üzemanyagkártyák menüpontra">
-    Válaszd ki a szolgáltatódat.
+  <Step title="Töltsd le a fájlt a szolgáltatótól">
+    Jelentkezz be az üzemanyagkártya-szolgáltatód online portáljára, és exportáld a tranzakciós előzményeket CSV vagy XLSX formátumban. Minden szolgáltató portálja más, de ez az opció jellemzően a Jelentések vagy Kimutatások alatt található.
   </Step>
-  <Step title="Töltsd fel a CSV fájlt">
-    A portálod admin felületéről töltsd le az üzemanyag-felhasználási CSV exportot a kívánt időszakra.
+  <Step title="Nyisd meg a Druma üzemanyag-importot">
+    A Drumában lépj a **Flotta → Üzemanyag** menüpontra, és kattints az **Üzemanyag importálása** gombra.
   </Step>
-  <Step title="Ellenőrzés és importálás">
-    A Druma előnézetet mutat az importált sorokról. Ellenőrizd, majd kattints az **Importálás** gombra.
+  <Step title="Töltsd fel a fájlt">
+    Húzd rá vagy válaszd ki a CSV/XLSX fájlt (max. 5 MB). A Druma automatikusan felismeri a szolgáltatót a fájlból, és megjelenít egy előnézetet a feldolgozott sorokról — beleértve az esetlegesen ugyanabba a kimutatásba kevert útdíjtételeket is.
+  </Step>
+  <Step title="Nézd át és erősítsd meg">
+    Ellenőrizd az előnézetet — a járművel nem egyező sorok megjelölésre és kizárásra kerülnek az importálásból. Kattints az **N sor importálása** gombra (a tényleges sorszámmal) a megerősítéshez.
   </Step>
 </Steps>
 
-## Mit importál a Druma?
+## Mi kerül importálásra?
 
-Az importálás során a Druma kinyeri:
-- Dátum és idő
-- Rendszám (a teherautó azonosításhoz)
-- Feltöltési helyszín
-- Feltöltött mennyiség (liter)
-- Egységár és összeg
-- Egyéb tételek (útdíj, mosás, stb.)
+Minden tranzakciónál a Druma kinyeri:
 
-## Automatikus rendelés-hozzárendelés
+| Mező | Forrás |
+|---|---|
+| Dátum (idő komponens nélkül) | Tranzakció dátum oszlop a fájlból |
+| Jármű | Párosítva üzemanyagkártya-szám alapján, majd rendszám alapján |
+| Töltőállomás neve | Helyszín mező a fájlból |
+| Feltöltött literek | Mennyiség mező a fájlból |
+| Összeg | Érték mező a fájlból — EUR-nak feltételezve, hacsak nincs pénznem-oszlop jelen |
+| Tranzakció-azonosító | A szolgáltató egyedi tranzakció-hivatkozása, duplikátum-észleléshez használva |
 
-Ha az üzemanyag-feltöltés dátuma és a rendszám egyezik egy aktív rendeléssel, a Druma megpróbálja automatikusan hozzárendelni az üzemanyagköltséget az adott rendeléshez. Ez javítja az árrés számítás pontosságát.
+A manuális, egyedi üzemanyag-feltöltések (a **Feltöltés hozzáadása** gombon keresztül) csak EUR-ban megadott összeget fogadnak el — nincs pénznem-választó azon az űrlapon. A RON-összegek csak a lentebb leírt, külön e-mail/mappa alapú automatikus beolvasási úton keresztül konvertálódnak automatikusan.
 
-## Üzemanyag-dashboard
+## Tranzakciók párosítása a járművekhez
 
-A **Flotta → Üzemanyag** oldalon megtekinthetők:
-- Szolgáltatónkénti és jármuvekkénti üzemanyag-felhasználás
-- Összehasonlítás a becsült fogyasztással
-- Importált tételek listája dátum szerint szűrve
+A Druma minden tranzakciót egy járműhöz párosít, először az **üzemanyagkártya-szám** alapján, majd a **rendszám** alapján. Mind a kártyaszám, mind a rendszám normalizálásra kerül összehasonlítás előtt — nagybetűsítve, minden szóköz, kötőjel és egyéb nem alfanumerikus karakter eltávolítva —, így a "B 123 ABC" és a "B123ABC" ugyanazt a járművet párosítja.
 
+Ha egy tranzakció még mindig nem párosul egyetlen járművel sem, **párosítatlanként** jelölésre kerül az előnézetben, és kizárásra kerül az importálásból. Gyakori okok:
+
+- A járművet nemrég adták hozzá, és még nincs a Drumában
+- Sem a tranzakción szereplő kártyaszám, sem a rendszám nem egyezik egyetlen flotta-rekorddal sem
+- Egy sofőr bérelt vagy alvállalkozásba adott járműben használta a kártyáját
+
+## Duplikátum-észlelés
+
+Ha véletlenül kétszer importálod ugyanazt a fájlt, a Druma a tranzakció dátumából, összegéből, literéből, kártyájából, rendszámából és a szolgáltató tranzakció-azonosítójából felépített deduplikációs kulccsal észleli a duplikátumokat — a duplikátumok automatikusan kihagyásra kerülnek adatbázis-szinten. A sikeres importálás üzenete csak azt jelenti, hány üzemanyag-feltöltés (és útdíjtétel) került importálásra; nem jelent külön kihagyott-duplikátum számot.
+
+<Note>
+Mindig a teljes kimutatást importáld, ne csak egy részleges exportot. A részleges importálások hiányosságokat okozhatnak az üzemanyagköltség-adataidban, amelyek befolyásolják az útvonal-jövedelmezőségi számításokat.
+</Note>
+
+## Automatikus importálás e-mailen keresztül
+
+A manuális feltöltés mellett a Druma automatikusan be tudja olvasni az üzemanyag-kimutatásokat egy bejövő e-mail-címről (egy ütemezett átvizsgálással tartalékként), ugyanazt a feldolgozót újrahasznosítva, mint a manuális importálási ablak. Vedd fel a kapcsolatot a Druma ügyfélszolgálatával ennek beállításához a fiókodhoz.
+
+## Hol jelenik meg az importált üzemanyag-adat?
+
+Importálás után a tranzakciók megjelennek:
+
+- **Flotta → Üzemanyag** — teljes tranzakciótörténet a flottádban, rendszám, szolgáltató és helyszín szerint szűrhető és kereshető
+- **Útvonal-jövedelmezőségi jelentés** — az importált üzemanyagköltségek helyettesítik a becsült üzemanyag-számítást azoknál a rendeléseknél, ahol tényleges üzemanyagadat elérhető
+
+## Miért CSV-importálás élő API helyett?
+
+Az üzemanyagkártya-szolgáltatók Európa-szerte következetlen és gyakran korlátozott API-hozzáféréssel rendelkeznek. Egyesek csak vállalati ügyfeleknek biztosítanak API-t, mások országspecifikus portálokkal rendelkeznek, amelyek nem kínálnak API-hozzáférést, és az API-formátumok jelentősen eltérnek. A CSV-export univerzálisan elérhető minden szolgáltatónál és minden fiók-típusnál, ami ezt a legmegbízhatóbb megközelítéssé teszi egy vegyes flottájú román operátor számára (ADR-016).
+
+<CardGroup cols={2}>
+  <Card title="Útvonal-jövedelmezőségi jelentés" icon="route" href="/en/reports/lane-profitability">
+    Hogyan táplálják be az importált üzemanyagköltségek az útvonalankénti margin-számításokat.
+  </Card>
+  <Card title="Flottakezelés" icon="truck" href="/en/fleet/fleet-management">
+    Jármű-rekordok kezelése, beleértve az üzemanyag-tranzakció párosításhoz használt rendszámokat.
+  </Card>
+</CardGroup>

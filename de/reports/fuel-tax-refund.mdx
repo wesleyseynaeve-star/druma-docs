@@ -1,0 +1,79 @@
+---
+title: "Kraftstoffsteuer-Rückerstattung"
+description: "Verfolgen und erstellen Sie EU-Kraftstoffsteuer-Rückerstattungsanträge für Belgien und Rumänien basierend auf importierten Kraftstoffkartendaten."
+icon: "gas-pump"
+---
+
+## Was ist die Kraftstoffsteuer-Rückerstattung?
+
+Mehrere EU-Mitgliedstaaten erlauben es professionellen Straßentransportbetreibern, einen Teil der auf Diesel gezahlten Verbrauchsteuer zurückzufordern. Druma unterstützt zwei Regelungen:
+
+- **Belgien — Gasoil professionnel**: Belgische Frachtführer können einen Teil der Verbrauchsteuer auf für den gewerblichen Transport genutzten Diesel zurückfordern. Anträge werden vierteljährlich beim SPF Finances eingereicht.
+- **Rumänien — TICAD-Dieselrückerstattung**: Rumänische Frachtführer können einen Teil der Verbrauchsteuern auf Diesel zurückfordern, der im internationalen und nationalen Straßentransport genutzt wird. Anträge werden bei ANAF eingereicht.
+
+Kraftstoffsteuer-Rückerstattung findet sich im Bereich **Finanzen**. Zugänglich nur für die Rollen **Admin** und **Unternehmensadmin** — Fuhrparkmanager hat keinen Zugriff auf diesen Bericht.
+
+<Frame caption="Finanzen → Kraftstoffsteuer — Regelungen für Belgien und Rumänien.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Seite Kraftstoffsteuer-Rückerstattung" />
+</Frame>
+
+---
+
+## Voraussetzungen
+
+Dieser Bericht erfordert zuerst importierte Kraftstoffkartendaten. Ohne Tankdatensätze gibt es keine Liter, gegen die berechnet werden kann.
+
+<Card title="Kraftstoffkartenimport" icon="credit-card" href="/de/integrations/fuel-card-import">
+  Importieren Sie Tankvorgänge von DKV, UTA, AS24 und anderen Anbietern.
+</Card>
+
+---
+
+## Einen Rückerstattungsantrag erstellen
+
+<Steps>
+  <Step title="Land und Zeitraum wählen">
+    Wählen Sie **Belgien** oder **Rumänien** aus dem Länder-Dropdown, legen Sie dann den Antragszeitraum fest (typischerweise ein Quartal für Belgien, ein Monat oder Quartal für Rumänien).
+  </Step>
+  <Step title="Auf Erstellen klicken">
+    Druma ruft alle Tankdatensätze für den Zeitraum ab, die unter der gewählten Regelung berechtigt sind, berechnet die gesamten berechtigten Liter, und multipliziert mit dem aktuellen Rückerstattungssatz für dieses Land.
+  </Step>
+  <Step title="Den Antrag prüfen">
+    Das Ergebnis zeigt berechtigte Liter, Rückerstattungssatz pro Liter, und den Gesamtrückerstattungsbetrag in EUR. Prüfen Sie vor der Einreichung.
+  </Step>
+  <Step title="Status und Referenz festlegen">
+    Ändern Sie den Status auf **Eingereicht** und geben Sie die nach der Einreichung erhaltene behördliche Referenznummer ein. Dies verknüpft den Druma-Datensatz mit Ihrer offiziellen Einreichung.
+  </Step>
+</Steps>
+
+---
+
+## Antragsstatus-Lebenszyklus
+
+```
+Entwurf → Eingereicht → Erstattet
+                      → Abgelehnt
+```
+
+- **Entwurf** — berechnet, aber noch nicht bei der Behörde eingereicht
+- **Eingereicht** — an SPF Finances (BE) oder ANAF (RO) gesendet; Referenznummer erfasst
+- **Erstattet** — Zahlung erhalten; Erstattungsdatum eingeben
+- **Abgelehnt** — Antrag wurde abgelehnt; fügen Sie eine Notiz mit dem Grund für die Nachverfolgung hinzu
+
+---
+
+## Diagramm der Rückerstattungsbeträge
+
+Ein Flächendiagramm zeigt Rückerstattungsbeträge nach Zeitraum über die letzten 12 Monate. Nützlich, um saisonale Kraftstoffverbrauchsmuster zu erkennen und für die Liquiditätsplanung.
+
+---
+
+## CSV-Export
+
+Klicken Sie auf **CSV exportieren**, um die Antragsdetails herunterzuladen — Aufschlüsselung nach Tankvorgang, berechtigte Liter, Satz, und berechnete Rückerstattung — für Einreichungs- oder Prüfzwecke.
+
+---
+
+<Warning>
+Druma berechnet berechtigte Liter aus Ihren importierten Kraftstoffkartendaten. Es liegt in Ihrer Verantwortung zu prüfen, dass alle Tankvorgänge korrekt importiert sind und der Rückerstattungssatz dem aktuell veröffentlichten Satz der zuständigen Steuerbehörde entspricht, bevor Sie einen Antrag einreichen.
+</Warning>

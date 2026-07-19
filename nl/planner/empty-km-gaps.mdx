@@ -1,35 +1,59 @@
 ---
-title: "Lege-km-gaten"
-description: "Vind lege afstanden tussen opeenvolgende orders en zie waar retourvrachtmatching het meeste zou opleveren."
+title: "Gaps"
+description: "Vind onbedekte ladingen, deadhead (lege-km) herpositioneringskansen en lege trucks die in de buurt kunnen herladen."
 icon: "route"
 ---
 
-## Wat is het rapport Lege-km-gaten?
+## Wat is het hulpmiddel Gaps?
 
-Elke keer dat een truck aflevert en vervolgens leeg naar de volgende ophaling rijdt, kost dat brandstof en chauffeururen zonder omzet. Dit rapport toont precies die gaten — de afstand tussen de aflevering van een order en de volgende toegewezen ophaling. Te vinden onder het tabblad **Operations**.
+Elke keer dat een truck een levering voltooit zonder volgende lading, of een order zonder toegewezen truck blijft terwijl de ophaaldatum nadert, verbrandt u ofwel lege kilometers, ofwel riskeert u een gemiste ophaling. De pagina **Gaps** (`/operations/gaps`, in de Planning-tabbladbalk als **Gaps**) brengt beide problemen op één plek samen, over drie subtabbladen.
 
-## KPI-rij
+---
 
-- **Totaal aantal gaten**
-- **Gemiddelde lege km**
-- **Totale lege km** in de gekozen periode
+## Coverage
 
-## Kleurcodering
+Het standaard subtabblad toont **onbedekte ladingen** — toekomstige orders die nog geen toegewezen truck hebben, gesorteerd op urgentie. Elke rij toont:
 
-| Kleur | Afstand | Interpretatie |
-|---|---|---|
-| Groen | < 150 km | Aanvaardbaar |
-| Oranje | 150–300 km | Verhoogd — bekijk retourvrachtkansen |
-| Rood | > 300 km | Hoog — sterke kandidaat voor retourvrachtmatching |
+- **Aanbevolen** — een badge: **Toewijzen** (een nabije truck werd gematcht), **Uitbesteden** (zoek een vervoerder), of **Zelf moeten dekken** (geen optie gevonden)
+- **Lege km** — de deadhead-afstand voor de aanbevolen match, kleurgecodeerd: groen ≤150 km, amber 150–300 km, rood >300 km
+- **Ophaling**, **Ophaaldatum**, **Levering**, **Klant**
 
-## Tabel- en kaartweergave
+Rijacties laten u de voorgestelde truck rechtstreeks toewijzen, naar **Vervoerder zoeken** springen, of de order voor detail openen. Een **Triage**-menu laat u een rij markeren als **In behandeling**, **24u snoozen**, of **Aanvaarden als uitbesteding** zodat ze stopt met om aandacht te concurreren.
 
-De tabel toont per gat: truck, chauffeur, afgeleverde order, volgende ophaling, gatafstand (kleurgecodeerd) en datum — sorteerbaar, klik voor orderdetail. De **kaartweergave** toont dezelfde gaten als gestippelde lijnen op een Leaflet-kaart, handig om geografische clusters te herkennen.
+De KPI-balk toont **≤12u/≤24u/≤72u onbedekt**, **% automatisch oplosbaar**, **Vervoerder nodig**, en **Ontbrekende coördinaten** (orders waarvan de stops geen coördinaten hebben en niet gematcht kunnen worden).
 
-## Export en filters
+---
 
-**CSV exporteren** downloadt de volledige dataset inclusief GPS-coördinaten. Filter op datumbereik, truck of chauffeur.
+## Lege-km-optimizer
 
-## Retourvrachten vinden
+Dit subtabblad berekent herpositioneringskansen over **alle** orders (bedekt en onbedekt) door een routingmatrix te draaien over elk levering→ophaling-paar — dit kan enkele seconden duren om te laden. Het is een permanente **gesplitste tabel + kaart**-indeling, geen schakelaar: de tabel toont gaten links, en klikken op een rij tekent een gestippelde lijn op de kaart van dat leverpunt naar de voorgestelde volgende ophaling — alleen de lijn van de geselecteerde rij wordt getekend, niet allemaal tegelijk.
 
-Lanes met herhaalde rode gaten (>300 km) zijn de beste kandidaten voor een vaste retourvrachtafspraak of een handmatige zoekactie op Timocom of Trans.eu. Druma zoekt niet automatisch naar vracht voor gewone FTL-orders — dat blijft een handmatige stap. Bij groupage-lanes kan de automatische backhaul-consolidatiesuggestie op het groupagepaneel al een match hebben gevonden.
+Kolommen: **Aanbevolen**, **Lege km**, **Ophaling**, **Ophaaldatum**, **Herpositioneert vanaf** (de order en het leverpunt waar de truck vandaan zou komen), **Levering**, **Klant**. Een filter **Top 10/Top 25/Alle** beperkt hoeveel rijen worden berekend en getoond, en de kaart heeft zijn eigen ernstfilter (Hoog/Middel/Laag/Onbedekt).
+
+---
+
+## Lege trucks
+
+Dit subtabblad draait de weergave om: één rij per **truck** die een levering voltooit zonder iets gepland erna, gematcht aan de dichtstbijzijnde niet-toegewezen lading waarmee hij kan herladen. Kolommen: **Truck** (met chauffeursnaam), **Eindigt bij** (plaats en datum), **Beste herlading** en **Lege km** voor die herlading. Trucks zonder bereikbare lading tonen geen herladingssuggestie en vereisen een handmatige herpositionerings- of uitbestedingsbeslissing.
+
+KPI's: **Lege trucks**, **Herlading gevonden**, **Geen herlading**, **Gem. lege km**, **Ontbrekende coördinaten**.
+
+---
+
+## Exporteren
+
+De werkbalk van elk subtabblad heeft knoppen **Afdrukken** en **Exporteren** voor de huidige tabel — exporteren levert een Excel-bestand (.xlsx) op van de zichtbare kolommen. Er is geen export van ruwe GPS-coördinaten.
+
+---
+
+## Filters
+
+Elk subtabblad heeft een vrije-tekstzoekvak (ordernummer, klantnaam, ophaal-/afleveradres). Er is geen apart datumbereik-, truck- of chauffeursfilter — de tabbladen Coverage en Optimizer zijn al beperkt tot aankomende orders, en het tabblad Lege trucks heeft geen truck-/chauffeurkiezer aangezien elke rij al een truck is.
+
+---
+
+## Dit hulpmiddel gebruiken om retourvrachten te vinden
+
+Trajecten waar u consequent rode gaten (>300 km) ziet, zijn precies waar een vaste retourvrachtafspraak — of een handmatige zoekactie op een vrachtbeurs zoals Timocom of Trans.eu bij levering — het meeste zou opleveren. Druma voert geen automatische ladingzoekactie uit voor gewone FTL-orders; het identificeren en boeken van de retourvracht is een handmatige stap zodra het hulpmiddel u naar het traject heeft gewezen.
+
+Betreft het gat een groupage-traject (meerdere stops), controleer dan of Druma's automatische backhaul-consolidatiesuggesties al een overeenkomende retourlading hebben gevonden — deze verschijnen rechtstreeks op het groupage-consolidatiepaneel en vereisen geen handmatige zoekactie.

@@ -1,44 +1,67 @@
 ---
 title: "Nachtelijkse gegevenskwaliteitsscan"
-description: "Elke nacht controleert Druma uw gegevens op negen soorten veelvoorkomende problemen en e-mailt een samenvatting zodat u problemen kunt oplossen voor ze vertragingen of verloren omzet veroorzaken."
+description: "Elke nacht controleert Druma uw gegevens op negen soorten veelvoorkomende problemen zodat u ze kunt oplossen voor ze vertragingen of verloren omzet veroorzaken."
 icon: "magnifying-glass-chart"
 ---
 
-Slechte gegevens zijn kostbaar. Een klant zonder BTW-nummer blokkeert uw e-Factura indiening. Een afgeleverde order die twee weken onbefactureerd blijft is contant geld dat u niet heeft geïnd. De nachtelijkse gegevenskwaliteitsscan vindt deze problemen voor ze u geld kosten.
+Slechte gegevens zijn kostbaar. Een klant zonder BTW-nummer blokkeert uw e-Factura-indiening. Een afgeleverde order die een week onbefactureerd blijft is geld dat u nog niet heeft geïnd. Een achterstallige factuur zonder opvolging is een klantrelatie die verwatert. De nachtelijkse gegevenskwaliteitsscan vindt deze problemen voor ze u geld kosten.
+
+Elke nacht draait Druma negen geautomatiseerde controles over uw volledige dataset en schrijft de resultaten naar de pagina **Gegevenskwaliteit** onder **Hulpmiddelen**.
 
 ## De negen controles
 
-### 1. Ontbrekende BTW-nummers
-Klanten zonder geldig BTW-nummer. Vereist voor Roemeense e-Factura-indiening.
+### 1. Ontbrekend BTW-nummer
+Klanten gebruikt in een recente, niet-conceptorder zonder geregistreerd BTW-nummer. Roemeense e-Factura-indiening vereist een geldig BTW-nummer voor elke klant — ontbreekt dit, dan kunnen facturen voor die klant niet automatisch bij ANAF worden ingediend.
 
-### 2. Onbefactureerde afgeleverde orders
-Orders die meer dan 48 uur geleden zijn afgeleverd maar nog geen factuur hebben.
+### 2. Factuur niet ingediend bij ANAF
+Verstuurde facturen zonder geregistreerde e-Factura-indieningsstatus.
 
-### 3. Verlopen documenten
-Vlootdocumenten (ITP, verzekering, ADR-certificaten) die zijn verlopen of binnen 7 dagen verlopen.
+### 3. Afgeleverd, 7+ dagen onbefactureerd
+Orders meer dan 7 dagen geleden als afgeleverd gemarkeerd die nog geen gekoppelde factuur hebben. Dit is omzet die u heeft verdiend maar nog niet gefactureerd.
 
-### 4. Ontbrekende chauffeursdocumenten
-Chauffeurs met verlopen rijbewijzen of CPC-certificaten.
+### 4. Verouderde conceptorder
+Conceptorders die meer dan 7 dagen onaangeroerd zijn gebleven — meestal vergeten, per e-mail ingelezen orders die een planner nooit bevestigd of verwijderd heeft.
 
-### 5. Langdurig wachten
-Orders met meer dan 4 uur wachttijd die nog niet zijn aangemeld bij de klant.
+### 5. Klant heeft geen e-mail
+Klanten zonder geregistreerd e-mailadres.
 
-### 6. Niet-gesynct uitbestede orders
-Uitbestede orders waarbij meer dan 24 uur zijn verstreken zonder statusupdate van de vervoerder.
+### 6. Bevestigde order, geen overeengekomen prijs
+Orders met status **Bevestigd** of **Toegewezen** waarbij de overeengekomen prijs nog ontbreekt of nul is.
 
-### 7. Ontbrekende klantcontacten
-Klanten zonder e-mailadres — meldingen en facturen kunnen niet worden bezorgd.
+### 7. Factuur 60+ dagen achterstallig
+Onbetaalde facturen meer dan 60 dagen na de vervaldatum.
 
-### 8. Onvoltooide orders
-Orders die de verwachte leveringsdatum hebben gepasseerd maar niet de status Afgeleverd hebben.
+### 8. Voltooide order, na 14 dagen geen factuur
+Afgeleverde orders nog steeds onbefactureerd na 14 dagen — een langetermijnversie van controle 3, gemarkeerd als informatief in plaats van kritiek.
 
-### 9. Ontbrekende e-Factura-indiening
-Facturen die zijn uitgegeven aan Roemeense klanten maar nog niet zijn ingediend bij ANAF.
+### 9. Slapende klant
+Klanten zonder orders in de laatste 90 dagen.
 
-## De gegevenskwaliteitspagina
+## Resultaten bekijken
 
-Ga naar **Rapporten → Gegevenskwaliteit** om alle gevonden problemen te bekijken, gegroepeerd op ernst (Kritiek / Waarschuwing / Info).
+Ga naar **Hulpmiddelen → Gegevenskwaliteit**.
 
-<Card title="Vlootdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
-  Documentvervaldatums bijhouden.
-</Card>
+De pagina toont:
+
+- Een KPI-balk met het totaal aantal openstaande issues, plus aantallen per ernst (Kritiek, Waarschuwing, Info)
+- Een gestapeld staafdiagram van issues per ernst over de laatste 30 dagen
+- Een filterbare tabel (Open / Opgelost / Genegeerd / Alle) met elk issue, entiteitstype, referentie, omschrijving, ernst, voorgestelde actie, status en aanmaakdatum
+- **Oplossen**- en **Negeren**-acties per openstaand issue
+
+<Note>
+De gegevenskwaliteitsscan draait elke nacht om **03:00 UTC**. Resultaten op de pagina weerspiegelen de staat van uw gegevens op dat moment. Problemen die u overdag oplost, verdwijnen bij de scan van de volgende nacht (of zodra u het issue zelf als **Opgelost** markeert).
+</Note>
+
+## Issues oplossen
+
+De pagina Gegevenskwaliteit vertelt wat er mis is en stelt een actie voor, maar linkt niet direct naar het onderliggende record — gebruik de getoonde referentie (klantnaam, ordernummer, factuurnummer) om het zelf op te zoeken in Klanten, Operaties of Finance, los het probleem op en klik dan op **Oplossen**.
+
+Er is geen bulk-oplostool — elk issue wordt individueel opgelost. Dit is bewust: gegevenscorrecties moeten weloverwogen zijn.
+
+Klikken op **Negeren** verwijdert een issue uit het filter **Open** zonder het als opgelost te markeren — gebruik dit voor issues waarop u besloten heeft niet te reageren. Genegeerde en opgeloste issues worden uitgesloten van de volgende nachtelijke herscan van openstaande issues.
+
+<CardGroup cols={1}>
+  <Card title="Overzicht rapporten" icon="chart-bar" href="/nl/reports/reports-overview">
+    Bekijk alle beschikbare rapporten in Druma en hoe u ze plant voor regelmatige e-maillevering.
+  </Card>
+</CardGroup>

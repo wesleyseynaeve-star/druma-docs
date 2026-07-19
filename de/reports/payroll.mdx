@@ -1,0 +1,85 @@
+---
+title: "Fahrer-Lohnabrechnung"
+description: "Erstellen Sie automatisierte Lohnberechnungen pro Fahrer basierend auf gefahrenen km, aktiven Tagen und Wartestunden."
+icon: "money-bill-wave"
+---
+
+## Übersicht
+
+Druma berechnet den Fahrerlohn aus den Betriebsdaten, die es bereits erfasst — gefahrene Kilometer, gearbeitete Tage, und protokollierte Wartestunden. Es gibt kein separates Zeiterfassungssystem; die Daten stammen aus Aufträgen und Status-Taps.
+
+Fahrer-Lohnabrechnung findet sich im Bereich **Finanzen**. Zugänglich für die Rollen Admin, Unternehmensadmin und Fuhrparkmanager.
+
+<Frame caption="Finanzen → Lohnabrechnung — Leerkilometer-Lohn ist ein Prozentsatz des Beladen-Satzes, kein eigenständiger Satz.">
+  <img src="/images/reports/payroll.png" alt="Seite Lohnabrechnung" />
+</Frame>
+
+---
+
+## Lohnkomponenten
+
+Jeder Lohnabrechnungslauf berechnet vier Komponenten:
+
+| Komponente | Grundlage |
+|---|---|
+| **Km-Lohn** | Beladene km × Satz pro km |
+| **Leer-km-Lohn** | Leer-/Leerfahrt-km × Satz pro km × Leer-km-Prozentsatz (ein konfigurierbarer Anteil des Beladen-Satzes, kein separater Leer-km-Satz — standardmäßig 100 %, d. h. gleich bezahlt wie beladene km) |
+| **Tageslohn** | Aktive Arbeitstage × Tagessatz |
+| **Wartelohn** | Gesamte Wartestunden × Stunden-Wartesatz |
+
+Die Gesamtsumme ist die Summe aller vier Komponenten in EUR.
+
+---
+
+## Einen Lohnabrechnungslauf erstellen
+
+<Steps>
+  <Step title="Fahrer und Zeitraum wählen">
+    Wählen Sie den Fahrer aus dem Dropdown und legen Sie Start- und Enddatum des Zeitraums fest. Typische Zeiträume sind ein Kalendermonat oder ein zweiwöchiger Lohnzyklus.
+  </Step>
+  <Step title="Auf Erstellen klicken">
+    Druma berechnet alle vier Lohnkomponenten aus den Aufträgen und Wartezeitprotokollen im gewählten Zeitraum.
+  </Step>
+  <Step title="Die Aufschlüsselung prüfen">
+    Das Ergebnis zeigt jede Komponente separat, damit Sie die Zahlen vor dem Export prüfen können.
+  </Step>
+  <Step title="Als CSV exportieren">
+    Klicken Sie auf **CSV exportieren**, um die Lohnzusammenfassung für Ihre Buchhaltungs- oder Lohnsoftware herunterzuladen.
+  </Step>
+</Steps>
+
+---
+
+## Sätze konfigurieren
+
+Lohnsätze (Satz pro km, Tagessatz, Leer-km-Prozentsatz, Stunden-Wartesatz) werden pro Fahrer gespeichert — mit einer unternehmensweiten Standardregel, die für jeden Fahrer ohne eigene Regel gilt — in der zugrunde liegenden Lohnregeltabelle.
+
+<Note>
+Es gibt derzeit keinen In-App-Bildschirm, um diese Sätze anzusehen oder zu bearbeiten. Sätze müssen direkt in der Datenbank festgelegt werden (oder vorbelegt sein), bis eine Fuhrpark-→-Fahrer-Sätze-Oberfläche erscheint. Hat ein Fahrer keine Regel und existiert kein Unternehmensstandard, berechnet sich jede Komponente für diesen Fahrer als null.
+</Note>
+
+---
+
+## Historische Läufe
+
+Jeder erstellte Lohnabrechnungslauf wird gespeichert und im Datensatz des Fahrers aufgelistet. Sie können jeden vorherigen Lauf erneut öffnen, um ihn zu prüfen oder erneut zu exportieren.
+
+---
+
+## Diagramm der Monatssummen
+
+Ein Balkendiagramm unter der Fahrerauswahl zeigt die monatlichen Gesamtlohnbeträge für den gewählten Fahrer über die letzten 12 Monate. Nützlich, um saisonale Muster oder Monate mit ungewöhnlich hohen Wartegebühren zu erkennen.
+
+---
+
+<Note>
+Lohnabrechnungswerte in Druma sind beratend — Druma integriert sich nicht mit Lohnabrechnungsdienstleistern oder Steuerbehörden. Der CSV-Export ist für den Import in Ihr Lohnabrechnungssystem oder zur manuellen Prüfung durch einen Buchhalter gedacht.
+</Note>
+
+<Card title="Wartezeit" icon="clock" href="/de/planner/waiting-time">
+  Erfahren Sie, wie Wartezeit protokolliert wird und wie sie in die Lohnberechnung einfließt.
+</Card>
+
+<Card title="Fehlfahrt" icon="triangle-exclamation" href="/de/planner/wasted-journey">
+  Leerkilometer aus Fehlfahrten erscheinen ebenfalls in den Fahrer-Lohnabrechnungsdatensätzen.
+</Card>

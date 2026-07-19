@@ -1,0 +1,63 @@
+---
+title: "Lücken"
+description: "Finden Sie ungedeckte Ladungen, Leerkilometer-Umpositionierungsmöglichkeiten, und leere LKW, die in der Nähe nachladen könnten."
+icon: "route"
+---
+
+## Was ist das Lücken-Werkzeug?
+
+Jedes Mal, wenn ein LKW eine Lieferung ohne nächste geplante Ladung abschließt, oder ein Auftrag ohne zugewiesenen LKW dasteht, während sich sein Abholdatum nähert, verbrennen Sie entweder Leerkilometer oder riskieren eine verpasste Abholung. Die Seite **Lücken** (`/operations/gaps`, in der Planung-Tab-Leiste als **Lücken**) zeigt beide Probleme an einem Ort, über drei Unter-Tabs.
+
+<Frame caption="Das Lücken-Werkzeug — Abdeckungslücken mit empfohlener Aktion, Leerkilometern, Abholung, Lieferung und Kunde.">
+  <img src="/images/planner/empty-km-gaps.png" alt="Lücken-Seite mit Abdeckungslücken und Leerkilometer-Nachladungsmöglichkeiten" />
+</Frame>
+
+---
+
+## Abdeckung
+
+Der Standard-Unter-Tab listet **ungedeckte Ladungen** — künftige Aufträge, denen noch kein LKW zugewiesen ist, nach Dringlichkeit sortiert. Jede Zeile zeigt:
+
+- **Empfohlen** — ein Abzeichen: **Zuweisen** (ein LKW in der Nähe wurde zugeordnet), **Unterauftragnehmer** (einen Frachtführer finden), oder **Muss selbst decken** (keine Option gefunden)
+- **Leer-KM** — die Leerfahrtdistanz für die empfohlene Zuordnung, farbcodiert: grün ≤150 km, gelb 150–300 km, rot >300 km
+- **Abholung**, **Abholdatum**, **Lieferung**, **Kunde**
+
+Zeilenaktionen erlauben es, den vorgeschlagenen LKW direkt zuzuweisen, zu **Frachtführer finden** zu springen, oder den Auftrag für Details zu öffnen. Ein Menü **Triage** lässt Sie eine Zeile als **In Bearbeitung**, **24h zurückstellen**, oder **Als Unterauftragnehmer akzeptieren** markieren, damit sie nicht mehr um Aufmerksamkeit konkurriert.
+
+Die KPI-Leiste zeigt **≤12h / ≤24h / ≤72h ungedeckt**, **Automatisch lösbar %**, **Braucht Frachtführer**, und **Fehlende Koordinaten** (Aufträge, deren Stopps keine Koordinaten haben und nicht zugeordnet werden können).
+
+---
+
+## Leerkilometer-Optimierer
+
+Dieser Unter-Tab berechnet Umpositionierungsmöglichkeiten über **alle** Aufträge (gedeckt und ungedeckt), indem er eine Routing-Matrix über jedes Lieferung→Abholung-Paar ausführt — das Laden kann einige Sekunden dauern. Es ist ein permanentes **Geteilte-Tabelle-+-Karte**-Layout, kein Schalter: Die Tabelle listet Lücken links, und ein Klick auf eine Zeile zeichnet eine gestrichelte Linie auf der Karte von diesem Lieferpunkt zur vorgeschlagenen nächsten Abholung — nur die Linie der ausgewählten Zeile wird gezeichnet, nicht alle.
+
+Spalten: **Empfohlen**, **Leer-KM**, **Abholung**, **Abholdatum**, **Umpositioniert von** (der Auftrag und Lieferpunkt, von dem der LKW käme), **Lieferung**, **Kunde**. Ein Filter **Top 10 / Top 25 / Alle** begrenzt, wie viele Zeilen berechnet und angezeigt werden, und die Karte hat ihren eigenen Schweregrad-Filter (Hoch / Mittel / Niedrig / Ungedeckt).
+
+---
+
+## Leere LKW
+
+Dieser Unter-Tab dreht die Ansicht um: eine Zeile pro **LKW**, der eine Lieferung ohne geplante Anschlussladung abschließt, zugeordnet zur nächstgelegenen nicht zugewiesenen Ladung, mit der er nachladen könnte. Spalten: **LKW** (mit Fahrername), **Endet bei** (Ort und Datum), **Beste Nachladung**, und **Leer-km** für diese Nachladung. LKW ohne erreichbare Ladung zeigen keinen Nachladevorschlag und benötigen eine manuelle Umpositionierungs- oder Unterauftragnehmer-Entscheidung.
+
+KPIs: **Leere LKW**, **Nachladung gefunden**, **Keine Nachladung**, **Ø Leer-km**, **Fehlende Koordinaten**.
+
+---
+
+## Exportieren
+
+Die Symbolleiste jedes Unter-Tabs hat Schaltflächen **Drucken** und **Exportieren** für die aktuelle Tabelle — der Export erzeugt eine Excel-Datei (.xlsx) der sichtbaren Spalten. Es gibt keinen Export roher GPS-Koordinaten.
+
+---
+
+## Filter
+
+Jeder Unter-Tab hat ein Freitext-Suchfeld (Auftragsnummer, Kundenname, Abhol-/Lieferadresse). Es gibt keinen separaten Datumsbereichs-, LKW- oder Fahrerfilter — die Tabs Abdeckung und Optimierer beschränken sich bereits auf anstehende Aufträge, und der Tab Leere LKW hat keine Pro-LKW-/Fahrer-Auswahl, da jede Zeile bereits ein LKW ist.
+
+---
+
+## Dieses Werkzeug zur Rückladungssuche nutzen
+
+Strecken, auf denen Sie konsequent rote Lücken (>300 km) sehen, sind genau dort, wo eine feste Rückladungsvereinbarung — oder eine manuelle Suche auf einer Frachtbörse wie Timocom oder Trans.eu bei Lieferung — die höchste Rendite hätte. Druma führt keine automatische Ladungssuche für allgemeine FTL-Aufträge durch; das Erkennen und Buchen der Rückladung ist ein manueller Schritt, sobald das Werkzeug Sie auf die Strecke hingewiesen hat.
+
+Betrifft die Lücke eine Sammelgut-(Mehrfachstopp-)Strecke, prüfen Sie, ob Drumas automatische Rückladungs-Konsolidierungsvorschläge bereits eine passende Rückladung markiert haben — diese erscheinen direkt im Sammelgut-Konsolidierungspanel und erfordern keine manuelle Suche.

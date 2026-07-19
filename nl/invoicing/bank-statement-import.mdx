@@ -1,39 +1,116 @@
 ---
 title: "Bankafschrift importeren"
-description: "Upload CAMT.053 of MT940-bankafschriftbestanden om betalingen automatisch te koppelen aan openstaande facturen — geen handmatige gegevensinvoer vereist."
+description: "Upload CAMT.053-, MT940- of CODA-bankafschriftbestanden om betalingen automatisch te koppelen aan openstaande facturen — geen handmatige gegevensinvoer vereist."
 icon: "file-up"
 ---
 
 ## Overzicht
 
-In plaats van betalingen één voor één te registreren, kunt u uw bankafschrift rechtstreeks in Druma uploaden. Druma verwerkt elke credittransactie in het bestand, voert koppelingslogica uit op uw openstaande facturen en past zekere overeenkomsten automatisch toe.
+In plaats van betalingen één voor één te registreren, kunt u uw bankafschrift rechtstreeks in Druma uploaden. Druma verwerkt elke credittransactie in het bestand, voert koppelingslogica uit op uw openstaande facturen en past elke zekere overeenkomst automatisch toe. Niet-gekoppelde transacties belanden in de afstemmingswachtrij voor een snelle handmatige controle.
+
+Dit is de snelste manier om een groot volume inkomende betalingen in één keer af te stemmen — ideaal aan het einde van de week of maand.
 
 ## Ondersteunde formaten en banken
 
-Druma accepteert twee standaardformaten:
-- **CAMT.053** — Europese ISO 20022-standaard. Ondersteund door ING, Raiffeisen, BRD, BCR en de meeste grote Europese banken.
-- **MT940** — Legacy SWIFT-formaat. Oudere exportoptie aangeboden door de meeste banken naast CAMT.053.
+Druma accepteert drie standaardformaten:
 
-## Een bankafschrift importeren
+| Formaat | Beschrijving |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — geëxporteerd door de meeste EU-banken via online bankieren |
+| **MT940 SWIFT** | SWIFT legacy-formaat — nog steeds gebruikelijk bij zakelijke bank-API's |
+| **CODA** | Vastebreedteformaat gebruikt door Belgische banken |
+
+Alle drie formaten worden ondersteund door BRD, BCR, Raiffeisen Bank, UniCredit en ING Roemenië, evenals de meerderheid van EU-banken — CODA dekt specifiek Belgische bankexports. Druma detecteert het formaat automatisch bij het uploaden. Faalt de detectie, selecteer dan het juiste formaat handmatig via de vervolgkeuzelijst **Formaat** in de importmodal.
+
+**Maximale bestandsgrootte:** 10 MB per upload.
+
+<Note>
+Hetzelfde afschriftbestand opnieuw uploaden is veilig. Druma neemt een vingerafdruk van elke transactie en slaat eventuele duplicaten stilzwijgend over — u registreert nooit dubbel een betaling.
+</Note>
+
+## Een afschrift importeren
 
 <Steps>
-  <Step title="Download uw bankafschrift">
-    Exporteer CAMT.053 of MT940 van uw online bankportaal voor de gewenste periode.
+  <Step title="Open het importdialoog">
+    Ga naar **Finance → Afstemming → tabblad Betalingen**. Klik op de knop **Afschrift importeren** rechtsboven op de pagina.
   </Step>
-  <Step title="Ga naar Facturering → Afstemming">
-    Open de afstemmingsmodule in Druma.
+  <Step title="Selecteer uw bestand">
+    Klik op **Bestand kiezen** en selecteer uw geëxporteerde bankafschrift. Geaccepteerde extensies zijn `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940) en `.cod`/`.coda` (CODA). Het bestand moet 10 MB of kleiner zijn.
   </Step>
-  <Step title="Klik op Afschrift importeren">
-    Klik op de knop **Afschrift importeren** en selecteer uw gedownloade bestand.
+  <Step title="Bevestig het formaat">
+    Druma detecteert het formaat automatisch en toont een label onder de bestandsnaam. Is het label onjuist, open dan de vervolgkeuzelijst **Formaat** en selecteer het juiste formaat handmatig voor u verdergaat.
   </Step>
-  <Step title="Bekijk de resultaten">
-    Druma toont: automatisch gekoppelde betalingen, suggesties voor handmatige beoordeling en transacties die niet overeenkomen.
+  <Step title="Voer de import uit">
+    Klik op **Importeren**. Druma verwerkt alle credittransacties in het bestand en voert koppelingslogica uit tegen elke openstaande factuur in uw bedrijf. Dit duurt doorgaans enkele seconden.
   </Step>
-  <Step title="Bevestig handmatige koppelingen">
-    Bekijk de suggesties, bevestig de correcte koppelingen en wijs niet-overeenkomende transacties toe indien nodig.
+  <Step title="Bekijk de resultaatsamenvatting">
+    Zodra de verwerking klaar is, toont een samenvattingsmodal het resultaat. Bekijk elke categorie voor u sluit — zie de uitsplitsing hieronder.
   </Step>
 </Steps>
 
-<Card title="Bankafstemming" icon="building-columns" href="/nl/invoicing/bank-reconciliation">
-  E-mailgebaseerde afstemming voor Roemeense banken.
+## De resultaatsamenvatting begrijpen
+
+Na elke import toont Druma een resultaatsamenvatting met de volgende tellers:
+
+| Veld | Wat het betekent |
+|-------|---------------|
+| **Verwerkt** | Totaal aantal credittransacties gevonden in het bestand |
+| **Automatisch gekoppeld** | Transacties gekoppeld aan een factuur met hoge betrouwbaarheid — betaling automatisch toegepast |
+| **Review nodig** | Transacties waarbij een mogelijke overeenkomst werd gevonden maar de betrouwbaarheid onder de drempel lag — verschijnen in de afstemmingswachtrij |
+| **Duplicaten overgeslagen** | Transacties al geregistreerd van een eerdere upload van hetzelfde bestand — stilzwijgend genegeerd |
+| **Fouten** | Transacties die niet konden worden verwerkt (misvormde rijen, niet-ondersteunde valuta, ontbrekende referentie) |
+
+Een gezonde import heeft een hoog aantal **Automatisch gekoppeld** en een laag aantal **Review nodig**. Ziet u veel rijen die review nodig hebben, dan betekent dit meestal dat factuurreferenties niet in betalingsomschrijvingen zijn opgenomen — vraag klanten hun factuurnummer op te nemen in het referentieveld van de bankoverschrijving.
+
+## Koppelingslogica
+
+Druma koppelt elke banktransactie aan een factuur met de volgende signalen, in volgorde van prioriteit:
+
+1. **Factuurnummer in transactiereferentie** — exacte of gedeeltelijke (fuzzy-genormaliseerde) overeenkomst met een openstaand factuurnummer. Een overeenkomst op dit signaal alleen volstaat om de betaling automatisch toe te passen — geen ander signaal vereist.
+2. **Bedragovereenkomst** — matcht geen factuurnummer, dan zoekt Druma een openstaande factuur waarvan het openstaande saldo binnen uw geconfigureerde tolerantie (standaard ±2%) van het transactiebedrag valt, **en** waarvan de vervaldatum binnen ±30 dagen van de transactiedatum valt. Dit voorkomt dat een toevallige bedragovereenkomst koppelt aan een ongerelateerde factuur van maanden geleden.
+3. **Klantnaam** — alleen gebruikt als tiebreaker wanneer de bedragovereenkomst hierboven meer dan één kandidaatfactuur oplevert; Druma verfijnt naar de kandidaat wiens klantnaam voorkomt in de afzendernaam van de transactie.
+
+Een factuurnummerovereenkomst past de betaling automatisch toe (volledig of gedeeltelijk, afhankelijk van het bedrag). Een **bedrag-alleen-overeenkomst wordt nooit automatisch toegepast** — ook al identificeert ze uniek één factuur — ze belandt altijd in de afstemmingswachtrij voor handmatige bevestiging, aangezien er geen referentie is die bewijst dat het echt de betaling van die factuur is. Geen enkel signaal → in wachtrij als niet-gekoppeld.
+
+## Niet-gekoppelde transacties afhandelen
+
+Elke transactie die niet met zekerheid kon worden gekoppeld, verschijnt in de wachtrij **Afstemming** op hetzelfde tabblad **Betalingen**. Elke rij toont een bronbadge **Afschrift** (ter onderscheid van transacties die via e-mailverwerking binnenkwamen, die een badge **E-mail** tonen).
+
+<Steps>
+  <Step title="Open de afstemmingswachtrij">
+    Blijf op **Finance → Afstemming → tabblad Betalingen**. Niet-gekoppelde rijen verschijnen onder de samenvatting met status **In behandeling**.
+  </Step>
+  <Step title="Klap de transactie uit">
+    Klik op een rij om ze uit te klappen. Druma toont de volledige transactiedetails: datum, bedrag, banktekst en eventuele kandidaatfacturen die het overwoog.
+  </Step>
+  <Step title="Koppel handmatig">
+    Klik op **Koppelen** naast de juiste factuur. Druma past de betaling toe en verplaatst de transactie naar status **Toegepast**.
+  </Step>
+  <Step title="Negeer indien niet relevant">
+    Is de transactie geen klantbetaling (bijvoorbeeld een interne overschrijving of bankkosten), klik dan op **Negeren**. De rij verplaatst naar status **Afgewezen** en beïnvloedt geen enkele factuur.
+  </Step>
+</Steps>
+
+<Warning>
+Een transactie negeren is een zachte actie — het markeert alleen de rij als afgewezen in Druma. Het beïnvloedt uw werkelijke bankrekening of boekhoudsysteem niet. Negeert u per ongeluk, neem dan contact op met support — er is momenteel geen self-service ongedaan-maken voor afgewezen afstemmingsrijen.
+</Warning>
+
+## Tips voor hogere automatische koppelingsgraden
+
+- **Vraag klanten het factuurnummer op te nemen** in het betalingsreferentieveld van hun bankoverschrijving. Een referentie zoals `INV-000047` geeft Druma een exacte overeenkomst op het eerste signaal.
+- **Houd klantnamen consistent** tussen uw klantstamgegevens en hoe klanten zichzelf identificeren op bankoverschrijvingen — Druma valt alleen terug op een klantnaamovereenkomst om te disambigueren tussen meerdere facturen met hetzelfde bedrag, dus een goede match daar kan een anders dubbelzinnige bedragovereenkomst redden.
+- **Gebruik consequent nettobetalingstermijnen.** Betalingen die binnenkomen met afgetrokken kosten (bank- of factoringkosten) vallen binnen de tolerantie van ±2% voor bedragen onder ~€5.000. Bevestig bij grotere facturen met klanten dat ze het volledige bedrag versturen.
+
+---
+
+<Card title="Betalingsopvolging" icon="circle-check" href="/nl/invoicing/payment-tracking">
+  Betalingen handmatig registreren en opvolgen, of de volledige betalingshistorie per factuur bekijken.
+</Card>
+
+<Card title="Achterstallig dashboard" icon="triangle-alert" href="/nl/invoicing/overdue-management">
+  Verouderde debiteuren bekijken en betalingsherinneringen versturen voor facturen na hun vervaldatum.
+</Card>
+
+<Card title="Creditnota's" icon="file-minus" href="/nl/invoicing/credit-notes">
+  Een creditnota uitgeven om een verstuurde factuur te herroepen of gedeeltelijk te corrigeren.
 </Card>

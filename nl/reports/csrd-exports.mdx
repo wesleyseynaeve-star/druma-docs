@@ -1,53 +1,105 @@
 ---
-title: "CSRD Emissie-exports"
+title: "CSRD-emissie-exports"
 description: "Exporteer wagenparkemissiegegevens in XLSX-, CSRD-conform CSV- en iXBRL-formaat voor duurzaamheidsrapportage en ESRS E1-naleving."
 ---
 
 ## Overzicht
 
-Naast het standaard maandelijkse CO2-rapport ondersteunt Druma drie aanvullende exportformaten voor bedrijven met CSRD-verplichtingen.
+Naast het standaard maandelijkse CO2-rapport ondersteunt Druma drie aanvullende exportformaten, ontworpen voor bedrijven met verplichtingen onder de Corporate Sustainability Reporting Directive (CSRD) — of die emissiegegevens leveren aan klanten met die verplichtingen.
 
-**Rapporten → CO2-rapport → Export**
+Alle CSRD-exports zijn beschikbaar vanaf de pagina **CO2-rapport**:
+
+**Rapporten → CO2-rapport → Jaarlijks (CSRD)**
 
 ---
 
 ## Jaarlijkse modus
 
-Standaard toont het CO2-rapport één kalendermaand. Schakel naar de **Jaarlijkse modus** met de knop rechtsboven om alle 12 maanden samen te voegen.
+Standaard toont het CO2-rapport de meest recente zendingen (Maandelijkse weergave). Schakel naar **Jaarlijks (CSRD)** met de schakelaar bovenaan de rapportpagina.
+
+In de jaarlijkse modus:
+- Verschijnt een jaarkiezer
+- Worden zendingen voor het hele geselecteerde jaar geladen (beperkt tot 5.000 rijen — verfijn op klant als een jaar is afgekapt)
+- Verschijnen alle drie exportknoppen — jaarlijkse XLSX, CSRD-gegevenspakket (.csv) en iXBRL — onder de schakelaar
 
 <Note>
-De meeste CSRD-indieningen vereisen een volledig kalenderjaar. Schakel naar Jaarlijkse modus voor export.
+De meeste CSRD- en ESG-rapportage-indieningen vereisen een volledig kalenderjaar aan gegevens. Schakel naar de jaarlijkse modus voor u exporteert voor regelgevende of klant-duurzaamheidsdoeleinden.
 </Note>
 
 ---
 
 ## Exporttypen
 
-### 1. XLSX Wagenparkemissierapport
+### 1. Jaarlijkse XLSX
 
-Standaard spreadsheet-export met één rij per order (ID, Klant, Herkomstland, Bestemmingsland, Afstand in km, Voertuig, Euro-norm, CO2 in kg en tCO2e) plus overzichtsblad.
+De standaard spreadsheetexport. Het beste voor delen met inkoopafdelingen, duurzaamheidsteams of ESG-auditbureaus. Twee werkbladen:
 
-Klik op **Export → XLSX**.
+**Shipments** — één rij per order, kolommen: Ordernr., Ophaaldatum, Leverdatum, Ophaaladres, Afleveradres, Afstand (km), Gewicht (kg), CO2 (kg), Methode, Euronorm, Klant, Truck.
 
-### 2. CSRD-conform CSV
+**Methodology** — bedrijfsnaam en BTW-nummer, rapportagejaar, en totalen voor het jaar (totaal aantal zendingen, totale afstand, totale CO2 in kg en ton), plus een platte-tekst methodologienotitie. Er is geen tabblad met uitsplitsing per maand, per klant of per Euronorm — totalen zijn vlootbreed voor het jaar.
 
-Plat CSV-bestand conform de kolomvereisten van CSRD-rapportageframeworks (VSME Bijlage D / ESRS E1). Compatibel met ESG-rapportagesoftware (Sweep, Workiva, Persefoni).
+**Hoe te exporteren:** klik op **Jaarlijkse XLSX** op de pagina CO2-rapport (jaarlijkse modus).
 
-Klik op **Export → CSRD CSV**.
+---
 
-### 3. iXBRL-rapport (Beta)
+### 2. CSRD-gegevenspakket (CSV)
+
+Een plat CSV-bestand met dezelfde gegevens per zending als het werkblad Shipments van de XLSX, in machineleesbaar formaat — geschikt om te laden in ESG-rapportagesoftware.
+
+Koppen zijn platte snake_case-veldnamen, geen ESRS-taxonomie-identifiers:
+
+`order_number, pickup_date, delivery_date, pickup_address, delivery_address, distance_km, weight_kg, co2_kg, co2_method, euro_standard`
 
 <Note>
-iXBRL-export is in bèta. Valideer het bestand met uw aangewezen auditor vóór indiening bij een toezichthouder.
+Er is vandaag geen kolom `fuel_type` in deze export — brandstoftype wordt intern gebruikt om de emissiefactor te bepalen (zie [CO2-rapport](/nl/reports/co2-report)) maar wordt momenteel niet blootgesteld als eigen CSV-kolom.
 </Note>
 
-ESEF-conform machineleesbaar formaat voor op EU-gereglementeerde markten genoteerde bedrijven. Klik op **Export → iXBRL (Beta)**.
+**Hoe te exporteren:** klik op **CSRD-gegevenspakket (.csv)** op de pagina CO2-rapport (jaarlijkse modus).
+
+---
+
+### 3. iXBRL-rapport (bèta)
+
+<Note>
+iXBRL-export is in bèta. De uitvoer gebruikt de **ESRS-taxonomie** (European Sustainability Reporting Standards — `xbrl.efrag.org/taxonomy/esrs`), niet ESEF (dat een apart indieningsformaat is voor jaarverslagen van beursgenoteerde bedrijven). Valideer het bestand tegen de vereisten van uw aangewezen auditor vóór indiening bij een toezichthouder. Druma garandeert geen aanvaarding door een specifieke toezichthouder in dit stadium.
+</Note>
+
+iXBRL (Inline eXtensible Business Reporting Language) tagt het bruto Scope 3, Categorie 9 (downstream-transport) CO2-cijfer voor het jaar tegen de ESRS E1-taxonomie, naast een samenvatting in gewone taal. Het is bedoeld als component die u (of uw auditor) opneemt in een breder CSRD-jaarverslag — geen op zichzelf staande wettelijke indiening.
+
+Het geëxporteerde bestand is een HTML-document met zowel mensleesbare tabellen als machinaal getagde emissiegegevens.
+
+**Hoe te exporteren:** klik op **Exporteer iXBRL (.xhtml)** op de pagina CO2-rapport (jaarlijkse modus) — u wordt eerst gevraagd een auditor-reviewdisclaimer te bevestigen.
+
+---
+
+## Delen met klanten
+
+Hebben uw klanten hun eigen CSRD-emissiegegevens van u nodig:
+
+1. Filter het CO2-rapport op een specifieke klant met het filter **Klant** bovenaan de pagina
+2. Schakel naar de jaarlijkse modus en selecteer het rapportagejaar
+3. Exporteer in het voorkeursformaat van uw klant
+4. Voeg toe aan de e-mail van het duurzaamheidsteam van uw klant of upload naar hun leveranciersportaal
+
+<Note>
+Klanten wier contactrecord **Ontvangt CO2-rapporten** heeft ingeschakeld, krijgen al automatisch een maandelijkse CO2-samenvatting per e-mail — zie [CO2-rapport](/nl/reports/co2-report). De exports op deze pagina zijn voor alles daarbuiten: een volledig-jaar-pakket, een ad-hoc deling, of de eigen ESG-rapportagesoftware van een klant.
+</Note>
+
+---
+
+## Wat is Scope 3 Categorie 4?
+
+Uw klanten registreren emissies van transport dat ze uitbesteden als **Scope 3 Categorie 4** (Upstream-transport) of **Categorie 9** (Downstream-transport). De CO2-gegevens die u vanuit Druma aanlevert, voeden rechtstreeks die berekening.
+
+Jaarlijkse CSRD-conforme emissiegegevens klaar hebben — met een erkende methodologie (GLEC Framework v4.0/ISO 14083) — positioneert u als voorkeursvervoerder in tenders en offerteaanvragen die om een gedocumenteerde emissiemethodologie vragen.
+
+---
 
 <CardGroup cols={2}>
   <Card title="CO2-rapport" href="/nl/reports/co2-report">
-    Genereer het maandelijkse CO2-rapport per vrachtwagen, per klant en per route.
+    De Maandelijkse en Jaarlijkse (CSRD) weergaven, en hoe CO2 per zending wordt berekend — de basis voor alle CSRD-exports.
   </Card>
-  <Card title="Rapportenoverzicht" href="/nl/reports/reports-overview">
-    Alle beschikbare rapporten in Druma en automatische levering instellen.
+  <Card title="Rapporten-overzicht" href="/nl/reports/reports-overview">
+    Alle beschikbare rapporten in Druma en hoe u geautomatiseerde levering plant.
   </Card>
 </CardGroup>

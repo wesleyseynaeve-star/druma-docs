@@ -8,64 +8,81 @@ Zamiast ręcznie przepisywać zlecenia ładunkowe przychodzące e-mailem, Druma 
 
 ## Twój adres skrzynki Druma
 
-Każda firma otrzymuje unikalny adres e-mail w formacie `twojafirma@in.druma.io`. Znajdź swój pod:
+Każda firma otrzymuje unikalny adres e-mail skrzynki. Znajdziesz go na stronie **Zlecenia** — kliknij przycisk **Skrzynka zleceń** na pasku narzędzi, aby go zobaczyć (z przyciskiem kopiowania). Nie jest konfigurowany ze strony Ustawień.
 
-**Ustawienia — Automatyzacja — Pobieranie z e-maili — Adres skrzynki**
+Udostępnij ten adres klientom i pośrednikom, od których chcesz otrzymywać zlecenia. Możesz też ustawić go jako cel przekierowania z istniejącej skrzynki logistycznej, jeśli wolisz zachować jeden główny adres na zewnątrz.
 
-Udostępnij ten adres klientom i pośrednikom, od których chcesz otrzymywać zlecenia.
-
-## Co AI wyodrębnia
+## Co wyodrębnia AI
 
 Gdy e-mail dociera, Druma odczytuje zarówno treść e-maila, jak i wszelkie załączniki. Próbuje wyodrębnić:
 
 - Adres odbioru (ulica, miasto, kraj, kod pocztowy)
 - Adres dostawy
-- Żądana data i okno czasowe odbioru
-- Żądana data dostawy
+- Żądaną datę i okno czasowe odbioru
+- Żądaną datę dostawy
 - Opis ładunku (typ towarów, waga, wymiary, palety)
 - Numery referencyjne (numer PO klienta, referencja pośrednika)
-- Cena lub stawka jeśli wspomniana
+- Cenę lub stawkę, jeśli jest wspomniana
 
-Obsługiwane formaty załączników: PDF, Excel/CSV, zwykła treść e-maila.
+Obsługiwane formaty załączników:
+
+- **PDF** — potwierdzenia stawek, kopie CMR, zlecenia ładunkowe (ekstrakcja tekstu, z awaryjnym trybem wizyjnym dla skanowanych/obrazowych PDF-ów)
+- **DOCX** (Word) — potwierdzenia stawek wysyłane jako dokumenty Word
+- **Zwykły tekst (.txt)** i **zwykła treść e-maila** — nieustrukturyzowane e-maile tekstowe od pośredników
+- **Obrazy** (JPEG, PNG, WebP, HEIC/HEIF) — zdjęcie wydrukowanego zlecenia lub potwierdzenia stawki jest wysyłane bezpośrednio do AI
+
+Obecnie nie ma parsowania Excel/CSV — załącznik arkusza kalkulacyjnego nie jest odczytywany przez pipeline ekstrakcji.
 
 ## Przeglądanie projektów zleceń
 
-Wyodrębnione zlecenia trafiają do **Zlecenia — Skrzynka odbiorcza**, a nie bezpośrednio na listę aktywnych zleceń. Musisz przejrzeć każdy projekt przed wejściem do systemu.
+Wyodrębnione zlecenia trafiają na listę **Zlecenia** ze statusem **Wersja robocza**, a nie bezpośrednio jako aktywne zlecenia. To celowe — musisz przejrzeć każdy projekt, zanim wejdzie do systemu. E-maile, których nie udało się automatycznie wyodrębnić (niska pewność, nierozpoznany nadawca lub błąd parsowania) w ogóle nie tworzą projektu — czekają w zwijalnym banerze **"N e-maili oczekujących na ekstrakcję"** na górze strony Zlecenia.
 
 <Steps>
-  <Step title="Otwórz Zlecenia — Skrzynka odbiorcza">
-    Zobaczysz wszystkie nowo wyodrębnione zlecenia z odznaką "Wersja robocza". Wskaźnik pewności AI jest pokazany dla każdego pola — pola o niższej pewności są podświetlone na żółto.
+  <Step title="Otwórz stronę Zlecenia">
+    Projekty zleceń pojawiają się na zwykłej liście zleceń z odznaką "Wersja robocza" i wskaźnikiem pewności AI. E-maile wciąż oczekujące na ekstrakcję pojawiają się osobno w banerze oczekujących, gdzie możesz kliknąć **Wyodrębnij**, aby spróbować ponownie, lub **Odrzuć**, aby je usunąć.
   </Step>
   <Step title="Sprawdź każde pole">
-    Kliknij projekt, aby go otworzyć. Zweryfikuj adresy odbioru i dostawy na mapie, potwierdź daty i sprawdź szczegóły ładunku. Popraw wszystko, co AI źle odczytało.
+    Kliknij projekt, aby go otworzyć. Zweryfikuj adresy odbioru i dostawy na mapie, potwierdź, że daty mają sens, i sprawdź szczegóły ładunku. Popraw wszystko, co AI źle odczytała lub pominęła.
   </Step>
-  <Step title="Przypisz ciężarówkę i kierowcę">
-    Użyj panelu przypisania po prawej stronie, aby wybrać dostępny pojazd i kierowcę.
+  <Step title="Przypisz pojazd i kierowcę">
+    Użyj panelu przypisania po prawej stronie, aby wybrać dostępny pojazd i kierowcę dla tego ładunku.
   </Step>
   <Step title="Potwierdź zlecenie">
-    Kliknij **Potwierdź zlecenie**. Projekt przechodzi do aktywnych zleceń i kierowca otrzymuje powiadomienie.
+    Kliknij **Potwierdź zlecenie**. Projekt przechodzi do aktywnych zleceń, a kierowca otrzymuje powiadomienie.
   </Step>
 </Steps>
 
 <Warning>
-Wyodrębnianie AI nie jest w 100% dokładne. Zawsze weryfikuj wyodrębnione pola przed potwierdzeniem.
+Ekstrakcja AI nie jest w 100% dokładna. Adresy zapisane w nietypowych formatach, skanowane PDF-y o niskiej jakości obrazu oraz e-maile mieszające kilka języków zwiększają ryzyko błędów. Zawsze weryfikuj wyodrębnione pola przed potwierdzeniem.
 </Warning>
 
 ## Biała lista nadawców
 
-Aby zapobiec tworzeniu śmieciowych projektów, Druma przetwarza tylko e-maile od zatwierdzonych nadawców.
+Druma może ograniczyć, którzy nadawcy mogą tworzyć projekty zleceń, ale obecnie nie ma **strony w aplikacji** do samodzielnego zarządzania tą listą dozwolonych. Jeśli Twoja firma nie ma skonfigurowanych wpisów białej listy, Druma przetwarza e-maile od **dowolnego** nadawcy docierającego na adres Twojej skrzynki. Jeśli chcesz ograniczyć przychodzące zlecenia do konkretnych domen klientów/pośredników, skontaktuj się z support@druma.io, aby dodać wpisy.
 
-**Ustawienia — Automatyzacja — Pobieranie z e-maili — Dozwoleni nadawcy**
+<Note>
+Gdy biała lista jest skonfigurowana, a e-mail przychodzi od nadawcy spoza niej, ten e-mail trafia do kolejki w banerze oczekujących na ekstrakcję (nie jest przetwarzany automatycznie), a Twoi planiści są powiadamiani, zamiast e-mail zostać po cichu odrzucony.
+</Note>
 
-Dodaj domeny e-mail swoich klientów i pośredników (np. `@acme-logistics.de`).
+## Wskazówki dla lepszej ekstrakcji
 
----
+- Poproś pośredników o wysyłanie ustrukturyzowanych PDF-ów zamiast skanowanych obrazów, gdzie to możliwe
+- Potwierdzenia stawek z jasnymi nagłówkami sekcji (Odbiór, Dostawa, Ładunek) są wyodrębniane najdokładniej
+- Jeśli format konkretnego pośrednika konsekwentnie źle się wyodrębnia, skontaktuj się z support@druma.io — można dodać reguły ekstrakcji specyficzne dla formatu
+
+## Częste pytania
+
+**Co jeśli e-mail zawiera kilka ładunków?** Jeśli e-mail zawiera dwa lub więcej załączników PDF/DOCX ze zleceniami, Druma wyodrębnia każdy niezależnie i tworzy osobny projekt dla każdego załącznika potwierdzonego jako prawdziwe zlecenie transportowe (dokumenty pomocnicze, takie jak certyfikaty ubezpieczenia, są dołączane do pierwszego projektu zamiast tworzyć własne). Dotyczy to tylko **wielu załączników dokumentów** — pojedynczy arkusz kalkulacyjny z kilkoma ładunkami nie jest dzielony na kilka projektów, ponieważ parsowanie arkuszy nie jest obsługiwane.
+
+**Czy mogę ręcznie uruchomić ponowną ekstrakcję?** Tylko dla e-maila wciąż czekającego w banerze oczekujących na ekstrakcję — kliknij **Wyodrębnij** obok niego. Nie ma akcji ponownej ekstrakcji dla projektu, który już powstał.
+
+**Co dzieje się z oryginalnym e-mailem?** Jest przechowywany i powiązany z projektem zlecenia. Możesz go w każdej chwili obejrzeć ze strony szczegółów zlecenia.
 
 <CardGroup cols={2}>
-  <Card title="Ręczne tworzenie zleceń" icon="plus" href="/en/orders/creating-orders">
-    Dowiedz się, jak tworzyć zlecenia bezpośrednio w Druma gdy nie używasz pobierania z e-maili.
+  <Card title="Ręczne tworzenie zleceń" icon="plus" href="/pl/planner/creating-orders">
+    Dowiedz się, jak tworzyć zlecenia bezpośrednio w Druma, gdy nie używasz pobierania z e-maili.
   </Card>
-  <Card title="Praca z pośrednikami" icon="handshake" href="/en/orders/brokers">
-    Zarządzaj relacjami z pośrednikami i potwierdzeniami stawek.
+  <Card title="Praca z pośrednikami" icon="handshake" href="/pl/planner/brokers">
+    Zarządzaj relacjami z pośrednikami, potwierdzeniami stawek i śledzeniem prowizji.
   </Card>
 </CardGroup>

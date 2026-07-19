@@ -1,42 +1,74 @@
 ---
 title: "Creditnota's"
-description: "Hoe u een creditnota aanmaakt in Druma om een verzonden factuur te storneren of gedeeltelijk te corrigeren — vereist door de wet wanneer een factuur moet worden gewijzigd."
+description: "Hoe u een creditnota aanmaakt in Druma om een verzonden factuur te storneren of gedeeltelijk te corrigeren — wettelijk vereist in Roemenië wanneer een factuur moet wijzigen."
 icon: "file-minus"
 ---
 
 ## Wanneer u een creditnota nodig heeft
 
-Zodra een factuur is gegenereerd en verzonden, kunt u deze niet bewerken of verwijderen — dat is een wettelijke vereiste. Als er iets verkeerd is of moet worden gewijzigd, is het juiste proces een creditnota uitreiken.
+Zodra een factuur is gegenereerd en verzonden, kunt u ze niet bewerken of verwijderen — dat is een wettelijke vereiste in Roemenië. Is er iets verkeerd of moet er iets wijzigen, dan is het juiste proces een creditnota uitreiken.
 
 Gebruik een creditnota wanneer:
-- U het verkeerde bedrag heeft gefactureerd
-- Goederen zijn geretourneerd en een terugbetaling is overeengekomen
-- U na het feit een korting heeft toegezegd aan de klant
+
+- U het verkeerde bedrag heeft gefactureerd (prijsfout, verkeerd berekende toeslag)
+- Goederen na levering zijn geretourneerd en een terugbetaling is overeengekomen
+- U achteraf een korting heeft toegezegd aan de klant
+- De factuur naar de verkeerde klant is verstuurd en moet worden geannuleerd
+- Een wachttijdkost werd betwist en u schrijft ze af
+
+Een creditnota vermindert het openstaande saldo van de klant met het gecrediteerde bedrag. Het is een apart, genummerd document dat teruglinkt naar de originele factuur.
 
 ## Een creditnota aanmaken
 
 <Steps>
   <Step title="Open de originele factuur">
-    Ga naar **Facturering** en zoek de factuur die u wilt corrigeren.
+    Ga naar **Facturering** en zoek de factuur die u moet corrigeren. Klik erop om de factuurdetailpagina te openen.
   </Step>
-  <Step title="Klik op Creditnota uitreiken">
-    Zoek de knop **Creditnota uitreiken** in het actiemenu van de factuur.
+  <Step title="Klik op Creditnota aanmaken">
+    Klik op de knop **Creditnota aanmaken**. Druma opent een kort creditnotaformulier dat verwijst naar het originele factuurnummer en totaal.
   </Step>
-  <Step title="Selecteer het type creditnota">
-    Kies: **Volledige stornering** (annuleert de gehele factuur) of **Gedeeltelijke creditnota** (corrigeert een specifiek bedrag).
+  <Step title="Voer het bedrag in">
+    Stel het veld **Bedrag** in op hoeveel u crediteert, tot het totaal van de originele factuur (getoond als **Max**). Laat het op het volledige bedrag voor een volledige creditnota, of verlaag het voor een gedeeltelijke creditnota — er is geen regelpost-editor; de creditnota is één bedrag dat Druma automatisch verdeelt over subtotaal en BTW.
   </Step>
-  <Step title="Voer de reden in">
-    Selecteer een redencode: Prijsfout, Geretourneerde goederen, Kortingsovereenkoms of Anders.
+  <Step title="Selecteer een reden">
+    Kies een **reden** uit de vervolgkeuzelijst: Verkeerde factuur (storneren & opnieuw uitgeven), prijsaanpassing, annulering, dubbele factuur, kwaliteitsprobleem/terugbetaling, of anders. Gebruik het aparte veld **Notities** voor vrije-tekstdetails (bijvoorbeeld "overeengekomen tarief was €850, niet €950"). Zowel de reden als de notities verschijnen op de creditnota-PDF.
   </Step>
-  <Step title="Controleer en genereer">
-    Controleer de creditnotadetails en klik op **Creditnota genereren**.
+  <Step title="Genereer de creditnota">
+    Klik op **Creditnota aanmaken**. Is de reden één van de storneringsredenen (verkeerde factuur, prijsaanpassing, annulering of dubbel) en is het bedrag gelijk aan het volledige factuurtotaal, dan storneert Druma ook de originele factuur en biedt een selectievakje **Concept gecorrigeerde factuur aanmaken** aan om een vervangende factuur te starten, vooraf ingevuld vanuit de originele. Druma kent een volgnummer toe met het prefix `CN-` (bijvoorbeeld `CN-000001`). Creditnotanummers zitten in hun eigen aparte reeks — ze delen geen volgorde met facturen.
+  </Step>
+  <Step title="Verstuur naar de klant">
+    Klik op **PDF downloaden** om het creditnotabestand te krijgen, en mail het naar het financiële contact van de klant. Of gebruik **Versturen per e-mail** om Druma het rechtstreeks te laten versturen, vooraf geadresseerd aan het geregistreerde financiële contact.
   </Step>
 </Steps>
 
-## Creditnota's en e-Factura
+## Volledige vs. gedeeltelijke creditnota's
 
-Als de originele factuur naar ANAF is ingediend, genereert Druma automatisch ook de bijbehorende ANAF-correctie-indiening voor de creditnota.
+**Volledige creditnota:** voer een bedrag gelijk aan het volledige factuurtotaal in. Gebruik dit wanneer u een factuur volledig moet annuleren — verkeerde klant, volledig verkeerde order, factuur per vergissing verstuurd. Is de reden een storneringsreden, dan markeert Druma de originele factuur als gestorneerd en laat u in dezelfde stap een concept gecorrigeerde factuur opstarten.
+
+**Gedeeltelijke creditnota:** voer een bedrag in lager dan het factuurtotaal. Gebruik dit wanneer slechts een deel van de factuur verkeerd is — bijvoorbeeld alleen de ADR-toeslag crediteren terwijl de transportkost onaangeroerd blijft. Druma verdeelt de BTW en het subtotaal automatisch op basis van het ingevoerde bedrag; er is geen bewerking per regelpost.
+
+## Nummering van creditnota's
+
+Creditnota's gebruiken het prefix `CN-` en hun eigen volgnummerreeks (bijvoorbeeld `CN-000001`, `CN-000002`, enz. — standaard geen jaartal). Deze reeks is gescheiden van uw factuurnummers. Een aangepast nummeringspatroon, inclusief een jaartoken, kan worden geconfigureerd onder **Instellingen → Huisstijl & Formaten → Factuurnummering**.
+
+## Boekhoudkundig effect
+
+Wanneer een creditnota wordt gegenereerd:
+
+- Het openstaande saldo van de klant wordt verminderd met het gecrediteerde bedrag
+- Was de originele factuur volledig betaald, dan creëert de creditnota een creditsaldo op het klantaccount dat kan worden toegepast op toekomstige facturen
+- De creditnota verschijnt in alle boekhoudkundige exports (SAGA, WinMENTOR) naast de originele factuur
+
+<Warning>
+Creditnota's zijn wettelijk vereiste documenten in Roemenië. Bewerk of verwijder nooit een verzonden factuur. Ontdekt u een fout — ook een kleine — volg dan altijd het creditnotaproces. ANAF e-Factura-indieningen vereisen ook dat de creditnota wordt ingediend zodat de originele factuur formeel gecorrigeerd wordt in het systeem.
+</Warning>
+
+---
 
 <Card title="Facturen genereren" icon="file-invoice-dollar" href="/nl/invoicing/generating-invoices">
-  Hoe facturen worden aangemaakt van afgeleverde orders.
+  Hoe u facturen aanmaakt van afgeleverde orders, inclusief batchfacturering en meerdere valuta.
+</Card>
+
+<Card title="Betalingsopvolging" icon="money-bill-wave" href="/nl/invoicing/payment-tracking">
+  Betalingen registreren tegen facturen en openstaande saldi beheren.
 </Card>

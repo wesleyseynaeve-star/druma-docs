@@ -1,48 +1,174 @@
 ---
-title: "API client"
-description: "Comment utiliser l'API client de Druma pour intégrer le suivi des expéditions et les informations de livraison dans vos propres systèmes clients."
-icon: "globe"
+title: "Intégration API client (CAPI)"
+description: "Laissez les clients pousser des commandes directement dans Druma ou recevoir des événements de livraison en temps réel sur un webhook — configuré par client, sans modification de code dans Druma."
+icon: "plug"
 ---
 
-## Vue d'ensemble
+L'Intégration API client (CAPI) crée un canal de données direct entre un client spécifique et votre compte Druma. Elle comporte deux volets indépendants :
 
-L'API client est une API en lecture seule destinée aux clients des transporteurs qui souhaitent intégrer le suivi des expéditions Druma dans leurs propres systèmes (ERP, portail client personnalisé, app mobile).
+- **Entrant** : le système du client envoie des commandes à Druma automatiquement. Aucune saisie manuelle de commande requise.
+- **Sortant** : Druma pousse des événements de statut (parti, livré, facturé, etc.) vers le système du client en temps réel.
 
----
-
-## Authentification
-
-L'API client utilise des tokens de portail client. Chaque token donne accès uniquement aux données de l'entreprise cliente concernée.
-
-Pour obtenir un token, contactez votre transporteur — il peut générer un token API client depuis votre profil dans Druma.
+Vous pouvez activer chaque volet indépendamment, ou les deux ensemble. Chaque client dispose de son propre jeton et point de terminaison, donc les identifiants sont entièrement isolés.
 
 ---
 
-## Endpoints disponibles
+## Quand utiliser cette fonctionnalité
 
-| Endpoint | Description |
+CAPI est approprié quand un client :
+
+- Dispose d'un WMS, ERP, ou système de gestion des commandes capable de faire des appels HTTP
+- Réserve des expéditions fréquemment et veut éviter de se connecter à votre portail client pour créer des commandes
+- A besoin d'une confirmation de livraison automatisée envoyée vers son système pour des flux en aval (réservation d'entrepôt, facturation, mises à jour de stock)
+
+Pour les clients qui réservent occasionnellement ou préfèrent le portail, CAPI ajoute une complexité inutile. Utilisez plutôt le portail client standard.
+
+---
+
+## Où trouver les paramètres
+
+1. Accédez à **Clients** dans la navigation de gauche.
+2. Ouvrez la fiche client.
+3. Cliquez sur l'onglet **API**.
+
+Les paramètres entrant et sortant se trouvent tous deux sur cet onglet.
+
+---
+
+## Entrant — le client pousse des commandes vers Druma
+
+<Steps>
+  <Step title="Activez l'entrant">
+    Sur l'onglet **API**, activez **Activer l'API entrante**.
+  </Step>
+  <Step title="Générez un jeton">
+    Cliquez sur **Générer un jeton**. Le jeton complet s'affiche **une seule fois** — copiez-le immédiatement et stockez-le en sécurité (un gestionnaire de mots de passe fonctionne bien). Druma ne stocke qu'un hachage du jeton ; la valeur complète est irrécupérable. Après cet écran, seuls les 20 premiers caractères sont affichés comme référence.
+  </Step>
+  <Step title="Partagez l'URL du point de terminaison">
+    Copiez l'**URL du point de terminaison** affichée sous le champ du jeton. Donnez cette URL et le jeton à l'équipe technique du client.
+  </Step>
+  <Step title="Configurez les correspondances de champs (optionnel)">
+    Si le système du client utilise des noms de champs différents de ceux de Druma (par exemple, `shipment_id` au lieu de `reference`), ajoutez des lignes au tableau **Correspondance des champs** en cliquant sur **+ Ajouter une correspondance**. Chaque ligne fait correspondre un nom de champ du client (colonne de gauche) au nom de champ Druma correspondant (colonne de droite).
+  </Step>
+</Steps>
+
+Le système du client envoie une requête `POST` à l'URL du point de terminaison avec l'en-tête `Authorization: Bearer <jeton>` et un corps JSON. Druma crée la commande au statut **Brouillon** avec l'indicateur source `booked_via: client_api`. Un planificateur peut examiner et confirmer les commandes brouillon depuis le tableau de planification.
+
+<Note>
+Les commandes créées via CAPI arrivent en tant que brouillons. Elles n'apparaissent pas sur le tableau comme assignées tant qu'un planificateur (ou une règle d'automatisation, si configurée) ne les fait pas passer au statut suivant. C'est voulu — cela vous permet de valider et de tarifer la commande avant qu'elle n'entre dans le flux de travail.
+</Note>
+
+---
+
+## Sortant — Druma pousse des événements vers le client
+
+<Steps>
+  <Step title="Activez le sortant">
+    Activez **Activer le webhook sortant**.
+  </Step>
+  <Step title="Saisissez l'URL du webhook">
+    Collez l'**URL du webhook** du client — le point de terminaison de son système qui recevra les événements.
+  </Step>
+  <Step title="Choisissez un type d'authentification">
+    Sélectionnez l'une des quatre options de **type d'authentification** :
+
+    - **Aucune** — pas d'en-tête d'authentification (à utiliser uniquement sur des réseaux privés de confiance)
+    - **Jeton Bearer** — Druma ajoute `Authorization: Bearer <valeur>` à chaque requête
+    - **Auth basique** — Druma ajoute un en-tête `Authorization: Basic` avec un nom d'utilisateur et mot de passe encodés en base64
+    - **Signature HMAC** — Druma signe le corps de chaque requête avec un secret partagé et inclut la signature dans un en-tête ; le client la vérifie avant traitement
+
+    Renseignez les identifiants pour le type choisi.
+  </Step>
+  <Step title="Sélectionnez les événements à envoyer">
+    Cochez les événements que vous voulez que Druma pousse :
+
+    - **Commande créée** — déclenché quand une nouvelle commande est confirmée dans Druma
+    - **Statut mis à jour** — déclenché à chaque changement de statut (assignée, au chargement, en transit, etc.)
+    - **Livrée** — déclenché quand la commande atteint le statut Livrée
+    - **Facture envoyée** — déclenché quand une facture de vente est envoyée au client
+  </Step>
+  <Step title="Configurez les correspondances de champs sortantes (optionnel)">
+    Si le système du client attend des noms de champs différents dans la charge utile, utilisez le tableau **Correspondance des champs** côté sortant (UX identique à l'entrant) pour renommer les champs de sortie de Druma avant leur envoi.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer**. Druma commencera à livrer les événements pour les déclencheurs sélectionnés à partir de ce moment.
+  </Step>
+</Steps>
+
+---
+
+## Correspondance de champs expliquée
+
+La correspondance de champs est un tableau de traduction clé-valeur. Elle ne change pas les données — seulement les noms de champs dans la charge utile.
+
+**Exemple — correspondance entrante :**
+
+| Champ client | Champ Druma |
 |---|---|
-| `GET /shipments` | Lister les expéditions de votre entreprise |
-| `GET /shipments/{id}` | Détails et statut d'une expédition |
-| `GET /shipments/{id}/tracking` | Position GPS en temps réel |
-| `GET /shipments/{id}/documents` | Liste des documents disponibles |
-| `GET /invoices` | Vos factures |
+| `shipment_id` | `reference` |
+| `pickup_city` | `pickup_address` |
+| `drop_city` | `delivery_address` |
+| `cargo_weight_kg` | `weight_kg` |
+
+Avec cette correspondance en place, le client peut envoyer sa structure JSON native en POST et Druma l'interprétera correctement sans que le client ait besoin de reformater sa charge utile.
+
+**Exemple — correspondance sortante :**
+
+| Champ Druma | Champ client |
+|---|---|
+| `order_id` | `druma_ref` |
+| `status` | `shipment_status` |
+| `actual_delivery_at` | `actual_delivery_datetime` |
+
+Les champs non mappés sont transmis avec les noms de champs par défaut de Druma.
 
 ---
 
-## Exemple de requête
+## Faire tourner un jeton
 
-```bash
-curl -H "Authorization: Bearer {votre-token}" \
-     https://api.druma.io/client/v1/shipments
-```
+Si un jeton est compromis ou qu'une personne clé quitte l'équipe du client :
+
+1. Sur l'onglet **API**, cliquez sur **Faire tourner le jeton**.
+2. L'ancien jeton est immédiatement invalidé.
+3. Le nouveau jeton s'affiche une fois — copiez-le et distribuez-le avant de quitter la page.
+
+Mettez à jour le jeton dans le système du client dès que possible. Les requêtes utilisant l'ancien jeton seront rejetées avec `401 Unauthorized` dès que la rotation est terminée.
+
+---
+
+## Horodatages d'activité
+
+Une fois l'API utilisée, l'onglet affiche :
+
+- **Dernier entrant** — horodatage de la commande la plus récente reçue du client
+- **Dernier sortant** — horodatage de l'événement le plus récent livré au webhook du client
+
+Ces horodatages sont utiles pour confirmer que l'intégration est active et pour diagnostiquer des lacunes de communication.
 
 ---
 
 ## Limites de taux
 
-100 requêtes par minute par token client.
+Druma impose une limite de **200 appels API par heure par configuration client**. Les requêtes dépassant cette limite reçoivent une réponse `429 Too Many Requests`. La limite se réinitialise sur une fenêtre glissante d'une heure.
 
-<Card title="API publique" icon="code" href="/fr/integrations/public-api">
-  API complète pour les intégrations système avancées.
+Si un client a légitimement besoin d'un débit plus élevé, contactez le support Druma.
+
+<Warning>
+Ne partagez pas le jeton Bearer d'un client avec d'autres clients et ne l'intégrez pas dans du code accessible publiquement. Chaque jeton accorde des droits complets de création de commande entrante pour le périmètre entreprise de ce client.
+</Warning>
+
+---
+
+## Pages associées
+
+<Card title="Portail client" icon="users" href="/fr/client-portal/tracking-shipments">
+  L'alternative sans code : laissez les clients suivre les expéditions et télécharger des documents sans aucune intégration API.
+</Card>
+
+<Card title="Configuration des intégrations" icon="plug" href="/fr/admin/integration-setup">
+  Aperçu de toutes les intégrations disponibles sous Paramètres → Intégrations.
+</Card>
+
+<Card title="Création de commandes" icon="package-plus" href="/fr/planner/creating-orders">
+  Comment les planificateurs créent et gèrent les commandes dans Druma.
 </Card>

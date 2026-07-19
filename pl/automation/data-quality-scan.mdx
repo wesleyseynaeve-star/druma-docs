@@ -1,72 +1,67 @@
 ---
 title: "Nocne skanowanie jakości danych"
-description: "Każdej nocy Druma sprawdza Twoje dane pod kątem dziewięciu typów typowych problemów i wysyła podsumowanie e-mailem, abyś mógł naprawić problemy zanim spowodują opóźnienia lub utratę przychodów."
+description: "Każdej nocy Druma sprawdza Twoje dane pod kątem dziewięciu typów typowych problemów, abyś mógł naprawić je zanim spowodują opóźnienia lub utratę przychodów."
 icon: "magnifying-glass-chart"
 ---
 
-Złe dane są kosztowne. Klient bez numeru VAT blokuje składanie e-Faktury. Dostarczone zlecenie bez faktury przez dwa tygodnie to pieniądze których nie zebrałeś. Nocne skanowanie jakości danych wykrywa te problemy zanim Cię kosztują.
+Złe dane są kosztowne. Klient bez numeru VAT blokuje składanie e-Factura. Dostarczone zlecenie bez faktury przez tydzień to pieniądze, których nie zebrałeś. Zaległa faktura bez działania to psująca się relacja z klientem. Nocne skanowanie jakości danych wykrywa te problemy, zanim Cię kosztują.
 
-Każdej nocy Druma przeprowadza dziewięć automatycznych kontroli w całym zestawie danych i wysyła podsumowanie e-mailem do wszystkich Administratorów firmy.
+Każdej nocy Druma przeprowadza dziewięć automatycznych kontroli w całym zestawie danych i zapisuje wyniki na stronie **Jakość danych** w **Narzędziach**.
 
 ## Dziewięć kontroli
 
-### 1. Brakujące numery VAT
-Klienci bez ważnego numeru VAT. Rumuńskie składanie e-Factura wymaga ważnego CUI/CIF dla każdego klienta.
+### 1. Brak VAT
+Klienci użyci w niedawnym, niebędącym wersją roboczą zleceniu, którzy nie mają zapisanego numeru VAT. Rumuńskie składanie e-Factura wymaga ważnego numeru VAT dla każdego klienta — jeśli go brakuje, faktury dla tego klienta nie mogą zostać automatycznie przesłane do ANAF.
 
-### 2. Zlecenia bez faktur
-Dostarczone zlecenia, które nie zostały zafakturowane i mają więcej niż 7 dni. To przychód, który zarobiłeś, ale jeszcze nie wystawiłeś. Próg 7 dni jest konfigurowalny.
+### 2. Faktura nieprzesłana do ANAF
+Wysłane faktury bez zapisanego statusu przesłania e-Factura.
 
-### 3. Wygasłe dokumenty
-Pojazdy lub kierowcy z certyfikatami, licencjami lub zezwoleniami, które już wygasły lub wygasną w ciągu następnych 14 dni.
+### 3. Dostarczone, niezafakturowane 7+ dni
+Zlecenia oznaczone jako dostarczone ponad 7 dni temu, które nadal nie mają powiązanej faktury. To przychód, który już zarobiłeś, ale jeszcze nie zafakturowałeś.
 
-### 4. Duplikaty zleceń
-Zlecenia wykryte jako potencjalne duplikaty — ta sama kombinacja klienta, daty odbioru i trasy pojawiająca się więcej niż raz.
+### 4. Zaległy projekt zlecenia
+Wersje robocze zleceń, które nie były ruszane przez ponad 7 dni — zazwyczaj zapomniane zlecenia z pobierania z e-maili, których planista nigdy nie potwierdził ani nie usunął.
 
-### 5. Niekompletne adresy
-Zlecenia, w których adres odbioru lub dostawy nie ma właściwego adresu ulicy — wprowadzono tylko miasto lub kraj.
+### 5. Klient bez e-maila
+Klienci bez zapisanego adresu e-mail.
 
-### 6. Brak przypisania kierowcy
-Potwierdzone zlecenia (status: Potwierdzone lub Zdysponowane), które nadal nie mają przypisanego kierowcy.
+### 6. Potwierdzone zlecenie bez uzgodnionej ceny
+Zlecenia w statusie **Potwierdzone** lub **Zdysponowane**, w których uzgodniona cena wciąż jest brakująca lub zerowa.
 
-### 7. Zaległe projekty zleceń
-Projekty zleceń starsze niż 14 dni bez aktywności. Zazwyczaj zlecenia z pobierania z e-maili, które planista otworzył, ale nigdy nie potwierdził ani nie usunął.
+### 7. Faktura zaległa 60+ dni
+Niezapłacone faktury ponad 60 dni po terminie płatności.
 
-### 8. Niedopasowane płatności
-Elementy uzgodnienia bankowego (zaimportowane transakcje bankowe) czekające niepowiązane z fakturą przez ponad 7 dni.
+### 8. Zakończone zlecenie bez faktury po 14 dniach
+Dostarczone zlecenia wciąż niezafakturowane po 14 dniach — wersja kontroli 3 o dłuższym horyzoncie, oflagowana jako informacyjna, a nie krytyczna.
 
-### 9. Anomalie cenowe
-Zlecenia wycenione znacznie poniżej skonfigurowanych kart stawek. Druma porównuje stawkę zlecenia z kartą stawek i oflagowuje zlecenia poniżej konfigurowalnego progu (domyślnie: 20% poniżej karty stawek).
+### 9. Nieaktywny klient
+Klienci bez zleceń w ciągu ostatnich 90 dni.
 
 ## Przeglądanie wyników
 
-Przejdź do **Raporty — Jakość danych**.
+Przejdź do **Narzędzia → Jakość danych**.
 
 Strona pokazuje:
-- **Bieżące problemy** — wszystkie otwarte problemy teraz, pogrupowane według kategorii
-- **Historia** — ile problemów istniało każdego dnia przez ostatnie 30 dni
-- **Szczegóły problemu** — kliknij dowolną kategorię, aby zobaczyć listę konkretnych rekordów
+
+- Pasek KPI z łączną liczbą otwartych problemów oraz liczbami wg dotkliwości (Krytyczne, Ostrzeżenie, Informacyjne)
+- Skumulowany wykres słupkowy problemów wg dotkliwości z ostatnich 30 dni
+- Filtrowaną tabelę (Otwarte / Rozwiązane / Zignorowane / Wszystkie) z każdym problemem, jego typem encji, referencją, opisem, dotkliwością, sugerowaną akcją, statusem i datą utworzenia
+- Akcje **Rozwiąż** i **Zignoruj** przy każdym otwartym problemie
 
 <Note>
-Skan jakości danych działa o 02:00 UTC każdej nocy. Problemy naprawione w ciągu dnia wyczyścią się przy następnym porannym skanie.
+Skanowanie jakości danych działa o **03:00 UTC** każdej nocy. Wyniki pokazane na stronie odzwierciedlają stan danych z tej godziny. Problemy naprawione w ciągu dnia wyczyszczą się przy następnym nocnym skanowaniu (gdy oznaczysz problem jako **Rozwiązany** lub przestanie on pasować do zapytania źródłowego).
 </Note>
 
-## Konfigurowanie skanu
+## Naprawianie problemów
 
-**Ustawienia — Automatyzacja — Jakość danych**
+Strona Jakość danych mówi, co jest nie tak, i sugeruje działanie, ale nie prowadzi bezpośrednio do powiązanego rekordu — użyj pokazanej referencji (nazwa klienta, numer zlecenia, numer faktury), aby znaleźć go samodzielnie w Klientach, Operacjach lub Finansach, napraw problem, a następnie wróć i kliknij **Rozwiąż**.
 
-| Kontrola | Konfigurowalne opcje |
-|---|---|
-| Zlecenia bez faktur | Próg dni (domyślnie 7) |
-| Wygasłe dokumenty | Czas ostrzegania w dniach (domyślnie 14) |
-| Zaległe projekty | Próg dni (domyślnie 14) |
-| Niedopasowane płatności | Próg dni (domyślnie 7) |
-| Anomalie cenowe | Procent poniżej karty stawek (domyślnie 20%) |
-| Duplikaty zleceń | Włącz/wyłącz |
+Nie ma narzędzia do masowej naprawy — każdy problem jest rozwiązywany indywidualnie. To celowe: poprawki danych powinny być świadome.
 
----
+Kliknięcie **Zignoruj** usuwa problem z filtra **Otwarte** bez oznaczania go jako rozwiązany — użyj tego dla problemów, na które postanowiłeś nie reagować. Zignorowane i rozwiązane problemy są wykluczone z ponownego skanowania otwartych problemów następnej nocy (każde skanowanie zastępuje bieżący zbiór otwartych, niezignorowanych problemów).
 
 <CardGroup cols={1}>
-  <Card title="Przegląd raportów" icon="chart-bar" href="/en/reports/reports-overview">
+  <Card title="Przegląd raportów" icon="chart-bar" href="/pl/reports/reports-overview">
     Zobacz wszystkie dostępne raporty w Druma i jak zaplanować ich regularne dostarczanie e-mailem.
   </Card>
 </CardGroup>

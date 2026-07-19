@@ -1,38 +1,166 @@
 ---
-title: "Transport intermodal"
-description: "Comment gérer les commandes impliquant plusieurs modes de transport — route, rail et mer — dans Druma."
-icon: "train"
+title: "Transport intermodal et multimodal"
+description: "Planifiez des commandes combinant des legs route, mer, rail, air, ou barge — avec affectation de transporteur par leg, suivi des coûts, eCMR, et prise en charge PWA chauffeur."
+icon: "git-merge"
 ---
 
 ## Vue d'ensemble
 
-Le transport intermodal implique plusieurs modes de transport (route + rail, route + mer) pour un seul envoi. Druma vous permet de gérer ces commandes complexes en ajoutant des arrêts intermodaux avec des détails spécifiques à chaque mode.
+Le transport intermodal déplace une cargaison à travers plusieurs modes de transport en séquence — par exemple, un camion pré-achemine une remorque d'une usine roumaine à Calais, elle traverse vers Folkestone sur un ferry RoRo du tunnel sous la Manche, et un second camion gère le post-acheminement vers l'adresse de livraison au Royaume-Uni. Chaque segment est un **leg**. Une seule commande Druma gère l'ensemble du trajet : planification, affectation de transporteur, coûts, eCMR, et visibilité chauffeur par leg.
+
+Ceci est différent d'une commande standard avec arrêts internes. Les arrêts internes sont des points de passage sur un trajet routier continu unique avec un seul camion. Les legs intermodaux sont des événements de transport distincts qui peuvent utiliser différents modes, différents transporteurs, et même différents pays de juridiction.
+
+<Note>
+Les trajets de groupage et les legs intermodaux sont des concepts séparés — les legs appartiennent à une seule commande, le groupage consolide plusieurs commandes sur un camion. Il n'y a pas de flux combiné « groupage intermodal » aujourd'hui.
+</Note>
+
+---
+
+## Exemple pratique : Roumanie → Royaume-Uni via le tunnel sous la Manche
+
+| Leg | Mode | Itinéraire | Transporteur |
+|---|---|---|---|
+| 1 | Route | Bucarest → Calais | Flotte propre — camion RO-01 |
+| 2 | Mer | Calais → Folkestone (Eurotunnel Le Shuttle) | Sous-traitant : Eurotunnel |
+| 3 | Route | Folkestone → Birmingham | Sous-traitant : transporteur britannique |
+
+Druma suit la référence de réservation et le numéro de conteneur pour le leg 2, génère un eCMR séparé pour les legs 1 et 3 (tous deux transfrontaliers), et ne montre au transporteur britannique que les arrêts pertinents pour le leg 3.
 
 ---
 
 ## Créer une commande intermodale
 
+Il n'y a pas de bascule « Intermodal » à activer — les legs sont ajoutés à une commande que vous avez déjà créée, et Druma traite automatiquement la commande comme intermodale dès qu'elle a des legs.
+
 <Steps>
-  <Step title="Créez une commande standard">
-    Commencez par une commande normale avec chargement et livraison.
+  <Step title="Créez ou ouvrez la commande">
+    Créez la commande normalement (voir [Créer une commande](/fr/planner/creating-orders)), puis ouvrez-la et accédez à son onglet **Cargaison et arrêts**.
   </Step>
-  <Step title="Ajoutez des arrêts intermodaux">
-    Utilisez le bouton **Ajouter un arrêt** et sélectionnez le type **Intermodal** pour les points de transfert modal (terminal ferroviaire, port, etc.).
+  <Step title="Ajoutez des legs">
+    Dans la section **Legs de transport**, cliquez sur **Ajouter un leg** pour créer le premier. Ajoutez-en autant que le trajet le nécessite — il n'y a pas de limite. L'origine de chaque nouveau leg est par défaut la destination du leg précédent (ou le chargement de la commande, pour le premier leg), afin que vous ne retapiez pas la même adresse.
   </Step>
-  <Step title="Renseignez les détails intermodaux">
-    Pour chaque arrêt intermodal, saisissez : numéro de référence du terminal, date/heure d'arrivée, mode de transport suivant.
-  </Step>
-  <Step title="Confirmez">
-    La commande affiche la séquence complète des modes de transport.
+  <Step title="Renseignez chaque leg">
+    Développez une carte de leg pour définir son mode, origine/destination, début/fin planifiés, et transporteur (voir ci-dessous).
   </Step>
 </Steps>
 
 ---
 
-## Suivi des statuts intermodaux
+## Gérer les legs
 
-Le chauffeur met à jour les statuts pour la partie routière. Les transitions intermodales sont saisies manuellement par le planificateur.
+Chaque carte de leg a les champs suivants :
 
-<Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">
-  Créer des commandes standard avec arrêts supplémentaires.
+| Champ | Remarques |
+|---|---|
+| **Mode** | Route, Mer, Rail, Air, ou Barge |
+| **Origine** | Texte libre ou autocomplétion d'adresse |
+| **Destination** | Texte libre ou autocomplétion d'adresse |
+| **Début planifié** | Date et heure de début du leg |
+| **Fin planifiée** | Date et heure de fin attendue du leg |
+| **Transporteur** | Flotte propre (route uniquement) ou sous-traitant |
+| **Tarif d'achat** | Coût que vous payez pour ce leg |
+| **Détail des coûts** | Carburant, péages, ferry, ou autres lignes |
+
+### Legs routiers
+
+Les legs routiers peuvent être affectés à votre propre flotte (camion et chauffeur) ou à un transporteur sous-traitant — choisissez lequel via un choix radio sur la carte du leg, puis sélectionnez le camion/chauffeur ou le sous-traitant dans une liste déroulante.
+
+### Legs non routiers (mer, rail, air, barge)
+
+Les legs non routiers ne peuvent être affectés qu'à un transporteur sous-traitant — vos propres camions et chauffeurs de flotte ne peuvent pas être affectés à un leg maritime ou ferroviaire. Le champ transporteur recherche dans votre liste de sous-traitants.
+
+### Contrôles de leg
+
+- **Flèches haut/bas** — réordonner les legs. La bande de chronologie des legs (voir ci-dessous) se met à jour au fur et à mesure du glissement.
+- **Retirer le leg** — supprimer un leg. Il n'y a pas de restriction basée sur le statut dans l'interface, donc vérifiez bien avant de retirer un leg déjà en cours.
+- Bouton **Terminer le leg** — marque le leg comme fait. Il s'affiche une fois que le statut du leg atteint **En transit**, **À la livraison**, ou **Déchargement** — cela dépend du statut, pas d'une date quelconque.
+
+### Bande de chronologie des legs
+
+Une bande horizontale compacte apparaît au-dessus de l'accordéon des legs. Elle montre tous les legs en séquence avec un badge de mode (route, mer, rail, etc.) et les noms de ville pour l'origine et la destination. Utilisez-la pour vérifier rapidement que la séquence du trajet a du sens avant d'enregistrer.
+
+---
+
+## Détails du leg mer/intermodal
+
+Pour tout leg avec le mode **Mer**, **Rail**, **Air**, ou **Barge**, une section repliable **Détails mer / intermodal** apparaît sur la carte du leg. Tous les champs sont optionnels.
+
+| Champ | Format | Remarques |
+|---|---|---|
+| Référence de réservation | Texte libre | Numéro de confirmation de réservation du transporteur |
+| Numéro de conteneur | Texte libre | ID de conteneur ISO |
+| Numéro de scellé | Texte libre | |
+| Nom du navire | Texte libre | Nom du service navire ou train |
+| Numéro de voyage | Texte libre | |
+| SCAC du transporteur | 4 caractères | Standard Carrier Alpha Code |
+| Port de chargement | LOCODE à 5 caractères | ex. `FRXXX` pour Calais |
+| Port de déchargement | LOCODE à 5 caractères | ex. `GBFXT` pour Folkestone |
+| Date/heure limite | Date + heure | Échéance d'acceptation de la cargaison au port de chargement |
+| ETD | Date + heure | Heure de départ estimée du port de chargement |
+| ETA au POD | Date + heure | Heure d'arrivée estimée au port de déchargement |
+
+<Warning>
+Si la date limite est dans les 48 heures de la fin planifiée du leg, Druma affiche une bannière d'avertissement ambre sur la carte du leg. Vérifiez la chronologie pour vous assurer que le camion atteint le port à temps.
+</Warning>
+
+Repasser le mode d'un leg à **Route** efface automatiquement les champs de détail mer/intermodal.
+
+---
+
+## Comportement du tableau de planification
+
+### Disponibilité des camions
+
+Le tableau de planification calcule la disponibilité des camions en fonction de la **date de fin du leg routier**, pas de la date de livraison finale de la commande. Cela signifie qu'un camion affecté au leg 1 (route) s'affiche comme libre dès que ce leg se termine — même si la dernière livraison de la commande a lieu des jours plus tard sur le leg 3 avec un transporteur différent.
+
+### Affecter un camion à une commande intermodale
+
+Faire glisser un camion sur une commande intermodale affiche une section **Leg intermodal** dans la feuille de confirmation d'affectation au lieu du flux standard. Elle liste chaque leg routier de la commande (séquence, origine → destination, dates planifiées) — cliquer sur une ligne de leg la sélectionne directement ; il n'y a pas de bouton « Affecter » séparé à cliquer ensuite.
+
+<Note>
+Un camion ne peut être affecté qu'à un seul leg routier par commande intermodale. Pour couvrir plusieurs legs routiers avec des camions différents, répétez le processus de glisser-déposer pour chaque leg.
+</Note>
+
+---
+
+## eCMR par leg routier
+
+Chaque leg routier qui traverse une frontière internationale reçoit son propre eCMR. Pour en créer un, ouvrez la carte du leg et cliquez sur **Créer un eCMR**. Druma enregistre le document en utilisant son fournisseur eCMR natif in-house, avec l'origine, la destination, et le transporteur affecté du leg pré-remplis — terminer un leg transfrontalier déclenche automatiquement cela de la même façon. (Il n'y a pas de choix de fournisseur à faire : Natif est le seul chemin pour les nouveaux documents ; seules les lignes TransFollow héritées préexistantes fonctionnent encore, sans rapport avec les legs créés ici.)
+
+Les legs restant dans un seul pays ne nécessitent pas d'eCMR (sauf si la politique de votre entreprise l'exige). Le bouton **Créer un eCMR** est toujours disponible si vous devez outrepasser cela.
+
+Le flux de signature à trois parties et le téléchargement du PDF certifié fonctionnent de façon identique à l'eCMR standard — voir la [documentation eCMR](/fr/ecmr/what-is-ecmr) pour le détail.
+
+---
+
+## PWA chauffeur — vue limitée au leg
+
+Les chauffeurs ne voient que les arrêts appartenant à leur leg routier affecté. Si la commande a trois legs et que le chauffeur couvre le leg 1, il ne voit que le chargement et tout arrêt interne du leg 1 — pas l'adresse de livraison au Royaume-Uni.
+
+Une bannière d'information en haut du détail du chargement indique :
+
+> **Leg 1 sur 3 — Route : Bucarest → Calais**
+
+Cela garde la vue du chauffeur propre et évite la confusion sur des arrêts appartenant à un transporteur différent.
+
+Les pressions de statut (arrivé au chargement, chargement, en transit, arrivé à la livraison, etc.) fonctionnent exactement comme sur une commande standard, mais elles ne font avancer que le statut du leg routier du chauffeur. Le planificateur voit la progression par leg dans le panneau de détail de la commande.
+
+---
+
+## Suivi des coûts et de la marge
+
+Chaque leg a son propre **Tarif d'achat** et **Détail des coûts**. Le coût total de la commande est la somme de tous les legs. Le calcul de marge dans le panneau de détail de la commande compare le prix de vente convenu au coût total multi-leg, vous donnant un chiffre de marge consolidé pour l'ensemble du trajet intermodal.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/fr/ecmr/what-is-ecmr">
+  Comment fonctionnent la création eCMR native, les signatures à trois parties, et les PDF certifiés.
+</Card>
+
+<Card title="Sous-traitants" icon="truck" href="/fr/planner/subcontractors">
+  Gérez votre liste de transporteurs sous-traitants — les mêmes transporteurs apparaissent dans l'affectation de leg intermodal.
+</Card>
+
+<Card title="Tableau de planification" icon="calendar" href="/fr/planner/planning-board">
+  Comment la disponibilité des camions et les blocs de commande intermodale apparaissent sur la chronologie de dispatch.
 </Card>

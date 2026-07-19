@@ -1,43 +1,101 @@
 ---
 title: "Trajet perdu"
-description: "Comment déclarer un trajet perdu lorsqu'un chauffeur est en route mais que la mission doit être annulée — enregistrement des coûts réels et notification au client."
-icon: "route"
+description: "Comment déclarer un trajet perdu quand un trajet est annulé après le départ du chauffeur, et ce qui est enregistré sur la commande."
+icon: "triangle-exclamation"
 ---
 
 ## Qu'est-ce qu'un trajet perdu ?
 
-Un trajet perdu s'applique aux commandes pour lesquelles le chauffeur est **déjà parti** mais le trajet doit être abandonné — en raison d'une annulation client, d'un cas de force majeure ou d'une décision de l'entreprise.
+Un trajet perdu se produit quand un chauffeur est déjà parti pour une mission — ou est à mi-chemin — et que le trajet est annulé ou devient impossible à terminer. Les causes courantes incluent :
 
-Contrairement à une annulation ordinaire, un vrai coût a déjà été engagé (carburant, temps du chauffeur, kilomètres à vide).
+- Le client annule la commande alors que le chauffeur est déjà en route.
+- Force majeure — fermetures de routes, problèmes à la frontière, ou intempéries sévères.
+- Une décision d'entreprise d'avorter le trajet (par ex., panne de véhicule).
+
+Contrairement à une simple annulation (qui s'applique aux commandes encore au statut Brouillon ou En attente), un trajet perdu affecte des commandes déjà **actives** — le chauffeur a quitté le dépôt et a engagé des coûts réels.
 
 ---
 
-## Déclarer un trajet perdu
+## Quand pouvez-vous déclarer un trajet perdu ?
 
-Vous pouvez déclarer un trajet perdu depuis l'un de ces statuts : **Parti**, **Au chargement**, **Chargement**, **En transit**, **À la livraison**, **Déchargement**.
+Vous pouvez déclarer un trajet perdu sur toute commande se trouvant dans l'un de ces statuts actifs :
+
+- Partie
+- Arrivée au chargement
+- Chargement
+- En transit
+- Arrivée à la livraison
+- Déchargement
+
+Les commandes au statut Brouillon, En attente, ou Assignée doivent être annulées normalement — aucune déclaration de trajet perdu n'est nécessaire puisque le chauffeur n'a pas encore bougé.
+
+<Warning>
+Déclarer un trajet perdu **ne peut pas être annulé**. La commande passe définitivement au statut **Trajet perdu**. Assurez-vous d'avoir confirmé la situation avec le chauffeur avant de continuer.
+</Warning>
+
+---
+
+## Comment déclarer un trajet perdu
 
 <Steps>
   <Step title="Ouvrez la commande">
-    Accédez à la commande active dans la liste des commandes.
+    Accédez à **Planificateur → Commandes** et cliquez sur la commande à marquer comme trajet perdu. Le panneau de détail de la commande s'ouvre à droite.
   </Step>
   <Step title="Cliquez sur Déclarer un trajet perdu">
-    Trouvez ce bouton dans le panneau de détails de la commande.
+    Dans le panneau de détail de la commande, trouvez le bouton **Déclarer un trajet perdu**. Ce bouton n'apparaît que pour les commandes à un statut actif (Partie à Déchargement).
   </Step>
   <Step title="Renseignez les détails">
-    - **Code de raison** — Sélectionnez dans la liste (annulation client, force majeure, etc.)
-    - **Position actuelle du chauffeur** — Adresse ou coordonnées GPS.
-    - **Kilomètres à vide parcourus** — Distance parcourue sans fret.
-    - **Facturer au client** — Cochez pour créer un enregistrement de facturation client optionnel.
+    La fenêtre de trajet perdu demande :
+    - **Code de raison** — sélectionnez la raison dans la liste déroulante (par ex., annulation client, force majeure, décision d'entreprise).
+    - **Commentaire** — ajoutez une explication en texte libre de ce qui s'est passé.
+    - **Annulé par** — choisissez qui a initié l'annulation : Client, Décision propre, ou Force majeure.
+    - **Position du chauffeur** — où se trouve le chauffeur en ce moment. C'est un champ obligatoire.
+    - **Kilomètres morts** — le nombre de kilomètres que le chauffeur a déjà parcourus sans revenu à en tirer.
+    - **Facturer au client** — activez si vous comptez facturer le client pour le trajet perdu.
   </Step>
   <Step title="Confirmez">
-    Cliquez sur **Confirmer**. La commande passe au statut Trajet perdu.
+    Cliquez sur **Déclarer le trajet perdu** pour confirmer. Le statut de la commande passe immédiatement à **Trajet perdu**.
   </Step>
 </Steps>
 
-<Warning>
-Déclarer un trajet perdu **ne peut pas être annulé**. La commande passe définitivement au statut Trajet perdu.
-</Warning>
+---
+
+## Ce qui se passe après la déclaration
+
+Une fois qu'une commande est marquée comme trajet perdu :
+
+1. **Le statut de la commande passe à Trajet perdu** — elle apparaît avec un badge rouge sur la liste des commandes et le tableau de planification.
+2. **Le chauffeur est libéré** — le camion redevient disponible pour de nouvelles affectations sur le tableau de planification.
+3. **L'événement est enregistré sur la commande** — le code de raison, qui a annulé (client, décision propre, ou force majeure), la position du chauffeur, les kilomètres morts, et (si vous avez activé « Facturer au client ») un montant de facturation client sont tous sauvegardés directement sur la fiche de commande.
+
+<Note>
+Déclarer un trajet perdu ne génère pas automatiquement une entrée de paie séparée ni un enregistrement de facturation autonome. Ce qui est enregistré vit sur la commande elle-même — utilisez cette information manuellement pour la paie du chauffeur et, si vous avez activé « Facturer au client », lors de la construction de la facture client.
+</Note>
+
+---
+
+## Facturer le client
+
+Si le trajet perdu a été causé par une annulation client, vous pourriez vouloir récupérer les coûts. Quand vous activez **Facturer au client** dans la fenêtre de trajet perdu, vous saisissez directement le montant de facturation client (pré-rempli à partir du prix convenu de la commande, s'il en existe un). Ce montant est sauvegardé sur la commande pour que vous l'ameniez dans la facture plus tard — il n'est pas automatiquement converti en ligne de facture de lui-même.
+
+<Note>
+Facturer ou non le client dépend de vos conditions contractuelles. Druma enregistre le montant — c'est à vous de décider si et comment le facturer.
+</Note>
+
+---
+
+## Trajet perdu sur le tableau de planification
+
+Les commandes au statut **Trajet perdu** apparaissent avec une pastille rouge sur le tableau de planification. Vous pouvez les filtrer à l'aide de la puce de filtre **Trajet perdu** dans le panneau des commandes.
+
+Les commandes de trajet perdu sont exclues des calculs d'utilisation de flotte et des KPI de chargement actif.
+
+---
 
 <Card title="Cycle de vie d'une commande" icon="circle-dot" href="/fr/planner/order-lifecycle">
-  Comprendre tous les statuts de commande et comment les gérer.
+  Voyez comment Trajet perdu s'intègre dans le flux complet de statut de commande — y compris quels statuts peuvent y transitionner.
+</Card>
+
+<Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">
+  Découvrez comment créer des commandes et comprendre les différents types de commande.
 </Card>

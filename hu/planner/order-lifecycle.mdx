@@ -1,139 +1,278 @@
 ---
 title: "Rendelési életciklus"
-description: "Hogyan halad előre egy rendelés Tervezettől a Kiszámlázottig a Drumában — minden státusz, ki váltja ki, és mi történik az egyes lépéseknél."
+description: "Hogyan halad egy rendelés Vázlattól Kiszállítottig a Drumában — minden státusz, ki váltja ki, és mi történik minden lépésnél."
 icon: "circle-dot"
 ---
 
-## A státuszok áttekintése
+## Áttekintés
 
-Minden Druma-rendelés egy meghatározott életcikluson megy keresztül. Minden státusz egy konkrét tevékenységet tükröz, és meghatározza, hogy mit tehet a tervező, a sofőr és az ügyfél.
-
-```
-Vázlat → Tervezett → Kiosztva → Felvételre vár → Felrakodás →
-Úton → Lerakodásnál → Lerakodás → Kiszállítva → Kiszámlázva
-```
-
----
-
-## Az egyes státuszok részletesen
-
-### Vázlat
-
-A rendelés létrehozva, de még nem véglegesítve. Nem jelenik meg a sofőrnél és nem küld értesítést. Hasznos az árajánlatok vagy tervezett munkák előkészítéséhez.
-
-**Ki váltja ki:** Tervező, amikor az **Mentés vázlatként** gombra kattint.
-
----
-
-### Tervezett
-
-A rendelés véglegesítve és látható a tervezőtáblán, de nincs jármű/sofőr hozzárendelve.
-
-**Ki váltja ki:** Tervező, amikor rendelést hoz létre jármű-hozzárendelés nélkül.
-
----
-
-### Kiosztva
-
-Teherautó és sofőr hozzárendelve. A sofőr látja a rendelést a mobilalkalmazásban.
-
-**Ki váltja ki:** Tervező, a tervezőtáblán végzett kiosztással vagy a rendelés-részletpanelen.
-
-**Mi történik:**
-- A sofőr push-értesítést kap
-- Az ügyfél (ha engedélyezve van) megerősítő e-mailt kap
-- A tervezőtáblán a teherautókártyán megjelenik a rendelés
-
----
-
-### Felvételre vár
-
-A sofőr megérkezett a felvételi helyszínre.
-
-**Ki váltja ki:** A sofőr a mobilalkalmazásban a státusz frissítésével.
-
-**Mi történik:**
-- Az érkezési időbélyeg automatikusan rögzítésre kerül
-- A várakozási idő számlálója elindul (ha beállítva)
-
----
-
-### Felrakodás
-
-Az áru felrakodása folyamatban van.
-
-**Ki váltja ki:** A sofőr a mobilalkalmazásban.
-
----
-
-### Úton
-
-A sofőr elindult a szállítási helyszín felé.
-
-**Ki váltja ki:** A sofőr a mobilalkalmazásban.
-
-**Mi történik:**
-- GPS-követés aktiválódik
-- Az ETA kiszámítása megtörténik és frissül
-- Az ügyfélportálon megjelenik az élő nyomkövetés
-- Az indulási időbélyeg rögzítve
-
----
-
-### Lerakodásnál
-
-A sofőr megérkezett a szállítási helyszínre.
-
-**Ki váltja ki:** A sofőr a mobilalkalmazásban.
-
-**Mi történik:**
-- Az érkezési időbélyeg rögzítve
-- A várakozási idő számláló elindul (ha szükséges)
-- eCMR-aláírási folyamat megkezdődhet
-
----
-
-### Lerakodás
-
-Az áru lerakodása folyamatban van.
-
-**Ki váltja ki:** A sofőr a mobilalkalmazásban.
-
----
-
-### Kiszállítva
-
-A szállítás sikeresen teljesítve. A bizonyíték (fénykép vagy eCMR) feltöltve.
-
-**Ki váltja ki:** A sofőr a mobilalkalmazásban.
-
-**Mi történik:**
-- Szállítási értesítés küldése az ügyfélnek (ha engedélyezve van)
-- Ha az automatikus számlázás be van kapcsolva, az auto-számla feladatsor elindul
-- A tényleges szállítási idő rögzítve
-
----
-
-### Kiszámlázva
-
-Számla generálva a rendeléshez.
-
-**Ki váltja ki:** Tervező/Ügyfélszolgálat, a **Számla generálása** gombra kattintva, vagy automatikusan az auto-számla funkcióval.
-
----
-
-## Rendelés lemondása
-
-Bármely státuszban lévő rendelés lemondható a **Mégse** gombra kattintva a részletpanelen. A lemondott rendelések megőrződnek az előzményekben, de nem dolgozhatók fel tovább.
+Minden Druma-rendelés egy meghatározott utat követ. Az életciklus megértése segít tudni, mire számíts az egyes szakaszokban, mikor kell beavatkoznod, és hogyan kezeld a kivételeket, mint a késett kiszállításokat vagy az elfelejtett státuszfrissítéseket.
 
 <Note>
-Ha egy rendelés az **Úton** státuszban van és a sofőr elindult, a lemondás előtt vedd fel a kapcsolatot a sofőrrel.
+Ha a céged feladat-sablonokat használ, egy rendeléshez egy **feladat-ellenőrzőlista** is tartozhat, amely ugyanezekhez az életciklus-fázisokhoz kapcsolódik — lásd a [Rendelési feladatok és munkafolyamat-sablonok](/en/planner/order-tasks) oldalt.
 </Note>
 
-<Card title="Tervezőtábla" icon="calendar" href="/en/planner/planning-board">
-  Rendelések vizuális kezelése és teherautókra való kiosztása.
+Íme a teljes folyamat:
+
+**Vázlat → Függőben → Hozzárendelve → Elindult → Felvételnél → Rakodás → Úton → Szállításnál → Lerakodás → Kiszállítva**
+
+Van két kivétel-státusz is — **Törölve** és **Elveszett fuvar** —, amelyeket a végén ismertetünk.
+
+---
+
+## Státusz-színek áttekintése
+
+Minden státusz egyetlen színre (tónusra) oldódik fel, amely azonos a tervezőtábla és a sofőralkalmazás között — ugyanaz a státusz sosem más színű a két képernyőn.
+
+| Státusz | Szín |
+|---|---|
+| Vázlat | Szürke (palaszürke) |
+| Függőben | Szürke (palaszürke) |
+| Hozzárendelve | Kék |
+| Elindult | Indigó |
+| Felvételnél | Borostyán |
+| Rakodás | Borostyán |
+| Úton | Smaragdzöld |
+| Szállításnál | Égszínkék |
+| Lerakodás | Égszínkék |
+| Kiszállítva | Zöld |
+| Törölve | Piros |
+| Elveszett fuvar | Piros |
+
+<Note>
+Az **Úton** a teherautó felrakodás utáni, szállítási címhez vezető szakasza — ez az *egyetlen* státusz, amely zölden jelenik meg Kiszállítva előtt. Az **Elindult** (a felvételi címhez vezető szakasz) indigó színnel jelenik meg, egy vizuálisan eltérő színnel, így egy pillantással megállapíthatod, hogy egy teherautó felvételre megy-e, vagy már felrakodva van, és szállításra megy.
+</Note>
+
+---
+
+## Vázlat
+
+**Kiváltja:** a tervező elment egy új rendelést megerősítés nélkül.
+
+**Ki válthatja ki:** csak a tervező.
+
+A rendelés létezik a rendszerben, de még nem aktív. A sofőr nem látja az alkalmazásában. Szürkén jelenik meg a tervezőtáblán.
+
+**Vázlatból elérhető műveletek:**
+- Bármely mező szerkesztése
+- A rendelés megerősítése (Függőbenre vált)
+- A rendelés törlése
+- A rendelés lemondása
+
+Használd a Vázlatot, amikor egy ügyfél előzetes foglalást tett, de még nem erősítette meg, vagy amikor éppen felépíted a rendelést, de még hiányoznak részletek.
+
+---
+
+## Függőben
+
+**Kiváltja:** a tervező a **Rendelés megerősítése** gombra kattint (a rendelés oldaláról vagy a tervezőtábláról).
+
+**Ki válthatja ki:** csak a tervező.
+
+A rendelés mostantól élő, és készen áll arra, hogy egy teherautóhoz és sofőrhöz párosítsák — csak még nincs hozzárendelve. Továbbra is **szürkén** jelenik meg a tervezőtáblán, ugyanolyan tónussal, mint a Vázlat, mivel még nincs teherautó elkötelezve rá.
+
+**Küldött értesítések:**
+- Opcionális: automatikus megerősítő e-mail az ügyfélnek (ha engedélyezve van a fiókbeállításaidban)
+
+**Függőbenből elérhető műveletek:**
+- Bármely mező szerkesztése
+- Teherautó és sofőr hozzárendelése (Hozzárendelvére vált)
+- A rendelés lemondása
+
+---
+
+## Hozzárendelve
+
+**Kiváltja:** a tervező hozzárendel egy teherautót és sofőrt a rendeléshez — az Új rendelés formból, a Tervezőtábláról vagy a rendelés-részletező panelről.
+
+**Ki válthatja ki:** csak a tervező.
+
+A rendeléshez mostantól tartozik egy teherautó és egy sofőr. A hozzárendelt sofőr push-értesítést kap az alkalmazásában, amely mutatja a munka részleteit — felvételi cím, szállítási cím, dátum, és az általad hozzáadott sofőr-megjegyzések.
+
+A rendelés **kéken** jelenik meg a tervezőtáblán.
+
+**Hozzárendelveből elérhető műveletek:**
+- A legtöbb mező szerkesztése (a változtatások új értesítést váltanak ki a sofőrnek)
+- A teherautó vagy sofőr újra-hozzárendelése
+- A rendelés lemondása
+- Áttérés Elindultra (sofőr-művelet, vagy tervezői felülbírálás)
+
+---
+
+## Elindult
+
+**Kiváltja:** a sofőr az **Elindult** gombra koppint az alkalmazásában, amikor elindul a felvételi helyre.
+
+**Ki válthatja ki:** sofőr (elsődleges művelet) vagy tervező (manuális felülbírálás).
+
+Ez a státusz azt jelenti, hogy a sofőr úton van a felvételi pont felé. A rendelés **indigó** színűre vált a tervezőtáblán.
+
+<Note>
+Ha egy sofőr elfelejt koppintani az Elindult gombra, manuálisan is beállíthatod a státuszt a rendelés oldaláról. Nyisd meg a rendelést, kattints a **Státusz felülbírálása** gombra, és válaszd az Elindultat. Mindig jegyezd fel az okot a megjegyzés mezőben, hogy legyen nyilvántartásod róla.
+</Note>
+
+---
+
+## Felvételnél
+
+**Kiváltja:** a sofőr a **Felvételnél** gombra koppint, amikor eléri a rakodási címet.
+
+**Ki válthatja ki:** sofőr vagy tervező.
+
+A sofőr megérkezett a rakodási helyszínre, és a kiszolgálásra vár. Ez a státusz automatikusan elindítja a **várakozási idő számlálót** — hasznos a rakodóhelyi késések dokumentálásához.
+
+**Küldött értesítések:**
+- Opcionális: automatikus értesítés az ügyfélnek vagy a rakodóhelyi kapcsolattartójának (ügyfelenként konfigurálható)
+
+---
+
+## Rakodás
+
+**Kiváltja:** a sofőr a **Rakodás** gombra koppint, amikor az árut felrakodják a teherautóra.
+
+**Ki válthatja ki:** sofőr vagy tervező.
+
+A várakozási idő számlálója leáll, amikor a rakodás megkezdődik. Bármely rögzített várakozási idő elmentődik a rendelésre, és felhasználható felár-számításokhoz.
+
+---
+
+## Úton
+
+**Kiváltja:** a sofőr az **Úton** gombra koppint, miután a rakodás befejeződött (és a CMR alá van írva, ha alkalmazandó).
+
+**Ki válthatja ki:** sofőr vagy tervező.
+
+A teherautó mostantól a szállítási cím felé tart. A rendelés **smaragdzöldre** vált a tervezőtáblán — ez az egyetlen folyamatban lévő státusz, amely zölden jelenik meg, így könnyen felismerhető egy felrakodott, mozgásban lévő teherautó. A rendelés a PTV útvonalszámítás alapján egy becsült érkezési időt mutat.
+
+<Note>
+Ez egy jó pillanat egy proaktív késés-értesítés küldésére az átvevőnek, ha a sofőr az ütemterv mögött halad. Használd az **ETA küldése** gombot a rendelés oldalán SMS vagy e-mail küldéséhez az aktuális becsült érkezési idővel.
+</Note>
+
+---
+
+## Szállításnál
+
+**Kiváltja:** a sofőr a **Szállításnál** gombra koppint, amikor eléri a szállítási címet.
+
+**Ki válthatja ki:** sofőr vagy tervező.
+
+A várakozási idő számlálója újra elindul a szállítási ponton. Bármilyen lerakodási késés ettől a pillanattól kerül rögzítésre. A rendelés égszínkék tónusban jelenik meg.
+
+---
+
+## Lerakodás
+
+**Kiváltja:** a sofőr a **Lerakodás** gombra koppint, amikor az árut leveszik a teherautóról.
+
+**Ki válthatja ki:** sofőr vagy tervező.
+
+A szállításnál mért várakozási idő leáll. A sofőr mostantól előkészítheti az aláírt kiszállítási dokumentumokat.
+
+---
+
+## Kiszállítva
+
+**Kiváltja:** a sofőr a **Kiszállítva** gombra koppint, és opcionálisan feltölt egy fotót az aláírt CMR-ről vagy szállítólevélről.
+
+**Ki válthatja ki:** sofőr (elsődleges művelet) vagy tervező.
+
+A szállítás befejeződött. A rendelés zöldre vált a tervezőtáblán, és átkerül a **Befejezett** fülre a rendelési listában.
+
+**Küldött értesítések:**
+- Opcionális: kiszállítási megerősítő e-mail az ügyfélnek, időbélyeggel és bármilyen feltöltött dokumentummal.
+
+**Kiszállítvából elérhető műveletek:**
+- Számla generálása a rendeléshez (maga a rendelés Kiszállítva státuszban marad — a számla generálása nem változtatja meg; a számla saját, kapcsolt rekordként jön létre)
+- Kiszállítási dokumentumok feltöltése vagy megtekintése (CMR-fotó, POD)
+- Vita vagy kár-megjegyzés hozzáadása
+
+---
+
+## Törölve
+
+**Kiváltja:** a tervező lemondja a rendelést.
+
+**Ki válthatja ki:** csak a tervező.
+
+<Warning>
+Egy **Vázlat** vagy **Függőben** státuszú rendelést különösebb lépések nélkül lemondhatsz. Azonban **nem mondhatsz le** egy Elindult vagy azt követő státuszú rendelést manuális folyamat nélkül. Vedd fel a kapcsolatot a fiók-adminisztrátoroddal, ha egy aktív rendelést kell lemondanod — ez megköveteli az ok naplózását, és befolyásolhatja a sofőr-kifizetéseket.
+</Warning>
+
+A törölt rendelések auditálási célból megmaradnak a rendszerben. Láthatók a rendelési listában a **Törölve** szűrő alatt.
+
+---
+
+## Elveszett fuvar
+
+**Kiváltja:** a tervező elveszett fuvart nyilvánít a rendelés-részletező panelről.
+
+**Ki válthatja ki:** csak a tervező.
+
+Egy elveszett fuvar olyan rendelésekre vonatkozik, amelyeknél a sofőr **már elindult**, de az utat meg kell szakítani — ügyfél-lemondás, vis maior, vagy céges döntés miatt. Ez különbözik egy szokásos lemondástól, mert már valódi költségek merültek fel (üzemanyag, sofőr-idő, üres kilométerek).
+
+Elveszett fuvart a következő státuszok bármelyikéből nyilváníthatsz: **Elindult, Felvételnél, Rakodás, Úton, Szállításnál, Lerakodás**.
+
+A tervezőnek meg kell adnia egy ok-kódot, a sofőr jelenlegi helyzetét, a megtett üres kilométereket, és opcionálisan megjelölheti a rendelést ügyfél-terhelésre.
+
+<Warning>
+Egy elveszett fuvar bejelentése **nem vonható vissza**. A rendelés véglegesen Elveszett fuvar státuszra vált, és az ok, a sofőr helyzete, az üres kilométerek, és (ha bekapcsolva) egy ügyfélterhelési összeg közvetlenül a rendelésen kerül rögzítésre későbbi számlázáshoz — nem generálódik automatikusan külön bérszámfejtési vagy terhelési rekord.
+</Warning>
+
+Lásd az [Elveszett fuvar](/en/planner/wasted-journey) oldalt a teljes útmutatóért.
+
+---
+
+## Manuális státusz-felülbírálások
+
+A sofőrök néha elfelejtenek koppintani a státuszfrissítésekre — előfordul. Tervezőként bármikor felülbírálhatod manuálisan a státuszt:
+
+<Steps>
+  <Step title="Nyisd meg a rendelést">
+    Lépj a Tervező → Rendelések menüpontra, és keresd meg a rendelést. Kattints rá a részletező oldal megnyitásához.
+  </Step>
+  <Step title="Kattints a Státusz felülbírálása gombra">
+    Keresd meg a **Státusz felülbírálása** gombot a jelenlegi státuszjelző mellett, az oldal tetején.
+  </Step>
+  <Step title="Válaszd ki a helyes státuszt">
+    Válaszd ki, milyen státuszban kellene most lennie a rendelésnek.
+  </Step>
+  <Step title="Adj hozzá egy megjegyzést">
+    Írj egy rövid magyarázatot (pl. "A sofőr elfelejtette frissíteni — telefonon megerősítve"). Ez elmentődik a rendelés-előzményben.
+  </Step>
+  <Step title="Mentés">
+    Kattints az **Felülbírálás alkalmazása** gombra. A státusz azonnal frissül, és a változás naplózásra kerül a nevedddel és egy időbélyeggel.
+  </Step>
+</Steps>
+
+---
+
+## Automatikus vs. manuális átmenetek
+
+| Státusz | Automatikus | Manuális (sofőr) | Manuális (tervező) |
+|---|---|---|---|
+| Vázlat | — | — | Igen |
+| Függőben | — | — | Igen |
+| Hozzárendelve | — | — | Igen |
+| Elindult | — | Igen | Igen (felülbírálás) |
+| Felvételnél | — | Igen | Igen (felülbírálás) |
+| Rakodás | — | Igen | Igen (felülbírálás) |
+| Úton | — | Igen | Igen (felülbírálás) |
+| Szállításnál | — | Igen | Igen (felülbírálás) |
+| Lerakodás | — | Igen | Igen (felülbírálás) |
+| Kiszállítva | — | Igen | Igen (felülbírálás) |
+| Törölve | — | — | Igen |
+| Elveszett fuvar | — | — | Igen (aktív státuszokból) |
+
+---
+
+<Card title="Kezdőlap irányítópult" icon="gauge" href="/en/planner/today-view">
+  Figyeld az összes aktív rendelést, lásd az élő sofőr-pozíciókat, és kezeld a riasztásokat az élő operatív irányítópultodból.
 </Card>
 
-<Card title="Rendelés létrehozása" icon="plus" href="/en/planner/creating-orders">
-  Új fuvarozási rendelés létrehozása.
+<Card title="Rendelési feladatok és munkafolyamat-sablonok" icon="list-check" href="/en/planner/order-tasks">
+  Konfigurálható feladat-ellenőrzőlisták, ezekhez az életciklus-fázisokhoz kapcsolva, plusz hogyan építik fel az adminok a mögöttük álló sablonokat.
+</Card>
+
+<Card title="Számlák generálása" icon="file-invoice" href="/en/finances/generating-invoices">
+  Miután egy rendelés Kiszállítva állapotba kerül, ismerd meg, hogyan hozd létre és küldd el a számlát az ügyfelednek.
 </Card>

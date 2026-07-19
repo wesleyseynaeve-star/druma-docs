@@ -1,34 +1,95 @@
 ---
-title: "Raport CO2"
-description: "Urmareste si raporteaza emisiile de CO2 ale flotei per comanda, client si ruta."
-icon: "leaf"
+title: "Raport de emisii CO2"
+description: "Date lunare despre emisiile flotei, calculate conform standardelor GLEC Framework v4.0 si ISO 14083, gata de partajat cu clientii pentru rapoartele lor ESG."
+icon: "cloud"
 ---
 
-Raportul CO2 calculeaza emisiile de carbon pentru fiecare comanda pe baza distantei rutei, standardul Euro al vehiculului si greutatea sarcinii.
+Clientii — mai ales retailerii mari, producatorii si companiile de logistica — au nevoie din ce in ce mai mult de date de emisii CO2 de la furnizorii lor de transport, pentru propriile rapoarte ESG si de sustenabilitate. Druma iti calculeaza automat emisiile flotei din datele de comanda si vehicul si produce un raport pe care il poti partaja direct cu clientii.
 
-## Accesarea raportului
+## Deschiderea raportului
 
-Mergi la **Rapoarte -> CO2**.
+Mergi la **Rapoarte → Raport CO2**.
 
-## Filtrele disponibile
+Implicit, vezi vizualizarea **Lunara** — cele mai recente transporturi cu o cifra CO2 calculata, cele mai noi primele. Comuta la **Anual (CSRD)** si alege un **an**, pentru a construi un set de date pe un an intreg, pentru exporturi de sustenabilitate. Optional, restrange oricare vizualizare la un singur client, cu filtrul **Client**.
 
-- Interval de date (implicit: luna curenta)
-- Client specific
-- Vehicul specific
-- Standard Euro
+<Frame caption="Raportul CO2 lunar — distanta, greutatea si CO2 (kg) per comanda, cu Metoda fiecarui rand aratand versiunea de factor GLEC folosita.">
+  <img src="/images/reports/co2-report.png" alt="Raport CO2 lunar cu grafic de emisii si tabel per comanda" />
+</Frame>
 
 ## Ce arata raportul
 
-- Emisii totale CO2 in kg pe intervalul selectat
-- Emisii per comanda (tabel detaliat)
-- Emisii per client (agregate)
-- Emisii per ruta
-- Comparatie cu media flotei
+Pagina are doua moduri de vizualizare, comutate in partea de sus: **Lunar** si **Anual (CSRD)**.
 
-## Exportul pentru raportare de sustenabilitate
+### Vizualizarea lunara
 
-Apasa **Exporta CSV** pentru date brute sau **Descarca PDF** pentru un raport formatat pe care il poti include in rapoartele de sustenabilitate ale companiei sau il poti trimite direct clientilor care solicita date CO2.
+Un tabel per transport — cate un rand per comanda, cu distanta, greutatea, CO2 calculat, metoda de calcul, clientul si camionul. Filtreaza la un singur client cu lista derulanta **Client**, si foloseste graficul de tendinta de deasupra tabelului, pentru a vedea totalul tCO2e pe luna. Bara KPI arata CO2 total pentru perioada, CO2 mediu per comanda si cate comenzi au o cifra CO2 calculata.
 
-## Limita de randuri
+<Note>
+Vizualizarea lunara este plafonata la primele **500 de randuri**, pentru un filtru dat (conventia paginilor de raportare folosita in toata Druma). Daca o luna este trunchiata, restrange intervalul de date sau filtrul de client pentru o imagine completa — un banner de avertisment apare pe pagina cand se intampla asta.
+</Note>
 
-Raportul afiseaza maxim 500 de comenzi. Ajusteaza filtrele pentru intervale mai scurte daca flota ta depaseste aceasta limita.
+### Vizualizarea Anuala (CSRD)
+
+Aceeasi structura per transport, extinsa cu data livrarii, adresele complete de preluare/livrare si coloana standardului Euro al camionului (ca referinta — cifra CO2 in sine nu este calculata din standardul Euro, vezi mai jos). Aceasta vizualizare este plafonata la 5.000 de transporturi pe an; apare un avertisment de trunchiere daca anul are mai multe.
+
+## Metodologia de calcul a emisiilor
+
+Druma respecta factorii de emisie impliciti ai **Cadrului GLEC v4.0**, aliniati cu **ISO 14083** (metoda Tier 1) — standardul international pentru cuantificarea si raportarea emisiilor de gaze cu efect de sera din lanturile de transport.
+
+CO2 per comanda **nu** se bazeaza pe standardul de emisii Euro al camionului. Se bazeaza pe **clasa de greutate** si **tipul de combustibil** al camionului:
+
+| Clasa de vehicul | Tip combustibil | Factor de emisie (gCO2e / tona-km) |
+|---|---|---|
+| Vehicul greu articulat 32–34t (camion FTL standard) | Diesel | 62 |
+| Vehicul greu articulat 32–34t | GNL | 54 |
+| Vehicul greu articulat 32–34t | Electric | 25 |
+| Vehicul greu articulat 32–34t | HVO | 12 |
+| Camion rigid 16–26t | Diesel | 91 |
+| Camion rigid 16–26t | Electric | 37 |
+| Camion rigid 12–16t | Diesel | 119 |
+| Camion rigid 12–16t | Electric | 48 |
+
+Clasa de vehicul este derivata automat din sarcina utila maxima/greutatea inregistrata a camionului (peste 30t → articulat 32–34t; peste 15t → rigid 16–26t; altfel rigid 12–16t). Tipul de combustibil vine din inregistrarea camionului si este implicit diesel, daca nu este setat; daca nu exista inca un factor pentru un tip neobisnuit de combustibil pentru acea clasa, Druma revine la factorul diesel pentru aceeasi clasa, in loc sa lase comanda necalculata.
+
+Formula (Well-to-Wheel, ISO 14083 Tier 1):
+
+```
+CO2e (kg) = distanta (km) × [greutate (kg) ÷ 1.000] × factor de emisie (gCO2e/tkm) ÷ 1.000
+```
+
+Distanta vine din rutarea PTV pentru camioane (aceeasi distanta afisata pe comanda). Greutatea este greutatea marfii inregistrata a comenzii; daca o comanda nu are greutate inregistrata, Druma estimeaza jumatate din sarcina utila maxima a camionului, ca o sarcina medie conservatoare.
+
+## Partajarea datelor CO2 cu clientii
+
+Druma trimite automat un sumar CO2 lunar prin email fiecarui contact de client cu optiunea **Primeste rapoarte CO2** activata (setata per contact, in tabul **Contacte** al clientului) — fara export manual necesar pentru acel destinatar.
+
+Pentru orice altceva dincolo de acest email automat — un pachet complet, aliniat ESRS, pe un an intreg, o partajare ad-hoc cu echipa de sustenabilitate a unui client, sau propria ta evidenta interna — comuta la vizualizarea **Anuala (CSRD)** si foloseste butoanele de export descrise in [Exporturi de emisii CSRD](/ro/reports/csrd-exports): XLSX anual, Pachet de Date CSRD (CSV) si iXBRL. Vizualizarea lunara are si ea un buton generic de printare/export pentru tabelul vizibil.
+
+### Ce inseamna Scopul 3
+
+Clientii tai inregistreaza emisiile din transportul pe care il externalizeaza ca **emisii de scop 3** (Categoria 4: Transport in amonte, sau Categoria 9: Transport in aval). Datele pe care le furnizezi alimenteaza direct acel calcul. A avea aceste date pregatite le economiseste timp clientilor tai si te face un transportator mai atractiv.
+
+## Cum imbunatatesti scorul tau CO2
+
+Deoarece calculul este determinat de **tipul de combustibil** si **clasa de greutate a vehiculului**, nu doar de distanta, cea mai mare parghie este chiar camionul. Pe cea mai comuna clasa FTL (articulat, 32–34t), trecerea de la diesel (62 gCO2e/tkm) la HVO (12 gCO2e/tkm) sau electric (25 gCO2e/tkm) reduce factorul cu 81%, respectiv 60%. De exemplu, o cursa de 1.000 km, transportand 24t:
+
+- Diesel: 1.000 km × 24t × 62 gCO2e/tkm ÷ 1.000 = **1.488 kg CO2**
+- HVO pe aceeasi clasa de camion: 1.000 km × 24t × 12 gCO2e/tkm ÷ 1.000 = **288 kg CO2** — o reducere de 1.200 kg (81%) per cursa
+
+Alte imbunatatiri pe care Druma te poate ajuta sa le urmaresti:
+
+- **Optimizarea rutei** — rute mai scurte din rutarea PTV pentru camioane inseamna emisii totale mai mici
+- **Consolidarea incarcaturii** — mai putine curse, dar mai pline, reduc totalul de tone-kilometri pe intreaga flota
+- **Reducerea rularii goale** — kilometrii morti sunt CO2 fara niciun venit care sa ii compenseze
+
+<CardGroup cols={2}>
+  <Card title="Exporturi de emisii CSRD" icon="download" href="/ro/reports/csrd-exports">
+    Exporta date anuale de CO2 in formate XLSX, CSV aliniat CSRD si iXBRL, pentru raportarea de sustenabilitate si conformitatea ESRS E1.
+  </Card>
+  <Card title="Raportare CO2 (Setari Flota)" icon="truck" href="/ro/fleet-compliance/co2-reporting">
+    Cum alimenteaza tipul de combustibil si clasa de greutate a camionului calculul CO2, si ce sa verifici in inregistrarile flotei tale.
+  </Card>
+  <Card title="Prezentare generala rapoarte" icon="chart-bar" href="/ro/reports/reports-overview">
+    Toate rapoartele disponibile in Druma si cum programezi livrarea automata.
+  </Card>
+</CardGroup>

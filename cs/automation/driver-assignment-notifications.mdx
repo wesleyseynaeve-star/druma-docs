@@ -1,37 +1,72 @@
 ---
 title: "Oznámení o přiřazení řidiče"
-description: "Jak Druma upozorňuje řidiče o nových přiřazených zásilkách — push notifikace, e-mail a připomínky."
-icon: "bell"
+description: "Druma automaticky posílá řidičům push notifikace při přiřazení k objednávce, takže vždy znají svou další zakázku bez telefonátu z dispečinku."
+icon: "bell-concierge"
 ---
 
-## Přehled
+Když plánovač přiřadí řidiče k objednávce, Druma se postará o jeho informování. Odesílají se dvě automatické push notifikace — jedna večer před odjezdem, druhá ráno v den vyzvednutí — aby měl řidič podrobnosti zakázky ve správný čas, aniž by musel dispečink volat.
 
-Když plánovač potvrdí objednávku s přiřazeným řidičem, Druma automaticky upozorní řidiče.
+## Kdy se oznámení odesílají
 
-## Typy oznámení
+Druma odesílá dvě notifikace na objednávku:
 
-### Push notifikace
+| Notifikace | Čas | Zpráva |
+|---|---|---|
+| Večerní připomínka | 18:00 UTC den před vyzvednutím | „Připomínka: zítra vyzvednutí" / „Zítra: — v [město vyzvednutí] → [město doručení]" |
+| Ranní připomínka | 06:00 UTC v den vyzvednutí | „Dnešní vyzvednutí" / „Vyzvednutí dnes v — v [město vyzvednutí]" |
 
-Při potvrzení objednávky obdrží řidič push notifikaci na svém telefonu (pokud si aplikaci přidal na domovskou obrazovku a povolil notifikace).
+Oba časy jsou **pevně v UTC** — nepřizpůsobují se místnímu časovému pásmu řidiče ani objednávky. Zástupný text pro čas vyzvednutí ve zprávě aktuálně není vyplněn (zobrazuje se jako doslovná pomlčka „—") — notifikace řidiči sděluje pouze město vyzvednutí (a u večerní připomínky i město doručení), ne konkrétní čas.
 
-Notifikace obsahuje:
-- Datum a čas vyzvednutí
-- Adresu nakládky
-- Název klienta
+Obě notifikace se odesílají v jazyce nastaveném v profilu řidiče (pole `language`), s návratem na angličtinu, pokud jazyk není nastaven. Druma podporuje všech 10 jazyků platformy, včetně rumunštiny, bulharštiny, maďarštiny, polštiny, češtiny a slovenštiny.
 
-### Připomínky
+## Co vidí řidič
 
-Druma automaticky odesílá dvě připomínky:
-- **Večer předem (18:00)** — připomínka zásilek naplánovaných na druhý den
-- **Ráno (6:00)** — připomínka zásilek naplánovaných na dnes
+Když řidič klepne na notifikaci, aplikace Druma pro řidiče se otevře přímo na dané objednávce. Řidič vidí:
 
-## Nastavení
+- Úplnou adresu vyzvednutí s tlačítkem „Navigovat" (otevře Google Maps nebo Waze)
+- Jméno a telefonní číslo kontaktu na nakládce
+- Požadované časové okno nakládky
+- Úplnou adresu doručení
+- Popis zboží, hmotnost a počet palet
+- Jakékoli poznámky, které plánovač přidal k této konkrétní objednávce
+- Dokumenty CMR / eCMR, jsou-li k dispozici
 
-Oznámení o přiřazení řidiče jsou ve výchozím nastavení aktivní. Žádná konfigurace není potřeba.
+Řidič nemusí svou objednávku hledat — notifikace ho zavede přímo na ni.
 
-<Card title="Správa řidičů" icon="id-card" href="/en/planner/driver-management">
-  Nastavení řidičů a přístupu k aplikaci.
-</Card>
----
+## Požadavky pro fungování notifikací
 
-This page is being translated. In the meantime, please refer to the [English version](/en/automation/driver-assignment-notifications).
+Push notifikace vyžadují, aby měl řidič na telefonu nainstalovanou PWA aplikaci Druma a povolená oznámení prohlížeče.
+
+**Android (Chrome):**
+Když řidič poprvé otevře portál pro řidiče Druma v Chromu, prohlížeč automaticky požádá o povolení oznámení. Řidič klepne na Povolit. Není potřeba žádné další nastavení.
+
+**iOS (Safari):**
+iOS zpracovává oznámení jinak. Řidič musí:
+1. Otevřít portál pro řidiče Druma v Safari
+2. Klepnout na tlačítko Sdílet (rámeček se šipkou)
+3. Vybrat **Přidat na plochu**
+4. Otevřít aplikaci z ikony na ploše
+5. Po zobrazení výzvy klepnout na Povolit u oznámení
+
+<Note>
+Na iOS se o povolení oznámení žádá až po přidání aplikace na plochu a jejím otevření odtud. Pokud řidič tvrdí, že na iPhonu oznámení nedostává, jde o nejčastější příčinu — zkontrolujte, zda si aplikaci nainstaloval z plochy.
+</Note>
+
+## Co když řidič nemá smartphone?
+
+Push notifikace jsou doplněk k vašemu stávajícímu procesu dispečinku, ne jeho náhrada. Pokud řidič nemá smartphone schopný spustit PWA — nebo se s aplikacemi jednoduše necítí pohodlně — dispečer mu má zavolat jako obvykle.
+
+Přiřazení se v Druma zaznamená bez ohledu na to, zda řidič aplikaci používá. Objednávka, trasa a dokumenty jsou uloženy a tisknutelné z počítače.
+
+## Notifikace pro objednávky s více zastávkami
+
+U objednávek s více zastávkami vyzvednutí nebo doručení odesílá Druma jednu notifikaci na objednávku. Text notifikace odkazuje na první město vyzvednutí a poslední město doručení. Řidič uvidí všechny zastávky ve správném pořadí po otevření objednávky.
+
+<CardGroup cols={2}>
+  <Card title="Správa řidičů" icon="id-card" href="/cs/planner/driver-management">
+    Jak přidávat řidiče, nastavovat jejich profily a spravovat dokumenty.
+  </Card>
+  <Card title="Instalace aplikace pro řidiče" icon="mobile" href="/cs/driver/installing-the-app">
+    Podrobný návod pro instalaci PWA Druma na Android a iOS.
+  </Card>
+</CardGroup>

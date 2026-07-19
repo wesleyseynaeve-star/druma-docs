@@ -1,42 +1,172 @@
 ---
-title: "Factures fournisseurs"
-description: "Comment recevoir, examiner et approuver les factures d'achat de vos sous-traitants et fournisseurs dans Druma."
-icon: "file-input"
+title: "Factures fournisseurs (comptes fournisseurs)"
+description: "Gérez ce que doit votre entreprise — transporteurs sous-traitants, cartes carburant, ateliers, péages, assurance et leasing — avec l'ingestion de factures assistée par IA et un tableau de bord des créditeurs vieillis."
+icon: "building-2"
 ---
 
 ## Vue d'ensemble
 
-Druma peut recevoir les factures de vos fournisseurs (sous-traitants, prestataires de carburant, ateliers) par email et les acheminer vers une file de révision. L'IA extrait les informations clés et tente de les faire correspondre automatiquement avec les commandes d'achat existantes.
+Le module Comptes fournisseurs (AP) suit chaque facture d'achat que votre entreprise reçoit de fournisseurs externes. Cela inclut les transporteurs sous-traitants auxquels vous transmettez des chargements, les fournisseurs de cartes carburant (DKV, UTA, AS24), les fournisseurs d'atelier et de pneus, les opérateurs de péage (ASFINAG, HU-GO), les compagnies d'assurance, les sociétés de leasing, et toute autre dépense professionnelle.
 
-Accédez à **Finance → Transfert → File de factures** pour voir la file d'attente.
+Druma réduit la saisie manuelle grâce à deux mécanismes : les **transporteurs sous-traitants sont automatiquement reflétés dans votre liste de fournisseurs** (pas de double saisie), et une **boîte de réception email pilotée par IA** peut extraire et rédiger des factures d'achat directement depuis les emails fournisseurs. Ce qui ne correspond pas automatiquement atterrit dans une **file de révision** pour une décision humaine rapide.
 
----
+## Fiche maîtresse fournisseurs
 
-## Configuration de la boîte de réception des factures fournisseurs
+La fiche maîtresse fournisseurs est le registre de toutes les entreprises auprès desquelles vous achetez. C'est la base du rapprochement des factures et du reporting des créditeurs vieillis.
 
-Voir [Configuration des intégrations](/fr/admin/integration-setup) — section **Boîte de réception des factures fournisseurs**.
+**Où :** Finance → Affrètement → onglet **Fournisseurs**
 
----
+Chaque fiche fournisseur contient :
 
-## Examiner une facture reçue
+| Champ | Description |
+|-------|-------------|
+| **Nom** | Nom de l'entreprise fournisseur |
+| **Numéro de TVA** | Utilisé pour le rapprochement avec les données de facture extraites |
+| **Email** | Email de contact du fournisseur — utilisé aussi pour le rapprochement de liste blanche d'expéditeurs |
+| **Type de fournisseur** | Transporteur / Carburant / Atelier / Péage / Assurance / Leasing / Autre |
+| **Pays** | Pays d'immatriculation du fournisseur |
+
+### Gérer les fournisseurs
+
+- **Ajouter un fournisseur :** cliquez sur **+ Ajouter un fournisseur**, remplissez le formulaire, et enregistrez.
+- **Modifier un fournisseur :** cliquez sur **Modifier** sur n'importe quelle ligne fournisseur pour mettre à jour ses détails.
+- **Supprimer un fournisseur :** cliquez sur **Supprimer**. La suppression est bloquée si le fournisseur a des factures d'achat liées.
+
+<Note>
+Les transporteurs sous-traitants que vous ajoutez sous la section Sous-traitants sont automatiquement reflétés dans la liste Fournisseurs avec le type **Transporteur**. Vous n'avez pas besoin de les ajouter à nouveau ici. Les modifications à la fiche sous-traitant (nom, TVA, email) se synchronisent automatiquement vers la fiche fournisseur.
+</Note>
+
+## Boîte de réception email des factures fournisseurs
+
+Druma peut recevoir les factures fournisseurs par email, extraire les champs clés à l'aide de l'IA, et soit créer automatiquement une facture d'achat brouillon, soit acheminer le document vers la file de révision.
+
+### Configuration
 
 <Steps>
-  <Step title="Ouvrez la file d'attente">
-    Accédez à **Finance → Transfert → File de factures**.
+  <Step title="Ouvrez les paramètres de l'entreprise">
+    Accédez à **Paramètres** → **Entreprise** et faites défiler jusqu'à la section **Email factures fournisseurs**.
   </Step>
-  <Step title="Cliquez sur une facture en attente">
-    Ouvrez la facture à examiner. Vous verrez les données extraites par l'IA : fournisseur, montant, date, numéro de facture.
+  <Step title="Activez la boîte de réception">
+    Activez **Activer la boîte de réception des factures fournisseurs**. Druma provisionne une adresse email entrante dédiée pour votre entreprise (par exemple, `invoices-acme@in.druma.io`). L'adresse s'affiche immédiatement après l'activation.
   </Step>
-  <Step title="Vérifiez la correspondance automatique">
-    Si l'IA a trouvé une commande correspondante, vérifiez que c'est correct.
+  <Step title="Copiez l'adresse email">
+    Cliquez sur l'icône de copie à côté de l'adresse. Partagez cette adresse avec vos fournisseurs et demandez-leur d'y envoyer leurs factures PDF. Vous pouvez aussi transférer des factures depuis votre propre boîte de réception vers cette adresse.
   </Step>
-  <Step title="Approuvez ou réaffectez">
-    - **Approuver** — La facture est marquée comme reçue et liée à la commande.
-    - **Réaffecter** — Trouvez manuellement la bonne commande.
-    - **Rejeter** — La facture n'est pas valide ou en double.
+  <Step title="Ajoutez les adresses d'expéditeurs à la liste blanche">
+    Dans la section **Liste blanche des expéditeurs** juste en dessous, cliquez sur **+ Ajouter un expéditeur** et saisissez l'adresse email d'envoi de chaque fournisseur. Seuls les expéditeurs en liste blanche sont traités — les emails d'adresses inconnues sont silencieusement rejetés comme protection anti-spam et anti-usurpation.
   </Step>
 </Steps>
 
-<Card title="Sous-traitants" icon="handshake" href="/fr/planner/subcontractors">
-  Gérez vos relations avec les transporteurs sous-traitants.
+<Warning>
+Gardez l'adresse email des factures fournisseurs confidentielle. Ne la publiez pas sur votre site web ni dans des documents externes. Quiconque connaît l'adresse et n'est pas en liste blanche est bloqué, mais l'adresse elle-même doit être traitée comme une adresse de routage privée.
+</Warning>
+
+<Note>
+Ce chemin entrant a récemment connu des problèmes de routage de passerelle qui ont causé le rejet silencieux d'emails vers cette adresse avant même d'atteindre Druma. Si des fournisseurs signalent que leurs factures n'arrivent jamais, ou que rien n'apparaît dans la file de révision malgré des emails envoyés, vérifiez auprès du support que le problème de routage a été entièrement résolu pour votre environnement avant de supposer que l'expéditeur ou la liste blanche est en cause.
+</Note>
+
+### Ce qui se passe à l'arrivée d'une facture
+
+Quand un fournisseur envoie un PDF (ou une image) à votre adresse de boîte de réception depuis un expéditeur en liste blanche :
+
+1. Druma télécharge la pièce jointe et la stocke de façon sécurisée.
+2. L'IA extrait : nom du fournisseur, numéro de TVA, numéro de facture, date de facture, montant total, devise, et catégorie de dépense (carburant / atelier / péage / assurance / leasing / autre).
+3. Druma tente de faire correspondre les données extraites avec votre fiche maîtresse fournisseurs en utilisant le numéro de TVA et l'adresse email.
+
+Le résultat dépend de la confiance de la correspondance :
+
+| Résultat | Ce qui se passe |
+|---------|-------------|
+| **Facture transporteur à haute confiance** | Acheminée vers la file de factures transporteur (rapprochée d'une facture d'achat d'une commande sous-traitée spécifique) |
+| **Correspondance fournisseur à haute confiance** | Facture d'achat brouillon créée automatiquement et liée au fournisseur |
+| **Confiance faible ou fournisseur non reconnu** | Apparaît dans la **file de révision** pour rapprochement manuel |
+
+<Note>
+L'extraction par IA lit la couche de texte du PDF. Les images scannées en basse résolution ou le texte manuscrit peuvent produire des scores de confiance plus bas et atterrir plus souvent dans la file de révision. Demandez aux fournisseurs d'envoyer des exports PDF natifs depuis leur logiciel comptable si possible.
+</Note>
+
+## File de révision
+
+La file de révision est l'endroit où toutes les factures — factures transporteur et factures fournisseur générales — n'ayant pas pu être appliquées automatiquement sont conservées pour une décision humaine.
+
+**Où :** Finance → Affrètement → onglet **File de factures**
+
+### Lire la file
+
+Chaque ligne de la file montre :
+
+- **Badge de source** — **Transporteur** (depuis la boîte de réception des factures transporteur) ou **Fournisseur** (depuis la boîte de réception des factures fournisseur)
+- **Nom du fournisseur** — extrait par l'IA ou rapproché depuis la fiche maîtresse fournisseurs
+- **Montant** et **Devise**
+- **Statut** — En attente / Appliquée / Rejetée
+- **Date de réception**
+
+Utilisez les onglets de filtre en haut pour basculer entre les vues **En attente**, **Appliquée**, et **Rejetée**. Vous pouvez aussi filtrer par type de fournisseur pour vous concentrer sur une catégorie spécifique (par exemple, n'afficher que les factures Carburant).
+
+### Traiter un élément de la file
+
+<Steps>
+  <Step title="Développez la ligne">
+    Cliquez n'importe où sur une ligne de la file pour la développer. La vue développée montre tous les champs extraits par l'IA, le fournisseur rapproché (ou suggéré), et la facture d'achat rapprochée si une a été trouvée.
+  </Step>
+  <Step title="Vérifiez les données extraites">
+    Vérifiez le nom du fournisseur extrait, le numéro de TVA, le numéro de facture, le montant, et la date par rapport au PDF. Les corrections ne peuvent pas être faites en ligne — si les données sont erronées, vous les corrigerez après approbation, sur la fiche de facture d'achat.
+  </Step>
+  <Step title="Choisissez une action">
+
+    | Action | Quand l'utiliser |
+    |--------|------------|
+    | **Approuver** | Les données semblent correctes et la correspondance est bonne — crée ou confirme la facture d'achat |
+    | **Rejeter** | La facture n'est pas valide, est un doublon, ou appartient à une autre entreprise — la retire de la file |
+    | **Réaffecter** | La facture d'achat suggérée est incorrecte — ouvre une recherche pour choisir la bonne |
+    | **Voir le PDF** | Ouvre le fichier joint original dans un nouvel onglet pour vérification manuelle |
+
+  </Step>
+</Steps>
+
+## Tableau de bord des créditeurs vieillis
+
+Le tableau de bord des créditeurs vieillis montre tout ce que doit votre entreprise à travers tous les fournisseurs, regroupé par ancienneté de la dette.
+
+**Où :** Finance → Analytique → onglet **Créditeurs vieillis**
+
+### Lire le tableau de bord
+
+Le haut de la page affiche trois cartes récapitulatives :
+
+- **Total en cours** — somme de toutes les factures d'achat impayées
+- **Factures par tranche d'ancienneté** — nombre dans chaque tranche
+- **Nombre de fournisseurs** — fournisseurs distincts avec des soldes en cours
+
+Sous le résumé, un tableau triable liste chaque fournisseur avec une ligne par facture. Cliquez sur n'importe quel en-tête de colonne pour trier. Cliquez sur une ligne fournisseur pour la développer et voir les factures individuelles.
+
+Les tranches d'ancienneté suivent la convention AP standard :
+
+| Tranche | Définition |
+|--------|-----------|
+| **0–30 jours** | Courant — dans les conditions de paiement standard |
+| **31–60 jours** | Légèrement en retard |
+| **61–90 jours** | En retard — relance recommandée |
+| **90+ jours** | Significativement en retard — escaladez |
+
+<Note>
+La vue Créditeurs vieillis est plafonnée à 500 lignes. Si votre entreprise a plus de 500 factures d'achat en cours, une bannière d'avertissement de troncature apparaît en haut du tableau. Utilisez le bouton **Exporter CSV** pour télécharger le jeu de données complet pour analyse dans Excel.
+</Note>
+
+### Exporter
+
+Cliquez sur **Exporter CSV** pour télécharger le rapport complet des créditeurs vieillis sous forme de fichier CSV. L'export inclut toutes les lignes fournisseur indépendamment du plafond d'affichage de 500 lignes, le rendant adapté au rapprochement AP dans votre système comptable.
+
+---
+
+<Card title="Import de relevé bancaire" icon="file-up" href="/fr/invoicing/bank-statement-import">
+  Téléversez des fichiers CAMT.053 ou MT940 pour rapprocher automatiquement les paiements entrants des factures ouvertes.
+</Card>
+
+<Card title="Suivi des paiements" icon="circle-check" href="/fr/invoicing/payment-tracking">
+  Enregistrez et suivez les paiements sur les factures de vente et consultez les soldes restants.
+</Card>
+
+<Card title="Gestion des impayés" icon="triangle-alert" href="/fr/invoicing/overdue-management">
+  Surveillez les créances vieillies et envoyez des rappels de paiement aux clients en retard.
 </Card>

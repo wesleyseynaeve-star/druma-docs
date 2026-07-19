@@ -6,7 +6,7 @@ icon: "package"
 
 ## Przegląd
 
-Gdy transportujesz towary na paletach EUR, CHEP lub innych paletach wymiennych, wchodzisz w bieżące saldo z każdym klientem i podwykonawcą — wysłane palety muszą wrócić lub należna jest opłata. Rejestr wymiany palet Druma śledzi każdy ruch jako niezmienialny rekord i daje Ci bieżące saldo per kontrahent.
+Gdy transportujesz towary na paletach EUR, CHEP lub innych paletach wymiennych, wchodzisz w bieżące saldo z każdym klientem i podwykonawcą — wysłane palety muszą wrócić, albo należna jest opłata. Rejestr wymiany palet Druma śledzi każdy ruch jako niezmienialny rekord i daje Ci bieżące saldo per kontrahent, dzięki czemu nic nie umyka.
 
 Rejestr jest **tylko-do-dołączania**: ruchy są dodawane przy każdym przystanku zlecenia, a bieżące saldo jest obliczane automatycznie. Możesz rejestrować korekty i dostosowania bez usuwania historii.
 
@@ -18,77 +18,117 @@ Rejestr jest **tylko-do-dołączania**: ruchy są dodawane przy każdym przystan
 |---|---|
 | EUR | Paleta EUR (EPAL) |
 | CHEP | Paleta CHEP |
-| EPAL | Certyfikowana paleta wymienna EPAL |
 | LPR | La Palette Rouge |
 | IPP | Industrial Pool Pallet |
 | Euro Pool | Euro Pool System |
+| Inne | Dowolny inny typ palety wymiennej używany w Twojej działalności |
+
+Każdy typ palety ma własną kolumnę salda. Kontrahent może być Ci winien palety EUR, jednocześnie Ty będąc mu winnym palety CHEP.
 
 ---
 
 ## Rejestrowanie ruchów palet na zleceniu
 
-Ruchy palet są rejestrowane na poziomie przystanku — przystanki odbioru, dostawy i rozładunku mają własną sekcję **Ruchy palet**.
+Ruchy palet są logowane na poziomie przystanku — przystanki odbioru, dostawy i rozładunku mają wszystkie własną sekcję **Ruchy palet**.
 
 <Steps>
   <Step title="Otwórz panel szczegółów zlecenia">
-    Kliknij zlecenie na Tablicy planowania lub na liście Zleceń.
+    Kliknij zlecenie na Tablicy planowania lub na liście Zleceń, aby otworzyć jego panel szczegółów po prawej stronie.
   </Step>
   <Step title="Przejdź do karty przystanku">
-    Przewiń do przystanku, gdzie wymieniają się palety. Każda karta przystanku pokazuje sekcję **Ruchy palet**.
+    Przewiń do przystanku, gdzie wymieniane są palety — zazwyczaj odbiór (palety wychodzące) lub dostawa (palety zwracane). Każda karta przystanku pokazuje sekcję **Ruchy palet**.
   </Step>
   <Step title="Dodaj ruch">
-    Kliknij **+ Dodaj ruch**. Pojawi się mały formularz z:
-    - **Typ palety** — wybierz z EUR, CHEP, EPAL, LPR, IPP, Euro Pool
-    - **Typ ruchu** — Wysłane (pozytywne), Zwrócone (negatywne), Korekta lub Saldo otwarcia
+    Kliknij **+ Dodaj ruch** na karcie przystanku. Pojawia się mały formularz z:
+    - **Typ palety** — wybierz z EUR, CHEP, LPR, IPP, Euro Pool lub Inne
+    - **Typ ruchu** — Wysłane (pozytywny), Zwrócone (negatywny), Korekta, Poprawka lub Saldo otwarcia
     - **Ilość** — liczba palet
-    - **Notatki** (opcjonalnie)
+    - **Notatki** (opcjonalnie) — numer referencyjny lub komentarz kierowcy
   </Step>
   <Step title="Zapisz">
-    Kliknij **Zapisz**. Ruch jest dodawany do rejestru natychmiast i bieżące saldo kontrahenta aktualizuje się.
+    Kliknij **Zapisz**, aby zatwierdzić ruch. Jest natychmiast dodawany do rejestru, a bieżące saldo kontrahenta aktualizuje się.
   </Step>
 </Steps>
+
+Aby usunąć błędny wpis, kliknij **ikonę kosza** obok ruchu.
+
+<Note>
+Użyj **Salda otwarcia** raz na kontrahenta, aby ustawić jego początkowe saldo, jeśli migrujesz z arkusza kalkulacyjnego lub poprzedniego systemu. Kolejne ruchy budują się na tym.
+</Note>
 
 ---
 
 ## Przeglądanie sald
 
-Lista **Klienci** zawiera kolumnę **Saldo palet** z kodowaniem kolorami:
+### Kolumna salda na liście klientów
+
+Lista **Klienci** (Handel → Klienci) zawiera kolumnę **Saldo palet**. Wskaźnik używa kodowania kolorem na pierwszy rzut oka:
 
 | Kolor | Znaczenie |
 |---|---|
 | Bursztynowy | Klient jest Ci winien palety |
-| Niebieski | Ty jesteś klientowi winien palety |
+| Niebieski | Ty jesteś winien klientowi palety |
 | Neutralny (szary) | Saldo jest wyrównane |
 
-Kliknij wiersz klienta, aby otworzyć panel szczegółów klienta, a następnie przejdź do karty **Palety**. Pokazuje pełny rejestr dla tego kontrahenta.
+Najedź kursorem na wskaźnik salda, aby zobaczyć podpowiedź per typ, rozbijającą saldo na wszystkie typy palet — na przykład +12 EUR, −4 CHEP.
+
+### Historia ruchów per kontrahent
+
+Kliknij wiersz klienta, aby otworzyć panel szczegółów klienta, a następnie przejdź do karty **Palety**. Pokazuje ona pełny rejestr dla tego kontrahenta: każdy ruch, datę, referencję zlecenia i bieżącą sumę.
 
 ---
 
 ## Próg opłaty i automatyczne tworzenie opłat
 
-Gdy ruch spowoduje, że saldo przekroczy skonfigurowany próg, pojawia się modal **Potwierdzenie opłaty za palety**:
+Jeśli saldo palet klienta wzrośnie ponad skonfigurowany próg, Druma może automatycznie zaproponować Ci naliczenie opłaty za wymianę palet.
 
-- **Potwierdź** — dodaje linię opłaty do ekstra zlecenia
-- **Pomiń** — zamyka monit bez tworzenia opłaty
+Gdy ruch spowoduje przekroczenie progu przez saldo, pojawia się modal **Potwierdzenie opłaty za palety**:
+
+- **Potwierdź** — dodaje linię opłaty do dodatków zlecenia (widoczną w edytorze faktury jako opłata za wymianę palet)
+- **Pomiń** — zamyka monit bez tworzenia opłaty; saldo pozostaje bez zmian
 
 <Warning>
-Kliknięcie **Pomiń** nie resetuje licznika progu. Modal pojawi się ponownie przy następnym ruchu przekraczającym próg.
+Kliknięcie **Pomiń** nie resetuje licznika progu. Modal pojawi się ponownie przy następnym ruchu przekraczającym próg, chyba że najpierw zmniejszysz saldo, rejestrując zwrócone palety.
 </Warning>
 
 ---
 
 ## Konfigurowanie progów i stawek opłat
 
-Przejdź do **Ustawienia — Konfiguracja palet**, aby ustawić reguły opłat (dostępne tylko dla ról admin i company_admin).
+Przejdź do **Ustawienia → Konfiguracja palet**, aby ustawić reguły opłat. Ta sekcja jest dostępna tylko dla ról **admin** i **company_admin**.
 
-Dla każdego typu palety możesz skonfigurować próg opłaty (liczba palet) i stawkę opłaty (cena za paletę).
+Dla każdego typu palety możesz skonfigurować:
+
+| Ustawienie | Opis |
+|---|---|
+| Próg opłaty | Liczba palet, przy której wyzwala się modal opłaty |
+| Stawka opłaty | Cena za paletę (w walucie Twojej firmy) stosowana do automatycznie generowanej linii opłaty |
+
+Pozostaw próg pusty, aby wyłączyć modal opłaty dla tego typu palety — ruchy są nadal śledzone, ale żadna opłata nigdy nie jest sugerowana.
 
 ---
 
-<Card title="Karty stawek" icon="sliders-horizontal" href="/en/settings/rate-cards">
-  Konfiguruj politykę przekazywania opłat za palety i nadpłaty per kraj.
+## Synchronizacja z dostawcą (opcjonalnie)
+
+Jeśli używasz CHEP Connect, Druma może uzgodnić Twój rejestr w aplikacji z oficjalnym saldem dostawcy. Przejdź do **Ustawienia → Integracje → Wymiana palet**.
+
+**CHEP Connect** jest aktywny. Wpisz dane uwierzytelniające konta CHEP, a następnie:
+
+- Kliknij **Testuj połączenie**, aby zweryfikować, że dane uwierzytelniające są akceptowane
+- Kliknij **Synchronizuj saldo**, aby pobrać bieżące saldo dostawcy i porównać je z bieżącą sumą Druma
+
+Wszelkie rozbieżności są pokazywane jako wiersz uzgodnienia — możesz je zaakceptować jako wpis **Korekta**, aby wyrównać oba rejestry.
+
+<Note>
+CHEP Connect to obecnie jedyna integracja z dostawcą palet. Typy palet EUR, LPR, IPP, Euro Pool i Inne są śledzone ręcznie w rejestrze — nie ma dla nich dziś synchronizacji z dostawcą. Podstawowy rejestr działa w pełni bez żadnego skonfigurowanego dostawcy.
+</Note>
+
+---
+
+<Card title="Dodatki i dopłaty zlecenia" icon="circle-plus" href="/pl/planner/order-extras">
+  Dowiedz się, jak linie opłat za palety pojawiają się w edytorze faktury obok innych dopłat zlecenia.
 </Card>
 
-<Card title="Klienci" icon="building-2" href="/en/planner/clients">
-  Zarządzaj profilami klientów i przeglądaj historię sald palet per klient.
+<Card title="Klienci" icon="building-2" href="/pl/planner/clients">
+  Zarządzaj profilami klientów, stałymi instrukcjami i przeglądaj historię sald palet per klient.
 </Card>

@@ -1,35 +1,52 @@
 ---
 title: "GDPR és adatkezelés"
-description: "Milyen adatokat tárol a Druma, mennyi ideig kerülnek megőrzésre, milyen jogai vannak az érintetteknek, és hogyan exportálhatja vagy törölheti a cég adatait."
+description: "Milyen adatokat tárol a Druma, mennyi ideig, milyen jogaid vannak érintettként, és hogyan exportálhatod vagy törölheted a céged adatait."
 icon: "lock"
 ---
 
 _Utolsó frissítés: 2026. július 10._
 
-A **működési adatok** (rendelések, ügyfelek, sofőrök, dokumentumok és a céged által a platformon tárolt kapcsolódó adatok) tekintetében a Druma **adatfeldolgozóként** jár el — a te céged az adatkezelő, a feldolgozást pedig a céged és a Druma közötti Adatfeldolgozási Megállapodás (DPA) szabályozza. A **fiók- és számlázási adatok** (a Druma-előfizetésed és az azt adminisztráló felhasználók adatai) tekintetében a Druma saját jogán **adatkezelőként** jár el. Ez a cikk pontosan bemutatja, milyen adatokat tárolunk, meddig, ki dolgozza fel őket, és milyen lépéseket tehetsz a GDPR alapján.
+A **működési adatok** (rendelések, ügyfelek, sofőrök, dokumentumok és a céged által a platformon tárolt kapcsolódó adatok) tekintetében a Druma **adatfeldolgozóként** jár el — a te céged az adatkezelő, a feldolgozást a céged és a Druma közötti Adatfeldolgozási Megállapodás (DPA) szabályozza. A **fiók- és számlázási adatok** (a Druma-előfizetésed és az azt adminisztráló felhasználók adatai) tekintetében a Druma saját jogán **adatkezelőként** jár el. Ez a cikk pontosan bemutatja, mit tárolunk, meddig, ki dolgozza fel, és milyen lépéseket tehetsz a GDPR alapján.
+
+<Frame caption="Beállítások → GDPR és adatvédelem — bármely szerepkör megtekintheti; csak az Admin léphet cselekvésre.">
+  <img src="/images/admin/gdpr-data-management.png" alt="GDPR és adatvédelmi beállítások panel" />
+</Frame>
 
 ---
 
 ## Milyen adatokat tárol a Druma?
 
-A Druma az alábbi adatokat tárolja a szolgáltatás nyújtásához:
+### Cég- és fiókadatok
+- Cégnév, adószám (CIF), cím, elérhetőségek
+- Felhasználói fiókok: név, e-mail-cím, szerepkör, bejelentkezési időbélyegek
 
-**Cégadatok:**
-- Jogi cégnév, ÁFA-szám, cím, logó
-- Felhasználói fiókok (név, e-mail, szerepkörök)
-- Vállalati beállítások és konfigurációk
+### Működési adatok
+- Rendelések: útvonaladatok, rakományleírások, felvételi/szállítási címek, státusztörténet, hozzárendelt sofőr és jármű, időbélyegek
+- Ügyféladatok: cégnév, cím, kapcsolattartó, adószám
+- Sofőradatok: név, telefonszám, jogosítványszám, ADR-tanúsítvány adatai, dokumentum-lejáratok
+- Járműadatok: rendszám, márka/típus, Euro-szabvány, dokumentum-lejáratok
 
-**Műveleti adatok:**
-- Fuvarozási rendelések és dokumentumok
-- Ügyfél- és alvállalkozói adatok
-- Számlák és fizetési nyilvántartások
-- Sofőrök személyes adatai (név, telefonszám, jogosítvány adatai)
-- Jármű- és flottadokumentumok
-- eCMR-dokumentumok — a Druma saját, belső szolgáltatója által kibocsátott és PAdES-lepecsételt fuvarlevelek; a TransFollow csak elavult (legacy) tartaléklehetőségként érhető el azon cégeknek, akik már a natív szolgáltató bevezetése előtt is használták
+### Pénzügyi adatok
+- Számlaadatok, tételek, összegek, fizetési státusz
+- Járművekhez kapcsolt üzemanyagkártya-importadatok
 
-**Technikailag szükséges adatok:**
-- Munkamenet-tokenek és hitelesítési naplók
-- Hibanaplók és teljesítménymérések
+### eCMR-dokumentumok
+- A **Druma saját, belső szolgáltatója** által kibocsátott és PAdES-lepecsételt elektronikus fuvarlevelek, beleértve az aláírásadatokat és a hitelesített PDF-eket. A TransFollow elavult (legacy) tartalék marad azon cégeknek, amelyek már a natív szolgáltató bevezetése előtt is használták.
+
+### GPS-helyzetadatok
+- **Élő járműkövetés**: a Druma csak a jármű aktuális pozícióját tárolja, amely minden új GPS-jel érkezésekor felülíródik — a térképen nincs korábbi pozíciótörténet megőrizve.
+- **Rendelés-esemény GPS-bélyegek**: amikor egy sofőr státuszváltozást, késést vagy incidenst jelent, egyetlen GPS-koordináta kerülhet rögzítésre az adott rendelési eseményhez csatolva. Ezek a bélyegek a rendelés saját nyilvántartásának részeként kerülnek megőrzésre (lásd a "Működési adatok" megőrzési idejét lentebb), nem külön, folyamatosan gördülő pozíciótörténetként.
+- **Románia e-Transport**: az ANAF e-Transport bejelentést igénylő szállítmányoknál az ANAF felé továbbított GPS-koordináták külön naplózódnak, és **30 nap után** törlődnek.
+
+### Tachográf-archívum adatai
+- Nyers DDD (jármű-egység) és TGD (sofőrkártya) tachográf-fájlok, amelyeket egy csatlakoztatott telematikai szolgáltatón keresztül automatikusan letöltünk, vagy manuálisan feltöltesz, és a Tachográf-archívumban tárolunk az EU 165/2014 rendelet megőrzési kötelezettségeinek teljesítéséhez. Lásd: [Tachográf-archívum](/en/fleet-compliance/tacho-archive).
+
+### Auditnaplók
+- A jelentős felhasználói műveletek naplója: bejelentkezési események, rendelés-státuszváltozások, szerepkör-változtatások, dokumentumfeltöltések és számlázási események.
+
+<Note>
+A Druma nem tárol hívásfelvételeket, sofőr biometrikus adatokat vagy sofőr egészségügyi adatokat.
+</Note>
 
 ---
 
@@ -37,64 +54,62 @@ A Druma az alábbi adatokat tárolja a szolgáltatás nyújtásához:
 
 | Adattípus | Megőrzési idő |
 |---|---|
-| Aktív rendelések | Az utolsó tevékenységtől számított 7 év |
-| Számlák és pénzügyi nyilvántartások | 10 év (törvényi kötelezettség) |
-| Törölt felhasználói fiókok | 90 nap, majd véglegesen törlődnek |
-| Sofőrpozíció-adatok | Valós időben felülíródik — nincs előzmény megőrizve |
-| Auditnaplók | 18 hónap |
-| Munkamenet-tokenek | 30 nap inaktivitás után |
-| Rendelési üzenetek | 90 nap megőrzés (cron törlési feladattal) |
+| Működési adatok (rendelések, ügyfelek, sofőrök, járművek) | Az előfizetés időtartama + 90 nap a lemondás után |
+| Felhasználói fiókadatok | Az előfizetés időtartama + 90 nap a lemondás után |
+| Auditnaplók | 12 hónap a naplózott esemény dátumától |
+| eCMR-dokumentumok | 10 év (jogi kötelezettség az e-CMR jegyzőkönyv alapján) |
+| GPS-helyzetadat (élő követés) | Nincs megőrizve — csak az aktuális pozíció tárolt, minden frissítéskor felülíródik |
+| GPS rendelés-esemény bélyegek | A rendeléssel együtt megőrizve (lásd fent) |
+| ANAF e-Transport felé továbbított GPS-adat | 30 nap, majd automatikusan törlődik |
+| Tachográf-fájlok (DDD/TGD) | Határozatlan ideig megőrizve (a 12 hónap jogi minimum, nem törlési cél) |
+| Számlázási nyilvántartások | 10 év (EU adójogi felső korlát) |
+
+<Note>
+A lenti 90 napos megőrzési időszak végén a Druma ütemezett törlési folyamata törli a **3 évnél régebbi rendeléseket**, a rendelési üzeneteket, a rendelési jegyzeteket, az ügyfeleket, a járműveket és a pótkocsikat, valamint eltávolítja a céges integrációkat és beállításokat. Szándékosan **nem törli a számlákat vagy az eCMR-aláírásokat** — mindkettő a fenti jogi megőrzési szabályok szerint marad meg, a fiók törlésétől függetlenül. A törléskor 3 évnél fiatalabb rendeléseket sem törli ez a folyamat.
+</Note>
 
 ---
 
-## Az érintett jogai
+## Adatexport kérése
 
-Az EU GDPR értelmében az érintett személyeknek az alábbi jogai vannak:
-
-**Hozzáférési jog:** Bármely személy, akinek az adatait tároljuk, kérheti az adatok másolatát.
-
-**Helyesbítési jog:** Helytelen adatok javítása kérhető.
-
-**Törlési jog ("az elfelejtés joga"):** A személyes adatok törlése kérhető, ha azok megőrzésére már nincs törvényi kötelezettség.
-
-**Adathordozhatóság:** Az adatok hordozható formátumban exportálhatók (CSV, JSON).
-
-**Tiltakozási jog:** Az adatkezelés ellen tiltakozni lehet.
-
-A GDPR-kérelmek benyújtásához vedd fel a kapcsolatot a support@druma.io e-mail-címen. A kérelmekre 30 munkanapon belül válaszolunk.
-
----
-
-## Cég adatainak exportálása
+Bármikor kérhetsz teljes exportot a céged adatairól.
 
 <Steps>
-  <Step title="Lépj a Beállítások → GDPR és adatkezelés menüpontra">
-    Az Admin és Vállalati admin szerepkörű felhasználók hozzáférnek ehhez az oldalhoz.
+  <Step title="Lépj a Beállítások → GDPR és adatvédelem menüpontra">
+    Bármely szerepkör megnyithatja ezt az oldalt és megtekintheti a tartalmát. Kizárólag az **Admin** szerepkör kérhet exportot, szerkesztheti a megőrzési szabályzatot, vagy zárhatja le az érintetti kérelmeket — a **Vállalati admin** csak olvasási hozzáférést kap a feltöltött GDPR-dokumentumokhoz, a többi szerepkör megtekintheti az oldalt, de nem cselekedhet rajta.
   </Step>
-  <Step title="Kattints az Összes adat exportálása gombra">
-    A Druma ZIP-archívumot generál, amely tartalmaz:
-    - Összes rendelési adatot (CSV)
-    - Számlák listáját (CSV)
-    - Ügyfél- és alvállalkozói nyilvántartásokat (CSV)
-    - Felhasználói listát (CSV)
-    - Sofőrök és járművek listáját (CSV)
+  <Step title="Kattints az Export kérése gombra">
+    Kattints az **Export kérése** gombra. A Druma egy ZIP-archívumot készít elő a céged összes adatáról, gépileg olvasható formátumban (JSON és CSV).
   </Step>
-  <Step title="Töltsd le az archívumot">
-    A letöltési link 24 óráig érvényes.
+  <Step title="Vedd át az exportot">
+    Egy letöltési linket tartalmazó e-mailt kapsz **kb. 15 percen belül** (az exportot egy 15 percenként futó háttérfeladat dolgozza fel). A link 7 nap után lejár.
   </Step>
 </Steps>
 
+Az export tartalmazza: rendeléseket, ügyfeleket, számlákat, flottajárműveket, alkalmazáson belüli rendelési üzeneteket, auditnapló-bejegyzéseket, hozzájárulási nyilvántartásokat és eCMR digitális aláírási nyilvántartásokat. Az exportban lévő `drivers.csv` fájl csak a **sofőr** szerepkörű felhasználói fiókokra szűrt — nem a teljes irodai állomány listája. Nem tartalmazza a hitelesített eCMR PDF-eket — azok egyenként letölthetők az egyes rendelések eCMR fülén.
+
 ---
 
-## Fiók törlése
+## A fiók törlése
 
-Ha le szeretnéd mondani és törölni a céged fiókját:
+<Warning>
+A fiók törlése a 90 napos megőrzési időszak után végleges és visszavonhatatlan. Töltsd le a szükséges adatokat a törlés kérése előtt.
+</Warning>
 
-1. Győződj meg arról, hogy minden szükséges adatot exportáltál.
-2. Mondd le az előfizetésedet a Stripe portálon keresztül (**Beállítások → Számlázás**).
-3. Küldj e-mailt a support@druma.io címre a fiók törlésének kérésével.
-
-A fiók törlése nem visszavonható. A törvényi megőrzési kötelezettség alá eső adatokat (például számlákat) az előírt ideig meg kell őrizni, de ezek az adatok személyes azonosítóktól mentesítve lesznek, ahol ez lehetséges.
+<Steps>
+  <Step title="Lépj a Beállítások → GDPR és adatvédelem menüpontra">
+    Görgess a **Fiók törlése** szakaszhoz. Csak az **Admin** szerepkör indíthatja el ezt.
+  </Step>
+  <Step title="Kattints a Fiók törlése gombra">
+    A megerősítéshez be kell írnod a céged nevét, jelezve, hogy tisztában vagy a következményekkel.
+  </Step>
+  <Step title="Megkezdődik a 90 napos megőrzési időszak">
+    A fiókod azonnal deaktiválódik — senki sem tud bejelentkezni. A Druma 90 napig megőrzi az adatokat esetleges hatósági vagy jogi igény esetére. Ez alatt az idő alatt bármikor visszavonhatod az ütemezett törlést ugyanezen az oldalon.
+  </Step>
+  <Step title="Ütemezett törlés">
+    90 nap után a Druma törli a 3 évnél régebbi rendeléseket, a rendelési üzeneteket, a rendelési jegyzeteket, az ügyfeleket, a járműveket, a pótkocsikat és a céges integrációkat, valamint eltávolítja magát a cégrekordot is. **A számlák és az eCMR digitális aláírások nem törlődnek** ebben a folyamatban — teljes jogi megőrzési idejükig megmaradnak (lásd a fenti táblázatot), a fiók törlésétől függetlenül. A törléskor 3 évnél fiatalabb rendeléseket sem törli ez a lépés.
+  </Step>
+</Steps>
 
 ---
 
@@ -111,14 +126,14 @@ A Druma az alábbi harmadik fél adatfeldolgozókkal osztja meg az adatokat a sz
 | Stripe | Fizetésfeldolgozás és előfizetés-kezelés |
 | PTV Group | Útvonal-, távolság- és ETA-számítás — felvételi/szállítási koordinátákat kap |
 | HERE Technologies | Cím-geokódolás és autokiegészítés |
-| Google Vertex AI (europe-west1) | AI-alapú funkciók (dokumentumfeldolgozás, e-mail kinyerés) — nincs modell-betanítás |
-| Google Cloud Translation | Felület és dokumentum tartalom igény szerinti fordítása — az adatok elhagyhatják az EU-t |
+| Google Vertex AI (europe-west1) | AI-alapú funkciók (dokumentumfeldolgozás, e-mail-kinyerés) — nincs modell-betanítás |
+| Google Cloud Translation | A felület és a dokumentumtartalom igény szerinti fordítása |
 | Sentry | Hibafigyelés és összeomlás-jelentés |
-| Google Firebase Cloud Messaging (FCM) | Push-értesítések a sofőralkalmazásnak |
+| Google Firebase Cloud Messaging | Push-értesítések a sofőralkalmazásnak |
 | WhatsApp Business Cloud API (Meta) | Sofőrüzenetek — csak akkor, ha a céged engedélyezi a WhatsApp-értesítéseket |
-| Telematikai szolgáltatók (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | GPS- és tachográf-adatok — csak a céged által csatlakoztatott szolgáltató |
-| Hűtős telematikai szolgáltatók (Mapon, Orbcomm, Thermo King) | Hűtős hőmérséklet-adatok — csak a céged által csatlakoztatott szolgáltató |
-| TransFollow | Csak elavult (legacy) eCMR tartaléklehetőség — a natív, belső Druma szolgáltató az alapértelmezett a kibocsátáshoz, aláíráshoz és archiváláshoz |
+| Telematikai szolgáltatók (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | GPS- és tachográf-adatok — csak a céged által csatlakoztatott szolgáltató |
+| Hűtős telematikai szolgáltatók (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Hűtős hőmérséklet-adatok — csak a céged által csatlakoztatott szolgáltató |
+| TransFollow | Csak elavult (legacy) eCMR tartalék — a natív, belső Druma szolgáltató az alapértelmezett a kibocsátáshoz, aláíráshoz és archiváláshoz |
 
 Minden adatfeldolgozó szerződésben vállalja, hogy az adatokat kizárólag utasítás szerint és a GDPR-nak megfelelően dolgozza fel.
 
@@ -126,14 +141,27 @@ Ha a céged engedélyezi az opcionális **Druma Copilot** funkciót a saját AI-
 
 ---
 
-## Adatvédelmi tisztviselő és adatkezelő
+## A te GDPR-jogaid
 
-A **működési adatok** tekintetében a Druma **adatfeldolgozóként** jár el — a céged az adatkezelő, a feldolgozást pedig a köztetek fennálló Adatfeldolgozási Megállapodás (DPA) szabályozza. A **fiók- és számlázási adatok** tekintetében a Druma saját jogán **adatkezelőként** jár el. Adatvédelmi kérdésekkel fordulj a support@druma.io e-mail-címre.
+Érintettként, vagy a munkatársaid nevében eljáró adatkezelőként az alábbi jogok illetnek meg:
 
-<Card title="Adatvédelmi tájékoztató" icon="file-text" href="/en/legal/privacy-policy">
-  A Druma adatvédelmi tájékoztatójának teljes szövege.
+- **Hozzáférési jog** — kérheted a rólad tárolt személyes adatok másolatát
+- **Helyesbítési jog** — kérheted a pontatlan személyes adatok javítását
+- **Törlési jog** — kérheted az adatok törlését (a jogi megőrzési kötelezettségek figyelembevételével)
+- **Adathordozhatósághoz való jog** — strukturált, gépileg olvasható formátumban kaphatod meg az adataidat (használd az Adatexport funkciót)
+- **Korlátozáshoz való jog** — kérheted, hogy a Druma bizonyos körülmények között korlátozza az adatkezelést
+- **Tiltakozási jog** — tiltakozhatsz a jogos érdeken alapuló adatkezelés ellen
+
+E jogok bármelyikének gyakorlásához írj a **privacy@druma.io** címre, feltüntetve a céged nevét, adószámát (CIF) és kérésed leírását. A Druma 30 napon belül válaszol.
+
+---
+
+## További olvasnivaló
+
+<Card title="Adatvédelmi tájékoztató" icon="shield" href="/en/legal/privacy-policy">
+  A teljes adatvédelmi tájékoztató, beleértve az adatkezelés jogalapját.
 </Card>
 
-<Card title="GDPR adatmegőrzés" icon="clock" href="/en/legal/gdpr-data-retention">
-  Részletes adatmegőrzési ütemterv és törlési eljárások.
+<Card title="GDPR adatmegőrzési részletek" icon="database" href="/en/legal/gdpr-data-retention">
+  A megőrzési időszakok és a törlési eljárások részletes bontása.
 </Card>

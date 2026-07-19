@@ -1,42 +1,47 @@
 ---
 title: "Chauffeurs importeren"
-description: "Upload uw chauffeursrooster in bulk naar Druma met een CSV-sjabloon."
+description: "Onboard uw chauffeursrooster in bulk met Smart Import — Druma's AI-documentextractietool — in plaats van chauffeurs één voor één toe te voegen."
 icon: "file-import"
 ---
 
-Voeg uw hele chauffeursteam in één keer toe via CSV-import — essentieel bij het onboarden van 10 of meer chauffeurs.
+Druma heeft **geen CSV-sjabloon-bulkimport voor chauffeurs**. Gebruik in plaats daarvan **Smart Import** — een AI-gestuurde tool die de chauffeursdocumenten die u al heeft (een PDF-rooster, een gescande lijst, foto's van rijbewijzen, een vreemd opgemaakte spreadsheet uit uw vorige systeem) leest en omzet in chauffeursrecords die u kunt controleren voor het opslaan.
+
+## Waar u het vindt
+
+Ga naar **Hulpmiddelen → Smart Import**. Dit is een gedeelde tool voor het onboarden van bedrijfs-, vloot-, chauffeurs-, klant- en verzekeringsgegevens — geen pagina beperkt tot Vloot → Chauffeurs.
+
+## Werkwijze
 
 <Steps>
-  <Step title="Download het sjabloon">
-    Ga naar **Vloot → Chauffeurs → Importeren** en klik op **Sjabloon downloaden**.
+  <Step title="Upload uw chauffeursdocumenten">
+    Klik op **Documenten uploaden** of sleep bestanden naar de dropzone. Ondersteunde formaten: PDF, afbeeldingen (JPEG, PNG, WebP, HEIC/HEIF), XLSX en CSV, tot 20 MB per bestand en tot 20 bestanden per sessie.
   </Step>
-  <Step title="Vul de CSV in">
-    Eén chauffeur per rij: `full_name`, `phone` en `active` zijn verplicht; `email`, `license_number`, `license_category`, `license_expiry`, `cpc_expiry`, `tachograph_card`, `adr_expiry` en `country` zijn optioneel. Datums in `YYYY-MM-DD`.
+  <Step title="Wacht op AI-extractie">
+    Druma stuurt elk bestand naar Gemini voor extractie — enkele seconden per bestand. Bestanden worden server-side verwerkt en niet permanent bewaard na extractie; alleen de records die u kiest te importeren worden opgeslagen.
   </Step>
-  <Step title="Upload en controleer">
-    Rode rijen wijzen meestal op een ontbrekend telefoonnummer of ongeldige datumnotatie.
+  <Step title="Open de categoriekaart Chauffeurs">
+    Het Review Dashboard toont één kaart per gegevenstype gevonden in uw documenten, inclusief **Chauffeurs** indien gedetecteerd. Klik erop om de geëxtraheerde rijen te zien in een bewerkbare tabel: volledige naam, telefoon, e-mail, rijbewijsnummer en vervaldatum, ADR-certificaat en vervaldatum, CPC-nummer en vervaldatum, tachograafkaartnummer en taal.
   </Step>
-  <Step title="Bevestig de import">
-    Klik op **[X] chauffeurs importeren**. Ze verschijnen direct in uw rooster.
+  <Step title="Controleer betrouwbaarheid en duplicaten">
+    Elk veld heeft een kleurgecodeerde betrouwbaarheidsindicator (groen/amber/rood) — controleer amber en rode velden altijd dubbel. Rijen worden vergeleken met uw bestaande chauffeurs op **volledige naam (niet hoofdlettergevoelig)**; een match wordt gemarkeerd als **Duplicaat**, standaard ingesteld op **Overslaan** (u kunt in plaats daarvan **Overschrijven** kiezen als u wilt dat de geëxtraheerde gegevens vervangen wat er al staat).
+  </Step>
+  <Step title="Bewerk en importeer">
+    Klik op een cel om deze inline te corrigeren, klik dan op **Chauffeurs importeren**. Volledige naam is het enige verplichte veld — rijen zonder naam worden niet geïmporteerd.
   </Step>
 </Steps>
 
-## Het telefoonnummer is essentieel
+<Warning>
+Er is geen ongedaan-maken voor een import. Is er onjuiste data geïmporteerd, bewerk dan de chauffeursrecords achteraf individueel.
+</Warning>
 
-Het telefoonnummer is — samen met een pincode die u na import instelt — hoe chauffeurs inloggen op de app. Verplicht internationaal formaat (`+40...` voor Roemenië).
+## Telefoonnummer en app-login
 
-<Note>
-De import stelt alleen het telefoonnummer in; er is nog geen bulk-pincodestap. Ga na het importeren naar **Vloot → Chauffeurs**, open elk profiel apart en klik onder **Telefoon + pincode-login** op **Pincode instellen** (of **Genereren** voor een willekeurige 6-cijferige code), dan **Pincode opslaan**. Geef elke chauffeur zijn pincode direct door — bij de eerste keer inloggen kiest hij zijn eigen pincode.
-</Note>
+Smart Import maakt het profielrecord van de chauffeur aan (naam, telefoon, rijbewijs-/CPC-/ADR-/tachodetails) — het maakt geen app-login aan. Ga na het importeren naar **Vloot → Chauffeurs**, open elk chauffeursprofiel apart en klik onder **Telefoon + pincode-login** op **Pincode instellen** (of **Genereren** voor een willekeurige 6-cijferige code), dan **Pincode opslaan**. Geef elke chauffeur zijn pincode direct door — bij de eerste keer inloggen kan hij deze personaliseren.
 
-## Vervalwaarschuwingen
-
-Vult u rijbewijs-, CPC- of ADR-vervaldatums in tijdens de import, dan bewaakt Druma deze meteen en waarschuwt 30 en 60 dagen vóór verval.
+<Card title="Bedrijf, vloot en klanten onboarden" icon="brain" href="/nl/tools/smart-import">
+  Smart Import behandelt ook bedrijfs-, vloot-, klant- en verzekeringsdocumenten in dezelfde workflow.
+</Card>
 
 <Card title="Chauffeurbeheer" icon="id-card" href="/nl/planner/driver-management">
   Individuele chauffeursprofielen beheren en telefoon + pincode-login instellen.
-</Card>
-
-<Card title="De chauffeurs-app installeren" icon="mobile" href="/nl/driver/installing-the-app">
-  Stapsgewijze installatie van de PWA voor chauffeurs.
 </Card>

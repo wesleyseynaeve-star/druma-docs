@@ -1,0 +1,79 @@
+---
+title: "Remboursement de taxe carburant"
+description: "Suivez et générez les demandes de remboursement de taxe carburant UE pour la Belgique et la Roumanie, basées sur les données de cartes carburant importées."
+icon: "gas-pump"
+---
+
+## Qu'est-ce que le remboursement de taxe carburant ?
+
+Plusieurs États membres de l'UE permettent aux opérateurs de transport routier professionnel de récupérer une partie des droits d'accise payés sur le diesel. Druma prend en charge deux régimes :
+
+- **Belgique — Gasoil professionnel** : les transporteurs belges peuvent récupérer une partie des droits d'accise sur le diesel utilisé pour le transport professionnel. Les demandes sont soumises trimestriellement au SPF Finances.
+- **Roumanie — Remboursement diesel TICAD** : les transporteurs roumains peuvent récupérer une partie des accises sur le diesel utilisé dans le transport routier international et national. Les demandes sont soumises à l'ANAF.
+
+Remboursement de taxe carburant se trouve sous la section **Finance**. Accessible uniquement aux rôles **admin** et **company_admin** — fleet_manager n'a pas accès à ce rapport.
+
+<Frame caption="Finance → Taxe carburant — régimes Belgique et Roumanie.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Page Remboursement de taxe carburant" />
+</Frame>
+
+---
+
+## Prérequis
+
+Ce rapport nécessite que les données de cartes carburant soient d'abord importées. Sans enregistrements de plein, il n'y a pas de litres à calculer.
+
+<Card title="Import de cartes carburant" icon="credit-card" href="/fr/integrations/fuel-card-import">
+  Importez les pleins depuis DKV, UTA, AS24, et autres fournisseurs.
+</Card>
+
+---
+
+## Générer une demande de remboursement
+
+<Steps>
+  <Step title="Sélectionnez le pays et la période">
+    Choisissez **Belgique** ou **Roumanie** dans la liste déroulante pays, puis définissez la période de demande (généralement un trimestre pour la Belgique, un mois ou trimestre pour la Roumanie).
+  </Step>
+  <Step title="Cliquez sur Générer">
+    Druma récupère tous les enregistrements de plein pour la période éligibles sous le régime sélectionné, calcule le total de litres éligibles, et le multiplie par le taux de remboursement actuel pour ce pays.
+  </Step>
+  <Step title="Vérifiez la demande">
+    Le résultat montre les litres éligibles, le taux de remboursement par litre, et le montant total de remboursement en EUR. Vérifiez avant de soumettre.
+  </Step>
+  <Step title="Définissez le statut et la référence">
+    Changez le statut sur **Soumise** et saisissez le numéro de référence gouvernemental reçu après soumission. Cela relie l'enregistrement Druma à votre dépôt officiel.
+  </Step>
+</Steps>
+
+---
+
+## Cycle de vie du statut de demande
+
+```
+Brouillon → Soumise → Remboursée
+                    → Rejetée
+```
+
+- **Brouillon** — calculée mais pas encore soumise à l'autorité
+- **Soumise** — envoyée au SPF Finances (BE) ou à l'ANAF (RO) ; numéro de référence enregistré
+- **Remboursée** — paiement reçu ; saisissez la date de remboursement
+- **Rejetée** — la demande a été rejetée ; ajoutez une note avec la raison pour suivi
+
+---
+
+## Graphique des montants de remboursement
+
+Un graphique en aires montre les montants de remboursement par période sur les 12 derniers mois glissants. Utile pour repérer les tendances saisonnières de consommation de carburant et pour la planification de trésorerie.
+
+---
+
+## Export CSV
+
+Cliquez sur **Exporter CSV** pour télécharger les détails de la demande — ventilation plein par plein, litres éligibles, taux, et remboursement calculé — à des fins de soumission ou d'audit.
+
+---
+
+<Warning>
+Druma calcule les litres éligibles à partir de vos données de cartes carburant importées. Il est de votre responsabilité de vérifier que tous les pleins sont correctement importés et que le taux de remboursement correspond au taux actuellement publié par l'autorité fiscale concernée avant de soumettre une demande.
+</Warning>

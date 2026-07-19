@@ -1,90 +1,117 @@
 ---
 title: "Branding & Dokumentenformate"
-description: "Passen Sie Ihr Unternehmenslogo, Brandingfarben und das Nummerierungsformat für Rechnungen, Gutschriften und Aufträge an."
+description: "Passen Sie Ihre Markenfarben und das Nummerierungsformat für Rechnungen, Aufträge und hervorgehobene Zeilen in Druma an."
 icon: "palette"
 ---
 
-Die **Branding & Formate**-Einstellungen steuern, wie Ihr Unternehmen auf jedem von Druma erstellten Dokument erscheint. Diese Einstellungen sind unternehmensspezifisch.
+Die Einstellungen unter **Branding & Formate** steuern, wie Ihr Unternehmen auf erstellten Dokumenten erscheint, und wie Rechnungs- und Auftragsreferenznummern aufgebaut werden.
 
-**Wer bearbeiten kann:** Nur Admin- und Unternehmensadministratoren-Rollen.
+Diese Einstellungen sind unternehmensspezifisch. Verwalten Sie mehrere Unternehmen in Druma, hat jedes seine eigene Branding- und Formatkonfiguration.
 
-Gehen Sie zu **Einstellungen → Branding & Formate**. Die Seite hat drei Tabs: **Branding**, **Rechnungsformat** und **Auftragsformat**.
+**Wer bearbeiten kann:** Nur die Rollen Admin und Unternehmensadministrator.
+
+<Frame caption="Branding & Formate — 4 Tabs: Branding, Rechnung, Auftrag, Zeilenformatierung.">
+  <img src="/images/admin/branding-formats.png" alt="Einstellungsbereich Branding und Formate" />
+</Frame>
+
+---
+
+## Zugriff auf die Einstellungen
+
+Gehen Sie zu **Einstellungen → Branding & Formate**. Die Seite hat vier Tabs: **Branding**, **Rechnungsformat**, **Auftragsformat** und **Zeilenformatierung**.
 
 ---
 
 ## Branding-Tab
 
-### Logo
+Steuert die zwei Markenfarben für erstellte PDFs und E-Mail-Vorlagen.
 
-Klicken Sie auf **Logo hochladen**. Druma akzeptiert PNG, JPG und SVG. Mindestbreite 300 Pixel empfohlen. Das Logo erscheint in Rechnungs-PDFs und E-Mail-Headern.
+- **Primärfarbe** — für Dokumentränder, Beschriftungen und Summen auf Rechnungs-PDFs und E-Mail-Vorlagen.
+- **Akzentfarbe** — für Tabellenköpfe und Fließtext auf denselben Dokumenten.
 
-### Primärfarbe
-
-Geben Sie die Primärfarbe Ihrer Marke ein. Wird auf den Header und Akzentelemente auf PDFs angewendet.
-
-### Akzentfarbe
-
-Für Tabellenheader und sekundäre Elemente auf PDFs.
-
-Klicken Sie auf **Branding speichern**.
+Jede Farbe hat ein Hex-Code-Feld plus Farbwähler, und eine Live-Vorschau zeigt beide Farbmuster nebeneinander. Klicken Sie auf **Änderungen speichern** oder **Auf Standard zurücksetzen**.
 
 <Note>
-Branding-Änderungen gelten nur für neue Dokumente. Bereits ausgestellte Rechnungen bleiben unverändert.
+Ihr Firmen-**Logo** wird nicht auf dieser Seite konfiguriert — es wird unter **Einstellungen → Unternehmen** hochgeladen. Druma akzeptiert PNG, JPEG, SVG oder WebP bis 2 MB; es gibt keine Mindestbreite und keine Vorgabe für transparenten Hintergrund.
 </Note>
 
 ---
 
 ## Rechnungsformat-Tab
 
+Steuert das Rechnungsnummernformat, den Rechnungstitel, Verzugszinsen, Zahlungshinweise, AGB, Fußzeilentext und welche optionalen Abschnitte im Rechnungs-PDF erscheinen.
+
 ### Format-Token
 
 | Token | Was eingefügt wird |
 |---|---|
-| `{PREFIX}` | Fester Textpräfix (z. B. `DR`, `RG`) |
+| `{PREFIX}` | Das von Ihnen definierte Präfix (z. B. `INV`, `ORD`, eigene Abkürzung) |
 | `{YYYY}` | Vierstelliges Jahr (z. B. `2026`) |
 | `{YY}` | Zweistelliges Jahr (z. B. `26`) |
 | `{MM}` | Zweistelliger Monat (z. B. `04`) |
-| `{NNN}` | Dreistellige fortlaufende Nummer (z. B. `007`) |
-| `{NNNN}` | Vierstellige fortlaufende Nummer (z. B. `0007`) |
+| `{DD}` | Zweistelliger Tag (z. B. `07`) |
+| `{YYMMDD}` | Kombiniert Jahr, Monat, Tag zweistellig (z. B. `260407`) |
+| `{SEQ3}` | Laufende Nummer, mit Nullen auf 3 Stellen aufgefüllt (z. B. `042`) |
+| `{SEQ4}` | Laufende Nummer, 4 Stellen (z. B. `0042`) |
+| `{SEQ5}` | Laufende Nummer, 5 Stellen |
+| `{SEQ6}` | Laufende Nummer, 6 Stellen |
 
-Der fortlaufende Zähler wird zu Beginn jedes Jahres zurückgesetzt.
+Es gibt **kein** `{NNN}`/`{NNNN}`-Token — verwenden Sie eines der `{SEQ3}`–`{SEQ6}`-Token. Token lassen sich frei mit Trennzeichen wie `-` oder `/` kombinieren.
 
-**Standard-Rechnungsformat:** `DR-{YYYY}-{NNN}` → `DR-2026-001`, `DR-2026-002`, ...
+Der Zähler setzt sich zurück, sobald sich ein Datumstoken im Muster (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` oder `{YYYY}`) ändert — ein Muster mit `{YYMMDD}` setzt sich also **täglich** zurück, nicht jährlich. Ein Muster mit nur `{YYYY}` setzt sich wie erwartet einmal jährlich zurück.
 
-**Standard-Gutschriftenformat:** `CN-{YYYY}-{NNN}` → `CN-2026-001`, `CN-2026-002`, ...
+### Rechnungsnummernformat
 
-Klicken Sie auf **Rechnungsformat speichern**.
+**Standard:** Präfix `INV`, Muster `{PREFIX}-{YYMMDD}-{SEQ3}` → z. B. `INV-260407-042`.
 
-<Warning>
-Das Ändern des Formats mitten im Jahr nummeriert bestehende Rechnungen nicht um.
-</Warning>
+**Beispiele:**
+
+| Vorlage | Beispielausgabe |
+|---|---|
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
+
+<Note>
+Gutschriften verwenden eine eigene Nummernserie (Standardpräfix `CN`) mit eigenem Zähler, haben aber aktuell kein editierbares Musterfeld auf dieser Seite.
+</Note>
+
+Klicken Sie auf **Änderungen speichern**. Das neue Format gilt ab der nächsten nach dem Speichern erstellten Rechnung — bestehende Rechnungen behalten ihre ursprüngliche Referenznummer.
 
 ---
 
 ## Auftragsformat-Tab
 
-**Standardformat:** `DR-{YYYY}-{NNN}` → `DR-2026-001`, `DR-2026-002`, ...
+Definiert das Nummerierungsmuster für Auftragsreferenznummern — den Bezeichner auf der Planungstafel, im Auftragsdetail und in Fahrer-/Kundenkommunikation.
 
-Klicken Sie auf **Auftragsformat speichern**.
+Dasselbe Token-System wie bei Rechnungen gilt. Geben Sie ein **Präfix** und ein **Nummernmuster** ein; eine Live-Vorschau aktualisiert sich darunter.
+
+**Standard:** Präfix `ORD`, Muster `{PREFIX}-{YYMMDD}-{SEQ3}` → z. B. `ORD-260407-042`.
+
+**Beispiel:** Ein Spediteur in Belgien könnte Präfix `BE` mit Muster `{PREFIX}-{YYYY}-{SEQ4}` verwenden, um Referenzen wie `BE-2026-0042` zu erzeugen.
+
+Klicken Sie auf **Änderungen speichern**. Das neue Format gilt für alle nach dem Speichern erstellten Aufträge; bestehende Aufträge behalten ihre ursprüngliche Nummer.
 
 ---
 
-## Praktisches Beispiel
+## Zeilenformatierung-Tab
 
-Angenommen, Ihr Unternehmen ist **Acme Freight** und möchte `AF-2026-001` für Rechnungen:
+Erlaubt es, Tabellenzeilen in ganz Druma anhand einfacher Bedingungen hervorzuheben — z. B. eine Zeile rot einfärben, wenn die Marge unter einen Schwellenwert fällt, oder wenn sie überfällig ist.
 
-<Steps>
-  <Step title="Rechnungsformat öffnen">
-    **Einstellungen → Branding & Formate** → Tab **Rechnungsformat**.
-  </Step>
-  <Step title="Format festlegen">
-    Rechnungsformat: `AF-{YYYY}-{NNN}`, Gutschriftenformat: `AF-CN-{YYYY}-{NNN}`.
-  </Step>
-  <Step title="Speichern">
-    Klicken Sie auf **Rechnungsformat speichern**.
-  </Step>
-</Steps>
+Jede Regel hat einen Namen, ein zu prüfendes Feld (Marge %, überfällig, Status, Tage seit Erstellung), eine Bedingung (kleiner als, höchstens, größer als, mindestens, gleich, ungleich), einen Vergleichswert und eine Hervorhebungsfarbe. Klicken Sie auf **Regel hinzufügen** und **Änderungen speichern**.
 
-<Card title="Integrationseinrichtung" icon="plug" href="/en/admin/integration-setup">
-  Verbinden Sie Ihren eCMR-Anbieter (Druma natives eCMR oder TransFollow als optionale Rückfalloption), SmartBill, Kraftstoffkartenanbieter und Buchhaltungssoftware.
+---
+
+## Verwandte Seiten
+
+<Card title="Integrationseinrichtung" icon="plug" href="/de/admin/integration-setup">
+  Verbinden Sie Ihren eCMR-Anbieter (Drumas natives, hausinternes eCMR — TransFollow bleibt nur für eine kleine Zahl von Unternehmen mit bestehender Altkonfiguration aktiv), Kraftstoffkartenanbieter und Buchhaltungssoftware.
+</Card>
+
+<Card title="Peppol-E-Rechnung (Belgien)" icon="file-check-2" href="/de/integrations/peppol-invoicing">
+  Rechnungen automatisch über das Peppol-Netzwerk an belgische Geschäftskunden weiterleiten.
+</Card>
+
+<Card title="Rechnungen versenden" icon="send" href="/en/finance/sending-invoices">
+  Wie Sie Ausgangsrechnungen in Druma erstellen, versenden und nachverfolgen.
 </Card>

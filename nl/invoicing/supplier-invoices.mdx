@@ -1,39 +1,172 @@
 ---
-title: "Leveranciersfacturen (Crediteuren)"
-description: "Beheer wat uw bedrijf verschuldigd is — onderaannemer-vervoerders, brandstofkaarten, werkplaatsen, tollen, verzekering en leasing — met AI-ondersteunde factuurinname en een verouderd crediteurendashboard."
+title: "Leveranciersfacturen (crediteuren)"
+description: "Beheer wat uw bedrijf verschuldigd is — onderaannemer-vervoerders, brandstofkaarten, werkplaatsen, tol, verzekering en leasing — met AI-ondersteunde factuurinname en een verouderd-crediteurendashboard."
 icon: "building-2"
 ---
 
 ## Overzicht
 
-De module Crediteuren houdt elke inkoopfactuur bij die uw bedrijf ontvangt van externe leveranciers: onderaannemer-vervoerders, brandstofkaartproviders (DKV, UTA, AS24), werkplaats- en bandenleveranciers, toloperators, verzekeringsmaatschappijen, leasingbedrijven.
+De module Crediteuren (AP) houdt elke inkoopfactuur bij die uw bedrijf ontvangt van externe leveranciers. Dit omvat onderaannemer-vervoerders waarnaar u ladingen doorstuurt, brandstofkaartproviders (DKV, UTA, AS24), werkplaats- en bandenleveranciers, toloperators (ASFINAG, HU-GO), verzekeringsmaatschappijen, leasingbedrijven en elke andere zakelijke uitgave.
+
+Druma vermindert handmatige invoer via twee mechanismen: **onderaannemer-vervoerders worden automatisch gespiegeld naar uw leverancierslijst** (geen dubbele invoer), en een **AI-gestuurde e-mailinbox** kan inkoopfacturen rechtstreeks uit leveranciersmails extraheren en als concept aanmaken. Wat niet automatisch matcht, belandt in een **reviewwachtrij** voor een snelle menselijke beslissing.
 
 ## Leverancierstamgegevens
 
-Het leveranciersregister is het register van alle bedrijven waarvan u inkoopt. Het is de basis voor factuurkoppeling en verouderd crediteurenrapportage.
+Het leveranciersregister is het register van alle bedrijven waarvan u inkoopt. Het is de basis voor factuurkoppeling en verouderd-crediteurenrapportage.
+
+**Waar:** Finance → Forwarding → tabblad **Suppliers**
+
+Elk leveranciersrecord bevat:
+
+| Veld | Beschrijving |
+|-------|-------------|
+| **Naam** | Bedrijfsnaam van de leverancier |
+| **BTW-nummer** | Gebruikt voor koppeling tegen geëxtraheerde factuurgegevens |
+| **E-mail** | Contact-e-mail van de leverancier — ook gebruikt voor whitelist-matching van afzenders |
+| **Leverancierstype** | Vervoerder/Brandstof/Werkplaats/Tol/Verzekering/Leasing/Overig |
+| **Land** | Registratieland van de leverancier |
+
+### Leveranciers beheren
+
+- **Een leverancier toevoegen:** klik op **+ Leverancier toevoegen**, vul het formulier in en sla op.
+- **Een leverancier bewerken:** klik op **Bewerken** bij een leveranciersrij om de gegevens bij te werken.
+- **Een leverancier verwijderen:** klik op **Verwijderen**. Verwijdering wordt geblokkeerd als de leverancier gekoppelde inkoopfacturen heeft.
+
+<Note>
+Onderaannemer-vervoerders die u toevoegt onder de sectie Onderaannemers worden automatisch gespiegeld naar de Leverancierslijst met type **Vervoerder**. U hoeft ze hier niet opnieuw toe te voegen. Wijzigingen aan het onderaannemerrecord (naam, BTW, e-mail) synchroniseren automatisch naar het leveranciersrecord.
+</Note>
+
+## Leveranciersfactuur-e-mailinbox
+
+Druma kan leveranciersfacturen per e-mail ontvangen, de kernvelden extraheren met AI, en ofwel automatisch een conceptinkoopfactuur aanmaken, ofwel het document naar de reviewwachtrij leiden.
+
+### Instellen
 
 <Steps>
-  <Step title="Ga naar Financiën → Leveranciers">
-    Open de leverancierslijst.
+  <Step title="Open de bedrijfsinstellingen">
+    Ga naar **Instellingen → Bedrijf** en scroll naar de sectie **Leveranciersfactuur-e-mail**.
   </Step>
-  <Step title="Klik op Leverancier toevoegen">
-    Voer de leveranciersgegevens in: bedrijfsnaam, BTW-nummer, land, betalingstermijnen.
+  <Step title="Schakel de inbox in">
+    Zet **Leveranciersfactuurinbox inschakelen** aan. Druma stelt een toegewijd inkomend e-mailadres voor uw bedrijf in (bijvoorbeeld `invoices-acme@in.druma.io`). Het adres wordt onmiddellijk na het inschakelen getoond.
   </Step>
-  <Step title="Opslaan">
-    Klik op **Opslaan**.
+  <Step title="Kopieer het e-mailadres">
+    Klik op het kopieericoon naast het adres. Deel dit adres met uw leveranciers en vraag hen PDF-facturen ernaartoe te sturen. U kunt ook facturen vanuit uw eigen inbox doorsturen naar dit adres.
+  </Step>
+  <Step title="Voeg afzenderadressen toe aan de whitelist">
+    Klik in de sectie **Afzender-whitelist** direct daaronder op **+ Afzender toevoegen** en voer het verzendadres van elke leverancier in. Alleen gewhiteliste afzenders worden verwerkt — e-mails van onbekende adressen worden stilzwijgend verwijderd als bescherming tegen spam en spoofing.
   </Step>
 </Steps>
 
-## AI-ondersteunde factuurinname
+<Warning>
+Houd het leveranciersfactuur-e-mailadres vertrouwelijk. Publiceer het niet op uw website of in externe documenten. Iedereen die het adres kent en niet op de whitelist staat, wordt geblokkeerd, maar het adres zelf moet behandeld worden als een privé-routeringsadres.
+</Warning>
 
-Druma kan leveranciersfacturen automatisch extraheren uit inkomende e-mails. Stel een toegewijd e-mailadres in via **Instellingen → Integraties → Leveranciersfactuur-inbox**.
+<Note>
+Dit inkomende pad had recent gatewayroutingproblemen die e-mails naar dit adres stilzwijgend lieten weigeren voordat ze Druma bereikten. Melden leveranciers dat hun facturen nooit aankomen, of verschijnt er niets in de reviewwachtrij ondanks verstuurde e-mails, controleer dan bij support of het routingprobleem volledig is opgelost voor uw omgeving, voordat u aanneemt dat de afzender of whitelist de oorzaak is.
+</Note>
 
-Ontvangen facturen verschijnen in de **Beoordelingswachtrij** voor verificatie en goedkeuring.
+### Wat er gebeurt wanneer een factuur binnenkomt
 
-## Verouderd crediteurendashboard
+Stuurt een leverancier een PDF (of afbeelding) naar uw inboxadres vanaf een gewhiteliste afzender:
 
-Ga naar **Financiën → Crediteuren** om te zien: totaal verschuldigd per leverancier, achterstallige facturen en betalingsdeadlines die naderen.
+1. Druma downloadt de bijlage en slaat ze veilig op.
+2. AI extraheert: leveranciersnaam, BTW-nummer, factuurnummer, factuurdatum, totaalbedrag, valuta en uitgavencategorie (brandstof/werkplaats/tol/verzekering/leasing/overig).
+3. Druma probeert de geëxtraheerde gegevens te matchen tegen uw leveranciersstamgegevens via BTW-nummer en e-mailadres.
 
-<Card title="Betalingen bijhouden" icon="money-bill-wave" href="/nl/invoicing/payment-tracking">
-  Hoe betalingen worden geregistreerd voor inkoopfacturen.
+Het resultaat hangt af van de matchbetrouwbaarheid:
+
+| Resultaat | Wat er gebeurt |
+|---------|-------------|
+| **Vervoerdersfactuur met hoge betrouwbaarheid** | Gerouteerd naar de vervoerdersfactuurwachtrij (gematcht tegen een inkoopfactuur van een specifieke uitbestede order) |
+| **Leveranciersmatch met hoge betrouwbaarheid** | Conceptinkoopfactuur automatisch aangemaakt en gekoppeld aan de leverancier |
+| **Lage betrouwbaarheid of onherkende leverancier** | Verschijnt in de **reviewwachtrij** voor handmatige koppeling |
+
+<Note>
+AI-extractie leest de tekstlaag van de PDF. Gescande afbeeldingen met lage resolutie of handschrift kunnen resulteren in lagere betrouwbaarheidsscores en belanden vaker in de reviewwachtrij. Vraag leveranciers waar mogelijk native PDF-exports uit hun boekhoudsoftware te sturen.
+</Note>
+
+## Reviewwachtrij
+
+De reviewwachtrij is waar alle facturen — zowel vervoerdersfacturen als algemene leveranciersfacturen — die niet automatisch konden worden toegepast, worden vastgehouden voor een menselijke beslissing.
+
+**Waar:** Finance → Forwarding → tabblad **Invoice Queue**
+
+### De wachtrij lezen
+
+Elke rij in de wachtrij toont:
+
+- **Bronbadge** — **Vervoerder** (uit de vervoerdersfactuurinbox) of **Leverancier** (uit de leveranciersfactuurinbox)
+- **Leveranciersnaam** — geëxtraheerd door AI of gematcht vanuit de leveranciersstamgegevens
+- **Bedrag** en **valuta**
+- **Status** — In behandeling/Toegepast/Afgewezen
+- **Ontvangstdatum**
+
+Gebruik de filtertabbladen bovenaan om te wisselen tussen **In behandeling**, **Toegepast** en **Afgewezen**. U kunt ook filteren op leverancierstype om te focussen op een specifieke categorie (bijvoorbeeld alleen brandstoffacturen tonen).
+
+### Een wachtrij-item verwerken
+
+<Steps>
+  <Step title="Klap de rij uit">
+    Klik ergens op een wachtrijrij om ze uit te klappen. De uitgeklapte weergave toont alle AI-geëxtraheerde velden, de gematchte (of voorgestelde) leverancier, en de gematchte inkoopfactuur indien gevonden.
+  </Step>
+  <Step title="Controleer de geëxtraheerde gegevens">
+    Controleer de geëxtraheerde leveranciersnaam, BTW-nummer, factuurnummer, bedrag en datum tegen de PDF. Correcties kunnen niet inline gebeuren — is data verkeerd, dan corrigeert u dit na goedkeuring op het inkoopfactuurrecord.
+  </Step>
+  <Step title="Kies een actie">
+
+    | Actie | Wanneer te gebruiken |
+    |--------|------------|
+    | **Goedkeuren** | Gegevens zien er correct uit en de match klopt — maakt de inkoopfactuur aan of bevestigt ze |
+    | **Afwijzen** | Factuur is ongeldig, een duplicaat, of hoort bij een ander bedrijf — verwijdert ze uit de wachtrij |
+    | **Herwijzen** | De voorgestelde inkoopfactuur is verkeerd — opent een zoekopdracht om de juiste te kiezen |
+    | **PDF bekijken** | Opent het originele bijgevoegde bestand in een nieuw tabblad voor handmatige verificatie |
+
+  </Step>
+</Steps>
+
+## Verouderd-crediteurendashboard
+
+Het verouderd-crediteurendashboard toont alles wat uw bedrijf verschuldigd is over alle leveranciers heen, gegroepeerd op hoe lang de schuld openstaat.
+
+**Waar:** Finance → Analytics → tabblad **Aged Creditors**
+
+### Het dashboard lezen
+
+Bovenaan de pagina staan drie samenvattingskaarten:
+
+- **Totaal openstaand** — som van alle onbetaalde inkoopfacturen
+- **Facturen per verouderingsvak** — aantal per vak
+- **Aantal leveranciers** — verschillende leveranciers met openstaande saldi
+
+Onder de samenvatting toont een sorteerbare tabel elke leverancier met een rij per factuur. Klik op een kolomkop om te sorteren. Klik op een leveranciersrij om uit te klappen en individuele facturen te zien.
+
+Verouderingsvakken volgen de standaard AP-conventie:
+
+| Vak | Definitie |
+|--------|-----------|
+| **0–30 dagen** | Actueel — binnen standaard betalingstermijn |
+| **31–60 dagen** | Lichtjes achterstallig |
+| **61–90 dagen** | Achterstallig — opvolging aanbevolen |
+| **90+ dagen** | Aanzienlijk achterstallig — escaleren |
+
+<Note>
+De verouderd-crediteurenweergave is beperkt tot 500 rijen. Heeft uw bedrijf meer dan 500 openstaande inkoopfacturen, dan verschijnt een afkappingswaarschuwingsbanner bovenaan de tabel. Gebruik de knop **CSV exporteren** om de volledige dataset te downloaden voor analyse in Excel.
+</Note>
+
+### Exporteren
+
+Klik op **CSV exporteren** om het volledige verouderd-crediteurenrapport te downloaden als CSV-bestand. De export bevat alle leveranciersrijen ongeacht de weergavecap van 500 rijen, geschikt voor AP-afstemming in uw boekhoudsysteem.
+
+---
+
+<Card title="Bankafschrift importeren" icon="file-up" href="/nl/invoicing/bank-statement-import">
+  Upload CAMT.053- of MT940-bestanden om inkomende betalingen automatisch te koppelen aan openstaande facturen.
+</Card>
+
+<Card title="Betalingsopvolging" icon="circle-check" href="/nl/invoicing/payment-tracking">
+  Betalingen registreren en opvolgen tegen verkoopfacturen en openstaande saldi bekijken.
+</Card>
+
+<Card title="Achterstallig beheer" icon="triangle-alert" href="/nl/invoicing/overdue-management">
+  Verouderde debiteuren volgen en betalingsherinneringen versturen naar achterstallige klanten.
 </Card>

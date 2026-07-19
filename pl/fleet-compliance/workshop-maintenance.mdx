@@ -1,34 +1,43 @@
 ---
 title: "Serwis i konserwacja"
-description: "Twórz i zarządzaj zleceniami roboczymi pojazdów, ustalaj harmonogramy konserwacji, rozwiązuj usterki z tablicy planowania i automatycznie blokuj ciężarówki z poważnymi awariami."
+description: "Twórz i zarządzaj zleceniami roboczymi pojazdów, ustalaj harmonogramy konserwacji, rozwiązuj usterki z tablicy planowania i automatycznie blokuj ciężarówki z usterkami krytycznymi dla bezpieczeństwa."
 icon: "wrench"
 ---
 
 ## Przegląd
 
-Moduł Serwis i konserwacja daje kierownikom floty ustrukturyzowany sposób śledzenia każdego zadania konserwacyjnego — od rutynowych wymian oleju po naprawy krytycznych dla bezpieczeństwa usterek. Zlecenia robocze łączą się bezpośrednio z tablicą planowania (blokując ciężarówki gdy potrzeba) i przepływem inspekcji po podróży.
+Moduł Serwis i konserwacja daje kierownikom floty ustrukturyzowany sposób śledzenia każdego zadania konserwacyjnego — od rutynowych wymian oleju po naprawy usterek krytycznych dla bezpieczeństwa. Zlecenia robocze łączą się bezpośrednio z tablicą planowania (blokując ciężarówki gdy potrzeba) i z przepływem inspekcji po podróży (usterki krytyczne dla bezpieczeństwa mogą tworzyć zlecenia robocze automatycznie lub jednym kliknięciem).
 
-Znajdź moduł pod **Flota — Zlecenia robocze** i **Flota — Konserwacja**.
+Znajdź moduł pod **Flota → Zlecenia robocze** i **Flota → Konserwacja**.
+
+<Frame caption="Flota → Zlecenia robocze — zadania śledzone od Otwarte do Ukończone, wg typu serwisu.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Strona Zlecenia robocze z zadaniami konserwacyjnymi wg statusu i typu serwisu" />
+</Frame>
 
 ---
 
 ## Zlecenia robocze
 
+### Czym jest zlecenie robocze
+
+Zlecenie robocze to rekord zadania konserwacyjnego na konkretnej ciężarówce. Rejestruje, co trzeba zrobić, koszty części i robocizny oraz bieżący status zadania. Każda usterka pojazdu krytyczna dla bezpieczeństwa powinna mieć odpowiadające zlecenie robocze, zanim ciężarówka wróci do eksploatacji.
+
 ### Tworzenie zlecenia roboczego
 
 <Steps>
   <Step title="Otwórz kartę Zlecenia robocze">
-    Przejdź do **Flota — Zlecenia robocze** i kliknij **Utwórz zlecenie robocze**.
+    Przejdź do **Flota → Zlecenia robocze** i kliknij **Utwórz zlecenie robocze**.
   </Step>
   <Step title="Wypełnij szczegóły">
     Wybierz ciężarówkę i wypełnij:
-    - **Typ** — wybierz jednen z: Rutynowe, Naprawcze, Krytyczne dla bezpieczeństwa, Wycofanie, Ustawowe
+
+    - **Typ serwisu** — wybierz jeden z: Wymiana oleju, Serwis hamulców, Wymiana opon, Przegląd, Naprawa, Recertyfikacja ADR, Kalibracja tachografu, Inne, plus trzy typy specyficzne dla chłodni naczep (Serwis filtrów i oleju, Pełny serwis chłodni, Przegląd ATP)
     - **Opis** — co trzeba zrobić
-    - **Przypisane do** — warsztat lub technik odpowiedzialny
-    - **Planowana data** — kiedy praca jest zaplanowana
+    - **Przypisane do** — warsztat lub technik odpowiedzialny (dowolny tekst)
+    - **Planowana data** — kiedy praca jest planowana
   </Step>
   <Step title="Dodaj pozycje">
-    Dodaj pozycje dla części i robocizny. Każda pozycja ma opis, ilość, koszt jednostkowy i typ (Części / Robocizna).
+    Dodaj jedną lub więcej pozycji dla części i robocizny. Każda pozycja ma opis, ilość, koszt jednostkowy i typ (Części / Robocizna). **Łączny koszt** jest obliczany automatycznie ze wszystkich pozycji.
   </Step>
   <Step title="Zapisz">
     Kliknij **Zapisz**. Zlecenie robocze jest tworzone ze statusem **Otwarte**.
@@ -44,46 +53,88 @@ Znajdź moduł pod **Flota — Zlecenia robocze** i **Flota — Konserwacja**.
 | **Ukończone** | Praca jest wykonana, ciężarówka oczyszczona | — |
 | **Anulowane** | Zadanie nie zostanie ukończone | — |
 
+Kliknij **Rozpocznij zlecenie robocze**, aby przejść z Otwarte → W trakcie. Kliknij **Oznacz jako ukończone**, gdy zadanie jest wykonane. Ukończone lub anulowane zlecenie robocze znosi każdą auto-blokadę ciężarówki.
+
 <Note>
-Tylko zlecenia robocze ze statusem **Otwarte** lub **W trakcie** utrzymują blokadę ciężarówki na tablicy planowania. Ukończenie lub anulowanie zlecenia natychmiast przywraca ciężarówkę do listy przypisywalnych.
+Tylko zlecenia robocze w statusie **Otwarte** lub **W trakcie** utrzymują blokadę ciężarówki na tablicy planowania. Ukończenie lub anulowanie zlecenia natychmiast przywraca ciężarówkę do listy przypisywalnych.
 </Note>
 
 ---
 
 ## Tworzenie zlecenia roboczego z usterki
 
-Gdy kierowca przesyła inspekcję po podróży z usterk **Krytyczną dla bezpieczeństwa**, usterka pojawia się w **Flota — Usterki**. Każdy wiersz krytyczny ma przycisk **Utwórz zlecenie robocze**.
+Gdy kierowca przesyła inspekcję po podróży z usterką **Krytyczną dla bezpieczeństwa**, usterka pojawia się w **Flota → Usterki**. Każdy wiersz krytyczny dla bezpieczeństwa ma przycisk **Utwórz zlecenie robocze**.
 
-Kliknięcie go otwiera formularz zlecenia roboczego wstępnie wypełniony informacjami o ciężarówce i usterce.
+Kliknięcie go otwiera formularz zlecenia roboczego wstępnie wypełniony ciężarówką, która była inspekcjonowana, i powiązany z pierwotnym zgłoszeniem usterki. Nie ma typu zlecenia roboczego "Krytyczne dla bezpieczeństwa" — wybierz **Typ serwisu** pasujący do naprawy (np. Naprawa, Serwis hamulców), wpisz opis, a następnie dodaj pozycje i planowaną datę, po czym zapisz.
 
 ---
 
 ## Harmonogramy konserwacji
 
-Harmonogramy konserwacji pozwalają śledzić powtarzające się interwały serwisowe per ciężarówka.
+Harmonogramy konserwacji pozwalają śledzić powtarzające się interwały serwisowe per ciężarówka — dzięki czemu zawsze wiesz, kiedy przypada kolejna wymiana oleju, wymiana pasków czy ustawowy przegląd.
 
-Przejdź do **Flota — Konserwacja**, aby zarządzać harmonogramami. Kliknij **Dodaj harmonogram** i skonfiguruj:
+Przejdź do **Flota → Konserwacja**, aby zarządzać harmonogramami.
+
+### Dodawanie harmonogramu
+
+Kliknij **Dodaj harmonogram** i skonfiguruj:
 
 | Pole | Opis |
 |---|---|
 | **Ciężarówka** | Którego pojazdu dotyczy ten harmonogram |
 | **Typ serwisu** | Opis tekstowy (np. "Wymiana oleju", "Rotacja opon") |
 | **Typ interwału** | **km** (oparty na dystansie), **dni** (oparty na kalendarzu) lub **godziny silnika** |
-| **Wartość interwału** | Numeryczny interwał (np. 15 000 km, 90 dni) |
-| **Ostatnio wykonane** | Data i odczyt licznika ostatniego serwisu |
+| **Wartość interwału** | Numeryczny interwał (np. 15 000 km, 90 dni, 500 godzin) |
+| **Ostatnio wykonane** | Data i odczyt licznika/godzin ostatniego serwisu |
+
+Druma oblicza datę lub km **Następnego terminu** na podstawie ostatnio wykonanych wartości i interwału. Lista harmonogramów sortuje wg następnego terminu, więc zaległe pozycje pojawiają się na górze.
+
+Możesz edytować lub usuwać dowolny harmonogram. Druma nie tworzy automatycznie zleceń roboczych z harmonogramów — harmonogram to narzędzie planistyczne; zlecenie robocze tworzysz ręcznie, gdy nadejdzie termin serwisu.
 
 ---
 
 ## Tablica planowania: odznaka klucza
 
-Gdy ciężarówka ma jedno lub więcej **Otwartych** lub **W trakcie** zleceń roboczych, bursztynowa odznaka klucza pojawia się na karcie tej ciężarówki na tablicy planowania.
+Gdy ciężarówka ma jedno lub więcej **Otwartych** lub **W trakcie** zleceń roboczych, bursztynowa odznaka klucza pojawia się na karcie tej ciężarówki na tablicy planowania. Odznaka to szybki sygnał dla dyspozytorów, że pojazd ma nierozwiązaną konserwację.
 
-Kliknij odznakę klucza, aby otworzyć modal **Szybkie rozwiązanie warsztatowe**, skąd możesz:
-- **Oznacz jako ukończone** — zamyka zlecenie i usuwa blokadę bez opuszczania tablicy planowania
-- **Anuluj** — anuluje zlecenie i usuwa blokadę
+### Szybkie rozwiązanie warsztatowe
+
+Kliknij odznakę klucza, aby otworzyć modal **Szybkie rozwiązanie warsztatowe**. Stąd możesz:
+
+- **Oznacz jako ukończone** — zamyka zlecenie robocze i usuwa blokadę bez opuszczania tablicy planowania
+- **Anuluj** — anuluje zlecenie robocze i usuwa blokadę
+
+Jest to zaprojektowane dla sytuacji, gdy po prostu musisz szybko usunąć blokadę (np. naprawa jest zakończona i musisz ponownie przypisać ciężarówkę) bez przechodzenia do pełnej karty Zlecenia robocze.
 
 ---
 
-<Card title="Inspekcja pojazdu po podróży (DVIR)" icon="clipboard-check" href="/en/driver/post-trip-inspection">
-  Jak kierowcy zgłaszają usterki na koniec podróży i jak są klasyfikowane poziomy dotkliwości.
-</Card>
+## Automatyczna niedostępność dla usterek krytycznych dla bezpieczeństwa
+
+Jeśli przełącznik **Auto-twórz niedostępność pojazdu dla usterek krytycznych dla bezpieczeństwa** jest włączony w **Ustawienia → Lista kontrolna po podróży**, przesłanie usterki krytycznej dla bezpieczeństwa automatycznie:
+
+1. Tworzy rekord niedostępności pojazdu dla ciężarówki
+2. Usuwa ciężarówkę z listy przypisywalnych na tablicy planowania
+3. Pokazuje bursztynową odznakę klucza na karcie ciężarówki
+
+Ciężarówka pozostaje niedostępna, dopóki powiązane zlecenie robocze nie zostanie oznaczone jako **Ukończone** lub **Anulowane**. Przyszłe zlecenia już przypisane do ciężarówki nie są automatycznie odłączane — dyspozytor otrzymuje powiadomienie i musi je ręcznie przejrzeć.
+
+<Warning>
+Jeśli kierowca zgłosi usterkę krytyczną dla bezpieczeństwa pod koniec zmiany i nikt nie sprawdzi tablicy planowania przed porankiem, ciężarówka nie pojawi się jako przypisywalna. Wyrób sobie nawyk sprawdzania **Flota → Usterki** w ramach codziennego porannego przeglądu.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Inspekcja pojazdu po podróży (DVIR)" icon="clipboard-check" href="/pl/fleet-compliance/post-trip-dvir">
+    Jak kierowcy zgłaszają usterki na koniec podróży, poziomy dotkliwości i jak usterki krytyczne dla bezpieczeństwa wyzwalają zlecenia robocze.
+  </Card>
+  <Card title="Dokumenty floty" icon="file-text" href="/pl/fleet-compliance/fleet-documents">
+    Śledź terminy ważności ITP, ubezpieczenia, CEMT i certyfikatu ADR — z ostrzeżeniami na tablicy planowania, gdy dokumenty zbliżają się do wygaśnięcia.
+  </Card>
+  <Card title="Opony floty" icon="circle" href="/pl/fleet-compliance/tyres">
+    Śledź stan opon, głębokość bieżnika i koszty wymiany per pojazd.
+  </Card>
+  <Card title="Zdarzenia floty" icon="triangle-exclamation" href="/pl/fleet-compliance/incidents">
+    Rejestruj wypadki, zdarzenia szkodowe i roszczenia ubezpieczeniowe Twojej floty.
+  </Card>
+</CardGroup>

@@ -1,38 +1,41 @@
 ---
-title: "HERE Maps útvonaltervezés"
-description: "Hogyan számítja a HERE a távolságokat, ETA-kat és útdíjakat a Drumában — konfiguráció és hibaelhárítás."
+title: "HERE Maps cím-keresés"
+description: "A HERE Maps biztosítja a cím-autokiegészítést és a geokódolást a Drumában. A teherautó-optimalizált útvonaltervezést, az útdíjbecslést és az ETA-t ehelyett a PTV számítja."
 icon: "map"
 ---
 
-## HERE Maps a Drumában
+A Druma a **HERE Maps**-et egyetlen alapvető funkcióhoz használja: a címek megtalálásához és validálásához, ahogy gépelsz. A teherautó-biztonságos útvonaltervezést, az útdíjbecslést és az élő ETA-t egy másik szolgáltató, a **PTV** számítja — erről röviden ennek az oldalnak a végén olvashatsz. Ez az integráció automatikusan működik a háttérben — az operátoroknak és diszpécsereknek nincs szükségük beállításra.
 
-A HERE Maps az elsődleges térképészeti és útvonaltervezési motor a Drumában. Rendelés létrehozásakor a Druma automatikusan lekéri a HERE-től:
-- **Útvonal távolságot** (km) — a felvételi és szállítási cím között
-- **Becsült menetidőt (ETA)** — valós idejű forgalomadatokkal
-- **Útdíjbecslést** — európai útdíjas utakon
-- **Útvonal geometriát** — a tervező térképén megjelenítendő
+## Nincs szükség beállításra
 
-## Konfiguráció
+A HERE platform-szinten van konfigurálva a Drumában. A TransFollow-hoz vagy a SmartBill-hez hasonló integrációkkal ellentétben nincs megadandó API-kulcs, és nincs beállítandó opció. Minden Druma-fiók az első naptól teljes hozzáféréssel rendelkezik a HERE cím-kereséshez.
 
-A HERE Maps előre be van konfigurálva a Drumában — nincs szükség saját API kulcsra. A Druma saját HERE API kvótáját használja.
+## Cím-autokiegészítés
 
-Ha tapasztalsz problémákat az útvonalak megjelenítésével (pl. a térkép nem jelenik meg, az ETA nem számítódik), lépj kapcsolatba a support@druma.io e-mail-címen.
+Amikor egy rendelésen felvételi vagy szállítási címet adsz meg, kezdj el gépelni egy utcanevet vagy várost, és a HERE egyező címeket javasol egy legördülő menüben. Válaszd ki a helyes címet, és minden mező — utca, házszám, város, irányítószám és ország — automatikusan kitöltésre kerül.
 
-## Hogyan jelenik meg az útvonal a rendelésnél
+Ez megelőzi azokat a cím-bevitel-hibákat, amelyek sofőr-navigációs problémákat okoznak. Egy HERE-autokiegészítéssel megerősített cím mindig érvényes koordinátákkal rendelkezik, így a sofőr navigációs alkalmazása közvetlenül oda tud navigálni.
 
-A rendelés részletei panelben az **Útvonal** fülön:
-- A teljes útvonal térképen jelenik meg
-- A távolság, becsült menetidő és útdíj kártyákon mutatják
-- Belső megállók esetén az egyes szakaszok adatai külön jelennek meg
+<Note>
+Vidéki vagy ipari címeknél, amelyek nem jelennek meg az autokiegészítésben, manuálisan is megadhatod a címet, majd a térkép-jelölőt a helyes helyre húzhatod. A koordináták a rendeléssel együtt tárolódnak, és útvonaltervezéshez kerülnek felhasználásra.
+</Note>
 
-## ETA frissítések
+## Fordított geokódolás
 
-Az Úton státuszban a Druma rendszeres időközönként frissíti az ETA-t a sofőr GPS-pozíciójának és az aktuális forgalomadatoknak az alapján. A frissített ETA az ügyfélportálon automatikusan megjelenik.
+A HERE egy térképre ejtett jelölőt (szélesség/hosszúság) is visszaalakít olvasható címmé — ezt használjuk például akkor, amikor egy tervező egy jelölőt húz a térképen egy helyszín nevének és címének előtöltéséhez.
 
-## Útdíj számítás
+## Útvonaltervezés, útdíjak és ETA: a PTV kezeli
 
-A HERE útdíjbecslés becslésen alapul, amely figyelembe veszi a teherautó kategóriáját (Euro-osztály, tengelyszám) és az útvonal útdíjas szakaszait. A tényleges útdíj eltérhet — lásd az [Útdíj-bevételek és egyeztetés](/en/planner/toll-actuals) oldalt a tényleges adatok kezeléséhez.
+A teherautó-optimalizált útvonaltervezést (elkerülve az alacsony hidakat, a tömegkorlátozásokat és más olyan veszélyeket, amelyeket a nehéz járművek nem vállalhatnak), az útdíjköltség-becslést az európai útdíjrendszerekben, és az élő, forgalom-tudatos ETA-t nem a HERE, hanem a **PTV Developer Routing API** számítja. A Druma átadja a jármű méreteit, tömegét és tengelyszámát a PTV-nek, hogy az útvonalak és útdíjbecslések a tényleges teherautódat tükrözzék.
 
-<Card title="Útdíj-bevételek és egyeztetés" icon="receipt" href="/en/planner/toll-actuals">
-  Becsült vs. tényleges útdíjak kezelése.
-</Card>
+<Warning>
+Az útdíjköltség-becslések szolgáltatótól függetlenül mindig közelítések maradnak. A tényleges útdíj a konkrét választott útvonaltól, a teherautód adott ország útdíjrendszerében regisztrált tengelykonfigurációjától, és attól függ, hogy változtak-e a díjak az utolsó adatfrissítés óta. Ezeket a számokat irányadóként, ne pontos számlaadatként használd.
+</Warning>
+
+A jármű technikai adatainak naprakészen tartása a **Flotta → Járművek → [jármű] → Technikai adatok** menüpontban az egyetlen leghatékonyabb lépés az útvonaltervezés, az útdíj és az ETA pontosságának javításához — függetlenül attól, melyik szolgáltató végzi a számítást.
+
+<CardGroup cols={1}>
+  <Card title="Flottakezelés" icon="truck" href="/en/fleet/fleet-management">
+    Hogyan kezeld a jármű-rekordjaidat, beleértve az útvonaltervezéshez felhasznált méreteket.
+  </Card>
+</CardGroup>

@@ -1,36 +1,94 @@
 ---
-title: "Rijstrookwinstgevendheidsrapport"
+title: "Rapport rijstrookwinstgevendheid"
 description: "Zie de werkelijke marge op elk oorsprong-bestemmingspaar dat u rijdt, met omzet, geschatte kosten en trend ten opzichte van de vorige periode."
 icon: "route"
 ---
 
-Veel operators kennen hun omzet per traject maar niet hun werkelijke marge nadat brandstof, tollen en chauffeurkosten zijn meegerekend. Het Rijstrookwinstgevendheidsrapport doet de berekening voor elke land-paarscombinatie die u exploiteert.
+Veel operators kennen hun omzet per traject maar niet hun werkelijke marge nadat brandstof, tol en chauffeurskosten zijn meegerekend. Het rapport Rijstrookwinstgevendheid doet de berekening voor elke landparencombinatie die u exploiteert, zodat u in één oogopslag ziet welke trajecten renderen en welke aan uw winst knagen.
 
 ## Het rapport openen
 
 Ga naar **Rapporten → Rijstrookwinstgevendheid**.
 
-Selecteer uw datumbereik bovenaan. Het rapport geeft standaard de huidige maand weer.
+Selecteer uw datumbereik bovenaan. Het rapport geeft standaard de huidige maand weer. Voor een zinvolle vergelijking wilt u doorgaans minstens een volledige maand data, idealiter een kwartaal.
 
 ## Wat het rapport toont
 
-Elke rij in de tabel is één oorsprong-bestemmingsland paar. Voor elk traject ziet u:
+Elke rij in de tabel is één oorsprong-bestemmingslandpaar. Voor elk traject ziet u:
 
-- **Orders** — Aantal orders op dit traject in de geselecteerde periode
-- **Omzet** — Totale verkoopprijs van alle orders
-- **Geschatte kosten** — Brandstof + tollen + chauffeurkosten + vaste voertuigkosten
-- **Brutomarge** — Omzet minus geschatte kosten
-- **Margepercentage** — Marge als percentage van de omzet
-- **Trend** — Vergelijking met dezelfde periode vorig jaar of de vorige maand
+| Kolom | Betekenis |
+|---|---|
+| **Omzet** | Totaal gefactureerd bedrag voor orders op dit traject in de periode |
+| **Brandstofkost** | Geschat: afstand × gemiddeld verbruik × brandstofprijs |
+| **Tolkost** | PTV-toldata voor de route |
+| **Chauffeurskost** | Dagkost × ritdagen, gebaseerd op het per-chauffeur-tarief dat u configureert |
+| **Totale kosten** | Som van brandstof + tol + chauffeurskost |
+| **Marge €** | Omzet minus totale kosten |
+| **Marge %** | Marge als percentage van de omzet |
+| **Ritten** | Aantal voltooide orders op dit traject in de periode |
+| **Gem. prijs/rit** | Gemiddelde omzet per order |
+| **Trend** | Pijl die aangeeft of het margepercentage verbeterde of daalde t.o.v. de vorige periode |
 
-## Granulariteitsinstellingen
+Rijen onder de doelmargedrempel worden rood gemarkeerd. Deze drempel staat momenteel vast op **15%** — nog niet configureerbaar vanuit Instellingen.
 
-Gebruik de schakelaar **Land / Stad** bovenaan om te wisselen tussen landen-niveau (bijv. NL → DE) en stads-niveau (bijv. Amsterdam → München) uitsplitsing.
+## Hoe kostenschattingen werken
+
+<Note>
+Kostenschattingen in dit rapport zijn benaderingen gebaseerd op uw geconfigureerde parameters. Ze zijn nuttig om relatieve prestaties tussen trajecten te herkennen, maar werkelijke kosten kunnen afwijken — vooral tolkosten op routes met variabele tolwegen.
+</Note>
+
+**Brandstofkostberekening:**
+Afstand (van PTV-routering) × gemiddeld vlootverbruik (liter/100km, ingesteld in Instellingen → Vloot → Standaardverbruik) × uw brandstofprijs (ingesteld in Instellingen → Vloot → Brandstofprijs, of geïmporteerd uit brandstofkaartgegevens indien u brandstofkaartimport gebruikt).
+
+**Tolkostberekening:**
+HERE Maps-toldata voor de route. Dekt de meeste Europese snelwegtolsystemen. Minder nauwkeurig voor routes door landen met complexe vignetsystemen.
+
+**Chauffeurskostberekening:**
+Aantal ritdagen × het dagkosttarief dat u instelde voor elke chauffeur in zijn profiel (Vloot → Chauffeurs → [chauffeur] → Dagkosttarief). Is geen chauffeur toegewezen, dan gebruikt Druma uw algemene standaard chauffeursdagkost.
+
+U kunt al deze inputs bijwerken in Instellingen om de nauwkeurigheid te verbeteren. Het rapport herberekent onmiddellijk wanneer u nieuwe waarden opslaat.
+
+## Onrendabele trajecten identificeren
+
+Sorteer de tabel op **Marge %** oplopend — de slechtst presterende trajecten komen bovenaan.
+
+Rode rijen zijn trajecten onder uw doelmarge. Veelvoorkomende redenen:
+
+- **Langeafstandstrajecten** — zien er winstgevend uit qua omzet maar hebben hoge brandstof- en chauffeurskosten
+- **Trajecten met zware tol** — bepaalde routes door Frankrijk, Oostenrijk of Zwitserland hebben aanzienlijk hogere tol dan alternatieven
+- **Onderprijsde legacy-klanten** — jaren geleden afgesproken tarieven die niet zijn heronderhandeld
+- **Laagvolumetrajecten** — minder ritten betekent dat vaste kosten harder aankomen
+
+## Inzoomen op een traject
+
+Klik op een trajectrij om de individuele orders te zien die de cijfers van dat traject vormen. U ziet de omzet, geschatte kost en marge van elke order — en identificeert specifieke orders die uitschieters zijn (bijvoorbeeld één order tegen een veel lager tarief dan de rest).
+
+Vanaf de orderlijst kunt u doorklikken naar het volledige orderdetail. Nuttig bij het onderzoeken waarom een specifiek traject in een bepaalde maand onderpresteerde.
+
+## Het rapport filteren
+
+Gebruik de filters bovenaan de pagina:
+
+- **Herkomstland** — filter op één of meer specifieke herkomstlanden
+- **Bestemmingsland** — filter op één of meer specifieke bestemmingslanden
+- **Klant** — bekijk rijstrookwinstgevendheid voor één klant
+- **Truck** — bekijk welke trucks welke trajecten het meest winstgevend uitvoeren
 
 ## Exporteren
 
-Klik op **CSV exporteren** om het rapport te downloaden. De export bevat alle kolommen inclusief individuele ordernummers voor reconciliatie.
+Klik op **Exporteren → CSV** om het volledige rapport te downloaden als spreadsheet. De CSV bevat alle kolommen en alle orders in de ingezoomde weergave als u filters heeft toegepast.
 
-<Card title="CO2-rapport" icon="cloud" href="/nl/reports/co2-report">
-  Emissiegegevens per traject en per truck.
-</Card>
+De CSV is het beste formaat voor verdere analyse in Excel — bijvoorbeeld om uw eigen draaitabellen te bouwen per klant of per truck.
+
+<Warning>
+Neem geen prijsbeslissingen enkel op basis van dit rapport zonder andere factoren te overwegen: retourladingen, strategische klantrelaties en seizoensgebonden volumevariatie beïnvloeden allemaal de werkelijke waarde van een traject.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Rapporten-overzicht" icon="chart-bar" href="/nl/reports/reports-overview">
+    Alle beschikbare rapporten in Druma en hoe u ze plant.
+  </Card>
+  <Card title="Tariefkaarten" icon="tag" href="/nl/admin/rate-cards">
+    Stel per-traject-tariefkaarten in die anomale prijsdetectie en margedoelen voeden.
+  </Card>
+</CardGroup>

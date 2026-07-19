@@ -1,78 +1,89 @@
 ---
 title: "Preistabellen"
-description: "So erstellen und verwalten Sie Preistabellen in Druma, um Standardstreckenpreise zu speichern und die Auftragserfassung zu beschleunigen."
+description: "So definieren Sie LKW-Kostenprofile in Druma, damit Aufträge eine genaue geschätzte Kosten- und Margenangabe zeigen."
 icon: "tags"
 ---
 
+<Note>
+Diese Seite behandelt **Einstellungen → Preistabellen** — LKW-**Kostenprofile** zur Schätzung von Kosten und Marge eines Auftrags. Suchen Sie stattdessen strecken­basierte **Verkaufspreise** (Ursprungs-/Zielbasierte Preisvorschläge, z. B. „Rumänien → Deutschland, Curtainsider — 1.450 €"), ist das die separate Funktion **Streckenpreise** unter **Preise → Streckenpreise** in der Hauptapp — nicht Teil dieser Seite.
+</Note>
+
 ## Was ist eine Preistabelle?
 
-Eine Preistabelle ist eine gespeicherte Preisvorlage für eine Route, die Sie regelmäßig fahren. Wenn Sie jede Woche Ladung von Rumänien nach Deutschland transportieren, speichern Sie eine Preistabelle für diese Strecke — und Druma schlägt den Preis automatisch vor, wenn Sie einen neuen Auftrag auf dieser Route erstellen.
+Eine Preistabelle unter **Einstellungen → Preistabellen** ist ein Kostenprofil für eine Kategorie von LKW-Betrieb — entweder Ihre **eigene Flotte** oder einen **Unterauftragnehmer**. Sie erfasst, was der Betrieb eines LKW tatsächlich kostet (Fixkosten, Fahrerlohn, Kraftstoff, ADR-/Übergrößenzuschläge, Maut), damit Druma Kosten und Marge eines Auftrags neben dem Kundenpreis schätzen kann.
 
-Preistabellen sind ein Ausgangspunkt, keine Regel. Planer können den vorgeschlagenen Preis bei einzelnen Aufträgen immer überschreiben.
+**Wer bearbeiten kann:** die Rollen Admin, Unternehmensadministrator und Planer.
 
----
+<Frame caption="Streckenpreise (Preise → Streckenpreise) — die separate, ursprungs-/zielbasierte Verkaufspreis-Funktion. Einstellungen → Preistabellen (diese Seite) ist die Kostenprofil-Seite.">
+  <img src="/images/admin/rate-cards.png" alt="Streckenpreise-Seite mit Preistabellen nach Ursprung, Ziel und Anhängertyp" />
+</Frame>
 
 ## Eine Preistabelle erstellen
 
-Gehen Sie zu **Einstellungen → Preistabellen** und klicken Sie auf **Preistabelle hinzufügen**.
+Gehen Sie zu **Einstellungen → Preistabellen** und klicken Sie auf **Neue Tabelle**.
 
 ### Name
 
-Geben Sie einen klaren, beschreibenden Namen.
+Geben Sie einen klaren Namen, z. B. „Eigene Flotte — Standard" oder „Unterauftragnehmer — RO/BG-Strecken".
 
-*Beispiele: "RO→DE Tautliner", "Rumänien nach Niederlande Frigo"*
+### Typ
 
-### Ursprungsland und Zielland
+Wählen Sie **Eigene Flotte** oder **Unterauftragnehmer** — dies bestimmt, für welche Auftragskategorie das Kostenprofil gilt.
 
-Preistabellen stimmen auf Länderebene überein — eine Preistabelle deckt alle Städte innerhalb dieser Länder ab.
+### Tarif / km (€)
 
-### Anhängertyp
+Ein optionaler pauschaler Kilometerkostensatz.
 
-Curtainsider, Kühlfahrzeug, Tieflader, Tankfahrzeug, Kofferaufbau, Mega-Trailer, Tieflader, Sonstige.
+### Kostenbasis
 
-Druma schlägt eine Preistabelle nur vor, wenn der Anhängertyp übereinstimmt.
+Wählen Sie, wie die fixen Betriebskosten berechnet werden:
+- **Tagessatz** — geben Sie **Tägliche Fixkosten (€)** und **Fahrerlohn/Tag (€)** ein.
+- **Wochenmiete** — geben Sie **Wöchentliche Fixkosten (€)** und **Fahrerlohn/Woche (€)** ein.
 
-### Preistyp
+### Wartezeit
 
-- **Pauschalpreis** — Fester Betrag unabhängig von der Entfernung.
-- **Pro Kilometer** — Tarif multipliziert mit der HERE-Routendistanz.
+- **Kostenlose Wartestunden** — wie viele Stunden Wartezeit enthalten sind, bevor eine Gebühr anfällt.
+- **Wartetarif €/h** — die Stundengebühr nach Überschreiten der kostenlosen Wartestunden.
 
-### Preis und Währung
+### Zuschläge
 
-Betrag und Währung (EUR, RON, USD, GBP usw.).
+- **ADR-Gebühr (€)** — Zusatzkosten für Gefahrgutsendungen.
+- **Übergrößenzuschlag (€)** — Zusatzkosten für übergroße Ladungen.
 
-### Kraftstoffzuschlag %
+### Kraftstoff
 
-Wenn Sie einen Kraftstoffzuschlag aufschlagen, geben Sie den Prozentsatz ein. Druma addiert ihn zum Grundpreis.
+- **Kraftstoff-Basispreis (€/L)** — der in Kostenberechnungen verwendete Kraftstoffpreis.
+- **Kraftstoffverbrauch (L/100km)** — der erwartete Verbrauch des LKW, verwendet zusammen mit Basispreis und Streckendistanz zur Schätzung der Kraftstoffkosten.
 
-*Beispiel: €1.200 Grundpreis + 8% = €1.296 vorgeschlagener Preis*
+### Margenziele
 
-### Notizen
+- **Zielmarge %** — die angestrebte Marge für Aufträge mit diesem Kostenprofil.
+- **Mindestmarge %** — die minimal akzeptable Marge, bevor Druma den Auftrag markieren soll.
 
-Interne Notizen — nur für Planer sichtbar, nicht auf Dokumenten.
+### Mautrichtlinie
 
----
+Wählen Sie die Standard-Maut-Behandlung für dieses Kostenprofil:
+- **Im Tarif enthalten** — Maut ist im Tarif eingepreist, nicht separat abgerechnet.
+- **An Kunden weitergegeben** — Maut wird dem Kunden nach Anfall in Rechnung gestellt.
+- **Separate Position** — Maut erscheint als eigene Position auf Auftrag/Rechnung.
 
-## Eine Preistabelle bearbeiten
+Sie können diese Standardeinstellung für bestimmte Länder oder Mautbetreiber überschreiben:
 
-**Einstellungen → Preistabellen** → Bearbeitungssymbol (Stift) → Änderungen → **Speichern**.
+- **Länderspezifische Mautrichtlinien** — wählen Sie ein Land und eine Richtlinie (An Kunden berechnet / Im Tarif enthalten / Nicht berechnet). Nützlich, wenn z. B. französische Maut weitergegeben, deutsche jedoch eingepreist wird.
+- **Betreiberspezifische Mautrichtlinien** — geben Sie einen Mautbetreibernamen exakt wie auf Belegen ein (z. B. `ASFINAG`, `HU-GO`, `Viapass`) und eine Richtlinie. Eine Betreiber-Überschreibung hat Vorrang vor der Länderrichtlinie.
 
-Der aktualisierte Preis gilt ab sofort für neue Aufträge.
+### Speichern
 
----
+Klicken Sie auf **Änderungen speichern** bei einer bestehenden Tabelle, oder **Erstellen** bei einer neuen.
 
-## Eine Preistabelle deaktivieren
+## Eine Preistabelle bearbeiten oder löschen
 
-Schalten Sie den **Aktiv**-Schalter aus. Deaktivierte Preistabellen werden nicht mehr vorgeschlagen, bleiben aber zur Referenz in der Liste.
+Erweitern Sie eine Tabelle in der Liste, um Felder inline zu bearbeiten. Klicken Sie auf das **X** neben einer Tabelle, um sie zu löschen — Sie werden zur Bestätigung aufgefordert, da dies nicht rückgängig gemacht werden kann.
 
-<Note>
-Deaktivieren ist besser als Löschen, besonders wenn Sie diese Strecke später wieder aktivieren möchten.
-</Note>
+Die Kostenprofile der Preistabellen fließen in die Kosten-/Margenschätzung ein, die beim Erstellen oder Bepreisen eines Auftrags angezeigt wird — das ist eine separate Berechnungsfläche, nicht Teil dieser Einstellungsseite.
 
-<Card title="Aufträge erstellen" icon="file-lines" href="/en/planner/creating-orders">
-  Wie Preistabellen-Vorschläge bei der Auftragserfassung erscheinen.
-</Card>
+## Verwandte Seiten
 
-<Card title="Unternehmenseinrichtung" icon="building" href="/en/admin/company-setup">
-  Konfigurieren Sie Standardwährung und Zahlungsbedingungen.
+<Card title="Unternehmenseinrichtung" icon="building" href="/de/admin/company-setup">
+  Konfigurieren Sie Ihr Unternehmensprofil, das zusammen mit Preistabellen in die Auftragskostenberechnung von Druma einfließt.
 </Card>

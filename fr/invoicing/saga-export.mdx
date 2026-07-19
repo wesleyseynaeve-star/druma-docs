@@ -1,44 +1,126 @@
 ---
-title: "Export SAGA / WinMENTOR"
-description: "Comment exporter les données de facturation et de paiement vers SAGA Classic, SAGA Enterprise et WinMENTOR pour la comptabilité roumaine."
-icon: "download"
+title: "Export SAGA et WinMENTOR"
+description: "Comment exporter les données de facture et de client de Druma vers SAGA C et WinMENTOR Classic pour la comptabilité roumaine, y compris l'export mensuel automatique envoyé par email à votre comptable."
+icon: "database"
 ---
 
 ## Vue d'ensemble
 
-Druma exporte les données comptables dans des formats compatibles avec SAGA et WinMENTOR. Cela vous permet de maintenir votre comptabilité officielle dans votre logiciel habituel tout en gérant les opérations dans Druma.
+SAGA C et WinMENTOR Classic sont les deux logiciels comptables les plus courants utilisés par les entreprises roumaines. Druma exporte les données de facture et de client dans les formats attendus par les deux logiciels, afin que votre comptable puisse importer directement sans ressaisie manuelle.
 
----
+<Frame caption="Finance → Générateur d'export — exports à profil personnalisé ; SAGA/WinMENTOR lui-même est un ZIP mensuel envoyé par email, pas un bouton ici.">
+  <img src="/images/invoicing/saga-export.png" alt="Page Générateur d'export" />
+</Frame>
 
-## Créer un export SAGA
+## Export SAGA C
+
+SAGA utilise des fichiers DBF (dBase) pour l'import de données. Druma génère un paquet d'export complet, pas seulement des données client et facture :
+
+- **CLI_\<date>.dbf** (Clienti) — données maîtresses clients (nom, CIF, adresse, conditions de paiement)
+- **ART_\<date>.dbf** (Articole) — la ligne de service utilisée sur les factures de vente, incluse par défaut
+- **IE_\<date>_\<date>.dbf** (Ieșiri) — données de factures de vente (numéro de facture, date, montants, TVA, référence client)
+- **INT_\<date>.dbf** (Intrări) — factures d'achat, quand la période inclut des commandes sous-traitées
+- **NC_\<date>_\<date>.xml** (Încasări) — paiements enregistrés dans la période (ce fichier-ci est en XML, pas en DBF)
+- **README.txt** — un résumé en texte brut de l'export plus les instructions d'import pour votre comptable
+
+### Comment exporter pour SAGA
 
 <Steps>
-  <Step title="Accédez à Rapports → Export comptable">
-    Cliquez sur **Nouvel export**.
+  <Step title="Accédez au module Facturation">
+    Cliquez sur **Facturation** dans le menu de navigation principal.
   </Step>
-  <Step title="Sélectionnez la plage de dates">
-    Choisissez la période pour laquelle vous souhaitez exporter les données (ex. : le mois dernier).
+  <Step title="Ouvrez le menu Export">
+    Cliquez sur le bouton **Export** en haut à droite de l'écran Facturation.
   </Step>
-  <Step title="Sélectionnez le format">
-    Choisissez **SAGA Classic**, **SAGA Enterprise** ou **WinMENTOR** selon votre logiciel.
+  <Step title="Sélectionnez SAGA">
+    Choisissez **SAGA C** parmi les options de format d'export.
   </Step>
-  <Step title="Téléchargez l'export">
-    Cliquez sur **Générer l'export**. Un fichier ZIP se télécharge contenant :
-    - **INTRARI.dbf** — Factures d'achat (fournisseurs)
-    - **IESIRI.dbf** — Factures de vente (clients)
-    - **INCASARI.xml** — Données de paiement
+  <Step title="Définissez la plage de dates">
+    Choisissez les dates de début et de fin pour les factures à exporter. La plupart des comptables veulent un export mensuel.
+  </Step>
+  <Step title="Téléchargez le ZIP">
+    Cliquez sur **Télécharger**. Druma crée un fichier ZIP contenant les fichiers DBF listés ci-dessus (plus le XML Încasări et README.txt) et le télécharge sur votre ordinateur.
   </Step>
 </Steps>
 
+### Importer dans SAGA C
+
+<Steps>
+  <Step title="Ouvrez SAGA C sur l'ordinateur de votre comptable">
+    Connectez-vous au dossier d'entreprise dans lequel vous voulez importer.
+  </Step>
+  <Step title="Accédez à Import">
+    Dans SAGA, naviguez vers **Import** → **Facturi furnizori / clienti** (selon votre configuration).
+  </Step>
+  <Step title="Sélectionnez les fichiers DBF">
+    Parcourez jusqu'au ZIP téléchargé depuis Druma et sélectionnez le fichier .dbf concerné.
+  </Step>
+  <Step title="Vérifiez la correspondance des champs">
+    SAGA vous montrera un aperçu de correspondance des champs. Confirmez que les colonnes correspondent aux champs SAGA attendus — elles devraient s'aligner automatiquement avec l'export de Druma.
+  </Step>
+  <Step title="Confirmez l'import">
+    Cliquez sur **Import**. SAGA traite les enregistrements. Vérifiez le journal d'import pour toute erreur.
+  </Step>
+</Steps>
+
+## Export WinMENTOR Classic
+
+WinMENTOR Classic n'utilise **pas** de fichiers DBF comme SAGA — Druma l'exporte plutôt sous forme de fichiers texte brut délimités par des barres verticales (`|`), correspondant au format « Import depuis fichier texte » de WinMENTOR :
+
+- **Iesiri_\<date>_\<date>.txt** — données de factures de vente
+- **Clienti_\<date>.txt** — données maîtresses des clients facturés durant la période
+- **Articole_\<date>.txt** — la ligne de service utilisée sur les factures de vente
+- **Incasari_\<date>_\<date>.txt** — paiements enregistrés durant la période (inclus uniquement s'il y en a eu)
+- **README.txt** — instructions d'import pour votre comptable
+
+<Steps>
+  <Step title="Ouvrez le menu Export dans Facturation">
+    Accédez à **Facturation** → **Export**.
+  </Step>
+  <Step title="Sélectionnez WinMENTOR Classic">
+    Choisissez **WinMENTOR Classic** dans la liste de formats. Cela produit les fichiers `.txt` délimités par des barres verticales ci-dessus au lieu des fichiers DBF de SAGA — n'utilisez pas l'option SAGA pour WinMENTOR.
+  </Step>
+  <Step title="Définissez la plage de dates et téléchargez">
+    Choisissez votre plage de dates et cliquez sur **Télécharger**.
+  </Step>
+</Steps>
+
+Importez les fichiers dans WinMENTOR en utilisant **Import/Export → Import din fișier text**, en sélectionnant le délimiteur barre verticale (`|`).
+
+## Export mensuel automatique (SAGA et WinMENTOR Classic)
+
+Plutôt qu'un téléchargement manuel nocturne, Druma envoie l'export à votre comptable automatiquement une fois par mois :
+
+<Steps>
+  <Step title="Accédez aux Paramètres">
+    Naviguez vers **Paramètres** → **Automatisation** et trouvez la section **Config export SAGA**.
+  </Step>
+  <Step title="Définissez l'email du comptable et le jour d'export">
+    Saisissez l'**email du comptable** (et une copie optionnelle), puis choisissez le **jour du mois** auquel l'export doit s'exécuter (1–28).
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Enregistrer la config SAGA**. Une tâche de fond vérifie quotidiennement à **06h00 UTC** si aujourd'hui correspond à votre jour configuré — quand c'est le cas, Druma génère l'export pour le **mois calendaire précédent** et l'envoie directement par email à votre comptable, sans étape de téléchargement manuel requise.
+  </Step>
+</Steps>
+
+<Note>
+Il n'existe pas de liste « Historique des exports » dans l'application — l'export de chaque mois arrive comme un email avec un lien de téléchargement sécurisé vers le ZIP, valable **7 jours**. Si le lien expire, ou si vous avez besoin d'un export hors cycle ou sur période personnalisée, utilisez le flux d'**Export** manuel ci-dessus (ou **Finance** → **Générateur d'export** pour une disposition de colonnes personnalisée) à la place.
+</Note>
+
+## Factures multi-devises et taux de change BNR
+
+Pour les factures en EUR, USD, GBP, CHF, ou PLN, Druma inclut le taux de change BNR (Banque Nationale de Roumanie) pour la date de facture dans l'export DBF/texte. Cela signifie que le logiciel de votre comptable dispose immédiatement des montants équivalents en RON — aucune recherche manuelle de taux nécessaire.
+
+<Warning>
+Vérifiez toujours avec votre comptable quel format d'export il lui faut — SAGA C ou WinMENTOR Classic. Utiliser le mauvais format produira des erreurs d'import ou des données silencieusement incorrectes.
+</Warning>
+
 ---
 
-## Importer dans SAGA
+<Card title="Configuration des intégrations" icon="plug" href="/fr/admin/integration-setup">
+  Comment configurer toutes les intégrations Druma, y compris les logiciels comptables et les connexions API.
+</Card>
 
-1. Ouvrez SAGA Classic ou Enterprise.
-2. Accédez à **Import → Import Druma**.
-3. Sélectionnez les fichiers du ZIP téléchargé.
-4. SAGA valide et importe les données.
-
-<Card title="SmartBill" icon="cloud" href="/fr/integrations/smartbill">
-  Pour une intégration directe sans export manuel, connectez SmartBill.
+<Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
+  Comment créer des factures dans Druma avant de les exporter vers votre logiciel comptable.
 </Card>

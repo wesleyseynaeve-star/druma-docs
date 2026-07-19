@@ -1,39 +1,47 @@
 ---
 title: "Importer vos chauffeurs"
-description: "Comment importer plusieurs chauffeurs à la fois dans Druma via un fichier CSV ou XLSX."
-icon: "id-card"
+description: "Intégrez votre effectif de chauffeurs en masse avec l'Import intelligent — l'outil d'extraction de documents par IA de Druma — plutôt que d'ajouter les chauffeurs un par un."
+icon: "file-import"
 ---
 
-## Vue d'ensemble
+Druma n'a pas d'import en masse par modèle CSV pour les chauffeurs. Utilisez plutôt l'**Import intelligent** — un outil piloté par IA qui lit les documents chauffeurs dont vous disposez déjà (un roster PDF, une liste scannée, des photos de permis, un tableur au format inhabituel de votre ancien système) et les transforme en fiches chauffeur que vous pouvez vérifier avant de les enregistrer.
 
-Importez tous vos chauffeurs en une seule fois depuis une feuille de calcul. Après l'import, chaque chauffeur reçoit automatiquement un lien PWA unique.
+## Où le trouver
 
-Accédez à **Flotte → Chauffeurs → Importer** pour commencer.
+Accédez à **Outils → Import intelligent**. C'est un outil partagé pour intégrer les données d'entreprise, de flotte, de chauffeurs, de clients et d'assurance — pas une page limitée à Flotte → Chauffeurs.
 
----
+## Déroulement
 
-## Colonnes du modèle
+<Steps>
+  <Step title="Téléchargez vos documents chauffeurs">
+    Cliquez sur **Télécharger des documents** ou glissez-déposez des fichiers dans la zone de dépôt. Formats pris en charge : PDF, images (JPEG, PNG, WebP, HEIC/HEIF), XLSX et CSV, jusqu'à 20 Mo par fichier et 20 fichiers par session.
+  </Step>
+  <Step title="Attendez l'extraction par IA">
+    Druma envoie chaque fichier à Gemini pour extraction — quelques secondes par fichier. Les fichiers sont traités côté serveur et ne sont pas conservés de façon permanente après l'extraction ; seules les fiches que vous choisissez d'importer sont enregistrées.
+  </Step>
+  <Step title="Ouvrez la carte catégorie Chauffeurs">
+    Le tableau de bord de révision affiche une carte par type de données détecté dans vos documents, y compris **Chauffeurs** si des données ont été détectées. Cliquez dessus pour voir les lignes extraites dans un tableau modifiable : nom complet, téléphone, email, numéro et expiration du permis, certificat ADR et expiration, numéro et expiration CPC, numéro de carte conducteur tachygraphe, et langue.
+  </Step>
+  <Step title="Vérifiez la confiance et les doublons">
+    Chaque champ a un indicateur de confiance à code couleur (vert/orange/rouge) — vérifiez toujours les champs orange et rouge en priorité. Les lignes sont comparées à vos chauffeurs existants par **nom complet (insensible à la casse)** ; une correspondance est signalée **Doublon**, avec **Ignorer** par défaut (vous pouvez choisir **Écraser** à la place si vous voulez que les données extraites remplacent celles sur fiche).
+  </Step>
+  <Step title="Modifiez et importez">
+    Cliquez sur n'importe quelle cellule pour la corriger en ligne, puis cliquez sur **Importer les chauffeurs**. Le nom complet est le seul champ obligatoire ; les lignes qui ne l'ont pas ne sont pas importées.
+  </Step>
+</Steps>
 
-| Colonne | Obligatoire | Description |
-|---|---|---|
-| `full_name` | Oui | Nom complet du chauffeur |
-| `phone` | Oui | Numéro de téléphone mobile |
-| `email` | Non | Adresse email |
-| `license_number` | Non | Numéro de permis de conduire |
-| `license_expiry` | Non | Date d'expiration du permis (YYYY-MM-DD) |
-| `cpc_expiry` | Non | Date d'expiration du CPC (YYYY-MM-DD) |
-| `adr_expiry` | Non | Date d'expiration du certificat ADR (YYYY-MM-DD) |
-| `tacho_card_number` | Non | Numéro de carte conducteur tachygraphe |
+<Warning>
+Il n'y a pas d'annulation pour un import. Si des données incorrectes ont été importées, modifiez les fiches chauffeur individuellement par la suite.
+</Warning>
 
----
+## Numéro de téléphone et connexion à l'application
 
-## Après l'import
+L'Import intelligent crée la fiche de profil du chauffeur (nom, téléphone, détails permis/CPC/ADR/tacho) — il ne crée pas sa connexion à l'application. Après l'import, accédez à **Flotte → Chauffeurs**, ouvrez le profil de chaque chauffeur un par un, et sous **Connexion téléphone + PIN**, cliquez sur **Définir le PIN** (ou **Générer** pour un code aléatoire à 6 chiffres), puis **Enregistrer le PIN**. Donnez directement son PIN à chaque chauffeur — il pourra le personnaliser lors de sa première connexion.
 
-Chaque chauffeur importé :
-- Reçoit un profil dans **Flotte → Chauffeurs**
-- A un lien PWA unique généré automatiquement
-- Peut commencer à utiliser l'application dès que vous partagez son lien
+<Card title="Intégrer clients et flotte" icon="brain" href="/fr/tools/smart-import">
+  L'Import intelligent gère aussi les documents d'entreprise, de flotte, de clients et d'assurance dans le même flux.
+</Card>
 
 <Card title="Gestion des chauffeurs" icon="id-card" href="/fr/planner/driver-management">
-  Partager les liens PWA et gérer les profils des chauffeurs.
+  Gérez les profils de chauffeurs individuels et configurez les connexions téléphone + PIN.
 </Card>

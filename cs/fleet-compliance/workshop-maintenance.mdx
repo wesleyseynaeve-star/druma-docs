@@ -1,19 +1,140 @@
-﻿---
-title: "Údržba v dílně"
-description: "Jak sledovat servisní záznamy, plánovat periodickou údržbu a spravovat záznamy o opravách vozidel v Druma."
+---
+title: "Servis a údržba"
+description: "Vytvářejte a spravujte pracovní příkazy vozidel, nastavujte plány údržby, řešte závady z plánovací tabule a automaticky blokujte vozidla s bezpečnostně kritickými závadami."
 icon: "wrench"
 ---
 
-Záložka Údržba v profilu každého vozidla umožňuje sledovat veškerou servisní historii na jednom místě.
+## Přehled
 
-## Přidání servisního záznamu
+Modul Servis a údržba dává fleet manažerům strukturovaný způsob sledování každého úkonu údržby — od běžné výměny oleje po opravy bezpečnostně kritických závad. Pracovní příkazy se přímo propojují s plánovací tabulí (blokují vozidla, když je potřeba) a s postupem popřepravní inspekce (bezpečnostně kritické závady mohou vytvořit pracovní příkazy automaticky nebo jedním kliknutím).
 
-Přejděte do **Vozový park → Vozidla**, otevřete vozidlo, klikněte na záložku **Údržba** a poté na **+ Přidat servisní záznam**. Zadejte typ servisu, datum, stav odometru, náklady, dodavatele a poznámky.
+Modul najdete pod **Vozový park → Pracovní příkazy** a **Vozový park → Údržba**.
 
-## Blokování vozidla pro servis
+<Frame caption="Vozový park → Pracovní příkazy — úkony sledované od Otevřeno po Dokončeno, podle typu servisu.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Stránka Pracovní příkazy uvádějící úkony údržby podle stavu a typu servisu" />
+</Frame>
 
-Při delší odstávce pro opravy použijte funkci **Nedostupnost** v profilu vozidla pro blokování kamionu na dané období.
+---
 
-<Card title="Doklady vozového parku" icon="file" href="/en/fleet-compliance/fleet-documents">
-  Uchovávejte pojistné certifikáty, ITP a ADR doklady.
-</Card>
+## Pracovní příkazy
+
+### Co je pracovní příkaz
+
+Pracovní příkaz je záznam úkonu údržby na konkrétním vozidle. Zachycuje, co je potřeba udělat, náklady na díly a práci a aktuální stav úkonu. Každá bezpečnostně kritická závada vozidla by měla mít odpovídající pracovní příkaz, než se vozidlo vrátí do provozu.
+
+### Vytvoření pracovního příkazu
+
+<Steps>
+  <Step title="Otevřete záložku Pracovní příkazy">
+    Přejděte do **Vozový park → Pracovní příkazy** a klikněte na **Vytvořit pracovní příkaz**.
+  </Step>
+  <Step title="Vyplňte podrobnosti">
+    Vyberte vozidlo a vyplňte:
+
+    - **Typ servisu** — vyberte jeden z: Výměna oleje, Servis brzd, Výměna pneumatik, Prohlídka, Oprava, Recertifikace ADR, Kalibrace tachografu, Ostatní, plus tři typy specifické pro chlazené návěsy (Servis filtru a oleje, Kompletní servis chlazení, Prohlídka ATP)
+    - **Popis** — co je potřeba udělat
+    - **Přiřazeno** — dílna nebo technik odpovědný za úkon (volný text)
+    - **Naplánované datum** — kdy je práce plánována
+  </Step>
+  <Step title="Přidejte položky">
+    Přidejte jednu nebo více položek za díly a práci. Každá položka má popis, množství, jednotkovou cenu a typ (Díly / Práce). **Celkové náklady** se automaticky vypočítají ze všech položek.
+  </Step>
+  <Step title="Uložit">
+    Klikněte na **Uložit**. Pracovní příkaz se vytvoří ve stavu **Otevřeno**.
+  </Step>
+</Steps>
+
+### Stavový automat
+
+| Stav | Význam | Další akce |
+|---|---|---|
+| **Otevřeno** | Úkon vytvořen, ještě nezahájen | Zahájit pracovní příkaz, Zrušit |
+| **Probíhá** | Práce byla zahájena | Označit jako dokončené, Zrušit |
+| **Dokončeno** | Práce je hotová, vozidlo uvolněno | — |
+| **Zrušeno** | Úkon nebude dokončen | — |
+
+Kliknutím na **Zahájit pracovní příkaz** přejdete z Otevřeno → Probíhá. Kliknutím na **Označit jako dokončené**, jakmile je úkon hotový. Dokončený nebo zrušený pracovní příkaz zruší jakékoli automatické zablokování vozidla.
+
+<Note>
+Vozidlo blokují na plánovací tabuli pouze pracovní příkazy ve stavu **Otevřeno** nebo **Probíhá**. Dokončení nebo zrušení pracovního příkazu vozidlo okamžitě vrátí do seznamu přiřaditelných.
+</Note>
+
+---
+
+## Vytvoření pracovního příkazu ze závady
+
+Když řidič odešle popřepravní inspekci s **bezpečnostně kritickou** závadou, závada se zobrazí ve **Vozový park → Závady**. Každý bezpečnostně kritický řádek má tlačítko **Vytvořit pracovní příkaz**.
+
+Kliknutím se otevře formulář pracovního příkazu předvyplněný kontrolovaným vozidlem a propojený s výchozím lístkem závady. Neexistuje typ pracovního příkazu „Bezpečnostně kritické" — vyberte **Typ servisu**, který odpovídá opravě (např. Oprava, Servis brzd), zadejte popis, poté přidejte položky a naplánované datum a uložte.
+
+---
+
+## Plány údržby
+
+Plány údržby umožňují sledovat opakující se servisní intervaly za jednotlivé vozidlo — takže vždy víte, kdy je splatná další výměna oleje, výměna řemenu nebo povinná prohlídka.
+
+Přejděte do **Vozový park → Údržba** pro správu plánů.
+
+### Přidání plánu
+
+Klikněte na **Přidat plán** a nakonfigurujte:
+
+| Pole | Popis |
+|---|---|
+| **Vozidlo** | Ke kterému vozidlu se tento plán vztahuje |
+| **Typ servisu** | Volný text popisu (např. „Výměna oleje", „Rotace pneumatik") |
+| **Typ intervalu** | **km** (podle vzdálenosti), **dny** (podle kalendáře), nebo **motohodiny** |
+| **Hodnota intervalu** | Číselný interval (např. 15 000 km, 90 dní, 500 hodin) |
+| **Naposledy provedeno** | Datum a stav odometru/hodin posledního servisu |
+
+Druma vypočítá datum nebo km **Příští splatnosti** z posledních provedených hodnot a intervalu. Seznam plánů se řadí podle příští splatnosti, takže položky po termínu se zobrazují nahoře.
+
+Jakýkoli plán můžete upravit nebo smazat. Druma z plánů automaticky nevytváří pracovní příkazy — plán je nástroj pro plánování; pracovní příkaz vytváříte ručně, když je servis splatný.
+
+---
+
+## Plánovací tabule: odznak klíče
+
+Když má vozidlo jeden nebo více pracovních příkazů ve stavu **Otevřeno** nebo **Probíhá**, na kartě daného vozidla na plánovací tabuli se zobrazí oranžový odznak klíče. Odznak je rychlý signál pro dispečery, že vozidlo má nevyřízenou údržbu.
+
+### Rychlé vyřešení dílny
+
+Kliknutím na odznak klíče otevřete modální okno **Rychlé vyřešení dílny**. Odtud můžete:
+
+- **Označit jako dokončené** — uzavře pracovní příkaz a odstraní blokaci, aniž byste opustili plánovací tabuli
+- **Zrušit** — zruší pracovní příkaz a odstraní blokaci
+
+Toto je navrženo pro situace, kdy potřebujete rychle odstranit blokaci (např. oprava je hotová a potřebujete vozidlo znovu přiřadit), aniž byste museli přejít na plnou záložku Pracovní příkazy.
+
+---
+
+## Automatická nedostupnost u bezpečnostně kritických závad
+
+Pokud je v **Nastavení → Popřepravní kontrolní seznam** zapnutý přepínač **Automaticky vytvořit nedostupnost vozidla u bezpečnostně kritických závad**, odeslání bezpečnostně kritické závady automaticky:
+
+1. Vytvoří záznam nedostupnosti vozidla pro dané vozidlo
+2. Odstraní vozidlo ze seznamu přiřaditelných na plánovací tabuli
+3. Zobrazí oranžový odznak klíče na kartě vozidla
+
+Vozidlo zůstává nedostupné, dokud není propojený pracovní příkaz označen jako **Dokončeno** nebo **Zrušeno**. Budoucí objednávky již přiřazené k vozidlu se automaticky nezruší — dispečer dostane oznámení a musí je zkontrolovat ručně.
+
+<Warning>
+Pokud řidič odešle bezpečnostně kritickou závadu na konci směny a nikdo nezkontroluje plánovací tabuli před ránem, vozidlo se nezobrazí jako přiřaditelné. Zavádějte si zvyk kontrolovat **Vozový park → Závady** jako součást denní ranní kontroly.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Popřepravní inspekce vozidla (DVIR)" icon="clipboard-check" href="/cs/fleet-compliance/post-trip-dvir">
+    Jak řidiči hlásí závady na konci jízdy, úrovně závažnosti a jak bezpečnostně kritické závady spouštějí pracovní příkazy.
+  </Card>
+  <Card title="Doklady vozového parku" icon="file-text" href="/cs/fleet-compliance/fleet-documents">
+    Sledujte platnost ITP, pojištění, CEMT a certifikátu ADR — s upozorněními na plánovací tabuli, když se doklady blíží vypršení.
+  </Card>
+  <Card title="Pneumatiky flotily" icon="circle" href="/cs/fleet-compliance/tyres">
+    Sledujte stav pneumatik, hloubku dezénu a náklady na výměnu za jednotlivé vozidlo.
+  </Card>
+  <Card title="Nehody flotily" icon="triangle-exclamation" href="/cs/fleet-compliance/incidents">
+    Zaznamenávejte nehody, škodní události a pojistné nároky vaší flotily.
+  </Card>
+</CardGroup>

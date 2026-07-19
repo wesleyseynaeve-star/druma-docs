@@ -1,43 +1,98 @@
 ---
 title: "e-Factura / Podání ANAF"
-description: "Jak odesílat faktury rumunských B2B prostřednictvím systému e-Factura ANAF přímo z Druma."
-icon: "file-check"
+description: "Jak Druma automaticky odesílá faktury do povinného rumunského systému e-Factura přes API ANAF SPV, se sledováním stavu a opakováním."
+icon: "landmark"
 ---
 
-## Přehled
+## Co je e-Factura
 
-Rumunské B2B faktury (pro firmy s rumunským DIČ) je od roku 2024 povinné odesílat přes systém e-Factura ANAF (SPV). Druma toto integruje přímo — vygenerujete fakturu, kliknete na **Odeslat do ANAF** a Druma se postará o XML formát, odesílání a sledování stavu.
+e-Factura je povinný rumunský systém elektronické fakturace provozovaný ANAF (rumunskou Národní finanční správou). Od roku 2024 musí být všechny B2B transakce mezi rumunskými plátci DPH hlášeny ANAF ve formátu UBL XML — standardním formátu elektronické faktury používaném napříč Evropou.
 
-## Požadavky
+Jednoduše řečeno: každá faktura, kterou vystavíte rumunské společnosti s CIF (registračním číslem DPH), musí být odeslána ANAF elektronicky, nejen vašemu klientovi. Druma se o to postará automaticky po vygenerování faktury.
 
-- Platné rumunské DIČ vaší společnosti (začínající „RO")
-- Certifikát ANAF nakonfigurovaný v **Nastavení → Integrace → ANAF e-Transport**
-- Klient musí mít rumunské DIČ
+## Jak Druma zpracovává e-Factura
 
-## Odeslání faktury do ANAF
+Nemusíte se přihlašovat do portálu ANAF, generovat soubory XML ani dělat nic ručně. Zde je, co se stane automaticky:
+
+1. Vygenerujete fakturu pro rumunského klienta, který má na svém záznamu klienta CIF
+2. Druma vytvoří soubor UBL XML ve správném formátu ANAF
+3. Druma odešle XML na ANAF přes API SPV (Spațiul Privat Virtual)
+4. ANAF vrátí ID podání a po zpracování stav přijetí nebo odmítnutí
+5. Záznam faktury v Druma se aktualizuje a zobrazuje aktuální stav e-Factura
+
+## Sledování stavu e-Factura
+
+Každá faktura vyžadující podání e-Factura zobrazuje odznak stavu na stránce detailu faktury v záložce **e-Factura**:
+
+| Stav | Co znamená |
+|---|---|
+| **Čeká** | Čeká na odeslání (obvykle se odešle během několika minut od vygenerování faktury) |
+| **Odesláno** | XML odesláno na ANAF — čeká se na zpracování ANAF |
+| **Přijato** | ANAF fakturu ověřil a přijal |
+| **Odmítnuto** | ANAF našel chybu — podrobnosti viz kód chyby |
+
+<Note>
+Systém ANAF má pravidelné výpadky, zejména ve všední rána a na konci měsíce. Pokud vaše faktura zobrazuje „Odesláno" déle než pár hodin, obvykle jde o problém na straně ANAF, ne o chybu v Druma. Fronta opakování to řeší automaticky.
+</Note>
+
+## Automatická fronta opakování
+
+Pokud podání selže, protože ANAF je nedostupný, Druma automaticky opakuje s exponenciálním prodlením, celkem až 3 pokusy (původní pokus plus 2 opakování):
+
+- První opakování: přibližně **1 hodinu** po selhání (±25 % rozptyl)
+- Druhé opakování: přibližně **2 hodiny** po prvním opakování (±25 % rozptyl)
+
+Pokud selže i třetí pokus, faktura přejde přímo do stavu **Selhalo** — poté už žádné další automatické opakování neproběhne. Poté můžete z záložky e-Factura na stránce faktury spustit **Ruční opětovné odeslání**.
+
+## Zobrazení stavu e-Factura
 
 <Steps>
-  <Step title="Vygenerujte fakturu">
-    Vygenerujte fakturu standardním způsobem z doručené objednávky.
+  <Step title="Otevřete fakturu">
+    Přejděte do **Fakturace** a klikněte na fakturu, kterou chcete zkontrolovat.
   </Step>
-  <Step title="Klikněte na Odeslat do ANAF">
-    Na stránce faktury najděte tlačítko **Odeslat do ANAF**.
+  <Step title="Klikněte na záložku e-Factura">
+    Záložka e-Factura zobrazuje aktuální stav, časové razítko odeslání, ID podání ANAF (jakmile je obdrženo) a jakékoli chybové zprávy.
   </Step>
-  <Step title="Potvrďte odeslání">
-    Druma vygeneruje soubor UBL XML a odešle ho do SPV (Spațiul Privat Virtual) ANAF.
-  </Step>
-  <Step title="Sledujte stav">
-    Stav faktury ANAF se aktualizuje na: Čeká, Přijato, Odmítnuto nebo Chyba.
+  <Step title="Pokud bylo odmítnuto, přečtěte si kód chyby">
+    Zprávy o odmítnutí pocházejí od ANAF a obsahují kód chyby a popis. Nejčastější jsou uvedeny níže.
   </Step>
 </Steps>
 
-## Fronta opakování
+## Časté chyby odmítnutí
 
-Pokud je podání odmítnuto nebo dojde k chybě, Druma automaticky plánuje opakování s postupným zpožděním (1h → 4h → 24h). Stav a datum uzávěrky jsou viditelné na stránce faktury.
+| Chyba | Pravděpodobná příčina | Jak opravit |
+|---|---|---|
+| **Neplatné CIF** | DIČ klienta v jeho záznamu je nesprávné nebo není registrováno k DPH | Přejděte do **Klienti** → upravte klienta → opravte pole CIF |
+| **Neplatný formát adresy** | Pole ulice, města nebo kraje neodpovídá formátu očekávanému ANAF | Upravte adresu klienta — ujistěte se, že je nastaven kraj a používá se správný rumunský název kraje |
+| **Chybějící povinné pole** | Požadované pole XML je prázdné | Zkontrolujte fakturu, zda nechybí údaje klienta — obvykle CIF, adresa nebo jméno klienta |
+| **Duplicitní faktura** | ANAF již má podání se stejným číslem faktury | Obvykle to znamená, že předchozí podání uspělo, ale Druma neobdržela potvrzení — zkontrolujte přímo portál ANAF SPV |
 
-<Card title="Export SAGA a WinMENTOR" icon="download" href="/en/invoicing/saga-export">
-  Exportujte faktury pro účetní software.
-</Card>
+## Ruční opětovné odeslání
+
+Pokud automatická opakování selžou, nebo jste opravili chybu a chcete to zkusit znovu ihned:
+
+Přejděte do **Fakturace** → otevřete fakturu → **záložka e-Factura** → klikněte na **Znovu odeslat do ANAF**. Druma okamžitě znovu odešle XML.
+
+## Kdy se e-Factura NEUPLATŇUJE
+
+Podání e-Factura je vyžadováno pouze pro rumunské klienty registrované k DPH. **Neplatí** pro:
+
+- Přeshraniční faktury EU (klienti sídlící mimo Rumunsko)
+- Klienty bez rumunského CIF
+- Faktury soukromým osobám (nikoli firmám)
+
+Pro tyto faktury Druma vygeneruje standardní PDF fakturu bez kroku podání UBL XML. Na těchto fakturách se záložka e-Factura nezobrazí.
+
+<Warning>
+Ujistěte se, že každý rumunský B2B klient v Druma má na svém záznamu zadané správné CIF. Bez CIF nemůže Druma podat e-Factura a mohli byste porušovat předpisy. Čísla CIF můžete zkontrolovat a aktualizovat v Klienti → vyberte klienta → záložka Podrobnosti.
+</Warning>
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/invoicing/efactura-anaf).
+<Card title="Generování faktur" icon="file-invoice-dollar" href="/cs/invoicing/generating-invoices">
+  Jak vytvářet faktury v Druma, včetně více měn a hromadné fakturace.
+</Card>
+
+<Card title="Export SAGA a WinMENTOR" icon="database" href="/cs/invoicing/saga-export">
+  Jak exportovat data faktur pro rumunský účetní software pro vašeho účetního.
+</Card>

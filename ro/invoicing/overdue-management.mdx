@@ -1,11 +1,150 @@
 ---
 title: "Gestionarea restantelor"
-description: "Vizualizeaza debitorii cu restante si trimite notificari de plata."
+description: "Urmareste facturile restante, vezi rapoarte de debitori pe vechime, trimite memento-uri de plata si configureaza programe automate de memento in Druma."
 icon: "bell"
 ---
 
-Mergi la **Facturi -> Restante** pentru a vedea facturile grupate dupa varsta: 0-30 zile, 31-60 zile, 61-90 zile, 90+ zile.
+## Prezentare generala
 
-Selecteaza facturile si apasa **Trimite Notificare** pentru email de urmarire catre client.
+Urmarirea platilor este una din partile mai putin placute ale conducerii unei companii de transport. Druma iti ofera o vedere clara asupra a ce este restant, cine cat datoreaza si instrumente pentru a trimite memento-uri fara sa scrii manual email-uri de fiecare data. Poti configura si memento-uri automate, ca Druma sa faca urmarirea in locul tau.
 
-Apasa **Exporta CSV** pentru a descarca lista completa.
+## Vizualizarea facturilor restante
+
+Mergi la **Facturare** → tabul **Restante**. Aici apar toate facturile neplatite si platite partial, a caror scadenta a trecut, sortate dupa numarul de zile de intarziere — datoriile cele mai vechi primele.
+
+<Frame caption="Finante → Restante — limita de rata pentru trimiterea manuala este 50/ora per utilizator, nu per companie.">
+  <img src="/images/invoicing/overdue-management.png" alt="Pagina de Gestionare Restante" />
+</Frame>
+
+Fiecare rand arata:
+
+- Numarul si data facturii
+- Numele clientului
+- Suma facturii si suma inca restanta
+- Data scadentei si cate zile de intarziere are
+- Ultimul memento trimis (daca exista)
+
+## Vizualizarea debitorilor pe vechime
+
+Vizualizarea debitorilor pe vechime iti grupeaza sumele restante in intervale de timp, ca sa vezi dintr-o privire unde se afla riscul tau de credit:
+
+| Interval | Ce arata |
+|---|---|
+| **1–30 zile** | Restant recent — probabil doar plata lenta |
+| **31–60 zile** | Devine serios — necesita o urmarire |
+| **61–90 zile** | Conturi problematice — escaladeaza |
+| **90+ zile** | Risc ridicat — ia in considerare actiune legala sau de recuperare |
+
+Pentru a accesa vizualizarea debitorilor pe vechime: **Facturare** → **Restante** → apasa comutatorul **Debitori pe Vechime** din partea de sus a paginii.
+
+## Soldul restant per client
+
+Pentru a vedea imaginea completa a unui anumit client — toate facturile deschise, cele mai vechi primele, cu suma totala restanta — mergi la **Clienti** → selecteaza clientul → tabul **Facturi**. Soldul restant este afisat cu bold, in partea de sus a tabului.
+
+Este util inainte de un apel cu un client: poti vedea exact cat datoreaza si de cat timp.
+
+## Trimiterea unui memento de plata
+
+<Steps>
+  <Step title="Mergi la tabul Restante">
+    Navigheaza la **Facturare** → **Restante**.
+  </Step>
+  <Step title="Selecteaza facturile de reamintit">
+    Bifeaza casutele langa facturile pe care vrei sa le incluzi in memento. Poti selecta mai multe facturi de la acelasi client, ca sa trimiti un singur memento care le acopera pe toate.
+  </Step>
+  <Step title="Apasa Trimite Memento">
+    Apasa butonul **Trimite Memento**. Druma genereaza un email de memento politicos, care include:
+
+    - Un sumar al facturilor restante, cu date si sume
+    - Suma totala restanta
+    - Datele tale bancare pentru plata
+    - PDF-urile facturilor atasate
+  </Step>
+  <Step title="Revizuieste si trimite">
+    Apare o previzualizare a email-ului. Poti edita mesajul inainte de trimitere. Apasa **Trimite** pentru a-l livra contactului financiar al clientului.
+  </Step>
+</Steps>
+
+<Note>
+Email-ul de memento foloseste sablonul configurat in setarile tale. Daca vrei sa ajustezi tonul sau limba memento-ului standard, mergi la **Setari** → **Sabloane** → **Memento de Plata**. Poti configura sabloane separate per limba, daca ai clienti in mai multe tari.
+</Note>
+
+## Memento-uri automate
+
+Daca nu vrei sa trimiti manual memento-uri in fiecare saptamana, Druma le poate trimite pentru tine, pe un program.
+
+<Steps>
+  <Step title="Mergi la Setari Facturare">
+    Navigheaza la **Setari** → **Facturare**.
+  </Step>
+  <Step title="Activeaza Memento-uri Automate">
+    Activeaza comutatorul **Memento-uri Automate**.
+  </Step>
+  <Step title="Configureaza programul">
+    Seteaza cand se trimite fiecare memento:
+
+    - **Primul memento** — de exemplu, la 7 zile dupa scadenta
+    - **Al doilea memento** — de exemplu, la 14 zile dupa scadenta
+    - **Notificare finala** — de exemplu, la 30 de zile dupa scadenta
+
+    Poti ajusta aceste praguri, ca sa se potriveasca culturii tale de plata si relatiilor cu clientii.
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza**. Druma va trimite acum memento-uri automat, la intervalele configurate, pentru toate facturile restante.
+  </Step>
+</Steps>
+
+<Warning>
+Memento-urile automate ajung la contactul financiar inregistrat al clientului. Asigura-te ca fiecare client are un contact financiar configurat, cu adresa de email corecta, inainte sa activezi aceasta functie — altfel memento-urile pot ajunge la persoana gresita sau nu se pot trimite deloc. Verifica sub Clienti → Contacte.
+</Warning>
+
+## Programul de urmarire (dunning) — cum functioneaza memento-urile automate
+
+Memento-urile automate ruleaza pe un **program de urmarire in 4 etape**, configurat per companie.
+
+- **Etapele 1–3**: email-uri trimise contactelor financiare ale clientului, la intervalele configurate (de exemplu, 7 zile / 14 zile / 30 de zile restant). Fiecare etapa foloseste un sablon de email separat, ca tonul sa poata escalada corespunzator, de la memento politicos la notificare ferma.
+- **Etapa 4**: niciun email nu este trimis automat. In schimb, o notificare de escaladare este trimisa planificatorilor si adminilor tai — este un semnal sa iei o actiune manuala (legal, factoring, un telefon). Etapa 4 nu trimite niciodata email clientului fara aprobare umana.
+
+Pentru a configura programul, mergi la **Setari → Politici de Urmarire (Dunning)**:
+
+- Seteaza **decalajul de zile** per etapa (cand se declanseaza fiecare memento, relativ la data scadentei)
+- Editeaza **subiectul si continutul email-ului** per etapa, sau foloseste sabloanele implicite i18n
+- Apasa **Previzualizare** pe orice etapa, pentru a rula o **previzualizare simulata** si a vedea email-ul inainte sa devina activ
+
+## Pauzarea si scutirea clientilor
+
+Nu fiecare client ar trebui sa primeasca memento-uri automate. Druma iti ofera trei niveluri de control:
+
+- **Pauzeaza memento-urile pentru un client**: mergi la **Clienti** → deschide clientul → seteaza o data **Pauzeaza memento-urile pana la**. Niciun email de urmarire nu este trimis acestui client, pana cand acea data trece. Util dupa ce un client se angajeaza intr-un plan de plata.
+- **Scuteste un client permanent**: in acelasi formular de client, activeaza comutatorul **Scutit de urmarire**. Acest client nu este urmarit niciodata automat — util pentru conturi cheie, unde preferi sa gestionezi relatia manual.
+- **Suprima o singura factura**: in editorul de factura, activeaza comutatorul **Suprima urmarirea** pe factura specifica. Acea factura este sarita de programul de urmarire, chiar daca clientul nu este scutit. Util pentru facturi contestate sau facturi in revizuire pentru nota de credit.
+
+## Trimitere manuala
+
+Pentru a trimite un memento imediat, in afara programului automat:
+
+1. Mergi la **Facturare → Restante**
+2. Selecteaza factura sau facturile
+3. Apasa **Trimite Memento**
+
+Asta declanseaza sablonul potrivit etapei chiar acum, indiferent daca data de trimitere programata a fost atinsa.
+
+<Note>
+Limita de rata: 50 de trimiteri manuale pe ora per utilizator. Fiecare planificator are propria alocatie, deci mai multi membri ai echipei pot trimite fiecare pana la 50 de memento-uri pe ora. Asta previne trimiterile in masa accidentale, catre liste mari de clienti.
+</Note>
+
+## Termene de plata per client
+
+Clienti diferiti pot avea termene de plata diferite — unii platesc la net 15, altii la net 45. Druma stocheaza termenele de plata per client, ca data scadentei sa fie calculata corect pe fiecare factura.
+
+Pentru a seta sau actualiza termenele de plata ale unui client: **Clienti** → selecteaza clientul → tabul **Detalii** → campul **Termene de Plata**. Seteaza-l la numarul de zile agreat (de exemplu, 30 pentru net 30). Asta suprascrie termenele de plata implicite din setarile tale globale.
+
+---
+
+<Card title="Urmarirea platilor" icon="money-bill-wave" href="/ro/invoicing/payment-tracking">
+  Cum inregistrezi plati fata de facturi si urmaresti soldurile restante per client.
+</Card>
+
+<Card title="Generarea facturilor" icon="file-invoice-dollar" href="/ro/invoicing/generating-invoices">
+  Cum creezi si trimiti facturi din comenzile livrate in Druma.
+</Card>

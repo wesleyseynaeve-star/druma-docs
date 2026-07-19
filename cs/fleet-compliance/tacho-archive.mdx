@@ -1,0 +1,118 @@
+---
+title: "Archiv tachografu"
+description: "Jak Druma ukládá soubory tachografu DDD a TGD pro splnění požadavků na frekvenci stahování a uchovávání podle nařízení EU 165/2014 — automatické noční stahování a ruční nahrávání."
+icon: "hard-drive"
+---
+
+Nařízení EU 165/2014 vyžaduje, aby přepravní operátoři stahovali data tachografu z jednotek vozidel a karet řidičů v definovaných intervalech a uchovávali tato data alespoň 12 měsíců. Druma tyto soubory ukládá v Archivu tachografu, abyste mohli prokázat soulad při silniční kontrole nebo úředním auditu bez vedení samostatného systému evidence.
+
+---
+
+## Požadavky na frekvenci stahování
+
+| Typ souboru | Požadovaná frekvence stahování |
+|---|---|
+| Data jednotky vozidla (VU / `.ddd`) | Alespoň každých **90 dní** |
+| Data karty řidiče (DDC / `.tgd`) | Alespoň každých **28 dní** |
+
+Zmeškání termínu stahování je přímé porušení předpisů, bez ohledu na to, zda řidič během daného období způsobil nějaké porušení. Inspektoři kontrolují, zda byla data stažena včas, ne pouze zda byla nakonec získána.
+
+---
+
+## Kde najít Archiv tachografu
+
+Přejděte do **Vozový park → Archiv tachografu**. Stránka uvádí všechny uložené soubory tachografu seřazené podle data nahrání. Každý řádek zobrazuje:
+
+- Jméno řidiče nebo vozidla
+- Typ souboru (VU nebo DDC)
+- Časový rozsah pokrytý souborem
+- Počet dní od posledního stažení
+- Odznak stavu
+
+### Odznaky stavu
+
+| Odznak | Význam |
+|---|---|
+| **OK** | V rámci termínu stahování |
+| **Brzy splatné** | Do 5 dní od termínu |
+| **Po termínu** | Termín uplynul |
+
+Soubory označené **Po termínu** vyžadují okamžitou akci — stáhněte soubor z vozidla nebo karty řidiče a nahrajte ho, abyste stav po termínu vyčistili.
+
+---
+
+## Automatické stahování
+
+U vozidel připojených přes rFMS (standardizované telematické rozhraní výrobců) Druma automaticky stahuje nové soubory DDD a TGD každou noc. U připojených vozidel a řidičů není potřeba žádná ruční akce.
+
+Podporované integrace automatického stahování:
+
+| Poskytovatel | Název integrace | Stav |
+|---|---|---|
+| Scania | rFMS | Aktivní |
+| Volvo | rFMS | Aktivní |
+| DAF | rFMS | Aktivní |
+| MAN | rFMS | Aktivní |
+| Mercedes-Benz | rFMS | Aktivní |
+| IVECO | rFMS | Aktivní |
+| Renault | rFMS | Aktivní |
+| Webfleet | TachoShare | Zatím neimplementováno — čeká se na přístup k partnerskému účtu Webfleet |
+
+Pro povolení automatického stahování přejděte do **Nastavení → Integrace** a připojte svého poskytovatele telematiky OEM s podporou rFMS. Po připojení Druma získává dostupné soubory během nočního synchronizačního okna a odpovídajícím způsobem aktualizuje odznaky stavu.
+
+<Note>
+Automatické stahování závisí na tom, zda poskytovatel telematiky zpřístupní soubor vzdáleně. Některé starší modely jednotek vozidel nebo karty řidičů nemusí podporovat vzdálené získání — pro ně je vyžadováno ruční nahrání. Webfleet TachoShare je na plánu, ale zatím není aktivní; připojená vozidla Webfleet aktuálně vyžadují ruční nahrání.
+</Note>
+
+---
+
+## Ruční nahrání
+
+U vozidel a řidičů nepokrytých automatickou integrací nahrajte soubory přímo z nástroje pro stahování tachografu (např. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+<Steps>
+  <Step title="Otevřete Archiv tachografu">
+    Přejděte do **Vozový park → Archiv tachografu**.
+  </Step>
+  <Step title="Klikněte na Nahrát soubor">
+    Klikněte na tlačítko **Nahrát soubor** vpravo nahoře.
+  </Step>
+  <Step title="Vyberte řidiče nebo vozidlo">
+    Vyberte, zda jde o soubor karty řidiče (DDC), nebo soubor jednotky vozidla (VU), poté vyberte řidiče nebo vozidlo ze seznamu.
+  </Step>
+  <Step title="Vyberte soubor">
+    Vyberte soubor `.ddd`, `.tgd`, `.v1b` nebo `.c1b` ze svého počítače. Maximální velikost souboru je **10 MB**.
+  </Step>
+  <Step title="Potvrďte nahrání">
+    Klikněte na **Nahrát**. Druma zpracuje hlavičku souboru pro extrakci časového rozsahu a uloží soubor do archivu. Počítadlo po termínu se pro vybraného řidiče nebo vozidlo resetuje.
+  </Step>
+</Steps>
+
+<Warning>
+Přijímají se pouze soubory `.ddd`, `.tgd`, `.v1b` a `.c1b` — `.v1b`/`.c1b` jsou ekvivalenty `.ddd`/`.tgd` pro chytrý tachograf generace 2. Soubory exportované v jiných formátech (CSV, PDF) nelze nahrát a nesplňují požadavek EU na uchovávání dat. Vždy uchovávejte původní binární soubor.
+</Warning>
+
+---
+
+## Uchovávání
+
+Druma uchovává všechny nahrané a automaticky stažené soubory tachografu po zákonem vyžadované minimum 12 měsíců. Soubory starší 12 měsíců podléhají automatické archivaci. Pokud potřebujete získat soubory nad rámec standardního období uchovávání, kontaktujte podporu.
+
+---
+
+## Související články
+
+<CardGroup cols={2}>
+  <Card title="Pravidla EU o hodinách řízení" icon="clock" href="/cs/fleet-compliance/eu-driving-hours">
+    Denní a týdenní limity řízení podle nařízení 561/2006 sledované z dat tachografu.
+  </Card>
+  <Card title="Pracovní doba řidiče (WTD)" icon="clock" href="/cs/fleet-compliance/driver-working-time">
+    Limity pracovní doby podle směrnice 2002/15/ES a jak je Druma sleduje.
+  </Card>
+  <Card title="Doklady vozového parku" icon="folder-open" href="/cs/fleet-compliance/fleet-documents">
+    Soulad dokladů vozidel a sledování platnosti.
+  </Card>
+  <Card title="Mobility Package" icon="globe" href="/cs/fleet-compliance/mobility-package">
+    Povinnosti návratu vozidla a řidiče a hlášení vyslání do IMI.
+  </Card>
+</CardGroup>

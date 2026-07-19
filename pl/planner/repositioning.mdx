@@ -6,13 +6,13 @@ icon: "route"
 
 ## Czym jest zlecenie repozycjonowania?
 
-Zlecenie repozycjonowania śledzi **przejazd bez przychodu** — gdy wysyłasz ciężarówkę z jednego miejsca do innego bez przewozu ładunku dla płacącego klienta. Częste scenariusze to:
+Zlecenie repozycjonowania śledzi **przejazd bez przychodu** — gdy wysyłasz ciężarówkę z jednego miejsca do innego bez przewozu ładunku dla płacącego klienta. Częste scenariusze obejmują:
 
-- Wysyłanie pustej ciężarówki z miejsca dostawy do innego miasta, gdzie czeka odbiór.
-- Powrót ciężarówki do bazy na koniec tygodnia pracy.
-- Relokacja pojazdu w celu pokrycia zamiany kierowcy lub wizyty serwisowej.
+- Wysłanie pustej ciężarówki z miejsca dostawy do innego miasta, gdzie czeka odbiór.
+- Powrót ciężarówki do bazy macierzystej na koniec tygodnia pracy.
+- Relokację pojazdu w celu pokrycia zamiany kierowcy lub wizyty serwisowej.
 
-Zlecenia repozycjonowania nie są fakturowane klientom. Istnieją, aby dać Ci pełną widoczność ruchów floty, śledzić martwe kilometry i obliczać prawdziwy koszt operacji.
+Zlecenia repozycjonowania nie są fakturowane klientom. Istnieją, aby dać Ci pełną widoczność ruchów Twojej floty, śledzić martwe kilometry i obliczać prawdziwy koszt Twoich operacji.
 
 ---
 
@@ -20,69 +20,94 @@ Zlecenia repozycjonowania nie są fakturowane klientom. Istnieją, aby dać Ci p
 
 <Steps>
   <Step title="Otwórz formularz nowego zlecenia">
-    Przejdź do **Planner — Zlecenia — Nowe zlecenie**.
+    Przejdź do **Planer → Zlecenia → Nowe zlecenie**.
   </Step>
   <Step title="Wybierz Repozycjonowanie jako typ zlecenia">
-    W polu **Typ zlecenia** wybierz **Repozycjonowanie**.
+    W polu **Typ zlecenia** wybierz **Repozycjonowanie**. To trzecia opcja obok Własnej ciężarówki i Podzleconego.
   </Step>
   <Step title="Wybierz przyczynę">
-    Wybierz **Przyczynę repozycjonowania** z listy rozwijanej. Typowe przykłady:
-    - Powrót do bazy
-    - Pozycjonowanie przed następnym ładunkiem
-    - Zamiana kierowcy
-    - Wizyta serwisowa
-    - Żądanie klienta (bez opłat)
-    - Zgodność transgraniczna
+    Wybierz **Przyczynę repozycjonowania** z listy rozwijanej. To stała lista 5 przyczyn — nie ma interfejsu Ustawień do ich dodawania czy zmiany:
+    - Powrót na pusto
+    - Relokacja floty
+    - Przekazanie do serwisu
+    - Wstępne pozycjonowanie
+    - Inne
   </Step>
   <Step title="Wypełnij trasę">
-    Wpisz adres odbioru (gdzie teraz jest ciężarówka) i adres dostawy (gdzie musi się udać).
+    Wpisz adres odbioru (gdzie ciężarówka jest teraz) i adres dostawy (gdzie musi się udać). Silnik routingu PTV oblicza odległość automatycznie.
+  </Step>
+  <Step title="Dodaj notatki (opcjonalnie)">
+    Użyj pola **Notatki repozycjonowania**, aby wyjaśnić, dlaczego ten przejazd się odbywa. Jest widoczne tylko dla planistów, nie dla kierowcy.
   </Step>
   <Step title="Przypisz ciężarówkę i zapisz">
-    Wybierz ciężarówkę i kierowcę jak przy każdym zleceniu.
+    Wybierz ciężarówkę i kierowcę tak jak dla każdego zlecenia. Zapisz jako Wersję roboczą albo Potwierdź od razu.
   </Step>
 </Steps>
 
 ---
 
-## Różnice między zleceniami repozycjonowania
+## Czym różnią się zlecenia repozycjonowania
 
 | Funkcja | Zwykłe zlecenie | Zlecenie repozycjonowania |
 |---|---|---|
 | Fakturowane klientowi | Tak | Nie |
 | Pojawia się na tablicy planowania | Tak | Tak (z odznaką **Repo**) |
 | Liczy się w raportach przychodów | Tak | Nie |
+| Śledzona odległość | `distance_km` | `distance_km_internal` |
 | Kierowca widzi w aplikacji | Tak | Tak |
+| Przepływ statusów | Pełny cykl życia | Pełny cykl życia |
 
 <Note>
-Zlecenia repozycjonowania podążają tym samym cyklem statusów co zwykłe zlecenia. Kierowca klika statusy jak normalnie.
+Zlecenia repozycjonowania podążają tym samym cyklem statusów co zwykłe zlecenia (Wersja robocza → Dostarczone). Kierowca stuka statusy w swojej aplikacji jak normalnie. Jedyna różnica polega na tym, że nie jest przypisany żaden klient ani cena.
 </Note>
 
 ---
 
 ## Przystanki wewnętrzne
 
-Podczas przejazdu repozycjonowania możesz dodawać **przystanki wewnętrzne** — nieplanowane postoje na paliwo, odpoczynek lub konserwację. Każdy przystanek wewnętrzny ma adres, kod przyczyny i notatki.
+Podczas przejazdu repozycjonowania (lub dowolnego zlecenia) możesz dodawać **przystanki wewnętrzne** — nieplanowane przystanki na paliwo, odpoczynek, konserwację lub inne potrzeby operacyjne.
+
+Przystanki wewnętrzne są śledzone osobno od przystanków załadunku i rozładunku. Każdy przystanek wewnętrzny ma:
+
+- **Adres** — gdzie przystanek został wykonany.
+- **Kod przyczyny** — wybierany ze stałej listy systemowej: Odpoczynek, Tankowanie, Nocleg, Osobiste, Parkowanie naczepy, Inne.
+- **Notatki** — dowolne wyjaśnienie tekstowe.
+
+Przystanki wewnętrzne pojawiają się na osi czasu przystanków zlecenia, ale są wizualnie odróżnione od przystanków ładunkowych. Nie wpływają na obliczenia ETA dostawy.
+
+---
+
+## Kody przyczyn
+
+### Przyczyny repozycjonowania
+
+5 przyczyn repozycjonowania (Powrót na pusto, Relokacja floty, Przekazanie do serwisu, Wstępne pozycjonowanie, Inne) jest ustalonych w produkcie — obecnie nie ma ekranu Ustawień do ich dodawania, zmiany nazwy czy usuwania.
+
+### Przyczyny przystanków wewnętrznych
+
+6 przyczyn przystanków wewnętrznych (Odpoczynek, Tankowanie, Nocleg, Osobiste, Parkowanie naczepy, Inne) jest podobnie ustalonych i dotyczy wszystkich typów zleceń, nie tylko zleceń repozycjonowania. Nie ma dziś interfejsu do dodawania niestandardowych kodów przyczyn ponad te, mimo że leżąca u podstaw możliwość istnieje na poziomie API.
 
 ---
 
 ## Repozycjonowanie na tablicy planowania
 
-Zlecenia repozycjonowania pojawiają się z fioletową odznaką **Repo**, co ułatwia ich odróżnienie od ładunków generujących przychód.
+Zlecenia repozycjonowania pojawiają się na tablicy planowania z małą szarą odznaką **R**, co ułatwia ich odróżnienie od ładunków generujących przychód. Są uwzględniane w obliczeniach wykorzystania floty (ciężarówka jest w użyciu), ale wykluczone z KPI przychodów.
 
 ---
 
 ## Raportowanie
 
-Kilometry repozycjonowania pojawiają się w:
-- **Raporcie rentowności tras** — jako kolumna "martwe km"
-- **Raporcie CO2** — raportowane oddzielnie od załadowanych przejazdów
+Kilometry repozycjonowania są śledzone przez pole `distance_km_internal` i pojawiają się w:
+
+- **Raporcie rentowności tras** — jako osobna kolumna "martwe km", więc możesz zobaczyć prawdziwy koszt obsługi każdej trasy.
+- **Raporcie CO2** — przejazdy repozycjonowania wnoszą wkład do emisji i są raportowane osobno od załadowanych podróży.
 
 ---
 
-<Card title="Tablica planowania" icon="calendar" href="/en/planner/planning-board">
-  Zobacz, jak zlecenia repozycjonowania pojawiają się na tablicy obok zwykłych ładunków.
+<Card title="Tablica planowania" icon="calendar" href="/pl/planner/planning-board">
+  Zobacz, jak zlecenia repozycjonowania pojawiają się na tablicy dyspozytorskiej obok zwykłych ładunków.
 </Card>
 
-<Card title="Tworzenie zlecenia" icon="plus" href="/en/planner/creating-orders">
-  Pełny przewodnik po tworzeniu zleceń wszystkich typów.
+<Card title="Tworzenie zlecenia" icon="plus" href="/pl/planner/creating-orders">
+  Pełny przewodnik po tworzeniu zleceń wszystkich typów — Własna ciężarówka, Podzlecone i Repozycjonowanie.
 </Card>

@@ -1,0 +1,143 @@
+---
+title: "Verkoop"
+description: "Volg leads en bestaande accounts doorheen de verkooppijplijn — van eerste contact tot een geconverteerde klant, offerte of tender."
+icon: "user-group"
+---
+
+## Overzicht
+
+De module **Verkoop** (`/operator-crm`, in de hoofdnavigatie als **Sales**) is waar u relatiebeheer apart beheert van de transportorders waartoe die relaties leiden. Ze is opgebouwd rond twee soorten records die door dezelfde levenscyclusfasen bewegen:
+
+- **Leads** — prospects die nog geen klant zijn in Druma
+- **Accounts** — uw bestaande klanten, opgevolgd via dezelfde pijplijn zodra u vernieuwingen of uitbreiding wilt beheren
+
+Verkoop is beschikbaar voor de rollen **admin, company_admin, planner, dispatcher en customer_service**.
+
+---
+
+## De tabbladbalk
+
+<Steps>
+  <Step title="Pijplijn">
+    Een kanban-bord van leads en accounts over vier fasen, met sleep-en-neerzet om de fase te wijzigen. Dit is uw standaard landingstabblad.
+  </Step>
+  <Step title="Contacten">
+    Een tabel van alle leads, met kolommen voor bedrijf, contact, land, bron, laatste contact en fase.
+  </Step>
+  <Step title="Accounts">
+    Een tabel van uw bestaande klanten, elk optioneel opgevolgd met zijn eigen levenscyclusfase en datum laatste contactmoment.
+  </Step>
+  <Step title="Offertes">
+    Opent de pagina [Offertes](/nl/planner/quotes) — spot-prijzen voor een specifieke lading voor een lead of klant.
+  </Step>
+  <Step title="Tenders (indien ingeschakeld)">
+    Opent [Tenders & Contracten](/nl/planner/tenders-and-contracts) — alleen getoond wanneer tenderbeheer is ingeschakeld voor uw bedrijf.
+  </Step>
+  <Step title="Rapportage">
+    Winratio, gemiddelde dealgrootte, lengte van de verkoopcyclus, gewogen pijplijnwaarde en een activiteitenklassement.
+  </Step>
+</Steps>
+
+<Note>
+Offertes en Tenders delen deze tabbladbalk zodat de hele verkoopbeweging — van lage tot hoge betrokkenheid — als één geheel leest, maar elk houdt zijn eigen paginabody en eigen docpagina.
+</Note>
+
+---
+
+## Levenscyclusfasen
+
+Elke lead en elk opgevolgd account doorloopt dezelfde set fasen:
+
+| Fase | Betekenis |
+|---|---|
+| `lead` | Eerste contact, nog niet gekwalificeerd |
+| `qualified` | Bevestigd als echte opportuniteit |
+| `proposal` | Een offerte of tender is verstuurd |
+| `won` | Geconverteerd naar een actieve klant |
+| `lost` | Niet geconverteerd |
+| `inactive` | Account is stil geworden |
+
+Het **Pijplijn**-bord toont alleen de kolommen `lead` → `qualified` → `proposal` → `won`. `lost` en `inactive` worden ingesteld via de fase-vervolgkeuzelijst in het detailpaneel van een record, niet als bordkolommen getoond.
+
+---
+
+## Een lead toevoegen
+
+<Steps>
+  <Step title="Klik op Nieuwe lead">
+    Klik op het tabblad **Pijplijn** of **Contacten** op **Nieuwe lead**.
+  </Step>
+  <Step title="Vul de gegevens in">
+    Voer in:
+    - **Bedrijf** (verplicht)
+    - **Contact**, **Land**, **E-mail**, **Telefoon**, **BTW**
+    - **Bron** — vrije tekst (bijv. "doorverwijzing", "vrachtbeurs")
+    - **Fase** — standaard `lead`
+    - **Notities**
+  </Step>
+  <Step title="Aanmaken">
+    Klik op **Aanmaken**. De lead verschijnt op het Pijplijn-bord en in de Contacten-tabel.
+  </Step>
+</Steps>
+
+<Note>
+Leads afkomstig van een inkomende offerteaanvraag of een inkomende, doorgestuurde CRM-e-mail worden automatisch getagd ("Inkomende offerteaanvraag" / "Inkomende e-mail") in de Bron-kolom van de Contacten-tabel.
+</Note>
+
+---
+
+## Werken met een lead of account
+
+Klik op een kaart of rij om het detailpaneel te openen:
+
+- **Fase** — wijzig de levenscyclusfase rechtstreeks.
+- **Notities** — vrije notities over de relatie.
+- **Deal** *(alleen leads)* — verwachte waarde (EUR/RON), waarschijnlijkheid (%), verwachte afsluitdatum, kommagescheiden tags, en een reden-verloren-vervolgkeuzelijst die verschijnt zodra de fase op `lost` wordt gezet.
+- **Personen/Contacten** *(alleen leads)* — voeg meerdere contactpersonen toe voor hetzelfde account en markeer er één als primair.
+- **Contactmomenten** — leg een interactie vast: kies een type (**Bellen, E-mail, Meeting, Demo, Notitie**), een optionele samenvatting/uitkomst, en een optionele bijlage, klik dan op **Contactmoment loggen**. Contactmomenten worden gedeeld door leads en accounts en worden nieuwste-eerst getoond.
+
+Voor leads bevat de paneelkoptekst ook:
+
+- **Offerte aanmaken** — deep-link naar [Offertes](/nl/planner/quotes) met een nieuwe offerte vooraf ingevuld vanuit deze lead.
+- **Tender aanmaken** *(indien tenderbeheer is ingeschakeld)* — deep-link naar [Tenders & Contracten](/nl/planner/tenders-and-contracts) met een nieuwe tender vooraf gekoppeld aan deze lead.
+- **Converteren naar klant** — zie hieronder. Eenmaal geconverteerd wordt deze knop **Klant bekijken**.
+
+---
+
+## Een lead converteren naar een klant
+
+<Steps>
+  <Step title="Open de lead en klik op Converteren naar klant">
+    Bevestig de melding. Druma maakt een nieuw klantrecord aan vanuit de gegevens van de lead — dit is idempotent, dus opnieuw klikken op een al-geconverteerde lead opent gewoon de bestaande klant in plaats van te dupliceren.
+  </Step>
+  <Step title="Maak optioneel een tariefkaart aan">
+    U wordt gevraagd of u een lane-pricing-tariefkaart wilt aanmaken voor de nieuwe klant. Kiest u **Tariefkaart aanmaken**, dan komt u op een vooraf ingevuld nieuw tariefkaartformulier; **Niet nu** laat niets achter.
+  </Step>
+  <Step title="Vind hem onder Accounts">
+    De pagina wisselt naar het tabblad **Accounts**, gefilterd op de nieuw geconverteerde klant.
+  </Step>
+</Steps>
+
+---
+
+## Rapportage
+
+Het tabblad **Rapportage** vat uw pijplijn samen:
+
+- **Winratio** — aandeel afgesloten deals (gewonnen vs. verloren) dat gewonnen werd.
+- **Gem. dealgrootte** — gemiddelde verwachte waarde over deals met een ingestelde waarde.
+- **Verkoopcyclus** — gemiddeld aantal dagen van leadaanmaak tot afsluiting.
+- **Gewogen pijplijn** — som van de verwachte waarde × waarschijnlijkheid van elke open deal, uitgesplitst per fase (met een berekeningstoelichting).
+- **Tenderpijplijn** *(indien tenderbeheer is ingeschakeld)* — toegezegd volume per tenderstatus.
+- **Activiteitenklassement** — gelogde contactmomenten per teamlid.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Offertes" icon="file-invoice" href="/nl/planner/quotes">
+    Stel een vrachtofferte samen en verstuur ze naar een lead of klant, met één-klik-accepteren dat er een bevestigde order van maakt.
+  </Card>
+  <Card title="Tenders & Contracten" icon="file-signature" href="/nl/planner/tenders-and-contracts">
+    Volg inkooptenders van klanten van prospect tot actief contract en ken traject­tarieven toe aan een tariefkaart.
+  </Card>
+</CardGroup>

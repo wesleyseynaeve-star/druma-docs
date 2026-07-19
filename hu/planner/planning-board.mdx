@@ -1,89 +1,184 @@
 ---
 title: "Tervezőtábla"
-description: "A vizuális diszpécser-tábla használatával megtekintheted az összes teherautódat, kioszthatod a rendeléseket, észlelheted a konfliktusokat és egy pillanat alatt kezelheted a flottád ütemezését."
+description: "A vizuális diszpécser-tábla — párosítsd a felszabaduló teherautókat a teherautót igénylő rakományokkal, rendelj hozzá egy húzással, és tervezz be kombinációkat előre, mielőtt véglegesítenéd őket."
 icon: "calendar"
 ---
 
-## A tervezőtábla áttekintése
+## Áttekintés
 
-A tervezőtábla a Druma elsődleges diszpécser-felülete. A bal oldali oszlopban a teherautóid jelennek meg, a jobb oldali panelen a kiosztás nélküli rendelések láthatók. Rendeléseket húzol a teherautókra, vagy a teherautóra kattintva rendeled hozzá a rendelést.
+A Tervezőtábla a fő diszpécser-eszközöd. Nyisd meg a **Tervező → Tervezőtábla** menüponton keresztül.
 
-![Tervezőtábla](/images/placeholder.png)
+A táblának három módja van, amelyek között a felső fülekkel válthatsz:
 
-## A tábla elrendezése
+| Mód | Mire való |
+|---|---|
+| **Most** | Az elsődleges diszpécser-nézet — két oszlop, amely a kapacitást a kereslettel párosítja. Itt rendeled hozzá és rendeled át a teherautókat. |
+| **Idővonal** | Gantt-stílusú nézet minden teherautó ütemezéséről, hogy egy nap, három nap vagy egy hét távlatában észrevedd a réseket és ütközéseket. |
+| **Térkép** | Ugyanazok a kiosztás nélküli rakományok és sofőrök, térben ábrázolva. |
 
-### Teherautók panel (bal)
+<Warning>
+A Tervezőtábla legalább 1280 pixel széles asztali képernyőkre lett tervezve. Telefonon vagy tableten egy egyszerűsített kártya-hírfolyam váltja fel a kétoszlopos elrendezést, és a húzd-és-ejtsd funkció nem érhető el.
+</Warning>
 
-Minden teherautókártya mutatja:
-- **Rendszám és teherautó neve**
-- **Jelenlegi státusz** (Elérhető / Foglalt / Úton / stb.)
-- **Sofőr neve** és elérhetősége
-- **Utolsó ismert helyszín**
-- **Hozzárendelt rendelések** az adott napra
+---
 
-### Kiosztás nélküli rendelések panel (jobb)
+## Most — a kétoszlopos diszpécser-nézet
 
-Minden rendeléskártya mutatja:
-- Felvételi és szállítási helyszínt és dátumot
-- Ügyfél nevét
-- Megállapodott árat és árrést
-- Szükséges teherautó típusát
+A **Most** fül egy osztott, kétoszlopos elrendezés:
 
-### KPI sor (felső)
+- **Bejövő** (bal) — ami kapacitást szabadít fel: azok a teherautók, amelyek éppen most szabadok, és azok, amelyek hamarosan felszabadulnak, mert a jelenlegi rakományuk a látható dátumtartományon belül kerül kiszállításra.
+- **Kimenő** (jobb) — azok a rendelések, amelyeknek még mindig teherautóra van szükségük (kiosztás nélküli felvételek), plusz a már hozzárendelt rendelések, mind ugyanúgy csoportosítva, mint a Bejövő oszlop, így egy adott zónában felszabaduló teherautó vizuálisan egy vonalban van az ugyanabban a zónában felvehető rakományokkal.
 
-A tábla tetején megjelennek a fő mutatók:
-- **Összes függő rendelés**
-- **Elérhető teherautók**
-- **Érkezők** (ma várható szállítások)
-- **Késések**
+<Frame caption="A Most nézet — Bejövő kapacitás bal oldalt, Kimenő rakományok jobb oldalt, a sűrűség- és Előretervezés-kapcsolókkal az eszköztárban.">
+  <img src="/images/planner/planning-board-split.png" alt="Tervezőtábla Most nézete a Bejövő és Kimenő oszlopokkal" />
+</Frame>
 
-## Rendelés kiosztása teherautóra
+Egy teherautó hozzárendelése egy húzás: fogj meg egy sort bármelyik oldalon, és ejtsd a másik oldal megfelelő sorára.
 
-**Módszer 1 — Húzd és ejtsd:**
-Fogd meg a rendeléskártyát a jobb panelről, és ejtsd a kívánt teherautó-kártyára a bal panelen.
+- Ha egy **teherautót** húzol egy rakományra, megnyílik egy megerősítő panel, amely mutatja a teherautó, a sofőr és a rendelés adatait — beleértve bármilyen kabotázs-, pótkocsi- vagy sofőrváltási-megálló ellenőrzést, amely a te döntésedet igényli —, mielőtt a hozzárendelés véglegesítésre kerül.
+- Ha egy **kiszállítás alatt lévő rakományt** (egy még nem szabad, de hamarosan felszabaduló Bejövő kártyát) húzol egy Kimenő rakományra, az még nem rendel hozzá teherautót — hiszen még nincs egy szabad, amit hozzárendelhetnél —, hanem egy előzetes kapcsolatot rajzol be a kettő között. Ezt megismételve egy teljes **láncot** építhetsz fel jövőbeli újratöltésekből egyetlen teherautóhoz, még mielőtt az az első számára felszabadulna; lásd az **Előretervezés mód** szakaszt lentebb a teljes lánc-munkafolyamatért, beleértve az automatikus optimalizálót, amely a berajzolt láncokat figyeli egy olcsóbb cseréért. Használd a **Teherautó hozzárendelése** gombot azon a soron, amikor készen állsz a véglegesítésre.
 
-**Módszer 2 — Kattintás:**
-Kattints egy rendeléskártyára a jobb panelen, majd kattints a kívánt teherautóra. Megjelenik egy megerősítő párbeszédablak.
+<Note>
+A húzás **mindkét irányban** működik — húzhatsz egy Bejövő kártyát egy Kimenő rakományra, vagy egy Kimenő rakományt egy Bejövő kártyára. Bármelyik irányban ugyanarra a sorra kerülsz.
+</Note>
 
-**Módszer 3 — A teherautókártyáról:**
-Kattints a teherautókártyán a **+** gombra, és válassz egyet a kiosztás nélküli rendelések közül.
+### Dátumtartomány
 
-## Figyelmeztetések és blokkolók
+A tábla egy gördülő, 7 napos horizontot mutat. Használd a dátumcímke melletti nyilakat egy teljes héttel korábbra vagy későbbre lapozáshoz, vagy kattints a **Ma** gombra, hogy visszaugorj a jelenlegi 7 napos ablakhoz.
 
-### Dokumentum lejárati figyelmeztetések
+### Sűrűség: Kompakt vagy Kényelmes
 
-Ha egy teherautónak lejárt dokumentuma van (biztosítás, ITP stb.), sárga figyelmeztetés jelenik meg a kiosztás előtt. Továbbléphetünk a hozzárendeléssel, de a figyelmeztetés fennmarad.
+Egy kapcsoló az eszköztárban váltja, mennyi részletet mutat minden sor:
 
-### ADR figyelmeztetések
+- **Kompakt** (alapértelmezett) — sűrű, egysoros sorok rendezhető/átrendezhető oszlopokkal, ez áll legközelebb egy táblázathoz. Ideális a gyors áttekintéshez és a tömeges tervezéshez.
+- **Kényelmes** — gazdagabb kártyák, teherautónként vagy rendelésenként több vizuális részlettel. Ideális néhány munka alaposabb átnézéséhez.
 
-Ha egy ADR-minősítést igénylő rendelést olyan teherautóra próbálsz kiosztani, amelynek lejárt vagy hiányzó ADR-tanúsítványa van, a Druma blokkolja a hozzárendelést.
+Mindkét sűrűség ugyanazokat az alapadatokat mutatja, és ugyanazt a húzd-és-ejtsd funkciót, szűrőket és csoportosítást támogatja — a váltás pusztán vizuális.
 
-### Kabotázs figyelmeztetések
+### Csoportosítás és összecsukás
 
-Ha a kiosztás a teherautót a kabotázs-korlát közelébe viszi, figyelmeztető üzenet jelenik meg.
+Használd a **Csoportosítás** vezérlőt az eszköztárban, hogy mindkét oszlopot zónacsoport, ország, város, tervezési csoport vagy dátum szerint rendezd — a Bejövő és Kimenő mindig ugyanazon tengely mentén csoportosít, így a kapacitás és a kereslet párosítása vizuálisan igazodva marad. A csoport-fejlécek összecsukhatók; ha összecsukod az egyik oldal egy szakaszát, a másik oldal megfelelő szakasza is összecsukódik, így a két oszlop szinkronban marad. Kattints az **Összes kibontása** gombra, hogy egyszerre visszaállíts minden összecsukott csoportot.
 
-### Súlytúllépés
+<Note>
+A zónacsoportok a saját, hierarchikus irányítószám-csoportosításaid (a Beállításokban konfigurálva), amelyek hasznosak ahhoz, hogy egy pillantással összevesd, "melyik telephelyemen/régiómban szabadul fel egy teherautó" azzal, hogy "melyik régióban van felvehető rakomány".
+</Note>
 
-Ha a rakomány meghaladja a teherautó maximális teherbírását, a Druma figyelmezteti a tervezőt.
+### Oszlopok
 
-## Visszafordulási rakomány panel
+Kattints az **Oszlopok** gombra, hogy kiválaszd, melyik oldal mely mezőket mutassa, és húzással rendezd át őket. A Bejövő és a Kimenő oldal független oszlopkészletet tart fenn — egy mező hozzáadása vagy elrejtése az egyik oldalon nem érinti a másikat. Az alapmezők (Státusz, azonosító, ETA) mindig megjelennek, és nem rejthetők el vagy rendezhetők át; minden más (irányítószám-/város-/ország-bontás, sofőr neve, rendszám, pótkocsi, kabotázs-státusz, alvállalkozó és további mezők) opcionálisan bekapcsolható.
 
-A kiszállítás utáni üres visszaút elkerülése érdekében, amikor egy rendelés kiszállítottnak van jelölve, a Druma automatikusan megnyitja a **Visszáru rakományok** panelt. Ez a panel:
-- Timocom-keresés eredményeit mutatja az érintett régióból
-- Rangsorolja a terheléseket a holtfutási kilométerek szerint
-- Lehetővé teszi az egy kattintással történő rendeléslétrehozást
+### Mentett nézetek
 
-## Tábla szűrői
+A **Nézetek** menü lehetővé teszi, hogy elmentsd a jelenlegi szűrő-, csoportosítás- és oszlop-konfigurációt egy elnevezett nézetként, válts a mentett nézetek között, és megjelölj egyet alapértelmezettként — ez ezután automatikusan alkalmazásra kerül, amikor legközelebb te (vagy bárki más, aki ugyanazt a nézetet használja) megnyitja a táblát.
 
-Szűrd a tervezőtáblát a következők szerint:
-- **Dátumtartomány** — Ma / Ez a hét / Következő 7 nap / Egyéni
-- **Tervező** — Csak a saját hozzárendeléseid megjelenítése
-- **Teherautó típus** — Ponyvás / Hűtős / Platós stb.
+### Szűrők és keresés
 
-<Card title="Rendelés létrehozása" icon="plus" href="/en/planner/creating-orders">
-  Új fuvarozási rendelés létrehozása a tervezőtáblán.
+Kattints a **Szűrők** gombra a szűrőpanel megnyitásához — státusz, felvételi/szállítási dátumtartomány, zóna, valamint felvételi/szállítási ország, város vagy irányítószám. Az aktív szűrők eltávolítható címkeként jelennek meg az eszköztár alatt; kattints az **Összes törlése** gombra a visszaállításukhoz. Minden oszlopnak saját gyorskereső mezője is van, amellyel rendelésszám, cím vagy sofőr neve szerint szűrhetsz az adott oldalon belül.
+
+### Gyorsáttekintő csempék
+
+Minden oszlop felett kis csempék foglalják össze egy pillantásra, mi található benne:
+
+- **Bejövő** — hány teherautó/rakomány esik az egyes kapacitás-kategóriákba.
+- **Kimenő** — **Tervezetlen**, **Késésben** és **Időben halad** számlálók azokra a rakományokra, amelyeknek már van előzetes vagy végleges terve.
+
+Kattints egy csempére, hogy az adott oszlopot csak arra a kategóriára szűrd; kattints rá újra a szűrő törléséhez.
+
+### Teherautó hozzárendelése / Teherautó eltávolítása / Eladásra felkínálás
+
+Minden Kimenő sor, amelyhez tartozik teherautó (végleges vagy előzetesen berajzolt), műveletgombokat mutat:
+
+- **Teherautó hozzárendelése** — egy előzetesen berajzolt kombináció véglegesítése hozzárendelésként.
+- **Teherautó eltávolítása** — a terv visszavonása, a rendelés visszaküldése a kiosztás nélküliek közé.
+- **Eladásra felkínálás** — a rakomány felkínálása egy alvállalkozónak/fuvarozónak, ahelyett hogy a saját flottáddal futtatnád. Egy eladott rakomány **Eladó** vagy **Eladva · [fuvarozó]** jelvényt mutat; ha a fuvarozó késésben van, egy **Késésben** jelvény is megjelenik. Egy eladott rakományt visszaigényelhetsz a saját flottádba, amíg a rakodás még nem kezdődött el.
+
+### Előretervezés mód
+
+Az **Előretervezés** kapcsoló az eszköztárban megváltoztatja, mit csinál egy húzd-és-ejtsd művelet:
+
+- **Kikapcsolva** (alapértelmezett) — a húzás azonnal véglegesen hozzárendeli a teherautót (megnyílik a megerősítő panel).
+- **Bekapcsolva** — a húzás egy előzetes kombinációt rajzol be, anélkül hogy bármit is véglegesítene. A berajzolt kombinációk egy **Előzetes** jelvényt, egy becsült (vagy ahol van útvonaltervezési adat, egy valós PTV-alapú) ETA-t, és egy időben/késésben-verdiktet mutatnak — így egy egész hétre való kombinációt felvázolhatsz, mielőtt bármelyiket lezárnád. Használd a **Teherautó hozzárendelése** gombot egy berajzolt soron, amikor készen állsz a véglegesítésre.
+
+**Lánc építése.** Egy berajzolt terv nem áll meg egyetlen teherautónál és egy rakománynál. Húzz egy **kiszállítás alatt lévő** Bejövő kártyát — egy még nem szabad, de hamarosan felszabaduló teherautót — egy Kimenő rakományra, és a Druma berajzol egy kapcsolatot, amely az új rakományt a jelenleg úton lévő mögé láncolja. Húzd újra az új lánc-végre, és megtervezheted egy egyetlen teherautó jövőbeli újratöltéseinek teljes sorozatát, napokkal azelőtt, hogy ténylegesen felszabadulna — egy Kolozsvár → Nagyszeben → Temesvár menet, hétfőn berajzolva egy még Kolozsvár felé tartó teherautóhoz.
+
+Minden berajzolt sor mutat egy **#{rendelés} után** címkét, amely megnevezi a rakományt, amely mögé láncolódik, így a sorrend egy pillantásra is olvasható marad. A háttérben egy berajzolt terv egy adott teherautóhoz, az előzményrendeléshez (amely után láncolódik), vagy mindkettőhöz horgonyzódik — és egy horgony egyszerre csak egy újratöltést szolgálhat ki: ha egy már lefoglalt horgonyra húzol egy új rakományt, a horgony átkerül az új rakományhoz, és a réginek megszűnik az előzetes berajzolása, ahelyett hogy ugyanaz a teherautó két lánc között lenne duplán lefoglalva.
+
+<Note>
+Semmi ebből nem érinti a valódi rendelést, amíg egy teherautó ténylegesen hozzá nincs rendelve a tábla normál folyamatán keresztül — egy húzással, kikapcsolt Előretervezés mellett, vagy a **Teherautó hozzárendelése** gombbal egy berajzolt soron. Addig egy lánc pusztán tervezési vázlat, amely szabadon átrendezhető.
+</Note>
+
+**Az újratöltés-átrendelési optimalizáló.** Amint létrejön egy lánc, a Druma a háttérben folyamatosan ellenőrzi. Minden lánc **végénél** — az utolsó berajzolt újratöltésnél, amely mögé még semmi nem láncolódik — megvizsgálja: van-e egy másik, még nem berajzolt újratöltés, amelynek felvételi pontja közelebb esik ahhoz, ahol az adott teherautó ténylegesen felszabadul?
+
+Például: egy teherautó holnapra Kolozsváron van berajzolva újratöltésre. Felbukkan egy közelebbi, még ki nem választott újratöltés, amelynek felvétele Nagyszebenben van. Ha a Nagyszeben-rakományra váltás valóban csökkentené az üres-futás költségét — €-ban értékelve, a teherautó saját költségprofilja alapján, nem csak a nyers kilométerek szerint —, a Druma egy javaslat-címkét jelenít meg közvetlenül azon a soron, valami ilyesmit: **"Olcsóbb újratöltés elérhető: −18 km · 22 €."** Kattints a **Váltás a #...-ra** gombra, és a csere egy lépésben alkalmazásra kerül: a Nagyszeben-rakomány berajzolásra kerül, a Kolozsvár-rakomány automatikusan elveszti a berajzolását (ugyanaz az egyszer-használatos horgony szabály, amelyre a láncok fentebb is támaszkodnak), és egy toast megerősíti: **"#... újratöltés berajzolva helyette."** Ez ugyanaz a javaslat-címke mechanizmus, amelyet lentebb ismertetünk, kifejezetten a lánc-végekre alkalmazva.
+
+Néhány védőkorlát biztosítja, hogy a javaslatok megbízhatóak maradjanak:
+
+- Csak olyan cserét javasol, amely **legalább 15 km-t és legalább 0 €-t** takarít meg — sosem olyat, amely csak azért tűnik olcsónak, mert egy teherautó költségprofilja hibásan nullára van beállítva.
+- **Ismeri az EU 561/2006 szabályozást** — sosem javasol olyan újratöltést, amely a teherautó sofőrjét a napi fennmaradó vezetési idején túlra tolná.
+- Kattints a címkére a kibontásához, hogy lásd a "miért"-et és a valós, útvonaltervezett előtte/utána hatást, beleértve egy figyelmeztetést arról, hogy a kiszorított rakomány újra kiosztás nélkülivé válik.
+
+<Note>
+Az optimalizáló mindig csak javasol; semmi sem kerül alkalmazásra kattintás nélkül. Akkor is csendben marad, ha nincs jobbat javasolni — a címke hiánya azt jelenti, hogy a Druma nem talált olcsóbb újratöltést, nem azt, hogy nem ellenőrizte.
+</Note>
+
+**Lánc-biztonság változás esetén.** Ha egy láncban feljebb (korábban) valami megváltozik — a rendelést lemondják, a teherautóját eltávolítják, vagy a teherautóját lecserélik —, a Druma ellenőrzi, hogy van-e bármi berajzolva ez után, lentebb a láncban. Ha nincs, a változás minden további nélkül végrehajtódik. Ha van egy lánc-vég lentebb, választanod kell: **Teljes lánc eltávolítása** (az eltávolítást tovagyűrűzteti minden utána berajzolt újratöltésen) vagy **Az utólagos rendelések megtartása** (csak azt az egy kapcsolatot szünteti meg, és a lentebbi rakományokat önálló, továbbra is újra-hozzárendelhető tételekként hagyja). Bármelyiket is választod, egy berajzolt terv sosem rothad csendben törött vagy árva állapotba — te döntöd el, mi történjen a lánc többi részével, sosem kell manuálisan felkutatnod a fellógó kapcsolatokat.
+
+### Javaslat-címkék
+
+Ahol a Druma automatikus tervezése magabiztos javaslattal rendelkezik egy kiosztás nélküli rendeléshez, egy javaslat-címke jelenik meg közvetlenül azon a soron. Kattints rá a javasolt teherautó közvetlen alkalmazásához, vagy utasítsd el, ha nem megfelelő.
+
+### Oszlopok közötti kiemelés
+
+Kattints bármelyik sorra a kiemelésének rögzítéséhez. Ha az a sor egy berajzolt vagy végleges kombináció része, a Druma kiemeli a megfelelő sor(oka)t a másik oszlopban, és láthatóvá görgeti őket — így ha a Bejövő oszlopban egy teherautóra kattintasz, pontosan látod, mely rakomán(ok)hoz van párosítva a Kimenő oszlopban, és fordítva.
+
+### Virtuális rendelések
+
+Kattints a **Virtuális** gombra egy helyfoglaló rendelés létrehozásához, amely lefoglal egy teherautót egy várt rakományhoz, amelynek még nincs végleges foglalása — hasznos, amikor egy megerősített rendelés előtt előre tervezel.
+
+---
+
+## Konfliktusok és blokkolók
+
+Ha egy javasolt hozzárendelés problémát okozna — egy kabotázs-korlátot, egy pótkocsi-eltérést, egy megoldatlan sofőrváltási megállót —, a Druma blokkolóként jelöli meg a megerősítő panelen, ahelyett hogy csendben átengedné a hozzárendelést. Néhány blokkoló kifejezett elfogadást igényel, mielőtt folytathatnád; mások pusztán tájékoztató jellegűek.
+
+---
+
+## Rendelés-adatok megtekintése
+
+**Kattints** bármelyik sorra a részletező panel megnyitásához. Onnan szerkesztheted a rendelést, megváltoztathatod a státuszát, vagy felhívhatod a sofőrt.
+
+---
+
+## Idővonal nézet
+
+Válts az **Idővonal** fülre egy Gantt-stílusú nézethez: minden teherautó egy sor, és az ütemezése idő szerint pozicionált szakaszokként jelenik meg — vezetési szakaszok, valamint rakodási/lerakodási időablakok. A tervezett (még nem tényleges) szakaszok sraffozott mintával jelennek meg; a tényleges/megerősített szakaszok tömör kitöltéssel. Az a szakasz, amelynek még nincs megerősített időbélyege, csökkentett átlátszatlansággal és szaggatott szegéllyel jelenik meg, jelezve, hogy becsült.
+
+<Frame caption="Idővonal nézet — minden sor egy teherautó; egy piros vonal jelzi a jelenlegi időt.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Tervezőtábla Idővonal nézete, teherautókat mutatva sorokként, idő szerint pozicionált szakaszokkal" />
+</Frame>
+
+Használd a dátum-navigációs vezérlőket az ütemezésben való mozgáshoz, és az **időtáv-választót**, hogy megválaszd, mennyi idő legyen látható:
+
+| Időtáv | Mire jó |
+|---|---|
+| **1 nap** | Részletes, napon belüli tervezés — a pontos rakodási és lerakodási időablakok megtekintése |
+| **3 nap** | Rések és ütközések felismerése a következő 72 órában |
+| **1 hét** | Kapacitás-áttekintés — mely teherautók szabadok a teljes hét folyamán |
+
+Az Idővonal ugyanazt a Szűrők panelt osztja meg a Most nézettel, így egy státusz-, dátum-, zóna- vagy helyszín-szűrő átkerül, amikor fület váltasz.
+
+---
+
+## Térkép nézet
+
+Válts a **Térkép** fülre, hogy a kiosztás nélküli rakományokat és az elérhető sofőröket sorok helyett térben ábrázolva lásd. Ez hasznos egy gyors "mi van mihez közel" térbeli áttekintéshez, mielőtt visszaváltanál a Most nézetre a tényleges hozzárendeléshez. Az **Automatikus javaslat** és a **Virtuális** műveletek itt is elérhetők.
+
+---
+
+<Card title="Mai nézet" icon="sun" href="/hu/planner/today-view">
+  A napi reggeli munkafolyamatodhoz — aktív rendelések, élő teherautó-pozíciók és státusz-riasztások egyetlen képernyőn.
 </Card>
 
-<Card title="Flottakezelés" icon="truck" href="/en/planner/fleet-management">
-  Teherautók hozzáadása és kezelése a Drumában.
+<Card title="Rendelés létrehozása" icon="plus" href="/hu/planner/creating-orders">
+  Új vagy a Drumában? Kezdd itt, hogy megtanuld, hogyan hozd létre az első rendelésedet.
 </Card>

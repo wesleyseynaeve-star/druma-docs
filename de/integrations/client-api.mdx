@@ -1,44 +1,174 @@
 ---
 title: "Client-API-Integration (CAPI)"
-description: "Ermöglichen Sie Kunden, Aufträge direkt in Druma einzureichen oder Lieferereignisse in Echtzeit zu empfangen."
+description: "Lassen Sie Kunden Aufträge direkt in Druma einreichen oder Echtzeit-Lieferereignisse an einen Webhook empfangen — pro Kunde konfiguriert, ohne Codeänderungen in Druma."
 icon: "plug"
 ---
 
-## Übersicht
+Die Client-API-Integration (CAPI) schafft einen direkten Datenkanal zwischen einem bestimmten Kunden und Ihrem Druma-Konto. Sie hat zwei unabhängige Hälften:
 
-Die Client-API-Integration ermöglicht es Ihren Kunden oder deren ERP-Systemen, direkt mit Druma zu kommunizieren:
-- **Auftragseinreichung** — Kunden können Aufträge programmgesteuert erstellen
-- **Status-Webhooks** — Kunden erhalten Echtzeit-Statusbenachrichtigungen
+- **Eingehend**: Das System des Kunden sendet Aufträge automatisch an Druma. Keine manuelle Auftragseingabe nötig.
+- **Ausgehend**: Druma sendet Statusereignisse (abgefahren, geliefert, abgerechnet usw.) in Echtzeit an das System des Kunden.
+
+Sie können jede Hälfte unabhängig aktivieren, oder beide zusammen. Jeder Kunde erhält sein eigenes Token und seinen eigenen Endpunkt, sodass Zugangsdaten vollständig isoliert sind.
 
 ---
 
-## CAPI für einen Kunden aktivieren
+## Wann Sie dies nutzen
+
+CAPI ist sinnvoll, wenn ein Kunde:
+
+- Ein WMS-, ERP- oder Auftragsverwaltungssystem hat, das HTTP-Aufrufe machen kann
+- Häufig Sendungen bucht und die Anmeldung in Ihrem Kundenportal für die Auftragserstellung vermeiden möchte
+- Automatisierte Lieferbestätigungen an sein System für nachgelagerte Abläufe benötigt (Lagerbuchung, Rechnungsstellung, Bestandsaktualisierung)
+
+Für Kunden, die gelegentlich buchen oder das Portal bevorzugen, fügt CAPI unnötige Komplexität hinzu. Nutzen Sie stattdessen das Standard-Kundenportal.
+
+---
+
+## Wo Sie die Einstellungen finden
+
+1. Gehen Sie im linken Menü zu **Kunden**.
+2. Öffnen Sie den Kundendatensatz.
+3. Klicken Sie auf den Tab **API**.
+
+Sowohl eingehende als auch ausgehende Einstellungen befinden sich auf diesem Tab.
+
+---
+
+## Eingehend — der Kunde sendet Aufträge an Druma
 
 <Steps>
-  <Step title="Kundenprofil öffnen">
-    Gehen Sie zu Kunden und öffnen Sie den Kunden.
+  <Step title="Eingehend aktivieren">
+    Aktivieren Sie im Tab **API** den Schalter **Eingehende API aktivieren**.
   </Step>
-  <Step title="API-Tab öffnen">
-    Klicken Sie auf **API-Integration**.
+  <Step title="Ein Token generieren">
+    Klicken Sie auf **Token generieren**. Das vollständige Token wird **einmalig** angezeigt — kopieren Sie es sofort und speichern Sie es sicher (ein Passwort-Manager eignet sich gut). Druma speichert nur einen Hash des Tokens; der vollständige Wert ist nicht wiederherstellbar. Nach diesem Bildschirm werden nur die ersten 20 Zeichen als Referenz angezeigt.
   </Step>
-  <Step title="API aktivieren">
-    Schalten Sie **Client-API aktivieren** ein.
+  <Step title="Die Endpunkt-URL teilen">
+    Kopieren Sie die unter dem Token-Feld angezeigte **Endpunkt-URL**. Geben Sie diese URL und das Token an das technische Team des Kunden.
   </Step>
-  <Step title="API-Schlüssel teilen">
-    Teilen Sie den generierten API-Schlüssel mit dem Entwicklungsteam des Kunden.
+  <Step title="Feldzuordnungen konfigurieren (optional)">
+    Verwendet das System des Kunden andere Feldnamen als Druma (z. B. `shipment_id` statt `reference`), fügen Sie Zeilen zur Tabelle **Feldzuordnung** hinzu, indem Sie auf **+ Zuordnung hinzufügen** klicken. Jede Zeile ordnet einen Feldnamen des Kunden (linke Spalte) dem entsprechenden Druma-Feldnamen (rechte Spalte) zu.
+  </Step>
+</Steps>
+
+Das System des Kunden sendet eine `POST`-Anfrage an die Endpunkt-URL mit dem Header `Authorization: Bearer <token>` und einem JSON-Body. Druma erstellt den Auftrag im Status **Entwurf** mit dem Quellkennzeichen `booked_via: client_api`. Ein Planer kann Auftragsentwürfe von der Planungstafel aus prüfen und bestätigen.
+
+<Note>
+Über CAPI erstellte Aufträge kommen als Entwürfe an. Sie erscheinen erst als zugewiesen auf der Tafel, wenn ein Planer (oder eine Automatisierungsregel, falls konfiguriert) sie zum nächsten Status bewegt. Das ist Absicht — es erlaubt Ihnen, den Auftrag zu validieren und zu bepreisen, bevor er in den Workflow eintritt.
+</Note>
+
+---
+
+## Ausgehend — Druma sendet Ereignisse an den Kunden
+
+<Steps>
+  <Step title="Ausgehend aktivieren">
+    Aktivieren Sie **Ausgehenden Webhook aktivieren**.
+  </Step>
+  <Step title="Die Webhook-URL eingeben">
+    Fügen Sie die **Webhook-URL** des Kunden ein — den Endpunkt in seinem System, der Ereignisse empfängt.
+  </Step>
+  <Step title="Einen Authentifizierungstyp wählen">
+    Wählen Sie eine der vier Optionen für **Auth-Typ**:
+
+    - **Keine** — kein Authentifizierungsheader (nur in vertrauenswürdigen privaten Netzwerken verwenden)
+    - **Bearer-Token** — Druma fügt jeder Anfrage `Authorization: Bearer <Wert>` hinzu
+    - **Basic Auth** — Druma fügt einen `Authorization: Basic`-Header mit base64-kodiertem Benutzernamen und Passwort hinzu
+    - **HMAC-Signatur** — Druma signiert jeden Anfrage-Body mit einem gemeinsamen Geheimnis und fügt die Signatur in einem Header hinzu; der Kunde verifiziert sie vor der Verarbeitung
+
+    Füllen Sie die Zugangsdaten für den gewählten Typ aus.
+  </Step>
+  <Step title="Ereignisse zum Senden auswählen">
+    Haken Sie die Ereignisse an, die Druma senden soll:
+
+    - **Auftrag erstellt** — ausgelöst, wenn ein neuer Auftrag in Druma bestätigt wird
+    - **Status aktualisiert** — ausgelöst bei jeder Statusänderung (zugewiesen, bei Abholung, unterwegs usw.)
+    - **Geliefert** — ausgelöst, wenn der Auftrag den Status Geliefert erreicht
+    - **Rechnung gesendet** — ausgelöst, wenn eine Verkaufsrechnung an den Kunden gesendet wird
+  </Step>
+  <Step title="Ausgehende Feldzuordnungen konfigurieren (optional)">
+    Erwartet das System des Kunden andere Feldnamen im Payload, verwenden Sie die Tabelle **Feldzuordnung** auf der ausgehenden Seite (identische Bedienung wie eingehend), um Drumas Ausgabefelder vor dem Senden umzubenennen.
+  </Step>
+  <Step title="Speichern">
+    Klicken Sie auf **Speichern**. Druma beginnt ab diesem Zeitpunkt, Ereignisse für die ausgewählten Trigger zuzustellen.
   </Step>
 </Steps>
 
 ---
 
-## Webhook-Ereignisse
+## Feldzuordnung erklärt
 
-Kunden können für folgende Ereignisse Webhooks konfigurieren:
-- `order.confirmed`
-- `order.status_changed`
-- `order.delivered`
-- `invoice.sent`
+Feldzuordnung ist eine Schlüssel-Wert-Übersetzungstabelle. Sie ändert nicht die Daten — nur die Feldnamen im Payload.
 
-<Card title="Public API und Webhooks" icon="code" href="/en/integrations/public-api">
-  REST-API für eigene Integrationen.
+**Beispiel — eingehende Zuordnung:**
+
+| Kundenfeld | Druma-Feld |
+|---|---|
+| `shipment_id` | `reference` |
+| `pickup_city` | `pickup_address` |
+| `drop_city` | `delivery_address` |
+| `cargo_weight_kg` | `weight_kg` |
+
+Mit dieser Zuordnung kann der Kunde seine native JSON-Struktur per POST senden, und Druma interpretiert sie korrekt, ohne dass der Kunde sein Payload umformatieren muss.
+
+**Beispiel — ausgehende Zuordnung:**
+
+| Druma-Feld | Kundenfeld |
+|---|---|
+| `order_id` | `druma_ref` |
+| `status` | `shipment_status` |
+| `actual_delivery_at` | `actual_delivery_datetime` |
+
+Nicht zugeordnete Felder werden mit Drumas Standard-Feldnamen durchgereicht.
+
+---
+
+## Ein Token rotieren
+
+Wird ein Token kompromittiert oder verlässt eine Schlüsselperson das Team des Kunden:
+
+1. Klicken Sie im Tab **API** auf **Token rotieren**.
+2. Das alte Token wird sofort ungültig.
+3. Das neue Token wird einmalig angezeigt — kopieren und verteilen Sie es, bevor Sie wegnavigieren.
+
+Aktualisieren Sie das Token im System des Kunden so schnell wie möglich. Anfragen mit dem alten Token werden ab Abschluss der Rotation mit `401 Unauthorized` abgelehnt.
+
+---
+
+## Aktivitätszeitstempel
+
+Wurde die API genutzt, zeigt der Tab:
+
+- **Letzter Eingang** — Zeitstempel des zuletzt vom Kunden empfangenen Auftrags
+- **Letzter Ausgang** — Zeitstempel des zuletzt an den Webhook des Kunden zugestellten Ereignisses
+
+Diese Zeitstempel sind nützlich, um zu bestätigen, dass die Integration aktiv ist, und um Kommunikationslücken zu diagnostizieren.
+
+---
+
+## Ratenlimits
+
+Druma erzwingt ein Limit von **200 API-Aufrufen pro Stunde pro Kundenkonfiguration**. Anfragen, die dieses Limit überschreiten, erhalten eine `429 Too Many Requests`-Antwort. Das Limit setzt sich in einem rollierenden Einstundenfenster zurück.
+
+Benötigt ein Kunde legitim höheren Durchsatz, kontaktieren Sie den Druma-Support.
+
+<Warning>
+Teilen Sie das Bearer-Token eines Kunden nicht mit anderen Kunden und betten Sie es nicht in öffentlich zugänglichen Code ein. Jedes Token gewährt volle eingehende Auftragserstellungsrechte für den Unternehmensbereich dieses Kunden.
+</Warning>
+
+---
+
+## Verwandte Seiten
+
+<Card title="Kundenportal" icon="users" href="/de/client-portal/tracking-shipments">
+  Die Alternative ohne Code: Kunden verfolgen Sendungen und laden Dokumente herunter, ganz ohne API-Integration.
+</Card>
+
+<Card title="Integrationseinrichtung" icon="plug" href="/de/admin/integration-setup">
+  Übersicht aller unter Einstellungen → Integrationen verfügbaren Integrationen.
+</Card>
+
+<Card title="Auftragserstellung" icon="package-plus" href="/de/planner/creating-orders">
+  Wie Planer Aufträge in Druma erstellen und verwalten.
 </Card>

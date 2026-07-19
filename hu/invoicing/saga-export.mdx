@@ -1,55 +1,126 @@
 ---
-title: "SAGA & WinMENTOR export"
-description: "Hogyan exportálhatod a Druma számla és ügyfél adatait SAGA C és WinMENTOR romániai könyveléshez, beleértve az automatikus éjszakai exportokat."
+title: "SAGA és WinMENTOR export"
+description: "Hogyan exportáld a Druma számla- és ügyféladatait SAGA C-be és WinMENTOR Classic-ba a román könyveléshez, beleértve a könyvelődnek automatikusan e-mailben elküldött havi exportot."
 icon: "database"
 ---
 
-## SAGA C exportálás
+## Áttekintés
 
-A SAGA C Románia legelterjedtebb könyvelő szoftvere kis és közepes vállalkozások körében. A Druma SAGA-kompatibilis exportfájlokat generál, amelyeket közvetlenül importálhatsz a SAGA-ba.
+A SAGA C és a WinMENTOR Classic a két legelterjedtebb könyvelőszoftver, amelyet a román cégek használnak. A Druma mindkét szoftver által elvárt formátumban exportálja a számla- és ügyféladatokat, így a könyvelőd közvetlenül importálhatja, kézi újrarögzítés nélkül.
 
-### Exportálás elindítása
+<Frame caption="Pénzügy → Exportkészítő — egyedi profil exportok; maga a SAGA/WinMENTOR egy havonta e-mailben küldött ZIP, nem egy gomb itt.">
+  <img src="/images/invoicing/saga-export.png" alt="Exportkészítő oldal" />
+</Frame>
+
+## SAGA C export
+
+A SAGA DBF (dBase) fájlokat használ az adatimportáláshoz. A Druma egy teljes exportcsomagot generál, nem csak ügyfél- és számlaadatokat:
+
+- **CLI_\<dátum>.dbf** (Clienti) — ügyfél törzsadatok (név, CIF, cím, fizetési feltételek)
+- **ART_\<dátum>.dbf** (Articole) — az értékesítési számlákon használt szolgáltatás-tétel, alapértelmezetten belefoglalva
+- **IE_\<dátum>_\<dátum>.dbf** (Iesiri) — értékesítési számla adatok (számlaszám, dátum, összegek, ÁFA, ügyfél-hivatkozás)
+- **INT_\<dátum>.dbf** (Intrari) — beszerzési számlák, ha az időszak tartalmaz alvállalkozásba adott rendeléseket
+- **NC_\<dátum>_\<dátum>.xml** (Incasari) — az időszakban rögzített fizetések (ez az egy fájl XML, nem DBF)
+- **README.txt** — az export egyszerű szöveges összefoglalója, plusz importálási utasítások a könyvelődnek
+
+### Hogyan exportálj a SAGA-hoz?
 
 <Steps>
-  <Step title="Lépj a Számlázás → SAGA Export menüpontra">
-    Kattints az **Exportálás** gombra a jobb felső sarokban.
+  <Step title="Lépj a Számlázás modulba">
+    Kattints a **Számlázás** menüpontra a főnavigációban.
   </Step>
-  <Step title="Válaszd ki az időszakot">
-    Válassz dátumtartományt (pl. az aktuális hónap, az elmúlt negyedév).
+  <Step title="Nyisd meg az Export menüt">
+    Kattints az **Export** gombra a Számlázás képernyő jobb felső részén.
   </Step>
-  <Step title="Exportálási típus kiválasztása">
-    Választhatsz:
-    - **Értékesítési számlák (Jurnal Vânzări)** — kimenő számlák
-    - **Vásárlási számlák (Jurnal Cumpărări)** — bejövő/alvállalkozói számlák
-    - **Ügyfelek** — ügyfélnyilvántartás szinkronizálás
+  <Step title="Válaszd a SAGA-t">
+    Válaszd a **SAGA C** opciót az export formátum lehetőségek közül.
   </Step>
-  <Step title="Letöltés">
-    A Druma ZIP-archívumot generál, amely tartalmazza az összes szükséges DBF vagy XML fájlt.
+  <Step title="Állítsd be a dátumtartományt">
+    Válaszd ki az exportálni kívánt számlák kezdő és záró dátumát. A legtöbb könyvelő havi exportot szeretne.
   </Step>
-  <Step title="Importálás SAGA-ba">
-    Nyisd meg a SAGA-t, és importáld a ZIP-archívumot a szokásos SAGA importálási folyamattal.
+  <Step title="Töltsd le a ZIP-et">
+    Kattints a **Letöltés** gombra. A Druma létrehoz egy ZIP-fájlt, amely tartalmazza a fent felsorolt DBF-fájlokat (plusz az Incasari XML-t és a README.txt-t), és letölti a számítógépedre.
   </Step>
 </Steps>
 
-## WinMENTOR exportálás
+### Importálás a SAGA C-be
 
-A WinMENTOR-export ugyanaz a folyamat — a Druma WinMENTOR-kompatibilis formátumot generál.
+<Steps>
+  <Step title="Nyisd meg a SAGA C-t a könyvelőd számítógépén">
+    Jelentkezz be abba a cégfájlba, amelybe importálni szeretnél.
+  </Step>
+  <Step title="Lépj az Importálásra">
+    A SAGA-ban navigálj az **Import** → **Facturi furnizori / clienti** menüpontra (a beállításodtól függően).
+  </Step>
+  <Step title="Válaszd ki a DBF-fájlokat">
+    Tallózz a Drumából letöltött ZIP-hez, és válaszd ki a megfelelő .dbf fájlt.
+  </Step>
+  <Step title="Ellenőrizd a mezőleképezést">
+    A SAGA megmutat egy mezőleképezési előnézetet. Erősítsd meg, hogy az oszlopok megfelelnek a várt SAGA-mezőknek — automatikusan illeszkedniük kell a Druma exportjához.
+  </Step>
+  <Step title="Erősítsd meg az importálást">
+    Kattints az **Import** gombra. A SAGA feldolgozza a rekordokat. Ellenőrizd az importálási naplót esetleges hibákért.
+  </Step>
+</Steps>
 
-## Automatikus éjszakai SAGA export
+## WinMENTOR Classic export
 
-Ha engedélyezed az automatikus éjszakai exportot (**Beállítások → Vállalat → SAGA automatikus export**):
-- A Druma minden nap hajnalban exportálja az előző nap tranzakcióit
-- ZIP-archívumot küld e-mailben a megadott könyvelői e-mail-címre
-- Az export tartalmaz értékesítési és vásárlási naplókat is
+A WinMENTOR Classic **nem** DBF-fájlokat használ, mint a SAGA — a Druma ehelyett csővezérjellel (`|`) tagolt egyszerű szöveges fájlokat exportál, a WinMENTOR "Import szöveges fájlból" formátumát követve:
 
-## A SAGA-export tartalma
+- **Iesiri_\<dátum>_\<dátum>.txt** — értékesítési számla adatok
+- **Clienti_\<dátum>.txt** — az adott időszakban számlázott ügyfelek törzsadatai
+- **Articole_\<dátum>.txt** — az értékesítési számlákon használt szolgáltatás-tétel
+- **Incasari_\<dátum>_\<dátum>.txt** — az időszakban rögzített fizetések (csak akkor szerepel, ha volt ilyen)
+- **README.txt** — importálási utasítások a könyvelődnek
 
-Az export tartalmazza:
-- **INTRARI.dbf** — bejövő számlák (vásárlások, alvállalkozói számár)
-- **IESIRI.dbf** — kimenő számlák (vásárlók felé)
-- **PARTENERI.dbf** — partnerek/ügyfelek nyilvántartása
-- **PLATI.dbf** — rögzített befizetések
+<Steps>
+  <Step title="Nyisd meg az Export menüt a Számlázásban">
+    Lépj a **Számlázás** → **Export** menüpontra.
+  </Step>
+  <Step title="Válaszd a WinMENTOR Classic-ot">
+    Válaszd a **WinMENTOR Classic** opciót a formátum listából. Ez a fenti csővezérjellel tagolt `.txt` fájlokat állítja elő, a SAGA DBF-fájljai helyett — ne használd a SAGA opciót WinMENTOR-hoz.
+  </Step>
+  <Step title="Állítsd be a dátumtartományt és tölts le">
+    Válaszd ki a dátumtartományt, és kattints a **Letöltés** gombra.
+  </Step>
+</Steps>
 
-<Card title="Fizetési nyomon követés" icon="money-bill-wave" href="/en/invoicing/payment-tracking">
-  Fizetések rögzítése a Druma rendszerében az export előtt.
+Importáld a fájlokat a WinMENTOR-ba az **Import/Export → Import din fisier text** menüponttal, a cső (`|`) elválasztót kiválasztva.
+
+## Automatikus havi export (SAGA és WinMENTOR Classic)
+
+Manuális éjszakai letöltés helyett a Druma automatikusan, havonta egyszer e-mailben elküldi az exportot a könyvelődnek:
+
+<Steps>
+  <Step title="Lépj a Beállításokhoz">
+    Navigálj a **Beállítások** → **Automatizálás** menüpontra, és keresd meg a **SAGA export-konfiguráció** szakaszt.
+  </Step>
+  <Step title="Add meg a könyvelő e-mail-címét és az export napját">
+    Add meg a **könyvelő e-mail-címét** (és opcionálisan egy másolatot), majd válaszd ki a **hónap napját** (1–28), amikor az exportnak futnia kell.
+  </Step>
+  <Step title="Mentés">
+    Kattints a **SAGA konfiguráció mentése** gombra. Egy háttérfeladat naponta **06:00 UTC**-kor ellenőrzi, hogy a mai nap megegyezik-e a beállított nappal — ha igen, a Druma generálja az exportot az **előző teljes naptári hónapra**, és közvetlenül e-mailben elküldi a könyvelődnek, kézi letöltési lépés nélkül.
+  </Step>
+</Steps>
+
+<Note>
+Nincs alkalmazáson belüli "Exporttörténet" lista — minden havi export egy e-mailként érkezik, egy biztonságos letöltési linkkel a ZIP-hez, amely **7 napig** érvényes. Ha a link lejár, vagy ciklusidőn kívüli vagy egyedi időszakra van szükséged, használd a fenti manuális **Export** folyamatot (vagy a **Pénzügy** → **Exportkészítő** menüpontot egyedi oszlop-elrendezéshez).
+</Note>
+
+## Több pénznemű számlák és BNR árfolyamok
+
+Az EUR, USD, GBP, CHF vagy PLN pénznemű számláknál a Druma a DBF/szöveges exportba belefoglalja a BNR (Román Nemzeti Bank) árfolyamát a számla dátumára. Ez azt jelenti, hogy a könyvelőd szoftvere azonnal rendelkezik a RON-egyenértékű összegekkel — nincs szükség kézi árfolyam-keresésre.
+
+<Warning>
+Mindig egyeztesd a könyvelőddel, melyik export formátumra van szüksége — SAGA C vagy WinMENTOR Classic. A rossz formátum használata importálási hibákat vagy csendben hibás adatokat eredményez.
+</Warning>
+
+---
+
+<Card title="Integráció beállítása" icon="plug" href="/en/admin/integration-setup">
+  Hogyan konfiguráld az összes Druma-integrációt, beleértve a könyvelőszoftvereket és az API-kapcsolatokat.
+</Card>
+
+<Card title="Számlák generálása" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
+  Hogyan hozz létre számlákat a Drumában, mielőtt exportálnád őket a könyvelőszoftveredbe.
 </Card>

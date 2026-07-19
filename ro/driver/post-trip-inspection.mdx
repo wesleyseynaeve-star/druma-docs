@@ -1,18 +1,120 @@
 ---
-title: "Inspectia post-calatorie"
-description: "Raportarea starii vehiculului dupa finalizarea livrarilor."
-icon: "clipboard-list"
+title: "Inspectia post-calatorie a vehiculului (DVIR)"
+description: "Cum finalizeaza soferii inspectia vehiculului dupa livrare, cum sunt clasificate si escaladate defectiunile, si cum urmaresc si rezolva planificatorii si fleet managerii aceste defectiuni."
+icon: "clipboard-check"
 ---
 
-La finalul schimbului, compania ta poate solicita o inspectie a starii vehiculului.
+## Prezentare generala
 
-## Completarea inspectiei
+Dupa ce soferul apasa **Livrat**, Druma afiseaza automat un ecran suprapus de **Inspectie Post-Calatorie**. Acesta este un Raport de Inspectie a Vehiculului de catre Sofer (DVIR) — o parcurgere structurata a starii camionului la finalul fiecarei curse. Inlocuieste rapoartele verbale informale si ii ofera fleet managerului tau o inregistrare completa, cu marcaj temporal, a fiecarei defectiuni.
+
+<Note>
+Inspectia post-calatorie se declanseaza doar pentru curse cu o singura comanda. Nu apare la opririle intermediare in cursele de grupaj (cu mai multe opriri).
+</Note>
+
+---
+
+## Cum finalizeaza soferul inspectia
 
 <Steps>
-  <Step title="Deschide sectiunea Inspectie">In aplicatie, mergi la tabul Inspectie sau urmeaza promptul de dupa ultima livrare.</Step>
-  <Step title="Parcurge fiecare categorie">Caroserie, anvelope, lumini, motor, documentatie.</Step>
-  <Step title="Raporteaza orice problema">Apasa Problema si adauga o nota sau fotografie.</Step>
-  <Step title="Finalizeaza">Apasa Finalizeaza. Dispecerul primeste o notificare despre problemele raportate.</Step>
+  <Step title="Ecranul apare automat">
+    Imediat dupa apasarea butonului **Livrat**, se deschide ecranul suprapus pe tot ecranul al Inspectiei Post-Calatorie. Soferul nu il poate inchide fara sa ia o actiune — trebuie fie sa o finalizeze, fie sa o sara in mod explicit.
+  </Step>
+  <Step title="Marcheaza fiecare element">
+    Fiecare element din lista are un comutator cu trei stari:
+
+    | Stare | Culoare | Semnificatie |
+    |---|---|---|
+    | **OK** | Verde | Nicio problema gasita |
+    | **Avizare** | Galben | Problema minora — poate continua operarea, planificatorul este notificat |
+    | **Critic pentru siguranta** | Rosu | Defectiune grava — camionul poate fi blocat de la dispecerare |
+
+    Soferul parcurge fiecare element si selecteaza starea potrivita. Elementele sunt implicit **OK**, astfel incat soferul trebuie sa schimbe doar elementele unde exista o problema.
+  </Step>
+  <Step title="Introduce citirea kilometrajului">
+    Un camp numeric in partea de jos a ecranului captureaza citirea curenta a kilometrajului, in kilometri. Aceasta citire este stocata alaturi de inregistrarea inspectiei.
+  </Step>
+  <Step title="Adauga note si fotografii pentru elementele semnalate">
+    Orice element marcat **Avizare** sau **Critic pentru siguranta** se extinde pentru a arata un camp de note si, pentru elementele unde fotografiile sunt activate, un control de incarcare foto. Soferul poate incarca pana la 3 fotografii per defectiune — de la camera dispozitivului sau din selectorul de fisiere. Formate acceptate: JPEG, PNG, WebP, HEIC, HEIF. Maximum 10 MB per fisier.
+  </Step>
+  <Step title="Trimite sau sari">
+    Apasa **Trimite Inspectia** pentru a inregistra rezultatele. Daca soferul nu poate finaliza inspectia imediat (de ex. trebuie sa parcheze si sa faca inconjurul camionului), poate apasa **Sari Inspectia** — aceasta este inregistrata ca inspectie sarita, nu ca trecuta. Un buton **Finalizeaza Inspectia** apare apoi in detaliul incarcaturii pentru comanda livrata, permitand soferului sa revina si sa o completeze mai tarziu.
+  </Step>
 </Steps>
 
-Inspectiile sunt stocate permanent in inregistrarile vehiculului.
+---
+
+## Niveluri de severitate a defectiunilor
+
+### OK
+Nicio actiune necesara. Elementul este inregistrat ca inspectat si fara probleme.
+
+### Avizare
+Defectiunea este notata si planificatorul primeste o alerta. Camionul nu este blocat — poate continua sa fie atribuit comenzilor. Avizarea este vizibila in panoul de detaliu al comenzii si in tabul Flota → **Defectiuni**.
+
+### Critic pentru siguranta
+O defectiune grava care poate face vehiculul nesigur sau neconform pentru operare.
+
+- Planificatorul si fleet managerul sunt notificati imediat.
+- Daca este activat comutatorul de companie **Semnaleaza automat camionul pentru service la defectiune critica**, camionul este marcat automat indisponibil si dispare din lista de atribuire de pe planning board, pana cand defectiunea este rezolvata printr-un ordin de lucru.
+- Soferului i se arata un avertisment clar la trimitere, explicand ca vehiculul poate fi scos din uz.
+
+<Warning>
+Daca comutatorul de auto-blocare este activat, o defectiune critica pentru siguranta va elimina camionul de la dispecerare imediat — chiar daca exista comenzi viitoare deja atribuite lui. Verifica tabul Flota → Defectiuni de indata ce primesti o alerta critica pentru siguranta.
+</Warning>
+
+---
+
+## Ce vad planificatorii
+
+In **panoul de detaliu al comenzii**, o sectiune **DVIR** apare sub informatiile de ruta, odata ce o inspectie a fost trimisa. Arata:
+
+- Statusul inspectiei: Finalizata, Sarita sau In asteptare
+- Marcajul temporal al trimiterii si numele soferului
+- O lista cu fiecare element defect si eticheta sa de severitate (Avizare / Critic pentru siguranta)
+- Previzualizari miniaturale ale oricaror fotografii incarcate, care se deschid la dimensiune completa la click
+
+Daca inspectia a fost sarita, sectiunea DVIR arata o eticheta "Sarita" cu marcajul temporal.
+
+---
+
+## Fleet manager: urmarirea defectiunilor deschise
+
+Mergi la **Flota → Defectiuni** pentru a vedea toate defectiunile din intreaga ta flota. Pagina are trei taburi de filtrare:
+
+| Tab | Ce arata |
+|---|---|
+| **Deschise** | Defectiuni inca nelegate de un ordin de lucru finalizat sau anulat |
+| **Confirmate** | Defectiuni pe care un fleet manager le-a revizuit |
+| **Toate** | Istoricul complet |
+
+Fiecare rand arata camionul, numele elementului defect, eticheta de severitate, data raportarii si soferul care a trimis-o.
+
+Pentru randurile **Critic pentru siguranta**, un buton **Creeaza Ordin de Lucru** este disponibil direct pe rand. Apasarea lui deschide formularul de ordin de lucru pre-completat cu descrierea si severitatea defectiunii — fara copy-paste necesar.
+
+---
+
+## Configurare admin
+
+Mergi la **Setari → DVIR Post-Calatorie** pentru a configura DVIR pentru compania ta.
+
+| Setare | Descriere |
+|---|---|
+| **Activeaza DVIR post-calatorie** | Porneste sau opreste ecranul de inspectie pentru toti soferii |
+| **Necesita fotografii pentru defectiuni critice pentru siguranta** | Face obligatorie incarcarea a cel putin unei fotografii inainte ca o defectiune critica pentru siguranta sa poata fi trimisa |
+| **Semnaleaza automat camionul pentru service la defectiune critica** | Blocheaza automat camionul de la dispecerare cand este trimisa o defectiune critica pentru siguranta |
+| **Elemente din lista de verificare** | Adauga, editeaza sau sterge elementele care apar in ecranul de inspectie. Fiecare element are un nume si o severitate implicita (OK / Avizare / Critic pentru siguranta) |
+
+<Note>
+Elementele din lista de verificare sunt la nivel de companie. Toti soferii din compania ta vad aceeasi lista. Daca operezi tipuri diferite de vehicule, foloseste nume de elemente descriptive (de ex. "Unitate de temperatura reefer — verifica garniturile") ca sa mentii lista relevanta pentru toata lumea.
+</Note>
+
+---
+
+<Card title="Lista de verificare pre-calatorie" icon="clipboard-list" href="/ro/driver/pre-trip-checklist">
+  Lista de verificare pre-calatorie ruleaza inainte de plecare. Afla cum o finalizeaza soferii si cum configureaza administratorii blocajele stricte si cele informative.
+</Card>
+
+<Card title="Service si mentenanta" icon="wrench" href="/ro/fleet-compliance/workshop-maintenance">
+  Cum creezi ordine de lucru din defectiuni critice pentru siguranta si gestionezi programele de mentenanta pentru intreaga flota.
+</Card>

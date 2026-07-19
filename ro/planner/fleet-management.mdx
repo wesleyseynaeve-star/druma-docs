@@ -1,11 +1,143 @@
 ---
 title: "Gestionarea flotei"
-description: "Cum sa adaugi si gestionezi vehiculele in Druma."
+description: "Cum sa adaugi si gestionezi vehiculele in Druma — tipuri de vehicule, dimensiuni, documente si disponibilitate."
 icon: "truck"
 ---
 
-Mergi la **Camioane -> Vehicule**.
+## Prezentare generala
 
-Apasa **Adauga Vehicul**: numar inmatriculare, tip vehicul, tip remorca, standard Euro, inaltime, greutate, axe, cost zilnic EUR.
+Flota ta este fundatia a tot ce se intampla in Druma. Inainte sa poti atribui camioane comenzilor, trebuie sa adaugi fiecare vehicul in sistem, cu detaliile sale. Dureaza cateva minute per camion si trebuie sa faci asta o singura data.
 
-Druma urmareste documentele flotei si trimite alerte cu 30 si 60 de zile inainte de expirare.
+Mergi la **Flota → Camioane** pentru a-ti gestiona vehiculele.
+
+<Frame caption="Flota → Camioane — lista de vehicule, cu numarul de inmatriculare, clasa Euro si tipul de remorca dintr-o privire.">
+  <img src="/images/planner/fleet-management.png" alt="Pagina Flota Camioane care listeaza vehiculele" />
+</Frame>
+
+---
+
+## Adaugarea unui vehicul nou
+
+Apasa **Adauga Camion** in coltul din dreapta sus al paginii Flota, pentru a deschide formularul vehiculului.
+
+<Steps>
+  <Step title="Introdu numarul de inmatriculare">
+    Tasteaza numarul de inmatriculare exact cum apare pe documentele vehiculului. Asa cauti si identifici camionul in toata aplicatia Druma.
+  </Step>
+  <Step title="Seteaza categoria vehiculului (optional)">
+    Nu exista un pas de "tip vehicul" cu alegere libera — in schimb, **Categoria Vehiculului** este o clasificare de omologare de tip UE: las-o nesetata pentru un **HGV** standard (implicit), sau alege **N1 — LCV ≤3,5t**, **N2 — LCV 3,5–12t**, sau **N3 — HGV >12t**, daca ai nevoie de gestionare specifica LCV a orelor de conducere sau conformitatii. Exista un camp separat, de text liber, **Tip Caroserie**, daca vrei sa notezi "Cap tractor", "Rigid", "Duba" etc., pentru referinta ta proprie.
+  </Step>
+  <Step title="Alege tipul de remorca">
+    Selecteaza din tipurile de remorca configurate de compania ta — implicit: **Tautliner, Mega, Cutie, Reefer, Platforma, Cisterna, Lowboy, Curtainside, Sasiu container, Silo, Lowloader**. Aceasta lista este configurabila per companie, deci a ta poate sa difere.
+  </Step>
+  <Step title="Seteaza standardul de emisii Euro">
+    Selecteaza **Clasa Euro** a vehiculului — de la **Euro 1** pana la **Euro 6**, plus **Euro 6d** si **EEV**. Aceasta informatie este folosita in raportarea emisiilor CO2 si poate afecta rutarea prin zonele cu emisii reduse. Verifica documentul de inmatriculare al vehiculului, daca nu esti sigur.
+  </Step>
+  <Step title="Introdu dimensiunile si greutatea">
+    - **Inaltime (m)** — Inaltimea maxima a vehiculului, inclusiv marfa. Folosita de rutarea PTV pentru camioane, pentru a evita podurile joase.
+    - **Greutate Max kg** — Greutatea maxima permisa a marfii/sarcinii utile.
+    - **GVW kg** — Greutatea bruta a vehiculului, folosita de rutarea PTV pentru drumuri cu restrictii de greutate.
+    - **Numar de axe** — Numarul total de axe. Folosit pentru rutarea prin drumuri cu restrictii de axe.
+  </Step>
+  <Step title="Introdu costul fix zilnic">
+    **Costul Fix Zilnic (€/zi)** este cat costa acest camion sa functioneze, indiferent daca se misca sau nu — asigurare, depreciere, plati de finantare, taxe si asa mai departe. Introdu cea mai buna estimare a ta. Aceasta cifra este folosita in rapoartele de profitabilitate, ca sa vezi daca fiecare comanda chiar aduce profit dupa costurile fixe.
+  </Step>
+  <Step title="Seteaza data expirarii certificatului ADR">
+    Daca acest vehicul este certificat sa transporte marfuri periculoase, introdu data de expirare a certificatului ADR. Druma te va alerta inainte sa expire, ca sa ai timp sa il reinnoiesti.
+  </Step>
+  <Step title="Salveaza vehiculul">
+    Apasa **Salveaza**. Vehiculul este acum activ si va aparea in listele derulante de atribuire a camioanelor, la crearea comenzilor.
+  </Step>
+</Steps>
+
+---
+
+## Vehicule active si inactive
+
+Fiecare vehicul are un comutator **Activ / Inactiv** in partea de sus a paginii sale de profil.
+
+- **Activ** — Vehiculul apare in listele derulante de atribuire si pe tabla de planificare.
+- **Inactiv** — Vehiculul este ascuns din fluxurile de dispecerat. Foloseste asta pentru camioane pe care le-ai vandut, le-ai retras permanent, sau le-ai parcat sezonier.
+
+<Note>
+Dezactivarea unui vehicul nu ii sterge istoricul de comenzi. Toate comenzile trecute raman legate de vehicul si apar in rapoarte. Il poti reactiva oricand.
+</Note>
+
+---
+
+## Cand un vehicul este temporar indisponibil
+
+Druma nu are un formular manual de "marcheaza acest camion indisponibil pentru un interval de date". In schimb, perioadele de indisponibilitate sunt create automat din partea de siguranta critica a operatiunilor de flota: o inspectie post-cursa (DVIR) a unui sofer care semnaleaza o defectiune deschide un ordin de lucru de service, iar un ordin de lucru deschis blocheaza acel camion de la planificare, pana este rezolvat.
+
+<Note>
+Daca ai nevoie ca un camion sa fie scos din uz dintr-un motiv care nu trece printr-un defect DVIR/service (de ex. un service planificat pe care il programezi manual), cel mai apropiat echivalent astazi este sa il treci pe **Inactiv** pentru acea perioada si sa il reactivezi dupa — vezi mai jos.
+</Note>
+
+---
+
+## Vizualizarea istoricului si statusului curent al unui vehicul
+
+Apasa orice vehicul din lista, pentru a-i deschide profilul complet. De aici poti vedea:
+
+- **Atribuirea curenta** — Pe ce comanda se afla in prezent camionul, daca exista una.
+- **Istoricul comenzilor** — O lista completa a tuturor comenzilor finalizate si active pentru acest vehicul, filtrabila dupa data.
+- **Statusul de expirare a documentelor** — Un sumar al tuturor documentelor legate si datele lor de expirare (vezi Documente Flota pentru detalii).
+- **Perioadele de indisponibilitate** — Blocaje trecute si viitoare, create de ordine de lucru de service (vezi mai sus).
+
+---
+
+## Importul in masa al vehiculelor
+
+Daca configurezi Druma pentru prima data si ai o flota mare, poti importa toate vehiculele deodata, folosind un fisier Excel, in loc sa le adaugi unul cate unul.
+
+<Steps>
+  <Step title="Descarca template-ul de import">
+    Mergi la **Flota → Camioane → Import** si apasa **Descarca Template**. Asta iti ofera un fisier Excel (.xlsx) cu toate antetele de coloana corecte: Numar inmatriculare (obligatoriu), Nume, Marca, Model, An, Clasa Euro, Tip combustibil si Tip remorca.
+  </Step>
+  <Step title="Completeaza template-ul">
+    Deschide-l in Excel sau Google Sheets. Adauga cate un vehicul pe rand — doar **Numarul de inmatriculare** este obligatoriu, orice altceva este optional.
+  </Step>
+  <Step title="Incarca fisierul">
+    Inapoi in Druma, incarca fisierul completat. Druma va valida fiecare rand si iti va arata orice erori inainte de import.
+  </Step>
+  <Step title="Revizuieste si confirma">
+    Verifica previzualizarea vehiculelor de importat. Daca totul arata corect, apasa **Importa**. Vehiculele sunt adaugate imediat.
+  </Step>
+</Steps>
+
+<Warning>
+Procesul de import nu actualizeaza vehiculele existente — creeaza doar unele noi. Daca incarci un fisier cu un numar de inmatriculare care exista deja in Druma, acel rand va fi sarit, cu o eroare.
+</Warning>
+
+---
+
+## Tabul Harta Flotei
+
+In interiorul listei Camioane, exista un tab **Harta** in partea de sus a paginii. Apasa-l pentru a comuta de la vizualizarea de lista la o harta live care arata toate vehiculele cu pozitii GPS.
+
+Fiecare camion se afiseaza ca acelasi marcaj gri-grafit, cu numarul sau de inmatriculare — nu exista codare pe culori dupa status. Remorcile primesc propriul marcaj gri mai inchis, iar vehiculele apropiate se grupeaza intr-un singur marcaj numerotat, pana cand marestii.
+
+Apasa orice marcaj pentru a deschide panoul de detaliu al vehiculului. Vezi [Harta de parcare camioane](/ro/tools/parking-map) pentru detalii complete despre vizualizarea hartii, straturi si gasirea unei parcari sigure de-a lungul unei rute.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Gestionarea remorcilor" icon="trailer" href="/ro/planner/trailer-management">
+    Gestioneaza remorcile care nu sunt atasate permanent de un singur cap tractor.
+  </Card>
+  <Card title="Documente flota" icon="file" href="/ro/fleet-compliance/fleet-documents">
+    Urmareste asigurarea, certificatele de inspectie tehnica si alte documente de vehicul, cu alerte automate de expirare.
+  </Card>
+  <Card title="Anvelope flota" icon="circle" href="/ro/fleet-compliance/tyres">
+    Urmareste starea anvelopelor, adancimea profilului si costurile de inlocuire per vehicul.
+  </Card>
+  <Card title="Incidente flota" icon="triangle-exclamation" href="/ro/fleet-compliance/incidents">
+    Inregistreaza accidente, evenimente de daune si dosare de asigurare pentru flota ta.
+  </Card>
+  <Card title="Inspectia post-cursa DVIR" icon="clipboard-check" href="/ro/fleet-compliance/post-trip-dvir">
+    Rapoarte de inspectie a vehiculului de catre sofer si cum declanseaza defectiunile critice de siguranta ordine de lucru de service.
+  </Card>
+  <Card title="Importul flotei" icon="upload" href="/ro/bulk-import/importing-fleet">
+    Ghid pas cu pas pentru importul vehiculelor si soferilor dintr-o foaie de calcul, la prima configurare a Druma.
+  </Card>
+</CardGroup>

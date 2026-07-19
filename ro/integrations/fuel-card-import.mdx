@@ -1,17 +1,103 @@
 ---
 title: "Import card combustibil"
-description: "Importa tranzactiile de combustibil de la DKV, UTA si AS24."
+description: "Importa datele de tranzactii de combustibil de la DKV, UTA, AS24, Shell si alti furnizori majori europeni de carduri de combustibil, ca sa urmaresti costurile reale de combustibil per vehicul."
 icon: "gas-pump"
 ---
 
-Furnizori suportati: **DKV**, **UTA**, **AS24** (exporturi CSV).
+Combustibilul este de regula cel mai mare cost variabil in transportul rutier. Druma iti permite sa imporți date de tranzactii de la furnizorii majori de carduri de combustibil, legand fiecare alimentare de vehiculul corect, ca rapoartele tale de cost sa reflecte cheltuiala reala de combustibil, nu estimari.
+
+<Frame caption="Flota → Combustibil — potrivirea numarului de inmatriculare este normalizata, nu exacta.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Pagina Combustibil Flota" />
+</Frame>
+
+## Furnizori acceptati
+
+Druma detecteaza automat furnizorul din antetele de coloane si numele fisierului. Furnizori acceptati:
+
+- **DKV**
+- **UTA**
+- **AS24**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
+
+Orice alt fisier CSV sau XLSX cu nume de coloane standard (data, suma, litri, card/numar inmatriculare) este de asemenea acceptat, chiar si fara o potrivire de furnizor recunoscuta. Daca folosesti mai multe carduri in flota ta, poti importa de la fiecare furnizor separat.
+
+## Cum imporți
 
 <Steps>
-  <Step title="Descarca extrasul">Descarca CSV-ul de tranzactii din portalul furnizorului.</Step>
-  <Step title="Mergi la Flota -> Combustibil -> Import">Deschide modulul de Combustibil in Druma.</Step>
-  <Step title="Selecteaza furnizorul">Alege furnizorul pentru maparea corecta a coloanelor.</Step>
-  <Step title="Incarca fisierul CSV">Selecteaza fisierul descarcat.</Step>
-  <Step title="Confirma">Verifica tranzactiile si apasa Confirma Importul.</Step>
+  <Step title="Descarca fisierul de la furnizor">
+    Autentifica-te in portalul online al furnizorului tau de card de combustibil si exporta istoricul tranzactiilor ca CSV sau XLSX. Portalul fiecarui furnizor difera, dar aceasta optiune se afla de regula sub Rapoarte sau Extrase.
+  </Step>
+  <Step title="Deschide importul de combustibil Druma">
+    In Druma, mergi la **Flota → Combustibil** si apasa **Importa Combustibil**.
+  </Step>
+  <Step title="Incarca fisierul">
+    Trage sau selecteaza fisierul CSV/XLSX (maximum 5 MB). Druma detecteaza automat furnizorul din fisier si arata o previzualizare a randurilor analizate — inclusiv orice linii de taxe de drum pe care le gaseste amestecate in acelasi extras.
+  </Step>
+  <Step title="Revizuieste si confirma">
+    Verifica previzualizarea — randurile fara un vehicul potrivit sunt semnalate si excluse din import. Apasa **Importa N randuri** (aratand numarul real de randuri) pentru a confirma.
+  </Step>
 </Steps>
 
-Druma potriveste automat tranzactiile cu vehiculele pe baza numarului de inmatriculare si cardului de combustibil.
+## Ce se importa
+
+Pentru fiecare tranzactie, Druma extrage:
+
+| Camp | Sursa |
+|---|---|
+| Data (fara componenta de ora) | Coloana de data a tranzactiei din fisier |
+| Vehicul | Potrivit dupa numarul cardului de combustibil, apoi dupa numarul de inmatriculare |
+| Numele statiei de combustibil | Campul de locatie din fisier |
+| Litri alimentati | Campul de cantitate din fisier |
+| Suma | Campul de valoare din fisier — presupus EUR, cu exceptia cazului in care exista o coloana de moneda |
+| ID tranzactie | Referinta unica de tranzactie a furnizorului, folosita pentru detectarea duplicatelor |
+
+Alimentarile manuale, cu o singura inregistrare (prin **Adauga Alimentare**), accepta doar o suma in EUR — nu exista un selector de moneda pe acel formular. Sumele in RON sunt convertite automat doar prin calea separata de auto-ingestie prin email/folder de retea, descrisa mai jos.
+
+## Potrivirea tranzactiilor cu vehiculele
+
+Druma potriveste fiecare tranzactie cu un vehicul, mai intai dupa **numarul cardului de combustibil**, apoi dupa **numarul de inmatriculare**. Atat numarul cardului cat si numarul de inmatriculare sunt normalizate inainte de comparare — cu majuscule, cu toate spatiile, cratimele si alte caractere non-alfanumerice eliminate — astfel incat "B 123 ABC" si "B123ABC" se potrivesc cu acelasi vehicul.
+
+Daca o tranzactie tot nu se potriveste cu niciun vehicul, este semnalata ca **nepotrivita** in previzualizare si exclusa din import. Motive comune:
+
+- Vehiculul a fost adaugat recent si inca nu este in Druma
+- Nici numarul cardului, nici numarul de inmatriculare de pe tranzactie nu se potrivesc cu nicio inregistrare din flota
+- Un sofer si-a folosit cardul intr-un vehicul inchiriat sau subcontractat
+
+## Detectarea duplicatelor
+
+Daca importi din greseala acelasi fisier de doua ori, Druma detecteaza duplicatele folosind o cheie de deduplicare construita din data tranzactiei, suma, litri, card, numar de inmatriculare si ID-ul de tranzactie al furnizorului — duplicatele sunt sarite automat, la nivel de baza de date. Mesajul de succes raporteaza doar cate alimentari (si linii de taxe de drum) au fost importate; nu raporteaza un numar separat de duplicate sarite.
+
+<Note>
+Importa intotdeauna extrasul complet, nu un export partial. Importurile partiale pot cauza goluri in datele tale de cost de combustibil, care afecteaza calculele de profitabilitate pe ruta.
+</Note>
+
+## Import automat prin email
+
+Pe langa incarcarea manuala, Druma poate prelua automat extrase de combustibil dintr-o adresa de email de intrare (cu o verificare programata ca rezerva), reutilizand acelasi parser ca modalul de import manual. Contacteaza suportul Druma pentru a configura asta pentru contul tau.
+
+## Unde apar datele de combustibil importate
+
+Dupa import, tranzactiile apar in:
+
+- **Flota → Combustibil** — istoric complet de tranzactii pe intreaga flota, filtrabil si cautabil dupa numar de inmatriculare, furnizor si locatie
+- **Raportul de profitabilitate pe ruta** — costurile de combustibil importate inlocuiesc calculul estimat de combustibil, pentru comenzile unde sunt disponibile date reale de combustibil
+
+## De ce import CSV in loc de API live?
+
+Furnizorii de carduri de combustibil din Europa au acces API inconsistent si adesea restrictionat. Unii ofera API-uri doar clientilor enterprise, altii au portaluri specifice tarii care nu ofera acces API, iar formatele API variaza considerabil. Exportul CSV este disponibil universal, la toti furnizorii si toate tipurile de cont, ceea ce il face abordarea cea mai fiabila pentru un operator roman cu flota mixta (ADR-016).
+
+<CardGroup cols={2}>
+  <Card title="Raportul de profitabilitate pe ruta" icon="route" href="/ro/reports/lane-profitability">
+    Cum alimenteaza costurile de combustibil importate calculele de marja per ruta.
+  </Card>
+  <Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+    Gestionarea inregistrarilor vehiculelor, inclusiv numerele de inmatriculare folosite pentru potrivirea tranzactiilor de combustibil.
+  </Card>
+</CardGroup>

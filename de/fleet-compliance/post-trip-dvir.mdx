@@ -1,53 +1,93 @@
 ---
 title: "Fahrzeuginspektion nach der Fahrt (DVIR)"
-description: "Strukturierte Fahrzeuginspektionsberichte am Ende jeder Fahrt — mit automatischer Sperrung bei sicherheitskritischen Mängeln."
+description: "Wie Sie die Nachreise-Checkliste konfigurieren, und wo Fuhrparkmanager von Fahrern gemeldete Mängel prüfen und darauf reagieren."
+icon: "clipboard-check"
 ---
 
 ## Übersicht
 
-Die Fahrzeuginspektion nach der Fahrt (DVIR) ist eine strukturierte Sicherheitsprüfung, die Fahrer am Ende jeder Fahrt durchführen. Sicherheitskritische Mängel lösen eine automatische Fahrzeugsperre aus und benachrichtigen sofort den Flottenmanager.
+Tippt ein Fahrer auf **Zugestellt**, zeigt Druma automatisch ein Overlay **Nachreise-Inspektion** in der Fahrer-App an — ein Driver Vehicle Inspection Report (DVIR), der den Fahrzeugzustand am Ende der Fahrt durchgeht. Diese Seite behandelt die Fuhrparkmanager-Seite: Konfiguration der Checkliste und Prüfung der daraus entstehenden Mängel. Für den vollständigen fahrerseitigen Ablauf siehe [Nachreise-Inspektion](/de/driver/post-trip-inspection).
+
+<Note>
+Die Nachreise-Inspektion wird nur bei Einzelauftrags-Fahrten ausgelöst. Sie erscheint nicht bei Zwischenstopps während Sammelgut-(Mehrfachstopp-)Fahrten.
+</Note>
 
 ---
 
-## Ablauf
+## Wie es kurz funktioniert
 
-<Steps>
-  <Step title="Inspektionsaufforderung öffnen">
-    Tippen Sie auf die **Fahrzeuginspektion nach der Fahrt**-Aufforderung am Ende des abgeschlossenen Auftrags in der App.
-  </Step>
-  <Step title="Checkliste durchgehen">
-    Für jedes Element wählen: **OK**, **Mangel — Gering** oder **Mangel — Sicherheitskritisch**.
-  </Step>
-  <Step title="Mängel melden">
-    Beschreibung eingeben und optional Foto anhängen (bis zu 5 Fotos pro Mangel).
-  </Step>
-  <Step title="Inspektion unterschreiben">
-    Digitale Unterschrift auf dem Bildschirm leisten.
-  </Step>
-  <Step title="Absenden">
-    **Inspektion absenden** tippen. Bericht wird sofort an Druma übermittelt.
-  </Step>
-</Steps>
+Der Fahrer markiert jeden Checklistenpunkt mit einem Dreizustandsschalter — **OK**, **Hinweis** oder **Sicherheitskritisch** — gibt den aktuellen Kilometerstand ein und hängt Fotos für jeden sicherheitskritischen Punkt an (bis zu 3 Fotos pro Mangel; JPEG, PNG, WebP, HEIC oder HEIF, je max. 10 MB — PDF wird für Mangelfotos nicht akzeptiert). Der Fahrer kann sofort einreichen oder auf **Inspektion überspringen** tippen, um sie später über das Ladungsdetail des Auftrags abzuschließen.
 
----
-
-## Schweregrade
-
-| Stufe | Bedeutung | Druma-Aktion |
+| Schweregrad | Bedeutung | Wirkung |
 |---|---|---|
-| **OK** | Kein Mangel | Keine Aktion |
-| **Geringer Mangel** | Fahrzeug kann im Betrieb bleiben | Orange Badge; Flottenmanager per E-Mail benachrichtigt |
-| **Sicherheitskritisch** | Fahrzeug ist nicht betriebssicher | Rotes Badge; Fahrzeug gesperrt; Flottenmanager sofort benachrichtigt |
+| **OK** | Kein Problem gefunden | Keine Aktion |
+| **Hinweis** | Kleineres Problem, LKW bleibt im Einsatz | Planer benachrichtigt; sichtbar im Auftragsdetail und unter Fuhrpark → Mängel |
+| **Sicherheitskritisch** | Ernster Mangel | Planer und Fuhrparkmanager sofort benachrichtigt; ist Auto-Sperre aktiviert, wird der LKW bis zur Behebung als nicht verfügbar markiert |
+
+---
+
+## Admin-Konfiguration
+
+Gehen Sie zu **Einstellungen → Nachreise-Checkliste**, um DVIR für Ihr Unternehmen zu konfigurieren.
+
+| Einstellung | Beschreibung |
+|---|---|
+| **Nachreise-DVIR aktivieren** | Schaltet das Inspektions-Overlay für alle Fahrer ein oder aus |
+| **Fotos für sicherheitskritische Punkte erforderlich** | Macht das Hochladen mindestens eines Fotos verpflichtend, bevor ein sicherheitskritischer Mangel eingereicht werden kann |
+| **Fahrzeug-Nichtverfügbarkeit bei sicherheitskritischen Mängeln automatisch anlegen** | Sperrt den LKW automatisch von der Disposition, sobald ein sicherheitskritischer Mangel eingereicht wird |
+| **Checklistenpunkte** | Punkte hinzufügen, bearbeiten oder löschen, die im Inspektions-Overlay erscheinen. Jeder Punkt hat einen Namen und einen Standard-Schweregrad (OK / Hinweis / Sicherheitskritisch) |
+
+<Note>
+Checklistenpunkte sind unternehmensweit und vom Admin konfigurierbar — es gibt keine feste, eingebaute Kategorienliste. Alle Fahrer Ihres Unternehmens sehen dieselbe Liste. Betreiben Sie unterschiedliche Fahrzeugtypen, verwenden Sie beschreibende Punktnamen (z. B. „Kühlaggregat — Dichtungen prüfen"), damit die Liste für alle sinnvoll bleibt.
+</Note>
+
+---
+
+## Eine einzelne Inspektion einsehen
+
+Im **Auftragsdetailpanel** erscheint unterhalb der Routeninformationen ein Abschnitt **DVIR**, sobald eine Inspektion eingereicht wurde. Er zeigt:
+
+- Inspektionsstatus: Abgeschlossen, Übersprungen oder Ausstehend
+- Zeitstempel der Einreichung und Fahrername
+- Den vom Fahrer erfassten Kilometerstand
+- Eine Liste jedes Mangelpunkts mit Schweregrad-Abzeichen (Hinweis / Sicherheitskritisch)
+- Vorschaubilder aller hochgeladenen Fotos, die per Klick in voller Größe öffnen
+
+Wurde die Inspektion übersprungen, zeigt der DVIR-Abschnitt ein „Übersprungen"-Abzeichen mit Zeitstempel.
+
+---
+
+## Offene Mängel flottenweit nachverfolgen
+
+Gehen Sie zu **Fuhrpark → Mängel**, um alle Mängel Ihrer gesamten Flotte zu sehen. Die Seite hat drei Filter-Tabs:
+
+| Tab | Was er zeigt |
+|---|---|
+| **Offen** | Mängel, die noch keinem abgeschlossenen oder stornierten Arbeitsauftrag zugeordnet sind |
+| **Bestätigt** | Mängel, die ein Fuhrparkmanager geprüft hat |
+| **Alle** | Vollständiger Verlauf |
+
+Jede Zeile zeigt den LKW, den Mangelnamen, das Schweregrad-Abzeichen, das Meldedatum und den meldenden Fahrer.
+
+---
+
+## Einen Arbeitsauftrag aus einem Mangel erstellen
+
+Bei **Sicherheitskritisch**-Zeilen unter **Fuhrpark → Mängel** steht direkt in der Zeile eine Schaltfläche **Arbeitsauftrag erstellen** zur Verfügung. Ein Klick öffnet das Arbeitsauftragsformular, vorausgefüllt mit dem inspizierten LKW und verknüpft mit dem ursprünglichen Mangel-Ticket. Arbeitsaufträge haben kein Schweregradfeld — wählen Sie den **Servicetyp**, der zur Reparatur passt, fügen Sie eine Beschreibung, Positionen und ein geplantes Datum hinzu, und speichern Sie. Ist der Schalter **Fahrzeug-Nichtverfügbarkeit bei sicherheitskritischen Mängeln automatisch anlegen** aktiviert, bleibt der LKW auf der Planungstafel gesperrt, bis der verknüpfte Arbeitsauftrag als abgeschlossen markiert wird.
 
 <Warning>
-Ein Fahrzeug mit einem sicherheitskritischen Mangel wird automatisch auf der Plantafel gesperrt bis der Flottenmanager die Sperre durch Abschließen des Werkstattauftrags aufhebt.
+Ist der Auto-Sperr-Schalter aktiviert, entfernt ein sicherheitskritischer Mangel den LKW sofort von der Disposition — selbst wenn ihm bereits künftige Aufträge zugewiesen sind. Prüfen Sie Fuhrpark → Mängel, sobald Sie eine sicherheitskritische Warnung erhalten.
 </Warning>
 
+Siehe [Werkstatt & Wartung](/de/fleet-compliance/workshop-maintenance) für den vollständigen Arbeitsauftrags-Workflow.
+
+---
+
 <CardGroup cols={2}>
-  <Card title="Werkstatt & Wartung" href="/de/fleet-compliance/workshop-maintenance">
-    Werkstattaufträge aus Mängelberichten erstellen.
+  <Card title="Nachreise-Inspektion (Fahreransicht)" icon="mobile" href="/de/driver/post-trip-inspection">
+    Der vollständige fahrerseitige Ablauf: Checkliste abschließen, Fotos hochladen, Inspektion überspringen/fortsetzen.
   </Card>
-  <Card title="Fahrzeugdokumente" href="/de/fleet-compliance/fleet-documents">
-    Zertifikate und Compliance-Dokumente der Fahrzeuge verfolgen.
+  <Card title="Werkstatt & Wartung" icon="wrench" href="/de/fleet-compliance/workshop-maintenance">
+    Arbeitsaufträge aus Mangelberichten und routinemäßigen Wartungsplänen erstellen und verwalten.
   </Card>
 </CardGroup>

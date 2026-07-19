@@ -1,115 +1,184 @@
 ---
 title: "Plánovací tabule"
-description: "Použijte vizuální dispečerskou tabuli pro přehled všech kamionů, přiřazování objednávek, zjišťování konfliktů a správu rozvrhu flotily na první pohled."
+description: "Vizuální dispečerská tabule — porovnejte vozidla, která se uvolňují, se zásilkami, které potřebují vozidlo, přiřaďte přetažením a předem naplánujte kombinace, než se stanou pevnými."
 icon: "calendar"
 ---
 
 ## Přehled
 
-Plánovací tabule je vaším hlavním dispečerským nástrojem. Zobrazuje každý kamion ve vaší flotile na horizontální časové ose s objednávkami zobrazenými jako barevné bloky. Vidíte, co každý řidič dělá, kdy jeho aktuální zakázka končí a kde jsou mezery — vše bez otevírání jediného formuláře objednávky.
+Plánovací tabule je váš hlavní dispečerský nástroj. Otevřete ji přes **Plánovač → Plánovací tabule**.
 
-Přejděte do **Plánovač → Plánovací tabule** pro otevření.
+Tabule má tři režimy, mezi kterými přepínáte pomocí záložek v horní části:
+
+| Režim | K čemu slouží |
+|---|---|
+| **Nyní** | Hlavní dispečerský pohled — dva sloupce porovnávající kapacitu s poptávkou. Zde přiřazujete a přeřazujete vozidla. |
+| **Časová osa** | Ganttovský pohled na rozvrh každého vozidla, pro odhalení mezer a konfliktů napříč jedním dnem, třemi dny nebo týdnem. |
+| **Mapa** | Stejné nepřiřazené zásilky a řidiči vykreslení geograficky. |
 
 <Warning>
-Plánovací tabule je navržena pro stolní obrazovky o šířce 1280 pixelů nebo více. Na notebooku nebo velkém monitoru získáte plný zážitek včetně přetahování. Na telefonu nebo tabletu je tabule dostupná v režimu pouze pro čtení.
+Plánovací tabule je navržena pro stolní obrazovky o šířce 1280 pixelů nebo více. Na telefonu nebo tabletu nahrazuje dvousloupcové rozvržení zjednodušený proud karet a přetahování (drag-and-drop) není k dispozici.
 </Warning>
 
 ---
 
-## Čtení tabule
+## Nyní — dvousloupcový dispečerský pohled
 
-### Časová osa
+Záložka **Nyní** je rozdělené dvousloupcové rozvržení:
 
-Horizontální osa představuje čas. Každý řádek představuje jeden kamion ve vaší flotile. Objednávky se zobrazují jako obdélníkové bloky od jejich času vyzvednutí do odhadovaného času doručení.
+- **Příchozí** (vlevo) — co uvolňuje kapacitu: vozidla, která jsou volná právě teď, a vozidla, která se brzy uvolní, protože jejich aktuální zásilka bude doručena ve viditelném rozsahu dat.
+- **Odchozí** (vpravo) — objednávky, které ještě potřebují vozidlo (nepřiřazená vyzvednutí), plus objednávky, které jsou již přiřazené, vše seskupené stejným způsobem jako Příchozí, takže se vozidlo uvolňující se v určité zóně vizuálně vyrovná se zásilkami vyzvedávanými ve stejné zóně.
 
-### Barevné kódování
+<Frame caption="Pohled Nyní — kapacita Příchozí vlevo, zásilky Odchozí vpravo, s přepínači hustoty a předběžného plánování v panelu nástrojů.">
+  <img src="/images/planner/planning-board-split.png" alt="Pohled Nyní plánovací tabule zobrazující sloupce Příchozí a Odchozí" />
+</Frame>
 
-| Barva | Stav |
-|---|---|
-| Šedá | Návrh — zatím nepotvrzeno |
-| Modrá | Potvrzeno — řidič informován, ještě neodjel |
-| Zelená | Na cestě nebo Na cestě k doručení |
-| Žlutá | Příjezd na vyzvednutí nebo doručení — čeká |
-| Červená | Po splatnosti — objednávka není doručena včas |
+Přiřazení vozidla se provádí přetažením: uchopte řádek na kterékoli straně a upusťte ho na odpovídající řádek na druhé straně.
 
-### Panel nepřiřazených objednávek
+- Přetažení **vozidla** na zásilku otevře potvrzovací panel zobrazující vozidlo, řidiče a podrobnosti objednávky — včetně jakýchkoli kontrol kabotáže, návěsu nebo štafetové zastávky, které vyžadují váš vstup — než se přiřazení potvrdí.
+- Přetažení **doručující se zásilky** (karta Příchozí, která ještě není volná, ale brzy bude) na zásilku Odchozí zatím nepřiřadí vozidlo — žádné totiž není volné k přiřazení — pouze se předběžně poznamená propojení mezi oběma. Opakováním tohoto postupu vybudujete celý **řetězec** budoucích doložení pro jedno vozidlo ještě předtím, než bude volné pro to úplně první; kompletní postup pro řetězce, včetně automatického optimalizátoru sledujícího poznamenané řetězce kvůli levnější záměně, najdete níže v části **Režim předběžného plánování**. Jakmile jste připraveni tento plán potvrdit, použijte na daném řádku **Přiřadit vozidlo**.
 
-Na levé straně tabule je panel **Nepřiřazené objednávky** se všemi objednávkami, které ještě nemají přiřazený kamion. Přetáhněte jednu z panelu na řádek kamionu pro přiřazení.
+<Note>
+Přetahování funguje **oběma směry** — přetáhněte kartu Příchozí na zásilku Odchozí, nebo přetáhněte zásilku Odchozí na kartu Příchozí. Oba způsoby skončí na stejném řádku.
+</Note>
+
+### Rozsah dat
+
+Tabule zobrazuje klouzavý sedmidenní horizont. Pomocí šipek vedle popisku data přeskočíte o celý týden dříve nebo později, nebo klikněte na **Dnes** pro návrat na aktuální sedmidenní okno.
+
+### Hustota: Kompaktní vs. Komfortní
+
+Přepínač v panelu nástrojů mění, kolik podrobností každý řádek zobrazuje:
+
+- **Kompaktní** (výchozí) — husté, jednořádkové řádky s řaditelnými/přeuspořádatelnými sloupci, nejblíže tabulkovému procesoru. Nejlepší pro rychlé prohlížení a hromadné plánování.
+- **Komfortní** — bohatší karty s více vizuálními podrobnostmi na vozidlo nebo objednávku. Nejlepší pro bližší pohled na hrstku zakázek.
+
+Obě hustoty zobrazují stejná podkladová data a podporují stejné přetahování, filtry a seskupování — přepínání mezi nimi je čistě kosmetické.
+
+### Seskupování a sbalování
+
+Použijte ovládací prvek **seskupit podle** v panelu nástrojů pro rozdělení obou sloupců podle skupiny zón, země, města, plánovací skupiny nebo data — Příchozí a Odchozí se vždy seskupují podle stejné osy, takže porovnání kapacity s poptávkou zůstává vizuálně sladěné. Záhlaví skupin lze sbalit; sbalíte-li sekci na jedné straně, sbalí se i odpovídající sekce na druhé straně, takže oba sloupce zůstávají synchronizované. Kliknutím na **Rozbalit vše** obnovíte najednou všechny sbalené skupiny.
+
+<Note>
+Skupiny zón jsou vaše vlastní hierarchická seskupení poštovních směrovacích čísel (nastavená v Nastavení), užitečná pro rychlé porovnání „která z mých poboček/regionů má vozidlo, které se uvolňuje" s „který region má zásilky k vyzvednutí".
+</Note>
+
+### Sloupce
+
+Klikněte na **Sloupce** pro výběr, která pole se na každé straně zobrazují, a přetažením je přeuspořádejte. Příchozí a Odchozí mají nezávislé sady sloupců — pole, které přidáte nebo skryjete na jedné straně, neovlivní druhou stranu. Základní pole (Stav, identita, ETA) se zobrazují vždy a nelze je skrýt ani přeuspořádat; vše ostatní (rozpad podle PSČ/města/země, jméno řidiče, SPZ, návěs, stav kabotáže, subdodavatel a další) je volitelné.
+
+### Uložená zobrazení
+
+Nabídka **Zobrazení** umožňuje uložit aktuální filtr, seskupení a konfiguraci sloupců jako pojmenované zobrazení, přepínat mezi uloženými zobrazeními a jedno z nich označit jako výchozí — to se pak automaticky použije, jakmile příště vy (nebo kdokoli jiný se stejným zobrazením) tabuli otevřete.
+
+### Filtry a vyhledávání
+
+Klikněte na **Filtry** pro otevření panelu filtrů — stav, rozsah dat vyzvednutí/doručení, zóna a země, město nebo PSČ vyzvednutí/doručení. Aktivní filtry se zobrazují jako odstranitelné čipy pod panelem nástrojů; kliknutím na **Vymazat vše** je resetujete. Každý sloupec má také vlastní rychlé vyhledávací pole pro filtrování podle čísla objednávky, adresy nebo jména řidiče v rámci dané strany.
+
+### Dlaždice třídění
+
+Nad každým sloupcem malé dlaždice na první pohled shrnují, co je v něm obsaženo:
+
+- **Příchozí** — kolik vozidel/zásilek spadá do jednotlivých kapacitních kategorií.
+- **Odchozí** — počty **Neplánováno**, **Se zpožděním** a **Včas** pro zásilky, které již mají předběžný nebo pevný plán.
+
+Kliknutím na dlaždici vyfiltrujete daný sloupec pouze na tuto kategorii; opětovným kliknutím filtr zrušíte.
+
+### Přiřadit vozidlo / Odebrat vozidlo / Nabídnout k prodeji
+
+Každý řádek Odchozí, který má vozidlo (pevné nebo předběžně poznamenané), zobrazuje akční tlačítka:
+
+- **Přiřadit vozidlo** — potvrdí předběžně poznamenanou kombinaci jako pevné přiřazení.
+- **Odebrat vozidlo** — zruší plán a vrátí objednávku zpět mezi nepřiřazené.
+- **Nabídnout k prodeji** — nabídne zásilku subdodavateli/dopravci místo jejího provozování vlastní flotilou. Prodaná zásilka zobrazuje odznak **K prodeji** nebo **Prodáno · [dopravce]**; pokud má dopravce zpoždění, zobrazí se navíc odznak **Zpoždění**. Prodanou zásilku můžete vzít zpět do vlastní flotily, dokud u ní nezačala nakládka.
+
+### Režim předběžného plánování
+
+Přepínač **Předběžné plánování** v panelu nástrojů mění, co dělá přetažení:
+
+- **Vypnuto** (výchozí) — přetažení okamžitě pevně přiřadí vozidlo (otevře potvrzovací panel).
+- **Zapnuto** — přetažení předběžně poznamená kombinaci bez jakéhokoli potvrzení. Předběžně poznamenané kombinace zobrazují odznak **Předběžné**, odhadované (nebo tam, kde jsou k dispozici směrovací data, skutečné, PTV-směrované) ETA a verdikt včas/se zpožděním — takže si můžete nakreslit kombinace na celý týden dopředu, než kteroukoli z nich uzamknete. Jakmile jste připraveni předběžně poznamenaný řádek potvrdit, použijte **Přiřadit vozidlo**.
+
+**Budování řetězce.** Poznámka se nemusí zastavit u jednoho vozidla a jedné zásilky. Přetáhněte kartu Příchozí, která se **doručuje** — vozidlo, které ještě není volné, ale brzy bude — na zásilku Odchozí, a Druma předběžně poznamená propojení řetězící nové doložení za to, které je právě na cestě. Přetáhněte znovu na nový konec a můžete naplánovat celou sekvenci budoucích doložení pro jedno vozidlo dny předtím, než se skutečně uvolní — jízda Kluž → Sibiu → Temešvár, poznamenaná v pondělí pro vozidlo, které ještě míří do Kluže.
+
+Každý předběžně poznamenaný řádek zobrazuje čip **Po #{objednávka}** pojmenovávající zásilku, za kterou je řetězen, takže sekvence zůstává na první pohled čitelná. Pod kapotou se poznámka ukotví ke konkrétnímu vozidlu, k předchozí objednávce, za kterou je řetězena, nebo k oběma — a ukotvení může vždy krmit jen jedno doložení najednou: přetažení nové zásilky na ukotvení, které je již obsazené, přesune ukotvení na novou zásilku a odpoznamená tu starou, místo aby vytvořilo dvojí rezervaci téhož vozidla ve dvou řetězcích.
+
+<Note>
+Nic z tohoto se nedotkne skutečné objednávky, dokud není vozidlo skutečně přiřazeno běžnou cestou přes tabuli — přetažením s vypnutým Předběžným plánováním, nebo pomocí **Přiřadit vozidlo** na předběžně poznamenaném řádku. Do té doby je řetězec čistě plánovacím pracovním prostorem a lze ho volně přeuspořádávat.
+</Note>
+
+**Optimalizátor přeřazení doložení.** Jakmile řetězec existuje, Druma ho na pozadí neustále kontroluje. U **konce** každého řetězce — posledního předběžně poznamenaného doložení, za které zatím nic dalšího neřetězí — se ptá: existuje jiné, dosud nepoznamenané doložení, jehož místo vyzvednutí je blíže tomu, kde se dané vozidlo skutečně uvolní?
+
+Například: vozidlo má na zítřek předběžně poznamenané doložení v Kluži. Objeví se bližší, dosud nevybrané doložení s vyzvednutím v Sibiu. Pokud by záměna za doložení ze Sibiu skutečně snížila náklady na jízdu naprázdno — vyčíslené v € podle vlastního nákladového profilu vozidla, ne jen v holých kilometrech — Druma zobrazí návrhový čip přímo na daném řádku, něco jako **„Levnější doložení k dispozici: −18 km · 22 €."** Kliknutím na **Přepnout na #...** se záměna provede v jednom kroku: doložení ze Sibiu se předběžně poznamená, doložení z Kluže automaticky ztratí svou poznámku (podle stejného pravidla jednoho použití ukotvení, na kterém řetězce výše závisí), a zobrazí se potvrzující zpráva **„Doložení #... poznamenáno místo toho."** Jde o stejný mechanismus návrhového čipu popsaný níže, aplikovaný konkrétně na konce řetězců.
+
+Několik pojistek udržuje návrhy důvěryhodné:
+
+- Navrhuje záměnu pouze tehdy, pokud ušetří **alespoň 15 km a alespoň 0 €** — nikdy záměnu, která vypadá levně jen proto, že nákladový profil vozidla je chybně nastaven na nulu.
+- Je **s ohledem na EU 561/2006** — nikdy nenavrhne doložení, které by posunulo řidiče vozidla nad zbývající dobu řízení na daný den.
+- Kliknutím na čip ho rozbalíte pro zobrazení „proč" a skutečného směrovaného dopadu před/po, včetně upozornění, že vytlačená zásilka se znovu stane nepřiřazenou.
+
+<Note>
+Optimalizátor pouze navrhuje; nic se neuplatní bez kliknutí. Je také tichý, pokud není co lepšího navrhnout — chybějící čip znamená, že Druma nenašla levnější doložení, ne že nekontrolovala.
+</Note>
+
+**Bezpečnost řetězce při změně.** Pokud se něco změní výše v řetězci — objednávka je zrušena, její vozidlo je odebráno, nebo je její vozidlo přepnuto — Druma zkontroluje, zda je za ní něco poznamenáno dále v řetězci. Pokud ne, změna proběhne bez komplikací. Pokud existuje navazující konec, budete vyzváni k volbě: **Odebrat celý řetězec** (kaskádovitě odebere všechna předběžně poznamenaná doložení, která za ní navazují) nebo **Ponechat navazující objednávky** (přeruší pouze toto jedno propojení a ponechá navazující zásilky jako nezávislé, stále přeřaditelné piny). Ať tak či onak, poznamenaný plán nikdy tiše nezchátrá do rozbitého nebo osiřelého stavu — vy rozhodujete, co se stane se zbytkem řetězce, nikdy nemusíte sami ručně dohledávat visící propojení.
+
+### Návrhové čipy
+
+Tam, kde má automatické plánování Druma sebejisté doporučení pro nepřiřazenou objednávku, se na daném řádku zobrazí návrhový čip přímo v textu. Kliknutím na něj rovnou použijete navrhované vozidlo, nebo ho zavřete, pokud se nehodí.
+
+### Zvýraznění napříč sloupci
+
+Kliknutím na libovolný řádek připnete jeho zvýraznění. Pokud je tento řádek součástí předběžně poznamenané nebo pevné kombinace, Druma zvýrazní odpovídající řádky v druhém sloupci a posune je do zobrazení — takže kliknutím na vozidlo v Příchozí uvidíte přesně, ke kterým zásilkám v Odchozí je spárováno, a naopak.
+
+### Virtuální objednávky
+
+Klikněte na **Virtuální** pro vytvoření zástupné objednávky, která rezervuje vozidlo pro očekávanou zásilku, jež ještě nemá pevnou rezervaci — užitečné při předběžném plánování před potvrzenou objednávkou.
 
 ---
 
-## Nastavení rozsahu dat
+## Konflikty a blokace
 
-Ve výchozím nastavení tabule zobrazuje dnes a následujících 7 dní. Toto lze změnit pomocí **výběru rozsahu dat** v horní části tabule.
-
----
-
-## Filtrování tabule
-
-Pomocí filtrů v horní části zúžíte, co vidíte:
-
-- **Typ kamionu** — Zobrazit pouze dodávky, pouze tahače, pouze valníky atd.
-- **Řidič** — Zobrazit pouze kamionu přiřazeného konkrétnímu řidiči.
-- **Stav** — Zobrazit pouze objednávky v určitém stavu.
-
----
-
-## Přiřazování a přeřazování objednávek
-
-### Přiřazení z panelu
-
-<Steps>
-  <Step title="Najděte nepřiřazenou objednávku">
-    Najděte objednávku v panelu Nepřiřazené objednávky vlevo.
-  </Step>
-  <Step title="Přetáhněte ji na řádek kamionu">
-    Klikněte na kartu objednávky a přetáhněte ji na řádek kamionu, na který ji chcete přiřadit.
-  </Step>
-  <Step title="Potvrďte přiřazení">
-    Zobrazí se potvrzovací popup. Klikněte na **Přiřadit** pro potvrzení. Řidič automaticky obdrží oznámení.
-  </Step>
-</Steps>
-
----
-
-## Konflikty
-
-Pokud se dvě objednávky překrývají na stejném kamionu, tabule zvýrazní dotčené bloky červeně s ikonou konfliktu. Indikátor konfliktu nebrání odeslání objednávky — je to varování, nikoli blokování.
+Pokud by navrhované přiřazení vytvořilo problém — limit kabotáže, neshodu návěsu, nevyřešenou štafetovou zastávku — Druma ho v potvrzovacím panelu označí jako blokaci, místo aby přiřazení nechala projít potichu. Některé blokace vyžadují explicitní potvrzení, než budete moci pokračovat; jiné jsou pouze informativní.
 
 ---
 
 ## Zobrazení podrobností objednávky
 
-**Klikněte** na libovolný blok objednávky na tabuli pro otevření **panelu rychlého souhrnu** na pravé straně obrazovky.
+**Kliknutím** na libovolný řádek otevřete panel podrobností. Odtud můžete objednávku upravit, změnit její stav nebo zavolat řidiči.
 
 ---
 
-## Hledání zpáteční nákladu
+## Pohled Časová osa
 
-Když kamion dokončí doručení, zobrazí se panel **Najít zpáteční náklad** na kartě objednávky. Kliknutím otevřete vysouvaný vyhledávací panel s:
+Přepněte na záložku **Časová osa** pro Ganttovský pohled: každé vozidlo je řádek a jeho rozvrh je vykreslen jako časově umístěné segmenty — jízdní úseky a okna nakládky/vykládky. Naplánované (ještě ne skutečné) segmenty se vykreslují šrafovaným vzorem; skutečné/potvrzené segmenty se vykreslují plně. Segment bez zatím potvrzeného časového razítka se zobrazuje se sníženou průhledností a přerušovaným okrajem, aby bylo zjevné, že jde o odhad.
 
-- **Shody interní flotily** — objednávky již ve vašem systému s vyzvednutím poblíž místa doručení
-- **Výsledky nákladní burzy Timocom** — dostupné náklady odpovídající aktuální poloze kamionu
-- **Srovnání tržní ceny** — každý výsledek zobrazuje nabízenou sazbu spolu s aktuálním tržním průměrem pro danou trasu
+<Frame caption="Pohled Časová osa — každý řádek je jedno vozidlo; červená čára označuje aktuální čas.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Pohled Časová osa plánovací tabule zobrazující vozidla jako řádky s časově umístěnými segmenty" />
+</Frame>
+
+Použijte ovládací prvky navigace data pro pohyb v rozvrhu a **volič rozsahu** pro výběr, kolik času je viditelné:
+
+| Rozsah | Nejlepší pro |
+|---|---|
+| **1 den** | Podrobné plánování v rámci dne — přesná okna nakládky a vykládky |
+| **3 dny** | Odhalení mezer a konfliktů v příštích 72 hodinách |
+| **1 týden** | Přehled kapacity — která vozidla jsou volná napříč celým týdnem |
+
+Časová osa sdílí stejný panel Filtry jako pohled Nyní, takže filtr stavu, data, zóny nebo místa se přenese při přepnutí záložky.
 
 ---
 
-## Odznaky typů objednávek
+## Pohled Mapa
 
-| Odznak | Typ objednávky | Význam |
-|---|---|---|
-| **Přes** (fialová) | Přemístění | Přesun bez tržeb |
-| **Sub** (oranžová) | Subdodávka | Outsourcováno třetí straně |
-| **Kap** (azurová) | Prodej kapacity | Prodej volného prostoru zprostředkovateli |
-| *(bez odznaku)* | Vlastní kamion | Standardní přeprava vlastní flotilou |
+Přepněte na záložku **Mapa** pro zobrazení nepřiřazených zásilek a dostupných řidičů geograficky namísto formou řádků. To je užitečné pro rychlé prostorové zjištění „co je poblíž čeho" před přepnutím zpět na Nyní kvůli skutečnému přiřazení. Akce **Automatický návrh** a **Virtuální** jsou dostupné i zde.
 
-<Card title="Zobrazení dnes" icon="sun" href="/en/planner/today-view">
-  Pro váš každodenní ranní workflow — aktivní objednávky, živé polohy kamionů a stavová upozornění na jedné obrazovce.
+---
+
+<Card title="Zobrazení dnes" icon="sun" href="/cs/planner/today-view">
+  Pro váš každodenní ranní workflow — aktivní objednávky, živé polohy vozidel a stavová upozornění na jedné obrazovce.
 </Card>
 
-<Card title="Vytvoření objednávky" icon="plus" href="/en/planner/creating-orders">
-  Nový v Druma? Začněte zde a naučte se, jak vytvořit první objednávku.
+<Card title="Vytvoření objednávky" icon="plus" href="/cs/planner/creating-orders">
+  Nový v Druma? Začněte zde a naučte se, jak vytvořit svou první objednávku.
 </Card>
----
-
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/planning-board).

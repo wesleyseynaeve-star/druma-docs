@@ -1,0 +1,147 @@
+---
+title: "Vanzari"
+description: "Urmareste lead-uri si conturi existente prin pipeline-ul de vanzari — de la primul contact pana la un client convertit, o oferta sau o licitatie."
+icon: "user-group"
+---
+
+## Prezentare generala
+
+Modulul **Vanzari** (`/operator-crm`, in navigarea principala ca **Vanzari**) este locul unde gestionezi construirea relatiilor, separat de comenzile de transport la care duc acele relatii. Este construit in jurul a doua tipuri de inregistrari, care circula prin aceleasi etape de ciclu de viata:
+
+- **Lead-uri** — potentiali clienti care inca nu sunt clienti in Druma
+- **Conturi** — clientii tai existenti, urmariti prin acelasi pipeline, odata ce vrei sa gestionezi reinnoiri sau extinderi
+
+Vanzari este disponibil pentru rolurile **admin, company_admin, planner, dispatcher si customer_service**.
+
+<Frame caption="Tabul Pipeline de Vanzari — lead-uri si conturi care circula prin lead → calificat → propunere → castigat.">
+  <img src="/images/planner/crm.png" alt="Kanban board de pipeline de vanzari, cu lead-uri si conturi pe patru etape" />
+</Frame>
+
+---
+
+## Bara de taburi
+
+<Steps>
+  <Step title="Pipeline">
+    Un kanban board cu lead-uri si conturi, pe patru etape, cu repozitionare prin drag-and-drop. Acesta este tabul tau implicit de aterizare.
+  </Step>
+  <Step title="Contacte">
+    Un tabel cu toate lead-urile, cu coloane de companie, contact, tara, sursa, ultima atingere si etapa.
+  </Step>
+  <Step title="Conturi">
+    Un tabel cu clientii tai existenti, fiecare urmarit optional cu propria etapa de ciclu de viata si data ultimei atingeri.
+  </Step>
+  <Step title="Oferte">
+    Deschide pagina [Oferte](/ro/planner/quotes) — stabilirea pretului pentru o incarcatura specifica, pentru un lead sau client.
+  </Step>
+  <Step title="Licitatii (daca este activata)">
+    Deschide [Licitatii si Contracte](/ro/planner/tenders-and-contracts) — afisat doar cand gestionarea licitatiilor este activata pentru compania ta.
+  </Step>
+  <Step title="Raportare">
+    Rata de castig, dimensiunea medie a tranzactiei, durata ciclului de vanzare, valoarea ponderata a pipeline-ului si un clasament de activitate.
+  </Step>
+</Steps>
+
+<Note>
+Ofertele si Licitatiile impart aceasta bara de taburi, ca intreaga miscare de vanzari — de la angajament redus la angajament ridicat — sa se citeasca ca o singura unitate, dar fiecare isi pastreaza propriul continut de pagina si propria pagina de documentatie.
+</Note>
+
+---
+
+## Etapele ciclului de viata
+
+Fiecare lead si fiecare cont urmarit trece prin acelasi set de etape:
+
+| Etapa | Semnificatie |
+|---|---|
+| `lead` | Contact initial, inca necalificat |
+| `qualified` | Confirmat ca o oportunitate reala |
+| `proposal` | O oferta sau licitatie a fost trimisa |
+| `won` | Convertit intr-un client activ |
+| `lost` | Nu s-a convertit |
+| `inactive` | Contul a devenit inactiv |
+
+Tabla **Pipeline** arata doar coloanele `lead` → `qualified` → `proposal` → `won`. `lost` si `inactive` se seteaza din lista derulanta de etapa, in interiorul panoului de detaliu al unei inregistrari, nu ca si coloane de tabla.
+
+---
+
+## Adaugarea unui lead
+
+<Steps>
+  <Step title="Apasa Lead nou">
+    Din tabul **Pipeline** sau **Contacte**, apasa **Lead nou**.
+  </Step>
+  <Step title="Completeaza detaliile">
+    Introdu:
+    - **Companie** (obligatoriu)
+    - **Contact**, **Tara**, **Email**, **Telefon**, **TVA**
+    - **Sursa** — text liber (de ex. "recomandare", "bursa de marfuri")
+    - **Etapa** — implicit `lead`
+    - **Note**
+  </Step>
+  <Step title="Creeaza">
+    Apasa **Creeaza**. Lead-ul apare pe tabla Pipeline si in tabelul Contacte.
+  </Step>
+</Steps>
+
+<Note>
+Lead-urile provenite dintr-o cerere de oferta (RFQ) primita sau dintr-un email redirectionat catre CRM sunt etichetate automat ("RFQ Primita" / "Email Primit") in coloana Sursa a tabelului Contacte.
+</Note>
+
+---
+
+## Lucrul cu un lead sau cont
+
+Apasa orice card sau rand pentru a-i deschide panoul de detaliu:
+
+- **Etapa** — schimba etapa de ciclu de viata direct.
+- **Note** — note libere despre relatie.
+- **Tranzactie** *(doar lead-uri)* — valoare asteptata (EUR/RON), probabilitate (%), data asteptata de finalizare, etichete separate prin virgula, si o lista derulanta de motiv de pierdere, care apare odata ce etapa este setata la `lost`.
+- **Persoane / Contacte** *(doar lead-uri)* — adauga mai multe persoane de contact pentru acelasi cont si marcheaza una ca principala.
+- **Puncte de contact** — inregistreaza o interactiune: alege un tip (**Apel, Email, Intalnire, Demo, Nota**), un rezumat/rezultat optional si un atasament de fisier optional, apoi apasa **Inregistreaza punctul de contact**. Punctele de contact sunt partajate intre lead-uri si conturi si sunt afisate cele mai noi primele.
+
+Pentru lead-uri, antetul panoului mai are:
+
+- **Creeaza oferta** — face link direct catre [Oferte](/ro/planner/quotes), cu o oferta noua precompletata din acest lead.
+- **Creeaza licitatie** *(daca gestionarea licitatiilor este activata)* — face link direct catre [Licitatii si Contracte](/ro/planner/tenders-and-contracts), cu o licitatie noua pre-legata de acest lead.
+- **Converteste in client** — vezi mai jos. Odata convertit, acest buton devine **Vezi clientul** in schimb.
+
+---
+
+## Convertirea unui lead intr-un client
+
+<Steps>
+  <Step title="Deschide lead-ul si apasa Converteste in client">
+    Confirma promptul. Druma creeaza o inregistrare noua de client din detaliile lead-ului — aceasta actiune este idempotenta, deci apasarea din nou pe un lead deja convertit doar deschide clientul existent, in loc sa il duplice.
+  </Step>
+  <Step title="Optional, creeaza o fisa de tarifare">
+    Esti intrebat daca vrei sa creezi o fisa de tarifare pe ruta, pentru noul client. Alegerea **Creeaza fisa de tarifare** te duce la un formular nou de fisa de tarifare precompletat; **Nu acum** nu lasa nimic in urma.
+  </Step>
+  <Step title="Gaseste-l sub Conturi">
+    Pagina comuta la tabul **Conturi**, filtrat la clientul nou convertit.
+  </Step>
+</Steps>
+
+---
+
+## Raportare
+
+Tabul **Raportare** rezuma pipeline-ul tau:
+
+- **Rata de castig** — ponderea tranzactiilor inchise (castigate vs. pierdute) care au fost castigate.
+- **Dimensiune medie tranzactie** — valoarea medie asteptata, pe tranzactiile cu o valoare setata.
+- **Ciclu de vanzare** — numarul mediu de zile de la crearea lead-ului pana la inchidere.
+- **Pipeline ponderat** — suma valorii asteptate a fiecarei tranzactii deschise × probabilitate, defalcata pe etapa (cu o dezvaluire a calculului).
+- **Pipeline de licitatii** *(daca gestionarea licitatiilor este activata)* — volum angajat, pe statusul licitatiei.
+- **Clasament de activitate** — puncte de contact inregistrate per membru al echipei.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Oferte" icon="file-invoice" href="/ro/planner/quotes">
+    Construieste si trimite o oferta de transport unui lead sau client, cu acceptare intr-un click, care o transforma intr-o comanda confirmata.
+  </Card>
+  <Card title="Licitatii si Contracte" icon="file-signature" href="/ro/planner/tenders-and-contracts">
+    Urmareste licitatiile de achizitie ale clientilor, de la prospect la contract activ, si atribuie tarife pe ruta intr-o fisa de tarifare.
+  </Card>
+</CardGroup>

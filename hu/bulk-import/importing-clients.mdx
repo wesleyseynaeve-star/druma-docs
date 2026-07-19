@@ -1,43 +1,53 @@
 ---
 title: "Ügyfelek importálása"
-description: "Ügyfelek tömeges importálása CSV vagy XLSX fájlból a Druma Tömeges importálás funkciójával."
-icon: "users"
+description: "Töltsd fel tömegesen az ügyfélcégeidet a Drumába egy táblázat-sablon segítségével."
+icon: "file-import"
 ---
 
-## Az ügyfelek tömeges importálása
-
-Az ügyfelek tömeges importálása lehetővé teszi a meglévő ügyfélnyilvántartás gyors áttelepítését a Druma-ba.
+Ha már van meglévő ügyféllistád Excelben vagy egy másik rendszerben, a tömeges importálás megkíméli attól, hogy minden ügyfelet manuálisan kelljen rögzítened.
 
 ## A sablon letöltése
 
-1. Lépj az **Ügyfelek** oldalra.
-2. Kattints a **Tömeges importálás** gombra.
-3. Kattints a **Sablon letöltése** gombra.
+<Steps>
+  <Step title="Nyisd meg a Tömeges importálást">
+    Lépj az **Ügyfelek** oldalra, és kattints a **Tömeges importálás** gombra az eszköztárban — ez közvetlenül az Ügyfelek listaoldalon nyitja meg az importálási ablakot; nincs külön importálási oldal.
+  </Step>
+  <Step title="Töltsd le és töltsd ki a sablont">
+    Kattints a **Sablon letöltése** gombra — a Druma egy `.xlsx` fájlt generál. Töltsd ki soronként egy-egy ügyféllel:
 
-| Oszlop | Kötelező | Leírás |
-|---|---|---|
-| `name` | Igen | Cég neve |
-| `vat_number` | Nem | ÁFA-szám (deduplikáláshoz használt) |
-| `legal_name` | Nem | Jogi cégnév |
-| `address` | Nem | Utca, házszám |
-| `city` | Nem | Város |
-| `postal_code` | Nem | Irányítószám |
-| `country` | Nem | Ország (2 betűs ISO kód: HU, RO, DE, stb.) |
-| `email` | Nem | Számlázási e-mail |
-| `phone` | Nem | Telefonszám |
-| `payment_terms` | Nem | Fizetési határidő napokban (pl. 30) |
-| `currency` | Nem | Alapértelmezett pénznem (EUR, RON, stb.) |
-| `contact_name` | Nem | Kapcsolattartó neve (kapcsolattartót hoz létre) |
-| `contact_email` | Nem | Kapcsolattartó e-mailje |
+    | Oszlop | Kötelező | Példa |
+    |--------|----------|---------|
+    | Cégnév | Igen | Acme Logistics SRL |
+    | ÁFA-szám | Nem | RO12345678 |
+    | Jogi név | Nem | Acme Logistics S.R.L. |
+    | Ország | Nem | Románia |
+    | Város | Nem | Bukarest |
+    | E-mail | Nem | billing@acme.ro |
+    | Telefon | Nem | +40 21 000 0000 |
+    | Fizetési határidő (napok) | Nem | 30 |
+    | Pénznem | Nem | EUR |
+  </Step>
+  <Step title="Töltsd fel és ellenőrizd">
+    Húzd rá a kitöltött fájlt (CSV vagy XLSX, legfeljebb 5 MB) az importálási ablakra. Ha az oszlopfejléceid pontosan egyeznek a sablonnal, a Druma automatikusan leképezi őket; egyébként minden oszlopot manuálisan hozzá kell rendelned a megfelelő mezőhöz. Ezután egy előnézet mutatja az első 5 sort — a hiányzó cégnevű sorok piros jelzéssel jelennek meg.
+  </Step>
+  <Step title="Erősítsd meg az importálást">
+    Kattints az **Importálás** gombra. Az ügyfelek azonnal létrejönnek, és rögtön felhasználhatók rendeléseken. Egy eredményképernyő mutatja, hány sor jött létre, lett kihagyva vagy hibázott, a hibázott sorokhoz soronkénti hibarészlettel.
+  </Step>
+</Steps>
 
-## Duplikálás-kezelés
+## Duplikátumkezelés
 
-Ha egy importált ügyfél ÁFA-száma egyezik egy meglévő ügyféllel, a sor kihagyásra kerül — az ügyfél nem kerül duplikáltan importálásra.
+A Druma minden sor ÁFA-számát összeveti a meglévő ügyfeleiddel (nagybetűsre normalizálva, szóközök levágva). Ha talál egyezést, az adott sor **kihagyásra** kerül — nem frissíti a meglévő ügyfelet. Az ÁFA-szám nélküli sorok ez alapján soha nem kerülnek kihagyásra, és mindig új ügyfelet hoznak létre.
 
-## Importálás elvégzése
+<Note>
+A tömeges importálás kizárólag új ügyfélrekordokat hoz létre — soha nem frissít meglévőt, még akkor sem, ha egyező ÁFA-számú fájlt importálsz újra. Egy már létező ügyfél adatainak módosításához szerkeszd közvetlenül a Drumában.
+</Note>
 
-Az importálás folyamata ugyanaz, mint a Flotta importálásnál. Lásd az [Flotta importálása](/en/bulk-import/importing-fleet) oldalt a lépésenkénti útmutatóhoz.
-
-<Card title="Ügyfelek kezelése" icon="users" href="/en/planner/fleet-management">
-  Ügyfelek egyenkénti hozzáadása és kezelése.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Flottád importálása" icon="truck" href="/en/bulk-import/importing-fleet">
+    Ugyanígy tömegesen add hozzá a járműveidet.
+  </Card>
+  <Card title="Sofőrök onboardolása Smart Import segítségével" icon="id-card" href="/en/bulk-import/importing-drivers">
+    A Druma AI-alapú dokumentumfeltöltő eszköze a sofőrállomány onboardolásához.
+  </Card>
+</CardGroup>

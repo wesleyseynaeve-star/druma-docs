@@ -1,130 +1,182 @@
 ---
 title: "Tableau de planification"
-description: "Utilisez le tableau de répartition visuel pour voir tous vos camions, affecter des commandes, repérer les conflits et gérer le planning de votre flotte d'un coup d'œil."
+description: "Le tableau de répartition visuel — rapprochez les camions qui se libèrent des chargements qui en ont besoin, affectez par glisser-déposer, et préplanifiez des combinaisons avant qu'elles ne soient fermes."
 icon: "calendar"
 ---
 
 ## Vue d'ensemble
 
-Le Tableau de planification est votre principal outil de répartition. Il montre chaque camion de votre flotte sur une chronologie horizontale, avec les commandes affichées comme des blocs colorés.
+Le Tableau de planification est votre principal outil de répartition. Accédez à **Planificateur → Tableau de planification** pour l'ouvrir.
 
-Accédez à **Planificateur → Tableau de planification** pour l'ouvrir.
+Le tableau propose trois modes, que vous changez via les onglets en haut :
+
+| Mode | À quoi il sert |
+|---|---|
+| **Maintenant** | La vue de répartition principale — deux colonnes qui rapprochent la capacité de la demande. C'est ici que vous affectez et réaffectez les camions. |
+| **Chronologie** | Une vue de type Gantt du planning de chaque camion, pour repérer les creux et les conflits sur une journée, trois jours, ou une semaine. |
+| **Carte** | Les mêmes chargements non affectés et chauffeurs disponibles, représentés géographiquement. |
 
 <Warning>
-Le Tableau de planification est conçu pour des écrans de bureau de 1280 pixels de large ou plus. Sur téléphone ou tablette, le tableau est disponible en mode lecture seule.
+Le Tableau de planification est conçu pour des écrans de bureau de 1280 pixels de large ou plus. Sur téléphone ou tablette, un flux de cartes simplifié remplace la disposition à deux colonnes, et le glisser-déposer n'est pas disponible.
 </Warning>
 
 ---
 
-## Lire le tableau
+## Maintenant — la vue de répartition à deux colonnes
 
-### La chronologie
+L'onglet **Maintenant** est une disposition scindée en deux colonnes :
 
-L'axe horizontal représente le temps. Chaque rangée représente un camion. Les commandes apparaissent comme des blocs rectangulaires s'étendant de l'heure de chargement à l'heure de livraison estimée.
+- **Entrant** (gauche) — ce qui libère de la capacité : les camions libres dès maintenant, et les camions sur le point de se libérer parce que leur chargement actuel sera livré dans la plage de dates visible.
+- **Sortant** (droite) — les commandes qui ont encore besoin d'un camion (chargements non affectés), plus les commandes déjà affectées, regroupées de la même façon que la colonne Entrant afin qu'un camion qui se libère dans une zone s'aligne visuellement avec les chargements à prendre dans cette même zone.
 
-### Codage couleur
+<Frame caption="La vue Maintenant — capacité Entrante à gauche, chargements Sortants à droite, avec les bascules de densité et de Préplanification dans la barre d'outils.">
+  <img src="/images/planner/planning-board-split.png" alt="Vue Maintenant du Tableau de planification montrant les colonnes Entrant et Sortant" />
+</Frame>
 
-| Couleur | Statut |
-|---|---|
-| Gris | Brouillon — pas encore confirmé |
-| Bleu | Confirmé — chauffeur notifié, pas encore parti |
-| Vert | En transit ou En route vers la livraison |
-| Jaune | Arrivé au chargement ou à la livraison — en attente |
-| Rouge | En retard — dépassé l'heure de livraison prévue |
+Affecter un camion se fait par glisser-déposer : prenez une ligne d'un côté et déposez-la sur la ligne correspondante de l'autre côté.
 
-### Le panneau latéral des commandes non assignées
-
-Sur le côté gauche du tableau, un panneau **Commandes non assignées** liste toutes les commandes sans camion assigné. Faites glisser une commande depuis le panneau vers une rangée de camion pour l'affecter.
-
----
-
-## Définir la plage de dates
-
-Par défaut, le tableau montre aujourd'hui plus les 7 prochains jours. Vous pouvez modifier cela en cliquant sur le **sélecteur de plage de dates** en haut du tableau.
-
----
-
-## Filtrer le tableau
-
-- **Type de camion** — Afficher uniquement certains types de véhicules.
-- **Chauffeur** — Afficher uniquement les camions assignés à un chauffeur spécifique.
-- **Statut** — Afficher uniquement les commandes dans un statut particulier.
-
----
-
-## Affecter et réaffecter des commandes
-
-<Steps>
-  <Step title="Trouvez la commande non assignée">
-    Localisez la commande dans le panneau des Commandes non assignées.
-  </Step>
-  <Step title="Faites-la glisser vers une rangée de camion">
-    Cliquez et maintenez la carte de commande, puis faites-la glisser vers la rangée du camion souhaité.
-  </Step>
-  <Step title="Confirmez l'affectation">
-    Une fenêtre contextuelle de confirmation apparaît. Cliquez sur **Affecter** pour confirmer. Le chauffeur reçoit automatiquement une notification.
-  </Step>
-</Steps>
-
-### Réaffecter une commande existante
-
-Pour déplacer une commande d'un camion à un autre, faites glisser le bloc de commande vers une autre rangée de camion.
+- Faire glisser un **camion** sur un chargement ouvre une fenêtre de confirmation montrant les détails du camion, du chauffeur, et de la commande — y compris toute vérification de cabotage, de remorque, ou d'arrêt relais nécessitant votre validation — avant que l'affectation ne soit finalisée.
+- Faire glisser un **chargement en cours de livraison** (une carte Entrant qui n'est pas encore libre, mais sur le point de l'être) sur un chargement Sortant n'affecte pas encore de camion — il n'y en a pas encore de libre à affecter — cela esquisse un lien provisoire entre les deux. Répéter l'opération construit toute une **chaîne** de rechargements futurs pour un même camion, avant même qu'il ne soit libre pour le premier ; voir le **mode Préplanification** ci-dessous pour le flux complet de gestion des chaînes, y compris l'optimiseur automatique qui surveille les chaînes esquissées à la recherche d'un échange plus économique. Utilisez **Affecter un camion** sur cette ligne une fois prêt à valider.
 
 <Note>
-Druma vous avertira si la réaffectation crée un conflit horaire.
+Le glisser-déposer fonctionne **dans les deux sens** — faites glisser une carte Entrant sur un chargement Sortant, ou un chargement Sortant sur une carte Entrant. Dans les deux cas, vous atterrissez sur la même ligne.
 </Note>
 
+### Plage de dates
+
+Le tableau montre un horizon glissant de 7 jours. Utilisez les flèches à côté de l'étiquette de date pour avancer ou reculer d'une semaine complète, ou cliquez sur **Aujourd'hui** pour revenir à la fenêtre actuelle de 7 jours.
+
+### Densité : Compact vs Confortable
+
+Une bascule dans la barre d'outils change le niveau de détail affiché par chaque ligne :
+
+- **Compact** (par défaut) — des lignes denses sur une seule ligne avec des colonnes triables/réordonnables, au plus proche d'un tableur. Idéal pour un balayage rapide et une planification en masse.
+- **Confortable** — des cartes plus riches avec davantage de détail visuel par camion ou commande. Idéal pour examiner de près une poignée de missions.
+
+Les deux densités montrent les mêmes données sous-jacentes et prennent en charge le même glisser-déposer, les mêmes filtres, et le même regroupement — le changement est purement cosmétique.
+
+### Regroupement et réduction
+
+Utilisez le contrôle **grouper par** dans la barre d'outils pour répartir les deux colonnes par groupe de zones, pays, ville, groupe de planification, ou date — Entrant et Sortant se regroupent toujours selon le même axe afin que la mise en correspondance de la capacité et de la demande reste visuellement alignée. Les en-têtes de groupe sont réductibles ; réduisez une section d'un côté et la section correspondante de l'autre côté se réduit aussi, ce qui garde les deux colonnes synchronisées. Cliquez sur **Tout développer** pour réinitialiser tous les groupes réduits en une fois.
+
+<Note>
+Les groupes de zones sont vos propres regroupements hiérarchiques de codes postaux (configurés dans Paramètres), utiles pour rapprocher d'un coup d'œil « lequel de mes dépôts/régions a un camion qui se libère » et « quelle région a des chargements à prendre ».
+</Note>
+
+### Colonnes
+
+Cliquez sur **Colonnes** pour choisir les champs affichés de chaque côté, et faites-les glisser pour les réordonner. Entrant et Sortant conservent des jeux de colonnes indépendants — un champ que vous ajoutez ou masquez d'un côté n'affecte pas l'autre. Les champs essentiels (Statut, identité, ETA) sont toujours affichés et ne peuvent être ni masqués ni réordonnés ; tout le reste (répartition par code postal/ville/pays, nom du chauffeur, plaque, remorque, statut de cabotage, sous-traitant, et plus encore) est optionnel.
+
+### Vues enregistrées
+
+Le menu **Vues** vous permet d'enregistrer la configuration actuelle de filtres, de regroupement, et de colonnes comme une vue nommée, de basculer entre les vues enregistrées, et d'en marquer une comme vue par défaut — elle est alors appliquée automatiquement la prochaine fois que vous (ou toute personne partageant cette vue) ouvrez le tableau.
+
+### Filtres et recherche
+
+Cliquez sur **Filtres** pour ouvrir le panneau de filtres — statut, plage de dates de chargement/livraison, zone, et pays, ville, ou code postal de chargement/livraison. Les filtres actifs s'affichent sous forme de puces amovibles sous la barre d'outils ; cliquez sur **Tout effacer** pour les réinitialiser. Chaque colonne dispose aussi de sa propre zone de recherche rapide pour filtrer par numéro de commande, adresse, ou nom de chauffeur au sein de ce côté.
+
+### Tuiles de triage
+
+Au-dessus de chaque colonne, de petites tuiles résument son contenu en un coup d'œil :
+
+- **Entrant** — le nombre de camions/chargements dans chaque tranche de capacité.
+- **Sortant** — le nombre de chargements **Non planifiés**, **En retard**, et **À l'heure** parmi ceux qui ont déjà un plan provisoire ou ferme.
+
+Cliquez sur une tuile pour filtrer cette colonne sur cette seule tranche ; cliquez à nouveau pour effacer le filtre.
+
+### Affecter un camion / Retirer le camion / Mettre en vente
+
+Chaque ligne Sortant qui a un camion (ferme ou esquissé) affiche des boutons d'action :
+
+- **Affecter un camion** — valider une combinaison esquissée comme une affectation ferme.
+- **Retirer le camion** — annuler le plan et renvoyer la commande vers non affectée.
+- **Mettre en vente** — proposer le chargement à un sous-traitant/transporteur plutôt que de l'exécuter avec votre propre flotte. Un chargement vendu affiche un badge **À vendre** ou **Vendu · [transporteur]** ; si le transporteur est en retard, un badge **En retard** apparaît également. Vous pouvez reprendre un chargement vendu dans votre propre flotte tant qu'il n'a pas commencé à charger.
+
+### Mode Préplanification
+
+La bascule **Préplanification** dans la barre d'outils change ce que fait un glisser-déposer :
+
+- **Désactivée** (par défaut) — le glisser-déposer affecte le camion fermement dans l'immédiat (ouvre la fenêtre de confirmation).
+- **Activée** — le glisser-déposer esquisse une combinaison provisoire sans rien valider. Les combinaisons esquissées affichent un badge **Provisoire**, une ETA estimée (ou, lorsque les données de routage sont disponibles, une ETA réelle calculée par PTV), et un verdict à l'heure/en retard — vous pouvez ainsi esquisser une semaine entière de combinaisons avant d'en verrouiller la moindre. Utilisez **Affecter un camion** sur une ligne esquissée quand vous êtes prêt à la rendre ferme.
+
+**Construire une chaîne.** Une esquisse ne s'arrête pas forcément à un camion et un chargement. Faites glisser une carte Entrant **en cours de livraison** — un camion pas encore libre mais sur le point de l'être — sur un chargement Sortant, et Druma esquisse un lien chaînant le nouveau chargement après celui actuellement en transit. Faites glisser à nouveau sur le nouveau dernier maillon, et vous pouvez planifier toute une séquence de rechargements futurs pour un seul camion, des jours avant qu'il ne se libère réellement — une tournée Cluj → Sibiu → Timișoara, esquissée un lundi pour un camion encore en route vers Cluj.
+
+Chaque ligne esquissée affiche une puce **Après n° {commande}** nommant le chargement auquel elle est chaînée, afin que la séquence reste lisible d'un coup d'œil. En coulisses, une esquisse s'ancre à un camion spécifique, à la commande prédécesseur à laquelle elle est chaînée, ou aux deux — et une ancre ne peut jamais alimenter qu'un seul rechargement à la fois : faire glisser un nouveau chargement sur une ancre déjà prise réattribue l'ancre au nouveau chargement et annule l'esquisse de l'ancien, au lieu de doubler-réserver le même camion sur deux chaînes.
+
+<Note>
+Rien ici ne touche la commande réelle tant qu'un camion n'est pas réellement affecté via le portail normal du tableau — un glisser-déposer avec Préplanification désactivée, ou **Affecter un camion** sur une ligne esquissée. Jusque-là, une chaîne n'est qu'un espace de planification à l'essai, librement réorganisable.
+</Note>
+
+**L'Optimiseur de réaffectation de rechargement.** Une fois qu'une chaîne existe, Druma continue de la vérifier en arrière-plan. Pour le **dernier maillon** de chaque chaîne — le dernier rechargement esquissé, celui après lequel rien n'est encore chaîné — il se demande : existe-t-il un autre rechargement, pas encore esquissé, dont le point de chargement est plus proche de l'endroit où ce camion va réellement se libérer ?
+
+Par exemple : un camion est esquissé pour recharger à Cluj demain. Un rechargement plus proche, non retenu, se présente avec un point de chargement à Sibiu à la place. Si permuter vers le chargement de Sibiu réduirait réellement le coût de kilomètres à vide — évalué en € selon le propre profil de coût du camion, pas seulement en kilomètres bruts — Druma fait apparaître une puce de suggestion directement sur cette ligne, quelque chose comme **« Rechargement moins cher disponible : −18 km · 22 € »**. Cliquez sur **Passer à n°...** et la permutation s'applique en une seule étape : le chargement de Sibiu est esquissé, le chargement de Cluj perd automatiquement son esquisse (la même règle d'ancre à usage unique sur laquelle reposent les chaînes ci-dessus), et une notification confirme **« Rechargement n°... esquissé à la place »**. C'est le même mécanisme de puce de suggestion décrit plus bas, appliqué spécifiquement aux derniers maillons de chaîne.
+
+Quelques garde-fous garantissent la fiabilité des suggestions :
+
+- Il ne suggère jamais qu'une permutation économisant **au moins 15 km et au moins 0 €** — jamais une permutation qui paraît économique uniquement parce que le profil de coût d'un camion est mal configuré à zéro.
+- Il **tient compte du règlement UE 561/2006** — il ne suggérera jamais un rechargement qui pousserait le chauffeur du camion au-delà de ses heures de conduite restantes pour la journée.
+- Cliquez sur la puce pour la déplier et voir le « pourquoi » ainsi qu'un impact avant/après réellement routé, y compris un avertissement indiquant que le chargement évincé redeviendra non affecté.
+
+<Note>
+L'optimiseur ne fait jamais que proposer ; rien n'est appliqué sans un clic. Il reste également silencieux quand il n'y a rien de mieux à suggérer — l'absence de puce signifie que Druma n'a pas trouvé de rechargement moins cher, pas qu'il n'a pas vérifié.
+</Note>
+
+**Sécurité des chaînes en cas de changement.** Si quelque chose en amont d'une chaîne change — la commande est annulée, son camion est désaffecté, ou son camion est changé — Druma vérifie si quelque chose est esquissé en aval. Si rien ne l'est, le changement s'applique sans encombre. Si un maillon en aval existe, on vous demande de choisir : **Supprimer toute la chaîne** (propage la suppression à travers chaque rechargement esquissé qui en découle) ou **Conserver les commandes en aval** (ne coupe que ce seul lien et laisse les chargements en aval comme des repères indépendants, toujours réaffectables). Dans les deux cas, un plan esquissé ne se dégrade jamais silencieusement en un état rompu ou orphelin — c'est vous qui décidez de ce qu'il advient du reste de la chaîne, vous n'avez jamais à traquer vous-même des liens en suspens.
+
+### Puces de suggestion
+
+Lorsque la planification automatique de Druma dispose d'une recommandation fiable pour une commande non affectée, une puce de suggestion apparaît directement sur cette ligne. Cliquez dessus pour appliquer directement le camion suggéré, ou ignorez-la si elle ne convient pas.
+
+### Mise en évidence croisée entre colonnes
+
+Cliquez sur n'importe quelle ligne pour épingler sa mise en évidence. Si cette ligne fait partie d'une combinaison esquissée ou ferme, Druma met en évidence la ou les lignes correspondantes dans l'autre colonne et les fait défiler jusqu'à la vue — ainsi, cliquer sur un camion dans Entrant vous montre exactement à quel(s) chargement(s) il est associé dans Sortant, et vice versa.
+
+### Commandes virtuelles
+
+Cliquez sur **Virtuel** pour créer une commande de substitution qui réserve un camion pour un chargement attendu ne disposant pas encore d'une réservation ferme — utile pour préplanifier en amont d'une commande confirmée.
+
 ---
 
-## Conflits
+## Conflits et blocages
 
-Si deux commandes se chevauchent sur le même camion, le tableau met en évidence les blocs affectés en rouge.
-
-Options pour résoudre un conflit :
-- **Faire glisser et réaffecter** une des commandes en conflit vers un autre camion.
-- **Modifier l'heure de chargement** de la commande suivante.
-- **Accepter le conflit** si vous savez que le chauffeur peut y arriver.
+Si une affectation proposée créerait un problème — une limite de cabotage, une incompatibilité de remorque, un arrêt relais non résolu — Druma le signale comme un blocage dans la fenêtre de confirmation plutôt que de laisser passer l'affectation silencieusement. Certains blocages nécessitent une reconnaissance explicite avant de pouvoir continuer ; d'autres sont purement informatifs.
 
 ---
 
-## Voir les détails d'une commande
+## Consulter les détails d'une commande
 
-**Cliquez** sur n'importe quel bloc de commande pour ouvrir un **panneau de résumé rapide** sur le côté droit.
-
-Depuis ce panneau, vous pouvez :
-- Cliquer sur **Modifier la commande** pour ouvrir le formulaire complet
-- Cliquer sur **Changer le statut** pour remplacer le statut
-- Cliquer sur **Appeler le chauffeur** pour composer le numéro du chauffeur
+**Cliquez** sur n'importe quelle ligne pour ouvrir un panneau de détail. Depuis là, vous pouvez modifier la commande, changer son statut, ou appeler le chauffeur.
 
 ---
 
-## Recherche de fret retour
+## Vue Chronologie
 
-Lorsqu'un camion complète une livraison, Druma vous aide à trouver des frets retour directement depuis le tableau de planification.
+Passez à l'onglet **Chronologie** pour une vue de type Gantt : chaque camion est une ligne, et son planning est dessiné sous forme de segments positionnés dans le temps — legs de conduite, et fenêtres de chargement/déchargement. Les segments planifiés (pas encore réels) s'affichent avec un motif hachuré ; les segments réels/confirmés s'affichent pleins. Un segment sans horodatage confirmé s'affiche à opacité réduite avec une bordure en pointillés pour signaler qu'il est estimé.
 
-Lorsqu'une commande atteint le statut **Livré**, un panneau **Trouver un fret retour** devient disponible. Ce panneau montre :
-- **Correspondances de flotte interne** — commandes déjà dans votre système avec un chargement proche du lieu de livraison.
-- **Résultats Timocom** — chargements disponibles sur la bourse de fret Timocom.
-- **Comparaison des prix du marché** — chaque résultat montre le tarif proposé par rapport à la moyenne du marché.
+<Frame caption="Vue Chronologie — chaque ligne représente un camion ; une ligne rouge marque l'heure actuelle.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Vue Chronologie du Tableau de planification montrant les camions en lignes avec des segments positionnés dans le temps" />
+</Frame>
+
+Utilisez les contrôles de navigation par date pour parcourir le planning, et le **sélecteur de portée** pour choisir la quantité de temps visible :
+
+| Portée | Idéal pour |
+|---|---|
+| **1 jour** | Planification intra-journalière détaillée — voir les fenêtres exactes de chargement et de déchargement |
+| **3 jours** | Repérer les creux et les conflits sur les 72 prochaines heures |
+| **1 semaine** | Une vue d'ensemble de la capacité — quels camions sont libres sur toute la semaine |
+
+La Chronologie partage le même panneau de Filtres que la vue Maintenant, si bien qu'un filtre de statut, de date, de zone, ou de lieu se conserve lorsque vous changez d'onglet.
 
 ---
 
-## Export du tableau de planification
+## Vue Carte
 
-<Steps>
-  <Step title="Définissez vos filtres et plage de dates">
-    Arrangez le tableau pour afficher exactement ce que vous souhaitez exporter.
-  </Step>
-  <Step title="Cliquez sur Exporter">
-    Trouvez le bouton **Exporter en PDF** dans le coin supérieur droit.
-  </Step>
-  <Step title="Télécharger">
-    Cliquez sur **Générer le PDF**. Le fichier se télécharge automatiquement.
-  </Step>
-</Steps>
+Passez à l'onglet **Carte** pour voir les chargements non affectés et les chauffeurs disponibles représentés géographiquement plutôt que sous forme de lignes. C'est utile pour une lecture spatiale rapide de « qu'est-ce qui est proche de quoi » avant de revenir à Maintenant pour effectuer l'affectation. Les actions **Suggestion automatique** et **Virtuel** sont également disponibles ici.
+
+---
 
 <Card title="Vue Aujourd'hui" icon="sun" href="/fr/planner/today-view">
-  Pour votre flux de travail matinal quotidien — commandes actives, positions des camions en direct et alertes de statut.
+  Pour votre flux de travail matinal quotidien — commandes actives, positions des camions en direct, et alertes de statut, le tout sur un seul écran.
 </Card>
 
 <Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">

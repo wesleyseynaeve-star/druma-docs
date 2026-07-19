@@ -8,7 +8,11 @@ icon: "arrows-left-right"
 
 Někdy přijmete zásilku od klienta, ale nepřepravujete ji sami — najmete jiného dopravce. Jednáte jako nákladní zasílatel: jste obchodní vrstva mezi klientem a skutečným dopravcem.
 
-V Druma se to nazývá typ objednávky **Subdodávka**. Vytvoříte jednu objednávku, přiřadíte ji dopravci z registru subdodavatelů a Druma se postará o zbytek: rozdělená fakturace, sledování stavu, tok dokladů a výpočet marže.
+V Druma se to nazývá typ objednávky **Subdodávka**. Vytvoříte jednu objednávku, přiřadíte ji dopravci z registru subdodavatelů a Druma se postará o zbytek: rozdělená fakturace, sledování stavu, tok dokladů a výpočet marže — vše z jediné objednávky bez dvojího zadávání dat.
+
+<Frame caption="Pipeline zasílatelství — marže nákupní/prodejní sazby sledovaná za jednotlivou subdodávkovou objednávku.">
+  <img src="/images/planner/freight-forwarding.png" alt="Tabule pipeline nákladního zasílatelství" />
+</Frame>
 
 ---
 
@@ -19,19 +23,19 @@ V Druma se to nazývá typ objednávky **Subdodávka**. Vytvoříte jednu objedn
     Přejděte do **Objednávky → Nová objednávka**.
   </Step>
   <Step title="Nastavte typ objednávky na Subdodávka">
-    Vyberte **Subdodávka** v poli **Typ objednávky**.
+    Ve formuláři objednávky najděte pole **Typ objednávky** a vyberte **Subdodávka**.
   </Step>
   <Step title="Vyplňte standardní podrobnosti objednávky">
-    Adresa vyzvednutí, adresa doručení, popis nákladu, sjednaná cena s klientem (prodejní sazba).
+    Zadejte adresu vyzvednutí, adresu doručení, popis nákladu, typ návěsu a vaši sjednanou cenu s klientem (prodejní sazbu).
   </Step>
   <Step title="Vyberte dopravce">
-    V poli **Dopravce** vyberte společnost z registru subdodavatelů.
+    V poli **Subdodavatel / Dopravce** vyberte společnost z registru subdodavatelů, která tuto zásilku fyzicky přepraví.
   </Step>
   <Step title="Zadejte náklady na dopravce">
-    Zadejte, co platíte dopravci (nákupní sazba). Toto je odděleno od ceny klienta.
+    Zadejte, co platíte dopravci (nákupní sazbu). Toto je odděleno od ceny klienta a viditelné pouze plánovačům — ne klientovi.
   </Step>
-  <Step title="Uložit a přiřadit">
-    Klikněte na **Uložit**.
+  <Step title="Uložte a přiřaďte">
+    Klikněte na **Uložit**. Dopravce automaticky obdrží přístup k této objednávce přes svůj portál.
   </Step>
 </Steps>
 
@@ -39,27 +43,101 @@ V Druma se to nazývá typ objednávky **Subdodávka**. Vytvoříte jednu objedn
 
 ## Rozdělená fakturace
 
-Subdodávaná objednávka generuje dvě faktury z jedné sady dat:
+Subdodávková objednávka sleduje obě strany peněz z jedné sady dat — bez dvojího zadávání trasy, dat nebo nákladu:
 
-**Prodejní faktura** — jde vašemu klientovi s vaší cenou.
+**Prodejní strana** — co účtujete klientovi (sjednaná cena). Tuto fakturu vygenerujete stejným způsobem jako u jakékoli jiné objednávky, z vlastní fakturační akce objednávky.
 
-**Nákupní faktura** — jde dopravci s nákupní sazbou.
+**Nákupní strana** — co platíte dopravci. Otevřete záložku objednávky **Dopravce a finance** pro zobrazení **nákupní sazby**, kterou jste s dopravcem sjednali, spolu s vašimi **tržbami**, přičemž **marže** (Tržby − nákupní sazba) se počítá automaticky.
 
-Obě faktury jsou generovány ze stejné objednávky — nikdy nezadáváte trasu, data ani podrobnosti o nákladu dvakrát.
+<Note>
+Na objednávce neexistuje samostatné tlačítko „Generovat nákupní fakturu" — když vám dopravce pošle vlastní fakturu za zásilku, spárujte ji proti faktuře subdodavatele na vyhrazené stránce **Faktury subdodavatelů**, která zpracovává příjem a párování proti nákupní sazbě, kterou jste zde zaznamenali.
+</Note>
 
 ---
 
 ## Synchronizace stavu: Dopravce → Váš systém → Klient
 
-Když dopravce aktualizuje stav objednávky ve svém portálu, tato aktualizace automaticky proběhne:
+Když dopravce aktualizuje stav objednávky ve svém portálu (Vyzvednuto, Na cestě, Doručeno), tato aktualizace automaticky proteče:
 
 1. Stav objednávky ve vaší Druma se okamžitě aktualizuje
-2. Váš klient vidí aktualizovaný stav ve svém portálu
-3. Váš plánovač vidí aktualizaci na mapě Zobrazení dnes
+2. Váš klient vidí aktualizovaný stav ve svém portálu, na časové ose své zásilky
+3. Vaši plánovači vidí aktualizaci v panelu detailu objednávky a, pokud je vozidlo živé, na Živé mapě
 
-<Card title="Subdodavatelé" icon="handshake" href="/en/planner/subcontractors">
-  Jak přidat dopravce a sdílet s nimi odkaz na portál.
-</Card>
+Nemusíte ručně předávat aktualizace stavu od dopravce klientovi. Informace protékají skrz Druma automaticky.
+
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/planner/freight-forwarding).
+## Tok dokumentů
+
+Když dopravce nahraje dokumenty přes svůj portál — sken CMR, doklad o doručení, fotografie — tyto dokumenty se objeví na dvou místech najednou:
+
+- **Váš účet Druma** — v záložce Dokumenty objednávky
+- **Portál vašeho klienta** — na jejich stránce Dokumenty, filtrovatelné podle typu (CMR, eCMR, POD, Faktura, CO2)
+
+Klient dostane přístup k CMR a potvrzení doručení, aniž byste museli cokoli ručně přeposílat. Prostě to tam je.
+
+<Note>
+Neexistuje přepínač viditelnosti za jednotlivý dokument — každý dokument připojený k objednávce, který klient vidí, je pro něj viditelný. Pokud potřebujete udržet soubor nahraný dopravcem interní, nepřipojujte ho k Dokumentům objednávky.
+</Note>
+
+---
+
+## Sledování marže
+
+U každé subdodávkové objednávky vám Druma zobrazí vaši marži na první pohled:
+
+**Marže = Prodejní cena − náklady na dopravce**
+
+Uvidíte to v záložce Dopravce a finance objednávky i v pohledu seznamu objednávek. To usnadňuje kontrolu ziskovosti napříč vašimi zasílatelskými zásilkami bez tvorby tabulek.
+
+Pokud se skutečné náklady změní (dopravce účtuje čekací dobu nebo dodatečné km), aktualizujte nákupní sazbu na objednávce a marže se automaticky přepočítá.
+
+---
+
+## Aktualizace dopravce
+
+Jakmile je subdodávková objednávka přiřazena dopravci a ten začne poskytovat aktualizace přes portál dopravce, Druma zobrazuje jeho data v reálném čase na tabuli zasílatelství a v panelu detailu objednávky — z vaší strany není potřeba žádné ruční předávání.
+
+### Na tabuli zasílatelství (karty Na cestě)
+
+- **ETA dopravce** — vlastní ETA dopravce pro doručení, označené „ETA dopravce", aby se odlišilo od ETA vypočítaného Druma pomocí PTV
+- **Odznak SPZ vozidla dopravce** — skutečná značka, kterou dopravce na této zásilce používá
+- **Upozornění na chybějící nákupní sazbu** — na kartě, kde nebyla nastavena žádná nákupní sazba, se zobrazí oranžový odznak. Signalizuje to mezeru v datech marže — otevřete objednávku a zadejte nákupní sazbu před fakturací
+
+### V panelu detailu objednávky
+
+U subdodávkových objednávek se v panelu detailu objednávky zobrazuje sekce **Aktualizace dopravce** zobrazující:
+
+- SPZ vozidla dopravce a jméno řidiče
+- Telefonní číslo řidiče (zobrazeno jako prostý text, ne odkaz pro klepnutí a volání)
+- ETA dopravce
+- Skutečnosti nakládky: dopravcem nahlášený příjezd a odjezd z místa vyzvednutí
+- Skutečnosti doručení: dopravcem nahlášený příjezd a odjezd z místa doručení
+
+Tato pole vyplňuje dopravce přes svůj portál — z vaší strany není potřeba žádné ruční zadávání. Pokud dopravce ještě aktualizace neodeslal, sekce zobrazuje zástupné texty.
+
+---
+
+## Kdy použít subdodávkové objednávky
+
+Použijte typ objednávky Subdodávka vždy, když:
+
+- Přijali jste zásilku, ale vaše vlastní vozidla jsou plná
+- Vystupujete čistě jako zasílatel a sami zásilky nevozíte
+- Používáte spotového dopravce pro jednorázovou zásilku
+- Potřebujete sledovat marži mezi tím, co účtujete klientovi, a tím, co platíte dopravci
+
+<Warning>
+Pokud používáte vlastního řidiče a vozidlo, použijte standardní typ objednávky — ne Subdodávka. Subdodávkové objednávky jsou specificky pro zásilky přepravované externími dopravci.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Subdodavatelé" icon="handshake" href="/cs/planner/subcontractors">
+    Přidejte dopravní společnosti do svého registru, než je budete moci přiřazovat k subdodávkovým objednávkám.
+  </Card>
+  <Card title="Generování faktur" icon="file-invoice-dollar" href="/cs/invoicing/generating-invoices">
+    Zjistěte, jak generovat prodejní a nákupní faktury z vašich objednávek.
+  </Card>
+</CardGroup>

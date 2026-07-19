@@ -1,69 +1,111 @@
 ---
 title: "Générer des factures"
-description: "Créez des factures à partir des commandes livrées dans Druma — individuelles ou groupées, multi-devises, avec calcul automatique des suppléments et envoi en un clic."
+description: "Créez des factures à partir de commandes livrées dans Druma — individuelles ou groupées, multi-devise, avec calcul automatique des suppléments et envoi en un clic."
 icon: "file-invoice-dollar"
 ---
 
 ## Vue d'ensemble
 
-Une fois une commande livrée, vous pouvez générer une facture directement dans Druma. La voie la plus rapide est depuis la page de détails de la commande elle-même.
+Une fois une commande livrée, vous pouvez générer une facture directement dans Druma. La voie la plus rapide est depuis la page de détail de la commande elle-même. Vous pouvez aussi regrouper plusieurs commandes du même client en une seule facture — idéal pour les cycles de facturation hebdomadaires ou mensuels.
 
 ## Deux façons de commencer
 
-**Depuis la page de détails de la commande (le plus rapide) :**
-Ouvrez la commande livrée → cliquez sur le bouton **Générer une facture** dans le coin supérieur droit.
+**Depuis la page de détail de la commande (le plus rapide) :**
+Ouvrez la commande livrée → cliquez sur le bouton **Générer une facture** dans le coin supérieur droit. Druma pré-remplit la facture avec les détails de cette commande et vous amène directement à l'écran de révision.
+
+<Frame caption="La liste des factures — le Statut de paiement (dérivé de la date d'échéance/montant payé) est suivi séparément du canal E-Facture et du E-Statut.">
+  <img src="/images/invoicing/generating-invoices.png" alt="Liste des factures avec colonnes de statut et de paiement" />
+</Frame>
 
 **Depuis le module Facturation :**
-Accédez à **Facturation → Nouvelle facture → recherchez le client → sélectionnez la ou les commandes**.
+Accédez à **Facturation** → **Nouvelle facture** → recherchez le client → sélectionnez la ou les commandes à inclure.
 
-## Créer une facture étape par étape
+## Étape par étape : créer une facture
 
 <Steps>
   <Step title="Sélectionnez la ou les commandes">
-    Choisissez quelle commande livrée ou quelles commandes inclure. Vous pouvez regrouper plusieurs commandes du même client en une seule facture.
+    Choisissez quelle(s) commande(s) livrée(s) inclure. Vous pouvez regrouper plusieurs commandes du même client en une seule facture — cochez chacune dans le sélecteur de commandes. Toutes les commandes doivent avoir le statut **Livrée** et appartenir au même client.
   </Step>
   <Step title="Vérifiez les postes">
-    Druma remplit automatiquement les postes à partir des données de la commande :
-    - **Frais de transport** — tirés du prix convenu lors de la création de la commande
-    - **Frais d'attente** — calculés automatiquement si le chauffeur a enregistré un temps d'attente dépassant la franchise
-    - **Supplément ADR** — ajouté automatiquement si la commande était marquée ADR
-    - **Supplément carburant** — inclus si vous avez une règle de supplément carburant configurée
-    - **Autres suppléments** — ajoutez les postes personnalisés nécessaires
+    Druma remplit automatiquement les postes à partir des données de la commande. Vérifiez et ajustez chacun :
+
+    - **Frais de transport** — tirés du prix convenu défini à la création de la commande
+    - **Frais d'attente** — calculés automatiquement si le chauffeur a enregistré un temps d'attente dépassant la franchise gratuite
+    - **Supplément ADR** — ajouté automatiquement si la commande était marquée comme cargaison ADR, en utilisant le tarif de supplément ADR configuré de votre entreprise (75 € par défaut si vous n'en avez pas défini un)
+    - **Supplément carburant** — inclus si vous avez une règle de supplément carburant configurée dans Paramètres
+    - **Autres suppléments** — ajoutez tout poste personnalisé nécessaire (remboursement de péage, ferry, arrêts supplémentaires)
+
+    Vous pouvez modifier n'importe quel montant, ajouter de nouvelles lignes, ou retirer des lignes qui ne s'appliquent pas.
   </Step>
   <Step title="Définissez la date de facture et la date d'échéance">
-    La date de facture est par défaut aujourd'hui. La date d'échéance est calculée automatiquement à partir des conditions de paiement du client.
+    La date de facture est par défaut aujourd'hui. La date d'échéance est calculée automatiquement à partir des conditions de paiement de la fiche client — par exemple, net 30 signifie que la date d'échéance est à 30 jours de la date de facture. Modifiez l'une ou l'autre manuellement si nécessaire.
   </Step>
   <Step title="Prévisualisez le PDF">
-    Cliquez sur **Aperçu PDF** pour voir exactement ce que le client recevra.
+    Cliquez sur **Aperçu PDF** pour voir exactement ce que le client recevra. Vérifiez le nom du client, le numéro de TVA, les adresses, les postes, les totaux, et vos coordonnées bancaires. Corrigez tout avant de générer — c'est bien plus facile à corriger maintenant qu'après.
   </Step>
   <Step title="Générez la facture">
-    Cliquez sur **Générer**. Druma attribue un numéro de facture séquentiel et verrouille le document.
+    Cliquez sur **Générer**. Druma attribue un numéro de facture séquentiel (par exemple, INV-000047) et verrouille le document. Une fois générée, vous ne pouvez plus modifier les montants directement — utilisez un avoir pour toute correction.
   </Step>
   <Step title="Envoyez la facture">
-    - **Email depuis Druma** — cliquez sur **Envoyer par email**.
-    - **Télécharger et envoyer manuellement** — cliquez sur **Télécharger PDF**.
+    Choisissez comment l'envoyer :
+
+    - **Email depuis Druma** — cliquez sur **Envoyer par email**. Druma pré-remplit l'email en utilisant le contact financier du client et joint le PDF. Vérifiez le message et cliquez sur Envoyer.
+    - **Télécharger et envoyer manuellement** — cliquez sur **Télécharger le PDF** et envoyez via votre propre client email, WhatsApp, ou comme vous communiquez habituellement avec ce client.
   </Step>
 </Steps>
 
-## Lignes de supplément automatiques
+## Lignes de supplément automatiques (extras de commande)
+
+En plus des frais de transport principaux, Druma ajoute automatiquement des lignes de supplément à la facture selon ce qui s'est passé pendant la commande :
 
 | Supplément | Quand il est ajouté |
 |---|---|
-| **Frais d'attente** | Quand le chauffeur a enregistré un temps d'attente dépassant la franchise |
-| **Péage (répercuté)** | Quand des reçus de péage existent et que votre politique tarifaire est la répercussion |
+| **Frais d'attente** | Quand le chauffeur a enregistré un temps d'attente dépassant la franchise gratuite |
+| **Péage (répercuté)** | Quand des reçus de péage enregistrés par le chauffeur existent et que la politique de votre barème de tarifs est la répercussion pour ce pays |
 | **Frais de trajet perdu** | Quand un trajet perdu a été enregistré sur la commande |
-| **Supplément ADR** | Quand la commande était marquée ADR/marchandises dangereuses |
+| **Supplément ADR** | Quand la commande était marquée cargaison ADR/dangereuse |
+
+Ces lignes apparaissent automatiquement dans l'éditeur de facture — aucune saisie manuelle nécessaire.
+
+**Vous pouvez :**
+- **Exclure une ligne de la facture** — cliquez sur la bascule **Exclure** sur la ligne. Le frais disparaît de la facture mais reste sur la fiche de commande pour le suivi de coût interne.
+- **Restaurer les lignes exclues** — cliquez sur **Restaurer les frais masqués** en bas de la section des postes pour ramener toute ligne automatique exclue.
+- **Ajouter des lignes personnalisées** — utilisez le bouton **+ Ajouter une ligne** pour ajouter des frais d'échange de palettes, des frais de dédouanement, des frais de manutention, ou tout autre supplément. Choisissez dans le **catalogue d'extras** de votre entreprise ou saisissez une description et un montant personnalisés.
+
+Pour gérer le catalogue d'extras (modèles de postes valables pour toute l'entreprise) : **Paramètres → Catalogue d'extras**.
 
 ## Numérotation des factures
 
-Les numéros de factures sont séquentiels et utilisent un préfixe configurable. Le format par défaut est `DR-AAAA-NNN`.
+Les numéros de factures sont séquentiels et utilisent un préfixe configurable. Le format par défaut (sans modèle personnalisé configuré) est `{préfixe}-{séquence à 6 chiffres}` — par exemple, `INV-000001`, `INV-000002`, `INV-000003`. Un modèle avec un jeton d'année (`{YYYY}`) est disponible si vous configurez un modèle de numérotation personnalisé.
 
-Pour changer le préfixe : **Paramètres → Marque et formats → Format des factures**.
+Pour changer le préfixe ou configurer un modèle de numérotation personnalisé (incluant un jeton d'année) : **Paramètres** → **Marque et formats** → **Numérotation des factures**.
+
+## Factures multi-devises
+
+Druma prend en charge la facturation en EUR, GBP, CHF, USD, RON et PLN. Sélectionnez la devise lors de la création de la facture. Pour toute devise autre que le RON, Druma récupère automatiquement le taux de change auprès de la **BNR (Banque Nationale de Roumanie)** pour la date de facture et l'inclut sur le PDF.
+
+Ceci est important pour la conformité comptable roumaine et la soumission e-Factura — l'équivalent en RON de tout montant en devise étrangère doit apparaître sur la facture.
+
+## Facturation groupée — règles clés
+
+- Vous ne pouvez regrouper que des commandes du **même client** en une seule facture
+- Toutes les commandes groupées doivent avoir le statut **Livrée**
+- Les commandes en devises différentes doivent être facturées séparément
+
+<Warning>
+Une fois qu'une facture est générée (le statut sort de Brouillon), vous ne pouvez plus la modifier directement. Si vous avez fait une erreur — mauvais montant, mauvais client, mauvais poste — vous devez créer un avoir pour l'annuler, puis émettre une facture corrigée. C'est une exigence légale en Roumanie. N'essayez pas de supprimer ou d'écraser une facture envoyée.
+</Warning>
+
+---
 
 <Card title="Avoirs" icon="file-minus" href="/fr/invoicing/credit-notes">
-  Comment émettre un avoir pour corriger ou annuler une facture.
+  Comment annuler ou corriger partiellement une facture envoyée à l'aide d'un avoir.
 </Card>
 
-<Card title="Suivi des paiements" icon="check-circle" href="/fr/invoicing/payment-tracking">
-  Comment enregistrer les paiements reçus et suivre les factures impayées.
+<Card title="Soumission e-Factura / ANAF" icon="landmark" href="/fr/invoicing/efactura-anaf">
+  Comment Druma soumet automatiquement les factures au système e-Factura de l'ANAF pour les clients roumains.
+</Card>
+
+<Card title="Suivi des paiements" icon="money-bill-wave" href="/fr/invoicing/payment-tracking">
+  Enregistrer les paiements contre les factures et suivre les soldes restants.
 </Card>

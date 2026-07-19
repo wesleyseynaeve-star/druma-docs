@@ -1,47 +1,175 @@
 ---
 title: "Smart Import (KI-Massen-Onboarding)"
-description: "Laden Sie unstrukturierte Dokumente hoch und lassen Sie die KI von Druma Ihre Daten in Minuten extrahieren und importieren."
+description: "Laden Sie unstrukturierte Dokumente hoch — PDFs, Bilder, Tabellen — und lassen Sie Drumas KI Ihre Fuhrpark-, Fahrer-, Kunden- und Unternehmensdaten in Minuten extrahieren, prüfen und als Massenimport übernehmen."
 icon: "brain"
 ---
 
 ## Übersicht
 
-Smart Import ermöglicht den Massen-Import von Daten aus vorhandenen Dokumenten — Tabellenkalkulationen, PDFs, gescannte Dokumente. Die KI von Druma (Gemini) extrahiert die Daten und bereitet sie für den Review und Import vor.
+Smart Import ist ein KI-gestütztes Onboarding-Werkzeug, das Dokumente liest, die Sie bereits haben — Frachtführer-Flottenlisten, Führerscheindateien, Kundenverzeichnisse, Versicherungszertifikate — und sie in strukturierte Druma-Datensätze umwandelt. Statt Daten aus Papierkram erneut einzutippen oder Tabellen umzuformatieren, um einer Importvorlage zu entsprechen, übergeben Sie Druma das Rohdokument und prüfen, was die KI extrahiert hat, bevor es in die Datenbank gelangt.
+
+Gehen Sie zu **Tools → Smart Import**, um es zu öffnen.
+
+<Note>
+Smart Import nutzt Google Gemini zur Datenextraktion. Dateien werden serverseitig verarbeitet und nach der Extraktion nicht dauerhaft gespeichert — nur die von Ihnen zum Import ausgewählten strukturierten Datensätze werden gespeichert.
+</Note>
+
+---
+
+## Wann Smart Import statt regulärem Massenimport verwenden
+
+Druma hat zwei Massen-Onboarding-Wege. Wählen Sie den richtigen für Ihre Situation:
+
+| Situation | Verwenden Sie |
+|---|---|
+| Sie haben ein PDF, gescanntes Dokument, oder Bild | **Smart Import** |
+| Sie haben ein Foto eines Dokuments oder eine handschriftliche Liste | **Smart Import** |
+| Sie haben eine Flottenliste von einem Frachtführer in Word oder einem untypischen Excel erhalten | **Smart Import** |
+| Sie exportieren aus einem anderen TMS mit bekanntem CSV-Format | **Regulärer CSV-Massenimport** |
+| Sie haben eine saubere Tabelle, die bereits Drumas Spaltenstruktur entspricht | **Regulärer CSV-Massenimport** |
+
+Smart Import handhabt Dokumente, die für einen direkten CSV-Import zu unordentlich oder unstrukturiert sind. Es ersetzt keinen gut strukturierten Export — der reguläre Import ist schneller, wenn Ihre Daten bereits sauber sind.
 
 ---
 
 ## Unterstützte Dokumenttypen
 
-- PDF, Bilder (JPEG, PNG, WebP), Excel/CSV
+- **PDF** — Flottenlisten, Frachtführerprofile, Versicherungszertifikate, Fahrerdossiers
+- **Bilder** — JPEG, PNG, WebP, HEIC/HEIF — Scans, Handyfotos, Screenshots
+- **Excel** — `.xlsx`-Dateien in beliebigem Layout (Smart Import liest den Inhalt, nicht nur Standardvorlagen)
+- **CSV** — komma- oder semikolongetrennte Dateien
 
 ---
 
-## Smart Import verwenden
+## Schritt-für-Schritt-Ablauf
 
 <Steps>
-  <Step title="Zu Tools → Smart Import gehen">
-    Klicken Sie auf **Dokument hochladen**.
+  <Step title="Smart Import öffnen">
+    Gehen Sie zu **Tools → Smart Import**. Sie sehen die Upload-Zone und darunter die Kategoriekarten (beim ersten Besuch leer).
   </Step>
-  <Step title="Kategorie auswählen">
-    Fuhrpark, Fahrer, Kunden oder Unterauftragnehmer.
+  <Step title="Ihre Dokumente hochladen">
+    Klicken Sie auf **Dokumente hochladen** oder ziehen Sie Dateien direkt in die Ablagefläche. Sie können mehrere Dateien gleichzeitig hochladen — z. B. eine PDF-Flottenliste und ein Bild eines Versicherungszertifikats zusammen.
+
+    <Note>
+    Maximale Dateigröße ist 20 MB pro Datei. Ist ein Dokument größer, teilen Sie es vor dem Hochladen in Abschnitte.
+    </Note>
   </Step>
-  <Step title="Dokument hochladen">
-    Drag & Drop oder klicken.
+  <Step title="Auf die KI-Extraktion warten">
+    Druma sendet jede Datei an den KI-Extraktionsdienst. Dies dauert typischerweise wenige Sekunden pro Datei. Ein Fortschrittsanzeiger zeigt den Status jedes Dokuments. Schließen Sie den Tab während der Extraktion nicht.
   </Step>
-  <Step title="KI-Extraktion überprüfen">
-    Jedes Feld hat einen Konfidenzwert: Hoch (grün), Mittel (amber), Niedrig (rot).
+  <Step title="Die Extraktionsergebnisse prüfen">
+    Ist die Extraktion abgeschlossen, erscheint das **Prüf-Dashboard**. Es zeigt oben Kategoriekarten — **Unternehmen**, **Fuhrpark**, **Fahrer**, **Kunden**, **Versicherung** — mit der Anzahl extrahierter Datensätze in jeder Kategorie.
   </Step>
-  <Step title="Bearbeiten und importieren">
-    Korrigieren Sie Felder mit niedrigem Konfidenzwert und klicken Sie auf **Importieren**.
+  <Step title="Eine Kategorie zur Prüfung öffnen">
+    Klicken Sie auf eine Kategoriekarte, um die extrahierten Datensätze in einer bearbeitbaren Tabelle zu sehen. Jede Zeile ist ein extrahierter Datensatz (ein Fahrzeug, ein Fahrer, ein Kunde usw.).
+  </Step>
+  <Step title="Fehlerhafte Felder bearbeiten">
+    Klicken Sie auf eine Zelle in der Tabelle, um sie inline zu bearbeiten. Die KI ist bei klar gedrucktem Text genau, kann aber Handschrift, Abkürzungen, oder untypische Formatierung falsch lesen. Korrigieren Sie Fehler vor dem Import.
+  </Step>
+  <Step title="Zuverlässigkeitswerte und Duplikate prüfen">
+    Prüfen Sie die Zuverlässigkeitsindikatoren und Duplikat-Markierungen jeder Zeile — Details siehe Abschnitte unten.
+  </Step>
+  <Step title="Die Kategorie importieren">
+    Sieht eine Kategorie korrekt aus, klicken Sie auf **[Kategorie] importieren** — z. B. **Fuhrpark importieren** oder **Kunden importieren**. Druma fügt alle nicht übersprungenen Zeilen im Batch ein und bestätigt die importierte Anzahl.
   </Step>
 </Steps>
 
 ---
 
-## Deduplizierung
+## Das Prüf-Dashboard
 
-Druma prüft auf Duplikate anhand von Kennzeichen (Fahrzeuge), USt-IdNr. (Kunden) und Name+Telefon (Fahrer).
+Das Prüf-Dashboard ist der zentrale Arbeitsbereich nach der Extraktion. Es hat zwei Ebenen:
 
-<Card title="Flotte importieren" icon="file-import" href="/en/bulk-import/importing-fleet">
-  Massenimport von Fahrzeugen mit CSV-Vorlage.
+**Kategoriekarten (oberste Ebene)** — eine Karte pro in Ihren Dokumenten gefundenem Datentyp. Jede Karte zeigt:
+- Den Kategorienamen
+- Anzahl extrahierter Datensätze
+- Eine Zusammenfassungswarnung, falls Datensätze niedrige Zuverlässigkeit oder Duplikat-Markierungen haben
+
+**Datensatztabelle (Detailansicht)** — Klick auf eine Karte öffnet die bearbeitbare Tabelle dieser Kategorie. Die Tabelle zeigt eine Spalte pro Feld (z. B. Kennzeichen, Anhängertyp, Kapazität, Baujahr für Fuhrpark), mit Zuverlässigkeitsindikatoren und Duplikat-Markierungen pro Zeile.
+
+Sie können frei zwischen Kategorien wechseln — Ihre Bearbeitungen bleiben erhalten, bis Sie importieren oder die Sitzung schließen.
+
+---
+
+## Zuverlässigkeitsbewertung
+
+Jedes extrahierte Feld erhält einen Zuverlässigkeitswert, basierend darauf, wie klar die KI den Quelltext lesen und interpretieren konnte. Werte werden als farbcodierte Indikatoren an jeder Zelle angezeigt:
+
+| Indikator | Bedeutung |
+|---|---|
+| Grün — **Hoch** | Die KI ist zuversichtlich. Das Feld war klar gedruckt oder strukturiert. |
+| Gelb — **Mittel** | Die KI hat eine vernünftige Schlussfolgerung gezogen, aber die Quelle war mehrdeutig (z. B. eine Abkürzung, ein teilweise sichtbares Wort). Vor dem Import prüfen. |
+| Rot — **Niedrig** | Die KI konnte keinen zuverlässigen Wert extrahieren. Die Zelle kann eine Vermutung enthalten oder leer sein. Niedrige Felder immer manuell prüfen. |
+
+<Warning>
+Felder mit niedriger Zuverlässigkeit werden vom Import nicht blockiert — Sie können sie unverändert importieren — aber Sie sind für die Prüfung ihrer Richtigkeit verantwortlich. Falsche Daten (falsches Kennzeichen, falsche USt-IdNr.) können nachgelagerte Probleme bei Rechnungsstellung, Compliance und Frachtführerkommunikation verursachen.
+</Warning>
+
+Um schnell alle Felder mit niedriger Zuverlässigkeit in einer Kategorie zu finden, achten Sie auf die gelben und roten Zellhervorhebungen in der Tabelle. Es gibt keinen separaten Filter — scannen Sie Spalte für Spalte oder Zeile für Zeile.
+
+---
+
+## Duplikaterkennung
+
+Vor der Anzeige des Prüf-Dashboards vergleicht Druma extrahierte Datensätze mit Ihren bestehenden Unternehmensdaten — aber nur für vier Kategorien:
+
+- **Fuhrpark (LKW)**: Abgleich nach Kennzeichen
+- **Fuhrpark (Anhänger)**: Abgleich nach Kennzeichen
+- **Fahrer**: Abgleich nach vollständigem Namen (Groß-/Kleinschreibung ignoriert)
+- **Kunden**: Abgleich nach USt-IdNr., mit Rückgriff auf den Namen, falls keine USt-IdNr. extrahiert wurde
+
+<Note>
+Für Unternehmen/Unterauftragnehmer oder Versicherungsdatensätze gibt es noch keine Duplikaterkennung — jede extrahierte Zeile in diesen Kategorien wird als neu behandelt.
+</Note>
+
+Datensätze, die zu bestehenden Daten passen, werden in der Zeile mit einem Abzeichen **Duplikat** markiert. Sie haben zwei Optionen pro Duplikat:
+
+- **Überspringen** (Standard) — die Zeile wird nicht importiert. Nutzen Sie dies, wenn der bestehende Datensatz bereits korrekt ist.
+- **Überschreiben** — der Import aktualisiert den bestehenden Datensatz mit den extrahierten Daten. Nutzen Sie dies vorsichtig — es ersetzt die gespeicherten Werte.
+
+Zeilen ohne Duplikat-Markierung sind neue Datensätze und werden beim Import eingefügt.
+
+---
+
+## Nach dem Import
+
+Importierte Datensätze erscheinen sofort im relevanten Modul:
+
+- **Fuhrpark**-Datensätze erscheinen unter **Fuhrpark → LKW** oder **Fuhrpark → Anhänger**
+- **Fahrer** erscheinen unter **Fuhrpark → Fahrer**
+- **Kunden** erscheinen unter **Kunden**
+- **Unternehmen/Unterauftragnehmer** erscheinen unter **Weiterleitung → Unterauftragnehmer**
+- **Versicherungsdaten** werden am relevanten Fahrzeug- oder Unternehmensdatensatz angehängt
+
+Es gibt kein Rückgängigmachen für einen Import. Wurden falsche Daten importiert, bearbeiten Sie die Datensätze einzeln im jeweiligen Modul.
+
+---
+
+## Einschränkungen
+
+Smart Import ist für Unternehmens-, Fuhrpark-, Fahrer-, Kunden- und Versicherungsdaten gedacht. Es handhabt nicht:
+
+- **Aufträge** — nutzen Sie das Auftragsformular oder die eingehende Auftrags-E-Mail-Funktion zur Auftragserstellung
+- **Rechnungen** — Rechnungen werden automatisch aus zugestellten Aufträgen oder über den Frachtführer-Rechnungserfassungs-Workflow erstellt
+- **Historische Datenmigration** — für große historische Datensätze (Tausende von Datensätzen) kontaktieren Sie den Support für eine begleitete Migration
+
+Smart Import funktioniert am besten mit überwiegend textbasierten Dokumenten. Es kann Handschrift in Bildern verarbeiten, aber die Genauigkeit sinkt im Vergleich zu gedrucktem Text erheblich.
+
+---
+
+## Praktisches Beispiel
+
+Ihr neuer Unterauftragnehmer sendet Ihnen ein 3-seitiges PDF mit seiner gesamten Flotte — 12 Fahrzeuge mit Kennzeichen, Typ, Höchstgewicht, und Baujahr. Statt jedes einzeln manuell einzugeben:
+
+1. Laden Sie das PDF unter **Tools → Smart Import** hoch
+2. Warten Sie wenige Sekunden auf die Extraktion
+3. Klicken Sie auf die Karte **Fuhrpark** — 12 Zeilen erscheinen, die meisten mit hoher Zuverlässigkeit
+4. Zwei Zeilen haben mittlere Zuverlässigkeit beim Feld Anhängertyp — korrigieren Sie sie inline
+5. Eine Zeile ist als Duplikat markiert (ein LKW, den Sie letzte Woche bereits hinzugefügt haben) — belassen Sie sie bei Überspringen
+6. Klicken Sie auf **Fuhrpark importieren** — 11 neue Fahrzeuge werden sofort zu Ihrer Flotte hinzugefügt
+
+---
+
+<Card title="Fuhrparkverwaltung" icon="truck" href="/de/planner/fleet-management">
+  Verwalten Sie LKW, Anhänger und Fahrer — und prüfen Sie hier importierte Fuhrparkdatensätze nach einem Smart Import.
 </Card>

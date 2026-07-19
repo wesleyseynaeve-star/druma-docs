@@ -1,53 +1,175 @@
 ---
-title: "Pótkocsi kezelés"
-description: "Kezelj önálló pótkocsik kezelése, amelyek nincsenek állandóan egyetlen vontatóhoz csatolva, beleértve a kiosztást, elérhetőséget és dokumentumokat."
+title: "Pótkocsik kezelése"
+description: "Kezeld azokat a pótkocsikat, amelyek nincsenek véglegesen egyetlen vontatóhoz csatolva, beleértve a hozzárendelést, elérhetőséget és dokumentumokat."
 icon: "trailer"
 ---
 
-## Mikor van szükség pótkocsi-kezelésre?
+## Szükséged van önálló pótkocsi-kezelésre?
 
-Egyes flottákban a pótkocsik önállóan mozognak a vontatóktól függetlenül. Például:
-- Egy pótkocsit leállítasz egy raktárnál rakodás céljából, majd egy másik vontató veszi fel
-- Pótkocsik felváltva kerülnek különböző teherautókra különböző menetrendek szerint
-- Hűtős és ponyvás pótkocsik készlete áll rendelkezésre, és különböző terhelésekhez rendeled hozzá őket
+Mielőtt belevágnál, érdemes ellenőrizni, hogy ez a funkció alkalmazandó-e az üzemeltetésedre.
 
-Ha az összes pótkocsid állandóan egy-egy vontatóhoz van csatolva, nem szükséges ezt a funkciót engedélyezni.
+**Szükséged van önálló pótkocsi-kezelésre, ha:** a vontatóid rendszeresen cserélnek pótkocsit — például egy sofőr leteszi a megrakott pótkocsit egy csomópontnál, és egy másikat vesz fel, vagy a pótkocsik a munkától függően mozognak a vontatók között.
 
-## Önálló pótkocsik engedélyezése
+**Valószínűleg nincs rá szükséged, ha:** minden teherautód mindig ugyanazt a pótkocsit használja, és sosem választják szét őket. Ebben az esetben egyszerűen állítsd be a pótkocsi-típust a jármű-rekordon, és kész is vagy. Lásd a [Flottakezelés](/en/planner/fleet-management) oldalt, hogyan tedd ezt.
 
-A **Beállítások → Vállalat** menüpontban engedélyezd a **Független pótkocsik** kapcsolót. Miután engedélyezve van, megjelenik egy **Pótkocsik** lap a **Flotta** alatt.
+Ha váltó-pótkocsis vagy több pótkocsis üzemeltetést futtatsz, olvass tovább.
+
+<Frame caption="Flotta → Pótkocsik — 11 előre betöltött típus, teljesen cégenként konfigurálható.">
+  <img src="/images/planner/trailer-management.png" alt="Pótkocsik kezelése oldal" />
+</Frame>
+
+---
 
 ## Pótkocsi hozzáadása
 
+Lépj a **Flotta → Pótkocsik** menüpontra, és kattints a **Pótkocsi hozzáadása** gombra.
+
+Töltsd ki a pótkocsi adatait:
+
+- **Rendszám vagy azonosító** — a pótkocsi rendszáma. Ha a pótkocsinak nincs rendszáma (egyes belső pótkocsiknak nincs), használd a saját belső azonosító kódodat.
+- **Pótkocsi-típus** — válaszd ki a pótkocsi karosszériájának megfelelő típust. A Druma 11 alapértelmezett típust tölt be minden cégnek:
+  - Ponyvás
+  - Mega
+  - Doboz
+  - Hűtős
+  - Platós
+  - Tartály
+  - Mélyágyas
+  - Curtainside
+  - Konténer-alváz
+  - Siló
+  - Alacsonypadlós
+
+  A lista teljesen konfigurálható cégenként — egy admin átnevezheti, deaktiválhatja vagy hozzáadhat típusokat a **Beállítások → Pótkocsi-típusok** menüpontban.
+- **Gyártási év** — a pótkocsi gyártási éve. Hasznos a kor nyomon követéséhez és a csereütemezéshez.
+- **Kapacitás** — a pótkocsi hasznos teherbírása kilogrammban.
+- **ADR-tanúsítvánnyal rendelkezik** — állítsd **Igen**-re, ha ez a pótkocsi veszélyesáru-szállításra van tanúsítva. Az ADR-tanúsítás automatikusan ellenőrzésre kerül, amikor ezt a pótkocsit egy ADR-jelölésű rendeléshez rendeled.
+- **Jelenlegi helyszín** — add meg egy szabad szöveges leírását annak, hol van jelenleg a pótkocsi, például "Temesvári telephely" vagy "Ügyfél raktár Kolozsvár". Ez ezután automatikusan frissül kiszállításkor és teherautóról való leválasztáskor — lásd a [Pótkocsi-helyszín nyomon követése](#potkocsi-helyszin-nyomon-kovetese) szakaszt lentebb.
+
+Kattints a **Mentés** gombra, amikor kész vagy.
+
+---
+
+## Pótkocsi csatolása egy teherautóhoz
+
+Egy pótkocsi egyszerre csak egy teherautóhoz rendelhető. Két módon csatolhatsz egy pótkocsit:
+
+### 1. lehetőség — Rendelés létrehozásakor
+
+Amikor egy **Saját teherautó** munkához rendelést töltesz ki, a vontató kiválasztása után megjelenik egy **Pótkocsi** legördülő menü. Keress rendszám vagy azonosító alapján, és válaszd ki a munkához használni kívánt pótkocsit. A pótkocsi automatikusan hozzárendeltként kerül megjelölésre a rendelés időtartamára.
+
+### 2. lehetőség — A pótkocsi-részletező oldalról
+
 <Steps>
-  <Step title="Lépj a Flotta → Pótkocsik menüpontra">
-    Kattints a **Pótkocsi hozzáadása** gombra.
+  <Step title="Nyisd meg a pótkocsi profilját">
+    Lépj a **Flotta → Pótkocsik** menüpontra, és kattints a hozzárendelni kívánt pótkocsira.
   </Step>
-  <Step title="Töltsd ki az adatokat">
-    - **Rendszám**
-    - **Típus** — ponyvás, hűtős, platós stb.
-    - **Maximális hasznos terhelés**
-    - **Köbméter-kapacitás**
-    - **Raklaptér méterben**
+  <Step title="Kattints a Hozzárendelés teherautóhoz gombra">
+    Keresd meg a **Jelenlegi hozzárendelés** szakaszt, és kattints a **Hozzárendelés teherautóhoz** gombra.
   </Step>
-  <Step title="Add meg a dokumentum lejáratokat">
-    Biztosítás, műszaki vizsga és más kötelező dokumentumok.
+  <Step title="Válaszd ki a teherautót">
+    Keresd meg a vontatót rendszám alapján. Csak aktív járművek jelennek meg.
+  </Step>
+  <Step title="Állítsd be a hozzárendelési időszakot">
+    Add meg a kezdő dátumot. A záró dátumot üresen hagyhatod, ha még nem tudod, mikor lesz a pótkocsi leválasztva.
   </Step>
   <Step title="Mentés">
-    A pótkocsi megjelenik a Pótkocsik listájában, és elérhető rendeléseknél a tervezőtáblán való kiosztáshoz.
+    Kattints a **Hozzárendelés megerősítése** gombra. A pótkocsi mostantól hozzárendeltként jelenik meg a tervezőtáblán.
   </Step>
 </Steps>
 
-## Pótkocsi helyszín nyomon követése
+---
 
-Amikor egy rendelés kiszállítottra van állítva, a Druma automatikusan frissíti a pótkocsi utolsó ismert helyszínét a szállítási helyszínre. Ez mutatja a tervezőknek, hol van egy pótkocsi, ha nincs csatolva aktív vontatóhoz.
+## Pótkocsi leválasztása
 
-Ha egy vontatóra rendelt rendelés pótkocsit igényel (mert a pótkocsi más helyen van tárolva), a Druma felajánlja egy **pótkocsi-leállítási megálló** hozzáadását a rendelési útvonalhoz.
+Amikor egy rendelés befejeződik, a Druma automatikusan felszabadítja a pótkocsi-hozzárendelést. Bármikor manuálisan is leválaszthatsz egy pótkocsit:
 
-## Pótkocsi kiosztása rendeléshez
+<Steps>
+  <Step title="Nyisd meg a pótkocsi profilját">
+    Lépj a Flotta → Pótkocsik menüpontra, és kattints a pótkocsira.
+  </Step>
+  <Step title="Kattints a Leválasztás gombra">
+    A Jelenlegi hozzárendelés szakaszban kattints a **Pótkocsi leválasztása** gombra.
+  </Step>
+  <Step title="Erősítsd meg">
+    Erősítsd meg a leválasztást. A pótkocsi státusza visszaáll **Elérhetőre**, és hozzárendelhető egy másik teherautóhoz.
+  </Step>
+</Steps>
 
-A rendelés létrehozásakor vagy szerkesztésekor válassz egy pótkocsit a **Pótkocsi** legördülő menüből. A legördülő menü mutatja az összes elérhető pótkocsit és azok aktuális helyszínét.
+<Warning>
+Ha egy pótkocsit leválasztasz, miközben egy rendelés még aktív (a sofőr úton van), a rendelés nyilvántartási célból továbbra is kapcsolódik a pótkocsihoz. A leválasztás csak a jövőbeli hozzárendeléseket érinti.
+</Warning>
+
+---
+
+## Pótkocsi-elérhetőségi nézet
+
+A pótkocsi-lista a **Flotta → Pótkocsik** menüpontban három gyorsszűrő fülrendelkezik:
+
+- **Összes** — a flottád minden pótkocsija.
+- **Elérhető** — jelenleg egyetlen teherautóhoz vagy rendeléshez sem hozzárendelt pótkocsik. Ezek készen állnak a diszpécselítésre.
+- **Hozzárendelve** — jelenleg egy teherautóhoz csatolt, vagy egy aktív rendelésen használatban lévő pótkocsik.
+
+Kattints bármelyik pótkocsira a teljes hozzárendelési előzményének megtekintéséhez — melyik teherautókon volt, melyik rendeléseket teljesítette, és mikor.
+
+---
+
+## Pótkocsi-dokumentumok
+
+A pótkocsiknak saját papírmunkájuk van — biztosítás, műszaki alkalmassági vizsga-igazolások, és ADR-tanúsítványok, ha alkalmazandó. Ezek külön vannak nyomon követve a jármű-dokumentumoktól.
+
+Egy dokumentum hozzáadásához egy pótkocsihoz:
+
+<Steps>
+  <Step title="Nyisd meg a pótkocsi profilját">
+    Lépj a Flotta → Pótkocsik menüpontra, és válaszd ki a pótkocsit.
+  </Step>
+  <Step title="Menj a Dokumentumok fülre">
+    Kattints a **Dokumentumok** fülre a pótkocsi profilján.
+  </Step>
+  <Step title="Töltsd fel a dokumentumot">
+    Kattints a **Dokumentum hozzáadása** gombra, válaszd ki a dokumentumtípust, add meg a lejárati dátumot, és töltsd fel a tanúsítvány szkennelését vagy fotóját.
+  </Step>
+</Steps>
+
+A Druma figyelmeztet a Kezdőlap irányítópulton és e-mailben, amikor egy pótkocsi-dokumentum közeledik a lejárati dátumához. Az alapértelmezett figyelmeztetési időszak 30 nap, amelyet a **Beállítások → Értesítések** menüpontban módosíthatsz.
+
+<Note>
+Ha egy pótkocsi ADR-tanúsítványa lejár, és hozzá vannak rendelve ADR-jelölésű rendelések, a Druma figyelmeztetéssel jelöli meg a rendelést. Nem blokkolja a diszpécselítést, de a figyelmeztetés naplózásra kerül.
+</Note>
+
+---
+
+## Pótkocsi-helyszín nyomon követése
+
+A Druma három forráson keresztül követi a pótkocsi-helyszíneket, mindegyik egy **helyszín-forrás** jelzővel rögzítve:
+
+### Automatikus: kiszállításkor
+
+Amikor egy rendelést **Kiszállítva**-ra jelölnek, a Druma automatikusan frissíti a pótkocsi helyszínét az utolsó lerakodási megálló címére. A helyszín-forrás **Rendelés kiszállítás**-ra van állítva. Ez azt jelenti, hogy minden befejezett kiszállítás után a pótkocsi pozíciója aktuális, bármilyen kézi beavatkozás nélkül.
+
+### Automatikus: teherautóról való leválasztáskor
+
+Amikor leválasztasz egy pótkocsit egy teherautóról (akár manuálisan, akár mert a teherautó újra hozzárendelésre kerül), a pótkocsi helyszíne a teherautó utolsó ismert pozíciójára áll be. A helyszín-forrás **Teherautó-leválasztás**-ra van állítva.
+
+### Manuális frissítés
+
+A diszpécserek bármikor frissíthetik a pótkocsi helyszínét a pótkocsi-profil oldalról. A **Jelenlegi helyszín** mező támogatja a HERE cím-autokiegészítést — kezdj el gépelni egy címet, és válassz a javaslatok közül a pontos koordinátákért. A helyszín-forrás **Manuális**-ra van állítva.
+
+<Note>
+A pótkocsi-helyszín nyomon követése ma erre a három forrásra korlátozódik — nincs GPS-nyomkövető integráció, amely automatikusan frissítené a pótkocsi pozícióját. Ha a pótkocsijaid saját telematikai egységet hordoznak, az az adat jelenleg nincs bekötve a Druma pótkocsi-helyszín mezőjébe.
+</Note>
+
+### Helyszín-oszlop a pótkocsi-listában
+
+A pótkocsi-lista a **Flotta → Pótkocsik** menüpontban tartalmaz egy **Helyszín** oszlopot, amely minden pótkocsi aktuális címét mutatja, és egy időbélyeget arról, mikor frissült utoljára a helyszín. Ez flotta-szintű áttekintést ad arról, hol vannak a pótkocsijaid, egyedi profilok megnyitása nélkül.
+
+---
 
 <Card title="Flottakezelés" icon="truck" href="/en/planner/fleet-management">
-  Vontatók és teherautók hozzáadása és kezelése.
+  Kezeld a vontatóidat és merev teherautóidat — adj hozzá járműveket, állítsd be a méreteket, és kövesd nyomon az elérhetőséget.
+</Card>
+
+<Card title="Flottadokumentumok" icon="file" href="/en/planner/fleet-documents">
+  Kövesd nyomon és kezeld az összes megfelelőségi dokumentumot mind a járművekhez, mind a pótkocsikhoz, egy helyen.
 </Card>

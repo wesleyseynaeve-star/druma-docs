@@ -1,76 +1,89 @@
 ---
 title: "Barèmes de tarifs"
-description: "Comment créer et gérer des barèmes de tarifs dans Druma pour enregistrer des prix de lignes standards et accélérer la création de commandes."
+description: "Comment définir des profils de coût camion dans Druma afin que les commandes affichent un coût et une marge estimés précis."
 icon: "tags"
 ---
 
+<Note>
+Cette page couvre **Paramètres → Barèmes de tarifs** — des **profils de coût** camion utilisés pour estimer le coût et la marge d'une commande. Si vous cherchez des prix de **vente** par ligne (suggestions de devis basées sur origine/destination, ex. « Roumanie → Allemagne, bâchée — 1 450 € »), c'est une fonctionnalité distincte appelée **Tarification par lane**, sous **Tarification → Tarification par lane** dans l'application principale — elle n'est pas couverte sur cette page.
+</Note>
+
 ## Qu'est-ce qu'un barème de tarifs ?
 
-Un barème de tarifs est un modèle de tarification enregistré pour un itinéraire que vous effectuez régulièrement. Enregistrez un barème pour une ligne — et Druma suggère automatiquement le prix lors de la création d'une nouvelle commande sur cet itinéraire.
+Un barème de tarifs dans **Paramètres → Barèmes de tarifs** est un profil de coût pour une catégorie d'exploitation camion — soit votre **flotte propre**, soit un transporteur **sous-traité**. Il capture ce qu'il vous coûte réellement de faire rouler un camion (coût fixe, salaire chauffeur, carburant, suppléments ADR/hors gabarit, péages) afin que Druma puisse estimer le coût et la marge d'une commande à côté du prix que vous facturez au client.
 
-Les barèmes sont un point de départ, pas une règle. Vos planificateurs peuvent toujours remplacer le prix suggéré.
+**Qui peut modifier :** les rôles Admin, Admin entreprise et Planificateur.
 
-## Comment fonctionnent les barèmes
+<Frame caption="Tarification par lane (Tarification → Tarification par lane) — la fonctionnalité distincte de prix de vente basée sur origine/destination. Paramètres → Barèmes de tarifs (cette page) est le volet profil de coût.">
+  <img src="/images/admin/rate-cards.png" alt="Page Tarification par lane avec barèmes par origine, destination et type de remorque" />
+</Frame>
 
-Lorsqu'un planificateur crée une nouvelle commande, Druma vérifie si des barèmes actifs correspondent à l'origine, la destination et le type de remorque. En cas de correspondance, une suggestion s'affiche.
+## Créer un barème de tarifs
 
-## Création d'un barème de tarifs
-
-Accédez à **Paramètres → Barèmes de tarifs** et cliquez sur **Ajouter un barème de tarifs**.
+Accédez à **Paramètres → Barèmes de tarifs** et cliquez sur **Nouveau barème**.
 
 ### Nom
 
-Donnez au barème un nom clair et descriptif.
+Donnez au barème un nom clair, par ex. « Flotte propre — standard » ou « Sous-traitant — lignes RO/BG ».
 
-*Exemples : « RO→DE Bâchée », « Roumanie vers Pays-Bas Frigo »*
+### Type
 
-### Pays d'origine et de destination
+Choisissez **Flotte propre** ou **Sous-traité** — cela détermine à quelle catégorie de commande s'applique le profil de coût.
 
-Les barèmes correspondent au niveau du pays. Un barème couvre toutes les villes de ces pays.
+### Tarif / km (€)
 
-<Note>
-Si vous avez besoin de prix différents pour différentes régions, créez des barèmes séparés avec des noms plus spécifiques.
-</Note>
+Un tarif forfaitaire optionnel au kilomètre.
 
-### Type de remorque
+### Base de coût
 
-Options : bâchée, frigorifique, plateau, citerne, fourgon, méga-remorque, porte-engins, autre.
+Choisissez comment le coût d'exploitation fixe est calculé :
+- **Tarif journalier** — saisissez un **coût fixe journalier (€)** et un **salaire chauffeur / jour (€)**.
+- **Location hebdomadaire** — saisissez un **coût fixe hebdomadaire (€)** et un **salaire chauffeur / semaine (€)**.
 
-### Type de tarification
+### Temps d'attente
 
-- **Prix de base forfaitaire** — un montant fixe pour toute la ligne.
-- **Par kilomètre** — un tarif multiplié par la distance calculée.
+- **Heures d'attente gratuites** — le nombre d'heures d'attente incluses avant qu'un coût ne s'applique.
+- **Tarif d'attente €/h** — le coût horaire une fois les heures d'attente gratuites dépassées.
 
-### Prix et devise
+### Suppléments
 
-Saisissez le montant et sélectionnez la devise (EUR, RON, USD, GBP, etc.).
+- **Frais ADR (€)** — coût supplémentaire appliqué aux expéditions de marchandises dangereuses.
+- **Frais hors gabarit (€)** — coût supplémentaire appliqué aux chargements hors gabarit.
 
-### Supplément carburant %
+### Carburant
 
-Si vous appliquez un supplément carburant, saisissez le pourcentage ici.
+- **Prix de base carburant (€/L)** — le prix du carburant utilisé dans les calculs de coût.
+- **Consommation (L/100km)** — la consommation attendue du camion, utilisée avec le prix de base du carburant et la distance de l'itinéraire pour estimer le coût carburant.
 
-*Exemple : Prix de base 1 200 €, supplément 8 % → prix suggéré 1 296 €*
+### Objectifs de marge
 
-### Notes
+- **Marge cible %** — la marge visée pour les commandes utilisant ce profil de coût.
+- **Marge min %** — la marge minimale acceptable avant que Druma ne signale la commande.
 
-Ajoutez des notes internes. Elles sont visibles pour les planificateurs mais n'apparaissent pas sur les factures.
+### Politique de péage
 
-## Modification d'un barème
+Choisissez le traitement par défaut des péages pour ce profil de coût :
+- **Inclus dans le tarif** — les péages sont absorbés dans votre tarif, non facturés séparément.
+- **Répercuté au client** — les péages sont facturés au client au fur et à mesure.
+- **Ligne séparée** — les péages apparaissent comme leur propre ligne sur la commande/facture.
 
-Accédez à **Paramètres → Barèmes de tarifs**, trouvez le barème et cliquez sur l'**icône de modification** (crayon).
+Vous pouvez remplacer ce défaut pour des pays ou des opérateurs de péage spécifiques :
 
-## Désactivation d'un barème
+- **Dérogations par pays** — choisissez un pays et une politique (Facturé au client / Inclus dans le tarif / Non facturé). Utile lorsque, par exemple, les péages français sont répercutés mais les péages allemands sont inclus.
+- **Dérogations par opérateur** — saisissez le nom d'un opérateur de péage exactement comme il apparaît sur les reçus (ex. `ASFINAG`, `HU-GO`, `Viapass`) et une politique. Une dérogation au niveau opérateur prime sur la politique au niveau pays.
 
-Basculez le commutateur **Actif** sur off. Les barèmes désactivés ne sont plus suggérés mais restent dans la liste.
+### Enregistrement
 
-<Note>
-La désactivation est préférable à la suppression, surtout si vous pourriez réactiver cette ligne à l'avenir.
-</Note>
+Cliquez sur **Enregistrer les modifications** sur un barème existant, ou **Créer** lors de l'ajout d'un nouveau.
 
-<Card title="Création de commandes" icon="file-lines" href="/fr/planner/creating-orders">
-  Voir comment les suggestions de barèmes apparaissent lors de la création d'une commande.
-</Card>
+## Modifier ou supprimer un barème de tarifs
+
+Déployez un barème dans la liste pour modifier n'importe lequel de ses champs en ligne. Cliquez sur le **X** à côté d'un barème pour le supprimer — une confirmation vous sera demandée, car cette action est irréversible.
+
+Les profils de coût des barèmes de tarifs alimentent l'estimation de coût/marge de commande affichée lors de la création ou de la tarification d'une commande — c'est une surface de calcul distincte de cette page de paramètres, non couverte ici.
+
+## Pages associées
 
 <Card title="Configuration de l'entreprise" icon="building" href="/fr/admin/company-setup">
-  Configurez votre devise par défaut et vos conditions de paiement.
+  Configurez votre profil d'entreprise, qui fonctionne conjointement avec les barèmes de tarifs lorsque Druma calcule les coûts de commande.
 </Card>

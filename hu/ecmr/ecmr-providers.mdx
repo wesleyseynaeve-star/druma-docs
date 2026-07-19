@@ -1,0 +1,84 @@
+---
+title: "eCMR-szolgáltatók"
+description: "A Druma natív, saját fejlesztésű eCMR-szolgáltatója az egyetlen választható eCMR-szolgáltató. A TransFollow csak elavult (legacy) útvonal azoknak a cégeknek, amelyeknek már volt korábbi konfigurációjuk."
+icon: "right-left"
+---
+
+A Druma a **natív szolgáltatójával** állítja ki az eCMR-eket — teljes egészében házon belül állítja ki és pecsételi le őket, dokumentumonkénti költség nélkül. A **Beállítások → Integrációk → eCMR-szolgáltató** menüpontban (vállalati admin hozzáférés szükséges) az egyetlen választható lehetőségek a **Natív** és a **Letiltva**. A **TransFollow** egyetlen cég számára sem választható újonnan; csak azon cégek számára létezik korábbi útvonalként, amelyek a natív szolgáltató bevezetése előtt konfigurálták — lásd lentebb.
+
+---
+
+## Druma Natív eCMR (alapértelmezett)
+
+A Druma natív szolgáltatója belsőleg állítja ki a CMR-dokumentumokat, gyűjti az aláírásokat, felépíti a PDF-et, és alkalmaz egy **PAdES digitális pecsétet** — egy eIDAS szerinti Fokozott Biztonságú Elektronikus Aláírást (AdES) — anélkül, hogy bármilyen külső szolgáltatással kapcsolatba lépne.
+
+### Hogyan működik?
+
+- **Nincs szükség beállításra** — a natív szolgáltató alapértelmezetten aktív. Nem kell API-kulcsot megadnod vagy külső fiókot csatlakoztatnod.
+- **Háromfeles aláírás, három külön eszköz:** a feladó a Druma webalkalmazáson keresztül ír alá (jellemzően egy tervező vagy diszpécser rögzíti a rendelés Dokumentumok fülén); a sofőr külön, a saját telefonján ír alá; az átvevő egy **megosztási link vagy QR-kód** segítségével ír alá a saját eszközén szállításkor — nincs szükség Druma-fiókra az átvevő oldalán.
+- **Hitelesített PDF:** miután mindhárom fél aláírt, a Druma felépíti a teljes CMR PDF-et, és alkalmazza a PAdES-pecsétet. A lepecsételt dokumentum tartalmazza az összes kötelező CMR-rovatot (1–24), beleértve a "CMR hatálya alá tartozik" nyilatkozatot, a kiállítás helyét és dátumát, valamint bármilyen fuvarozói fenntartást.
+- **Átvevői fenntartások (24. rovat):** aláíráskor az átvevő szabad szöveges megjegyzéseket adhat hozzá (sérülés, hiány, eltérés). Ezek a megjegyzések a lepecsételt PDF-be kerülnek bélyegezve, és egy borostyánsárga "Átvevői fenntartások" banner jelenik meg a rendelésen a Drumában.
+
+### A szolgáltató készenlétének ellenőrzése
+
+Lépj a **Beállítások → Integrációk → eCMR-szolgáltató** menüpontra, és kattints a **Kapcsolat tesztelése** gombra, hogy megerősítsd, a Druma aláírási tanúsítványa konfigurálva van, és a szolgáltató készen áll.
+
+### Költségek
+
+Az eCMR a Druma előfizetésed része, extra költség nélkül — nincs dokumentumonkénti díj és nincs felhasználási plafon.
+
+### eCMR-dokumentumok megtekintése és letöltése
+
+A aláírt eCMR-dokumentumok és aláírások 7 évig maradnak a Drumában, a rendelés kiszállítási dátumától számítva, majd egy ütemezett feladat véglegesen törli őket — lásd az [eCMR jogi érvényessége](/en/ecmr/ecmr-legal-validity) oldalt a teljes megőrzési szabályzatért.
+
+**Rendelés-részletező oldal → Dokumentumok fül → eCMR megtekintése**
+
+Innen tudsz:
+
+- Megtekinteni a lepecsételt PDF-et a böngésződben
+- Letölteni az aláírt PDF-et
+- Ellenőrizni mindhárom fél aláírási státuszát — a Feladó sor egy aláírási dátumot mutat; a Sofőr és az Átvevő aláírt/nem aláírt jelvényt mutat, időbélyeg nélkül
+- Megosztani egy linket a dokumentumhoz az ügyfeleddel (Druma-bejelentkezés nélkül is elérhető)
+
+---
+
+## TransFollow (csak elavult)
+
+A TransFollow egy harmadik féltől származó eCMR-platform, amelyet a Druma korábban választható opcióként támogatott. Ez **már nem valami, amit újonnan kiválaszthatsz** — nincs TransFollow-bejegyzés a választáshoz, nincs API-kulcs mező, nincs Mock Mode kapcsoló, és nincs Kapcsolat tesztelése gomb hozzá a Beállítások → Integrációk menüpontban.
+
+Az egyetlen ok, amiért a TransFollow egyáltalán még létezik a Drumában, az, hogy azt a kis számú céget, amelyeknek **korábbi TransFollow-konfigurációjuk** van, zökkenőmentesen működőképesen tartsa. Ha ez érvényes a cégedre:
+
+- Az eCMR-folyamatod pontosan úgy működik tovább, ahogy eddig — semmi sem törik el, és nincs szükség beavatkozásra.
+- Az eCMR-szolgáltató kártya a Beállítások → Integrációk menüpontban **Natívként** mutatja a konfigurációdat.
+- A következő alkalommal, amikor az integráció mentésre kerül (még ha semmit sem módosítasz), a céged csendben átmigrál a valódi natív szolgáltatóra.
+
+Ha most állítod be az eCMR-t először, vagy a céged sosem konfigurálta a TransFollow-t, ez rád nem vonatkozik — te már a natív szolgáltatón vagy.
+
+<Warning>
+Nincs mód a TransFollow konfigurálására egy olyan cégnél, amely még nincs rajta. Ha máshol TransFollow-hivatkozásokat látsz, azok ezt a korábbi folytonossági viselkedést írják le, nem egy ma is elérhető terméklehetőséget.
+</Warning>
+
+---
+
+## Országlefedettség
+
+Az eCMR jogilag érvényes azokban az országokban, amelyek ratifikálták az e-CMR jegyzőkönyvet. 2025-től ez a legtöbb EU-tagállamot magában foglalja, plusz Svájcot, Fehéroroszországot, Grúziát és másokat. Az aktuális listát a [unece.org](https://unece.org) oldalon ellenőrizheted. Azoknál az országoknál, amelyek nem ratifikálták, továbbra is papír CMR szükséges — a Druma ki tud nyomtatni egy formázott CMR-jegyzetet az ilyen szállítmányokhoz.
+
+---
+
+## Kapcsolódó cikkek
+
+<CardGroup cols={2}>
+  <Card title="Mi az eCMR?" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+    Bevezetés az elektronikus fuvarlevelekbe, és hogy mikor van rájuk szükséged.
+  </Card>
+  <Card title="eCMR jogi érvényessége" icon="scale-balanced" href="/en/ecmr/ecmr-legal-validity">
+    Az e-CMR Jegyzőkönyv, a PAdES-pecsét és az eIDAS AdES elmagyarázva.
+  </Card>
+  <Card title="eCMR létrehozása" icon="file-plus" href="/en/ecmr/creating-ecmr">
+    Lépésről lépésre útmutató egy eCMR kiállításához egy Druma-rendelésen.
+  </Card>
+  <Card title="Az aláírási folyamat" icon="pen-to-square" href="/en/ecmr/signing-flow">
+    Hogyan írja alá a feladó, a sofőr és az átvevő, és melyik eszközön.
+  </Card>
+</CardGroup>

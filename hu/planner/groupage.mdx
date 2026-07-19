@@ -1,58 +1,161 @@
 ---
-title: "Csoportos szállítás (LTL)"
-description: "Több kis rakomány konszolidálása különböző ügyfelektől egy teherautóra megállónkénti nyomkövetéssel, ügyfelenkénti számlázással és nyomtatható többmegállós menetlevéllel."
+title: "Gyűjtőfuvar (LTL)"
+description: "Konszolidálj több kis rakományt különböző ügyfelektől egyetlen teherautóra, szakaszonkénti nyomon követéssel, szakaszonkénti számlázással és nyomtatható, több megállós menetlevéllel."
 icon: "boxes-stacked"
 ---
 
-## Mi az a csoportos szállítás?
+## Mi az a gyűjtőfuvar?
 
-A csoportos szállítás (más néven LTL — kevesebb mint egy teherautórakomány) lehetővé teszi, hogy több ügyfél kisebb rakományait egyetlen teherautón kombináld. A Druma mindegyik ügyfelet és megállót külön kezeli, lehetővé téve a pontos nyomkövetést, külön eCMR-eket és külön számlákat minden egyes ügyfélnek.
+A gyűjtőfuvar — más néven LTL (less-than-truckload, részrakomány) vagy konszolidáció — az, amikor több kis szállítmányt rakodsz különböző ügyfelektől ugyanarra a teherautóra, amely ugyanabba az irányba tart. Minden ügyfél csak a saját teherautó-helyéért fizet, te pedig a kombinált rakományokkal töltöd meg a teherautót, hogy a fuvar nyereséges legyen.
 
-## Csoportos szállítmány létrehozása
+A Drumában a gyűjtőfuvar egy önálló modul (`/groupage`) — egy **gyűjtőfuvar-menet** több meglévő rendelés-**szakaszt** tartalmaz. A menet nyomon követi a teherautót, a sofőrt és az útvonalat; minden szakasz megtartja a saját ügyfelét, rakományát, felvételi/szállítási címét és árát.
+
+<Note>
+A gyűjtőfuvar nem egy negyedik "rendelés-típus" a Saját teherautó / Alvállalkozásba adott / Áthelyezés mellett — ez egy külön modul, amely meglévő rendeléseket csoportosít.
+</Note>
+
+<Frame caption="A Gyűjtőfuvar modul — egy menet szakaszai, szakaszonkénti ügyféllel, rakománnyal és kihasználtság-nyomon követéssel.">
+  <img src="/images/planner/groupage.png" alt="Gyűjtőfuvar-menet több szakasszal és kihasználtsági jelzővel" />
+</Frame>
+
+---
+
+## Gyűjtőfuvar-menet létrehozása
 
 <Steps>
-  <Step title="Lépj a Rendelések → Új csoportos szállítmány menüpontra">
-    Kattints a **Rendelések** menüpontra, majd az **Új csoportos szállítmány** gombra.
+  <Step title="Lépj a Gyűjtőfuvar menüpontra">
+    Nyisd meg a **Gyűjtőfuvar** modult a navigációból.
   </Step>
-  <Step title="Adja hozzá az első ügyfél megállóját">
-    Minden megállóhoz add meg:
-    - Ügyfél neve
-    - Felvételi cím és időablak
-    - Szállítási cím és időablak
-    - Rakomány részletei (súly, CBM, raklapok)
-    - Megállapodott ár ennek az ügyfélnek
+  <Step title="Kattints a Gyűjtőfuvar létrehozása gombra">
+    Kattints a **Gyűjtőfuvar létrehozása** gombra. A Druma létrehoz egy üres menetet (egy automatikusan generált hivatkozással, mint `GRP-XXXXX`), és megnyitja a részletező panelét — ebben a lépésben nincs teherautó/sofőr/dátum/útvonal form.
   </Step>
-  <Step title="Adja hozzá a további ügyfél megállókat">
-    Kattints a **Megálló hozzáadása** gombra minden további ügyfélhez és megállóhoz. A Druma automatikusan szekvenciálja a megállókat a hatékony útvonal érdekében.
-  </Step>
-  <Step title="Rendelje hozzá a teherautót">
-    Válassz egy teherautót. A Druma megmutatja az összkihasználtságot: súly %, CBM %, raklapméter %.
-  </Step>
-  <Step title="Mentés">
-    A csoportos szállítmány megjelenik a tervezőtáblán.
+  <Step title="Adj hozzá rendeléseket a menethez">
+    Lásd a következő szakaszt — a menetet úgy építed fel, hogy meglévő, jogosult rendeléseket adsz hozzá, nem egy form kitöltésével.
   </Step>
 </Steps>
 
-## Megállónkénti nyomkövetés
+---
 
-A sofőr alkalmazás az összes megállót külön felsorolja. A sofőr mindegyiknél önállóan frissíti a státuszt — a tervező és az ügyfél csak a saját megállóját látja, nem az összes kiszállítás részletét.
+## Rendelések hozzáadása egy gyűjtőfuvar-menethez
 
-## Megállónkénti eCMR
+<Steps>
+  <Step title="Nyisd meg a menetet, és kattints a Rendelések hozzáadása gombra">
+    Nyisd meg a gyűjtőfuvar-menetet, és kattints a **Rendelések hozzáadása a gyűjtőfuvarhoz** gombra.
+  </Step>
+  <Step title="Pipáld be a jogosult rendeléseket">
+    Az ablak felsorolja az ehhez a menethez csatlakozásra jogosult meglévő rendeléseket — rendelésszám, ügyfél, útvonal, LDM, súly és pótkocsi-típus —, jelölőnégyzettel soronként. Itt nincs adatrögzítő form; már meglévő rendeléseket választasz ki, nem új szállítmány-adatokat gépelsz be.
+  </Step>
+  <Step title="Használd az Automatikus kitöltést, ha szeretnéd, hogy a Druma válasszon helyetted">
+    Kattints az **Automatikus kitöltés** gombra, hogy a Druma kiválassza a jogosult rendelések legjobban illeszkedő kombinációját, a pótkocsi fennmaradó raklapméter-kapacitásáig.
+  </Step>
+  <Step title="Hozzáadás a gyűjtőfuvarhoz">
+    Kattints a **Hozzáadás a gyűjtőfuvarhoz** gombra. Ha a kiválasztásod meghaladná a pótkocsi LDM-kapacitását, a művelet egy validációs hibával blokkolva van — előbb el kell távolítanod valamit. Egy pótkocsi-típus eltérés (egy rendelés pótkocsi-típusa eltér a menetétől) figyelmeztetésként jelenik meg, de nem blokkolja a műveletet.
+  </Step>
+</Steps>
 
-A Druma külön eCMR-t generál minden ügyfél-megállóhoz. A csoportos szállítmányban lévő minden ügyfélnek saját aláírandó fuvarlevele van.
+<Note>
+A súly és a térfogat nem blokkolja a rendelések hozzáadását — csak a raklapméterek (LDM). A súlyra és térfogatra vonatkozó kihasználtsági sávok referenciaként továbbra is megjelennek (lásd lentebb), de tájékoztató jellegűek, nem korlátozók.
+</Note>
 
-## Számlázás
+---
 
-A csoportos szállítmány teljesítése után a Druma lehetővé teszi számla generálását minden ügyfélnek külön-külön, a vonatkozó rész kiosztott árával.
+## Megálló-sorrendezés
 
-## Költség-megosztás
+Az új megállók egyszerűen a menet végéhez fűződnek hozzáadás sorrendjében — a Druma nem optimalizálja automatikusan az útvonalat menet közben.
 
-A csoportos szállítmány esetén az összköltség (üzemanyag, sofőr, teherautó) felosztható az ügyfelek között. A Druma támogatja a következő felosztási módszereket:
-- **CBM alapján** — arányos köbméter szerint
-- **Súly alapján** — arányos tonna szerint
-- **Raklapméter alapján** — arányos LDM szerint
-- **Manuális felülbírálat** — manuálisan állíts be minden megállóhoz árrést
+A sorrend optimalizálásához kattints az **Automatikus sorrendezés** gombra (csak 2+ megállónál jelenik meg): ez átrendezi a megállólistát a teljes távolság minimalizálásához (felvételek a szállítások előtt), és jelenti, mennyi távolságot takarított meg, vagy hogy a sorrend már optimális volt. Bármikor manuálisan is húzhatod-ejtheted a megállókat, vagy használhatod a fel/le nyilakat minden megálló során.
 
-<Card title="Rendelési életciklus" icon="circle-dot" href="/en/planner/order-lifecycle">
-  Hogyan haladnak a csoportos szállítmány megállói az állapotmérőn.
-</Card>
+---
+
+## Szakaszonkénti státusz-nyomon követés
+
+Minden rendelés-szakasznak saját státuszfolyamata van, a teherautón lévő többi szállítmánytól függetlenül. Amikor a sofőr frissíti a státuszát egy konkrét megállóhoz, csak az adott szakasz rendelése frissül — a menet-áttekintés mutatja, mely megállók készek el, és melyek függőben.
+
+Például: ha a teherautónak négy kiszállítása van, és a sofőr befejezi az 1. és 2. megállót, azok a szakaszok **Kiszállítva** státuszt mutatnak, míg a 3. és 4. megálló még **Úton a szállításhoz** státuszt mutat. Minden ügyfél csak a saját szállítmánya státuszát látja a portálján.
+
+---
+
+## Raklapméter (LDM), súly és térfogat nyomon követése
+
+Minden szakaszhoz megadható **CBM**, **Súly (kg)** és **LDM** érték, közvetlenül a megálló-kártyáján. Az LDM a pótkocsi padlófelületének lineáris hosszát jelenti, amelyet a szállítmány elfoglal — a gyűjtőfuvar-tervezés szabványos mértéke Európa-szerte.
+
+A gyűjtőfuvar-menet kihasználtsági sávokat mutat azokban a dimenziókban, amelyekre a hozzárendelt teherautónak/pótkocsinak ismert kapacitása van — **Súly**, **Térfogat (CBM)** és **Raklapméterek**:
+
+| Szín | Kihasználtsági szint |
+|---|---|
+| Zöld | ≤70% a kapacitásból |
+| Borostyán | 70–90% a kapacitásból |
+| Piros | >90% a kapacitásból (beleértve a 100% felettit is, amely korlátlanul kerül megjelenítésre) |
+
+### Költség-megosztási mód
+
+A **költség-megosztási mód** szabályozza, hogyan oszlanak meg a közös költségek a szakaszok között. Négy mód érhető el: **CBM**, **Súly**, **LDM** és **Számlázandó**. Kattints egy mód-gombra a menet Költség-megosztás fülén a váltáshoz — ez kiváltja az egyes szakaszok költségrészének, megosztási százalékának, kiosztott költségének és marginjának automatikus újraszámítását.
+
+Válaszd azt a módot, amely megfelel az adott menet ügyfeleivel kötött kereskedelmi megállapodásodnak. A CBM a leggyakoribb általános rakományhoz, az LDM a padlófelület-kritikus rakományokhoz, a súly a sűrű árukhoz, a Számlázandó pedig akkor, amikor a súly/térfogat közül azt számlázod, amelyik magasabb értéket ad.
+
+---
+
+## Gyűjtőfuvar menetlevél
+
+Mielőtt a sofőr elindulna, nyomtasd ki a gyűjtőfuvar menetlevelet — a menet megállóinak és rakományának listáját.
+
+<Steps>
+  <Step title="Nyisd meg a gyűjtőfuvar-menetet">
+    Nyisd meg a menet részletező panelét.
+  </Step>
+  <Step title="Menetlevél nyomtatása">
+    Kattints a **Menetlevél nyomtatása** gombra. A Druma egy új böngészőlapot nyit meg egy nyomtatható HTML menetlevéllel — nincs külön PDF-letöltés.
+  </Step>
+  <Step title="Oszd meg a sofőrrel">
+    Nyomtasd ki és add át, vagy oszd meg a sofőralkalmazás üzenetküldő szálán keresztül.
+  </Step>
+</Steps>
+
+A menetlevél tartalmazza: a megállósorrendet, a felvételi/szállítási címet, az ügyfelet, a rendelésszámot, a súlyt, és bármilyen megjegyzést megállónként. Nem tartalmaz rakomány-leírás oszlopot.
+
+---
+
+## Szakaszonkénti számlázás
+
+A menetnek saját **Számlák** füle van, amely felsorolja az összes szakaszt a számla-státuszukkal (**Nincs kiszámlázva → Generálva → Elküldve → Kifizetve**) és egy **Számla generálása** gombbal szakaszonként:
+
+<Steps>
+  <Step title="Nyisd meg a menet Számlák fülét">
+    Nyisd meg a gyűjtőfuvar-menetet, és lépj a **Számlák** fülre.
+  </Step>
+  <Step title="Számla generálása">
+    Kattints a **Számla generálása** gombra bármelyik, még ki nem számlázott szakasz mellett. A számla csak az adott szakasz ügyfelének jön létre, a saját rakományával, árával és hivatkozásával.
+  </Step>
+</Steps>
+
+Az ugyanazon teherautón lévő ügyfelek soha nem látják egymás számláit vagy árait — mindegyikük egy tiszta, külön dokumentumot kap, és egyenként generálhatod őket, ahogy az egyes szakaszok készen állnak a számlázásra.
+
+---
+
+## Nyomon követés
+
+Egy gyűjtőfuvar-szállítmányt követő ügyfelek egy statikus **Várható kiszállítás** dátumot látnak a nyilvános nyomkövetési oldalon, nem egy élő, több megállóra szekvenciált ETA-t.
+
+---
+
+## Egy tipikus felhasználási eset
+
+Négy ügyfélnek van rakománya, amelyet Bukarestből Bécs felé kell szállítani ezen a csütörtökön. Egyenként egyikük sem tölt meg egy teherautót. Együtt igen:
+
+- A ügyfél: 8 raklap Pozsonyba
+- B ügyfél: 4 raklap Budapestre
+- C ügyfél: 10 raklap Bécsbe
+- D ügyfél: 6 raklap Linzbe
+
+Létrehozod a négy rendelést a szokásos módon, majd létrehozol egy gyűjtőfuvar-menetet, hozzáadod mind a négy rendelést, hozzárendeled a sofőrödet, automatikusan sorba rendezed a megállókat, és kinyomtatod a menetlevelet. Minden ügyfél a saját részéért fizet, mindegyik saját számlát és státuszfrissítést kap, és te egy teli teherautót üzemeltetsz.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Rendelések létrehozása" icon="plus" href="/en/planner/creating-orders">
+    Ismerd meg, hogyan működnek a standard rendelések a Drumában — először létrehozod az egyedi rendeléseket, majd csoportosítod őket.
+  </Card>
+  <Card title="Tervezőtábla" icon="calendar" href="/en/planner/planning-board">
+    Lásd az összes rendelésedet a heti tervezési nézetben, mielőtt egy menetbe csoportosítanád őket.
+  </Card>
+</CardGroup>

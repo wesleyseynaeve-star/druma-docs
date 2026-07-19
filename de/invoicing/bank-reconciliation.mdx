@@ -1,46 +1,100 @@
 ---
 title: "Bankabgleich"
-description: "Stimmen Sie eingehende Bankzahlungs-E-Mails automatisch mit offenen Rechnungen in Druma ab, indem Sie Benachrichtigungs-E-Mails von Ihrer rumänischen Bank weiterleiten."
+description: "Stimmen Sie eingehende Bankzahlungs-E-Mails automatisch mit offenen Rechnungen in Druma ab, indem Sie Benachrichtigungs-E-Mails Ihrer rumänischen Bank weiterleiten."
 icon: "building-columns"
 ---
 
 ## Übersicht
 
-Der Druma-Bankabgleich ermöglicht es Ihnen, Zahlungsbenachrichtigungen von Ihrer Bank direkt in eine spezielle E-Mail-Adresse weiterzuleiten. Druma parst die E-Mail, identifiziert den Zahlungsbetrag und versucht, ihn automatisch mit einer offenen Rechnung abzugleichen.
+Bank­überweisungen manuell mit Rechnungen abzugleichen, ist mühsam und fehleranfällig. Drumas Bankabgleich automatisiert das meiste davon, indem er die Zahlungsbenachrichtigungs-E-Mails auswertet, die rumänische Banken bei jeder eingehenden Überweisung senden. Sie leiten diese E-Mails an einen speziellen Druma-Posteingang weiter, und Druma übernimmt den Abgleich.
 
----
+Kein Bank-API-Zugang nötig. Keine neue Software zu installieren. Nur E-Mail-Weiterleitung.
+
+<Frame caption="Finanzen → Abgleich — CAMT.053-, MT940- und CODA-Kontoauszugsformate.">
+  <img src="/images/invoicing/bank-reconciliation.png" alt="Seite Bankabgleich" />
+</Frame>
+
+## Wie es funktioniert
+
+Trifft Geld auf Ihrem Bankkonto ein, sendet Ihre Bank Ihnen automatisch eine Benachrichtigungs-E-Mail. Druma kann diese E-Mails lesen und die Kerndaten extrahieren:
+
+- Erhaltener Betrag
+- Name des Zahlers
+- Zahlungsreferenznummer
+- Überweisungsdatum
+
+Druma durchsucht dann Ihre offenen Rechnungen nach einer Übereinstimmung. Stimmen Betrag und Referenznummer überein, wird die Rechnung automatisch als bezahlt markiert. Gibt es keine eindeutige Übereinstimmung, landet die Zahlung in einer Prüfwarteschlange zur manuellen Bearbeitung.
 
 ## Unterstützte Banken
 
-Druma unterstützt E-Mail-Benachrichtigungen von:
-- BRD (Groupe Société Générale)
-- BCR (Banca Comercială Română)
+Folgende rumänische Banken werden für das E-Mail-Parsing unterstützt:
+
+- BRD – Groupe Société Générale
+- BCR – Banca Comercială Română
 - Raiffeisen Bank
 - UniCredit Bank
 - ING Bank
 
----
+<Note>
+Ist Ihre Bank nicht auf dieser Liste, können Sie Druma weiterhin für die manuelle Zahlungserfassung nutzen — erfassen Sie Zahlungen einfach über die Schaltfläche Zahlung erfassen bei jeder Rechnung. Der manuelle Abgleich steht unabhängig von der Bankeinrichtung immer zur Verfügung.
+</Note>
 
-## Einrichten
+## E-Mail-Weiterleitung einrichten
 
 <Steps>
-  <Step title="Zu Einstellungen → Unternehmen gehen">
-    Scrollen Sie zum Abschnitt **Zahlungs-E-Mail-Posteingang**.
+  <Step title="Ihre Druma-Abgleichs-Posteingangsadresse finden">
+    Gehen Sie zu **Einstellungen** → **Unternehmen** und aktivieren Sie **Bankzahlungs-Posteingang aktivieren**. Ihre eindeutige Druma-Abgleichs-E-Mail-Adresse wird hier angezeigt — sie sieht etwa so aus: `reconcile-ihrunternehmen@inbox.druma.io`.
   </Step>
-  <Step title="Posteingang aktivieren">
-    Schalten Sie **Zahlungs-E-Mail-Posteingang aktivieren** ein. Druma generiert eine eindeutige E-Mail-Adresse für Ihr Unternehmen.
+  <Step title="Die E-Mail-Adresse kopieren">
+    Kopieren Sie die vollständige Adresse. Sie benötigen sie in Ihrem E-Mail-Client oder den Bank-Benachrichtigungseinstellungen.
   </Step>
-  <Step title="Bank-Weiterleitung einrichten">
-    Konfigurieren Sie Ihr Bank-Online-Banking, um Zahlungsbenachrichtigungen an die generierte Druma-Adresse weiterzuleiten.
+  <Step title="Weiterleitung in Ihrem E-Mail-Client einrichten">
+    Erstellen Sie im E-Mail-Konto, an das Ihre Bank Zahlungsbenachrichtigungen sendet, eine Weiterleitungsregel:
+
+    - **Bedingung:** E-Mails von der Benachrichtigungsadresse Ihrer Bank (z. B. `notificari@brd.ro`)
+    - **Aktion:** Weiterleiten an Ihre Druma-Abgleichsadresse
+
+    Die genauen Schritte hängen von Ihrem E-Mail-Anbieter ab. In Gmail: Einstellungen → Filter und blockierte Adressen → Neuen Filter erstellen. In Outlook: Regeln → Neue Regel.
+  </Step>
+  <Step title="Mit einer echten Zahlung testen">
+    Warten Sie auf die nächste eingehende Zahlung. Sobald Ihre Bank die Benachrichtigungs-E-Mail sendet, wird sie automatisch an Druma weitergeleitet. Prüfen Sie innerhalb weniger Minuten unter **Rechnungsstellung** → **Abgleich**, ob sie zugeordnet wurde.
   </Step>
 </Steps>
 
+## Automatischer Abgleich
+
+Trifft eine weitergeleitete E-Mail ein, versucht Druma, sie mit folgenden Kriterien einer offenen Rechnung zuzuordnen:
+
+1. **Betrag** — der erhaltene Betrag entspricht dem offenen Rechnungssaldo
+2. **Referenznummer** — die Zahlungsreferenz in der E-Mail entspricht einer Rechnungsnummer in Druma (Kunden werden aufgefordert, die Rechnungsnummer als Zahlungsreferenz zu verwenden)
+
+Stimmen beide überein, wird die Rechnung automatisch als **Bezahlt** markiert. Keine Aktion Ihrerseits nötig.
+
+## Nicht zugeordnete Zahlungen
+
+Manche Zahlungen werden nicht automatisch zugeordnet — z. B. wenn der Kunde die Rechnungsnummer nicht in die Überweisungsreferenz aufgenommen hat, oder der Betrag leicht abweicht. Diese erscheinen in der Prüfwarteschlange:
+
+Gehen Sie zu **Rechnungsstellung** → **Abgleich** → **Nicht zugeordnete Zahlungen**. Jede nicht zugeordnete Zahlung zeigt Betrag, Zahlername und Referenz. Sie können:
+
+- **Mit Rechnung verknüpfen** — die richtige Rechnung suchen und diese Zahlung damit verbinden
+- **Ignorieren** — die Zahlung als nicht zu Druma-Rechnungen gehörig markieren (z. B. eine Zahlung für etwas außerhalb von Druma)
+
+Verknüpfen Sie eine Zahlung mit einer Rechnung, aktualisiert sich der Rechnungsstatus genauso, als hätten Sie die Zahlung manuell erfasst.
+
+## Deduplizierung
+
+Leiten Sie versehentlich dieselbe Benachrichtigungs-E-Mail zweimal weiter, erstellt Druma keine doppelte Zahlung. Duplikate werden anhand des `Message-Id`-Headers der E-Mail erkannt, nicht anhand der Bankreferenznummer — selbst wenn das Referenzfeld leer ist oder wiederverwendet wird, wird genau dieselbe E-Mail nie zweimal verarbeitet. Die zweite E-Mail wird stillschweigend ignoriert.
+
+<Note>
+Ermutigen Sie Ihre Kunden, die Rechnungsnummer als Überweisungsreferenz zu verwenden. Diese eine Angewohnheit erhöht die automatische Zuordnungsrate drastisch — die meisten Zahlungen werden dann ohne manuellen Aufwand Ihrerseits abgeglichen.
+</Note>
+
+<Warning>
+Bank-Benachrichtigungs-E-Mails enthalten manchmal vertrauliche Finanzinformationen. Stellen Sie sicher, dass Ihre Druma-Abgleichs-Posteingangsadresse privat bleibt — teilen Sie sie nicht öffentlich. Sie ist einzigartig für Ihr Unternehmen und nicht erratbar, behandeln Sie sie aber wie ein Passwort.
+</Warning>
+
 ---
 
-## Die Abgleichswarteschlange
-
-Wenn eine E-Mail eingeht, versucht Druma, die Zahlung automatisch abzugleichen. Wenn kein Abgleich gefunden wird, erscheint sie in **Rechnungsstellung → Abgleich → Nicht zugeordnet** zur manuellen Überprüfung.
-
-<Card title="Bankkontoauszug importieren" icon="file-up" href="/en/invoicing/bank-statement-import">
-  Alternative: Importieren Sie CAMT.053- oder MT940-Dateien für den Abgleich.
+<Card title="Zahlungsverfolgung" icon="money-bill-wave" href="/de/invoicing/payment-tracking">
+  Wie Sie Zahlungen manuell erfassen, Teilzahlungen handhaben und Zahlungsdaten exportieren.
 </Card>

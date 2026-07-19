@@ -1,0 +1,85 @@
+---
+title: "Salarizarea soferilor"
+description: "Genereaza calcule automate de salarizare per sofer, pe baza km parcursi, zilelor active si orelor de asteptare."
+icon: "money-bill-wave"
+---
+
+## Prezentare generala
+
+Druma calculeaza plata soferilor din datele operationale pe care le captureaza deja — kilometri parcursi, zile lucrate si ore de asteptare inregistrate. Nu exista un sistem separat de urmarire a timpului; datele circula din comenzi si atingerile de status.
+
+Salarizarea Soferilor se gaseste sub sectiunea **Finante**. Accesibila rolurilor admin, company_admin si fleet_manager.
+
+<Frame caption="Finante → Salarizare — plata pentru km goi este un procent din tariful incarcat, nu un tarif independent.">
+  <img src="/images/reports/payroll.png" alt="Pagina de Salarizare" />
+</Frame>
+
+---
+
+## Componentele platii
+
+Fiecare rulare de salarizare calculeaza patru componente:
+
+| Componenta | Baza |
+|---|---|
+| **Plata km** | Km incarcati × tarif per km |
+| **Plata km goi** | Km goi/morti × tarif per km × procentul pentru km goi (o cota configurabila din tariful incarcat, nu un tarif separat pentru km goi — implicit 100%, adica platit la fel ca km incarcati) |
+| **Plata zi** | Zile de lucru active × tariful de zi |
+| **Plata asteptare** | Total ore de asteptare × tariful orar de asteptare |
+
+Totalul este suma tuturor celor patru componente, in EUR.
+
+---
+
+## Generarea unei rulari de salarizare
+
+<Steps>
+  <Step title="Selecteaza soferul si perioada">
+    Alege soferul din lista derulanta si seteaza data de inceput si sfarsit a perioadei. Perioadele tipice sunt o luna calendaristica sau un ciclu de plata de doua saptamani.
+  </Step>
+  <Step title="Apasa Genereaza">
+    Druma calculeaza toate cele patru componente de plata, din comenzile si jurnalele de asteptare din perioada selectata.
+  </Step>
+  <Step title="Revizuieste detalierea">
+    Rezultatul arata fiecare componenta separat, ca sa poti verifica cifrele inainte de export.
+  </Step>
+  <Step title="Exporta in CSV">
+    Apasa **Exporta CSV** pentru a descarca sumarul de salarizare, pentru folosire in sistemul tau de contabilitate sau salarizare.
+  </Step>
+</Steps>
+
+---
+
+## Configurarea tarifelor
+
+Tarifele de plata (tarif per km, tarif de zi, procent km goi, tarif orar de asteptare) sunt stocate per sofer — cu o regula implicita la nivel de companie care se aplica oricarui sofer fara una proprie — in tabelul de baza al regulilor de salarizare.
+
+<Note>
+Momentan nu exista un ecran in aplicatie pentru a vizualiza sau edita aceste tarife. Tarifele trebuie setate direct in baza de date (sau initializate), pana cand o interfata Flota → Soferi pentru tarife este lansata. Daca un sofer nu are nicio regula si nu exista niciun implicit de companie, fiecare componenta pentru acel sofer se calculeaza ca zero.
+</Note>
+
+---
+
+## Rulari istorice
+
+Fiecare rulare de salarizare generata este stocata si listata sub inregistrarea soferului. Poti redeschide orice rulare anterioara, pentru a o revizui sau re-exporta.
+
+---
+
+## Graficul totalurilor lunare
+
+Un grafic cu bare, sub selectorul de sofer, arata sumele totale lunare de salarizare pentru soferul selectat, in ultimele 12 luni. Util pentru a observa tipare sezoniere sau luni cu taxe de asteptare neobisnuit de mari.
+
+---
+
+<Note>
+Cifrele de salarizare din Druma sunt consultative — Druma nu se integreaza cu procesatori de salarizare sau autoritati fiscale. Exportul CSV este destinat importului in sistemul tau de salarizare sau revizuirii manuale de catre un contabil.
+</Note>
+
+<Card title="Timp de asteptare" icon="clock" href="/ro/planner/waiting-time">
+  Afla cum este inregistrat timpul de asteptare si cum alimenteaza calculele de salarizare.
+</Card>
+
+<Card title="Cursa irosita" icon="triangle-exclamation" href="/ro/planner/wasted-journey">
+  Kilometrii morti din cursele irosite apar si ei in inregistrarile de salarizare ale soferilor.
+</Card>

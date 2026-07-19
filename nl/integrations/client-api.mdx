@@ -1,36 +1,174 @@
 ---
 title: "Client API-integratie (CAPI)"
-description: "Laat klanten orders rechtstreeks in Druma sturen of ontvang realtime leveringsgebeurtenissen op een webhook — geconfigureerd per klant, geen codewijzigingen in Druma nodig."
+description: "Laat klanten orders rechtstreeks in Druma pushen of ontvang realtime leveringsgebeurtenissen op een webhook — per klant geconfigureerd, geen codewijzigingen in Druma nodig."
 icon: "plug"
 ---
 
-De Client API-integratie (CAPI) creëert een direct datakanaal tussen een specifieke klant en uw Druma-account. Het heeft twee onafhankelijke helften:
+De Client API-integratie (CAPI) creëert een direct datakanaal tussen een specifieke klant en uw Druma-account. Ze heeft twee onafhankelijke helften:
 
-- **Inkomend**: het systeem van de klant stuurt orders automatisch naar Druma.
-- **Uitgaand**: Druma pusht statusgebeurtenissen (vertrokken, afgeleverd, gefactureerd) naar het systeem van de klant in realtime.
+- **Inkomend**: het systeem van de klant stuurt orders automatisch naar Druma. Geen handmatige orderinvoer nodig.
+- **Uitgaand**: Druma pusht statusgebeurtenissen (vertrokken, afgeleverd, gefactureerd, enz.) naar het systeem van de klant in realtime.
 
-U kunt elke helft onafhankelijk inschakelen. Elke klant krijgt zijn eigen token, dus inloggegevens zijn volledig geïsoleerd.
+U kunt elke helft onafhankelijk inschakelen, of beide samen. Elke klant krijgt zijn eigen token en endpoint, dus inloggegevens zijn volledig geïsoleerd.
 
-## Instellen
+---
+
+## Wanneer dit te gebruiken
+
+CAPI is geschikt wanneer een klant:
+
+- Een WMS, ERP of ordermanagementsysteem heeft dat HTTP-aanroepen kan doen
+- Vaak zendingen boekt en niet telkens wil inloggen op uw klantportaal om orders aan te maken
+- Geautomatiseerde leveringsbevestiging nodig heeft in zijn systeem voor downstream-workflows (magazijnboeking, facturering, voorraadupdates)
+
+Voor klanten die af en toe boeken of het portaal verkiezen, voegt CAPI onnodige complexiteit toe. Gebruik dan het standaard klantportaal.
+
+---
+
+## Waar u de instellingen vindt
+
+1. Ga naar **Klanten** in het linkermenu.
+2. Open het klantrecord.
+3. Klik op het tabblad **API**.
+
+Zowel de inkomende als uitgaande instellingen staan op dit tabblad.
+
+---
+
+## Inkomend — de klant pusht orders naar Druma
 
 <Steps>
-  <Step title="Open het klantrecord">
-    Ga naar **Klanten** en klik op de klant waarvoor u de API wilt inschakelen.
+  <Step title="Schakel inkomend in">
+    Zet op het tabblad **API** de schakelaar **Inkomende API inschakelen** aan.
   </Step>
-  <Step title="Ga naar het tabblad API">
-    Klik op het tabblad **API & Integratie** op de klantpagina.
+  <Step title="Genereer een token">
+    Klik op **Token genereren**. Het volledige token wordt **eenmalig** getoond — kopieer het onmiddellijk en bewaar het veilig (een wachtwoordmanager werkt goed). Druma slaat alleen een hash van het token op; de volledige waarde is niet herstelbaar. Na dit scherm worden alleen de eerste 20 tekens getoond als referentie.
   </Step>
-  <Step title="Genereer een API-token">
-    Klik op **API-token genereren**. Het token verschijnt eenmalig — kopieer het onmiddellijk.
+  <Step title="Deel de endpoint-URL">
+    Kopieer de **Endpoint-URL** getoond onder het tokenveld. Geef deze URL en het token aan het technisch team van de klant.
   </Step>
-  <Step title="Inkomende orders inschakelen (optioneel)">
-    Zet **Inkomende orders inschakelen** aan om toe te staan dat het systeem van de klant orders pusht.
-  </Step>
-  <Step title="Webhook-URL instellen (optioneel)">
-    Voer de webhook-URL van de klant in als u wilt dat Druma statusgebeurtenissen pusht.
+  <Step title="Configureer veldmappings (optioneel)">
+    Gebruikt het systeem van de klant andere veldnamen dan Druma (bijv. `shipment_id` in plaats van `reference`), voeg dan rijen toe aan de tabel **Veldmapping** door op **+ Mapping toevoegen** te klikken. Elke rij koppelt een veldnaam van de klant (linkerkolom) aan de bijbehorende Druma-veldnaam (rechterkolom).
   </Step>
 </Steps>
 
-<Card title="Openbare API" icon="code" href="/nl/integrations/public-api">
-  Algemene REST API voor uw eigen integraties.
+Het systeem van de klant stuurt een `POST`-verzoek naar de endpoint-URL met de header `Authorization: Bearer <token>` en een JSON-body. Druma maakt de order aan met status **Concept** en de bronvlag `booked_via: client_api`. Een planner kan conceptorders vanaf het planningsbord nakijken en bevestigen.
+
+<Note>
+Orders aangemaakt via CAPI komen binnen als concepten. Ze verschijnen niet als toegewezen op het bord tot een planner (of een automatiseringsregel, indien geconfigureerd) ze naar de volgende status verplaatst. Dit is bewust — het laat u de order valideren en prijzen voordat ze de workflow ingaat.
+</Note>
+
+---
+
+## Uitgaand — Druma pusht gebeurtenissen naar de klant
+
+<Steps>
+  <Step title="Schakel uitgaand in">
+    Zet **Uitgaande webhook inschakelen** aan.
+  </Step>
+  <Step title="Voer de webhook-URL in">
+    Plak de **webhook-URL** van de klant — het endpoint in hun systeem dat gebeurtenissen zal ontvangen.
+  </Step>
+  <Step title="Kies een authenticatietype">
+    Selecteer één van de vier opties voor **Auth-type**:
+
+    - **Geen** — geen authenticatieheader (gebruik alleen op vertrouwde private netwerken)
+    - **Bearer-token** — Druma voegt `Authorization: Bearer <waarde>` toe aan elk verzoek
+    - **Basic auth** — Druma voegt een `Authorization: Basic`-header toe met een base64-gecodeerde gebruikersnaam en wachtwoord
+    - **HMAC-handtekening** — Druma ondertekent elke request body met een gedeeld geheim en voegt de handtekening toe in een header; de klant verifieert deze voor verwerking
+
+    Vul de inloggegevens in voor het gekozen type.
+  </Step>
+  <Step title="Selecteer te versturen gebeurtenissen">
+    Vink de gebeurtenissen aan die Druma moet pushen:
+
+    - **Order aangemaakt** — afgevuurd wanneer een nieuwe order in Druma wordt bevestigd
+    - **Status bijgewerkt** — afgevuurd bij elke statuswijziging (toegewezen, bij ophaling, onderweg, enz.)
+    - **Afgeleverd** — afgevuurd wanneer de order de status Afgeleverd bereikt
+    - **Factuur verstuurd** — afgevuurd wanneer een verkoopfactuur naar de klant wordt verstuurd
+  </Step>
+  <Step title="Configureer uitgaande veldmappings (optioneel)">
+    Verwacht het systeem van de klant andere veldnamen in de payload, gebruik dan de tabel **Veldmapping** aan de uitgaande kant (identieke UX als inkomend) om de uitvoervelden van Druma te hernoemen voor ze verstuurd worden.
+  </Step>
+  <Step title="Opslaan">
+    Klik op **Opslaan**. Druma begint vanaf dit moment gebeurtenissen te leveren voor de geselecteerde triggers.
+  </Step>
+</Steps>
+
+---
+
+## Veldmapping uitgelegd
+
+Veldmapping is een sleutel-waardevertaaltabel. Ze verandert de gegevens niet — alleen de veldnamen in de payload.
+
+**Voorbeeld — inkomende mapping:**
+
+| Klantveld | Druma-veld |
+|---|---|
+| `shipment_id` | `reference` |
+| `pickup_city` | `pickup_address` |
+| `drop_city` | `delivery_address` |
+| `cargo_weight_kg` | `weight_kg` |
+
+Met deze mapping ingesteld kan de klant zijn eigen native JSON-structuur POST'en en interpreteert Druma deze correct zonder dat de klant zijn payload moet herformatteren.
+
+**Voorbeeld — uitgaande mapping:**
+
+| Druma-veld | Klantveld |
+|---|---|
+| `order_id` | `druma_ref` |
+| `status` | `shipment_status` |
+| `actual_delivery_at` | `actual_delivery_datetime` |
+
+Niet-gemapte velden worden doorgegeven met de standaard Druma-veldnamen.
+
+---
+
+## Een token roteren
+
+Is een token gecompromitteerd, of verlaat een sleutelpersoon het team van de klant:
+
+1. Klik op het tabblad **API** op **Token roteren**.
+2. Het oude token wordt onmiddellijk ongeldig gemaakt.
+3. Het nieuwe token wordt eenmalig getoond — kopieer en verspreid het voor u wegnavigeert.
+
+Werk het token in het systeem van de klant zo snel mogelijk bij. Verzoeken met het oude token worden vanaf het moment van rotatie afgewezen met `401 Unauthorized`.
+
+---
+
+## Activiteitstijdstempels
+
+Is de API gebruikt, dan toont het tabblad:
+
+- **Laatst inkomend** — tijdstempel van de meest recente order ontvangen van de klant
+- **Laatst uitgaand** — tijdstempel van de meest recente gebeurtenis geleverd aan de webhook van de klant
+
+Deze tijdstempels zijn nuttig om te bevestigen dat de integratie actief is en om hiaten in communicatie te diagnosticeren.
+
+---
+
+## Snelheidslimieten
+
+Druma hanteert een limiet van **200 API-aanroepen per uur per klantconfiguratie**. Verzoeken die deze limiet overschrijden krijgen een `429 Too Many Requests`-respons. De limiet reset in een voortschrijdend venster van één uur.
+
+Heeft een klant legitiem een hogere doorvoer nodig, neem dan contact op met Druma-support.
+
+<Warning>
+Deel het bearer-token van een klant niet met andere klanten en integreer het niet in publiek toegankelijke code. Elk token geeft volledige rechten om orders aan te maken binnen de bedrijfsscope van die klant.
+</Warning>
+
+---
+
+## Gerelateerde pagina's
+
+<Card title="Klantportaal" icon="users" href="/nl/client-portal/tracking-shipments">
+  Het no-code alternatief: laat klanten zendingen volgen en documenten downloaden zonder API-integratie.
+</Card>
+
+<Card title="Integraties instellen" icon="plug" href="/nl/admin/integration-setup">
+  Overzicht van alle integraties beschikbaar in Instellingen → Integraties.
+</Card>
+
+<Card title="Orders aanmaken" icon="package-plus" href="/nl/planner/creating-orders">
+  Hoe planners orders aanmaken en beheren in Druma.
 </Card>

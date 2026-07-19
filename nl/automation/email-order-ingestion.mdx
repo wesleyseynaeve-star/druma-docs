@@ -4,31 +4,85 @@ description: "Laat Druma inkomende e-mails van klanten en makelaars lezen en aut
 icon: "envelope-open-text"
 ---
 
-In plaats van handmatig ladingorders opnieuw in te typen die per e-mail arriveren, kan Druma ze voor u lezen. Klanten en makelaars sturen hun laadbevestigingen, ladinglijsten of instructies naar uw unieke Druma-inboxadres, en de AI extraheert de sleuteldetails in een conceptorder klaar voor uw planner.
+In plaats van ladingorders die per e-mail binnenkomen handmatig opnieuw in te typen, kan Druma ze voor u lezen. Klanten en makelaars sturen hun laadbevestigingen, ladinglijsten of tekstinstructies naar uw unieke Druma-inboxadres, en de AI extraheert de kerndetails in een conceptorder klaar voor uw planner om te controleren en bevestigen.
 
 ## Uw Druma-inboxadres
 
-Elk bedrijf krijgt een uniek e-mailadres in het formaat `uwbedrijf@in.druma.io`. Vind uw adres op:
+Elk bedrijf krijgt een uniek inboxe-mailadres. Vind het uwe op de pagina **Orders** — klik op de knop **Orderinbox** in de werkbalk om het te tonen (met kopieerknop). Het wordt niet ingesteld via een Instellingenpagina.
 
-**Instellingen → Automatisering → E-mail orderinname → Inboxadres**
+Deel dit adres met de klanten en makelaars van wie u orders wilt ontvangen. U kunt het ook instellen als doorstuuradres vanuit uw bestaande logistieke inbox als u liever één primair extern adres behoudt.
 
-Deel dit adres met de klanten en makelaars van wie u orders wilt ontvangen.
+## Wat de AI extraheert
 
-## Hoe het werkt
+Bij binnenkomst van een e-mail leest Druma zowel de e-mailtekst als eventuele bijlagen. Het probeert te extraheren:
 
-1. Een klant of makelaar stuurt een e-mail naar uw Druma-inboxadres
-2. Druma's AI leest de e-mail en extraheert: ophaaladres, afleveradres, datum/tijd, ladingbeschrijving, gewicht, prijs (indien vermeld)
-3. Een conceptorder wordt aangemaakt in Druma en u ontvangt een melding
-4. Uw planner opent het concept, controleert de details en bevestigt de order
+- Ophaaladres (straat, stad, land, postcode)
+- Afleveradres
+- Gevraagde ophaaldatum en tijdvenster
+- Gevraagde afleverdatum
+- Ladingbeschrijving (goederentype, gewicht, afmetingen, pallets)
+- Referentienummers (klant-PO-nummer, makelaarsreferentie)
+- Prijs of tarief indien vermeld
 
-## Vereiste e-mailnotaties
+Ondersteunde bijlageformaten:
 
-Standaard zijn e-mails nodig van het gewhitelistde afzenderadres. Configureer de whitelist in **Instellingen → Automatisering → E-mail orderinname**.
+- **PDF** — laadbevestigingen, CMR-kopieën, ladingorders (tekstextractie, met visuele terugval voor gescande/afbeeldingsgebaseerde PDF's)
+- **DOCX** (Word) — laadbevestigingen verstuurd als Word-documenten
+- **Platte tekst (.txt)** en **platte e-mailtekst** — ongestructureerde tekstmails van makelaars
+- **Afbeeldingen** (JPEG, PNG, WebP, HEIC/HEIF) — een foto van een gedrukte order of laadbevestiging wordt rechtstreeks naar de AI gestuurd
+
+Er is momenteel geen Excel/CSV-parsing — een spreadsheetbijlage wordt niet gelezen door de extractiepijplijn.
 
 ## Conceptorders beoordelen
 
-Ga naar **Orders → Concept** om conceptorders die zijn aangemaakt via e-mailinname te bekijken. Elk concept toont de bron e-mail zodat u de extractie kunt controleren.
+Geëxtraheerde orders belanden in uw **Orders**-lijst met status **Concept**, niet direct als actieve orders. Dit is bewust — u moet elk concept beoordelen voordat het uw systeem in gaat. E-mails die niet automatisch konden worden geëxtraheerd (lage betrouwbaarheid, onherkende afzender of een parseerfout) maken helemaal geen concept aan — ze wachten in een inklapbare banner **"N e-mails wachten op extractie"** bovenaan de Orders-pagina.
 
-<Card title="Gegevensscanningskwaliteit" icon="magnifying-glass-chart" href="/nl/automation/data-quality-scan">
-  Hoe Druma gegevensfouten detecteert voor ze problemen veroorzaken.
-</Card>
+<Steps>
+  <Step title="Open de Orders-pagina">
+    Conceptorders verschijnen in uw normale orderlijst met een "Concept"-badge en een AI-betrouwbaarheidsscore. E-mails die nog op extractie wachten verschijnen apart in de wachtbanner, waar u op **Extraheren** kunt klikken om het opnieuw te proberen, of **Negeren** om ze te laten vallen.
+  </Step>
+  <Step title="Controleer elk veld">
+    Klik op het concept om te openen. Controleer de ophaal- en afleveradressen op de kaart, bevestig dat de datums kloppen en controleer de ladinggegevens. Corrigeer alles wat de AI verkeerd las of miste.
+  </Step>
+  <Step title="Wijs vrachtwagen en chauffeur toe">
+    Gebruik het toewijzingspaneel rechts om een beschikbaar voertuig en chauffeur voor deze lading te kiezen.
+  </Step>
+  <Step title="Bevestig de order">
+    Klik op **Order bevestigen**. Het concept verhuist naar uw actieve orders en de chauffeur ontvangt een melding.
+  </Step>
+</Steps>
+
+<Warning>
+AI-extractie is niet 100% nauwkeurig. Adressen in ongebruikelijke formaten, gescande PDF's met lage beeldkwaliteit en e-mails met meerdere talen door elkaar verhogen allemaal de kans op fouten. Controleer altijd de geëxtraheerde velden voor u bevestigt.
+</Warning>
+
+## Afzenders whitelisten
+
+Druma kan beperken welke afzenders conceptorders mogen aanmaken, maar er is momenteel **geen in-app pagina** om die toegestane lijst zelf te beheren. Heeft uw bedrijf geen whitelistvermeldingen geconfigureerd, dan verwerkt Druma e-mail van **elke** afzender die uw inboxadres bereikt. Wilt u inkomende orders beperken tot specifieke klant-/makelaardomeinen, neem dan contact op met support@druma.io om vermeldingen te laten toevoegen.
+
+<Note>
+Is een whitelist geconfigureerd en komt er een e-mail binnen van een afzender die er niet op staat, dan wordt die e-mail in de wachtbanner geplaatst (niet automatisch verwerkt) en worden uw planners op de hoogte gesteld, in plaats van de e-mail stilzwijgend te negeren.
+</Note>
+
+## Tips voor betere extractie
+
+- Vraag uw makelaars waar mogelijk gestructureerde PDF's te sturen in plaats van gescande afbeeldingen
+- Laadbevestigingen met duidelijke sectiekoppen (Ophaling, Levering, Lading) extraheren het nauwkeurigst
+- Extraheert het formaat van een specifieke makelaar consequent slecht, neem dan contact op met support@druma.io — formaatspecifieke extractieregels kunnen worden toegevoegd
+
+## Veelgestelde vragen
+
+**Wat als een e-mail meerdere ladingen bevat?** Bevat een e-mail twee of meer PDF-/DOCX-orderbijlagen, dan extraheert Druma elke bijlage apart en maakt een afzonderlijk concept per bijlage aan die als echte transportorder wordt bevestigd (ondersteunende documenten zoals verzekeringscertificaten worden aan het eerste concept gehangen in plaats van een eigen concept te vormen). Dit geldt alleen voor **meerdere documentbijlagen** — een enkele spreadsheet met meerdere ladingen wordt niet opgesplitst, aangezien spreadsheetparsing niet wordt ondersteund.
+
+**Kan ik handmatig herextractie starten?** Alleen voor een e-mail die nog in de wachtbanner staat — klik ernaast op **Extraheren**. Er is geen herextractie-actie voor een concept dat al is aangemaakt.
+
+**Wat gebeurt er met de originele e-mail?** Deze wordt opgeslagen en gekoppeld aan de conceptorder. U kunt hem altijd bekijken vanaf de orderdetailpagina.
+
+<CardGroup cols={2}>
+  <Card title="Orders handmatig aanmaken" icon="plus" href="/nl/planner/creating-orders">
+    Leer hoe u orders rechtstreeks in Druma aanmaakt wanneer u geen e-mailinname gebruikt.
+  </Card>
+  <Card title="Werken met makelaars" icon="handshake" href="/nl/planner/brokers">
+    Beheer makelaarsrelaties, laadbevestigingen en commissietracking.
+  </Card>
+</CardGroup>

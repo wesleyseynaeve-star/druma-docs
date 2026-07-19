@@ -1,0 +1,85 @@
+---
+title: "Paie des chauffeurs"
+description: "Générez des calculs de paie automatisés par chauffeur basés sur les km parcourus, les jours actifs, et les heures d'attente."
+icon: "money-bill-wave"
+---
+
+## Vue d'ensemble
+
+Druma calcule la paie des chauffeurs à partir des données opérationnelles qu'il capture déjà — kilomètres parcourus, jours travaillés, et heures d'attente enregistrées. Il n'y a pas de système de suivi du temps séparé ; les données proviennent des commandes et des pressions de statut.
+
+Paie des chauffeurs se trouve sous la section **Finance**. Accessible aux rôles admin, company_admin, et fleet_manager.
+
+<Frame caption="Finance → Paie — la paie km à vide est un pourcentage du tarif chargé, pas un tarif indépendant.">
+  <img src="/images/reports/payroll.png" alt="Page Paie" />
+</Frame>
+
+---
+
+## Composantes de paie
+
+Chaque exécution de paie calcule quatre composantes :
+
+| Composante | Base |
+|---|---|
+| **Paie au km** | Km chargés × tarif par km |
+| **Paie km à vide** | Km à vide/morts × tarif par km × pourcentage km à vide (une part configurable du tarif chargé, pas un tarif km à vide séparé — par défaut 100 %, c'est-à-dire payé pareil que les km chargés) |
+| **Paie journalière** | Jours de travail actifs × tarif journalier |
+| **Paie d'attente** | Heures d'attente totales × tarif horaire d'attente |
+
+Le total est la somme des quatre composantes en EUR.
+
+---
+
+## Générer une exécution de paie
+
+<Steps>
+  <Step title="Sélectionnez le chauffeur et la période">
+    Choisissez le chauffeur dans la liste déroulante et définissez les dates de début et de fin de la période. Les périodes typiques sont un mois calendaire ou un cycle de paie de deux semaines.
+  </Step>
+  <Step title="Cliquez sur Générer">
+    Druma calcule les quatre composantes de paie à partir des commandes et journaux d'attente dans la période sélectionnée.
+  </Step>
+  <Step title="Vérifiez la ventilation">
+    Le résultat montre chaque composante séparément afin que vous puissiez vérifier les chiffres avant l'export.
+  </Step>
+  <Step title="Exportez en CSV">
+    Cliquez sur **Exporter CSV** pour télécharger le résumé de paie pour usage dans votre système comptable ou de paie.
+  </Step>
+</Steps>
+
+---
+
+## Configurer les tarifs
+
+Les tarifs de paie (tarif par km, tarif journalier, pourcentage km à vide, tarif horaire d'attente) sont stockés par chauffeur — avec une règle par défaut valable pour toute l'entreprise s'appliquant à tout chauffeur n'en ayant pas — dans la table de règles de paie sous-jacente.
+
+<Note>
+Il n'existe actuellement pas d'écran dans l'application pour voir ou modifier ces tarifs. Les tarifs doivent être définis directement dans la base de données (ou initialisés) jusqu'à ce qu'une interface de tarifs Flotte → Chauffeurs soit livrée. Si un chauffeur n'a pas de règle et qu'aucun défaut d'entreprise n'existe, chaque composante pour ce chauffeur se calcule à zéro.
+</Note>
+
+---
+
+## Exécutions historiques
+
+Chaque exécution de paie générée est stockée et listée sous la fiche du chauffeur. Vous pouvez rouvrir n'importe quelle exécution précédente pour la réviser ou la réexporter.
+
+---
+
+## Graphique des totaux mensuels
+
+Un graphique à barres sous le sélecteur de chauffeur montre les montants totaux de paie mensuelle pour le chauffeur sélectionné sur les 12 derniers mois glissants. Utile pour repérer des tendances saisonnières ou des mois avec des frais d'attente inhabituellement élevés.
+
+---
+
+<Note>
+Les chiffres de paie dans Druma sont à titre indicatif — Druma ne s'intègre pas aux processeurs de paie ni aux autorités fiscales. L'export CSV est destiné à l'import dans votre système de paie ou à la révision manuelle par un comptable.
+</Note>
+
+<Card title="Temps d'attente" icon="clock" href="/fr/planner/waiting-time">
+  Découvrez comment le temps d'attente est enregistré et comment il alimente les calculs de paie.
+</Card>
+
+<Card title="Trajet perdu" icon="triangle-exclamation" href="/fr/planner/wasted-journey">
+  Les kilomètres morts des trajets perdus apparaissent aussi dans les enregistrements de paie chauffeur.
+</Card>

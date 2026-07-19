@@ -1,47 +1,48 @@
 ---
-title: "Veřejné API a webhooky"
-description: "Jak používat Druma API pro integraci s vlastními systémy — autentizace, endpointy, webhooky a limity sazeb."
+title: "Veřejné API"
+description: "Přístup pouze pro čtení REST k vašim objednávkám, propojte Druma s vlastním ERP, zákaznickým portálem nebo reportovacími nástroji."
 icon: "code"
 ---
 
-## Přehled
+Veřejné API Druma poskytuje **přístup pouze pro čtení** REST k vašim objednávkám — užitečné pro zákaznický samoobslužný portál, BI/reportovací nástroj nebo interní nástroje vytvořené vaším týmem.
 
-Druma poskytuje REST API pro integraci s vlastními systémy, ERP platformami nebo vlastními dashboardy. API je dostupné pro společnosti na placených plánech.
+<Warning>
+Veřejné API je funkce skrytá za feature flagem a ve výchozím nastavení není povolena. Kontaktujte **support@druma.io** pro požádání o přístup — API klíče v současnosti vydává přímo Druma; v aplikaci neexistuje samoobslužná obrazovka pro generování klíčů.
+</Warning>
 
 ## Autentizace
 
-Druma API používá klíče API pro autentizaci. Vygenerujte klíč API v **Nastavení → Integrace → API**.
+Každý požadavek API musí obsahovat váš API klíč v hlavičce `X-API-Key`:
 
-Zahrňte klíč do každého požadavku v hlavičce:
 ```
-Authorization: Bearer <vas-api-klic>
+X-API-Key: VAS_API_KLIC
 ```
 
-## Klíčové endpointy
+Požadavky bez platného klíče vrací odpověď `401 Unauthorized`. Autentizace bearer tokenem (`Authorization: Bearer ...`) **není** podporována a také vrací 401.
 
-| Endpoint | Popis |
-|---|---|
-| `GET /orders` | Seznam objednávek s filtrováním |
-| `GET /orders/{id}` | Podrobnosti objednávky |
-| `POST /orders` | Vytvoření nové objednávky |
-| `GET /vehicles` | Seznam vozidel |
-| `GET /drivers` | Seznam řidičů |
-| `GET /invoices` | Seznam faktur |
+## Dostupné endpointy
 
-## Webhooky
+API je pouze pro čtení — přijímají se pouze požadavky `GET`. Všechny odpovědi jsou JSON.
 
-Nakonfigurujte webhooky v **Nastavení → Integrace → Webhooky** pro přijímání real-time notifikací při:
-- Změně stavu objednávky
-- Vytvoření faktury
-- Doručení zásilky
+| Metoda | Endpoint | Popis |
+|---|---|---|
+| `GET` | `/orders` | Seznam objednávek (stránkovaný, volitelný filtr `status`) |
+| `GET` | `/orders/{id}` | Podrobnosti objednávky |
+| `GET` | `/orders/{id}/location` | Aktuální pozice vozidla a poslední ETA |
+| `GET` | `/orders/{id}/documents` | Seznam dokumentů s časově omezenými podepsanými URL pro stažení |
 
-## Limity sazeb
+Jakýkoli jiný zdroj, nebo jakákoli metoda kromě GET, vrací chybu `404`/`405`.
 
-100 požadavků za minutu na klíč API. Překročení limitu vrátí HTTP 429.
+## Limity požadavků
 
-<Card title="Nastavení integrace" icon="plug" href="/en/admin/integration-setup">
-  Přehled všech dostupných integrací Druma.
-</Card>
----
+- **100 požadavků za minutu** na API klíč
+- Pokud limit překročíte, obdržíte odpověď `429 Too Many Requests` s hlavičkou `Retry-After` udávající, kolik sekund počkat
+- Žádné jiné hlavičky limitu sazby se nevrací
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/public-api).
+Pro vyšší limity kontaktujte support@druma.io se svým případem použití.
+
+<CardGroup cols={1}>
+  <Card title="Přehled nastavení integrace" icon="plug" href="/cs/admin/integration-setup">
+    Přehled všech integrací Druma a jak je spravovat z panelu Nastavení.
+  </Card>
+</CardGroup>

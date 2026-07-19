@@ -1,48 +1,47 @@
 ---
 title: "Import řidičů"
-description: "Jak importovat řidiče hromadně do Druma pomocí CSV šablony — jméno, telefonní číslo, řidičský průkaz a doklady."
-icon: "id-card"
+description: "Onboardujte seznam řidičů hromadně pomocí Smart Import — nástroje Druma pro AI extrakci dokumentů — místo přidávání řidičů jednoho po druhém."
+icon: "file-import"
 ---
 
-## Přehled
+Druma nemá hromadný import řidičů pomocí CSV šablony. Místo toho použijte **Smart Import** — nástroj s podporou AI, který přečte jakékoli dokumenty řidičů, které již máte (PDF seznam, skenovaný seznam, fotografie řidičských průkazů, podivně formátovaný tabulkový soubor z předchozího systému) a promění je v záznamy řidičů, které před uložením zkontrolujete.
 
-Importujte celý seznam řidičů najednou pomocí CSV souboru. Každý importovaný řidič automaticky obdrží vygenerovaný odkaz PWA.
+## Kde ho najít
 
-## Šablona CSV pro import řidičů
+Přejděte do **Nástroje → Smart Import**. Jde o sdílený nástroj pro onboarding dat společnosti, flotily, řidičů, klientů a pojištění — ne o stránku omezenou na Vozový park → Řidiči.
 
-Klíčové sloupce:
-
-| Sloupec | Povinný | Popis |
-|---|---|---|
-| full_name | Ano | Celé jméno řidiče |
-| phone | Ano | Telefonní číslo (mezinárodní formát) |
-| email | Ne | E-mail (volitelný) |
-| licence_number | Ne | Číslo řidičského průkazu |
-| licence_category | Ne | Kategorie (CE, C atd.) |
-| licence_expiry | Ne | Datum platnosti průkazu (RRRR-MM-DD) |
-| country | Ne | Dvoupísmenný kód domovské země |
-
-## Postup importu
+## Postup
 
 <Steps>
-  <Step title="Přejděte do Vozový park → Řidiči → Import">
-    Klikněte na **Import** na stránce řidičů.
+  <Step title="Nahrajte dokumenty řidičů">
+    Klikněte na **Nahrát dokumenty** nebo přetáhněte soubory do plochy pro upuštění. Podporované formáty: PDF, obrázky (JPEG, PNG, WebP, HEIC/HEIF), XLSX a CSV, do 20 MB na soubor a do 20 souborů na jednu relaci.
   </Step>
-  <Step title="Stáhněte a vyplňte šablonu">
-    Stáhněte CSV šablonu, vyplňte ji a nahrajte.
+  <Step title="Počkejte na extrakci AI">
+    Druma odešle každý soubor do Gemini k extrakci — pár sekund na soubor. Soubory se zpracovávají na serveru a po extrakci se trvale neukládají; uloží se pouze záznamy, které se rozhodnete importovat.
   </Step>
-  <Step title="Ověřte a importujte">
-    Zkontrolujte náhled a klikněte na **Importovat**.
+  <Step title="Otevřete kartu kategorie Řidiči">
+    Kontrolní dashboard zobrazí jednu kartu na typ dat nalezených ve vašich dokumentech, včetně **Řidiči**, pokud byli nějací detekováni. Klikněte na ni pro zobrazení extrahovaných řádků v editovatelné tabulce: celé jméno, telefon, e-mail, číslo a platnost řidičského průkazu, certifikát ADR a jeho platnost, číslo CPC a jeho platnost, číslo karty tachografu a jazyk.
+  </Step>
+  <Step title="Zkontrolujte jistotu a duplicity">
+    Každé pole má barevně odlišený ukazatel jistoty (zelená/oranžová/červená) — vždy dvakrát zkontrolujte oranžová a červená pole. Řádky se porovnávají s vašimi existujícími řidiči podle **celého jména (bez rozlišení velikosti písmen)**; shoda je označena jako **Duplicita**, ve výchozím nastavení **Přeskočit** (místo toho můžete zvolit **Přepsat**, pokud chcete, aby extrahovaná data nahradila to, co je v záznamu).
+  </Step>
+  <Step title="Upravte a importujte">
+    Klikněte na jakoukoli buňku pro opravu přímo na místě, poté klikněte na **Importovat řidiče**. Celé jméno je jediné povinné pole — řádky bez něj se neimportují.
   </Step>
 </Steps>
 
-<Note>
-Po importu musíte ručně sdílet odkaz PWA s každým řidičem.
-</Note>
+<Warning>
+Import nelze vrátit zpět. Pokud byla importována nesprávná data, upravte záznamy řidičů jednotlivě dodatečně.
+</Warning>
 
-<Card title="Správa řidičů" icon="id-card" href="/en/planner/driver-management">
-  Jak sdílet odkaz na aplikaci s řidiči po importu.
+## Telefonní číslo a přihlášení do aplikace
+
+Smart Import vytvoří profilový záznam řidiče (jméno, telefon, údaje o průkazu/CPC/ADR/tachografu) — nevytvoří jeho přihlášení do aplikace. Po importu přejděte do **Vozový park → Řidiči**, otevřete profil každého řidiče jednotlivě a v sekci **Přihlášení telefonem + PIN** klikněte na **Nastavit PIN** (nebo **Generovat** pro náhodný 6místný kód), poté **Uložit PIN**. Předejte každému řidiči jeho PIN přímo — při prvním přihlášení si ho může přizpůsobit.
+
+<Card title="Onboarding klientů a flotily" icon="brain" href="/cs/tools/smart-import">
+  Smart Import zvládá ve stejném workflow i dokumenty společnosti, flotily, klientů a pojištění.
 </Card>
----
 
-This page is being translated. In the meantime, please refer to the [English version](/en/bulk-import/importing-drivers).
+<Card title="Správa řidičů" icon="id-card" href="/cs/planner/driver-management">
+  Spravujte jednotlivé profily řidičů a nastavte přihlášení telefonem + PIN.
+</Card>

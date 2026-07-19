@@ -1,38 +1,107 @@
 ---
 title: "Facturen genereren"
-description: "Maak facturen aan van afgeleverde orders in Druma — enkelvoudig of gebundeld, multi-valuta, met automatische toeslagberekening en één-klik verzending."
+description: "Maak facturen aan van afgeleverde orders in Druma — enkelvoudig of gebundeld, meerdere valuta, met automatische toeslagberekening en één-klik verzending."
 icon: "file-invoice-dollar"
 ---
 
 ## Overzicht
 
-Zodra een order is afgeleverd, kunt u direct een factuur aanmaken in Druma. De snelste route is vanuit de orderdetailpagina zelf.
+Zodra een order is afgeleverd, kunt u direct een factuur aanmaken in Druma. De snelste route is vanuit de orderdetailpagina zelf. U kunt ook meerdere orders van dezelfde klant bundelen tot één factuur — ideaal voor wekelijkse of maandelijkse factureringscycli.
 
 ## Twee manieren om te beginnen
 
 **Vanuit de orderdetailpagina (snelst):**
-Open de afgeleverde order → klik op de knop **Factuur genereren** rechtsboven. Druma vult de factuur voor met de orderdetails.
+Open de afgeleverde order → klik op de knop **Factuur genereren** rechtsboven. Druma vult de factuur vooraf in met de details van die order en brengt u direct naar het reviewscherm.
 
 **Vanuit de Facturering-module:**
-Ga naar **Facturering → Nieuwe factuur**. Selecteer de klant en kies vervolgens een of meer afgeleverde orders om samen op te nemen.
+Ga naar **Facturering → Nieuwe factuur** → zoek de klant → selecteer de order of orders die u wilt opnemen.
 
-## Wat Druma automatisch vult
+## Stap voor stap: een factuur aanmaken
 
-- Klantnaam en facturadres
-- Uw bedrijfsgegevens en BTW-nummer
-- Orderreferentie en beschrijving
-- De overeengekomen prijs van de order
-- Wachttijdkosten (als er wachttijd was geregistreerd)
-- Tolkosten (als doorberekening is geconfigureerd)
-- Het volgende factuurnummer in uw reeks
-- Vervaldatum betaling (op basis van standaard betalingstermijnen van de klant)
+<Steps>
+  <Step title="Selecteer de order of orders">
+    Kies welke afgeleverde order(s) u wilt opnemen. U kunt meerdere orders van dezelfde klant in één factuur bundelen — vink elke gewenste order aan in de orderselector. Alle orders moeten status **Afgeleverd** hebben en tot dezelfde klant behoren.
+  </Step>
+  <Step title="Controleer de regelposten">
+    Druma vult de regelposten automatisch in vanuit de ordergegevens. Controleer en pas elke regel aan:
 
-## Een factuur verzenden
+    - **Transportkost** — overgenomen uit de overeengekomen prijs bij het aanmaken van de order
+    - **Wachttijdkost** — automatisch berekend als de chauffeur wachttijd registreerde boven de gratis periode
+    - **ADR-toeslag** — automatisch toegevoegd als de order als ADR-lading was gemarkeerd, tegen het geconfigureerde ADR-toeslagtarief van uw bedrijf (standaard €75 indien niet ingesteld)
+    - **Brandstoftoeslag** — meegenomen als u een brandstoftoeslagregel heeft geconfigureerd in Instellingen
+    - **Andere toeslagen** — voeg naar wens aangepaste regelposten toe (tolterugbetaling, veerboot, extra stops)
 
-Klik op **Versturen** om de factuur direct per e-mail te versturen naar het facturatiecontact van de klant. U kunt ook klikken op **PDF downloaden** voor een lokale kopie.
+    U kunt elk bedrag bewerken, nieuwe regels toevoegen of niet-toepasselijke regels verwijderen.
+  </Step>
+  <Step title="Stel factuurdatum en vervaldatum in">
+    De factuurdatum staat standaard op vandaag. De vervaldatum wordt automatisch berekend op basis van de betalingstermijn op het klantrecord — bijvoorbeeld net 30 betekent dat de vervaldatum 30 dagen na de factuurdatum ligt. Overschrijf beide datums handmatig indien nodig.
+  </Step>
+  <Step title="Bekijk de PDF-voorvertoning">
+    Klik op **PDF voorvertonen** om exact te zien wat de klant zal ontvangen. Controleer klantnaam, BTW-nummer, adressen, regelposten, totalen en uw bankgegevens. Corrigeer alles voor u genereert — dit is nu veel makkelijker dan achteraf.
+  </Step>
+  <Step title="Genereer de factuur">
+    Klik op **Genereren**. Druma kent een volgnummer toe (bijvoorbeeld INV-000047) en vergrendelt het document. Eenmaal gegenereerd kunt u bedragen niet meer rechtstreeks bewerken — gebruik een creditnota voor correcties.
+  </Step>
+  <Step title="Verstuur de factuur">
+    Kies hoe te versturen:
 
-Als SmartBill is geconfigureerd, klik op **Naar SmartBill sturen** om automatisch door te sturen naar uw boekhoudsysteem.
+    - **E-mail vanuit Druma** — klik op **Versturen per e-mail**. Druma vult de e-mail vooraf in met het financiële contact van de klant en voegt de PDF toe. Controleer het bericht en klik op Versturen.
+    - **Downloaden en handmatig versturen** — klik op **PDF downloaden** en verstuur via uw eigen e-mailclient, WhatsApp, of hoe u ook met die klant communiceert.
+  </Step>
+</Steps>
 
-<Card title="Betalingen bijhouden" icon="money-bill-wave" href="/nl/invoicing/payment-tracking">
-  Hoe u betalingen registreert tegen facturen.
+## Automatische toeslagregels (order-extra's)
+
+Naast de hoofdtransportkost voegt Druma automatisch toeslagregels toe aan de factuur, gebaseerd op wat er tijdens de order gebeurde:
+
+| Toeslag | Wanneer toegevoegd |
+|---|---|
+| **Wachttijdkost** | Wanneer de chauffeur wachttijd registreerde boven de gratis periode |
+| **Tol (doorberekend)** | Wanneer door de chauffeur geregistreerde tolbonnen bestaan en uw tariefkaartbeleid doorberekening is voor dat land |
+| **Wasted-journey-kost** | Wanneer een wasted journey op de order werd geregistreerd |
+| **ADR-toeslag** | Wanneer de order was gemarkeerd als ADR-/gevaarlijke lading |
+
+Deze regels verschijnen automatisch in de factuureditor — geen handmatige invoer nodig.
+
+**U kunt:**
+- **Een regel uitsluiten van de factuur** — klik op de schakelaar **Uitsluiten** op de regelrij. De kost verdwijnt van de factuur maar blijft op het orderrecord voor interne kostenopvolging.
+- **Uitgesloten regels herstellen** — klik op **Verborgen kosten herstellen** onderaan de sectie regelposten om uitgesloten auto-regels terug te brengen.
+- **Aangepaste regels toevoegen** — gebruik de knop **+ Regel toevoegen** voor palletwisselkosten, douane-afhandelingskosten, behandelingskosten of andere extra's. Kies uit de **extra-catalogus** van uw bedrijf of voer een aangepaste omschrijving en bedrag in.
+
+Om de extra-catalogus te beheren (bedrijfsbrede regelposttemplates): **Instellingen → Extra-catalogus**.
+
+## Factuurnummering
+
+Factuurnummers zijn opeenvolgend en gebruiken een configureerbaar prefix. Het standaardformaat (zonder aangepast patroon) is `{prefix}-{6-cijferig volgnummer}` — bijvoorbeeld `INV-000001`, `INV-000002`, `INV-000003`. Een patroon met een jaartoken (`{YYYY}`) is beschikbaar als u een aangepast nummeringspatroon configureert.
+
+Om het prefix te wijzigen of een aangepast nummeringspatroon te configureren (inclusief een jaartoken): **Instellingen → Huisstijl & Formaten → Factuurnummering**.
+
+## Facturen in meerdere valuta
+
+Druma ondersteunt facturering in EUR, GBP, CHF, USD, RON en PLN. Selecteer de valuta bij het aanmaken van de factuur. Voor elke valuta behalve RON haalt Druma automatisch de wisselkoers op van de **BNR (Nationale Bank van Roemenië)** voor de factuurdatum en neemt deze op in de PDF.
+
+Dit is belangrijk voor de Roemeense boekhoudkundige naleving en e-Factura-indiening — het RON-equivalent van elk buitenlands valutabedrag moet op de factuur verschijnen.
+
+## Batchfacturering — kernregels
+
+- U kunt alleen orders van **dezelfde klant** in één factuur bundelen
+- Alle gebundelde orders moeten status **Afgeleverd** hebben
+- Orders in verschillende valuta moeten apart worden gefactureerd
+
+<Warning>
+Eenmaal gegenereerd (status verlaat Concept) kunt u een factuur niet meer rechtstreeks bewerken. Maakte u een fout — verkeerd bedrag, verkeerde klant, verkeerde regelpost — dan moet u een creditnota aanmaken om te storneren, en daarna een gecorrigeerde factuur uitgeven. Dit is een wettelijke vereiste in Roemenië. Probeer nooit een verzonden factuur te verwijderen of te overschrijven.
+</Warning>
+
+---
+
+<Card title="Creditnota's" icon="file-minus" href="/nl/invoicing/credit-notes">
+  Hoe u een verzonden factuur storneert of gedeeltelijk corrigeert met een creditnota.
+</Card>
+
+<Card title="e-Factura / ANAF-indiening" icon="landmark" href="/nl/invoicing/efactura-anaf">
+  Hoe Druma facturen automatisch indient bij het e-Factura-systeem van ANAF voor Roemeense klanten.
+</Card>
+
+<Card title="Betalingsopvolging" icon="money-bill-wave" href="/nl/invoicing/payment-tracking">
+  Betalingen registreren tegen facturen en openstaande saldi opvolgen.
 </Card>

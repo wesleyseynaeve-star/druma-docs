@@ -1,56 +1,48 @@
 ---
-title: "Nyilvános API és webhookok"
-description: "A Druma REST API-ja és webhook rendszere külső rendszerek, ERP-k és testreszabott integrációk csatlakoztatásához."
+title: "Nyilvános API"
+description: "Csak olvasható REST-hozzáférés a rendeléseidhez, csatlakoztasd a Drumát a saját ERP-dhez, ügyfélportálodhoz vagy jelentéskészítő eszközeidhez."
 icon: "code"
 ---
 
-## A Druma API-ról
+A Druma Nyilvános API-ja **csak olvasható** REST-hozzáférést biztosít a rendeléseidhez — hasznos egy ügyfél-önkiszolgáló portálhoz, egy BI/jelentéskészítő eszközhöz, vagy a csapatod által épített belső eszközökhöz.
 
-A Druma REST API-t biztosít, amely lehetővé teszi külső rendszerek — ERP-k, ügyfél-megrendelő rendszerek, telemátika platformok — integrálását. Az API JWT hitelesítést használ.
-
-<Note>
-A nyilvános API jelenleg korlátozott hozzáféréssel érhető el. Az API hozzáférés igényléséhez lépj kapcsolatba a support@druma.io e-mail-címen.
-</Note>
+<Warning>
+A Nyilvános API egy funkció-jelzővel vezérelt képesség, és alapértelmezetten nincs engedélyezve. Írj a **support@druma.io** címre hozzáférés igényléséhez — az API-kulcsokat jelenleg közvetlenül a Druma állítja elő; nincs önkiszolgáló kulcsgeneráló képernyő az alkalmazásban.
+</Warning>
 
 ## Hitelesítés
 
-Az API JWT (JSON Web Token) alapú hitelesítést használ. Az API kulcsot a **Beállítások → Integrációk → API** oldalon generálhatod.
+Minden API-kérésnek tartalmaznia kell az API-kulcsodat az `X-API-Key` fejlécben:
 
-Minden kéréshez tartalmazza a következő fejlécet:
 ```
-Authorization: Bearer <az_api_kulcsod>
+X-API-Key: A_TE_API_KULCSOD
 ```
+
+Az érvényes kulcs nélküli kérések `401 Unauthorized` választ adnak. A Bearer-token hitelesítés (`Authorization: Bearer ...`) **nem** támogatott, és szintén 401-et ad vissza.
 
 ## Elérhető végpontok
 
-### Rendelések
-- `GET /orders` — rendelések listája szűrőkkel
-- `GET /orders/{id}` — egy rendelés adatai
-- `POST /orders` — új rendelés létrehozása
-- `PATCH /orders/{id}` — rendelés frissítése
+Az API csak olvasható — csak `GET` kérések fogadhatók el. Minden válasz JSON formátumú.
 
-### Ügyfelek
-- `GET /clients` — ügyfelek listája
-- `GET /clients/{id}` — egy ügyfél adatai
-- `POST /clients` — új ügyfél létrehozása
+| Metódus | Végpont | Leírás |
+|---|---|---|
+| `GET` | `/orders` | Rendelések listázása (lapozva, opcionális `status` szűrővel) |
+| `GET` | `/orders/{id}` | Rendelés részletei |
+| `GET` | `/orders/{id}/location` | A teherautó jelenlegi pozíciója és a legutóbbi ETA |
+| `GET` | `/orders/{id}/documents` | Dokumentumlista, időben korlátozott aláírt letöltési URL-ekkel |
 
-### Számlák
-- `GET /invoices` — számlák listája
-- `GET /invoices/{id}` — egy számla adatai
+Bármely más erőforrás, vagy bármely nem-GET metódus `404`/`405` hibát ad vissza.
 
-## Webhookok
+## Sebességkorlátok
 
-Webhookok segítségével a Druma valós idejű értesítéseket küldhet, amikor esemény történik:
-- `order.status_changed` — rendelési állapot változásakor
-- `invoice.created` — új számla generálásakor
-- `invoice.paid` — számla kifizetésekor
+- **100 kérés percenként** API-kulcsonként
+- Ha meghaladod a korlátot, egy `429 Too Many Requests` választ kapsz egy `Retry-After` fejléccel, amely megmondja, hány másodpercet kell várnod
+- Nincs más sebességkorlát-fejléc
 
-Webhook URL konfigurálásához lépj a **Beállítások → Integrációk → Webhookok** menüpontra.
+Magasabb korlátokért írj a support@druma.io címre a felhasználási esetedet leírva.
 
-## Sebesség-korlátok
-
-Az API hívások korlátja: **100 kérés percenként** vállalatonként. A korlát átlépésekor `429 Too Many Requests` választ kapsz.
-
-<Card title="Integráció beállítása" icon="plug" href="/en/admin/integration-setup">
-  Visszatérés az összes integráció áttekintéséhez.
-</Card>
+<CardGroup cols={1}>
+  <Card title="Integráció beállítása áttekintés" icon="plug" href="/en/integrations/integration-setup">
+    Áttekintés az összes Druma-integrációról, és hogyan kezeld őket a Beállítások panelről.
+  </Card>
+</CardGroup>

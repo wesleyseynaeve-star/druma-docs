@@ -1,13 +1,172 @@
 ---
-title: "Facturi de la furnizori"
-description: "Gestionarea facturilor de cumparare de la transportatorii subcontractati."
-icon: "file-invoice"
+title: "Facturi de la furnizori (Conturi de plata)"
+description: "Gestioneaza ce datoreaza compania ta — transportatori subcontractati, carduri de combustibil, ateliere, taxe de drum, asigurari si leasing — cu ingestie de facturi asistata de AI si un dashboard de creditori pe vechime."
+icon: "building-2"
 ---
 
-In Druma, fiecare comanda subcontractata genereaza automat o factura de cumparare asociata.
+## Prezentare generala
 
-Vizualizeaza: **Facturi -> Facturi Cumparare**.
+Modulul de Conturi de Plata (Accounts Payable / AP) urmareste fiecare factura de achizitie pe care compania ta o primeste de la furnizori externi. Include transportatorii subcontractati carora le transferi incarcaturi, furnizorii de carduri de combustibil (DKV, UTA, AS24), furnizorii de service si anvelope, operatorii de taxe de drum (ASFINAG, HU-GO), companiile de asigurare, companiile de leasing si orice alta cheltuiala de afaceri.
 
-Marcheaza ca platita: deschide factura -> **Marcheaza ca Platita** -> data si referinta platii.
+Druma reduce introducerea manuala prin doua mecanisme: **transportatorii subcontractati sunt oglinditi automat in lista ta de furnizori** (fara introducere dubla), si un **inbox de email pe baza de AI** poate extrage si crea ciorne de facturi de achizitie direct din email-urile furnizorilor. Ce nu se potriveste automat ajunge intr-o **Coada de Revizuire**, pentru o decizie umana rapida.
 
-Ingestia automata: Druma poate extrage datele din facturile primite prin email folosind AI. Configureaza in **Setari -> Automatizare -> Ingestion Facturi Furnizori**.
+## Registrul de furnizori
+
+Registrul de furnizori este evidenta tuturor companiilor de la care cumperi. Este fundatia pentru potrivirea facturilor si raportarea creditorilor pe vechime.
+
+**Unde:** Finante → Forwarding → tabul **Furnizori**
+
+Fiecare inregistrare de furnizor contine:
+
+| Camp | Descriere |
+|-------|-------------|
+| **Nume** | Numele companiei furnizor |
+| **Numar de TVA** | Folosit pentru potrivirea fata de datele de factura extrase |
+| **Email** | Email-ul de contact al furnizorului — folosit si pentru potrivirea listei albe de expeditori |
+| **Tip furnizor** | Transportator / Combustibil / Service / Taxe de drum / Asigurare / Leasing / Altele |
+| **Tara** | Tara de inregistrare a furnizorului |
+
+### Gestionarea furnizorilor
+
+- **Adauga un furnizor:** Apasa **+ Adauga Furnizor**, completeaza formularul si salveaza.
+- **Editeaza un furnizor:** Apasa **Editeaza** pe orice rand de furnizor, pentru a-i actualiza detaliile.
+- **Sterge un furnizor:** Apasa **Sterge**. Stergerea este blocata daca furnizorul are facturi de achizitie asociate.
+
+<Note>
+Transportatorii subcontractati pe care ii adaugi in sectiunea Subcontractanti sunt oglinditi automat in lista de Furnizori, cu tipul **Transportator**. Nu trebuie sa ii adaugi din nou aici. Modificarile la inregistrarea subcontractantului (nume, TVA, email) se sincronizeaza automat cu inregistrarea de furnizor.
+</Note>
+
+## Inbox de email pentru facturi de furnizori
+
+Druma poate primi facturi de la furnizori prin email, poate extrage campurile cheie folosind AI si fie creeaza automat o ciorna de factura de achizitie, fie directioneaza documentul catre Coada de Revizuire.
+
+### Configurare
+
+<Steps>
+  <Step title="Deschide setarile companiei">
+    Mergi la **Setari** → **Companie** si deruleaza pana la sectiunea **Email Facturi Furnizori**.
+  </Step>
+  <Step title="Activeaza inbox-ul">
+    Activeaza comutatorul **Activeaza inbox facturi furnizori**. Druma genereaza o adresa de email de intrare dedicata companiei tale (de exemplu, `invoices-acme@in.druma.io`). Adresa este afisata imediat dupa activare.
+  </Step>
+  <Step title="Copiaza adresa de email">
+    Apasa pictograma de copiere de langa adresa. Distribuie aceasta adresa furnizorilor tai si cere-le sa trimita facturile PDF la ea. Poti si sa redirectionezi facturi din propriul tau inbox catre aceasta adresa.
+  </Step>
+  <Step title="Adauga adresele expeditorilor in lista alba">
+    In sectiunea **Lista Alba Expeditori** de mai jos, apasa **+ Adauga Expeditor** si introdu adresa de email de trimitere a fiecarui furnizor. Doar expeditorii din lista alba sunt procesati — email-urile de la adrese necunoscute sunt eliminate silentios, ca masura de protectie impotriva spam-ului si falsificarii.
+  </Step>
+</Steps>
+
+<Warning>
+Pastreaza adresa de email a facturilor de furnizori confidentiala. Nu o publica pe site-ul tau sau in documente externe. Oricine cunoaste adresa si nu este in lista alba este blocat, dar adresa in sine ar trebui tratata ca o adresa de rutare privata.
+</Warning>
+
+<Note>
+Aceasta cale de intrare a avut recent probleme de rutare la gateway, care au cauzat respingerea silentioasa a email-urilor catre aceasta adresa, inainte sa ajunga macar la Druma. Daca furnizorii raporteaza ca facturile lor nu ajung niciodata, sau nimic nu apare in Coada de Revizuire in ciuda email-urilor trimise, verifica cu suportul ca problema de rutare a fost complet rezolvata pentru mediul tau, inainte sa presupui ca expeditorul sau lista alba sunt de vina.
+</Note>
+
+### Ce se intampla cand soseste o factura
+
+Cand un furnizor trimite un PDF (sau o imagine) la adresa ta de inbox, de la un expeditor din lista alba:
+
+1. Druma descarca atasamentul si il stocheaza in siguranta.
+2. AI-ul extrage: numele furnizorului, numarul de TVA, numarul facturii, data facturii, suma totala, moneda si categoria de cheltuiala (combustibil / service / taxe de drum / asigurare / leasing / altele).
+3. Druma incearca sa potriveasca datele extrase fata de registrul tau de furnizori, folosind numarul de TVA si adresa de email.
+
+Rezultatul depinde de increderea potrivirii:
+
+| Rezultat | Ce se intampla |
+|---------|-------------|
+| **Factura de transportator cu incredere ridicata** | Directionata catre coada de facturi de transportator (potrivita fata de o factura de achizitie de la o comanda subcontractata specifica) |
+| **Potrivire de furnizor cu incredere ridicata** | Ciorna de factura de achizitie creata automat si legata de furnizor |
+| **Incredere scazuta sau furnizor nerecunoscut** | Apare in **Coada de Revizuire**, pentru potrivire manuala |
+
+<Note>
+Extragerea AI citeste stratul de text al PDF-ului. Imaginile scanate cu rezolutie scazuta sau text de mana pot rezulta in scoruri de incredere mai mici si pot ajunge mai des in Coada de Revizuire. Cere furnizorilor sa trimita exporturi PDF native din software-ul lor de contabilitate, acolo unde este posibil.
+</Note>
+
+## Coada de revizuire
+
+Coada de Revizuire este locul unde toate facturile — atat facturile de transportator, cat si facturile generale de furnizor — care nu au putut fi aplicate automat sunt tinute pentru o decizie umana.
+
+**Unde:** Finante → Forwarding → tabul **Coada Facturi**
+
+### Citirea cozii
+
+Fiecare rand din coada arata:
+
+- **Eticheta de sursa** — **Transportator** (din inbox-ul de facturi de transportator) sau **Furnizor** (din inbox-ul de facturi de furnizor)
+- **Numele furnizorului** — extras de AI sau potrivit din registrul de furnizori
+- **Suma** si **Moneda**
+- **Status** — In asteptare / Aplicata / Respinsa
+- **Data primirii**
+
+Foloseste taburile de filtrare din partea de sus pentru a comuta intre vizualizarile **In asteptare**, **Aplicata** si **Respinsa**. Poti filtra si dupa tipul de furnizor, pentru a te concentra pe o categorie specifica (de exemplu, arata doar facturile de Combustibil).
+
+### Procesarea unui element din coada
+
+<Steps>
+  <Step title="Extinde randul">
+    Apasa oriunde pe un rand din coada, pentru a-l extinde. Vizualizarea extinsa arata toate campurile extrase de AI, furnizorul potrivit (sau sugerat) si factura de achizitie potrivita, daca a fost gasita una.
+  </Step>
+  <Step title="Revizuieste datele extrase">
+    Verifica numele furnizorului extras, numarul de TVA, numarul facturii, suma si data, fata de PDF. Corectiile nu pot fi facute inline — daca datele sunt gresite, le vei corecta dupa aprobare, pe inregistrarea facturii de achizitie.
+  </Step>
+  <Step title="Alege o actiune">
+
+    | Actiune | Cand se foloseste |
+    |--------|------------|
+    | **Aproba** | Datele arata corect si potrivirea este corecta — creeaza sau confirma factura de achizitie |
+    | **Respinge** | Factura nu este valida, este un duplicat, sau apartine altei companii — o elimina din coada |
+    | **Reatribuie** | Factura de achizitie sugerata este gresita — deschide o cautare pentru a alege cea corecta |
+    | **Vezi PDF** | Deschide fisierul original atasat, intr-un tab nou, pentru verificare manuala |
+
+  </Step>
+</Steps>
+
+## Dashboard-ul creditorilor pe vechime
+
+Dashboard-ul Creditorilor pe Vechime arata tot ce datoreaza compania ta, pe toti furnizorii, grupat dupa cat timp datoria a fost restanta.
+
+**Unde:** Finante → Analytics → tabul **Creditori pe Vechime**
+
+### Citirea dashboard-ului
+
+Partea de sus a paginii arata trei carduri de sumar:
+
+- **Total restant** — suma tuturor facturilor de achizitie neplatite
+- **Facturi pe interval de vechime** — numarul din fiecare interval
+- **Numar de furnizori** — furnizori distincti cu solduri restante
+
+Sub sumar, un tabel sortabil listeaza fiecare furnizor, cu un rand per factura. Apasa orice antet de coloana pentru a sorta. Apasa un rand de furnizor pentru a-l extinde si a vedea facturile individuale.
+
+Intervalele de vechime urmeaza conventia standard AP:
+
+| Interval | Definitie |
+|--------|-----------|
+| **0–30 zile** | Curent — in termenele standard de plata |
+| **31–60 zile** | Usor restant |
+| **61–90 zile** | Restant — se recomanda urmarire |
+| **90+ zile** | Semnificativ restant — escaladeaza |
+
+<Note>
+Vizualizarea Creditorilor pe Vechime este plafonata la 500 de randuri. Daca firma ta are mai mult de 500 de facturi de achizitie restante, un banner de avertisment de trunchiere apare in partea de sus a tabelului. Foloseste butonul **Exporta CSV** pentru a descarca setul complet de date, pentru analiza in Excel.
+</Note>
+
+### Exportarea
+
+Apasa **Exporta CSV** pentru a descarca raportul complet de creditori pe vechime, ca fisier CSV. Exportul include toate randurile de furnizor, indiferent de plafonul de afisare de 500 de randuri, facandu-l potrivit pentru reconcilierea AP in sistemul tau de contabilitate.
+
+---
+
+<Card title="Import extras de cont bancar" icon="file-up" href="/ro/invoicing/bank-statement-import">
+  Incarca fisiere CAMT.053 sau MT940, pentru a potrivi automat platile primite cu facturile deschise.
+</Card>
+
+<Card title="Urmarirea platilor" icon="circle-check" href="/ro/invoicing/payment-tracking">
+  Inregistreaza si urmareste platile fata de facturile de vanzare si vezi soldurile restante.
+</Card>
+
+<Card title="Gestionarea restantelor" icon="triangle-alert" href="/ro/invoicing/overdue-management">
+  Monitorizeaza creantele pe vechime si trimite memento-uri de plata clientilor restanti.
+</Card>

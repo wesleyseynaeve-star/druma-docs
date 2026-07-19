@@ -1,9 +1,131 @@
 ---
 title: "Raportare CO2"
-description: "Urmareste si raporteaza emisiile de CO2 ale flotei."
+description: "Cum calculeaza Druma emisiile de carbon per comanda si per vehicul, si cum generezi rapoarte CO2 pentru clienti si raportari ESG."
 icon: "leaf"
 ---
 
-Druma calculeaza emisiile CO2 per comanda pe baza distantei (HERE routing), standardul Euro al vehiculului si greutatea sarcinii.
+Expeditorii mari — retaileri, producatori, cumparatori de logistica — cer din ce in ce mai mult ca furnizorii lor de transport sa raporteze amprenta de carbon a fiecarui transport. Druma calculeaza automat emisiile CO2 per comanda si ofera rapoarte descarcabile pentru raportarile ESG ale clientilor.
 
-Mergi la **Rapoarte -> CO2** pentru emisii totale, per client, per ruta. Apasa **Exporta CSV** pentru datele brute.
+---
+
+## Metodologia de calcul
+
+Druma respecta **Cadrul GLEC v4.0** (Global Logistics Emissions Council), aliniat si cu **ISO 14083** — standardul international pentru cuantificarea si raportarea emisiilor de gaze cu efect de sera din lanturile de transport (calcul Tier 1 cu factor implicit). Aceasta este metodologia recunoscuta si acceptata de majoritatea expeditorilor mari si auditorilor.
+
+Spre deosebire de o estimare pur bazata pe distanta, metoda GLEC v4.0 Tier 1 se bazeaza pe **tone-kilometru** — inmulteste distanta cu greutatea reala a marfii, nu doar cu tipul vehiculului:
+
+```
+CO2e (kg) = Distanta (km) × (Greutate (kg) ÷ 1000) × Factor de Emisie (gCO2e/tona-km) ÷ 1000
+```
+
+Greutatea este un input obligatoriu al formulei: aceeasi ruta parcursa goala si parcursa la sarcina maxima produce cifre CO2e foarte diferite. Asigura-te ca greutatea marfii comenzii este introdusa corect — afecteaza direct calculul emisiilor, nu doar facturarea.
+
+---
+
+## Factori de emisie dupa clasa de vehicul si tipul de combustibil
+
+Factorul de emisie este preluat dintr-un tabel de referinta (`co2_emission_factors`, valorile implicite GLEC v4.0 pentru Europa), indexat dupa **clasa de vehicul** si **tipul de combustibil** — NU dupa standardul Euro de emisii al camionului, care nu este consultat deloc pentru acest calcul. Clasa de vehicul este derivata automat din capacitatea de sarcina utila/greutate a camionului:
+
+| Capacitate de sarcina camion | Clasa de vehicul |
+|---|---|
+| Peste 30.000 kg | Vehicul greu articulat 34t (camion FTL tipic) |
+| 15.000 – 30.000 kg | Camion rigid 16–26t |
+| Sub 15.000 kg | Camion rigid 12–16t |
+
+| Clasa de vehicul | Tip combustibil | Factor de emisie (gCO2e/tona-km) |
+|---|---|---|
+| Vehicul greu articulat 34t | Diesel | 62 |
+| Vehicul greu articulat 34t | GNL | 54 |
+| Vehicul greu articulat 34t | Electric | 25 |
+| Vehicul greu articulat 34t | HVO | 12 |
+| Rigid 16–26t | Diesel | 91 |
+| Rigid 16–26t | Electric | 37 |
+| Rigid 12–16t | Diesel | 119 |
+| Rigid 12–16t | Electric | 48 |
+| Vehicul greu articulat 40t (mega-remorca) | Diesel | 55 |
+| Vehicul greu articulat 40t (mega-remorca) | GNL | 48 |
+| Vehicul greu articulat 40t (mega-remorca) | Electric | 22 |
+
+<Note>
+Daca camionul nu are un tip de combustibil setat, Druma presupune diesel. Daca nu se gaseste un factor exact pentru combinatia clasa-vehicul/tip-combustibil, Druma revine la factorul diesel pentru aceeasi clasa de vehicul — nu exista un comportament de "revine la un standard Euro specific", deoarece standardul Euro nu apare deloc in aceasta cautare.
+</Note>
+
+---
+
+## De unde vine distanta
+
+Distanta folosita in calcul este **distanta rutei optimizate pentru camion**, calculata de HERE Maps la crearea comenzii. Aceasta nu este distanta in linie dreapta — tine cont de drumurile permise camioanelor, restrictiile de greutate si limitele de inaltime.
+
+Daca suprascrii manual distanta pe o comanda (de exemplu, pentru ca ruta reala a diferit de cea calculata), Druma foloseste distanta suprascrisa pentru calculul CO2.
+
+---
+
+## Afisarea CO2 per comanda
+
+Fiecare comanda finalizata isi arata cifra CO2 pe pagina de detaliu a comenzii, sub sectiunea **Financiar** sau **Sumar**. Poti vedea dintr-o privire:
+
+- Distanta rutei in km
+- Greutatea marfii folosita
+- Total kg CO2e pentru comanda
+
+---
+
+## Totalul lunar al flotei
+
+Druma agrega toate cifrele CO2 ale comenzilor pentru a produce un total lunar al flotei. Pentru a-l vedea:
+
+1. Mergi la **Rapoarte → Raport CO2**
+2. Seteaza intervalul de date (de exemplu, o luna calendaristica sau o perioada personalizata)
+3. Raportul arata:
+   - Total CO2 al flotei pentru perioada
+   - Detaliere per camion (care vehicule sunt cei mai mari emitenti)
+   - Detaliere per client (cat CO2 au generat transporturile fiecarui client)
+
+---
+
+## CO2 per client in portalul de client
+
+Clientii care au acces la portalul de client Druma pot vedea direct cifra CO2 pentru fiecare dintre transporturile lor. Nu trebuie sa te intrebe — este vizibila pe fiecare comanda finalizata din vizualizarea lor de portal.
+
+Acest lucru este util in special pentru clientii care trebuie sa raporteze **emisiile de Scop 3** (emisiile din lantul de aprovizionare) ca parte din propriile obligatii de raportare ESG sau de sustenabilitate, conform CSRD sau cadrelor similare.
+
+---
+
+## Exportarea raportului CO2
+
+Pagina Raport CO2 nu are un buton "Descarca PDF". In schimb, din **Rapoarte → Raport CO2** (vizualizarea anuala) poti exporta in trei formate:
+
+- **XLSX anual** — un registru de calcul cu cifrele CO2 per comanda pentru intregul an
+- **Pachet de date CSRD (.csv)** — un export de date formatat pentru alimentarea unei raportari CSRD / ESRS E1 Scop 3
+- **iXBRL (.xhtml)** — un fisier XBRL inline pentru setul de etichete ESRS E1 Scop 3, cu un disclaimer in aplicatie ca trebuie revizuit de auditorul tau de sustenabilitate inainte de depunere
+
+Vizualizarea lunara ofera in schimb o actiune generica de **printare** si **export** pe tabel, acoperind orice coloane si interval de date ai selectat curent.
+
+<Note>
+Separat, fiecare client cu comenzi finalizate primeste automat un raport CO2 lunar prin email — un sumar HTML al emisiilor transporturilor sale pentru luna precedenta, generat si trimis automat pe data de 1 a fiecarei luni. Acesta nu este ceva ce declansezi tu din pagina Raport CO2; ruleaza in fundal pentru fiecare client cu livrari in acea perioada.
+</Note>
+
+---
+
+## De ce conteaza asta pentru afacerea ta
+
+Raportarea emisiilor nu mai este doar pentru transportatorii mari. Tendinta se muta in aval:
+
+- **CSRD** (Directiva UE privind Raportarea de Sustenabilitate a Companiilor) cere companiilor mari sa raporteze emisiile de Scop 3 — care includ transportul pe care il cumpara
+- **Retailerii si producatorii mari** transfera aceasta cerinta de raportare furnizorilor si prestatorilor lor de servicii
+- **Licitatiile si cererile de oferta** cer din ce in ce mai des o metodologie CO2 documentata
+- **Programele de transport verde** precum SmartWay Europe si Clean Cargo dau preferinta la achizitii transportatorilor cu date de emisii documentate
+
+A avea rapoarte CO2 pregatite — cu o metodologie recunoscuta (GLEC v4.0 / ISO 14083) — diferentiaza compania ta in licitatii competitive.
+
+---
+
+## Articole asociate
+
+<Card title="Raport CO2" icon="chart-bar" href="/ro/reports/co2-report">
+  Ghid detaliat pentru filtrele raportului CO2, optiunile de export si interpretarea datelor.
+</Card>
+
+<Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+  Cum setezi capacitatea de sarcina si tipul de combustibil al vehiculului — datele de flota care alimenteaza calculele CO2.
+</Card>

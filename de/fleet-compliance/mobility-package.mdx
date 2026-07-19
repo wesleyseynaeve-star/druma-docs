@@ -1,0 +1,142 @@
+---
+title: "Mobilitätspaket-Compliance"
+description: "Wie Druma die Pflichten des EU-Mobilitätspakets nachverfolgt — Fahrzeugrückkehr alle 8 Wochen (Verordnung 2020/1055), Fahrerrückkehr alle 4 Wochen (Verordnung 2020/1054), und IMI-Entsendemeldungen (Richtlinie 2020/1057)."
+icon: "globe"
+---
+
+Das EU-Mobilitätspaket, in Kraft seit Februar 2022, führte drei verbindliche Pflichten für grenzüberschreitende Straßentransportbetreiber ein. Die Einhaltung wird bei Straßenkontrollen geprüft und kann in jedem EU-Mitgliedstaat, in dem der LKW angehalten wird, zu Bußgeldern führen.
+
+---
+
+## Die drei Regeln
+
+| Verordnung | Pflicht | Frist |
+|---|---|---|
+| **Verordnung 2020/1055** | Das Fahrzeug muss ins Heimatland des Betreibers zurückkehren | Mindestens alle **8 Wochen** |
+| **Verordnung 2020/1054** | Der Fahrer muss heimkehren (oder an einen selbst gewählten Ort) | Mindestens alle **4 Wochen**, für die reguläre wöchentliche Ruhezeit |
+| **Richtlinie 2020/1057** | Entsendemeldungen müssen über IMI eingereicht werden | Bevor der Fahrer im Aufnahmemitgliedstaat zu arbeiten beginnt |
+
+<Warning>
+Fahrzeugrückkehr bedeutet, dass das Fahrzeug physisch zurück in das Land wechselt, in dem die Betriebslizenz gehalten wird — nicht nur ein kurzer Stopp in einer Grenzzone. Fahrerrückkehr bedeutet, dass der Fahrer seine reguläre wöchentliche Ruhezeit (mindestens 45 aufeinanderfolgende Stunden) am gewählten Ort nimmt, keine reduzierte Ruhezeit. Beide Anforderungen werden streng ausgelegt.
+</Warning>
+
+---
+
+## Wo Sie das Mobilitätspaket-Dashboard finden
+
+Gehen Sie zu **Analytics → Mobilitätspaket**. Die Seite gliedert sich in drei Abschnitte: Fahrzeugrückkehr, Fahrerrückkehr und IMI-Meldungen.
+
+---
+
+## Fahrzeugrückkehr
+
+Die Tabelle Fahrzeugrückkehr zeigt eine Zeile pro LKW mit dem letzten Rückkehrdatum ins Heimatland, den seitdem verstrichenen Tagen und einem Statusabzeichen.
+
+| Status | Bedingung |
+|---|---|
+| **OK** | Weniger als 6 Wochen seit letzter Rückkehr |
+| **Warnung** | 6–8 Wochen seit letzter Rückkehr (14 Tage oder weniger bis zur 8-Wochen-Frist) |
+| **Überfällig** | Mehr als 8 Wochen seit letzter Rückkehr |
+
+Ein **überfälliges** Fahrzeug muss sofort ins Heimatland zurückkehren, um die Compliance wiederherzustellen. Planen Sie Rückfahrten proaktiv — sobald ein LKW als **Warnung** markiert ist, beginnen Sie mit der Planung einer Rückfahrt.
+
+<Note>
+„Letzte Rückkehr" wird nicht aus einem Live-GPS-Feed oder einem dedizierten Rückkehr-Verfolgungsereignis abgeleitet. Sie wird aus **abgeschlossenen Auftragsstopps** hergeleitet: dem jüngsten Lade- oder Entladestopp eines gelieferten oder abgerechneten Auftrags, der im Heimatland des Unternehmens liegt (`companies.country`). Dies ist ein praktischer Näherungswert, keine direkte Beobachtung — ein LKW, der physisch durch das Heimatland fuhr, ohne dort einen Auftragsstopp zu haben (z. B. leer durchfahren, oder ein vom Fahrer nicht erfasster Stopp), wird nicht als zurückgekehrt registriert. Führen Ihre Fahrzeuge nicht regelmäßig im Rahmen normaler Aufträge Ladungen im Heimatland auf oder ab, protokollieren Sie Rückkehren stattdessen manuell.
+</Note>
+
+---
+
+## Fahrerrückkehr
+
+Die Tabelle Fahrerrückkehr zeigt eine Zeile pro Fahrer mit dem letzten erfassten Rückkehrdatum, den verstrichenen Tagen und einem Statusabzeichen.
+
+| Status | Bedingung |
+|---|---|
+| **OK** | Weniger als 3 Wochen seit letzter Rückkehr |
+| **Warnung** | 3–4 Wochen seit letzter Rückkehr |
+| **Überfällig** | Mehr als 4 Wochen seit letzter Rückkehr |
+
+Wie bei der Fahrzeugrückkehr werden Fahrerrückkehrdaten nicht aus Tachographen-Ruhezeitdaten abgeleitet — Druma unterscheidet dafür überhaupt nicht zwischen regulärer und reduzierter Ruhe, oder Ruhe im Fahrzeug vs. an einem richtigen Stopp. Es verwendet denselben Näherungswert auf Basis abgeschlossener Auftragsstopps: den jüngsten Lade- oder Entladestopp eines gelieferten oder abgerechneten Auftrags dieses Fahrers, im Heimatland des Unternehmens. Es gibt auch noch kein separates Feld „Fahrer-Heimatland" — das Heimatland des Unternehmens dient als Ersatz für das Heimat-/Einsatzzentrum des Fahrers.
+
+Führen die Aufträge Ihrer Fahrer sie nicht natürlich durch das Heimatland, unterschätzt dieser Näherungswert qualifizierende Rückkehren — protokollieren Sie Rückkehren stattdessen manuell durch Bearbeiten des Fahrerdatensatzes.
+
+---
+
+## IMI-Entsendemeldungen
+
+Der Abschnitt IMI-Meldungen listet alle aktiven und historischen Entsendemeldungen für Fahrer auf, die in anderen EU-Mitgliedstaaten arbeiten. Jeder Eintrag zeigt:
+
+- Fahrername
+- Aufnahmeland
+- Start- und Enddatum der Meldung
+- IMI-Referenznummer (falls eingetragen)
+- Statusabzeichen
+
+| Status | Bedeutung |
+|---|---|
+| **Aktiv** | Meldung ist gültig und aktuell |
+| **Läuft ab** | Läuft innerhalb von 30 Tagen ab — Handlung erforderlich |
+| **Abgelaufen** | Enddatum überschritten |
+| **Zurückgezogen** | Manuell zurückgezogen |
+
+Als **Läuft ab** markierte Meldungen werden mit einem gelben Abzeichen hervorgehoben, damit Sie sie vor Ablaufdatum erneuern oder verlängern können.
+
+---
+
+## Eine Entsendemeldung erstellen
+
+<Steps>
+  <Step title="IMI-Meldungen öffnen">
+    Gehen Sie zu **Analytics → Mobilitätspaket** und wählen Sie den Tab **IMI-Meldungen**.
+  </Step>
+  <Step title="Auf Neue Meldung klicken">
+    Klicken Sie auf die Schaltfläche **Neue Meldung**.
+  </Step>
+  <Step title="Details eingeben">
+    Geben Sie den Fahrer, das Aufnahmeland, in das der Fahrer entsandt wird, und Start- und Enddatum des Entsendezeitraums ein.
+  </Step>
+  <Step title="Auf dem IMI-Portal einreichen">
+    Druma reicht **nicht** direkt bei IMI ein — Sie müssen dies separat über das [IMI-System](https://ec.europa.eu/imi-net/) tun. Sobald Sie eingereicht und Ihre IMI-Referenznummer erhalten haben, kehren Sie zu Druma zurück, um sie einzutragen.
+  </Step>
+  <Step title="Die IMI-Referenznummer hinzufügen">
+    Bearbeiten Sie die Meldung in Druma und geben Sie die IMI-Referenznummer ein. Dies verknüpft Ihren Druma-Datensatz mit der offiziellen Einreichung.
+  </Step>
+  <Step title="Speichern">
+    Klicken Sie auf **Speichern**. Druma verfolgt den Ablauf und markiert die Meldung als **Läuft ab**, sobald sich das Enddatum nähert.
+  </Step>
+</Steps>
+
+<Note>
+Eine Entsendemeldung ist bei jedem Einsatz eines Fahrers in einem Aufnahmemitgliedstaat erforderlich, nicht nur einmal pro Fahrer. Fährt ein Fahrer regelmäßig nach Deutschland, ist für jeden Entsendezeitraum eine neue Meldung erforderlich. Meldungen dürfen sich für denselben Fahrer und dasselbe Aufnahmeland nicht überschneiden.
+</Note>
+
+---
+
+## Wie Rückkehrdaten nachverfolgt werden
+
+| Datentyp | Quelle |
+|---|---|
+| Fahrzeugrückkehrdaten | Jüngster abgeschlossener Auftragsstopp (Laden oder Entladen, bei geliefertem/abgerechnetem Auftrag) im Heimatland des Unternehmens |
+| Fahrerrückkehrdaten | Derselbe Näherungswert auf Basis abgeschlossener Auftragsstopps, beschränkt auf die Aufträge dieses Fahrers |
+| Manuelle Überschreibung | Fahrer- oder Fahrzeugdatensatz direkt bearbeiten |
+
+Da beide Tracker auf Auftragsstopps statt auf einem Live-Positionsfeed beruhen, sehen sie Länderpräsenz nur über abgeschlossene Aufträge — nicht über GPS-Spuren oder Tachographendaten. Führt Ihr Betrieb LKW/Fahrer im Rahmen normaler Aufträge nicht natürlich durch das Heimatland, protokollieren Sie Rückkehrdaten manuell, damit Statusabzeichen und Countdown-Timer korrekt bleiben.
+
+---
+
+## Verwandte Artikel
+
+<CardGroup cols={2}>
+  <Card title="EU-Lenkzeitregeln" icon="clock" href="/de/fleet-compliance/eu-driving-hours">
+    Lenkzeitgrenzen nach Verordnung 561/2006 — getrennt vom, aber gemeinsam mit dem Mobilitätspaket durchgesetzt.
+  </Card>
+  <Card title="Fahrer-Arbeitszeit (WTD)" icon="clock" href="/de/fleet-compliance/driver-working-time">
+    60-Stunden- und 48-Stunden-Durchschnitts-Arbeitszeitgrenzen nach Richtlinie 2002/15/EG.
+  </Card>
+  <Card title="Tachographen-Archiv" icon="hard-drive" href="/de/fleet-compliance/tacho-archive">
+    Speicherung von DDD-/TGD-Dateien zur Erfüllung der Download-Häufigkeitsanforderung nach Verordnung 165/2014.
+  </Card>
+  <Card title="Fuhrparkdokumente" icon="folder-open" href="/de/fleet-compliance/fleet-documents">
+    Compliance und Ablaufverfolgung von Fahrzeugdokumenten.
+  </Card>
+</CardGroup>

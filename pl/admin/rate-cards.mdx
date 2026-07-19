@@ -1,105 +1,89 @@
 ---
 title: "Karty stawek"
-description: "Jak tworzyć i zarządzać kartami stawek w Druma, aby zapisywać standardowe ceny tras i przyspieszać tworzenie zleceń."
+description: "Jak definiować profile kosztowe pojazdów w Druma, aby zlecenia pokazywały dokładny szacowany koszt i marżę."
 icon: "tags"
 ---
 
+<Note>
+Ta strona opisuje **Ustawienia → Karty stawek** — **profile kosztowe** pojazdów używane do szacowania kosztu i marży zlecenia. Jeśli szukasz cen **sprzedaży** per trasa (sugestie cenowe wg pochodzenia/celu, np. "Rumunia → Niemcy, Plandeka — 1 450 €"), to osobna funkcja **Lane Pricing**, pod **Ceny → Ceny tras** w głównej aplikacji — nie jest opisana na tej stronie.
+</Note>
+
 ## Czym jest karta stawek?
 
-Karta stawek to zapisany szablon cenowy dla trasy, którą regularnie obsługujesz. Jeśli co tydzień przewozisz ładunki z Rumunii do Niemiec, nie chcesz za każdym razem wyliczać ceny od podstaw. Zamiast tego zapisujesz kartę stawek dla tej trasy — a Druma automatycznie sugeruje cenę przy tworzeniu nowego zlecenia na tej trasie.
+Karta stawek w **Ustawienia → Karty stawek** to profil kosztowy dla kategorii operacji pojazdu — albo **własnej floty**, albo przewoźnika **podwykonawcy**. Zapisuje, ile faktycznie kosztuje Cię prowadzenie pojazdu (koszt stały, wynagrodzenie kierowcy, paliwo, dopłaty ADR/za gabaryt, opłaty drogowe), aby Druma mogła szacować koszt i marżę zlecenia obok ceny, którą naliczasz klientowi.
 
-Karty stawek są punktem wyjścia, nie regułą. Twoi planiści zawsze mogą zmienić sugerowaną cenę na poszczególnych zleceniach.
+**Kto może edytować:** role Admin, Administrator firmy i Planista.
 
-## Jak działają karty stawek w praktyce
-
-Gdy planista tworzy nowe zlecenie, Druma sprawdza, czy jakiekolwiek aktywne karty stawek pasują do wybranego kraju pochodzenia, kraju docelowego i typu naczepy. Jeśli jest dopasowanie, Druma wyświetla monit:
-
-*"Karta stawek pasuje do tej trasy: Rumunia — Niemcy, Plandeka — 1 450 EUR stawka ryczałtowa. Zastosować?"*
-
-Planista może kliknąć **Zastosuj**, aby użyć tej ceny, lub zignorować sugestię i wpisać inną cenę ręcznie.
+<Frame caption="Ceny tras (Ceny → Ceny tras) — osobna funkcja cen sprzedaży wg pochodzenia/celu. Ustawienia → Karty stawek (ta strona) to strona profili kosztowych.">
+  <img src="/images/admin/rate-cards.png" alt="Strona Ceny tras z kartami stawek wg pochodzenia, celu i typu naczepy" />
+</Frame>
 
 ## Tworzenie karty stawek
 
-Przejdź do **Ustawienia — Karty stawek** i kliknij **Dodaj kartę stawek**.
-
-![Formularz karty stawek](/images/placeholder.png)
-
-Wypełnij następujące pola:
+Przejdź do **Ustawienia → Karty stawek** i kliknij **Nowa karta**.
 
 ### Nazwa
 
-Nadaj karcie stawek jasną, opisową nazwę, aby planiści mogli ją rozpoznać na pierwszy rzut oka.
+Nadaj karcie jasną nazwę, np. "Własna flota — standard" lub "Podwykonawca — trasy RO/BG".
 
-*Przykłady: "RO — DE Plandeka", "Rumunia do Holandii Chłodnia", "BG do ES Platforma"*
+### Typ
 
-### Kraj pochodzenia i kraj docelowy
+Wybierz **Własna flota** lub **Podwykonawca** — to określa, do jakiej kategorii zleceń stosuje się profil kosztowy.
 
-Wybierz kraj, w którym ładunek jest pobierany, i kraj dostawy. Karty stawek dopasowują się na poziomie kraju, więc jedna karta obejmuje wszystkie miasta w tych krajach.
+### Stawka / km (€)
 
-<Note>
-Jeśli potrzebujesz różnych cen dla różnych regionów w tym samym kraju — na przykład innej stawki dla południowych Niemiec niż dla północnych — utwórz dwie oddzielne karty stawek z bardziej szczegółowymi nazwami. Planista zobaczy obie sugestie i może wybrać właściwą.
-</Note>
+Opcjonalna, ryczałtowa stawka kosztu za kilometr.
 
-### Typ naczepy
+### Podstawa kosztu
 
-Wybierz typ naczepy używanej na tej trasie. Opcje obejmują:
+Wybierz, jak obliczany jest stały koszt operacyjny:
+- **Stawka dzienna** — wpisz **Dzienny koszt stały (€)** i **Wynagrodzenie kierowcy / dzień (€)**.
+- **Czynsz tygodniowy** — wpisz **Tygodniowy koszt stały (€)** i **Wynagrodzenie kierowcy / tydzień (€)**.
 
-- Plandeka (tautliner)
-- Chłodnia (frigo / reefer)
-- Platforma
-- Cysterna
-- Furgon
-- Mega naczepa
-- Niskopodwoziowa
-- Inne
+### Czas oczekiwania
 
-Druma sugeruje kartę stawek tylko wtedy, gdy typ naczepy w zleceniu pasuje do karty. Zapobiega to sugerowaniu stawki chłodni dla zlecenia z platformą.
+- **Bezpłatne godziny oczekiwania** — ile godzin oczekiwania jest wliczone, zanim naliczana jest opłata.
+- **Stawka oczekiwania €/h** — koszt godzinowy po przekroczeniu bezpłatnych godzin oczekiwania.
 
-### Typ wyceny
+### Dopłaty
 
-Wybierz sposób obliczania ceny:
+- **Opłata ADR (€)** — dodatkowy koszt stosowany do przesyłek towarów niebezpiecznych.
+- **Opłata za gabaryt (€)** — dodatkowy koszt stosowany do ładunków ponadgabarytowych.
 
-- **Stawka ryczałtowa** — stała kwota za całą trasę, niezależnie od dokładnej odległości. Najczęstsza dla regularnych tras z wynegocjowaną stawką.
-- **Za kilometr** — stawka pomnożona przez odległość obliczoną przez Druma dla trasy. Przydatna dla zmiennych tras.
+### Paliwo
 
-### Cena i waluta
+- **Cena bazowa paliwa (€/l)** — cena paliwa używana w kalkulacjach kosztu.
+- **Zużycie paliwa (l/100 km)** — oczekiwane zużycie pojazdu, używane razem z ceną bazową paliwa i odległością trasy do szacowania kosztu paliwa.
 
-Wpisz kwotę i wybierz walutę (EUR, RON, USD, GBP itp.).
+### Cele marży
 
-### Dopłata paliwowa %
+- **Docelowa marża %** — marża, do której dążysz na zleceniach używających tego profilu kosztowego.
+- **Minimalna marża %** — minimalna akceptowalna marża, poniżej której Druma powinna oflagować zlecenie.
 
-Jeśli dodajesz dopłatę paliwową do swojej stawki bazowej, wpisz tu wartość procentową. Druma doda ten procent do ceny bazowej przy obliczaniu sugerowanej łącznej kwoty.
+### Polityka opłat drogowych
 
-*Przykład: Cena bazowa 1 200 EUR, dopłata paliwowa 8% — sugerowana cena 1 296 EUR*
+Wybierz domyślną obsługę opłat drogowych dla tego profilu kosztowego:
+- **Wliczone w stawkę** — opłaty drogowe są wchłaniane przez Twoją stawkę, nie fakturowane osobno.
+- **Przenoszone na klienta** — opłaty drogowe są fakturowane klientowi w miarę ich ponoszenia.
+- **Osobna pozycja** — opłaty drogowe pojawiają się jako osobna pozycja na zleceniu/fakturze.
 
-Jeśli nie korzystasz z dopłat paliwowych, pozostaw to pole na 0.
+Możesz nadpisać tę domyślną politykę dla konkretnych krajów lub konkretnych operatorów opłat:
 
-### Notatki
+- **Nadpisania polityki wg kraju** — wybierz kraj i politykę (Fakturowane klientowi / Wliczone w stawkę / Nie naliczane). Przydatne, gdy np. francuskie opłaty są przenoszone na klienta, a niemieckie wliczone w stawkę.
+- **Nadpisania polityki wg operatora** — wpisz nazwę operatora opłat dokładnie tak, jak widnieje na paragonach (np. `ASFINAG`, `HU-GO`, `Viapass`) i politykę. Nadpisanie na poziomie operatora ma pierwszeństwo przed polityką na poziomie kraju.
 
-Dodaj wewnętrzne notatki dotyczące tej karty stawek — na przykład "Uzgodniono z klientem Schmidt GmbH do grudnia 2026" lub "Wymaga windy załadowczej". Te notatki są widoczne dla planistów gdy karta stawek jest sugerowana, ale nie pojawiają się na fakturach ani dokumentach dla klientów.
+### Zapisywanie
 
-## Edycja karty stawek
+Kliknij **Zapisz zmiany** przy istniejącej karcie lub **Utwórz** przy dodawaniu nowej.
 
-Przejdź do **Ustawienia — Karty stawek**, znajdź kartę na liście i kliknij **ikonę edycji** (ołówek). Zmień potrzebne pola i kliknij **Zapisz**. Zaktualizowana cena obowiązuje dla nowych zleceń od tej chwili — nie zmienia wcześniej utworzonych zleceń.
+## Edycja lub usuwanie karty stawek
 
-## Wyłączanie karty stawek
+Rozwiń kartę na liście, aby edytować dowolne z jej pól bezpośrednio. Kliknij **X** obok karty, aby ją usunąć — zostaniesz poproszony o potwierdzenie, ponieważ nie można tego cofnąć.
 
-Jeśli stawka nie jest już aktualna — na przykład koszty paliwa się zmieniły i musisz renegocjować — możesz wyłączyć kartę stawek bez jej usuwania.
+Profile kosztowe kart stawek zasilają szacunek kosztu/marży zlecenia pokazywany przy tworzeniu lub wycenie zlecenia — to osobna powierzchnia kalkulacji od tej strony ustawień, nieopisana tutaj.
 
-Przejdź do **Ustawienia — Karty stawek**, znajdź kartę i przełącz przycisk **Aktywna** na wyłączony. Wyłączone karty nie są już sugerowane podczas tworzenia zleceń, ale pozostają na liście jako referencja. Możesz je ponownie włączyć w dowolnym momencie.
+## Powiązane strony
 
-<Note>
-Wyłączanie karty stawek jest lepsze niż jej usuwanie, szczególnie jeśli możesz reaktywować tę trasę w przyszłości lub chcesz zobaczyć historyczną stawkę, której używałeś.
-</Note>
-
-## Karty stawek to sugestie, nie reguły
-
-Nawet ze skonfigurowanymi kartami stawek planiści zawsze mogą wpisać inną cenę w dowolnym zleceniu. Karta stawek jest po to, aby zaoszczędzić czas i zapewnić spójność — nie po to, aby blokować ceny. Jeśli klient negocjuje specjalną stawkę dla jednorazowej przesyłki, planista po prostu wpisuje tę stawkę zamiast sugerowanej.
-
-<Card title="Tworzenie zleceń" icon="file-lines" href="/en/planner/creating-orders">
-  Zobacz, jak sugestie kart stawek pojawiają się przy tworzeniu nowego zlecenia transportowego.
-</Card>
-
-<Card title="Konfiguracja firmy" icon="building" href="/en/admin/company-setup">
-  Skonfiguruj domyślną walutę i warunki płatności, które działają razem z kartami stawek.
+<Card title="Konfiguracja firmy" icon="building" href="/pl/admin/company-setup">
+  Skonfiguruj profil firmy, który współpracuje z kartami stawek przy szacowaniu kosztów zleceń przez Druma.
 </Card>

@@ -1,46 +1,88 @@
 ---
 title: "Vytvoření eCMR"
-description: "Průvodce krok za krokem pro vydání eCMR dokumentu z přepravní objednávky v Druma."
+description: "Jak Druma automaticky generuje dokumenty eCMR pro přeshraniční objednávky a jak jeden vytvořit ručně, když je potřeba."
 icon: "file-plus"
 ---
 
-## Přehled
+Druma vytváří dokumenty eCMR **interně pomocí nativního poskytovatele Druma** ve výchozím nastavení. Není potřeba žádný externí účet u služby. Proces je pro způsobilé objednávky z velké části automatický, ale vytvoření můžete spustit i ručně z detailu objednávky.
 
-eCMR se v Druma generuje z existující potvrzené objednávky. Nelze vytvořit eCMR bez propojené objednávky.
-
-## Předpoklady
-
-- Objednávka musí být ve stavu Potvrzeno nebo novějším
-- TransFollow musí být nakonfigurován v **Nastavení → Integrace**
-- Zkušební režim musí být vypnut pro právně platné dokumenty
-
-## Vytvoření eCMR
-
-<Steps>
-  <Step title="Otevřete objednávku">
-    Přejděte do Objednávky a otevřete potvrzenou objednávku.
-  </Step>
-  <Step title="Přejděte na záložku eCMR">
-    Klikněte na záložku **eCMR** na stránce podrobností objednávky.
-  </Step>
-  <Step title="Zkontrolujte předvyplněné podrobnosti">
-    Druma předvyplní eCMR údaji z objednávky: odesílatel, příjemce, místa nakládky/vykládky, popis zboží. Zkontrolujte a v případě potřeby upravte.
-  </Step>
-  <Step title="Klikněte na Vydat eCMR">
-    Klikněte na **Vydat eCMR**. Druma odešle požadavek do TransFollow a eCMR je zaregistrováno v síti.
-  </Step>
-  <Step title="eCMR je aktivní">
-    eCMR je nyní viditelné v aplikaci pro řidiče. Řidič může přistoupit k podpisovému toku.
-  </Step>
-</Steps>
-
-<Warning>
-eCMR ve zkušebním režimu TransFollow nejsou právně platné. Ověřte, že **Zkušební režim** je vypnut v nastavení integrace TransFollow před vydáváním skutečných dokumentů.
-</Warning>
-
-<Card title="Průběh podepisování" icon="pen" href="/en/ecmr/signing-flow">
-  Jak procházejí tři podpisy: odesílatel, řidič, příjemce.
-</Card>
 ---
 
-This page is being translated. In the meantime, please refer to the [English version](/en/ecmr/creating-ecmr).
+## Kdy Druma vytvoří eCMR automaticky
+
+Druma vytvoří eCMR automaticky, jakmile je silniční objednávka **vyslána do provozu (dispatched)** — v okamžiku, kdy je jí přiřazeno vozidlo a její stav se změní na „Přiřazeno". Neporovnávají se země vyzvednutí/doručení: každá vyslaná objednávka, která není subdodávkou a jejíž společnost používá nativního poskytovatele eCMR, dostane eCMR vydané jako nepodepsaný návrh. To znamená, že i tuzemské objednávky ho dostanou — jednoduše zůstane nepodepsané, dokud ho nebudete potřebovat.
+
+Po vydání se dokument eCMR zobrazí v záložce **Dokumenty** na stránce detailu objednávky, kde si můžete zapečetěné PDF zobrazit přes tlačítko **Zobrazit eCMR**, jakmile je připraveno.
+
+<Note>
+Subdodávkové objednávky se přeskakují — subdodavatel vydává vlastní CMR, takže Druma nemůže podepisovat jeho jménem. Objednávky, které již eCMR mají, se nikdy nevydávají znovu.
+</Note>
+
+---
+
+## Ruční vytvoření eCMR
+
+U vícenásobných (skupinových) objednávek dostává vlastní eCMR každý silniční úsek. Pokud úsek zatím žádné nemá, otevřete záložku objednávky **Náklad / Zastávky** a klikněte na **Vytvořit eCMR** vedle daného úseku — neexistuje samostatná záložka „eCMR": tlačítko je přímo na řádku úseku.
+
+<Note>
+Když označíte potvrzený přeshraniční silniční úsek jako dokončený, Druma v tu chvíli také automaticky vytvoří jeho eCMR, pokud ještě neexistuje.
+</Note>
+
+---
+
+## Data předvyplněná z objednávky
+
+Druma vyplní pole eCMR z dat objednávky, která jste již zadali. Zde je přehled, odkud co pochází:
+
+| Pole eCMR | Zdroj v Druma |
+|---|---|
+| Jméno a adresa odesílatele | Záznam klienta na objednávce |
+| Jméno a adresa dopravce | Údaje vaší společnosti |
+| Jméno a adresa příjemce | Záznam klienta na objednávce (adresa doručení ze zastávky doručení) |
+| Adresa vyzvednutí | Místo vyzvednutí objednávky |
+| Adresa doručení | Místo doručení objednávky |
+| Popis zboží | Pole popisu nákladu na objednávce |
+| SPZ vozidla | Vozidlo přiřazené k objednávce |
+| Jméno řidiče | Řidič přiřazený k objednávce |
+| Zvláštní podmínky (ADR) | Příznak a třída ADR objednávky |
+
+Pokud některá z těchto dat na objednávce chybí nebo jsou nesprávná, nejprve opravte objednávku a poté vytvořte eCMR — neexistuje krok náhledu předvyplnění; dokument se zapíše okamžitě.
+
+---
+
+## Než potvrdíte: Co nelze změnit
+
+<Warning>
+Jakmile je pro objednávku (nebo úsek) vydáno eCMR, Druma pro ni nevydá druhé — opětovné kliknutí na Vytvořit eCMR, nebo opětovné spuštění triggeru dokončení úseku, jednoduše vrátí existující dokument místo vytvoření nového. Jde o ochranu idempotence, ne o uzamčení pole: neexistuje žádné omezení pro úpravu samotných podkladových dat objednávky.
+
+Pokud potřebujete opravit již zaregistrované eCMR, použijte proces Záložní papírové CMR a případně vytvořte nové.
+</Warning>
+
+---
+
+## Poskytovatel eCMR: Nativní (TransFollow je pouze pro existující konfigurace)
+
+Ve výchozím nastavení Druma používá svého **nativního poskytovatele eCMR** — není potřeba žádný externí účet ani API klíč. V **Nastavení → Integrace → Poskytovatel eCMR** jsou jedinou možností **Nativní** a **Vypnuto** — TransFollow už nelze vybrat, ať pro novou, nebo existující společnost. Pokud vaše společnost má již existující konfiguraci TransFollow, ta funguje dál jako dřív a tiše se převede na Nativní při dalším uložení integrace.
+
+<Card title="Poskytovatelé eCMR" icon="right-left" href="/cs/ecmr/ecmr-providers">
+  Co dělá nativní poskytovatel a co se stane s existujícími konfiguracemi TransFollow.
+</Card>
+
+---
+
+## Fakturace
+
+eCMR je zahrnuto ve vašem předplatném Druma bez dalších nákladů — neexistuje poplatek za dokument ani limit využití. Statistiky využití si zobrazíte v **Nastavení → Fakturace → Využití**.
+
+---
+
+## Další kroky
+
+<CardGroup cols={2}>
+  <Card title="Proces podepisování" icon="pen-to-square" href="/cs/ecmr/signing-flow">
+    Jak podepisuje odesílatel, řidič a příjemce, a na jakém zařízení.
+  </Card>
+  <Card title="Co je eCMR?" icon="file-contract" href="/cs/ecmr/what-is-ecmr">
+    Základní informace o eCMR, jeho právním základu a jak ho Druma vydává.
+  </Card>
+</CardGroup>

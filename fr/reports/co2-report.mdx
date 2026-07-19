@@ -1,50 +1,95 @@
 ---
-title: "Rapport CO2"
-description: "Suivez et exportez les données d'émissions de CO2 de votre flotte pour le reporting de durabilité et les exigences clients."
-icon: "leaf"
+title: "Rapport d'émissions CO2"
+description: "Données d'émissions mensuelles de la flotte calculées selon les normes GLEC Framework v4.0 et ISO 14083, prêtes à partager avec les clients pour leurs rapports ESG."
+icon: "cloud"
 ---
 
-## Vue d'ensemble
+Les clients — particulièrement les grands détaillants, industriels, et entreprises de logistique — ont de plus en plus besoin de données d'émissions CO2 de leurs prestataires de transport pour leurs propres rapports ESG et de durabilité. Druma calcule automatiquement les émissions de votre flotte à partir de vos données de commande et de véhicule, et produit un rapport que vous pouvez partager directement avec les clients.
 
-Le rapport CO2 consolide les données d'émissions de toute votre flotte sur une période sélectionnée. Il est conçu pour les besoins de reporting ESG internes et les demandes de clients qui ont besoin de données carbone pour leur propre reporting de durabilité.
+## Ouvrir le rapport
 
-Accédez à **Rapports → CO2**.
+Accédez à **Rapports → Rapport CO2**.
 
----
+Par défaut, vous voyez la vue **Mensuelle** — les expéditions les plus récentes avec un chiffre CO2 calculé, les plus récentes en premier. Basculez vers **Annuel (CSRD)** et choisissez une **année** pour construire un jeu de données complet pour les exports de durabilité. Vous pouvez éventuellement restreindre l'une ou l'autre vue à un client avec le filtre **Client**.
 
-## Ce que le rapport affiche
+<Frame caption="Le Rapport CO2 mensuel — distance, poids, et CO2 (kg) par commande, chaque ligne affichant la Méthode montrant la version du facteur GLEC utilisée.">
+  <img src="/images/reports/co2-report.png" alt="Rapport CO2 mensuel avec graphique d'émissions et tableau par commande" />
+</Frame>
 
-- **Émissions totales** (tonnes CO2) pour la période sélectionnée
-- **Émissions par véhicule** — quels camions émettent le plus
-- **Émissions par client** — pour les rapports clients
-- **Émissions par itinéraire** — pour identifier les lignes à forte empreinte carbone
-- **Intensité carbone** (kg CO2 par tonne transportée par km) — métrique de comparaison standardisée
+## Ce que montre le rapport
 
----
+La page a deux modes de vue, basculés en haut : **Mensuel** et **Annuel (CSRD)**.
 
-## Méthodologie
+### Vue mensuelle
 
-Druma utilise la méthode GLEC (Global Logistics Emissions Council) avec les facteurs d'émission spécifiques à chaque norme Euro. Chaque calcul est basé sur la distance d'itinéraire HERE réelle et la norme Euro du véhicule utilisé.
+Un tableau par expédition — une ligne par commande, avec distance, poids, CO2 calculé, méthode de calcul, client, et camion. Filtrez sur un seul client avec la liste déroulante **Client**, et utilisez le graphique de tendance au-dessus du tableau pour voir le total de tCO2e par mois. La barre KPI montre le CO2 total pour la période, le CO2 moyen par commande, et combien de commandes ont un chiffre CO2 calculé.
 
----
+<Note>
+La vue mensuelle est plafonnée aux 500 premières lignes pour un filtre donné (la convention des pages de reporting utilisée dans tout Druma). Si un mois est tronqué, restreignez votre plage de dates ou votre filtre client pour une image complète — une bannière d'avertissement apparaît sur la page quand cela se produit.
+</Note>
 
-## Exporter pour les clients
+### Vue annuelle (CSRD)
 
-<Steps>
-  <Step title="Ouvrez le rapport CO2">
-    Accédez à Rapports → CO2.
-  </Step>
-  <Step title="Filtrez par client">
-    Sélectionnez le client pour lequel vous préparez le rapport.
-  </Step>
-  <Step title="Définissez la période">
-    Choisissez la période couverte (généralement l'année civile ou le trimestre).
-  </Step>
-  <Step title="Exportez">
-    Cliquez sur **Exporter PDF** pour un rapport formaté ou **Exporter CSV** pour les données brutes.
-  </Step>
-</Steps>
+La même structure par expédition, étendue avec la date de livraison, les adresses complètes de chargement/livraison, et la colonne norme Euro du camion (pour référence — le chiffre CO2 lui-même n'est pas calculé à partir de la norme Euro, voir ci-dessous). Cette vue est plafonnée à 5 000 expéditions par an ; un avertissement de troncature apparaît si l'année en compte davantage.
 
-<Card title="Rapport de rentabilité par ligne" icon="chart-line" href="/fr/reports/lane-profitability">
-  Combinez les données CO2 avec l'analyse financière.
-</Card>
+## Méthodologie de calcul des émissions
+
+Druma suit les facteurs d'émission par défaut du **GLEC Framework v4.0**, aligné sur l'**ISO 14083** (méthode Tier 1) — la norme internationale pour quantifier et déclarer les émissions de gaz à effet de serre des chaînes de transport.
+
+Le CO2 par commande n'est **pas** basé sur la norme d'émission Euro du camion. Il est basé sur la **classe de poids** et le **type de carburant** du camion :
+
+| Classe de véhicule | Type de carburant | Facteur d'émission (gCO2e / tonne-km) |
+|---|---|---|
+| Semi-remorque articulé 32–34t (camion FTL standard) | Diesel | 62 |
+| Semi-remorque articulé 32–34t | GNL | 54 |
+| Semi-remorque articulé 32–34t | Électrique | 25 |
+| Semi-remorque articulé 32–34t | HVO | 12 |
+| Camion rigide 16–26t | Diesel | 91 |
+| Camion rigide 16–26t | Électrique | 37 |
+| Camion rigide 12–16t | Diesel | 119 |
+| Camion rigide 12–16t | Électrique | 48 |
+
+La classe de véhicule est dérivée automatiquement de la charge utile/poids max enregistré du camion (plus de 30t → articulé 32–34t ; plus de 15t → rigide 16–26t ; sinon rigide 12–16t). Le type de carburant provient de la fiche du camion et est par défaut diesel si non défini ; si aucun facteur n'existe encore pour un type de carburant inhabituel sur cette classe, Druma se rabat sur le facteur diesel pour la même classe plutôt que de laisser la commande sans calcul.
+
+La formule (du puits à la roue, ISO 14083 Tier 1) :
+
+```
+CO2e (kg) = distance (km) × [poids (kg) ÷ 1 000] × facteur d'émission (gCO2e/tkm) ÷ 1 000
+```
+
+La distance provient du routage camion PTV (la même distance affichée sur la commande). Le poids est le poids de cargaison enregistré de la commande ; si une commande n'a pas de poids enregistré, Druma estime la moitié de la charge utile max du camion comme charge moyenne conservatrice.
+
+## Partager les données CO2 avec les clients
+
+Druma envoie automatiquement par email un résumé CO2 mensuel à tout contact client ayant **Reçoit les rapports CO2** activé (défini par contact sur l'onglet **Contacts** du client) — aucun export manuel nécessaire pour ce destinataire.
+
+Pour tout ce qui va au-delà de cet email automatique — un paquet complet aligné ESRS pour l'année, un partage ponctuel avec l'équipe durabilité d'un client, ou votre propre archive interne — basculez vers la vue **Annuel (CSRD)** et utilisez les boutons d'export décrits dans [Exports d'émissions CSRD](/fr/reports/csrd-exports) : XLSX annuel, Paquet de données CSRD (CSV), et iXBRL. La vue Mensuelle a aussi un bouton générique imprimer/exporter pour le tableau visible.
+
+### Ce que signifie le Scope 3
+
+Vos clients enregistrent les émissions du transport qu'ils sous-traitent comme **émissions de Scope 3** (Catégorie 4 : Transport amont, ou Catégorie 9 : Transport aval). Les données que vous fournissez alimentent directement ce calcul. Avoir ces données prêtes fait gagner du temps à vos clients et fait de vous un transporteur plus attractif.
+
+## Comment améliorer votre score CO2
+
+Puisque le calcul est piloté par le **type de carburant** et la **classe de poids du véhicule**, pas seulement la distance, le plus grand levier est le camion lui-même. Sur la classe FTL la plus courante (articulé, 32–34t), passer du diesel (62 gCO2e/tkm) au HVO (12 gCO2e/tkm) ou à l'électrique (25 gCO2e/tkm) réduit le facteur de 81 % ou 60 % respectivement. Par exemple, un trajet de 1 000 km transportant 24t :
+
+- Diesel : 1 000 km × 24t × 62 gCO2e/tkm ÷ 1 000 = **1 488 kg CO2**
+- HVO sur la même classe de camion : 1 000 km × 24t × 12 gCO2e/tkm ÷ 1 000 = **288 kg CO2** — une réduction de 1 200 kg (81 %) par trajet
+
+Autres améliorations que Druma peut vous aider à suivre :
+
+- **Optimisation d'itinéraire** — des itinéraires plus courts depuis le routage camion PTV signifient moins d'émissions totales
+- **Consolidation de chargement** — moins de trajets, plus pleins, réduit le total de tonnes-kilomètres à travers la flotte
+- **Réduction des trajets à vide** — les kilomètres morts sont du CO2 sans revenu pour les compenser
+
+<CardGroup cols={2}>
+  <Card title="Exports d'émissions CSRD" icon="download" href="/fr/reports/csrd-exports">
+    Exportez les données CO2 annuelles aux formats XLSX, CSV aligné CSRD, et iXBRL pour le reporting de durabilité et la conformité ESRS E1.
+  </Card>
+  <Card title="Rapport CO2 (paramètres flotte)" icon="truck" href="/fr/fleet-compliance/co2-reporting">
+    Comment le type de carburant et la classe de poids du camion alimentent le calcul CO2, et quoi vérifier sur vos fiches de flotte.
+  </Card>
+  <Card title="Vue d'ensemble des rapports" icon="chart-bar" href="/fr/reports/reports-overview">
+    Tous les rapports disponibles dans Druma et comment programmer la livraison automatisée.
+  </Card>
+</CardGroup>

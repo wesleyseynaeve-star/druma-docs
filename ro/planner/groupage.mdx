@@ -1,25 +1,161 @@
 ---
 title: "Grupaj (LTL)"
-description: "Consolideaza mai multe transporturi mici pe un singur camion."
+description: "Consolideaza mai multe transporturi mici de la clienti diferiti pe un singur camion, cu urmarire per segment, facturare per segment si un manifest pe mai multe opriri, printabil."
 icon: "boxes-stacked"
 ---
 
-## Crearea containerului de grupaj
+## Ce este grupajul?
 
-In **Comenzi -> Comanda Noua** selecteaza tipul **Grupaj**. Completeaza camionul, soferul, data plecarii. Salveaza.
+Grupajul — numit si LTL (less-than-truckload) sau consolidare — este atunci cand incarci mai multe transporturi mici de la clienti diferiti pe acelasi camion, care merge in aceeasi directie. Fiecare client plateste doar pentru portiunea sa de spatiu din camion, iar tu umpli camionul cu incarcaturi combinate, ca sa faci cursa profitabila.
 
-## Adaugarea comenzilor copil
+In Druma, grupajul este propriul sau modul (`/groupage`) — o **cursa de grupaj** contine mai multe **segmente** de comenzi existente. Cursa urmareste camionul, soferul si ruta; fiecare segment isi pastreaza propriul client, marfa, adresa de preluare/livrare si pret.
 
-Apasa **+ Adauga Transport** pentru fiecare transport: client, adrese, marfa, pret.
+<Note>
+Grupajul nu este un al patrulea "tip de comanda", alaturi de Camion Propriu / Subcontractat / Repozitionare — este un modul separat, care grupeaza comenzi existente.
+</Note>
 
-## Facturare per client
+<Frame caption="Modulul Grupaj — segmentele unei curse, cu urmarirea clientului, marfii si ratei de umplere per segment.">
+  <img src="/images/planner/groupage.png" alt="Cursa de grupaj cu mai multe segmente si indicator de rata de umplere" />
+</Frame>
 
-Factureaza din comanda copil, nu din containerul de grupaj. Fiecare client primeste propria factura.
+---
 
-<Warning>
-Factureaza intotdeauna din comanda copil.
-</Warning>
+## Crearea unei curse de grupaj
 
-## Capacitate si LDM
+<Steps>
+  <Step title="Mergi la Grupaj">
+    Deschide modulul **Grupaj** din navigare.
+  </Step>
+  <Step title="Apasa Creeaza Grupaj">
+    Apasa **Creeaza Grupaj**. Druma creeaza o cursa goala (cu o referinta generata automat, de tipul `GRP-XXXXX`) si ii deschide panoul de detaliu — nu exista un formular de camion/sofer/data/ruta la acest pas.
+  </Step>
+  <Step title="Adauga comenzi la cursa">
+    Vezi sectiunea urmatoare — construiesti cursa adaugand comenzi existente eligibile la ea, nu completand un formular.
+  </Step>
+</Steps>
 
-Bare de progres pentru greutate, volum (m3) si LDM. Verde mai mic de 80%, Portocaliu 80-99%, Rosu la sau peste capacitate.
+---
+
+## Adaugarea comenzilor la o cursa de grupaj
+
+<Steps>
+  <Step title="Deschide cursa si apasa Adauga Comenzi">
+    Deschide cursa de grupaj si apasa **Adauga Comenzi la Grupaj**.
+  </Step>
+  <Step title="Bifeaza comenzile eligibile">
+    Modalul listeaza comenzile existente eligibile sa se alature acestei curse — numar comanda, client, ruta, LDM, greutate si tip de remorca — cu o casuta de bifat per rand. Nu exista un formular de introducere de date aici; selectezi comenzi care exista deja, nu tastezi detalii noi de transport.
+  </Step>
+  <Step title="Foloseste Auto-completare, daca vrei ca Druma sa aleaga pentru tine">
+    Apasa **Auto-completare**, ca Druma sa selecteze cea mai potrivita combinatie de comenzi eligibile, pana la capacitatea ramasa de metri liniari de incarcare a remorcii.
+  </Step>
+  <Step title="Adauga la Grupaj">
+    Apasa **Adauga la Grupaj**. Daca selectia ta ar depasi capacitatea LDM a remorcii, actiunea este blocata cu o eroare de validare — va trebui sa deselectezi ceva mai intai. O nepotrivire de tip de remorca (tipul de remorca al unei comenzi difera de cel al cursei) apare ca un avertisment, dar nu blocheaza actiunea.
+  </Step>
+</Steps>
+
+<Note>
+Greutatea si volumul nu blocheaza adaugarea de comenzi — doar metrii de incarcare (LDM) o fac. Barele de rata de umplere pentru greutate si volum sunt afisate in continuare, ca referinta (vezi mai jos), dar sunt informative, nu restrictive.
+</Note>
+
+---
+
+## Secventierea opririlor
+
+Opririle noi sunt pur si simplu adaugate la sfarsitul cursei, in ordinea in care le adaugi — Druma nu optimizeaza automat ruta pe masura ce avansezi.
+
+Pentru a optimiza ordinea, apasa **Auto-secventiere** (afisat doar cu 2+ opriri): reordoneaza lista de opriri pentru a minimiza distanta totala (preluari inainte de livrari) si raporteaza cata distanta a economisit, sau ca ordinea era deja optima. Poti si sa tragi si plasezi opririle manual, sau sa folosesti sagetile sus/jos de pe fiecare rand de oprire, oricand.
+
+---
+
+## Urmarirea statusului per segment
+
+Fiecare segment de comanda are propriul flux de status, independent de celelalte transporturi de pe camion. Cand soferul isi actualizeaza statusul pentru o oprire specifica, doar comanda acelui segment se actualizeaza — prezentarea generala a cursei arata care opriri sunt finalizate si care sunt in asteptare.
+
+De exemplu: daca camionul are patru livrari si soferul finalizeaza opririle 1 si 2, acele segmente arata **Livrat**, in timp ce opririle 3 si 4 inca arata **In drum spre livrare**. Fiecare client vede doar statusul propriului transport, in portalul sau.
+
+---
+
+## Urmarirea metrilor de incarcare (LDM), greutatii si volumului
+
+Fiecare segment poate avea valori de **CBM**, **Greutate (kg)** si **LDM** introduse direct pe cardul sau de oprire. LDM reprezinta lungimea liniara de spatiu pe podeaua remorcii pe care o ocupa transportul — masura standard pentru planificarea grupajului in toata Europa.
+
+Cursa de grupaj arata bare de progres a ratei de umplere pe orice dimensiuni pentru care camionul/remorca atribuita are o capacitate cunoscuta — **Greutate**, **Volum (CBM)** si **Metri de Incarcare**:
+
+| Culoare | Nivel de umplere |
+|---|---|
+| Verde | ≤70% din capacitate |
+| Chihlimbariu | 70–90% din capacitate |
+| Rosu | >90% din capacitate (inclusiv peste 100%, afisat neplafonat) |
+
+### Modul de impartire a costurilor
+
+**Modul de impartire a costurilor** controleaza cum sunt divizate costurile partajate intre segmente. Sunt disponibile patru moduri: **CBM**, **Greutate**, **LDM** si **Facturabil**. Apasa un buton de mod pe tabul Impartire Costuri al cursei, pentru a comuta — declanseaza o recalculare automata a cotei de cost, procentului de impartire, costului alocat si marjei fiecarui segment.
+
+Alege modul care se potriveste acordului tau comercial cu clientii de pe acea cursa. CBM este cel mai comun pentru marfa generala, LDM pentru incarcaturi critice pe spatiul de podea, greutatea pentru marfuri dense, si Facturabil cand facturezi pe oricare din greutate/volum produce cifra mai mare.
+
+---
+
+## Manifestul de grupaj
+
+Inainte ca soferul sa plece, printeaza manifestul de grupaj — o lista de opriri si marfa pentru cursa.
+
+<Steps>
+  <Step title="Deschide cursa de grupaj">
+    Deschide panoul de detaliu al cursei.
+  </Step>
+  <Step title="Printeaza Manifestul">
+    Apasa **Printeaza Manifestul**. Druma deschide un tab nou de browser, cu un manifest HTML printabil — nu exista o descarcare PDF separata.
+  </Step>
+  <Step title="Distribuie soferului">
+    Printeaza-l si preda-l, sau distribuie-l prin firul de mesaje al aplicatiei soferului.
+  </Step>
+</Steps>
+
+Manifestul include: secventa opririlor, adresa de preluare/livrare, client, numar de comanda, greutate si orice note per oprire. Nu include o coloana de descriere a marfii.
+
+---
+
+## Facturare per segment
+
+Cursa are propriul tab **Facturi**, listand fiecare segment cu statusul sau de factura (**Nefacturata → Generata → Trimisa → Platita**) si un buton **Genereaza factura** per segment:
+
+<Steps>
+  <Step title="Deschide tabul Facturi al cursei">
+    Deschide cursa de grupaj si mergi la tabul **Facturi**.
+  </Step>
+  <Step title="Genereaza factura">
+    Apasa **Genereaza factura** langa orice segment inca nefacturat. Factura este creata doar pentru clientul acelui segment, cu marfa, pretul si referinta sale specifice.
+  </Step>
+</Steps>
+
+Clientii de pe acelasi camion nu vad niciodata facturile sau preturile celuilalt — fiecare primeste un document curat, separat, si poti sa le generezi una cate una, pe masura ce fiecare segment este gata de facturat.
+
+---
+
+## Urmarire
+
+Clientii care urmaresc un transport de grupaj vad o data statica de **Livrare Estimata** pe pagina publica de urmarire, nu un ETA live, secventiat pe mai multe opriri.
+
+---
+
+## Un caz de utilizare tipic
+
+Ai patru clienti care au nevoie de marfuri mutate din Bucuresti spre Viena, joia aceasta. Individual, niciunul nu umple un camion. Impreuna, o fac:
+
+- Clientul A: 8 paleti la Bratislava
+- Clientul B: 4 paleti la Budapesta
+- Clientul C: 10 paleti la Viena
+- Clientul D: 6 paleti la Linz
+
+Creezi cele patru comenzi normal, apoi creezi o cursa de grupaj, adaugi toate cele patru comenzi la ea, atribui soferul tau, auto-secventiezi opririle si printezi manifestul. Fiecare client plateste pentru portiunea sa, fiecare primeste propria factura si actualizari de status, iar tu rulezi un camion plin.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Crearea comenzilor" icon="plus" href="/ro/planner/creating-orders">
+    Afla cum functioneaza comenzile standard in Druma — vei crea mai intai comenzile individuale, apoi le vei grupa.
+  </Card>
+  <Card title="Tabla de planificare" icon="calendar" href="/ro/planner/planning-board">
+    Vezi toate comenzile tale in vizualizarea saptamanala de planificare, inainte sa le grupezi intr-o cursa.
+  </Card>
+</CardGroup>

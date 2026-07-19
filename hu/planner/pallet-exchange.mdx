@@ -1,39 +1,134 @@
 ---
 title: "Raklapcsere-főkönyv"
-description: "EUR, CHEP és egyéb raklap-egyenlegek nyomon követése partnerenként egy hozzáfűzés-csak főkönyvvel, díjautomatizálással és opcionális szolgáltatói szinkronizálással."
+description: "Kövesd nyomon az EUR, CHEP és egyéb raklap-egyenlegeket partnerenként egy hozzáfűzés-csak főkönyvvel, díjautomatizálással és opcionális szolgáltatói szinkronizálással."
 icon: "package"
 ---
 
-## Mi a raklapcsere-főkönyv?
+## Áttekintés
 
-Sok rakományban visszatéríthető raklapokat (EUR, CHEP, LPR stb.) küldenek. Az ügyfél ugyanannyi raklapet küld vissza, mint amennyit kapott — vagy ha nem, az eltérés díjat von maga után. A nyilvántartás elvesztése könnyen keletkeztethet vitákat és nem behajtott díjakat.
+Amikor EUR-raklapokon, CHEP-en vagy más csererendszerű raklapokon szállítasz árut, egy futó egyenlegbe kerülsz minden ügyféllel és alvállalkozóval — a kiküldött raklapoknak vissza kell jönniük, vagy díjat kell fizetni. A Druma raklapcsere-főkönyve minden mozgást megváltoztathatatlan rekordként követ, és élő egyenleget ad partnerenként, hogy semmi ne vesszen el.
 
-A Druma raklapcsere-főkönyve felenként egy hozzáfűzés-csak naplót vezet — minden fel- és lerakodásnál behelyezett és kiemelt raklapokkal — és automatikusan számítja ki az egyenleget.
+A főkönyv **hozzáfűzés-csak** (append-only): a mozgások minden rendelés-megállónál hozzáadódnak, és a futó egyenleg automatikusan kiszámításra kerül. Korrekciókat és módosításokat rögzíthetsz az előzmények törlése nélkül.
 
-## Raklapmozgás rögzítése
+---
 
-Minden rendelésnél a rendelés részletei panelben a **Raklap** részben rögzítheted:
-- **Kiadott raklapok** — felrakodásnál átadott raklapok
-- **Visszakapott raklapok** — lerakodásnál visszakapott raklapok
-- **Raklapdíj** — felszámolt díj az eltérésért
+## Támogatott raklaptípusok
 
-Ezek az adatok a sofőr alkalmazásban is megadhatók a sofőr által.
+| Típus | Teljes név |
+|---|---|
+| EUR | EUR-raklap (EPAL) |
+| CHEP | CHEP raklap |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Egyéb | Bármely más csere-raklaptípus, amelyet az üzemeltetésed használ |
 
-## Raklap-egyenleg megtekintése
+Minden raklaptípusnak saját egyenleg-oszlopa van. Egy partner egyszerre tartozhat neked EUR-raklapokkal, miközben te tartozol neki CHEP-raklapokkal.
 
-Lépj a **Kereskedelmi → Raklapcsere** menüpontra. Az oldal mutatja:
-- Az összes raklaptípus egyenlegét partnerenként (ügyfél, alvállalkozó)
-- Az összes mozgás teljes naplóját időrendi sorrendben
-- A függő visszaküldéseket és a felszámolt díjakat
+---
 
-## Raklaptípusok
+## Raklapmozgások rögzítése egy rendelésen
 
-A Druma a következőket támogatja:
-- **EUR** — Európai raklap (80×120 cm)
-- **CHEP** — Kék raklap (CHEP tulajdon)
-- **LPR** — Logisztika Pool Raklap
-- **Egyéni** — Saját raklattípusok meghatározása
+A raklapmozgások megálló-szinten kerülnek naplózásra — a felvételi, szállítási és lerakodási megállóknak mind saját **Raklapmozgások** szakaszuk van.
 
-<Card title="Rendelés létrehozása" icon="plus" href="/en/planner/creating-orders">
-  Raklapmozgások beállítása a rendelés-létrehozási folyamat során.
+<Steps>
+  <Step title="Nyisd meg a rendelés-részletező panelt">
+    Kattints a rendelésre a Tervezőtáblán vagy a Rendelések listában a jobb oldali részletező panel megnyitásához.
+  </Step>
+  <Step title="Navigálj a megálló-kártyához">
+    Görgess ahhoz a megállóhoz, ahol a raklapcsere történik — jellemzően a felvétel (raklapok kimennek) vagy a szállítás (raklapok visszajönnek). Minden megálló-kártya mutat egy **Raklapmozgások** szakaszt.
+  </Step>
+  <Step title="Adj hozzá egy mozgást">
+    Kattints a **+ Mozgás hozzáadása** gombra a megálló-kártyán. Egy kis form jelenik meg:
+    - **Raklaptípus** — válassz az EUR, CHEP, LPR, IPP, Euro Pool vagy Egyéb közül
+    - **Mozgás típusa** — Kiküldött (pozitív), Visszakapott (negatív), Módosítás, Korrekció, vagy Nyitóegyenleg
+    - **Mennyiség** — a raklapok száma
+    - **Megjegyzések** (opcionális) — hivatkozási szám vagy sofőr-megjegyzés
+  </Step>
+  <Step title="Mentés">
+    Kattints a **Mentés** gombra a mozgás rögzítéséhez. Azonnal hozzáadódik a főkönyvhöz, és a partner futó egyenlege frissül.
+  </Step>
+</Steps>
+
+Egy téves bejegyzés eltávolításához kattints a **kuka ikonra** a mozgás mellett.
+
+<Note>
+Használd a **Nyitóegyenleg** opciót partnerenként egyszer, hogy beállítsd a kezdő egyenleget, ha egy táblázatból vagy egy korábbi rendszerből migrálsz. Az azt követő mozgások erre épülnek.
+</Note>
+
+---
+
+## Egyenlegek megtekintése
+
+### Ügyfelek lista egyenleg-oszlopa
+
+Az **Ügyfelek** lista (Kereskedelmi → Ügyfelek) tartalmaz egy **Raklap-egyenleg** oszlopot. A jelző színkódolást használ egy pillantásra:
+
+| Szín | Jelentés |
+|---|---|
+| Borostyán | Az ügyfél tartozik neked raklapokkal |
+| Kék | Te tartozol az ügyfélnek raklapokkal |
+| Semleges (szürke) | Az egyenleg kiegyenlített |
+
+Vidd az egeret az egyenleg-jelző fölé, hogy egy típusonkénti tooltipet láss, amely lebontja az egyenleget minden raklaptípusra — például +12 EUR, −4 CHEP.
+
+### Mozgás-előzmény partnerenként
+
+Kattints egy ügyfél-sorra az ügyfél-részletező panel megnyitásához, majd lépj a **Raklapok** fülre. Ez mutatja a teljes főkönyvet az adott partnerhez: minden mozgást, dátumot, rendelés-hivatkozást és futó összeget.
+
+---
+
+## Díjküszöb és automatikus díj-létrehozás
+
+Ha egy ügyfél raklap-egyenlege meghalad egy beállított küszöböt, a Druma automatikusan felszólíthat egy raklapcsere-díj felszámítására.
+
+Amikor egy mozgás miatt az egyenleg átlépi a küszöböt, egy **Raklapdíj megerősítése** ablak jelenik meg:
+
+- **Megerősítés** — hozzáad egy díjtételt a rendelés extráihoz (a számla-szerkesztőben raklapcsere-díjként látható)
+- **Kihagyás** — elutasítja a felszólítást díj létrehozása nélkül; az egyenleg változatlan marad
+
+<Warning>
+A **Kihagyás** gombra kattintás nem állítja vissza a küszöb-számlálót. Az ablak újra megjelenik a küszöböt meghaladó következő mozgásnál, hacsak előbb nem csökkented az egyenleget a visszakapott raklapok naplózásával.
+</Warning>
+
+---
+
+## Küszöbök és díjszabások konfigurálása
+
+Lépj a **Beállítások → Raklap-konfiguráció** menüpontra a díjszabályok beállításához. Ez a szakasz csak az **admin** és **vállalati admin** szerepkörök számára elérhető.
+
+Minden raklaptípusnál beállíthatod:
+
+| Beállítás | Leírás |
+|---|---|
+| Díjküszöb | A raklapok száma, amelynél a díj-ablak kiváltódik |
+| Díjszabás | Raklaponkénti ár (a céged pénznemében), az automatikusan generált díjtételre alkalmazva |
+
+Hagyd üresen a küszöböt a díj-ablak letiltásához az adott raklaptípusnál — a mozgások továbbra is nyomon követve maradnak, de sosem javasolunk díjat.
+
+---
+
+## Szolgáltatói szinkronizálás (opcionális)
+
+Ha a CHEP Connect-et használod, a Druma egyeztetheti az alkalmazáson belüli főkönyvedet a szolgáltató hivatalos egyenlegével. Lépj a **Beállítások → Integrációk → Raklapcsere** menüpontra.
+
+A **CHEP Connect** élesben van. Add meg a CHEP-fiókod hitelesítő adatait, majd:
+
+- Kattints a **Kapcsolat tesztelése** gombra a hitelesítő adatok érvényesítéséhez
+- Kattints az **Egyenleg szinkronizálása** gombra a szolgáltató aktuális egyenlegének lekéréséhez, és a Druma futó összegével való összehasonlításához
+
+Bármilyen eltérés egyeztetési sorként jelenik meg — elfogadhatod **Korrekció** bejegyzésként, hogy összehangold a két főkönyvet.
+
+<Note>
+A CHEP Connect jelenleg az egyetlen raklap-szolgáltatói integráció. Az EUR, LPR, IPP, Euro Pool és Egyéb raklaptípusok manuálisan kerülnek nyomon követésre a főkönyvben — ezekhez ma nincs szolgáltatói szinkronizálás. A fő főkönyv teljesen működik bármilyen szolgáltató konfigurálása nélkül is.
+</Note>
+
+---
+
+<Card title="Rendelési extrák és felárak" icon="circle-plus" href="/en/planner/order-extras">
+  Ismerd meg, hogyan jelennek meg a raklapdíj-tételek a számla-szerkesztőben más rendelési felárak mellett.
+</Card>
+
+<Card title="Ügyfelek" icon="building-2" href="/en/planner/clients">
+  Kezeld az ügyfélprofilokat, az állandó utasításokat, és tekintsd meg a raklap-egyenleg előzményét ügyfelenként.
 </Card>

@@ -1,22 +1,48 @@
 ---
-title: "API public Druma"
-description: "Integreaza Druma cu sistemele tale proprii folosind API-ul REST."
+title: "API public"
+description: "Acces REST doar-citire la comenzile tale — conecteaza Druma la propriul tau ERP, portal de clienti sau instrumente de raportare."
 icon: "code"
 ---
 
-Druma ofera un API REST public. Genereaza o cheie API in **Setari -> API -> Genereaza Cheie API**.
+API-ul Public Druma iti ofera acces REST **doar-citire** la comenzile tale — util pentru un portal de self-service pentru clienti, un instrument BI/de raportare, sau instrumente interne construite de echipa ta.
 
-Include cheia in fiecare cerere: `Authorization: Bearer CHEIA_TA_API`
+<Warning>
+API-ul Public este o capacitate controlata printr-un feature-flag si nu este activata implicit. Contacteaza **support@druma.io** pentru a solicita acces — cheile API sunt momentan furnizate direct de Druma; nu exista un ecran de auto-generare a cheii in aplicatie.
+</Warning>
 
-Limita de rata: 100 cereri per minut.
+## Autentificare
 
-Documentatia completa: **druma.io/docs/api**
+Toate cererile API trebuie sa includa cheia ta API in header-ul `X-API-Key`:
 
-## Endpoint-uri principale
+```
+X-API-Key: CHEIA_TA_API
+```
 
-- `GET /v1/orders` - Lista comenzilor
-- `POST /v1/orders` - Creeaza o comanda
-- `GET /v1/orders/{id}` - Detaliile comenzii
-- `PUT /v1/orders/{id}/status` - Actualizeaza statusul
-- `GET /v1/clients` - Lista clientilor
-- `GET /v1/fleet` - Lista vehiculelor
+Cererile fara o cheie valida returneaza un raspuns `401 Unauthorized`. Autentificarea prin token Bearer (`Authorization: Bearer ...`) **nu** este acceptata si returneaza de asemenea 401.
+
+## Endpoint-uri disponibile
+
+API-ul este doar-citire — sunt acceptate doar cererile `GET`. Toate raspunsurile sunt JSON.
+
+| Metoda | Endpoint | Descriere |
+|---|---|---|
+| `GET` | `/orders` | Lista comenzilor (paginata, filtru optional `status`) |
+| `GET` | `/orders/{id}` | Detaliul comenzii |
+| `GET` | `/orders/{id}/location` | Pozitia curenta a camionului si cel mai recent ETA |
+| `GET` | `/orders/{id}/documents` | Lista de documente, cu URL-uri de descarcare semnate, cu timp limitat |
+
+Orice alta resursa, sau orice metoda non-GET, returneaza o eroare `404`/`405`.
+
+## Limite de rata
+
+- **100 de cereri pe minut** per cheie API
+- Daca depasesti limita, primesti un raspuns `429 Too Many Requests`, cu un header `Retry-After` care iti spune cate secunde sa astepti
+- Nu sunt returnate alte header-e de limita de rata
+
+Pentru limite mai mari, contacteaza support@druma.io cu cazul tau de utilizare.
+
+<CardGroup cols={1}>
+  <Card title="Prezentare configurare integrari" icon="plug" href="/ro/admin/integration-setup">
+    Prezentare generala a tuturor integrarilor Druma si cum le gestionezi din panoul de Setari.
+  </Card>
+</CardGroup>

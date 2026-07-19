@@ -1,0 +1,78 @@
+---
+title: "KI-Chat-Eskalationen"
+description: "Wie ungelöste Ask-Druma-Gespräche an Ihr Team eskalieren, und wie Planer Live-Sitzungen bearbeiten."
+icon: "messages"
+---
+
+## Übersicht
+
+Ask Druma ist ein KI-Assistent für Planer, Fahrer und Kunden, mit drei Modi: Fragen aus der Dokumentation beantworten, Fragen zu Ihren eigenen Daten beantworten, und als Assistent Aktionen ausführen. **Eskalation gilt nur für den Doku-Modus** — kann die KI eine Dokumentationsfrage nicht lösen, nachdem der Nutzer 6 Nachrichten gesendet hat, bietet Ask Druma eine Schaltfläche **Menschliche Hilfe anfordern** an. Dies löst eine Eskalation aus — eine Live-Chat-Sitzung, die Ihr Team sofort übernehmen kann. Gespräche im Daten- oder Assistent-Modus zeigen diese Schaltfläche nie, egal wie lange sie laufen.
+
+<Note>
+Dies unterscheidet sich von [Nachrichten](/de/planner/messages) — dem alltäglichen Person-zu-Person- und Fahrer-Chat-Hub. Chat-Eskalationen ist speziell die nur Admin/Unternehmensadmin zugängliche Warteschlange für KI-Gespräche, die Ask Druma nicht lösen konnte.
+</Note>
+
+<Frame caption="Werkzeuge → Support-Anfragen — Eskalationen ausschließlich aus dem Doku-Modus von Ask Druma.">
+  <img src="/images/tools/chat-escalations.png" alt="Warteschlange Chat-Eskalationen" />
+</Frame>
+
+---
+
+## Wie die Eskalation funktioniert
+
+1. **Der Nutzer sendet 6 Nachrichten** in einem Doku-Modus-Gespräch ohne zufriedenstellende Antwort. Dies zählt nur die eigenen Nachrichten des Nutzers — mit den dazwischen eingestreuten KI-Antworten ist das sichtbare Gespräch bei Erreichen des Schwellenwerts etwa 11–12 Nachrichten lang.
+2. Ask Druma zeigt an: „Ich konnte dies nicht lösen. Möchten Sie mit Ihrem Team sprechen?"
+3. Der Nutzer tippt auf **Menschliche Hilfe anfordern**.
+4. Eine Chat-Sitzung wird erstellt, und ihr Status wird auf **Wartend** gesetzt.
+5. Eine Resend-E-Mail-Benachrichtigung wird an alle Admin- und Unternehmensadmin-Benutzer des Unternehmens gesendet.
+6. Die Sitzung erscheint unter **Werkzeuge → Live-Sitzungen** mit einem orangen Abzeichen am Werkzeuge-Navigationspunkt.
+
+Doppelte Eskalationen werden dedupliziert — hat derselbe Nutzer bereits eine offene Sitzung, erstellt ein zweiter Tap keine weitere und sendet keine weitere E-Mail.
+
+---
+
+## Live-Sitzungen (Planer-Ansicht)
+
+Gehen Sie zu **Werkzeuge → Live-Sitzungen**, um alle eskalierten Gespräche zu sehen. Die Liste ist nach Status aufgeteilt:
+
+| Status | Bedeutung |
+|---|---|
+| Wartend | Eskaliert, noch nicht von einem Planer übernommen |
+| Aktiv | Ein Planer hat mindestens einmal geantwortet |
+| Geschlossen | Gespräch beendet |
+
+### Eine Sitzung bearbeiten
+
+1. Klicken Sie auf eine **wartende** Sitzung, um sie zu öffnen.
+2. Lesen Sie das vollständige KI-Transkript — jede vom Nutzer gesendete Nachricht und jede KI-Antwort ist sichtbar.
+3. Tippen Sie Ihre Antwort ins Eingabefeld und drücken Sie **Senden**. Dies verschiebt die Sitzung zu **Aktiv**, und der Nutzer sieht Ihre Antwort in Echtzeit.
+4. Setzen Sie das Gespräch fort, bis das Problem gelöst ist.
+5. Klicken Sie auf **Sitzung schließen**, wenn fertig.
+
+Aktualisierungen erscheinen auf beiden Seiten in Echtzeit über Supabase-Realtime-Kanäle — Sie müssen die Seite nicht neu laden.
+
+---
+
+## Rollen mit Zugriff
+
+Nur die Rollen **Admin** und **Unternehmensadmin** können Live-Sitzungen einsehen und beantworten. Der Werkzeuge-Navigationsbereich ist auf diese Rollen beschränkt; Planer und Disponenten sehen ihn nicht.
+
+---
+
+## Benachrichtigungs-E-Mail
+
+Trifft eine neue Eskalation ein, sendet Druma eine E-Mail über Resend an alle Admin-/Unternehmensadmin-Benutzer. Die E-Mail enthält:
+
+- Name und Rolle des Nutzers
+- Das vollständige KI-Transkript des bisherigen Gesprächs
+- Einen direkten Link zur Seite Live-Sitzungen
+
+---
+
+<Note>
+Der Eskalationsschwellenwert ist fest auf 6 Nutzer-Nachrichten im Doku-Modus eingestellt. Er kann derzeit nicht pro Unternehmen geändert werden, und löst im Daten- oder Assistent-Modus nie aus.
+</Note>
+
+<Card title="Ask Druma" icon="sparkles" href="/de/tools/smart-import">
+  Ask Druma kann auch bei Datenextraktion und Import helfen — siehe Smart Import.
+</Card>

@@ -1,32 +1,47 @@
 ---
 title: "Fahrer importieren"
-description: "Laden Sie Ihren Fahrerstamm in Druma per CSV-Vorlage hoch."
+description: "Binden Sie Ihren Fahrerbestand per Massenimport mit Smart Import ein — Drumas KI-Dokumentenextraktion — statt Fahrer einzeln anzulegen."
 icon: "file-import"
 ---
 
-## CSV-Vorlage herunterladen
+Druma hat keinen CSV-Vorlagen-Massenimport für Fahrer. Verwenden Sie stattdessen **Smart Import** — ein KI-gestütztes Werkzeug, das die Fahrerdokumente liest, die Sie bereits haben (eine PDF-Liste, eine gescannte Liste, Fotos von Führerscheinen, eine eigenwillig formatierte Tabelle aus Ihrem alten System) und daraus Fahrerdatensätze erstellt, die Sie vor dem Speichern prüfen.
 
-Gehen Sie zu **Fuhrpark → Fahrer** und klicken Sie auf **Importieren → Vorlage herunterladen**.
+## Wo Sie es finden
 
----
+Gehen Sie zu **Tools → Smart Import**. Es ist ein gemeinsames Werkzeug für das Einbinden von Unternehmens-, Flotten-, Fahrer-, Kunden- und Versicherungsdaten — keine auf Fuhrpark → Fahrer beschränkte Seite.
 
-## Erforderliche Spalten
+## Ablauf
 
-| Spalte | Beschreibung |
-|---|---|
-| `full_name` | Vollständiger Name des Fahrers (Pflicht) |
-| `phone_number` | Mobiltelefonnummer |
-| `licence_number` | Führerscheinnummer |
-| `licence_expiry` | Führerschein-Ablaufdatum (YYYY-MM-DD) |
-| `cpc_expiry` | CPC-Ablaufdatum (YYYY-MM-DD, optional) |
-| `adr_expiry` | ADR-Ablaufdatum (YYYY-MM-DD, optional) |
+<Steps>
+  <Step title="Fahrerdokumente hochladen">
+    Klicken Sie auf **Dokumente hochladen** oder ziehen Sie Dateien in die Ablagefläche. Unterstützte Formate: PDF, Bilder (JPEG, PNG, WebP, HEIC/HEIF), XLSX und CSV, bis 20 MB pro Datei und bis 20 Dateien pro Sitzung.
+  </Step>
+  <Step title="Auf die KI-Extraktion warten">
+    Druma sendet jede Datei zur Extraktion an Gemini — wenige Sekunden pro Datei. Dateien werden serverseitig verarbeitet und nach der Extraktion nicht dauerhaft gespeichert; nur die von Ihnen zum Import ausgewählten Datensätze werden gespeichert.
+  </Step>
+  <Step title="Die Kategoriekarte Fahrer öffnen">
+    Das Prüf-Dashboard zeigt eine Karte pro in Ihren Dokumenten gefundenem Datentyp, einschließlich **Fahrer**, falls welche erkannt wurden. Klicken Sie darauf, um die extrahierten Zeilen in einer bearbeitbaren Tabelle zu sehen: vollständiger Name, Telefon, E-Mail, Führerscheinnummer und -ablauf, ADR-Zertifikat und -Ablauf, CPC-Nummer und -Ablauf, Tachographenkartennummer und Sprache.
+  </Step>
+  <Step title="Zuverlässigkeit und Duplikate prüfen">
+    Jedes Feld hat einen farbcodierten Zuverlässigkeitsindikator (grün/gelb/rot) — prüfen Sie gelbe und rote Felder immer nochmal. Zeilen werden anhand des **vollständigen Namens (Groß-/Kleinschreibung ignoriert)** gegen Ihre bestehenden Fahrer geprüft; ein Treffer wird als **Duplikat** markiert, standardmäßig auf **Überspringen** gesetzt (Sie können stattdessen **Überschreiben** wählen, wenn die extrahierten Daten die bestehenden ersetzen sollen).
+  </Step>
+  <Step title="Bearbeiten und importieren">
+    Klicken Sie auf eine Zelle, um sie inline zu korrigieren, dann auf **Fahrer importieren**. Der vollständige Name ist das einzige Pflichtfeld — Zeilen ohne ihn werden nicht importiert.
+  </Step>
+</Steps>
 
----
+<Warning>
+Es gibt kein Rückgängigmachen für einen Import. Wurden falsche Daten importiert, bearbeiten Sie die Fahrerdatensätze anschließend einzeln.
+</Warning>
 
-## Nach dem Import
+## Telefonnummer und App-Anmeldung
 
-Für jeden importierten Fahrer erstellt Druma automatisch einen PWA-Link. Sie können die Links über das Fahrerprofil abrufen und per WhatsApp oder SMS weiterleiten.
+Smart Import erstellt den Profildatensatz des Fahrers (Name, Telefon, Führerschein-/CPC-/ADR-/Tacho-Details) — es erstellt nicht die App-Anmeldung. Gehen Sie nach dem Import zu **Fuhrpark → Fahrer**, öffnen Sie jedes Fahrerprofil einzeln und klicken Sie unter **Telefon + PIN-Anmeldung** auf **PIN festlegen** (oder **Generieren** für einen zufälligen 6-stelligen Code), dann **PIN speichern**. Geben Sie jedem Fahrer seine PIN direkt — er kann sie bei der ersten Anmeldung personalisieren.
 
-<Card title="Fahrerverwaltung" icon="id-card" href="/en/planner/driver-management">
-  Fahrer manuell verwalten.
+<Card title="Kunden und Flotte einbinden" icon="brain" href="/de/tools/smart-import">
+  Smart Import verarbeitet im selben Ablauf auch Unternehmens-, Flotten-, Kunden- und Versicherungsdokumente.
+</Card>
+
+<Card title="Fahrerverwaltung" icon="id-card" href="/de/planner/driver-management">
+  Verwalten Sie einzelne Fahrerprofile und richten Sie Telefon + PIN-Anmeldungen ein.
 </Card>

@@ -1,11 +1,116 @@
-﻿---
+---
 title: "Import bankovního výpisu"
-description: "Jak importovat bankovní výpisy do Druma pro automatické párování plateb s otevřenými fakturami."
-icon: "bank"
+description: "Nahrajte soubory bankovního výpisu CAMT.053 nebo MT940 pro automatické spárování plateb s otevřenými fakturami — bez ručního zadávání dat."
+icon: "file-up"
 ---
 
-Import bankovniho vypisu umoznuje nahrat soubor CAMT.053 nebo MT940. Druma automaticky paruje prichozi platby s otevrenymi fakturami.
+## Přehled
 
-## Postup
+Místo zaznamenávání plateb jednu po druhé můžete nahrát svůj bankovní výpis přímo do Druma. Druma zpracuje každou kreditní transakci v souboru, spustí logiku párování proti vašim otevřeným fakturám a automaticky použije jakékoli jisté shody. Nespárované transakce spadnou do fronty Odsouhlasení k rychlé ruční kontrole.
 
-Prejdete do **Fakturace - Odsouhlaseni - Import vypisu**, kliknete na **Importovat bankovni vypis**, nahrajete soubor a zkontrolujete navrzena parovani.
+Toto je nejrychlejší způsob, jak najednou odsouhlasit velký objem příchozích plateb — ideální na konci týdne nebo měsíce.
+
+## Podporované formáty a banky
+
+Druma přijímá tři standardní formáty:
+
+| Formát | Popis |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — exportovaný většinou bank EU přes internetové bankovnictví |
+| **MT940 SWIFT** | Starší formát SWIFT — stále běžný pro firemní bankovní API |
+| **CODA** | Formát s pevnou šířkou polí používaný belgickými bankami |
+
+Všechny tři formáty podporují BRD, BCR, Raiffeisen Bank, UniCredit a ING Rumunsko, stejně jako většina bank EU — CODA konkrétně pokrývá exporty belgických bank. Druma automaticky rozpozná formát při nahrání. Pokud rozpoznání selže, vyberte správný formát z rozbalovací nabídky **Formát** v importním okně.
+
+**Maximální velikost souboru:** 10 MB na nahrání.
+
+<Note>
+Opětovné nahrání stejného souboru výpisu je bezpečné. Druma vytváří otisk každé transakce a tiše přeskočí jakékoli duplicity — nikdy nezaznamenáte platbu dvakrát.
+</Note>
+
+## Jak importovat výpis
+
+<Steps>
+  <Step title="Otevřete dialog importu">
+    Přejděte do **Finance** → **Odsouhlasení** → záložka **Platby**. Klikněte na tlačítko **Importovat výpis** vpravo nahoře na stránce.
+  </Step>
+  <Step title="Vyberte soubor">
+    Klikněte na **Vybrat soubor** a vyberte exportovaný bankovní výpis. Přijímané přípony jsou `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940) a `.cod`/`.coda` (CODA). Soubor musí mít 10 MB nebo méně.
+  </Step>
+  <Step title="Potvrďte formát">
+    Druma automaticky rozpozná formát a zobrazí popisek pod názvem souboru. Pokud je popisek špatný, otevřete rozbalovací nabídku **Formát** a vyberte správný formát ručně, než budete pokračovat.
+  </Step>
+  <Step title="Spusťte import">
+    Klikněte na **Importovat**. Druma zpracuje všechny kreditní transakce v souboru a spustí logiku párování proti každé otevřené faktuře ve vaší společnosti. Obvykle to trvá několik sekund.
+  </Step>
+  <Step title="Zkontrolujte souhrn výsledku">
+    Po dokončení zpracování se zobrazí souhrnné modální okno s výsledkem. Před zavřením zkontrolujte každou kategorii — viz rozpis níže.
+  </Step>
+</Steps>
+
+## Pochopení souhrnu výsledku
+
+Po každém importu Druma zobrazí souhrn výsledku s následujícími počítadly:
+
+| Pole | Co to znamená |
+|-------|---------------|
+| **Zpracováno** | Celkový počet kreditních transakcí nalezených v souboru |
+| **Automaticky spárováno** | Transakce spárované s fakturou s vysokou jistotou — platba použita automaticky |
+| **Vyžaduje kontrolu** | Transakce, kde byla nalezena potenciální shoda, ale jistota byla pod prahem — zobrazují se ve frontě Odsouhlasení |
+| **Přeskočené duplicity** | Transakce již zaznamenané z předchozího nahrání stejného souboru — tiše ignorovány |
+| **Chyby** | Transakce, které nebylo možné zpracovat (poškozené řádky, nepodporovaná měna, chybějící reference) |
+
+Zdravý import má vysoký počet **Automaticky spárováno** a nízký počet **Vyžaduje kontrolu**. Pokud vidíte mnoho řádků vyžadujících kontrolu, obvykle to znamená, že reference faktur nejsou zahrnuty v popisech plateb — požádejte klienty, aby do pole reference bankovního převodu zahrnuli číslo faktury.
+
+## Logika párování
+
+Druma páruje každou bankovní transakci s fakturou pomocí následujících signálů, v pořadí podle priority:
+
+1. **Číslo faktury v referenci transakce** — přesná nebo částečná (fuzzy-normalizovaná) shoda s číslem otevřené faktury. Shoda pouze na tomto signálu stačí pro automatické použití platby — žádný jiný signál není potřeba.
+2. **Shoda částky** — pokud se neshoduje žádné číslo faktury, Druma hledá otevřenou fakturu, jejíž nezaplacený zůstatek spadá do vaší nakonfigurované tolerance (výchozí ±2 %) částky transakce, **a** jejíž datum splatnosti spadá do ±30 dnů od data transakce. Tím se zabrání tomu, aby náhodná shoda částky propojila transakci s nesouvisející fakturou vzdálenou měsíce.
+3. **Jméno klienta** — používá se pouze jako rozhodující faktor, když shoda částky výše vrátí více než jednu kandidátskou fakturu; Druma zúží výběr na kandidáta, jehož jméno klienta se objevuje ve jméně odesílatele transakce.
+
+Shoda čísla faktury automaticky použije platbu (celou nebo částečně, podle částky). **Shoda pouze podle částky se nikdy nepoužije automaticky** — i když jednoznačně identifikuje jednu fakturu — vždy skončí ve frontě Odsouhlasení k ručnímu potvrzení, protože neexistuje reference dokazující, že jde skutečně o platbu dané faktury. Žádný signál vůbec → zařazeno do fronty jako nespárované.
+
+## Zpracování nespárovaných transakcí
+
+Jakákoli transakce, kterou se nepodařilo s jistotou spárovat, se zobrazí ve frontě **Odsouhlasení** na stejné záložce **Platby**. Každý řádek zobrazuje odznak zdroje **Výpis** (odlišující ji od transakcí, které přišly přes analýzu e-mailu, které zobrazují odznak **E-mail**).
+
+<Steps>
+  <Step title="Otevřete frontu Odsouhlasení">
+    Zůstaňte na záložce **Finance** → **Odsouhlasení** → **Platby**. Nespárované řádky se zobrazují pod souhrnem se stavem **Čeká**.
+  </Step>
+  <Step title="Rozbalte transakci">
+    Kliknutím na řádek ho rozbalíte. Druma zobrazí úplné podrobnosti transakce: datum, částku, text bankovní reference a jakékoli kandidátské faktury, které zvažovala.
+  </Step>
+  <Step title="Spárujte ručně">
+    Klikněte na **Spárovat** vedle správné faktury. Druma použije platbu a přesune transakci do stavu **Použito**.
+  </Step>
+  <Step title="Zahoďte, pokud není relevantní">
+    Pokud transakce není platbou klienta (například interní převod nebo bankovní poplatek), klikněte na **Zahodit**. Řádek se přesune do stavu **Odmítnuto** a neovlivní žádnou fakturu.
+  </Step>
+</Steps>
+
+<Warning>
+Zahození transakce je měkká akce — pouze označí řádek jako odmítnutý v Druma. Neovlivňuje váš skutečný bankovní účet ani účetní systém. Pokud zahodíte omylem, kontaktujte podporu — pro odmítnuté řádky odsouhlasení v současnosti neexistuje samoobslužné vrácení zpět.
+</Warning>
+
+## Tipy pro vyšší míru automatického párování
+
+- **Požádejte klienty, aby do pole reference platby** svého bankovního převodu zahrnuli číslo faktury. Reference jako `INV-000047` dá Druma přesnou shodu na prvním signálu.
+- **Udržujte jména klientů konzistentní** mezi vaším hlavním záznamem klienta a tím, jak se klienti identifikují na bankovních převodech — Druma se vrací ke shodě jména klienta pouze k rozlišení mezi více fakturami se stejnou částkou, takže blízká shoda tam může zachránit jinak nejednoznačnou shodu částky.
+- **Používejte konzistentně platební podmínky netto.** Platby, které dorazí se sníženými poplatky (bankovními nebo faktoringovými), spadají do tolerance ±2 % u částek pod ~5 000 €. U větších faktur si s klienty potvrďte, že posílají celou částku.
+
+---
+
+<Card title="Sledování plateb" icon="circle-check" href="/cs/invoicing/payment-tracking">
+  Zaznamenávejte a sledujte platby ručně, nebo zobrazte úplnou historii plateb za jednotlivou fakturu.
+</Card>
+
+<Card title="Přehled po splatnosti" icon="triangle-alert" href="/en/invoicing/overdue-dashboard">
+  Zobrazte stárnutí dlužníků a odesílejte upomínky k platbě za faktury po splatnosti.
+</Card>
+
+<Card title="Dobropisy" icon="file-minus" href="/cs/invoicing/credit-notes">
+  Vystavte dobropis pro storno nebo částečnou opravu odeslané faktury.
+</Card>

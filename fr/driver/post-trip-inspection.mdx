@@ -1,15 +1,15 @@
 ---
-title: "Inspection post-trajet (DVIR)"
+title: "Inspection post-trajet du véhicule (DVIR)"
 description: "Comment les chauffeurs complètent l'inspection du véhicule après livraison, comment les défauts sont classifiés et escaladés, et comment les planificateurs et gestionnaires de flotte les suivent et les résolvent."
 icon: "clipboard-check"
 ---
 
 ## Vue d'ensemble
 
-Après qu'un chauffeur appuie sur **Livré**, Druma présente automatiquement une superposition d'**Inspection post-trajet**. Il s'agit d'un Rapport d'inspection du véhicule par le conducteur (DVIR) — un parcours structuré de l'état du camion à la fin de chaque trajet.
+Après qu'un chauffeur touche **Livré**, Druma présente automatiquement une superposition d'**Inspection post-trajet**. Il s'agit d'un Rapport d'inspection du véhicule par le conducteur (DVIR) — un parcours structuré de l'état du camion à la fin de chaque trajet. Elle remplace les rapports verbaux informels et donne à votre gestionnaire de flotte un enregistrement complet et horodaté de chaque défaut.
 
 <Note>
-L'inspection post-trajet n'est déclenchée que pour les trajets à commande unique. Elle n'apparaît pas aux arrêts intermédiaires pendant les trajets de groupage.
+L'inspection post-trajet ne se déclenche que pour les trajets à commande unique. Elle n'apparaît pas aux arrêts intermédiaires pendant les trajets de groupage (à arrêts multiples).
 </Note>
 
 ---
@@ -18,7 +18,7 @@ L'inspection post-trajet n'est déclenchée que pour les trajets à commande uni
 
 <Steps>
   <Step title="La superposition apparaît automatiquement">
-    Immédiatement après avoir appuyé sur **Livré**, la superposition d'inspection post-trajet plein écran s'ouvre. Le chauffeur ne peut pas la rejeter sans effectuer une action.
+    Immédiatement après avoir touché **Livré**, la superposition d'inspection post-trajet en plein écran s'ouvre. Le chauffeur ne peut pas la fermer sans effectuer une action — il doit soit la compléter, soit l'ignorer explicitement.
   </Step>
   <Step title="Marquez chaque élément">
     Chaque élément de la liste de contrôle a un commutateur à trois états :
@@ -26,17 +26,19 @@ L'inspection post-trajet n'est déclenchée que pour les trajets à commande uni
     | État | Couleur | Signification |
     |---|---|---|
     | **OK** | Vert | Aucun problème trouvé |
-    | **Consultatif** | Ambre | Problème mineur — peut continuer à fonctionner, planificateur notifié |
+    | **Consultatif** | Ambre | Problème mineur — l'exploitation peut continuer, planificateur notifié |
     | **Critique pour la sécurité** | Rouge | Défaut grave — le camion peut être bloqué pour la répartition |
+
+    Le chauffeur parcourt chaque élément et sélectionne l'état approprié. Les éléments sont par défaut sur **OK** ; le chauffeur n'a donc besoin de modifier que les éléments présentant un problème.
   </Step>
   <Step title="Saisissez le relevé du compteur kilométrique">
-    Une entrée numérique en bas de la superposition capture le relevé actuel du compteur en kilomètres.
+    Une saisie numérique en bas de la superposition capture le relevé actuel du compteur en kilomètres. Ce relevé est enregistré avec la fiche d'inspection.
   </Step>
-  <Step title="Ajoutez des photos pour les défauts critiques pour la sécurité">
-    Pour tout élément marqué **Critique pour la sécurité**, un bouton **Ajouter une photo** apparaît. Le chauffeur peut télécharger jusqu'à 3 photos par défaut.
+  <Step title="Ajoutez des notes et des photos pour les éléments signalés">
+    Tout élément marqué **Consultatif** ou **Critique pour la sécurité** se déploie pour afficher un champ de notes et, pour les éléments où les photos sont activées, un contrôle de téléversement de photo. Le chauffeur peut téléverser jusqu'à 3 photos par défaut — depuis l'appareil photo ou le sélecteur de fichiers. Formats acceptés : JPEG, PNG, WebP, HEIC, HEIF. Maximum 10 Mo par fichier.
   </Step>
   <Step title="Soumettez ou ignorez">
-    Appuyez sur **Soumettre l'inspection** pour enregistrer les résultats, ou sur **Ignorer l'inspection** si vous ne pouvez pas le faire immédiatement.
+    Touchez **Soumettre l'inspection** pour enregistrer les résultats. Si le chauffeur ne peut pas la compléter immédiatement (par ex. il doit se garer et faire le tour du camion), il peut toucher **Ignorer l'inspection** — cela est enregistré comme une inspection ignorée, pas réussie. Un bouton **Compléter l'inspection** apparaît alors sur le détail du chargement pour la commande livrée, permettant au chauffeur de revenir la remplir plus tard.
   </Step>
 </Steps>
 
@@ -45,37 +47,74 @@ L'inspection post-trajet n'est déclenchée que pour les trajets à commande uni
 ## Niveaux de gravité des défauts
 
 ### OK
-Aucune action requise.
+Aucune action requise. L'élément est enregistré comme inspecté et sans problème.
 
 ### Consultatif
-Le défaut est noté et le planificateur reçoit une alerte. Le camion n'est pas bloqué.
+Le défaut est noté et le planificateur reçoit une alerte. Le camion n'est pas bloqué — il peut continuer à être assigné à des commandes. L'avis est visible dans le panneau de détail de la commande et dans l'onglet Flotte → **Défauts**.
 
 ### Critique pour la sécurité
-Un défaut grave pouvant rendre le véhicule dangereux.
+Un défaut grave pouvant rendre le véhicule dangereux ou non conforme à l'exploitation.
 
 - Le planificateur et le gestionnaire de flotte sont notifiés immédiatement.
-- Si le basculement **Bloquer automatiquement le camion pour les défauts critiques pour la sécurité** est activé, le camion est automatiquement marqué indisponible.
+- Si le basculement d'entreprise **Bloquer automatiquement le camion pour l'atelier en cas de défaut critique pour la sécurité** est activé, le camion est automatiquement marqué indisponible et disparaît de la liste assignable sur le tableau de planification jusqu'à ce que le défaut soit résolu via un ordre de travail.
+- Un avertissement clair s'affiche pour le chauffeur à la soumission, expliquant que le véhicule peut être retiré du service.
 
 <Warning>
-Si le basculement de blocage automatique est activé, un défaut critique pour la sécurité supprimera le camion de la répartition immédiatement.
+Si le basculement de blocage automatique est activé, un défaut critique pour la sécurité retirera le camion de la répartition immédiatement — même s'il a déjà des commandes futures assignées. Consultez l'onglet Flotte → Défauts dès que vous recevez une alerte critique pour la sécurité.
 </Warning>
 
 ---
 
 ## Ce que voient les planificateurs
 
-Dans le **panneau de détails de la commande**, une section **DVIR** apparaît une fois qu'une inspection a été soumise. Elle montre le statut de l'inspection, l'horodatage, le nom du chauffeur et la liste des défauts avec leurs badges de gravité.
+Dans le **panneau de détail de la commande**, une section **DVIR** apparaît sous les informations d'itinéraire une fois qu'une inspection a été soumise. Elle montre :
+
+- Le statut de l'inspection : Complétée, Ignorée ou En attente
+- L'horodatage de soumission et le nom du chauffeur
+- Une liste de chaque élément de défaut avec son badge de gravité (Consultatif / Critique pour la sécurité)
+- Des aperçus miniatures des photos téléversées, qui s'ouvrent en pleine taille au clic
+
+Si l'inspection a été ignorée, la section DVIR affiche un badge « Ignorée » avec l'horodatage.
 
 ---
 
 ## Gestionnaire de flotte : suivre les défauts ouverts
 
-Accédez à **Flotte → Défauts** pour voir tous les défauts de toute votre flotte.
+Accédez à **Flotte → Défauts** pour voir tous les défauts de l'ensemble de votre flotte. La page a trois onglets de filtre :
+
+| Onglet | Ce qu'il montre |
+|---|---|
+| **Ouverts** | Défauts pas encore liés à un ordre de travail terminé ou annulé |
+| **Reconnus** | Défauts qu'un gestionnaire de flotte a examinés |
+| **Tous** | Historique complet |
+
+Chaque ligne affiche le camion, le nom de l'élément défectueux, le badge de gravité, la date de signalement et le chauffeur qui l'a soumis.
+
+Pour les lignes **Critique pour la sécurité**, un bouton **Créer un ordre de travail** est disponible directement sur la ligne. Cliquer dessus ouvre le formulaire d'ordre de travail pré-rempli avec la description et la gravité du défaut — sans copier-coller nécessaire.
+
+---
+
+## Configuration admin
+
+Accédez à **Paramètres → DVIR post-trajet** pour configurer le DVIR pour votre entreprise.
+
+| Paramètre | Description |
+|---|---|
+| **Activer le DVIR post-trajet** | Active ou désactive la superposition d'inspection pour tous les chauffeurs |
+| **Exiger des photos pour les défauts critiques pour la sécurité** | Rend obligatoire le téléversement d'au moins une photo avant qu'un défaut critique pour la sécurité puisse être soumis |
+| **Bloquer automatiquement le camion pour l'atelier en cas de défaut critique pour la sécurité** | Bloque automatiquement le camion de la répartition quand un défaut critique pour la sécurité est soumis |
+| **Éléments de la liste de contrôle** | Ajoutez, modifiez ou supprimez les éléments qui apparaissent dans la superposition d'inspection. Chaque élément a un nom et une gravité par défaut (OK / Consultatif / Critique pour la sécurité) |
+
+<Note>
+Les éléments de la liste de contrôle sont valables pour toute l'entreprise. Tous les chauffeurs de votre entreprise voient la même liste. Si vous exploitez différents types de véhicules, utilisez des noms d'éléments descriptifs (par ex. « Groupe frigorifique — vérifier les joints ») pour garder la liste pertinente pour tout le monde.
+</Note>
+
+---
 
 <Card title="Liste de contrôle pré-départ" icon="clipboard-list" href="/fr/driver/pre-trip-checklist">
-  La liste de contrôle pré-départ s'exécute avant le départ.
+  La liste de contrôle pré-départ s'exécute avant le départ. Découvrez comment les chauffeurs la complètent et comment les admins configurent les blocages stricts et souples.
 </Card>
 
 <Card title="Atelier et maintenance" icon="wrench" href="/fr/fleet-compliance/workshop-maintenance">
-  Comment créer des ordres de travail à partir des défauts critiques pour la sécurité.
+  Comment créer des ordres de travail à partir des défauts critiques pour la sécurité et gérer les plannings de maintenance sur votre flotte.
 </Card>

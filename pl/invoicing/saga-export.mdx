@@ -1,63 +1,126 @@
 ---
 title: "Eksport SAGA i WinMENTOR"
-description: "Jak eksportować dane faktur i klientów z Druma do SAGA C i WinMENTOR dla rumuńskiej księgowości, w tym automatyczne nocne eksporty."
+description: "Jak eksportować dane faktur i klientów z Druma do SAGA C i WinMENTOR Classic dla rumuńskiej księgowości, w tym automatyczny miesięczny eksport wysyłany e-mailem do księgowego."
 icon: "database"
 ---
 
 ## Przegląd
 
-SAGA C i WinMENTOR to dwa najpopularniejsze pakiety oprogramowania księgowego używane przez rumuńskie firmy. Druma eksportuje dane faktur i klientów w formatach oczekiwanych przez oba pakiety.
+SAGA C i WinMENTOR Classic to dwa najpopularniejsze pakiety oprogramowania księgowego używane przez rumuńskie firmy. Druma eksportuje dane faktur i klientów w formatach oczekiwanych przez oba pakiety, dzięki czemu Twój księgowy może importować je bezpośrednio bez ręcznego ponownego wprowadzania danych.
+
+<Frame caption="Finanse → Kreator eksportu — eksporty z niestandardowym profilem; sam eksport SAGA/WinMENTOR to miesięczny ZIP wysyłany e-mailem, nie przycisk tutaj.">
+  <img src="/images/invoicing/saga-export.png" alt="Strona Kreatora eksportu" />
+</Frame>
 
 ## Eksport SAGA C
 
-SAGA używa plików DBF do importu danych. Druma generuje dwa pliki per eksport:
-- **Clienti.dbf** — dane główne klientów
-- **Facturi.dbf** — dane faktur
+SAGA używa plików DBF (dBase) do importu danych. Druma generuje pełny pakiet eksportu, nie tylko dane klientów i faktur:
+
+- **CLI_\<data>.dbf** (Clienți) — dane główne klientów (nazwa, CIF, adres, warunki płatności)
+- **ART_\<data>.dbf** (Articole) — pozycja usługi używana na fakturach sprzedaży, dołączona domyślnie
+- **IE_\<data>_\<data>.dbf** (Ieșiri) — dane faktur sprzedaży (numer faktury, data, kwoty, VAT, referencja klienta)
+- **INT_\<data>.dbf** (Intrări) — faktury zakupu, gdy okres zawiera zlecenia podzlecone
+- **NC_\<data>_\<data>.xml** (Încasări) — płatności zarejestrowane w okresie (ten jeden plik to XML, nie DBF)
+- **README.txt** — tekstowe podsumowanie eksportu oraz instrukcje importu dla Twojego księgowego
 
 ### Jak eksportować dla SAGA
 
 <Steps>
-  <Step title="Przejdź do modułu Faktury">
-    Kliknij **Faktury** w głównym menu nawigacji.
+  <Step title="Przejdź do modułu Fakturowanie">
+    Kliknij **Fakturowanie** w głównym menu nawigacji.
   </Step>
-  <Step title="Otwórz menu Eksport i wybierz SAGA">
-    Kliknij przycisk **Eksport** i wybierz **SAGA C** z opcji formatu.
+  <Step title="Otwórz menu Eksport">
+    Kliknij przycisk **Eksport** w prawym górnym obszarze ekranu Fakturowania.
   </Step>
-  <Step title="Ustaw zakres dat i pobierz ZIP">
-    Wybierz zakres dat i kliknij **Pobierz**. Druma tworzy plik ZIP z plikami DBF.
+  <Step title="Wybierz SAGA">
+    Wybierz **SAGA C** z opcji formatu eksportu.
+  </Step>
+  <Step title="Ustaw zakres dat">
+    Wybierz datę początkową i końcową dla faktur, które chcesz wyeksportować. Większość księgowych chce eksportu miesięcznego.
+  </Step>
+  <Step title="Pobierz ZIP">
+    Kliknij **Pobierz**. Druma tworzy plik ZIP zawierający pliki DBF wylistowane powyżej (plus XML Încasări i README.txt) i pobiera go na Twój komputer.
   </Step>
 </Steps>
 
-### Importowanie do SAGA C
+### Import do SAGA C
 
 <Steps>
-  <Step title="Otwórz SAGA C i przejdź do Import">
-    Zaloguj się do pliku firmy i przejdź do **Import — Facturi furnizori / clienti**.
+  <Step title="Otwórz SAGA C na komputerze księgowego">
+    Zaloguj się do pliku firmy, do której chcesz importować.
   </Step>
-  <Step title="Wybierz plik DBF i potwierdź import">
-    Przeglądaj do ZIP z Druma, wybierz plik .dbf i kliknij **Import**.
+  <Step title="Przejdź do Import">
+    W SAGA przejdź do **Import** → **Facturi furnizori / clienți** (w zależności od konfiguracji).
+  </Step>
+  <Step title="Wybierz pliki DBF">
+    Przejdź do ZIP-a pobranego z Druma i wybierz odpowiedni plik .dbf.
+  </Step>
+  <Step title="Zweryfikuj mapowanie pól">
+    SAGA pokaże podgląd mapowania pól. Potwierdź, że kolumny odpowiadają oczekiwanym polom SAGA — powinny dopasować się automatycznie do eksportu Druma.
+  </Step>
+  <Step title="Potwierdź import">
+    Kliknij **Import**. SAGA przetwarza rekordy. Sprawdź dziennik importu pod kątem błędów.
   </Step>
 </Steps>
 
 ## Eksport WinMENTOR Classic
 
+WinMENTOR Classic **nie** używa plików DBF jak SAGA — Druma eksportuje go zamiast tego jako pliki tekstowe rozdzielane znakiem `|`, zgodnie z formatem WinMENTOR "Import z pliku tekstowego":
+
+- **Iesiri_\<data>_\<data>.txt** — dane faktur sprzedaży
+- **Clienti_\<data>.txt** — dane główne klientów zafakturowanych w okresie
+- **Articole_\<data>.txt** — pozycja usługi używana na fakturach sprzedaży
+- **Incasari_\<data>_\<data>.txt** — płatności zarejestrowane w okresie (dołączone tylko jeśli jakieś były)
+- **README.txt** — instrukcje importu dla Twojego księgowego
+
 <Steps>
-  <Step title="Otwórz menu Eksport">
-    Przejdź do **Faktury — Eksport**.
+  <Step title="Otwórz menu Eksport w Fakturowaniu">
+    Przejdź do **Fakturowanie** → **Eksport**.
   </Step>
-  <Step title="Wybierz WinMENTOR Classic i pobierz">
-    Wybierz **WinMENTOR Classic** z listy formatów, ustaw zakres dat i kliknij **Pobierz**.
+  <Step title="Wybierz WinMENTOR Classic">
+    Wybierz **WinMENTOR Classic** z listy formatów. Powoduje to wygenerowanie plików `.txt` rozdzielanych znakiem `|` powyżej zamiast plików DBF SAGA — nie używaj opcji SAGA dla WinMENTOR.
+  </Step>
+  <Step title="Ustaw zakres dat i pobierz">
+    Wybierz zakres dat i kliknij **Pobierz**.
   </Step>
 </Steps>
 
-## Automatyczny nocny eksport
+Zaimportuj pliki do WinMENTOR, używając **Import/Export → Import din fișier text**, wybierając separator w postaci pionowej kreski (`|`).
 
-Druma może automatycznie generować i wysyłać eksport SAGA e-mailem do Twojego księgowego każdej nocy.
+## Automatyczny miesięczny eksport (SAGA i WinMENTOR Classic)
 
-Przejdź do **Ustawienia — Automatyzacja — SAGA Auto-eksport** i skonfiguruj adres e-mail, format i godzinę eksportu.
+Zamiast ręcznego, nocnego pobierania, Druma może automatycznie wysłać eksport e-mailem do Twojego księgowego raz w miesiącu:
+
+<Steps>
+  <Step title="Przejdź do Ustawień">
+    Przejdź do **Ustawienia** → **Automatyzacja** i znajdź sekcję **Konfiguracja eksportu SAGA**.
+  </Step>
+  <Step title="Ustaw e-mail księgowego i dzień eksportu">
+    Wpisz **e-mail księgowego** (i opcjonalne DW), a następnie wybierz **dzień miesiąca**, w którym eksport ma się uruchamiać (1–28).
+  </Step>
+  <Step title="Zapisz">
+    Kliknij **Zapisz konfigurację SAGA**. Zaplanowane zadanie sprawdza codziennie o **06:00 UTC**, czy dzisiaj przypada Twój skonfigurowany dzień — gdy tak, Druma generuje eksport za **poprzedni pełny miesiąc kalendarzowy** i wysyła go e-mailem bezpośrednio do Twojego księgowego, bez żadnego ręcznego kroku pobierania.
+  </Step>
+</Steps>
+
+<Note>
+Nie ma listy "Historia eksportów" w aplikacji — eksport każdego miesiąca przychodzi jako e-mail z bezpiecznym linkiem do pobrania ZIP, ważnym przez **7 dni**. Jeśli link wygaśnie, albo potrzebujesz eksportu poza cyklem lub za niestandardowy okres, użyj powyższego ręcznego przepływu **Eksport** (lub **Finanse** → **Kreator eksportu** dla niestandardowego układu kolumn).
+</Note>
+
+## Faktury wielowalutowe i kursy wymiany BNR
+
+Dla faktur w EUR, USD, GBP, CHF lub PLN, Druma dołącza w eksporcie DBF/tekstowym kurs wymiany BNR (Narodowy Bank Rumunii) na dzień faktury. Oznacza to, że oprogramowanie Twojego księgowego od razu ma kwoty w ekwiwalencie RON — nie jest potrzebne ręczne sprawdzanie kursu.
+
+<Warning>
+Zawsze sprawdź ze swoim księgowym, jakiego formatu eksportu potrzebuje — SAGA C czy WinMENTOR Classic. Użycie niewłaściwego formatu spowoduje błędy importu lub po cichu niepoprawne dane.
+</Warning>
 
 ---
 
-<Card title="Generowanie faktur" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-Jak tworzyć faktury z dostarczonych zleceń.
+<Card title="Konfiguracja integracji" icon="plug" href="/pl/admin/integration-setup">
+  Jak skonfigurować wszystkie integracje Druma, w tym oprogramowanie księgowe i połączenia API.
+</Card>
+
+<Card title="Generowanie faktur" icon="file-invoice-dollar" href="/pl/invoicing/generating-invoices">
+  Jak tworzyć faktury w Druma przed ich eksportem do oprogramowania księgowego.
 </Card>

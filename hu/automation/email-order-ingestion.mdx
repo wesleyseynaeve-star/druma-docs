@@ -1,47 +1,88 @@
 ---
 title: "E-mail rendelésbeolvasás"
-description: "Rendelés-vázlatok automatikus kinyerése az ügyfelektől és brókerektől érkező e-mailekből AI segítségével."
-icon: "mail"
+description: "Engedd, hogy a Druma beolvassa az ügyfelektől és brókerektől érkező e-maileket, és automatikusan vázlat rendeléseket hozzon létre a tervezőid felülvizsgálatához."
+icon: "envelope-open-text"
 ---
 
-## Mi az e-mail rendelésbeolvasás?
+Ahelyett, hogy manuálisan begépelnéd az e-mailben érkező rendeléseket, a Druma elolvassa őket helyetted. Az ügyfelek és brókerek elküldik az árajánlat-visszaigazolásaikat, rakománylistáikat vagy egyszerű szöveges instrukcióikat a céged egyedi Druma postafiók-címére, és az AI kinyeri a legfontosabb adatokat egy vázlat rendelésbe, amelyet a terveződ ellenőrizhet és megerősíthet.
 
-Az e-mail rendelésbeolvasás lehetővé teszi, hogy az ügyfelek és brókerek rendelési kérelmeket küldjenek egy dedikált e-mail aliaszra. A Druma AI (Gemini) segítségével automatikusan kinyeri a releváns adatokat az e-mailből, és létrehoz egy vázlat rendelést, amelyet a tervező felülvizsgál.
+## A Druma postafiók-címed
 
-## Beállítás
+Minden cég kap egy egyedi postafiók e-mail-címet. A sajátodat a **Rendelések** oldalon találod — kattints a **Rendelési postafiók** gombra az eszköztárban a megjelenítéséhez (másolás gombbal). Ez nincs Beállítások oldalon konfigurálva.
+
+Oszd meg ezt a címet azokkal az ügyfelekkel és brókerekkel, akiktől rendeléseket szeretnél kapni. Ezt beállíthatod továbbítási célként is a meglévő logisztikai postafiókodból, ha szeretnél egyetlen elsődleges címet megtartani kifelé.
+
+## Mit nyer ki az AI?
+
+Amikor egy e-mail megérkezik, a Druma elolvassa mind az e-mail törzsét, mind a mellékleteket. Megpróbálja kinyerni:
+
+- Felvételi címet (utca, város, ország, irányítószám)
+- Szállítási címet
+- A kért felvételi dátumot és időablakot
+- A kért szállítási dátumot
+- A rakomány leírását (áru típusa, súly, méretek, raklapok)
+- Hivatkozási számokat (ügyfél megrendelésszáma, bróker hivatkozás)
+- Az árat vagy díjat, ha szerepel
+
+Támogatott melléklet-formátumok:
+
+- **PDF** — árajánlat-visszaigazolások, CMR-másolatok, rakodási megbízások (szövegkinyeréssel, vizuális tartalék-feldolgozással a szkennelt/kép alapú PDF-eknél)
+- **DOCX** (Word) — Word-dokumentumként küldött árajánlat-visszaigazolások
+- **Egyszerű szöveg (.txt)** és **egyszerű e-mail-törzs** — strukturálatlan szöveges e-mailek brókerektől
+- **Képek** (JPEG, PNG, WebP, HEIC/HEIF) — egy nyomtatott rendelésről vagy árajánlat-visszaigazolásról készült fotó közvetlenül az AI-hoz kerül
+
+Jelenleg nincs Excel/CSV-feldolgozás — a táblázat mellékletet a kinyerési folyamat nem olvassa be.
+
+## Vázlat rendelések felülvizsgálata
+
+A kinyert rendelések **Vázlat** státusszal kerülnek a **Rendelések** listádba, nem közvetlenül aktív rendelésként. Ez szándékos — minden vázlatot felül kell vizsgálnod, mielőtt bekerülne a rendszeredbe. Az e-mailek, amelyeket nem sikerült automatikusan kinyerni (alacsony megbízhatóság, ismeretlen küldő, vagy feldolgozási hiba), egyáltalán nem hoznak létre vázlatot — ehelyett egy összecsukható **"N e-mail vár kinyerésre"** bannerben várakoznak a Rendelések oldal tetején.
 
 <Steps>
-  <Step title="Lépj a Beállítások → Automatizálás → E-mail rendelésbeolvasás menüpontra">
-    Megjeleníti a cég egyedi e-mail aliaszát (pl. `orders-abc-transport@inbound.druma.io`).
+  <Step title="Nyisd meg a Rendelések oldalt">
+    A vázlat rendelések a normál rendelési listádban jelennek meg egy "Vázlat" jelvénnyel és egy AI-megbízhatósági pontszámmal. A kinyerésre váró e-mailek külön jelennek meg a kinyerésre-váró bannerben, ahol az **Kinyerés** gombra kattintva újra próbálkozhatsz, vagy az **Elvetés** gombbal eldobhatod őket.
   </Step>
-  <Step title="Oszd meg az aliaszt">
-    Küldd el ezt az e-mail-címet az ügyfeleknek és brókereknek. Megkérheted őket, hogy rendelési kérelmeiket erre a címre küldjék.
+  <Step title="Ellenőrizz minden mezőt">
+    Kattints a vázlatra a megnyitásához. Ellenőrizd a felvételi és szállítási címeket a térképen, erősítsd meg, hogy a dátumok értelmesek, és ellenőrizd a rakomány részleteit. Javíts ki mindent, amit az AI félreolvasott vagy kihagyott.
   </Step>
-  <Step title="Engedélyezd az integrációt">
-    Kapcsold be a **Rendelésbeolvasás engedélyezése** kapcsolót.
+  <Step title="Rendelj hozzá teherautót és sofőrt">
+    Használd a jobb oldali hozzárendelési panelt, hogy kiválassz egy elérhető járművet és sofőrt ehhez a rakományhoz.
+  </Step>
+  <Step title="Erősítsd meg a rendelést">
+    Kattints a **Rendelés megerősítése** gombra. A vázlat átkerül az aktív rendeléseid közé, és a sofőr értesítést kap.
   </Step>
 </Steps>
 
-## A beolvasás működése
+<Warning>
+Az AI-kinyerés nem 100%-osan pontos. A szokatlan formátumban írt címek, az alacsony képminőségű szkennelt PDF-ek, és a több nyelvet kevert e-mailek mind növelik a hiba esélyét. Mindig ellenőrizd a kinyert mezőket megerősítés előtt.
+</Warning>
 
-Amikor e-mail érkezik az aliaszra:
-1. A Druma AI elemzi az e-mail tartalmát
-2. Kinyeri a következőket (ha elérhető): felvételi cím, szállítási cím, dátumok, rakomány leírása, súly, ár
-3. Létrehoz egy **Vázlat** rendelést az Ügyfélhez rendelve (ha az e-mail feladója egyezik egy ismert ügyfél e-mail-tartományával)
-4. Értesíti a tervező csapatot
+## Küldők fehérlistázása
 
-## A vázlat rendelés felülvizsgálata
-
-A tervező a **Rendelések → Vázlatok** szekción látja a beolvasott vázlatokat. Minden vázlatnál:
-- Ellenőrzi az AI által kinyert adatok pontosságát
-- Szerkeszti a szükséges mezőket
-- Hozzárendel teherautót és sofőrt
-- Megerősíti a rendelést
+A Druma korlátozhatja, mely küldők hozhatnak létre vázlat rendeléseket, de jelenleg **nincs alkalmazáson belüli oldal** ennek az engedélyezési listának a saját kezű kezelésére. Ha a cégednek nincsenek konfigurált engedélyezési lista bejegyzései, a Druma feldolgozza a postafiók-címedre érkező **bármely** küldő e-mailjét. Ha szeretnéd, hogy a beérkező rendelések bizonyos ügyfél-/bróker-domainekre korlátozódjanak, írj a support@druma.io címre a bejegyzések hozzáadásához.
 
 <Note>
-Az AI-kinyerés nem 100%-os pontosságú — a vázlatokat mindig emberi szemmel kell átnézni megerősítés előtt.
+Ha egy engedélyezési lista be van állítva, és egy e-mail olyan küldőtől érkezik, aki nincs rajta, az az e-mail a kinyerésre-váró bannerben kerül sorba (nem kerül automatikusan feldolgozásra), és a tervezőid értesítést kapnak róla, ahelyett hogy csendben eldobásra kerülne.
 </Note>
 
-<Card title="Rendelés létrehozása" icon="plus" href="/en/planner/creating-orders">
-  Manuális rendeléslétrehozás az e-mail beolvasás mellett.
-</Card>
+## Tippek a jobb kinyeréshez
+
+- Kérd meg a brókereidet, hogy inkább strukturált PDF-eket küldjenek, mint szkennelt képeket, ha lehetséges
+- Az egyértelmű szakaszfejlécekkel (Felvétel, Szállítás, Rakomány) rendelkező árajánlat-visszaigazolások a legpontosabban nyerhetők ki
+- Ha egy adott bróker formátuma következetesen rosszul nyerhető ki, írj a support@druma.io címre — formátum-specifikus kinyerési szabályok adhatók hozzá
+
+## Gyakori kérdések
+
+**Mi van, ha egy e-mail több rakományt tartalmaz?** Ha egy e-mail két vagy több PDF/DOCX rendelési mellékletet tartalmaz, a Druma mindegyiket önállóan nyeri ki, és mellékletenként külön vázlatot hoz létre azokhoz, amelyekről megerősítést nyer, hogy valódi fuvarozási rendelések (a kísérő dokumentumok, például biztosítási igazolások, az első vázlathoz kerülnek csatolásra, nem hoznak létre saját vázlatot). Ez csak a **több dokumentum-mellékletre** vonatkozik — egy több rakományt felsoroló táblázat nem oszlik szét több vázlatra, mivel a táblázat-feldolgozás nem támogatott.
+
+**Kézzel is elindíthatom az újrakinyerést?** Csak egy még a kinyerésre-váró bannerben várakozó e-mailnél — kattints mellette a **Kinyerés** gombra. Egy már létrehozott vázlaton nincs újrakinyerési művelet.
+
+**Mi történik az eredeti e-maillel?** Tárolásra kerül, és összekapcsolódik a vázlat rendeléssel. Bármikor megtekintheted a rendelés-részletező oldalról.
+
+<CardGroup cols={2}>
+  <Card title="Rendelések manuális létrehozása" icon="plus" href="/en/planner/creating-orders">
+    Ismerd meg, hogyan hozz létre rendeléseket közvetlenül a Drumában, ha nem használsz e-mail beolvasást.
+  </Card>
+  <Card title="Munka brókerekkel" icon="handshake" href="/en/planner/brokers">
+    Bróker-kapcsolatok, árajánlat-visszaigazolások és jutaléknyomon követés kezelése.
+  </Card>
+</CardGroup>

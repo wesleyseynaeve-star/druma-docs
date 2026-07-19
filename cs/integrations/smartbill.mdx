@@ -1,41 +1,69 @@
 ---
 title: "Integrace SmartBill"
-description: "Jak připojit Druma k SmartBill pro automatické odesílání potvrzených faktur do rumunského cloudového fakturačního systému."
+description: "Odesílejte faktury Druma do SmartBill automaticky při jejich odeslání, jako jednosměrnou kopii pro váš účetní workflow."
 icon: "receipt"
 ---
 
-## Přehled
+SmartBill je rozšířená rumunská cloudová fakturační a účetní platforma. Integrace Druma-SmartBill odesílá kopii každé faktury, kterou odešlete, do SmartBill, takže žije i ve vašem účetním systému bez ručního opětovného zadávání.
 
-SmartBill je rumunská cloudová fakturační platforma. S aktivní integrací Druma automaticky odesílá potvrzené faktury do SmartBill — bez ručního opakovaného zadávání.
+## Co integrace dělá
 
-## Konfigurace
+- Každá faktura, kterou v Druma **odešlete** (ne v okamžiku vygenerování/vytvoření), se jednosměrně odešle do SmartBill jako návrh faktury
+- Fakturu zkontrolujete a vystavíte ze SmartBill jako součást svého běžného účetního workflow
+- Stav odeslání faktury do SmartBill (odesláno nebo chyba) se zaznamená na faktuře Druma — neexistuje žádná průběžná obousměrná synchronizace stavu zpět ze SmartBill
+- Data klienta a produktu odeslaná do SmartBill jsou v datovém obsahu odeslání výslovně označena „neukládat" — SmartBill z této integrace **nevytváří** ani neaktualizuje vlastní záznamy klientů/produktů
+
+## Nastavení integrace
 
 <Steps>
   <Step title="Získejte API klíč SmartBill">
-    V účtu SmartBill přejděte do **Účet → API** a zkopírujte API klíč.
+    Přihlaste se na [smartbill.ro](https://smartbill.ro). Přejděte do **Cont → Setări → API**. Vygenerujte nový API klíč (token). Zkopírujte ho — SmartBill ho zobrazí pouze jednou.
   </Step>
-  <Step title="Otevřete kartu SmartBill v Druma">
-    Přejděte do **Nastavení → Integrace → SmartBill**.
+  <Step title="Najděte CIF své společnosti a řadu faktur">
+    CIF vaší společnosti (Codul de Identificare Fiscală) je zobrazen ve vašem účtu SmartBill v nastavení společnosti. Budete také potřebovat **název řady faktur** nakonfigurovaný ve SmartBill, který mají odeslané faktury používat.
   </Step>
-  <Step title="Zadejte API klíč a CIF">
-    Vložte API klíč a zadejte CIF vaší společnosti.
+  <Step title="Zadejte přihlašovací údaje v Druma">
+    Přejděte do **Nastavení → Integrace → SmartBill**. Zadejte svůj **e-mail** účtu SmartBill, **API token**, **CIF** a **řadu faktur** — všechna čtyři pole jsou povinná.
   </Step>
-  <Step title="Otestujte a uložte">
-    Klikněte na **Otestovat připojení**, pak **Uložit**.
+  <Step title="Otestujte připojení">
+    Klikněte na **Otestovat připojení**. Druma se autentizuje u SmartBill a potvrdí, že je integrace aktivní.
   </Step>
 </Steps>
 
-## Jak to funguje
+## Jak funguje odesílání faktur
 
-Jakmile je faktura v Druma označena jako potvrzená, je automaticky odeslána do SmartBill. Na stránce faktury se zobrazí stav SmartBill (Odesláno, Odmítnuto, Chyba).
+1. Vygenerujete fakturu v Druma s vaším pořadovým číslem faktury
+2. Když fakturu **odešlete** (ne v okamžiku vygenerování), Druma ji odešle do SmartBill jako návrh, spolu s jakýmkoli podáním ANAF e-Factura nebo Peppol, které se také spouští při odeslání
+3. Otevřete SmartBill, zkontrolujete návrh a vystavíte ho (Emite factura)
+4. SmartBill při vystavení přiřadí **vlastní číslo faktury** — číslo faktury Druma se do SmartBill neposílá a tam se nezobrazuje; číslo SmartBill se uloží zpět na fakturu Druma pro referenci
 
-<Warning>
-Pokud vyprší předplatné SmartBill nebo je API klíč regenerován, integrace tiše přestane fungovat. Pravidelně kontrolujte stav v Nastavení → Integrace.
-</Warning>
+<Note>
+Stav odeslání do SmartBill na faktuře Druma je jednoduchý příznak odesláno/chyba, ne sledovač Návrh/Vystaveno/Zaplaceno — Druma nemá žádný přehled o tom, co se s fakturou ve SmartBill děje po odeslání (v tomto směru mezi oběma systémy neexistuje žádný webhook).
+</Note>
 
-<Card title="Generování faktur" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
-  Jak generovat faktury, které se odešlou do SmartBill.
-</Card>
----
+## Důležitá omezení
 
-This page is being translated. In the meantime, please refer to the [English version](/en/integrations/smartbill).
+**Správa faktur zůstává ve SmartBill.** Integrace je jednosměrné odeslání v okamžiku odeslání. Úprava, zrušení, vystavení nebo dobropisování faktury musí probíhat přímo ve SmartBill — nic z toho se nesynchronizuje zpět do Druma.
+
+**SmartBill nepotřebujete pro ANAF e-Factura.** Druma odesílá faktury přímo do ANAF pomocí vlastní integrace e-Factura, nezávisle na SmartBill. Obě integrace můžete používat současně bez konfliktu.
+
+<Note>
+Pokud aktuálně používáte SmartBill pro podání e-Factura, rozhodněte se, zda v tom pokračovat ve SmartBill, nebo přejít na přímou integraci ANAF Druma. Provozování obou paralelně způsobí duplicitní podání. Pokud potřebujete poradit s migrací, kontaktujte support@druma.io.
+</Note>
+
+## Řešení problémů
+
+**Odeslání selhalo:**
+Faktura Druma při selhání zaznamená podrobnost `smartbill_error`. Časté příčiny: vypršelý API token, servisní okno SmartBill, nebo záznam klienta s chybějícím CUI/DIČ, které SmartBill vyžaduje pro firemní klienty.
+
+**Konflikt čísla faktury:**
+Pokud byl ve SmartBill ručně vytvořen návrh se stejnou řadou/číslem před odesláním, SmartBill duplicitu odmítne. Smažte ruční návrh ve SmartBill, poté klikněte na **Zopakovat SmartBill** v nabídce akcí řádku faktury v Druma.
+
+<CardGroup cols={2}>
+  <Card title="Generování faktur" icon="file-invoice" href="/cs/invoicing/generating-invoices">
+    Jak generovat faktury z dokončených objednávek v Druma, než se odešlou do SmartBill.
+  </Card>
+  <Card title="ANAF e-Factura" icon="building-columns" href="/cs/invoicing/efactura-anaf">
+    Přímé odesílání faktur do ANAF z Druma bez použití SmartBill.
+  </Card>
+</CardGroup>

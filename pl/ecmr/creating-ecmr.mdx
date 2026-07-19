@@ -4,82 +4,85 @@ description: "Jak Druma generuje dokumenty eCMR automatycznie dla zleceń transg
 icon: "file-plus"
 ---
 
-Druma tworzy dokumenty eCMR przez TransFollow. Proces jest w dużej mierze automatyczny dla kwalifikujących się zleceń, ale możesz również ręcznie wyzwolić tworzenie ze strony szczegółów zlecenia.
+Druma domyślnie tworzy dokumenty eCMR **wewnętrznie, przy użyciu natywnego dostawcy Druma**. Nie jest potrzebne żadne konto usługi zewnętrznej. Proces jest w dużej mierze automatyczny dla kwalifikujących się zleceń, ale możesz też ręcznie wyzwolić tworzenie ze strony szczegółów zlecenia.
 
 ---
 
 ## Kiedy Druma tworzy eCMR automatycznie
 
-Druma tworzy eCMR automatycznie gdy spełnione są **obie** następujące warunki:
+Druma tworzy eCMR automatycznie, gdy tylko zlecenie drogowe zostaje **zdysponowane** — w momencie przypisania ciężarówki i zmiany statusu na "Przypisane". Nie ma porównania krajów odbioru/dostawy: każde zdysponowane zlecenie, które nie jest podzlecone, i którego firma korzysta z natywnego dostawcy eCMR, otrzymuje eCMR wydany jako niepodpisany projekt. Oznacza to, że zlecenia krajowe też go otrzymują — po prostu pozostaje niepodpisany, dopóki nie będzie potrzebny.
 
-1. **Integracja TransFollow jest aktywna** — Twój klucz API jest zapisany i połączenie jest prawidłowe w Ustawienia — Integracje.
-2. **Zlecenie jest transgraniczne** — kraj odbioru i kraj dostawy są różne.
-
-Gdy potwierdzone zlecenie spełnia oba warunki, Druma rejestruje eCMR w TransFollow natychmiast po potwierdzeniu zlecenia.
+Po wydaniu dokument eCMR pojawia się w karcie **Dokumenty** strony szczegółów zlecenia, gdzie możesz obejrzeć opieczętowany PDF przez przycisk **Zobacz eCMR**, gdy będzie gotowy.
 
 <Note>
-Zlecenia krajowe (ten sam kraj odbioru i dostawy) nie uruchamiają automatycznego tworzenia eCMR, ponieważ Konwencja CMR dotyczy transportu międzynarodowego. Możesz nadal tworzyć eCMR ręcznie dla zlecenia krajowego, jeśli Twój klient lub trasa tego wymaga.
+Zlecenia podzlecone są pomijane — podwykonawca wydaje własny CMR, więc Druma nie może podpisać w jego imieniu. Zlecenia, które już mają eCMR, nigdy nie są wydawane ponownie.
 </Note>
 
 ---
 
 ## Ręczne tworzenie eCMR
 
-<Steps>
-  <Step title="Otwórz zlecenie">
-    Przejdź do **Zlecenia**, znajdź zlecenie i kliknij, aby otworzyć stronę szczegółów.
-  </Step>
-  <Step title="Otwórz kartę eCMR">
-    Kliknij kartę **eCMR** w pobliżu górnej części strony szczegółów zlecenia.
-  </Step>
-  <Step title="Kliknij Utwórz eCMR">
-    Kliknij przycisk **Utwórz eCMR**. Druma pokaże Ci podgląd danych, które zostaną przesłane do TransFollow.
-  </Step>
-  <Step title="Przejrzyj wszystkie pola">
-    Sprawdź dokładnie każde pole przed potwierdzeniem. Po rejestracji w TransFollow numer dokumentu eCMR nie może być usunięty ani zmieniony.
-  </Step>
-  <Step title="Potwierdź tworzenie">
-    Kliknij **Potwierdź i utwórz**. Druma rejestruje dokument w TransFollow a status eCMR zmienia się na "Oczekuje na podpis nadawcy."
-  </Step>
-</Steps>
+Dla zleceń wieloodcinkowych (grupaż) każdy odcinek drogowy otrzymuje własny eCMR. Jeśli odcinek jeszcze go nie ma, otwórz kartę **Ładunek / Przystanki** zlecenia i kliknij **Utwórz eCMR** obok tego odcinka — nie ma osobnej "karty eCMR": przycisk znajduje się bezpośrednio w wierszu odcinka.
+
+<Note>
+Gdy oznaczasz potwierdzony transgraniczny odcinek drogowy jako ukończony, Druma automatycznie tworzy dla niego eCMR w tym momencie, jeśli jeszcze nie istnieje.
+</Note>
 
 ---
 
 ## Dane wstępnie wypełnione ze zlecenia
 
+Druma wypełnia pola eCMR danymi zlecenia, które już wprowadziłeś. Oto skąd pochodzi każde z nich:
+
 | Pole eCMR | Źródło w Druma |
 |---|---|
-| Nazwa i adres nadawcy | Dane Twojej firmy z Ustawienia — Firma |
-| Nazwa i adres odbiorcy | Rekord klienta w zleceniu |
+| Nazwa i adres nadawcy | Rekord klienta w zleceniu |
+| Nazwa i adres przewoźnika | Dane Twojej firmy |
+| Nazwa i adres odbiorcy | Rekord klienta w zleceniu (adres dostawy pochodzi z przystanku dostawy) |
 | Adres odbioru | Lokalizacja odbioru zlecenia |
 | Adres dostawy | Lokalizacja dostawy zlecenia |
 | Opis towarów | Pole opisu ładunku w zleceniu |
 | Numer rejestracyjny ciężarówki | Pojazd przypisany do zlecenia |
 | Imię i nazwisko kierowcy | Kierowca przypisany do zlecenia |
+| Warunki specjalne (ADR) | Flaga ADR zlecenia i klasa |
+
+Jeśli którekolwiek z tych danych brakuje lub jest nieprawidłowe w zleceniu, najpierw popraw zlecenie, a następnie utwórz eCMR — nie ma kroku podglądu wstępnego wypełnienia; dokument jest zapisywany natychmiast.
 
 ---
 
-## Czego nie można zmienić po potwierdzeniu
+## Zanim potwierdzisz: czego nie można zmienić
 
 <Warning>
-Po kliknięciu **Potwierdź i utwórz** numer dokumentu eCMR jest rejestrowany w TransFollow. Nie możesz:
-- Usunąć eCMR
-- Zmienić numeru dokumentu
-- Zmodyfikować nadawcy, odbiorcy ani opisu towarów po rejestracji
+Gdy eCMR zostanie wydany dla zlecenia (lub odcinka), Druma nie wyda dla niego drugiego — ponowne kliknięcie Utwórz eCMR, lub ponowne uruchomienie się wyzwalacza ukończenia odcinka, po prostu zwraca istniejący dokument zamiast tworzyć nowy. To zabezpieczenie idempotencji, nie blokada pól: nie ma ograniczenia w edytowaniu samych danych źródłowych zlecenia.
 
-Jeśli potrzebujesz poprawić zarejestrowany eCMR, musisz go anulować (poprzez proces Papierowego CMR jako alternatywy) i ewentualnie stworzyć nowy.
+Jeśli musisz poprawić zarejestrowany eCMR, użyj procesu Papierowy CMR jako alternatywa i, jeśli to zasadne, utwórz nowy.
 </Warning>
 
 ---
 
-## Tryb testowy
+## Dostawca eCMR: Natywny (TransFollow tylko dla wcześniejszych konfiguracji)
 
-Jeśli TransFollow jest ustawiony na **tryb testowy** w Ustawienia — Integracje, dokumenty eCMR będą wyglądać na prawidłowo tworzone, ale dokument **nie jest rejestrowany w TransFollow** i nie ma mocy prawnej.
+Domyślnie Druma używa swojego **natywnego dostawcy eCMR** — nie jest wymagane żadne konto zewnętrzne ani klucz API. W **Ustawienia → Integracje → Dostawca eCMR** jedynymi opcjami są **Natywny** i **Wyłączony** — TransFollow nie może już zostać wybrany, ani dla nowej, ani dla istniejącej firmy. Jeśli Twoja firma ma wcześniejszą konfigurację TransFollow, nadal działa jak dotąd i po cichu przekształca się w Natywny przy następnym zapisaniu integracji.
 
-Tryb testowy jest przeznaczony dla szkoleń kierowców, testowania przepływu podpisywania i demonstrowania funkcji klientom.
+<Card title="Dostawcy eCMR" icon="right-left" href="/pl/ecmr/ecmr-providers">
+  Co robi natywny dostawca i co dzieje się z wcześniejszymi konfiguracjami TransFollow.
+</Card>
 
 ---
 
-<Card title="Przepływ podpisywania" icon="pen-to-square" href="/en/ecmr/signing-flow">
-  Jak kierowca zbiera wszystkie trzy podpisy na telefonie.
-</Card>
+## Rozliczenia
+
+eCMR jest wliczone w Twoją subskrypcję Druma bez dodatkowych kosztów — nie ma opłaty za dokument ani limitu użycia. Statystyki użycia możesz zobaczyć w **Ustawienia → Rozliczenia → Użycie**.
+
+---
+
+## Kolejne kroki
+
+<CardGroup cols={2}>
+  <Card title="Przepływ podpisywania" icon="pen-to-square" href="/pl/ecmr/signing-flow">
+    Jak podpisują nadawca, kierowca i odbiorca — i na jakim urządzeniu.
+  </Card>
+  <Card title="Czym jest eCMR?" icon="file-contract" href="/pl/ecmr/what-is-ecmr">
+    Tło eCMR, jego podstawa prawna i jak Druma go wydaje.
+  </Card>
+</CardGroup>

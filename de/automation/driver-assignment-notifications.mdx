@@ -1,47 +1,72 @@
 ---
 title: "Fahrerzuweisungsbenachrichtigungen"
-description: "Druma sendet automatisch Push-Benachrichtigungen an Fahrer, wenn sie einem Auftrag zugewiesen werden, damit sie ihren nächsten Job ohne Anruf vom Disponenten kennen."
+description: "Druma sendet automatisch Push-Benachrichtigungen an Fahrer, wenn sie einem Auftrag zugewiesen werden, damit sie ihren nächsten Job stets kennen — ganz ohne Anruf vom Disponenten."
 icon: "bell-concierge"
 ---
 
-## Übersicht
+Wenn ein Planer einen Fahrer einem Auftrag zuweist, übernimmt Druma die Benachrichtigung. Es gehen zwei automatische Push-Benachrichtigungen hinaus — eine am Vorabend der Abfahrt, eine am Morgen — sodass der Fahrer die Auftragsdetails zur richtigen Zeit hat, ohne dass die Disposition anrufen muss.
 
-Wenn ein Planer einen Auftrag einem Fahrer zuweist, sendet Druma automatisch eine Push-Benachrichtigung an die Fahrer-App. Der Fahrer sieht sofort seinen nächsten Auftrag ohne Anruf oder SMS.
+## Wann Benachrichtigungen gesendet werden
 
----
+Druma sendet zwei Benachrichtigungen pro Auftrag:
 
-## Wie Benachrichtigungen funktionieren
+| Benachrichtigung | Zeitpunkt | Nachricht |
+|---|---|---|
+| Abenderinnerung | 18:00 UTC am Vortag der Abholung | „Erinnerung: Abholung morgen" / „Morgen: — in [Abholstadt] → [Lieferstadt]" |
+| Morgenerinnerung | 06:00 UTC am Abholtag | „Heutige Abholung" / „Abholung heute um — in [Abholstadt]" |
 
-1. Planer bestätigt einen Auftrag und weist ihn einem Fahrer zu.
-2. Druma sendet sofort eine Push-Benachrichtigung an das registrierte Gerät des Fahrers.
-3. Der Fahrer tippt auf die Benachrichtigung und öffnet den Auftragsdetail.
+Beide Zeiten sind **fest in UTC** — sie werden nicht an die lokale Zeitzone des Fahrers oder des Auftrags angepasst. Der Platzhalter für die Abholzeit in der Nachricht ist derzeit nicht befüllt (er erscheint als reiner Gedankenstrich „—") — die Benachrichtigung nennt dem Fahrer nur die Abholstadt (und bei der Abenderinnerung zusätzlich die Lieferstadt), keine konkrete Uhrzeit.
 
----
+Beide Benachrichtigungen werden in der im Fahrerprofil konfigurierten Sprache (Feld `language`) gesendet, mit Englisch als Rückfalloption, falls nicht gesetzt. Druma unterstützt alle 10 Plattformsprachen, einschließlich Rumänisch, Bulgarisch, Ungarisch, Polnisch, Tschechisch und Slowakisch.
 
-## Benachrichtigungsinhalt
+## Was der Fahrer sieht
 
-Die Benachrichtigung enthält:
-- Auftragsreferenznummer
-- Abholadresse und -datum
-- Lieferadresse
-- Abholzeit
+Tippt der Fahrer auf die Benachrichtigung, öffnet sich die Druma-Fahrer-App direkt beim Auftrag. Er sieht:
 
----
+- Vollständige Abholadresse mit einer „Navigieren"-Schaltfläche (öffnet Google Maps oder Waze)
+- Name und Telefonnummer des Ladekontakts
+- Angefordertes Ladezeitfenster
+- Vollständige Lieferadresse
+- Warenbeschreibung, Gewicht und Palettenanzahl
+- Alle vom Planer für diesen spezifischen Auftrag hinzugefügten Notizen
+- CMR-/eCMR-Dokumente, sofern verfügbar
 
-## Erinnerungsbenachrichtigungen
+Der Fahrer muss seinen Auftrag nicht suchen — die Benachrichtigung führt ihn direkt dorthin.
 
-Druma sendet auch automatische Erinnerungen:
-- **Am Vorabend um 18:00 Uhr** — Für Aufträge, die am nächsten Tag beginnen
-- **Am Morgen um 06:00 Uhr** — Für Aufträge, die heute beginnen
+## Voraussetzungen für Benachrichtigungen
 
----
+Push-Benachrichtigungen setzen voraus, dass der Fahrer die Druma-PWA auf seinem Telefon installiert und Browser-Benachrichtigungen akzeptiert hat.
 
-## Fahrer ohne Push-Benachrichtigungen
+**Android (Chrome):**
+Öffnet der Fahrer das Druma-Fahrerportal erstmals in Chrome, fragt der Browser automatisch nach der Benachrichtigungsberechtigung. Der Fahrer tippt auf Zulassen. Keine weitere Einrichtung nötig.
 
-Wenn ein Fahrer keine Push-Benachrichtigungen empfängt:
-- Stellen Sie sicher, dass Benachrichtigungen für die Druma-App auf seinem Gerät aktiviert sind
-- Prüfen Sie, ob der Fahrer die App neu geöffnet hat (zur Registrierung des Geräts erforderlich)
+**iOS (Safari):**
+iOS handhabt Benachrichtigungen anders. Der Fahrer muss:
+1. Das Druma-Fahrerportal in Safari öffnen
+2. Auf die Teilen-Schaltfläche tippen (das Feld mit dem Pfeil)
+3. **Zum Home-Bildschirm hinzufügen** wählen
+4. Die App über das Symbol auf dem Home-Bildschirm öffnen
+5. Bei Aufforderung auf Zulassen für Benachrichtigungen tippen
 
-<Card title="Fahrerverwaltung" icon="id-card" href="/en/planner/driver-management">
-  Verwalten Sie Fahrer und ihre App-Zugänge.
-</Card>
+<Note>
+Auf iOS wird die Benachrichtigungsberechtigung erst abgefragt, nachdem die App zum Home-Bildschirm hinzugefügt und von dort geöffnet wurde. Meldet ein Fahrer, dass er auf dem iPhone keine Benachrichtigungen erhält, ist dies die häufigste Ursache — prüfen Sie, ob die Installation über den Home-Bildschirm erfolgte.
+</Note>
+
+## Was, wenn ein Fahrer kein Smartphone hat?
+
+Push-Benachrichtigungen ergänzen Ihren bestehenden Dispositionsprozess, ersetzen ihn aber nicht. Hat ein Fahrer kein für die PWA geeignetes Smartphone — oder ist einfach nicht mit Apps vertraut — sollte der Disponent wie gewohnt anrufen.
+
+Die Zuweisung wird in Druma trotzdem erfasst, unabhängig davon, ob der Fahrer die App nutzt. Auftrag, Route und Dokumente sind alle gespeichert und vom Desktop aus druckbar.
+
+## Benachrichtigungen bei Aufträgen mit mehreren Stopps
+
+Bei Aufträgen mit mehreren Abhol- oder Lieferstopps sendet Druma eine einzelne Benachrichtigung pro Auftrag. Der Benachrichtigungstext bezieht sich auf die erste Abholstadt und die letzte Lieferstadt. Der Fahrer sieht alle Stopps in der richtigen Reihenfolge, sobald er den Auftrag öffnet.
+
+<CardGroup cols={2}>
+  <Card title="Fahrerverwaltung" icon="id-card" href="/de/planner/driver-management">
+    Wie Sie Fahrer hinzufügen, Profile einrichten und Dokumente verwalten.
+  </Card>
+  <Card title="Fahrer-App installieren" icon="mobile" href="/de/driver/installing-the-app">
+    Schritt-für-Schritt-Anleitung zur Installation der Druma-PWA auf Android und iOS.
+  </Card>
+</CardGroup>

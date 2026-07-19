@@ -1,0 +1,63 @@
+---
+title: "Écarts"
+description: "Trouvez les chargements non couverts, les opportunités de repositionnement à vide (km morts), et les camions vides qui pourraient recharger à proximité."
+icon: "route"
+---
+
+## Qu'est-ce que l'outil Écarts ?
+
+Chaque fois qu'un camion termine une livraison sans prochain chargement prévu, ou qu'une commande reste sans camion affecté à l'approche de sa date de chargement, vous brûlez des kilomètres à vide ou risquez de manquer un chargement. La page **Écarts** (`/operations/gaps`, dans la barre d'onglets Planification sous **Écarts**) fait remonter les deux problèmes en un seul endroit, à travers trois sous-onglets.
+
+<Frame caption="L'outil Écarts — écarts de couverture avec une action recommandée, km à vide, chargement, livraison, et client.">
+  <img src="/images/planner/empty-km-gaps.png" alt="Page Écarts listant les écarts de couverture et les opportunités de rechargement en km à vide" />
+</Frame>
+
+---
+
+## Couverture
+
+Le sous-onglet par défaut liste les **chargements non couverts** — des commandes futures qui n'ont pas encore de camion affecté, classées par urgence. Chaque ligne montre :
+
+- **Recommandé** — un badge : **Affecter** (un camion proche a été trouvé), **Sous-traiter** (trouver un transporteur), ou **Doit se couvrir soi-même** (aucune option trouvée)
+- **KM à vide** — la distance à vide pour la correspondance recommandée, codée par couleur : vert ≤150 km, ambre 150–300 km, rouge >300 km
+- **Chargement**, **Date de chargement**, **Livraison**, **Client**
+
+Les actions de ligne vous permettent d'affecter directement le camion suggéré, d'accéder à **Trouver un transporteur**, ou d'ouvrir la commande pour le détail. Un menu **Triage** vous permet de marquer une ligne **En cours**, **Reporter 24h**, ou **Accepter en sous-traitance** afin qu'elle cesse de rivaliser pour l'attention.
+
+La barre KPI montre **≤12h / ≤24h / ≤72h non couverts**, **% auto-résolvable**, **Besoin transporteur**, et **Coordonnées manquantes** (commandes dont les arrêts manquent de coordonnées et ne peuvent pas être rapprochées).
+
+---
+
+## Optimiseur de km à vide
+
+Ce sous-onglet calcule les opportunités de repositionnement à travers **toutes** les commandes (couvertes et non couvertes) en exécutant une matrice de routage sur chaque paire livraison→chargement — cela peut prendre quelques secondes à charger. C'est une disposition permanente **tableau divisé + carte**, pas une bascule : le tableau liste les écarts à gauche, et cliquer sur une ligne trace une ligne en pointillés sur la carte depuis ce point de livraison jusqu'au prochain chargement proposé — seule la ligne de la ligne sélectionnée est tracée, pas toutes.
+
+Colonnes : **Recommandé**, **KM à vide**, **Chargement**, **Date de chargement**, **Repositionne depuis** (la commande et le point de livraison d'où viendrait le camion), **Livraison**, **Client**. Un filtre **Top 10 / Top 25 / Tous** limite le nombre de lignes calculées et affichées, et la carte a son propre filtre de sévérité (Élevée / Moyenne / Faible / Non couvert).
+
+---
+
+## Camions vides
+
+Ce sous-onglet inverse la vue : une ligne par **camion** qui termine une livraison sans rien de prévu après, rapproché du chargement non affecté le plus proche avec lequel il pourrait recharger. Colonnes : **Camion** (avec nom du chauffeur), **Se termine à** (lieu et date), **Meilleur rechargement**, et **Km à vide** pour ce rechargement. Les camions sans chargement accessible n'affichent aucune suggestion de rechargement et nécessitent une décision manuelle de repositionnement ou de sous-traitance.
+
+KPI : **Camions vides**, **Rechargement trouvé**, **Pas de rechargement**, **Km à vide moy.**, **Coordonnées manquantes**.
+
+---
+
+## Exporter
+
+La barre d'outils de chaque sous-onglet a des boutons **Imprimer** et **Exporter** pour le tableau actuel — l'export produit un fichier Excel (.xlsx) des colonnes visibles. Il n'y a pas d'export de coordonnées GPS brutes.
+
+---
+
+## Filtres
+
+Chaque sous-onglet a une zone de recherche en texte libre (numéro de commande, nom de client, adresse de chargement/livraison). Il n'y a pas de filtre séparé de plage de dates, camion, ou chauffeur — les onglets Couverture et Optimiseur sont déjà limités aux commandes à venir, et l'onglet Camions vides n'a pas de sélecteur par camion/chauffeur puisque chaque ligne est déjà un camion.
+
+---
+
+## Utiliser cet outil pour trouver des frets retour
+
+Les lignes où vous voyez systématiquement des écarts rouges (>300 km) sont exactement celles où un arrangement de fret retour permanent — ou une recherche manuelle sur une bourse de fret comme Timocom ou Trans.eu à la livraison — aurait le meilleur retour sur investissement. Druma n'exécute pas de recherche automatique de chargement pour les commandes FTL générales ; identifier et réserver le fret retour est une étape manuelle une fois que l'outil vous a orienté vers la ligne.
+
+Si l'écart concerne une ligne de groupage (à arrêts multiples), vérifiez si les suggestions automatiques de consolidation de fret retour de Druma ont déjà signalé un chargement retour correspondant — celles-ci apparaissent directement sur le panneau de consolidation de groupage et ne nécessitent pas de recherche manuelle.

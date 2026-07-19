@@ -1,51 +1,136 @@
 ---
 title: "Branding a formáty dokumentů"
-description: "Přizpůsobte logo společnosti, barvy značky a formát číslování faktur, dobropisů a objednávek."
+description: "Přizpůsobte barvy značky a formát číslování pro faktury, objednávky a zvýrazněné řádky napříč Druma."
 icon: "palette"
 ---
 
-Nastavení **Branding a formáty** ovládá, jak se vaše společnost zobrazuje na každém dokumentu generovaném Druma: PDF faktur, PDF dobropisů a záhlaví e-mailů.
+Nastavení **Branding a formáty** určuje, jak se vaše společnost zobrazuje na generovaných dokumentech a jak se sestavují referenční čísla faktur a objednávek.
+
+Toto nastavení je specifické pro danou společnost. Pokud v Druma spravujete více společností, každá má vlastní konfiguraci brandingu a formátů.
 
 **Kdo může upravovat:** Pouze role Správce a Správce společnosti.
 
-Přejděte do **Nastavení → Branding a formáty**.
+<Frame caption="Branding a formáty — 4 záložky: Branding, Faktura, Objednávka, Formátování řádků.">
+  <img src="/images/admin/branding-formats.png" alt="Panel nastavení brandingu a formátů" />
+</Frame>
+
+---
+
+## Přístup k nastavení
+
+Přejděte do **Nastavení → Branding a formáty**. Stránka má čtyři záložky: **Branding**, **Formát faktury**, **Formát objednávky** a **Formátování řádků**.
 
 ---
 
 ## Záložka Branding
 
-### Logo
+Záložka Branding ovládá dvě barvy značky použité na generovaných PDF a e-mailových šablonách.
 
-Klikněte na **Nahrát logo** pro výběr souboru PNG, JPG nebo SVG. Logo se zobrazuje v záhlaví PDF faktur.
+### Primární barva
 
-### Primární a akcentní barva
+Používá se pro ohraničení dokumentů, popisky a součty na PDF fakturách a e-mailových šablonách.
 
-Nastavte barvy značky pro PDF faktury a e-mailové šablony.
+### Akcentní barva
+
+Používá se pro záhlaví tabulek a text v těle stejných dokumentů.
+
+Každá barva má pole s hex kódem a barevnou paletu, živý náhled zobrazuje obě barvy vedle sebe.
+
+### Uložení
+
+Klikněte na **Uložit změny** pro použití barev, nebo **Obnovit výchozí** pro obnovení vestavěných barev.
+
+<Note>
+Logo vaší společnosti se nekonfiguruje na této stránce — nahrává se v **Nastavení → Společnost**. Druma přijímá soubory PNG, JPEG, SVG nebo WebP do 2 MB; není vyžadována minimální šířka ani průhledné pozadí.
+</Note>
 
 ---
 
 ## Záložka Formát faktury
 
-Formáty čísel jsou sestavovány ze šablonové řetězce s tokeny:
+Záložka Formát faktury určuje vzor čísla faktury, název záhlaví faktury, úrok z prodlení, platební pokyny, obchodní podmínky, text v zápatí a volitelné sekce zobrazené na PDF faktury.
 
-| Token | Příklad výstupu |
+### Formátovací tokeny
+
+Vzory čísel se sestavují z šablonového řetězce kombinujícího pevný text s dynamickými tokeny v složených závorkách:
+
+| Token | Co vloží |
 |---|---|
-| `{PREFIX}` | Váš prefix (např. `DR`) |
-| `{YYYY}` | `2026` |
-| `{NNN}` | `001` |
+| `{PREFIX}` | Váš definovaný prefix (např. `INV`, `ORD`, vlastní zkratka) |
+| `{YYYY}` | Čtyřciferný rok (např. `2026`) |
+| `{YY}` | Dvouciferný rok (např. `26`) |
+| `{MM}` | Dvouciferný měsíc (např. `04`) |
+| `{DD}` | Dvouciferný den (např. `07`) |
+| `{YYMMDD}` | Kombinovaný rok, měsíc a den (např. `260407`) |
+| `{SEQ3}` | Pořadové číslo doplněné nulami na 3 číslice (např. `042`) |
+| `{SEQ4}` | Pořadové číslo doplněné nulami na 4 číslice (např. `0042`) |
+| `{SEQ5}` | Pořadové číslo doplněné nulami na 5 číslic |
+| `{SEQ6}` | Pořadové číslo doplněné nulami na 6 číslic |
 
-**Výchozí formát faktury:** `DR-{YYYY}-{NNN}` → `DR-2026-001`
+Token `{NNN}`/`{NNNN}` neexistuje — použijte jeden z tokenů `{SEQ3}`–`{SEQ6}`. Tokeny lze libovolně kombinovat s oddělovači jako `-` nebo `/`.
 
-**Výchozí formát dobropisu:** `CN-{YYYY}-{NNN}` → `CN-2026-001`
+Pořadové číslo se resetuje vždy, když se změní hodnota datového tokenu ve vzoru (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` nebo `{YYYY}`) — v praxi to znamená, že vzor obsahující `{YYMMDD}` se resetuje **denně**, ne jednou za rok. Vzor používající pouze `{YYYY}` se resetuje jednou ročně, jak by se dalo očekávat.
+
+### Formát čísla faktury
+
+Zadejte požadovanou šablonu do pole **Formát čísla faktury**. Živý náhled pod polem se aktualizuje při psaní a zobrazuje ukázkové číslo s dnešním datem a příkladovou hodnotou pořadového čísla.
+
+**Výchozí:** prefix faktury `INV`, vzor `{PREFIX}-{YYMMDD}-{SEQ3}` → výsledek podobný `INV-260407-042`.
+
+**Příklady přizpůsobení:**
+
+| Šablona | Ukázkový výstup |
+|---|---|
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
+
+<Note>
+Dobropisy používají vlastní číselnou řadu (výchozí prefix `CN`) a vlastní čítač, ale v současnosti nemají na této stránce editovatelné pole vzoru.
+</Note>
+
+### Uložení
+
+Klikněte na **Uložit změny**. Nový formát se použije na další fakturu vytvořenou po uložení — stávající faktury si ponechávají referenční číslo, se kterým byly vystaveny.
 
 ---
 
 ## Záložka Formát objednávky
 
-Definuje vzor číslování pro referenční čísla objednávek.
+Záložka Formát objednávky určuje vzor číslování pro referenční čísla objednávek — identifikátor zobrazený na plánovací tabuli, v panelu detailu objednávky a ve veškeré komunikaci s řidiči nebo klienty.
 
-**Výchozí:** `DR-{YYYY}-{NNN}` → `DR-2026-001`
+### Formát čísla objednávky
 
-<Card title="Nastavení integrace" icon="plug" href="/en/admin/integration-setup">
-  Připojte poskytovatele eCMR (nativní eCMR Druma nebo TransFollow jako volitelná záložní možnost), SmartBill, poskytovatele palivových karet a účetní software.
+Platí stejný systém tokenů jako u faktur. Zadejte **Prefix** a **Vzor čísla** a sledujte, jak se aktualizuje živý náhled pod poli.
+
+**Výchozí:** prefix objednávky `ORD`, vzor `{PREFIX}-{YYMMDD}-{SEQ3}` → výsledek podobný `ORD-260407-042`.
+
+**Příklad:** dopravce působící v Belgii může použít prefix `BE` se vzorem `{PREFIX}-{YYYY}-{SEQ4}` pro reference jako `BE-2026-0042`.
+
+### Uložení
+
+Klikněte na **Uložit změny**. Nový formát se použije na všechny objednávky vytvořené po uložení. Stávající objednávky si ponechávají svá původní referenční čísla.
+
+---
+
+## Záložka Formátování řádků
+
+Záložka Formátování řádků umožňuje zvýraznit řádky tabulek napříč Druma na základě jednoduchých podmínek — například obarvit řádek červeně, když marže klesne pod práh, nebo je-li po splatnosti.
+
+Každé pravidlo má název, vyhodnocované pole (marže %, po splatnosti, stav, dny od vytvoření), podmínku (menší než, nejvýše, větší než, alespoň, rovná se, nerovná se), porovnávanou hodnotu a barvu zvýraznění. Klikněte na **Přidat pravidlo** pro vytvoření a **Uložit změny** pro použití pravidel.
+
+---
+
+## Související stránky
+
+<Card title="Nastavení integrace" icon="plug" href="/cs/admin/integration-setup">
+  Připojte poskytovatele eCMR (nativní eCMR Druma vytvořené interně — TransFollow je zachován pouze pro malý počet společností s existující starší konfigurací), poskytovatele palivových karet a účetní software.
+</Card>
+
+<Card title="Peppol e-fakturace (Belgie)" icon="file-check-2" href="/cs/integrations/peppol-invoicing">
+  Automaticky směrujte faktury belgickým firemním klientům přes síť Peppol.
+</Card>
+
+<Card title="Odesílání faktur" icon="send" href="/en/finance/sending-invoices">
+  Jak generovat, odesílat a sledovat prodejní faktury v Druma.
 </Card>

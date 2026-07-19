@@ -6,40 +6,115 @@ icon: "clipboard-check"
 
 ## Overzicht
 
-Nadat een chauffeur op **Afgeleverd** tikt, presenteert Druma automatisch een **Ritinspectie**-overlay. Dit is een Driver Vehicle Inspection Report (DVIR) — een gestructureerde doorloop van de staat van de truck aan het einde van elke rit.
+Nadat een chauffeur op **Afgeleverd** tikt, presenteert Druma automatisch een **Ritinspectie**-overlay. Dit is een Driver Vehicle Inspection Report (DVIR) — een gestructureerde doorloop van de staat van de truck aan het einde van elke rit. Ze vervangt informele mondelinge meldingen en geeft uw wagenparkbeheerder een volledig, tijdgestempeld overzicht van elk defect.
 
 <Note>
-Ritinspectie na aflevering wordt alleen geactiveerd voor enkelvoudige orders. Het verschijnt niet bij tussenliggende stops tijdens groupage-ritten.
+Ritinspectie na aflevering wordt alleen geactiveerd voor ritten met één order. Ze verschijnt niet bij tussenliggende stops tijdens groupage-ritten (meerdere stops).
 </Note>
 
 ---
 
-## Hoe de chauffeur de inspectie uitvoert
+## Hoe de chauffeur de inspectie voltooit
 
 <Steps>
   <Step title="De overlay verschijnt automatisch">
-    Direct na het tikken op **Afgeleverd** opent de volledige scherm Ritinspectie-overlay.
+    Direct na het tikken op **Afgeleverd** opent de volledige-scherm Ritinspectie-overlay. De chauffeur kan ze niet wegklikken zonder een actie te ondernemen — hij moet ze ofwel voltooien, ofwel expliciet overslaan.
   </Step>
   <Step title="Markeer elk item">
-    Elk checklistitem heeft drie opties:
-    - **OK** (groen) — Geen problemen gevonden
-    - **Defect** (oranje) — Probleem aangetroffen maar rit kan worden voortgezet
-    - **Geblokkeerd** (rood) — Ernstig defect dat reparatie vereist voor de volgende rit
+    Elk checklistitem heeft een schakelaar met drie standen:
+
+    | Stand | Kleur | Betekenis |
+    |---|---|---|
+    | **OK** | Groen | Geen problemen gevonden |
+    | **Advies** | Amber | Klein probleem — rit kan worden voortgezet, planner wordt op de hoogte gesteld |
+    | **Veiligheidskritiek** | Rood | Ernstig defect — truck kan worden geblokkeerd voor dispatch |
+
+    De chauffeur doorloopt elk item en kiest de juiste stand. Items staan standaard op **OK** zodat de chauffeur alleen items hoeft te wijzigen waar een probleem is.
   </Step>
-  <Step title="Foto's toevoegen voor defecten">
-    Voor elk item gemarkeerd als Defect of Geblokkeerd, tik op de camera om foto's te maken.
+  <Step title="Voer de kilometerstand in">
+    Een numeriek invoerveld onderaan de overlay legt de huidige kilometerstand vast. Deze waarde wordt bij het inspectierecord opgeslagen.
   </Step>
-  <Step title="Verstuur de inspectie">
-    Tik op **Inspectie versturen**. De wagenparkbeheerder ontvangt onmiddellijk een melding van eventuele defecten.
+  <Step title="Voeg notities en foto's toe voor gemarkeerde items">
+    Elk item gemarkeerd als **Advies** of **Veiligheidskritiek** klapt open met een notitieveld en, voor items waarvoor foto's zijn ingeschakeld, een foto-uploadknop. De chauffeur kan tot 3 foto's per defect uploaden — vanaf de cameraknop of bestandskiezer. Toegestane formaten: JPEG, PNG, WebP, HEIC, HEIF. Maximaal 10 MB per bestand.
+  </Step>
+  <Step title="Verstuur of sla over">
+    Tik op **Inspectie versturen** om de resultaten vast te leggen. Kan de chauffeur de inspectie niet meteen voltooien (bijv. hij moet parkeren en rond de truck lopen), dan kan hij op **Inspectie overslaan** tikken — dit wordt vastgelegd als overgeslagen inspectie, niet als goedgekeurd. Er verschijnt dan een knop **Inspectie voltooien** op het laaddetail van de afgeleverde order, zodat de chauffeur later kan terugkeren om ze alsnog in te vullen.
   </Step>
 </Steps>
 
 ---
 
-## Defecten opvolgen (planners & wagenparkbeheerders)
+## Ernstniveaus van defecten
 
-Ga naar **Vloot → Voertuigen** en open het voertuigprofiel om alle openstaande DVIR-defecten te zien. Elk defect kan worden gemarkeerd als opgelost met een notitie en tijdstempel.
+### OK
+Geen actie vereist. Het item wordt gelogd als geïnspecteerd en in orde.
 
-<Card title="Vlootdocumenten" icon="file" href="/nl/fleet-compliance/fleet-documents">
-  Hoe voertuigdocumenten en inspecties worden bijgehouden.
+### Advies
+Het defect wordt genoteerd en de planner ontvangt een waarschuwing. De truck wordt niet geblokkeerd — hij kan verder aan orders worden toegewezen. Het advies is zichtbaar in het orderdetailpaneel en op het tabblad Vloot → **Defecten**.
+
+### Veiligheidskritiek
+Een ernstig defect dat het voertuig onveilig of niet-conform kan maken om te gebruiken.
+
+- Planner en wagenparkbeheerder worden onmiddellijk op de hoogte gesteld.
+- Is de bedrijfsschakelaar **Truck automatisch markeren voor werkplaats bij veiligheidskritiek** ingeschakeld, dan wordt de truck automatisch onbeschikbaar gemarkeerd en verdwijnt hij van de toewijsbare lijst op het planningsbord tot het defect via een werkorder is opgelost.
+- De chauffeur ziet bij het versturen een duidelijke waarschuwing dat het voertuig uit dienst kan worden genomen.
+
+<Warning>
+Is de auto-blokkeerschakelaar ingeschakeld, dan verwijdert een veiligheidskritiek defect de truck onmiddellijk van dispatch — zelfs als er al toekomstige orders aan zijn toegewezen. Controleer het tabblad Vloot → Defecten zodra u een veiligheidskritieke waarschuwing ontvangt.
+</Warning>
+
+---
+
+## Wat planners zien
+
+In het **orderdetailpaneel** verschijnt een **DVIR**-sectie onder de routegegevens zodra een inspectie is verstuurd. Deze toont:
+
+- Inspectiestatus: Voltooid, Overgeslagen of In afwachting
+- Tijdstempel van indiening en chauffeursnaam
+- Een lijst van elk defectitem met zijn ernstbadge (Advies / Veiligheidskritiek)
+- Miniatuurvoorvertoningen van geüploade foto's, die op klik op volledig formaat openen
+
+Is de inspectie overgeslagen, dan toont de DVIR-sectie een "Overgeslagen"-badge met tijdstempel.
+
+---
+
+## Wagenparkbeheerder: openstaande defecten opvolgen
+
+Ga naar **Vloot → Defecten** om alle defecten in uw hele wagenpark te zien. De pagina heeft drie filtertabbladen:
+
+| Tabblad | Wat het toont |
+|---|---|
+| **Open** | Defecten nog niet gekoppeld aan een voltooide of geannuleerde werkorder |
+| **Erkend** | Defecten die een wagenparkbeheerder heeft beoordeeld |
+| **Alle** | Volledige geschiedenis |
+
+Elke rij toont de truck, defectitemnaam, ernstbadge, meldingsdatum en de chauffeur die het indiende.
+
+Voor rijen met **Veiligheidskritiek** is een knop **Werkorder aanmaken** direct op de rij beschikbaar. Klikken erop opent het werkorderformulier vooraf ingevuld met de defectomschrijving en ernst — geen kopiëren en plakken nodig.
+
+---
+
+## Adminconfiguratie
+
+Ga naar **Instellingen → Ritinspectie na aflevering** om DVIR voor uw bedrijf te configureren.
+
+| Instelling | Omschrijving |
+|---|---|
+| **Ritinspectie na aflevering inschakelen** | Schakelt de inspectie-overlay in of uit voor alle chauffeurs |
+| **Foto's vereisen bij veiligheidskritieke defecten** | Maakt het uploaden van minstens één foto verplicht voor een veiligheidskritiek defect kan worden verstuurd |
+| **Truck automatisch markeren voor werkplaats bij veiligheidskritiek** | Blokkeert de truck automatisch voor dispatch wanneer een veiligheidskritiek defect wordt verstuurd |
+| **Checklistitems** | Voeg items toe, bewerk of verwijder ze uit de inspectie-overlay. Elk item heeft een naam en een standaardernst (OK / Advies / Veiligheidskritiek) |
+
+<Note>
+Checklistitems gelden bedrijfsbreed. Alle chauffeurs bij uw bedrijf zien dezelfde lijst. Werkt u met verschillende voertuigtypes, gebruik dan beschrijvende itemnamen (bijv. "Reefer-temperatuureenheid — controleer afdichtingen") zodat de lijst voor iedereen zinvol blijft.
+</Note>
+
+---
+
+<Card title="Vertrekchecklist" icon="clipboard-list" href="/nl/driver/pre-trip-checklist">
+  De vertrekchecklist draait vóór vertrek. Leer hoe chauffeurs ze invullen en hoe admins harde en zachte blokkades configureren.
+</Card>
+
+<Card title="Werkplaats & onderhoud" icon="wrench" href="/nl/fleet-compliance/workshop-maintenance">
+  Hoe u werkorders aanmaakt vanuit veiligheidskritieke defecten en onderhoudsschema's beheert voor uw vloot.
 </Card>

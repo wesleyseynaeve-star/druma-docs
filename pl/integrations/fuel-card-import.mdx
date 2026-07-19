@@ -1,40 +1,47 @@
 ---
 title: "Import kart paliwowych"
-description: "Importuj miesięczne dane transakcji paliwowych z DKV, UTA, AS24, Shell Card i SmartDiesel, aby śledzić rzeczywiste koszty paliwa per pojazd."
+description: "Importuj dane transakcji paliwowych z DKV, UTA, AS24, Shell i innych głównych europejskich dostawców kart paliwowych, aby śledzić rzeczywiste koszty paliwa per pojazd."
 icon: "gas-pump"
 ---
 
-Paliwo jest zazwyczaj największym zmiennym kosztem w transporcie drogowym. Druma pozwala importować dane transakcji z głównych dostawców kart paliwowych używanych przez operatorów, przypisując każde tankowanie do właściwego pojazdu, tak aby raporty kosztów odzwierciedlały rzeczywiste wydatki na paliwo, a nie szacunki.
+Paliwo to zwykle największy koszt zmienny w transporcie drogowym. Druma pozwala importować dane transakcji od głównych dostawców kart paliwowych, przypisując każde tankowanie do właściwego pojazdu, tak aby raporty kosztów odzwierciedlały rzeczywiste wydatki na paliwo, a nie szacunki.
+
+<Frame caption="Flota → Paliwo — dopasowanie numeru rejestracyjnego jest znormalizowane, nie dokładne.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Strona Paliwo floty" />
+</Frame>
 
 ## Obsługiwani dostawcy
 
-Druma obsługuje import CSV od tych dostawców kart paliwowych:
+Druma automatycznie wykrywa dostawcę na podstawie nagłówków kolumn pliku i nazwy pliku. Obsługiwani dostawcy:
 
-- **DKV** (DKV Mobility)
-- **UTA** (UTA Edenred)
+- **DKV**
+- **UTA**
 - **AS24**
-- **Shell Card**
-- **SmartDiesel**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
 
-Jeśli używasz wielu kart w swojej flocie, możesz importować od każdego dostawcy osobno. Druma automatycznie obsługuje różne formaty plików.
+Każdy inny plik CSV lub XLSX ze standardowymi nazwami kolumn (data, kwota, litry, karta/numer rejestracyjny) jest również akceptowany, nawet bez rozpoznanego dopasowania dostawcy. Jeśli używasz wielu kart w swojej flocie, możesz importować od każdego dostawcy osobno.
 
 ## Jak importować
 
 <Steps>
-  <Step title="Pobierz CSV od dostawcy">
-    Zaloguj się do portalu online dostawcy karty paliwowej i przejdź do sekcji historii transakcji lub eksportu zestawień. Pobierz miesięczny plik transakcji jako CSV. Portal każdego dostawcy jest inny, ale ta opcja jest zazwyczaj dostępna w sekcji Raporty lub Zestawienia.
+  <Step title="Pobierz plik od dostawcy">
+    Zaloguj się do portalu online swojego dostawcy karty paliwowej i wyeksportuj historię transakcji jako CSV lub XLSX. Portal każdego dostawcy jest inny, ale ta opcja jest zazwyczaj dostępna w sekcji Raporty lub Zestawienia.
   </Step>
-  <Step title="Otwórz import kart paliwowych w Druma">
-    W Druma przejdź do **Integracje → Karty paliwowe → Importuj CSV**.
-  </Step>
-  <Step title="Wybierz dostawcę">
-    Wybierz dostawcę z listy rozwijanej. Dzięki temu Druma wie, jakie mapowanie kolumn zastosować — format CSV znacznie różni się między dostawcami.
+  <Step title="Otwórz import paliwa Druma">
+    W Druma przejdź do **Flota → Paliwo** i kliknij **Importuj paliwo**.
   </Step>
   <Step title="Prześlij plik">
-    Kliknij **Wybierz plik**, wybierz pobrany CSV i kliknij **Importuj**. Druma przetwarza plik i pokazuje podgląd znalezionych rekordów przed zapisaniem.
+    Przeciągnij lub wybierz plik CSV/XLSX (maks. 5 MB). Druma automatycznie wykrywa dostawcę z pliku i pokazuje podgląd sparsowanych wierszy — w tym wszelkich pozycji opłat drogowych znalezionych zmieszanych w tym samym zestawieniu.
   </Step>
   <Step title="Przejrzyj i potwierdź">
-    Sprawdź podgląd — Druma pokazuje liczbę znalezionych transakcji, zakres dat i przykładowe rekordy. Jeśli wszystko wygląda poprawnie, kliknij **Potwierdź import**.
+    Sprawdź podgląd — wiersze bez pasującego pojazdu są oznaczone i wykluczone z importu. Kliknij **Importuj N wierszy** (pokazujący faktyczną liczbę wierszy), aby potwierdzić.
   </Step>
 </Steps>
 
@@ -44,46 +51,47 @@ Dla każdej transakcji Druma wyodrębnia:
 
 | Pole | Źródło |
 |------|--------|
-| Data i godzina | Znacznik czasu transakcji z CSV |
-| Pojazd | Dopasowany po numerze rejestracyjnym |
-| Nazwa stacji paliwowej | Pole lokalizacji z CSV |
-| Litry zatankowane | Pole ilości z CSV |
-| Kwota (EUR lub RON) | Pole wartości z CSV |
-| ID transakcji | Unikalny numer referencyjny transakcji dostawcy |
+| Data (bez godziny) | Kolumna daty transakcji z pliku |
+| Pojazd | Dopasowany po numerze karty paliwowej, następnie po numerze rejestracyjnym |
+| Nazwa stacji paliwowej | Pole lokalizacji z pliku |
+| Litry zatankowane | Pole ilości z pliku |
+| Kwota | Pole wartości z pliku — zakładane EUR, chyba że obecna jest kolumna waluty |
+| ID transakcji | Unikalna referencja transakcji dostawcy, używana do wykrywania duplikatów |
+
+Ręczne, pojedyncze wpisy tankowań (przez **Dodaj tankowanie**) akceptują tylko kwotę w EUR — nie ma selektora waluty w tym formularzu. Kwoty w RON są konwertowane automatycznie tylko przez osobną ścieżkę auto-pobierania z e-maila/folderu, opisaną niżej.
 
 ## Dopasowywanie transakcji do pojazdów
 
-Druma dopasowuje każdą transakcję do pojazdu za pomocą **numeru rejestracyjnego**. Numer rejestracyjny w transakcji musi dokładnie odpowiadać numerowi zapisanemu w Flota → Pojazdy (włącznie z formatem — spacje, myślniki).
+Druma dopasowuje każdą transakcję do pojazdu, najpierw po **numerze karty paliwowej**, następnie po **numerze rejestracyjnym**. Zarówno numer karty, jak i numer rejestracyjny są normalizowane przed porównaniem — zamieniane na wielkie litery, z usuniętymi wszystkimi spacjami, myślnikami i innymi znakami niealfanumerycznymi — więc "B 123 ABC" i "B123ABC" pasują do tego samego pojazdu.
 
-Jeśli numer rejestracyjny nie pasuje do żadnego pojazdu w flocie, transakcja jest oznaczana jako **Niedopasowana** i wyświetlana w osobnej liście. Typowe przyczyny:
+Jeśli transakcja nadal nie pasuje do żadnego pojazdu, jest oznaczana jako **niedopasowana** w podglądzie i wykluczona z importu. Typowe przyczyny:
 
 - Pojazd został niedawno dodany i nie jest jeszcze w Druma
-- Format numeru rejestracyjnego w CSV używa innego odstępu niż w Druma (np. "B123ABC" vs "B 123 ABC")
-- Kierowca użył karty w wynajętym lub podwykonawczym pojeździe
-
-Możesz ręcznie połączyć niedopasowane transakcje z pojazdem z listy Niedopasowane lub zaktualizować format numeru rejestracyjnego pojazdu w rekordach Floty.
+- Ani numer karty, ani numer rejestracyjny w transakcji nie pasują do żadnego rekordu floty
+- Kierowca użył swojej karty w wynajętym lub podwykonawczym pojeździe
 
 ## Wykrywanie duplikatów
 
-Jeśli przypadkowo zaimportujesz ten sam CSV dwa razy, Druma wykrywa duplikaty porównując ID transakcji dostawcy. Zduplikowane transakcje są automatycznie pomijane. Zobaczysz komunikat: "X transakcji zaimportowanych, Y duplikatów pominiętych."
-
-Dzięki temu bezpieczne jest ponowne importowanie pliku, jeśli nie jesteś pewien, czy już go zaimportowałeś.
+Jeśli przypadkowo zaimportujesz ten sam plik dwa razy, Druma wykrywa duplikaty za pomocą klucza deduplikacji zbudowanego z daty transakcji, kwoty, litrów, karty, numeru rejestracyjnego i ID transakcji dostawcy — duplikaty są automatycznie pomijane na poziomie bazy danych. Komunikat o sukcesie podaje tylko, ile tankowań (i pozycji opłat drogowych) zaimportowano; nie podaje osobnej liczby pominiętych duplikatów.
 
 <Note>
-Zawsze importuj kompletny miesięczny plik zamiast częściowego eksportu. Częściowe importy mogą powodować luki w danych o kosztach paliwa, które wpływają na obliczenia rentowności trasy.
+Zawsze importuj kompletne zestawienie zamiast częściowego eksportu. Częściowe importy mogą powodować luki w danych o kosztach paliwa, które wpływają na obliczenia rentowności trasy.
 </Note>
+
+## Automatyczny import przez e-mail
+
+Oprócz ręcznego przesyłania, Druma może automatycznie pobierać zestawienia paliwowe z przychodzącego adresu e-mail (z zaplanowanym skanem jako zabezpieczeniem awaryjnym), ponownie wykorzystując ten sam parser co okno importu ręcznego. Skontaktuj się z pomocą techniczną Druma, aby to skonfigurować dla swojego konta.
 
 ## Gdzie pojawiają się zaimportowane dane paliwowe
 
 Po imporcie transakcje pojawiają się w:
 
-- **Flota → Koszty paliwa** — pełna historia transakcji per pojazd, filtrowana według zakresu dat
-- **Flota → Pojazdy → [pojazd] → Historia paliwa** — wszystkie tankowania dla konkretnej ciężarówki
+- **Flota → Paliwo** — pełna historia transakcji w całej flocie, filtrowana i przeszukiwalna wg numeru rejestracyjnego, dostawcy i lokalizacji
 - **Raport rentowności trasy** — zaimportowane koszty paliwa zastępują szacunkowe obliczenie paliwa dla zleceń, gdzie dostępne są rzeczywiste dane paliwowe
 
-<Note>
-Gdy istnieją rzeczywiste dane importu paliwa dla danego okresu, raport rentowności trasy używa ich zamiast szacunku. Dzięki temu raport jest znacznie dokładniejszy. Raport oznacza, czy koszty są "Rzeczywiste" czy "Szacowane" w zestawieniu kosztów.
-</Note>
+## Dlaczego import CSV zamiast API na żywo?
+
+Dostawcy kart paliwowych w Europie mają niespójny i często ograniczony dostęp do API. Niektórzy udostępniają API tylko klientom korporacyjnym, inni mają portale specyficzne dla kraju, które nie oferują dostępu API, a formaty API znacznie się różnią. Eksport CSV jest dostępny uniwersalnie u wszystkich dostawców i wszystkich typów kont, co czyni go najbardziej niezawodnym podejściem dla operatora z mieszaną flotą (ADR-016).
 
 <CardGroup cols={2}>
   <Card title="Raport rentowności trasy" icon="route" href="/pl/reports/lane-profitability">

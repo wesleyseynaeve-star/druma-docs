@@ -1,46 +1,100 @@
 ---
 title: "Réconciliation bancaire"
-description: "Faites correspondre les paiements bancaires entrants avec les factures ouvertes dans Druma — manuellement ou via import de relevé bancaire."
-icon: "bank"
+description: "Faites correspondre automatiquement les emails de paiement bancaire entrants aux factures ouvertes dans Druma en transférant les emails de notification de votre banque roumaine."
+icon: "building-columns"
 ---
 
 ## Vue d'ensemble
 
-La réconciliation bancaire dans Druma vous aide à faire correspondre les paiements que vous recevez sur votre compte bancaire avec les factures ouvertes. Cela réduit la saisie manuelle et garantit que vos dossiers de paiement sont toujours à jour.
+Faire correspondre manuellement les virements bancaires aux factures est fastidieux et source d'erreurs. La fonctionnalité de réconciliation bancaire de Druma automatise l'essentiel de ce travail en analysant les emails de notification de paiement que les banques roumaines envoient pour chaque virement entrant. Vous transférez ces emails vers une boîte de réception Druma spéciale, et Druma effectue la correspondance.
 
-Accédez à **Facturation → Réconciliation** pour ouvrir le module.
+Aucun accès API bancaire requis. Aucun nouveau logiciel à installer. Juste un transfert d'email.
 
----
+<Frame caption="Finance → Réconciliation — formats de relevé CAMT.053, MT940 et CODA.">
+  <img src="/images/invoicing/bank-reconciliation.png" alt="Page Réconciliation bancaire" />
+</Frame>
 
-## File d'attente de réconciliation
+## Comment ça fonctionne
 
-La file d'attente affiche tous les paiements entrants qui n'ont pas encore été associés à une facture :
+Quand de l'argent arrive sur votre compte bancaire, votre banque vous envoie un email de notification automatique. Druma peut lire ces emails et en extraire les détails clés :
 
-- **Paiements auto-correspondants** — Druma a trouvé une correspondance probable basée sur le montant et le client. Vérifiez et approuvez.
-- **Paiements non correspondants** — Druma ne peut pas déterminer la facture. Faites correspondre manuellement.
+- Montant reçu
+- Nom du payeur
+- Numéro de référence de paiement
+- Date du virement
 
----
+Druma recherche ensuite dans vos factures ouvertes une correspondance. Si le montant et le numéro de référence concordent, la facture est marquée comme payée automatiquement. S'il n'y a pas de correspondance claire, le paiement passe dans une file de révision pour que vous le traitiez manuellement.
 
-## Faire correspondre manuellement un paiement
+## Banques prises en charge
+
+Les banques roumaines suivantes sont prises en charge pour l'analyse d'email :
+
+- BRD – Groupe Société Générale
+- BCR – Banca Comercială Română
+- Raiffeisen Bank
+- UniCredit Bank
+- ING Bank
+
+<Note>
+Si votre banque n'est pas dans cette liste, vous pouvez toujours utiliser Druma pour l'enregistrement manuel des paiements — enregistrez simplement les paiements via le bouton Enregistrer un paiement sur chaque facture. La réconciliation manuelle est toujours disponible, quelle que soit la configuration bancaire.
+</Note>
+
+## Configurer le transfert d'email
 
 <Steps>
-  <Step title="Cliquez sur un paiement non correspondant">
-    Ouvrez le paiement dans la file d'attente.
+  <Step title="Trouvez votre adresse de boîte de réconciliation Druma">
+    Accédez à **Paramètres** → **Entreprise**, et activez **Activer la boîte de réception des paiements bancaires**. Votre adresse email de réconciliation Druma unique s'affiche ici — elle ressemble à quelque chose comme `reconcile-votreentreprise@inbox.druma.io`.
   </Step>
-  <Step title="Recherchez la facture">
-    Tapez le numéro de facture ou le nom du client pour trouver la facture correspondante.
+  <Step title="Copiez l'adresse email">
+    Copiez l'adresse complète. Vous en aurez besoin dans votre client email ou vos paramètres de notification bancaire.
   </Step>
-  <Step title="Confirmez la correspondance">
-    Cliquez sur **Correspondre**. Le paiement est appliqué à la facture et le statut se met à jour.
+  <Step title="Configurez le transfert dans votre client email">
+    Dans le compte email où votre banque envoie les notifications de paiement, créez une règle de transfert :
+
+    - **Condition :** emails provenant de l'adresse de notification de votre banque (par exemple, `notificari@brd.ro`)
+    - **Action :** transférer vers votre adresse de réconciliation Druma
+
+    Les étapes exactes dépendent de votre fournisseur email. Dans Gmail, allez dans Paramètres → Filtres et adresses bloquées → Créer un nouveau filtre. Dans Outlook, utilisez Règles → Nouvelle règle.
+  </Step>
+  <Step title="Testez avec un paiement réel">
+    Attendez le prochain paiement entrant. Une fois que votre banque envoie l'email de notification, il sera transféré automatiquement vers Druma. Vérifiez **Facturation** → **Réconciliation** dans les minutes qui suivent pour voir s'il a été rapproché.
   </Step>
 </Steps>
 
+## Correspondance automatique
+
+Quand un email transféré arrive, Druma tente de le faire correspondre à une facture ouverte en utilisant :
+
+1. **Montant** — le montant reçu correspond au solde restant de la facture
+2. **Numéro de référence** — la référence de paiement dans l'email correspond à un numéro de facture dans Druma (les clients sont invités à utiliser le numéro de facture comme référence de paiement)
+
+Si les deux correspondent, la facture est marquée **Payée** automatiquement. Aucune action requise de votre part.
+
+## Paiements non rapprochés
+
+Certains paiements ne correspondront pas automatiquement — par exemple, si le client n'a pas inclus le numéro de facture dans la référence du virement, ou si le montant est légèrement différent. Ceux-ci apparaissent dans la file de révision :
+
+Accédez à **Facturation** → **Réconciliation** → **Paiements non rapprochés**. Chaque paiement non rapproché affiche le montant, le nom du payeur et la référence. Vous pouvez :
+
+- **Lier à une facture** — rechercher la bonne facture et connecter ce paiement à elle
+- **Ignorer** — marquer le paiement comme non lié aux factures Druma (par exemple, un paiement pour quelque chose en dehors de Druma)
+
+Une fois que vous liez un paiement à une facture, le statut de la facture se met à jour comme si vous aviez enregistré le paiement manuellement.
+
+## Déduplication
+
+Si vous transférez accidentellement le même email de notification deux fois, Druma ne créera pas de paiement en double. Il détecte les doublons à l'aide de l'en-tête `Message-Id` de l'email, pas du numéro de référence bancaire — donc même si le champ de référence est vide ou réutilisé, le même email exact n'est jamais traité deux fois. Le deuxième email est silencieusement ignoré.
+
+<Note>
+Encouragez vos clients à utiliser le numéro de facture comme référence de leur virement bancaire. Cette seule habitude augmente considérablement le taux de correspondance automatique — la plupart des paiements seront rapprochés sans aucun travail manuel de votre part.
+</Note>
+
+<Warning>
+Les emails de notification bancaire contiennent parfois des informations financières confidentielles. Assurez-vous que votre adresse de boîte de réconciliation Druma reste privée — ne la partagez pas publiquement. Elle est unique à votre entreprise et ne peut pas être devinée, mais traitez-la comme un mot de passe.
+</Warning>
+
 ---
 
-## Ignorer un paiement
-
-Si un paiement n'est pas lié à une facture Druma (par ex. un remboursement ou un paiement d'acompte), cliquez sur **Ignorer** pour le retirer de la file d'attente sans créer de correspondance.
-
-<Card title="Import de relevé bancaire" icon="file-text" href="/fr/invoicing/bank-statement-import">
-  Importez votre relevé bancaire pour alimenter automatiquement la file de réconciliation.
+<Card title="Suivi des paiements" icon="money-bill-wave" href="/fr/invoicing/payment-tracking">
+  Comment enregistrer les paiements manuellement, gérer les paiements partiels et exporter les données de paiement.
 </Card>

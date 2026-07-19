@@ -1,9 +1,134 @@
 ---
-title: "Schimb de paleti"
-description: "Urmareste schimburile de paleti EUR."
-icon: "arrow-right-arrow-left"
+title: "Registrul de schimb paleti"
+description: "Urmareste soldurile de paleti EUR, CHEP si alte tipuri, per contraparte, cu un registru doar-adaugare, automatizarea taxelor si sincronizare optionala cu furnizorul."
+icon: "package"
 ---
 
-In tabul Detalii al comenzii: **paleti preluati**, **paleti returnati**, **tip palet** (EUR, CHEP, industrial).
+## Prezentare generala
 
-Raport de sold per client: **Rapoarte -> Sold Paleti**.
+Cand transporti marfuri pe paleti EUR, CHEP sau alti paleti de schimb, intri intr-un sold curent cu fiecare client si subcontractant — paletii trimisi trebuie sa se intoarca, sau se datoreaza o taxa. Registrul de schimb paleti al Druma urmareste fiecare miscare ca o inregistrare imuabila si iti ofera un sold live per contraparte, ca nimic sa nu-ti scape.
+
+Registrul este **doar-adaugare**: miscarile se adauga la fiecare oprire de comanda, iar soldul curent este calculat automat. Poti inregistra corectii si ajustari fara sa stergi istoricul.
+
+---
+
+## Tipuri de paleti acceptate
+
+| Tip | Denumire completa |
+|---|---|
+| EUR | Palet EUR (EPAL) |
+| CHEP | Palet CHEP |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Altele | Orice alt tip de palet de schimb pe care il foloseste operatiunea ta |
+
+Fiecare tip de palet are propria coloana de sold. O contraparte iti poate datora paleti EUR, in timp ce tu ii datorezi simultan paleti CHEP.
+
+---
+
+## Inregistrarea miscarilor de paleti pe o comanda
+
+Miscarile de paleti sunt inregistrate la nivel de oprire — opririle de preluare, livrare si descarcare au toate propria sectiune **Miscari Paleti**.
+
+<Steps>
+  <Step title="Deschide panoul de detaliu al comenzii">
+    Apasa comanda pe Tabla de planificare sau in lista de Comenzi, pentru a-i deschide panoul de detaliu in dreapta.
+  </Step>
+  <Step title="Navigheaza la cardul de oprire">
+    Deruleaza la oprirea unde se schimba paletii — de regula preluarea (paleti care ies) sau livrarea (paleti returnati). Fiecare card de oprire arata o sectiune **Miscari Paleti**.
+  </Step>
+  <Step title="Adauga o miscare">
+    Apasa **+ Adauga Miscare** pe cardul de oprire. Apare un formular mic cu:
+    - **Tip palet** — selecteaza din EUR, CHEP, LPR, IPP, Euro Pool sau Altele
+    - **Tip miscare** — Trimis (pozitiv), Returnat (negativ), Ajustare, Corectie, sau Sold de Deschidere
+    - **Cantitate** — numarul de paleti
+    - **Note** (optional) — numar de referinta sau comentariu de sofer
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza** pentru a confirma miscarea. Este adaugata imediat in registru si soldul curent al contrapartii se actualizeaza.
+  </Step>
+</Steps>
+
+Pentru a elimina o inregistrare gresita, apasa **pictograma de cos de gunoi** de langa miscare.
+
+<Note>
+Foloseste **Sold de Deschidere** o singura data per contraparte, pentru a-i semana soldul de start, daca migrezi dintr-o foaie de calcul sau un sistem anterior. Miscarile ulterioare se construiesc peste el.
+</Note>
+
+---
+
+## Vizualizarea soldurilor
+
+### Coloana de sold in lista de Clienti
+
+Lista **Clienti** (Comercial → Clienti) include o coloana **Sold Paleti**. Indicatorul foloseste codare pe culori, dintr-o privire:
+
+| Culoare | Semnificatie |
+|---|---|
+| Chihlimbariu | Clientul iti datoreaza paleti |
+| Albastru | Tu ii datorezi clientului paleti |
+| Neutru (gri) | Soldul este echilibrat |
+
+Treci cu mouse-ul peste indicatorul de sold, pentru un tooltip per tip, care detaliaza soldul pe toate tipurile de paleti — de exemplu, +12 EUR, −4 CHEP.
+
+### Istoricul miscarilor per contraparte
+
+Apasa un rand de client pentru a deschide panoul de detaliu al clientului, apoi mergi la tabul **Paleti**. Aici apare registrul complet pentru acea contraparte: fiecare miscare, data, referinta de comanda si totalul curent.
+
+---
+
+## Pragul de taxa si crearea automata a taxei
+
+Daca soldul de paleti al unui client creste peste un prag configurat, Druma te poate solicita automat sa ridici o taxa de schimb de paleti.
+
+Cand o miscare face ca soldul sa depaseasca pragul, apare un modal **Confirmare Taxa Paleti**:
+
+- **Confirma** — adauga o linie de taxa la extra-urile comenzii (vizibila in editorul de factura, ca taxa de schimb paleti)
+- **Sari** — inchide promptul fara sa creeze o taxa; soldul ramane neschimbat
+
+<Warning>
+Apasarea **Sari** nu reseteaza contorul de prag. Modalul va aparea din nou la urmatoarea miscare care depaseste pragul, cu exceptia cazului in care reduci mai intai soldul, inregistrand paleti returnati.
+</Warning>
+
+---
+
+## Configurarea pragurilor si tarifelor de taxa
+
+Mergi la **Setari → Configurare Paleti**, pentru a seta regulile de taxa. Aceasta sectiune este accesibila doar rolurilor **admin** si **company_admin**.
+
+Pentru fiecare tip de palet poti configura:
+
+| Setare | Descriere |
+|---|---|
+| Prag taxa | Numarul de paleti la care se declanseaza modalul de taxa |
+| Tarif taxa | Pretul per palet (in moneda companiei tale), aplicat liniei de taxa generate automat |
+
+Lasa pragul necompletat pentru a dezactiva modalul de taxa pentru acel tip de palet — miscarile sunt in continuare urmarite, dar nicio taxa nu este niciodata sugerata.
+
+---
+
+## Sincronizare cu furnizorul (optional)
+
+Daca folosesti CHEP Connect, Druma poate reconcilia registrul tau din aplicatie fata de soldul oficial al furnizorului. Mergi la **Setari → Integrari → Schimb Paleti**.
+
+**CHEP Connect** este live. Introdu credentialele contului tau CHEP, apoi:
+
+- Apasa **Testeaza Conexiunea** pentru a verifica ca credentialele sunt acceptate
+- Apasa **Sincronizeaza Soldul** pentru a prelua soldul curent al furnizorului si a-l compara fata de totalul curent din Druma
+
+Orice discrepanta este afisata ca un rand de reconciliere — o poti accepta ca o inregistrare de **Corectie**, pentru a alinia cele doua registre.
+
+<Note>
+CHEP Connect este momentan singura integrare de furnizor de paleti. Tipurile de paleti EUR, LPR, IPP, Euro Pool si Altele sunt urmarite manual in registru — nu exista sincronizare cu furnizorul pentru ele astazi. Registrul de baza functioneaza complet fara niciun furnizor configurat.
+</Note>
+
+---
+
+<Card title="Extra si suprataxe comanda" icon="circle-plus" href="/en/planner/order-extras">
+  Afla cum apar liniile de taxa de paleti in editorul de factura, alaturi de celelalte suprataxe de comanda.
+</Card>
+
+<Card title="Clienti" icon="building-2" href="/en/planner/clients">
+  Gestioneaza profilurile de client, instructiunile permanente si vezi istoricul soldului de paleti per client.
+</Card>

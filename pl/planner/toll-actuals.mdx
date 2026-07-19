@@ -6,76 +6,117 @@ icon: "receipt"
 
 ## Przegląd
 
-Koszty opłat drogowych są znaczącą i często nieprzejrzystą częścią transportu drogowego. API routingu HERE daje szacunek opłat per kraj przy tworzeniu zlecenia, ale faktyczna kwota zapłacona na drodze regularnie się różni.
+Koszty opłat drogowych są znaczącą i często nieprzejrzystą częścią transportu drogowego. API routingu PTV daje szacunek opłat per kraj przy tworzeniu zlecenia, ale rzeczywista kwota zapłacona na drodze regularnie się różni — różne kategorie pojazdów, brakujące winiety, stawki sezonowe i różnice przy przekraczaniu granic powodują rozbieżności.
 
-Druma wypełnia tę lukę, pozwalając kierowcom rejestrować paragony opłat bezpośrednio z PWA, a następnie prezentując panel rozliczenia z kodowaniem kolorami w szczegółach zlecenia, aby planiści mogli wykrywać duże rozbieżności.
+Druma wypełnia tę lukę, pozwalając kierowcom rejestrować paragony opłat bezpośrednio z PWA, a następnie prezentuje oznaczony kolorem panel rozliczenia w szczegółach zlecenia, aby planiści mogli wykrywać duże rozbieżności, zanim wpłyną na marże lub faktury klientów.
 
 ---
 
 ## Jak kierowcy rejestrują paragony opłat
 
-Podczas aktywnego ładunku PWA kierowcy pokazuje przycisk **Zarejestruj opłatę** na ekranie szczegółów ładunku. Kliknięcie otwiera arkusz **Paragon opłaty**.
+Podczas aktywnego ładunku PWA kierowcy pokazuje przycisk **Zarejestruj opłatę** na ekranie szczegółów ładunku. Kliknięcie go otwiera arkusz **Paragon opłaty**.
 
 <Steps>
-  <Step title="Kliknij Zarejestruj opłatę">
-    Przycisk jest widoczny gdy status ładunku to: przy odbiorze, załadunek, w trasie, przy dostawie lub rozładunek.
+  <Step title="Stuknij Zarejestruj opłatę">
+    Przycisk jest widoczny, gdy status ładunku to przy odbiorze, załadunek, w transporcie, przy dostawie lub rozładunek — dowolny status, w którym ciężarówka jest w drodze.
   </Step>
   <Step title="Wpisz szczegóły opłaty">
-    Wpisz:
-    - **Kwota** — zapłacona opłata w lokalnej walucie
-    - **Kraj** — wstępnie wypełniony na podstawie aktualnej pozycji GPS, ale edytowalny
-    - **Notatki** (opcjonalnie) — referencja autostrady, numer bramki
+    Wypełnij:
+    - **Kwota (EUR)** — pole wymagane: zapłacona opłata, przeliczona na EUR
+    - **Kwota lokalna** (opcjonalnie) — kwota w walucie lokalnej, plus kod waluty i kurs wymiany, jeśli chcesz zapisać też oryginalne liczby
+    - **Kraj** — wstępnie wypełniony na podstawie bieżącej pozycji GPS, ale edytowalny
+    - **Notatki** (opcjonalnie) — referencja autostrady, numer bramki lub dowolny komentarz kierowcy
   </Step>
   <Step title="Dołącz zdjęcie paragonu (opcjonalnie)">
-    Kliknij ikonę aparatu lub pliku, aby dołączyć zdjęcie paragonu. Obsługiwane formaty: JPEG, PNG, WebP, HEIC, PDF. Maksymalny rozmiar: 5 MB.
+    Stuknij ikonę aparatu lub pliku, aby dołączyć zdjęcie paragonu. Akceptowane formaty: JPEG, PNG, WebP, HEIC, PDF. Maksymalny rozmiar pliku: 5 MB.
   </Step>
   <Step title="Potwierdź">
-    Kliknij **Zapisz**. Paragon jest natychmiast przechowywany.
+    Stuknij **Zapisz**. Paragon jest przechowywany natychmiast.
   </Step>
 </Steps>
 
 ### Obsługa offline
 
-Paragony opłat działają offline. Jeśli kierowca jest w obszarze bez łączności, paragon jest kolejkowany lokalnie i synchronizowany automatycznie po przywróceniu połączenia.
+Paragony opłat działają offline. Jeśli kierowca jest w obszarze bez łączności, paragon jest kolejkowany lokalnie i synchronizowany automatycznie, gdy tylko urządzenie się połączy ponownie. Planista widzi jego przybycie w panelu rozliczenia po zakończeniu synchronizacji.
 
 ---
 
 ## Panel rozliczenia (widok planisty)
 
-Otwórz panel szczegółów dowolnego zlecenia i przewiń do sekcji **Rozliczenie opłat**. Panel pokazuje tabelę z jednym wierszem na kraj.
+Otwórz panel szczegółów dowolnego zlecenia i przewiń do sekcji **Rozliczenie opłat drogowych**. Panel pokazuje tabelę z jednym wierszem na kraj, dla którego istnieje albo szacunek HERE, albo zarejestrowana rzeczywista kwota.
 
-### Kodowanie kolorami delt
+### Kodowanie kolorami delty
 
 | Kolor | Warunek | Znaczenie |
 |---|---|---|
 | Zielony | Delta ≤ 5% | Rzeczywista kwota mieści się w oczekiwanym zakresie |
 | Bursztynowy | Delta 6–15% | Umiarkowana rozbieżność — warto przejrzeć |
 | Czerwony | Delta > 15% | Znacząca rozbieżność — sprawdź paragony |
-| Szary | Brak szacunku HERE | HERE nie miał danych o opłatach dla tego segmentu |
+| Szary | Brak szacunku HERE | HERE nie miał danych o opłatach dla tego segmentu kraju |
+
+Delta jest obliczana jako `(rzeczywista − szacunek) / szacunek`. Dodatnia delta oznacza, że kierowca zapłacił więcej niż szacowano; ujemna delta oznacza mniej.
+
+### Lista paragonów
+
+Poniżej tabeli podsumowania każdy pojedynczy paragon jest wylistowany z:
+- Datą i godziną zarejestrowania
+- Krajem i kwotą
+- Notatkami (jeśli są)
+- Miniaturą, jeśli dołączono zdjęcie — kliknij, aby otworzyć pełny obraz
+
+Planiści mogą dodawać paragony ręcznie za pomocą przycisku **Dodaj paragon** na dole sekcji — przydatne, gdy kierowca zapomniał zarejestrować opłatę, ale ma papierowy paragon.
 
 ---
 
 ## Import kart paliwowych — automatyczne dzielenie opłat
 
-Wyciągi kart paliwowych DKV, UTA i AS24 często łączą transakcje paliwowe i opłaty w tym samym pliku eksportu. Gdy importujesz plik karty paliwowej w **Flota — Karty paliwowe**, Druma automatycznie rozdziela linie opłat od linii paliwa.
+Wyciągi kart paliwowych DKV, UTA i AS24 często łączą transakcje paliwowe i opłaty w tym samym pliku eksportu. Gdy importujesz plik karty paliwowej w **Flota → Paliwo**, Druma automatycznie oddziela linie opłat od linii paliwa:
+
+- **Linie paliwa** są dodawane do rejestru paliwa ciężarówki normalnie
+- **Linie opłat** są kierowane do paragonów opłat i dopasowywane do zlecenia aktywnego w tym dniu dla tej ciężarówki
+
+Ponowny import tego samego pliku jest bezpieczny — zduplikowane wpisy (dopasowane po referencji transakcji i kwocie) są pomijane automatycznie.
+
+<Note>
+Dopasowywanie opłat z importów kart paliwowych używa ciężarówki i daty, aby znaleźć aktywne zlecenie. Jeśli ciężarówka miała więcej niż jedno zlecenie tego samego dnia, import dołącza paragon do pierwszego pasującego zlecenia i oznacza wiersz do ręcznego przeglądu w podsumowaniu importu.
+</Note>
 
 ---
 
-## Polityka przekazywania opłat per kraj
+## Polityka przekazywania per kraj
 
-Przejdź do **Ustawienia — Karty stawek** i otwórz dowolną kartę stawek. Na dole znajduje się tabela nadpisań **Polityka opłat per kraj**. Dla każdego kraju:
+Nie każda opłata jest fakturowana klientowi. Niektóre firmy wchłaniają opłaty dla pewnych korytarzy jako część swojej stawki; inne przekazują je w całości. Druma pozwala to skonfigurować na poziomie karty stawek.
+
+Przejdź do **Ustawienia → Karty stawek** i otwórz dowolną kartę. Na dole znajduje się tabela nadpisań **Polityka opłat drogowych per kraj**. Dla każdego kraju:
 
 | Polityka | Zachowanie |
 |---|---|
-| Przekaż | Rzeczywista opłata pojawia się jako linia ekstra na fakturze |
+| Przekaż | Rzeczywista opłata pojawia się jako linia dodatku zlecenia na fakturze |
 | Wchłoń | Opłata jest śledzona wewnętrznie, ale nie pojawia się na fakturze klienta |
+| (puste) | Wraca do domyślnej polityki opłat karty stawek najwyższego poziomu |
+
+Kraje niewylistowane w tabeli nadpisań dziedziczą domyślną wartość karty stawek.
+
+### Automatyczna linia faktury
+
+Gdy kraj jest ustawiony na **Przekaż**, zarejestrowane paragony opłat dla tego kraju są automatycznie sumowane i dodawane jako linia dodatku zlecenia na fakturze podczas generowania. Linia jest oznaczona nazwą kraju.
+
+Jeśli musisz wykluczyć konkretny paragon z faktury — na przykład ponieważ jest objęty osobną umową dopłaty — otwórz edytor faktury i przełącz **Wyklucz z faktury** na tej linii dodatku.
 
 ---
 
-<Card title="Karty stawek" icon="sliders-horizontal" href="/en/settings/rate-cards">
-  Konfiguruj politykę przekazywania opłat i nadpłaty bazowe per kraj.
+## Wskazówki dla dokładnego rozliczenia
+
+- Poproś kierowców o rejestrowanie opłat natychmiast po każdej płatności, nie na końcu podróży, aby paragony pozostały dopasowane do właściwego dnia i kraju.
+- Jeśli HERE pokazuje szaro (brak szacunku) dla kraju, który Twoje ciężarówki często przekraczają, zgłoś to w **Ustawienia → Karty stawek** z ręczną dopłatą per kraj, aby marże były chronione nawet bez danych HERE.
+- Duże bursztynowe lub czerwone delty konsekwentnie dla tego samego kraju to sygnał, aby dostosować bazowy szacunek opłat w Twojej karcie stawek.
+
+---
+
+<Card title="Karty stawek" icon="sliders-horizontal" href="/pl/admin/rate-cards">
+  Skonfiguruj politykę przekazywania opłat, bazowe dopłaty i nadpisania per kraj.
 </Card>
 
-<Card title="Karty paliwowe i importy" icon="fuel" href="/en/planner/fuel-cards">
+<Card title="Import kart paliwowych" icon="gas-pump" href="/pl/integrations/fuel-card-import">
   Importuj wyciągi DKV, UTA i AS24, aby automatycznie wypełniać rekordy paliwa i opłat.
 </Card>

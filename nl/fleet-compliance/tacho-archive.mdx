@@ -1,66 +1,118 @@
 ---
 title: "Tachograafarchief"
-description: "Hoe Druma DDD- en TGD-tachograafbestanden opslaat om te voldoen aan de downloadfrequentie en bewaarplicht van EU-Verordening 165/2014 — automatische nachtelijke download en handmatige upload."
+description: "Hoe Druma DDD- en TGD-tachograafbestanden opslaat om te voldoen aan de downloadfrequentie- en bewaarplicht van EU-Verordening 165/2014 — automatische nachtelijke download en handmatige upload."
 icon: "hard-drive"
 ---
 
-EU-Verordening 165/2014 verplicht vervoerders om tachograafgegevens van voertuigunits en chauffeurskaarten periodiek te downloaden en minstens **12 maanden** te bewaren. Druma slaat deze bestanden op in het Tachograafarchief zodat u compliance kunt aantonen zonder aparte archivering.
+EU-Verordening 165/2014 verplicht vervoerders om tachograafgegevens van voertuigunits en chauffeurskaarten met vaste tussenpozen te downloaden, en die gegevens minstens 12 maanden te bewaren. Druma slaat deze bestanden op in het Tachoarchief zodat u naleving kunt aantonen tijdens een wegcontrole of overheidsaudit, zonder een apart archiveringssysteem bij te houden.
 
-## Downloadfrequentie
+---
+
+## Downloadfrequentievereisten
 
 | Bestandstype | Vereiste downloadfrequentie |
 |---|---|
-| Voertuigunit (VU / `.ddd`) | Minstens elke **90 dagen** |
-| Chauffeurskaart (DDC / `.tgd`) | Minstens elke **28 dagen** |
+| Voertuigunitgegevens (VU / `.ddd`) | Minstens elke **90 dagen** |
+| Chauffeurskaartgegevens (DDC / `.tgd`) | Minstens elke **28 dagen** |
 
-Een gemiste downloaddeadline is op zich al een overtreding — ongeacht of de chauffeur een inbreuk beging in die periode.
+Een gemiste downloaddeadline is een directe overtreding van de regelgeving, ongeacht of de chauffeur een inbreuk beging tijdens die periode. Inspecteurs controleren of de gegevens op tijd zijn gedownload, niet enkel of ze uiteindelijk zijn opgehaald.
 
-## Waar te vinden
+---
 
-**Vloot → Tachograafarchief** toont alle opgeslagen bestanden, met chauffeur/voertuig, bestandstype, datumbereik en statusbadge: **OK**, **Bijna verlopen** (binnen 7 dagen) of **Verlopen** (deadline gepasseerd — vereist directe actie).
+## Waar u het Tachoarchief vindt
+
+Ga naar **Vloot → Tachoarchief**. De pagina toont alle opgeslagen tachograafbestanden gesorteerd op uploaddatum. Elke rij toont:
+
+- Naam chauffeur of voertuig
+- Bestandstype (VU of DDC)
+- Datumbereik gedekt door het bestand
+- Dagen sinds de laatste download
+- Statusbadge
+
+### Statusbadges
+
+| Badge | Betekenis |
+|---|---|
+| **OK** | Binnen de downloaddeadline |
+| **Binnenkort verplicht** | Binnen 5 dagen van de deadline |
+| **Achterstallig** | Deadline is verstreken |
+
+Bestanden gemarkeerd als **Achterstallig** vereisen onmiddellijke actie — download het bestand van het voertuig of de chauffeurskaart en upload het om de achterstallige status op te heffen.
+
+---
 
 ## Automatische download
 
-Voor trucks gekoppeld via **rFMS** haalt Druma nieuwe DDD- en TGD-bestanden elke nacht automatisch op — geen actie nodig. Dit werkt vandaag voor **Scania, Volvo, DAF, MAN, Mercedes-Benz, IVECO en Renault** (allen via rFMS, live).
+Voor trucks gekoppeld via rFMS (de gestandaardiseerde OEM-telematica-interface) haalt Druma elke nacht automatisch nieuwe DDD- en TGD-bestanden op. Geen handmatige actie nodig voor gekoppelde voertuigen en chauffeurs.
+
+Ondersteunde automatische-downloadintegraties:
+
+| Provider | Integratienaam | Status |
+|---|---|---|
+| Scania | rFMS | Live |
+| Volvo | rFMS | Live |
+| DAF | rFMS | Live |
+| MAN | rFMS | Live |
+| Mercedes-Benz | rFMS | Live |
+| IVECO | rFMS | Live |
+| Renault | rFMS | Live |
+| Webfleet | TachoShare | Nog niet geïmplementeerd — in afwachting van Webfleet-partneraccounttoegang |
+
+Om automatische download in te schakelen, ga naar **Instellingen → Integraties** en koppel uw rFMS-ondersteunde OEM-telematicaprovider. Eenmaal gekoppeld haalt Druma beschikbare bestanden op tijdens het nachtelijke synchronisatievenster en werkt de statusbadges dienovereenkomstig bij.
 
 <Note>
-**Webfleet TachoShare is nog niet geïmplementeerd** — in afwachting van partnertoegang bij Webfleet. Gekoppelde Webfleet-voertuigen vereisen momenteel handmatige upload. Sommige oudere voertuigunits of chauffeurskaarten ondersteunen geen remote ophalen en vereisen sowieso handmatige upload.
+Automatische download hangt af van of de telematicaprovider het bestand op afstand beschikbaar maakt. Sommige oudere voertuigunitmodellen of chauffeurskaarten ondersteunen geen ophalen op afstand — hiervoor is handmatige upload vereist. Webfleet TachoShare staat op de roadmap maar is nog niet live; gekoppelde Webfleet-voertuigen vereisen momenteel handmatige upload.
 </Note>
 
-Inschakelen: **Instellingen → Integraties** → koppel uw rFMS-ondersteunde OEM-telematicaprovider.
+---
 
 ## Handmatige upload
 
-Voor voertuigen/chauffeurs zonder automatische koppeling: upload rechtstreeks vanaf een tachograaf-downloadtool (VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+Voor voertuigen en chauffeurs niet gedekt door een automatische integratie, upload bestanden rechtstreeks vanaf een tachograaf-downloadtool (bijv. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
 
 <Steps>
-  <Step title="Open het Tachograafarchief">
-    Ga naar **Vloot → Tachograafarchief**.
+  <Step title="Open het Tachoarchief">
+    Ga naar **Vloot → Tachoarchief**.
   </Step>
   <Step title="Klik op Bestand uploaden">
-    Kies of het een chauffeurskaartbestand (DDC) of voertuigunitbestand (VU) is, en selecteer chauffeur of voertuig.
+    Klik rechtsboven op de knop **Bestand uploaden**.
+  </Step>
+  <Step title="Selecteer chauffeur of voertuig">
+    Kies of het bestand een chauffeurskaartbestand (DDC) of een voertuigunitbestand (VU) is, en selecteer dan de chauffeur of het voertuig uit de lijst.
   </Step>
   <Step title="Kies het bestand">
-    Alleen `.ddd` of `.tgd`, max. **10 MB**.
+    Selecteer het bestand `.ddd`, `.tgd`, `.v1b` of `.c1b` van uw computer. Maximale bestandsgrootte is **10 MB**.
   </Step>
-  <Step title="Bevestig upload">
-    Druma leest de bestandskop uit om het datumbereik te bepalen; de verlopen-klok wordt gereset.
+  <Step title="Bevestig de upload">
+    Klik op **Uploaden**. Druma verwerkt de bestandskop om het datumbereik te bepalen en slaat het bestand op in het archief. De achterstallig-klok reset voor de geselecteerde chauffeur of het voertuig.
   </Step>
 </Steps>
 
 <Warning>
-Alleen `.ddd`- en `.tgd`-bestanden worden geaccepteerd — CSV of PDF voldoen niet aan de EU-bewaarplicht. Bewaar altijd het originele binaire bestand.
+Alleen bestanden `.ddd`, `.tgd`, `.v1b` en `.c1b` worden geaccepteerd — `.v1b`/`.c1b` zijn de Generatie 2 smart-tachograafequivalenten van `.ddd`/`.tgd`. Bestanden geëxporteerd in andere formaten (CSV, PDF) kunnen niet worden geüpload en voldoen niet aan de EU-bewaarplicht. Bewaar altijd het originele binaire bestand.
 </Warning>
 
-## Bewaartermijn
+---
 
-Druma bewaart alle geüploade en automatisch gedownloade tachograafbestanden **onbeperkt** — 12 maanden is het wettelijk minimum, geen verwijderdoel.
+## Bewaring
+
+Druma bewaart alle geüploade en automatisch gedownloade tachograafbestanden voor het wettelijk vereiste minimum van 12 maanden. Bestanden ouder dan 12 maanden zijn onderhevig aan geautomatiseerde archivering. Neem contact op met support als u bestanden buiten het standaard bewaarvenster moet ophalen.
+
+---
+
+## Gerelateerde artikelen
 
 <CardGroup cols={2}>
   <Card title="EU-rijurenregels" icon="clock" href="/nl/fleet-compliance/eu-driving-hours">
-    Verordening 561/2006 rij- en rusttijden op basis van tachograafgegevens.
+    Dagelijkse en wekelijkse rijtijdlimieten van Verordening 561/2006, bijgehouden op basis van tachograafgegevens.
   </Card>
-  <Card title="Wagenparkdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
-    Compliance en vervaldatums van voertuigdocumenten.
+  <Card title="Werktijd chauffeurs (WTD)" icon="clock" href="/nl/fleet-compliance/driver-working-time">
+    Werktijdlimieten van Richtlijn 2002/15/EG en hoe Druma ze bewaakt.
+  </Card>
+  <Card title="Vlootdocumenten" icon="folder-open" href="/nl/fleet-compliance/fleet-documents">
+    Naleving en vervalopvolging van voertuigdocumenten.
+  </Card>
+  <Card title="Mobiliteitspakket" icon="globe" href="/nl/fleet-compliance/mobility-package">
+    Terugkeerverplichtingen voor voertuig en chauffeur en IMI-detacheringsmeldingen.
   </Card>
 </CardGroup>

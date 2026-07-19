@@ -1,0 +1,63 @@
+---
+title: "Luki"
+description: "Znajdź niepokryte ładunki, możliwości repozycjonowania pustych przebiegów oraz puste pojazdy, które mogłyby doładować się w pobliżu."
+icon: "route"
+---
+
+## Czym jest narzędzie Luki?
+
+Za każdym razem, gdy pojazd kończy dostawę bez zaplanowanego kolejnego ładunku, albo zlecenie czeka bez przypisanego pojazdu w miarę zbliżania się daty odbioru, albo tracisz puste kilometry, albo ryzykujesz przegapiony odbiór. Strona **Luki** (`/operations/gaps`, na pasku kart Planowania jako **Luki**) ujawnia oba problemy w jednym miejscu, w trzech podkartach.
+
+<Frame caption="Narzędzie Luki — luki pokrycia z zalecaną akcją, puste km, odbiorem, dostawą i klientem.">
+  <img src="/images/planner/empty-km-gaps.png" alt="Strona Luki wylistowująca luki pokrycia i możliwości doładunku pustych km" />
+</Frame>
+
+---
+
+## Pokrycie
+
+Domyślna podkarta wylistowuje **niepokryte ładunki** — przyszłe zlecenia, które jeszcze nie mają przypisanego pojazdu, uporządkowane wg pilności. Każdy wiersz pokazuje:
+
+- **Zalecane** — odznaka: **Przypisz** (dopasowano pobliski pojazd), **Podzleć** (znajdź przewoźnika) lub **Musi pokryć samodzielnie** (nie znaleziono opcji)
+- **Puste km** — odległość pustego przebiegu dla zalecanego dopasowania, oznaczona kolorem: zielony ≤150 km, bursztynowy 150–300 km, czerwony >300 km
+- **Odbiór**, **Data odbioru**, **Dostawa**, **Klient**
+
+Akcje wiersza pozwalają przypisać sugerowany pojazd bezpośrednio, przejść do **Znajdź przewoźnika** albo otworzyć zlecenie po szczegóły. Menu **Segregacja** pozwala oznaczyć wiersz jako **W trakcie**, **Uśpij 24h** albo **Zaakceptuj jako podzlecenie**, aby przestał konkurować o uwagę.
+
+Pasek KPI pokazuje **≤12h / ≤24h / ≤72h niepokryte**, **% auto-rozwiązywalnych**, **Potrzebny przewoźnik** i **Brak współrzędnych** (zlecenia, których przystanki nie mają współrzędnych i nie mogą zostać dopasowane).
+
+---
+
+## Optymalizator pustych km
+
+Ta podkarta oblicza możliwości repozycjonowania we **wszystkich** zleceniach (pokrytych i niepokrytych), uruchamiając macierz routingu dla każdej pary dostawa→odbiór — może to potrwać kilka sekund do załadowania. To stały układ **tabela + mapa podzielona**, nie przełącznik: tabela wylistowuje luki po lewej, a kliknięcie wiersza rysuje przerywaną linię na mapie od tego punktu dostawy do proponowanego następnego odbioru — rysowana jest tylko linia wybranego wiersza, nie wszystkie naraz.
+
+Kolumny: **Zalecane**, **Puste km**, **Odbiór**, **Data odbioru**, **Repozycjonuje z** (zlecenie i punkt dostawy, z którego pojazd by przyjeżdżał), **Dostawa**, **Klient**. Filtr **Top 10 / Top 25 / Wszystkie** ogranicza, ile wierszy jest obliczanych i pokazywanych, a mapa ma własny filtr ważności (Wysoka / Średnia / Niska / Niepokryte).
+
+---
+
+## Puste pojazdy
+
+Ta podkarta odwraca widok: jeden wiersz na **pojazd**, który kończy dostawę bez niczego zaplanowanego po niej, dopasowany do najbliższego nieprzypisanego ładunku, którym mógłby się doładować. Kolumny: **Pojazd** (z imieniem kierowcy), **Kończy w** (miejsce i data), **Najlepsze doładowanie** i **Puste km** dla tego doładowania. Pojazdy bez osiągalnego ładunku nie pokazują sugestii doładowania i wymagają ręcznej decyzji o repozycjonowaniu lub podzleceniu.
+
+KPI: **Puste pojazdy**, **Znaleziono doładowanie**, **Brak doładowania**, **Śr. puste km**, **Brak współrzędnych**.
+
+---
+
+## Eksportowanie
+
+Pasek narzędzi każdej podkarty ma przyciski **Drukuj** i **Eksportuj** dla bieżącej tabeli — eksport tworzy plik Excel (.xlsx) widocznych kolumn. Nie ma eksportu surowych współrzędnych GPS.
+
+---
+
+## Filtry
+
+Każda podkarta ma pole wyszukiwania tekstowego (numer zlecenia, nazwa klienta, adres odbioru/dostawy). Nie ma osobnego filtra zakresu dat, pojazdu ani kierowcy — karty Pokrycie i Optymalizator już ograniczają się do nadchodzących zleceń, a karta Puste pojazdy nie ma selektora per pojazd/kierowca, ponieważ każdy wiersz już jest pojazdem.
+
+---
+
+## Używanie tego narzędzia do znajdowania ładunków powrotnych
+
+Trasy, na których konsekwentnie widzisz czerwone luki (>300 km), to dokładnie te, gdzie stały układ ładunku powrotnego — albo ręczne wyszukiwanie na giełdzie frachtowej jak Timocom czy Trans.eu przy dostawie — przyniosłoby najwyższy zwrot. Druma nie prowadzi automatycznego wyszukiwania ładunków dla ogólnych zleceń FTL; zidentyfikowanie i zarezerwowanie ładunku powrotnego to ręczny krok, gdy narzędzie już wskazało Ci trasę.
+
+Jeśli luka dotyczy trasy grupażowej (wieloprzystankowej), sprawdź, czy automatyczne sugestie konsolidacji ładunku powrotnego Druma już oflagowały pasujący ładunek powrotny — te pojawiają się bezpośrednio na panelu konsolidacji grupażu i nie wymagają ręcznego wyszukiwania.

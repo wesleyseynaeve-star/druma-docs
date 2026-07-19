@@ -1,47 +1,166 @@
 ---
 title: "Intermodaler & multimodaler Transport"
-description: "Planen Sie Aufträge, die Straßen-, See-, Schienen-, Luft- oder Wasserwegeabschnitte kombinieren."
+description: "Planen Sie Aufträge, die Straßen-, See-, Schienen-, Luft- oder Binnenschifffahrtsabschnitte kombinieren — mit Spediteurzuweisung, Kostenverfolgung, eCMR und Fahrer-PWA-Unterstützung pro Abschnitt."
 icon: "git-merge"
 ---
 
 ## Übersicht
 
-Intermodaler Transport bewegt Ladung über mehrere Transportmodi in Folge. Ein einzelner Druma-Auftrag verwaltet die gesamte Reise: Planung, Spediteurzuweisung, Kosten, eCMR und Fahrerübersicht pro Abschnitt.
+Intermodaler Transport bewegt Ladung über mehrere Transportmodi in Folge — z. B. transportiert ein LKW einen Anhänger vorab von einer rumänischen Fabrik nach Calais, dieser überquert auf einer Ärmelkanal-RoRo-Fähre nach Folkestone, und ein zweiter LKW übernimmt den Weitertransport zur Lieferadresse in Großbritannien. Jeder Abschnitt ist eine **Etappe**. Ein einzelner Druma-Auftrag verwaltet die gesamte Reise: Planung, Spediteurzuweisung, Kosten, eCMR und Fahrersichtbarkeit pro Etappe.
+
+Dies unterscheidet sich von einem Standardauftrag mit internen Stopps. Interne Stopps sind Wegpunkte auf einer einzigen durchgehenden Straßenfahrt mit einem LKW. Intermodale Etappen sind eigenständige Transportereignisse, die unterschiedliche Modi, unterschiedliche Spediteure und sogar unterschiedliche Länder-Rechtsordnungen nutzen können.
 
 <Note>
-Sammelgutaufträge können nicht intermodal gemacht werden.
+Sammelgutfahrten und intermodale Etappen sind separate Konzepte — Etappen gehören zu einem einzelnen Auftrag, Sammelgut konsolidiert mehrere Aufträge auf einem LKW. Es gibt heute keinen kombinierten „intermodalen Sammelgut"-Ablauf.
 </Note>
 
 ---
 
-## Praktisches Beispiel: Rumänien → UK
+## Praktisches Beispiel: Rumänien → UK über den Ärmelkanaltunnel
 
-1. **Abschnitt 1** — LKW von Bukarest nach Calais (Straße)
-2. **Abschnitt 2** — RoRo-Fähre Calais → Folkestone (See)
-3. **Abschnitt 3** — LKW Folkestone → UK-Lieferort (Straße)
+| Etappe | Modus | Route | Spediteur |
+|---|---|---|---|
+| 1 | Straße | Bukarest → Calais | Eigene Flotte — LKW RO-01 |
+| 2 | See | Calais → Folkestone (Eurotunnel Le Shuttle) | Unterauftragnehmer: Eurotunnel |
+| 3 | Straße | Folkestone → Birmingham | Unterauftragnehmer: britischer Frachtführer |
+
+Druma verfolgt Buchungsreferenz und Containernummer für Etappe 2, erstellt separate eCMRs für Etappe 1 und 3 (beide grenzüberschreitend), und zeigt dem britischen Frachtführer nur die für Etappe 3 relevanten Stopps.
 
 ---
 
-## Intermodalen Auftrag erstellen
+## Einen intermodalen Auftrag erstellen
+
+Es gibt keinen „Intermodal"-Schalter zum Aktivieren — Etappen werden zu einem bereits erstellten Auftrag hinzugefügt, und Druma behandelt den Auftrag automatisch als intermodal, sobald er Etappen hat.
 
 <Steps>
-  <Step title="Neuen Auftrag erstellen">
-    Gehen Sie zu **Aufträge → Neuer Auftrag**.
+  <Step title="Den Auftrag erstellen oder öffnen">
+    Erstellen Sie den Auftrag normal (siehe [Einen Auftrag erstellen](/de/planner/creating-orders)), öffnen Sie ihn dann und gehen Sie zum Tab **Ladung & Stopps**.
   </Step>
-  <Step title="Intermodalen Schalter aktivieren">
-    Aktivieren Sie **Intermodaler Auftrag** oben im Formular.
+  <Step title="Etappen hinzufügen">
+    Klicken Sie im Abschnitt **Transportetappen** auf **Etappe hinzufügen**, um die erste Etappe zu erstellen. Fügen Sie so viele hinzu, wie die Reise erfordert — es gibt kein Limit. Der Ursprung jeder neuen Etappe wird standardmäßig auf das Ziel der vorherigen Etappe gesetzt (oder die Abholung des Auftrags, für die erste Etappe), damit Sie nicht dieselbe Adresse erneut eintippen müssen.
   </Step>
-  <Step title="Abschnitte hinzufügen">
-    Klicken Sie auf **Abschnitt hinzufügen** für jeden Transportmodus.
-  </Step>
-  <Step title="Spediteur pro Abschnitt zuweisen">
-    Weisen Sie LKW/Fahrer (Straße) oder externen Spediteur zu.
-  </Step>
-  <Step title="Kosten eingeben">
-    Geben Sie Kosten pro Abschnitt ein. Druma berechnet Gesamtkosten und Marge.
+  <Step title="Jede Etappe ausfüllen">
+    Erweitern Sie eine Etappenkarte, um Modus, Ursprung/Ziel, geplanten Start/Ende und Spediteur festzulegen (siehe unten).
   </Step>
 </Steps>
 
-<Card title="Frachtspedition" icon="arrows-left-right" href="/en/planner/freight-forwarding">
-  Verwalten Sie ausgelagerte Ladungen mit Spediteursportal.
+---
+
+## Etappen verwalten
+
+Jede Etappenkarte hat folgende Felder:
+
+| Feld | Hinweise |
+|---|---|
+| **Modus** | Straße, See, Schiene, Luft, oder Binnenschiff |
+| **Ursprung** | Freitext oder Adress-Autovervollständigung |
+| **Ziel** | Freitext oder Adress-Autovervollständigung |
+| **Geplanter Start** | Datum und Uhrzeit des Etappenbeginns |
+| **Geplantes Ende** | Erwartetes Datum und Uhrzeit des Etappenendes |
+| **Spediteur** | Eigene Flotte (nur Straße) oder Unterauftragnehmer |
+| **Einkaufspreis** | Kosten, die Sie für diese Etappe zahlen |
+| **Kostenaufschlüsselung** | Kraftstoff, Maut, Fähre, oder andere Positionen |
+
+### Straßenetappen
+
+Straßenetappen können Ihrer eigenen Flotte (LKW und Fahrer) oder einem Unterauftragnehmer-Spediteur zugewiesen werden — wählen Sie über eine Optionsauswahl auf der Etappenkarte, dann wählen Sie LKW/Fahrer oder Unterauftragnehmer aus einer Liste.
+
+### Nicht-Straßenetappen (See, Schiene, Luft, Binnenschiff)
+
+Nicht-Straßenetappen können nur einem Unterauftragnehmer-Spediteur zugewiesen werden — Ihre eigenen Flotten-LKW und -Fahrer können keiner See- oder Schienenetappe zugewiesen werden. Das Spediteurfeld durchsucht Ihre Unterauftragnehmerliste.
+
+### Etappensteuerung
+
+- **Auf-/Ab-Pfeile** — Etappen neu ordnen. Der Etappen-Zeitleistenstreifen (siehe unten) aktualisiert sich beim Ziehen.
+- **Etappe entfernen** — eine Etappe löschen. Es gibt keine statusbasierte Einschränkung hierfür in der Oberfläche, prüfen Sie also doppelt, bevor Sie eine bereits laufende Etappe entfernen.
+- **Etappe abschließen**-Schaltfläche — markiert die Etappe als erledigt. Sie erscheint, sobald der Status der Etappe **Unterwegs**, **Bei Lieferung**, oder **Entladung** erreicht — dies hängt vom Status ab, nicht von einem Datum.
+
+### Etappen-Zeitleistenstreifen
+
+Ein kompakter horizontaler Streifen erscheint über dem Etappen-Akkordeon. Er zeigt alle Etappen der Reihe nach mit einem Modus-Abzeichen (Straße, See, Schiene usw.) und den Stadtnamen für Ursprung und Ziel. Nutzen Sie ihn, um vor dem Speichern schnell zu prüfen, ob die Reisereihenfolge Sinn ergibt.
+
+---
+
+## See-/Intermodal-Etappendetails
+
+Bei jeder Etappe mit Modus **See**, **Schiene**, **Luft** oder **Binnenschiff** erscheint ein einklappbarer Abschnitt **See-/Intermodal-Details** auf der Etappenkarte. Alle Felder sind optional.
+
+| Feld | Format | Hinweise |
+|---|---|---|
+| Buchungsreferenz | Freitext | Buchungsbestätigungsnummer des Spediteurs |
+| Containernummer | Freitext | ISO-Container-ID |
+| Plombennummer | Freitext | |
+| Schiffsname | Freitext | Name des Schiffs- oder Zugservices |
+| Reisenummer | Freitext | |
+| Spediteur-SCAC | 4 Zeichen | Standard Carrier Alpha Code |
+| Verladehafen | 5-stelliger LOCODE | z. B. `FRXXX` für Calais |
+| Löschhafen | 5-stelliger LOCODE | z. B. `GBFXT` für Folkestone |
+| Annahmeschluss (Datum/Uhrzeit) | Datum + Uhrzeit | Ladungsannahmeschluss am Verladehafen |
+| ETD | Datum + Uhrzeit | Voraussichtliche Abfahrtszeit vom Verladehafen |
+| ETA am Löschhafen | Datum + Uhrzeit | Voraussichtliche Ankunftszeit am Löschhafen |
+
+<Warning>
+Liegt der Annahmeschluss innerhalb von 48 Stunden nach dem geplanten Ende der Etappe, zeigt Druma ein gelbes Warnbanner auf der Etappenkarte. Prüfen Sie den Zeitplan, um sicherzustellen, dass der LKW den Hafen rechtzeitig erreicht.
+</Warning>
+
+Wird der Modus einer Etappe zurück auf **Straße** gesetzt, werden die See-/Intermodal-Detailfelder automatisch geleert.
+
+---
+
+## Verhalten auf der Planungstafel
+
+### LKW-Verfügbarkeit
+
+Die Planungstafel berechnet die LKW-Verfügbarkeit anhand des **Straßenetappen-Enddatums**, nicht des endgültigen Lieferdatums des Auftrags. Das bedeutet, ein Etappe-1-(Straße)-LKW wird ab dem Moment als frei angezeigt, in dem diese Etappe endet — selbst wenn die letzte Lieferung des Auftrags Tage später auf Etappe 3 mit einem anderen Spediteur erfolgt.
+
+### Einem intermodalen Auftrag einen LKW zuweisen
+
+Ziehen Sie einen LKW auf einen intermodalen Auftrag, zeigt das Bestätigungsblatt der Zuweisung einen Abschnitt **Intermodale Etappe** statt des Standardablaufs. Er listet jede Straßenetappe des Auftrags (Reihenfolge, Ursprung → Ziel, geplante Daten) — ein Klick auf eine Etappenzeile wählt sie direkt aus; es gibt keine separate „Zuweisen"-Schaltfläche danach.
+
+<Note>
+Ein LKW kann pro intermodalem Auftrag nur einer Straßenetappe zugewiesen werden. Um mehrere Straßenetappen mit unterschiedlichen LKW abzudecken, wiederholen Sie den Ziehen-und-Ablegen-Vorgang für jede Etappe.
+</Note>
+
+---
+
+## eCMR pro Straßenetappe
+
+Jede Straßenetappe, die eine internationale Grenze überquert, erhält ihr eigenes eCMR. Um eines zu erstellen, öffnen Sie die Etappenkarte und klicken auf **eCMR erstellen**. Druma registriert das Dokument über seinen nativen, hausinternen eCMR-Anbieter, mit vorausgefülltem Ursprung, Ziel und zugewiesenem Spediteur der Etappe — der Abschluss einer grenzüberschreitenden Etappe löst dies auf dieselbe Weise automatisch aus. (Es gibt keine Anbieterwahl: Nativ ist der einzige Weg für neue Dokumente; nur bereits bestehende Legacy-TransFollow-Zeilen funktionieren noch, unabhängig von hier erstellten Etappen.)
+
+Etappen, die innerhalb eines einzigen Landes bleiben, benötigen kein eCMR (sofern Ihre Unternehmensrichtlinie nichts anderes vorschreibt). Die Schaltfläche **eCMR erstellen** ist immer verfügbar, falls Sie dies überschreiben möchten.
+
+Der dreiparteiige Signaturablauf und der Download des zertifizierten PDFs funktionieren identisch zum Standard-eCMR — siehe die [eCMR-Dokumentation](/de/ecmr/what-is-ecmr) für Details.
+
+---
+
+## Fahrer-PWA — etappenbeschränkte Ansicht
+
+Fahrer sehen nur die Stopps, die zu ihrer zugewiesenen Straßenetappe gehören. Hat der Auftrag drei Etappen und der Fahrer deckt Etappe 1 ab, sieht er nur die Abholung und etwaige interne Stopps für Etappe 1 — nicht die Lieferadresse in Großbritannien.
+
+Ein Info-Banner oben im Ladungsdetail lautet:
+
+> **Etappe 1 von 3 — Straße: Bukarest → Calais**
+
+Das hält die Ansicht des Fahrers übersichtlich und vermeidet Verwirrung über Stopps, die zu einem anderen Spediteur gehören.
+
+Status-Taps (Bei Abholung, Beladung, Unterwegs, Bei Lieferung usw.) funktionieren genau wie bei einem Standardauftrag, bewegen aber nur den Status der Straßenetappe des Fahrers voran. Der Planer sieht den Fortschritt pro Etappe im Auftragsdetailbereich.
+
+---
+
+## Kosten- und Margenverfolgung
+
+Jede Etappe hat ihren eigenen **Einkaufspreis** und ihre eigene **Kostenaufschlüsselung**. Die Gesamtkosten des Auftrags sind die Summe über alle Etappen. Die Margenberechnung im Auftragsdetailbereich vergleicht den vereinbarten Verkaufspreis mit den gesamten Mehretappen-Kosten und ergibt eine konsolidierte Margenzahl für die gesamte intermodale Reise.
+
+---
+
+<Card title="eCMR" icon="file-signature" href="/de/ecmr/what-is-ecmr">
+  Wie native eCMR-Erstellung, dreiparteiige Signaturen und zertifizierte PDFs funktionieren.
+</Card>
+
+<Card title="Unterauftragnehmer" icon="truck" href="/de/planner/subcontractors">
+  Verwalten Sie Ihre Unterauftragnehmer-Spediteurliste — dieselben Spediteure erscheinen bei der intermodalen Etappenzuweisung.
+</Card>
+
+<Card title="Planungstafel" icon="calendar" href="/de/planner/planning-board">
+  Wie LKW-Verfügbarkeit und intermodale Auftragsblöcke auf der Dispositions-Zeitleiste erscheinen.
 </Card>

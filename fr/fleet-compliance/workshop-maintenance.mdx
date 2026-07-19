@@ -1,70 +1,140 @@
 ---
 title: "Atelier et maintenance"
-description: "Comment créer des ordres de travail pour les défauts de véhicules, gérer les plannings de maintenance et suivre l'historique des réparations dans Druma."
+description: "Créez et gérez les ordres de travail véhicule, définissez les plannings de maintenance, résolvez les défauts depuis le tableau de planification, et bloquez automatiquement les camions ayant des défauts critiques pour la sécurité."
 icon: "wrench"
 ---
 
 ## Vue d'ensemble
 
-La fonctionnalité Atelier de Druma vous permet de gérer les ordres de travail de maintenance, de relier les réparations aux défauts détectés lors des inspections post-trajet (DVIR) et de suivre les coûts de maintenance par véhicule.
+Le module Atelier et maintenance donne aux gestionnaires de flotte une façon structurée de suivre chaque travail de maintenance — des vidanges d'huile de routine aux réparations de défauts critiques pour la sécurité. Les ordres de travail se lient directement au tableau de planification (bloquant les camions si nécessaire) et au flux d'inspection post-trajet (les défauts critiques pour la sécurité peuvent créer des ordres de travail automatiquement ou en un clic).
 
-Accédez à **Flotte → Atelier** pour gérer les ordres de travail.
+Trouvez le module sous **Flotte → Ordres de travail** et **Flotte → Maintenance**.
+
+<Frame caption="Flotte → Ordres de travail — travaux suivis d'Ouvert à Terminé, par type de service.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Page Ordres de travail listant les travaux de maintenance par statut et type de service" />
+</Frame>
 
 ---
 
-## Créer un ordre de travail
+## Ordres de travail
+
+### Qu'est-ce qu'un ordre de travail
+
+Un ordre de travail est un enregistrement d'un travail de maintenance sur un camion spécifique. Il capture ce qui doit être fait, les coûts de pièces et de main-d'œuvre, et le statut actuel du travail. Chaque défaut véhicule critique pour la sécurité devrait avoir un ordre de travail correspondant avant que le camion ne reprenne du service.
+
+### Créer un ordre de travail
 
 <Steps>
-  <Step title="Accédez à Flotte → Atelier">
-    Cliquez sur **Nouvel ordre de travail**.
+  <Step title="Ouvrez l'onglet Ordres de travail">
+    Accédez à **Flotte → Ordres de travail** et cliquez sur **Créer un ordre de travail**.
   </Step>
-  <Step title="Sélectionnez le véhicule">
-    Choisissez le camion ou la remorque nécessitant une maintenance.
+  <Step title="Renseignez les détails">
+    Sélectionnez le camion et renseignez :
+
+    - **Type de service** — choisissez parmi : Vidange, Service freins, Changement pneus, Inspection, Réparation, Recertification ADR, Calibrage tachygraphe, Autre, plus trois types spécifiques frigo pour les remorques (Service filtre et huile, Service frigo complet, Inspection ATP)
+    - **Description** — ce qui doit être fait
+    - **Assigné à** — l'atelier ou le technicien responsable (texte libre)
+    - **Date planifiée** — quand le travail est prévu
   </Step>
-  <Step title="Décrivez les travaux">
-    - Type de maintenance : entretien périodique, réparation, inspection, autre
-    - Description détaillée des travaux à effectuer
-    - Pièces requises (optionnel)
-  </Step>
-  <Step title="Définissez les dates">
-    - Date planifiée
-    - Date de retour prévu
-  </Step>
-  <Step title="Marquez le véhicule comme indisponible (optionnel)">
-    Activez l'option pour marquer automatiquement le véhicule comme indisponible pendant la période de maintenance.
+  <Step title="Ajoutez des lignes de détail">
+    Ajoutez une ou plusieurs lignes de détail pour les pièces et la main-d'œuvre. Chaque ligne a une description, une quantité, un coût unitaire, et un type (Pièces / Main-d'œuvre). Le **coût total** est calculé automatiquement à partir de toutes les lignes.
   </Step>
   <Step title="Enregistrer">
-    Cliquez sur **Créer l'ordre de travail**.
+    Cliquez sur **Enregistrer**. L'ordre de travail est créé au statut **Ouvert**.
   </Step>
 </Steps>
 
+### Machine à états
+
+| Statut | Signification | Actions suivantes |
+|---|---|---|
+| **Ouvert** | Travail créé, pas encore commencé | Démarrer l'ordre de travail, Annuler |
+| **En cours** | Le travail a commencé | Marquer terminé, Annuler |
+| **Terminé** | Le travail est fait, camion dégagé | — |
+| **Annulé** | Le travail ne sera pas terminé | — |
+
+Cliquez sur **Démarrer l'ordre de travail** pour passer d'Ouvert à En cours. Cliquez sur **Marquer terminé** quand le travail est fait. Un ordre de travail terminé ou annulé lève tout blocage automatique sur le camion.
+
+<Note>
+Seuls les ordres de travail au statut **Ouvert** ou **En cours** maintiennent un camion bloqué sur le tableau de planification. Terminer ou annuler l'ordre de travail restaure immédiatement le camion dans la liste assignable.
+</Note>
+
 ---
 
-## Lier à un défaut DVIR
+## Créer un ordre de travail depuis un défaut
 
-Lorsqu'un défaut critique pour la sécurité est détecté lors d'une inspection post-trajet, vous pouvez créer un ordre de travail directement depuis l'onglet **Flotte → Défauts** en cliquant sur **Créer un ordre de travail** sur la ligne du défaut.
+Lorsqu'un chauffeur soumet une inspection post-trajet avec un défaut **Critique pour la sécurité**, le défaut apparaît dans **Flotte → Défauts**. Chaque ligne critique pour la sécurité a un bouton **Créer un ordre de travail**.
+
+Cliquer dessus ouvre le formulaire d'ordre de travail pré-rempli avec le camion inspecté et lié au ticket de défaut d'origine. Il n'y a pas de type d'ordre de travail « Critique pour la sécurité » — choisissez le **Type de service** correspondant à la réparation (par ex. Réparation, Service freins), saisissez une description, puis ajoutez des lignes de détail et une date planifiée, et enregistrez.
 
 ---
 
-## Clôturer un ordre de travail
+## Plannings de maintenance
 
-Lorsque les travaux sont terminés :
+Les plannings de maintenance vous permettent de suivre les intervalles de service récurrents par camion — afin de toujours savoir quand la prochaine vidange, le prochain remplacement de courroie ou la prochaine inspection réglementaire est due.
 
-<Steps>
-  <Step title="Ouvrez l'ordre de travail">
-    Trouvez l'ordre dans la liste des ordres de travail ouverts.
-  </Step>
-  <Step title="Saisissez les travaux effectués">
-    Décrivez ce qui a été réellement fait et les pièces utilisées.
-  </Step>
-  <Step title="Saisissez le coût">
-    Saisissez le coût total de la réparation pour le suivi des coûts de maintenance.
-  </Step>
-  <Step title="Cliquez sur Clôturer">
-    L'ordre de travail est clôturé et le véhicule redevient disponible.
-  </Step>
-</Steps>
+Accédez à **Flotte → Maintenance** pour gérer les plannings.
 
-<Card title="Inspection post-trajet (DVIR)" icon="clipboard-check" href="/fr/driver/post-trip-inspection">
-  Comment les chauffeurs signalent les défauts lors des inspections post-trajet.
-</Card>
+### Ajouter un planning
+
+Cliquez sur **Ajouter un planning** et configurez :
+
+| Champ | Description |
+|---|---|
+| **Camion** | À quel véhicule ce planning s'applique |
+| **Type de service** | Description en texte libre (ex. « Vidange », « Rotation des pneus ») |
+| **Type d'intervalle** | **km** (basé sur la distance), **jours** (basé sur le calendrier), ou **heures moteur** |
+| **Valeur d'intervalle** | L'intervalle numérique (ex. 15 000 km, 90 jours, 500 heures) |
+| **Dernière exécution** | Date et relevé compteur/heures du dernier service |
+
+Druma calcule la date ou le kilométrage **d'échéance** à partir des valeurs de dernière exécution et de l'intervalle. La liste des plannings trie par date d'échéance, donc les éléments en retard apparaissent en haut.
+
+Vous pouvez modifier ou supprimer n'importe quel planning. Druma ne crée pas automatiquement d'ordres de travail à partir des plannings — le planning est un outil de planification ; vous créez l'ordre de travail manuellement quand le service arrive à échéance.
+
+---
+
+## Tableau de planification : le badge clé à molette
+
+Lorsqu'un camion a un ou plusieurs ordres de travail **Ouverts** ou **En cours**, un badge ambre en forme de clé à molette apparaît sur la carte de ce camion sur le tableau de planification. Le badge est un signal rapide pour les répartiteurs indiquant que le véhicule a une maintenance en attente.
+
+### Résolution rapide atelier
+
+Cliquez sur le badge clé à molette pour ouvrir la fenêtre **Résolution rapide atelier**. Depuis là, vous pouvez :
+
+- **Marquer terminé** — clôture l'ordre de travail et retire le blocage sans quitter le tableau de planification
+- **Annuler** — annule l'ordre de travail et retire le blocage
+
+Ceci est conçu pour les situations où vous avez juste besoin de lever un blocage rapidement (par ex. la réparation est finie et vous devez réaffecter le camion) sans naviguer vers l'onglet complet Ordres de travail.
+
+---
+
+## Indisponibilité automatique pour les défauts critiques pour la sécurité
+
+Si la bascule **Créer automatiquement une indisponibilité véhicule pour les défauts critiques pour la sécurité** est activée dans **Paramètres → Liste de contrôle post-trajet**, soumettre un défaut critique pour la sécurité, automatiquement :
+
+1. Crée un enregistrement d'indisponibilité véhicule pour le camion
+2. Retire le camion de la liste assignable sur le tableau de planification
+3. Affiche le badge ambre clé à molette sur la carte du camion
+
+Le camion reste indisponible jusqu'à ce que l'ordre de travail lié soit marqué **Terminé** ou **Annulé**. Les commandes futures déjà affectées au camion ne sont pas automatiquement désaffectées — le répartiteur reçoit une notification et doit les examiner manuellement.
+
+<Warning>
+Si un chauffeur soumet un défaut critique pour la sécurité en fin de service et que personne ne vérifie le tableau de planification avant le matin, le camion n'apparaîtra pas comme assignable. Prenez l'habitude de vérifier **Flotte → Défauts** dans le cadre de la revue matinale quotidienne.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Inspection post-trajet du véhicule (DVIR)" icon="clipboard-check" href="/fr/fleet-compliance/post-trip-dvir">
+    Comment les chauffeurs signalent les défauts en fin de trajet, les niveaux de gravité, et comment les défauts critiques pour la sécurité déclenchent des ordres de travail.
+  </Card>
+  <Card title="Documents de flotte" icon="file-text" href="/fr/fleet-compliance/fleet-documents">
+    Suivez l'expiration des documents ITP, assurance, CEMT et certificat ADR — avec des avertissements sur le tableau de planification quand les documents approchent de l'expiration.
+  </Card>
+  <Card title="Pneus de flotte" icon="circle" href="/fr/fleet-compliance/tyres">
+    Suivez l'état des pneus, la profondeur de bande et les coûts de remplacement par véhicule.
+  </Card>
+  <Card title="Incidents de flotte" icon="triangle-exclamation" href="/fr/fleet-compliance/incidents">
+    Enregistrez les accidents, dommages et sinistres d'assurance pour votre flotte.
+  </Card>
+</CardGroup>

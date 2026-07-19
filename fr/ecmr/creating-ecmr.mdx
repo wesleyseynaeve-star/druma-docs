@@ -1,53 +1,88 @@
 ---
 title: "Créer un eCMR"
-description: "Guide étape par étape pour émettre des documents eCMR depuis une commande dans Druma via l'intégration TransFollow."
+description: "Comment Druma génère automatiquement les documents eCMR pour les commandes transfrontalières, et comment en créer un manuellement si besoin."
 icon: "file-plus"
 ---
 
-## Vue d'ensemble
-
-Un eCMR est créé automatiquement lorsqu'une commande transfrontalière est confirmée — si TransFollow est configuré et que la commande nécessite un CMR. Vous pouvez également en créer un manuellement depuis n'importe quelle commande.
+Druma crée les documents eCMR **en interne via le fournisseur natif Druma** par défaut. Aucun compte de service externe n'est nécessaire. Le processus est en grande partie automatique pour les commandes éligibles, mais vous pouvez aussi déclencher la création manuellement depuis la page de détail de la commande.
 
 ---
 
-## Conditions préalables
+## Quand Druma crée un eCMR automatiquement
 
-- TransFollow configuré dans **Paramètres → Intégrations**
-- Mode simulation désactivé (pour des documents légalement valables)
-- La commande doit être en statut **Confirmée** ou ultérieur
+Druma crée automatiquement un eCMR dès qu'une commande routière est **répartie** — au moment où un camion lui est assigné et que son statut passe à « Assignée ». Il n'y a pas de comparaison des pays de chargement/livraison : chaque commande répartie qui n'est pas sous-traitée, et dont l'entreprise utilise le fournisseur eCMR natif, reçoit un eCMR émis comme brouillon non signé. Cela signifie que les commandes nationales en reçoivent aussi une — elle reste simplement non signée jusqu'à ce que vous en ayez besoin.
+
+Une fois émis, le document eCMR apparaît dans l'onglet **Documents** de la page de détail de la commande, où vous pouvez consulter le PDF scellé via le bouton **Voir l'eCMR** une fois prêt.
+
+<Note>
+Les commandes sous-traitées sont ignorées — le sous-traitant émet son propre CMR, Druma ne peut donc pas signer en son nom. Les commandes ayant déjà un eCMR ne sont jamais réémises.
+</Note>
 
 ---
 
 ## Créer un eCMR manuellement
 
-<Steps>
-  <Step title="Ouvrez la commande">
-    Accédez à la commande pour laquelle vous souhaitez créer un eCMR.
-  </Step>
-  <Step title="Accédez à l'onglet eCMR">
-    Cliquez sur l'onglet **eCMR** dans le panneau de détails de la commande.
-  </Step>
-  <Step title="Vérifiez les données pré-remplies">
-    Druma pré-remplit automatiquement les données de l'eCMR depuis la commande :
-    - Nom et adresse de l'expéditeur
-    - Nom et adresse du destinataire
-    - Description des marchandises et poids
-    - Immatriculation du camion
-  </Step>
-  <Step title="Modifiez si nécessaire">
-    Ajustez les champs si les données ne correspondent pas exactement à ce qui est sur les documents physiques.
-  </Step>
-  <Step title="Cliquez sur Créer l'eCMR">
-    Druma soumet la demande à TransFollow. L'eCMR est créé en quelques secondes et prêt pour la signature.
-  </Step>
-</Steps>
+Pour les commandes à plusieurs legs (groupage), chaque leg routier reçoit son propre eCMR. Si un leg n'en a pas encore, ouvrez l'onglet **Marchandise / Arrêts** de la commande et cliquez sur **Créer un eCMR** à côté de ce leg — il n'y a pas d'onglet « eCMR » séparé : le bouton se trouve directement sur la ligne du leg.
+
+<Note>
+Lorsque vous marquez un leg routier transfrontalier confirmé comme terminé, Druma crée aussi son eCMR automatiquement à ce moment-là s'il n'en existe pas déjà un.
+</Note>
 
 ---
 
-## eCMR automatique pour les commandes transfrontalières
+## Données pré-remplies depuis la commande
 
-Druma détecte automatiquement si une commande nécessite un eCMR (origine et destination dans des pays différents) et peut créer l'eCMR automatiquement à la confirmation si vous activez **Créer automatiquement l'eCMR** dans les paramètres de l'intégration TransFollow.
+Druma remplit les champs de l'eCMR à partir des données de commande que vous avez déjà saisies. Voici d'où vient chaque champ :
 
-<Card title="Flux de signature" icon="pen" href="/fr/ecmr/signing-flow">
-  Comment les trois signatures sont obtenues par le chauffeur et le destinataire.
+| Champ eCMR | Source dans Druma |
+|---|---|
+| Nom et adresse de l'expéditeur | Fiche client de la commande |
+| Nom et adresse du transporteur | Détails de votre entreprise |
+| Nom et adresse du destinataire | Fiche client de la commande (adresse de livraison depuis l'arrêt de livraison) |
+| Adresse de chargement | Lieu de chargement de la commande |
+| Adresse de livraison | Lieu de livraison de la commande |
+| Description des marchandises | Champ description de la cargaison de la commande |
+| Plaque d'immatriculation du camion | Véhicule assigné à la commande |
+| Nom du chauffeur | Chauffeur assigné à la commande |
+| Conditions particulières (ADR) | Indicateur ADR et classe de la commande |
+
+Si l'une de ces données manque ou est incorrecte sur la commande, corrigez d'abord la commande, puis créez l'eCMR — il n'y a pas d'étape d'aperçu du pré-remplissage ; le document est rédigé immédiatement.
+
+---
+
+## Avant de confirmer : ce qui ne peut pas être modifié
+
+<Warning>
+Une fois qu'un eCMR est émis pour une commande (ou un leg), Druma n'en émettra pas un second — cliquer à nouveau sur Créer l'eCMR, ou un déclencheur de complétion de leg se déclenchant à nouveau, renvoie simplement le document existant au lieu d'en générer un nouveau. C'est une protection d'idempotence, pas un verrou de champ : il n'y a aucune restriction sur la modification des données de commande sous-jacentes elles-mêmes.
+
+Si vous devez corriger un eCMR enregistré, utilisez le processus de repli vers CMR papier et, si approprié, créez-en un nouveau.
+</Warning>
+
+---
+
+## Fournisseur eCMR : Natif (TransFollow réservé aux configurations héritées)
+
+Par défaut, Druma utilise son **fournisseur eCMR natif** — aucun compte externe ni clé API requis. Dans **Paramètres → Intégrations → Fournisseur eCMR**, les seuls choix sont **Natif** et **Désactivé** — TransFollow ne peut plus être sélectionné, ni pour une nouvelle entreprise ni pour une entreprise existante. Si votre entreprise dispose d'une configuration TransFollow préexistante, elle continue de fonctionner comme avant et se convertit silencieusement en Natif lors du prochain enregistrement de l'intégration.
+
+<Card title="Fournisseurs eCMR" icon="right-left" href="/fr/ecmr/ecmr-providers">
+  Ce que fait le fournisseur natif, et ce qu'il advient des configurations TransFollow héritées.
 </Card>
+
+---
+
+## Facturation
+
+L'eCMR est inclus dans votre abonnement Druma sans coût supplémentaire — il n'y a pas de frais par document ni de plafond d'usage. Vous pouvez consulter les statistiques d'usage sous **Paramètres → Facturation → Usage**.
+
+---
+
+## Étapes suivantes
+
+<CardGroup cols={2}>
+  <Card title="Le flux de signature" icon="pen-to-square" href="/fr/ecmr/signing-flow">
+    Comment l'expéditeur, le chauffeur et le destinataire signent chacun, et sur quel appareil.
+  </Card>
+  <Card title="Qu'est-ce que l'eCMR ?" icon="file-contract" href="/fr/ecmr/what-is-ecmr">
+    Contexte sur l'eCMR, sa base légale, et comment Druma l'émet en interne.
+  </Card>
+</CardGroup>

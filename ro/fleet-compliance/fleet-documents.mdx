@@ -1,23 +1,120 @@
 ---
 title: "Documente flota"
-description: "Stocare si urmarire documente pentru vehicule si soferi cu alerte de expirare."
+description: "Urmareste certificatele de asigurare, ITP, permisele CEMT, certificatele ADR si de calibrare tahograf si toate celelalte documente de vehicul, cu o notificare optionala de alerta la expirare."
 icon: "folder-open"
 ---
 
-Druma urmareste documentele flotei cu alerte automate de expirare.
+Fiecare camion din flota ta trebuie sa poarte un set de documente valide — certificate cerute legal, care expira si trebuie reinnoite periodic. Documentele lipsa sau expirate pot imobiliza un vehicul la un control rutier. Druma le urmareste pe toate si te alerteaza inainte sa expire.
 
-## Documente vehicule urmarite
+---
 
-Asigurare RCA, Asigurare CMR, ITP, Licenta de transport, Taxa rutiera (vigneta), Calibrare tahograf, Certificat ADR.
+## Tipuri de documente urmarite per vehicul
 
-## Documente soferi urmarite
+Druma urmareste urmatoarele categorii de documente pentru fiecare vehicul:
 
-Permis de conducere, Certificat CPC, Certificat ADR.
+| Document | Denumire romaneasca | Note |
+|---|---|---|
+| Certificat de inspectie tehnica | ITP | Inspectie tehnica periodica |
+| Asigurare de raspundere civila | RCA | Obligatorie pentru toate vehiculele |
+| Asigurare marfa CMR | Asigurare CMR | Necesara pentru transportul international |
+| Certificat de inmatriculare a vehiculului | Talon / Carte de identitate a vehiculului | |
+| Permis CEMT | Autorizatie CEMT | Permis de contingent multilateral, separat de licenta de operare interna |
+| Certificat ADR | Certificat ADR vehicul | Doar daca vehiculul transporta marfuri periculoase |
+| Certificat de calibrare tahograf | Certificat verificare tahograf | Necesar periodic prin lege |
+| Certificat ATP | Certificat ATP | Doar remorci reefer/cu temperatura controlata |
+| Altele | — | Orice tip de document care nu se incadreaza in categoriile de mai sus |
 
-## Adaugarea unui document
+<Note>
+Poti adauga si tipuri de documente personalizate, daca operatiunea ta are documente care nu se incadreaza in aceste categorii — de exemplu, certificate de calibrare pentru lantul de frig sau documente de permis pentru incarcaturi supradimensionate.
+</Note>
 
-Deschide profilul vehiculului sau soferului -> tabul Documente -> apasa **Adauga Document** -> selecteaza tipul, introdu data expirarii, incarca o scanare.
+---
 
-## Alertele
+## Adaugarea unui document la un vehicul
 
-Alertele de expirare apar pe Vizualizarea Astazi, pe Tabla de planificare, ca email catre planificator si in Scanarea de calitate a datelor nocturna.
+<Steps>
+  <Step title="Deschide Prezentarea Documentelor">
+    Mergi la **Flota → Prezentare Documente** — aceasta este o pagina separata de nivel superior in Flota, nu un tab pe vizualizarea de detaliu a vehiculului.
+  </Step>
+  <Step title="Apasa Incarca Document">
+    Apasa **Incarca Document**.
+  </Step>
+  <Step title="Selecteaza tipul documentului">
+    Alege tipul de document din lista (de ex. RCA, ITP, Calibrare Tahograf).
+  </Step>
+  <Step title="Introdu data expirarii">
+    Introdu data de expirare de pe document. Aceasta este data pe care Druma o foloseste pentru toate calculele de alerta.
+  </Step>
+  <Step title="Incarca scanarea">
+    Ataseaza o scanare PDF, JPG sau PNG a documentului. Dimensiune maxima fisier: 20 MB per fisier.
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza**. Documentul apare in lista de documente a vehiculului, cu data expirarii si statusul sau.
+  </Step>
+</Steps>
+
+---
+
+## Urmarirea expirarii si alerte
+
+Etichetele (avertisment galben / expirat rosu) de pe vehiculul din lista de flota reflecta intotdeauna statusul real de expirare al fiecarui document, calculat zilnic. **Notificarea** proactiva, in plus fata de aceste etichete, este insa optionala:
+
+| Timp inainte de expirare | Eticheta afisata | Notificare (daca este activata) |
+|---|---|---|
+| 60 de zile | — | Notificare de avertisment trimisa |
+| 14 zile | Eticheta galbena de avertisment | Notificare critica trimisa |
+| Expirat | Eticheta rosie; vehiculul blocat de la noi atribuiri de comanda | Notificare trimisa |
+
+<Warning>
+Notificarea este conditionata de **Setari → Automatizari si Functii → Alerte expirare documente flota**, care este **dezactivata implicit** pentru fiecare companie. Pana o activezi, Druma arata in continuare etichetele corecte pe vehicul si lista de flota, dar nimeni nu este notificat proactiv pe masura ce un document se apropie de expirare — trebuie sa observi asta in lista. Cand este activata, notificarile in aplicatie ajung la utilizatorii cu rolul Fleet Manager, Company Admin sau Admin (nu exista un canal separat de email pentru aceasta alerta).
+</Warning>
+
+<Warning>
+Un vehicul cu un document expirat **nu poate fi atribuit unor comenzi noi** pana cand documentul expirat nu este reinnoit si incarcat. Comenzile existente, in curs, nu sunt intrerupte, dar dispecerii vor vedea un avertisment.
+</Warning>
+
+Daca reinnoiesti un document, incarca noua versiune imediat — Druma va elimina statusul de expirat de indata ce noua data de expirare este salvata.
+
+---
+
+## Prezentarea conformitatii
+
+In loc sa verifici vehiculele unul cate unul, foloseste vizualizarea de conformitate la nivel de flota:
+
+1. Mergi la **Flota → Prezentare Documente**
+2. Vezi fiecare vehicul si fiecare tip de document intr-o singura grila
+3. Filtreaza vizualizarea dupa status: **Expirat**, **Expira in Curand** (in 30 de zile) sau **La Zi**
+
+Aceasta vizualizare este conceputa pentru verificarea de dimineata a fleet managerului — o privire rapida asupra grilei arata daca ceva necesita actiune azi.
+
+---
+
+## Cerinte de format fisier
+
+- **Formate acceptate:** PDF, JPG, PNG
+- **Dimensiune maxima fisier:** 20 MB per document
+- **Recomandat:** scaneaza la o rezolutie la care textul documentului este clar lizibil — cel putin 150 DPI pentru documente A4
+
+Daca un inspector rutier sau un client cere un document, il poti descarca direct din **Flota → Prezentare Documente** si il poti trimite prin email. Soferii pot vedea si ei documentele pentru vehiculul atribuit, in aplicatia mobila Druma.
+
+---
+
+## Intrebari frecvente
+
+**Poate un singur document sa acopere mai multe vehicule?** Nu — fiecare document trebuie incarcat separat, la fiecare vehicul pe care il acopera. Polita RCA poate acoperi intreaga ta flota, dar incarc-o la fiecare vehicul individual, ca urmarirea expirarii sa functioneze per vehicul.
+
+**Ce fac daca am un document care nu este in lista?** Foloseste optiunea de tip de document personalizat la incarcare. Introdu numele documentului manual.
+
+**Pot soferii sa incarce propriile documente de vehicul?** Nu — gestionarea documentelor este restrictionata la rolurile Dispatcher, Fleet Manager, Admin si Company Admin.
+
+---
+
+## Articole asociate
+
+<Card title="Certificate ADR" icon="radiation" href="/ro/fleet-compliance/adr-certificates">
+  Urmarirea certificarii ADR pentru soferi si vehicule, si cum aplica comenzile ADR conformitatea.
+</Card>
+
+<Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
+  Adaugarea vehiculelor, editarea detaliilor vehiculului si gestionarea listei tale de flota.
+</Card>

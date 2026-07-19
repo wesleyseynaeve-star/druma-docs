@@ -1,33 +1,29 @@
 ---
 title: "Konfiguracja integracji"
-description: "Połącz Druma z dostawcą eCMR, HERE Maps, dostawcami kart paliwowych, oprogramowaniem księgowym i SmartBill na stronie Ustawienia — Integracje."
+description: "Połącz Druma z dostawcą eCMR, HERE Maps, dostawcami kart paliwowych, oprogramowaniem księgowym, SmartBill oraz dostawcami telematyki/chłodni na stronie Ustawienia → Integracje."
 icon: "plug"
 ---
 
-Każda integracja, z której korzysta Twoja firma, jest konfigurowana w jednym miejscu: **Ustawienia — Integracje**. Nie potrzebujesz programisty — wszystkie konfiguracje są formularzowe i zajmują mniej niż pięć minut każda.
+Każda integracja, z której korzysta Twoja firma, jest konfigurowana w jednym miejscu: **Ustawienia → Integracje**. Nie potrzebujesz programisty — wszystkie konfiguracje są formularzowe i zajmują mniej niż pięć minut każda.
 
-![Przegląd strony integracji](/images/placeholder.png)
+<Frame caption="Ustawienia → Integracje — karta dostawcy eCMR ma tylko dwa stany: Natywny i Wyłączony.">
+  <img src="/images/admin/integration-setup.png" alt="Panel ustawień integracji" />
+</Frame>
 
 ---
 
 ## 1. Dostawca eCMR
 
-Druma wydaje elektroniczne listy przewozowe **we własnym zakresie, domyślnie używając natywnego dostawcy Druma** — żadne zewnętrzne konto, klucz API ani konfiguracja nie są wymagane. eCMR jest dostępne od razu dla zleceń transgranicznych, a Druma pieczętuje każdy ukończony dokument cyfrowym podpisem PAdES.
+Druma wydaje elektroniczne listy przewozowe **we własnym zakresie, przy użyciu natywnego dostawcy Druma** — żadne zewnętrzne konto, klucz API ani konfiguracja nie są wymagane. eCMR jest dostępne od razu dla zleceń transgranicznych, a Druma pieczętuje każdy ukończony dokument cyfrowym podpisem PAdES.
 
-**TransFollow** pozostaje dostępny jako opcjonalny dostawca zastępczy dla firm, które korzystały z niego przed wprowadzeniem natywnego dostawcy. Nowe firmy powinny pozostać przy natywnym dostawcy.
+Karta dostawcy eCMR oferuje tylko dwa stany: **Natywny** i **Wyłączony**. TransFollow nie jest opcją do wyboru — istnieje wyłącznie jako zapasowa ścieżka dla niewielkiej liczby firm z wcześniejszą konfiguracją (patrz notatka niżej).
 
 <Steps>
   <Step title="Otwórz kartę dostawcy eCMR">
-    Przejdź do **Ustawienia — Integracje** i otwórz kartę **Dostawca eCMR**. Natywny dostawca Druma jest domyślnie wybrany.
-  </Step>
-  <Step title="(Opcjonalnie) Przełącz na TransFollow">
-    Aby używać TransFollow zamiast tego, wybierz go i wklej klucz API z panelu konta TransFollow w polu **Klucz API**. Zarejestruj się na [transfollow.org](https://transfollow.org), jeśli nie masz jeszcze konta.
-  </Step>
-  <Step title="Włącz tryb testowy (opcjonalnie)">
-    W przypadku korzystania z TransFollow włącz **Tryb testowy**, aby przetestować przepływ pracy eCMR bez wydawania rzeczywistych, prawnie zarejestrowanych dokumentów. Używaj go podczas szkolenia lub wdrażania kierowców. Wyłącz przed uruchomieniem produkcyjnym.
+    Przejdź do **Ustawienia → Integracje** i otwórz kartę **Dostawca eCMR**. Domyślnie wybrany jest **Natywny**.
   </Step>
   <Step title="Przetestuj połączenie">
-    Kliknij **Testuj połączenie**. Druma weryfikuje natywny certyfikat podpisu — lub, jeśli wybrany jest TransFollow, wywołuje API TransFollow, aby potwierdzić ważność klucza.
+    Kliknij **Testuj połączenie**. Druma weryfikuje, czy certyfikat podpisu jest skonfigurowany i gotowy.
   </Step>
   <Step title="Zapisz">
     Kliknij **Zapisz**. Tworzenie eCMR jest aktywne dla zleceń transgranicznych.
@@ -35,23 +31,19 @@ Druma wydaje elektroniczne listy przewozowe **we własnym zakresie, domyślnie u
 </Steps>
 
 <Note>
-Większość firm nigdy nie musi tego zmieniać — natywny dostawca to zalecane ustawienie domyślne. Zobacz [Dostawcy eCMR](/en/ecmr/ecmr-providers) dla pełnego porównania.
+Większość firm nigdy nie musi tego zmieniać — Natywny to jedyna realna opcja. Jeśli Twoja firma ma wcześniejszą konfigurację TransFollow, nadal działa jak wcześniej i jest tu pokazywana jako **Natywny**; przy następnym zapisaniu tej karty po cichu migruje do prawdziwego natywnego dostawcy, bez niczego do przełączenia czy skonfigurowania. Zobacz [Dostawcy eCMR](/pl/ecmr/ecmr-providers) po szczegóły.
 </Note>
-
-<Warning>
-Dokumenty eCMR TransFollow w trybie testowym **nie mają mocy prawnej**. Upewnij się, że tryb testowy jest wyłączony przed wysyłką rzeczywistych przesyłek.
-</Warning>
 
 ---
 
-## 2. HERE Maps
+## 2. HERE Maps i routing PTV
 
-HERE Maps obsługuje dwie funkcje w Druma: autouzupełnianie adresów przy tworzeniu zleceń i obliczanie tras zoptymalizowanych dla ciężarówek (odległość, szacowany czas jazdy i dane CO2).
+HERE Maps obsługuje autouzupełnianie adresów przy tworzeniu zleceń. Obliczanie trasy zoptymalizowanej dla ciężarówek, odległości, ETA i szacowania opłat drogowych obsługuje **PTV**, osobny dostawca routingu.
 
-**Konfiguracja nie jest wymagana.** Klucz API HERE Maps jest zarządzany na poziomie platformy przez Druma. Nie ma nic do konfigurowania i nie będziesz oddzielnie rozliczany za użycie HERE — jest ono wliczone w Twoją subskrypcję.
+**Konfiguracja nie jest wymagana dla żadnego z nich.** Oba klucze API są zarządzane na poziomie platformy przez Druma. Nie ma nic do skonfigurowania i nie będziesz oddzielnie rozliczany za użycie HERE ani PTV — oba są wliczone w subskrypcję.
 
 <Note>
-Jeśli autouzupełnianie adresów przestanie działać, jest to problem na poziomie platformy. Skontaktuj się z pomocą techniczną Druma zamiast próbować samodzielnie rekonfigurować HERE.
+Jeśli autouzupełnianie adresów lub routing przestanie działać, jest to problem na poziomie platformy. Skontaktuj się z pomocą techniczną Druma zamiast próbować samodzielnie rekonfigurować HERE lub PTV.
 </Note>
 
 ---
@@ -60,14 +52,14 @@ Jeśli autouzupełnianie adresów przestanie działać, jest to problem na pozio
 
 Druma nie łączy się bezpośrednio z API dostawców kart paliwowych. Zamiast tego pobierasz eksport CSV z portalu internetowego swojego dostawcy i przesyłasz go do Druma. To automatycznie łączy koszty paliwa z pojazdami i zleceniami.
 
-**Obsługiwani dostawcy:** DKV, UTA, AS24, Shell Card, SmartDiesel.
+**Obsługiwani dostawcy:** DKV, UTA, AS24, Shell, TotalEnergies, BP, Circle K, Eurowag, WEG, MOL, E100.
 
 <Steps>
   <Step title="Eksportuj z portalu dostawcy">
-    Zaloguj się do portalu internetowego DKV, UTA, AS24, Shell lub SmartDiesel i wyeksportuj transakcje jako CSV. Większość portali oferuje to w sekcji **Raporty — Eksport transakcji**.
+    Zaloguj się do portalu internetowego dostawcy karty paliwowej i wyeksportuj transakcje jako CSV. Większość portali oferuje to w sekcji **Raporty → Eksport transakcji**.
   </Step>
-  <Step title="Otwórz kartę Import kart paliwowych">
-    W **Ustawienia — Integracje** kliknij kartę Import kart paliwowych.
+  <Step title="Otwórz Import kart paliwowych">
+    Przejdź do **Flota → Paliwo** i otwórz okno importu.
   </Step>
   <Step title="Wybierz dostawcę">
     Wybierz dostawcę z listy rozwijanej, aby Druma wiedziała, jakiego formatu kolumn CSV oczekiwać.
@@ -89,56 +81,36 @@ Druma eksportuje dane faktur i zleceń w formatach zgodnych z SAGA i WinMENTOR, 
 
 ### SAGA Classic i WinMENTOR Classic
 
-Klucz API nie jest wymagany. Druma generuje ustrukturyzowany plik eksportu (XML lub CSV zależnie od pakietu), który importujesz bezpośrednio do oprogramowania księgowego.
+Klucz API nie jest potrzebny. SAGA eksportuje jako pliki DBF (`CLI_`, `ART_`, `IE_`, `INT_`, `NC_.xml`); WinMENTOR Classic eksportuje jako pliki `.txt` rozdzielane znakiem `|`. Oba formaty są generowane automatycznie raz w miesiącu i wysyłane e-mailem na skonfigurowany adres księgowego jako ZIP (Resend, podpisany link ważny 7 dni) — dzień eksportu skonfigurujesz w **Ustawienia → Automatyzacje i funkcje → Konfiguracja eksportu SAGA**. Nie ma ręcznej listy "Historia eksportów" — eksport każdego miesiąca istnieje wyłącznie jako wysłany e-mailem ZIP.
 
-Przejdź do **Raporty — Eksport księgowy**, wybierz zakres dat i format księgowy, a następnie pobierz plik. Zaimportuj go do SAGA lub WinMENTOR używając standardowego kreatora importu w tym oprogramowaniu.
-
-### WinMENTOR Enterprise (REST API)
-
-WinMENTOR Enterprise obsługuje bezpośrednią integrację API.
-
-<Steps>
-  <Step title="Otwórz kartę WinMENTOR Enterprise">
-    W **Ustawienia — Integracje** kliknij **WinMENTOR Enterprise**.
-  </Step>
-  <Step title="Wprowadź adres REST">
-    Wpisz adres URL REST API podany przez administratora WinMENTOR Enterprise. Zazwyczaj wygląda jak `https://twojafirma.winmentor.ro/api/`.
-  </Step>
-  <Step title="Wprowadź dane uwierzytelniające">
-    Wpisz nazwę użytkownika i hasło API skonfigurowane w WinMENTOR Enterprise.
-  </Step>
-  <Step title="Przetestuj i zapisz">
-    Kliknij **Testuj połączenie**, następnie **Zapisz**.
-  </Step>
-</Steps>
+<Note>
+Obecnie nie ma bezpośredniej integracji REST API dla WinMENTOR Enterprise ani żadnego innego pakietu księgowego — SAGA i WinMENTOR Classic są jedynymi dwoma obsługiwanymi formatami, oba oparte na plikach.
+</Note>
 
 ---
 
 ## 5. SmartBill
 
-SmartBill to rumuńska platforma fakturowania w chmurze. Po aktywacji tej integracji Druma automatycznie przesyła potwierdzone faktury do SmartBill — bez ręcznego ponownego wprowadzania danych.
+SmartBill to rumuńska platforma fakturowania w chmurze. Po aktywacji tej integracji Druma automatycznie przesyła fakturę do SmartBill w momencie jej **wysłania** (nie w momencie utworzenia ani oznaczenia jako potwierdzona) — bez ręcznego ponownego wprowadzania danych.
 
 <Steps>
-  <Step title="Pobierz klucz API SmartBill">
-    W koncie SmartBill przejdź do **Konto — API** i skopiuj klucz API.
+  <Step title="Pobierz dane uwierzytelniające SmartBill">
+    W koncie SmartBill znajdź swój **E-mail** konta, **Token API**, **CIF** (numer rejestracji podatkowej) i **Serię faktur** — wszystkie cztery są wymagane.
   </Step>
   <Step title="Otwórz kartę SmartBill w Druma">
-    Przejdź do **Ustawienia — Integracje — SmartBill**.
+    Przejdź do **Ustawienia → Integracje → SmartBill**.
   </Step>
-  <Step title="Wprowadź klucz API i CIF">
-    Wklej klucz API i wpisz CIF swojej firmy (numer rejestracji podatkowej). SmartBill używa CIF do kierowania faktur do właściwego konta firmowego.
-  </Step>
-  <Step title="Przetestuj połączenie">
-    Kliknij **Testuj połączenie**. Druma spróbuje nawiązać połączenie ze SmartBill i potwierdzi ważność danych uwierzytelniających.
+  <Step title="Wprowadź dane uwierzytelniające">
+    Wpisz E-mail, Token API, CIF i Serię faktur. SmartBill używa CIF do kierowania faktur do właściwego konta firmowego.
   </Step>
   <Step title="Zapisz">
-    Kliknij **Zapisz**. Od tej chwili każda faktura, którą oznaczysz jako potwierdzoną w Druma, zostanie automatycznie przesłana do SmartBill.
+    Kliknij **Zapisz**. Od tej chwili wysłanie faktury w Druma przesyła ją również do SmartBill.
   </Step>
 </Steps>
 
-<Warning>
-Jeśli Twoja subskrypcja SmartBill wygaśnie lub Twój klucz API zostanie zregenerowany, integracja przestanie działać bez powiadomienia. Regularnie sprawdzaj **Ustawienia — Integracje**, aby potwierdzić, że status SmartBill jest zielony.
-</Warning>
+<Note>
+SmartBill nadaje własny numer faktury przy przesłaniu — nie ponownie wykorzystuje numeru faktury Druma. Status jest śledzony po prostu jako przesłano lub błąd; Druma nie śledzi stanu SmartBill Wersja robocza/Wystawiona/Opłacona i nie ma webhooka utrzymującego synchronizację obu systemów po przesłaniu (nie są też tworzone rekordy klienta ani produktu w SmartBill). Jeśli Twoja subskrypcja SmartBill wygaśnie lub Twój klucz API zostanie zregenerowany, przesyłanie zacznie zawodzić — okresowo sprawdzaj **Ustawienia → Integracje**, aby potwierdzić, że status SmartBill jest zielony.
+</Note>
 
 ---
 
@@ -146,11 +118,11 @@ Jeśli Twoja subskrypcja SmartBill wygaśnie lub Twój klucz API zostanie zregen
 
 Peppol to ogólnoeuropejska sieć e-fakturowania. Belgijskie firmy (zarejestrowane w KBO) są zobowiązane do wysyłania faktur do innych belgijskich firm przez Peppol — jest to obowiązkowe od stycznia 2026.
 
-**Wymagane dla:** Belgijskich firm wysyłających faktury B2B do innych belgijskich firm.
+**Wymagane dla:** belgijskich firm wysyłających faktury B2B do innych belgijskich firm.
 
 <Steps>
   <Step title="Znajdź kartę Peppol E-Invoicing">
-    Przejdź do **Ustawienia — Integracje** i kliknij kartę **Peppol E-Invoicing**.
+    Przejdź do **Ustawienia → Integracje** i kliknij kartę **Peppol E-Invoicing**.
   </Step>
   <Step title="Wprowadź dane rejestracyjne">
     Wpisz swój **numer KBO** (belgijski numer rejestracji firmy) i **numer VAT**.
@@ -159,53 +131,106 @@ Peppol to ogólnoeuropejska sieć e-fakturowania. Belgijskie firmy (zarejestrowa
     Kliknij **Zarejestruj się w sieci Peppol**. Druma przesyła Twoją rejestrację do punktu dostępu e-invoice.be. Zazwyczaj kończy się to w ciągu kilku minut.
   </Step>
   <Step title="Potwierdź aktywację">
-    Po aktywacji karta pokazuje zielony status **Aktywny**. Routing Peppol jest teraz automatyczny dla uprawnionych belgijskich klientów.
+    Po aktywacji karta pokazuje status **Połączono**. Routing Peppol jest teraz automatyczny dla uprawnionych belgijskich klientów — nie są potrzebne dodatkowe kroki przy wysyłaniu faktur do belgijskich odbiorców.
   </Step>
 </Steps>
 
 <Note>
-Zobacz [Fakturowanie Peppol](/en/integrations/peppol-invoicing) aby uzyskać pełne szczegóły dotyczące działania routingu.
+Zobacz [Fakturowanie Peppol](/pl/integrations/peppol-invoicing), aby uzyskać pełne szczegóły dotyczące działania routingu, tego co się dzieje, gdy odbiorca nie jest w sieci Peppol, i jak obsługiwać odrzucenia.
 </Note>
 
 ---
 
 ## 7. Skrzynka e-mail dla faktur dostawców
 
-Daje Twojej firmie dedykowany adres e-mail do odbierania faktur od dostawców. Otrzymane faktury są klasyfikowane przez AI i kierowane do kolejki do przeglądu.
+Daje Twojej firmie dedykowany adres e-mail do odbierania faktur od dostawców — od dostawców kart paliwowych, warsztatów, operatorów opłat drogowych czy dowolnego innego dostawcy. Otrzymane faktury są klasyfikowane przez AI i kierowane do kolejki do przeglądu, więc nic nie umyka.
 
 <Steps>
   <Step title="Przejdź do Ustawień firmy">
-    Przejdź do **Ustawienia — Firma** i przewiń do sekcji **E-mail faktur dostawców**.
+    Przejdź do **Ustawienia → Firma** i przewiń do sekcji **E-mail faktur dostawców**.
   </Step>
   <Step title="Włącz skrzynkę">
     Włącz **Włącz skrzynkę faktur dostawców**. Druma generuje dedykowany przychodzący adres e-mail dla Twojej firmy.
   </Step>
   <Step title="Dodaj adresy nadawców do białej listy">
-    W polu **Biała lista nadawców** dodaj adresy e-mail lub domeny, od których oczekujesz faktur (na przykład `faktury@dkv.com` lub `@uta.eu`). E-maile od nadawców spoza białej listy są odrzucane.
+    W polu **Biała lista nadawców** dodaj adresy e-mail lub domeny, od których oczekujesz faktur (np. `invoices@dkv.com` lub `@uta.eu`). E-maile od nadawców spoza białej listy są odrzucane i nigdy nie trafiają do kolejki.
   </Step>
   <Step title="Udostępnij adres dostawcom">
-    Skopiuj wygenerowany adres e-mail i podaj go każdemu dostawcy jako adres do przesyłania faktur.
+    Skopiuj wygenerowany adres e-mail i podaj go każdemu dostawcy jako adres do przesyłania faktur dla Twojej firmy.
   </Step>
 </Steps>
 
-Otrzymane faktury pojawiają się w **Finanse — Spedycja — Kolejka faktur** do przeglądu, dopasowania i zatwierdzenia.
+Otrzymane faktury pojawiają się w **Finanse → Spedycja → Kolejka faktur** do przeglądu, dopasowania i zatwierdzenia.
+
+<Note>
+Zobacz [Faktury dostawców](/pl/invoicing/supplier-invoices), aby uzyskać pełne szczegóły dotyczące kolejki przeglądu, logiki automatycznego dopasowania i obsługi niedopasowanych faktur.
+</Note>
+
+---
+
+## 8. Dostawcy telematyki, tachografu i chłodni
+
+Druma łączy się z GPS pojazdów, tachografem (godziny jazdy) i dostawcami chłodni naczep bezpośrednio z **Ustawienia → Integracje**, dzięki czemu pozycje na żywo, dane godzin jazdy wg EU 561/2006 i odczyty temperatury ładunku napływają do Druma automatycznie zamiast wymagać ręcznego wprowadzania.
+
+### GPS i tachograf (telematyka)
+
+Otwórz kartę swojego dostawcy w **Ustawienia → Integracje** i wprowadź poniższe dane uwierzytelniające. Link "Skąd je wziąć?" na każdej karcie powtarza tę wskazówkę w aplikacji.
+
+| Dostawca | Pola uwierzytelniające | Skąd je wziąć |
+|---|---|---|
+| **Scania / Volvo / DAF / MAN / Mercedes-Benz / IVECO / Renault (rFMS)** | Client ID, Client Secret, selektor OEM | Wydawane przez portal deweloperski lub flotowy producenta ciężarówek (np. `developer.scania.com` dla Scania). Scania dodatkowo wymaga jednostki pokładowej Communicator oraz subskrypcji Location lub Performance. Scania i Volvo są najbardziej sprawdzone; pozostałe marki standardu rFMS współdzielą to samo API i mają działać tak samo, ale wciąż są weryfikowane na żywych flotach. |
+| **Webfleet** | Konto, Nazwa użytkownika, Hasło, Klucz API | Od użytkownika Webfleet z profilem "expert" i włączonym dostępem zewnętrznym. Sam klucz API wydaje wsparcie Webfleet lub program partnerski WEBFLEET.connect. |
+| **Geotab** | Baza danych, Nazwa użytkownika, Hasło | Utwórz konto serwisowe (tylko odczyt) w MyGeotab → Administracja → Użytkownicy. "Baza danych" to nazwa w Twoim adresie URL `my.geotab.com/<baza>`. |
+| **Samsara** | Token API, Base URL (opcjonalnie) | Wygeneruj token w panelu Samsara pod Ustawienia → Tokeny API, z zakresem "Read Vehicle Statistics". Zostaw Base URL puste dla flot UE; ustaw je, jeśli organizacja działa na shardzie US. Tylko pozycje GPS — Samsara nie dostarcza danych tachografu/godzin jazdy. |
+| **Frotcom** | Nazwa użytkownika, Hasło, Provider | Twoje dane konta Frotcom, z dostępem API włączonym przez wsparcie Frotcom lub lokalnego resellera. Obecnie w fazie **beta** — połączenie działa, ale mapowanie pól jest wciąż weryfikowane na żywych kontach. |
+| **Continental VDO** | Client ID, Secret, ID konta/firmy | Wymaga umowy partnerskiej z Continental — skontaktuj się z Continental przez formularz kontaktowy `fleet.vdo.com`. **Dostęp tylko dla partnerów** — nie ma publicznej samoobsługowej rejestracji. |
+| **Webeye / Eurowag** | Nazwa użytkownika, Secret | Generowane w `selfcare.eurowag.com` → Telematics → Fleet management → System connections. Twoja firma musi najpierw zostać zatwierdzona jako partner przez Eurowag. **Dostęp tylko dla partnerów** — nie ma publicznej samoobsługowej rejestracji. |
+
+<Note>
+Scania, Webfleet, Geotab i Samsara to sprawdzone integracje. Frotcom jest w fazie beta — działa, ale mapowanie pól jest wciąż potwierdzane. Continental VDO i Webeye/Eurowag wymagają zatwierdzenia Twojej firmy jako partnera przez dostawcę, zanim połączenie zwróci dane na żywo; formularz uwierzytelniania nadal pozwala zapisać i przetestować, ale synchronizacja nie ruszy, dopóki ten dostęp partnerski nie będzie aktywny.
+</Note>
+
+### Chłodnia / temperatura naczepy
+
+<Steps>
+  <Step title="Otwórz kartę dostawcy chłodni">
+    W **Ustawienia → Integracje** znajdź kartę dostawcy telematyki Twojej naczepy — **Mapon**, **Orbcomm**, **Thermo King TracKing** lub **Carrier Lynx Fleet** — i otwórz ją.
+  </Step>
+  <Step title="Wprowadź dane uwierzytelniające">
+    Link "Skąd je wziąć?" na każdej karcie wyjaśnia, jak uzyskać dane uwierzytelniające dla tego dostawcy (patrz tabela niżej).
+  </Step>
+  <Step title="Przetestuj i zapisz">
+    Kliknij **Testuj połączenie**, następnie **Zapisz**. Odczyty temperatury zaczynają się synchronizować automatycznie po potwierdzeniu połączenia.
+  </Step>
+</Steps>
+
+| Dostawca | Pola uwierzytelniające | Skąd je wziąć |
+|---|---|---|
+| **Mapon** | Klucz API, Base URL (opcjonalnie) | Wygeneruj klucz API w platformie Mapon pod Ustawienia → API. W pełni publiczne API — działa od razu. |
+| **Orbcomm** | Token dostępu lub Nazwa użytkownika + Hasło, Base URL (opcjonalnie) | Wydawane przez konto ORBCOMM Platform API. Jeśli masz tylko nazwę użytkownika/hasło, Druma automatycznie wymienia je na token. |
+| **Thermo King TracKing** | Klucz API lub Nazwa użytkownika + Hasło, Base URL (opcjonalnie) | Poproś dealera Thermo King lub portal TracKing o klucz API. Brak publicznej samoobsługowej rejestracji — to integracja dostępna tylko dla partnerów. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (lub starszy Klucz API), Base URL (opcjonalnie) | Otrzymywane przez Carrier Transicold lub dealera Carrier jako część zestawu narzędzi Lynx Fleet API. Brak publicznej samoobsługowej rejestracji. |
+
+<Note>
+Mapon jest w pełni publiczny i działa od razu. Orbcomm potrzebuje tokenu konta od ORBCOMM, zanim zwróci dane na żywo. Thermo King TracKing i Carrier Lynx Fleet są dostępne tylko dla partnerów — będziesz musiał ubiegać się o dostęp API u dostawcy, zanim Druma będzie mogła pobierać dane na żywo, mimo że formularz połączenia jest dostępny dla wszystkich czterech.
+</Note>
 
 ---
 
 ## Artykuły szczegółowe
 
-<Card title="TransFollow i eCMR" icon="file-contract" href="/en/ecmr/what-is-ecmr">
+<Card title="Czym jest eCMR?" icon="file-contract" href="/pl/ecmr/what-is-ecmr">
   Zrozum, jak działa eCMR, kto podpisuje i kiedy ma zastosowanie.
 </Card>
 
-<Card title="Tworzenie eCMR" icon="file-plus" href="/en/ecmr/creating-ecmr">
+<Card title="Tworzenie eCMR" icon="file-plus" href="/pl/ecmr/creating-ecmr">
   Przewodnik krok po kroku do wydawania dokumentów eCMR ze zlecenia.
 </Card>
 
-<Card title="Szczegóły importu kart paliwowych" icon="gas-pump" href="/en/fleet-compliance/fleet-documents">
+<Card title="Szczegóły importu kart paliwowych" icon="gas-pump" href="/pl/fleet-compliance/fleet-documents">
   Jak koszty paliwa są powiązane z pojazdami i zleceniami.
 </Card>
 
-<Card title="Raportowanie CO2" icon="leaf" href="/en/fleet-compliance/co2-reporting">
-  Jak odległości tras HERE zasilają obliczenia CO2.
+<Card title="Raportowanie CO2" icon="leaf" href="/pl/fleet-compliance/co2-reporting">
+  Jak odległości tras PTV zasilają obliczenia CO2.
 </Card>

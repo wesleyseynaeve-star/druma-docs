@@ -1,0 +1,102 @@
+---
+title: "KSeF — polskie fakturowanie elektroniczne"
+description: "Jak Druma automatycznie składa faktury do KSeF (Krajowego Systemu e-Faktur), polskiego obowiązkowego krajowego systemu fakturowania elektronicznego obsługiwanego przez KAS, ze śledzeniem statusu, obsługą ponowień i pobieraniem UPO."
+icon: "file-invoice"
+---
+
+<Warning>
+**Wczesny dostęp — oczekuje na pierwszą walidację przez żywego operatora.** Składanie do KSeF przez Drumę jest funkcjonalnie kompletne, ale w chwili pisania tego tekstu nie zostało jeszcze przetestowane od początku do końca względem żywego API KSeF przez prawdziwego operatora zarejestrowanego jako podatnik VAT w Polsce. Składanie pozostaje zablokowane, dopóki nie zostanie podłączony token żywego operatora. Jeśli jesteś jednym z pierwszych operatorów podłączających KSeF, traktuj swoje pierwsze złożenia jako wczesny dostęp — uważnie obserwuj odznaki statusu i niezwłocznie skontaktuj się z pomocą techniczną, jeśli coś wygląda nie tak. Opisane niżej kroki konfiguracji i zachowanie są prawidłowymi instrukcjami; jedyną otwartą kwestią jest historia działania na żywej produkcji.
+</Warning>
+
+## Czym jest KSeF?
+
+KSeF (Krajowy System e-Faktur) to polski krajowy system ustrukturyzowanego fakturowania elektronicznego, obsługiwany przez polską administrację skarbową (KAS — Krajowa Administracja Skarbowa). Jest obowiązkowy dla firm zarejestrowanych do VAT w Polsce. Każda faktura wystawiona przez firmę PL-VAT musi zostać wysłana do KSeF w oficjalnym formacie XML FA(3) — sam portal KAS nie wystarcza.
+
+<Note>
+Obowiązek KSeF jest wdrażany fazami w trakcie 2026 roku, a jego daty wejścia w życie były wielokrotnie opóźniane przez polski rząd. Potwierdź konkretną obowiązującą Twoją firmę datę wejścia w życie z księgowym lub oficjalnym portalem [ksef.mf.gov.pl](https://ksef.mf.gov.pl), zanim polegasz na jakiejkolwiek dacie wspomnianej tutaj.
+</Note>
+
+KSeF dotyczy tylko, jeśli Twoja firma ma **polski numer VAT** (format: `PL`, po którym następuje 10 cyfr, np. `PL1234567890`). Firmy zarejestrowane w Rumunii, Belgii lub jakimkolwiek innym niepolskim kraju nie podlegają KSeF. Jeśli Druma nie wykryje polskiego numeru VAT na rekordzie Twojej firmy, karta integracji KSeF pozostanie nieaktywna.
+
+## Jak Druma obsługuje KSeF
+
+Nie musisz logować się do portalu KAS, tworzyć plików XML ani nic składać ręcznie. Oto co dzieje się automatycznie, gdy generujesz fakturę, a KSeF jest włączony:
+
+1. Druma konwertuje fakturę do oficjalnego formatu **XML FA(3)** wymaganego przez KAS.
+2. Druma uwierzytelnia się w API KSeF, używając Twojego **tokenu operatora**, przechowywanego bezpiecznie w Supabase Vault — token nigdy nie jest widoczny w postaci jawnej po jego wklejeniu.
+3. Druma składa XML do KSeF i otrzymuje **numer KSeF** (oficjalną referencję od KAS).
+4. Druma pobiera **UPO** (Urzędowe Poświadczenie Odbioru) i przechowuje je przy rekordzie faktury.
+
+Cały proces działa w tle. Wynik zobaczysz na fakturze jako kolorową odznakę statusu.
+
+## Odznaki statusu KSeF
+
+Każda faktura podlegająca KSeF pokazuje odznakę statusu na stronie szczegółów faktury w sekcji **KSeF**:
+
+| Odznaka | Znaczenie |
+|---|---|
+| **Oczekująca** | Faktura wygenerowana; złożenie do KSeF jest zakolejkowane. |
+| **Złożona** | XML wysłany do KSeF; czeka na przetworzenie przez KAS (zwykle 1–5 minut). |
+| **Zaakceptowana** | KAS zaakceptował fakturę. Numer KSeF jest zapisany, a UPO jest dostępne. |
+| **Nieudana** | KSeF odrzucił fakturę z powodu błędu walidacji. Zobacz komunikat błędu na fakturze. |
+| **Odrzucona** | KAS zwrócił formalne odrzucenie. Sprawdź UPO po kod przyczyny. |
+
+<Note>
+Zadanie w tle sprawdza nieudane złożenia co 30 minut, ale każda faktura faktycznie ponawia próbę wg harmonogramu wykładniczego wycofania — mniej więcej 1 godzinę po pierwszym niepowodzeniu, a potem mniej więcej 2 godziny później (±25% losowego odchylenia). Jeśli trzecia próba (oryginalne złożenie plus te 2 ponowienia) również się nie powiedzie, faktura przechodzi bezpośrednio do statusu **Nieudana**, zwykle w ciągu około 3 godzin od pierwszego niepowodzenia — po tym nie ponawia już automatycznie. Uruchom ręczne ponowienie z panelu szczegółów faktury, gdy rozwiążesz pierwotny błąd.
+</Note>
+
+## Konfiguracja KSeF
+
+<Steps>
+  <Step title="Przejdź do Ustawienia → Integracje">
+    Otwórz menu **Ustawienia** z górnego paska nawigacji i wybierz **Integracje**.
+  </Step>
+  <Step title="Znajdź kartę KSeF i kliknij Połącz">
+    Znajdź kartę **KSeF (polskie fakturowanie elektroniczne)**. Kliknij **Połącz**.
+  </Step>
+  <Step title="Wklej swój token operatora">
+    Wprowadź swój token operatora KSeF. To token uwierzytelniający wydany przez KAS dla dostępu API Twojej firmy. Twój księgowy lub zespół IT może go wygenerować z portalu KSeF pod [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  </Step>
+  <Step title="Zapisz">
+    Kliknij **Zapisz**. Druma weryfikuje, że rekord Twojej firmy ma polski numer VAT, zanim aktywuje integrację. Jeśli walidacja się nie powiedzie, sprawdź, czy numer VAT w danych Twojej firmy jest w formacie `PL` + 10 cyfr.
+  </Step>
+</Steps>
+
+Po połączeniu wszystkie nowe faktury generowane przez Twoją firmę są automatycznie składane do KSeF. Istniejące faktury już w Druma **nie** są składane retroaktywnie.
+
+## Odłączanie KSeF
+
+Przejdź do **Ustawienia → Integracje → KSeF → Odłącz**. To usuwa token operatora z Vault i natychmiast zatrzymuje nowe złożenia. Faktury, które zostały już zaakceptowane, zachowują swoje numery KSeF — odłączenie nie wpływa na zaakceptowane rekordy.
+
+## Faktury z odwrotnym obciążeniem
+
+Druma poprawnie obsługuje odwrotne obciążenie VAT w formacie XML FA(3). Gdy faktura ma odwrotne obciążenie VAT, Druma pomija kwotę VAT i ustawia prawidłowe pole **P_12** w XML. Nie jest potrzebna żadna ręczna korekta — traktowanie VAT jest wyprowadzane z pozycji faktury skonfigurowanych w Druma.
+
+## Pobieranie UPO
+
+UPO (oficjalne potwierdzenie odbioru z KAS) jest pobierane automatycznie, gdy faktura osiągnie status **Zaakceptowana**, i przechowywane przy rekordzie faktury. Aby pobrać je ręcznie:
+
+1. Otwórz fakturę z **Fakturowanie**.
+2. Przewiń do sekcji **KSeF**.
+3. Kliknij **Pobierz UPO**.
+
+<Warning>
+UPO to prawny dowód, że KAS otrzymał Twoją fakturę. Zachowaj kopię dla swoich rekordów — polskie prawo podatkowe wymaga, abyś mógł je przedstawić podczas kontroli podatkowej.
+</Warning>
+
+## Ręczne ponowienie
+
+Jeśli automatyczne ponowienia zostały wyczerpane albo poprawiłeś błąd i chcesz ponownie złożyć natychmiast:
+
+Przejdź do **Fakturowanie** → otwórz fakturę → **sekcja KSeF** → kliknij **Ponów złożenie**. Druma natychmiast ponownie wysyła XML FA(3).
+
+---
+
+<CardGroup cols={2}>
+  <Card title="e-Factura / Składanie do ANAF" icon="landmark" href="/pl/invoicing/efactura-anaf">
+    Rumuński odpowiednik obowiązkowego systemu fakturowania elektronicznego — jak Druma składa do ANAF przez API SPV.
+  </Card>
+  <Card title="Fakturowanie Peppol" icon="network-wired" href="/pl/integrations/peppol-invoicing">
+    Ogólnounijne fakturowanie elektroniczne przez sieć Peppol — konfiguracja, wysyłanie i śledzenie statusu.
+  </Card>
+</CardGroup>

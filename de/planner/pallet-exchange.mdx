@@ -1,40 +1,124 @@
 ---
 title: "Palettentausch-Hauptbuch"
-description: "Verfolgen Sie EUR-, CHEP- und andere Palettensalden pro Gegenpartei mit einem append-only Hauptbuch."
+description: "Verfolgen Sie EUR-, CHEP- und andere Palettensalden pro Gegenpartei mit einem append-only Hauptbuch, Gebührenautomatisierung und optionaler Anbietersynchronisierung."
 icon: "package"
 ---
 
 ## Übersicht
 
-Das Palettentausch-Hauptbuch verfolgt jede Palettenbewegung als unveränderlichen Datensatz und gibt Ihnen ein Live-Gleichgewicht pro Gegenpartei.
+Transportieren Sie Waren auf EUR-Paletten, CHEP oder anderen Tauschpaletten, gehen Sie mit jedem Kunden und Unterauftragnehmer einen laufenden Saldo ein — ausgegebene Paletten müssen zurückkommen, sonst wird eine Gebühr fällig. Drumas Palettentausch-Hauptbuch verfolgt jede Bewegung als unveränderlichen Datensatz und gibt Ihnen einen Live-Saldo pro Gegenpartei, damit nichts durchs Raster fällt.
+
+Das Hauptbuch ist **append-only**: Bewegungen werden bei jedem Auftragsstopp hinzugefügt, und der laufende Saldo wird automatisch berechnet. Sie können Korrekturen und Anpassungen erfassen, ohne die Historie zu löschen.
+
+---
+
+## Unterstützte Palettentypen
 
 | Typ | Vollständiger Name |
 |---|---|
-| EUR | EUR-Palette (Standard-Europalette) |
-| CHEP | CHEP Blue Palette |
-| LPR | Lightweight Plastic Returnable |
+| EUR | EUR-Palette (EPAL) |
+| CHEP | CHEP-Palette |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Sonstige | Jeder andere Tauschpalettentyp, den Ihr Betrieb nutzt |
+
+Jeder Palettentyp hat seine eigene Saldospalte. Eine Gegenpartei kann Ihnen gleichzeitig EUR-Paletten schulden, während Sie ihr CHEP-Paletten schulden.
 
 ---
 
-## Palettenbewegungen aufzeichnen
+## Palettenbewegungen an einem Auftrag erfassen
 
-1. Öffnen Sie einen abgeschlossenen Auftrag.
-2. Gehen Sie zum Tab **Paletten**.
-3. Klicken Sie auf **Bewegung hinzufügen**.
-4. Wählen Sie Palettentyp, Menge, Richtung (Ausgabe/Empfang) und Gegenpartei.
+Palettenbewegungen werden auf Stopp-Ebene protokolliert — Abhol-, Liefer- und Entladestopps haben jeweils einen eigenen Abschnitt **Palettenbewegungen**.
+
+<Steps>
+  <Step title="Den Auftragsdetailbereich öffnen">
+    Klicken Sie auf der Planungstafel oder in der Auftragsliste auf den Auftrag, um seinen Detailbereich rechts zu öffnen.
+  </Step>
+  <Step title="Zur Stoppkarte navigieren">
+    Scrollen Sie zum Stopp, an dem Paletten getauscht werden — typischerweise Abholung (Paletten raus) oder Lieferung (Paletten zurück). Jede Stoppkarte zeigt einen Abschnitt **Palettenbewegungen**.
+  </Step>
+  <Step title="Eine Bewegung hinzufügen">
+    Klicken Sie auf der Stoppkarte auf **+ Bewegung hinzufügen**. Ein kleines Formular erscheint mit:
+    - **Palettentyp** — wählen Sie aus EUR, CHEP, LPR, IPP, Euro Pool oder Sonstige
+    - **Bewegungstyp** — Ausgegeben (positiv), Zurückerhalten (negativ), Anpassung, Korrektur, oder Anfangssaldo
+    - **Menge** — Anzahl der Paletten
+    - **Notizen** (optional) — Referenznummer oder Fahrerkommentar
+  </Step>
+  <Step title="Speichern">
+    Klicken Sie auf **Speichern**, um die Bewegung zu übernehmen. Sie wird sofort dem Hauptbuch hinzugefügt, und der laufende Saldo der Gegenpartei aktualisiert sich.
+  </Step>
+</Steps>
+
+Um einen fehlerhaften Eintrag zu entfernen, klicken Sie auf das **Papierkorb-Symbol** neben der Bewegung.
+
+<Note>
+Nutzen Sie **Anfangssaldo** einmal pro Gegenpartei, um deren Startsaldo zu erfassen, falls Sie von einer Tabelle oder einem früheren System migrieren. Nachfolgende Bewegungen bauen darauf auf.
+</Note>
 
 ---
 
-## Salden anzeigen
+## Salden einsehen
 
-Gehen Sie zu **Berichte → Palettensalden** für aktuelle Salden und CSV-Export.
+### Saldospalte in der Kundenliste
+
+Die Liste **Kunden** (Handel → Kunden) enthält eine Spalte **Palettensaldo**. Der Indikator nutzt Farbcodierung auf einen Blick:
+
+| Farbe | Bedeutung |
+|---|---|
+| Gelb | Der Kunde schuldet Ihnen Paletten |
+| Blau | Sie schulden dem Kunden Paletten |
+| Neutral (grau) | Saldo ist ausgeglichen |
+
+Fahren Sie mit der Maus über den Saldo-Indikator, um einen Tooltip pro Typ zu sehen, der den Saldo über alle Palettentypen aufschlüsselt — z. B. +12 EUR, −4 CHEP.
+
+### Bewegungshistorie pro Gegenpartei
+
+Klicken Sie auf eine Kundenzeile, um das Kundendetailpanel zu öffnen, dann gehen Sie zum Tab **Paletten**. Dies zeigt das vollständige Hauptbuch dieser Gegenpartei: jede Bewegung, Datum, Auftragsreferenz und laufende Summe.
 
 ---
 
-## Gebührenautomatisierung
+## Gebührenschwellenwert und automatische Gebührenerstellung
 
-Wenn ein Palettensaldo einen konfigurierten Schwellenwert überschreitet oder eine festgelegte Anzahl Tage überschreitet, kann Druma automatisch eine Gebührenzeile zur nächsten Rechnung hinzufügen.
+Wächst der Palettensaldo eines Kunden über einen konfigurierten Schwellenwert hinaus, kann Druma Sie automatisch auffordern, eine Palettentausch-Gebühr zu erheben.
 
-<Card title="Auftragslebenszyklus" icon="circle-dot" href="/en/planner/order-lifecycle">
-  Verstehen Sie den vollständigen Auftragsworkflow.
-</Card>
+Verursacht eine Bewegung, dass der Saldo den Schwellenwert überschreitet, erscheint ein Modal **Palettengebühr-Bestätigung**:
+
+- **Bestätigen** — fügt eine Gebührenposition zu den Extras des Auftrags hinzu (im Rechnungseditor als Palettentausch-Gebühr sichtbar)
+- **Überspringen** — verwirft die Aufforderung, ohne eine Gebühr zu erstellen; der Saldo bleibt wie er ist
+
+<Warning>
+Ein Klick auf **Überspringen** setzt den Schwellenwertzähler nicht zurück. Das Modal erscheint bei der nächsten den Schwellenwert überschreitenden Bewegung erneut, es sei denn, Sie reduzieren den Saldo zuerst durch Protokollieren zurückgegebener Paletten.
+</Warning>
+
+---
+
+## Schwellenwerte und Gebührensätze konfigurieren
+
+Gehen Sie zu **Einstellungen → Palettenkonfiguration**, um die Gebührenregeln festzulegen. Dieser Bereich ist nur für die Rollen **Admin** und **Unternehmensadmin** zugänglich.
+
+Für jeden Palettentyp können Sie konfigurieren:
+
+| Einstellung | Beschreibung |
+|---|---|
+| Gebührenschwellenwert | Anzahl der Paletten, bei der das Gebühren-Modal auslöst |
+| Gebührensatz | Preis pro Palette (in Ihrer Unternehmenswährung), angewendet auf die automatisch erzeugte Gebührenposition |
+
+Lassen Sie den Schwellenwert leer, um das Gebühren-Modal für diesen Palettentyp zu deaktivieren — Bewegungen werden weiterhin verfolgt, aber nie eine Gebühr vorgeschlagen.
+
+---
+
+## Anbietersynchronisierung (optional)
+
+Nutzen Sie CHEP Connect, kann Druma Ihr In-App-Hauptbuch mit dem offiziellen Saldo des Anbieters abgleichen. Gehen Sie zu **Einstellungen → Integrationen → Palettentausch**.
+
+**CHEP Connect** ist live. Geben Sie Ihre CHEP-Kontodaten ein, dann:
+
+- Klicken Sie auf **Verbindung testen**, um zu prüfen, dass die Zugangsdaten akzeptiert werden
+- Klicken Sie auf **Saldo synchronisieren**, um den aktuellen Saldo des Anbieters abzurufen und mit Drumas laufender Summe zu vergleichen
+
+Jede Abweichung wird als Abgleichszeile angezeigt — Sie können sie als **Korrektur**-Eintrag akzeptieren, um beide Hauptbücher anzugleichen.
+
+<Note>
+CHEP Connect ist derzeit die einzige Palettenanbieter-Integration. EUR-, LPR-, IPP-, Euro-Pool- und Sonstige-Palettentypen werden manuell im Hauptbuch verfolgt — für sie gibt es heute keine Anbietersynchronisierung. Das Kern-Hauptbuch funktioniert vollständig ohne konfigurierten Anbieter.
+</Note>

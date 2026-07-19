@@ -1,152 +1,133 @@
 ---
 title: "Branding i formaty dokumentów"
-description: "Dostosuj logo firmy, kolory marki i format numerowania faktur, not kredytowych oraz zleceń we wszystkich dokumentach generowanych przez Druma."
+description: "Dostosuj kolory marki i wzorzec numerowania faktur, zleceń oraz wyróżnionych wierszy w całej Druma."
 icon: "palette"
 ---
 
-Ustawienia **Branding i formaty** kontrolują, jak Twoja firma jest prezentowana na każdym dokumencie generowanym przez Druma: plikach PDF faktur, PDF not kredytowych i nagłówkach e-maili. Definiują również wzorzec numerowania faktur, not kredytowych i referencji zleceń.
+Ustawienia **Branding i formaty** kontrolują, jak Twoja firma wygląda na generowanych dokumentach oraz jak budowane są numery referencyjne faktur i zleceń.
 
 Ustawienia te są specyficzne dla firmy. Jeśli zarządzasz wieloma firmami w Druma, każda firma ma własną konfigurację brandingu i formatów.
 
 **Kto może edytować:** tylko role Admin i Administrator firmy.
 
+<Frame caption="Branding i formaty — 4 zakładki: Branding, Faktura, Zlecenie, Formatowanie wierszy.">
+  <img src="/images/admin/branding-formats.png" alt="Panel ustawień brandingu i formatów" />
+</Frame>
+
 ---
 
 ## Dostęp do ustawień
 
-Przejdź do **Ustawienia → Branding i formaty**. Strona ma trzy zakładki: **Branding**, **Format faktury** i **Format zlecenia**.
+Przejdź do **Ustawienia → Branding i formaty**. Strona ma cztery zakładki: **Branding**, **Format faktury**, **Format zlecenia** i **Formatowanie wierszy**.
 
 ---
 
 ## Zakładka Branding
 
-Zakładka Branding kontroluje elementy wizualne wyświetlane na plikach PDF i szablonach e-maili.
-
-### Logo
-
-Kliknij **Prześlij logo**, aby wybrać plik obrazu z komputera. Druma akceptuje formaty PNG, JPG i SVG. Logo pojawia się w lewym górnym rogu plików PDF faktur i not kredytowych oraz w nagłówku wychodzących e-maili z fakturami.
-
-Dla najlepszych wyników używaj logo z przezroczystym tłem (PNG lub SVG) o minimalnej szerokości 300 px.
+Zakładka Branding kontroluje dwa kolory marki używane na generowanych PDF-ach i szablonach e-maili.
 
 ### Kolor podstawowy
 
-Kliknij próbnik kolorów **Kolor podstawowy** i wpisz lub wybierz kolor podstawowy Twojej marki. Ten kolor jest stosowany do paska nagłówka i elementów akcentujących na plikach PDF faktur i szablonach e-maili.
+Używany do obramowań dokumentów, etykiet i sum na PDF-ach faktur i szablonach e-maili.
 
 ### Kolor akcentu
 
-**Kolor akcentu** jest używany dla elementów drugorzędnych, takich jak wiersze nagłówków tabel i obramowania wyróżnień na plikach PDF.
+Używany dla nagłówków tabel i tekstu głównego na tych samych dokumentach.
+
+Każdy kolor ma pole z kodem hex oraz próbnik kolorów, a podgląd na żywo pokazuje oba kolory obok siebie.
 
 ### Zapisywanie
 
-Kliknij **Zapisz branding**, aby zastosować zmiany. Nowy branding zaczyna obowiązywać natychmiast dla wszystkich dokumentów generowanych po tym punkcie.
+Kliknij **Zapisz zmiany**, aby zastosować kolory, lub **Przywróć domyślne**, aby przywrócić wbudowane kolory.
 
 <Note>
-Zmiany brandingu dotyczą tylko **nowych** dokumentów. Faktury, które zostały już wygenerowane i wysłane, nie są retroaktywnie aktualizowane — PDF przechowywany dla każdej faktury odzwierciedla branding w momencie jej utworzenia.
+**Logo** firmy nie jest konfigurowane na tej stronie — przesyła się je w **Ustawienia → Firma**. Druma akceptuje pliki PNG, JPEG, SVG lub WebP do 2 MB; nie ma wymogu minimalnej szerokości ani wskazówek dotyczących przezroczystego tła.
 </Note>
 
 ---
 
 ## Zakładka Format faktury
 
-Zakładka Format faktury kontroluje sposób generowania przez Druma numerów referencyjnych faktur i not kredytowych.
+Zakładka Format faktury kontroluje wzorzec numeru faktury, tytuł nagłówka faktury, odsetki za opóźnienie w płatności, instrukcje płatności, warunki oraz tekst stopki, a także które opcjonalne sekcje pojawiają się na PDF faktury.
 
 ### Tokeny formatu
 
-Formaty numerów są budowane z krótkiego szablonu tekstowego łączącego stały tekst z dynamicznymi tokenami w nawiasach klamrowych. Druma podstawia każdy token żywą wartością podczas tworzenia dokumentu.
+Wzorce numerów budowane są z szablonu tekstowego łączącego stały tekst z dynamicznymi tokenami w nawiasach klamrowych:
 
 | Token | Co wstawia |
 |-------|-----------|
-| `{PREFIX}` | Stały prefiks tekstowy zdefiniowany przez Ciebie (np. `DR`, `INV`, skrót Twojej firmy) |
+| `{PREFIX}` | Zdefiniowany przez Ciebie prefiks (np. `INV`, `ORD`, własny skrót) |
 | `{YYYY}` | Rok czterocyfrowy (np. `2026`) |
 | `{YY}` | Rok dwucyfrowy (np. `26`) |
 | `{MM}` | Miesiąc dwucyfrowy (np. `04`) |
-| `{NNN}` | Trzy-cyfrowy numer sekwencyjny, uzupełniony zerami (np. `007`) |
-| `{NNNN}` | Czterocyfrowy numer sekwencyjny, uzupełniony zerami (np. `0007`) |
+| `{DD}` | Dzień dwucyfrowy (np. `07`) |
+| `{YYMMDD}` | Połączony rok, miesiąc i dzień dwucyfrowy (np. `260407`) |
+| `{SEQ3}` | Numer sekwencyjny uzupełniony zerami do 3 cyfr (np. `042`) |
+| `{SEQ4}` | Numer sekwencyjny uzupełniony zerami do 4 cyfr (np. `0042`) |
+| `{SEQ5}` | Numer sekwencyjny uzupełniony zerami do 5 cyfr |
+| `{SEQ6}` | Numer sekwencyjny uzupełniony zerami do 6 cyfr |
 
-Licznik sekwencyjny (`{NNN}` / `{NNNN}`) resetuje się do `001` / `0001` na początku każdego roku kalendarzowego. Możesz swobodnie łączyć tokeny ze znakami separatora, takimi jak `-` lub `/`.
+Nie ma tokenu `{NNN}`/`{NNNN}` — użyj jednego z tokenów `{SEQ3}`–`{SEQ6}` dla sekwencji uzupełnionej zerami. Tokeny można swobodnie łączyć znakami separatora, np. `-` lub `/`.
+
+Sekwencja resetuje się, gdy zmieni się wartość tokenu daty w szablonie (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` lub `{YYYY}`) — w praktyce szablon zawierający `{YYMMDD}` resetuje się **codziennie**, nie raz w roku. Szablon używający tylko `{YYYY}` resetuje się raz w roku, zgodnie z oczekiwaniami.
 
 ### Format numeru faktury
 
-Wpisz żądany szablon w polu **Format numeru faktury**. Panel **podglądu na żywo** po prawej stronie aktualizuje się w trakcie pisania, pokazując przykładowy numer z dzisiejszą datą i następnym dostępnym numerem sekwencji.
+Wpisz żądany szablon w polu **Format numeru faktury**. Podgląd na żywo poniżej pola aktualizuje się w trakcie pisania, pokazując przykładowy numer z dzisiejszą datą i przykładową wartością sekwencji.
 
-**Format domyślny:** `DR-{YYYY}-{NNN}` → generuje `DR-2026-001`, `DR-2026-002`, …
+**Domyślnie:** prefiks faktury `INV`, wzorzec `{PREFIX}-{YYMMDD}-{SEQ3}` → generuje coś jak `INV-260407-042`.
 
-**Przykładowe niestandardowe formaty:**
+**Przykładowe dostosowania:**
 
 | Szablon | Przykładowy wynik |
 |---------|------------------|
-| `INV-{YYYY}-{NNNN}` | `INV-2026-0001` |
-| `{PREFIX}/{YY}/{NNN}` | `ABC/26/001` (gdzie PREFIX = `ABC`) |
-| `{YYYY}{MM}-{NNN}` | `202604-001` |
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
 
-### Format numeru noty kredytowej
-
-Noty kredytowe używają osobnego licznika i osobnego szablonu formatu. Dostępne są te same tokeny.
-
-**Format domyślny:** `CN-{YYYY}-{NNN}` → generuje `CN-2026-001`, `CN-2026-002`, …
-
-### Przywracanie wartości domyślnych
-
-Kliknij **Przywróć wartości domyślne**, aby przywrócić oba pola do `DR-{YYYY}-{NNN}` i `CN-{YYYY}-{NNN}`. Nie wpływa to na już wystawione dokumenty — tylko na przyszłe.
+<Note>
+Noty kredytowe używają własnej serii numeracji (domyślny prefiks `CN`) i własnego licznika, ale obecnie nie mają edytowalnego pola wzorca na tej stronie.
+</Note>
 
 ### Zapisywanie
 
-Kliknij **Zapisz format faktury**. Nowy format obowiązuje dla następnej faktury lub noty kredytowej utworzonej po zapisaniu.
-
-<Warning>
-Zmiana formatu numeru faktury w trakcie roku nie przenumeruje istniejących faktur. Druma kontynuuje licznik sekwencyjny od miejsca, w którym skończyła, używając nowego szablonu dla wszystkich kolejnych dokumentów. Jeśli potrzebujesz czystego restartu sekwencji, skontaktuj się z pomocą techniczną Druma.
-</Warning>
+Kliknij **Zapisz zmiany**. Nowy format obowiązuje dla następnej faktury utworzonej po zapisaniu — istniejące faktury zachowują numer, z którym zostały wystawione.
 
 ---
 
 ## Zakładka Format zlecenia
 
-Zakładka Format zlecenia definiuje wzorzec numerowania referencji zleceń — identyfikatora wyświetlanego na tablicy planowania, panelu szczegółów zlecenia i w komunikacji z kierowcami lub klientami.
+Zakładka Format zlecenia definiuje wzorzec numerowania referencji zleceń — identyfikatora wyświetlanego na tablicy planowania, w panelu szczegółów zlecenia i w komunikacji z kierowcami lub klientami.
 
 ### Format numeru zlecenia
 
-Ten sam system tokenów obowiązuje jak dla faktur. Wpisz szablon w polu **Format numeru zlecenia** i obserwuj, jak podgląd na żywo aktualizuje się po prawej stronie.
+Obowiązuje ten sam system tokenów co dla faktur. Wpisz **Prefiks** i **Wzorzec numeru**, obserwując aktualizację podglądu na żywo poniżej pól.
 
-**Format domyślny:** `DR-{YYYY}-{NNN}` → generuje `DR-2026-001`, `DR-2026-002`, …
+**Domyślnie:** prefiks zlecenia `ORD`, wzorzec `{PREFIX}-{YYMMDD}-{SEQ3}` → generuje coś jak `ORD-260407-042`.
 
-**Przykład:** firma transportowa działająca w Belgii może używać `BE-{YYYY}-{NNNN}` do generowania referencji takich jak `BE-2026-0042`.
+**Przykład:** przewoźnik działający w Belgii może użyć prefiksu `BE` ze wzorcem `{PREFIX}-{YYYY}-{SEQ4}`, aby uzyskać referencje takie jak `BE-2026-0042`.
 
 ### Zapisywanie
 
-Kliknij **Zapisz format zlecenia**. Nowy format obowiązuje dla wszystkich zleceń utworzonych po zapisaniu. Istniejące zlecenia zachowują oryginalne numery referencyjne.
+Kliknij **Zapisz zmiany**. Nowy format obowiązuje dla wszystkich zleceń utworzonych po zapisaniu. Istniejące zlecenia zachowują oryginalne numery referencyjne.
 
 ---
 
-## Praktyczny przykład: dostosowanie numerowania faktur
+## Zakładka Formatowanie wierszy
 
-Załóżmy, że Twoja firma to **Acme Freight** i Twój księgowy chce faktur ponumerowanych `AF-2026-001`, `AF-2026-002` itd., z notami kredytowymi jako `AF-CN-2026-001`.
+Zakładka Formatowanie wierszy pozwala wyróżniać wiersze tabel w całej Druma na podstawie prostych warunków — na przykład zabarwić wiersz na czerwono, gdy jego marża spadnie poniżej progu, albo gdy jest zaległy.
 
-<Steps>
-  <Step title="Otwórz Format faktury">
-    Przejdź do **Ustawienia → Branding i formaty** i kliknij zakładkę **Format faktury**.
-  </Step>
-  <Step title="Ustaw format faktury">
-    W polu **Format numeru faktury** wpisz: `AF-{YYYY}-{NNN}`
-
-    Podgląd na żywo po prawej stronie pokaże przykładowy numer taki jak `AF-2026-001`.
-  </Step>
-  <Step title="Ustaw format noty kredytowej">
-    W polu **Format numeru noty kredytowej** wpisz: `AF-CN-{YYYY}-{NNN}`
-
-    Podgląd pokaże `AF-CN-2026-001`.
-  </Step>
-  <Step title="Zapisz">
-    Kliknij **Zapisz format faktury**. Od następnej faktury Druma będzie używać nowego formatu.
-  </Step>
-</Steps>
+Każda reguła ma nazwę, pole do oceny (marża %, czy zaległe, status, dni od utworzenia), warunek (mniej niż, co najwyżej, więcej niż, co najmniej, równe, różne od), wartość do porównania i kolor wyróżnienia. Kliknij **Dodaj regułę**, aby ją utworzyć, i **Zapisz zmiany**, aby zastosować reguły.
 
 ---
+
+## Powiązane strony
 
 <CardGroup cols={2}>
   <Card title="Konfiguracja integracji" icon="plug" href="/pl/admin/integration-setup">
-    Podłącz dostawcę eCMR (natywny eCMR Druma lub TransFollow jako opcjonalny dostawca zastępczy), SmartBill, dostawców kart paliwowych i oprogramowanie księgowe.
+    Podłącz dostawcę eCMR (natywnego, wewnętrznego dostawcę Druma — TransFollow pozostaje aktywny tylko dla niewielkiej liczby firm z wcześniejszą konfiguracją), dostawców kart paliwowych i oprogramowanie księgowe.
   </Card>
-  <Card title="Generowanie faktur" icon="file-invoice-dollar" href="/pl/invoicing/generating-invoices">
-    Jak tworzyć faktury z dostarczonych zleceń.
+  <Card title="Fakturowanie Peppol (Belgia)" icon="file-check-2" href="/pl/integrations/peppol-invoicing">
+    Automatyczne kierowanie faktur do belgijskich klientów biznesowych przez sieć Peppol.
   </Card>
 </CardGroup>

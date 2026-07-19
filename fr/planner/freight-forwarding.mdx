@@ -1,45 +1,143 @@
 ---
 title: "Transfert de fret"
-description: "Gérez les commandes externalisées à des transporteurs tiers — pipeline de transfert, portail transporteur et suivi des factures d'achat."
+description: "Gérez les chargements sous-traités où vous agissez comme transitaire — facturation scindée, synchronisation du statut transporteur, et suivi automatique de marge depuis une seule commande."
 icon: "arrows-left-right"
 ---
 
-## Vue d'ensemble
+## Qu'est-ce qu'une commande sous-traitée ?
 
-La section Transfert vous aide à gérer les commandes que vous externalisez à des sous-traitants. Elle regroupe le pipeline de transfert, la gestion des sous-traitants et le suivi des factures d'achat en un seul endroit.
+Parfois vous prenez un chargement d'un client mais ne le transportez pas vous-même — vous engagez un autre transporteur pour le faire. Vous agissez comme transitaire : vous êtes la couche commerciale entre le client et le transporteur réel.
 
-Accédez à **Transfert** dans le menu de navigation.
+Dans Druma, on appelle cela un type de commande **Sous-traitée**. Vous créez une commande, l'affectez à un transporteur depuis votre registre de sous-traitants, et Druma gère le reste : facturation scindée, suivi de statut, flux de documents, et calcul de marge — tout depuis cette seule commande sans double saisie de données.
+
+<Frame caption="Le Pipeline de transfert — marge tarif d'achat/tarif de vente suivie par commande sous-traitée.">
+  <img src="/images/planner/freight-forwarding.png" alt="Tableau du pipeline de transfert de fret" />
+</Frame>
 
 ---
 
-## Pipeline de transfert
+## Créer une commande sous-traitée
 
-Le pipeline affiche toutes vos commandes sous-traitées sous forme de tableau kanban :
+<Steps>
+  <Step title="Créez une nouvelle commande">
+    Accédez à **Commandes → Nouvelle commande**.
+  </Step>
+  <Step title="Définissez le type de commande sur Sous-traitée">
+    Dans le formulaire de commande, trouvez le champ **Type de commande** et sélectionnez **Sous-traitée**.
+  </Step>
+  <Step title="Renseignez les détails standard de la commande">
+    Saisissez l'adresse de chargement, l'adresse de livraison, la description de la cargaison, le type de remorque, et votre prix convenu avec le client (le tarif de vente).
+  </Step>
+  <Step title="Sélectionnez le transporteur">
+    Dans le champ **Sous-traitant / Transporteur**, choisissez l'entreprise de votre registre de sous-traitants qui transportera physiquement ce chargement.
+  </Step>
+  <Step title="Saisissez le coût transporteur">
+    Saisissez ce que vous payez au transporteur (le tarif d'achat). Ceci est gardé séparé du prix client et n'est visible que par les planificateurs — pas par le client.
+  </Step>
+  <Step title="Enregistrez et affectez">
+    Cliquez sur **Enregistrer**. Le transporteur reçoit automatiquement l'accès à cette commande via son portail.
+  </Step>
+</Steps>
 
-| Colonne | Signification |
-|---|---|
-| **Ouvert** | Commandes sous-traitées sans transporteur confirmé |
-| **Assigné** | Transporteur confirmé, en attente de chargement |
-| **En transit** | Chauffeur du sous-traitant en route |
-| **Livré** | Livraison confirmée par le sous-traitant |
+---
+
+## Facturation scindée
+
+Une commande sous-traitée suit les deux côtés de l'argent à partir d'un seul jeu de données — pas de double saisie d'itinéraire, de dates, ou de cargaison :
+
+**Côté vente** — ce que vous facturez à votre client (le prix convenu). Vous générez cette facture de la même façon que pour toute autre commande, depuis l'action de facturation propre à la commande.
+
+**Côté achat** — ce que vous payez au transporteur. Ouvrez l'onglet **Transporteur et argent** de la commande pour voir le **Tarif d'achat** convenu avec le transporteur aux côtés de votre **Revenu**, avec la **Marge** (Revenu − Tarif d'achat) calculée automatiquement.
+
+<Note>
+Il n'y a pas de bouton « Générer une facture d'achat » séparé sur la commande — quand le transporteur vous envoie sa propre facture pour le chargement, rapprochez-la d'une facture de sous-traitant sur la page dédiée **Factures de sous-traitants**, qui gère l'ingestion et le rapprochement par rapport au tarif d'achat que vous avez enregistré ici.
+</Note>
+
+---
+
+## Synchronisation de statut : transporteur → votre système → client
+
+Quand le transporteur met à jour le statut de la commande dans son portail (Chargé, En transit, Livré), cette mise à jour circule automatiquement :
+
+1. Le statut de la commande dans votre Druma se met à jour immédiatement
+2. Votre client voit le statut mis à jour dans son portail, sur la chronologie de son expédition
+3. Vos planificateurs voient la mise à jour sur le panneau de détail de la commande et, si le camion est en direct, sur la Carte en direct
+
+Vous n'avez pas besoin de relayer manuellement les mises à jour de statut du transporteur à votre client. L'information circule automatiquement à travers Druma.
+
+---
+
+## Flux de documents
+
+Quand le transporteur téléverse des documents via son portail — scan CMR, preuve de livraison, photos — ces documents apparaissent à deux endroits à la fois :
+
+- **Votre compte Druma** — sous l'onglet Documents de la commande
+- **Le portail de votre client** — sur sa page Documents, filtrable par type (CMR, eCMR, POD, Facture, CO2)
+
+Le client obtient l'accès au CMR et à la confirmation de livraison sans que vous ayez à transférer manuellement quoi que ce soit. Cela arrive tout simplement.
+
+<Note>
+Il n'y a pas de bascule de visibilité par document — tout document rattaché à une commande que le client peut voir lui est visible. Si vous devez garder un fichier téléversé par le transporteur interne, ne le rattachez pas aux Documents de la commande.
+</Note>
+
+---
+
+## Suivi de marge
+
+Sur chaque commande sous-traitée, Druma vous montre votre marge en un coup d'œil :
+
+**Marge = Prix de vente − Coût transporteur**
+
+Vous verrez cela sur l'onglet Transporteur et argent de la commande et dans la vue liste des commandes. Cela facilite la révision de la rentabilité de vos chargements de transfert sans construire de tableurs.
+
+Si les coûts réels changent (le transporteur facture du temps d'attente ou des km supplémentaires), mettez à jour le tarif d'achat sur la commande et la marge se recalcule automatiquement.
 
 ---
 
 ## Mises à jour du transporteur
 
-Lorsqu'un sous-traitant met à jour sa commande via son portail, vous voyez en temps réel :
+Une fois qu'une commande sous-traitée est affectée à un transporteur et qu'il commence à fournir des mises à jour via le portail transporteur, Druma affiche ses données en temps réel sur le tableau de transfert et dans le panneau de détail de la commande — aucun relais manuel nécessaire de votre côté.
 
-- Plaque du camion du transporteur
-- Nom et téléphone du chauffeur
-- ETA du transporteur
-- Horodatages d'arrivée/départ au chargement et à la livraison
+### Sur le tableau de transfert (cartes En transit)
+
+- **ETA transporteur** — l'ETA propre du transporteur pour la livraison, étiquetée « ETA transporteur » pour la distinguer de l'ETA calculée par PTV de Druma
+- Badge **plaque camion transporteur** — la plaque réelle utilisée par le transporteur sur ce chargement
+- **Avertissement tarif d'achat manquant** — un badge ambre apparaît sur toute carte où aucun tarif d'achat n'a été défini. Cela signale une lacune de données de marge — ouvrez la commande et saisissez le tarif d'achat avant la facturation
+
+### Dans le panneau de détail de la commande
+
+Pour les commandes sous-traitées, une section **Mises à jour du transporteur** apparaît dans le panneau de détail de la commande montrant :
+
+- Plaque du camion transporteur et nom du chauffeur
+- Numéro de téléphone du chauffeur (affiché en texte brut, pas un lien d'appel en un clic)
+- ETA transporteur
+- Réels de chargement : arrivée et départ signalés par le transporteur au point de chargement
+- Réels de livraison : arrivée et départ signalés par le transporteur au point de livraison
+
+Ces champs sont renseignés par le transporteur via son portail — aucune saisie manuelle n'est nécessaire de votre côté. Si un transporteur n'a pas encore envoyé de mises à jour, la section affiche des espaces réservés.
 
 ---
 
-## File d'attente des factures de sous-traitants
+## Quand utiliser les commandes sous-traitées
 
-Accédez à l'onglet **Factures** dans la section Transfert pour voir la file d'attente de révision des factures d'achat reçues par email.
+Utilisez un type de commande Sous-traitée chaque fois que :
 
-<Card title="Sous-traitants" icon="handshake" href="/fr/planner/subcontractors">
-  Gérez votre registre de sous-traitants et configurez leurs portails.
-</Card>
+- Vous avez pris un chargement mais vos propres camions sont pleins
+- Vous agissez purement comme transitaire et ne transportez pas les chargements vous-même
+- Vous utilisez un transporteur ponctuel pour un chargement unique
+- Vous devez suivre la marge entre ce que vous facturez au client et ce que vous payez au transporteur
+
+<Warning>
+Si vous utilisez votre propre chauffeur et camion, utilisez un type de commande standard — pas Sous-traitée. Les commandes sous-traitées sont spécifiquement pour les chargements transportés par des transporteurs externes.
+</Warning>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Sous-traitants" icon="handshake" href="/fr/planner/subcontractors">
+    Ajoutez des entreprises transporteuses à votre registre avant de pouvoir les affecter à des commandes sous-traitées.
+  </Card>
+  <Card title="Générer des factures" icon="file-invoice-dollar" href="/fr/invoicing/generating-invoices">
+    Découvrez comment générer des factures de vente et d'achat depuis vos commandes.
+  </Card>
+</CardGroup>

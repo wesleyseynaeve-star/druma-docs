@@ -1,0 +1,84 @@
+---
+title: "Poskytovatelé eCMR"
+description: "Nativní interní poskytovatel eCMR Druma je jediný volitelný poskytovatel eCMR. TransFollow je cesta pouze pro společnosti s již existující konfigurací."
+icon: "right-left"
+---
+
+Druma vydává eCMR pomocí svého **nativního poskytovatele** — vydává a zapečeťuje eCMR zcela interně, bez nákladů na dokument. V **Nastavení → Integrace → Poskytovatel eCMR** (vyžaduje přístup správce společnosti) jsou jedinou možností **Nativní** a **Vypnuto**. **TransFollow** nemůže nově vybrat žádná společnost; existuje pouze jako cesta pro společnosti, které ho nakonfigurovaly ještě před zavedením nativního poskytovatele — viz níže.
+
+---
+
+## Nativní eCMR Druma (výchozí)
+
+Nativní poskytovatel Druma vydává dokumenty CMR interně, shromažďuje podpisy, sestavuje PDF a aplikuje **digitální pečeť PAdES** — zdokonalený elektronický podpis (AdES) podle eIDAS — bez kontaktování jakékoli externí služby.
+
+### Jak to funguje
+
+- **Není potřeba žádné nastavení** — nativní poskytovatel je ve výchozím nastavení aktivní. Nemusíte zadávat žádný API klíč ani propojovat externí účet.
+- **Třístranné podepisování, tři samostatná zařízení:** odesílatel podepisuje přes webovou aplikaci Druma (obvykle zachyceno plánovačem nebo dispečerem v záložce Dokumenty objednávky); řidič podepisuje samostatně na svém telefonu; příjemce podepisuje přes **sdílený odkaz nebo QR kód** na svém vlastním zařízení při doručení — pro příjemce není potřeba žádný účet Druma.
+- **Certifikované PDF:** jakmile všechny tři strany podepíší, Druma sestaví kompletní PDF CMR a aplikuje pečeť PAdES. Zapečetěný dokument obsahuje všechna povinná pole CMR (1–24), včetně prohlášení „podléhá CMR", místa a data vydání a případných výhrad dopravce.
+- **Výhrady příjemce (pole 24):** při podepisování může příjemce přidat volný text s pozorováním (poškození, manko, nesrovnalost). Tyto poznámky se propíší do zapečetěného PDF a na objednávce v Druma se zobrazí oranžový banner „Výhrady příjemce".
+
+### Kontrola připravenosti poskytovatele
+
+Přejděte do **Nastavení → Integrace → Poskytovatel eCMR** a klikněte na **Otestovat připojení** pro ověření, že je podpisový certifikát Druma nakonfigurován a poskytovatel je připraven.
+
+### Náklady
+
+eCMR je zahrnuto ve vašem předplatném Druma bez dalších nákladů — neexistuje poplatek za dokument ani limit využití.
+
+### Zobrazení a stahování dokumentů eCMR
+
+Podepsané dokumenty eCMR a podpisy se v Druma uchovávají 7 let od data doručení objednávky, poté jsou trvale smazány naplánovanou úlohou — kompletní politiku uchovávání viz [Právní platnost eCMR](/cs/ecmr/ecmr-legal-validity).
+
+**Detail objednávky → záložka Dokumenty → Zobrazit eCMR**
+
+Odtud můžete:
+
+- Zobrazit zapečetěné PDF v prohlížeči
+- Stáhnout podepsané PDF
+- Zkontrolovat stav podpisu všech tří stran — řádek Odesílatel zobrazuje datum podpisu; Řidič a Příjemce zobrazují odznak podepsáno/nepodepsáno bez časového razítka
+- Sdílet odkaz na dokument s klientem (přístupný bez přihlášení Druma)
+
+---
+
+## TransFollow (pouze existující konfigurace)
+
+TransFollow je platforma eCMR třetí strany, kterou Druma dříve podporovala jako volitelnou možnost. **Už ji nelze nově vybrat** — v Nastavení → Integrace neexistuje žádná položka TransFollow k výběru, žádné pole API klíče, žádný přepínač zkušebního režimu ani tlačítko Otestovat připojení pro ni.
+
+Jediný důvod, proč TransFollow v Druma vůbec stále existuje, je udržet funkčnost pro malý počet společností s **již existující konfigurací TransFollow** bez přerušení. Pokud to platí pro vaši společnost:
+
+- Váš workflow eCMR funguje dál přesně jako dřív — nic se nerozbije a není potřeba žádná akce.
+- Karta poskytovatele eCMR v Nastavení → Integrace zobrazuje vaši konfiguraci jako **Nativní**.
+- Při dalším uložení této integrace (i bez jakékoli změny) se vaše společnost tiše migruje na skutečně nativního poskytovatele.
+
+Pokud nastavujete eCMR poprvé, nebo vaše společnost TransFollow nikdy nekonfigurovala, nic z toho se vás netýká — už jste na nativním poskytovateli.
+
+<Warning>
+Neexistuje způsob, jak nakonfigurovat TransFollow pro společnost, která na něm ještě není. Pokud narazíte na zmínky o TransFollow jinde, popisují toto chování zajišťující kontinuitu existující konfigurace, ne možnost dostupnou v produktu dnes.
+</Warning>
+
+---
+
+## Pokrytí zemí
+
+eCMR je právně platné v zemích, které ratifikovaly Protokol e-CMR. K roku 2025 to zahrnuje většinu členských států EU plus Švýcarsko, Bělorusko, Gruzii a další. Aktuální seznam zkontrolujte na [unece.org](https://unece.org). Pro země, které neratifikovaly, je stále vyžadováno papírové CMR — Druma může pro takové zásilky vytisknout formátovaný nákladní list CMR.
+
+---
+
+## Související články
+
+<CardGroup cols={2}>
+  <Card title="Co je eCMR?" icon="file-contract" href="/cs/ecmr/what-is-ecmr">
+    Úvod do elektronických nákladních listů CMR a kdy je potřebujete.
+  </Card>
+  <Card title="Právní platnost eCMR" icon="scale-balanced" href="/cs/ecmr/ecmr-legal-validity">
+    Vysvětlení Protokolu e-CMR, pečeti PAdES a eIDAS AdES.
+  </Card>
+  <Card title="Vytvoření eCMR" icon="file-plus" href="/cs/ecmr/creating-ecmr">
+    Podrobný návod pro vydání eCMR na objednávce Druma.
+  </Card>
+  <Card title="Proces podepisování" icon="pen-to-square" href="/cs/ecmr/signing-flow">
+    Jak podepisuje odesílatel, řidič a příjemce, a na jakém zařízení.
+  </Card>
+</CardGroup>

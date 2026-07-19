@@ -4,21 +4,25 @@ description: "Ce date stocheaza Druma, cat timp le pastreaza, drepturile tale ca
 icon: "lock"
 ---
 
-_Ultima actualizare: 17 iulie 2026._
+_Ultima actualizare: 10 iulie 2026._
 
-Pentru **datele operationale** (comenzi, clienti, soferi, documente), Druma actioneaza ca **persoana imputernicita de operator (procesator)** - compania ta este operatorul de date, procesarea fiind guvernata de un Acord de Procesare a Datelor (DPA). Pentru **datele contului si de facturare**, Druma actioneaza ca **operator de date** in nume propriu.
+Pentru **datele operationale** (comenzi, clienti, soferi, documente si alte inregistrari pe care compania ta le stocheaza pe platforma), Druma actioneaza ca **persoana imputernicita de operator (procesator)** — compania ta este operatorul de date, iar procesarea este guvernata de un Acord de Procesare a Datelor (DPA) intre compania ta si Druma. Pentru **datele contului si de facturare** (detaliile abonamentului tau Druma si ale utilizatorilor care il administreaza), Druma actioneaza ca **operator de date** in nume propriu.
+
+<Frame caption="Setari → GDPR si Confidentialitate — orice rol poate vizualiza; doar Admin poate actiona.">
+  <img src="/images/admin/gdpr-data-management.png" alt="Panoul de setari GDPR si Confidentialitate" />
+</Frame>
 
 ---
 
 ## Ce date stocheaza Druma
 
-- **Companie si cont**: nume companie, CIF, adresa, conturi utilizator (nume, email, rol, marci temporale de autentificare)
-- **Operationale**: comenzi (ruta, marfa, adrese, istoric status, sofer/vehicul atribuit), clienti, date soferi (permis, ADR, expirari), date vehicule
-- **Financiare**: facturi, linii de factura, status plata, date de import card carburant
-- **Documente eCMR**: scrisori de transport electronice emise si sigilate PAdES **intern, de furnizorul nativ Druma** - inclusiv semnaturile si PDF-urile certificate. TransFollow ramane doar ca fallback pentru companiile care il foloseau deja, functionand ca inregistrare mostenita.
-- **Pozitie GPS**: doua fluxuri distincte - (1) urmarirea live a camionului pastreaza **doar pozitia curenta**, suprascrisa continuu la fiecare ping nou, fara istoric; (2) un eveniment de comanda (schimbare de status, intarziere, incident) poate atasa o singura coordonata GPS, retinuta ca parte din inregistrarea comenzii respective - nu un istoric de pozitie separat. Coordonatele trimise la ANAF e-Transport sunt logate separat si sterse dupa 30 de zile.
-- **Arhiva tahograf**: fisiere DDD (unitate montata pe vehicul) si TGD (card sofer), descarcate automat printr-un furnizor de telematica conectat sau incarcate manual, pastrate in Arhiva Tahograf conform obligatiilor Regulamentului UE 165/2014 - vezi [Arhiva tahograf](/ro/fleet-compliance/tacho-archive).
-- **Jurnale de audit**: autentificari, schimbari de status ale comenzilor, schimbari de rol, incarcari de documente, evenimente de facturare
+- **Companie si cont**: nume companie, CIF, adresa, detalii contact; conturi utilizator (nume, email, rol, marci temporale de autentificare)
+- **Operationale**: comenzi (detalii ruta, descrieri marfa, adrese de ridicare/livrare, istoric status, sofer si vehicul atribuit, marci temporale), clienti (nume companie, adresa, persoana de contact, CIF), soferi (nume, numar contact, numar permis, detalii certificat ADR, date de expirare documente), vehicule (numar inmatriculare, marca/model, standard Euro, date de expirare documente)
+- **Financiare**: facturi, linii de factura, sume, status plata; date de import card carburant asociate vehiculelor
+- **Documente eCMR**: scrisori de transport electronice emise si sigilate PAdES **intern, de furnizorul nativ Druma**, inclusiv datele de semnatura si PDF-urile certificate. TransFollow ramane disponibil ca fallback mostenit pentru companiile care il foloseau deja inainte de introducerea furnizorului nativ.
+- **Pozitie GPS**: doua fluxuri distincte — (1) **urmarirea live** pastreaza doar pozitia curenta a camionului, suprascrisa continuu la fiecare ping GPS nou, fara istoric de pozitii pastrat pentru harta live; (2) **marcajele GPS de eveniment de comanda** — cand un sofer raporteaza o schimbare de status, o intarziere sau un incident, poate fi capturata o singura coordonata GPS atasata evenimentului respectiv, pastrata ca parte din inregistrarea comenzii (vezi retentia "date operationale" mai jos), nu ca istoric de pozitie separat; (3) pentru transporturile care necesita declaratie ANAF e-Transport, coordonatele GPS trimise catre ANAF sunt logate separat si sterse dupa **30 de zile**.
+- **Arhiva tahograf**: fisiere DDD (unitate montata pe vehicul) brute si TGD (card sofer), descarcate automat printr-un furnizor de telematica conectat sau incarcate manual, pastrate in Arhiva Tahograf conform obligatiilor de retentie ale Regulamentului UE 165/2014. Vezi [Arhiva tahograf](/ro/fleet-compliance/tacho-archive).
+- **Jurnale de audit**: autentificari, schimbari de status ale comenzilor, schimbari de rol utilizator, incarcari de documente, evenimente de facturare
 
 <Note>
 Druma nu stocheaza inregistrari de apeluri, date biometrice ale soferilor sau informatii despre sanatatea soferilor.
@@ -32,57 +36,103 @@ Druma nu stocheaza inregistrari de apeluri, date biometrice ale soferilor sau in
 |---|---|
 | Date operationale (comenzi, clienti, soferi, vehicule) | Durata abonamentului + 90 de zile dupa anulare |
 | Date de cont utilizator | Durata abonamentului + 90 de zile dupa anulare |
-| Jurnale de audit | 18 luni de la data evenimentului |
-| Documente eCMR | 10 ani (cerinta legala, Protocolul e-CMR) |
-| Pozitie GPS (urmarire live) | Nu se retine - doar pozitia curenta, suprascrisa la fiecare actualizare |
-| Coordonate GPS asociate unui eveniment de comanda | Retinute impreuna cu comanda (vezi randul de mai sus) |
+| Jurnale de audit | 12 luni de la data evenimentului logat |
+| Documente eCMR | 10 ani (cerinta legala conform Protocolului e-CMR) |
+| Pozitie GPS (urmarire live) | Nu se retine — doar pozitia curenta, suprascrisa la fiecare actualizare |
+| Marcaje GPS de eveniment de comanda | Retinute impreuna cu comanda (vezi retentia datelor operationale de mai sus) |
 | Date GPS trimise la ANAF e-Transport | 30 de zile, apoi sterse automat |
 | Fisiere tahograf (DDD/TGD) | Pastrate pe termen nedeterminat (12 luni este minimul legal, nu un prag de stergere) |
-| Inregistrari de facturare | 7 ani (legea contabilitatii din Romania) |
+| Inregistrari de facturare | 10 ani (plafonul legislatiei fiscale UE) |
 
-Dupa expirarea perioadei de retentie, datele sunt sterse definitiv din toate sistemele, inclusiv din backup-uri.
+<Note>
+La finalul ferestrei de retentie de 90 de zile descrisa mai jos, procesul programat de stergere al Druma elimina **comenzile mai vechi de 3 ani**, mesajele si notele de comanda, clientii, camioanele si remorcile, si elimina integrarile si preferintele companiei. Deliberat, **nu sterge facturile sau semnaturile eCMR** — ambele sunt pastrate conform regulilor legale de retentie de mai sus, indiferent de stergerea contului. Comenzile mai noi de 3 ani la momentul stergerii nu sunt eliminate de acest proces.
+</Note>
 
 ---
 
 ## Solicitarea unui export de date
 
+Poti solicita oricand un export complet al datelor companiei tale.
+
 <Steps>
-  <Step title="Setari -> Date si Confidentialitate">
-    Doar rolurile Admin si Company Admin pot accesa aceasta sectiune.
+  <Step title="Mergi la Setari → GDPR si Confidentialitate">
+    Orice rol poate deschide aceasta pagina si vedea continutul ei. Doar rolul **Admin** poate solicita un export, edita politica de retentie sau rezolva cererile persoanelor vizate — **Company Admin** are acces doar-citire la documentele GDPR incarcate, iar celelalte roluri pot vizualiza pagina dar nu pot actiona pe ea.
   </Step>
   <Step title="Apasa Solicita Export">
-    Druma pregateste o arhiva ZIP cu toate datele companiei, in format citibil automat (JSON si CSV).
+    Druma pregateste o arhiva ZIP cu toate datele companiei tale, in format citibil automat (JSON si CSV).
   </Step>
-  <Step title="Primeste exportul">
-    Link de descarcare pe email in maximum **24 de ore**, valabil 7 zile.
+  <Step title="Primesti exportul">
+    Vei primi un email cu un link de descarcare in **aproximativ 15 minute** (exportul este procesat de un job care ruleaza la fiecare 15 minute). Link-ul expira dupa 7 zile.
   </Step>
 </Steps>
 
-Exportul include comenzi, clienti, soferi, vehicule, facturi, lista utilizatori si jurnale de audit. Nu include PDF-urile eCMR certificate - acestea se descarca individual din fila eCMR a fiecarei comenzi.
+Exportul include: comenzi, clienti, facturi, vehicule din flota, mesaje interne de comanda, intrari din jurnalul de audit, inregistrari de consimtamant si inregistrari de semnatura digitala eCMR. Fisierul `drivers.csv` din export este filtrat doar la conturile de utilizator cu rolul **sofer** — nu este o lista completa a utilizatorilor de birou. Nu include PDF-urile eCMR certificate — acestea se descarca individual din fila eCMR a fiecarei comenzi.
 
 ---
 
 ## Stergerea contului
 
 <Warning>
-Stergerea este permanenta si ireversibila dupa perioada de retentie de 90 de zile. Descarca datele necesare inainte de a solicita stergerea.
+Stergerea contului este permanenta si ireversibila dupa fereastra de retentie de 90 de zile. Descarca orice date de care ai nevoie inainte de a solicita stergerea.
 </Warning>
 
-Contul este dezactivat imediat la solicitare (nimeni nu se mai poate autentifica), datele sunt pastrate 90 de zile pentru nevoi legale, apoi toate datele operationale sunt eliminate definitiv. Documentele eCMR raman pastrate pentru intreaga perioada legala de 10 ani, chiar si dupa stergerea contului.
+<Steps>
+  <Step title="Mergi la Setari → GDPR si Confidentialitate">
+    Deruleaza pana la sectiunea **Sterge Contul**. Doar rolul **Admin** poate initia aceasta actiune.
+  </Step>
+  <Step title="Apasa Sterge Contul">
+    Ti se va cere sa scrii numele companiei pentru a confirma ca intelegi actiunea.
+  </Step>
+  <Step title="Incepe perioada de retentie de 90 de zile">
+    Contul tau este dezactivat imediat — nimeni nu se mai poate autentifica. Druma pastreaza datele 90 de zile pentru eventuale nevoi legale sau de reglementare. Poti anula stergerea programata oricand in aceasta fereastra, din aceeasi pagina.
+  </Step>
+  <Step title="Stergerea programata">
+    Dupa 90 de zile, Druma sterge comenzile mai vechi de 3 ani, mesajele de comanda, notele de comanda, clientii, camioanele, remorcile si integrarile companiei, si elimina inregistrarea companiei insesi. **Facturile si semnaturile digitale eCMR nu sunt sterse** de acest proces — sunt pastrate pentru intreaga lor perioada legala de retentie (vezi tabelul de mai sus), indiferent de stergerea contului. Comenzile mai noi de 3 ani la momentul stergerii nu sunt eliminate de acest pas.
+  </Step>
+</Steps>
 
 ---
 
 ## Sub-procesatori
 
-Supabase (gazduire si autentificare, UE-Frankfurt), Cloudflare (CDN/DDoS/DNS), Resend (email tranzactional), Mailgun (ingestie email), Stripe (plati), PTV Group (ruta/distanta/ETA), HERE Technologies (geocodare), Google Vertex AI europe-west1 (functii AI, fara antrenare de model), Google Cloud Translation, Sentry, Google Firebase Cloud Messaging (push soferi), WhatsApp Business Cloud API/Meta (doar daca activezi notificarile WhatsApp), furnizorii de telematica si reefer pe care compania ta ii conecteaza efectiv, si **TransFollow** - doar ca fallback eCMR mostenit, furnizorul nativ intern fiind implicit pentru emitere, semnare si arhivare.
+Druma partajeaza date cu urmatorii sub-procesatori terti pentru a livra serviciul:
 
-Daca activezi **Druma Copilot** cu propria cheie API AI ("bring your own AI"), prompturile si datele interogate sunt trimise direct catre furnizorul ales (OpenAI, Anthropic sau Google) conform acordului propriu al companiei tale - poate implica transfer de date in afara UE. Copilot este **dezactivat implicit**.
+| Sub-procesator | Scop |
+|---|---|
+| Supabase | Gazduire baza de date si autentificare (UE — Frankfurt) |
+| Cloudflare | CDN, protectie DDoS si DNS |
+| Resend | Livrare email tranzactional iesit |
+| Mailgun | Ingestie email intrat (comenzi, facturi si email-uri de plata analizate in Druma) |
+| Stripe | Procesare plati si administrare abonament |
+| PTV Group | Calcul ruta, distanta si ETA — primeste coordonatele de ridicare/livrare |
+| HERE Technologies | Geocodare si autocompletare adrese |
+| Google Vertex AI (europe-west1) | Functii AI (analiza documente, extragere din email) — fara antrenare de model |
+| Google Cloud Translation | Traducere la cerere a interfetei si continutului documentelor |
+| Sentry | Monitorizare erori si rapoarte de crash |
+| Google Firebase Cloud Messaging | Notificari push pentru aplicatia soferului |
+| WhatsApp Business Cloud API (Meta) | Mesagerie sofer — doar daca compania ta activeaza notificarile WhatsApp |
+| Furnizori de telematica (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | Date GPS si tahograf — doar furnizorul pe care compania ta il conecteaza |
+| Furnizori de telematica reefer (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Date temperatura reefer — doar furnizorul pe care compania ta il conecteaza |
+| TransFollow | Doar fallback eCMR mostenit — furnizorul nativ intern este implicit pentru emitere, semnare si arhivare |
+
+Toti sub-procesatorii sunt obligati contractual sa proceseze datele doar conform instructiunilor si in conformitate cu GDPR.
+
+Daca compania ta activeaza functia optionala **Druma Copilot** cu propria cheie API de la un furnizor AI ("bring your own AI"), prompturile tale si datele interogate sunt trimise direct catre furnizorul AI ales (OpenAI, Anthropic sau Google) conform acordului propriu al companiei tale cu acel furnizor — acest lucru poate implica transfer de date in afara UE. Druma Copilot este **dezactivat implicit** si se activeaza doar dupa ce compania ta furnizeaza propria cheie.
 
 ---
 
 ## Drepturile tale GDPR
 
-Drept de acces, rectificare, stergere, portabilitate, restrictionare si opozitie. Pentru a le exercita, scrie la **privacy@druma.io** cu numele companiei, CIF-ul si solicitarea ta - raspuns in 30 de zile.
+Ca persoana vizata sau ca operator in numele angajatilor tai, ai urmatoarele drepturi:
+
+- **Dreptul de acces** — solicita o copie a datelor personale detinute despre tine
+- **Dreptul la rectificare** — corecteaza date personale inexacte
+- **Dreptul la stergere** — solicita stergerea (sub rezerva obligatiilor legale de retentie)
+- **Dreptul la portabilitatea datelor** — primeste-ti datele intr-un format structurat, citibil automat (foloseste functia de Export Date)
+- **Dreptul la restrictionare** — cere Druma sa restrictioneze procesarea in anumite circumstante
+- **Dreptul la opozitie** — opune-te procesarii bazate pe interese legitime
+
+Pentru a exercita oricare dintre aceste drepturi, scrie la **privacy@druma.io** cu numele companiei, CIF-ul si o descriere a solicitarii tale. Druma va raspunde in 30 de zile.
 
 ---
 
@@ -93,5 +143,5 @@ Drept de acces, rectificare, stergere, portabilitate, restrictionare si opozitie
 </Card>
 
 <Card title="Detalii retentie date GDPR" icon="database" href="/ro/legal/gdpr-data-retention">
-  Detaliere completa a perioadelor de retentie si procedurilor de stergere.
+  Detaliere completa a perioadelor de retentie si a procedurilor de stergere.
 </Card>

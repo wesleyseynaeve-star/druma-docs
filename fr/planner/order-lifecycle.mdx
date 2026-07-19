@@ -1,130 +1,278 @@
 ---
 title: "Cycle de vie d'une commande"
-description: "Comment une commande passe de Brouillon à Facturée dans Druma — chaque statut, qui le déclenche et ce qui se passe à chaque étape."
+description: "Comment une commande passe de Brouillon à Livrée dans Druma — chaque statut, qui le déclenche, et ce qui se passe à chaque étape."
 icon: "circle-dot"
 ---
 
 ## Vue d'ensemble
 
-Chaque commande dans Druma suit un parcours défini :
+Chaque commande dans Druma suit un parcours défini. Comprendre le cycle de vie vous aide à savoir à quoi vous attendre à chaque étape, quand intervenir, et comment gérer les exceptions comme les livraisons en retard ou les mises à jour de statut oubliées.
 
-**Brouillon → Confirmée → En transit → Arrivé au chargement → Chargement → En route vers la livraison → Arrivé à la livraison → Déchargement → Livré → Facturée**
+<Note>
+Si votre entreprise utilise des modèles de tâches, une commande peut aussi porter une **liste de tâches** rattachée à ces mêmes phases de cycle de vie — voir [Tâches de commande et modèles de workflow](/en/planner/order-tasks).
+</Note>
 
-Il existe également un statut **Annulée** distinct.
+Voici le flux complet :
+
+**Brouillon → En attente → Assignée → Partie → Arrivée au chargement → Chargement → En transit → Arrivée à la livraison → Déchargement → Livrée**
+
+Il existe aussi deux statuts d'exception — **Annulée** et **Trajet perdu** — couverts vers la fin.
+
+---
+
+## Couleurs de statut en un coup d'œil
+
+Chaque statut se résout en une seule couleur (teinte) partagée à l'identique entre le tableau de planification et l'application chauffeur — le même statut n'est jamais d'une couleur différente sur deux écrans.
+
+| Statut | Couleur |
+|---|---|
+| Brouillon | Gris (ardoise) |
+| En attente | Gris (ardoise) |
+| Assignée | Bleu |
+| Partie | Indigo |
+| Arrivée au chargement | Ambre |
+| Chargement | Ambre |
+| En transit | Vert émeraude |
+| Arrivée à la livraison | Bleu ciel |
+| Déchargement | Bleu ciel |
+| Livrée | Vert |
+| Annulée | Rouge |
+| Trajet perdu | Rouge |
+
+<Note>
+**En transit** est le leg post-chargement du camion vers l'adresse de livraison — c'est le *seul* statut qui s'affiche en vert avant Livrée. **Partie** (le leg vers l'adresse de chargement) s'affiche en indigo, une couleur visuellement distincte, afin que vous puissiez voir en un coup d'œil si un camion se dirige vers le chargement ou est déjà chargé et se dirige vers la livraison.
+</Note>
 
 ---
 
 ## Brouillon
 
-**Déclenché par :** Le planificateur enregistre une nouvelle commande sans la confirmer.
+**Déclenché par :** le planificateur enregistre une nouvelle commande sans la confirmer.
 
-La commande existe dans le système mais n'est pas encore active. Le chauffeur ne la voit pas dans son application.
+**Qui peut le déclencher :** planificateur uniquement.
 
----
+La commande existe dans le système mais n'est pas encore active. Le chauffeur ne la voit pas dans son application. Elle apparaît grise sur le tableau de planification.
 
-## Confirmée
+**Actions disponibles depuis Brouillon :**
+- Modifier n'importe quel champ
+- Confirmer la commande (passe à En attente)
+- Supprimer la commande
+- Annuler la commande
 
-**Déclenché par :** Le planificateur clique sur **Confirmer la commande**.
-
-La commande est maintenant active. Le chauffeur assigné reçoit une notification push dans son application.
-
----
-
-## En transit
-
-**Déclenché par :** Le chauffeur appuie sur **En route** dans son application lorsqu'il part vers le lieu de chargement.
+Utilisez Brouillon quand un client a fait une réservation provisoire mais n'a pas encore confirmé, ou quand vous construisez la commande mais attendez encore des détails.
 
 ---
 
-## Arrivé au chargement
+## En attente
 
-**Déclenché par :** Le chauffeur appuie sur **Arrivé au chargement** lorsqu'il atteint l'adresse de chargement.
+**Déclenché par :** le planificateur clique sur **Confirmer la commande** (depuis la page de commande ou le tableau de planification).
 
-L'horloge de temps d'attente démarre automatiquement.
+**Qui peut le déclencher :** planificateur uniquement.
+
+La commande est maintenant active et prête à être rapprochée d'un camion et d'un chauffeur — elle n'a simplement pas encore été affectée. Elle apparaît toujours **grise** sur le tableau de planification, la même teinte que Brouillon, puisqu'aucun camion n'y est encore engagé.
+
+**Notifications envoyées :**
+- Optionnel : email de confirmation automatique au client (si activé dans les paramètres de votre compte)
+
+**Actions disponibles depuis En attente :**
+- Modifier n'importe quel champ
+- Affecter un camion et un chauffeur (passe à Assignée)
+- Annuler la commande
+
+---
+
+## Assignée
+
+**Déclenché par :** le planificateur affecte un camion et un chauffeur à la commande — depuis le formulaire Nouvelle commande, le Tableau de planification, ou le panneau de détail de commande.
+
+**Qui peut le déclencher :** planificateur uniquement.
+
+La commande a maintenant un camion et un chauffeur rattachés. Le chauffeur assigné reçoit une notification push dans son application montrant les détails de la mission — adresse de chargement, adresse de livraison, date, et les notes chauffeur que vous avez ajoutées.
+
+La commande apparaît **bleue** sur le tableau de planification.
+
+**Actions disponibles depuis Assignée :**
+- Modifier la plupart des champs (les changements déclenchent une nouvelle notification au chauffeur)
+- Réaffecter le camion ou le chauffeur
+- Annuler la commande
+- Passer à Partie (action du chauffeur, ou remplacement du planificateur)
+
+---
+
+## Partie
+
+**Déclenché par :** le chauffeur touche **Parti** dans son application quand il part vers le lieu de chargement.
+
+**Qui peut le déclencher :** chauffeur (action principale) ou planificateur (remplacement manuel).
+
+Ce statut signifie que le chauffeur est en mouvement vers le point de chargement. La commande passe en **indigo** sur le tableau de planification.
+
+<Note>
+Si un chauffeur oublie de toucher Parti, vous pouvez définir le statut manuellement depuis la page de commande. Ouvrez la commande, cliquez sur **Remplacer le statut**, et sélectionnez Partie. Notez toujours la raison dans la zone de commentaire afin d'en garder une trace.
+</Note>
+
+---
+
+## Arrivée au chargement
+
+**Déclenché par :** le chauffeur touche **Arrivé au chargement** quand il atteint l'adresse de chargement.
+
+**Qui peut le déclencher :** chauffeur ou planificateur.
+
+Le chauffeur est arrivé au site de chargement et attend d'être traité. Ce statut démarre automatiquement l'**horloge de temps d'attente** — utile pour documenter tout retard au quai de chargement.
+
+**Notifications envoyées :**
+- Optionnel : notification automatique au client ou à son contact sur le site de chargement (configurable par client)
 
 ---
 
 ## Chargement
 
-**Déclenché par :** Le chauffeur appuie sur **Chargement commencé** lorsque les marchandises sont chargées sur le camion.
+**Déclenché par :** le chauffeur touche **Chargement** quand les marchandises sont chargées sur le camion.
 
-L'horloge de temps d'attente s'arrête lorsque le chargement commence.
+**Qui peut le déclencher :** chauffeur ou planificateur.
 
----
-
-## En route vers la livraison
-
-**Déclenché par :** Le chauffeur appuie sur **Parti du chargement** après le chargement.
+L'horloge de temps d'attente s'arrête quand le chargement commence. Tout temps d'attente enregistré est sauvegardé sur la commande et peut être utilisé pour les calculs de supplément.
 
 ---
 
-## Arrivé à la livraison
+## En transit
 
-**Déclenché par :** Le chauffeur appuie sur **Arrivé à la livraison**.
+**Déclenché par :** le chauffeur touche **En transit** une fois le chargement terminé (et le CMR signé, le cas échéant).
 
-L'horloge de temps d'attente redémarre au point de livraison.
+**Qui peut le déclencher :** chauffeur ou planificateur.
+
+Le camion se dirige maintenant vers l'adresse de livraison. La commande passe en **vert émeraude** sur le tableau de planification — c'est le seul statut en cours qui s'affiche en vert, donc il est facile de repérer un camion chargé et en mouvement. La commande affiche une heure d'arrivée estimée basée sur le calcul d'itinéraire PTV.
+
+<Note>
+C'est un bon moment pour envoyer une notification de retard proactive au destinataire si le chauffeur est en retard sur le planning. Utilisez le bouton **Envoyer l'ETA** sur la page de commande pour envoyer un SMS ou un email avec l'heure d'arrivée estimée actuelle.
+</Note>
+
+---
+
+## Arrivée à la livraison
+
+**Déclenché par :** le chauffeur touche **Arrivé à la livraison** quand il atteint l'adresse de livraison.
+
+**Qui peut le déclencher :** chauffeur ou planificateur.
+
+L'horloge de temps d'attente redémarre au point de livraison. Tout retard de déchargement est enregistré à partir de ce moment. La commande apparaît en teinte bleu ciel.
 
 ---
 
 ## Déchargement
 
-**Déclenché par :** Le chauffeur appuie sur **Déchargement commencé**.
+**Déclenché par :** le chauffeur touche **Déchargement** quand les marchandises sont retirées du camion.
+
+**Qui peut le déclencher :** chauffeur ou planificateur.
+
+Le temps d'attente à la livraison s'arrête. Le chauffeur peut maintenant préparer les documents de livraison signés.
 
 ---
 
-## Livré
+## Livrée
 
-**Déclenché par :** Le chauffeur appuie sur **Livré** et télécharge optionnellement une photo.
+**Déclenché par :** le chauffeur touche **Livré** et téléverse optionnellement une photo du CMR signé ou du bon de livraison.
+
+**Qui peut le déclencher :** chauffeur (action principale) ou planificateur.
+
+Le transport est terminé. La commande passe au vert sur le tableau de planification et se déplace vers l'onglet **Terminées** de la liste de commandes.
 
 **Notifications envoyées :**
-- Email de confirmation de livraison optionnel au client.
+- Optionnel : email de confirmation de livraison au client avec horodatage et tout document téléversé.
 
----
-
-## Facturée
-
-**Déclenché par :** Le planificateur génère une facture pour la commande.
-
-La commande est entièrement clôturée. Elle est en lecture seule et liée à l'enregistrement de la facture.
+**Actions disponibles depuis Livrée :**
+- Générer une facture pour la commande (la commande elle-même reste au statut Livrée — générer une facture ne le change pas ; la facture est créée comme son propre enregistrement lié)
+- Téléverser ou consulter les documents de livraison (photo CMR, POD)
+- Ajouter une note de litige ou de dommage
 
 ---
 
 ## Annulée
 
-**Déclenché par :** Le planificateur annule la commande.
+**Déclenché par :** le planificateur annule la commande.
+
+**Qui peut le déclencher :** planificateur uniquement.
 
 <Warning>
-Vous pouvez annuler une commande en statut **Brouillon** ou **Confirmée** sans étapes spéciales. Cependant, vous ne pouvez **pas** annuler une commande qui est En transit ou à un stade ultérieur sans procédure manuelle.
+Vous pouvez annuler une commande au statut **Brouillon** ou **En attente** sans aucune étape spéciale. Cependant, vous ne pouvez **pas** annuler une commande Partie ou à un stade ultérieur sans passer par un processus manuel. Contactez l'administrateur de votre compte si vous devez annuler une commande active — cela nécessite d'enregistrer la raison et peut affecter les paiements du chauffeur.
 </Warning>
+
+Les commandes annulées sont conservées dans le système à des fins d'audit. Elles sont visibles dans la liste des commandes sous le filtre **Annulées**.
+
+---
+
+## Trajet perdu
+
+**Déclenché par :** le planificateur déclare un trajet perdu depuis le panneau de détail de commande.
+
+**Qui peut le déclencher :** planificateur uniquement.
+
+Un trajet perdu s'applique aux commandes où le chauffeur est **déjà parti** mais où le trajet doit être avorté — en raison d'une annulation client, d'un cas de force majeure, ou d'une décision d'entreprise. Ceci est différent d'une annulation régulière car des coûts réels ont déjà été engagés (carburant, temps chauffeur, kilomètres morts).
+
+Vous pouvez déclarer un trajet perdu depuis n'importe lequel de ces statuts : **Partie, Arrivée au chargement, Chargement, En transit, Arrivée à la livraison, Déchargement**.
+
+Le planificateur doit fournir un code de raison, la position actuelle du chauffeur, les kilomètres morts parcourus, et optionnellement marquer la commande pour facturation client.
+
+<Warning>
+Déclarer un trajet perdu **ne peut pas être annulé**. La commande passe définitivement au statut Trajet perdu, et la raison, la position du chauffeur, les kilomètres morts, et (si activé) un montant de facturation client sont enregistrés directement sur la commande pour une facturation ultérieure — aucun enregistrement de paie ou de facturation séparé n'est généré automatiquement.
+</Warning>
+
+Voir [Trajet perdu](/fr/planner/wasted-journey) pour le guide complet.
 
 ---
 
 ## Remplacements manuels de statut
 
-Les chauffeurs oublient parfois de mettre à jour le statut. En tant que planificateur, vous pouvez toujours remplacer le statut manuellement :
+Les chauffeurs oublient parfois de toucher les mises à jour de statut — cela arrive. En tant que planificateur, vous pouvez toujours remplacer le statut manuellement :
 
 <Steps>
   <Step title="Ouvrez la commande">
-    Accédez à Planificateur → Commandes et trouvez la commande.
+    Accédez à Planificateur → Commandes et trouvez la commande. Cliquez dessus pour ouvrir la page de détail.
   </Step>
   <Step title="Cliquez sur Remplacer le statut">
-    Trouvez le bouton **Remplacer le statut** près de l'indicateur de statut actuel.
+    Trouvez le bouton **Remplacer le statut** près de l'indicateur de statut actuel en haut de la page.
   </Step>
   <Step title="Sélectionnez le statut correct">
     Choisissez le statut que la commande devrait avoir maintenant.
   </Step>
   <Step title="Ajoutez une note">
-    Saisissez une brève explication. Cela est enregistré dans l'historique de la commande.
+    Tapez une brève explication (ex. « Le chauffeur a oublié de mettre à jour — confirmé par téléphone »). Cela est enregistré dans l'historique de la commande.
   </Step>
   <Step title="Enregistrer">
-    Cliquez sur **Appliquer le remplacement**.
+    Cliquez sur **Appliquer le remplacement**. Le statut se met à jour immédiatement et le changement est journalisé avec votre nom et un horodatage.
   </Step>
 </Steps>
 
-<Card title="Vue Aujourd'hui" icon="sun" href="/fr/planner/today-view">
-  Surveillez toutes les commandes actives du jour, les positions des chauffeurs en direct et les alertes.
+---
+
+## Transitions automatiques vs manuelles
+
+| Statut | Automatique | Manuel (chauffeur) | Manuel (planificateur) |
+|---|---|---|---|
+| Brouillon | — | — | Oui |
+| En attente | — | — | Oui |
+| Assignée | — | — | Oui |
+| Partie | — | Oui | Oui (remplacement) |
+| Arrivée au chargement | — | Oui | Oui (remplacement) |
+| Chargement | — | Oui | Oui (remplacement) |
+| En transit | — | Oui | Oui (remplacement) |
+| Arrivée à la livraison | — | Oui | Oui (remplacement) |
+| Déchargement | — | Oui | Oui (remplacement) |
+| Livrée | — | Oui | Oui (remplacement) |
+| Annulée | — | — | Oui |
+| Trajet perdu | — | — | Oui (depuis les statuts actifs) |
+
+---
+
+<Card title="Tableau de bord d'accueil" icon="gauge" href="/fr/planner/home-dashboard">
+  Surveillez toutes les commandes actives, voyez les positions chauffeur en direct, et gérez les alertes depuis votre tableau de bord opérationnel en direct.
+</Card>
+
+<Card title="Tâches de commande et modèles de workflow" icon="list-check" href="/en/planner/order-tasks">
+  Listes de tâches configurables rattachées à ces phases de cycle de vie, plus comment les admins construisent les modèles derrière elles.
 </Card>
 
 <Card title="Générer des factures" icon="file-invoice" href="/fr/invoicing/generating-invoices">
-  Une fois une commande livrée, apprenez comment créer et envoyer la facture.
+  Une fois une commande Livrée, découvrez comment créer et envoyer la facture à votre client.
 </Card>

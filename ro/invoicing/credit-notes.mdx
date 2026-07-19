@@ -1,20 +1,74 @@
 ---
 title: "Note de credit"
-description: "Cum sa creezi o nota de credit pentru a corecta o factura trimisa."
+description: "Cum sa creezi o nota de credit in Druma pentru a inversa sau corecta partial o factura trimisa — ceruta de legea romana cand o factura trebuie sa se schimbe."
 icon: "file-minus"
 ---
 
-Emite o nota de credit cand: ai facturat gresit, marfurile au fost returnate, ai convenit o reducere sau factura a fost trimisa gresit.
+## Cand ai nevoie de o nota de credit
+
+Odata ce o factura a fost generata si trimisa, nu o poti edita sau sterge — este o cerinta legala in Romania. Daca ceva este gresit sau trebuie sa se schimbe, procesul corect este sa emiti o nota de credit.
+
+Foloseste o nota de credit cand:
+
+- Ai facturat suma gresita (eroare de pret, suprataxa calculata gresit)
+- Marfa a fost returnata dupa livrare si un rambursare este agreata
+- Ai convenit sa oferi clientului o reducere ulterioara
+- Factura a fost trimisa clientului gresit si trebuie anulata
+- O taxa de timp de asteptare a fost contestata si o anulezi
+
+O nota de credit reduce soldul restant al clientului cu suma creditata. Este un document separat, numerotat, care se leaga inapoi de factura originala.
+
+## Crearea unei note de credit
 
 <Steps>
-  <Step title="Deschide factura originala">Mergi la Facturi si gaseste factura de corectat.</Step>
-  <Step title="Apasa Creeaza Nota de Credit">Formularul se deschide pre-completat cu elementele din factura.</Step>
-  <Step title="Alege credit total sau partial">Total: lasa sumele neschimbate. Partial: editeaza sumele de corectat.</Step>
-  <Step title="Adauga un motiv">Scurt motiv care apare pe PDF si in inregistrari.</Step>
-  <Step title="Genereaza">Druma atribuie un numar din seria CN-.</Step>
-  <Step title="Trimite clientului">Descarca PDF-ul sau foloseste Trimite prin Email.</Step>
+  <Step title="Deschide factura originala">
+    Mergi la **Facturare** si gaseste factura pe care trebuie sa o corectezi. Apasa pe ea pentru a deschide pagina de detaliu a facturii.
+  </Step>
+  <Step title="Apasa Creeaza Nota de Credit">
+    Apasa butonul **Creeaza Nota de Credit**. Druma deschide un formular scurt de nota de credit, care face referire la numarul facturii originale si totalul sau.
+  </Step>
+  <Step title="Introdu suma">
+    Seteaza campul **Suma** la cat vrei sa creditezi, pana la totalul facturii originale (afisat ca **Maxim**). Lasa-l la suma integrala pentru o nota de credit completa, sau scade-l pentru o nota de credit partiala — nu exista un editor de elemente de linie, nota de credit este o singura suma pe care Druma o proratizeaza automat in subtotal si TVA.
+  </Step>
+  <Step title="Selecteaza un motiv">
+    Alege un **Motiv** din lista: Factura Gresita (Anulare si Reemitere), Ajustare de Pret, Anulare, Factura Duplicata, Problema de Calitate / Rambursare, sau Altele. Foloseste campul separat de **Note** pentru orice detaliu in text liber (de exemplu, "tariful agreat a fost 850 €, nu 950 €"). Atat motivul, cat si notele apar pe PDF-ul notei de credit.
+  </Step>
+  <Step title="Genereaza nota de credit">
+    Apasa **Creeaza Nota de Credit**. Daca motivul este unul din motivele de anulare (Factura Gresita, Ajustare de Pret, Anulare sau Duplicata) si suma este egala cu totalul integral al facturii, Druma anuleaza si factura originala si ofera o casuta **Creeaza ciorna de factura corectata**, ca sa incepi o factura de inlocuire precompletata din original. Druma atribuie un numar secvential de nota de credit, folosind prefixul `CN-` (de exemplu, `CN-000001`). Numerele notelor de credit sunt intr-o serie proprie, separata — nu impart o secventa cu facturile.
+  </Step>
+  <Step title="Trimite clientului">
+    Apasa **Descarca PDF** pentru a obtine fisierul notei de credit, apoi trimite-l prin email contactului financiar al clientului. Sau foloseste **Trimite prin Email**, ca Druma sa il trimita direct, pre-adresat contactului financiar inregistrat.
+  </Step>
 </Steps>
 
+## Note de credit complete vs. partiale
+
+**Nota de credit completa:** introdu o suma egala cu totalul integral al facturii. Foloseste asta cand trebuie sa anulezi complet o factura — client gresit, comanda complet gresita, factura trimisa din greseala. Daca motivul este unul de anulare, Druma marcheaza factura originala ca anulata si iti permite sa pornesti o ciorna de factura corectata, in acelasi pas.
+
+**Nota de credit partiala:** introdu o suma mai mica decat totalul facturii. Foloseste asta cand doar o parte din factura este gresita — de exemplu, creditand doar suprataxa ADR, lasand tariful de transport neatins. Druma proratizeaza TVA-ul si subtotalul pentru tine, pe baza sumei introduse; nu exista editare per element de linie.
+
+## Numerotarea notelor de credit
+
+Notele de credit folosesc prefixul `CN-` si propria lor serie secventiala (de exemplu `CN-000001`, `CN-000002` si asa mai departe — fara an inclus implicit). Aceasta serie este separata de numerele tale de factura. Un pattern de numerotare personalizat, inclusiv un token de an, poate fi configurat sub **Setari** → **Branding si Formate** → **Numerotare Facturi**.
+
+## Efectul contabil
+
+Cand o nota de credit este generata:
+
+- Soldul restant al clientului este redus cu suma creditata
+- Daca factura originala a fost platita integral, nota de credit creeaza un sold creditor pe contul clientului, care poate fi aplicat fata de facturi viitoare
+- Nota de credit apare in toate exporturile contabile (SAGA, WinMENTOR), alaturi de factura originala
+
 <Warning>
-Notele de credit sunt documente legale obligatorii. Nu edita niciodata o factura trimisa.
+Notele de credit sunt documente cerute legal in Romania. Nu trebuie niciodata sa editezi sau sa stergi o factura trimisa. Daca descoperi o eroare — chiar si una mica — urmeaza intotdeauna procesul de nota de credit. Trimiterile ANAF e-Factura necesita si ele ca nota de credit sa fie trimisa, ca factura originala sa fie corectata formal in sistem.
 </Warning>
+
+---
+
+<Card title="Generarea facturilor" icon="file-invoice-dollar" href="/ro/invoicing/generating-invoices">
+  Cum creezi facturi din comenzi livrate, inclusiv facturarea in masa si multi-valuta.
+</Card>
+
+<Card title="Urmarirea platilor" icon="money-bill-wave" href="/ro/invoicing/payment-tracking">
+  Inregistrarea platilor fata de facturi si gestionarea soldurilor restante.
+</Card>

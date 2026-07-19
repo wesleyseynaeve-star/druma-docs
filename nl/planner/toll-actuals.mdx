@@ -1,44 +1,122 @@
 ---
-title: "Tolbonnen & Afstemming"
+title: "Tolbonnen & afstemming"
 description: "Vergelijk HERE-geschatte tollen met door chauffeurs geregistreerde werkelijke bedragen per land, importeer brandstofkaart-tolregels en configureer doorberekeningsbeleid aan klanten."
 icon: "receipt"
 ---
 
 ## Overzicht
 
-HERE Routes berekent geschatte tolkosten voor elke order op basis van de route en het voertuigtype. Werkelijke tolkosten kunnen afwijken — andere route gereden, tolkortingen, landspecifieke variaties.
+Tolkosten zijn een aanzienlijk en vaak ondoorzichtig onderdeel van het wegvervoer. De routings-API van PTV geeft u een geschatte tolkost per land bij het aanmaken van een order, maar het werkelijk betaalde bedrag op de weg wijkt regelmatig af — andere voertuigcategorieën, ontbrekende vignetten, seizoenstarieven en grensovergangvariaties veroorzaken allemaal afwijkingen.
 
-Druma biedt een afstemmingsweergave om de twee te vergelijken en eventuele afwijkingen te markeren.
-
----
-
-## Geschatte vs. werkelijke tollen
-
-Op elke order kunt u zien:
-- **HERE-schatting** — tolkosten berekend bij het aanmaken van de order
-- **Werkelijke tollen** — door de chauffeur of planner ingevoerd na de rit
-
-Het verschil wordt berekend en opgeslagen voor rapportage.
+Druma dicht dit gat door chauffeurs tolbonnen rechtstreeks vanuit de PWA te laten registreren, en toont dan een kleurgecodeerd afstemmingspaneel in het orderdetail zodat planners grote afwijkingen kunnen opsporen voordat ze marges of klantfacturen beïnvloeden.
 
 ---
 
-## Werkelijke tollen registreren
+## Hoe chauffeurs tolbonnen registreren
 
-**Via de chauffeurs-app:** Chauffeurs kunnen tolbonnen fotograferen en uploaden vanuit hun app. De planner herbekijkt en bevestigt het bedrag.
+Tijdens een actieve lading toont de PWA van de chauffeur een knop **Tol registreren** op het scherm met laaddetails. Erop tikken opent het venster **Tolbon**.
 
-**Via handmatige invoer:** Open de order, ga naar het tabblad **Kosten** en voer het werkelijke tolbedrag in per land.
+<Steps>
+  <Step title="Tik op Tol registreren">
+    De knop is zichtbaar zolang de ladingstatus at_pickup, loading, in_transit, at_delivery of offloading is — elke status waarbij de truck onderweg is.
+  </Step>
+  <Step title="Voer de toldetails in">
+    Vul in:
+    - **Bedrag (EUR)** — het verplichte veld: de betaalde tol, omgerekend naar EUR
+    - **Lokaal bedrag** (optioneel) — het bedrag in de lokale valuta, plus de valutacode en wisselkoers, als u ook de oorspronkelijke cijfers wilt registreren
+    - **Land** — vooraf ingevuld op basis van de huidige GPS-positie, maar bewerkbaar
+    - **Notities** (optioneel) — snelwegreferentie, tolpoortnummer, of een chauffeursopmerking
+  </Step>
+  <Step title="Voeg een bonfoto toe (optioneel)">
+    Tik op het camera- of bestandsicoon om een foto van de bon toe te voegen. Toegestane formaten: JPEG, PNG, WebP, HEIC, PDF. Maximale bestandsgrootte: 5 MB.
+  </Step>
+  <Step title="Bevestig">
+    Tik op **Opslaan**. De bon wordt onmiddellijk opgeslagen.
+  </Step>
+</Steps>
 
-**Via brandstofkaartimport:** Tolregels in brandstofkaartexports worden automatisch gekoppeld aan de overeenkomstige order als het kenteken en de datum overeenkomen.
+### Offline-ondersteuning
+
+Tolbonnen werken offline. Bevindt de chauffeur zich in een gebied zonder connectiviteit, dan wordt de bon lokaal in de wachtrij geplaatst en automatisch gesynchroniseerd zodra het toestel weer verbinding heeft. De planner ziet ze verschijnen in het afstemmingspaneel zodra de synchronisatie voltooid is.
 
 ---
 
-## Tollen doorberekenen aan klanten
+## Het afstemmingspaneel (planner-weergave)
 
-Configureer uw doorberekeningsbeleid in **Instellingen → Tariefkaarten**:
-- **Inclusieff** — tollen zijn inbegrepen in de overeengekomen prijs
-- **Doorberekend** — tollen worden als aparte regelpost aan de klant gefactureerd
-- **Per land** — doorberekening per land configureren
+Open het detailpaneel van een order en scroll naar de sectie **Tolafstemming**. Het paneel toont een tabel met één rij per land waarvoor een HERE-schatting of een geregistreerd werkelijk bedrag bestaat.
 
-<Card title="CO2-rapportage" icon="leaf" href="/nl/fleet-compliance/co2-reporting">
-  Hoe HERE-routeafstanden bijdragen aan uw CO2-berekeningen.
+### Kleurcodering van het verschil
+
+| Kleur | Voorwaarde | Betekenis |
+|---|---|---|
+| Groen | Verschil ≤ 5% | Werkelijk bedrag ligt binnen het verwachte bereik |
+| Amber | Verschil 6–15% | Matige afwijking — de moeite waard om na te kijken |
+| Rood | Verschil > 15% | Aanzienlijke afwijking — controleer de bonnen |
+| Grijs | Geen HERE-schatting | HERE had geen toldata voor dit landsegment |
+
+Het verschil wordt berekend als `(werkelijk − schatting) / schatting`. Een positief verschil betekent dat de chauffeur meer betaalde dan geschat; een negatief verschil betekent minder.
+
+### Bonnenlijst
+
+Onder de samenvattingstabel wordt elke individuele bon vermeld met:
+- Datum en tijd van registratie
+- Land en bedrag
+- Notities (indien aanwezig)
+- Een miniatuur als een foto is bijgevoegd — klik om de volledige afbeelding te openen
+
+Planners kunnen handmatig bonnen toevoegen via de knop **Bon toevoegen** onderaan de sectie — nuttig wanneer de chauffeur vergat een tol te registreren maar wel de papieren bon heeft.
+
+---
+
+## Brandstofkaartimport — automatische tolsplitsing
+
+Afschriften van DKV-, UTA- en AS24-brandstofkaarten bundelen brandstof- en toltransacties vaak in hetzelfde exportbestand. Importeert u een brandstofkaartbestand in **Vloot → Brandstofkaarten**, dan splitst Druma automatisch tolregels van brandstofregels:
+
+- **Brandstofregels** worden zoals gewoonlijk toegevoegd aan het brandstofgrootboek van de truck
+- **Tolregels** worden naar tolbonnen gerouteerd en gematcht aan de op die datum actieve order van die truck
+
+Hetzelfde bestand opnieuw importeren is veilig — duplicaatinvoeren (gematcht op transactiereferentie en bedrag) worden automatisch overgeslagen.
+
+<Note>
+Tolmatching vanuit brandstofkaartimports gebruikt de truck en datum om de actieve order te vinden. Had een truck meer dan één order op dezelfde datum, dan koppelt de import de bon aan de eerst overeenkomende order en markeert de rij voor handmatige review in de importsamenvatting.
+</Note>
+
+---
+
+## Doorberekeningsbeleid per land
+
+Niet elke tol wordt aan de klant gefactureerd. Sommige bedrijven absorberen tol voor bepaalde corridors als onderdeel van hun tarief; andere berekenen ze volledig door. Druma laat u dit configureren op het niveau van de tariefkaart.
+
+Ga naar **Instellingen → Tariefkaarten** en open een tariefkaart. Onderaan staat een overschrijvingstabel **Tolbeleid per land**. Voor elk land:
+
+| Beleid | Gedrag |
+|---|---|
+| Doorberekenen | Werkelijke tol verschijnt als een order-extraregel op de factuur |
+| Absorberen | Tol wordt intern bijgehouden maar verschijnt niet op de klantfactuur |
+| (leeg) | Valt terug op het algemene tolbeleid van de tariefkaart |
+
+Landen niet vermeld in de overschrijvingstabel erven de standaard van de tariefkaart.
+
+### Automatische factuurregel
+
+Staat een land ingesteld op **Doorberekenen**, dan worden geregistreerde tolbonnen voor dat land automatisch opgeteld en toegevoegd als order-extraregel op de factuur bij het genereren. De regel wordt gelabeld met de landnaam.
+
+Moet u een specifieke bon uitsluiten van de factuur — bijvoorbeeld omdat ze gedekt is door een aparte toeslagafspraak — open dan de factuureditor en schakel **Uitsluiten van factuur** in op die extraregel.
+
+---
+
+## Tips voor nauwkeurige afstemming
+
+- Vraag chauffeurs tol onmiddellijk na elke betaling te registreren, niet aan het einde van de rit, zodat bonnen gekoppeld blijven aan de juiste dag en het juiste land.
+- Toont HERE grijs (geen schatting) voor een land dat uw trucks vaak doorkruisen, meld dit dan in **Instellingen → Tariefkaarten** met een handmatige landtoeslag zodat marges beschermd blijven, ook zonder HERE-data.
+- Herhaaldelijk grote amber- of rode verschillen op hetzelfde land zijn een signaal om de basistolschatting in uw tariefkaart aan te passen.
+
+---
+
+<Card title="Tariefkaarten" icon="sliders-horizontal" href="/nl/admin/rate-cards">
+  Configureer tolbeleid, basistoeslagen en overschrijvingen per land.
+</Card>
+
+<Card title="Brandstofkaarten & imports" icon="fuel" href="/nl/integrations/fuel-card-import">
+  Importeer DKV-, UTA- en AS24-afschriften om automatisch brandstof- en tolrecords in te vullen.
 </Card>

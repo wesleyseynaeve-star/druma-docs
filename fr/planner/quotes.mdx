@@ -1,74 +1,146 @@
 ---
 title: "Devis"
-description: "Créez, envoyez et gérez des devis de transport dans Druma — avec conversion automatique en commande à l'acceptation."
-icon: "file-text"
+description: "Créez, envoyez et suivez des devis de fret dans Druma — avec conversion automatique en commandes confirmées quand les clients acceptent."
+icon: "file-invoice"
 ---
 
-## Vue d'ensemble
+## Que sont les devis ?
 
-Druma vous permet de créer des devis formels pour vos clients avant de confirmer une commande. Les devis peuvent être envoyés par email, acceptés ou refusés par le client via un lien, et convertis automatiquement en commandes.
+Avant qu'un chargement ne devienne une commande confirmée, la plupart des clients veulent un prix. Le système de devis de Druma vous permet de construire un devis de fret professionnel en quelques minutes, de l'envoyer par email avec un lien Accepter/Refuser en un clic pour le client, et de le transformer automatiquement en commande confirmée dès qu'il dit oui.
 
-Accédez à **Commercial → Devis** pour gérer vos devis.
+Pas de copier-coller entre systèmes. Pas de ressaisie des mêmes données deux fois. Le devis devient la commande.
+
+<Frame caption="La liste des devis — les badges de statut suivent chaque devis de Brouillon à Envoyé, Accepté, ou Remplacé.">
+  <img src="/images/planner/quotes.png" alt="Page de liste des devis avec badges de statut" />
+</Frame>
 
 ---
 
-## Créer un devis
+## Créer un nouveau devis
 
 <Steps>
-  <Step title="Accédez à Commercial → Devis">
-    Cliquez sur **Nouveau devis**.
+  <Step title="Accédez à Devis">
+    Dans la navigation supérieure, cliquez sur **Ventes → Devis → Nouveau devis**.
   </Step>
-  <Step title="Sélectionnez le client">
-    Choisissez le client dans votre liste.
+  <Step title="Renseignez les détails du devis">
+    Complétez les champs suivants :
+
+    - **Client** — sélectionnez dans votre registre client ou tapez pour rechercher
+    - **Origine** — adresse ou ville de chargement
+    - **Destination** — adresse ou ville de livraison
+    - **Description de la cargaison** — brève description des marchandises (ex. « 22 palettes euro, fret général, 18t »)
+    - **Type de remorque** — bâchée, frigo, plateau, citerne, etc.
+    - **Valide jusqu'au** — la date après laquelle ce devis expire
+    - **Prix** — votre tarif pour le transport
+    - **Devise** — EUR, RON, GBP, USD, etc.
+    - **Notes** — conditions, exclusions, termes de supplément carburant, ou tout ce que le client devrait savoir
   </Step>
-  <Step title="Renseignez les détails du transport">
-    Saisissez l'origine, la destination, la date de chargement, le type de marchandise et le prix proposé.
-  </Step>
-  <Step title="Définissez la date d'expiration">
-    Les devis expirent automatiquement. La durée par défaut est de 7 jours.
-  </Step>
-  <Step title="Envoyez le devis">
-    Cliquez sur **Envoyer**. Le client reçoit un email avec un lien pour accepter ou refuser.
+  <Step title="Enregistrez le devis">
+    Cliquez sur **Enregistrer en brouillon** pour continuer à modifier plus tard, ou allez directement à **Envoyer au client** quand vous êtes prêt.
   </Step>
 </Steps>
 
 ---
 
-## Statuts des devis
+## Envoyer un devis au client
 
-| Statut | Signification |
-|---|---|
-| **Brouillon** | Créé mais pas encore envoyé |
-| **Envoyé** | Email envoyé au client, en attente de réponse |
-| **Accepté** | Client a accepté via le lien |
-| **Refusé** | Client a refusé via le lien |
-| **Converti** | Converti en commande confirmée |
-| **Expiré** | Date d'expiration dépassée sans réponse |
+Quand vous cliquez sur **Envoyer au client**, Druma :
+
+1. Génère un PDF propre et à votre marque du devis
+2. L'envoie par email au contact email de la fiche du client
+3. Intègre deux boutons dans l'email : **Accepter ce devis** et **Refuser**
+
+Le client clique directement depuis sa boîte de réception email — pas de connexion, pas de portail, pas de friction. Un clic et la mission est faite.
+
+<Note>
+Assurez-vous que la fiche client dispose d'une adresse email valide avant l'envoi. Accédez à **Paramètres → Clients** et ouvrez le client pour vérifier. Vous pouvez aussi ajouter un email de contact spécifique sur le devis lui-même si vous voulez joindre une personne différente.
+</Note>
 
 ---
 
-## Convertir un devis en commande
+## Ce qui se passe quand le client répond
 
-Lorsqu'un client accepte un devis, Druma vous notifie. Vous pouvez ensuite convertir le devis en commande :
+**Le client clique sur Accepter :**
+- Le devis se convertit automatiquement en commande confirmée
+- Vous recevez une notification in-app et un email
+- La commande apparaît dans votre liste **Commandes**, prête à affecter un chauffeur et à démarrer
+
+**Le client clique sur Refuser :**
+- Le devis est marqué **Refusé**
+- Vous recevez une notification afin de pouvoir relancer, renégocier, ou passer à autre chose
+
+**Le client ne fait rien :**
+- Après la date **Valide jusqu'au**, le devis passe automatiquement à **Expiré**
+- Les devis expirés sont visibles dans l'onglet **Expirés** de votre liste de devis — ils n'encombrent pas votre pipeline actif
+
+---
+
+## Versionnage des devis
+
+Les prix changent. Les clients négocient. Druma gère cela proprement avec le versionnage — chaque fois que vous retarifez un devis déjà envoyé, Druma crée une nouvelle version et garde la précédente intacte.
+
+Cela signifie que vous avez toujours un enregistrement de ce que vous avez offert, quand, et à quel prix. Utile pour les audits, les litiges client, et pour comprendre combien de temps durent généralement les négociations.
+
+**Pour réviser un devis :**
 
 <Steps>
-  <Step title="Ouvrez le devis accepté">
-    Trouvez le devis avec le statut **Accepté** dans la liste.
+  <Step title="Ouvrez le devis existant">
+    Accédez à **Ventes → Devis** et cliquez sur le devis pour l'ouvrir.
+  </Step>
+  <Step title="Cliquez sur Retarifer dans l'outil de tarification">
+    Cliquez sur le bouton **Retarifer dans l'outil de tarification** en haut de la page. Cela ouvre l'itinéraire, la cargaison, et les détails de coût du devis dans la feuille de travail de tarification.
+  </Step>
+  <Step title="Apportez vos modifications">
+    Recalculez la distance, les péages, le coût, et la marge, et ajustez le prix selon les besoins.
+  </Step>
+  <Step title="Réécrivez le prix">
+    Enregistrez la feuille de travail. Si le statut du devis est encore **Brouillon**, vos modifications sont enregistrées sur place — pas de nouvelle version. Si le devis a déjà été **Envoyé**, **Refusé**, **Expiré**, ou **Accepté**, Druma crée automatiquement une nouvelle version au lieu d'écraser ce qui a déjà été proposé, et le libellé du bouton devient **Démarrer un nouveau round de négociation** pour le rendre clair.
+  </Step>
+</Steps>
+
+<Note>
+Créer une nouvelle version marque automatiquement le statut de la version précédente comme **Remplacé** — son lien Accepter cesse d'être actif pour ce fil. Il n'y a pas de statut de devis « Annulé » séparé ni d'action d'annulation manuelle ; le remplacement se produit automatiquement dès que vous démarrez un nouveau round.
+</Note>
+
+Une fois qu'un devis a plus d'un round, l'**historique de négociation** apparaît dans la colonne principale de la vue de détail du devis (aux côtés des détails d'expédition et financiers) — le panneau à droite de la page est la carte d'itinéraire, pas l'historique des versions.
+
+---
+
+## Convertir un devis manuellement
+
+Parfois les clients confirment par téléphone, WhatsApp, ou email en dehors de Druma — ils ne cliquent jamais sur le lien. Dans ce cas, convertissez le devis en commande vous-même :
+
+<Steps>
+  <Step title="Ouvrez le devis">
+    Accédez à **Ventes → Devis** et ouvrez le devis concerné.
   </Step>
   <Step title="Cliquez sur Convertir en commande">
-    Druma pré-remplit le formulaire de commande avec tous les détails du devis.
+    Cliquez sur le bouton **Convertir en commande** en haut de la page de détail du devis.
   </Step>
-  <Step title="Vérifiez et confirmez">
-    Ajustez les détails si nécessaire et cliquez sur **Confirmer la commande**.
+  <Step title="Confirmez">
+    Une boîte de dialogue apparaît vous demandant de confirmer. Cliquez sur **Confirmer** — le devis devient une commande confirmée immédiatement.
   </Step>
 </Steps>
 
+<Warning>
+Convertir un devis en commande ne peut pas être annulé. Assurez-vous que le prix, l'itinéraire, et les détails de cargaison sont corrects avant de confirmer. Si quelque chose doit changer, modifiez la commande après conversion.
+</Warning>
+
 ---
 
-## Indicateur de prix du marché
+## Barre KPI des devis
 
-Lors de la création d'un devis, Druma peut afficher le prix moyen du marché pour cette ligne (si les intégrations Timocom/Trans.eu sont configurées). Cela vous aide à vous positionner par rapport au marché.
+La page liste **Ventes → Devis** affiche une barre KPI en haut afin que vous puissiez évaluer votre pipeline en un coup d'œil :
 
-<Card title="Créer une commande" icon="plus" href="/fr/planner/creating-orders">
-  Créez une commande directement sans passer par un devis.
+- **Total des devis** — chaque devis que vous avez créé, tous statuts confondus
+- **Envoyés** — devis actuellement envoyés à un client, en attente de réponse
+- **Acceptés** — devis que le client a acceptés
+- **Taux de conversion** — la part des devis qui ont été acceptés
+
+Il n'y a pas de page analytique séparée pour les devis aujourd'hui — ces quatre chiffres sur la page liste sont l'image complète. Pour une analyse de tendance plus approfondie (taux de conversion dans le temps, valeur de devis par client), utilisez la section [Rapports](/fr/reports/analytics-overview).
+
+---
+
+<Card title="Créer des commandes" icon="plus" href="/fr/planner/creating-orders">
+  Une fois qu'un devis se convertit en commande, découvrez comment affecter un chauffeur, planifier l'itinéraire, et faire démarrer le chargement.
 </Card>

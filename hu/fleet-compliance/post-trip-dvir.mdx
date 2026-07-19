@@ -1,53 +1,93 @@
 ---
-title: "Jármű ellenőrzés menet után (DVIR)"
-description: "Strukturált járműellenőrzési jelentések minden menet végén — automatikus blokkolással biztonsági szempontból kritikus hibák esetén."
+title: "Út utáni jármű-ellenőrzés (DVIR)"
+description: "Hogyan konfiguráld az út utáni ellenőrzőlistát, és hol tekintik át és kezelik a flottakezelők a sofőrök által bejelentett hibákat."
+icon: "clipboard-check"
 ---
 
 ## Áttekintés
 
-A menet utáni járműellenőrzés (DVIR) egy strukturált biztonsági ellenőrzés, amelyet a sofőrök minden menet végén elvégeznek. A biztonsági szempontból kritikus hibák automatikus járműblokkolást váltanak ki és azonnal értesítik a flottamanagert.
+Miután a sofőr a **Kiszállítva** gombra koppint, a Druma automatikusan megjelenít egy **Út utáni ellenőrzés** felületet a sofőralkalmazásban — egy Driver Vehicle Inspection Report (DVIR), amely végigvezet a teherautó állapotán a menet végén. Ez az oldal a flottakezelői oldalt fedi le: az ellenőrzőlista konfigurálását és az általa generált hibák átnézését. A sofőr oldali folyamat teljes részletességéért lásd az [Út utáni ellenőrzés](/en/driver/post-trip-inspection) oldalt.
+
+<Note>
+Az út utáni ellenőrzés csak egyetlen rendelésből álló fuvaroknál indul el. Nem jelenik meg a gyűjtőfuvarok (több megállós) közbenső megállóinál.
+</Note>
 
 ---
 
-## Folyamat
+## Hogyan működik, röviden
 
-<Steps>
-  <Step title="Ellenőrzési felszólítás megnyitása">
-    Koppintson a **Menet utáni járműellenőrzés** felszólításra a befejezett rendelés alján az alkalmazásban.
-  </Step>
-  <Step title="Ellenőrzőlista áttekintése">
-    Megnyílik egy strukturált űrlap. Minden elemnél válasszon: **OK**, **Hiba — Kisebb** vagy **Hiba — Biztonsági szempontból kritikus**.
-  </Step>
-  <Step title="Hibák bejelentése">
-    Adjon meg leírást és csatoljon opcionálisan fotót (legfeljebb 5 fotó hibánként).
-  </Step>
-  <Step title="Ellenőrzés aláírása">
-    Digitálisan írja alá a képernyőn.
-  </Step>
-  <Step title="Beküldés">
-    Koppintson az **Ellenőrzés beküldése** gombra. A jelentés azonnal elküldésre kerül a Druma-ba.
-  </Step>
-</Steps>
+A sofőr minden ellenőrzőlista-tételt egy három állapotú kapcsolóval jelöl meg — **Rendben**, **Figyelmeztetés** vagy **Biztonságkritikus** —, megadja a jelenlegi kilométeróra-állást, és fotókat csatol bármely Biztonságkritikus tételhez (legfeljebb 3 fotó hibánként; JPEG, PNG, WebP, HEIC vagy HEIF, legfeljebb 10 MB egyenként — PDF nem fogadható el hibafotóként). A sofőr azonnal beküldheti, vagy koppinthat az **Ellenőrzés kihagyása** gombra, hogy később fejezze be a rendelés rakomány-részleteiből.
 
----
-
-## Súlyossági szintek
-
-| Szint | Jelentés | Druma intézkedés |
+| Súlyosság | Jelentés | Hatás |
 |---|---|---|
-| **OK** | Nincs hiba | Nincs intézkedés |
-| **Kisebb hiba** | A jármű forgalomban maradhat | Narancssárga jelvény; flottamanager e-mail értesítést kap |
-| **Biztonsági szempontból kritikus** | A jármű nem biztonságos | Piros jelvény; jármű blokkolva; flottamanager azonnal értesítve |
+| **Rendben** | Nincs probléma | Nincs intézkedés |
+| **Figyelmeztetés** | Kisebb hiba, a teherautó forgalomban marad | A tervező értesítést kap; látható a rendelés-részletezőn és a Flotta → Hibák menüpontban |
+| **Biztonságkritikus** | Komoly hiba | A tervező és a flottakezelő azonnal értesítést kap; ha az automatikus blokkolás engedélyezve van, a jármű nem elérhetőként lesz megjelölve a megoldásig |
+
+---
+
+## Admin konfiguráció
+
+Lépj a **Beállítások → Út előtti ellenőrzőlista** menüpontra a DVIR konfigurálásához a cégednél.
+
+| Beállítás | Leírás |
+|---|---|
+| **Út utáni DVIR engedélyezése** | Ki- vagy bekapcsolja az ellenőrzési felületet minden sofőrnél |
+| **Fotó kötelező a biztonságkritikus tételeknél** | Kötelezővé teszi legalább egy fotó feltöltését, mielőtt egy biztonságkritikus hiba beküldhető lenne |
+| **Automatikus jármű-elérhetetlenség létrehozása biztonságkritikus hibáknál** | Automatikusan blokkolja a jármű diszpécselését, amikor biztonságkritikus hiba kerül beküldésre |
+| **Ellenőrzőlista tételei** | Add hozzá, szerkeszd vagy töröld az ellenőrzési felületen megjelenő tételeket. Minden tételnek van neve és alapértelmezett súlyossága (Rendben / Figyelmeztetés / Biztonságkritikus) |
+
+<Note>
+Az ellenőrzőlista tételei céges szinten érvényesek és admin által konfigurálhatók — nincs fix, beépített kategórialista. A céged összes sofőrje ugyanazt a listát látja. Ha különböző jármű-típusokat üzemeltetsz, használj leíró tétel-neveket (pl. "Hűtőegység — tömítések ellenőrzése"), hogy a lista mindenki számára értelmes maradjon.
+</Note>
+
+---
+
+## Egyetlen ellenőrzés megtekintése
+
+A **rendelés-részletező panelen** egy **DVIR** szakasz jelenik meg az útvonal-adatok alatt, miután egy ellenőrzés benyújtásra került. Mutatja:
+
+- Az ellenőrzés státuszát: Befejezve, Kihagyva vagy Függőben
+- A beküldés időbélyegét és a sofőr nevét
+- A sofőr által rögzített kilométeróra-állást
+- Az egyes hibatételek listáját súlyossági jelvénnyel (Figyelmeztetés / Biztonságkritikus)
+- A feltöltött fotók bélyegképeit, amelyek kattintásra teljes méretben nyílnak meg
+
+Ha az ellenőrzést kihagyták, a DVIR szakasz egy "Kihagyva" jelvényt mutat az időbélyeggel.
+
+---
+
+## Nyitott hibák nyomon követése a flottában
+
+Lépj a **Flotta → Hibák** menüpontra, hogy lásd az összes hibát a teljes flottádban. Az oldalnak három szűrőfüle van:
+
+| Fül | Mit mutat |
+|---|---|
+| **Nyitott** | Olyan hibák, amelyek még nincsenek kapcsolva befejezett vagy törölt munkalaphoz |
+| **Nyugtázva** | Hibák, amelyeket egy flottakezelő már átnézett |
+| **Összes** | Teljes előzmény |
+
+Minden sor mutatja a járművet, a hiba tétel nevét, a súlyossági jelvényt, a jelentés dátumát és a beküldő sofőrt.
+
+---
+
+## Munkalap létrehozása egy hibából
+
+A **Flotta → Hibák** menüpontban a **Biztonságkritikus** soroknál egy **Munkalap létrehozása** gomb közvetlenül a soron elérhető. Rákattintva megnyílik a munkalap-form, előre kitöltve az ellenőrzött járművel, és kapcsolva az eredeti hibajegyhez. A munkalapoknak nincs súlyossági mezőjük — válaszd ki a javításnak megfelelő **Szolgáltatástípust**, adj hozzá leírást, majd tételeket és egy ütemezett dátumot, és mentsd el. Ha az **Automatikus jármű-elérhetetlenség létrehozása biztonságkritikus hibáknál** kapcsoló be van kapcsolva, a jármű a tervezőtáblán blokkolva marad, amíg a kapcsolt munkalapot befejezettként nem jelölik.
 
 <Warning>
-A biztonsági szempontból kritikus hibával rendelkező jármű automatikusan blokkolva van a tervező táblán, amíg a flottamanager fel nem oldja a blokkolást a munkamegrendelés megoldottként való megjelölésével.
+Ha az automatikus blokkolási kapcsoló be van kapcsolva, egy biztonságkritikus hiba azonnal eltávolítja a járművet a diszpécselésből — még akkor is, ha már vannak hozzárendelt jövőbeli rendelések. Tekintsd át a Flotta → Hibák oldalt, amint biztonságkritikus riasztást kapsz.
 </Warning>
 
+Lásd a [Szerviz és karbantartás](/en/fleet-compliance/workshop-maintenance) oldalt a teljes munkalap-folyamatért.
+
+---
+
 <CardGroup cols={2}>
-  <Card title="Műhely és karbantartás" href="/hu/fleet-compliance/workshop-maintenance">
-    Munkamegrendelések létrehozása hibajegyzékekből.
+  <Card title="Út utáni ellenőrzés (sofőr nézet)" icon="mobile" href="/en/driver/post-trip-inspection">
+    A teljes sofőr-oldali folyamat: az ellenőrzőlista kitöltése, fotók feltöltése, és egy ellenőrzés kihagyása/folytatása.
   </Card>
-  <Card title="Flotta dokumentumok" href="/hu/fleet-compliance/fleet-documents">
-    Járművek tanúsítványainak és megfelelőségi dokumentumainak nyomon követése.
+  <Card title="Szerviz és karbantartás" icon="wrench" href="/en/fleet-compliance/workshop-maintenance">
+    Munkalapok létrehozása és kezelése hibajelentésekből és rendszeres karbantartási ütemtervekből.
   </Card>
 </CardGroup>
