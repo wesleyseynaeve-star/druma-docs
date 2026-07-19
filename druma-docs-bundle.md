@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-19 06:58 UTC
+Generated: 2026-07-19 07:17 UTC
 
 ---
 
@@ -536,6 +536,10 @@ Druma does not require a VPN to access. If your company uses a VPN, Druma should
 
 Go to **Settings → Company** in the left-hand menu. This is the first place you should visit when setting up a new Druma account. The information you enter here appears on every invoice, every eCMR document, and in the client portal — so it is worth taking a few minutes to get it right.
 
+<Frame caption="Settings → Company — no timezone, default-language, or default-currency field exists here.">
+  <img src="/images/admin/company-setup.png" alt="Company settings panel" />
+</Frame>
+
 ## First-time setup checklist
 
 If you are setting up a brand-new Druma account, follow this sequence. Each step links to more detail — either further down this page or on its own page.
@@ -629,6 +633,10 @@ Giving every team member the right role means:
 - You have a clear audit trail of who did what
 
 Druma has **eight roles**. Six are for your internal team (web platform), and two are for external users (drivers and clients) who access Druma through dedicated links rather than the web platform.
+
+<Frame caption="Settings → Users — role badges per team member.">
+  <img src="/images/admin/user-roles.png" alt="Users and roles settings panel" />
+</Frame>
 
 ## Role permissions at a glance
 
@@ -923,6 +931,9 @@ Rate card cost profiles feed into the order cost/margin estimate shown when crea
 
 Every integration your company uses is configured in one place: **Settings → Integrations**. You do not need a developer — all setups are form-based and take less than five minutes each.
 
+<Frame caption="Settings → Integrations — the eCMR provider card has only two states: Native and Disabled.">
+  <img src="/images/admin/integration-setup.png" alt="Integrations settings panel" />
+</Frame>
 
 ---
 
@@ -1268,6 +1279,10 @@ These settings are company-specific. If you manage multiple companies in Druma, 
 
 **Who can edit:** Admin and Company Admin roles only.
 
+<Frame caption="Branding & Formats — 4 tabs: Branding, Invoice, Order, Row formatting.">
+  <img src="/images/admin/branding-formats.png" alt="Branding and Formats settings panel" />
+</Frame>
+
 ---
 
 ## Accessing the settings
@@ -1397,6 +1412,10 @@ Each rule has a name, a field to evaluate (margin %, is overdue, status, days si
 _Last updated: 10 July 2026._
 
 For your **operational data** (orders, clients, drivers, documents, and related records your company stores on the platform), Druma acts as a **data processor** — your company is the data controller, and processing is governed by a Data Processing Agreement (DPA) between your company and Druma. For your **account and billing data** (the details of your Druma subscription and the users who administer it), Druma acts as a **data controller** in its own right. This article explains exactly what is stored, how long it is retained, who processes it, and what actions you can take under GDPR.
+
+<Frame caption="Settings → GDPR & Privacy — any role can view; only Admin can act.">
+  <img src="/images/admin/gdpr-data-management.png" alt="GDPR and Privacy settings panel" />
+</Frame>
 
 ---
 
@@ -2551,6 +2570,10 @@ Chat messages are stored and visible on the order record if the conversation was
 
 Messages opens as a drawer with two tabs: **Internal** and **Drivers**.
 
+<Frame caption="Driver Chat — attachments capped at 5 MB per file.">
+  <img src="/images/planner/messages.png" alt="Messages hub Driver Chat tab" />
+</Frame>
+
 > **Note:** 
 Don't confuse Messages with [AI Chat Escalations](/en/tools/chat-escalations). Messages is person-to-person chat you use every day. Chat Escalations is a separate, narrower feature — it's the admin/company_admin-only **Live Sessions** queue that Ask Druma escalates to when its AI assistant can't resolve a conversation on its own.
 
@@ -2779,6 +2802,10 @@ Before diving in, it's worth checking whether this feature applies to your opera
 **You probably don't need it if:** Each of your trucks always uses the same trailer and they are never separated. In that case, just set the trailer type on the vehicle record and you're done. See [Fleet Management](/en/planner/fleet-management) for how to do that.
 
 If you do run a swap-trailer or multi-trailer operation, read on.
+
+<Frame caption="Fleet → Trailers — 11 seeded types, fully company-configurable.">
+  <img src="/images/planner/trailer-management.png" alt="Trailer Management page" />
+</Frame>
 
 ---
 
@@ -3536,6 +3563,10 @@ When you outsource a load to another carrier — a partner company, a spot marke
 
 Druma's subcontractor registry solves this without phone calls. Each carrier gets a lightweight portal link — no app to install, no expensive software — where they can update order status and upload documents. You stay in control without chasing people by phone.
 
+<Frame caption="The Subcontractor registry — portal access, documents, and rating per carrier.">
+  <img src="/images/planner/subcontractors.png" alt="Subcontractors registry page" />
+</Frame>
+
 ---
 
 ## Adding a Subcontractor
@@ -3892,6 +3923,10 @@ The **Reporting** tab summarises your pipeline:
 Sometimes you take a load from a client but don't carry it yourself — you hire another carrier to do it. You're acting as a freight forwarder: you're the commercial layer between the client and the actual carrier.
 
 In Druma, this is called a **Subcontracted** order type. You create one order, assign it to a carrier from your subcontractor registry, and Druma handles the rest: split invoicing, status tracking, document flow, and margin calculation — all from that single order with no double data entry.
+
+<Frame caption="The Forwarding Pipeline — buy-rate/sell-rate margin tracked per subcontracted order.">
+  <img src="/images/planner/freight-forwarding.png" alt="Freight Forwarding pipeline board" />
+</Frame>
 
 ---
 
@@ -5168,6 +5203,10 @@ A tender moves through four pipeline stages — **Prospect → Bidding → Submi
 > **Note:** 
 Tenders & Contracts is an opt-in module. If you don't see **Tenders** under **Pricing & Sales**, ask your company admin to enable it in **Settings → Automation → Tender & contract management**.
 
+
+<Frame caption="Tenders & Contracts — awarding a tender writes its lane rates into a rate card.">
+  <img src="/images/planner/tenders-and-contracts.png" alt="Tenders and Contracts pipeline" />
+</Frame>
 
 **Access:** Click **Pricing & Sales → Tenders** in the left navigation. The page opens on the **Pipeline** view, with **All**, **Active Contracts**, and **Performance** tabs alongside it.
 
@@ -6463,6 +6502,10 @@ Add contacts at a client company, set who gets which notifications, and give eac
 
 Every document attached to an order is available to your client directly from their portal. This removes the back-and-forth of emailing PDFs on request — the client gets what they need, when they need it, without contacting you.
 
+<Frame caption="Client Portal — Documents. Individual per-document downloads only — no bulk ZIP.">
+  <img src="/images/client-portal/downloading-documents.png" alt="Client portal Documents page" />
+</Frame>
+
 ## Document Types Available
 
 Depending on what has been uploaded or attached to an order, clients may see the following documents:
@@ -6534,6 +6577,10 @@ How planners create and send invoices so they appear in the client portal.
 Most of your clients have more than one person involved in their logistics. The logistics manager wants live status updates. The finance team needs invoices. The warehouse supervisor only cares about delivery confirmation. Sending everything to one email address is messy and creates noise.
 
 Druma lets you add as many contacts as needed per client. From the Clients page, you control the basics — who's the primary contact, who gets delivery notifications, who's the financial contact — and the client can fine-tune their own notification preferences (invoices, waiting charges, CO2 reports) from their own portal settings.
+
+<Frame caption="A client's Contacts tab — Role is a free-text field, not a fixed dropdown.">
+  <img src="/images/client-portal/managing-contacts.png" alt="Client Contacts tab" />
+</Frame>
 
 ## Adding a Contact
 
@@ -7325,6 +7372,10 @@ How to export invoice data to Romanian accounting software for your accountant.
 
 SAGA C and WinMENTOR Classic are the two most common accounting software packages used by Romanian companies. Druma exports invoice and client data in the formats both packages expect, so your accountant can import directly without manual re-entry.
 
+<Frame caption="Finance → Export Builder — custom-profile exports; SAGA/WinMENTOR itself is a monthly emailed ZIP, not a button here.">
+  <img src="/images/invoicing/saga-export.png" alt="Export Builder page" />
+</Frame>
+
 ## SAGA C Export
 
 SAGA uses DBF (dBase) files for data import. Druma generates a full export package, not just client and invoice data:
@@ -7544,6 +7595,10 @@ Chasing payments is one of the less enjoyable parts of running a freight company
 
 Go to **Invoicing** → **Overdue** tab. This shows all unpaid and partially paid invoices where the due date has passed, sorted by the number of days overdue — the oldest debts at the top.
 
+<Frame caption="Finance → Overdue — the manual-send rate limit is 50/hour per user, not per company.">
+  <img src="/images/invoicing/overdue-management.png" alt="Overdue Management page" />
+</Frame>
+
 Each row shows:
 
 - Invoice number and date
@@ -7686,6 +7741,10 @@ How to create and send invoices from delivered orders in Druma.
 Manually matching bank transfers to invoices is tedious and error-prone. Druma's bank reconciliation feature automates most of this by parsing the payment notification emails that Romanian banks send for every incoming transfer. You forward those emails to a special Druma inbox, and Druma does the matching.
 
 No bank API access required. No new software to install. Just email forwarding.
+
+<Frame caption="Finance → Reconciliation — CAMT.053, MT940, and CODA statement formats.">
+  <img src="/images/invoicing/bank-reconciliation.png" alt="Bank Reconciliation page" />
+</Frame>
 
 ## How It Works
 
@@ -10864,6 +10923,10 @@ Ask Druma is an AI assistant available to planners, drivers, and clients, with t
 This is different from [Messages](/en/planner/messages) — the everyday person-to-person and driver chat hub. Chat Escalations is specifically the admin/company_admin-only queue for AI conversations that Ask Druma couldn't resolve.
 
 
+<Frame caption="Tools → Support Requests — escalations from Ask Druma's docs mode only.">
+  <img src="/images/tools/chat-escalations.png" alt="Chat Escalations queue" />
+</Frame>
+
 ---
 
 ## How escalation works
@@ -11132,6 +11195,10 @@ Reports are available on the desktop version of Druma only. The mobile driver ap
 
 Click **Reports** in the left sidebar. The reports menu opens with all available report types listed.
 
+<Frame caption="Analytics → Reports (Report Builder) — scheduled email delivery here is XLSX-only and opt-in.">
+  <img src="/images/reports/reports-overview.png" alt="Report Builder page" />
+</Frame>
+
 
 ## Available Reports
 
@@ -11328,6 +11395,10 @@ A capacity contract is a formal commitment to dedicate a specific truck to one c
 
 Capacity Contracts is found under the **Finance** section. Accessible to admin, company_admin, and fleet_manager roles.
 
+<Frame caption="Finance → Capacity — committed lane volume in EUR or RON.">
+  <img src="/images/reports/capacity-contracts.png" alt="Capacity Contracts page" />
+</Frame>
+
 ---
 
 ## Contract fields
@@ -11398,6 +11469,10 @@ Capacity contract revenue does not automatically generate invoices. Use the Invo
 Druma calculates driver pay from the operational data it already captures — kilometres driven, days worked, and waiting hours logged. There is no separate time-tracking system; the data flows from orders and status taps.
 
 Driver Payroll is found under the **Finance** section. Accessible to admin, company_admin, and fleet_manager roles.
+
+<Frame caption="Finance → Payroll — empty-km pay is a percentage of the loaded rate, not an independent rate.">
+  <img src="/images/reports/payroll.png" alt="Payroll page" />
+</Frame>
 
 ---
 
@@ -11482,6 +11557,10 @@ Several EU member states allow professional road transport operators to reclaim 
 - **Romania — TICAD diesel refund**: Romanian carriers can reclaim a portion of accise duties on diesel used in international and national road transport. Claims are submitted to ANAF.
 
 Fuel Tax Refund is found under the **Finance** section. Accessible to **admin** and **company_admin** roles only — fleet_manager does not have access to this report.
+
+<Frame caption="Finance → Fuel Tax — Belgium and Romania schemes.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Fuel Tax Refund page" />
+</Frame>
 
 ---
 
@@ -11932,6 +12011,10 @@ Keeping vehicle technical details up to date in **Fleet → Vehicles → [vehicl
 
 
 Fuel is typically the largest variable cost in road freight. Druma lets you import transaction data from the major fuel card providers, linking each fill-up to the correct vehicle so your cost reports reflect real fuel spend rather than estimates.
+
+<Frame caption="Fleet → Fuel — plate matching is normalized, not exact.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Fleet Fuel page" />
+</Frame>
 
 ## Supported Providers
 
@@ -12650,6 +12733,10 @@ Druma Copilot is an AI assistant built **into** Druma. Unlike [connecting an ext
 > **Warning:** 
 Druma Copilot is a feature-flagged capability and is off by default. Contact **support@druma.io** to enable it for your account.
 
+
+<Frame caption="Settings → Copilot — a mandatory data-sharing consent checkbox gates Save.">
+  <img src="/images/integrations/copilot.png" alt="Copilot settings panel" />
+</Frame>
 
 ## How it stays safe
 
