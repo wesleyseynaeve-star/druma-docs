@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-19 19:59 UTC
+Generated: 2026-07-19 20:04 UTC
 
 ---
 
@@ -3268,7 +3268,7 @@ Waiting time charges (also called detention or demurrage) let you bill the clien
 - Free waiting allowance: **2 hours** after arrival
 - Charge rate: **€45/hour** after the free period expires
 
-Both values are fully customisable per client or per individual order.
+Both values are set per **Rate Card** (the cost profile assigned to a truck) — see "Configuring Free Hours and the Hourly Rate" below.
 
 ---
 
