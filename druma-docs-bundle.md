@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-07-19 20:05 UTC
+Generated: 2026-08-04 18:22 UTC
 
 ---
 
@@ -1676,6 +1676,10 @@ Describe what is being transported:
 - **Volume (m³)** — Total volume, if known.
 - **Pallet count** — Number of EUR pallets or other loading units.
 
+> **Note:** 
+Weight, pallet count, and LDM (if entered) feed the **Load size** fill-percentage shown for this order on the Orders workbench, and whether it gets flagged as a part-load worth combining — see [Groupage](/en/planner/groupage).
+
+
 ### Special flags
 
 - **ADR (Dangerous Goods)** — Tick this if the cargo is classified as dangerous under ADR regulations. Druma will automatically apply any ADR surcharge configured in your rate cards, and the order will be flagged so you know to check the driver holds the correct ADR certificate. Ticking it reveals ADR class, UN number, packing group, tunnel restriction code, proper shipping name, and an ADR notes field.
@@ -2193,6 +2197,10 @@ The **Views** menu lets you save the current filter, grouping, and column config
 ### Filters and search
 
 Click **Filters** to open the filters panel — status, pickup/delivery date range, zone, and load/delivery country, city, or postal code. Active filters show as removable chips under the toolbar; click **Clear all** to reset them. Each column also has its own quick search box for filtering by order number, address, or driver name within that side.
+
+> **Note:** 
+Search also reaches inside a groupage run's own orders, and a filter lets you show or hide groupage runs entirely — see [Groupage on the Planning Board and Live Map](/en/planner/groupage).
+
 
 ### Triage tiles
 
@@ -4082,6 +4090,33 @@ Groupage isn't a fourth "order type" alongside Own Truck / Subcontracted / Repos
 
 ---
 
+## Finding Orders to Combine
+
+Before you build a run, Druma helps you spot which orders are worth combining — right on the Orders workbench, and on the order itself.
+
+### Load size column
+
+The Orders workbench shows a **Load size** column by default: each order's fill percentage of a standard trailer (13.6 LDM / 24 t / 33 EUR-pallet places), alongside its loading metres (LDM).
+
+> **Note:** 
+If an order has no LDM value but does have a pallet count, Druma estimates LDM at 0.4 LDM per EUR pallet — the column's tooltip flags the figure as an estimate whenever it's calculated this way.
+
+
+Orders under 85% fill get a violet **PART** chip, flagging them as part-loads — good candidates for consolidating onto a groupage run.
+
+### Part-loads quick filter
+
+Click the **Part-loads** filter on the Orders workbench to show only ungrouped part-loads: orders small enough to combine that aren't riding on a groupage run yet. The filter persists in the URL, so you can bookmark or share a link straight to the filtered list.
+
+### Spotting orders already in a run
+
+Two indicators tell you an order is already part of a run, so you don't go looking to add it to another one:
+
+- **G badge** — an amber **G** badge sits next to the order number on the Orders workbench, and next to the corresponding invoice on the Invoices list. Click it to jump straight into that run's detail panel.
+- **Groupage strip** — opening an order that belongs to a run shows a strip at the top of its detail pane: *"Part of groupage run {ref} · {n} orders · {truck}"*. Click through to the run from there too.
+
+---
+
 ## Creating a Groupage Run
 
 
@@ -4121,11 +4156,40 @@ Weight and volume don't block adding orders — only loading metres (LDM) do. Fi
 
 ---
 
+## Open Slots
+
+Adding orders one at a time works from the order side. **Open Slots** works from the truck side: a third view on the Groupage page, next to **Table** and **Map**, that lists upcoming assigned trucks with spare capacity — and open runs that don't have a truck yet — and suggests which ungrouped part-loads fit each one.
+
+
+  ### Switch to the Open Slots view
+    Open the **Groupage** module and click **Open Slots** in the view toggle.
+  
+  ### Review a slot's spare capacity
+    Each slot — a truck, or a draft/confirmed run still waiting for one — lists what's already committed against its capacity, jointly across LDM, weight, and pallets, plus the space still remaining in each. A run with no truck assigned yet is marked **No truck yet**. The first slot with fitting orders auto-expands, and the search box matches truck, plate, driver, cities, and run references.
+  
+  ### Check the suggested orders
+    Below each slot, Druma lists the top fitting orders: matched on a pickup-date window of ±2 days, route compatibility within roughly a 100 km detour radius, and fit across LDM, weight, and pallets. Each candidate shows its pickup date and time window (e.g. `07/08 08:00–10:00`), so a tight window is visible before you commit. Orders already riding in a *different* open run show up here too, tagged **In GRP-XXXXX**. A trailer-type mismatch between the order and the truck shows as a warning — it doesn't block the match.
+  
+  ### Add — or move — with one click
+    Click **Add to run** on a candidate that isn't grouped yet. For a candidate tagged **In GRP-XXXXX**, the button reads **Move here** instead: one click moves the order out of that run and into this slot, and both runs' cost splits recalculate automatically. If the truck was carrying a single order, Druma creates a draft groupage run and adds both orders to it. If the truck is already on a run, the order is simply added to it as a new leg.
+  
+
+
+> **Note:** 
+Runs that have already departed (in progress) aren't offered as Open Slots targets, and their orders can't be pulled out of them either — only trucks and runs still ahead of departure show up here, on both sides of a move.
+
+
+> **Note:** 
+Capacity comes from the trailer attached to the truck's orders. When none is set, Druma falls back to the standard-trailer assumption (13.6 LDM / 24 t / 33 pallets) and notes that it's an estimate.
+
+
+---
+
 ## Stop Sequencing
 
-New stops are simply appended to the end of the run in the order you add them — Druma doesn't auto-optimise the route as you go.
+New stops are appended to the end of the run in the order you add them — Druma doesn't auto-optimise the route as you go. The exception is a run's opening stop list: when a run comes together in one shot — via **Auto-fill**, or by adding the first orders through **Open Slots** — Druma sequences it loads-first, all pickups before any deliveries, rather than leaving stops in raw add order.
 
-To optimise the order, click **Auto-sequence** (only shown with 2+ stops): it re-orders the stop list to minimise total distance (pickups before deliveries) and reports how much distance it saved, or that the order was already optimal. You can also drag-and-drop stops manually, or use the up/down arrows on each stop row, at any time.
+To optimise further, click **Auto-sequence** (only shown with 2+ stops): it re-orders the stop list to minimise total distance (pickups before deliveries) and reports how much distance it saved, or that the order was already optimal. You can also drag-and-drop stops manually, or use the up/down arrows on each stop row, at any time.
 
 ---
 
@@ -4154,6 +4218,10 @@ The groupage run shows fill-rate progress bars across whichever dimensions the a
 The **cost split mode** controls how shared costs are divided between legs. Four modes are available: **CBM**, **Weight**, **LDM**, and **Chargeable**. Click a mode button on the run's Cost Split tab to switch — it triggers an automatic recalculation of each leg's cost share, split percentage, allocated cost, and margin.
 
 Choose the mode that matches your commercial agreement with the clients on that run. CBM is most common for general cargo, LDM for floor-space-critical loads, weight for dense goods, and Chargeable when you bill on whichever of weight/volume yields the higher figure.
+
+> **Note:** 
+Every path that adds an order to a run — manual add, Auto-fill, or Open Slots — copies that order's cargo dimensions (CBM, weight, LDM) onto its leg, so the cost split allocates correctly regardless of mode. For legs added before this copy step existed, use **Recalculate split** on the run's Cost Split tab to backfill the correct figures.
+
 
 ---
 
@@ -4197,6 +4265,18 @@ Clients on the same truck never see each other's invoices or prices — each one
 ## Tracking
 
 Clients tracking a groupage shipment see a static **Expected delivery** date on the public tracking page, not a live, multi-stop-sequenced ETA.
+
+---
+
+## Groupage on the Planning Board and Live Map
+
+Groupage runs stay visible outside the Groupage module too:
+
+- **A row, not a card** — a groupage run appears on the Planning Board as a standard row in the Outgoing list, grouped under the same day as its first loading stop, exactly like any order. It shows a status pill, a **G** marker plus reference, a compact stops marker like **2P+3D** (2 pickups, 3 deliveries across the whole run), and an LDM fill figure colour-coded the same way as elsewhere: green under 75%, amber 75–94%, red 95% and up.
+- **Assign truck like an order** — the row carries the same **Assign truck** cell as any order row: drag a truck onto it to assign, exactly like assigning a truck to a single order.
+- **Approximate route** — a second line shows the approximate (**≈**) total route distance and time, plus the first-load date and time window. The ≈ figure comes from the route optimizer once the run has been sequenced; before that, Druma falls back to a straight-line estimate across the legs. Hover the row for the full pickup-city → … → delivery-city chain; open the run's detail panel for the complete per-dimension fill-rate breakdown (see the fill-rate table above).
+- **Search and filters** — searching an order number or client on the board matches orders riding inside a groupage run too, not just its own reference, and a board filter lets you show or hide groupage runs entirely.
+- **Live Map** — a truck executing a groupage run shows the run reference and its stop progress (e.g. "stop 3 of 6") in its map popup, with an **Open run** link straight into the run's detail panel.
 
 ---
 
