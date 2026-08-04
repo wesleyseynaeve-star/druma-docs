@@ -20,6 +20,33 @@ Le groupage n'est pas un quatrième « type de commande » aux côtés de Camion
 
 ---
 
+## Trouver des commandes à combiner
+
+Avant de construire un trajet, Druma vous aide à repérer les commandes qui valent la peine d'être combinées — directement sur l'espace de travail Commandes, et sur la commande elle-même.
+
+### Colonne taille de chargement
+
+L'espace de travail Commandes affiche par défaut une colonne **Taille de chargement** : le taux de remplissage de chaque commande par rapport à une remorque standard (13,6 LDM / 24 t / 33 emplacements palette EUR), à côté de ses mètres de plancher (LDM).
+
+<Note>
+Si une commande n'a pas de valeur LDM mais dispose d'un nombre de palettes, Druma estime le LDM à 0,4 LDM par palette EUR — l'infobulle de la colonne signale que le chiffre est une estimation chaque fois qu'il est calculé de cette façon.
+</Note>
+
+Les commandes remplies à moins de 85% reçoivent une puce violette **PART**, les signalant comme chargements partiels — de bonnes candidates pour être consolidées sur un trajet de groupage.
+
+### Filtre rapide chargements partiels
+
+Cliquez sur le filtre **Chargements partiels** de l'espace de travail Commandes pour n'afficher que les chargements partiels non groupés : des commandes assez petites pour être combinées et qui ne sont pas encore rattachées à un trajet de groupage. Le filtre persiste dans l'URL, vous pouvez donc mettre en favori ou partager un lien direct vers la liste filtrée.
+
+### Repérer les commandes déjà dans un trajet
+
+Deux indicateurs vous signalent qu'une commande fait déjà partie d'un trajet, pour éviter de chercher à l'ajouter à un autre :
+
+- **Badge G** — un badge ambre **G** apparaît à côté du numéro de commande sur l'espace de travail Commandes, et à côté de la facture correspondante sur la liste des factures. Cliquez dessus pour accéder directement au panneau de détail de ce trajet.
+- **Bandeau groupage** — ouvrir une commande qui appartient à un trajet affiche un bandeau en haut de son panneau de détail : *« Fait partie du trajet de groupage {ref} · {n} commandes · {truck} »*. Vous pouvez aussi cliquer dessus pour accéder au trajet.
+
+---
+
 ## Créer un trajet de groupage
 
 <Steps>
@@ -59,9 +86,38 @@ Le poids et le volume ne bloquent pas l'ajout de commandes — seuls les mètres
 
 ---
 
+## Créneaux disponibles
+
+Ajouter des commandes une par une fonctionne depuis le côté commande. **Créneaux disponibles** fonctionne depuis le côté camion : une troisième vue de la page Groupage, à côté de **Tableau** et **Carte**, qui liste les camions à venir déjà affectés disposant de capacité libre — ainsi que les trajets ouverts sans camion — et suggère les chargements partiels non groupés qui correspondent à chaque emplacement.
+
+<Steps>
+  <Step title="Passez à la vue Créneaux disponibles">
+    Ouvrez le module **Groupage** et cliquez sur **Créneaux disponibles** dans le sélecteur de vue.
+  </Step>
+  <Step title="Consultez la capacité libre d'un emplacement">
+    Chaque emplacement — un camion, ou un trajet en brouillon/confirmé encore en attente d'un camion — indique ce qui est déjà engagé par rapport à sa capacité, conjointement en LDM, poids et palettes, ainsi que l'espace encore disponible dans chacune de ces dimensions. Un trajet sans camion assigné est marqué **Pas encore de camion**. Le premier créneau contenant des commandes correspondantes se déplie automatiquement, et le champ de recherche cherche parmi camion, plaque, chauffeur, villes et références de trajet.
+  </Step>
+  <Step title="Vérifiez les commandes suggérées">
+    Sous chaque emplacement, Druma liste les meilleures commandes correspondantes : rapprochées selon une fenêtre de date de chargement de ±2 jours, une compatibilité d'itinéraire dans un rayon de détour d'environ 100 km, et une adéquation en LDM, poids et palettes. Chaque commande candidate affiche sa date de chargement et sa plage horaire (par ex. `07/08 08:00–10:00`), afin qu'une fenêtre serrée soit visible avant de vous engager. Les commandes déjà présentes sur un *autre* trajet ouvert apparaissent ici aussi, marquées **Dans GRP-XXXXX**. Une discordance de type de remorque entre la commande et le camion s'affiche comme un avertissement — elle ne bloque pas la correspondance.
+  </Step>
+  <Step title="Ajoutez — ou déplacez — en un clic">
+    Cliquez sur **Ajouter au trajet** pour une commande qui n'est pas encore groupée. Pour une commande marquée **Dans GRP-XXXXX**, le bouton affiche **Déplacer ici** à la place : un clic déplace la commande hors de ce trajet et vers cet emplacement, et la répartition des coûts des deux trajets se recalcule automatiquement. Si le camion ne transportait qu'une seule commande, Druma crée un trajet de groupage provisoire et y ajoute les deux commandes. Si le camion est déjà sur un trajet, la commande y est simplement ajoutée comme nouveau leg.
+  </Step>
+</Steps>
+
+<Note>
+Les trajets déjà partis (en cours) ne sont pas proposés comme cibles pour les Créneaux disponibles, et leurs commandes ne peuvent pas non plus en être retirées — seuls les camions et trajets encore en amont de leur départ apparaissent ici, des deux côtés d'un déplacement.
+</Note>
+
+<Note>
+La capacité provient de la remorque attachée aux commandes du camion. Quand aucune n'est définie, Druma se rabat sur l'hypothèse de la remorque standard (13,6 LDM / 24 t / 33 palettes) et indique qu'il s'agit d'une estimation.
+</Note>
+
+---
+
 ## Séquençage des arrêts
 
-Les nouveaux arrêts sont simplement ajoutés à la fin du trajet dans l'ordre où vous les ajoutez — Druma n'optimise pas automatiquement l'itinéraire au fur et à mesure.
+Les nouveaux arrêts sont simplement ajoutés à la fin du trajet dans l'ordre où vous les ajoutez — Druma n'optimise pas automatiquement l'itinéraire au fur et à mesure. L'exception concerne la liste d'arrêts initiale d'un trajet : quand celui-ci se constitue en une seule fois — via **Remplissage auto**, ou en ajoutant les premières commandes via **Créneaux disponibles** — Druma la séquence chargements d'abord, tous les chargements avant les livraisons, plutôt que de laisser les arrêts dans l'ordre brut d'ajout.
 
 Pour optimiser l'ordre, cliquez sur **Auto-séquencer** (affiché uniquement avec 2+ arrêts) : cela réordonne la liste des arrêts pour minimiser la distance totale (chargements avant livraisons) et indique combien de distance a été économisée, ou que l'ordre était déjà optimal. Vous pouvez aussi glisser-déposer les arrêts manuellement, ou utiliser les flèches haut/bas sur chaque ligne d'arrêt, à tout moment.
 
@@ -92,6 +148,10 @@ Le trajet de groupage affiche des barres de progression de taux de remplissage p
 Le **mode de répartition des coûts** contrôle comment les coûts partagés sont divisés entre les legs. Quatre modes sont disponibles : **CBM**, **Poids**, **LDM**, et **Facturable**. Cliquez sur un bouton de mode dans l'onglet Répartition des coûts du trajet pour basculer — cela déclenche un recalcul automatique de la part de coût, du pourcentage de répartition, du coût alloué, et de la marge de chaque leg.
 
 Choisissez le mode qui correspond à votre accord commercial avec les clients de ce trajet. CBM est le plus courant pour le fret général, LDM pour les chargements critiques en espace de plancher, poids pour les marchandises denses, et Facturable quand vous facturez selon celui du poids/volume qui donne le chiffre le plus élevé.
+
+<Note>
+Chaque façon d'ajouter une commande à un trajet — ajout manuel, Remplissage auto, ou Créneaux disponibles — copie désormais les dimensions de cargaison de cette commande (CBM, poids, LDM) sur son leg, afin que la répartition des coûts s'effectue correctement quel que soit le mode. Pour les legs ajoutés avant l'existence de cette étape de copie, utilisez **Recalculer la répartition** dans l'onglet Répartition des coûts du trajet pour rétablir les bons chiffres.
+</Note>
 
 ---
 
@@ -135,6 +195,18 @@ Les clients sur le même camion ne voient jamais les factures ni les prix des au
 ## Suivi
 
 Les clients suivant une expédition de groupage voient une date **Livraison prévue** statique sur la page de suivi publique, pas une ETA en direct séquencée à arrêts multiples.
+
+---
+
+## Le groupage sur le Tableau de planification et la Carte en direct
+
+Les trajets de groupage restent visibles en dehors du module Groupage aussi :
+
+- **Une ligne, pas une carte** — un trajet de groupage apparaît sur le Tableau de planification comme une ligne standard dans la liste **Sortants**, regroupé sous le même jour que son premier arrêt de chargement, exactement comme une commande. Il affiche une pastille de statut, un repère **G** plus la référence, un repère d'arrêts compact du type **2P+3D** (2 enlèvements, 3 livraisons sur l'ensemble du trajet), et un taux de remplissage LDM coloré de la même façon qu'ailleurs : vert sous 75 %, ambre 75–94 %, rouge à partir de 95 %.
+- **Affectation de camion comme une commande** — la ligne comporte la même cellule **Attribuer un camion** que n'importe quelle commande : glissez-y un camion pour l'affecter, exactement comme pour affecter un camion à une seule commande.
+- **Itinéraire approximatif** — une seconde ligne affiche la distance et la durée totales approximatives (**≈**) de l'itinéraire, ainsi que la date et la plage horaire du premier enlèvement. La valeur ≈ provient de l'optimiseur d'itinéraire une fois le trajet séquencé ; avant cela, Druma se rabat sur une estimation à vol d'oiseau sur l'ensemble des legs. Survolez la ligne pour voir la chaîne complète ville d'enlèvement → … → ville de livraison ; ouvrez le panneau de détail du trajet pour la répartition complète du taux de remplissage par dimension (voir le tableau de remplissage ci-dessus).
+- **Recherche et filtres** — rechercher un numéro de commande ou un client sur le tableau trouve aussi les commandes voyageant à l'intérieur d'un trajet de groupage, pas seulement sa propre référence, et un filtre du tableau permet d'afficher ou de masquer entièrement les trajets de groupage.
+- **Carte en direct** — un camion exécutant un trajet de groupage affiche la référence du trajet et sa progression dans les arrêts (par exemple « arrêt 3 sur 6 ») dans son infobulle sur la carte, avec un lien **Ouvrir le trajet** qui mène directement au panneau de détail du trajet.
 
 ---
 

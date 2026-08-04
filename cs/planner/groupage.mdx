@@ -20,6 +20,33 @@ Skupinová přeprava není čtvrtý „typ objednávky" vedle Vlastní vozidlo /
 
 ---
 
+## Vyhledávání objednávek ke kombinování
+
+Než sestavíte jízdu, Druma vám pomůže odhalit, které objednávky se vyplatí zkombinovat — přímo v pracovní ploše Objednávky i na samotné objednávce.
+
+### Sloupec Velikost nákladu
+
+Pracovní plocha Objednávky ve výchozím nastavení zobrazuje sloupec **Velikost nákladu**: procento naplnění standardního návěsu (13,6 LDM / 24 t / 33 míst pro EUR palety) pro každou objednávku, spolu s jejími nakládacími metry (LDM).
+
+<Note>
+Pokud objednávka nemá vyplněnou hodnotu LDM, ale má počet palet, Druma odhadne LDM jako 0,4 LDM na jednu EUR paletu — tooltip sloupce v takovém případě hodnotu vždy označí jako odhad.
+</Note>
+
+Objednávky s naplněním pod 85 % dostávají fialový štítek **PART**, který je označuje jako částečné náklady — dobré kandidáty pro konsolidaci do jízdy skupinové přepravy.
+
+### Rychlý filtr částečných nákladů
+
+Klikněte na filtr **Částečné náklady** v pracovní ploše Objednávky, abyste zobrazili pouze neseskupené částečné náklady: objednávky dostatečně malé na kombinování, které zatím nejedou v žádné jízdě skupinové přepravy. Filtr se ukládá do URL, takže si přefiltrovaný seznam můžete uložit do záložek nebo sdílet odkaz přímo na něj.
+
+### Rozpoznání objednávek, které už jsou v jízdě
+
+Dva indikátory vám prozradí, že objednávka už je součástí jízdy, abyste ji nehledali kvůli přidání do jiné:
+
+- **Štítek G** — jantarový štítek **G** se zobrazuje vedle čísla objednávky v pracovní ploše Objednávky a vedle odpovídající faktury v seznamu faktur. Kliknutím na něj přejdete přímo do panelu detailu dané jízdy.
+- **Pruh skupinové přepravy** — otevření objednávky, která patří k jízdě, zobrazí v horní části jejího panelu detailu pruh: *„Součást jízdy skupinové přepravy {ref} · {n} objednávek · {truck}"*. I odtud se kliknutím dostanete přímo do jízdy.
+
+---
+
 ## Vytvoření jízdy skupinové přepravy
 
 <Steps>
@@ -59,9 +86,38 @@ Hmotnost a objem nebrání přidání objednávek — pouze nakládací metry (L
 
 ---
 
+## Volná místa
+
+Přidávání objednávek jednu po druhé funguje ze strany objednávky. **Volná místa** fungují ze strany vozidla: je to třetí zobrazení na stránce Skupinová přeprava, vedle **Tabulka** a **Mapa**, které uvádí nadcházející přiřazená vozidla s volnou kapacitou — a také otevřené jízdy bez vozidla — a navrhuje, které neseskupené částečné náklady se do jednotlivých míst hodí.
+
+<Steps>
+  <Step title="Přepněte se do zobrazení Volná místa">
+    Otevřete modul **Skupinová přeprava** a klikněte na **Volná místa** v přepínači zobrazení.
+  </Step>
+  <Step title="Zkontrolujte volnou kapacitu místa">
+    Každé místo — vozidlo, nebo koncept/potvrzená jízda, která ještě čeká na vozidlo — uvádí, co už je vytíženo vůči jeho kapacitě, společně napříč LDM, hmotností a paletami, a také prostor, který v každé z nich ještě zbývá. Jízda bez přiřazeného vozidla je označena jako **Zatím žádné vozidlo**. První místo s vyhovujícími objednávkami se automaticky rozbalí a vyhledávací pole hledá napříč vozidlem, SPZ, řidičem, městy a referencemi jízd.
+  </Step>
+  <Step title="Zkontrolujte navržené objednávky">
+    Pod každým místem Druma uvádí nejlépe sedící objednávky: párované podle okna data vyzvednutí ±2 dny, kompatibility trasy v rámci přibližně 100km okruhu odklonu a shody napříč LDM, hmotností a paletami. Každá kandidátská objednávka zobrazuje datum vyzvednutí a časové okno (např. `07/08 08:00–10:00`), takže úzké okno je vidět, ještě než se zavážete. Objednávky, které už jsou v *jiné* otevřené jízdě, se zobrazí i zde, označené **V GRP-XXXXX**. Neshoda typu návěsu mezi objednávkou a vozidlem se zobrazí jako varování — shodu neblokuje.
+  </Step>
+  <Step title="Přidat — nebo přesunout — jedním kliknutím">
+    Klikněte na **Přidat do trasy** u kandidáta, který ještě není seskupen. U kandidáta označeného **V GRP-XXXXX** tlačítko místo toho zobrazí **Přesunout sem**: jedno kliknutí přesune objednávku z oné jízdy do tohoto místa a rozdělení nákladů obou jízd se automaticky přepočítá. Pokud vozidlo veze pouze jednu objednávku, Druma vytvoří koncept jízdy skupinové přepravy a přidá do ní obě objednávky. Pokud už je vozidlo na jízdě, objednávka se do ní jednoduše přidá jako nový úsek.
+  </Step>
+</Steps>
+
+<Note>
+Jízdy, které už vyrazily (probíhající), nejsou ve Volných místech nabízeny jako cíl, a jejich objednávky z nich také nelze vyjmout — zde se, na obou stranách přesunu, zobrazují jen vozidla a jízdy ještě před odjezdem.
+</Note>
+
+<Note>
+Kapacita vychází z návěsu přiřazeného k objednávkám vozidla. Pokud žádný není nastaven, Druma použije jako záložní hodnotu standardní návěs (13,6 LDM / 24 t / 33 palet) a označí ji jako odhad.
+</Note>
+
+---
+
 ## Řazení zastávek
 
-Nové zastávky se jednoduše přidávají na konec jízdy v pořadí, v jakém je přidáváte — Druma trasu automaticky za chodu neoptimalizuje.
+Nové zastávky se jednoduše přidávají na konec jízdy v pořadí, v jakém je přidáváte — Druma trasu automaticky za chodu neoptimalizuje. Výjimkou je počáteční seznam zastávek jízdy: když jízda vznikne najednou — přes **Automaticky vyplnit**, nebo přidáním prvních objednávek přes **Volná místa** — Druma jej seřadí nejprve podle vyzvednutí, všechna vyzvednutí před jakýmkoli doručením, místo aby zastávky ponechal v pořadí, v jakém byly přidány.
 
 Pro optimalizaci pořadí klikněte na **Automatické řazení** (zobrazuje se pouze při 2+ zastávkách): přeuspořádá seznam zastávek pro minimalizaci celkové vzdálenosti (vyzvednutí před doručeními) a nahlásí, kolik vzdálenosti ušetřilo, nebo že pořadí bylo již optimální. Zastávky můžete také kdykoli přesouvat ručně přetažením, nebo pomocí šipek nahoru/dolů u každého řádku zastávky.
 
@@ -92,6 +148,10 @@ Jízda skupinové přepravy zobrazuje lišty průběhu naplnění napříč jak�
 **Režim rozdělení nákladů** ovládá, jak se sdílené náklady dělí mezi úseky. K dispozici jsou čtyři režimy: **CBM**, **Hmotnost**, **LDM** a **Fakturovatelné**. Klikněte na tlačítko režimu na záložce Rozdělení nákladů jízdy pro přepnutí — spustí to automatický přepočet podílu nákladů, procenta rozdělení, přidělených nákladů a marže každého úseku.
 
 Vyberte režim, který odpovídá vaší obchodní dohodě s klienty na dané jízdě. CBM je nejběžnější pro obecný náklad, LDM pro náklady kritické na podlahovou plochu, hmotnost pro hutné zboží a Fakturovatelné, když fakturujete podle toho, která z hodnot hmotnosti/objemu je vyšší.
+
+<Note>
+Každá cesta, kterou se objednávka přidá do jízdy — ruční přidání, Automaticky vyplnit nebo Volná místa — zkopíruje rozměry nákladu dané objednávky (CBM, hmotnost, LDM) na její úsek, takže rozdělení nákladů alokuje správně bez ohledu na zvolený režim. U úseků přidaných před zavedením tohoto kopírování použijte **Přepočítat rozdělení** na záložce Rozdělení nákladů jízdy pro doplnění správných hodnot.
+</Note>
 
 ---
 
@@ -135,6 +195,18 @@ Klienti na stejném vozidle nikdy nevidí faktury nebo ceny ostatních — každ
 ## Sledování
 
 Klienti sledující zásilku skupinové přepravy vidí na veřejné stránce sledování statické datum **Očekávané doručení**, ne živé, vícezastávkově seřazené ETA.
+
+---
+
+## Skupinová přeprava na Plánovací tabuli a Živé mapě
+
+Jízdy skupinové přepravy zůstávají viditelné i mimo modul Skupinová přeprava:
+
+- **Řádek, ne karta** — jízda skupinové přepravy se na Plánovací tabuli zobrazuje jako standardní řádek v seznamu **Odchozí**, seskupený pod stejným dnem jako její první nakládací zastávka, přesně jako objednávka. Zobrazuje štítek stavu, značku **G** plus referenci, kompaktní značku zastávek jako **2P+3D** (2 nakládky, 3 vykládky v rámci celé jízdy) a číslo naplnění LDM, barevně odlišené stejně jako jinde: zelená pod 75 %, oranžová 75–94 %, červená od 95 % výš.
+- **Přiřazení vozidla jako u objednávky** — řádek má stejnou buňku **Přiřadit kamion** jako jakákoli objednávka: přetáhněte na něj vozidlo, abyste ho přiřadili, přesně jako při přiřazování vozidla k jednotlivé objednávce.
+- **Přibližná trasa** — druhý řádek ukazuje přibližnou (**≈**) celkovou vzdálenost a čas trasy, plus datum a časové okno první nakládky. Hodnota ≈ pochází z optimalizátoru trasy, jakmile je jízda sekvenována; předtím se Druma vrátí k odhadu vzdušnou čarou napříč úseky. Najeďte myší na řádek pro zobrazení celého řetězce nakládací město → … → vykládací město; otevřete panel detailu jízdy pro kompletní rozpis naplnění podle jednotlivých rozměrů (viz tabulka naplnění výše).
+- **Vyhledávání a filtry** — vyhledávání čísla objednávky nebo klienta na tabuli najde i objednávky cestující uvnitř jízdy skupinové přepravy, nejen její vlastní referenci, a filtr tabule umožňuje jízdy skupinové přepravy zcela zobrazit nebo skrýt.
+- **Živá mapa** — vozidlo vykonávající jízdu skupinové přepravy zobrazuje ve svém popup okně na mapě referenci jízdy a průběh zastávek (např. „zastávka 3 ze 6"), s odkazem **Otevřít jízdu** přímo do panelu detailu jízdy.
 
 ---
 

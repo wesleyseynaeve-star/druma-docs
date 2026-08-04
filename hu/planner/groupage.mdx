@@ -20,6 +20,33 @@ A gyűjtőfuvar nem egy negyedik "rendelés-típus" a Saját teherautó / Alvál
 
 ---
 
+## Összekombinálható rendelések megtalálása
+
+Mielőtt felépítenél egy menetet, a Druma segít kiszúrni, mely rendeléseket érdemes összekombinálni — közvetlenül a Rendelések munkaterületen, és magán a rendelésen is.
+
+### Rakomány-kihasználtság oszlop
+
+A Rendelések munkaterület alapértelmezetten megjelenít egy **Rakomány-kihasználtság** oszlopot: az adott rendelés kihasználtsági százalékát egy szabványos pótkocsihoz képest (13,6 LDM / 24 t / 33 EUR-raklaphely), a raklapmétere (LDM) mellett.
+
+<Note>
+Ha egy rendelésnek nincs LDM-értéke, de van raklapszáma, a Druma raklaponként 0,4 LDM-mel becsüli az LDM-et — az oszlop eszköztipp-je jelzi, hogy az érték becslés, valahányszor így számolódik.
+</Note>
+
+A 85% alatti kihasználtságú rendelések lila **PART** jelvényt kapnak, amely részrakományként jelöli meg őket — jó jelöltek egy gyűjtőfuvar-menetbe való összevonásra.
+
+### Részrakományok gyorsszűrő
+
+Kattints a **Részrakományok** szűrőre a Rendelések munkaterületen, hogy csak a még nem csoportosított részrakományokat lásd: azokat a rendeléseket, amelyek elég kicsik az összevonáshoz, de még nem futnak gyűjtőfuvar-menetben. A szűrő megmarad az URL-ben, így könyvjelzőzheted, vagy közvetlenül megoszthatod a szűrt listára mutató linket.
+
+### Már menetben lévő rendelések felismerése
+
+Két jelző mutatja, hogy egy rendelés már egy menet része, így nem kell máshova is hozzáadni:
+
+- **G jelvény** — egy borostyán **G** jelvény jelenik meg a rendelésszám mellett a Rendelések munkaterületen, és a megfelelő számla mellett a Számlák listán. Kattints rá, hogy egyenesen az adott menet részletező paneljére juss.
+- **Gyűjtőfuvar-sáv** — egy menethez tartozó rendelés megnyitásakor egy sáv jelenik meg a részletpanel tetején: *"Része a(z) {ref} gyűjtőfuvar-menetnek · {n} rendelés · {truck}"*. Innen is átkattinthatsz a menetre.
+
+---
+
 ## Gyűjtőfuvar-menet létrehozása
 
 <Steps>
@@ -59,9 +86,38 @@ A súly és a térfogat nem blokkolja a rendelések hozzáadását — csak a ra
 
 ---
 
+## Szabad helyek
+
+A rendelések egyenkénti hozzáadása a rendelés oldaláról működik. A **Szabad helyek** a teherautó oldaláról működik: ez egy harmadik nézet a Gyűjtőfuvar oldalon, a **Táblázat** és a **Térkép** mellett, amely felsorolja a közelgő, hozzárendelt teherautókat a szabad kapacitásukkal — valamint a teherautó nélküli nyitott meneteket —, és javasolja, mely nem csoportosított részrakományok illenek az egyes helyekre.
+
+<Steps>
+  <Step title="Válts a Szabad helyek nézetre">
+    Nyisd meg a **Gyűjtőfuvar** modult, és kattints a **Szabad helyek** gombra a nézetkapcsolóban.
+  </Step>
+  <Step title="Tekintsd át egy hely szabad kapacitását">
+    Minden helynél — egy teherautónál, vagy egy vázlat/megerősített menetnél, amely még teherautóra vár — látod, mi van már lekötve a kapacitásából, együttesen LDM, súly és raklapok szerint, plusz a mindegyikben még fennmaradó helyet. A hozzárendelt teherautó nélküli menet **Még nincs kamion** jelöléssel jelenik meg. Az első, illő rendeléseket tartalmazó hely automatikusan kinyílik, a keresőmező pedig a teherautóra, rendszámra, sofőrre, városokra és menethivatkozásokra is illeszkedik.
+  </Step>
+  <Step title="Nézd meg a javasolt rendeléseket">
+    Minden hely alatt a Druma felsorolja a legjobban illeszkedő rendeléseket: ±2 napos felvételi dátumablakra, nagyjából 100 km-es kerülő sugarú útvonal-kompatibilitásra, valamint LDM, súly és raklapok szerinti illeszkedésre egyeztetve. Minden jelölt rendelés mutatja a felvételi dátumát és időablakát (pl. `07/08 08:00–10:00`), így egy szűk időablak már elköteleződés előtt látszik. A már egy *másik* nyitott menetben lévő rendelések is megjelennek itt, **Ebben: GRP-XXXXX** jelöléssel. Egy pótkocsi-típus eltérés a rendelés és a teherautó között figyelmeztetésként jelenik meg — nem blokkolja az egyeztetést.
+  </Step>
+  <Step title="Hozzáadás — vagy áthelyezés — egy kattintással">
+    Kattints a **Hozzáadás a járathoz** gombra egy még nem csoportosított jelöltnél. Egy **Ebben: GRP-XXXXX** jelölésű jelöltnél a gomb helyette **Áthelyezés ide** feliratot mutat: egy kattintással a rendelés kikerül abból a menetből, és bekerül ebbe a helybe, és mindkét menet költségmegosztása automatikusan újraszámolódik. Ha a teherautó egyetlen rendelést szállított, a Druma létrehoz egy vázlat gyűjtőfuvar-menetet, és mindkét rendelést hozzáadja. Ha a teherautó már egy meneten van, a rendelés egyszerűen új szakaszként kerül hozzá.
+  </Step>
+</Steps>
+
+<Note>
+A már elindult (folyamatban lévő) menetek nem jelennek meg Szabad helyek célpontként, és a rendeléseiket sem lehet kivenni belőlük — itt, az áthelyezés mindkét oldalán, csak az indulás előtt álló teherautók és menetek jelennek meg.
+</Note>
+
+<Note>
+A kapacitás a teherautó rendeléseihez csatolt pótkocsiból származik. Ha nincs beállítva, a Druma a szabványos pótkocsi feltételezésére esik vissza (13,6 LDM / 24 t / 33 raklap), és jelzi, hogy ez egy becslés.
+</Note>
+
+---
+
 ## Megálló-sorrendezés
 
-Az új megállók egyszerűen a menet végéhez fűződnek hozzáadás sorrendjében — a Druma nem optimalizálja automatikusan az útvonalat menet közben.
+Az új megállók egyszerűen a menet végéhez fűződnek hozzáadás sorrendjében — a Druma nem optimalizálja automatikusan az útvonalat menet közben. Ez alól kivétel egy menet nyitó megállólistája: amikor egy menet egy lépésben áll össze — az **Automatikus kitöltésen**, vagy a **Szabad helyeken** keresztül hozzáadott első rendeléseken át —, a Druma rakomány-elsőbbséggel sorrendezi, minden felvételt a szállítások elé helyezve, ahelyett hogy a megállókat nyers hozzáadási sorrendben hagyná.
 
 A sorrend optimalizálásához kattints az **Automatikus sorrendezés** gombra (csak 2+ megállónál jelenik meg): ez átrendezi a megállólistát a teljes távolság minimalizálásához (felvételek a szállítások előtt), és jelenti, mennyi távolságot takarított meg, vagy hogy a sorrend már optimális volt. Bármikor manuálisan is húzhatod-ejtheted a megállókat, vagy használhatod a fel/le nyilakat minden megálló során.
 
@@ -92,6 +148,10 @@ A gyűjtőfuvar-menet kihasználtsági sávokat mutat azokban a dimenziókban, a
 A **költség-megosztási mód** szabályozza, hogyan oszlanak meg a közös költségek a szakaszok között. Négy mód érhető el: **CBM**, **Súly**, **LDM** és **Számlázandó**. Kattints egy mód-gombra a menet Költség-megosztás fülén a váltáshoz — ez kiváltja az egyes szakaszok költségrészének, megosztási százalékának, kiosztott költségének és marginjának automatikus újraszámítását.
 
 Válaszd azt a módot, amely megfelel az adott menet ügyfeleivel kötött kereskedelmi megállapodásodnak. A CBM a leggyakoribb általános rakományhoz, az LDM a padlófelület-kritikus rakományokhoz, a súly a sűrű árukhoz, a Számlázandó pedig akkor, amikor a súly/térfogat közül azt számlázod, amelyik magasabb értéket ad.
+
+<Note>
+Bármelyik módon kerül is egy rendelés egy menetbe — kézi hozzáadással, Automatikus kitöltéssel vagy Szabad helyekkel —, a rendelés rakomány-méretei (CBM, súly, LDM) átmásolódnak a szakaszára, így a költségmegosztás minden módban helyesen oszt szét. Az e másolási lépés bevezetése előtt hozzáadott szakaszoknál használd a **Megosztás újraszámítása** gombot a menet Költség-megosztás fülén a helyes értékek pótlásához.
+</Note>
 
 ---
 
@@ -135,6 +195,18 @@ Az ugyanazon teherautón lévő ügyfelek soha nem látják egymás számláit v
 ## Nyomon követés
 
 Egy gyűjtőfuvar-szállítmányt követő ügyfelek egy statikus **Várható kiszállítás** dátumot látnak a nyilvános nyomkövetési oldalon, nem egy élő, több megállóra szekvenciált ETA-t.
+
+---
+
+## Gyűjtőfuvar a Tervezőtáblán és az Élő térképen
+
+A gyűjtőfuvar-menetek a Gyűjtőfuvar modulon kívül is láthatók maradnak:
+
+- **Sor, nem kártya** — a gyűjtőfuvar-menet a Tervezőtáblán szabványos sorként jelenik meg a **Kimenő** listában, az első felvételi megállójával azonos nap alá csoportosítva, pontosan úgy, mint egy rendelés. Állapotjelvényt mutat, egy **G** jelet plusz hivatkozást, egy kompakt megálló-jelölőt, mint például **2P+3D** (2 felvétel, 3 kiszállítás a teljes menetben), valamint egy LDM-kihasználtsági számot, ugyanúgy színkódolva, mint másutt: zöld 75% alatt, borostyán 75–94%, piros 95% és afelett.
+- **Teherautó-hozzárendelés, mint egy rendelésnél** — a sornak ugyanaz a **Teherautó hozzárendelése** cellája van, mint bármely rendelésnek: húzz rá egy teherautót a hozzárendeléshez, pontosan úgy, mint egy egyedi rendeléshez rendelt teherautónál.
+- **Hozzávetőleges útvonal** — egy második sor mutatja az útvonal hozzávetőleges (**≈**) teljes távolságát és idejét, valamint az első felvétel dátumát és időablakát. A ≈ érték az útvonal-optimalizálóból származik, miután a menetet szekvenálták; addig a Druma egy légvonalbeli becslésre áll vissza a szakaszokon keresztül. Vidd az egeret a sor fölé a teljes felvételi város → … → kiszállítási város lánc megtekintéséhez; nyisd meg a menet részletező panelét a teljes, dimenziónkénti kihasználtsági bontásért (lásd a fenti kihasználtsági táblázatot).
+- **Keresés és szűrők** — egy rendelésszám vagy ügyfél keresése a táblán a gyűjtőfuvar-meneten belül utazó rendeléseket is megtalálja, nem csak a menet saját hivatkozását, és egy tábla-szűrővel teljesen elrejtheted vagy megjelenítheted a gyűjtőfuvar-meneteket.
+- **Élő térkép** — egy gyűjtőfuvar-menetet teljesítő teherautó a menet hivatkozását és megálló-előrehaladását (pl. "3. megálló a 6-ból") mutatja a térképi felugró ablakában, egy **Menet megnyitása** linkkel, amely egyenesen a menet részletező paneljére vezet.
 
 ---
 

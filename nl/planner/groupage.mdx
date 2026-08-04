@@ -16,6 +16,33 @@ Groupage is geen vierde "ordertype" naast Eigen truck/Uitbesteed/Herpositionerin
 
 ---
 
+## Orders vinden om te combineren
+
+Voordat u een rit opbouwt, helpt Druma u ontdekken welke orders de moeite waard zijn om te combineren — rechtstreeks op het Orders-werkblad, en op de order zelf.
+
+### Kolom Laadomvang
+
+Het Orders-werkblad toont standaard een kolom **Laadomvang**: het vulpercentage van elke order ten opzichte van een standaardtrailer (13,6 LDM / 24 t / 33 EUR-palletplaatsen), samen met de laadmeters (LDM).
+
+<Note>
+Heeft een order geen LDM-waarde maar wel een palletaantal, dan schat Druma de LDM op 0,4 LDM per EUR-pallet — de tooltip van de kolom vermeldt telkens dat het cijfer een schatting is wanneer het zo berekend wordt.
+</Note>
+
+Orders onder 85% vulgraad krijgen een paarse **PART**-chip, die ze markeert als deellading — goede kandidaten om te consolideren op een groupage-rit.
+
+### Snelfilter Deelladingen
+
+Klik op het filter **Deelladingen** op het Orders-werkblad om alleen ongegroepeerde deelladingen te tonen: orders klein genoeg om te combineren die nog niet meerijden op een groupage-rit. Het filter blijft behouden in de URL, zodat u een link rechtstreeks naar de gefilterde lijst kunt bookmarken of delen.
+
+### Orders herkennen die al in een rit zitten
+
+Twee indicatoren tonen dat een order al deel uitmaakt van een rit, zodat u niet op zoek gaat om hem aan een andere toe te voegen:
+
+- **G-badge** — een amberkleurige **G**-badge staat naast het ordernummer op het Orders-werkblad, en naast de bijbehorende factuur op de facturenlijst. Klik erop om rechtstreeks naar het detailpaneel van die rit te springen.
+- **Groupage-balk** — het openen van een order die tot een rit behoort, toont een balk bovenaan het detailpaneel: *"Onderdeel van groupage-rit {ref} · {n} orders · {truck}"*. Ook vandaar klikt u door naar de rit.
+
+---
+
 ## Een groupage-rit aanmaken
 
 <Steps>
@@ -55,9 +82,38 @@ Gewicht en volume blokkeren het toevoegen van orders niet — alleen laadmeters 
 
 ---
 
+## Open plekken
+
+Orders één voor één toevoegen werkt vanuit de order. **Open plekken** werkt vanuit de truck: een derde weergave op de Groupage-pagina, naast **Tabel** en **Kaart**, die aankomende toegewezen trucks met vrije capaciteit toont — plus open ritten zonder truck — en suggereert welke ongegroepeerde deelladingen bij elke plek passen.
+
+<Steps>
+  <Step title="Schakel over naar de weergave Open plekken">
+    Open de module **Groupage** en klik op **Open plekken** in de weergaveschakelaar.
+  </Step>
+  <Step title="Bekijk de vrije capaciteit van een plek">
+    Elke plek — een truck, of een concept-/bevestigde rit die nog op een truck wacht — toont wat al vastligt ten opzichte van zijn capaciteit, gezamenlijk voor LDM, gewicht en pallets, plus de ruimte die in elk daarvan nog overblijft. Een rit zonder toegewezen truck is gemarkeerd met **Nog geen vrachtwagen**. De eerste plek met passende orders klapt automatisch open, en het zoekveld doorzoekt truck, kenteken, chauffeur, steden en ritreferenties.
+  </Step>
+  <Step title="Controleer de voorgestelde orders">
+    Onder elke plek toont Druma de best passende orders: gematcht op een ophaaldatumvenster van ±2 dagen, routecompatibiliteit binnen ongeveer een omrijradius van 100 km, en passendheid voor LDM, gewicht en pallets. Elke kandidaat toont zijn ophaaldatum en tijdvenster (bv. `07/08 08:00–10:00`), zodat een krap venster zichtbaar is voordat u zich vastlegt. Orders die al in een *andere* open rit rijden, verschijnen hier ook, gemarkeerd met **In GRP-XXXXX**. Een mismatch in opleggertype tussen de order en de truck toont een waarschuwing — dit blokkeert de match niet.
+  </Step>
+  <Step title="Toevoegen — of verplaatsen — met één klik">
+    Klik op **Toevoegen aan rit** bij een kandidaat die nog niet gegroepeerd is. Bij een kandidaat gemarkeerd met **In GRP-XXXXX** toont de knop in plaats daarvan **Hierheen verplaatsen**: één klik verplaatst de order uit die rit naar deze plek, en de kostenverdeling van beide ritten wordt automatisch herberekend. Vervoerde de truck één order, dan maakt Druma een concept-groupage-rit aan en voegt beide orders eraan toe. Zit de truck al op een rit, dan wordt de order gewoon toegevoegd als nieuwe leg.
+  </Step>
+</Steps>
+
+<Note>
+Ritten die al vertrokken zijn (onderweg) worden niet aangeboden als doel in Open plekken, en hun orders kunnen er ook niet uit worden gehaald — hier verschijnen, aan beide kanten van een verplaatsing, alleen trucks en ritten die nog voor vertrek staan.
+</Note>
+
+<Note>
+De capaciteit komt van de trailer die aan de orders van de truck gekoppeld is. Is er geen ingesteld, dan valt Druma terug op de standaardtrailer-aanname (13,6 LDM / 24 t / 33 pallets) en vermeldt dat het om een schatting gaat.
+</Note>
+
+---
+
 ## Stopvolgorde
 
-Nieuwe stops worden simpelweg toegevoegd aan het einde van de rit, in de volgorde waarin u ze toevoegt — Druma optimaliseert de route niet automatisch terwijl u bezig bent.
+Nieuwe stops worden simpelweg toegevoegd aan het einde van de rit, in de volgorde waarin u ze toevoegt — Druma optimaliseert de route niet automatisch terwijl u bezig bent. De uitzondering is de openingsstoplijst van een rit: komt een rit in één keer tot stand — via **Auto-vullen**, of door de eerste orders toe te voegen via **Open plekken** — dan sequentieert Druma hem eerst op ladingen, alle ophalingen vóór leveringen, in plaats van de stops in de ruwe toevoegvolgorde te laten staan.
 
 Om de volgorde te optimaliseren, klik op **Auto-sequentie** (alleen getoond bij 2+ stops): dit herschikt de stoplijst om de totale afstand te minimaliseren (ophalingen voor leveringen) en meldt hoeveel afstand het bespaarde, of dat de volgorde al optimaal was. U kunt stops ook op elk moment handmatig verslepen, of de pijltjes omhoog/omlaag op elke stoprij gebruiken.
 
@@ -88,6 +144,10 @@ De groupage-rit toont vulgraad-voortgangsbalken voor elke dimensie waarvoor de t
 De **kostverdelingsmodus** bepaalt hoe gedeelde kosten worden verdeeld tussen legs. Er zijn vier modi beschikbaar: **CBM**, **Gewicht**, **LDM** en **Factureerbaar**. Klik op een moduskop op het tabblad Kostverdeling van de rit om te wisselen — dit triggert een automatische herberekening van het kostaandeel, splitpercentage, toegewezen kost en marge van elke leg.
 
 Kies de modus die aansluit bij uw commerciële afspraak met de klanten op die rit. CBM is het meest gebruikelijk voor algemene lading, LDM voor vloerruimte-kritieke ladingen, gewicht voor dichte goederen, en Factureerbaar wanneer u factureert op welk van gewicht/volume het hoogste cijfer oplevert.
+
+<Note>
+Elk pad waarlangs een order aan een rit wordt toegevoegd — handmatig toevoegen, Auto-vullen of Open plekken — kopieert de ladingafmetingen van die order (CBM, gewicht, LDM) naar de leg, zodat de kostverdeling ongeacht de modus correct verloopt. Voor legs die zijn toegevoegd vóór deze kopieerstap bestond, gebruikt u **Splitsing herberekenen** op het tabblad Kostverdeling van de rit om de juiste cijfers alsnog in te vullen.
+</Note>
 
 ---
 
@@ -131,6 +191,18 @@ Klanten op dezelfde truck zien nooit elkaars facturen of prijzen — elk krijgt 
 ## Tracking
 
 Klanten die een groupage-zending volgen, zien een statische **verwachte leverdatum** op de publieke trackingpagina, geen live, multi-stop-gesequencede ETA.
+
+---
+
+## Groupage op het Planningsbord en de Live Kaart
+
+Groupage-ritten blijven ook buiten de Groupage-module zichtbaar:
+
+- **Een rij, geen kaart** — een groupage-rit verschijnt op het Planningsbord als een standaardrij in de lijst **Uitgaand**, gegroepeerd onder dezelfde dag als de eerste laadstop, precies zoals een order. Het toont een statusbadge, een **G**-merker plus referentie, een compacte stopmarkering zoals **2P+3D** (2 ophalingen, 3 leveringen over de hele rit), en een LDM-vulcijfer met dezelfde kleurcodering als elders: groen onder 75%, amber 75–94%, rood vanaf 95%.
+- **Truck toewijzen zoals bij een order** — de rij heeft dezelfde cel **Vrachtwagen toewijzen** als elke order: sleep er een truck op om toe te wijzen, precies zoals bij het toewijzen van een truck aan een losse order.
+- **Geschatte route** — een tweede regel toont de geschatte (**≈**) totale routeafstand en -tijd, plus de datum en het tijdvenster van de eerste laadstop. Het ≈-cijfer komt van de route-optimizer zodra de rit is gesequenced; daarvoor valt Druma terug op een hemelsbrede schatting over de legs. Beweeg over de rij voor de volledige keten ophaalstad → … → afleverstad; open het detailpaneel van de rit voor de volledige vulgraad-uitsplitsing per dimensie (zie de vulgraadtabel hierboven).
+- **Zoeken en filters** — zoeken op ordernummer of klant op het bord vindt ook orders die binnen een groupage-rit meerijden, niet alleen de eigen referentie ervan, en een bordfilter laat u groupage-ritten volledig tonen of verbergen.
+- **Live Kaart** — een truck die een groupage-rit uitvoert, toont de ritreferentie en de voortgang van de stops (bv. "stop 3 van 6") in zijn kaartpopup, met een link **Rit openen** rechtstreeks naar het detailpaneel van de rit.
 
 ---
 

@@ -20,6 +20,33 @@ Sammelgut ist kein vierter „Auftragstyp" neben Eigener LKW / Unterauftragnehme
 
 ---
 
+## Kombinierbare Aufträge finden
+
+Bevor Sie eine Fahrt zusammenstellen, hilft Druma Ihnen zu erkennen, welche Aufträge sich zum Kombinieren lohnen — direkt im Auftrags-Arbeitsbereich und am Auftrag selbst.
+
+### Spalte Ladungsgröße
+
+Der Auftrags-Arbeitsbereich zeigt standardmäßig eine Spalte **Ladungsgröße**: den Auslastungsgrad jedes Auftrags gegenüber einem Standardanhänger (13,6 LDM / 24 t / 33 EUR-Palettenplätze), zusammen mit seinen Lademetern (LDM).
+
+<Note>
+Hat ein Auftrag keinen LDM-Wert, aber eine Palettenanzahl, schätzt Druma die LDM mit 0,4 LDM pro EUR-Palette — der Tooltip der Spalte kennzeichnet den Wert als Schätzung, sobald er auf diese Weise berechnet wurde.
+</Note>
+
+Aufträge mit einer Auslastung unter 85 % erhalten einen **PART**-Chip, der sie als Teilladungen kennzeichnet — gute Kandidaten, um sie zu einer Sammelgutfahrt zu konsolidieren.
+
+### Schnellfilter Teilladungen
+
+Klicken Sie im Auftrags-Arbeitsbereich auf den Filter **Teilladungen**, um nur nicht gruppierte Teilladungen anzuzeigen: Aufträge, die klein genug zum Kombinieren sind und noch auf keiner Sammelgutfahrt mitfahren. Der Filter bleibt in der URL erhalten, sodass Sie direkt auf die gefilterte Liste verlinken oder sie als Lesezeichen speichern können.
+
+### Aufträge erkennen, die bereits zu einer Fahrt gehören
+
+Zwei Hinweise zeigen Ihnen, dass ein Auftrag bereits Teil einer Fahrt ist, damit Sie ihn nicht versehentlich einer weiteren hinzufügen:
+
+- **G-Badge** — ein **G**-Badge sitzt neben der Auftragsnummer im Auftrags-Arbeitsbereich und neben der zugehörigen Rechnung in der Rechnungsliste. Ein Klick darauf führt direkt ins Detailpanel dieser Fahrt.
+- **Sammelgut-Leiste** — beim Öffnen eines Auftrags, der zu einer Fahrt gehört, erscheint oben in seinem Detailpanel eine Leiste: *„Teil der Sammelgutfahrt {ref} · {n} Aufträge · {truck}"*. Auch von dort gelangen Sie mit einem Klick zur Fahrt.
+
+---
+
 ## Eine Sammelgutfahrt erstellen
 
 <Steps>
@@ -59,9 +86,38 @@ Gewicht und Volumen blockieren das Hinzufügen von Aufträgen nicht — nur Lade
 
 ---
 
+## Freie Kapazitäten
+
+Aufträge einzeln hinzuzufügen funktioniert von der Auftragsseite aus. **Freie Kapazitäten** funktioniert von der LKW-Seite aus: eine dritte Ansicht auf der Sammelgut-Seite, neben **Tabelle** und **Karte**, die anstehende, bereits zugewiesene LKW mit freier Kapazität — sowie offene Fahrten ohne LKW — auflistet und vorschlägt, welche nicht gruppierten Teilladungen zu welchem Platz passen.
+
+<Steps>
+  <Step title="Zur Ansicht Freie Kapazitäten wechseln">
+    Öffnen Sie das Modul **Sammelgut** und klicken Sie in der Ansichtsumschaltung auf **Freie Kapazitäten**.
+  </Step>
+  <Step title="Freie Kapazität eines Platzes prüfen">
+    Jeder Platz — ein LKW oder eine Fahrt im Entwurf/bestätigt, die noch auf einen LKW wartet — zeigt, was bereits gegen seine Kapazität verplant ist, gemeinsam über LDM, Gewicht und Paletten, sowie den jeweils noch verbleibenden Platz. Eine Fahrt ohne zugewiesenen LKW ist mit **Noch kein Lkw** gekennzeichnet. Der erste Platz mit passenden Aufträgen klappt automatisch auf, und das Suchfeld durchsucht LKW, Kennzeichen, Fahrer, Städte und Fahrtreferenzen.
+  </Step>
+  <Step title="Vorgeschlagene Aufträge prüfen">
+    Unter jedem Platz listet Druma die am besten passenden Aufträge auf: abgeglichen anhand eines Abholdatumsfensters von ±2 Tagen, der Routenkompatibilität innerhalb eines Umwegradius von rund 100 km sowie der Passung bei LDM, Gewicht und Paletten. Jeder Kandidat zeigt sein Abholdatum und Zeitfenster (z. B. `07.08. 08:00–10:00`), damit ein enges Zeitfenster sichtbar ist, bevor Sie sich festlegen. Aufträge, die bereits auf einer *anderen* offenen Fahrt mitfahren, tauchen hier ebenfalls auf, markiert mit **In GRP-XXXXX**. Eine Anhängertyp-Abweichung zwischen Auftrag und LKW wird als Warnung angezeigt — sie blockiert den Vorschlag nicht.
+  </Step>
+  <Step title="Hinzufügen — oder verschieben — mit einem Klick">
+    Klicken Sie bei einem noch nicht gruppierten Kandidaten auf **Zur Fahrt hinzufügen**. Bei einem mit **In GRP-XXXXX** markierten Kandidaten zeigt die Schaltfläche stattdessen **Hierher verschieben**: ein Klick verschiebt den Auftrag aus dieser Fahrt heraus und in diesen Platz hinein, und die Kostenteilung beider Fahrten wird automatisch neu berechnet. Trug der LKW bisher nur einen einzelnen Auftrag, legt Druma eine Sammelgutfahrt im Entwurf an und fügt ihr beide Aufträge hinzu. Ist der LKW bereits auf einer Fahrt, wird der Auftrag einfach als neue Etappe hinzugefügt.
+  </Step>
+</Steps>
+
+<Note>
+Fahrten, die bereits losgefahren sind (in Bearbeitung), werden nicht als Ziel für Freie Kapazitäten angeboten, und ihre Aufträge lassen sich auch nicht aus ihnen herauslösen — hier erscheinen, auf beiden Seiten einer Verschiebung, nur LKW und Fahrten, die ihre Abfahrt noch vor sich haben.
+</Note>
+
+<Note>
+Die Kapazität stammt vom Anhänger, der an den Aufträgen des LKW hinterlegt ist. Ist keiner gesetzt, greift Druma auf die Annahme eines Standardanhängers zurück (13,6 LDM / 24 t / 33 Paletten) und weist darauf hin, dass es sich um eine Schätzung handelt.
+</Note>
+
+---
+
 ## Stoppreihenfolge
 
-Neue Stopps werden einfach in der Reihenfolge, in der Sie sie hinzufügen, ans Ende der Fahrt angehängt — Druma optimiert die Route dabei nicht automatisch.
+Neue Stopps werden einfach in der Reihenfolge, in der Sie sie hinzufügen, ans Ende der Fahrt angehängt — Druma optimiert die Route dabei nicht automatisch. Die Ausnahme ist die Eröffnungs-Stoppliste einer Fahrt: Entsteht eine Fahrt in einem Zug — über **Auto-Ausfüllen** oder durch Hinzufügen der ersten Aufträge über **Freie Kapazitäten** —, sequenziert Druma sie ladungsorientiert: alle Abholungen vor allen Lieferungen, statt die Stopps in roher Hinzufügereihenfolge zu belassen.
 
 Um die Reihenfolge zu optimieren, klicken Sie auf **Auto-Sequenzierung** (nur bei 2+ Stopps sichtbar): sie ordnet die Stoppliste neu, um die Gesamtdistanz zu minimieren (Abholungen vor Lieferungen), und meldet, wie viel Distanz gespart wurde, oder dass die Reihenfolge bereits optimal war. Sie können Stopps auch jederzeit manuell per Drag-and-Drop oder mit den Auf-/Ab-Pfeilen jeder Stoppzeile verschieben.
 
@@ -92,6 +148,10 @@ Die Sammelgutfahrt zeigt Auslastungsbalken für jede Dimension, für die der zug
 Der **Kostenteilungsmodus** steuert, wie gemeinsame Kosten auf Etappen aufgeteilt werden. Vier Modi stehen zur Verfügung: **CBM**, **Gewicht**, **LDM** und **Berechnungsfähig**. Klicken Sie im Tab Kostenteilung der Fahrt auf eine Modus-Schaltfläche, um zu wechseln — dies löst eine automatische Neuberechnung von Kostenanteil, Aufteilungsprozentsatz, zugewiesenen Kosten und Marge jeder Etappe aus.
 
 Wählen Sie den Modus, der zu Ihrer kommerziellen Vereinbarung mit den Kunden dieser Fahrt passt. CBM ist am gängigsten für Stückgut, LDM für flächenkritische Ladungen, Gewicht für dichte Waren, und Berechnungsfähig, wenn Sie nach dem jeweils höheren Wert von Gewicht/Volumen abrechnen.
+
+<Note>
+Jeder Weg, auf dem ein Auftrag zu einer Fahrt hinzugefügt wird — manuelles Hinzufügen, Auto-Ausfüllen oder Freie Kapazitäten — überträgt die Ladungsabmessungen dieses Auftrags (CBM, Gewicht, LDM) auf seine Etappe, sodass die Kostenteilung unabhängig vom Modus korrekt zugeteilt wird. Für Etappen, die vor Einführung dieses Übertragungsschritts hinzugefügt wurden, nutzen Sie **Aufteilung neu berechnen** im Tab Kostenteilung der Fahrt, um die korrekten Werte nachzutragen.
+</Note>
 
 ---
 
@@ -135,6 +195,18 @@ Kunden auf demselben LKW sehen nie die Rechnungen oder Preise des anderen — je
 ## Sendungsverfolgung
 
 Kunden, die eine Sammelgutsendung verfolgen, sehen auf der öffentlichen Tracking-Seite ein statisches **Voraussichtliches Lieferdatum**, keine live nach mehreren Stopps sequenzierte ETA.
+
+---
+
+## Sammelgut auf der Planungstafel und der Live-Karte
+
+Sammelgutfahrten bleiben auch außerhalb des Sammelgut-Moduls sichtbar:
+
+- **Eine Zeile, keine Karte** — eine Sammelgutfahrt erscheint auf der Planungstafel als normale Zeile in der Liste „Ausgehend", eingruppiert unter demselben Tag wie ihr erster Ladestopp, genau wie jeder Auftrag. Sie zeigt ein Status-Badge, ein **G**-Zeichen plus Referenz, eine kompakte Stopp-Markierung wie **2P+3D** (2 Abholungen, 3 Lieferungen über die ganze Fahrt), sowie eine LDM-Auslastungszahl, farblich genauso codiert wie anderswo: grün unter 75 %, gelb 75–94 %, rot ab 95 %.
+- **LKW-Zuweisung wie bei einem Auftrag** — die Zeile hat dieselbe Zelle **LKW zuweisen** wie jeder Auftrag: ziehen Sie einen LKW darauf, um ihn zuzuweisen — genau wie bei der Zuweisung eines LKW zu einem einzelnen Auftrag.
+- **Näherungswert für die Route** — eine zweite Zeile zeigt die geschätzte (**≈**) Gesamtstrecke und -zeit der Route sowie das Datum und Zeitfenster des ersten Ladestopps. Der ≈-Wert stammt vom Routen-Optimizer, sobald die Fahrt sequenziert wurde; davor greift Druma auf eine Luftlinien-Schätzung über die Etappen zurück. Fahren Sie mit der Maus über die Zeile für die vollständige Kette Abholstadt → … → Zielstadt; öffnen Sie das Detailpanel der Fahrt für die vollständige Auslastungsübersicht je Dimension (siehe die Auslastungstabelle oben).
+- **Suche und Filter** — die Suche nach Auftragsnummer oder Kunde auf der Tafel findet auch Aufträge, die auf einer Sammelgutfahrt mitfahren, nicht nur deren eigene Referenz, und ein Tafelfilter lässt Sie Sammelgutfahrten ein- oder ausblenden.
+- **Live-Karte** — ein LKW, der eine Sammelgutfahrt ausführt, zeigt in seinem Kartenpopup die Fahrtreferenz und den Stoppfortschritt (z. B. „Stopp 3 von 6") an, mit einem Link **Fahrt öffnen** direkt ins Detailpanel der Fahrt.
 
 ---
 

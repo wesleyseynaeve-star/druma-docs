@@ -20,6 +20,33 @@ Grupaż nie jest czwartym "typem zlecenia" obok Własna ciężarówka / Podzleco
 
 ---
 
+## Wyszukiwanie zleceń do połączenia
+
+Zanim zbudujesz przejazd, Druma pomaga Ci dostrzec, które zlecenia warto połączyć — bezpośrednio w panelu zleceń oraz na samym zleceniu.
+
+### Kolumna wielkości ładunku
+
+Panel zleceń domyślnie pokazuje kolumnę **Wielkość ładunku**: procent wypełnienia standardowej naczepy przez dane zlecenie (13,6 LDM / 24 t / 33 miejsca paletowe EUR), wraz z jego metrami ładunkowymi (LDM).
+
+<Note>
+Jeśli zlecenie nie ma wartości LDM, ale ma podaną liczbę palet, Druma szacuje LDM na poziomie 0,4 LDM na paletę EUR — podpowiedź kolumny oznacza wtedy wartość jako szacunkową, ilekroć jest wyliczana w ten sposób.
+</Note>
+
+Zlecenia z wypełnieniem poniżej 85% otrzymują fioletowy chip **PART**, oznaczający je jako ładunki częściowe — dobrych kandydatów do skonsolidowania w ramach przejazdu grupażowego.
+
+### Szybki filtr ładunków częściowych
+
+Kliknij filtr **Ładunki częściowe** w panelu zleceń, aby pokazać tylko niezgrupowane ładunki częściowe: zlecenia wystarczająco małe, by je łączyć, które nie jadą jeszcze w ramach żadnego przejazdu grupażowego. Filtr zapisuje się w adresie URL, więc możesz dodać go do zakładek albo udostępnić link bezpośrednio do przefiltrowanej listy.
+
+### Rozpoznawanie zleceń już w przejeździe
+
+Dwa wskaźniki informują Cię, że zlecenie jest już częścią przejazdu, więc nie musisz szukać go do dodania do kolejnego:
+
+- **Odznaka G** — bursztynowa odznaka **G** znajduje się obok numeru zlecenia w panelu zleceń oraz obok odpowiadającej faktury na liście faktur. Kliknij ją, aby przejść od razu do panelu szczegółów tego przejazdu.
+- **Pasek grupażu** — otwarcie zlecenia należącego do przejazdu pokazuje pasek na górze jego panelu szczegółów: *"Część przejazdu grupażowego {ref} · {n} zleceń · {truck}"*. Stamtąd też możesz przejść bezpośrednio do przejazdu.
+
+---
+
 ## Tworzenie przejazdu grupażowego
 
 <Steps>
@@ -59,9 +86,38 @@ Waga i objętość nie blokują dodawania zleceń — tylko metry ładunkowe (LD
 
 ---
 
+## Wolne miejsca
+
+Dodawanie zleceń pojedynczo działa od strony zlecenia. **Wolne miejsca** działają od strony ciężarówki: to trzeci widok na stronie Grupaż, obok **Tabeli** i **Mapy**, wylistowujący nadchodzące przypisane ciężarówki z wolną pojemnością — a także otwarte przejazdy bez ciężarówki — i sugerujący, które niezgrupowane ładunki częściowe pasują do każdego miejsca.
+
+<Steps>
+  <Step title="Przełącz się na widok Wolne miejsca">
+    Otwórz moduł **Grupaż** i kliknij **Wolne miejsca** w przełączniku widoku.
+  </Step>
+  <Step title="Sprawdź wolną pojemność miejsca">
+    Każde miejsce — ciężarówka albo przejazd w statusie roboczym/potwierdzony, wciąż czekający na ciężarówkę — wylistowuje to, co jest już zajęte względem jego pojemności, łącznie w LDM, wadze i paletach, plus przestrzeń wciąż pozostającą w każdym z tych wymiarów. Przejazd bez przypisanej ciężarówki jest oznaczony jako **Jeszcze brak ciężarówki**. Pierwsze miejsce z pasującymi zleceniami rozwija się automatycznie, a pole wyszukiwania dopasowuje ciężarówkę, numer rejestracyjny, kierowcę, miasta i referencje przejazdów.
+  </Step>
+  <Step title="Sprawdź sugerowane zlecenia">
+    Pod każdym miejscem Druma wylistowuje najlepiej pasujące zlecenia: dopasowane wg okna daty odbioru ±2 dni, zgodności trasy w promieniu objazdu ok. 100 km oraz dopasowania w LDM, wadze i paletach. Każdy kandydat pokazuje datę odbioru i okno czasowe (np. `07/08 08:00–10:00`), więc wąskie okno jest widoczne, zanim się zdecydujesz. Zlecenia będące już w *innym* otwartym przejeździe też się tu pojawiają, oznaczone jako **W GRP-XXXXX**. Niezgodność typu naczepy między zleceniem a ciężarówką pokazuje się jako ostrzeżenie — nie blokuje dopasowania.
+  </Step>
+  <Step title="Dodaj — lub przenieś — jednym kliknięciem">
+    Kliknij **Dodaj do trasy** przy kandydacie, który nie jest jeszcze zgrupowany. Przy kandydacie oznaczonym **W GRP-XXXXX** przycisk pokazuje zamiast tego **Przenieś tutaj**: jedno kliknięcie przenosi zlecenie z tamtego przejazdu do tego miejsca, a podział kosztów obu przejazdów przelicza się automatycznie. Jeśli ciężarówka wiozła pojedyncze zlecenie, Druma tworzy przejazd grupażowy w statusie **Wersja robocza** i dodaje do niego oba zlecenia. Jeśli ciężarówka jest już na przejeździe, zlecenie zostaje po prostu dodane do niego jako nowy odcinek.
+  </Step>
+</Steps>
+
+<Note>
+Przejazdy, które już wyruszyły (są w trakcie realizacji), nie są proponowane jako cele w widoku Wolne miejsca, a ich zleceń też nie można z nich wyciągnąć — pojawiają się tu, po obu stronach przeniesienia, tylko ciężarówki i przejazdy wciąż przed wyjazdem.
+</Note>
+
+<Note>
+Pojemność pochodzi z naczepy przypisanej do zleceń ciężarówki. Gdy żadna nie jest ustawiona, Druma przyjmuje domyślne założenie standardowej naczepy (13,6 LDM / 24 t / 33 palety) i zaznacza, że to szacunek.
+</Note>
+
+---
+
 ## Sekwencjonowanie przystanków
 
-Nowe przystanki są po prostu dołączane na koniec przejazdu w kolejności, w jakiej je dodajesz — Druma nie optymalizuje automatycznie trasy w miarę dodawania.
+Nowe przystanki są po prostu dołączane na koniec przejazdu w kolejności, w jakiej je dodajesz — Druma nie optymalizuje automatycznie trasy w miarę dodawania. Wyjątkiem jest początkowa lista przystanków przejazdu: gdy przejazd powstaje od razu w całości — przez **Auto-wypełnij** albo przez dodanie pierwszych zleceń przez **Wolne miejsca** — Druma sekwencjonuje go najpierw pod kątem załadunków, czyli wszystkie odbiory przed jakimikolwiek dostawami, zamiast zostawiać przystanki w surowej kolejności dodawania.
 
 Aby zoptymalizować kolejność, kliknij **Auto-sekwencja** (pokazywane tylko przy 2+ przystankach): zmienia kolejność listy przystanków, aby zminimalizować całkowitą odległość (odbiory przed dostawami), i raportuje, ile odległości zaoszczędziła, albo że kolejność była już optymalna. Możesz też ręcznie przeciągać przystanki albo użyć strzałek góra/dół na każdym wierszu przystanku w dowolnym momencie.
 
@@ -92,6 +148,10 @@ Przejazd grupażowy pokazuje paski postępu wypełnienia dla wymiarów, dla któ
 **Tryb podziału kosztów** kontroluje, jak wspólne koszty są dzielone między odcinki. Dostępne są cztery tryby: **CBM**, **Waga**, **LDM** i **Rozliczeniowy**. Kliknij przycisk trybu na karcie Podział kosztów przejazdu, aby przełączyć — wyzwala to automatyczne przeliczenie udziału kosztu każdego odcinka, procentu podziału, przydzielonego kosztu i marży.
 
 Wybierz tryb pasujący do Twojej umowy handlowej z klientami na tym przejeździe. CBM jest najczęstszy dla ładunków ogólnych, LDM dla ładunków krytycznych pod względem powierzchni podłogi, waga dla gęstych towarów, a Rozliczeniowy, gdy rozliczasz się na podstawie tego z wagi/objętości, które daje wyższą wartość.
+
+<Note>
+Każda ścieżka dodawania zlecenia do przejazdu — ręczne dodanie, Auto-wypełnij czy Wolne miejsca — kopiuje wymiary ładunku tego zlecenia (CBM, waga, LDM) na jego odcinek, dzięki czemu podział kosztów rozdziela się poprawnie niezależnie od trybu. Dla odcinków dodanych przed wprowadzeniem tego kopiowania, użyj **Przelicz podział** na karcie Podział kosztów przejazdu, aby uzupełnić poprawne wartości.
+</Note>
 
 ---
 
@@ -135,6 +195,18 @@ Klienci na tej samej ciężarówce nigdy nie widzą nawzajem swoich faktur ani c
 ## Śledzenie
 
 Klienci śledzący przesyłkę grupażową widzą statyczną datę **Oczekiwana dostawa** na publicznej stronie śledzenia, nie na żywo, sekwencjonowane wieloprzystankowo ETA.
+
+---
+
+## Grupaż na tablicy planowania i mapie na żywo
+
+Przejazdy grupażowe pozostają widoczne również poza modułem Grupaż:
+
+- **Wiersz, nie karta** — przejazd grupażowy pojawia się na tablicy planowania jako standardowy wiersz na liście **Wychodzące**, zgrupowany pod tym samym dniem co jego pierwszy przystanek załadunku, dokładnie jak zlecenie. Pokazuje odznakę statusu, oznaczenie **G** wraz z referencją, kompaktowy znacznik przystanków w rodzaju **2P+3D** (2 załadunki, 3 rozładunki w całym przejeździe) oraz wskaźnik wypełnienia LDM kolorowany tak samo jak gdzie indziej: zielony poniżej 75%, bursztynowy 75–94%, czerwony od 95% wzwyż.
+- **Przypisanie ciężarówki jak przy zleceniu** — wiersz ma to samo pole **Przypisz ciężarówkę** co każde zlecenie: przeciągnij na nie ciężarówkę, aby ją przypisać, dokładnie tak jak przy przypisywaniu ciężarówki do pojedynczego zlecenia.
+- **Przybliżona trasa** — druga linia pokazuje przybliżony (**≈**) całkowity dystans i czas trasy oraz datę i okno czasowe pierwszego załadunku. Wartość ≈ pochodzi z optymalizatora trasy, gdy przejazd został zsekwencjonowany; wcześniej Druma korzysta z oszacowania w linii prostej przez wszystkie odcinki. Najedź na wiersz, aby zobaczyć pełny łańcuch miasto załadunku → … → miasto rozładunku; otwórz panel szczegółów przejazdu, aby zobaczyć pełne zestawienie wypełnienia w każdym wymiarze (patrz tabela wypełnienia powyżej).
+- **Wyszukiwanie i filtry** — wyszukiwanie numeru zlecenia lub klienta na tablicy dopasowuje również zlecenia jadące wewnątrz przejazdu grupażowego, nie tylko jego własną referencję, a filtr tablicy pozwala całkowicie pokazać lub ukryć przejazdy grupażowe.
+- **Mapa na żywo** — ciężarówka realizująca przejazd grupażowy pokazuje w swoim okienku podręcznym na mapie referencję przejazdu oraz postęp przystanków (np. "przystanek 3 z 6"), wraz z linkiem **Otwórz przejazd** prowadzącym prosto do panelu szczegółów przejazdu.
 
 ---
 
