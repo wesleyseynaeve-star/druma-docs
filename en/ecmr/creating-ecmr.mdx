@@ -16,6 +16,8 @@ Once issued, the eCMR document appears in the **Documents** tab of the order det
 
 <Note>
 Subcontracted orders are skipped — the subcontractor issues their own CMR, so Druma can't sign on their behalf. Orders that already have an eCMR are never re-issued.
+
+**Empty shunt / repositioning moves are also skipped.** A shunt or repositioning order only gets an eCMR when the moved trailer is loaded — an empty move has no goods to consign, so there's nothing for a CMR to cover. Every other order type is issued one regardless of cargo, since a freight order carries cargo by definition.
 </Note>
 
 ---
@@ -44,9 +46,25 @@ Druma populates the eCMR fields from the order data you already entered. Here is
 | Goods description | Cargo description field on the order |
 | Truck registration plate | Vehicle assigned to the order |
 | Driver name | Driver assigned to the order |
-| Special conditions (ADR) | Order's ADR flag and class |
+| Special conditions (ADR) | Full ADR 5.4.1.1.1 dangerous-goods declaration — UN number, proper shipping name, class, packing group, and tunnel code, in that order (e.g. `UN 1203, PETROL, 3, II, (D/E)`) — built from the order's structured ADR fields |
 
 If any of this data is missing or incorrect on the order, fix the order first, then create the eCMR — there's no pre-fill preview step; the document is written immediately.
+
+<Note>
+Box 9 is built from the order's structured ADR fields (UN number, proper shipping name, packing group, tunnel code), not from free text — an inspector reads the sequence positionally, so it follows the regulation's prescribed order rather than however a planner might type it. If the order also has a free-text ADR description, it's appended to the declaration as a trailing remark rather than replacing it. An order flagged ADR with no structured data at all still prints a bare `ADR` marker, so box 9 is never silently blank on a dangerous-goods consignment.
+</Note>
+
+---
+
+## Overriding the Consignor / Consignee (Boxes 1 & 2)
+
+Boxes 1 (consignor / sender) and 2 (consignee) default to the order's client — correct for a normal freight order, but not always right on a **loaded shunt or repositioning move**, where the client is often a haulier or 3PL moving someone else's goods and isn't actually a party to the carriage.
+
+To name the real parties, open the order's **Documents** tab and expand **CMR consignment details** — the same panel used for boxes 6, 8, 9, 14, 15, and 20. The **Consignor / sender** and **Consignee** fields there override boxes 1 and 2; leave either blank to keep using the client.
+
+<Warning>
+On a loaded shunt or repositioning move that crosses a border, if neither override is set, Druma warns you that boxes 1 and 2 will both print the client's name — CMR Art. 6.1(b)/(c) requires the real consignor and consignee. The warning doesn't block you from creating the eCMR; it's there so you can catch it before the note is signed. As a last check, the driver is also asked to confirm the parties before signing in this same situation — see [The Signing Flow](/en/ecmr/signing-flow).
+</Warning>
 
 ---
 

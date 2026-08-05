@@ -1,26 +1,26 @@
 ---
 title: "Integrarea SAGA C si WinMENTOR"
-description: "Exporta facturile Druma catre SAGA C sau WinMENTOR Classic ca pachete de fisiere, pe care le imporți in software-ul tau de contabilitate."
+description: "Exporta facturile Druma catre SAGA C ca pachet fix, sau cloneaza un sablon in stil WinMENTOR, personalizabil, din Finante → Export Builder."
 icon: "calculator"
 ---
 
-Majoritatea companiilor romanesti de transport isi gestioneaza contabilitatea in SAGA C sau WinMENTOR Classic. Druma se integreaza cu ambele, permitandu-ti sa muti facturile din Druma in software-ul tau de contabilitate fara reintroducere manuala a datelor.
+Majoritatea companiilor romanesti de transport isi gestioneaza contabilitatea in SAGA C sau WinMENTOR. Druma exporta facturile din **Finante → Export Builder**, permitandu-ti sa muti facturile din Druma in software-ul tau de contabilitate fara reintroducere manuala a datelor.
 
 ## SAGA C
 
-SAGA C este cel mai folosit software de contabilitate pentru IMM-urile romanesti. Druma exporta facturi in formatul DBF asteptat de SAGA C.
+SAGA C este cel mai folosit software de contabilitate pentru IMM-urile romanesti. Druma exporta facturi in formatul DBF asteptat de SAGA C, ca pachet fix, cu un singur click.
 
 ### Exportul din Druma
 
 <Steps>
-  <Step title="Deschide meniul de export">
-    In Druma, mergi la **Facturare → Export → SAGA C**.
+  <Step title="Deschide Export Builder">
+    In Druma, mergi la **Finante → Export Builder**.
   </Step>
-  <Step title="Selecteaza intervalul de date">
-    Alege perioada pe care vrei sa o exporti — de regula luna curenta sau luna precedenta. Toate facturile emise in acea perioada vor fi incluse.
+  <Step title="Selecteaza perioada">
+    Pentru companiile cu sediul in Romania, un panou **Export SAGA (Romania)** apare in partea de sus a paginii. Alege luna pe care vrei sa o exporti — de regula luna curenta sau luna precedenta. Toate facturile emise in acea perioada vor fi incluse.
   </Step>
   <Step title="Descarca fisierul ZIP">
-    Apasa **Descarca ZIP**. In functie de ce se afla in perioada selectata, fisierul contine:
+    Apasa **Export SAGA (Romania)**. In functie de ce se afla in perioada selectata, fisierul contine:
     - `CLI_<data>.dbf` — date de baza ale clientilor
     - `ART_<data>.dbf` — elementul de linie al serviciului de transport (inclus implicit doar la primul tau export; dezactivat automat dupa, deoarece SAGA are nevoie de el o singura data)
     - `IE_<data>_<data>.dbf` — facturi de vanzare (Iesiri), cu detalierea TVA
@@ -29,6 +29,8 @@ SAGA C este cel mai folosit software de contabilitate pentru IMM-urile romanesti
     - `README.txt` — instructiuni de import in romana
   </Step>
 </Steps>
+
+Acest pachet SAGA este fix — nu este un profil personalizat si nu trece prin generatorul de coloane de mai jos. Este acelasi pachet pe care exportul lunar automat (mai jos, pe aceasta pagina) il trimite prin email contabilului tau.
 
 ### Importul in SAGA C
 
@@ -51,18 +53,26 @@ SAGA C este cel mai folosit software de contabilitate pentru IMM-urile romanesti
 
 Pentru facturile emise in alte monede decat RON, Druma include automat cursul de schimb BNR (Banca Nationala a Romaniei) valabil la data facturii. Este inclus in fisierul DBF si importat automat in SAGA C — fara introducere manuala a cursului.
 
-## WinMENTOR Classic
+## WinMENTOR
 
-WinMENTOR Classic foloseste un format diferit fata de SAGA C: fisiere `.txt` delimitate prin pipe (`|`), nu DBF. Selecteaza **WinMENTOR Classic** din lista de export, in loc de SAGA C.
+Spre deosebire de SAGA C, nu exista un pachet WinMENTOR fix de descarcat — instalarile WinMENTOR variaza suficient de mult intre companii, incat Druma iti ofera in schimb un **sablon de pornire**, pe care apoi il ajustezi ca sa se potriveasca propriului tau format de import.
 
-Arhiva ZIP contine:
-- `Iesiri_<data>_<data>.txt` — facturi de vanzare
-- `Clienti_<data>.txt` — date de baza ale clientilor atinsi de acele facturi
-- `Articole_<data>.txt` — elementul de linie al serviciului de transport
-- `Incasari_<data>_<data>.txt` — plati, prezent doar daca perioada are vreuna
-- `README.txt` — instructiuni de import in romana
+<Steps>
+  <Step title="Deschide Export Builder">
+    In Druma, mergi la **Finante → Export Builder**.
+  </Step>
+  <Step title="Cloneaza sablonul WinMENTOR">
+    Apasa **Cloneaza sablonul WinMentor**. Asta creeaza un profil de export nou, precompletat cu setarile tipice pentru WinMENTOR: delimitator pipe (`|`), codare Windows-1252, date in format `DD.MM.YYYY` si un set de coloane de start — Numar, Data, Client, Suma, TVA, Total, Cod_TVA.
+  </Step>
+  <Step title="Ajusteaza coloanele">
+    Adauga, elimina sau reordoneaza coloane din lista de campuri ale facturii de vanzare, redenumeste anteturile si seteaza o transformare per coloana (data, numar, majuscule, trunchiere, sau o cautare de cod de nomenclator) ca sa se potriveasca cu ce asteapta importul tau WinMENTOR. Da un nume profilului si apasa **Salveaza profilul**.
+  </Step>
+  <Step title="Previzualizeaza, apoi ruleaza">
+    Alege o perioada si apasa **Actualizeaza previzualizarea** ca sa verifici rezultatul inainte sa te angajezi. Apasa **Ruleaza exportul** ca sa descarci fisierul CSV/TXT pentru acea perioada.
+  </Step>
+</Steps>
 
-Pentru import: in WinMENTOR, mergi la **Utilitare → Import/Export → Import din fisier text**, selecteaza fiecare fisier pe rand si confirma ca delimitatorul este `|`. Verifica documentele importate sub **Documente → Vanzari**.
+Pentru ca este un profil de export obisnuit, acelasi generator functioneaza si pentru orice alt software de contabilitate bazat pe CSV — WinMENTOR este doar punctul de pornire precompletat, nu un format fix. Odata salvat, profilul apare alaturi de celelalte profiluri tale de export si poate fi rulat din nou pentru orice perioada, de acum inainte.
 
 ## Export lunar automat (SAGA C)
 
@@ -70,10 +80,14 @@ In loc sa exporti manual fiecare perioada, poti face ca Druma sa trimita automat
 
 **Setari → Automatizari si Functii → Configurare Export SAGA**
 
-Configureaza **email-ul contabilului** (si o copie CC optionala), si o **zi din luna** (1–28) in care sa ruleze. Un job programat verifica zilnic si, in ziua configurata, exporta **luna anterioara completa** si trimite arhiva ZIP contabilului prin email, cu un sumar al numarului de facturi/achizitii/plati si orice avertismente de validare.
+Configureaza **email-ul contabilului** (si o copie CC optionala), si o **zi din luna** in care sa ruleze. Un job programat verifica zilnic si, in ziua configurata, exporta **luna anterioara completa** si trimite arhiva ZIP contabilului prin email, cu un sumar al numarului de facturi/achizitii/plati si orice avertismente de validare.
 
 <Note>
-Email-ul contine un link de descarcare a arhivei ZIP, care **expira dupa 7 zile**. Nu exista o lista "Istoric Export" in aplicatie — fisierul fiecarei luni este accesibil doar prin acel link trimis pe email (sau re-ruland exportul manual pentru aceeasi perioada, din Facturare → Export).
+Alege o zi intre **1 si 5**. Campul accepta momentan valori mai mari in interfata, dar valorile de peste 5 nu sunt salvate in mod fiabil (o problema cunoscuta, in curs de reparare) — pentru moment, ramai la 1–5.
+</Note>
+
+<Note>
+Email-ul contine un link de descarcare a arhivei ZIP, care **expira dupa 7 zile**. Nu exista o lista "Istoric Export" in aplicatie — fisierul fiecarei luni este accesibil doar prin acel link trimis pe email (sau re-ruland exportul manual pentru aceeasi perioada, din Finante → Export Builder).
 </Note>
 
 <CardGroup cols={2}>

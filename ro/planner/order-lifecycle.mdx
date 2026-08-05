@@ -28,6 +28,7 @@ Fiecare status se traduce intr-o singura culoare (nuanta), identica pe tabla de 
 |---|---|
 | Ciorna | Gri (slate) |
 | In asteptare | Gri (slate) |
+| Virtual | Violet |
 | Atribuita | Albastru |
 | Plecat | Indigo |
 | Sosit la Preluare | Chihlimbariu |
@@ -60,6 +61,20 @@ Comanda exista in sistem, dar nu este inca activa. Soferul nu o vede in aplicati
 - Anuleaza comanda
 
 Foloseste Ciorna cand un client a facut o rezervare provizorie, dar nu a confirmat inca, sau cand construiesti comanda, dar inca astepti detalii.
+
+---
+
+## Virtual
+
+**Declansat de:** Planificatorul apasa **Virtual** pe Tabla de planificare, pentru a crea o comanda substituent.
+
+**Cine poate declansa:** Doar planificatorul.
+
+O comanda Virtual este un substituent usor — adresa de preluare si livrare, o data de preluare si, optional, un pret — care rezerva un camion inainte de o rezervare formala. Este separata de fluxul normal Ciorna → In asteptare → Atribuita: in schimb, odata ce rezervarea reala soseste, planificatorul o combina intr-o comanda propriu-zisa, prin modalul Comanda Noua, care preia automat atribuirea camionului. Comenzile Virtual apar **violet** pe tabla de planificare, ca sa fie usor de distins dintr-o privire, fata de o comanda reala, rezervata.
+
+<Note>
+Optimizatorul de reatribuire a reincarcarilor trateaza comenzile Virtual la fel ca pe cele Ciorna sau In asteptare, cand inlantuie reincarcari viitoare — asa ca un substituent notat cu creionul poate fi in continuare schimbat cu o reincarcare reala, mai ieftina, daca una apare.
+</Note>
 
 ---
 
@@ -251,6 +266,7 @@ Soferii uita uneori sa apese actualizarile de status — se intampla. Ca planifi
 | Status | Automat | Manual (sofer) | Manual (planificator) |
 |---|---|---|---|
 | Ciorna | — | — | Da |
+| Virtual | — | — | Da |
 | In asteptare | — | — | Da |
 | Atribuita | — | — | Da |
 | Plecat | — | Da | Da (suprascriere) |

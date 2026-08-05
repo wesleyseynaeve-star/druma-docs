@@ -30,7 +30,7 @@ Tabul **Acum** este un layout impartit, pe doua coloane:
 - **Plecari** (dreapta) — comenzi care inca au nevoie de un camion (preluari neatribuite), plus comenzi deja atribuite, toate grupate la fel ca Sosiri, astfel incat un camion care se elibereaza intr-o zona sa se alinieze vizual cu incarcaturile care se preiau in aceeasi zona.
 
 <Frame caption="Vizualizarea Acum — capacitatea Sosiri in stanga, incarcaturile Plecari in dreapta, cu comutatoarele de densitate si Preplanificare in bara de instrumente.">
-  <img src="/images/planner/planning-board-split.png" alt="Vizualizarea Acum a Tablei de planificare, aratand coloanele Sosiri si Plecari" />
+  <img src="/images/planner/planning-board-split.ro.png" alt="Vizualizarea Acum a Tablei de planificare, aratand coloanele Sosiri si Plecari" />
 </Frame>
 
 Atribuirea unui camion se face printr-o tragere: apuca un rand de pe oricare parte si plaseaza-l pe randul potrivit de pe cealalta parte.
@@ -74,6 +74,10 @@ Meniul **Vizualizari** iti permite sa salvezi filtrul, gruparea si configuratia 
 ### Filtre si cautare
 
 Apasa **Filtre** pentru a deschide panoul de filtre — status, interval de date de preluare/livrare, zona si tara, oras sau cod postal de incarcare/livrare. Filtrele active apar ca etichete detasabile sub bara de instrumente; apasa **Sterge tot** pentru a le reseta. Fiecare coloana are si propria casuta de cautare rapida, pentru filtrare dupa numarul comenzii, adresa sau numele soferului, in cadrul acelei parti.
+
+<Note>
+Cautarea ajunge si in interiorul comenzilor proprii unei curse de grupaj, iar un filtru iti permite sa arati sau sa ascunzi cursele de grupaj in intregime — vezi [Grupaj pe Tabla de planificare si Harta live](/ro/planner/groupage).
+</Note>
 
 ### Cadrane de triaj
 
@@ -154,7 +158,7 @@ Daca o atribuire propusa ar crea o problema — o limita de cabotaj, o nepotrivi
 Comuta la tabul **Cronologie** pentru o vizualizare de tip Gantt: fiecare camion este un rand, iar programul sau este desenat ca segmente pozitionate in timp — etape de conducere si ferestre de incarcare/descarcare. Segmentele planificate (inca nereale) sunt desenate cu un model hasurat; segmentele reale/confirmate sunt desenate plin. Un segment fara niciun marcaj temporal confirmat inca este afisat cu opacitate redusa si un contur punctat, pentru a-l marca drept estimat.
 
 <Frame caption="Vizualizarea Cronologie — fiecare rand este un camion; o linie rosie marcheaza ora curenta.">
-  <img src="/images/planner/planning-board-timeline.png" alt="Vizualizarea Cronologie a Tablei de planificare, aratand camioanele ca randuri cu segmente pozitionate in timp" />
+  <img src="/images/planner/planning-board-timeline.ro.png" alt="Vizualizarea Cronologie a Tablei de planificare, aratand camioanele ca randuri cu segmente pozitionate in timp" />
 </Frame>
 
 Foloseste comenzile de navigare a datei pentru a te deplasa prin program, si **selectorul de interval** pentru a alege cat timp este vizibil:
@@ -167,11 +171,35 @@ Foloseste comenzile de navigare a datei pentru a te deplasa prin program, si **s
 
 Cronologie foloseste acelasi panou de Filtre ca vizualizarea Acum, asa ca un filtru de status, data, zona sau locatie se pastreaza la comutarea intre taburi.
 
+### Tragere pentru reprogramare
+
+La intervalele de 1 zi si 3 zile, trage corpul unui segment planificat pentru a-l muta la o ora noua, sau trage marginile lui pentru a redimensiona fereastra de incarcare/descarcare. Plasarea modificarii deschide un panou de confirmare care te avertizeaza despre orice suprapunere de cursa sau conflict cu orele de conducere conform Regulamentului UE 561/2006, pe care modificarea l-ar crea, inainte sa confirmi — un mesaj toast de anulare apare dupa aceea, astfel incat o reprogramare gresita se poate anula dintr-un click.
+
+### Insigne de conformitate
+
+Eticheta de cursa a fiecarui camion arata insigne mici pentru orice afecteaza acel camion chiar acum: un document de flota care expira sau a expirat, un avertisment sau o incalcare de cabotaj, o fereastra de indisponibilitate (out-of-service) sau o lucrare de atelier in asteptare. Treci cu mouse-ul peste o insigna pentru detalii.
+
+### Previzualizare fantoma pentru candidat
+
+Cand o comanda neatribuita este focalizata, trecerea cu mouse-ul peste un camion candidat clasat in Cronologie arata o plasare fantoma a acelei comenzi direct pe culoarul camionului — inclusiv etapa goala estimata pentru a ajunge la preluare — astfel incat poti vedea exact unde ar ajunge, inainte sa confirmi. Apasa pe fantoma pentru a atribui comanda direct acelui camion.
+
+### Intervalul de o saptamana
+
+La intervalul de **1 saptamana**, randul fiecarui camion se restrange in blocuri pe zi (numar de comenzi si utilizare), in loc de bare la scara orelor. Axa orara este inlocuita cu un antet cu numele zilei, iar antetul grupului de zone ramane fix, in timp ce derulezi.
+
 ---
 
 ## Vizualizarea Harta
 
-Comuta la tabul **Harta** pentru a vedea incarcaturile neatribuite si soferii disponibili plasati geografic, in loc de randuri. Este util pentru o citire spatiala rapida de tipul "ce este aproape de ce", inainte sa comuti inapoi la Acum, pentru a atribui efectiv. Actiunile **Auto Suggest** si **Virtual** sunt disponibile si aici.
+Comuta la tabul **Harta** pentru o vizualizare geografica a incarcaturilor neatribuite si a camioanelor disponibile, condusa de un sistem de culori bazat pe urgenta (vezi legenda de pe harta), astfel incat incarcaturile si camioanele care au nevoie de atentie cel mai curand ies in evidenta. Comenzile si camioanele se grupeaza (cluster) la zoom redus, ca o regiune aglomerata sa nu devina o gramada ilizibila de pini.
+
+<Frame caption="Tabla de planificare — Vizualizarea Harta">
+  <img src="/images/planner/planning-board-map.ro.png" alt="Vizualizarea Harta a Tablei de planificare cu comenzi si camioane grupate" />
+</Frame>
+
+Bara de instrumente are propria bara de filtre — cautare comenzi, cautare camioane si un comutator de status camion — plus un contor care arata cate comenzi urgente sunt momentan pe harta. Un banner apare cand unul sau mai multe camioane nu au o pozitie GPS cunoscuta si deci nu pot fi plasate.
+
+Apasa pe un marker de comanda pentru a deschide un panou cu cele mai bune camioane candidate pentru ea, clasate dupa km goi — fiecare afisat ca un card compact, cu o ora de eliberare, timp de conducere si o banda de sosire la preluare. Apasa pe un candidat (sau direct pe un marker de camion) pentru a deschide acelasi panou de confirmare folosit in restul tablei, inclusiv orice verificari de cabotaj, remorca sau oprire de releu. Actiunile **Auto Suggest** si **Virtual** sunt disponibile si aici.
 
 ---
 

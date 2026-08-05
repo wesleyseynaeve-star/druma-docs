@@ -26,16 +26,20 @@ HERE converteste si un pin plasat pe harta (latitudine/longitudine) inapoi intr-
 
 ## Rutare, taxe de drum si ETA: gestionate de PTV
 
-Rutarea optimizata pentru camioane (evitarea podurilor joase, restrictiilor de greutate si altor pericole pe care vehiculele grele nu le pot lua), estimarea costului taxelor de drum in sistemele europene de taxare si ETA-ul live, care tine cont de trafic, sunt toate calculate de **PTV Developer Routing API**, nu de HERE. Druma trimite dimensiunile, greutatea si numarul de axe ale vehiculului tau catre PTV, ca rutele si estimarile de taxe sa reflecte camionul tau real.
+Rutarea optimizata pentru camioane (evitarea podurilor joase, restrictiilor de greutate si altor pericole pe care vehiculele grele nu le pot lua), estimarea costului taxelor de drum in sistemele europene de taxare si ETA-ul live, care tine cont de trafic, sunt toate calculate de **PTV Developer Routing API**, nu de HERE.
+
+<Note>
+Profilul de vehicul PTV este populat cu **greutatea si clasa de emisii** reale ale camionului tau doar in **Instrumentul de Pretuire (Pricing Tool)**. Crearea comenzii, planning board-ul si potrivirea AI a camioanelor apeleaza toate PTV cu un profil implicit generic de 40 de tone — inca nu transmit datele de greutate/emisii ale camionului atribuit in apelul de rutare. Dimensiunile (inaltime, latime, lungime) si numarul de axe nu sunt trimise catre PTV in niciun flux, astazi; calculele de taxe si ruta se bazeaza peste tot pe distanta si clasa de vehicul furnizata catre PTV, nu pe specificatiile fizice exacte ale camionului tau.
+</Note>
 
 <Warning>
 Estimarile de cost pentru taxele de drum raman aproximari, indiferent de furnizor. Taxele reale depind de ruta specifica parcursa, de configuratia de axe sub care este inregistrat camionul tau in sistemul de taxare al fiecarei tari si de daca tarifele s-au schimbat de la ultima actualizare a datelor. Foloseste aceste cifre ca un ghid, nu ca un input precis de factura.
 </Warning>
 
-Mentinerea la zi a detaliilor tehnice ale vehiculului in **Flota → Vehicule → [vehicul] → Detalii Tehnice** este cel mai eficient pas unic pentru a imbunatati precizia rutarii, taxelor si ETA-ului — indiferent care furnizor face calculul.
+Mentinerea la zi a detaliilor tehnice ale vehiculului in **Flota → Vehicule → [vehicul] → Detalii Tehnice** imbunatateste precizia in **Instrumentul de Pretuire**, astazi, unde greutatea si clasa de emisii ale camionului tau sunt de fapt folosite. Apelurile de rutare din crearea comenzii, board si potrivirea AI inca nu citesc acele campuri — deci o fisa de vehicul mai detaliata nu schimba momentan cifrele de rutare/ETA in afara Instrumentului de Pretuire.
 
 <CardGroup cols={1}>
   <Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
-    Cum gestionezi inregistrarile vehiculelor tale, inclusiv dimensiunile care alimenteaza rutarea.
+    Cum gestionezi inregistrarile vehiculelor tale, inclusiv greutatea si clasa de emisii folosite de apelurile de rutare ale Instrumentului de Pretuire.
   </Card>
 </CardGroup>

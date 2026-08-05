@@ -84,12 +84,39 @@ This check is a boolean capability flag, not an expiry or per-class check: it do
 
 ---
 
-## ADR Surcharge
+## Planning-Board ADR Warnings
 
-Orders flagged as ADR automatically include an ADR surcharge as a line item on the invoice. The rate is a fixed **€75 flat fee per order**, configured centrally by Druma — there is currently no per-company setting to change this amount.
+Since 2026-07-30, the assignment flow also runs a second, **expiry-aware** check alongside the boolean capability check above. When you assign a driver, truck, or trailer to an ADR order, Druma compares the driver's **ADR Expiry**, the truck's ADR certificate expiry, and the trailer's ADR certificate expiry against the order's **delivery date** (falling back to the pickup date when no delivery date is set yet).
+
+If any of those certificates will have lapsed by the delivery date, Druma shows an amber **"ADR certificate expires before delivery"** warning chip. This appears everywhere an assignment is made or reviewed:
+
+- The **confirm assignment** sheet
+- **Drag-assign** on the planning board
+- **Auto-Plan** suggestions
 
 <Note>
-If some ADR contracts are priced differently, you can override the surcharge amount on individual orders after the order is created — go to the order's Financials tab and edit the ADR surcharge line item.
+This is a warning, not a block — the assignment still goes through even when the chip is shown. Treat it as a prompt to renew the certificate or choose a different resource before departure.
+</Note>
+
+Two related checks reinforce this warning elsewhere in the platform:
+
+- **Matching engines** — Auto-Plan and AI order matching penalise a non-ADR-capable vehicle category or a lapsed driver/vehicle ADR certificate in their scoring, so a compliant resource ranks above a non-compliant one when candidates are otherwise similar.
+- **Site-level restrictions** — if a pickup or delivery site is flagged as not accepting ADR cargo (**Customer Service → Sites**, restrictions), an ADR order routed through that site shows a warning on the order's readiness panel.
+
+---
+
+## ADR Surcharge
+
+Orders flagged as ADR automatically include an ADR surcharge as a line item on the invoice. Druma resolves the surcharge amount through a resolution chain:
+
+1. **Rate card** — the client's rate card has its own **ADR fee (€)** field (**Settings → Rate Cards**). If set, this value is used.
+2. **Platform default** — if the rate card doesn't specify a value, Druma falls back to a platform-wide ADR surcharge default.
+3. **€75 built-in fallback** — if neither of the above is configured, Druma applies a **€75** flat fee.
+
+Set the ADR fee on the relevant rate card to price ADR surcharges per client or contract — that's the intended way to change the amount, not a per-order edit.
+
+<Note>
+As a last resort, you can still edit the ADR surcharge line item on an individual order's Financials tab after the order is created — but prefer setting the rate card's ADR fee so the correct amount applies automatically to every future order under that rate card.
 </Note>
 
 ---
@@ -117,6 +144,6 @@ Regardless of whether alerts are enabled, an expired ADR document does not by it
   Full guide to tracking all vehicle document types and the compliance overview.
 </Card>
 
-<Card title="Creating Orders" icon="plus" href="/en/orders/creating-orders">
+<Card title="Creating Orders" icon="plus" href="/en/planner/creating-orders">
   How to create an order, flag ADR cargo, and assign drivers and vehicles.
 </Card>

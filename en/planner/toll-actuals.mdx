@@ -15,18 +15,21 @@ Druma closes this gap by letting drivers log toll receipts directly from the PWA
 
 ## How drivers log toll receipts
 
-During an active load, the driver's PWA shows a **Log toll** button on the load detail screen. Tapping it opens the **Toll Receipt** sheet.
+During an active load, the driver's PWA shows a red **Report** button on the load detail screen. Tapping it opens the **Report a problem** sheet, which lists **Log toll** alongside Report Delay, Report Incident, and (where applicable) the cannot-complete actions. Tapping **Log toll** opens the **Toll Receipt** sheet.
 
 <Steps>
-  <Step title="Tap Log toll">
-    The button is visible whenever the load status is at_pickup, loading, in_transit, at_delivery, or offloading — any status where the truck is on the road.
+  <Step title="Tap Report, then Log toll">
+    **Log toll** is offered whenever the load status is at_pickup, loading, in_transit, at_delivery, or offloading — any status where the truck is on the road.
   </Step>
   <Step title="Enter the toll details">
     Fill in:
-    - **Amount (EUR)** — the required field: the toll paid, converted to EUR
-    - **Local amount** (optional) — the amount in the local currency, plus the currency code and exchange rate, if you want to record the original figures too
-    - **Country** — pre-filled based on current GPS position, but editable
-    - **Notes** (optional) — motorway reference, booth number, or any driver comment
+    - **Country** — required. The driver always selects it from a list; it is not pre-filled from GPS.
+    - **Toll operator** (optional) — free text, e.g. "Autobahn GmbH" or "HU-GO".
+    - **Amount (EUR)** — required: the toll paid, converted to EUR.
+    - **Local amount** (optional) — the amount in the local currency, plus the currency code and exchange rate, if you want to record the original figures too.
+    - **Date & time** — required, defaults to the current time but is editable, for logging a toll after the fact.
+    - **Payment method** — required: **Cash**, **Fuel card**, **Credit card**, **On-board unit (OBU)**, or **Reverse charge**.
+    - **Notes** (optional) — motorway reference, booth number, or any driver comment.
   </Step>
   <Step title="Attach a receipt photo (optional)">
     Tap the camera or file icon to attach a photo of the receipt. Accepted formats: JPEG, PNG, WebP, HEIC, PDF. Maximum file size: 5 MB.
@@ -89,19 +92,23 @@ Toll matching from fuel card imports uses the truck and date to find the active 
 
 Not every toll is billed to the client. Some companies absorb tolls for certain corridors as part of their rate; others pass them through in full. Druma lets you configure this at the rate card level.
 
-Go to **Settings → Rate Cards** and open any rate card. There is a **Per-country toll policy** override table at the bottom. For each country:
+Go to **Settings → Rate Cards** and open any rate card. There is a **Per-country toll policy** override table at the bottom. Each entry (and the rate card's top-level toll policy) is one of three values:
 
 | Policy | Behaviour |
 |---|---|
-| Pass through | Actual toll appears as an order extras line on the invoice |
-| Absorb | Toll is tracked internally but does not appear on the client invoice |
-| (blank) | Falls back to the rate card's top-level toll policy |
+| Billed to client (pass-through) | Actual toll appears as an order extras line on the invoice |
+| Included in rate | Toll is tracked internally but does not appear on the client invoice — the cost is assumed to already be baked into the linehaul rate |
+| Not charged | Toll is tracked internally but does not appear on the client invoice — used when the corridor genuinely isn't tolled or the cost isn't passed on |
 
-Countries not listed in the override table inherit the rate card default.
+Countries not listed in the override table inherit the rate card's top-level toll policy.
 
 ### Auto invoice line
 
-When a country is set to **Pass through**, logged toll receipts for that country are automatically summed and added as an order extras line on the invoice during generation. The line is labelled with the country name.
+When a country is set to **Billed to client**, logged toll receipts for that country are automatically summed and added as an order extras line on the invoice during generation. The line is labelled with the country name.
+
+<Note>
+The pass-through only applies to clients that have **Invoice tolls** enabled on their client record. For clients without it, logged tolls are tracked internally but never added to the invoice, regardless of the per-country policy.
+</Note>
 
 If you need to exclude a specific receipt from the invoice — for example, because it is covered by a separate surcharge agreement — open the invoice editor and toggle **Exclude from invoice** on that extras line.
 
@@ -115,10 +122,10 @@ If you need to exclude a specific receipt from the invoice — for example, beca
 
 ---
 
-<Card title="Rate Cards" icon="sliders-horizontal" href="/en/settings/rate-cards">
+<Card title="Rate Cards" icon="sliders-horizontal" href="/en/admin/rate-cards">
   Configure toll pass-through policy, base surcharges, and per-country overrides.
 </Card>
 
-<Card title="Fuel Cards & Imports" icon="fuel" href="/en/planner/fuel-cards">
+<Card title="Fuel Cards & Imports" icon="fuel" href="/en/integrations/fuel-card-import">
   Import DKV, UTA, and AS24 statements to automatically populate fuel and toll records.
 </Card>

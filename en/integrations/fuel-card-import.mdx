@@ -80,13 +80,32 @@ Always import the complete statement rather than a partial export. Partial impor
 
 ## Automatic Import via Email
 
-In addition to manual upload, Druma can ingest fuel statements automatically from an inbound email address (with a scheduled sweep as a fallback), reusing the same parser as the manual import modal. Contact Druma support to set this up for your account.
+In addition to manual upload, Druma can ingest fuel statements automatically from an inbound email address (with a scheduled sweep as a fallback), reusing the same parser as the manual import modal.
+
+This is self-service — no need to contact support to turn it on:
+
+<Steps>
+  <Step title="Enable the automation">
+    An admin or company admin goes to **Settings → Automations & Features** and toggles on **Fuel-card statement auto-ingestion**.
+  </Step>
+  <Step title="Get your inbound alias address">
+    Druma auto-generates a per-company inbound email alias for fuel statements as soon as the toggle is on. The alias isn't yet shown anywhere in the UI — contact Druma support to get the exact address to forward statements to (or to have it added to a drop folder instead).
+  </Step>
+  <Step title="Forward or drop statements">
+    Forward fuel-card statements to that alias, or drop a CSV/XLSX into the fuel-imports folder. Druma parses each one with the same logic as the manual import, matches fills to trucks by plate, and queues anything unmatched (no plate match) or in a non-EUR currency for review.
+  </Step>
+</Steps>
+
+## Reviewing Failed Auto-Ingest Rows
+
+Rows the automatic importer couldn't place — no matching plate, a non-EUR currency, or a row it couldn't parse — land in **Fleet → Fuel Exceptions** (only visible once the auto-ingest automation is enabled). Each row shows the reason, source (email or drop folder), and the raw values, and can be resolved once corrected. You can also upload a file directly from this page — its upload limit is **10 MB**, higher than the 5 MB cap on the manual **Import Fuel** wizard on the main Fleet → Fuel page.
 
 ## Where Imported Fuel Data Appears
 
 After import, transactions appear in:
 
 - **Fleet → Fuel** — full transaction history across your fleet, filterable and searchable by plate, provider, and location
+- **Fleet → Fuel Exceptions** — rows the automatic importer couldn't place, for manual review
 - **Lane Profitability report** — imported fuel costs replace the estimated fuel calculation for orders where actual fuel data is available
 
 ## Why CSV Import Instead of Live API?
@@ -97,7 +116,7 @@ Fuel card providers across Europe have inconsistent and often restricted API acc
   <Card title="Lane Profitability Report" icon="route" href="/en/reports/lane-profitability">
     How imported fuel costs feed into margin calculations per route.
   </Card>
-  <Card title="Fleet Management" icon="truck" href="/en/fleet/fleet-management">
+  <Card title="Fleet Management" icon="truck" href="/en/planner/fleet-management">
     Managing vehicle records, including licence plates used for fuel transaction matching.
   </Card>
 </CardGroup>

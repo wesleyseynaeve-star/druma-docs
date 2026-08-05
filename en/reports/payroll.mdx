@@ -8,7 +8,7 @@ icon: "money-bill-wave"
 
 Druma calculates driver pay from the operational data it already captures — kilometres driven, days worked, and waiting hours logged. There is no separate time-tracking system; the data flows from orders and status taps.
 
-Driver Payroll is found under the **Finance** section. Accessible to admin, company_admin, and fleet_manager roles.
+Driver Payroll is found under the **Finance** section, gated by the payroll module flag — it follows normal Finance-section access, with no additional role restriction on viewing. Approving/finalizing a batch and adding adjustment lines each have their own narrower permission — see [Monthly Payroll Batches](#monthly-payroll-batches-automated) below.
 
 <Frame caption="Finance → Payroll — empty-km pay is a percentage of the loaded rate, not an independent rate.">
   <img src="/images/reports/payroll.png" alt="Payroll page" />
@@ -31,7 +31,9 @@ The total is the sum of all four components in EUR.
 
 ---
 
-## Generating a payroll run
+Druma supports two ways to produce a payroll run: generate one manually whenever you need it, or let an opt-in monthly batch build one automatically for every driver and hold it for approval. Most companies use the automated batch day-to-day and fall back to a manual run for ad-hoc periods (a driver who started mid-month, a special pay-cycle correction, and so on).
+
+## Generating a Payroll Run (Manual)
 
 <Steps>
   <Step title="Select driver and period">
@@ -50,6 +52,38 @@ The total is the sum of all four components in EUR.
 
 ---
 
+## Monthly Payroll Batches (Automated)
+
+For companies that don't want to trigger a run by hand every month, Druma can build one batch automatically.
+
+<Note>
+This is opt-in. Enable **Monthly payroll batch build** under **Settings → Automations** — it is off by default. A human always reviews and approves the batch; drivers never see it until it is approved.
+</Note>
+
+**How it works:** once enabled, a daily job checks each company's **payroll cutoff day** (a configurable day of the month, defaulting to the **2nd**). When today matches that day, Druma computes gross pay — the same four components and math as the manual run above — for every active driver over the **previous calendar month**, and saves it as one held **draft** batch for the company. The batch build is idempotent: re-running it for a month that already has a batch is a no-op.
+
+### Batch status lifecycle
+
+```
+Draft (held) → Approved → Finalized
+```
+
+- **Draft** — freshly built, or still being reviewed. Individual driver runs inside the batch can still be adjusted.
+- **Approved** — reviewed and released. Drivers can now see their payslip in the driver app.
+- **Finalized** — permanently locked. No further adjustments are possible on any run in the batch.
+
+Approving and finalizing a batch is restricted to **admin** and **company_admin** roles — click **Approve batch** or **Finalize batch** from the Payroll page. Once a run is finalized it cannot be reopened.
+
+### Adding adjustments
+
+Before a batch is approved, authorized users can add **adjustment lines** to any individual driver's run — bonus, per diem, deduction, or other. This is available to **admin**, **company_admin**, and **fleet_manager** roles (a wider set than approve/finalize). Each adjustment shows in a calculation breakdown alongside the four standard pay components, so the final total is fully traceable. Adjustments can no longer be added once the run has moved out of Draft status.
+
+### What drivers see
+
+Drivers only ever see **approved** or **finalized** batches in their app — draft batches (including anything still being adjusted) are invisible to them. A finalized run is badged **Final** in the driver's payslip view, signalling it is locked and won't change further.
+
+---
+
 ## Configuring rates
 
 Pay rates (rate per km, day rate, empty-km percentage, waiting hourly rate) are stored per driver — with a company-wide default rule that applies to any driver without one — in the underlying payroll rules table.
@@ -62,7 +96,7 @@ There is currently no in-app screen to view or edit these rates. Rates have to b
 
 ## Historical runs
 
-Every generated payroll run is stored and listed under the driver's record. You can re-open any previous run to review or re-export it.
+Every generated payroll run is stored and listed under the driver's record. Draft and approved runs can still be reviewed or re-exported; a **finalized** run is permanently locked and cannot be reopened or changed.
 
 ---
 

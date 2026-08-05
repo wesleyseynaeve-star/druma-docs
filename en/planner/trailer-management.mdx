@@ -53,65 +53,75 @@ Click **Save** when done.
 
 ## Attaching a trailer to a truck
 
-A trailer can only be assigned to one truck at a time. There are two ways to attach a trailer:
-
-### Option 1 — When creating an order
-
-When filling in an order for an **Own Truck** job, after selecting the tractor, a **Trailer** dropdown will appear. Search by plate or ID and select the trailer you want to use for this job. The trailer is automatically marked as assigned for the order's duration.
-
-### Option 2 — From the trailer detail page
+A trailer is linked to a truck directly on the **truck's** record — there's no separate "assign" step on the trailer, and order creation doesn't ask you to pick a specific trailer either (order creation only asks for a **Trailer type**, e.g. "needs a Reefer" — the actual trailer and truck are assigned afterwards on the [Planning Board](/en/planner/planning-board)).
 
 <Steps>
-  <Step title="Open the trailer profile">
-    Go to **Fleet → Trailers** and click the trailer you want to assign.
+  <Step title="Open the truck">
+    Go to **Fleet → Trucks** and click the tractor you want to attach a trailer to.
   </Step>
-  <Step title="Click Assign to Truck">
-    Find the **Current Assignment** section and click **Assign to Truck**.
+  <Step title="Find the Assignment section">
+    On the **General** tab, scroll to the **Assignment** section (below Primary/Second Driver and Assigned Planner/Dispatcher).
   </Step>
-  <Step title="Select the truck">
-    Search for the tractor by plate number. Only active vehicles are shown.
-  </Step>
-  <Step title="Set the assignment period">
-    Enter the start date. You can leave the end date blank if you don't know yet when the trailer will be detached.
+  <Step title="Set the Linked Trailer dropdown">
+    Choose the trailer from the **Linked Trailer** dropdown. It lists every trailer in your fleet by plate (and name, if set) — Druma doesn't currently block picking a trailer that's already linked to another truck, so double-check the trailer's **Status** column first (see [Trailer availability view](#trailer-availability-view) below).
   </Step>
   <Step title="Save">
-    Click **Confirm Assignment**. The trailer will now appear as assigned on the planning board.
+    Click **Save**. The trailer now shows as **In Use** in the trailer list, and is linked to this truck wherever the truck is used for planning.
   </Step>
 </Steps>
+
+<Note>
+A trailer can only be genuinely linked to one truck at a time (the field is a straightforward 1:1 pointer, not an assignment-with-dates record) — but Druma doesn't validate that on save, so avoid manually linking a trailer that's already showing **In Use** on another truck.
+</Note>
 
 ---
 
 ## Detaching a trailer
 
-When an order is completed, Druma automatically releases the trailer assignment. You can also detach a trailer manually at any time:
+There are two ways to detach a trailer, and which one you want depends on whether the trailer still has cargo on it.
+
+### Simple unlink (empty trailer, or just correcting a record)
+
+Open the truck's **General** tab, set **Linked Trailer** back to **— None —**, and click **Save**. This is instant and doesn't touch the trailer's recorded location — use it when the trailer is genuinely empty or you're just fixing a data-entry mistake.
+
+### Detaching a trailer via Reposition (trailer still loaded)
+
+If the tractor is leaving a **loaded** trailer behind — a driver swap, a breakdown, an end-of-shift drop at a yard — use the **Reposition** action instead (Fleet → Trucks toolbar, or from a truck's row menu; see [Repositioning a truck](/en/planner/fleet-management#repositioning-a-truck)):
 
 <Steps>
-  <Step title="Open the trailer profile">
-    Go to Fleet → Trailers and click the trailer.
+  <Step title="Open Reposition and select the truck">
+    Click **Reposition**, then pick the truck. Its linked trailer (if any) appears automatically.
   </Step>
-  <Step title="Click Detach">
-    In the Current Assignment section, click **Detach Trailer**.
+  <Step title="Toggle Drop Trailer">
+    Click **Drop Trailer** next to the trailer name. A warning confirms the trailer will be detached and left at the truck's current location.
   </Step>
-  <Step title="Confirm">
-    Confirm the detachment. The trailer status returns to **Available** and it can be assigned to a different truck.
+  <Step title="Create the repositioning">
+    Fill in the destination for the truck and click **Create Repositioning**.
   </Step>
 </Steps>
 
-<Warning>
-If you detach a trailer while an order is still active (the driver is en route), the order remains linked to the trailer for record-keeping purposes. The detachment only affects future assignments.
-</Warning>
+Behind the scenes this calls the `flag_trailer_collection` database function (migration `0372`), which:
+
+- Records the trailer's drop location as its current position.
+- Detaches the tractor from the trailer (`trucks.trailer_id` cleared).
+- If the trailer still has an **active, loaded** order on it (any status from pickup through delivery), that order is bounced back to **pending**: its truck, driver, and second driver are all cleared, and it's flagged **awaiting trailer collection**.
+
+<Note>
+An order flagged "awaiting trailer collection" surfaces distinctly on the Planning Board from an ordinary unassigned order — it needs a truck sent out to go collect the trailer and finish the delivery, not a fresh assignment from scratch. If the trailer was empty, dropping it just repositions the trailer with no order impact.
+</Note>
 
 ---
 
 ## Trailer availability view
 
-The trailer list at **Fleet → Trailers** has three quick-filter tabs:
+The trailer list at **Fleet → Trailers** has four quick-filter tabs:
 
 - **All** — Every trailer in your fleet.
-- **Available** — Trailers not currently assigned to any truck or order. These are ready to be dispatched.
-- **Assigned** — Trailers currently attached to a truck or in use on an active order.
+- **In Use** — Trailers currently linked to a truck (see [Attaching a trailer to a truck](#attaching-a-trailer-to-a-truck) above).
+- **Still** — Trailers not linked to any truck and not in maintenance. These are the ones free to link.
+- **Maintenance** — Trailers with an active maintenance window (a **Maintenance until** date in the future).
 
-Click any trailer to see its full assignment history — which trucks it has been on, which orders it completed, and when.
+Click any trailer to open its profile (General / Specs / Compliance / Temperature / Notes / Comments tabs).
 
 ---
 
@@ -122,18 +132,15 @@ Trailers need their own paperwork — insurance, roadworthiness inspection certi
 To add a document to a trailer:
 
 <Steps>
-  <Step title="Open the trailer profile">
-    Go to Fleet → Trailers and select the trailer.
+  <Step title="Open Fleet Documents">
+    Go to **Fleet → Documents** — trailer paperwork is managed on the central Fleet Documents page, not on the trailer profile itself.
   </Step>
-  <Step title="Go to the Documents tab">
-    Click the **Documents** tab on the trailer profile.
-  </Step>
-  <Step title="Upload the document">
-    Click **Add Document**, select the document type, enter the expiry date, and upload a scan or photo of the certificate.
+  <Step title="Add the document">
+    Click **Add Document**, pick the trailer as the linked asset, select the document type, enter the expiry date, and upload a scan or photo of the certificate.
   </Step>
 </Steps>
 
-Druma will alert you on the Today View and by email when a trailer document is approaching its expiry date. The default warning period is 30 days, which you can change in **Settings → Notifications**.
+When fleet document alerts are enabled (Settings → Automations & Features), Druma warns you in-app as a trailer document approaches expiry — 60 days ahead as a warning and 14 days ahead as critical. See [Fleet Documents](/en/fleet-compliance/fleet-documents) for details.
 
 <Note>
 If a trailer's ADR certificate expires and you have ADR-flagged orders assigned to it, Druma will flag the order with a warning. It will not block dispatch, but the warning is logged.
@@ -143,19 +150,19 @@ If a trailer's ADR certificate expires and you have ADR-flagged orders assigned 
 
 ## Trailer location tracking
 
-Druma tracks trailer locations through three sources, each recorded with a **location source** indicator:
+Druma keeps a trailer's location current from three sources. Which one last updated a given trailer is recorded internally (used for troubleshooting) — day to day, the trailers list and profile just show you the location itself, not a "source" label.
 
 ### Automatic: on delivery
 
-When an order is marked as **Delivered**, Druma automatically updates the trailer's location to the last offloading stop address. The location source is set to **Order Delivery**. This means that after every completed delivery, the trailer's position is current without any manual input.
+When an order is marked as **Delivered**, Druma automatically updates the trailer's location to the last offloading stop address. This means that after every completed delivery, the trailer's position is current without any manual input.
 
-### Automatic: on truck detach
+### Automatic: dropping a trailer via Reposition
 
-When you detach a trailer from a truck (either manually or because the truck is reassigned), the trailer's location is set to the truck's last known position. The location source is set to **Truck Detach**.
+When you use the Reposition modal's **Drop Trailer** toggle to detach a loaded or empty trailer from its truck (see [Detaching a trailer via Reposition](#detaching-a-trailer-via-reposition-trailer-still-loaded) above), the trailer's location is set to the truck's last known position. A plain manual unlink from the truck's Linked Trailer dropdown does **not** update the trailer's location — only the Reposition flow does.
 
 ### Manual update
 
-Dispatchers can update the trailer's location at any time from the trailer profile page. The **Current Location** field supports HERE address autocomplete — start typing an address and select from the suggestions to get precise coordinates. The location source is set to **Manual**.
+Dispatchers can update the trailer's location at any time from the trailer profile page. The **Current Location** field supports HERE address autocomplete — start typing an address and select from the suggestions to get precise coordinates.
 
 <Note>
 Trailer location tracking is limited to these three sources today — there is no GPS-tracker integration that updates a trailer's position automatically. If your trailers carry their own telematics unit, that data isn't currently wired into Druma's trailer location field.
@@ -171,6 +178,6 @@ The trailers list at **Fleet → Trailers** includes a **Location** column showi
   Manage your tractors and rigid trucks — add vehicles, set dimensions, and track availability.
 </Card>
 
-<Card title="Fleet Documents" icon="file" href="/en/planner/fleet-documents">
+<Card title="Fleet Documents" icon="file" href="/en/fleet-compliance/fleet-documents">
   Track and manage all compliance documents for both vehicles and trailers in one place.
 </Card>

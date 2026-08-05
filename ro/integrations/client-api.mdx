@@ -1,6 +1,6 @@
 ---
 title: "Integrarea API Client (CAPI)"
-description: "Permite clientilor sa trimita comenzi direct in Druma sau sa primeasca evenimente de livrare in timp real la un webhook — configurata per client, fara modificari de cod in Druma."
+description: "Permite clientilor sa trimita comenzi direct in Druma sau sa primeasca evenimente de livrare in timp real la un webhook — configurata per client, printr-un wizard ghidat, fara modificari de cod in Druma."
 icon: "plug"
 ---
 
@@ -35,28 +35,66 @@ Ambele seturi de setari, de intrare si de iesire, sunt pe acest tab.
 
 ---
 
-## Intrare — clientul trimite comenzi catre Druma
+## Configurarea unei noi conexiuni de intrare
+
+Conexiunile noi trec printr-un wizard de configurare ghidat — nu mai scrii manual un tabel de mapare de campuri. Apasa **Configurare integrare API** pe tabul API, ca sa il pornesti.
 
 <Steps>
-  <Step title="Activeaza intrarea">
-    Pe tabul **API**, activeaza comutatorul **Activeaza API Intrare**.
+  <Step title="Alege canalul">
+    Alege cum iti trimite de fapt acest client comenzile: **API** (continua prin acest wizard), **Ingestie email** (gestionata in schimb de sistemul AI de preluare email al Druma — nu este nevoie de mapare), sau **Portal client** (isi plaseaza singuri comenzile — nu este nevoie de mapare). Doar **API** continua la pasul urmator.
   </Step>
-  <Step title="Genereaza un token">
-    Apasa **Genereaza Token**. Token-ul complet este afisat **o singura data** — copiaza-l imediat si stocheaza-l in siguranta (un manager de parole functioneaza bine). Druma stocheaza doar un hash al token-ului; valoarea completa este irecuperabila. Dupa acest ecran, doar primele 20 de caractere sunt afisate ca referinta.
+  <Step title="Lipeste un payload de exemplu">
+    Lipeste un payload JSON real (sau realist) pe care clientul l-ar trimite. Nu esti sigur ce sa ii spui echipei IT a clientului? Foloseste **Trimite clientului un pachet de integrare**, la acest pas, ca sa ii trimiti prin email URL-ul endpoint-ului, un exemplu curl si instructiuni de configurare in limbaj simplu — nu este necesara o schema fixa.
   </Step>
-  <Step title="Distribuie URL-ul endpoint-ului">
-    Copiaza **URL-ul Endpoint-ului** afisat sub campul token-ului. Da acest URL si token-ul echipei tehnice a clientului.
+  <Step title="Revizuieste maparea propusa de AI">
+    AI-ul Druma citeste esantionul si propune o mapare de campuri. Daca increderea sa este **90% sau mai mare** si maparea este completa, este aplicata automat, iar wizard-ul sare direct la testare. Sub acest prag, ajungi pe un ecran de revizuire a maparii — o previzualizare live a comenzii ciorna se actualizeaza pe masura ce ajustezi calea sursa, campul tinta sau transformarea pentru fiecare rand. Aproba pentru a continua, sau respinge si incearca un alt esantion.
   </Step>
-  <Step title="Configureaza maparile de campuri (optional)">
-    Daca sistemul clientului foloseste nume de campuri diferite de cele ale Druma (de exemplu, `shipment_id` in loc de `reference`), adauga randuri in tabelul **Mapare Campuri**, apasand **+ Adauga Mapare**. Fiecare rand mapeaza un nume de camp al clientului (coloana din stanga) la numele de camp corespunzator din Druma (coloana din dreapta).
+  <Step title="Testeaza, apoi activeaza">
+    Ruleaza **Valideaza fara sa creezi** pe esantionul tau, ca sa confirmi ca nu lipseste nimic, apoi apasa **Marcheaza ca testat**. Comenzile reale pe care sistemul propriu al clientului le trimite cat timp esti inca in configurare apar si ele aici — ascunse din Planificare, tablouri de bord si portalul lor, pana cand activezi conexiunea. Odata multumit, apasa **Activeaza**.
   </Step>
 </Steps>
 
-Sistemul clientului trimite o cerere `POST` catre URL-ul endpoint-ului, cu header-ul `Authorization: Bearer <token>` si un corp JSON. Druma creeaza comanda in status **Ciorna**, cu marcajul de sursa `booked_via: client_api`. Un planificator poate revizui si confirma comenzile ciorna din planning board.
+<Note>
+Daca un alt operator are deja o mapare aprobata pentru un client cu acelasi CIF, Druma reutilizeaza acea structura si sare peste pasul AI in intregime — asta se intampla silentios si apare doar ca o propunere neobisnuit de sigura.
+</Note>
 
 <Note>
-Comenzile create prin CAPI sosesc ca ciorne. Nu apar pe board ca atribuite pana cand un planificator (sau o regula de automatizare, daca este configurata) nu le muta la statusul urmator. Este intentionat — iti permite sa validezi si sa stabilesti pretul comenzii, inainte sa intre in flux.
+Tabelul de mapare de campuri de intrare, plat si editabil manual, din configurarile CAPI mai vechi a disparut pentru conexiunile **noi** — totul trece acum prin specificatia de mapare cu versiuni a wizard-ului. Conexiunile configurate inainte de aceasta schimbare continua sa functioneze automat pe maparea lor de campuri existenta; pur si simplu nu mai exista o interfata pentru editarea manuala a acelui tabel plat.
 </Note>
+
+Sistemul clientului trimite o cerere `POST` catre URL-ul endpoint-ului, cu header-ul `Authorization: Bearer <token>` si un corp JSON. Druma creeaza comanda in status **Ciorna**. Un planificator poate revizui si confirma comenzile ciorna din planning board.
+
+---
+
+## Statusul conexiunii
+
+Fiecare conexiune trece printr-un ciclu de viata, afisat ca o eticheta de status pe tabul API:
+
+| Status | Semnificatie |
+|---|---|
+| Ciorna | Creata, configurarea inca nu a inceput |
+| Pachet trimis | Email-ul cu pachetul de integrare a fost trimis persoanei de contact a clientului |
+| Receptioneaza | Pasul de esantion/mapare este in desfasurare |
+| Testat | Validata, inca nu accepta trafic real de productie |
+| Activ | Accepta comenzi reale de intrare / trimite evenimente de iesire |
+| Esueaza | 3 payload-uri de intrare respinse consecutiv, sau 3 livrari de iesire abandonate (dead-letter) consecutiv |
+| Dezactivat | Oprita (comutatorul "Conexiune activa") |
+
+Cand o conexiune trece in **Esueaza**, Druma isi notifica utilizatorii admin/company_admin in aplicatie, ca sa poti observa o integrare stricata inainte ca clientul sa sune sa intrebe de ce nu a ajuns nimic.
+
+---
+
+## Deviatia maparii si istoricul versiunilor
+
+Daca sistemul clientului redenumeste sau muta silentios un camp, Druma detecteaza nepotrivirea fata de maparea activa si propune o actualizare cu un singur click — aprob-o ca sa activezi imediat o noua versiune de mapare, sau respinge-o si pastreaz-o pe cea curenta. Tabul API pastreaza si un istoric al versiunilor pentru fiecare mapare folosita de conexiune, cu optiunea **Revino** disponibila pe orice versiune mai veche.
+
+---
+
+## Rotirea sau livrarea unui token
+
+- **Generarea initiala**: pe tabul API, apasa **Genereaza token**. Token-ul complet este afisat **o singura data** — copiaza-l imediat (un manager de parole functioneaza bine). Doar primele caractere sunt afisate ulterior, ca referinta.
+- **Prin pachetul de integrare**: cand trimiti pachetul, bifeaza **Genereaza un token API nou si trimite-l separat** — token-ul pleaca intotdeauna intr-un email propriu, niciodata impreuna cu instructiunile de configurare, deci un pachet redirectionat nu poarta niciodata o credentiala vie. Token-ul este afisat si in interfata imediat, pentru cazul in care acel email esueaza.
+- **Rotirea**: apasa **Roteste token** ca sa invalidezi vechiul token si sa generezi unul nou. Cererile care folosesc token-ul vechi sunt respinse cu `401 Unauthorized`, din momentul in care rotirea se finalizeaza.
 
 ---
 
@@ -64,7 +102,7 @@ Comenzile create prin CAPI sosesc ca ciorne. Nu apar pe board ca atribuite pana 
 
 <Steps>
   <Step title="Activeaza iesirea">
-    Activeaza comutatorul **Activeaza Webhook Iesire**.
+    Pe tabul API (vizualizarea de gestionare, odata ce conexiunea a iesit din wizard), activeaza comutatorul **Activeaza webhook iesire**.
   </Step>
   <Step title="Introdu URL-ul webhook-ului">
     Lipeste **URL-ul Webhook** al clientului — endpoint-ul din sistemul lor care va primi evenimentele.
@@ -75,42 +113,30 @@ Comenzile create prin CAPI sosesc ca ciorne. Nu apar pe board ca atribuite pana 
     - **Niciuna** — fara header de autentificare (foloseste doar pe retele private de incredere)
     - **Token Bearer** — Druma adauga `Authorization: Bearer <valoare>` la fiecare cerere
     - **Autentificare de baza (Basic auth)** — Druma adauga un header `Authorization: Basic`, cu un utilizator si parola codate base64
-    - **Semnatura HMAC** — Druma semneaza corpul fiecarei cereri cu un secret partajat si include semnatura intr-un header; clientul o verifica inainte de procesare
+    - **HMAC-SHA256** — Druma semneaza corpul fiecarei cereri cu un secret partajat si include semnatura intr-un header; clientul o verifica inainte de procesare
 
-    Completeaza credentialele pentru tipul ales.
+    Completeaza credentialele pentru tipul ales. Lasa un camp de credentiale gol, ca sa pastrezi valoarea salvata curent.
   </Step>
   <Step title="Selecteaza evenimentele de trimis">
     Bifeaza evenimentele pe care vrei ca Druma sa le trimita:
 
-    - **Comanda Creata** — declansat cand o comanda noua este confirmata in Druma
-    - **Status Actualizat** — declansat la orice schimbare de status (atribuita, la preluare, in tranzit etc.)
-    - **Livrata** — declansat cand comanda ajunge in statusul Livrat
-    - **Factura Trimisa** — declansat cand o factura de vanzare este trimisa clientului
+    - **Comanda creata**
+    - **Status schimbat** — orice schimbare de status (atribuita, la preluare, in tranzit etc.)
+    - **Comanda livrata**
+    - **Comanda intarziata**
+    - **Comanda facturata**
   </Step>
-  <Step title="Configureaza maparile de campuri de iesire (optional)">
-    Daca sistemul clientului asteapta nume de campuri diferite in payload, foloseste tabelul **Mapare Campuri** de pe partea de iesire (aceeasi experienta ca la intrare) pentru a redenumi campurile de iesire ale Druma, inainte sa fie trimise.
+  <Step title="Configureaza maparea campurilor de iesire (optional)">
+    Daca sistemul clientului asteapta nume de campuri diferite in payload, foloseste tabelul **Mapare campuri iesite** ca sa redenumesti campurile de iesire ale Druma, inainte sa fie trimise.
   </Step>
   <Step title="Salveaza">
-    Apasa **Salveaza**. Druma va incepe sa livreze evenimente pentru declansatoarele selectate, de acum inainte.
+    Apasa **Salveaza setarile**. Druma va incepe sa livreze evenimente pentru declansatoarele selectate, de acum inainte.
   </Step>
 </Steps>
 
----
-
-## Maparea campurilor explicata
-
-Maparea campurilor este un tabel de traducere cheie-valoare. Nu schimba datele — doar numele campurilor din payload.
-
-**Exemplu — mapare de intrare:**
-
-| Camp client | Camp Druma |
-|---|---|
-| `shipment_id` | `reference` |
-| `pickup_city` | `pickup_address` |
-| `drop_city` | `delivery_address` |
-| `cargo_weight_kg` | `weight_kg` |
-
-Cu aceasta mapare in vigoare, clientul poate trimite (POST) structura sa JSON nativa, iar Druma o va interpreta corect, fara ca clientul sa trebuiasca sa isi reformateze payload-ul.
+<Note>
+Clientii isi pot configura si ei propriul webhook de iesire — URL, autentificare, evenimente si credentiale — din propriul lor portal, fara sa atingi deloc acest tab. Vezi [Gestionarea contactelor](/ro/client-portal/managing-contacts) pentru cum functioneaza setarile din portalul propriu al clientului.
+</Note>
 
 **Exemplu — mapare de iesire:**
 
@@ -124,15 +150,9 @@ Campurile nemapate sunt trecute prin, folosind numele implicite de camp ale Drum
 
 ---
 
-## Rotirea unui token
+## Testare si jurnal de livrare
 
-Daca un token este compromis sau o persoana cheie paraseste echipa clientului:
-
-1. Pe tabul **API**, apasa **Roteste Token**.
-2. Token-ul vechi este invalidat imediat.
-3. Noul token este afisat o singura data — copiaza-l si distribuie-l inainte sa navighezi in alta parte.
-
-Actualizeaza token-ul in sistemul clientului cat mai curand posibil. Cererile care folosesc token-ul vechi vor fi respinse cu `401 Unauthorized`, din momentul in care rotirea se finalizeaza.
+Odata ce o conexiune este activa (sau esueaza), sectiunea **Testare si jurnal de livrare** a tabului API iti permite sa re-validezi un payload fara sa creezi o comanda, sa declansezi un eveniment de test ad-hoc catre webhook-ul de iesire si sa navighezi jurnalul de livrare (status, incercari, raspuns HTTP, marcaje temporale) pentru fiecare eveniment pe care Druma a incercat sa il trimita.
 
 ---
 
@@ -149,9 +169,16 @@ Aceste marcaje temporale sunt utile pentru a confirma ca integrarea este activa 
 
 ## Limite de rata
 
-Druma aplica o limita de **200 de apeluri API pe ora per configuratie de client**. Cererile care depasesc aceasta limita primesc un raspuns `429 Too Many Requests`. Limita se reseteaza pe o fereastra glisanta de o ora.
+CAPI aplica mai multe limite independente, glisante, pe o ora:
 
-Daca un client are legitim nevoie de un debit mai mare, contacteaza suportul Druma.
+| Limita | Se aplica la |
+|---|---|
+| 200 apeluri/ora | Trimiteri de comenzi de intrare, per conexiune |
+| 600 apeluri/ora | Trimiterea evenimentelor de iesire, per conexiune |
+| 60 apeluri/ora | Actiuni de setari/admin pe tabul API, per planificator |
+| 20 apeluri/ora | Propuneri AI de specificatie de mapare (wizard + deviatie), per planificator |
+
+Cererile care depasesc o limita primesc un raspuns `429 Too Many Requests`. Daca un client are legitim nevoie de un debit mai mare de intrare/iesire, contacteaza suportul Druma.
 
 <Warning>
 Nu distribui token-ul bearer al unui client altor clienti si nu il incorpora in cod accesibil public. Fiecare token acorda drepturi complete de creare a comenzilor de intrare, pentru domeniul de companie al acelui client.

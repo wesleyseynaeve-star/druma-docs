@@ -43,26 +43,55 @@ There is currently no preview or edit step — the email is generated and sent f
 
 When you generate the invoice for the order, the waiting time charge is automatically added as a separate line item:
 
-- Description: "Waiting time — [location] — [date] — [X hours Y minutes]"
+- Description: "Waiting time charges" (a fixed label — it does not interpolate the location, date, or duration)
 - Rate: your configured hourly rate
-- Amount: calculated to the nearest 15 minutes
+- Amount: waiting time is rounded to the nearest minute, and the resulting charge to 2 decimal places
 
 You can edit or remove this line item on the invoice before issuing it if you have agreed otherwise with the client.
 
+<Note>
+Waiting can also be excluded from billing entirely, per client or per order — see [Turning off waiting billing](#turning-off-waiting-billing) below. When it's off, the waiting event is still logged, it just never becomes a charge.
+</Note>
+
 ## Configuring Waiting Time Settings
 
-Free waiting hours and the hourly waiting rate come from your truck cost profile — go to **Settings → Rate Cards**, open the relevant own-fleet or subcontracted cost profile, and set **Free waiting hours** and **Waiting rate €/h** there. There's no separate per-client or per-order override for these values today — every order priced against a given cost profile uses that profile's waiting terms.
+### Free hours and hourly rate
+
+The free waiting period and the hourly waiting rate resolve through a fallback chain, checked in this order:
+
+1. **Client** — a per-client override, if the client record has its own free-hours and/or rate set
+2. **Rate card** — the truck cost profile assigned to the order (Settings → Rate Cards, own-fleet or subcontracted)
+3. **Company default** — a company-wide fallback
+4. **Platform default** — used only when none of the above is set
+
+Each field falls back independently — a client that overrides only the rate still inherits the company's free-hours, and vice versa. For most companies the rate-card level is enough: go to **Settings → Rate Cards**, open the relevant cost profile, and set **Free waiting hours** and **Waiting rate €/h**. Set the fields on a client's own record only when that specific client has contractually different waiting terms.
 
 <Warning>
 If you change a cost profile's waiting rate, it only affects waiting events recorded from that point on. Waiting charges already added to open invoices are not updated automatically.
 </Warning>
+
+### Turning off waiting billing
+
+Not every client or order should turn waiting into a charge. Druma still logs the waiting event either way — arrival, free period, chargeable minutes are all recorded — it just won't generate a bill for it when this is off:
+
+- **Per client** — open the client's record and uncheck **Bill waiting hours for this client**. Every order for that client stops generating waiting charges (waiting time is still tracked).
+- **Per order** — on the Add Order screen, **Client tab**, set **Bill waiting hours** to **Inherit from client** (the default), **Always bill**, or **Never bill**. The order-level setting always wins over the client setting, in either direction, so you can bill one exceptional order for an otherwise opted-out client, or exempt a single order from an otherwise-billing client.
+- If neither is set anywhere, the company-wide default is to bill.
+
+## Late-Arrival Waiting Charges
+
+If your own truck arrives more than 30 minutes late to a pickup or delivery stop, and the order has a chargeable waiting charge that hasn't been sent to the client yet, Druma pauses that order's auto-invoicing rather than billing the client automatically — the driver's own lateness may have caused or extended the wait, so a planner should confirm the charge is fair first.
+
+- Paused orders appear in a **"Late-arrival waiting charges"** section on the **Finance → Waiting to bill** page, above the regular detention-charges queue.
+- For each one, a planner chooses **Include** (keep the waiting charge, resume auto-invoicing on the next hourly sweep) or **Drop** (remove the waiting charge from this invoice and resume auto-invoicing).
+- Orders with no late arrival, or where waiting billing is already off for that client/order, are never affected by this check.
 
 ## Viewing Waiting History
 
 All waiting events are stored permanently on the order. To review them:
 
 - **Order detail page → Activity tab** — shows every status change with timestamp
-- **Analytics → Site Waiting** — waiting visits, total hours, average duration, and billable amounts grouped by pickup/delivery site and client, over a selectable timeframe (last 24 hours through last 12 months, or a custom range)
+- **Analytics → Site Waiting** — waiting visits, total hours, average duration, and billable amounts grouped by the order's pickup city and client, over a selectable timeframe (last 24 hours through last 12 months, or a custom range)
 
 This data is useful when negotiating contract terms. If a client consistently causes 3+ hours of waiting per delivery, you have the numbers to back a rate renegotiation.
 

@@ -83,12 +83,39 @@ Aceasta verificare este un marcaj boolean de capabilitate, nu o verificare de ex
 
 ---
 
-## Suprataxa ADR
+## Avertismente ADR pe planning board
 
-Comenzile marcate ADR includ automat o suprataxa ADR ca element de linie pe factura. Tariful este o taxa fixa de **75 € per comanda**, configurata centralizat de Druma — momentan nu exista o setare per companie pentru a schimba aceasta suma.
+Din 2026-07-30, fluxul de atribuire ruleaza si o a doua verificare, **sensibila la expirare**, alaturi de verificarea booleana de capabilitate de mai sus. Cand atribui un sofer, camion sau remorca unei comenzi ADR, Druma compara **Expirarea ADR** a soferului, expirarea certificatului ADR al camionului si expirarea certificatului ADR al remorcii, fata de **data de livrare** a comenzii (folosind data de preluare cand inca nu este setata o data de livrare).
+
+Daca oricare dintre aceste certificate va fi expirat pana la data de livrare, Druma arata o eticheta chihlimbarie de avertisment **"Certificatul ADR expira inainte de livrare"**. Aceasta apare oriunde se face sau se revizuieste o atribuire:
+
+- Fisa **confirma atribuirea**
+- **Atribuirea prin tragere (drag-assign)** pe planning board
+- Sugestiile **Auto-Plan**
 
 <Note>
-Daca unele contracte ADR sunt tarifate diferit, poti suprascrie suma suprataxei pe comenzi individuale, dupa crearea comenzii — mergi la tabul Financiar al comenzii si editeaza elementul de linie al suprataxei ADR.
+Acesta este un avertisment, nu o blocare — atribuirea se face in continuare, chiar si cand eticheta este afisata. Trateaz-o ca pe un indiciu sa reinnoiesti certificatul sau sa alegi o alta resursa inainte de plecare.
+</Note>
+
+Doua verificari conexe intaresc acest avertisment in alte parti ale platformei:
+
+- **Motoarele de potrivire** — Auto-Plan si potrivirea AI a comenzilor penalizeaza in scorare o categorie de vehicul necapabila ADR sau un certificat ADR expirat al soferului/vehiculului, deci o resursa conforma se claseaza deasupra uneia neconforme, cand candidatii sunt altfel similari.
+- **Restrictii la nivel de sit** — daca un sit de preluare sau livrare este marcat ca nu accepta marfa ADR (**Customer Service → Site-uri**, restrictii), o comanda ADR rutata prin acel sit arata un avertisment pe panoul de pregatire al comenzii.
+
+---
+
+## Suprataxa ADR
+
+Comenzile marcate ADR includ automat o suprataxa ADR ca element de linie pe factura. Druma rezolva suma suprataxei printr-un lant de rezolutie:
+
+1. **Fisa de tarifare** — fisa de tarifare a clientului are propriul camp **Taxa ADR (€)** (**Setari → Fise de Tarifare**). Daca este setat, aceasta valoare este folosita.
+2. **Valoare implicita la nivel de platforma** — daca fisa de tarifare nu specifica o valoare, Druma foloseste o valoare implicita de suprataxa ADR, la nivel de platforma.
+3. **Rezerva incorporata de 75 €** — daca niciuna din cele de mai sus nu este configurata, Druma aplica o taxa fixa de **75 €**.
+
+Seteaza taxa ADR pe fisa de tarifare relevanta pentru a tarifa suprataxele ADR per client sau contract — asta este modalitatea intentionata de a schimba suma, nu o editare per comanda.
+
+<Note>
+Ca ultima solutie, poti tot edita elementul de linie al suprataxei ADR pe o comanda individuala, din tabul Financiar al comenzii, dupa ce comanda este creata — dar prefera setarea taxei ADR din fisa de tarifare, ca suma corecta sa se aplice automat oricarei comenzi viitoare sub acea fisa de tarifare.
 </Note>
 
 ---

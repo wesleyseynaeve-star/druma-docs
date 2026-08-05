@@ -10,11 +10,11 @@ When your driver arrives at a pickup or delivery point and has to wait — the l
 
 Waiting time charges (also called detention or demurrage) let you bill the client for that lost time once a free allowance period is used up. Druma automates the whole thing — timing, calculation, client notification, and invoicing — and backs it up with GPS evidence so disputes are easy to win.
 
-**Druma's default settings:**
+**Druma's platform default settings:**
 - Free waiting allowance: **2 hours** after arrival
 - Charge rate: **€45/hour** after the free period expires
 
-Both values are set per **Rate Card** (the cost profile assigned to a truck) — see "Configuring Free Hours and the Hourly Rate" below.
+These are only the last-resort fallback — free hours and the hourly rate can be set at the **client** level, the **Rate Card** level, or company-wide, and Druma resolves them in that order. See [Configuring Free Hours and the Hourly Rate](#configuring-free-hours-and-the-hourly-rate) below.
 
 ---
 
@@ -108,9 +108,48 @@ When you generate the invoice for the order, Druma automatically suggests the wa
 
 ---
 
+## The Finance → Waiting to Bill Queue
+
+Beyond adding waiting time while an invoice is being generated, Druma also runs a nightly sweep of delivered orders and queues any waiting time you haven't invoiced yet as a draft charge. Go to **Finance → Waiting to bill** to review it. The page has three call-out sections layered on top of the base pending-charges queue:
+
+- **Late-arrival waiting charges** — needs planner review. See [Late-Arrival Blocking](#late-arrival-blocking) below.
+- **Recently auto-approved** — geofence-backed charges that were billed automatically, with no planner click. See [Geofence Auto-Approval](#geofence-auto-approval) below. Each one can be reversed with one click if it shouldn't have gone through.
+- **Other charge gaps** — draft charges unrelated to waiting time (fuel surcharge, ADR surcharge, weekend surcharge, failed pickup, reefer surcharge, overweight surcharge) that Druma also detected as missing from an invoice.
+
+The base queue beneath these sections lists every other draft waiting charge Druma has detected — approve one to add it to the order's invoice, or dismiss it.
+
+### Geofence Auto-Approval
+
+A waiting charge skips the planner-review queue and is billed automatically when **all** of the following are true:
+
+- The arrival was **geofence-verified** (the driver's "Arrived" status was captured automatically by the geofence, not a manual tap).
+- The waiting period ended when **loading/unloading started** (not some other close-out path).
+- The billable time clears a **30-minute margin** past the free period.
+
+A company only gets auto-approval once it has at least one prior charge a planner approved by hand — this trust gate keeps the first few charges human-reviewed before Druma starts approving on its own.
+
+### Late-Arrival Blocking
+
+If your own truck arrives more than 30 minutes late to a pickup or delivery stop, and that order has a waiting charge that hasn't been sent to the client yet, Druma **pauses auto-invoicing for that order** rather than billing the client automatically — the driver's own lateness may have caused or extended the wait, so a planner should confirm the charge is fair first. These paused orders are what populate the **Late-arrival waiting charges** section; a planner picks **Include** (keep the charge, resume auto-invoicing) or **Drop** (remove the charge, resume auto-invoicing).
+
+<Note>
+For the full mechanics of planner alerts, client notification emails, and escalation tiers, see [Waiting Time Charge Alerts](/en/automation/waiting-charge-alerts).
+</Note>
+
+---
+
 ## Configuring Free Hours and the Hourly Rate
 
-Free waiting hours and the hourly waiting rate are set per **Rate Card** — the cost profile assigned to a truck (own-fleet or subcontracted) — not per client or per order:
+Free waiting hours and the hourly waiting rate resolve through a fallback chain, checked in this order:
+
+1. **Client** — a per-client override, if the client record has its own free-hours and/or rate set.
+2. **Rate Card** — the truck cost profile assigned to the order (own-fleet or subcontracted).
+3. **Company default** — a company-wide fallback (**Settings → Company**).
+4. **Platform default** — used only when none of the above is set (2h / €45).
+
+Each field falls back independently — a client that overrides only the rate still inherits the company's free-hours, and vice versa.
+
+### Setting it on a Rate Card (most companies)
 
 <Steps>
   <Step title="Open Rate Cards">
@@ -123,13 +162,42 @@ Free waiting hours and the hourly waiting rate are set per **Rate Card** — the
     Enter the agreed free hours allowance and hourly rate for this cost profile.
   </Step>
   <Step title="Save">
-    Click **Save**. Every order priced against this cost profile now uses these values.
+    Click **Save**. Every order priced against this cost profile now uses these values, unless the order's client overrides them.
   </Step>
 </Steps>
 
-<Note>
-There's no separate per-client or per-order override today — every order uses the waiting terms of the cost profile assigned to its truck, falling back to a company-wide default (**Settings → Company**) and then the platform default (2h / €45) if neither is set.
-</Note>
+### Setting it on a client (contractual exceptions)
+
+If one specific client has contractually different waiting terms, set it on their own record instead of touching the rate card:
+
+<Steps>
+  <Step title="Open the client">
+    Go to **Clients** and open the client's record.
+  </Step>
+  <Step title="Find the waiting time fields">
+    Locate **Free hours before charging** and **Hourly rate after free hours**.
+  </Step>
+  <Step title="Set your values">
+    Enter the agreed figures for this client. Leave either blank to keep inheriting the rate-card (or company/platform) value for that field.
+  </Step>
+  <Step title="Save">
+    Click **Save**. Every order for this client now uses these values, regardless of which truck or rate card is assigned.
+  </Step>
+</Steps>
+
+<Warning>
+If you change a rate card's or a client's waiting rate, it only affects waiting events recorded from that point on. Waiting charges already added to open invoices are not updated automatically.
+</Warning>
+
+---
+
+## Turning Off Waiting Billing
+
+Not every client or order should turn waiting into a charge. Druma still logs the waiting event either way — arrival, free period, and chargeable minutes are all recorded — it just won't generate a bill for it when this is off.
+
+- **Per client** — open the client's record and uncheck **Bill waiting hours for this client**. Every order for that client stops generating waiting charges (waiting time is still tracked).
+- **Per order** — on the Add Order screen, **Client tab**, set **Bill waiting hours** to **Inherit from client** (the default), **Always bill**, or **Never bill**. The order-level setting always wins over the client setting, in either direction — so you can bill one exceptional order for an otherwise opted-out client, or exempt a single order from an otherwise-billing client.
+- If neither is set anywhere, the company-wide default is to bill.
 
 ---
 
@@ -149,7 +217,10 @@ In covered loading bays or areas with poor signal, GPS may fall back to network-
   <Card title="Today View" icon="map" href="/en/planner/today-view">
     See all active drivers, live wait times, and waiting alerts on the map.
   </Card>
-  <Card title="Generating Invoices" icon="file-invoice-dollar" href="/en/planner/generating-invoices">
+  <Card title="Generating Invoices" icon="file-invoice-dollar" href="/en/invoicing/generating-invoices">
     Add waiting time and other charges as line items on client invoices.
+  </Card>
+  <Card title="Waiting Time Charge Alerts" icon="bell" href="/en/automation/waiting-charge-alerts">
+    Planner/client notifications, escalation tiers, and the full late-arrival and auto-approval mechanics.
   </Card>
 </CardGroup>

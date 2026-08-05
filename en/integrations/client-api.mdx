@@ -1,6 +1,6 @@
 ---
 title: "Client API Integration (CAPI)"
-description: "Let clients push orders directly into Druma or receive real-time delivery events at a webhook — configured per client, no code changes in Druma needed."
+description: "Let clients push orders directly into Druma or receive real-time delivery events at a webhook — set up per client with a guided wizard, no code changes in Druma needed."
 icon: "plug"
 ---
 
@@ -10,7 +10,6 @@ The Client API Integration (CAPI) creates a direct data channel between a specif
 - **Outbound**: Druma pushes status events (departed, delivered, invoiced, and so on) to the client's system in real time.
 
 You can enable either half independently, or both together. Each client gets their own token and endpoint, so credentials are fully isolated.
-
 
 ---
 
@@ -36,28 +35,66 @@ Both inbound and outbound settings are on this tab.
 
 ---
 
-## Inbound — client pushes orders to Druma
+## Setting up a new inbound connection
+
+New connections go through a guided setup wizard — you don't hand-write a field-mapping table. Click **Set up API integration** on the API tab to start it.
 
 <Steps>
-  <Step title="Enable inbound">
-    On the **API** tab, toggle on **Enable Inbound API**.
+  <Step title="Pick the channel">
+    Choose how this client actually sends you orders: **API** (continue through this wizard), **Email ingestion** (handled by Druma's AI email intake instead — no mapping needed), or **Client portal** (they place orders themselves — no mapping needed). Only **API** continues to the next step.
   </Step>
-  <Step title="Generate a token">
-    Click **Generate Token**. The full token is shown **once** — copy it immediately and store it securely (a password manager works well). Druma only stores a hash of the token; the full value is unrecoverable. After this screen, only the first 20 characters are displayed as a reference.
+  <Step title="Paste a sample payload">
+    Paste one real (or realistic) JSON payload the client would send. Not sure what to tell the client's IT team? Use **Send the client an integration pack** on this same step to email them the endpoint URL, a curl example, and plain-language setup instructions — no fixed schema required.
   </Step>
-  <Step title="Share the endpoint URL">
-    Copy the **Endpoint URL** displayed below the token field. Give this URL and the token to the client's technical team.
+  <Step title="Review the AI-proposed mapping">
+    Druma's AI reads the sample and proposes a field mapping. If its confidence is **90% or higher** and the mapping is complete, it's applied automatically and the wizard skips straight to testing. Below that bar, you land on a mapping review screen — a live draft-order preview updates as you adjust the source path, target field, or transform for each row. Approve to continue, or reject and try a different sample.
   </Step>
-  <Step title="Configure field mappings (optional)">
-    If the client's system uses different field names than Druma's (for example, `shipment_id` instead of `reference`), add rows to the **Field Mapping** table by clicking **+ Add Mapping**. Each row maps one of the client's field names (left column) to the corresponding Druma field name (right column).
+  <Step title="Test, then go live">
+    Run **Validate without creating** against your sample to confirm nothing is missing, then click **Mark as tested**. Real orders the client's own system sends while you're still in setup show up here too — hidden from Planning, dashboards, and their portal until you go live. Once you're satisfied, click **Go live**.
   </Step>
 </Steps>
 
-The client's system sends a `POST` request to the endpoint URL with the header `Authorization: Bearer <token>` and a JSON body. Druma creates the order in **Draft** status with the source flag `booked_via: client_api`. A planner can review and confirm draft orders from the planning board.
+<Note>
+If another operator already has an approved mapping for a client with the same VAT number, Druma reuses that structure and skips the AI step entirely — this happens silently and just shows up as an unusually confident proposal.
+</Note>
 
 <Note>
-Orders created via CAPI arrive as drafts. They do not appear on the board as assigned until a planner (or an automation rule, if configured) moves them to the next status. This is intentional — it lets you validate and price the order before it enters the workflow.
+The flat, hand-edited inbound field-mapping table from older CAPI setups is gone for **new** connections — everything now goes through the wizard's versioned mapping spec. Connections configured before this change keep working automatically on their existing field map; there's just no UI to hand-edit that flat map anymore.
 </Note>
+
+The client's system sends a `POST` request to the endpoint URL with the header `Authorization: Bearer <token>` and a JSON body. Druma creates the order in **Draft** status. A planner can review and confirm draft orders from the planning board.
+
+---
+
+## Connection status
+
+Each connection moves through a lifecycle, shown as a status pill on the API tab:
+
+| Status | Meaning |
+|---|---|
+| Draft | Created, setup not yet started |
+| Pack sent | The integration pack email has been sent to the client's contact |
+| Receiving | Sample/mapping step in progress |
+| Tested | Validated, not yet accepting real production traffic |
+| Live | Accepting real inbound orders / sending outbound events |
+| Failing | 3 consecutive rejected inbound payloads, or 3 consecutive dead-lettered outbound deliveries |
+| Disabled | Turned off (the "Connection active" toggle) |
+
+When a connection flips to **Failing**, Druma notifies your admin/company_admin users in-app so you can catch a broken integration before the client calls to ask why nothing arrived.
+
+---
+
+## Mapping drift and version history
+
+If a client's system silently renames or moves a field, Druma detects the mismatch against the active mapping and proposes a one-click update — approve it to activate a new mapping version immediately, or reject it and keep the current one. The API tab also keeps a version history of every mapping the connection has used, with **Roll back** available on any older version.
+
+---
+
+## Rotating or delivering a token
+
+- **First-time generation**: on the API tab, click **Generate token**. The full token is shown **once** — copy it immediately (a password manager works well). Only the first characters are shown afterwards as a reference.
+- **Via the integration pack**: when sending the pack, tick **Generate a fresh API token and email it separately** — the token always goes out in its own email, never bundled with the setup instructions, so a forwarded pack never carries a live credential. The token is also shown in the UI immediately in case that email bounces.
+- **Rotating**: click **Rotate token** to invalidate the old one and generate a new one. Requests using the old token are rejected with `401 Unauthorized` from the moment rotation completes.
 
 ---
 
@@ -65,7 +102,7 @@ Orders created via CAPI arrive as drafts. They do not appear on the board as ass
 
 <Steps>
   <Step title="Enable outbound">
-    Toggle on **Enable Outbound Webhook**.
+    On the API tab (manage view, once the connection has left the wizard), toggle on **Enable outbound webhook**.
   </Step>
   <Step title="Enter the webhook URL">
     Paste the client's **Webhook URL** — the endpoint in their system that will receive events.
@@ -76,45 +113,32 @@ Orders created via CAPI arrive as drafts. They do not appear on the board as ass
     - **None** — no authentication header (use only on trusted private networks)
     - **Bearer token** — Druma adds `Authorization: Bearer <value>` to every request
     - **Basic auth** — Druma adds an `Authorization: Basic` header with a base64-encoded username and password
-    - **HMAC signature** — Druma signs each request body with a shared secret and includes the signature in a header; the client verifies it before processing
+    - **HMAC-SHA256** — Druma signs each request body with a shared secret and includes the signature in a header; the client verifies it before processing
 
-    Fill in the credentials for whichever type you choose.
+    Fill in the credentials for whichever type you choose. Leave a credential field blank to keep the currently saved value.
   </Step>
   <Step title="Select events to send">
     Tick the events you want Druma to push:
 
-    - **Order Created** — fired when a new order is confirmed in Druma
-    - **Status Updated** — fired on any status change (assigned, at pickup, in transit, and so on)
-    - **Delivered** — fired when the order reaches Delivered status
-    - **Invoice Sent** — fired when a sales invoice is sent to the client
+    - **Order created**
+    - **Status changed** — any status change (assigned, at pickup, in transit, and so on)
+    - **Order delivered**
+    - **Order delayed**
+    - **Order invoiced**
   </Step>
-  <Step title="Configure outbound field mappings (optional)">
-    If the client's system expects different field names in the payload, use the **Field Mapping** table on the outbound side (identical UX to inbound) to rename Druma's output fields before they are sent.
+  <Step title="Configure the outbound field map (optional)">
+    If the client's system expects different field names in the payload, use the **Outbound field map** table to rename Druma's output fields before they are sent.
   </Step>
   <Step title="Save">
-    Click **Save**. Druma will begin delivering events for the selected triggers from this point forward.
+    Click **Save settings**. Druma will begin delivering events for the selected triggers from this point forward.
   </Step>
 </Steps>
 
+<Note>
+Clients can also configure their own outbound webhook — URL, auth, events, and credentials — from their own portal, without you touching this tab at all. See [Managing Contacts](/en/client-portal/managing-contacts) for how the client's own portal settings work.
+</Note>
 
----
-
-## Field mapping explained
-
-Field mapping is a key-value translation table. It does not change the data — only the field names in the payload.
-
-**Example — inbound mapping:**
-
-| Client field | Druma field |
-|---|---|
-| `shipment_id` | `reference` |
-| `pickup_city` | `pickup_address` |
-| `drop_city` | `delivery_address` |
-| `cargo_weight_kg` | `weight_kg` |
-
-With this mapping in place, the client can POST their native JSON structure and Druma will interpret it correctly without the client needing to reformat their payload.
-
-**Example — outbound mapping:**
+**Example — outbound field mapping:**
 
 | Druma field | Client field |
 |---|---|
@@ -126,15 +150,9 @@ Unmapped fields are passed through using Druma's default field names.
 
 ---
 
-## Rotating a token
+## Testing and delivery log
 
-If a token is compromised or a key person leaves the client's team:
-
-1. On the **API** tab, click **Rotate Token**.
-2. The old token is immediately invalidated.
-3. The new token is shown once — copy and distribute it before navigating away.
-
-Update the token in the client's system as soon as possible. Requests using the old token will be rejected with `401 Unauthorized` from the moment the rotation completes.
+Once a connection is live (or failing), the API tab's **Testing & delivery log** section lets you re-validate a payload without creating an order, fire an ad-hoc test event at the outbound webhook, and browse the delivery log (status, attempts, HTTP response, timestamps) for every event Druma has tried to send.
 
 ---
 
@@ -151,9 +169,16 @@ These timestamps are useful for confirming the integration is active and for dia
 
 ## Rate limits
 
-Druma enforces a limit of **200 API calls per hour per client configuration**. Requests that exceed this limit receive a `429 Too Many Requests` response. The limit resets on a rolling one-hour window.
+CAPI enforces several independent rolling one-hour limits:
 
-If a client legitimately needs a higher throughput, contact Druma support.
+| Limit | Applies to |
+|---|---|
+| 200 calls/hour | Inbound order submissions, per connection |
+| 600 calls/hour | Outbound event dispatch, per connection |
+| 60 calls/hour | Settings/admin actions on the API tab, per planner |
+| 20 calls/hour | AI mapping-spec proposals (wizard + drift), per planner |
+
+Requests that exceed a limit receive a `429 Too Many Requests` response. If a client legitimately needs higher inbound/outbound throughput, contact Druma support.
 
 <Warning>
 Do not share a client's bearer token with other clients or embed it in publicly accessible code. Each token grants full inbound order creation rights for that client's company scope.
@@ -163,7 +188,7 @@ Do not share a client's bearer token with other clients or embed it in publicly 
 
 ## Related pages
 
-<Card title="Client Portal" icon="users" href="/en/clients/client-portal">
+<Card title="Client Portal" icon="users" href="/en/client-portal/tracking-shipments">
   The no-code alternative: let clients track shipments and download documents without any API integration.
 </Card>
 
@@ -171,6 +196,6 @@ Do not share a client's bearer token with other clients or embed it in publicly 
   Overview of all integrations available in Settings → Integrations.
 </Card>
 
-<Card title="Order Creation" icon="package-plus" href="/en/operations/creating-orders">
+<Card title="Order Creation" icon="package-plus" href="/en/planner/creating-orders">
   How planners create and manage orders in Druma.
 </Card>

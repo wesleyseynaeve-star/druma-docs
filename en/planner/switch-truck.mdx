@@ -45,70 +45,43 @@ The order must be of type **Own Truck**. Subcontracted and capacity sale orders 
     Go to **Planner → Planning Board** and find the active order's row.
   </Step>
   <Step title="Trigger Switch Truck">
-    Drag a different truck onto the order's row (or use the row's action menu). Druma detects that the order already has a truck assigned and offers to switch it rather than replace the assignment outright. Switch Truck is only available for Own Truck orders in an active status — it isn't exposed from the order detail panel.
+    Drag a different truck onto the order's row, or use **Switch truck** in the row's action menu. Druma detects that the order already has a truck assigned and opens the Switch Truck dialog instead of a plain assignment. Switch Truck is only available for Own Truck orders in an active status — it isn't exposed from the order detail panel.
   </Step>
-  <Step title="Select the target stop">
-    Choose the stop where the switch happens. For example, if the switch occurs at the second stop, select stop 2. All stops from this point onwards will be handled by the new truck.
+  <Step title="Set the relay location">
+    Enter where the handover happens — type an address or drop a pin on a saved parking. This is the only required field.
   </Step>
-  <Step title="Select the new truck">
-    Search for the replacement truck by plate number. Only active, available trucks from your fleet are shown. The new truck's assigned driver is automatically selected.
+  <Step title="Choose where to insert it">
+    Use **Insert relay after** to pick which stop the relay comes after (it defaults to the last loading stop). Druma inserts a new internal stop into the route at that point.
   </Step>
-  <Step title="Enter a reason and confirm">
-    Add a brief reason for the switch (e.g., "Driver hours limit", "Breakdown at Timisoara"). Click **Confirm Switch**.
+  <Step title="Pick the new truck (optional)">
+    Choose the replacement truck from the **New truck** dropdown, or leave it on **Don't know yet** if you only want to record where the handover will happen and assign a truck later.
+  </Step>
+  <Step title="Confirm">
+    Click **Confirm**. If you picked a new truck, Druma immediately runs the normal assign-truck flow on top of the relay — including any trailer-swap or cabotage checks that would apply to a first-time assignment.
   </Step>
 </Steps>
+
+<Note>
+There is no reason or comment field on the Switch Truck dialog — Druma only records where the relay happens and, optionally, which truck picks up the load from there. If you want a record of *why* the switch happened, note it in the order's activity log or a stop note.
+</Note>
 
 ---
 
 ## What happens after a switch
 
-When you confirm a truck switch, Druma performs several actions automatically:
+When you confirm, Druma:
 
-1. **A truck segment is created** for the original truck, recording which stops it handled (from the first stop to the switch point).
-2. **A new segment is created** for the replacement truck, covering from the switch point to the end of the order (open-ended until delivery).
-3. **All stops from the switch point onwards** are updated with the new truck and driver.
-4. **The order's main truck and driver fields** are updated to reflect the new assignment.
-5. **The trailer remains unchanged** — it stays attached to the order regardless of which tractor is pulling it.
+1. **Inserts an internal relay stop** into the order's route at the position you chose (stop type `internal`, labelled "Truck relay point"), recording the original truck on that stop so the switch can be cancelled later — see Undo below.
+2. **Runs the normal truck-assignment flow**, if you picked a new truck — the order's truck and driver fields are updated the same way a first-time assignment would be, including a trailer-swap prompt if the new truck has a fixed trailer that differs from the one currently on the order.
+3. **Leaves the trailer alone** otherwise — the trailer stays attached to the order regardless of which tractor is pulling it, unless the new truck's fixed trailer forces a swap.
 
----
-
-## Viewing truck segment history
-
-After a switch, the order detail panel shows a **Truck Segments** section listing every tractor that has been involved in the order:
-
-| Truck | Driver | Stops | Reason | Switched at |
-|---|---|---|---|---|
-| B-201-TCL (Volvo FH) | Ion Ionescu | Stop 1 → Stop 2 | Driver hours limit | 12 Apr 2026, 14:30 |
-| B-215-TCL (Scania R450) | Vasile Popa | Stop 2 → (ongoing) | — | — |
-
-Each segment records:
-- The truck name and plate
-- The driver who was driving
-- The stop range (from → to)
-- The reason for the switch
-- The timestamp of the handover
+If you leave the new truck as **Don't know yet**, only the relay stop is recorded — the order keeps its current truck until you assign one, either by editing the relay later or by dragging a truck onto the order as normal.
 
 ---
 
-## Per-stop truck and driver overrides
+## Multiple relays
 
-After a truck switch, individual stops in the order may show a different truck and driver than the order's main assignment. This is normal — it means the stop was handled by the previous tractor before the switch happened.
-
-When viewing the order's stop timeline, each stop shows which truck and driver were assigned to it. If a stop has no override, it inherits the order's current truck and driver.
-
----
-
-## Multiple switches
-
-You can switch the truck more than once on the same order. Each switch creates a new segment. This is useful for long-distance international routes where the load passes through multiple relay points.
-
-For example, a Bucharest → Duisburg load might use three tractors:
-
-1. Truck A: Bucharest → Budapest (Stop 1 → Stop 2)
-2. Truck B: Budapest → Wien (Stop 2 → Stop 3)
-3. Truck C: Wien → Duisburg (Stop 3 → Stop 4)
-
-Each segment is tracked independently with its own driver, reason, and timestamps.
+You can switch the truck more than once on the same order. Each switch inserts another internal relay stop at the point you choose, so a load can pass through several relay points on a long-distance route — for example, a Bucharest → Duisburg load handed off at Budapest and again at Wien.
 
 ---
 
@@ -116,14 +89,14 @@ Each segment is tracked independently with its own driver, reason, and timestamp
 
 If the replacement truck has not yet done any work on the order, you can cancel the switch and restore the original truck.
 
-Look for the **Undo Switch** button on the order row in the planning board or orders list — it appears only when a cancellable switch exists (relay stop present and no activity recorded on the new truck).
+Look for the **Undo swap** icon on the order row in the planning board — it appears only when a cancellable switch exists (relay stop present and no activity recorded since).
 
 Alternatively, drag the original truck back onto the order on the planning board — Druma will try to auto-cancel the switch before re-assigning.
 
 **The cancel is blocked if any of the following are true:**
-- Any stop at or after the relay point has an actual arrival or departure timestamp recorded
-- Any driver status events were recorded after the switch
-- The original truck is now assigned to another active order
+- Any stop at or after the relay point has an actual arrival, departure, or loading-started timestamp recorded
+- Any driver status event was captured after the relay stop was created
+- The original truck is now tied up on another active order — Druma won't silently pull it off work the planner gave it after the switch
 
 If the cancel is blocked, Druma shows a message explaining why. You can still manually reassign from the order detail panel in that case.
 
@@ -136,7 +109,7 @@ Switching a truck does **not** create a new order. The original order number, cl
 </Warning>
 
 - The **trailer always stays with the cargo**. If you need to change the trailer as well, that is a different operation — see [Trailer Management](/en/planner/trailer-management).
-- Truck switches are **logged in the order's audit history** with the planner's name, timestamp, and reason.
+- Truck switches are **logged in the order's audit history** with the planner's name and timestamp.
 - The driver app automatically updates — the outgoing driver sees the order disappear from their active loads, and the incoming driver receives a push notification with the job details.
 
 ---

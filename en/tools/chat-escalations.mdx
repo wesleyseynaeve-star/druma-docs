@@ -1,76 +1,68 @@
 ---
 title: "AI Chat Escalations"
-description: "How unresolved Ask Druma conversations escalate to your team, and how planners handle live sessions."
+description: "How unresolved Ask Druma conversations escalate to live chat, and how Druma staff handle sessions in Live Sessions."
 icon: "messages"
 ---
 
 ## Overview
 
-Ask Druma is an AI assistant available to planners, drivers, and clients, with three modes: answering questions from the docs, answering questions about your own data, and taking action as an assistant. **Escalation only applies to the docs mode** — if the AI can't resolve a documentation question after the user has sent 6 messages, Ask Druma offers a **Request human help** button. This triggers an escalation — a live chat session your team can pick up immediately. Data-mode and assistant-mode conversations never show this button, regardless of how long they run.
+Ask Druma is an AI assistant available to planners, drivers, and clients, with two tabs: **Docs** (answers questions from the documentation) and **Assistant** (answers questions about your own data, and — where entitled — takes action as an agent). **Escalation only applies to the Docs tab** — if the user has sent 6 messages in a Docs conversation, Ask Druma offers a **Request human help** button. This triggers an escalation — a live chat session that lands in **Tools → Live Sessions** for Druma staff to pick up. The Assistant tab never shows this button, regardless of how long the conversation runs.
 
 <Note>
-This is different from [Messages](/en/planner/messages) — the everyday person-to-person and driver chat hub. Chat Escalations is specifically the admin/company_admin-only queue for AI conversations that Ask Druma couldn't resolve.
+This is different from [Messages](/en/planner/messages) — the everyday person-to-person and driver chat hub. Live Sessions is specifically the queue for AI conversations that Ask Druma's Docs tab couldn't resolve, and it's handled by Druma support staff, not your own company admins.
 </Note>
-
-<Frame caption="Tools → Support Requests — escalations from Ask Druma's docs mode only.">
-  <img src="/images/tools/chat-escalations.png" alt="Chat Escalations queue" />
-</Frame>
 
 ---
 
 ## How escalation works
 
-1. **User sends 6 messages** in a docs-mode conversation without a satisfactory answer. This counts only the user's own messages — with the AI's replies interleaved, the visible conversation is roughly 11–12 messages long by the time the threshold is hit.
-2. Ask Druma displays: *"I haven't been able to resolve this. Would you like to speak with your team?"*
-3. The user taps **Request human help**.
-4. A chat session is created and its status is set to **waiting**.
-5. A Resend email notification is sent to all admin and company_admin users in the company.
-6. The session appears under **Tools → Live Sessions** with an orange badge on the Tools nav item.
-
-Duplicate escalations are deduplicated — if the same user already has an open session, a second tap does not create another one or send another email.
+1. **User sends 6 messages** in a Docs-tab conversation without a satisfactory answer.
+2. Ask Druma offers a **Request human help** button.
+3. The user taps it.
+4. A chat session is created (or, if the same user already has an open session, that existing one is reused rather than creating a duplicate).
+5. An email notification is sent to Druma's support address — not to your company's admins — with the AI conversation so far for context. The email contains no direct link into the app; it just tells support to open Live Sessions.
+6. The user is switched into live chat inside the same Ask Druma panel and waits for a reply.
 
 ---
 
-## Live Sessions (planner view)
+## Live Sessions
 
-Go to **Tools → Live Sessions** to see all escalated conversations. The list is split by status:
+**Tools → Live Sessions** lists escalated conversations. The list is split by status:
 
 | Status | Meaning |
 |---|---|
-| Waiting | Escalated, not yet picked up by a planner |
-| Active | Planner has replied at least once |
+| Waiting | Escalated, not yet picked up by an agent |
+| Active | An agent has replied at least once |
 | Closed | Conversation ended |
 
 ### Handling a session
 
-1. Click a **Waiting** session to open it.
-2. Read the full AI transcript — every message the user sent and every AI response is visible.
-3. Type your reply in the input box and press **Send**. This moves the session to **Active** and the user sees your reply in real time.
+1. Open a **Waiting** session.
+2. Read the AI conversation history — every message the user sent and every AI response before the handoff.
+3. Type a reply in the reply box and send it. This moves the session to **Active** and the user sees the reply in real time on their side.
 4. Continue the conversation until the issue is resolved.
-5. Click **Close session** when done.
+5. Close the session when done.
 
-Updates appear in real time on both sides via Supabase Realtime channels — you do not need to refresh the page.
+Updates appear in real time on both sides via Supabase Realtime — no need to refresh the page.
 
 ---
 
 ## Roles with access
 
-Only **admin** and **company_admin** roles can view and reply in Live Sessions. The Tools nav section is gated to these roles; planners and dispatchers do not see it.
+The **Tools** section in the sidebar is platform-admin-only — it isn't shown to company_admin, planner, or dispatcher roles at all. In practice, escalated sessions are seen and answered by Druma's own support staff, not by users inside your company.
 
 ---
 
 ## Notification email
 
-When a new escalation arrives, Druma sends an email via Resend to all admin/company_admin users. The email includes:
+When a new escalation arrives, Druma sends an email to its support address (not to any user in your company). The email includes:
 
-- The user's name and role
-- The full AI transcript of the conversation so far
-- A direct link to the Live Sessions page
-
----
+- The user's name and email (as a reply-to)
+- The AI conversation up to that point
+- A note to open Live Sessions in the app to reply — no direct link is included
 
 <Note>
-The escalation threshold is fixed at 6 user messages in docs mode. It cannot currently be changed per company, and it never triggers in data or assistant mode.
+The escalation threshold is fixed at 6 user messages in the Docs tab. It cannot currently be changed per company, and it never triggers from the Assistant tab.
 </Note>
 
 <Card title="Ask Druma" icon="sparkles" href="/en/tools/smart-import">

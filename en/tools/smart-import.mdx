@@ -59,7 +59,7 @@ Smart Import handles documents that are too messy or unstructured for a direct C
     Druma sends each file to the AI extraction service. This typically takes a few seconds per file. A progress indicator shows the status for each document. Do not close the tab during extraction.
   </Step>
   <Step title="Review the extraction results">
-    When extraction is complete, the **Review Dashboard** appears. It shows category cards across the top — **Companies**, **Fleet**, **Drivers**, **Clients**, **Insurance** — with a count of extracted records in each category.
+    When extraction is complete, the **Review Dashboard** appears. It shows six category cards across the top — **Company**, **Trucks**, **Trailers**, **Drivers**, **Clients**, **Insurance** — with a count of extracted records in each category.
   </Step>
   <Step title="Open a category to review">
     Click any category card to see the extracted records in an editable table. Each row is one extracted record (one vehicle, one driver, one client, etc.).
@@ -71,7 +71,7 @@ Smart Import handles documents that are too messy or unstructured for a direct C
     Review the confidence indicators and duplicate flags on each row — see the sections below for details.
   </Step>
   <Step title="Import the category">
-    When a category looks correct, click **Import [Category]** — for example, **Import Fleet** or **Import Clients**. Druma batch-inserts all non-skipped rows and confirms the count imported.
+    When a category looks correct, click **Import [Category]** — for example, **Import Trucks** or **Import Clients**. Druma batch-inserts all non-skipped rows and confirms the count imported.
   </Step>
 </Steps>
 
@@ -86,7 +86,7 @@ The Review Dashboard is the central workspace after extraction. It has two level
 - Number of records extracted
 - A summary warning if any records have Low confidence or Duplicate flags
 
-**Record table (drill-down)** — click a card to open the editable table for that category. The table shows one column per field (e.g., Plate, Trailer Type, Capacity, Year for Fleet), with confidence indicators and duplicate flags on each row.
+**Record table (drill-down)** — click a card to open the editable table for that category. The table shows one column per field (e.g., Plate, Brand, Payload, Year for Trucks; Plate, Trailer Type, Max Weight for Trailers), with confidence indicators and duplicate flags on each row.
 
 
 You can switch between categories freely — your edits are preserved until you import or close the session.
@@ -113,15 +113,15 @@ To quickly find all Low-confidence fields across a category, look for the amber 
 
 ## Duplicate detection
 
-Before showing the Review Dashboard, Druma compares extracted records against your existing company data — but only for four categories:
+Before showing the Review Dashboard, Druma compares extracted records against your existing company data — but only for four of the six categories:
 
-- **Fleet (trucks)**: matches on licence plate
-- **Fleet (trailers)**: matches on licence plate
+- **Trucks**: matches on licence plate
+- **Trailers**: matches on licence plate
 - **Drivers**: matches on full name (case-insensitive)
 - **Clients**: matches on VAT number, falling back to name if no VAT number was extracted
 
 <Note>
-There is no duplicate detection yet for Companies/Subcontractors or Insurance records — every extracted row in those categories is treated as new.
+There is no duplicate detection yet for Company or Insurance records — every extracted row in those categories is treated as new.
 </Note>
 
 Records that match existing data are flagged with a **Duplicate** badge on the row. You have two options for each duplicate:
@@ -137,11 +137,12 @@ Rows without a Duplicate flag are new records and will be inserted on import.
 
 Imported records appear immediately in the relevant module:
 
-- **Fleet** records appear in **Fleet → Trucks** or **Fleet → Trailers**
+- **Trucks** appear in **Fleet → Trucks**
+- **Trailers** appear in **Fleet → Trailers**
 - **Drivers** appear in **Fleet → Drivers**
 - **Clients** appear in **Clients**
-- **Companies / Subcontractors** appear in **Forwarding → Subcontractors**
-- **Insurance** data is attached to the relevant vehicle or company record
+- **Company** doesn't create a new record — it updates your own company's profile fields (name, VAT, address, IBAN, and so on) directly. There's only ever one Company row to review, not a list.
+- **Insurance** data is attached to the matching vehicle by licence plate (rows that don't match an existing truck are skipped)
 
 There is no undo for an import. If incorrect data was imported, edit the records individually in their respective modules.
 
@@ -149,7 +150,7 @@ There is no undo for an import. If incorrect data was imported, edit the records
 
 ## Limitations
 
-Smart Import is designed for company, fleet, driver, client, and insurance data. It does not handle:
+Smart Import is designed for company profile, truck, trailer, driver, client, and insurance data. It does not handle:
 
 - **Orders** — use the order form or the inbound order email feature for order creation
 - **Invoices** — invoices are generated automatically from delivered orders or via the carrier invoice ingestion workflow
@@ -165,17 +166,14 @@ Your new subcontractor sends you a 3-page PDF listing their entire fleet — 12 
 
 1. Upload the PDF to **Tools → Smart Import**
 2. Wait a few seconds for extraction
-3. Click the **Fleet** card — 12 rows appear, most with High confidence
-4. Two rows have Medium confidence on the Trailer Type field — correct them inline
+3. Click the **Trucks** card — 12 rows appear, most with High confidence
+4. Two rows have Medium confidence on a field — correct them inline
 5. One row is flagged as Duplicate (a truck you already added last week) — leave it as Skip
-6. Click **Import Fleet** — 11 new vehicles are added to your fleet instantly
+6. Click **Import Trucks** — 11 new vehicles are added to your fleet instantly
 
 ---
 
-<Card title="Fleet Management" icon="truck" href="/en/fleet/fleet-overview">
+<Card title="Fleet Management" icon="truck" href="/en/planner/fleet-management">
   Manage trucks, trailers, and drivers — and verify imported fleet records here after a Smart Import.
 </Card>
 
-<Card title="Clients" icon="building-2" href="/en/clients/clients-overview">
-  View and edit client records created by Smart Import, and add contacts and standing instructions.
-</Card>

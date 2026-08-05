@@ -12,6 +12,12 @@ Every integration your company uses is configured in one place: **Settings → I
 
 ---
 
+## Finding an integration
+
+The Integrations page groups every card into categories — GPS/Telematics, Reefer/Trailer Temperature, Compliance, eCMR, Freight, Market Data, Accounting, Messaging, and Platform. A row of **category chips** at the top of the page lets you filter to just one category (each chip shows how many integrations are in it); click **All** to see everything again. A **search box** next to the chips filters cards by name or description as you type — useful once your company has several integrations configured and you just want to jump straight to one.
+
+---
+
 ## 1. eCMR Provider
 
 Druma issues electronic consignment notes **in-house using the Druma native provider** — no external account, API key, or setup is required. eCMR is available out of the box for cross-border orders, and Druma seals each completed document with a PAdES digital signature.
@@ -178,7 +184,8 @@ Open the card for your provider under **Settings → Integrations** and enter th
 
 | Provider | Credential fields | Where you get them |
 |---|---|---|
-| **Scania / Volvo / DAF / MAN / Mercedes-Benz / IVECO / Renault (rFMS)** | Client ID, Client Secret, OEM selector | Issued by your truck manufacturer's developer or fleet portal (for example `developer.scania.com` for Scania). Scania additionally requires a Communicator onboard unit plus a Location or Performance subscription. Scania and Volvo are the most established; the other rFMS-standard brands share the same API and are expected to work the same way, but are still being validated against live fleets. |
+| **Scania (rFMS)** | Client ID, Client Secret | Register an application at `developer.scania.com` to get a Client ID and Client Secret. The truck also needs a Scania Communicator onboard unit plus a Location (GPS) subscription — and, for driver hours, a Performance subscription. Auth uses Scania's HMAC challenge-response, handled for you. |
+| **Volvo (rFMS)** | Username, Password | Volvo exposes the same rFMS API standard as Scania, but with HTTP Basic auth — enter the Username and Password issued for your fleet via Volvo Connect / Dynafleet rFMS access. |
 | **Webfleet** | Account, Username, Password, API key | From a Webfleet user with an "expert" profile and external access enabled. The API key itself is issued by Webfleet support or through the WEBFLEET.connect partner programme. |
 | **Geotab** | Database, Username, Password | Create a Service Account (View Only) under MyGeotab → Administration → Users. "Database" is the name in your `my.geotab.com/<database>` URL. |
 | **Samsara** | API Token, Base URL (optional) | Generate a token in the Samsara dashboard under Settings → API Tokens, scoped to "Read Vehicle Statistics". Leave Base URL blank for EU fleets; set it if your organisation runs on the US shard. GPS positions only — Samsara does not supply tachograph/driving-hours data. |
@@ -187,7 +194,7 @@ Open the card for your provider under **Settings → Integrations** and enter th
 | **Webeye / Eurowag** | Username, Secret | Generated in `selfcare.eurowag.com` → Telematics → Fleet management → System connections. Your company must first be approved as a partner by Eurowag. **Partner-gated** — there is no public self-service signup. |
 
 <Note>
-Scania, Webfleet, Geotab, and Samsara are established integrations. Frotcom is in beta — it works, but its field mapping is still being confirmed. Continental VDO and Webeye/Eurowag require the vendor to approve your company as a partner before the connection returns live data; the credential form still lets you save and test, but syncing won't start until that partner access is active.
+Scania, Volvo, Webfleet, Geotab, and Samsara are established integrations. Frotcom is in beta — it works, but its field mapping is still being confirmed. Continental VDO and Webeye/Eurowag require the vendor to approve your company as a partner before the connection returns live data; the credential form still lets you save and test, but syncing won't start until that partner access is active.
 </Note>
 
 ### Reefer / Trailer Temperature

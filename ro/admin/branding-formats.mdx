@@ -6,12 +6,12 @@ icon: "palette"
 
 Setarile **Branding si Formate** controleaza cum apare compania ta pe documentele generate si cum se construiesc numerele de referinta pentru facturi si comenzi.
 
-Aceste setari sunt specifice fiecarei companii. Daca administrezi mai multe companii in Druma, fiecare are propria configuratie de branding si format.
+Aceste setari sunt specifice fiecarei companii. Daca administrezi mai multe companii in Druma, fiecare companie are propria configuratie de branding si format.
 
 **Cine poate edita:** doar rolurile Admin si Company Admin.
 
 <Frame caption="Branding si Formate — 4 taburi: Branding, Format Factura, Format Comanda, Formatare randuri.">
-  <img src="/images/admin/branding-formats.png" alt="Panoul de setari Branding si Formate" />
+  <img src="/images/admin/branding-formats.ro.png" alt="Panoul de setari Branding si Formate" />
 </Frame>
 
 ---
@@ -24,21 +24,35 @@ Mergi la **Setari → Branding si Formate**. Pagina are patru taburi: **Branding
 
 ## Tabul Branding
 
-Controleaza cele doua culori de brand folosite pe PDF-urile generate si sabloanele de email: **culoarea principala** (borduri, etichete, totaluri) si **culoarea accent** (antete de tabel, text de continut). Fiecare culoare are un camp cod hex plus un selector vizual, cu previzualizare live.
+Tabul Branding controleaza cele doua culori de brand ale companiei tale. Acestea sunt aplicate **live in tot UI-ul aplicatiei Druma** pentru compania ta — nu doar pe documentele generate. Salvarea unei culori aici o scrie intr-o variabila CSS la radacina aplicatiei, astfel incat recoloreaza imediat butoanele, insignele, evidentierile si alte elemente tematice din tot planner-ul, aplicatia soferului si portalurile de client/carrier, pe langa PDF-urile de factura si sabloanele de email.
 
-Apasa **Salveaza modificarile** sau **Reseteaza la implicit**.
+### Culoarea principala
+
+Culoarea principala de brand a companiei tale — folosita in tot UI-ul aplicatiei, plus pentru borduri de documente, etichete si totaluri pe PDF-urile de factura si sabloanele de email.
+
+### Culoarea accent
+
+O culoare secundara folosita pentru accente in tot UI-ul aplicatiei, plus antetele de tabel si textul de continut pe aceleasi documente.
+
+Fiecare culoare are un camp cu cod hex plus un selector vizual (swatch), iar o previzualizare live arata ambele swatch-uri unul langa altul.
+
+### Salvare
+
+Apasa **Salveaza modificarile** pentru a aplica culorile, sau **Reseteaza la implicit** pentru a restaura culorile predefinite.
 
 <Note>
-Logo-ul companiei NU se configureaza pe aceasta pagina — se incarca la **Setari → Companie**. Druma accepta fisiere PNG, JPEG, SVG sau WebP de pana la 2 MB; nu exista o cerinta minima de latime sau de fundal transparent impusa.
+**Logo-ul** companiei tale NU se configureaza pe aceasta pagina — se incarca la **Setari → Companie**. Druma accepta fisiere PNG, JPEG, SVG sau WebP de pana la 2 MB; nu exista o cerinta minima de latime sau de fundal transparent impusa.
 </Note>
 
 ---
 
 ## Tabul Format Factura
 
-Controleaza patternul numarului de factura, titlul antetului, dobanda de intarziere, instructiunile de plata, termenii si conditiile, textul de subsol si sectiunile optionale afisate pe PDF-ul facturii.
+Tabul Format Factura controleaza patternul numarului de factura, titlul antetului facturii, dobanda de intarziere, instructiunile de plata, termenii si conditiile, textul de subsol si sectiunile optionale afisate pe PDF-ul facturii.
 
 ### Token-uri de format
+
+Patternurile de numar sunt construite dintr-un sablon text care combina text fix cu token-uri dinamice, incadrate in acolade:
 
 | Token | Ce insereaza |
 |---|---|
@@ -47,16 +61,23 @@ Controleaza patternul numarului de factura, titlul antetului, dobanda de intarzi
 | `{YY}` | An pe 2 cifre (ex: `26`) |
 | `{MM}` | Luna pe 2 cifre (ex: `04`) |
 | `{DD}` | Ziua pe 2 cifre (ex: `07`) |
-| `{YYMMDD}` | An, luna, zi combinate pe 2 cifre fiecare (ex: `260407`) |
+| `{YYMMDD}` | An, luna si zi combinate pe 2 cifre fiecare (ex: `260407`) |
 | `{SEQ3}` | Numar secvential, completat cu zerouri la 3 cifre (ex: `042`) |
 | `{SEQ4}` | Numar secvential, completat cu zerouri la 4 cifre (ex: `0042`) |
-| `{SEQ5}` / `{SEQ6}` | Numar secvential, completat cu zerouri la 5 / 6 cifre |
+| `{SEQ5}` | Numar secvential, completat cu zerouri la 5 cifre |
+| `{SEQ6}` | Numar secvential, completat cu zerouri la 6 cifre |
 
 Nu exista token `{NNN}`/`{NNNN}` — foloseste unul din token-urile `{SEQ3}`–`{SEQ6}` pentru o secventa cu zerouri. Poti combina token-urile liber cu separatori precum `-` sau `/`.
 
-Secventa se reseteaza de fiecare data cand un token de data din pattern (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` sau `{YYYY}`) isi schimba valoarea — practic, un pattern cu `{YYMMDD}` se reseteaza **zilnic**, nu anual. Un pattern care foloseste doar `{YYYY}` se reseteaza o data pe an, cum te-ai astepta.
+Secventa se reseteaza de fiecare data cand un token de data din pattern (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}` sau `{YYYY}`) isi schimba valoarea — practic, un pattern care include `{YYMMDD}` se reseteaza **zilnic**, nu o data pe an. Un pattern care foloseste doar `{YYYY}` se reseteaza o data pe an, cum te-ai astepta.
 
-**Implicit:** prefix `INV`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produce ceva de genul `INV-260407-042`.
+### Formatul numarului de factura
+
+Introdu sablonul dorit in campul **Format numar factura**. O previzualizare live sub camp se actualizeaza pe masura ce scrii, aratand un numar exemplu folosind data de azi si o valoare de secventa exemplu.
+
+**Implicit:** prefix factura `INV`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produce ceva de genul `INV-260407-042`.
+
+**Exemple de personalizare:**
 
 | Sablon | Exemplu rezultat |
 |---|---|
@@ -68,27 +89,33 @@ Secventa se reseteaza de fiecare data cand un token de data din pattern (`{YYMMD
 Notele de credit folosesc propria serie de numerotare (prefix implicit `CN`) si propriul contor, dar nu au momentan un camp de pattern editabil pe aceasta pagina.
 </Note>
 
+### Salvare
+
 Apasa **Salveaza modificarile**. Noul format se aplica urmatoarei facturi create dupa salvare — facturile existente pastreaza numarul de referinta cu care au fost emise.
 
 ---
 
 ## Tabul Format Comanda
 
-Defineste patternul de numerotare pentru numerele de referinta ale comenzilor — identificatorul afisat pe planning board, in panoul de detaliu al comenzii si in comunicarile cu soferii sau clientii.
+Tabul Format Comanda defineste patternul de numerotare pentru numerele de referinta ale comenzilor — identificatorul afisat pe planning board, in panoul de detaliu al comenzii si in orice comunicare cu soferii sau clientii.
 
-Acelasi sistem de token-uri ca la facturi. Introdu un **Prefix** si un **Pattern numar**; previzualizarea live se actualizeaza sub campuri.
+### Formatul numarului de comanda
 
-**Implicit:** prefix `ORD`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produce ceva de genul `ORD-260407-042`.
+Se aplica acelasi sistem de token-uri ca la facturi. Introdu un **Prefix** si un **Pattern numar**, si urmareste previzualizarea live actualizandu-se sub campuri.
 
-**Exemplu:** un transportator din Belgia ar putea folosi prefixul `BE` cu patternul `{PREFIX}-{YYYY}-{SEQ4}` pentru referinte de tipul `BE-2026-0042`.
+**Implicit:** prefix comanda `ORD`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produce ceva de genul `ORD-260407-042`.
 
-Apasa **Salveaza modificarile**. Noul format se aplica tuturor comenzilor create dupa salvare; comenzile existente isi pastreaza numarul original.
+**Exemplu:** un transportator care opereaza in Belgia ar putea folosi prefixul `BE` cu patternul `{PREFIX}-{YYYY}-{SEQ4}` pentru a produce referinte de tipul `BE-2026-0042`.
+
+### Salvare
+
+Apasa **Salveaza modificarile**. Noul format se aplica tuturor comenzilor create dupa salvare. Comenzile existente isi pastreaza numerele de referinta originale.
 
 ---
 
 ## Tabul Formatare randuri
 
-Iti permite sa evidentiezi randurile din tabelele Druma pe baza unor conditii simple — de exemplu, colorezi un rand cu rosu cand marja scade sub un prag, sau cand este restant.
+Tabul Formatare randuri iti permite sa evidentiezi randurile din tabelele Druma pe baza unor conditii simple — de exemplu, colorezi un rand cu rosu cand marja scade sub un prag, sau cand este restant.
 
 Fiecare regula are un nume, un camp de evaluat (marja %, este restant, status, zile de la creare), o conditie (mai mic decat, cel mult, mai mare decat, cel putin, egal, diferit), o valoare de comparat si o culoare de evidentiere. Apasa **Adauga regula** pentru a crea una si **Salveaza modificarile** pentru a aplica regulile.
 
@@ -97,13 +124,13 @@ Fiecare regula are un nume, un camp de evaluat (marja %, este restant, status, z
 ## Pagini asociate
 
 <Card title="Configurare integrari" icon="plug" href="/ro/admin/integration-setup">
-  Conecteaza-ti furnizorul eCMR (furnizorul nativ, intern, al Druma — TransFollow ramane disponibil doar ca fallback mostenit pentru companiile care il foloseau deja), furnizorii de carduri de carburant si software-ul de contabilitate.
+  Conecteaza-ti furnizorul eCMR (furnizorul nativ, intern, al Druma — TransFollow ramane disponibil doar ca ruta mostenita pentru un numar mic de companii cu o configurare preexistenta), furnizorii de carduri de carburant si software-ul de contabilitate.
 </Card>
 
 <Card title="Facturare electronica Peppol (Belgia)" icon="file-check-2" href="/ro/integrations/peppol-invoicing">
   Trimite automat facturi catre clientii belgieni prin reteaua Peppol.
 </Card>
 
-<Card title="Trimiterea facturilor" icon="send" href="/en/finance/sending-invoices">
+<Card title="Trimiterea facturilor" icon="send" href="/ro/invoicing/generating-invoices">
   Cum generezi, trimiti si urmaresti facturile de vanzare in Druma.
 </Card>

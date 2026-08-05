@@ -1,30 +1,45 @@
 ---
-title: "KSeF - e-Facturare in Polonia"
-description: "Cum trimite Druma automat facturi catre KSeF (Krajowy System e-Faktur), sistemul national obligatoriu de e-facturare al Poloniei operat de KAS."
+title: "KSeF — e-Facturare in Polonia"
+description: "Cum trimite Druma automat facturile catre KSeF (Krajowy System e-Faktur), sistemul national obligatoriu de e-facturare al Poloniei operat de KAS, cu urmarirea statusului, gestionarea reincercarilor si descarcarea recipisei UPO."
 icon: "file-invoice"
 ---
 
 <Warning>
-**Early access - in asteptarea primei validari live cu un operator.** Trimiterea KSeF a Druma este completa functional, dar nu a fost inca exercitata integral pe API-ul live KSeF de catre un operator real cu TVA polonez. Trimiterea ramane blocata pana la conectarea unui token de operator live. Daca esti printre primii operatori care conecteaza KSeF, trateaza trimiterile initiale ca early access - urmareste indeaproape indicatoarele de status si contacteaza suportul rapid daca ceva pare gresit.
+**Early access — in asteptarea primei validari live cu un operator.** Trimiterea KSeF a Druma este completa functional, dar la data acestui text nu a fost inca exercitata integral, cap la cap, pe API-ul live KSeF al Poloniei, de catre un operator real cu TVA polonez. Trimiterea ramane blocata pana la conectarea unui token de operator live. Daca esti printre primii operatori care conecteaza KSeF, trateaza trimiterile initiale ca early access — urmareste indeaproape indicatoarele de status si contacteaza suportul rapid, daca ceva pare gresit. Pasii de configurare si comportamentul descrise mai jos sunt instructiunile corecte; singurul aspect deschis este un istoric de productie live.
 </Warning>
 
 ## Ce este KSeF?
 
-KSeF este sistemul national polonez de facturare electronica structurata, operat de autoritatea fiscala poloneza (KAS). Este obligatoriu pentru companiile inregistrate TVA in Polonia. Fiecare factura emisa de o companie cu TVA-PL trebuie trimisa la KSeF in formatul oficial XML **FA(3)** - portalul KAS singur nu este suficient.
+KSeF (Krajowy System e-Faktur) este sistemul national polonez de facturare electronica structurata, operat de autoritatea fiscala poloneza (KAS — Krajowa Administracja Skarbowa). Este obligatoriu pentru companiile inregistrate TVA in Polonia. Fiecare factura emisa de o companie cu TVA-PL trebuie trimisa la KSeF in formatul oficial XML **FA(3)** — portalul KAS singur nu este suficient.
 
 <Note>
-Implementarea obligatiei KSeF se face in etape pe parcursul lui 2026, iar datele de intrare in vigoare au fost amanate repetat de guvernul polonez. Confirma data aplicabila companiei tale cu contabilul sau pe portalul oficial [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+Implementarea obligatiei KSeF se face in etape pe parcursul lui 2026, iar datele de intrare in vigoare au fost amanate repetat de guvernul polonez. Confirma data aplicabila companiei tale cu contabilul sau pe portalul oficial [ksef.mf.gov.pl](https://ksef.mf.gov.pl), inainte sa te bazezi pe orice data mentionata aici.
 </Note>
 
-KSeF se aplica doar daca firma ta are un **numar de TVA polonez** (format `PL` + 10 cifre). Companiile inregistrate in Romania, Belgia sau alta tara non-poloneza nu sunt supuse KSeF - fara un numar de TVA-PL detectat, cardul de integrare ramane inactiv.
+KSeF se aplica doar daca firma ta are un **numar de TVA polonez** (format `PL` urmat de 10 cifre, de exemplu `PL1234567890`). Companiile inregistrate in Romania, Belgia sau orice alta tara non-poloneza nu sunt supuse KSeF. Daca Druma nu detecteaza un numar de TVA-PL pe inregistrarea companiei tale, cardul de integrare KSeF va ramane inactiv.
 
 ## Cum gestioneaza Druma KSeF
 
-Nu trebuie sa te autentifici in portalul KAS, sa produci XML-uri sau sa trimiti nimic manual. La generarea unei facturi, cu KSeF activat, Druma converteste factura in formatul **FA(3) XML**, se autentifica la API-ul KSeF cu **tokenul tau de operator** (stocat securizat in Supabase Vault), trimite XML-ul si primeste un **numar KSeF**, apoi descarca **UPO**-ul (confirmarea oficiala de primire) si il ataseaza facturii.
+Nu trebuie sa te autentifici in portalul KAS, sa produci fisiere XML sau sa trimiti nimic manual. Iata ce se intampla automat cand generezi o factura si KSeF este activat:
+
+1. Druma converteste factura in formatul oficial **FA(3) XML** cerut de KAS.
+2. Druma se autentifica la API-ul KSeF folosind **tokenul tau de operator**, stocat securizat in Supabase Vault — tokenul nu este niciodata vizibil in text simplu, dupa ce il lipesti.
+3. Druma trimite XML-ul la KSeF si primeste un **numar KSeF** (referinta oficiala de la KAS).
+4. Druma descarca **UPO**-ul (Urzędowe Poświadczenie Odbioru — confirmarea oficiala de primire) si il stocheaza pe inregistrarea facturii.
+
+Intregul proces ruleaza in fundal. Vei vedea rezultatul pe factura, ca o eticheta de status colorata.
 
 ## Indicatoare de status KSeF
 
-Fiecare factura supusa KSeF arata un status in sectiunea **KSeF** a facturii: **In asteptare** (trimitere in coada), **Trimisa** (asteapta procesarea KAS, de obicei 1-5 minute), **Acceptata** (numarul KSeF si UPO disponibile), **Esuata** (eroare de validare) sau **Respinsa** (respingere formala KAS - vezi codul motiv in UPO).
+Fiecare factura supusa KSeF arata o eticheta de status pe pagina de detaliu a facturii, sub sectiunea **KSeF**:
+
+| Eticheta | Semnificatie |
+|---|---|
+| **In asteptare** | Factura generata; trimiterea KSeF este in coada. |
+| **Trimisa** | XML trimis la KSeF; se asteapta ca KAS sa il proceseze (de obicei 1–5 minute). |
+| **Acceptata** | KAS a acceptat factura. Numarul KSeF este stocat si UPO-ul este disponibil. |
+| **Esuata** | KSeF a respins factura, din cauza unei erori de validare. Vezi mesajul de eroare de pe factura. |
+| **Respinsa** | KAS a returnat o respingere formala. Verifica UPO-ul pentru codul motiv. |
 
 <Note>
 Un job din fundal verifica trimiterile esuate la fiecare 30 de minute, dar fiecare factura reincearca de fapt pe un program de backoff exponential — aproximativ 1 ora dupa primul esec, apoi aproximativ 2 ore dupa aceea (±25% variatie). Daca si a treia incercare (trimiterea originala plus aceste 2 reincercari) esueaza, factura trece direct in statusul **Esuata**, de regula in aproximativ 3 ore de la primul esec — nu va mai reincerca automat dupa aceea. Declanseaza o reincercare manuala din panoul de detaliu al facturii, dupa ce ai rezolvat eroarea de baza.
@@ -33,34 +48,55 @@ Un job din fundal verifica trimiterile esuate la fiecare 30 de minute, dar fieca
 ## Configurarea KSeF
 
 <Steps>
-  <Step title="Setari -> Integrari">Gaseste cardul **KSeF (e-facturare Polonia)** si apasa **Conecteaza**.</Step>
-  <Step title="Lipeste tokenul de operator">Tokenul de autentificare emis de KAS pentru accesul API al companiei tale - il genereaza contabilul sau echipa IT din portalul KSeF.</Step>
-  <Step title="Salveaza">Druma valideaza ca firma ta are un numar de TVA polonez inainte de activare.</Step>
+  <Step title="Mergi la Setari → Integrari">
+    Deschide meniul **Setari** din bara de navigare de sus si selecteaza **Integrari**.
+  </Step>
+  <Step title="Gaseste cardul KSeF si apasa Conecteaza">
+    Localizeaza cardul **KSeF (e-facturare Polonia)**. Apasa **Conecteaza**.
+  </Step>
+  <Step title="Lipeste tokenul tau de operator">
+    Introdu tokenul tau de operator KSeF. Acesta este tokenul de autentificare emis de KAS, pentru accesul API al companiei tale. Contabilul tau sau echipa IT il pot genera din portalul KSeF, la [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  </Step>
+  <Step title="Salveaza">
+    Apasa **Salveaza**. Druma valideaza ca inregistrarea companiei tale are un numar de TVA polonez, inainte de activare. Daca validarea esueaza, verifica ca numarul de TVA din detaliile companiei tale este in formatul `PL` + 10 cifre.
+  </Step>
 </Steps>
 
-Odata conectat, toate facturile noi sunt trimise automat la KSeF. Facturile deja existente in Druma **nu** sunt retrimise retroactiv.
+Odata conectat, toate facturile noi generate de compania ta sunt trimise automat la KSeF. Facturile deja existente in Druma **nu** sunt retrimise retroactiv.
 
-## Deconectare
+## Deconectarea KSeF
 
-**Setari -> Integrari -> KSeF -> Deconecteaza** - elimina tokenul din Vault si opreste imediat trimiterile noi. Facturile deja acceptate isi pastreaza numerele KSeF.
+Mergi la **Setari → Integrari → KSeF → Deconecteaza**. Asta elimina tokenul de operator din Vault si opreste imediat trimiterile noi. Facturile deja acceptate isi pastreaza numerele KSeF — deconectarea nu afecteaza inregistrarile acceptate.
 
 ## Facturi cu taxare inversa
 
-Druma gestioneaza corect TVA-ul cu taxare inversa in formatul XML FA(3) - omite suma TVA si seteaza corect campul **P_12**, fara ajustare manuala.
+Druma gestioneaza corect TVA-ul cu taxare inversa in formatul XML FA(3). Cand o factura poarta regimul de TVA cu taxare inversa, Druma omite suma de TVA si seteaza corect campul **P_12** din XML. Nu este necesara nicio ajustare manuala — regimul de TVA este derivat din elementele de linie ale facturii, asa cum sunt configurate in Druma.
 
 ## Descarcarea UPO
 
-Se descarca automat cand factura ajunge la statusul **Acceptata**. Manual: **Facturare -> deschide factura -> sectiunea KSeF -> Descarca UPO**.
+UPO-ul (recipisa oficiala de la KAS) este descarcat automat, odata ce factura ajunge la statusul **Acceptata**, si este stocat pe inregistrarea facturii. Pentru a-l descarca manual:
+
+1. Deschide factura din **Facturare** → **Facturi**.
+2. Deruleaza pana la sectiunea **KSeF**.
+3. Apasa **Descarca UPO**.
 
 <Warning>
-UPO este dovada legala ca KAS a primit factura ta - pastreaza o copie, legea fiscala poloneza cere sa o poti prezenta la un control fiscal.
+UPO este dovada legala ca KAS a primit factura ta. Pastreaza o copie pentru evidentele tale — legea fiscala poloneza cere sa o poti prezenta in timpul unui control fiscal.
 </Warning>
+
+## Reincercare manuala
+
+Daca reincercarile automate sunt epuizate, sau ai corectat o eroare si vrei sa retrimiti imediat:
+
+Mergi la **Facturare** → **Facturi** → deschide factura → **sectiunea KSeF** → apasa **Reincearca trimiterea**. Druma trimite din nou XML-ul FA(3) imediat.
+
+---
 
 <CardGroup cols={2}>
   <Card title="e-Factura / Trimitere ANAF" icon="landmark" href="/ro/invoicing/efactura-anaf">
-    Echivalentul romanesc obligatoriu de e-facturare - cum trimite Druma catre ANAF prin API-ul SPV.
+    Echivalentul romanesc obligatoriu de e-facturare — cum trimite Druma catre ANAF prin API-ul SPV.
   </Card>
   <Card title="Facturare Peppol" icon="network-wired" href="/ro/integrations/peppol-invoicing">
-    Facturare electronica la nivel UE prin reteaua Peppol.
+    Facturare electronica la nivel UE prin reteaua Peppol — configurare, trimitere si urmarirea statusului.
   </Card>
 </CardGroup>

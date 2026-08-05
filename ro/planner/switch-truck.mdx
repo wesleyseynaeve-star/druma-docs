@@ -45,70 +45,43 @@ Comanda trebuie sa fie de tipul **Camion Propriu**. Comenzile Subcontractate si 
     Mergi la **Planner → Tabla de planificare** si gaseste randul comenzii active.
   </Step>
   <Step title="Declanseaza Schimba Camionul">
-    Trage un camion diferit pe randul comenzii (sau foloseste meniul de actiuni al randului). Druma detecteaza ca la comanda este deja atribuit un camion si ofera sa il schimbe, in loc sa inlocuiasca atribuirea direct. Schimba Camionul este disponibil doar pentru comenzile Camion Propriu, intr-un status activ — nu este expus din panoul de detaliu al comenzii.
+    Trage un camion diferit pe randul comenzii, sau foloseste **Schimba camionul** din meniul de actiuni al randului. Druma detecteaza ca la comanda este deja atribuit un camion si deschide dialogul Schimba Camionul, in loc de o atribuire simpla. Schimba Camionul este disponibil doar pentru comenzile Camion Propriu, intr-un status activ — nu este expus din panoul de detaliu al comenzii.
   </Step>
-  <Step title="Selecteaza oprirea tinta">
-    Alege oprirea la care are loc schimbul. De exemplu, daca schimbul se intampla la a doua oprire, selecteaza oprirea 2. Toate opririle de la acest punct incolo vor fi gestionate de noul camion.
+  <Step title="Seteaza locatia releului">
+    Introdu unde are loc predarea — tasteaza o adresa sau plaseaza un pin pe o parcare salvata. Acesta este singurul camp obligatoriu.
   </Step>
-  <Step title="Selecteaza noul camion">
-    Cauta camionul de inlocuire dupa numarul de inmatriculare. Sunt afisate doar camioanele active, disponibile din flota ta. Soferul atribuit noului camion este selectat automat.
+  <Step title="Alege unde sa il inserezi">
+    Foloseste **Insereaza releul dupa** pentru a alege dupa care oprire vine releul (implicit este ultima oprire de incarcare). Druma insereaza o oprire interna noua in ruta, in acel punct.
   </Step>
-  <Step title="Introdu un motiv si confirma">
-    Adauga un motiv scurt pentru schimb (de ex. "Limita de ore a soferului", "Defectiune la Timisoara"). Apasa **Confirma Schimbul**.
+  <Step title="Alege noul camion (optional)">
+    Alege camionul de inlocuire din lista derulanta **Camion nou**, sau lasa-l pe **Nu stiu inca**, daca vrei doar sa inregistrezi unde va avea loc predarea si sa atribui un camion mai tarziu.
+  </Step>
+  <Step title="Confirma">
+    Apasa **Confirma**. Daca ai ales un camion nou, Druma ruleaza imediat fluxul normal de atribuire a camionului, peste releu — inclusiv orice verificari de schimb de remorca sau de cabotaj care s-ar aplica unei atribuiri initiale.
   </Step>
 </Steps>
+
+<Note>
+Nu exista niciun camp de motiv sau comentariu in dialogul Schimba Camionul — Druma inregistreaza doar unde are loc releul si, optional, care camion preia marfa de acolo. Daca vrei o inregistrare a *motivului* pentru care s-a facut schimbul, noteaz-o in jurnalul de activitate al comenzii sau intr-o nota de oprire.
+</Note>
 
 ---
 
 ## Ce se intampla dupa un schimb
 
-Cand confirmi un schimb de camion, Druma efectueaza automat mai multe actiuni:
+Cand confirmi, Druma:
 
-1. **Se creeaza un segment de camion** pentru tractorul original, inregistrand ce opriri a gestionat (de la prima oprire pana la punctul de schimb).
-2. **Se creeaza un segment nou** pentru camionul de inlocuire, acoperind de la punctul de schimb pana la sfarsitul comenzii (deschis pana la livrare).
-3. **Toate opririle de la punctul de schimb incolo** sunt actualizate cu noul camion si sofer.
-4. **Campurile principale de camion si sofer ale comenzii** sunt actualizate, ca sa reflecte noua atribuire.
-5. **Remorca ramane neschimbata** — ramane atasata comenzii, indiferent care tractor o trage.
+1. **Insereaza o oprire interna de releu** in ruta comenzii, la pozitia pe care ai ales-o (tip de oprire `internal`, etichetata „Punct de releu camion"), inregistrand camionul original pe acea oprire, ca schimbul sa poata fi anulat mai tarziu — vezi Undo mai jos.
+2. **Ruleaza fluxul normal de atribuire a camionului**, daca ai ales un camion nou — campurile de camion si sofer ale comenzii sunt actualizate la fel ca la o atribuire initiala, inclusiv un prompt de schimb de remorca, daca noul camion are o remorca fixa diferita de cea aflata in prezent pe comanda.
+3. **Lasa remorca neschimbata**, in caz contrar — remorca ramane atasata comenzii, indiferent care tractor o trage, cu exceptia cazului in care remorca fixa a noului camion forteaza un schimb.
 
----
-
-## Vizualizarea istoricului de segmente de camion
-
-Dupa un schimb, panoul de detaliu al comenzii arata o sectiune **Segmente de Camion**, care listeaza fiecare tractor implicat in comanda:
-
-| Camion | Sofer | Opriri | Motiv | Schimbat la |
-|---|---|---|---|---|
-| B-201-TCL (Volvo FH) | Ion Ionescu | Oprire 1 → Oprire 2 | Limita de ore a soferului | 12 apr 2026, 14:30 |
-| B-215-TCL (Scania R450) | Vasile Popa | Oprire 2 → (in desfasurare) | — | — |
-
-Fiecare segment inregistreaza:
-- Numele si numarul de inmatriculare al camionului
-- Soferul care conducea
-- Intervalul de opriri (de la → pana la)
-- Motivul schimbului
-- Marcajul temporal al predarii
-
----
-
-## Suprascrieri de camion si sofer per oprire
-
-Dupa un schimb de camion, opririle individuale ale comenzii pot arata un camion si sofer diferite fata de atribuirea principala a comenzii. Este normal — inseamna ca oprirea a fost gestionata de tractorul anterior, inainte sa se intample schimbul.
-
-Cand vizualizezi cronologia de opriri a comenzii, fiecare oprire arata ce camion si sofer i-au fost atribuite. Daca o oprire nu are nicio suprascriere, mosteneste camionul si soferul curenti ai comenzii.
+Daca lasi camionul nou pe **Nu stiu inca**, este inregistrata doar oprirea de releu — comanda isi pastreaza camionul curent, pana cand atribui unul, fie editand releul mai tarziu, fie tragand un camion pe comanda, ca de obicei.
 
 ---
 
 ## Schimburi multiple
 
-Poti schimba camionul de mai multe ori pe aceeasi comanda. Fiecare schimb creeaza un segment nou. Este util pentru rute internationale de distanta lunga, unde marfa trece prin mai multe puncte de releu.
-
-De exemplu, o marfa Bucuresti → Duisburg ar putea folosi trei tractoare:
-
-1. Camionul A: Bucuresti → Budapesta (Oprire 1 → Oprire 2)
-2. Camionul B: Budapesta → Viena (Oprire 2 → Oprire 3)
-3. Camionul C: Viena → Duisburg (Oprire 3 → Oprire 4)
-
-Fiecare segment este urmarit independent, cu propriul sofer, motiv si marcaje temporale.
+Poti schimba camionul de mai multe ori pe aceeasi comanda. Fiecare schimb insereaza o alta oprire interna de releu, in punctul pe care il alegi, astfel incat o marfa poate trece prin mai multe puncte de releu pe o ruta de lunga distanta — de exemplu, o marfa Bucuresti → Duisburg predata la Budapesta si din nou la Viena.
 
 ---
 
@@ -116,14 +89,14 @@ Fiecare segment este urmarit independent, cu propriul sofer, motiv si marcaje te
 
 Daca noul camion nu a facut inca nicio activitate pe comanda, poti anula schimbul si restaura camionul original.
 
-Cauta butonul **Anuleaza Schimbul** pe randul comenzii, pe tabla de planificare sau in lista de comenzi — apare doar cand exista un schimb anulabil (o oprire de releu este prezenta si nicio activitate nu este inregistrata pe noul camion).
+Cauta pictograma **Anuleaza schimbul** pe randul comenzii, pe tabla de planificare — apare doar cand exista un schimb anulabil (o oprire de releu este prezenta si nicio activitate nu a fost inregistrata de atunci).
 
 Alternativ, trage camionul original inapoi pe comanda, pe tabla de planificare — Druma va incerca sa anuleze automat schimbul, inainte sa reatribuie.
 
 **Anularea este blocata daca oricare din urmatoarele este adevarat:**
-- Orice oprire la sau dupa punctul de releu are un marcaj temporal real de sosire sau plecare inregistrat
-- Au fost inregistrate evenimente de status ale soferului dupa schimb
-- Camionul original este acum atribuit unei alte comenzi active
+- Orice oprire la sau dupa punctul de releu are un marcaj temporal real de sosire, plecare sau inceput de incarcare inregistrat
+- A fost capturat orice eveniment de status al soferului dupa ce oprirea de releu a fost creata
+- Camionul original este acum ocupat pe o alta comanda activa — Druma nu il va retrage in tacere de pe activitatea pe care planificatorul i-a dat-o dupa schimb
 
 Daca anularea este blocata, Druma arata un mesaj care explica de ce. Poti totusi reatribui manual din panoul de detaliu al comenzii, in acel caz.
 
@@ -136,7 +109,7 @@ Schimbarea unui camion **nu** creeaza o comanda noua. Numarul comenzii originale
 </Warning>
 
 - **Remorca ramane intotdeauna cu marfa**. Daca trebuie sa schimbi si remorca, este o operatiune diferita — vezi [Gestionarea remorcilor](/ro/planner/trailer-management).
-- Schimburile de camion sunt **inregistrate in istoricul de audit al comenzii**, cu numele planificatorului, marcajul temporal si motivul.
+- Schimburile de camion sunt **inregistrate in istoricul de audit al comenzii**, cu numele planificatorului si marcajul temporal.
 - Aplicatia soferului se actualizeaza automat — soferul care iese vede comanda disparand din incarcaturile sale active, iar soferul care intra primeste o notificare push cu detaliile comenzii.
 
 ---

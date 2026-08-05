@@ -1,26 +1,26 @@
 ---
 title: "SAGA C and WinMENTOR Integration"
-description: "Export Druma invoices to SAGA C or WinMENTOR Classic as file packages you import into your accounting software."
+description: "Export Druma invoices to SAGA C as a fixed package, or clone a customisable WinMENTOR-style template, from Finance → Export Builder."
 icon: "calculator"
 ---
 
-Most Romanian transport companies handle their accounting in SAGA C or WinMENTOR Classic. Druma integrates with both, letting you move invoices from Druma into your accounting software without re-entering data manually.
+Most Romanian transport companies handle their accounting in SAGA C or WinMENTOR. Druma exports invoices from **Finance → Export Builder**, letting you move invoices from Druma into your accounting software without re-entering data manually.
 
 ## SAGA C
 
-SAGA C is the most widely used accounting software for Romanian SMEs. Druma exports invoices in the DBF format that SAGA C expects.
+SAGA C is the most widely used accounting software for Romanian SMEs. Druma exports invoices in the DBF format that SAGA C expects, as a fixed, one-click package.
 
 ### Exporting from Druma
 
 <Steps>
-  <Step title="Open the export menu">
-    In Druma, go to **Invoicing → Export → SAGA C**.
+  <Step title="Open Export Builder">
+    In Druma, go to **Finance → Export Builder**.
   </Step>
-  <Step title="Select date range">
-    Choose the period you want to export — typically the current month or the previous month. All issued invoices in that period will be included.
+  <Step title="Select the period">
+    For companies based in Romania, a **SAGA export (Romania)** panel appears at the top of the page. Pick the month you want to export — typically the current month or the previous month. All issued invoices in that period will be included.
   </Step>
   <Step title="Download the ZIP file">
-    Click **Download ZIP**. Depending on what's in the selected period, the file contains:
+    Click **SAGA export (Romania)**. Depending on what's in the selected period, the file contains:
     - `CLI_<date>.dbf` — client master data
     - `ART_<date>.dbf` — the freight service line item (included by default on your first export only; auto-disabled afterwards, since SAGA only needs it once)
     - `IE_<date>_<date>.dbf` — sales invoices (Iesiri) with VAT breakdown
@@ -29,6 +29,8 @@ SAGA C is the most widely used accounting software for Romanian SMEs. Druma expo
     - `README.txt` — import instructions in Romanian
   </Step>
 </Steps>
+
+This SAGA package is fixed — it isn't a custom profile and doesn't go through the column builder below. It's the same package the automatic monthly export (further down this page) emails to your accountant.
 
 ### Importing into SAGA C
 
@@ -51,18 +53,26 @@ SAGA C is the most widely used accounting software for Romanian SMEs. Druma expo
 
 For invoices issued in currencies other than RON, Druma automatically includes the BNR (National Bank of Romania) exchange rate valid on the invoice date. This is embedded in the DBF file and imported into SAGA C automatically — no manual rate entry needed.
 
-## WinMENTOR Classic
+## WinMENTOR
 
-WinMENTOR Classic uses a different format than SAGA C: pipe-delimited (`|`) `.txt` files rather than DBF. Select **WinMENTOR Classic** from the export dropdown instead of SAGA C.
+Unlike SAGA C, there's no fixed WinMENTOR package to download — WinMENTOR installs vary enough between companies that Druma gives you a **starting template** instead, which you then adjust to match your own import format.
 
-The ZIP contains:
-- `Iesiri_<date>_<date>.txt` — sales invoices
-- `Clienti_<date>.txt` — client master data for clients touched by those invoices
-- `Articole_<date>.txt` — the freight service line item
-- `Incasari_<date>_<date>.txt` — payments, only present if the period has any
-- `README.txt` — import instructions in Romanian
+<Steps>
+  <Step title="Open Export Builder">
+    In Druma, go to **Finance → Export Builder**.
+  </Step>
+  <Step title="Clone the WinMENTOR template">
+    Click **Clone WinMentor template**. This creates a new export profile pre-filled with WinMENTOR-typical settings: pipe (`|`) delimiter, Windows-1252 encoding, `DD.MM.YYYY` dates, and a starter column set — Numar, Data, Client, Suma, TVA, Total, Cod_TVA.
+  </Step>
+  <Step title="Adjust the columns">
+    Add, remove, or reorder columns from the sales-invoice field list, rename headers, and set a transform per column (date, number, uppercase, truncate, or a nominal-code lookup) to match what your WinMENTOR import expects. Give the profile a name and click **Save profile**.
+  </Step>
+  <Step title="Preview, then run">
+    Pick a period and click **Refresh preview** to check the output before committing. Click **Run export** to download the CSV/TXT file for that period.
+  </Step>
+</Steps>
 
-To import: in WinMENTOR, go to **Utilitare → Import/Export → Import din fisier text**, select each file in turn, and confirm the delimiter is `|`. Verify the imported documents under **Documente → Vanzari**.
+Because this is a regular export profile, the same builder also works for any other CSV-based accounting package — WinMENTOR is just the pre-filled starting point, not a fixed format. Once saved, the profile appears alongside your other export profiles and can be re-run for any period going forward.
 
 ## Automatic Monthly Export (SAGA C)
 
@@ -70,10 +80,14 @@ Instead of manually exporting every period, you can have Druma email a SAGA expo
 
 **Settings → Automations & Features → SAGA Export Config**
 
-Configure the **accountant email** (and optional CC), and a **day of month** (1–28) to run on. A scheduled job checks daily and, on the configured day, exports the **previous full month** and emails the ZIP to the accountant with a summary of invoice/purchase/payment counts and any validation warnings.
+Configure the **accountant email** (and optional CC), and a **day of month** to run on. A scheduled job checks daily and, on the configured day, exports the **previous full month** and emails the ZIP to the accountant with a summary of invoice/purchase/payment counts and any validation warnings.
 
 <Note>
-The email contains a download link to the ZIP that **expires after 7 days**. There is no in-app "Export History" list — each month's file is only reachable via that emailed link (or by re-running the manual export for the same period from Invoicing → Export).
+Choose a day between **1 and 5**. The field currently accepts higher values in the UI, but values above 5 are not reliably saved (a known issue, being fixed) — stick to 1–5 for now.
+</Note>
+
+<Note>
+The email contains a download link to the ZIP that **expires after 7 days**. There is no in-app "Export History" list — each month's file is only reachable via that emailed link (or by re-running the manual export for the same period from Finance → Export Builder).
 </Note>
 
 <CardGroup cols={2}>

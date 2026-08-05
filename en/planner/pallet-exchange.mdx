@@ -110,6 +110,34 @@ Leave the threshold blank to disable the fee modal for that pallet type — move
 
 ---
 
+## Pallet Balance Reconciliation
+
+Beyond the per-client balance column, Druma has a dedicated **Operations → Pallet Balances** page that reconciles positions across **both clients and subcontractors** in one view — useful when you want a single sweep of every open pallet position rather than checking counterparties one at a time.
+
+Each row shows a counterparty (client or carrier), pallet type, net balance, and a **status** badge using the same threshold logic as the fee modal, but with an extra tier for positions that have drifted a long way past it:
+
+| Status | Meaning |
+|---|---|
+| **OK** | Balance is at or under the configured threshold |
+| **Imbalance** | Balance exceeds the threshold |
+| **Severe** | Balance exceeds **twice** the threshold — worth chasing before it grows further |
+
+<Steps>
+  <Step title="Review the list">
+    Open **Operations → Pallet Balances**. Search by counterparty name or pallet type to narrow the list; the KPI bar at the top shows total open positions, how many are imbalanced, and your total exposure in euros.
+  </Step>
+  <Step title="Drill into movements">
+    Click **View movements** on any row to see that counterparty's full movement history for that pallet type in a modal, without leaving the list.
+  </Step>
+  <Step title="Generate a statement">
+    Click **Generate statement** on a row for a CSV statement of that one counterparty's position, or **Export all** at the top of the page for every counterparty at once — useful for sending a reconciliation document to a client or carrier who disputes their balance.
+  </Step>
+</Steps>
+
+A **weekly automated reconciliation** run also checks every company's balances against the same thresholds and fires an in-app notification when a position is imbalanced — deduplicated per pallet type and counterparty over a 7-day window, so you're not renotified every run for a position you already know about.
+
+---
+
 ## Provider sync (optional)
 
 If you use CHEP Connect, Druma can reconcile your in-app ledger against the provider's official balance. Go to **Settings → Integrations → Pallet Exchange**.
@@ -127,10 +155,7 @@ CHEP Connect is currently the only pallet provider integration. EUR, LPR, IPP, E
 
 ---
 
-<Card title="Order Extras & Surcharges" icon="circle-plus" href="/en/planner/order-extras">
+<Card title="Order Extras & Surcharges" icon="circle-plus" href="/en/invoicing/generating-invoices">
   Learn how pallet fee lines appear in the invoice editor alongside other order surcharges.
 </Card>
 
-<Card title="Clients" icon="building-2" href="/en/planner/clients">
-  Manage client profiles, standing instructions, and view pallet balance history per client.
-</Card>

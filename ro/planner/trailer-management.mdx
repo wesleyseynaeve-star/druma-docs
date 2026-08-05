@@ -15,7 +15,7 @@ Inainte sa aprofundezi, merita sa verifici daca aceasta functie se aplica operat
 Daca chiar rulezi o operatiune cu schimb de remorci sau cu remorci multiple, continua sa citesti.
 
 <Frame caption="Flota → Remorci — 11 tipuri initializate, complet configurabile per companie.">
-  <img src="/images/planner/trailer-management.png" alt="Pagina de Gestionare Remorci" />
+  <img src="/images/planner/trailer-management.ro.png" alt="Pagina de Gestionare Remorci" />
 </Frame>
 
 ---
@@ -52,65 +52,75 @@ Apasa **Salveaza** cand ai terminat.
 
 ## Atasarea unei remorci la un camion
 
-O remorca poate fi atribuita unui singur camion la un moment dat. Exista doua moduri de a atasa o remorca:
-
-### Optiunea 1 — La crearea unei comenzi
-
-Cand completezi o comanda pentru o misiune **Camion Propriu**, dupa ce selectezi tractorul, apare o lista derulanta **Remorca**. Cauta dupa placa sau ID si selecteaza remorca pe care vrei sa o folosesti pentru aceasta misiune. Remorca este marcata automat ca atribuita, pe durata comenzii.
-
-### Optiunea 2 — Din pagina de detaliu a remorcii
+O remorca este legata de un camion direct pe inregistrarea **camionului** — nu exista un pas separat de "atribuire" pe remorca, iar crearea comenzii nici nu te intreaba sa alegi o remorca anume (crearea comenzii cere doar un **Tip de remorca**, de ex. "are nevoie de Reefer" — remorca si camionul efective sunt atribuite ulterior, pe [Tabla de planificare](/ro/planner/planning-board)).
 
 <Steps>
-  <Step title="Deschide profilul remorcii">
-    Mergi la **Flota → Remorci** si apasa remorca pe care vrei sa o atribui.
+  <Step title="Deschide camionul">
+    Mergi la **Flota → Camioane** si apasa tractorul la care vrei sa atasezi o remorca.
   </Step>
-  <Step title="Apasa Atribuie la Camion">
-    Gaseste sectiunea **Atribuire Curenta** si apasa **Atribuie la Camion**.
+  <Step title="Gaseste sectiunea Atribuire">
+    Pe tabul **General**, deruleaza la sectiunea **Atribuire** (sub Sofer Principal/Secundar si Planificator/Dispecer Atribuit).
   </Step>
-  <Step title="Selecteaza camionul">
-    Cauta tractorul dupa numarul de inmatriculare. Sunt afisate doar vehiculele active.
-  </Step>
-  <Step title="Seteaza perioada de atribuire">
-    Introdu data de inceput. Poti lasa data de sfarsit necompletata, daca inca nu stii cand va fi detasata remorca.
+  <Step title="Seteaza lista derulanta Remorca Legata">
+    Alege remorca din lista derulanta **Remorca Legata**. Aceasta listeaza fiecare remorca din flota ta, dupa placa (si nume, daca este setat) — Druma nu blocheaza momentan alegerea unei remorci deja legate de alt camion, asa ca verifica mai intai coloana **Status** a remorcii (vezi [Vizualizarea disponibilitatii remorcilor](#vizualizarea-disponibilitatii-remorcilor) mai jos).
   </Step>
   <Step title="Salveaza">
-    Apasa **Confirma Atribuirea**. Remorca va aparea acum ca atribuita pe tabla de planificare.
+    Apasa **Salveaza**. Remorca arata acum ca **In Folosinta** in lista de remorci si este legata de acest camion, oriunde este folosit camionul pentru planificare.
   </Step>
 </Steps>
+
+<Note>
+O remorca poate fi legata cu adevarat de un singur camion, la un moment dat (campul este un simplu pointer 1:1, nu o inregistrare de atribuire cu date) — dar Druma nu valideaza asta la salvare, asa ca evita sa legi manual o remorca ce arata deja **In Folosinta** pe alt camion.
+</Note>
 
 ---
 
 ## Detasarea unei remorci
 
-Cand o comanda este finalizata, Druma elibereaza automat atribuirea remorcii. Poti detasa si o remorca manual, oricand:
+Exista doua moduri de a detasa o remorca, iar cel potrivit depinde de daca remorca mai are inca marfa pe ea.
+
+### Dezlegare simpla (remorca goala, sau doar corectarea unei inregistrari)
+
+Deschide tabul **General** al camionului, seteaza **Remorca Legata** inapoi la **— Niciuna —** si apasa **Salveaza**. Este instantaneu si nu atinge locatia inregistrata a remorcii — foloseste-o cand remorca este cu adevarat goala, sau doar corectezi o greseala de introducere a datelor.
+
+### Detasarea unei remorci prin Repozitionare (remorca inca incarcata)
+
+Daca tractorul lasa in urma o remorca **incarcata** — un schimb de sofer, o defectiune, o lasare la sfarsit de tura intr-o baza — foloseste in schimb actiunea **Repozitioneaza** (bara de instrumente Flota → Camioane, sau din meniul randului unui camion; vezi [Repozitionarea unui camion](/ro/planner/fleet-management#repozitionarea-unui-camion)):
 
 <Steps>
-  <Step title="Deschide profilul remorcii">
-    Mergi la Flota → Remorci si apasa remorca.
+  <Step title="Deschide Repozitioneaza si selecteaza camionul">
+    Apasa **Repozitioneaza**, apoi alege camionul. Remorca sa legata (daca exista) apare automat.
   </Step>
-  <Step title="Apasa Detaseaza">
-    In sectiunea Atribuire Curenta, apasa **Detaseaza Remorca**.
+  <Step title="Comuta Lasa Remorca">
+    Apasa **Lasa Remorca**, langa numele remorcii. Un avertisment confirma ca remorca va fi detasata si lasata la locatia curenta a camionului.
   </Step>
-  <Step title="Confirma">
-    Confirma detasarea. Statusul remorcii revine la **Disponibila** si poate fi atribuita unui alt camion.
+  <Step title="Creeaza repozitionarea">
+    Completeaza destinatia pentru camion si apasa **Creeaza Repozitionarea**.
   </Step>
 </Steps>
 
-<Warning>
-Daca detasezi o remorca in timp ce o comanda este inca activa (soferul este in tranzit), comanda ramane legata de remorca in scopuri de evidenta. Detasarea afecteaza doar atribuirile viitoare.
-</Warning>
+In spatele scenei, aceasta apeleaza functia de baza de date `flag_trailer_collection` (migratia `0372`), care:
+
+- Inregistreaza locatia de lasare a remorcii ca pozitia ei curenta.
+- Detaseaza tractorul de remorca (`trucks.trailer_id` este golit).
+- Daca remorca mai are inca o comanda **activa, incarcata** pe ea (orice status de la preluare pana la livrare), acea comanda este trimisa inapoi la **in asteptare**: camionul, soferul si al doilea sofer sunt toate golite, iar comanda este marcata **in asteptarea colectarii remorcii**.
+
+<Note>
+O comanda marcata "in asteptarea colectarii remorcii" apare distinct pe Tabla de planificare, fata de o comanda obisnuita neatribuita — are nevoie de un camion trimis sa colecteze remorca si sa finalizeze livrarea, nu de o atribuire noua de la zero. Daca remorca era goala, lasarea ei doar o repozitioneaza, fara niciun impact asupra comenzii.
+</Note>
 
 ---
 
 ## Vizualizarea disponibilitatii remorcilor
 
-Lista de remorci de la **Flota → Remorci** are trei taburi de filtrare rapida:
+Lista de remorci de la **Flota → Remorci** are patru taburi de filtrare rapida:
 
 - **Toate** — Fiecare remorca din flota ta.
-- **Disponibile** — Remorci neatribuite momentan niciunui camion sau comenzi. Sunt gata de dispecerizare.
-- **Atribuite** — Remorci atasate momentan unui camion sau in folosinta pe o comanda activa.
+- **In Folosinta** — Remorci legate momentan de un camion (vezi [Atasarea unei remorci la un camion](#atasarea-unei-remorci-la-un-camion) mai sus).
+- **Disponibile** — Remorci nelegate de niciun camion si care nu sunt in mentenanta. Acestea sunt cele libere de legat.
+- **Mentenanta** — Remorci cu o fereastra activa de mentenanta (o data **Mentenanta pana la** in viitor).
 
-Apasa orice remorca pentru a-i vedea istoricul complet de atribuire — pe ce camioane a fost, ce comenzi a finalizat si cand.
+Apasa orice remorca pentru a-i deschide profilul (taburile General / Specificatii / Conformitate / Temperatura / Note / Comentarii).
 
 ---
 
@@ -121,18 +131,15 @@ Remorcile au nevoie de propriile acte — asigurare, certificate de inspectie te
 Pentru a adauga un document la o remorca:
 
 <Steps>
-  <Step title="Deschide profilul remorcii">
-    Mergi la Flota → Remorci si selecteaza remorca.
+  <Step title="Deschide Documente Flota">
+    Mergi la **Flota → Documente** — actele remorcii sunt gestionate pe pagina centrala Documente Flota, nu pe profilul remorcii insusi.
   </Step>
-  <Step title="Mergi la tabul Documente">
-    Apasa tabul **Documente** din profilul remorcii.
-  </Step>
-  <Step title="Incarca documentul">
-    Apasa **Adauga Document**, selecteaza tipul de document, introdu data de expirare si incarca o scanare sau fotografie a certificatului.
+  <Step title="Adauga documentul">
+    Apasa **Adauga Document**, alege remorca drept activul legat, selecteaza tipul de document, introdu data de expirare si incarca o scanare sau fotografie a certificatului.
   </Step>
 </Steps>
 
-Druma te va alerta pe Tabloul de bord Acasa si prin email, cand un document de remorca se apropie de data expirarii. Perioada implicita de avertisment este de 30 de zile, pe care o poti schimba in **Setari → Notificari**.
+Cand alertele de documente de flota sunt activate (Setari → Automatizari si Functii), Druma te avertizeaza in aplicatie, pe masura ce un document de remorca se apropie de expirare — cu 60 de zile inainte ca avertisment si cu 14 zile inainte ca critic. Vezi [Documente Flota](/ro/fleet-compliance/fleet-documents) pentru detalii.
 
 <Note>
 Daca certificatul ADR al unei remorci expira si ai comenzi marcate ADR atribuite ei, Druma va semnala comanda cu un avertisment. Nu va bloca dispecerarea, dar avertismentul este inregistrat.
@@ -142,19 +149,19 @@ Daca certificatul ADR al unei remorci expira si ai comenzi marcate ADR atribuite
 
 ## Urmarirea locatiei remorcii
 
-Druma urmareste locatiile remorcilor prin trei surse, fiecare inregistrata cu un indicator de **sursa locatie**:
+Druma pastreaza locatia unei remorci actualizata din trei surse. Care dintre ele a actualizat ultima data o remorca anume este inregistrat intern (folosit pentru depanare) — zi de zi, lista si profilul remorcilor iti arata doar locatia in sine, nu o eticheta de "sursa".
 
 ### Automat: la livrare
 
-Cand o comanda este marcata **Livrata**, Druma actualizeaza automat locatia remorcii la adresa ultimei opriri de descarcare. Sursa locatiei este setata la **Livrare Comanda**. Asta inseamna ca, dupa fiecare livrare finalizata, pozitia remorcii este actuala, fara nicio introducere manuala.
+Cand o comanda este marcata **Livrata**, Druma actualizeaza automat locatia remorcii la adresa ultimei opriri de descarcare. Asta inseamna ca, dupa fiecare livrare finalizata, pozitia remorcii este actuala, fara nicio introducere manuala.
 
-### Automat: la detasarea de camion
+### Automat: lasarea unei remorci prin Repozitionare
 
-Cand detasezi o remorca de un camion (fie manual, fie pentru ca acel camion este reatribuit), locatia remorcii este setata la ultima pozitie cunoscuta a camionului. Sursa locatiei este setata la **Detasare Camion**.
+Cand folosesti comutatorul **Lasa Remorca** din modalul Repozitioneaza, pentru a detasa o remorca incarcata sau goala de camionul ei (vezi [Detasarea unei remorci prin Repozitionare](#detasarea-unei-remorci-prin-repozitionare-remorca-inca-incarcata) mai sus), locatia remorcii este setata la ultima pozitie cunoscuta a camionului. O simpla dezlegare manuala din lista derulanta Remorca Legata a camionului **nu** actualizeaza locatia remorcii — doar fluxul de Repozitionare o face.
 
 ### Actualizare manuala
 
-Dispecerii pot actualiza locatia remorcii oricand, din pagina de profil a remorcii. Campul **Locatie Curenta** suporta autocompletare de adrese HERE — incepe sa tastezi o adresa si selecteaza din sugestii, pentru coordonate precise. Sursa locatiei este setata la **Manual**.
+Dispecerii pot actualiza locatia remorcii oricand, din pagina de profil a remorcii. Campul **Locatie Curenta** suporta autocompletare de adrese HERE — incepe sa tastezi o adresa si selecteaza din sugestii, pentru coordonate precise.
 
 <Note>
 Urmarirea locatiei remorcii este limitata astazi la aceste trei surse — nu exista o integrare de urmaritor GPS care sa actualizeze automat pozitia unei remorci. Daca remorcile tale poarta propria unitate de telematica, acele date nu sunt momentan conectate la campul de locatie a remorcii din Druma.

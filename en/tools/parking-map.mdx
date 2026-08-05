@@ -1,6 +1,6 @@
 ---
 title: "Truck Parking Map"
-description: "Find verified, security-rated truck parking locations along active routes directly on the Live Map — and propose rest stops to drivers without leaving the dispatch screen."
+description: "Find verified, security-rated truck parking locations along active routes directly on the Live Map — and add rest stops to a driver's order without leaving the dispatch screen."
 icon: "map-pin"
 ---
 
@@ -36,16 +36,19 @@ Each marker on the map represents one truck parking location. Markers are colour
 
 | Colour | Security level | Meaning |
 |---|---|---|
-| Green | **High** | CCTV coverage and on-site security guards. Suitable for high-value cargo. |
-| Amber | **Medium** | Some security measures — typically fenced with CCTV but no on-site guards. |
-| Red | **Basic** | Unsecured — no fencing, CCTV, or guards. Acceptable for short stops; not recommended for overnight rest with valuable cargo. |
+| Green | **Certified** | Meets a recognised third-party security standard (see SSTPA below). The highest tier — suitable for high-value cargo. |
+| Blue | **Secured** | Fenced and monitored (CCTV and/or lighting), but not independently certified. |
+| Amber | **Basic** | Some measures in place, but not fenced/monitored to the Secured tier. Acceptable for short stops. |
+| Grey | **Unknown / unsecured** | No security data available, or known to have none. Not recommended for overnight rest with valuable cargo. |
+
+Locations that meet the EU Safe & Secure Truck Parking (SSTPA) standard carry a green **SSTPA** badge in the popup and on the marker — see Data Sources below.
 
 Click any marker to open the parking popup. The popup shows:
 
 - **Name** and full address
-- **Security level** badge
+- **Security level** badge (and the SSTPA badge, if certified)
 - **Capacity** — total spaces available at this location
-- **Amenities** — fuel, showers, food, toilets, WiFi (shown as icons)
+- **Amenities** — fuel, electricity, showers, food, toilets, WiFi (shown as icons)
 - **Detour** — estimated extra distance (km) and time (minutes) from the selected truck's route to reach this parking
 
 The detour calculation uses real driving distances on HGV-permitted roads, not straight-line distance — so a parking that is 3 km away on the map may show a 7-minute detour if the route requires a turn-around.
@@ -56,31 +59,32 @@ The detour calculation uses real driving distances on HGV-permitted roads, not s
 
 Click the **Filter** icon next to the Parking Layer toggle to open the filter panel. Filters apply immediately — the map updates without reloading.
 
-**Max detour distance**
+**Search radius**
 Limits markers to parking locations within a maximum driving distance from the active route. Options:
 - 10 km
 - 25 km
 - 50 km
-- Any distance
+- 75 km
+- 100 km
 
-Start with 10 km for stops on busy motorway corridors where options are plentiful. Expand to 25 or 50 km on rural routes or in less-served areas.
+Start with 10 km for stops on busy motorway corridors where options are plentiful. Expand to 50–100 km on rural routes or in less-served areas.
 
-**Minimum security level**
+**Security level**
 - Any — show all parking regardless of security rating
-- Medium or above — hide Red (basic/unsecured) locations
-- High only — show only Green (CCTV + guards) locations
+- Basic, Secured, or Certified — filter to that tier and above
 
-Use High-only when the truck is carrying high-value or temperature-controlled cargo.
+Use Certified when the truck is carrying high-value or temperature-controlled cargo.
 
 **Amenities**
 Tick the amenities your driver needs for the stop:
-- Fuel
+- Toilets
 - Showers
 - Food
-- Toilets
 - WiFi
+- Fuel
+- Electricity
 
-Only parking locations with **all** ticked amenities are shown. If you tick Showers and Food, a location must have both to appear.
+Only parking locations with **all** ticked amenities are shown. If you tick Showers and Food, a location must have both to appear. CCTV and Lighting can also be filtered on directly, alongside the security-level buttons.
 
 ---
 
@@ -99,56 +103,57 @@ Only parking locations with **all** ticked amenities are shown. If you tick Show
   <Step title="Review the options">
     Click individual markers to see the popup with full details, capacity, and detour time. Markers closer to the truck's route (smaller detour) are preferred — there is no automatic sort on the map, but the detour figure in the popup lets you compare options quickly.
   </Step>
-  <Step title="Propose a stop (optional)">
-    From the parking popup, click **Propose Stop** to send a rest stop suggestion to the driver — see the section below for details.
+  <Step title="Add it to the order (optional)">
+    From the parking popup, click **Add to order** (labelled with the order's number, e.g. "Add to order #4821") to insert it as a stop on the truck's active order — see the section below for details.
   </Step>
 </Steps>
 
 ---
 
-## Proposing an internal stop to the driver
+## Adding a parking stop to the order
 
-When you find a suitable parking location, you can add it as an internal stop on the driver's active order directly from the map.
+When you find a suitable parking location and a truck with an active order is selected, the parking popup shows an **Add to order** button labelled with the order's number. Clicking it is a single, immediate action — there is no propose/acknowledge step:
 
-Click **Propose Stop** on any parking popup. Druma:
+1. Druma inserts an internal rest stop on the truck's active order right after its current position in the route, linked to the selected parking location, with a default 45-minute dwell
+2. The stop shows as **Stop assigned** in the popup immediately, with a **Cancel stop** option while it's still pending
+3. The driver sees the new stop on their route in the PWA as soon as it's added
 
-1. Creates an internal stop of type **rest stop** on the truck's active order, linked to the selected parking location
-2. Pushes a notification to the driver's PWA showing the proposed location — name, address, and a map link
-3. The driver sees the suggestion as a **Proposed** stop in their load detail screen
-
-The driver can tap **Acknowledge** to confirm they are planning to use that stop. The stop status updates to **Acknowledged** in the order detail panel, visible to the planner.
-
-If you want to assign the stop directly without waiting for driver acknowledgement — for example, if the driver is unreachable by phone — you can mark it as assigned from the order detail panel in the planner.
+There's no separate driver acknowledgement stage — adding the stop from the map assigns it outright. If plans change, use **Cancel stop** from the same popup (only available before the driver has started that stop).
 
 <Warning>
-Internal stops added via Propose Stop are included in ETA calculations. Adding a stop mid-route will extend the estimated delivery time. Check the updated ETA in the order detail panel after proposing a stop and notify the client if the delay is significant.
+Stops added via **Add to order** are included in ETA calculations. Adding a stop mid-route will extend the estimated delivery time. Check the updated ETA in the order detail panel after adding a stop and notify the client if the delay is significant.
 </Warning>
 
 ---
 
 ## Parking data sources
 
-Druma combines two sources of parking data:
+Druma combines three sources of parking data:
 
 **OpenStreetMap (OSM)**
 Public truck parking data contributed to OpenStreetMap and automatically ingested by Druma. Covers the majority of formal truck parking areas across Europe — motorway service areas, dedicated HGV parks, border crossing facilities. OSM data is refreshed periodically. Coverage is strongest in Western and Central Europe; Eastern Europe and remote areas may have gaps.
 
+**SSTPA-certified areas**
+Locations certified under the EU Safe & Secure Truck Parking Areas (SSTPA) standard — independently audited secure parking. These carry the **Certified** security level and a green **SSTPA** badge on the marker and in the popup, so you can spot them at a glance.
+
 **Company-uploaded parking**
-Parking locations added by your own company — trusted stops your drivers use regularly, private yards that accept overnight parking, partner facilities. Company-uploaded locations are only visible to users in your company. They appear on the map alongside OSM data with no visual distinction — filtering and security ratings work the same way.
+Parking locations added by your own company — trusted stops your drivers use regularly, private yards that accept overnight parking, partner facilities. Company-uploaded locations are only visible to users in your company. They appear on the map alongside the other sources with no visual distinction beyond the usual security-level colour — filtering works the same way.
 
 ---
 
 ## Adding your own parking locations
 
-You can add company-specific parking locations in two ways:
+Company parking locations are managed from the Live Map itself, not from Settings.
 
-**From Settings:**
-Go to **Settings → Company → Parking** section. Click **+ Add Parking** and fill in:
+**Manage Parkings modal:**
+On the **Live Map**, open **Manage Parkings**. It lists your company's parking locations with search, and lets you add, edit, delete, or promote each one. Click **+ Add Parking** and fill in:
 - Name
 - Address (with HERE address autocomplete)
-- Security level (Basic / Medium / High)
+- Security level (Basic / Secured / Certified)
 - Capacity (number of spaces)
-- Amenities (tick all that apply)
+- Amenities (tick all that apply, including CCTV and lighting)
+
+You can also bulk-import company parkings from a CSV/Excel file (a downloadable template is provided) from the same modal.
 
 **From the map:**
 Click **+ Add Parking** in the parking popup of an existing location (to add a nearby variant) or use the map context menu on an empty map area.
@@ -159,11 +164,7 @@ Saved company parkings appear immediately on the Live Map for all users in your 
 
 If your company has added a well-documented parking location that would benefit all Druma users — for example, a large truck park that is not yet in OSM — an admin can share it.
 
-Open the parking in **Settings → Company → Parking**, or click the location on the Live Map and open its detail. Click **Promote to public**. After promotion, the location becomes visible to all Druma companies and is marked as community-contributed.
-
-<Note>
-Promoted locations go through a basic quality check before appearing in the public pool. Druma reserves the right to remove locations that are inaccurate, duplicates of existing OSM data, or inappropriate.
-</Note>
+Open **Manage Parkings** on the Live Map and click **Promote to public** next to the location. After promotion, the location becomes visible to all Druma companies and is marked as community-contributed. This cannot be undone from the modal.
 
 ---
 
@@ -183,10 +184,10 @@ Druma's ETA engine accounts for mandatory EU break time in estimated arrival cal
 
 ---
 
-<Card title="Live Map" icon="map" href="/en/dispatching/live-map">
+<Card title="Live Map" icon="map" href="/en/planner/dispatching">
   The full Live Map reference — truck positions, route polylines, and real-time status overlays.
 </Card>
 
-<Card title="Internal Stops" icon="flag" href="/en/planner/internal-stops">
-  How to add, assign, and manage internal stops on an order — including rest stops proposed from the parking map.
+<Card title="Internal Stops" icon="flag" href="/en/planner/repositioning">
+  How to add, assign, and manage internal stops on an order — including rest stops added from the parking map.
 </Card>

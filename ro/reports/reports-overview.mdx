@@ -1,83 +1,53 @@
 ---
 title: "Prezentare generala rapoarte"
-description: "Un ghid pentru toate rapoartele disponibile in Druma, cum le exporti si cum programezi livrarea automata catre inbox-ul tau."
+description: "O harta de orientare pentru unde se afla raportarea in Druma — filele Analiza, paginile Finante si Report Builder — plus cum functioneaza livrarea programata prin email."
 icon: "chart-bar"
 ---
 
-Rapoartele Druma iti ofera o imagine clara a modului in care performeaza operatiunea ta — pe ruta, pe camion, pe client si in timp. Toate rapoartele sunt generate live din datele tale, deci nu exista intarziere de procesare peste noapte si niciun depozit de date de asteptat.
+Nu exista un singur meniu de nivel superior "Rapoarte" in Druma. Raportarea este raspandita in aplicatie, aproape de datele pe care le acopera:
+
+- **Analiza** (navigare stanga) — file de performanta operationala si comerciala: Profitabilitate pe Rute, Profit/km, P&L Camion, KM Goi, Performanta Sofer, Scor Eco, Scorecard Client, Creditori Vechi si altele.
+- **Finante** (navigare stanga) — pagini orientate pe bani: Facturi, Restante, Reconciliere, Salarizare, Acciza Combustibil, Capacitate, Flux de numerar.
+- **Analiza → Rapoarte** (`/analytics/reports`) — **Report Builder**: construieste dashboard-uri personalizate cu widget-uri din template-uri si, optional, programeaza-le pentru livrare automata prin email.
+
+Vezi [Prezentare generala analitica](/ro/reports/analytics-overview) pentru harta completa a fiecarei file si ce iti spune.
 
 <Note>
-Rapoartele sunt disponibile doar pe versiunea desktop a Druma. Aplicatia mobila a soferului nu include raportare. Accesul necesita rolul de Planner sau superior.
+Rapoartele sunt disponibile doar pe versiunea desktop a Druma. Aplicatia mobila a soferului nu include raportare. Accesul necesita rolul de Planner sau superior (majoritatea paginilor Analiza/Finante urmeaza accesul normal pe baza de flag de modul — fara nicio restrictie de rol suplimentara, dincolo de asta).
 </Note>
 
-## Accesarea rapoartelor
-
-Apasa **Rapoarte** in bara laterala din stanga. Meniul de rapoarte se deschide cu toate tipurile de rapoarte disponibile listate.
-
-<Frame caption="Analytics → Rapoarte (Report Builder) — livrarea programata prin email aici este doar XLSX si optionala.">
-  <img src="/images/reports/reports-overview.png" alt="Pagina Report Builder" />
+<Frame caption="Analiza → Rapoarte (Report Builder) — livrarea programata prin email aici este doar XLSX si optionala.">
+  <img src="/images/reports/reports-overview.ro.png" alt="Pagina Report Builder" />
 </Frame>
 
-## Rapoarte disponibile
+## Gasirea unui raport anume
 
-### Profitabilitate pe rute
+| Vrei sa afli... | Mergi la |
+|---|---|
+| Ce rute sunt profitabile | Analiza → Profitabilitate pe Rute |
+| Profitul per camion, inclusiv costul de stationare | Analiza → P&L Camion |
+| Emisiile CO2 ale flotei | Analiza → CO2 |
+| Ce este restant si cine datoreaza ce | Finante → Restante |
+| Pozitia viitoare de numerar | Finante → Flux de numerar |
+| Probleme de calitate a datelor (TVA lipsa, comenzi nefacturate, documente expirate) | Instrumente → Calitate Date *(doar platform-admin)* |
+| Conformitatea orelor de lucru ale soferilor | Dispecerat → Conformitate |
+| Un dashboard personalizat pe care il poti programa pe email | Analiza → Rapoarte (Report Builder) |
 
-**Rapoarte → Profitabilitate pe Rute**
+<Note>
+**Calitate Date** s-a mutat sub **Instrumente**, iar acea sectiune este restrictionata la platform admini (personalul Druma), nu la un rol de nivel companie — nu este ceva ce majoritatea operatorilor il vor vedea in propria navigare.
+</Note>
 
-Arata venitul, costurile estimate si marja pentru fiecare pereche de tari origine-destinatie pe care o operezi (de exemplu, RO→DE sau RO→NL). Identifica ce rute aduc bani si care nu, odata ce combustibilul, taxele de drum si costurile soferului sunt luate in calcul.
+## Filtrarea
 
-Util pentru: decizii de tarifare, deciderea rutelor de prioritizat sau evitat, revizuirea fiselor de tarifare.
+Majoritatea paginilor Analiza si Finante au un **selector de interval de date** in partea de sus — fie optiuni rapide (Saptamana Aceasta, Saptamana Trecuta, Luna Aceasta, Luna Trecuta, Trimestrul Acesta, Trimestrul Trecut, Anul Acesta), fie un interval personalizat. Multe accepta si filtre suplimentare relevante pentru acea pagina — de exemplu, Profitabilitate pe Rute poate fi filtrata dupa tara de origine sau destinatie.
 
-### Raport CO2
+## Exportarea
 
-**Rapoarte → Raport CO2**
-
-Emisii ale flotei per transport, calculate conform metodologiei GLEC Framework v4.0 / ISO 14083 (Tier 1), din clasa de greutate si tipul de combustibil al fiecarui camion. Comuta la modul Anual (CSRD) pentru un set de date pe un an intreg si exporturile CSRD/iXBRL. Vezi [Raportul CO2](/ro/reports/co2-report) pentru metodologia completa.
-
-Util pentru: raportare de sustenabilitate, cerinte ESG ale clientilor, urmarirea impactului actualizarilor de flota.
-
-### Calitate date
-
-**Rapoarte → Calitate Date**
-
-Rezultatele scanarii nocturne automate de date — numere de TVA lipsa, comenzi nefacturate, documente expirate si altele. Arata problemele curente si o tendinta istorica de 30 de zile.
-
-Util pentru: revizuirea de dimineata a Company Admin-ului, prinderea problemelor inainte sa escaladeze.
-
-### Vechimea facturilor
-
-**Rapoarte → Vechimea Facturilor**
-
-Facturile restante (neplatite) grupate dupa vechime: 0–30 zile, 31–60 zile, 61–90 zile si peste 90 de zile. Arata totalul restant per client si per interval.
-
-Util pentru: urmarirea platilor restante, planificarea fluxului de numerar, identificarea clientilor care platesc lent.
-
-### Ore de conducere
-
-**Rapoarte → Ore de Conducere**
-
-Timpul total de conducere per sofer, pe saptamana, pe baza jurnalelor de activitate a comenzilor si actualizarilor de status din aplicatia soferului. Ajuta la semnalarea soferilor care se apropie de limitele legale de timp de lucru.
-
-Util pentru: verificari saptamanale de conformitate, planificarea rotatiilor de soferi, identificarea dezechilibrelor de incarcare a muncii.
-
-## Filtrarea tuturor rapoartelor
-
-Fiecare raport are un **selector de interval de date** in partea de sus. Selecteaza orice interval personalizat sau foloseste optiunile rapide: Saptamana Aceasta, Saptamana Trecuta, Luna Aceasta, Luna Trecuta, Trimestrul Acesta, Trimestrul Trecut, Anul Acesta.
-
-Unele rapoarte au filtre suplimentare — de exemplu, Profitabilitate pe Rute poate fi filtrat dupa o anumita tara de origine sau destinatie, iar Ore de Conducere poate fi filtrat dupa sofer individual.
-
-## Exportarea rapoartelor
-
-Toate rapoartele pot fi exportate in doua formate:
-
-- **CSV** — pentru analiza suplimentara in Excel sau Google Sheets. Se deschide in orice aplicatie de foi de calcul.
-- **PDF** — formatat pentru printare sau partajare cu clientii si managementul.
-
-Apasa butonul **Export** din coltul din dreapta sus al oricarei pagini de raport si selecteaza formatul.
+Formatele de export difera per pagina — majoritatea exporturilor de tabele produc un fisier **XLSX** (prin butonul **Export** din bara de instrumente a paginii), o parte inca ofera **CSV** (de exemplu, exportul per cerere de pe Restituirea Accizei la Combustibil). Verifica eticheta butonului de export de pe pagina pe care o folosesti — numeste formatul pe care il produce.
 
 ## Livrare programata (dashboard-uri Report Builder)
 
-Livrarea programata prin email in Druma **nu** este disponibila pe cele cinci rapoarte de mai sus — Profitabilitate pe Rute, CO2, Calitate Date, Vechimea Facturilor si Ore de Conducere nu au propria optiune de programare. Este limitata la dashboard-uri personalizate **Report Builder** (construiesti unul din **Analytics → Rapoarte**, apoi folosesti butonul **Livrare Programata** pe acel dashboard).
+Livrarea programata prin email in Druma **nu** este o functie per raport — niciuna dintre paginile Analiza sau Finante de mai sus nu are propria optiune de programare. Este limitata la dashboard-uri personalizate **Report Builder**: construiesti unul din **Analiza → Rapoarte**, apoi folosesti butonul **Livrare Programata** pe acel dashboard.
 
 <Note>
 Aceasta functie este dezactivata implicit. Un company_admin trebuie sa o activeze mai intai, in **Setari → Automatizari**, inainte ca orice programare sa trimita.
@@ -102,10 +72,10 @@ Aceasta functie este dezactivata implicit. Un company_admin trebuie sa o activez
 </Steps>
 
 <CardGroup cols={2}>
-  <Card title="Profitabilitate pe rute" icon="route" href="/ro/reports/lane-profitability">
-    Intelege ce rute sunt profitabile si care te costa bani, odata ce combustibilul si taxele de drum sunt numarate.
+  <Card title="Prezentare generala analitica" icon="chart-line" href="/ro/reports/analytics-overview">
+    Harta completa a fiecarei file de raportare din Analiza si Finante.
   </Card>
-  <Card title="Raport CO2" icon="cloud" href="/ro/reports/co2-report">
-    Date lunare despre emisiile flotei, formatate pentru raportarea ESG catre clienti.
+  <Card title="Profitabilitate pe Rute" icon="route" href="/ro/reports/lane-profitability">
+    Intelege ce rute sunt profitabile si care te costa bani, odata ce combustibilul si taxele de drum sunt numarate.
   </Card>
 </CardGroup>

@@ -114,6 +114,35 @@ harness creates section sub-folders as needed. Outbound integrations
 (ANAF, Peppol, TransFollow, Resend, HERE) are stubbed by the shared guard, so a
 capture run against the prod demo never fires a real authority/partner call.
 
+Practical notes (learned the hard way, 2026-08-05):
+
+- Pass `--project=capture` — that project renders 1920×1080 at 2× DPR (the docs
+  standard). Without it the suite ALSO runs the 1280×720 `qa` project and every
+  shot is captured twice.
+- The harness signs in once per role and reuses the saved session for every
+  later shot (`test-results/docs-auth-state/`). Do not revert to per-test
+  logins — ~100 password logins in one run degraded prod auth to the point of
+  a pool-exhaustion outage.
+- Annotation selectors must be plain `document.querySelector` CSS. Playwright
+  pseudo-selectors (`:has-text()`, `text=`) are tolerated (the highlight ring is
+  skipped, legend still renders) but never match.
+
+### Romanian screenshot variants (`DOCS_LANG=ro`)
+
+The same run with `DOCS_LANG=ro` re-captures every shot with the app UI in
+Romanian: output files get a `.ro.png` suffix (referenced only from `ro/*.mdx`)
+and the annotation overlay text comes from `tests-e2e/lib/docs-shots.ro.ts`.
+Two prerequisites:
+
+1. The planner/driver apps resolve language from the **user profile** after
+   bootstrap, so flip the demo users' `users.language` to `'ro'` in the target
+   env before the run and restore the original values after (planner + driver01
+   + client of the Carpați Cargo demo company). The localStorage seed the
+   harness injects only covers first paint and the public/portal surfaces.
+2. Keep `docs-shots.ro.ts` in sync when adding shots — every shot id gets a
+   translated `title`/`subtitle`/`notes` entry (positional against the
+   annotations array).
+
 ### Workflow to add or refresh a screenshot
 
 1. Add an entry to `tests-e2e/lib/docs-shots.ts` (route, role, the selectors to

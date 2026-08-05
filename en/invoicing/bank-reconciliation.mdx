@@ -27,7 +27,7 @@ Druma then searches your open invoices for a match. If the amount and reference 
 
 ## Supported Banks
 
-The following Romanian banks are supported for email parsing:
+Druma has dedicated email parsers for these Romanian banks:
 
 - BRD – Groupe Société Générale
 - BCR – Banca Comercială Română
@@ -35,8 +35,19 @@ The following Romanian banks are supported for email parsing:
 - UniCredit Bank
 - ING Bank
 
+For Belgian and other SEPA banks, a shared SEPA parser handles the common structured-communication format used by:
+
+- KBC
+- BNP Paribas Fortis
+- Belfius
+- ING Belgium
+- Argenta
+- Crelan
+
+If your bank is not on either list, a **generic fallback parser** still attempts to extract the amount, currency, and reference from the forwarded email — match rates are lower than with a dedicated parser, but many banks' plain-text notification emails parse successfully anyway.
+
 <Note>
-If your bank is not on this list, you can still use Druma for manual payment recording — just record payments via the Record Payment button on each invoice. Manual reconciliation is always available regardless of bank setup.
+If automatic parsing does not pick up a payment, it lands in the review queue rather than being lost — you can still link it to the right invoice manually, or record the payment directly via the Record Payment button on each invoice.
 </Note>
 
 ## Setting Up Email Forwarding
@@ -57,7 +68,7 @@ If your bank is not on this list, you can still use Druma for manual payment rec
     The exact steps depend on your email provider. In Gmail, go to Settings → Filters and Blocked Addresses → Create a new filter. In Outlook, use Rules → New Rule.
   </Step>
   <Step title="Test with a real payment">
-    Wait for the next incoming payment. Once your bank sends the notification email, it will be forwarded to Druma automatically. Check **Invoicing** → **Reconciliation** within a few minutes to see if it was matched.
+    Wait for the next incoming payment. Once your bank sends the notification email, it will be forwarded to Druma automatically. Check **Finance** → **Reconciliation** within a few minutes to see if it was matched.
   </Step>
 </Steps>
 
@@ -75,7 +86,7 @@ If both match, the invoice is marked as **Paid** automatically. No action needed
 
 Some payments will not match automatically — for example, if the client did not include the invoice number in the transfer reference, or if the amount is slightly different. These appear in the review queue:
 
-Go to **Invoicing** → **Reconciliation** → **Unmatched Payments**. Each unmatched payment shows the amount, payer name, and reference. You can:
+Go to **Finance** → **Reconciliation** → **Unmatched Payments**. Each unmatched payment shows the amount, payer name, and reference. You can:
 
 - **Link to invoice** — search for the correct invoice and connect this payment to it
 - **Ignore** — mark the payment as unrelated to Druma invoices (for example, a payment for something outside Druma)

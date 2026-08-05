@@ -28,6 +28,7 @@ Every status resolves to a single colour (tone) that's shared identically betwee
 |---|---|
 | Draft | Grey (slate) |
 | Pending | Grey (slate) |
+| Virtual | Violet |
 | Assigned | Blue |
 | Departed | Indigo |
 | At Pickup | Amber |
@@ -60,6 +61,20 @@ The order exists in the system but is not yet active. The driver does not see it
 - Cancel the order
 
 Use Draft when a client has made a tentative booking but hasn't confirmed yet, or when you're building the order but still waiting on details.
+
+---
+
+## Virtual
+
+**Triggered by:** Planner clicks **Virtual** on the Planning Board to create a placeholder order.
+
+**Who can trigger it:** Planner only.
+
+A Virtual order is a lightweight placeholder — pickup and delivery address, a pickup date, and optionally a price — that reserves a truck ahead of a formal booking. It's separate from the normal Draft → Pending → Assigned flow: instead, once the real booking comes in, the planner merges it into a proper order via the New Order modal, which automatically carries over the truck assignment. Virtual orders appear **violet** on the planning board so they're easy to tell apart from a real, booked order at a glance.
+
+<Note>
+The reload reassignment optimizer treats Virtual orders the same as Draft or Pending ones when chaining future reloads — so a pencilled-in placeholder can still be swapped out for a cheaper real reload if one turns up.
+</Note>
 
 ---
 
@@ -251,6 +266,7 @@ Drivers sometimes forget to tap status updates — it happens. As a planner, you
 | Status | Automatic | Manual (driver) | Manual (planner) |
 |---|---|---|---|
 | Draft | — | — | Yes |
+| Virtual | — | — | Yes |
 | Pending | — | — | Yes |
 | Assigned | — | — | Yes |
 | Departed | — | Yes | Yes (override) |
@@ -273,6 +289,6 @@ Drivers sometimes forget to tap status updates — it happens. As a planner, you
   Configurable task checklists tied to these lifecycle phases, plus how admins build the templates behind them.
 </Card>
 
-<Card title="Generating Invoices" icon="file-invoice" href="/en/finances/generating-invoices">
+<Card title="Generating Invoices" icon="file-invoice" href="/en/invoicing/generating-invoices">
   Once an order is Delivered, learn how to create and send the invoice to your client.
 </Card>

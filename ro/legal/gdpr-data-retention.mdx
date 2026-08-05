@@ -19,13 +19,12 @@ Aceasta pagina explica exact ce date pastreaza Druma despre compania ta, cat tim
 | Date soferi | Durata abonamentului + 90 zile | Contract |
 | Facturi si inregistrari financiare | Arhivate la 3 ani, sterse definitiv la 10 ani de la data facturii | Legea fiscala UE / Legea Contabilitatii din Romania |
 | Documente eCMR (semnate) | Sterse definitiv la 7 ani de la data livrarii transportului, printr-o purjare anuala de sine statatoare — independenta de statusul contului tau | Protocolul Aditional la Conventia CMR |
-| Jurnale de audit | 18 luni | Interes legitim |
+| Jurnale de audit | 12 luni | Interes legitim |
 | Pozitie GPS (urmarire live) | Nu se retine - doar pozitia curenta, suprascrisa la fiecare actualizare | Contract |
 | Coordonate GPS asociate unui eveniment de comanda | Retinute impreuna cu comanda (vezi randul de mai sus) | Contract |
 | Date GPS trimise la ANAF e-Transport | 30 de zile, apoi sterse automat | Cerinta legala (Romania) |
 | Fisiere tahograf (DDD/TGD) | Pe termen nedeterminat (12 luni este minimul legal, nu un prag de stergere) | Regulamentul UE 165/2014 |
 | Jurnale de erori si securitate | 90 de zile | Interes legitim |
-| Inregistrari de facturare (Stripe) | 7 ani | Legislatie fiscala |
 
 <Note>
 Semnaturile si documentele eCMR sunt sterse definitiv automat **la 7 ani de la data livrarii transportului**, printr-un job de purjare anual — acesta ruleaza indiferent daca contul tau este deschis sau inchis. Separat, daca contul unui utilizator individual este sters, orice semnatura eCMR pe care a creat-o in **ultimii 3 ani** este anonimizata (nu stearsa), in loc sa fie eliminata imediat, deci supravietuieste — fara date personale atasate — pana cand pragul de 7 ani de mai sus o ajunge din urma.
@@ -44,13 +43,17 @@ Noi NU:
 - Pastram un istoric al pozitiilor de urmarire live
 - Partajam datele GPS cu terti, cu exceptia raportarii e-Transport catre ANAF, care foloseste un buffer glisant de 30 de zile inainte de stergere
 
+<Note>
+Un tabel de pozitii doar-adaugare (append-only), ramas dintr-o versiune mai veche a chat-ului soferului, inca exista, cu o purjare glisanta de 90 de zile, dar nimic din aplicatia actuala nu mai scrie randuri noi in el — este un rest inactiv, nu un jurnal GPS istoric activ.
+</Note>
+
 ## Date tahograf: ce stocam
 
 Druma mentine o **Arhiva Tahograf** care stocheaza fisierele brute DDD (unitate vehicul) si TGD (card sofer) - descarcate automat printr-un furnizor de telematica conectat sau incarcate manual - pentru a indeplini cerintele de frecventa de descarcare si retentie ale Regulamentului UE 165/2014. Spre deosebire de datele operationale, fisierele tahograf sunt **pastrate pe termen nedeterminat**: 12 luni este minimul legal, nu un prag de stergere, deoarece operatorii pot avea nevoie sa le prezinte mult dupa acest prag, la un control rutier sau audit al autoritatilor. Vezi [Arhiva tahograf](/ro/fleet-compliance/tacho-archive).
 
 ## Jurnalul de audit
 
-Fiecare actiune semnificativa in Druma (comanda creata, factura trimisa, autentificare utilizator, setari modificate) este inregistrata intr-un jurnal de audit cu marca temporala, utilizator si detalii despre actiune. Jurnalele de audit sunt pastrate 18 luni si nu pot fi modificate sau sterse - exista pentru a proteja atat compania ta, cat si Druma in caz de litigii.
+Fiecare actiune semnificativa in Druma (comanda creata, factura trimisa, autentificare utilizator, setari modificate) este inregistrata intr-un jurnal de audit cu marca temporala, utilizator si detalii despre actiune. Jurnalele de audit sunt pastrate 12 luni si nu pot fi modificate sau sterse - exista pentru a proteja atat compania ta, cat si Druma in caz de litigii.
 
 ## Dupa anularea contului
 
@@ -69,9 +72,9 @@ Daca este eliminat contul unui singur membru al echipei (nu intreaga companie), 
 
 Poti solicita oricand un export complet al datelor companiei tale:
 
-**Setari -> Date si Confidentialitate -> Solicita Export**
+**Setari → GDPR si Confidentialitate → Solicita Export**
 
-Datele sunt livrate ca fisier ZIP (format JSON si CSV) la adresa de email a contului, in maximum 24 de ore. Exportul include toate comenzile, clientii, soferii, facturile si setarile.
+Datele tale sunt impachetate ca fisier ZIP (format JSON si CSV) si livrate la adresa de email a contului tau in aproximativ 15 minute (procesat de un job care ruleaza la fiecare 15 minute). Exportul include toate comenzile, clientii, soferii, facturile si setarile.
 
 ## Solicitarea stergerii contului
 
@@ -79,7 +82,7 @@ Datele sunt livrate ca fisier ZIP (format JSON si CSV) la adresa de email a cont
 Stergerea contului este ireversibila. Odata ce trece perioada de retentie de 90 de zile, datele operationale mai vechi (comenzi de peste 3 ani, plus clienti/camioane/remorci) sunt sterse definitiv; comenzile, facturile si datele eCMR mai recente sunt anonimizate sau pastrate conform calendarelor lor proprii, cerute legal, in loc sa fie sterse imediat — vezi "Dupa anularea contului" de mai sus.
 </Warning>
 
-Pentru a sterge contul: **Setari -> Date si Confidentialitate -> Sterge Contul** -> confirma tastand numele companiei.
+Pentru a sterge contul: **Setari → GDPR si Confidentialitate → Sterge Contul** → confirma tastand numele companiei.
 
 Alternativ, trimite un email la privacy@druma.io de la adresa de email a proprietarului contului.
 
@@ -99,8 +102,8 @@ Alternativ, trimite un email la privacy@druma.io de la adresa de email a proprie
 | Sentry | Monitorizare erori si raportare crash-uri | UE |
 | Google Firebase Cloud Messaging | Notificari push in aplicatia soferului | Google Cloud |
 | WhatsApp Business Cloud API (Meta) | Mesagerie soferi (doar daca este activata) | Meta (SUA/UE) |
-| Furnizori de telematica (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania) | Date GPS si tahograf (doar furnizorul conectat) | Variaza dupa furnizor |
-| Furnizori de telematica reefer (Mapon, Orbcomm, Thermo King) | Date de temperatura reefer (doar furnizorul conectat) | Variaza dupa furnizor |
+| Furnizori de telematica (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | Date GPS si tahograf (doar furnizorul conectat) | Variaza dupa furnizor |
+| Furnizori de telematica reefer (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Date de temperatura reefer (doar furnizorul conectat) | Variaza dupa furnizor |
 | TransFollow | Doar fallback eCMR mostenit - furnizorul nativ intern Druma este cel implicit | Olanda |
 
 ## Drepturile tale conform GDPR

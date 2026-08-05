@@ -4,35 +4,73 @@ description: "Cum sustine Druma verificarile eFTI conform Regulamentului UE 2020
 icon: "shield-check"
 ---
 
-Regulamentul (UE) 2020/1056 privind informatiile electronice de transport de marfa (**eFTI**) impune ca, incepand cu **9 iulie 2027**, autoritatile din statele membre UE sa accepte informatii electronice in locul documentelor pe hartie la inspectiile rutiere. Druma este construit pentru a indeplini aceasta cerinta.
+Regulamentul (UE) 2020/1056 privind informatiile electronice de transport de marfa (**eFTI**) impune ca, incepand cu **9 iulie 2027**, autoritatile din statele membre UE sa accepte informatii electronice de transport de marfa in locul documentelor pe hartie la inspectiile rutiere. Druma este construit pentru a indeplini aceasta cerinta.
+
+---
 
 ## Ce este eFTI?
 
-Cadrul legal permite transportatorilor sa stocheze informatiile de transport digital pe o platforma eFTI certificata, iar autoritatilor (politie, vama, inspectori) sa le acceseze electronic la control rutier, in loc sa ceara documente fizice. Druma implementeaza subsetul **transport rutier / CMR** al setului de date comun (CDS), inclusiv un **serializator CDS** care produce subsetul **EU03 road/CMR** definit de Regulamentul Delegat (UE) 2024/2024 - reprezentarea structurata, masina-lizibila a unui transport (parti, locatii, marfuri, semnaturi).
+Regulamentul eFTI creeaza un cadru legal pentru:
+
+- Transportatorii sa stocheze informatiile de transport de marfa digital, pe o platforma eFTI certificata
+- Autoritatile (politie, vama, inspectori) sa acceseze aceste informatii electronic la inspectiile rutiere, in loc sa ceara soferului sa produca documente fizice pe hartie
+- Un set de date comun, standardizat, pentru informatiile de transport rutier, mapat din campurile scrisorii de transport CMR
+
+Druma implementeaza subsetul **transport rutier / CMR** al setului de date comun eFTI, acoperind toate campurile obligatorii de expediere, detaliile partilor si statusul eCMR.
+
+### Setul de date comun (CDS)
+
+Stratul de conformitate al Druma include un **serializator CDS (set de date comun)** care produce subsetul **EU03 road/CMR** definit de Regulamentul Delegat (UE) 2024/2024 — reprezentarea structurata, masina-lizibila a unui transport (parti, locatii, marfuri, semnaturi), pe care se asteapta sa o produca o platforma eFTI. Aceasta functioneaza in paralel cu vizualizarea pentru inspectori, lizibila de om, descrisa mai jos, deci acelasi transport poate fi prezentat fie ca date structurate, fie ca vizualizare pe ecran, in functie de ce cere autoritatea.
+
+---
 
 ## Ce vede soferul
 
-Fiecare comanda are un **identificator eFTI** unic. In aplicatia soferului, pe ecranul de detaliu al comenzii, exista un card **"Verificare autoritati (eFTI)"** cu:
+Fiecare comanda are un **identificator eFTI** unic. In aplicatia soferului, pe ecranul de detaliu al comenzii, exista un card **"Verificare autoritati (eFTI)"**. Acesta arata:
 
-- Un **cod QR** de prezentat la control rutier
-- Un link eFTI copiabil (UIL - prescurtarea interna Druma pentru **Unique Identifying Link**, numit de Art. 9(1)(e) din Regulament "link electronic unic de identificare")
-- Un link catre vizualizarea eCMR pe propriul dispozitiv
+- Un **cod QR** pe care soferul il poate prezenta la o inspectie rutiera
+- Un link eFTI copiabil (UIL — prescurtarea interna Druma pentru **Unique Identifying Link**; Art. 9(1)(e) din Regulamentul (UE) 2020/1056 il numeste "linkul electronic unic de identificare")
+- Un link catre deschiderea vizualizarii eCMR pe propriul dispozitiv al soferului
 
-Cardul este intotdeauna prezent pe comenzile atribuite - soferul nu trebuie sa faca nimic pentru a-l activa sau sa caute prin meniuri.
+Soferul nu trebuie sa faca nimic pentru a activa asta — cardul este intotdeauna prezent pe comenzile atribuite.
+
+<Note>
+Soferul nu trebuie niciodata sa navigheze prin meniuri sau sa caute cardul eFTI. Este afisat vizibil pe ecranul comenzii active, deci este accesibil imediat cand un inspector se apropie de vehicul.
+</Note>
+
+---
 
 ## Ce vede inspectorul
 
-Scanand codul QR (sau introducand UIL manual), inspectorul vede o **vizualizare read-only, lizibila** a transportului: descrierea marfii, partile (expeditor, transportator, destinatar), adresele de preluare/livrare, numerele de inmatriculare ale camionului si remorcii, statusul semnaturii eCMR.
+Inspectorul scaneaza codul QR (sau introduce UIL manual) si vede o **vizualizare read-only, lizibila de om** a transportului:
 
-**Nu se afiseaza preturi, tarife sau date financiare** - vizualizarea inspectorului este restransa deliberat la informatii operationale si de conformitate. Fiecare acces al unui inspector este inregistrat intr-un **jurnal de operatiuni securizat impotriva alterarii**, parte din pista de audit eFTI ceruta de Art. 9.
+- Descrierea marfii
+- Partile: expeditor, transportator, destinatar (nume si adrese)
+- Adresele de preluare si livrare
+- Numerele de inmatriculare ale camionului si remorcii
+- Statusul semnaturii eCMR
+
+**Nu se afiseaza preturi, tarife sau date financiare.** Vizualizarea inspectorului este restransa deliberat la informatii operationale si de conformitate — termenii comerciali raman privati.
+
+Vizualizarea detecteaza automat limba browserului inspectorului la incarcare, deci se deschide deja in limba tarii in care efectueaza inspectia, fara ca nimeni sa trebuiasca sa intrebe. In antet exista si un selector manual de limba, pentru aceleasi 10 limbi suportate de restul Druma (engleza, franceza, germana, romana, olandeza, bulgara, ceha, maghiara, poloneza, slovaca), pentru cazul in care limba browserului nu se potriveste cu cea a inspectorului.
+
+Fiecare acces al unui inspector este inregistrat intr-un **jurnal de operatiuni securizat impotriva alterarii**. Acest jurnal face parte din pista de audit eFTI ceruta de Art. 9 din Regulament.
+
+<Note>
+Daca inspectorului i se preda in schimb chiar PDF-ul eCMR sigilat (tiparit, sau deschis prin **Vezi eCMR**), etichetele casetelor de pe el sunt **trilingve** — engleza plus limba proprie a expeditorului si a destinatarului — deci documentul este lizibil fara vizualizarea pentru inspectori, chiar si peste o frontiera, la fel cum un CMR pe hartie tipareste traditional etichetele casetelor sale in mai multe limbi.
+</Note>
+
+---
 
 ## Status de certificare
 
 <Warning>
-Druma a construit o pregatire tehnica interna substantiala pentru eFTI - serializator CDS, jurnal de operatiuni securizat, UIL si aceasta vizualizare pentru inspectori. Druma **nu este insa o platforma eFTI certificata** conform **Art. 10** din Regulament: certificarea necesita evaluarea unui organism de evaluare a conformitatii (CAB) acreditat, iar la mijlocul lui 2026 niciun CAB nu a publicat inca domeniul de aplicare eFTI de evaluat - un decalaj la nivel de industrie, nu specific Druma. Pana atunci, vizualizarea pentru inspectori este utilizabila azi ca gest voluntar pentru companiile care vor sa renunte la hartie inainte de termenul din 2027.
+Druma a construit o pregatire tehnica interna substantiala pentru eFTI — un serializator CDS, un jurnal de operatiuni securizat impotriva alterarii, UIL-ul si aceasta vizualizare pentru inspectori rutieri. Druma **nu este insa o platforma eFTI certificata** conform **Art. 10** din Regulamentul (UE) 2020/1056: certificarea necesita evaluarea de catre un organism de evaluare a conformitatii (CAB) acreditat, iar la mijlocul lui 2026 niciun CAB nu a publicat inca domeniul de aplicare eFTI de evaluat — un decalaj la nivel de industrie, nu specific Druma. Pana atunci, vizualizarea pentru inspectori este utilizabila azi ca gest de curtoazie si dezvaluire voluntara, pentru companiile care vor sa renunte la hartie inainte de termenul din 2027.
 
-Interfata certificata masina-la-masina cu autoritatile (prin Porti eFTI nationale ale statelor membre UE) depinde separat de disponibilitatea unor porti nationale functionale, care inca nu erau operationale la mijlocul lui 2026.
+Interfata certificata masina-la-masina cu autoritatile (prin Portile eFTI ale statelor membre UE) depinde separat de disponibilitatea unor porti nationale functionale, care inca nu erau operationale la mijlocul lui 2026. Cand CAB-urile publica domeniul de aplicare eFTI si portile nationale devin functionale, Druma va urmari certificarea si va actualiza aceasta pagina.
 </Warning>
+
+---
 
 ## Cronologie
 
@@ -40,8 +78,14 @@ Interfata certificata masina-la-masina cu autoritatile (prin Porti eFTI national
 |---|---|
 | 2020 | Regulamentul (UE) 2020/1056 adoptat |
 | 9 iulie 2025 | Platformele eFTI pot incepe operarea voluntara |
-| 9 iulie 2027 | **Autoritatile trebuie sa accepte eFTI** - hartia nu mai e ceruta unde eFTI e prezentat |
-| TBC | Porti eFTI nationale operationale (tara cu tara) |
+| 9 iulie 2027 | **Autoritatile trebuie sa accepte eFTI** — hartia nu mai este ceruta unde eFTI este prezentat |
+| TBC | Portile eFTI nationale operationale (tara cu tara) |
+
+Druma a construit pregatirea tehnica de baza pentru mandatul eFTI al UE din 2027 — procesul de certificare si acreditare formala in sine este inca in asteptare la nivel de industrie (niciun organism de certificare nu a publicat inca domeniul de aplicare eFTI), deci statusul complet de conformitate va fi confirmat pe masura ce acest proces avanseaza.
+
+---
+
+## Articole asociate
 
 <CardGroup cols={2}>
   <Card title="Ce este eCMR?" icon="file-contract" href="/ro/ecmr/what-is-ecmr">

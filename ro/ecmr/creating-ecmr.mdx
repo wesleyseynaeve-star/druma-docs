@@ -16,6 +16,8 @@ Odata emis, documentul eCMR apare in tabul **Documente** al paginii de detaliu a
 
 <Note>
 Comenzile subcontractate sunt sarite — subcontractantul isi emite propriul CMR, deci Druma nu poate semna in numele lui. Comenzile care au deja un eCMR nu sunt niciodata re-emise.
+
+**Cursele goale de shuntare / repozitionare sunt de asemenea sarite.** O comanda de shuntare sau repozitionare primeste un eCMR doar cand remorca mutata este incarcata — o cursa goala nu are marfa de consemnat, deci nu exista nimic de acoperit de un CMR. Orice alt tip de comanda primeste unul, indiferent de marfa, pentru ca o comanda de marfa transporta marfa prin definitie.
 </Note>
 
 ---
@@ -44,9 +46,25 @@ Druma populeaza campurile eCMR din datele comenzii pe care le-ai introdus deja. 
 | Descrierea marfii | Campul de descriere a marfii de pe comanda |
 | Numar de inmatriculare camion | Vehiculul atribuit comenzii |
 | Nume sofer | Soferul atribuit comenzii |
-| Conditii speciale (ADR) | Marcajul ADR si clasa comenzii |
+| Conditii speciale (ADR) | Declaratia completa de marfuri periculoase ADR 5.4.1.1.1 — numar UN, denumirea oficiala de transport, clasa, grupa de ambalare si codul de tunel, in aceasta ordine (de ex. `UN 1203, PETROL, 3, II, (D/E)`) — construita din campurile ADR structurate ale comenzii |
 
 Daca oricare din aceste date lipseste sau este incorecta pe comanda, corecteaza mai intai comanda, apoi creeaza eCMR-ul — nu exista un pas de previzualizare precompletata; documentul este scris imediat.
+
+<Note>
+Caseta 9 este construita din campurile ADR structurate ale comenzii (numar UN, denumirea oficiala de transport, grupa de ambalare, codul de tunel), nu din text liber — un inspector citeste secventa pozitional, deci urmeaza ordinea prescrisa de regulament, nu felul in care ar putea-o tasta un planificator. Daca comanda are si o descriere ADR in text liber, aceasta este adaugata la declaratie ca observatie finala, nu o inlocuieste. O comanda marcata ADR fara deloc date structurate tot afiseaza un marcaj simplu `ADR`, deci caseta 9 nu ramane niciodata goala, in tacere, pe un transport de marfuri periculoase.
+</Note>
+
+---
+
+## Suprascrierea expeditorului / destinatarului (Casetele 1 si 2)
+
+Casetele 1 (expeditor / sender) si 2 (destinatar) au implicit clientul comenzii — corect pentru o comanda de marfa normala, dar nu intotdeauna corect pe o **cursa de shuntare sau repozitionare incarcata**, unde clientul este adesea un transportator sau un 3PL care muta marfa altcuiva si nu este de fapt parte la transport.
+
+Ca sa numesti partile reale, deschide tabul **Documente** al comenzii si extinde **Detalii expediere CMR** — acelasi panou folosit pentru casetele 6, 8, 9, 14, 15 si 20. Campurile **Expeditor / sender** si **Destinatar** de acolo suprascriu casetele 1 si 2; lasa oricare gol ca sa continui sa folosesti clientul.
+
+<Warning>
+Pe o cursa de shuntare sau repozitionare incarcata care traverseaza o frontiera, daca nicio suprascriere nu este setata, Druma te avertizeaza ca ambele casete 1 si 2 vor afisa numele clientului — Art. 6.1(b)/(c) CMR cere expeditorul si destinatarul reali. Avertismentul nu te blocheaza sa creezi eCMR-ul; este acolo ca sa poti observa problema inainte ca nota sa fie semnata. Ca o ultima verificare, soferului i se cere de asemenea sa confirme partile inainte de semnare, in aceeasi situatie — vezi [Fluxul de semnare](/ro/ecmr/signing-flow).
+</Warning>
 
 ---
 

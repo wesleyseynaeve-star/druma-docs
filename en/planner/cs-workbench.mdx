@@ -10,6 +10,10 @@ The CS Workbench is where customer-service reps answer the question clients ask 
 
 **How to access:** click **Customer Service** in the left navigation. It opens on the **Workbench** tab by default; a **Sites** tab sits alongside it.
 
+<Frame caption="CS Workbench — triage view">
+  <img src="/images/planner/cs-workbench.png" alt="CS Workbench order triage list with filters and detail pane" />
+</Frame>
+
 The Workbench is built on two supporting pieces:
 
 - **Sites** — a reusable catalogue of pickup/delivery locations (warehouses, factories, distribution centres, ports, terminals, yards) with opening hours, contacts, dock/access notes, and per-client booking instructions. Pick a site once on an order's stop and its address autofills; the Workbench then pulls that site's hours and contacts for every order that visits it.
@@ -47,6 +51,16 @@ The Workbench is built on two supporting pieces:
 | **Contact** | Free-text name of who you spoke to, for your own reference. |
 | **Note** | What happened — required before you can log the entry. |
 
+### What Else the Detail Pane Shows
+
+Beyond the status stepper and stop breakdown, the detail pane surfaces everything a rep needs without leaving the Workbench:
+
+- **Cargo chips** — an **ADR** chip (with the dangerous-goods class, when set) and a **temperature range** chip appear alongside weight, pallets, and loading metres for cargo that carries them.
+- **Live position line** — while the order is in transit, a mini-map shows the truck's current position, with **Copy tracking link** and **Send tracking link by email** actions right next to it — no need to jump to the order detail page to hand the client a link.
+- **Distance remaining** — the remaining kilometres to delivery, computed from the same ETA data as the live map.
+- **View eCMR / POD** — a direct link to the signed eCMR or proof of delivery once one exists on the order.
+- **Client order history** — a panel listing this client's past orders with an on-time/late indicator on each, so a rep can immediately see whether a delay is a one-off or a pattern before they get on the phone.
+
 ---
 
 ## Filtering and Sorting the Order List
@@ -54,9 +68,16 @@ The Workbench is built on two supporting pieces:
 The left-hand order list has its own toolbar above the cards:
 
 - **Scope toggle** — **Active** (default), **All**, or **Historical**.
-- **Sort** — by Created, ETA, Delivery, or Status.
+- **Sort** — by Created, ETA, Delivery date, Status, **Next stop**, or **Check-call age** (the last two need each order's live signal data, so they're greyed out for a moment while that loads).
 - **Status filter**, **Client filter**, and **Client reference filter** — narrow further; client and reference filters accept partial matches.
+- **Loading** and **Unloading** date presets — **Today**, **Tomorrow**, or **This week**, applied against the pickup and delivery dates independently.
 - **Exceptions only** — show only orders currently carrying an exception.
+- **Unassigned** — show only orders with no driver, no truck, and no subcontractor/carrier assigned yet.
+- **Stale check-call** — show only orders whose last check-call is older than a threshold you choose: **12h, 24h, 48h,** or **72h**. An order with no check-call logged at all always counts as stale.
+
+Click the **star** on an order card to pin it as a **CS priority** — pinned orders always sort to the top of the list, regardless of the active sort key or direction.
+
+Each order card also shows an **at-risk badge** (amber for "at risk" when the ETA buffer against the delivery window drops to an hour or less, red for "late" once it's missed), a **check-call-age badge** showing how long since the last touch, and a **next-stop preview** (the upcoming stop's name, city, and time window).
 
 A KPI bar above the list shows live counts for Results, In transit, Delivered, and Exceptions.
 

@@ -1,30 +1,33 @@
 ---
 title: "Generating Invoices"
-description: "Create invoices from delivered orders in Druma — single or batched, multi-currency, with automatic surcharge calculation and one-click sending."
+description: "Create invoices from delivered orders in Druma — one order per invoice, multi-currency, with automatic surcharge calculation and one-click sending."
 icon: "file-invoice-dollar"
 ---
 
 ## Overview
 
-Once an order is delivered, you can generate an invoice directly inside Druma. The fastest route is from the order detail page itself. You can also batch multiple orders from the same client into a single invoice — ideal for weekly or monthly billing cycles.
+Invoices in Druma are always order-derived — there is no blank "New Invoice" form. Once an order is delivered, the fastest way to bill it is from **Finance → Uninvoiced**, which lists every delivered order that has no invoice yet.
 
-## Two Ways to Start
+## Starting an Invoice
 
-**From the order detail page (fastest):**
-Open the delivered order → click the **Generate Invoice** button in the top-right corner. Druma pre-fills the invoice with that order's details and takes you straight to the review screen.
+**Finance → Uninvoiced (fastest route):**
+This page lists delivered orders with no invoice yet, sorted oldest first, with an age badge showing how many days each one has been sitting uninvoiced. Click **Create Invoice** on any row. Druma creates the invoice as a draft — with the invoice number already assigned — and opens it directly in the invoice editor.
 
 <Frame caption="The Invoices list — Payment Status (derived from due date/amount paid) is tracked separately from E-Invoice channel and E-Status.">
   <img src="/images/invoicing/generating-invoices.png" alt="Invoices list with status and payment columns" />
 </Frame>
 
-**From the Invoicing module:**
-Go to **Invoicing** → **New Invoice** → search for the client → select the order or orders you want to include.
+<Note>
+Each invoice covers exactly **one order** — there is no multi-order batch invoicing today. If a client wants several deliveries on one bill, invoice each order separately and send them together, or ask your accountant to combine them at export time.
+</Note>
+
+If an invoice was already auto-generated for an order (auto-invoicing, where configured) but is held for review, it appears in the **"Auto-invoice drafts awaiting release"** section at the top of the same Uninvoiced page instead of the main list — click **Release** to send it.
 
 ## Step-by-Step: Creating an Invoice
 
 <Steps>
-  <Step title="Select the order or orders">
-    Choose which delivered order or orders to include. You can batch multiple orders from the same client into one invoice — tick each one in the order selector. All orders must have **Delivered** status and belong to the same client.
+  <Step title="Open the draft from Uninvoiced">
+    Go to **Finance → Uninvoiced** and click **Create Invoice** on the order you want to bill. Druma creates the draft invoice and opens it in the editor.
   </Step>
   <Step title="Review the line items">
     Druma auto-fills the line items from the order data. Review and adjust each one:
@@ -37,20 +40,17 @@ Go to **Invoicing** → **New Invoice** → search for the client → select the
 
     You can edit any amount, add new lines, or remove lines that do not apply.
   </Step>
-  <Step title="Set the invoice date and due date">
-    The invoice date defaults to today. The due date is calculated automatically from the payment terms on the client record — for example, net 30 means the due date is 30 days from the invoice date. Override either date manually if needed.
+  <Step title="Set the due date and VAT treatment">
+    The due date is pre-filled from the payment terms on the client record — for example, net 30 means the due date is 30 days from creation. Override it manually if needed, and set the VAT treatment (Standard, Reverse Charge Art. 44, or Exempt) if it differs from the default.
   </Step>
-  <Step title="Preview the PDF">
-    Click **Preview PDF** to see exactly what the client will receive. Verify the client name, VAT number, addresses, line items, totals, and your bank details. Fix anything before generating — it is much easier to correct now than after.
-  </Step>
-  <Step title="Generate the invoice">
-    Click **Generate**. Druma assigns a sequential invoice number (for example, INV-000047) and locks the document. Once generated, you cannot edit amounts directly — use a credit note for any corrections.
+  <Step title="Save or Preview">
+    Click **Save Draft** at any point while you keep editing. Click **Preview** to see exactly what the client will receive — verify the client name, VAT number, addresses, line items, totals, and your bank details before sending. Only draft invoices can be edited; once sent, the amounts are locked.
   </Step>
   <Step title="Send the invoice">
-    Choose how to send:
+    From the preview, choose how to deliver it:
 
-    - **Email from Druma** — click **Send by Email**. Druma pre-fills the email using the client's finance contact and attaches the PDF. Review the message and click Send.
-    - **Download and send manually** — click **Download PDF** and send via your own email client, WhatsApp, or however you communicate with that client.
+    - **Send Invoice** — emails the client's finance contact with the invoice attached, and moves the invoice from Draft to Sent.
+    - **Print / Save PDF** — opens the print dialog so you can save it as a PDF and send it yourself via your own email client, WhatsApp, or however you communicate with that client. This does not change the invoice status.
   </Step>
 </Steps>
 
@@ -83,18 +83,12 @@ To change the prefix or configure a custom numbering pattern (including a year t
 
 ## Multi-Currency Invoices
 
-Druma supports invoicing in EUR, GBP, CHF, USD, RON, and PLN. Select the currency when you create the invoice. For any currency other than RON, Druma automatically fetches the exchange rate from the **BNR (Romanian National Bank)** for the invoice date and includes it on the PDF.
+Druma supports invoicing in EUR, GBP, CHF, USD, RON, and PLN. Change the currency from the selector in the invoice editor — it defaults to the order's own currency. For any currency other than RON, Druma automatically fetches the exchange rate from the **BNR (Romanian National Bank)** for the invoice date and includes it on the PDF.
 
 This is important for Romanian accounting compliance and e-Factura submission — the RON equivalent of any foreign currency amount must appear on the invoice.
 
-## Batch Invoicing — Key Rules
-
-- You can only batch orders from the **same client** into one invoice
-- All batched orders must have status **Delivered**
-- Orders in different currencies must be invoiced separately
-
 <Warning>
-Once an invoice is generated (status moves out of Draft), you cannot edit it directly. If you made a mistake — wrong amount, wrong client, wrong line item — you must create a credit note to reverse it, then issue a corrected invoice. This is a legal requirement in Romania. Do not attempt to delete or overwrite a sent invoice.
+Once an invoice is sent (status moves out of Draft), you cannot edit it directly. If you made a mistake — wrong amount, wrong client, wrong line item — you must create a credit note to reverse it, then issue a corrected invoice. This is a legal requirement in Romania. Do not attempt to delete or overwrite a sent invoice.
 </Warning>
 
 ---

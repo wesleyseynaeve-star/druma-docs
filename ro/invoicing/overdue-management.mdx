@@ -13,7 +13,7 @@ Urmarirea platilor este una din partile mai putin placute ale conducerii unei co
 Mergi la **Facturare** → tabul **Restante**. Aici apar toate facturile neplatite si platite partial, a caror scadenta a trecut, sortate dupa numarul de zile de intarziere — datoriile cele mai vechi primele.
 
 <Frame caption="Finante → Restante — limita de rata pentru trimiterea manuala este 50/ora per utilizator, nu per companie.">
-  <img src="/images/invoicing/overdue-management.png" alt="Pagina de Gestionare Restante" />
+  <img src="/images/invoicing/overdue-management.ro.png" alt="Pagina de Gestionare Restante" />
 </Frame>
 
 Fiecare rand arata:
@@ -39,7 +39,7 @@ Pentru a accesa vizualizarea debitorilor pe vechime: **Facturare** → **Restant
 
 ## Soldul restant per client
 
-Pentru a vedea imaginea completa a unui anumit client — toate facturile deschise, cele mai vechi primele, cu suma totala restanta — mergi la **Clienti** → selecteaza clientul → tabul **Facturi**. Soldul restant este afisat cu bold, in partea de sus a tabului.
+Pentru a vedea imaginea completa a unui anumit client — sold restant, expunere de credit si facturi deschise — mergi la **Clienti** → selecteaza clientul → tabul **Prezentare generala**. Soldul Restant este afisat ca o placa KPI, in partea de sus a tabului.
 
 Este util inainte de un apel cu un client: poti vedea exact cat datoreaza si de cat timp.
 
@@ -69,47 +69,44 @@ Este util inainte de un apel cu un client: poti vedea exact cat datoreaza si de 
 Email-ul de memento foloseste sablonul configurat in setarile tale. Daca vrei sa ajustezi tonul sau limba memento-ului standard, mergi la **Setari** → **Sabloane** → **Memento de Plata**. Poti configura sabloane separate per limba, daca ai clienti in mai multe tari.
 </Note>
 
+
 ## Memento-uri automate
 
-Daca nu vrei sa trimiti manual memento-uri in fiecare saptamana, Druma le poate trimite pentru tine, pe un program.
-
-<Steps>
-  <Step title="Mergi la Setari Facturare">
-    Navigheaza la **Setari** → **Facturare**.
-  </Step>
-  <Step title="Activeaza Memento-uri Automate">
-    Activeaza comutatorul **Memento-uri Automate**.
-  </Step>
-  <Step title="Configureaza programul">
-    Seteaza cand se trimite fiecare memento:
-
-    - **Primul memento** — de exemplu, la 7 zile dupa scadenta
-    - **Al doilea memento** — de exemplu, la 14 zile dupa scadenta
-    - **Notificare finala** — de exemplu, la 30 de zile dupa scadenta
-
-    Poti ajusta aceste praguri, ca sa se potriveasca culturii tale de plata si relatiilor cu clientii.
-  </Step>
-  <Step title="Salveaza">
-    Apasa **Salveaza**. Druma va trimite acum memento-uri automat, la intervalele configurate, pentru toate facturile restante.
-  </Step>
-</Steps>
+Daca nu vrei sa trimiti manual memento-uri in fiecare saptamana, Druma le poate trimite pentru tine, pe un program — configurat per etapa, sub **Setari → Politici de Urmarire (Dunning)**. Vezi sectiunea urmatoare pentru cum functioneaza exact programul si ce face fiecare etapa.
 
 <Warning>
-Memento-urile automate ajung la contactul financiar inregistrat al clientului. Asigura-te ca fiecare client are un contact financiar configurat, cu adresa de email corecta, inainte sa activezi aceasta functie — altfel memento-urile pot ajunge la persoana gresita sau nu se pot trimite deloc. Verifica sub Clienti → Contacte.
+Memento-urile automate ajung la contactul financiar inregistrat al clientului. Asigura-te ca fiecare client are un contact financiar configurat, cu adresa de email corecta, inainte sa activezi orice etapa — altfel memento-urile pot ajunge la persoana gresita sau nu se pot trimite deloc. Verifica sub Clienti → Contacte.
 </Warning>
 
 ## Programul de urmarire (dunning) — cum functioneaza memento-urile automate
 
 Memento-urile automate ruleaza pe un **program de urmarire in 4 etape**, configurat per companie.
 
-- **Etapele 1–3**: email-uri trimise contactelor financiare ale clientului, la intervalele configurate (de exemplu, 7 zile / 14 zile / 30 de zile restant). Fiecare etapa foloseste un sablon de email separat, ca tonul sa poata escalada corespunzator, de la memento politicos la notificare ferma.
-- **Etapa 4**: niciun email nu este trimis automat. In schimb, o notificare de escaladare este trimisa planificatorilor si adminilor tai — este un semnal sa iei o actiune manuala (legal, factoring, un telefon). Etapa 4 nu trimite niciodata email clientului fara aprobare umana.
+- **Etapele 1–3**: email-uri trimise contactelor financiare ale clientului, la intervalele configurate (de exemplu, 7 zile / 14 zile / 30 de zile restant). Fiecare etapa foloseste un sablon de email separat, ca tonul sa poata escalada corespunzator, de la memento politicos la notificare ferma. Incepand cu etapa 2, email-ul de memento poate include si o linie informativa despre dobanda de intarziere UE — vezi mai jos.
+- **Etapa 4**: niciun email nu este trimis automat. In schimb, o notificare de escaladare este trimisa planificatorilor si adminilor tai — este un semnal sa iei o actiune manuala (legal, factoring, un telefon). Etapa 4 nu trimite niciodata email clientului fara aprobare umana. Daca **oprirea automata a creditului** este activata (vezi mai jos), atingerea etapei 4 pune si clientul automat pe oprire de credit.
 
 Pentru a configura programul, mergi la **Setari → Politici de Urmarire (Dunning)**:
 
 - Seteaza **decalajul de zile** per etapa (cand se declanseaza fiecare memento, relativ la data scadentei)
 - Editeaza **subiectul si continutul email-ului** per etapa, sau foloseste sabloanele implicite i18n
+- Activeaza optional **Ataseaza PDF-ul facturii** si/sau **Ataseaza extrasul de cont** per etapa
 - Apasa **Previzualizare** pe orice etapa, pentru a rula o **previzualizare simulata** si a vedea email-ul inainte sa devina activ
+
+## Oprirea automata a creditului la etapa 4
+
+Implicit, atingerea etapei 4 doar notifica echipa ta — nu blocheaza clientul. Daca vrei ca Druma sa actioneze automat, in loc sa astepte ca un om sa revizuiasca escaladarea, activeaza **oprirea automata a creditului** (o setare de companie, optionala). Odata activata, orice client care ajunge la etapa 4 a programului de urmarire este pus automat pe oprire de credit:
+
+- Comenzile noi pentru acel client sunt blocate, pana la ridicarea opririi.
+- Adminii si planificatorii primesc o notificare ca acel client a fost oprit automat.
+- Oprirea este **intr-un singur sens** — Druma nu o ridica niciodata automat. Un om trebuie sa elimine oprirea de credit de pe inregistrarea clientului, odata ce situatia este rezolvata.
+
+## Dobanda de intarziere UE
+
+Memento-urile de urmarire, incepand cu etapa 2, pot include o linie informativa de dobanda de intarziere, pe baza Directivei 2011/7/UE privind combaterea intarzierii platilor in tranzactiile comerciale. Druma calculeaza dobanda simpla (fara capitalizare) la suma restanta, folosind un procent anual configurabil — seteaza-l sub **Setari → Branding si Formate** (implicit 8.0%, o aproximare a pragului legal minim UE).
+
+<Note>
+Aceasta suma de dobanda este afisata in email-ul de memento doar ca un semnal — nu este niciodata adaugata automat la totalul facturii. Daca si cum sa percepi efectiv dobanda de intarziere este o decizie comerciala si legala — consulta-ti contabilul, inainte de a o aplica.
+</Note>
 
 ## Pauzarea si scutirea clientilor
 
@@ -137,7 +134,7 @@ Limita de rata: 50 de trimiteri manuale pe ora per utilizator. Fiecare planifica
 
 Clienti diferiti pot avea termene de plata diferite — unii platesc la net 15, altii la net 45. Druma stocheaza termenele de plata per client, ca data scadentei sa fie calculata corect pe fiecare factura.
 
-Pentru a seta sau actualiza termenele de plata ale unui client: **Clienti** → selecteaza clientul → tabul **Detalii** → campul **Termene de Plata**. Seteaza-l la numarul de zile agreat (de exemplu, 30 pentru net 30). Asta suprascrie termenele de plata implicite din setarile tale globale.
+Pentru a seta sau actualiza termenele de plata ale unui client: **Clienti** → selecteaza clientul → tabul **General** → campul **Termene de Plata**. Seteaza-l la numarul de zile agreat (de exemplu, 30 pentru net 30). Asta suprascrie termenele de plata implicite din setarile tale globale.
 
 ---
 

@@ -11,7 +11,7 @@ Cand externalizezi o marfa catre un alt transportator — o companie partenera, 
 Registrul de subcontractanti al Druma rezolva asta fara telefoane. Fiecare transportator primeste un link usor de portal — fara aplicatie de instalat, fara software scump — unde poate actualiza statusul comenzii si incarca documente. Ramai in control, fara sa alergi dupa oameni la telefon.
 
 <Frame caption="Registrul de subcontractanti — acces la portal, documente si rating per transportator.">
-  <img src="/images/planner/subcontractors.png" alt="Pagina registrului de Subcontractanti" />
+  <img src="/images/planner/subcontractors.ro.png" alt="Pagina registrului de Subcontractanti" />
 </Frame>
 
 ---
@@ -20,7 +20,10 @@ Registrul de subcontractanti al Druma rezolva asta fara telefoane. Fiecare trans
 
 <Steps>
   <Step title="Mergi la Subcontractanti">
-    Apasa **Setari → Subcontractanti → Adauga**.
+    Apasa **Forwarding → Subcontractanti** in navigare (`/forwarding/subcontractors`).
+  </Step>
+  <Step title="Apasa Adauga Subcontractant">
+    Apasa **Adauga Subcontractant** pentru a deschide o inregistrare noua de transportator.
   </Step>
   <Step title="Completeaza detaliile companiei">
     Introdu urmatoarele campuri obligatorii:
@@ -30,11 +33,17 @@ Registrul de subcontractanti al Druma rezolva asta fara telefoane. Fiecare trans
     - **Tara**
     - **Nume contact**
     - **Email contact**
+
+    Optional, poti inregistra si **termeni de plata (zile)**, un **tarif implicit de achizitie (€/km)** pentru a precompleta ofertele, si **tarile de operare** in care ruleaza acest transportator — toate trei alimenteaza PDF-ul comenzii de transport si clasamentul de auto-licitare, odata setate.
   </Step>
   <Step title="Salveaza">
     Apasa **Salveaza**. Compania este adaugata in registrul tau de subcontractanti, gata sa fie aleasa cand atribui o marfa.
   </Step>
 </Steps>
+
+<Note>
+Registrul de subcontractanti (si restul modulului **Forwarding**) este restrictionat la rolurile operationale — admin, company_admin, planner, dispatcher, fleet_manager si customer_service. Un cont de sofer nu poate crea transportatori, nu le poate incarca documentele de conformitate si nu poate acorda acorduri de auto-facturare.
+</Note>
 
 ---
 
@@ -75,12 +84,22 @@ Transportatorul nu se inregistreaza si nu se autentifica — pur si simplu apasa
 
 Din link-ul sau, transportatorul vede doar acea singura comanda. Din portal poate:
 
-- **Actualiza statusul comenzii** — parcurge 8 etape granulare: Confirmata, In Drum spre Incarcare, La Incarcare, Incarcata, In Drum spre Livrare, La Livrare, Descarcare, Livrata
+- **Accepta sau refuza oferta** — cardurile de actualizare a statusului de mai jos se deblocheaza doar dupa ce a acceptat; o cerere de incarcare a documentelor poate primi totusi raspuns si inainte de asta, asa ca un transportator poate trimite actele chiar si pe o oferta pe care inca nu a acceptat-o formal
+- **Introduce vehiculul si soferul** — numar de inmatriculare camion, numar de inmatriculare remorca, numele soferului si numarul de telefon al soferului. De aici obtine Druma detaliile camionului/soferului transportatorului — nu ai nimic de introdus pe partea ta
+- **Actualizeaza statusul comenzii** — parcurge 8 etape granulare: Confirmata, In Drum spre Incarcare, La Incarcare, Incarcata, In Drum spre Livrare, La Livrare, Descarcare, Livrata
 - **Incarca o scanare CMR** — fotografie sau scanare a CMR-ului semnat pe hartie
 - **Incarca Dovada de Livrare** — nota de livrare semnata, chitanta de depozit, sau dovada foto
 - **Vede detaliile comenzii** — adresa de preluare, adresa de livrare, descrierea marfii, numere de referinta
 
 Nu poate vedea celelalte comenzi ale tale, tarifele tale cu clientii, flota ta, sau orice altceva din contul tau Druma.
+
+### Schimbarile de status urmeaza o masina de stari
+
+Transportatorul nu poate impinge statusul intr-o stare inconsistenta — Druma aplica pe server aceleasi reguli pe care butoanele le respecta in interfata:
+
+- **Livrata necesita o preluare anterioara.** Nu poate sari direct de la Confirmata la Livrata — marfa trebuie sa fi ajuns mai intai la Incarcata (sau sa aiba o sosire la incarcare inregistrata).
+- **Pasii inapoi sunt o corectie de un singur pas.** Daca apasa gresit o etapa, se poate intoarce cu exact un pas inapoi pentru a o corecta. Orice mai departe de atat necesita interventia ta.
+- **Livrata este terminal.** Odata ce o comanda este marcata Livrata, transportatorul nu o mai poate redeschide din portal — contacteaza-l pentru a confirma ce s-a intamplat efectiv si corecteaza de pe partea ta, daca este necesar.
 
 ---
 
@@ -103,6 +122,41 @@ Nu exista un "cont de transportator" separat de gestionat — fiecare reinnoire 
 
 ---
 
+## Blocarea unui transportator (Blacklist)
+
+Uneori serviciul unui transportator a fost suficient de slab, incat nu mai vrei sa il folosesti niciodata. Deschide inregistrarea transportatorului si mergi la sectiunea **Blacklist**:
+
+<Steps>
+  <Step title="Apasa Blocheaza transportatorul">
+    In panoul de detaliu al transportatorului, deschide sectiunea **Blacklist** si apasa **Blocheaza transportatorul**.
+  </Step>
+  <Step title="Da un motiv">
+    Introdu un motiv — este obligatoriu si ramane pe inregistrare pentru oricine o revizuieste ulterior.
+  </Step>
+  <Step title="Confirma">
+    Apasa **Confirma blocarea**.
+  </Step>
+</Steps>
+
+Un transportator blocat este exclus din email-urile de comanda pentru subcontractanti si din selectia de candidati pentru auto-licitare — Druma pur si simplu nu ii va mai oferi o marfa. Aceasta este o decizie durabila, manuala: spre deosebire de verificarile automate de screening al transportatorului care ruleaza cand atribui o marfa noua (valabilitate TVA, expirare asigurare si semnale de risc similare), blocarea nu este niciodata recalculata sau eliminata automat. Ramane in vigoare pana o elimini tu insuti, din aceeasi sectiune. Blocarea nu anuleaza o marfa deja atribuita acelui transportator — poti totusi sa il retragi de pe o comanda in desfasurare.
+
+---
+
+## Fisa de scor a transportatorului
+
+Panoul de detaliu al fiecarui transportator are un tab **Performanta**, care arata o fisa de scor construita din comenzile si ofertele deja inregistrate — fara nicio configurare:
+
+- **Total Comenzi** si **Livrate** — volumul pe care acest transportator l-a transportat efectiv pentru tine
+- **Rata de Acceptare** si **Rata de Respingere** — cat de des accepta sau refuza o marfa oferita
+- **Timp Mediu pana la Acceptare** — cat ii ia de regula sa raspunda la o oferta
+- **Livrare la Timp** — ponderea livrarilor sale care au ajuns conform programului
+- **Dispute de Facturare** — cat de des factura sa nu s-a potrivit cu ce ai inregistrat tu ca tarif de achizitie
+- **Marja Medie** — marja medie pe care ai obtinut-o pe marfurile transportate de acest transportator
+
+Fisa de scor se completeaza odata ce transportatorul are cel putin o comanda sau o oferta inregistrata; transportatorii noi arata o stare goala pana atunci. Foloseste-o pentru a compara transportatorii obiectiv, in loc sa te bazezi pe un rating introdus manual.
+
+---
+
 ## Vizualizarea activitatii transportatorului pe o comanda
 
 Pentru a vedea tot ce a facut un transportator pe o comanda specifica:
@@ -119,7 +173,7 @@ Aceasta este urma ta de audit. Daca un client intreaba cand a fost preluata marf
 
 Registrul de subcontractanti este construit pentru acest scenariu specific: **ai vandut un transport unui client si folosesti un alt transportator pentru a muta efectiv marfa**. Ramai responsabil in fata clientului tau pentru livrare, dar ai nevoie de vizibilitate asupra a ce face transportatorul, fara sa fii la telefon cu el toata ziua.
 
-Este diferit de brokeri, care iti dau tie marfuri. Vezi articolul [Brokeri](/ro/planner/brokers) pentru acea parte a relatiei.
+Este diferit de brokeri, care iti dau tie marfuri — brokerii sunt gestionati acum ca simpli Clienti, nu in acest registru. Vezi articolul [Brokeri](/ro/planner/brokers) pentru acea parte a relatiei.
 
 ---
 
@@ -128,6 +182,6 @@ Este diferit de brokeri, care iti dau tie marfuri. Vezi articolul [Brokeri](/ro/
     Afla cum gestioneaza Druma facturarea split, cand actionezi ca expeditor de marfa.
   </Card>
   <Card title="Brokeri" icon="briefcase" href="/ro/planner/brokers">
-    Brokerii iti dau marfuri — iata cum gestionezi documentele cu ei.
+    Brokerii iti dau marfuri sa le transporti — sunt gestionati acum ca Clienti, nu in acest registru.
   </Card>
 </CardGroup>

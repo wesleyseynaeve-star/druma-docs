@@ -14,18 +14,21 @@ Druma inchide acest gol, permitand soferilor sa inregistreze chitantele de taxa 
 
 ## Cum inregistreaza soferii chitantele de taxa
 
-In timpul unei incarcaturi active, PWA-ul soferului arata un buton **Inregistreaza Taxa** pe ecranul de detaliu al incarcaturii. Apasarea lui deschide fisa **Chitanta Taxa**.
+In timpul unei incarcaturi active, PWA-ul soferului arata un buton rosu **Raporteaza** pe ecranul de detaliu al incarcaturii. Apasarea lui deschide fisa **Raporteaza o problema**, care listeaza **Inregistreaza taxa**, alaturi de Raporteaza intarziere, Raporteaza incident si (unde este cazul) actiunile de tip nu pot finaliza. Apasarea pe **Inregistreaza taxa** deschide fisa **Chitanta de taxa**.
 
 <Steps>
-  <Step title="Apasa Inregistreaza Taxa">
-    Butonul este vizibil oricand statusul incarcaturii este sosit la preluare, incarcare, in tranzit, sosit la livrare sau descarcare — orice status in care camionul este pe drum.
+  <Step title="Apasa Raporteaza, apoi Inregistreaza taxa">
+    **Inregistreaza taxa** este oferit oricand statusul incarcaturii este sosit la preluare, incarcare, in tranzit, sosit la livrare sau descarcare — orice status in care camionul este pe drum.
   </Step>
   <Step title="Introdu detaliile taxei">
     Completeaza:
-    - **Suma (EUR)** — campul obligatoriu: taxa platita, convertita in EUR
-    - **Suma locala** (optional) — suma in moneda locala, plus codul monedei si cursul de schimb, daca vrei sa inregistrezi si cifrele originale
-    - **Tara** — precompletata pe baza pozitiei GPS curente, dar editabila
-    - **Note** (optional) — referinta autostrada, numar cabina, sau orice comentariu de sofer
+    - **Tara** — obligatoriu. Soferul o selecteaza intotdeauna dintr-o lista; nu este precompletata pe baza GPS.
+    - **Operator taxa de drum** (optional) — text liber, de ex. "Autobahn GmbH" sau "HU-GO".
+    - **Suma (EUR)** — obligatoriu: taxa platita, convertita in EUR.
+    - **Suma locala** (optional) — suma in moneda locala, plus codul monedei si cursul de schimb, daca vrei sa inregistrezi si cifrele originale.
+    - **Data si ora** — obligatoriu, implicit ora curenta, dar editabila, pentru a inregistra o taxa ulterior.
+    - **Metoda de plata** — obligatoriu: **Numerar**, **Card de combustibil**, **Card de credit**, **Unitate de bord (OBU)** sau **Taxare inversa**.
+    - **Note** (optional) — referinta autostrada, numar cabina sau orice comentariu de sofer.
   </Step>
   <Step title="Ataseaza o fotografie a chitantei (optional)">
     Apasa pictograma de camera sau fisier, pentru a atasa o fotografie a chitantei. Formate acceptate: JPEG, PNG, WebP, HEIC, PDF. Dimensiune maxima fisier: 5 MB.
@@ -70,7 +73,7 @@ Planificatorii pot adauga chitante manual, folosind butonul **Adauga Chitanta** 
 
 ## Import card de combustibil — impartire automata a taxelor
 
-Extrasele de card de combustibil DKV, UTA si AS24 combina adesea tranzactiile de combustibil si de taxa in acelasi fisier de export. Cand imporți un fisier de card de combustibil in **Flota → Carduri Combustibil**, Druma separa automat liniile de taxa de liniile de combustibil:
+Extrasele de card de combustibil DKV, UTA si AS24 combina adesea tranzactiile de combustibil si de taxa in acelasi fisier de export. Cand importi un fisier de card de combustibil in **Flota → Carduri Combustibil**, Druma separa automat liniile de taxa de liniile de combustibil:
 
 - **Liniile de combustibil** sunt adaugate normal in registrul de combustibil al camionului
 - **Liniile de taxa** sunt directionate catre chitante de taxa si potrivite cu comanda activa la acea data, pentru acel camion
@@ -87,19 +90,23 @@ Potrivirea taxelor din importurile de card de combustibil foloseste camionul si 
 
 Nu fiecare taxa este facturata clientului. Unele companii absorb taxele pentru anumite coridoare, ca parte din tariful lor; altele le transfera integral. Druma iti permite sa configurezi asta la nivelul fisei de tarifare.
 
-Mergi la **Setari → Fise de Tarifare** si deschide orice fisa de tarifare. Exista un tabel de suprascriere **Politica de taxe de drum per tara**, in partea de jos. Pentru fiecare tara:
+Mergi la **Setari → Fise de Tarifare** si deschide orice fisa de tarifare. Exista un tabel de suprascriere **Politica de taxe de drum per tara**, in partea de jos. Fiecare intrare (si politica de taxa de nivel superior a fisei de tarifare) este una din trei valori:
 
 | Politica | Comportament |
 |---|---|
-| Transferata | Taxa reala apare ca o linie de extra a comenzii, pe factura |
-| Absorbita | Taxa este urmarita intern, dar nu apare pe factura clientului |
-| (necompletat) | Revine la politica de taxa de nivel superior a fisei de tarifare |
+| Facturata clientului (transfer) | Taxa reala apare ca o linie de extra a comenzii, pe factura |
+| Inclusa in tarif | Taxa este urmarita intern, dar nu apare pe factura clientului — costul este considerat deja inclus in tariful de baza |
+| Nefacturata | Taxa este urmarita intern, dar nu apare pe factura clientului — folosita cand coridorul chiar nu are taxa de drum sau costul nu se transfera |
 
-Tarile nelistate in tabelul de suprascriere mostenesc implicitul fisei de tarifare.
+Tarile nelistate in tabelul de suprascriere mostenesc politica de taxa de nivel superior a fisei de tarifare.
 
 ### Linie automata pe factura
 
-Cand o tara este setata la **Transferata**, chitantele de taxa inregistrate pentru acea tara sunt insumate automat si adaugate ca o linie de extra a comenzii, pe factura, in timpul generarii. Linia este etichetata cu numele tarii.
+Cand o tara este setata la **Facturata clientului**, chitantele de taxa inregistrate pentru acea tara sunt insumate automat si adaugate ca o linie de extra a comenzii, pe factura, in timpul generarii. Linia este etichetata cu numele tarii.
+
+<Note>
+Transferul se aplica doar clientilor care au **Factureaza taxele de drum** activat pe inregistrarea lor de client. Pentru clientii fara aceasta optiune, taxele inregistrate sunt urmarite intern, dar nu sunt niciodata adaugate pe factura, indiferent de politica per tara.
+</Note>
 
 Daca trebuie sa excluzi o chitanta specifica din factura — de exemplu, pentru ca este acoperita de un acord separat de suprataxa — deschide editorul de factura si activeaza **Exclude din factura** pe acea linie de extra.
 

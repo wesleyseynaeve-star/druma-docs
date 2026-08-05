@@ -8,9 +8,10 @@ Timpul de asteptare este una din cele mai frecvente surse de venit pierdut in tr
 
 ## Cum porneste cronometrul
 
-Cand un sofer isi actualizeaza statusul in aplicatia Druma la **Sosit la Preluare** sau **Sosit la Livrare**, cronometrul de asteptare porneste automat. Sosirea este marcata temporal folosind locatia GPS a soferului, care este inregistrata si stocata ca dovada.
+Cand un sofer isi actualizeaza statusul in aplicatia de sofer Druma la **Sosit la Preluare** sau **Sosit la Livrare**, cronometrul de asteptare porneste automat. Sosirea este marcata temporal folosind locatia GPS a soferului, care este inregistrata si stocata ca dovada.
 
-Nu este necesara nicio actiune manuala din partea planificatorului. Druma alerteaza planificatorii tai in momentul in care soferul ajunge — vezi mai jos — si calculeaza separat suma facturabila odata ce perioada gratuita a trecut.
+Nu este necesara nicio actiune manuala din partea planificatorului. Druma alerteaza planificatorii tai in momentul in care soferul ajunge — vezi mai jos — si calculeaza separat suma facturabila, odata ce perioada gratuita a trecut.
+
 
 ## Ce se intampla cand ajunge soferul
 
@@ -20,7 +21,7 @@ Druma alerteaza planificatorii tai **imediat** cand statusul unui sofer se schim
 2. Este pusa in asteptare si o **notificare in aplicatie catre client**, mentionand ca pot aparea taxe de asteptare dupa perioada gratuita
 3. Jurnalul de activitate al comenzii inregistreaza sosirea cu numele soferului, locatia si numarul de ore gratuite care se aplica
 
-Perioada gratuita de asteptare este implicit **2 ore**, dar vine din profilul de cost al vehiculului (**Setari → Fise de Tarifare**) — aceasta determina cand sosirea devine facturabila, nu cand se declanseaza alerta.
+Perioada gratuita de asteptare este implicit **2 ore**, dar vine din profilul de cost al vehiculului (Setari → Fise de Tarifare) — aceasta determina cand sosirea devine facturabila, nu cand se declanseaza alerta.
 
 ## Notificarea clientului
 
@@ -42,26 +43,55 @@ Momentan nu exista un pas de previzualizare sau editare — email-ul este genera
 
 Cand generezi factura pentru comanda, taxa de timp de asteptare este adaugata automat ca element de linie separat:
 
-- Descriere: "Timp de asteptare — [locatie] — [data] — [X ore Y minute]"
+- Descriere: "Waiting time charges" (o eticheta fixa — nu interpoleaza locatia, data sau durata)
 - Tarif: tariful tau orar configurat
-- Suma: calculata la cel mai apropiat sfert de ora
+- Suma: timpul de asteptare este rotunjit la cel mai apropiat minut, iar taxa rezultata la 2 zecimale
 
 Poti edita sau elimina acest element de linie pe factura inainte de emitere, daca ai convenit altfel cu clientul.
 
+<Note>
+Asteptarea poate fi exclusa si complet din facturare, per client sau per comanda — vezi [Dezactivarea facturarii asteptarii](#dezactivarea-facturarii-asteptarii) mai jos. Cand este dezactivata, evenimentul de asteptare este inregistrat oricum, doar ca nu devine niciodata o taxa.
+</Note>
+
 ## Configurarea setarilor de timp de asteptare
 
-Orele gratuite de asteptare si tariful orar de asteptare vin din profilul de cost al vehiculului — mergi la **Setari → Fise de Tarifare**, deschide profilul de cost relevant (flota proprie sau subcontractat) si seteaza acolo **Ore de asteptare gratuite** si **Tarif asteptare €/h**. Momentan nu exista o suprascriere separata per client sau per comanda pentru aceste valori — fiecare comanda cu pret calculat pe baza unui anumit profil de cost foloseste termenii de asteptare ai acelui profil.
+### Ore gratuite si tarif orar
+
+Perioada gratuita de asteptare si tariful orar de asteptare se rezolva printr-un lant de reveniri, verificat in aceasta ordine:
+
+1. **Client** — o suprascriere per client, daca inregistrarea clientului are propriile ore gratuite si/sau tarif setate
+2. **Fisa de tarifare** — profilul de cost al vehiculului atribuit comenzii (Setari → Fise de Tarifare, flota proprie sau subcontractata)
+3. **Implicit companie** — o revenire la nivel de companie
+4. **Implicit platforma** — folosit doar cand niciuna dintre cele de mai sus nu este setata
+
+Fiecare camp revine independent — un client care suprascrie doar tariful mosteneste in continuare orele gratuite ale companiei, si invers. Pentru majoritatea companiilor, nivelul fisei de tarifare este suficient: mergi la **Setari → Fise de Tarifare**, deschide profilul de cost relevant si seteaza **Ore de asteptare gratuite** si **Tarif asteptare €/h**. Seteaza campurile pe inregistrarea proprie a unui client doar cand acel client anume are termeni de asteptare diferiti contractual.
 
 <Warning>
 Daca schimbi tariful de asteptare al unui profil de cost, afecteaza doar evenimentele de asteptare inregistrate de atunci incolo. Taxele de asteptare deja adaugate pe facturi deschise nu se actualizeaza automat.
 </Warning>
+
+### Dezactivarea facturarii asteptarii
+
+Nu orice client sau comanda ar trebui sa transforme asteptarea intr-o taxa. Druma inregistreaza oricum evenimentul de asteptare in ambele cazuri — sosirea, perioada gratuita, minutele facturabile sunt toate inregistrate — doar ca nu va genera o factura pentru ea, cand aceasta optiune este dezactivata:
+
+- **Per client** — deschide inregistrarea clientului si debifeaza **Factureaza orele de asteptare pentru acest client**. Fiecare comanda pentru acel client nu mai genereaza taxe de asteptare (timpul de asteptare ramane in continuare urmarit).
+- **Per comanda** — pe ecranul Adauga Comanda, tabul **Client**, seteaza **Factureaza orele de asteptare** la **Mosteneste de la client** (implicit), **Factureaza intotdeauna** sau **Nu factura niciodata**. Setarea la nivel de comanda castiga mereu in fata setarii la nivel de client, in ambele directii, deci poti factura o comanda exceptionala pentru un client altfel dezactivat, sau poti scuti o singura comanda a unui client care in mod normal este facturat.
+- Daca niciuna nu este setata nicaieri, implicit la nivel de companie se factureaza.
+
+## Taxe de asteptare la sosire intarziata
+
+Daca propriul tau camion ajunge cu mai mult de 30 de minute intarziere la un punct de preluare sau livrare, si comanda are o taxa de asteptare facturabila care inca nu a fost trimisa clientului, Druma pune pe pauza facturarea automata a acelei comenzi, in loc sa factureze automat clientul — propria intarziere a soferului ar fi putut cauza sau prelungi asteptarea, deci un planificator ar trebui sa confirme mai intai ca taxa este corecta.
+
+- Comenzile puse pe pauza apar intr-o sectiune **"Taxe de asteptare la sosire intarziata"** pe pagina **Facturare → De facturat**, deasupra cozii obisnuite de taxe de detentie.
+- Pentru fiecare, un planificator alege **Include** (pastreaza taxa de asteptare, reia facturarea automata la urmatoarea trecere orara) sau **Renunta** (elimina taxa de asteptare de pe aceasta factura si reia facturarea automata).
+- Comenzile fara sosire intarziata, sau unde facturarea asteptarii este deja dezactivata pentru acel client/comanda, nu sunt niciodata afectate de aceasta verificare.
 
 ## Vizualizarea istoricului de asteptare
 
 Toate evenimentele de asteptare sunt stocate permanent pe comanda. Pentru a le revizui:
 
 - **Pagina de detaliu a comenzii → tabul Activitate** — arata fiecare schimbare de status cu marcaj temporal
-- **Analytics → Site Waiting** — vizite de asteptare, ore totale, durata medie si sume facturabile grupate pe punct de preluare/livrare si client, pe un interval selectabil (ultimele 24 de ore pana la ultimele 12 luni, sau un interval personalizat)
+- **Analytics → Site Waiting** — vizite de asteptare, ore totale, durata medie si sume facturabile grupate pe orasul de preluare al comenzii si client, pe un interval selectabil (ultimele 24 de ore pana la ultimele 12 luni, sau un interval personalizat)
 
 Aceste date sunt utile in negocierea termenilor contractuali. Daca un client cauzeaza constant 3+ ore de asteptare per livrare, ai cifrele ca sa sustii o renegociere de tarif.
 

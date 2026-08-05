@@ -18,37 +18,52 @@ Go to **Fleet → Trucks** to manage your vehicles.
 
 ## Adding a new vehicle
 
-Click **Add Truck** in the top-right corner of the Fleet page to open the vehicle form.
+Click **Add Truck** in the top-right corner of the Fleet page to open the vehicle form. The form is organised into tabs — fill in whichever tabs are relevant and click **Save** at any point; only **Name** and **Plate** are required.
 
-<Steps>
-  <Step title="Enter the registration plate">
-    Type the plate number exactly as it appears on the vehicle's documents. This is how you search for and identify the truck throughout Druma.
-  </Step>
-  <Step title="Set the vehicle category (optional)">
-    There's no free-choice "vehicle type" step — instead, **Vehicle Category** is an EU type-approval classification: leave it unset for a standard **HGV** (the default), or choose **N1 — LCV ≤3.5t**, **N2 — LCV 3.5–12t**, or **N3 — HGV >12t** if you need LCV-specific driving-hours or compliance handling. There's a separate free-text **Body Type** field if you want to note "Tractor unit", "Rigid", "Van", etc. for your own reference.
-  </Step>
-  <Step title="Choose the trailer type">
-    Select from your company's configured trailer types — by default: **Tautliner, Mega, Box, Reefer, Flatbed, Tanker, Lowboy, Curtainside, Container chassis, Silo, Lowloader**. This list is company-configurable, so yours may differ.
-  </Step>
-  <Step title="Set the Euro emission standard">
-    Select the vehicle's **Euro Class** — **Euro 1** through **Euro 6**, plus **Euro 6d** and **EEV**. This information is used in CO2 emission reporting and may affect routing through low-emission zones. Check the vehicle's registration document if you're unsure.
-  </Step>
-  <Step title="Enter dimensions and weight">
-    - **Height (m)** — Maximum vehicle height including the load. Used by PTV truck routing to avoid low bridges.
-    - **Max Weight kg** — The maximum permitted cargo/payload weight.
-    - **GVW kg** — Gross vehicle weight, used by PTV truck routing for weight-restricted roads.
-    - **Axle count** — Total number of axles. Used for routing through roads with axle restrictions.
-  </Step>
-  <Step title="Enter the daily fixed cost">
-    The **Daily Fixed Cost (€/day)** is what this truck costs to run regardless of whether it moves — insurance, depreciation, finance payments, tax, and so on. Enter your best estimate. This figure is used in the profitability reports to show you whether each order is actually making money after fixed costs.
-  </Step>
-  <Step title="Set the ADR certificate expiry date">
-    If this vehicle is certified to carry dangerous goods, enter the ADR certificate expiry date. Druma will alert you before it expires so you have time to renew.
-  </Step>
-  <Step title="Save the vehicle">
-    Click **Save**. The vehicle is now active and will appear in truck assignment dropdowns when creating orders.
-  </Step>
-</Steps>
+<Tabs>
+  <Tab title="General">
+    - **Name** and **Plate** (required) — type the plate exactly as it appears on the vehicle's documents. This is how you search for and identify the truck throughout Druma.
+    - **Brand / Model / Year / VIN**, **Ownership** (Own / Leased / Rented), and **Status**.
+    - **Euro Class** — **Euro 1** through **Euro 6**, plus **Euro 6d** and **EEV**. Used in CO2 emission reporting and may affect routing through low-emission zones. Check the vehicle's registration document if you're unsure.
+    - **Fuel Type** and **CO₂ Emission Class**.
+    - **Vehicle Category** — there's no free-choice "vehicle type" field; instead this is an EU type-approval classification. Leave it unset for a standard **HGV** (the default), or choose **N1 — LCV ≤3.5t**, **N2 — LCV 3.5–12t**, or **N3 — HGV >12t** if you need LCV-specific driving-hours or compliance handling.
+    - **Tachograph** (Fitted / Exempt), **Tacho Generation**, and **International carriage** toggle.
+    - An **Assignment** section further down: **Primary Driver**, **Second Driver**, **Assigned Planner**, **Assigned Dispatcher**, and **Linked Trailer** — see [Trailer Management](/en/planner/trailer-management) for how the Linked Trailer dropdown attaches a trailer to this truck.
+    - An **Operations** section: **Start Address**, **Available From**, **Notes**, and an **Exclude from auto-assignment** toggle.
+  </Tab>
+  <Tab title="Specs">
+    - **Trailer Type** — select from your company's configured trailer types (by default: Tautliner, Mega, Box, Reefer, Flatbed, Tanker, Lowboy, Curtainside, Container chassis, Silo, Lowloader — company-configurable).
+    - **Max Weight kg**, **Max Payload kg**, **Max Pallets**, **Max Volume m³**, **Height cm** — used by PTV truck routing to avoid low bridges and respect payload limits.
+    - **GVW kg** — gross vehicle weight, used by PTV truck routing for weight-restricted roads.
+    - **Axle Count** — used for routing through roads with axle restrictions.
+    - A **Compatibility** group for catalogue-level restriction: **Vehicle Category (catalogue)**, free-text **Body Type**, **Axle Configuration**, and **Roof Type**.
+  </Tab>
+  <Tab title="Costs">
+    What this truck costs to run — see [Cost Rates](#cost-rates-rate-cards-and-overrides) below for the full Rate Card / Cost Basis model.
+  </Tab>
+  <Tab title="Compliance">
+    ADR certificate expiry, insurance, MOT/roadworthiness, and tachograph calibration expiry dates. If this vehicle is certified to carry dangerous goods, set the **ADR Cert Expiry** date here — Druma will alert you before it expires so you have time to renew.
+  </Tab>
+  <Tab title="Telematics">
+    Maps this truck to a vehicle ID from a connected GPS/telematics provider, once one is configured in `Settings → Integrations`.
+  </Tab>
+  <Tab title="Notes">
+    Free-text internal notes about the vehicle.
+  </Tab>
+  <Tab title="Comments">
+    A threaded comment log for the vehicle, visible to your team.
+  </Tab>
+</Tabs>
+
+### Cost Rates — Rate Cards and overrides
+
+The Costs tab doesn't take a flat daily figure by default — it assigns a **Rate Card** (the same cost profile used for pricing and profitability elsewhere in Druma):
+
+- **Rate Card** — pick one of your company's configured rate cards (Own Fleet or Subcontracted), or leave it as **— Company default —**.
+- **Cost Basis** — a toggle between **Daily rate** and **Weekly rent**, defaulting to whatever the assigned rate card uses. This governs whether the truck's fixed cost is split per day or per ISO week across its trips.
+- **Daily Fixed Cost €** (or **Weekly Fixed Cost €** if the basis is set to weekly) and **Fuel Consumption L/100km** — both are pre-filled from the assigned rate card. Type a different value to override it for this truck only; an amber outline and a **Reset to rate card** link appear once a field is overridden.
+
+This figure — whether inherited from the rate card or overridden per truck — is what this truck costs to run regardless of whether it moves: insurance, depreciation, finance payments, tax, and so on. It feeds the profitability reports to show you whether each order is actually making money after fixed costs.
 
 ---
 
@@ -108,6 +123,14 @@ If you are setting up Druma for the first time and have a large fleet, you can i
 <Warning>
 The import process does not update existing vehicles — it only creates new ones. If you upload a file with a plate number that already exists in Druma, that row will be skipped with an error.
 </Warning>
+
+---
+
+## Repositioning a truck
+
+The Fleet → Trucks toolbar also has a **Reposition** action, next to **Bulk Import** and **Add Truck**. Use it to move an empty truck to a new location — pre-positioning ahead of a load, an empty return leg, or a fleet relocation — without an actual client order. It creates a repositioning order with an origin (auto-resolved from the truck's last delivery), a destination you pick or type, and an optional reason.
+
+If the truck is currently carrying a linked trailer, the Reposition modal also lets you **Drop Trailer** as part of the move — see [Detaching a trailer via Reposition](/en/planner/trailer-management#detaching-a-trailer-via-reposition-trailer-still-loaded) for what happens to the trailer and any load still on it.
 
 ---
 

@@ -20,7 +20,10 @@ Druma's subcontractor registry solves this without phone calls. Each carrier get
 
 <Steps>
   <Step title="Go to Subcontractors">
-    Click **Settings → Subcontractors → Add**.
+    Click **Forwarding → Subcontractors** in the navigation (`/forwarding/subcontractors`).
+  </Step>
+  <Step title="Click Add Subcontractor">
+    Click **Add Subcontractor** to open a new carrier record.
   </Step>
   <Step title="Fill in the company details">
     Enter the following required fields:
@@ -30,12 +33,17 @@ Druma's subcontractor registry solves this without phone calls. Each carrier get
     - **Country**
     - **Contact name**
     - **Contact email**
+
+    Optionally also record **payment terms (days)**, a **default buy rate (€/km)** to pre-fill offers, and the **operating countries** this carrier runs in — all three feed the transport-order PDF and auto-tender ranking once set.
   </Step>
   <Step title="Save">
     Click **Save**. The company is added to your subcontractor registry, ready to be picked when you assign a load.
   </Step>
 </Steps>
 
+<Note>
+The subcontractor registry (and the rest of **Forwarding**) is restricted to operations roles — admin, company_admin, planner, dispatcher, fleet_manager, and customer_service. A driver account can't create carriers, upload their compliance documents, or grant self-billing agreements.
+</Note>
 
 ---
 
@@ -76,6 +84,8 @@ The carrier doesn't sign up or log in — they just click through:
 
 From their link, the carrier sees only that one order. From the portal they can:
 
+- **Accept or decline the offer** — the status-update cards below only unlock once they've accepted; a document-upload request can still be answered before that, so a carrier can send paperwork even on an offer they haven't formally accepted yet
+- **Enter their vehicle and driver** — truck plate, trailer plate, driver name, and driver phone number. This is where Druma gets the carrier's truck/driver details from — there's nothing to type in on your side
 - **Update order status** — step through 8 granular stages: Confirmed, En Route to Loading, At Loading, Loaded, En Route to Delivery, At Delivery, Offloading, Delivered
 - **Upload a CMR scan** — photograph or scan of the signed paper CMR
 - **Upload Proof of Delivery** — signed delivery note, warehouse receipt, or photo evidence
@@ -83,6 +93,13 @@ From their link, the carrier sees only that one order. From the portal they can:
 
 They cannot see your other orders, your rates with clients, your fleet, or anything else in your Druma account.
 
+### Status changes follow a state machine
+
+The carrier can't drive the status into an inconsistent state — Druma enforces the same rules server-side that the buttons respect in the UI:
+
+- **Delivered requires a prior pickup.** They can't jump straight from Confirmed to Delivered — the load has to have reached Loaded (or have a recorded loading arrival) first.
+- **Backward moves are a one-step correction only.** If they mis-tap a stage, they can step back exactly one stage to fix it. Anything further back needs you to intervene.
+- **Delivered is terminal.** Once an order is marked Delivered, the carrier can't reopen it from the portal — contact them to confirm what actually happened and correct it from your side if needed.
 
 ---
 
@@ -105,6 +122,41 @@ There's no separate "carrier account" to manage — every renewal simply issues 
 
 ---
 
+## Blacklisting a Carrier
+
+Sometimes a carrier's service was bad enough that you never want to use them again. Open the carrier's record and go to the **Blacklist** section:
+
+<Steps>
+  <Step title="Click Blacklist carrier">
+    In the carrier's detail panel, open the **Blacklist** section and click **Blacklist carrier**.
+  </Step>
+  <Step title="Give a reason">
+    Enter a reason — this is required and stays on the record for whoever reviews it later.
+  </Step>
+  <Step title="Confirm">
+    Click **Confirm blacklist**.
+  </Step>
+</Steps>
+
+A blacklisted carrier is excluded from subcontractor order emails and from auto-tendering candidate selection — Druma simply won't offer them a load again. This is a durable, manual decision: unlike the automated carrier-screening checks that run when you assign a new load (VAT validity, insurance expiry, and similar risk signals), blacklisting is never recomputed or cleared automatically. It stays in effect until you remove it yourself from the same section. Blacklisting doesn't cancel a load already assigned to that carrier — you can still stand them down from an in-progress order.
+
+---
+
+## Carrier Scorecard
+
+Every carrier's detail panel has a **Performance** tab showing a scorecard built from the orders and offers already on record — no setup required:
+
+- **Total Orders** and **Delivered** — volume this carrier has actually carried for you
+- **Acceptance Rate** and **Rejection Rate** — how often they say yes or no to an offered load
+- **Avg. Time to Accept** — how long it typically takes them to respond to an offer
+- **On-Time Delivery** — the share of their deliveries that landed on schedule
+- **Invoice Disputes** — how often their invoice didn't match what you recorded as the buy rate
+- **Avg. Margin** — the average margin you've made on loads carried by this carrier
+
+The scorecard fills in once the carrier has at least one order or offer on record; new carriers show an empty state until then. Use it to compare carriers objectively instead of relying on a hand-typed rating.
+
+---
+
 ## Viewing Carrier Activity on an Order
 
 To see everything a carrier has done on a specific order:
@@ -121,7 +173,7 @@ This is your audit trail. If a client asks when their load was picked up, this i
 
 The subcontractor registry is built for this specific scenario: **you've sold a transport to a client, and you're using another carrier to physically move the load**. You remain responsible to your client for the delivery, but you need visibility into what the carrier is doing without being on the phone with them all day.
 
-This is different from brokers, who give loads to you. See the [Brokers](/en/planner/brokers) article for that side of the relationship.
+This is different from brokers, who give loads to you — brokers are now managed as plain Clients, not in this registry. See the [Brokers](/en/planner/brokers) article for that side of the relationship.
 
 ---
 
@@ -130,6 +182,6 @@ This is different from brokers, who give loads to you. See the [Brokers](/en/pla
     Learn how Druma handles split invoicing when you act as a freight forwarder.
   </Card>
   <Card title="Brokers" icon="briefcase" href="/en/planner/brokers">
-    Brokers give you loads — here's how to manage documents with them.
+    Brokers give you loads to carry — they're managed as Clients now, not in this registry.
   </Card>
 </CardGroup>
