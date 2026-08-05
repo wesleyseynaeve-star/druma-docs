@@ -1,52 +1,52 @@
 ---
-title: "Salarizarea soferilor"
-description: "Genereaza calcule automate de salarizare per sofer, pe baza km parcursi, zilelor active si orelor de asteptare."
+title: "Salarizarea șoferilor"
+description: "Generează calcule automate de salarizare per șofer, pe baza km parcurși, zilelor active și orelor de așteptare."
 icon: "money-bill-wave"
 ---
 
-## Prezentare generala
+## Prezentare generală
 
-Druma calculeaza plata soferilor din datele operationale pe care le captureaza deja — kilometri parcursi, zile lucrate si ore de asteptare inregistrate. Nu exista un sistem separat de urmarire a timpului; datele circula din comenzi si atingerile de status.
+Druma calculează plata șoferilor din datele operaționale pe care le capturează deja — kilometri parcurși, zile lucrate și ore de așteptare înregistrate. Nu există un sistem separat de urmărire a timpului; datele circulă din comenzi și atingerile de status.
 
-Salarizarea Soferilor se gaseste sub sectiunea **Finante**, controlata de flag-ul modulului de salarizare — urmeaza accesul normal al sectiunii Finante, fara nicio restrictie de rol suplimentara pentru vizualizare. Aprobarea/finalizarea unui lot si adaugarea de linii de ajustare au fiecare propria permisiune, mai restransa — vezi [Loturi Lunare de Salarizare](#loturi-lunare-de-salarizare-automatizate) mai jos.
+Salarizarea Șoferilor se găsește sub secțiunea **Finanțe**, controlată de flag-ul modulului de salarizare — urmează accesul normal al secțiunii Finanțe, fără nicio restricție de rol suplimentară pentru vizualizare. Aprobarea/finalizarea unui lot și adăugarea de linii de ajustare au fiecare propria permisiune, mai restrânsă — vezi [Loturi Lunare de Salarizare](#loturi-lunare-de-salarizare-automatizate) mai jos.
 
-<Frame caption="Finante → Salarizare — plata pentru km goi este un procent din tariful incarcat, nu un tarif independent.">
+<Frame caption="Finanțe → Salarizare — plata pentru km goi este un procent din tariful încărcat, nu un tarif independent.">
   <img src="/images/reports/payroll.ro.png" alt="Pagina de Salarizare" />
 </Frame>
 
 ---
 
-## Componentele platii
+## Componentele plății
 
-Fiecare rulare de salarizare calculeaza patru componente:
+Fiecare rulare de salarizare calculează patru componente:
 
 | Componenta | Baza |
 |---|---|
-| **Plata km** | Km incarcati × tarif per km |
-| **Plata km goi** | Km goi/morti × tarif per km × procentul pentru km goi (o cota configurabila din tariful incarcat, nu un tarif separat pentru km goi — implicit 100%, adica platit la fel ca km incarcati) |
+| **Plata km** | Km încărcați × tarif per km |
+| **Plata km goi** | Km goi/morți × tarif per km × procentul pentru km goi (o cotă configurabilă din tariful încărcat, nu un tarif separat pentru km goi — implicit 100%, adică plătit la fel ca km încărcați) |
 | **Plata zi** | Zile de lucru active × tariful de zi |
-| **Plata asteptare** | Total ore de asteptare × tariful orar de asteptare |
+| **Plata așteptare** | Total ore de așteptare × tariful orar de așteptare |
 
-Totalul este suma tuturor celor patru componente, in EUR.
+Totalul este suma tuturor celor patru componente, în EUR.
 
 ---
 
-Druma suporta doua moduri de a produce o rulare de salarizare: genereaza una manual, oricand ai nevoie, sau lasa un lot lunar opt-in sa construiasca automat cate unul pentru fiecare sofer si sa il retina pentru aprobare. Majoritatea companiilor folosesc lotul automatizat zi de zi si recurg la o rulare manuala pentru perioade ad-hoc (un sofer care a inceput la mijlocul lunii, o corectie speciala de ciclu de plata si asa mai departe).
+Druma suportă două moduri de a produce o rulare de salarizare: generează una manual, oricând ai nevoie, sau lasă un lot lunar opt-in să construiască automat câte unul pentru fiecare șofer și să îl rețină pentru aprobare. Majoritatea companiilor folosesc lotul automatizat zi de zi și recurg la o rulare manuală pentru perioade ad-hoc (un șofer care a început la mijlocul lunii, o corecție specială de ciclu de plată și așa mai departe).
 
-## Generarea unei rulari de salarizare (manual)
+## Generarea unei rulări de salarizare (manual)
 
 <Steps>
-  <Step title="Selecteaza soferul si perioada">
-    Alege soferul din lista derulanta si seteaza data de inceput si sfarsit a perioadei. Perioadele tipice sunt o luna calendaristica sau un ciclu de plata de doua saptamani.
+  <Step title="Selectează șoferul și perioada">
+    Alege șoferul din lista derulantă și setează data de început și sfârșit a perioadei. Perioadele tipice sunt o lună calendaristică sau un ciclu de plată de două săptămâni.
   </Step>
-  <Step title="Apasa Genereaza">
-    Druma calculeaza toate cele patru componente de plata, din comenzile si jurnalele de asteptare din perioada selectata.
+  <Step title="Apasă Generează">
+    Druma calculează toate cele patru componente de plată, din comenzile și jurnalele de așteptare din perioada selectată.
   </Step>
-  <Step title="Revizuieste detalierea">
-    Rezultatul arata fiecare componenta separat, ca sa poti verifica cifrele inainte de export.
+  <Step title="Revizuiește detalierea">
+    Rezultatul arată fiecare componentă separat, ca să poți verifica cifrele înainte de export.
   </Step>
-  <Step title="Exporta in CSV">
-    Apasa **Exporta CSV** pentru a descarca sumarul de salarizare, pentru folosire in sistemul tau de contabilitate sau salarizare.
+  <Step title="Exportă în CSV">
+    Apasă **Exportă CSV** pentru a descărca sumarul de salarizare, pentru folosire în sistemul tău de contabilitate sau salarizare.
   </Step>
 </Steps>
 
@@ -54,66 +54,66 @@ Druma suporta doua moduri de a produce o rulare de salarizare: genereaza una man
 
 ## Loturi lunare de salarizare (automatizate)
 
-Pentru companiile care nu vor sa declanseze manual o rulare in fiecare luna, Druma poate construi automat un lot.
+Pentru companiile care nu vor să declanșeze manual o rulare în fiecare lună, Druma poate construi automat un lot.
 
 <Note>
-Aceasta functie este opt-in. Activeaza **Construire automata lot lunar de salarizare** sub **Setari → Automatizări și funcționalități** — este dezactivata implicit. Un om revizuieste si aproba intotdeauna lotul; soferii nu il vad niciodata pana nu este aprobat.
+Această funcție este opt-in. Activează **Construire automată lot lunar de salarizare** sub **Setări → Automatizări și funcționalități** — este dezactivată implicit. Un om revizuiește și aprobă întotdeauna lotul; șoferii nu îl văd niciodată până nu este aprobat.
 </Note>
 
-**Cum functioneaza:** odata activata, un job zilnic verifica **ziua de taiere a salarizarii** a fiecarei companii (o zi configurabila a lunii, implicit **a 2-a**). Cand data de azi se potriveste cu acea zi, Druma calculeaza plata bruta — aceleasi patru componente si acelasi calcul ca la rularea manuala de mai sus — pentru fiecare sofer activ, pe **luna calendaristica precedenta**, si il salveaza ca un singur lot **ciorna** retinut, pentru companie. Construirea lotului este idempotenta: re-rularea pentru o luna care are deja un lot nu are niciun efect.
+**Cum funcționează:** odată activată, un job zilnic verifică **ziua de tăiere a salarizării** a fiecărei companii (o zi configurabilă a lunii, implicit **a 2-a**). Când data de azi se potrivește cu acea zi, Druma calculează plata brută — aceleași patru componente și același calcul ca la rularea manuală de mai sus — pentru fiecare șofer activ, pe **luna calendaristică precedentă**, și îl salvează ca un singur lot **ciornă** reținut, pentru companie. Construirea lotului este idempotentă: re-rularea pentru o lună care are deja un lot nu are niciun efect.
 
-### Ciclul de viata al statusului lotului
+### Ciclul de viață al statusului lotului
 
 ```
-Ciorna (retinut) → Aprobat → Finalizat
+Ciornă (reținut) → Aprobat → Finalizat
 ```
 
-- **Ciorna** — construit recent, sau inca in curs de revizuire. Rularile individuale ale soferilor din interiorul lotului pot fi inca ajustate.
-- **Aprobat** — revizuit si eliberat. Soferii pot vedea acum fluturasul de salariu in aplicatia soferului.
-- **Finalizat** — blocat permanent. Nu mai sunt posibile alte ajustari pe nicio rulare din lot.
+- **Ciornă** — construit recent, sau încă în curs de revizuire. Rulările individuale ale șoferilor din interiorul lotului pot fi încă ajustate.
+- **Aprobat** — revizuit și eliberat. Șoferii pot vedea acum fluturașul de salariu în aplicația șoferului.
+- **Finalizat** — blocat permanent. Nu mai sunt posibile alte ajustări pe nicio rulare din lot.
 
-Aprobarea si finalizarea unui lot sunt restrictionate rolurilor **admin** si **company_admin** — apasa **Aproba lotul** sau **Finalizeaza lotul** din pagina de Salarizare. Odata ce o rulare este finalizata, nu mai poate fi redeschisa.
+Aprobarea și finalizarea unui lot sunt restricționate rolurilor **admin** și **company_admin** — apasă **Aprobă lotul** sau **Finalizează lotul** din pagina de Salarizare. Odată ce o rulare este finalizată, nu mai poate fi redeschisă.
 
-### Adaugarea ajustarilor
+### Adăugarea ajustărilor
 
-Inainte ca un lot sa fie aprobat, utilizatorii autorizati pot adauga **linii de ajustare** la rularea oricarui sofer individual — bonus, diurna, retinere sau altele. Aceasta este disponibila rolurilor **admin**, **company_admin** si **fleet_manager** (un set mai larg decat aprobare/finalizare). Fiecare ajustare apare intr-o detaliere de calcul, alaturi de cele patru componente standard de plata, asa ca totalul final este complet trasabil. Ajustarile nu mai pot fi adaugate odata ce rularea a iesit din statusul Ciorna.
+Înainte ca un lot să fie aprobat, utilizatorii autorizați pot adăuga **linii de ajustare** la rularea oricărui șofer individual — bonus, diurnă, reținere sau altele. Aceasta este disponibilă rolurilor **admin**, **company_admin** și **fleet_manager** (un set mai larg decât aprobare/finalizare). Fiecare ajustare apare într-o detaliere de calcul, alături de cele patru componente standard de plată, așa că totalul final este complet trasabil. Ajustările nu mai pot fi adăugate odată ce rularea a ieșit din statusul Ciornă.
 
-### Ce vad soferii
+### Ce văd șoferii
 
-Soferii vad in aplicatia lor doar loturile **aprobate** sau **finalizate** — loturile ciorna (inclusiv orice este inca in curs de ajustare) le sunt invizibile. O rulare finalizata este marcata **Final** in vizualizarea fluturasului de salariu al soferului, semnaland ca este blocata si nu se va mai schimba.
+Șoferii văd în aplicația lor doar loturile **aprobate** sau **finalizate** — loturile ciornă (inclusiv orice este încă în curs de ajustare) le sunt invizibile. O rulare finalizată este marcată **Final** în vizualizarea fluturașului de salariu al șoferului, semnalând că este blocată și nu se va mai schimba.
 
 ---
 
 ## Configurarea tarifelor
 
-Tarifele de plata (tarif per km, tarif de zi, procent km goi, tarif orar de asteptare) sunt stocate per sofer — cu o regula implicita la nivel de companie care se aplica oricarui sofer fara una proprie — in tabelul de baza al regulilor de salarizare.
+Tarifele de plată (tarif per km, tarif de zi, procent km goi, tarif orar de așteptare) sunt stocate per șofer — cu o regulă implicită la nivel de companie care se aplică oricărui șofer fără una proprie — în tabelul de bază al regulilor de salarizare.
 
 <Note>
-Momentan nu exista un ecran in aplicatie pentru a vizualiza sau edita aceste tarife. Tarifele trebuie setate direct in baza de date (sau initializate), pana cand o interfata Flota → Soferi pentru tarife este lansata. Daca un sofer nu are nicio regula si nu exista niciun implicit de companie, fiecare componenta pentru acel sofer se calculeaza ca zero.
+Momentan nu există un ecran în aplicație pentru a vizualiza sau edita aceste tarife. Tarifele trebuie setate direct în baza de date (sau inițializate), până când o interfață Flotă → Șoferi pentru tarife este lansată. Dacă un șofer nu are nicio regulă și nu există niciun implicit de companie, fiecare componentă pentru acel șofer se calculează ca zero.
 </Note>
 
 ---
 
-## Rulari istorice
+## Rulări istorice
 
-Fiecare rulare de salarizare generata este stocata si listata sub inregistrarea soferului. Rularile ciorna si aprobate pot fi in continuare revizuite sau re-exportate; o rulare **finalizata** este blocata permanent si nu poate fi redeschisa sau schimbata.
+Fiecare rulare de salarizare generată este stocată și listată sub înregistrarea șoferului. Rulările ciornă și aprobate pot fi în continuare revizuite sau re-exportate; o rulare **finalizată** este blocată permanent și nu poate fi redeschisă sau schimbată.
 
 ---
 
 ## Graficul totalurilor lunare
 
-Un grafic cu bare, sub selectorul de sofer, arata sumele totale lunare de salarizare pentru soferul selectat, in ultimele 12 luni. Util pentru a observa tipare sezoniere sau luni cu taxe de asteptare neobisnuit de mari.
+Un grafic cu bare, sub selectorul de șofer, arată sumele totale lunare de salarizare pentru șoferul selectat, în ultimele 12 luni. Util pentru a observa tipare sezoniere sau luni cu taxe de așteptare neobișnuit de mari.
 
 ---
 
 <Note>
-Cifrele de salarizare din Druma sunt consultative — Druma nu se integreaza cu procesatori de salarizare sau autoritati fiscale. Exportul CSV este destinat importului in sistemul tau de salarizare sau revizuirii manuale de catre un contabil.
+Cifrele de salarizare din Druma sunt consultative — Druma nu se integrează cu procesatori de salarizare sau autorități fiscale. Exportul CSV este destinat importului în sistemul tău de salarizare sau revizuirii manuale de către un contabil.
 </Note>
 
-<Card title="Timp de asteptare" icon="clock" href="/ro/planner/waiting-time">
-  Afla cum este inregistrat timpul de asteptare si cum alimenteaza calculele de salarizare.
+<Card title="Timp de așteptare" icon="clock" href="/ro/planner/waiting-time">
+  Află cum este înregistrat timpul de așteptare și cum alimentează calculele de salarizare.
 </Card>
 
-<Card title="Calatorie risipita" icon="triangle-exclamation" href="/ro/planner/wasted-journey">
-  Kilometrii morti din calatoriile risipite apar si ei in inregistrarile de salarizare ale soferilor.
+<Card title="Călătorie risipită" icon="triangle-exclamation" href="/ro/planner/wasted-journey">
+  Kilometrii morți din călătoriile risipite apar și ei în înregistrările de salarizare ale șoferilor.
 </Card>
