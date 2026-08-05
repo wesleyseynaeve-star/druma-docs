@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-05 10:14 UTC
+Generated: 2026-08-05 12:13 UTC
 
 ---
 
@@ -4930,7 +4930,7 @@ The order must be of type **Own Truck**. Subcontracted and capacity sale orders 
 
 
   ### Open the Planning Board
-    Go to **Planner → Planning Board** and find the active order's row.
+    Go to **Planning → Planning Board** and find the active order's row.
   
   ### Trigger Switch Truck
     Drag a different truck onto the order's row, or use **Switch truck** in the row's action menu. Druma detects that the order already has a truck assigned and opens the Switch Truck dialog instead of a plain assignment. Switch Truck is only available for Own Truck orders in an active status — it isn't exposed from the order detail panel.
@@ -4970,6 +4970,16 @@ If you leave the new truck as **Don't know yet**, only the relay stop is recorde
 ## Multiple relays
 
 You can switch the truck more than once on the same order. Each switch inserts another internal relay stop at the point you choose, so a load can pass through several relay points on a long-distance route — for example, a Bucharest → Duisburg load handed off at Budapest and again at Wien.
+
+---
+
+## Segment history
+
+Every truck switch automatically records a **segment** — which truck and driver covered which stretch of the route — the moment the relay stop is created. When you switch trucks a second or third time on the same order, each switch closes out the previous segment and opens a new one, so the full chain of who drove which leg is preserved in order.
+
+This history is stored in the background (no extra planner action needed) and exists for audit and reporting purposes — for example, reconstructing exactly which driver was responsible for a given stretch if a claim or a driving-hours question comes up later.
+
+Cancelling a switch (see Undo below), or a truck reassignment that fails partway through, removes the segment it created — the history only reflects switches that actually completed.
 
 ---
 
@@ -6579,7 +6589,7 @@ If your company has this enabled, Druma requires you to complete a safety checkl
 There's no separate checklist button to find — the checklist opens automatically the first time you try to move a status from **Assigned** to **En Route to Pickup**, if you haven't completed it yet.
 
 > **Note:** 
-The checklist is session-wide, not per order: once you've completed (or skipped) it, it won't ask again for the rest of that app session — even when you move on to a different order. It only resets when you reload the app or log in again.
+The checklist is per order, not session-wide: once you've completed (or skipped) it for the order you're departing on, it won't ask again for that same order. Opening or advancing a different order prompts the checklist again, even within the same app session.
 
 
 ---
@@ -6696,6 +6706,8 @@ Post-trip inspection is only triggered for single-order trips. It does not appea
   
   ### Add notes and photos for flagged items
     Any item marked **Advisory** or **Safety Critical** expands to show a notes field and, for items where photos are enabled, a photo upload control. The driver can upload up to 3 photos per defect — from the device camera or file picker. Accepted formats: JPEG, PNG, WebP, HEIC, HEIF. Maximum 10 MB per file.
+
+    If your admin has turned on **Require photos for safety-critical defects**, a Safety Critical item with no photo attached blocks submission: an inline error appears under the photo area and the **Submit Inspection** button stays disabled until at least one photo is added. Items whose photo capture was disabled by the admin are exempt from this rule.
   
   ### Submit or skip
     Tap **Submit Inspection** to record the results. If the driver cannot complete the inspection right away (e.g., they need to park and walk around the truck), they can tap **Skip Inspection** — this is recorded as a skipped inspection, not a pass. A **Complete Inspection** button then appears on the load detail for the delivered order, allowing the driver to return and fill it in later.
@@ -6763,6 +6775,7 @@ Go to **Settings → Post-trip DVIR** to configure DVIR for your company.
 |---|---|
 | **Enable post-trip DVIR** | Turns the inspection overlay on or off for all drivers |
 | **Auto-flag truck for workshop on safety-critical** | Automatically blocks the truck from dispatch when a safety-critical defect is submitted |
+| **Require photos for safety-critical defects** | Blocks submission until at least one photo is attached to every Safety Critical item. Items whose photo capture the admin has disabled are exempt |
 | **Checklist items** | Add, edit, or delete the items that appear in the inspection overlay. Each item has a name and a default severity (Advisory / Safety Critical) |
 
 > **Note:** 
@@ -11112,7 +11125,7 @@ If your own truck arrives more than 30 minutes late to a pickup or delivery stop
 All waiting events are stored permanently on the order. To review them:
 
 - **Order detail page → Activity tab** — shows every status change with timestamp
-- **Analytics → Site Waiting** — waiting visits, total hours, average duration, and billable amounts grouped by the order's pickup city and client, over a selectable timeframe (last 24 hours through last 12 months, or a custom range)
+- **Analytics → Site Waiting** — waiting visits, total hours, average duration, and billable amounts grouped by the **site where the truck actually waited** (a wait at the delivery stop shows under the delivery city, not the order's pickup city) and by client, over a selectable timeframe (last 24 hours through last 12 months, or a custom range)
 
 This data is useful when negotiating contract terms. If a client consistently causes 3+ hours of waiting per delivery, you have the numbers to back a rate renegotiation.
 
@@ -11211,10 +11224,10 @@ Druma sends two notifications per order:
 
 | Notification | Timing | Message |
 |---|---|---|
-| Evening reminder | 18:00 UTC the day before pickup | "Reminder: pickup tomorrow" / "Tomorrow: — in [pickup city] → [delivery city]" |
-| Morning reminder | 06:00 UTC on the pickup day | "Today's pickup" / "Pickup today at — in [pickup city]" |
+| Evening reminder | 18:00 UTC the day before pickup | "Reminder: pickup tomorrow" / "Tomorrow: 08:00–12:00 in [pickup city] → [delivery city]" |
+| Morning reminder | 06:00 UTC on the pickup day | "Today's pickup" / "Pickup today at 08:00–12:00 in [pickup city]" |
 
-Both times are **fixed UTC** — they are not adjusted for the driver's or the order's local timezone. The pickup-time placeholder in the message is not currently filled in (it renders as a literal em dash "—") — the notification only tells the driver the pickup city (and, for the evening reminder, the delivery city), not a specific time.
+Both times are **fixed UTC** — they are not adjusted for the driver's or the order's local timezone. The pickup-time placeholder shows the order's planned pickup window (e.g., "08:00–12:00", 24-hour clock), taken from the first loading stop. It renders as a literal em dash "—" only when that stop has no pickup time recorded.
 
 Both notifications are sent in the driver's configured language (the `language` field on their profile), falling back to English if not set. Druma supports all 10 platform languages, including Romanian, Bulgarian, Hungarian, Polish, Czech, and Slovak.
 
@@ -12532,14 +12545,14 @@ HERE also converts a dropped map pin (latitude/longitude) back into a readable a
 Truck-optimised routing (avoiding low bridges, weight restrictions, and other hazards heavy vehicles can't take), toll cost estimation across European toll systems, and live traffic-aware ETA are all calculated by the **PTV Developer Routing API**, not HERE.
 
 > **Note:** 
-PTV's vehicle profile is only populated with your truck's actual **weight and emission class** in the **Pricing Tool**. Order creation, the planning board, and AI truck-matching all call PTV with a generic 40-tonne default profile instead — they don't yet carry the assigned truck's weight/emission data into the routing call. Dimensions (height, width, length) and axle count are not sent to PTV in any flow today; toll and route calculations everywhere rely on distance and the vehicle class PTV is given, not your truck's exact physical specs.
+PTV's vehicle profile now uses your truck's actual **permitted weight, Euro emission class, height, and axle count** wherever a specific truck is known — this covers the **Pricing Tool** and the planning board's remaining-km figure for a switch-truck order's assigned truck. Bulk candidate comparisons — AI truck-matching and other board-wide estimates that compare many trucks at once — deliberately keep the generic 40-tonne default profile, to bound the number of routing calls made per request.
 
 
 > **Warning:** 
 Toll cost estimates remain approximations regardless of provider. Actual tolls depend on the specific route taken, which axle configuration your truck is registered under in each country's toll system, and whether rates have changed since the last data update. Use these figures as a guide, not a precise invoice input.
 
 
-Keeping vehicle technical details up to date in **Fleet → Vehicles → [vehicle] → Technical Details** improves accuracy in the **Pricing Tool** today, where your truck's weight and emission class are actually used. Order creation, board, and AI-matching routing calls don't yet read those fields — so a more detailed vehicle record won't currently change routing/ETA figures outside Pricing Tool.
+Keeping vehicle technical details up to date in **Fleet → Vehicles → [vehicle] → Technical Details** improves accuracy wherever a specific truck is known to the routing call — the **Pricing Tool** and the planning board's switch-truck remaining-km figure. Bulk comparisons (AI truck-matching, other board-wide estimates) use the generic 40-tonne profile by design, so a more detailed vehicle record won't change those figures.
 
 
   
@@ -12725,7 +12738,28 @@ For invoices issued in currencies other than RON, Druma automatically includes t
 
 ## WinMENTOR
 
-Unlike SAGA C, there's no fixed WinMENTOR package to download — WinMENTOR installs vary enough between companies that Druma gives you a **starting template** instead, which you then adjust to match your own import format.
+There are two ways to export to WinMENTOR: a one-click preset for the standard import, or a customisable template for companies whose WinMENTOR install expects a different layout.
+
+### One-click WinMENTOR export
+
+
+  ### Open Export Builder
+    In Druma, go to **Finance → Export Builder**.
+  
+  ### Select the period
+    For Romanian companies, a **WinMENTOR export (.txt)** button appears next to the SAGA export panel, at the top of the page, using the same month picker.
+  
+  ### Download the ZIP file
+    Click **WinMENTOR export (.txt)**. The file contains:
+    - `Iesiri.txt` — sales invoices
+    - `Incasari.txt` — payments, only present if the period has any
+    - `README.txt` — step-by-step instructions for importing into WinMENTOR
+  
+
+
+### Custom layouts (template clone)
+
+If your WinMENTOR install expects a different column layout than the built-in export above, clone a **starting template** instead and adjust it to match.
 
 
   ### Open Export Builder
@@ -12753,7 +12787,7 @@ Instead of manually exporting every period, you can have Druma email a SAGA expo
 Configure the **accountant email** (and optional CC), and a **day of month** to run on. A scheduled job checks daily and, on the configured day, exports the **previous full month** and emails the ZIP to the accountant with a summary of invoice/purchase/payment counts and any validation warnings.
 
 > **Note:** 
-Choose a day between **1 and 5**. The field currently accepts higher values in the UI, but values above 5 are not reliably saved (a known issue, being fixed) — stick to 1–5 for now.
+Choose a day between **1 and 28**.
 
 
 > **Note:** 
@@ -13483,6 +13517,14 @@ If a driver is offline or the message conversation window has closed, Druma does
 - If the window has closed, Druma sends exactly one approved template for that driver per cycle to reopen the conversation, and holds any remaining queued messages for the next cycle rather than sending (and paying for) several templates back to back.
 
 Every message is eventually delivered — nothing queued is ever silently discarded.
+
+---
+
+## Delivery retries
+
+If a WhatsApp send itself fails — a transient error from the WhatsApp API, not a closed conversation window — Druma retries it automatically: up to 3 attempts, with a 5-minute wait before the second attempt and a 15-minute wait before the third. Only after the third failed attempt is the message marked **Failed**.
+
+When a message is marked Failed, every planner-role staff member on the company gets an in-app notification, so a failed send is never silently discarded.
 
 ---
 
