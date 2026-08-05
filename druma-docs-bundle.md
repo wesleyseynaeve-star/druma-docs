@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-05 10:01 UTC
+Generated: 2026-08-05 10:12 UTC
 
 ---
 
@@ -1132,7 +1132,7 @@ Open the card for your provider under **Settings → Integrations** and enter th
 | **Webeye / Eurowag** | Username, Secret | Generated in `selfcare.eurowag.com` → Telematics → Fleet management → System connections. Your company must first be approved as a partner by Eurowag. **Partner-gated** — there is no public self-service signup. |
 
 > **Note:** 
-Scania, Volvo, Webfleet, Geotab, and Samsara are established integrations. Frotcom is in beta — it works, but its field mapping is still being confirmed. Continental VDO and Webeye/Eurowag require the vendor to approve your company as a partner before the connection returns live data; the credential form still lets you save and test, but syncing won't start until that partner access is active.
+Scania is validated against live fleet accounts. Volvo, Webfleet, Geotab, and Samsara use the vendors' standard public APIs but are still being validated with pilot fleets — you can set them up self-service, and we recommend involving Druma support during your first sync so we can confirm the field mapping against your account. Frotcom is in beta — the connection works, but its field mapping is still being confirmed. Continental VDO and Webeye/Eurowag additionally require the vendor to approve your company as a partner before the connection returns live data; the credential form still lets you save and test, but syncing won't start until that partner access is active.
 
 
 ### Reefer / Trailer Temperature
@@ -1151,13 +1151,13 @@ Scania, Volvo, Webfleet, Geotab, and Samsara are established integrations. Frotc
 
 | Provider | Credential fields | Where you get them |
 |---|---|---|
-| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — works immediately. |
+| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — credentials connect straight away. |
 | **Orbcomm** | Access Token, or Username + Password, Base URL (optional) | Issued via your ORBCOMM Platform API account. If you only have a username/password, Druma exchanges it for a token automatically. |
 | **Thermo King TracKing** | API Key, or Username + Password, Base URL (optional) | Request a TracKing API key from your Thermo King dealer or via the TracKing portal. No public self-service signup — this is a partner-gated integration. |
 | **Carrier Lynx Fleet** | Client ID + Client Secret (or a legacy API Key), Base URL (optional) | Obtained through Carrier Transicold or your Carrier dealer as part of the Lynx Fleet API toolkit. No public self-service signup. |
 
 > **Note:** 
-Mapon is fully public and works out of the box. Orbcomm needs an account token from ORBCOMM before it returns live data. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
+All four reefer connectors are currently in **beta** — they are being validated with pilot fleets, so involve Druma support during your first sync. Mapon's API is fully public, so credentials connect straight away. Orbcomm needs an account token from ORBCOMM before it returns live data. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
 
 
 ---
@@ -5609,7 +5609,7 @@ If your fleet runs temperature-controlled (reefer) trailers, Druma can pull live
 Reefer features only appear once your company's **Reefer** fleet type is switched on. An admin or company admin does this once, from **Settings → Fleet Types**. Everything below — the Temp column, the Temperature tab, alerts, and the compliance report — is hidden until that flag is on.
 
 > **Note:** 
-Reefer telematics providers vary widely in how open their APIs are. Mapon is fully public and works out of the box. Orbcomm needs an account token. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
+Reefer telematics providers vary widely in how open their APIs are, and all four connectors are currently in **beta** — they are being validated with pilot fleets, so involve Druma support during your first sync. Mapon's API is fully public, so credentials connect straight away. Orbcomm needs an account token. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
 
 
 ---
@@ -5643,7 +5643,7 @@ Once connected, Druma's sync job pulls new readings automatically. There's no ma
 
 | Provider | Fields you enter | Where to get them |
 |---|---|---|
-| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — works immediately. |
+| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — credentials connect straight away. |
 | **Orbcomm** | Access Token, or Username + Password, Base URL (optional) | Issued via your ORBCOMM Platform API account. If you only have a username/password, Druma exchanges it for a token automatically. |
 | **Thermo King TracKing** | API Key, or Username + Password, Base URL (optional) | Request a TracKing API key from your Thermo King dealer or via the TracKing portal. No public self-service signup — this is a partner-gated integration. |
 | **Carrier Lynx Fleet** | Client ID + Client Secret (or a legacy API Key), Base URL (optional) | Obtained through Carrier Transicold or your Carrier dealer as part of the Lynx Fleet API toolkit. No public self-service signup. |
