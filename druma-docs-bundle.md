@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-05 12:13 UTC
+Generated: 2026-08-05 22:25 UTC
 
 ---
 
@@ -1604,7 +1604,7 @@ To exercise any of these rights, email **privacy@druma.io** with your company na
 
 Every job starts with an order. In Druma, an order holds everything in one place — the client, pickup and delivery addresses, goods details, the driver, and the agreed price. Once saved, the order flows through the system automatically, from planning all the way to invoicing.
 
-Go to **Planner → Orders → New Order** to get started.
+Go to **Planning → Orders → New Order** to get started.
 
 ---
 
@@ -1614,7 +1614,7 @@ The modal is organised into tabs. Here's the fastest path through it — the sec
 
 
   ### Open New Order
-    Go to **Planner → Orders** and click **New Order**. The modal opens on the **Client** tab.
+    Go to **Planning → Orders** and click **New Order**. The modal opens on the **Client** tab.
   
   ### Client tab — pick or add the client
     Search by company name or VAT number. If nothing matches, click **Add client** to create one inline without leaving the modal.
@@ -2022,7 +2022,7 @@ Drivers sometimes forget to tap status updates — it happens. As a planner, you
 
 
   ### Open the order
-    Go to Planner → Orders and find the order. Click it to open the detail page.
+    Go to Planning → Orders and find the order. Click it to open the detail page.
   
   ### Click Override Status
     Find the **Override Status** button near the current status indicator at the top of the page.
@@ -2173,7 +2173,7 @@ A scheduled job checks every few minutes for tasks that are ready to run — dep
 
 ## Overview
 
-The Planning Board is your main dispatch tool. Go to **Planner → Planning Board** to open it.
+The Planning Board is your main dispatch tool. Go to **Planning → Planning Board** to open it.
 
 The board has three modes, switched with the tabs at the top:
 
@@ -2388,6 +2388,10 @@ Click an order marker to open a panel of the best candidate trucks for it, ranke
 The **Home** page (`/home`) is your live operational dashboard. It is the first thing you see after logging in. Unlike the Analytics section — which runs historical reports — the Home dashboard runs real-time queries against live data throughout the working day, giving you an always-current view of what is happening right now.
 
 Every operator at your company can configure their own layout independently. The dashboard remembers your arrangement per user.
+
+<Frame caption="The Home dashboard on a normal morning — live KPI tiles above, configurable widgets below.">
+  <img src="/images/planner/home-dashboard.png" alt="Druma Home dashboard showing live KPI tiles and configurable operational widgets" />
+</Frame>
 
 ---
 
@@ -4649,7 +4653,7 @@ Declaring a wasted journey **cannot be undone**. The order moves to the **Wasted
 
 
   ### Open the order
-    Go to **Planner → Orders** and click the order you need to mark as a wasted journey. The order detail panel opens on the right.
+    Go to **Planning → Orders** and click the order you need to mark as a wasted journey. The order detail panel opens on the right.
   
   ### Click Declare Wasted Journey
     In the order detail panel, find the **Declare Wasted Journey** button. This button only appears for orders in an active status (Departed through Offloading).
@@ -4795,7 +4799,7 @@ Repositioning orders are not invoiced to clients. They exist to give you full vi
 
 
   ### Open the new order form
-    Go to **Planner → Orders → New Order**.
+    Go to **Planning → Orders → New Order**.
   
   ### Select Repositioning as the order type
     In the **Order Type** field, choose **Repositioning**. This is the third option alongside Own Truck and Subcontracted.
@@ -5122,7 +5126,7 @@ Clicking **Skip** does not reset the threshold counter. The modal will appear ag
 
 ## Configuring thresholds and fee rates
 
-Go to **Settings → Pallet Configuration** to set the fee rules. This section is only accessible to **admin** and **company_admin** roles.
+Go to **Settings → Pallet Config** to set the fee rules. This section is only accessible to **admin** and **company_admin** roles.
 
 For each pallet type you can configure:
 
@@ -7604,7 +7608,7 @@ These lines appear automatically in the invoice editor — no manual entry neede
 - **Restore excluded lines** — click **Restore hidden charges** at the bottom of the line items section to bring back any excluded auto-lines.
 - **Add custom lines** — use the **+ Add Line** button to add palette exchange fees, customs clearance charges, handling fees, or any other extra. Pick from your company's **extras catalog** or enter a custom description and amount.
 
-To manage the extras catalog (company-wide line item templates): **Settings → Extras Catalog**.
+To manage the extras catalog (company-wide line item templates): **Settings → Extras catalog**.
 
 ## Invoice Numbering
 
@@ -8108,7 +8112,7 @@ The reminder email uses the template configured in your settings. If you want to
 
 ## Automatic Reminders
 
-If you do not want to manually send reminders every week, Druma can do it for you on a schedule — configured per stage under **Settings → Dunning Policies**. See the next section for exactly how the schedule works and what each stage does.
+If you do not want to manually send reminders every week, Druma can do it for you on a schedule — configured per stage under **Settings → Dunning**. See the next section for exactly how the schedule works and what each stage does.
 
 > **Warning:** 
 Automatic reminders go to the client's finance contact on record. Make sure each client has a finance contact set up with the correct email address before enabling any stage — otherwise reminders may go to the wrong person or not send at all. Check under Clients → Contacts.
@@ -8121,7 +8125,7 @@ Automatic reminders run on a **4-stage dunning schedule**, configured per compan
 - **Stage 1–3**: emails are sent to the client's finance contacts at configured intervals (for example, 7 days / 14 days / 30 days overdue). Each stage uses a separate email template so the tone can escalate appropriately from polite reminder to firm notice. From stage 2 onward, the reminder email can also include an informational EU late-payment interest line — see below.
 - **Stage 4**: no email is sent automatically. Instead, an escalation notification is sent to your planners and admins — this is a signal to take manual action (legal, factoring, a phone call). Stage 4 never emails the client without human sign-off. If **auto credit-stop** is enabled (see below), reaching stage 4 also puts the client on credit stop automatically.
 
-To configure the schedule, go to **Settings → Dunning Policies**:
+To configure the schedule, go to **Settings → Dunning**:
 
 - Set the **days offset** per stage (when each reminder fires relative to the due date)
 - Edit the **email subject and body** per stage, or use the default i18n templates
@@ -8599,6 +8603,10 @@ Click **Export CSV** to download the full aged creditors report as a CSV file. T
 ## What is KSeF?
 
 KSeF (Krajowy System e-Faktur) is Poland's national structured e-invoicing system, operated by the Polish tax authority (KAS — Krajowa Administracja Skarbowa). It is mandatory for Polish VAT-registered companies. Every invoice issued by a PL-VAT company must be sent to KSeF in the official FA(3) XML format — the KAS portal alone is not sufficient.
+
+<Frame caption="KSeF settings — connect the operator token, then watch submission status and UPO receipts per invoice.">
+  <img src="/images/invoicing/ksef-poland.png" alt="KSeF Polish e-invoicing settings and submission status in Druma" />
+</Frame>
 
 > **Note:** 
 The KSeF mandate is being rolled out in phases during 2026 and its go-live dates have been repeatedly delayed by the Polish government. Confirm your company's specific applicable go-live date with your accountant or the official [ksef.mf.gov.pl](https://ksef.mf.gov.pl) portal before relying on any date mentioned here.
@@ -9222,7 +9230,7 @@ Carriers who continue to use paper CMR are fully compliant. The choice to use eC
     Introduction to eCMR, who signs, and how Druma issues it in-house.
   
   
-    Native default vs TransFollow fallback — and how to switch.
+    What the native provider does, and what happens to legacy TransFollow configurations.
   
 </CardGroup>
 
@@ -9328,6 +9336,10 @@ The eFTI Regulation creates a legal framework for:
 - A standardised common data set for road transport information, mapped from the CMR consignment note fields
 
 Druma implements the **road transport / CMR subset** of the eFTI common data set, covering all mandatory consignment fields, party details, and eCMR status.
+
+<Frame caption="The roadside inspection card an officer sees after scanning the driver's QR code — consignment, parties and eCMR status, read-only.">
+  <img src="/images/ecmr/efti-roadside-inspection.png" alt="eFTI roadside inspection view showing consignment details, parties and eCMR status for an authority check" />
+</Frame>
 
 ### The Common Data Set (CDS)
 
@@ -9785,9 +9797,10 @@ Double manning extends operational hours by allowing one driver to rest while th
 
 Planners can log driving hours for each driver from tachograph printouts:
 
-1. Go to **Fleet → Drivers → [Driver name] → Driving Hours**
-2. Click **Add Entry** and enter the date and driving time for the day
-3. Druma calculates weekly and fortnightly totals automatically
+1. Go to **Dispatching → Compliance** and click a driver's row to open their detail panel.
+2. A row is only editable if that driver's data source is **manual** — the panel shows "Manually entered — you can update these values." Rows fed by a tachograph or telematics integration are read-only, marked "(telematics — read only)," and have no edit form.
+3. On a manual row, update **Remaining daily** (hours + minutes), **Program**, **Shift start**, **Daily ceiling** (9h or 10h), **10h extensions used this week**, and **Weekly driving hours used**.
+4. Click **Save**. Druma recalculates the remaining daily, weekly, and fortnightly totals from the values you entered.
 
 ### Integration (VDO, Webfleet, Frotcom, Webeye/Eurowag, rFMS)
 
@@ -10085,7 +10098,7 @@ Druma's automation eliminates the most common compliance failures: missing decla
 
 
   
-    Configure your ANAF API credentials, goods-value threshold, and e-Transport defaults in Druma.
+    Romania's mandatory e-invoicing system, and how Druma submits invoices to ANAF automatically.
   
   
     Vehicle document compliance, including the CEMT permit tracked for international transport.
@@ -10209,7 +10222,7 @@ This is designed for situations where you just need to clear a block quickly (e.
 
 ## Auto-unavailability for safety-critical defects
 
-If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled in **Settings → Post-Trip Checklist**, submitting a safety-critical defect automatically:
+If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled in **Settings → Post-trip DVIR**, submitting a safety-critical defect automatically:
 
 1. Creates a vehicle unavailability record for the truck
 2. Removes the truck from the assignable list on the planning board
@@ -10267,7 +10280,7 @@ The driver marks each checklist item with a tri-state toggle — **OK**, **Advis
 
 ## Admin configuration
 
-Go to **Settings → Post-Trip Checklist** to configure DVIR for your company.
+Go to **Settings → Post-trip DVIR** to configure DVIR for your company.
 
 | Setting | Description |
 |---|---|
@@ -10571,6 +10584,10 @@ Directive 2002/15/EC (the Working Time Directive for mobile workers, commonly ca
 Druma's WTD monitoring is based on tachograph data synced from your connected telematics provider. If tachograph sync is not enabled, WTD columns will show as unavailable. WTD data is a monitoring aid — always verify compliance using the raw tachograph files for any formal audit response.
 
 
+<Frame caption="Working-time monitoring — weekly total against the 60-hour maximum and the 48-hour rolling average, worst-first.">
+  <img src="/images/fleet-compliance/driver-working-time.png" alt="Driver working time monitoring showing weekly totals against the 60-hour and 48-hour WTD limits" />
+</Frame>
+
 ---
 
 ## WTD Limits at a Glance
@@ -10688,6 +10705,10 @@ If a driver uses a tachograph unit not connected to a Druma-integrated telematic
 
 
 EU Regulation 165/2014 requires transport operators to download tachograph data from vehicle units and driver cards at defined intervals, and to retain that data for at least 12 months. Druma stores these files in the Tacho Archive so you can prove compliance during a roadside inspection or authority audit without maintaining a separate filing system.
+
+<Frame caption="The Tacho Archive — every vehicle-unit and driver-card download, with the next due date per source.">
+  <img src="/images/fleet-compliance/tacho-archive.png" alt="Tacho Archive listing tachograph downloads with due dates per vehicle and driver card" />
+</Frame>
 
 ---
 
@@ -10809,6 +10830,10 @@ Druma retains all uploaded and automatically downloaded tachograph files for the
 
 The EU Mobility Package, in force since February 2022, introduced three binding obligations for cross-border road transport operators. Non-compliance is checked during roadside inspections and can result in fines in any EU member state where the truck is stopped.
 
+<Frame caption="Mobility Package tracking — vehicle and driver return clocks per unit, with the next due date and days remaining.">
+  <img src="/images/fleet-compliance/mobility-package.png" alt="Mobility Package compliance view showing vehicle 8-week and driver 4-week return clocks" />
+</Frame>
+
 ---
 
 ## The Three Rules
@@ -10827,7 +10852,7 @@ Vehicle return means the vehicle physically crosses back into the country where 
 
 ## Where to Find the Mobility Package Dashboard
 
-Go to **Analytics → Mobility Package**. The page is divided into three sections: Vehicle Returns, Driver Returns, and IMI Declarations.
+Go to **Planning → Mobility Package**. The page is divided into three sections: Vehicle Returns, Driver Returns, and IMI Declarations.
 
 ---
 
@@ -10890,7 +10915,7 @@ Declarations flagged **Expiring** are highlighted with an amber badge so you can
 
 
   ### Open IMI Declarations
-    Go to **Analytics → Mobility Package** and select the **IMI Declarations** tab.
+    Go to **Planning → Mobility Package** and select the **IMI Declarations** tab.
   
   ### Click New declaration
     Click the **New declaration** button.
@@ -11476,6 +11501,10 @@ Ask Druma is an AI assistant available to planners, drivers, and clients, with t
 This is different from [Messages](/en/planner/messages) — the everyday person-to-person and driver chat hub. Live Sessions is specifically the queue for AI conversations that Ask Druma's Docs tab couldn't resolve, and it's handled by Druma support staff, not your own company admins.
 
 
+<Frame caption="Tools → Live Sessions — escalated Ask Druma conversations waiting for a human to pick them up.">
+  <img src="/images/tools/chat-escalations.png" alt="Live Sessions queue showing escalated Ask Druma chat conversations" />
+</Frame>
+
 ---
 
 ## How escalation works
@@ -11777,7 +11806,7 @@ Export formats vary per page — most table exports produce an **XLSX** file (vi
 Scheduled email delivery in Druma is **not** a per-report feature — none of the Analytics or Finance pages above have their own schedule option. It's scoped to custom **Report Builder** dashboards: build one from **Analytics → Reports**, then use the **Scheduled Delivery** button on that dashboard.
 
 > **Note:** 
-This feature is off by default. A company_admin has to turn it on first, in **Settings → Automations**, before any schedule will send.
+This feature is off by default. A company_admin has to turn it on first, in **Settings → Automations & Features**, before any schedule will send.
 
 
 
@@ -12034,7 +12063,7 @@ Druma supports two ways to produce a payroll run: generate one manually whenever
 For companies that don't want to trigger a run by hand every month, Druma can build one batch automatically.
 
 > **Note:** 
-This is opt-in. Enable **Monthly payroll batch build** under **Settings → Automations** — it is off by default. A human always reviews and approves the batch; drivers never see it until it is approved.
+This is opt-in. Enable **Monthly payroll batch build** under **Settings → Automations & Features** — it is off by default. A human always reviews and approves the batch; drivers never see it until it is approved.
 
 
 **How it works:** once enabled, a daily job checks each company's **payroll cutoff day** (a configurable day of the month, defaulting to the **2nd**). When today matches that day, Druma computes gross pay — the same four components and math as the manual run above — for every active driver over the **previous calendar month**, and saves it as one held **draft** batch for the company. The batch build is idempotent: re-running it for a month that already has a batch is a no-op.
