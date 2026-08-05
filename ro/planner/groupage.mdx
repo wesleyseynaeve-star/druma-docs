@@ -1,6 +1,6 @@
 ---
 title: "Grupaj (LTL)"
-description: "Consolideaza mai multe transporturi mici de la clienti diferiti pe un singur camion, cu urmarire per segment, facturare per segment si un manifest pe mai multe opriri, printabil."
+description: "Consolideaza mai multe transporturi mici de la clienti diferiti pe un singur camion, cu urmarire per etapa, facturare per etapa si un manifest pe mai multe opriri, printabil."
 icon: "boxes-stacked"
 ---
 
@@ -8,14 +8,14 @@ icon: "boxes-stacked"
 
 Grupajul — numit si LTL (less-than-truckload) sau consolidare — este atunci cand incarci mai multe transporturi mici de la clienti diferiti pe acelasi camion, care merge in aceeasi directie. Fiecare client plateste doar pentru portiunea sa de spatiu din camion, iar tu umpli camionul cu incarcaturi combinate, ca sa faci cursa profitabila.
 
-In Druma, grupajul este propriul sau modul (`/groupage`) — o **cursa de grupaj** contine mai multe **segmente** de comenzi existente. Cursa urmareste camionul, soferul si ruta; fiecare segment isi pastreaza propriul client, marfa, adresa de preluare/livrare si pret.
+In Druma, grupajul este propriul sau modul (`/groupage`) — o **cursa de grupaj** contine mai multe **etape** de comenzi existente. Cursa urmareste camionul, soferul si ruta; fiecare etapa isi pastreaza propriul client, marfa, adresa de preluare/livrare si pret.
 
 <Note>
 Grupajul nu este un al patrulea "tip de comanda", alaturi de Camion Propriu / Subcontractat / Repozitionare — este un modul separat, care grupeaza comenzi existente.
 </Note>
 
-<Frame caption="Modulul Grupaj — segmentele unei curse, cu urmarirea clientului, marfii si ratei de umplere per segment.">
-  <img src="/images/planner/groupage.ro.png" alt="Cursa de grupaj cu mai multe segmente si indicator de rata de umplere" />
+<Frame caption="Modulul Grupaj — etapele unei curse, cu urmarirea clientului, marfii si ratei de umplere per etapa.">
+  <img src="/images/planner/groupage.ro.png" alt="Cursa de grupaj cu mai multe etape si indicator de rata de umplere" />
 </Frame>
 
 ---
@@ -72,8 +72,8 @@ Doi indicatori iti arata ca o comanda este deja parte dintr-o cursa, ca sa nu ca
   <Step title="Bifeaza comenzile eligibile">
     Modalul listeaza comenzile existente eligibile sa se alature acestei curse — numar comanda, client, ruta, LDM, greutate si tip de remorca — cu o casuta de bifat per rand. Nu exista un formular de introducere de date aici; selectezi comenzi care exista deja, nu tastezi detalii noi de transport.
   </Step>
-  <Step title="Foloseste Auto-completare, daca vrei ca Druma sa aleaga pentru tine">
-    Apasa **Auto-completare**, ca Druma sa selecteze cea mai potrivita combinatie de comenzi eligibile, pana la capacitatea ramasa de metri liniari de incarcare a remorcii.
+  <Step title="Foloseste Completare automata, daca vrei ca Druma sa aleaga pentru tine">
+    Apasa **Completare automata**, ca Druma sa selecteze cea mai potrivita combinatie de comenzi eligibile, pana la capacitatea ramasa de metri liniari de incarcare a remorcii.
   </Step>
   <Step title="Adauga la Grupaj">
     Apasa **Adauga la Grupaj**. Daca selectia ta ar depasi capacitatea LDM a remorcii, actiunea este blocata cu o eroare de validare — va trebui sa deselectezi ceva mai intai. O nepotrivire de tip de remorca (tipul de remorca al unei comenzi difera de cel al cursei) apare ca un avertisment, dar nu blocheaza actiunea.
@@ -86,13 +86,13 @@ Greutatea si volumul nu blocheaza adaugarea de comenzi — doar metrii de incarc
 
 ---
 
-## Sloturi Libere
+## Sloturi disponibile
 
-Adaugarea comenzilor una cate una functioneaza dinspre comanda. **Sloturi Libere** functioneaza dinspre camion: o a treia vizualizare pe pagina Grupaj, langa **Tabel** si **Harta**, care listeaza camioanele atribuite urmatoare cu capacitate libera — precum si cursele deschise fara camion — si sugereaza ce incarcaturi partiale negrupate se potrivesc fiecarui loc.
+Adaugarea comenzilor una cate una functioneaza dinspre comanda. **Sloturi disponibile** functioneaza dinspre camion: o a treia vizualizare pe pagina Grupaj, langa **Tabel** si **Harta**, care listeaza camioanele atribuite urmatoare cu capacitate libera — precum si cursele deschise fara camion — si sugereaza ce incarcaturi partiale negrupate se potrivesc fiecarui loc.
 
 <Steps>
-  <Step title="Comuta la vizualizarea Sloturi Libere">
-    Deschide modulul **Grupaj** si apasa **Sloturi Libere** in comutatorul de vizualizare.
+  <Step title="Comuta la vizualizarea Sloturi disponibile">
+    Deschide modulul **Grupaj** si apasa **Sloturi disponibile** in comutatorul de vizualizare.
   </Step>
   <Step title="Verifica capacitatea libera a unui loc">
     Fiecare loc — un camion, sau o cursa ciorna/confirmata care inca asteapta un camion — listeaza ce este deja angajat fata de capacitatea sa, impreuna pe LDM, greutate si paleti, plus spatiul care mai ramane la fiecare. O cursa fara camion atribuit este marcata **Fara camion inca**. Primul slot cu comenzi potrivite se extinde automat, iar campul de cautare potriveste camion, numar de inmatriculare, sofer, orase si referinte de curse.
@@ -101,12 +101,12 @@ Adaugarea comenzilor una cate una functioneaza dinspre comanda. **Sloturi Libere
     Sub fiecare loc, Druma listeaza cele mai potrivite comenzi: potrivite dupa o fereastra de data de preluare de ±2 zile, compatibilitate de ruta intr-o raza de deviere de aproximativ 100 km si potrivire pe LDM, greutate si paleti. Fiecare comanda candidata arata data de preluare si fereastra orara (de ex. `07/08 08:00–10:00`), astfel incat o fereastra stransa sa fie vizibila inainte sa te angajezi. Comenzile aflate deja intr-o *alta* cursa deschisa apar si ele aici, marcate **In GRP-XXXXX**. O nepotrivire de tip de remorca intre comanda si camion apare ca un avertisment — nu blocheaza potrivirea.
   </Step>
   <Step title="Adauga — sau muta — dintr-un click">
-    Apasa **Adauga la cursa** pe o comanda candidata care inca nu e grupata. Pentru o comanda marcata **In GRP-XXXXX**, butonul arata in schimb **Muta aici**: un click muta comanda din acea cursa si o pune in acest loc, iar impartirea costurilor ambelor curse se recalculeaza automat. Daca acel camion transporta o singura comanda, Druma creeaza o cursa de grupaj ciorna si adauga ambele comenzi la ea. Daca acel camion este deja pe o cursa, comanda este pur si simplu adaugata la ea, ca un nou segment.
+    Apasa **Adauga la cursa** pe o comanda candidata care inca nu e grupata. Pentru o comanda marcata **In GRP-XXXXX**, butonul arata in schimb **Muta aici**: un click muta comanda din acea cursa si o pune in acest loc, iar impartirea costurilor ambelor curse se recalculeaza automat. Daca acel camion transporta o singura comanda, Druma creeaza o cursa de grupaj ciorna si adauga ambele comenzi la ea. Daca acel camion este deja pe o cursa, comanda este pur si simplu adaugata la ea, ca o noua etapa.
   </Step>
 </Steps>
 
 <Note>
-Cursele care au plecat deja (in desfasurare) nu sunt oferite ca tinte pentru Sloturi Libere, iar comenzile lor nici nu pot fi scoase din ele — aici apar, de ambele parti ale unei mutari, doar camioanele si cursele inca dinaintea plecarii.
+Cursele care au plecat deja (in desfasurare) nu sunt oferite ca tinte pentru Sloturi disponibile, iar comenzile lor nici nu pot fi scoase din ele — aici apar, de ambele parti ale unei mutari, doar camioanele si cursele inca dinaintea plecarii.
 </Note>
 
 <Note>
@@ -117,40 +117,40 @@ Capacitatea provine din remorca atasata comenzilor camionului. Cand niciuna nu e
 
 ## Secventierea opririlor
 
-Opririle noi sunt pur si simplu adaugate la sfarsitul cursei, in ordinea in care le adaugi — Druma nu optimizeaza automat ruta pe masura ce avansezi. Exceptia este lista initiala de opriri a unei curse: cand o cursa se formeaza dintr-o data — prin **Auto-completare**, sau prin adaugarea primelor comenzi via **Sloturi Libere** — Druma o secventiaza mai intai cu preluarile, toate preluarile inaintea oricarei livrari, in loc sa lase opririle in ordinea bruta de adaugare.
+Opririle noi sunt pur si simplu adaugate la sfarsitul cursei, in ordinea in care le adaugi — Druma nu optimizeaza automat ruta pe masura ce avansezi. Exceptia este lista initiala de opriri a unei curse: cand o cursa se formeaza dintr-o data — prin **Completare automata**, sau prin adaugarea primelor comenzi via **Sloturi disponibile** — Druma o secventiaza mai intai cu preluarile, toate preluarile inaintea oricarei livrari, in loc sa lase opririle in ordinea bruta de adaugare.
 
 Pentru a optimiza ordinea, apasa **Auto-secventiere** (afisat doar cu 2+ opriri): reordoneaza lista de opriri pentru a minimiza distanta totala (preluari inainte de livrari) si raporteaza cata distanta a economisit, sau ca ordinea era deja optima. Poti si sa tragi si plasezi opririle manual, sau sa folosesti sagetile sus/jos de pe fiecare rand de oprire, oricand.
 
 ---
 
-## Urmarirea statusului per segment
+## Urmarirea statusului per etapa
 
-Fiecare segment de comanda are propriul flux de status, independent de celelalte transporturi de pe camion. Cand soferul isi actualizeaza statusul pentru o oprire specifica, doar comanda acelui segment se actualizeaza — prezentarea generala a cursei arata care opriri sunt finalizate si care sunt in asteptare.
+Fiecare etapa de comanda are propriul flux de status, independent de celelalte transporturi de pe camion. Cand soferul isi actualizeaza statusul pentru o oprire specifica, doar comanda acelei etape se actualizeaza — prezentarea generala a cursei arata care opriri sunt finalizate si care sunt in asteptare.
 
-De exemplu: daca camionul are patru livrari si soferul finalizeaza opririle 1 si 2, acele segmente arata **Livrat**, in timp ce opririle 3 si 4 inca arata **In drum spre livrare**. Fiecare client vede doar statusul propriului transport, in portalul sau.
+De exemplu: daca camionul are patru livrari si soferul finalizeaza opririle 1 si 2, acele etape arata **Livrat**, in timp ce opririle 3 si 4 inca arata **In drum spre livrare**. Fiecare client vede doar statusul propriului transport, in portalul sau.
 
 ---
 
 ## Urmarirea metrilor de incarcare (LDM), greutatii si volumului
 
-Fiecare segment poate avea valori de **CBM**, **Greutate (kg)** si **LDM** introduse direct pe cardul sau de oprire. LDM reprezinta lungimea liniara de spatiu pe podeaua remorcii pe care o ocupa transportul — masura standard pentru planificarea grupajului in toata Europa.
+Fiecare etapa poate avea valori de **CBM**, **Greutate (kg)** si **LDM** introduse direct pe cardul sau de oprire. LDM reprezinta lungimea liniara de spatiu pe podeaua remorcii pe care o ocupa transportul — masura standard pentru planificarea grupajului in toata Europa.
 
 Cursa de grupaj arata bare de progres a ratei de umplere pe orice dimensiuni pentru care camionul/remorca atribuita are o capacitate cunoscuta — **Greutate**, **Volum (CBM)** si **Metri de Incarcare**:
 
 | Culoare | Nivel de umplere |
 |---|---|
 | Verde | ≤70% din capacitate |
-| Chihlimbariu | 70–90% din capacitate |
+| Portocaliu | 70–90% din capacitate |
 | Rosu | >90% din capacitate (inclusiv peste 100%, afisat neplafonat) |
 
 ### Modul de impartire a costurilor
 
-**Modul de impartire a costurilor** controleaza cum sunt divizate costurile partajate intre segmente. Sunt disponibile patru moduri: **CBM**, **Greutate**, **LDM** si **Facturabil**. Apasa un buton de mod pe tabul Impartire Costuri al cursei, pentru a comuta — declanseaza o recalculare automata a cotei de cost, procentului de impartire, costului alocat si marjei fiecarui segment.
+**Modul de impartire a costurilor** controleaza cum sunt divizate costurile partajate intre etape. Sunt disponibile patru moduri: **CBM**, **Greutate**, **LDM** si **Facturabil**. Apasa un buton de mod pe tabul Impartire Costuri al cursei, pentru a comuta — declanseaza o recalculare automata a cotei de cost, procentului de impartire, costului alocat si marjei fiecarei etape.
 
 Alege modul care se potriveste acordului tau comercial cu clientii de pe acea cursa. CBM este cel mai comun pentru marfa generala, LDM pentru incarcaturi critice pe spatiul de podea, greutatea pentru marfuri dense, si Facturabil cand facturezi pe oricare din greutate/volum produce cifra mai mare.
 
 <Note>
-Orice mod de adaugare a unei comenzi la o cursa — adaugare manuala, Auto-completare sau Sloturi Libere — copiaza dimensiunile marfii comenzii (CBM, greutate, LDM) pe segmentul respectiv, astfel incat impartirea costurilor se calculeaza corect, indiferent de mod. Pentru segmentele adaugate inainte de introducerea acestui pas de copiere, foloseste **Recalculeaza impartirea** din tabul Impartire Costuri al cursei, pentru a completa ulterior cifrele corecte.
+Orice mod de adaugare a unei comenzi la o cursa — adaugare manuala, Completare automata sau Sloturi disponibile — copiaza dimensiunile marfii comenzii (CBM, greutate, LDM) pe etapa respectiva, astfel incat impartirea costurilor se calculeaza corect, indiferent de mod. Pentru etapele adaugate inainte de introducerea acestui pas de copiere, foloseste **Recalculeaza repartizarea** din tabul Impartire Costuri al cursei, pentru a completa ulterior cifrele corecte.
 </Note>
 
 ---
@@ -175,20 +175,20 @@ Manifestul include: secventa opririlor, adresa de preluare/livrare, client, numa
 
 ---
 
-## Facturare per segment
+## Facturare per etapa
 
-Cursa are propriul tab **Facturi**, listand fiecare segment cu statusul sau de factura (**Nefacturata → Generata → Trimisa → Platita**) si un buton **Genereaza factura** per segment:
+Cursa are propriul tab **Facturi**, listand fiecare etapa cu statusul sau de factura (**Nefacturata → Generata → Trimisa → Platita**) si un buton **Genereaza factura** per etapa:
 
 <Steps>
   <Step title="Deschide tabul Facturi al cursei">
     Deschide cursa de grupaj si mergi la tabul **Facturi**.
   </Step>
   <Step title="Genereaza factura">
-    Apasa **Genereaza factura** langa orice segment inca nefacturat. Factura este creata doar pentru clientul acelui segment, cu marfa, pretul si referinta sale specifice.
+    Apasa **Genereaza factura** langa orice etapa inca nefacturata. Factura este creata doar pentru clientul acelei etape, cu marfa, pretul si referinta sale specifice.
   </Step>
 </Steps>
 
-Clientii de pe acelasi camion nu vad niciodata facturile sau preturile celuilalt — fiecare primeste un document curat, separat, si poti sa le generezi una cate una, pe masura ce fiecare segment este gata de facturat.
+Clientii de pe acelasi camion nu vad niciodata facturile sau preturile celuilalt — fiecare primeste un document curat, separat, si poti sa le generezi una cate una, pe masura ce fiecare etapa este gata de facturat.
 
 ---
 
@@ -198,14 +198,14 @@ Clientii care urmaresc un transport de grupaj vad o data statica de **Livrare Es
 
 ---
 
-## Grupajul pe tabla de planificare si harta live
+## Grupajul pe panoul de planificare si harta live
 
 Cursele de grupaj raman vizibile si in afara modulului Grupaj:
 
-- **Un rand, nu un card** — o cursa de grupaj apare pe tabla de planificare ca un rand standard in lista **Plecari**, grupata sub aceeasi zi ca prima ei oprire de incarcare, exact ca o comanda. Arata o eticheta de stare, un marcaj **G** plus referinta, un marcaj compact de opriri de tipul **2P+3D** (2 preluari, 3 livrari pe toata cursa), si o cifra de umplere LDM colorata la fel ca in alta parte: verde sub 75%, chihlimbariu 75–94%, rosu 95% si peste.
+- **Un rand, nu un card** — o cursa de grupaj apare pe panoul de planificare ca un rand standard in lista **Plecari**, grupata sub aceeasi zi ca prima ei oprire de incarcare, exact ca o comanda. Arata o eticheta de stare, un marcaj **G** plus referinta, un marcaj compact de opriri de tipul **2P+3D** (2 preluari, 3 livrari pe toata cursa), si o cifra de umplere LDM colorata la fel ca in alta parte: verde sub 75%, portocaliu 75–94%, rosu 95% si peste.
 - **Atribuire camion ca la o comanda** — randul are aceeasi celula **Atribuie camion** ca orice comanda: trage un camion peste el ca sa il atribui, exact ca la atribuirea unui camion unei singure comenzi.
-- **Ruta aproximativa** — o a doua linie arata distanta si timpul total aproximativ (**≈**) al rutei, plus data si fereastra orara a primei incarcari. Cifra ≈ provine din optimizatorul de ruta odata ce cursa a fost secventiata; inainte de asta, Druma foloseste o estimare in linie dreapta peste segmente. Treci cu mouse-ul peste rand pentru lantul complet oras-preluare → … → oras-livrare; deschide panoul de detaliu al cursei pentru defalcarea completa a umplerii pe fiecare dimensiune (vezi tabelul de umplere de mai sus).
-- **Cautare si filtre** — cautarea unui numar de comanda sau a unui client pe tabla potriveste si comenzile aflate in interiorul unei curse de grupaj, nu doar referinta ei proprie, iar un filtru de pe tabla iti permite sa arati sau sa ascunzi cu totul cursele de grupaj.
+- **Ruta aproximativa** — o a doua linie arata distanta si timpul total aproximativ (**≈**) al rutei, plus data si fereastra orara a primei incarcari. Cifra ≈ provine din optimizatorul de ruta odata ce cursa a fost secventiata; inainte de asta, Druma foloseste o estimare in linie dreapta peste etape. Treci cu mouse-ul peste rand pentru lantul complet oras-preluare → … → oras-livrare; deschide panoul de detaliu al cursei pentru defalcarea completa a umplerii pe fiecare dimensiune (vezi tabelul de umplere de mai sus).
+- **Cautare si filtre** — cautarea unui numar de comanda sau a unui client pe panou potriveste si comenzile aflate in interiorul unei curse de grupaj, nu doar referinta ei proprie, iar un filtru de pe panou iti permite sa arati sau sa ascunzi cu totul cursele de grupaj.
 - **Harta Live** — un camion care executa o cursa de grupaj arata referinta cursei si progresul opririlor sale (de exemplu, "oprirea 3 din 6") in popup-ul sau de pe harta, cu un link **Deschide cursa** direct in panoul de detaliu al cursei.
 
 ---
@@ -227,7 +227,7 @@ Creezi cele patru comenzi normal, apoi creezi o cursa de grupaj, adaugi toate ce
   <Card title="Crearea comenzilor" icon="plus" href="/ro/planner/creating-orders">
     Afla cum functioneaza comenzile standard in Druma — vei crea mai intai comenzile individuale, apoi le vei grupa.
   </Card>
-  <Card title="Tabla de planificare" icon="calendar" href="/ro/planner/planning-board">
+  <Card title="Panoul de planificare" icon="calendar" href="/ro/planner/planning-board">
     Vezi toate comenzile tale in vizualizarea saptamanala de planificare, inainte sa le grupezi intr-o cursa.
   </Card>
 </CardGroup>

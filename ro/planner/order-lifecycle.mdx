@@ -1,6 +1,6 @@
 ---
 title: "Ciclul de viata al comenzii"
-description: "Cum se misca o comanda de la Ciorna la Livrata in Druma — fiecare status, cine il declanseaza si ce se intampla la fiecare pas."
+description: "Cum se misca o comanda de la Ciornă la Livrata in Druma — fiecare status, cine il declanseaza si ce se intampla la fiecare pas."
 icon: "circle-dot"
 ---
 
@@ -14,31 +14,31 @@ Daca firma ta foloseste sabloane de sarcini, o comanda poate avea si o **lista d
 
 Iata fluxul complet:
 
-**Ciorna → In asteptare → Atribuita → Plecat → Sosit la Preluare → Incarcare → In Tranzit → Sosit la Livrare → Descarcare → Livrat**
+**Ciornă → In asteptare → Atribuit → Plecat → La ridicare → Incarcare → In Tranzit → La livrare → Descarcare → Livrat**
 
-Mai exista si doua statusuri de exceptie — **Anulata** si **Cursa Irosita** — acoperite spre finalul paginii.
+Mai exista si doua statusuri de exceptie — **Anulat** si **Călătorie risipită** — acoperite spre finalul paginii.
 
 ---
 
 ## Culorile statusului, dintr-o privire
 
-Fiecare status se traduce intr-o singura culoare (nuanta), identica pe tabla de planificare si in aplicatia soferului — acelasi status nu este niciodata o culoare diferita pe cele doua ecrane.
+Fiecare status se traduce intr-o singura culoare (nuanta), identica pe panoul de planificare si in aplicatia soferului — acelasi status nu este niciodata o culoare diferita pe cele doua ecrane.
 
 | Status | Culoare |
 |---|---|
-| Ciorna | Gri (slate) |
+| Ciornă | Gri (slate) |
 | In asteptare | Gri (slate) |
 | Virtual | Violet |
-| Atribuita | Albastru |
+| Atribuit | Albastru |
 | Plecat | Indigo |
-| Sosit la Preluare | Chihlimbariu |
-| Incarcare | Chihlimbariu |
+| La ridicare | Portocaliu |
+| Incarcare | Portocaliu |
 | In Tranzit | Verde smarald |
-| Sosit la Livrare | Albastru cer |
+| La livrare | Albastru cer |
 | Descarcare | Albastru cer |
 | Livrat | Verde |
-| Anulata | Rosu |
-| Cursa Irosita | Rosu |
+| Anulat | Rosu |
+| Călătorie risipită | Rosu |
 
 <Note>
 **In Tranzit** este segmentul post-incarcare al camionului, spre adresa de livrare — este *singurul* status care apare verde inainte de Livrat. **Plecat** (segmentul spre adresa de preluare) apare in indigo, o culoare vizual distincta, ca sa poti spune dintr-o privire daca un camion se indreapta spre incarcare sau este deja incarcat si se indreapta spre livrare.
@@ -46,67 +46,67 @@ Fiecare status se traduce intr-o singura culoare (nuanta), identica pe tabla de 
 
 ---
 
-## Ciorna
+## Ciornă
 
 **Declansat de:** Planificatorul salveaza o comanda noua, fara sa o confirme.
 
 **Cine poate declansa:** Doar planificatorul.
 
-Comanda exista in sistem, dar nu este inca activa. Soferul nu o vede in aplicatia sa. Apare gri pe tabla de planificare.
+Comanda exista in sistem, dar nu este inca activa. Soferul nu o vede in aplicatia sa. Apare gri pe panoul de planificare.
 
-**Actiuni disponibile din Ciorna:**
+**Actiuni disponibile din Ciornă:**
 - Editeaza orice camp
 - Confirma comanda (trece in In asteptare)
 - Sterge comanda
 - Anuleaza comanda
 
-Foloseste Ciorna cand un client a facut o rezervare provizorie, dar nu a confirmat inca, sau cand construiesti comanda, dar inca astepti detalii.
+Foloseste Ciornă cand un client a facut o rezervare provizorie, dar nu a confirmat inca, sau cand construiesti comanda, dar inca astepti detalii.
 
 ---
 
 ## Virtual
 
-**Declansat de:** Planificatorul apasa **Virtual** pe Tabla de planificare, pentru a crea o comanda substituent.
+**Declansat de:** Planificatorul apasa **Virtual** pe Panoul de planificare, pentru a crea o comanda substituent.
 
 **Cine poate declansa:** Doar planificatorul.
 
-O comanda Virtual este un substituent usor — adresa de preluare si livrare, o data de preluare si, optional, un pret — care rezerva un camion inainte de o rezervare formala. Este separata de fluxul normal Ciorna → In asteptare → Atribuita: in schimb, odata ce rezervarea reala soseste, planificatorul o combina intr-o comanda propriu-zisa, prin modalul Comanda Noua, care preia automat atribuirea camionului. Comenzile Virtual apar **violet** pe tabla de planificare, ca sa fie usor de distins dintr-o privire, fata de o comanda reala, rezervata.
+O comanda Virtual este un substituent usor — adresa de preluare si livrare, o data de preluare si, optional, un pret — care rezerva un camion inainte de o rezervare formala. Este separata de fluxul normal Ciornă → In asteptare → Atribuit: in schimb, odata ce rezervarea reala soseste, planificatorul o combina intr-o comanda propriu-zisa, prin modalul Comanda Noua, care preia automat atribuirea camionului. Comenzile Virtual apar **violet** pe panoul de planificare, ca sa fie usor de distins dintr-o privire, fata de o comanda reala, rezervata.
 
 <Note>
-Optimizatorul de reatribuire a reincarcarilor trateaza comenzile Virtual la fel ca pe cele Ciorna sau In asteptare, cand inlantuie reincarcari viitoare — asa ca un substituent notat cu creionul poate fi in continuare schimbat cu o reincarcare reala, mai ieftina, daca una apare.
+Optimizatorul de reatribuire a reincarcarilor trateaza comenzile Virtual la fel ca pe cele Ciornă sau In asteptare, cand inlantuie reincarcari viitoare — asa ca un substituent notat cu creionul poate fi in continuare schimbat cu o reincarcare reala, mai ieftina, daca una apare.
 </Note>
 
 ---
 
 ## In asteptare (Pending)
 
-**Declansat de:** Planificatorul apasa **Confirma Comanda** (din pagina comenzii sau tabla de planificare).
+**Declansat de:** Planificatorul apasa **Confirma Comanda** (din pagina comenzii sau panoul de planificare).
 
 **Cine poate declansa:** Doar planificatorul.
 
-Comanda este acum live si gata sa fie potrivita cu un camion si un sofer — pur si simplu inca nu a fost atribuita. Apare in continuare **gri** pe tabla de planificare, aceeasi nuanta ca Ciorna, deoarece niciun camion nu este inca angajat pentru ea.
+Comanda este acum live si gata sa fie potrivita cu un camion si un sofer — pur si simplu inca nu a fost atribuita. Apare in continuare **gri** pe panoul de planificare, aceeasi nuanta ca Ciornă, deoarece niciun camion nu este inca angajat pentru ea.
 
 **Notificari trimise:**
 - Optional: confirmare automata prin email catre client (daca este activata in setarile contului tau)
 
 **Actiuni disponibile din In asteptare:**
 - Editeaza orice camp
-- Atribuie un camion si un sofer (trece in Atribuita)
+- Atribuie un camion si un sofer (trece in Atribuit)
 - Anuleaza comanda
 
 ---
 
-## Atribuita
+## Atribuit
 
-**Declansat de:** Planificatorul atribuie un camion si un sofer comenzii — din formularul Comanda Noua, Tabla de planificare, sau panoul de detaliu al comenzii.
+**Declansat de:** Planificatorul atribuie un camion si un sofer comenzii — din formularul Comanda Noua, Panoul de planificare, sau panoul de detaliu al comenzii.
 
 **Cine poate declansa:** Doar planificatorul.
 
 Comanda are acum un camion si un sofer atasati. Soferul atribuit primeste o notificare push in aplicatia sa, care arata detaliile comenzii — adresa de preluare, adresa de livrare, data si notele de sofer pe care le-ai adaugat.
 
-Comanda apare **albastra** pe tabla de planificare.
+Comanda apare **albastra** pe panoul de planificare.
 
-**Actiuni disponibile din Atribuita:**
+**Actiuni disponibile din Atribuit:**
 - Editeaza majoritatea campurilor (modificarile declanseaza o noua notificare catre sofer)
 - Reatribuie camionul sau soferul
 - Anuleaza comanda
@@ -120,7 +120,7 @@ Comanda apare **albastra** pe tabla de planificare.
 
 **Cine poate declansa:** Soferul (actiunea principala) sau Planificatorul (suprascriere manuala).
 
-Acest status inseamna ca soferul este in miscare spre punctul de preluare. Comanda devine **indigo** pe tabla de planificare.
+Acest status inseamna ca soferul este in miscare spre punctul de preluare. Comanda devine **indigo** pe panoul de planificare.
 
 <Note>
 Daca un sofer uita sa apese Plecat, poti seta statusul manual din pagina comenzii. Deschide comanda, apasa **Suprascrie Status** si selecteaza Plecat. Noteaza intotdeauna motivul in caseta de comentarii, ca sa ai o inregistrare.
@@ -128,9 +128,9 @@ Daca un sofer uita sa apese Plecat, poti seta statusul manual din pagina comenzi
 
 ---
 
-## Sosit la Preluare
+## La ridicare
 
-**Declansat de:** Soferul apasa **Sosit la Preluare** cand ajunge la adresa de incarcare.
+**Declansat de:** Soferul apasa **La ridicare** cand ajunge la adresa de incarcare.
 
 **Cine poate declansa:** Soferul sau Planificatorul.
 
@@ -157,7 +157,7 @@ Cronometrul timpului de asteptare se opreste cand incepe incarcarea. Orice timp 
 
 **Cine poate declansa:** Soferul sau Planificatorul.
 
-Camionul se indreapta acum spre adresa de livrare. Comanda devine **verde smarald** pe tabla de planificare — acesta este singurul status in desfasurare care apare verde, deci este usor sa reperezi un camion care este incarcat si in miscare. Comanda arata o ora estimata de sosire, pe baza calculului de ruta PTV.
+Camionul se indreapta acum spre adresa de livrare. Comanda devine **verde smarald** pe panoul de planificare — acesta este singurul status in desfasurare care apare verde, deci este usor sa reperezi un camion care este incarcat si in miscare. Comanda arata o ora estimata de sosire, pe baza calculului de ruta PTV.
 
 <Note>
 Acesta este un moment bun pentru a trimite o notificare proactiva de intarziere destinatarului, daca soferul intarzie fata de program. Foloseste butonul **Trimite ETA** de pe pagina comenzii, pentru a trimite un SMS sau email cu ora estimata de sosire curenta.
@@ -165,9 +165,9 @@ Acesta este un moment bun pentru a trimite o notificare proactiva de intarziere 
 
 ---
 
-## Sosit la Livrare
+## La livrare
 
-**Declansat de:** Soferul apasa **Sosit la Livrare** cand ajunge la adresa de livrare.
+**Declansat de:** Soferul apasa **La livrare** cand ajunge la adresa de livrare.
 
 **Cine poate declansa:** Soferul sau Planificatorul.
 
@@ -191,7 +191,7 @@ Timpul de asteptare la livrare se opreste. Soferul poate acum pregati documentel
 
 **Cine poate declansa:** Soferul (actiunea principala) sau Planificatorul.
 
-Transportul este complet. Comanda devine verde pe tabla de planificare si trece in tabul **Finalizate** din lista de comenzi.
+Transportul este complet. Comanda devine verde pe panoul de planificare si trece in tabul **Finalizate** din lista de comenzi.
 
 **Notificari trimise:**
 - Optional: email de confirmare a livrarii catre client, cu marcaj temporal si orice documente incarcate.
@@ -203,37 +203,37 @@ Transportul este complet. Comanda devine verde pe tabla de planificare si trece 
 
 ---
 
-## Anulata
+## Anulat
 
 **Declansat de:** Planificatorul anuleaza comanda.
 
 **Cine poate declansa:** Doar planificatorul.
 
 <Warning>
-Poti anula liber o comanda aflata in status **Ciorna** sau **In asteptare**, fara niciun pas special. Totusi, **nu poti** anula o comanda care este Plecata sau intr-un status ulterior, fara sa treci printr-un proces manual. Contacteaza administratorul contului tau daca trebuie sa anulezi o comanda activa — asta necesita inregistrarea motivului si poate afecta platile soferului.
+Poti anula liber o comanda aflata in status **Ciornă** sau **In asteptare**, fara niciun pas special. Totusi, **nu poti** anula o comanda care este Plecata sau intr-un status ulterior, fara sa treci printr-un proces manual. Contacteaza administratorul contului tau daca trebuie sa anulezi o comanda activa — asta necesita inregistrarea motivului si poate afecta platile soferului.
 </Warning>
 
 Comenzile anulate sunt pastrate in sistem, in scopuri de audit. Sunt vizibile in lista de comenzi, sub filtrul **Anulate**.
 
 ---
 
-## Cursa Irosita
+## Călătorie risipită
 
-**Declansat de:** Planificatorul declara o cursa irosita, din panoul de detaliu al comenzii.
+**Declansat de:** Planificatorul declara o călătorie risipită, din panoul de detaliu al comenzii.
 
 **Cine poate declansa:** Doar planificatorul.
 
-O cursa irosita se aplica comenzilor unde soferul a **plecat deja**, dar cursa trebuie intrerupta — din cauza anularii clientului, fortei majore, sau unei decizii a companiei. Este diferit de o anulare obisnuita, deoarece costuri reale au fost deja suportate (combustibil, timpul soferului, kilometri morti).
+O călătorie risipită se aplica comenzilor unde soferul a **plecat deja**, dar cursa trebuie intrerupta — din cauza anularii clientului, fortei majore, sau unei decizii a companiei. Este diferit de o anulare obisnuita, deoarece costuri reale au fost deja suportate (combustibil, timpul soferului, kilometri morti).
 
-Poti declara o cursa irosita din oricare din aceste statusuri: **Plecat, Sosit la Preluare, Incarcare, In Tranzit, Sosit la Livrare, Descarcare**.
+Poti declara o călătorie risipită din oricare din aceste statusuri: **Plecat, La ridicare, Incarcare, In Tranzit, La livrare, Descarcare**.
 
 Planificatorul trebuie sa furnizeze un cod de motiv, locatia curenta a soferului, kilometrii morti parcursi si, optional, sa marcheze comanda pentru facturare catre client.
 
 <Warning>
-Declararea unei curse irosite **nu poate fi anulata**. Comanda trece permanent in statusul Cursa Irosita, iar motivul, locatia soferului, kilometrii morti si (daca este activat) o suma de facturare catre client sunt inregistrate direct pe comanda, pentru facturare ulterioara — nicio inregistrare separata de salarizare sau taxa nu este generata automat.
+Declararea unei călătorii risipite **nu poate fi anulata**. Comanda trece permanent in statusul Călătorie risipită, iar motivul, locatia soferului, kilometrii morti si (daca este activat) o suma de facturare catre client sunt inregistrate direct pe comanda, pentru facturare ulterioara — nicio inregistrare separata de salarizare sau taxa nu este generata automat.
 </Warning>
 
-Vezi [Cursa irosita](/ro/planner/wasted-journey) pentru ghidul complet.
+Vezi [Călătorie risipită](/ro/planner/wasted-journey) pentru ghidul complet.
 
 ---
 
@@ -243,7 +243,7 @@ Soferii uita uneori sa apese actualizarile de status — se intampla. Ca planifi
 
 <Steps>
   <Step title="Deschide comanda">
-    Mergi la Planner → Comenzi si gaseste comanda. Apasa-o pentru a deschide pagina de detaliu.
+    Mergi la Planificare → Comenzi si gaseste comanda. Apasa-o pentru a deschide pagina de detaliu.
   </Step>
   <Step title="Apasa Suprascrie Status">
     Gaseste butonul **Suprascrie Status**, langa indicatorul de status curent, din partea de sus a paginii.
@@ -265,19 +265,19 @@ Soferii uita uneori sa apese actualizarile de status — se intampla. Ca planifi
 
 | Status | Automat | Manual (sofer) | Manual (planificator) |
 |---|---|---|---|
-| Ciorna | — | — | Da |
+| Ciornă | — | — | Da |
 | Virtual | — | — | Da |
 | In asteptare | — | — | Da |
-| Atribuita | — | — | Da |
+| Atribuit | — | — | Da |
 | Plecat | — | Da | Da (suprascriere) |
-| Sosit la Preluare | — | Da | Da (suprascriere) |
+| La ridicare | — | Da | Da (suprascriere) |
 | Incarcare | — | Da | Da (suprascriere) |
 | In Tranzit | — | Da | Da (suprascriere) |
-| Sosit la Livrare | — | Da | Da (suprascriere) |
+| La livrare | — | Da | Da (suprascriere) |
 | Descarcare | — | Da | Da (suprascriere) |
 | Livrat | — | Da | Da (suprascriere) |
-| Anulata | — | — | Da |
-| Cursa Irosita | — | — | Da (din statusuri active) |
+| Anulat | — | — | Da |
+| Călătorie risipită | — | — | Da (din statusuri active) |
 
 ---
 
