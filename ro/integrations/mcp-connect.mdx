@@ -1,45 +1,45 @@
 ---
-title: "Conecteaza-ti AI-ul (MCP)"
-description: "Conecteaza Claude Code, GitHub Copilot, Codex CLI, Gemini CLI sau Cursor la datele tale Druma folosind Model Context Protocol (MCP)."
+title: "Conectează-ți AI-ul (MCP)"
+description: "Conectează Claude Code, GitHub Copilot, Codex CLI, Gemini CLI sau Cursor la datele tale Druma folosind Model Context Protocol (MCP)."
 icon: "bot"
 ---
 
-Druma ruleaza un server **MCP (Model Context Protocol)** la distanta, ca sa poti conecta propriul tau client AI — Claude Code, Claude Desktop, GitHub Copilot (mod agent), OpenAI Codex CLI, Gemini CLI sau Cursor — direct la datele tale Druma. Intreaba-l despre comenzile, flota, soferii si facturile tale in limbaj natural si — cu un domeniu optional (opt-in) — lasa-l sa **propuna** atribuiri de camioane pe care le aprobi tu.
+Druma rulează un server **MCP (Model Context Protocol)** la distanță, ca să poți conecta propriul tău client AI — Claude Code, Claude Desktop, GitHub Copilot (mod agent), OpenAI Codex CLI, Gemini CLI sau Cursor — direct la datele tale Druma. Întreabă-l despre comenzile, flota, șoferii și facturile tale în limbaj natural și — cu un domeniu opțional (opt-in) — lasă-l să **propună** atribuiri de camioane pe care le aprobi tu.
 
 <Warning>
-Conectorul MCP este o functie controlata printr-un feature-flag si este dezactivat implicit. Contacteaza **support@druma.io** ca sa il activezi pentru contul tau.
+Conectorul MCP este o funcție controlată printr-un feature-flag și este dezactivat implicit. Contactează **support@druma.io** ca să îl activezi pentru contul tău.
 </Warning>
 
-## Cum ramane sigur
+## Cum rămâne sigur
 
-- **Tot ce poate vedea AI-ul respecta rolul si compania ta** — are acces doar la ce ai deja acces in Druma. Nu exista nicio modalitate ca el sa citeasca datele altei companii.
-- **Nu poate schimba nimic de la sine.** Singura actiune pe care o poate face este sa **propuna** o atribuire de camion; nimic nu se aplica pana nu confirmi explicit. Nu exista actiuni de stergere, in masa sau de baza de date in format liber.
-- **Token-ul tau este secret.** Druma stocheaza doar un hash unidirectional al lui — token-ul complet este afisat o singura data, la creare, si niciodata din nou.
-- Fiecare cerere este limitata ca rata si inregistrata pentru administratorii tai.
+- **Tot ce poate vedea AI-ul respectă rolul și compania ta** — are acces doar la ce ai deja acces în Druma. Nu există nicio modalitate ca el să citească datele altei companii.
+- **Nu poate schimba nimic de la sine.** Singura acțiune pe care o poate face este să **propună** o atribuire de camion; nimic nu se aplică până nu confirmi explicit. Nu există acțiuni de ștergere, în masă sau de bază de date în format liber.
+- **Token-ul tău este secret.** Druma stochează doar un hash unidirecțional al lui — token-ul complet este afișat o singură dată, la creare, și niciodată din nou.
+- Fiecare cerere este limitată ca rată și înregistrată pentru administratorii tăi.
 
-## 1. Creeaza un token de acces personal
+## 1. Creează un token de acces personal
 
-1. Mergi la **Setari → IA conectată (MCP)**.
-2. Sub **Creeaza token**, da-i un nume (de ex. "Claude Code — laptop").
+1. Mergi la **Setări → IA conectată (MCP)**.
+2. Sub **Creează token**, dă-i un nume (de ex. "Claude Code — laptop").
 3. Alege **domeniile**:
-   - `read` (mereu activ) — citeste comenzi, flota, soferi, facturi si KPI-uri.
-   - `write:planning` (optional) — permite in plus AI-ului sa **propuna** atribuiri de camioane. Chiar si cu asta activat, nimic nu se aplica fara confirmarea ta explicita.
-4. Alege o expirare (30 / 90 / 365 zile) si apasa **Creeaza token**.
-5. **Copiaza token-ul acum** — este afisat o singura data. Arata cam asa: `druma_pat_…`.
+   - `read` (mereu activ) — citește comenzi, flotă, șoferi, facturi și KPI-uri.
+   - `write:planning` (opțional) — permite în plus AI-ului să **propună** atribuiri de camioane. Chiar și cu asta activat, nimic nu se aplică fără confirmarea ta explicită.
+4. Alege o expirare (30 / 90 / 365 zile) și apasă **Creează token**.
+5. **Copiază token-ul acum** — este afișat o singură dată. Arată cam așa: `druma_pat_…`.
 
-Poti revoca orice token oricand din acelasi ecran; administratorii companiei pot revoca orice token din companie.
+Poți revoca orice token oricând din același ecran; administratorii companiei pot revoca orice token din companie.
 
-## 2. URL-ul serverului tau
+## 2. URL-ul serverului tău
 
 ```
 https://<your-project>.supabase.co/functions/v1/mcp-server
 ```
 
-URL-ul exact pentru contul tau este afisat pe pagina **Setari → IA conectată (MCP)**, cu un buton de copiere.
+URL-ul exact pentru contul tău este afișat pe pagina **Setări → IA conectată (MCP)**, cu un buton de copiere.
 
-## 3. Conecteaza-ti clientul
+## 3. Conectează-ți clientul
 
-Inlocuieste `<url>` cu URL-ul serverului tau si `<token>` cu token-ul tau de acces personal.
+Înlocuiește `<url>` cu URL-ul serverului tău și `<token>` cu token-ul tău de acces personal.
 
 <Tabs>
   <Tab title="Claude Code">
@@ -48,7 +48,7 @@ claude mcp add --transport http druma <url> --header "Authorization: Bearer <tok
 ```
   </Tab>
   <Tab title="VS Code (Copilot)">
-Creeaza `.vscode/mcp.json`. Folosirea unui `input` pastreaza token-ul in afara fisierului comis:
+Creează `.vscode/mcp.json`. Folosirea unui `input` păstrează token-ul în afara fișierului comis:
 ```json
 {
   "servers": {
@@ -65,7 +65,7 @@ Creeaza `.vscode/mcp.json`. Folosirea unui `input` pastreaza token-ul in afara f
 ```
   </Tab>
   <Tab title="Codex CLI">
-Adauga in `~/.codex/config.toml`:
+Adaugă în `~/.codex/config.toml`:
 ```toml
 [mcp_servers.druma]
 url = "<url>"
@@ -73,7 +73,7 @@ http_headers = { Authorization = "Bearer <token>" }
 ```
   </Tab>
   <Tab title="Gemini CLI">
-Adauga in `~/.gemini/settings.json`:
+Adaugă în `~/.gemini/settings.json`:
 ```json
 {
   "mcpServers": {
@@ -83,7 +83,7 @@ Adauga in `~/.gemini/settings.json`:
 ```
   </Tab>
   <Tab title="Cursor">
-Adauga in `~/.cursor/mcp.json`:
+Adaugă în `~/.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
@@ -94,21 +94,21 @@ Adauga in `~/.cursor/mcp.json`:
   </Tab>
 </Tabs>
 
-## 4. Ce poti intreba
+## 4. Ce poți întreba
 
-- "Ce comenzi sunt neatribuite pentru maine?"
-- "Arata-mi comenzile intarziate din aceasta saptamana si ce camioane sunt libere."
-- "Care e totalul meu de creante restante, pe client?"
-- Cu `write:planning`: "Propune camionul RO-123-ABC pentru comanda 4021." — AI-ul creeaza o propunere si iti arata un rezumat; ii spui apoi sa confirme, si abia atunci atribuirea este aplicata.
+- "Ce comenzi sunt neatribuite pentru mâine?"
+- "Arată-mi comenzile întârziate din această săptămână și ce camioane sunt libere."
+- "Care e totalul meu de creanțe restante, pe client?"
+- Cu `write:planning`: "Propune camionul RO-123-ABC pentru comanda 4021." — AI-ul creează o propunere și îți arată un rezumat; îi spui apoi să confirme, și abia atunci atribuirea este aplicată.
 
 ## Conectori de chat web (ChatGPT, claude.ai)
 
-Conectarea aplicatiilor de chat **web** de pe chatgpt.com sau claude.ai (in loc de un client desktop/CLI) necesita OAuth si **va veni mai tarziu**. Deocamdata, foloseste unul dintre clientii de mai sus.
+Conectarea aplicațiilor de chat **web** de pe chatgpt.com sau claude.ai (în loc de un client desktop/CLI) necesită OAuth și **va veni mai târziu**. Deocamdată, folosește unul dintre clienții de mai sus.
 
 ## Rotirea token-ului
 
-Prefera token-uri cu durata scurta de viata. Pentru a rota: creeaza un token nou, actualizeaza configuratia clientului tau, apoi revoca-l pe cel vechi. Revoca orice token al carui "Ultima utilizare" este gol — inseamna ca nimic nu s-a conectat vreodata cu el.
+Preferă token-uri cu durată scurtă de viață. Pentru a rota: creează un token nou, actualizează configurația clientului tău, apoi revocă-l pe cel vechi. Revocă orice token al cărui "Ultima utilizare" este gol — înseamnă că nimic nu s-a conectat vreodată cu el.
 
-## Vezi si
+## Vezi și
 
-Daca preferi sa discuti cu un AI **in interiorul** Druma (folosind propria ta cheie Anthropic, OpenAI sau Gemini) in loc sa conectezi un client extern, vezi [Druma Copilot](/ro/integrations/copilot).
+Dacă preferi să discuți cu un AI **în interiorul** Druma (folosind propria ta cheie Anthropic, OpenAI sau Gemini) în loc să conectezi un client extern, vezi [Druma Copilot](/ro/integrations/copilot).

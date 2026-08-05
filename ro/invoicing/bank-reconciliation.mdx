@@ -1,41 +1,41 @@
 ---
-title: "Reconciliere bancara"
-description: "Potriveste automat email-urile de plata bancara primite cu facturile deschise din Druma, redirectionand email-urile de notificare de la banca ta romaneasca."
+title: "Reconciliere bancară"
+description: "Potrivește automat email-urile de plată bancară primite cu facturile deschise din Druma, redirecționând email-urile de notificare de la banca ta românească."
 icon: "building-columns"
 ---
 
-## Prezentare generala
+## Prezentare generală
 
-Potrivirea manuala a transferurilor bancare cu facturile este obositoare si predispusa la erori. Functia de reconciliere bancara a Druma automatizeaza cea mai mare parte din asta, analizand email-urile de notificare de plata pe care bancile romanesti le trimit pentru fiecare transfer primit. Redirectionezi acele email-uri catre un inbox special Druma, iar Druma face potrivirea.
+Potrivirea manuală a transferurilor bancare cu facturile este obositoare și predispusă la erori. Funcția de reconciliere bancară a Druma automatizează cea mai mare parte din asta, analizând email-urile de notificare de plată pe care băncile românești le trimit pentru fiecare transfer primit. Redirecționezi acele email-uri către un inbox special Druma, iar Druma face potrivirea.
 
-Nu necesita acces API bancar. Nu necesita niciun software nou de instalat. Doar redirectionare de email.
+Nu necesită acces API bancar. Nu necesită niciun software nou de instalat. Doar redirecționare de email.
 
 <Frame caption="Finante → Reconciliere — formatele de extras CAMT.053, MT940 si CODA.">
   <img src="/images/invoicing/bank-reconciliation.ro.png" alt="Pagina de Reconciliere Bancara" />
 </Frame>
 
-## Cum functioneaza
+## Cum funcționează
 
-Cand banii ajung in contul tau bancar, banca ta iti trimite automat un email de notificare. Druma poate citi aceste email-uri si poate extrage detaliile cheie:
+Când banii ajung în contul tău bancar, banca ta îți trimite automat un email de notificare. Druma poate citi aceste email-uri și poate extrage detaliile cheie:
 
-- Suma primita
-- Numele platitorului
-- Numarul de referinta al platii
+- Suma primită
+- Numele plătitorului
+- Numărul de referință al plății
 - Data transferului
 
-Druma cauta apoi in facturile tale deschise o potrivire. Daca suma si numarul de referinta se aliniaza, factura este marcata automat ca platita. Daca nu exista o potrivire clara, plata intra intr-o coada de revizuire, pentru ca tu sa o gestionezi manual.
+Druma caută apoi în facturile tale deschise o potrivire. Dacă suma și numărul de referință se aliniază, factura este marcată automat ca plătită. Dacă nu există o potrivire clară, plata intră într-o coadă de revizuire, pentru ca tu să o gestionezi manual.
 
-## Banci acceptate
+## Bănci acceptate
 
-Druma are parsere de email dedicate pentru aceste banci romanesti:
+Druma are parsere de email dedicate pentru aceste bănci românești:
 
 - BRD – Groupe Société Générale
-- BCR – Banca Comerciala Romana
+- BCR – Banca Comercială Română
 - Raiffeisen Bank
 - UniCredit Bank
 - ING Bank
 
-Pentru bancile belgiene si alte banci SEPA, un parser SEPA comun gestioneaza formatul obisnuit de comunicare structurata, folosit de:
+Pentru băncile belgiene și alte bănci SEPA, un parser SEPA comun gestionează formatul obișnuit de comunicare structurată, folosit de:
 
 - KBC
 - BNP Paribas Fortis
@@ -44,69 +44,69 @@ Pentru bancile belgiene si alte banci SEPA, un parser SEPA comun gestioneaza for
 - Argenta
 - Crelan
 
-Daca banca ta nu este pe niciuna dintre liste, un **parser generic de rezerva** incearca totusi sa extraga suma, moneda si referinta din email-ul redirectionat — ratele de potrivire sunt mai mici decat cu un parser dedicat, dar multe email-uri de notificare in text simplu ale bancilor se analizeaza cu succes oricum.
+Dacă banca ta nu este pe niciuna dintre liste, un **parser generic de rezervă** încearcă totuși să extragă suma, moneda și referința din email-ul redirecționat — ratele de potrivire sunt mai mici decât cu un parser dedicat, dar multe email-uri de notificare în text simplu ale băncilor se analizează cu succes oricum.
 
 <Note>
-Daca analiza automata nu prinde o plata, aceasta ajunge in coada de revizuire, in loc sa se piarda — o poti lega totusi manual de factura corecta, sau poti inregistra plata direct, prin butonul Inregistreaza Plata de pe fiecare factura.
+Dacă analiza automată nu prinde o plată, aceasta ajunge în coada de revizuire, în loc să se piardă — o poți lega totuși manual de factura corectă, sau poți înregistra plata direct, prin butonul Înregistrează Plata de pe fiecare factură.
 </Note>
 
-## Configurarea redirectionarii de email
+## Configurarea redirecționării de email
 
 <Steps>
   <Step title="Gaseste adresa ta de inbox de reconciliere Druma">
-    Mergi la **Setari** → **Companie** si activeaza comutatorul **Activeaza inbox de plati bancare**. Adresa ta unica de email de reconciliere Druma este afisata aici — arata cam asa: `reconcile-companiata@inbox.druma.io`.
+    Mergi la **Setări** → **Companie** și activează comutatorul **Activează inbox de plăți bancare**. Adresa ta unică de email de reconciliere Druma este afișată aici — arată cam așa: `reconcile-companiata@inbox.druma.io`.
   </Step>
   <Step title="Copiaza adresa de email">
-    Copiaza adresa completa. Vei avea nevoie de ea in clientul tau de email sau in setarile de notificare ale bancii.
+    Copiază adresa completă. Vei avea nevoie de ea în clientul tău de email sau în setările de notificare ale băncii.
   </Step>
   <Step title="Configureaza redirectionarea in clientul tau de email">
-    In contul de email unde banca ta trimite notificarile de plata, creeaza o regula de redirectionare:
+    În contul de email unde banca ta trimite notificările de plată, creează o regulă de redirecționare:
 
-    - **Conditie:** email-uri de la adresa de notificare a bancii tale (de exemplu, `notificari@brd.ro`)
-    - **Actiune:** redirectioneaza catre adresa ta de reconciliere Druma
+    - **Condiție:** email-uri de la adresa de notificare a băncii tale (de exemplu, `notificari@brd.ro`)
+    - **Acțiune:** redirecționează către adresa ta de reconciliere Druma
 
-    Pasii exacti depind de furnizorul tau de email. In Gmail, mergi la Setari → Filtre si Adrese Blocate → Creeaza un filtru nou. In Outlook, foloseste Reguli → Regula Noua.
+    Pașii exacți depind de furnizorul tău de email. În Gmail, mergi la Setări → Filtre și Adrese Blocate → Creează un filtru nou. În Outlook, folosește Reguli → Regulă Nouă.
   </Step>
   <Step title="Testeaza cu o plata reala">
-    Asteapta urmatoarea plata primita. Odata ce banca ta trimite email-ul de notificare, acesta va fi redirectionat automat catre Druma. Verifica **Facturare** → **Reconciliere** in cateva minute, ca sa vezi daca a fost potrivita.
+    Așteaptă următoarea plată primită. Odată ce banca ta trimite email-ul de notificare, acesta va fi redirecționat automat către Druma. Verifică **Facturare** → **Reconciliere** în câteva minute, ca să vezi dacă a fost potrivită.
   </Step>
 </Steps>
 
 
-## Potrivire automata
+## Potrivire automată
 
-Cand soseste un email redirectionat, Druma incearca sa il potriveasca cu o factura deschisa, folosind:
+Când sosește un email redirecționat, Druma încearcă să îl potrivească cu o factură deschisă, folosind:
 
-1. **Suma** — suma primita se potriveste cu soldul restant al facturii
-2. **Numarul de referinta** — referinta de plata din email se potriveste cu un numar de factura din Druma (clientii sunt indemnati sa foloseasca numarul facturii ca referinta de plata)
+1. **Suma** — suma primită se potrivește cu soldul restant al facturii
+2. **Numărul de referință** — referința de plată din email se potrivește cu un număr de factură din Druma (clienții sunt îndemnați să folosească numărul facturii ca referință de plată)
 
-Daca ambele se potrivesc, factura este marcata automat ca **Platita**. Nu este necesara nicio actiune din partea ta.
+Dacă ambele se potrivesc, factura este marcată automat ca **Plătită**. Nu este necesară nicio acțiune din partea ta.
 
-## Plati nepotrivite
+## Plăți nepotrivite
 
-Unele plati nu se vor potrivi automat — de exemplu, daca clientul nu a inclus numarul facturii in referinta transferului, sau daca suma este usor diferita. Acestea apar in coada de revizuire:
+Unele plăți nu se vor potrivi automat — de exemplu, dacă clientul nu a inclus numărul facturii în referința transferului, sau dacă suma este ușor diferită. Acestea apar în coada de revizuire:
 
-Mergi la **Facturare** → **Reconciliere** → **Plati Nepotrivite**. Fiecare plata nepotrivita arata suma, numele platitorului si referinta. Poti:
+Mergi la **Facturare** → **Reconciliere** → **Plăți Nepotrivite**. Fiecare plată nepotrivită arată suma, numele plătitorului și referința. Poți:
 
-- **Leaga de factura** — cauti factura corecta si conectezi aceasta plata la ea
-- **Ignora** — marchezi plata ca nefiind legata de facturile Druma (de exemplu, o plata pentru ceva din afara Druma)
+- **Leagă de factură** — cauți factura corectă și conectezi această plată la ea
+- **Ignoră** — marchezi plata ca nefiind legată de facturile Druma (de exemplu, o plată pentru ceva din afara Druma)
 
-Odata ce legi o plata de o factura, statusul facturii se actualizeaza exact ca si cum ai fi inregistrat plata manual.
+Odată ce legi o plată de o factură, statusul facturii se actualizează exact ca și cum ai fi înregistrat plata manual.
 
 ## Deduplicare
 
-Daca redirectionezi din greseala acelasi email de notificare de doua ori, Druma nu va crea o plata duplicata. Detecteaza duplicatele folosind header-ul `Message-Id` al email-ului, nu numarul de referinta bancar — deci chiar daca campul de referinta este gol sau reutilizat, exact acelasi email nu este niciodata procesat de doua ori. Al doilea email este ignorat silentios.
+Dacă redirecționezi din greșeală același email de notificare de două ori, Druma nu va crea o plată duplicată. Detectează duplicatele folosind header-ul `Message-Id` al email-ului, nu numărul de referință bancar — deci chiar dacă câmpul de referință este gol sau reutilizat, exact același email nu este niciodată procesat de două ori. Al doilea email este ignorat silențios.
 
 <Note>
-Incurajeaza-ti clientii sa foloseasca numarul facturii ca referinta a transferului lor bancar. Acest singur obicei creste dramatic rata de potrivire automata — majoritatea platilor vor fi reconciliate fara nicio munca manuala din partea ta.
+Încurajează-ți clienții să folosească numărul facturii ca referință a transferului lor bancar. Acest singur obicei crește dramatic rata de potrivire automată — majoritatea plăților vor fi reconciliate fără nicio muncă manuală din partea ta.
 </Note>
 
 <Warning>
-Email-urile de notificare bancara contin uneori informatii financiare confidentiale. Asigura-te ca adresa ta de inbox de reconciliere Druma ramane privata — nu o distribui public. Este unica pentru compania ta si nu poate fi ghicita, dar trateaz-o ca pe o parola.
+Email-urile de notificare bancară conțin uneori informații financiare confidențiale. Asigură-te că adresa ta de inbox de reconciliere Druma rămâne privată — nu o distribui public. Este unică pentru compania ta și nu poate fi ghicită, dar tratează-o ca pe o parolă.
 </Warning>
 
 ---
 
 <Card title="Urmarirea platilor" icon="money-bill-wave" href="/ro/invoicing/payment-tracking">
-  Cum inregistrezi plati manual, gestionezi platile partiale si exporti datele de plata.
+  Cum înregistrezi plăți manual, gestionezi plățile parțiale și exporți datele de plată.
 </Card>

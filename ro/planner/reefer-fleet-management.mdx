@@ -1,17 +1,17 @@
 ---
 title: "Gestionarea flotei reefer"
-description: "Conecteaza remorcile cu temperatura controlata la furnizorul lor de telematica, monitorizeaza temperatura live, gestioneaza alertele si genereaza rapoarte de conformitate lant de frig."
+description: "Conectează remorcile cu temperatura controlată la furnizorul lor de telematică, monitorizează temperatura live, gestionează alertele și generează rapoarte de conformitate lanț de frig."
 icon: "snowflake"
 ---
 
-## Prezentare generala
+## Prezentare generală
 
-Daca flota ta opereaza remorci cu temperatura controlata (reefer), Druma poate prelua temperatura live, orele de motor si alarmele direct din unitatea de telematica a remorcii - fara jurnalizare manuala. Odata conectat furnizorul, vezi temperatura curenta in lista de remorci, esti notificat cand se abate de la setpoint sau declanseaza o alarma, si poti genera un PDF de lant de frig pentru orice cursa finalizata.
+Dacă flota ta operează remorci cu temperatură controlată (reefer), Druma poate prelua temperatura live, orele de motor și alarmele direct din unitatea de telematică a remorcii - fără jurnalizare manuală. Odată conectat furnizorul, vezi temperatura curentă în lista de remorci, ești notificat când se abate de la setpoint sau declanșează o alarmă, și poți genera un PDF de lanț de frig pentru orice cursă finalizată.
 
-Functiile reefer apar doar dupa activarea tipului de flota **Reefer** de catre un admin, din **Setari → Tipuri Flota**. Pana atunci, coloana Temp, fila Temperatura, alertele si raportul de conformitate raman ascunse.
+Funcțiile reefer apar doar după activarea tipului de flotă **Reefer** de către un admin, din **Setări → Tipuri Flotă**. Până atunci, coloana Temp, fila Temperatura, alertele și raportul de conformitate rămân ascunse.
 
 <Note>
-Furnizorii reefer variaza in cat de deschise sunt API-urile lor, iar toti cei patru conectori sunt momentan in **beta** — sunt in validare cu flote pilot, asa ca implica suportul Druma la prima sincronizare. API-ul Mapon este complet public, deci credentialele se conecteaza imediat. Orbcomm necesita un token de cont. Thermo King TracKing si Carrier Lynx Fleet sunt doar pentru parteneri - trebuie sa soliciti acces API la furnizor inainte ca Druma sa poata prelua date live, desi formularul de conectare e disponibil pentru toti patru.
+Furnizorii reefer variază în cât de deschise sunt API-urile lor, iar toți cei patru conectori sunt momentan în **beta** — sunt în validare cu flote pilot, așa că implică suportul Druma la prima sincronizare. API-ul Mapon este complet public, deci credențialele se conectează imediat. Orbcomm necesită un token de cont. Thermo King TracKing și Carrier Lynx Fleet sunt doar pentru parteneri - trebuie să soliciți acces API la furnizor înainte ca Druma să poată prelua date live, deși formularul de conectare e disponibil pentru toți patru.
 </Note>
 
 ---
@@ -20,98 +20,98 @@ Furnizorii reefer variaza in cat de deschise sunt API-urile lor, iar toti cei pa
 
 <Steps>
   <Step title="Activeaza tipul de flota Reefer">
-    Deschide **Setari → Tipuri Flota** si activeaza **Reefer**. Deblocheaza ecranele specifice reefer in modulul Flota.
+    Deschide **Setări → Tipuri Flotă** și activează **Reefer**. Deblochează ecranele specifice reefer în modulul Flotă.
   </Step>
   <Step title="Mergi la Integrari">
-    Deschide **Setari → Integrari**. Furnizorii reefer sunt listati alaturi de ceilalti conectori GPS/tahograf.
+    Deschide **Setări → Integrări**. Furnizorii reefer sunt listați alături de ceilalți conectori GPS/tahograf.
   </Step>
   <Step title="Alege-ti furnizorul">
-    Gaseste cardul furnizorului tau - **Mapon**, **Orbcomm**, **Thermo King TracKing** sau **Carrier Lynx Fleet** - si deschide-l. Linkul "De unde obtin acestea?" explica cum obtii credentialele (vezi tabelul de mai jos).
+    Găsește cardul furnizorului tău - **Mapon**, **Orbcomm**, **Thermo King TracKing** sau **Carrier Lynx Fleet** - și deschide-l. Linkul "De unde obțin acestea?" explică cum obții credențialele (vezi tabelul de mai jos).
   </Step>
   <Step title="Introdu credentialele">
-    Completeaza campurile (difera per furnizor) si apasa **Conecteaza**. Credentialele sunt stocate securizat; o valoare noua ulterior roteaza cheia.
+    Completează câmpurile (diferă per furnizor) și apasă **Conectează**. Credențialele sunt stocate securizat; o valoare nouă ulterior rotează cheia.
   </Step>
   <Step title="Testeaza conexiunea">
-    Apasa **Testeaza conexiunea** pentru a confirma accesul la API-ul furnizorului.
+    Apasă **Testează conexiunea** pentru a confirma accesul la API-ul furnizorului.
   </Step>
   <Step title="Seteaza ID-ul unitatii de telematica al fiecarei remorci">
-    Deschide **Flota → Remorci**, selecteaza o remorca reefer, mergi la fila **Conformitate** si completeaza **ID unitate telematica** - ID-ul pe care furnizorul il foloseste pentru remorca respectiva, ca sa lege citirile de remorca corecta.
+    Deschide **Flotă → Remorci**, selectează o remorcă reefer, mergi la fila **Conformitate** și completează **ID unitate telematică** - ID-ul pe care furnizorul îl folosește pentru remorca respectivă, ca să lege citirile de remorca corectă.
   </Step>
 </Steps>
 
-Odata conectat, sincronizarea Druma preia automat citirile noi - fara reincarcare manuala.
+Odată conectat, sincronizarea Druma preia automat citirile noi - fără reîncărcare manuală.
 
-### Campurile de credentiale per furnizor
+### Câmpurile de credențiale per furnizor
 
-| Furnizor | Campuri de introdus | De unde le obtii |
+| Furnizor | Câmpuri de introdus | De unde le obții |
 |---|---|---|
-| **Mapon** | Cheie API, URL de baza (optional) | Genereaza o cheie API in Mapon la Setari → API. API public - credentialele se conecteaza imediat. |
-| **Orbcomm** | Token de acces, sau Utilizator + Parola, URL de baza (optional) | Emis prin contul ORBCOMM Platform API. Cu utilizator/parola, Druma le schimba automat pentru un token. |
-| **Thermo King TracKing** | Cheie API, sau Utilizator + Parola, URL de baza (optional) | Solicita o cheie API de la dealerul Thermo King sau portalul TracKing. Integrare gestionata de partener, fara auto-service public. |
-| **Carrier Lynx Fleet** | Client ID + Client Secret (sau cheie API mostenita), URL de baza (optional) | Obtinut prin Carrier Transicold sau dealerul Carrier, ca parte a setului API Lynx Fleet. Fara auto-service public. |
+| **Mapon** | Cheie API, URL de bază (opțional) | Generează o cheie API în Mapon la Setări → API. API public - credențialele se conectează imediat. |
+| **Orbcomm** | Token de acces, sau Utilizator + Parolă, URL de bază (opțional) | Emis prin contul ORBCOMM Platform API. Cu utilizator/parolă, Druma le schimbă automat pentru un token. |
+| **Thermo King TracKing** | Cheie API, sau Utilizator + Parolă, URL de bază (opțional) | Solicită o cheie API de la dealerul Thermo King sau portalul TracKing. Integrare gestionată de partener, fără auto-service public. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (sau cheie API moștenită), URL de bază (opțional) | Obținut prin Carrier Transicold sau dealerul Carrier, ca parte a setului API Lynx Fleet. Fără auto-service public. |
 
 <Warning>
-Thermo King si Carrier necesita acordul furnizorului inainte ca legatura sa returneze date reale - Druma nu poate ocoli aceasta cerinta. Cat astepti aprobarea, formularul iti permite sa salvezi si testezi, dar sincronizarea porneste doar cand contul e activ.
+Thermo King și Carrier necesită acordul furnizorului înainte ca legătura să returneze date reale - Druma nu poate ocoli această cerință. Cât aștepți aprobarea, formularul îți permite să salvezi și testezi, dar sincronizarea pornește doar când contul e activ.
 </Warning>
 
 ---
 
 ## Unde apare temperatura remorcii
 
-- **Lista de remorci** - o coloana **Temp** arata ultima temperatura reala, o eticheta motor Pornit/Oprit si un semnal chihlimbariu de Alarma daca ultima citire poarta un cod de alarma.
-- **Detaliu remorca → Fila Temperatura** - apare odata ce flagul reefer e activ. Arata ultima citire (setpoint vs. real, status usa, ore de motor, coduri de alarma) plus istoric. Fara ID de unitate telematica, fila cere sa adaugi unul in fila Conformitate.
-- **Panou principal → Widget status Reefer** - adauga-l din galeria de widget-uri pentru o numaratoare rapida a alarmelor active, remorcilor peste prag si mentenantei apropiate, cu cea mai urgenta remorca numita in subsol.
+- **Lista de remorci** - o coloană **Temp** arată ultima temperatură reală, o etichetă motor Pornit/Oprit și un semnal chihlimbariu de Alarmă dacă ultima citire poartă un cod de alarmă.
+- **Detaliu remorcă → Fila Temperatura** - apare odată ce flagul reefer e activ. Arată ultima citire (setpoint vs. real, status ușă, ore de motor, coduri de alarmă) plus istoric. Fără ID de unitate telematică, fila cere să adaugi unul în fila Conformitate.
+- **Panou principal → Widget status Reefer** - adaugă-l din galeria de widget-uri pentru o numărătoare rapidă a alarmelor active, remorcilor peste prag și mentenanței apropiate, cu cea mai urgentă remorcă numită în subsol.
 
 ---
 
-## Alerte si confirmarea alarmelor
+## Alerte și confirmarea alarmelor
 
-Pragurile de alerta reefer se afla in **Setari → Tipuri Flota**, in panoul **Alerte de temperatura reefer** care apare odata ce flagul este activ:
+Pragurile de alertă reefer se află în **Setări → Tipuri Flotă**, în panoul **Alerte de temperatură reefer** care apare odată ce flagul este activ:
 
-| Camp | Ce controleaza |
+| Câmp | Ce controlează |
 |---|---|
-| **Activeaza alertele reefer** | Comutator general pentru alertele reefer. |
-| **Prag de deviatie temperatura (°C)** | Cat de mult se poate abate o citire de la setpoint inainte de a fi semnalata (implicit 3°C). |
-| **Prag usa deschisa (minute)** | Cat timp poate ramane o usa deschisa inainte de a fi semnalata (implicit 10 minute). |
-| **Alerta la coduri de alarma ale unitatii** | Daca un cod de alarma brut de la unitate declanseaza o notificare. |
-| **Interval de racire re-alertare (minute)** | Distanta minima intre alerte repetate pentru aceeasi remorca/conditie, astfel incat o problema in desfasurare sa nu inunde notificarile (implicit 60 de minute). |
+| **Activează alertele reefer** | Comutator general pentru alertele reefer. |
+| **Prag de deviație temperatură (°C)** | Cât de mult se poate abate o citire de la setpoint înainte de a fi semnalată (implicit 3°C). |
+| **Prag ușă deschisă (minute)** | Cât timp poate rămâne o ușă deschisă înainte de a fi semnalată (implicit 10 minute). |
+| **Alertă la coduri de alarmă ale unității** | Dacă un cod de alarmă brut de la unitate declanșează o notificare. |
+| **Interval de răcire re-alertare (minute)** | Distanța minimă între alerte repetate pentru aceeași remorcă/condiție, astfel încât o problemă în desfășurare să nu inunde notificările (implicit 60 de minute). |
 
-Cand un prag e depasit, Druma notifica **in aplicatie** (clopotel catre administratori) si trimite o **notificare push soferului** care opereaza remorca - fara email, deoarece soferul e cel care poate actiona la o usa deschisa sau o alarma.
+Când un prag e depășit, Druma notifică **în aplicație** (clopoțel către administratori) și trimite o **notificare push șoferului** care operează remorca - fără email, deoarece șoferul e cel care poate acționa la o ușă deschisă sau o alarmă.
 
-**Confirmarea unei alarme:** deschide fila **Temperatura** - codurile neconfirmate apar cu ora ultimei aparitii si un buton **Confirma**. Confirmarea creeaza o inregistrare permanenta; daca alarma se repeta, reapare ca neconfirmata.
-
----
-
-## Generarea unui PDF de conformitate temperatura
-
-Pentru orice comanda transportata pe o remorca reefer conectata, poti genera un document de o pagina care dovedeste lantul de frig:
-
-1. Deschide comanda in **Operatiuni** si mergi la fila **Documente**.
-2. Apasa **Raport de temperatura** (afisat doar cu unitate de telematica reefer configurata).
-3. Druma construieste si descarca un PDF cu traseul setpoint-vs-real, evenimentele de alarma si usa deschisa, timpul de rulare al motorului, clasa ATP si referinta comenzii - gata pentru un expeditor sau auditor.
+**Confirmarea unei alarme:** deschide fila **Temperatura** - codurile neconfirmate apar cu ora ultimei apariții și un buton **Confirmă**. Confirmarea creează o înregistrare permanentă; dacă alarma se repetă, reapare ca neconfirmată.
 
 ---
 
-## Certificate ATP si mentenanta reefer
+## Generarea unui PDF de conformitate temperatură
 
-Odata ce flagul e activ, remorcile reefer primesc doua elemente de conformitate suplimentare:
+Pentru orice comandă transportată pe o remorcă reefer conectată, poți genera un document de o pagină care dovedește lanțul de frig:
 
-- **Urmarirea certificatelor ATP** - in **Flota → Documente Flota**, lista de tipuri primeste optiunea **ATP**; alege remorca si clasa (A/B/C/D/F/IN/IR conform Acordului ATP). Certificatul apare in fila Conformitate cu eticheta de expirare si in widget-ul de alerte al panoului principal.
-- **Programarea mentenantei reefer** - in **Flota → Mentenanta**, fila **Unitati Reefer** urmareste intervalele de service in **ore de motor**, nu kilometri (schimb filtru, service complet, inspectie ATP).
+1. Deschide comanda în **Operațiuni** și mergi la fila **Documente**.
+2. Apasă **Raport de temperatură** (afișat doar cu unitate de telematică reefer configurată).
+3. Druma construiește și descarcă un PDF cu traseul setpoint-vs-real, evenimentele de alarmă și ușă deschisă, timpul de rulare al motorului, clasa ATP și referința comenzii - gata pentru un expeditor sau auditor.
+
+---
+
+## Certificate ATP și mentenanță reefer
+
+Odată ce flagul e activ, remorcile reefer primesc două elemente de conformitate suplimentare:
+
+- **Urmărirea certificatelor ATP** - în **Flotă → Documente Flotă**, lista de tipuri primește opțiunea **ATP**; alege remorca și clasa (A/B/C/D/F/IN/IR conform Acordului ATP). Certificatul apare în fila Conformitate cu eticheta de expirare și în widget-ul de alerte al panoului principal.
+- **Programarea mentenanței reefer** - în **Flotă → Mentenanță**, fila **Unități Reefer** urmărește intervalele de service în **ore de motor**, nu kilometri (schimb filtru, service complet, inspecție ATP).
 
 ---
 
 <CardGroup cols={2}>
   <Card title="Gestionarea remorcilor" icon="trailer" href="/ro/planner/trailer-management">
-    Gestioneaza remorcile, atribuirea, disponibilitatea si documentele - inclusiv fila Conformitate unde se seteaza ID-urile telematice reefer.
+    Gestionează remorcile, atribuirea, disponibilitatea și documentele - inclusiv fila Conformitate unde se setează ID-urile telematice reefer.
   </Card>
   <Card title="Documente flota" icon="folder-open" href="/ro/fleet-compliance/fleet-documents">
-    Urmareste certificatele ATP alaturi de asigurare, ITP si alte documente de vehicul cu alerte de expirare.
+    Urmărește certificatele ATP alături de asigurare, ITP și alte documente de vehicul cu alerte de expirare.
   </Card>
   <Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">
-    Adauga si gestioneaza vehicule, tipuri de vehicul, dimensiuni si documente.
+    Adaugă și gestionează vehicule, tipuri de vehicul, dimensiuni și documente.
   </Card>
   <Card title="Panou principal" icon="gauge" href="/ro/planner/home-dashboard">
-    Adauga widget-ul de status Reefer la panoul tau pentru o vedere rapida a alarmelor si mentenantei scadente.
+    Adaugă widget-ul de status Reefer la panoul tău pentru o vedere rapidă a alarmelor și mentenanței scadente.
   </Card>
 </CardGroup>

@@ -1,134 +1,134 @@
 ---
-title: "Canal WhatsApp pentru soferi"
-description: "Permite soferilor care prefera WhatsApp sa trimita si primeasca mesaje, statusuri si poze acolo, in loc de aplicatia de sofer Druma - raspunsurile ajung in acelasi chat sofer folosit deja de dispeceri."
+title: "Canal WhatsApp pentru șoferi"
+description: "Permite șoferilor care preferă WhatsApp să trimită și primească mesaje, statusuri și poze acolo, în loc de aplicația de șofer Druma - răspunsurile ajung în același chat șofer folosit deja de dispeceri."
 icon: "message-circle"
 ---
 
-## Prezentare generala
+## Prezentare generală
 
-Nu orice sofer vrea sa instaleze si sa tina deschisa o aplicatie dedicata. In Romania, Bulgaria, Ungaria, Polonia, Cehia si Slovacia, WhatsApp este adesea instrumentul pe care un sofer subcontractat sau OTR il foloseste deja zilnic - Druma il intalneste acolo, in loc sa ii impuna o a doua aplicatie.
+Nu orice șofer vrea să instaleze și să țină deschisă o aplicație dedicată. În România, Bulgaria, Ungaria, Polonia, Cehia și Slovacia, WhatsApp este adesea instrumentul pe care un șofer subcontractat sau OTR îl folosește deja zilnic - Druma îl întâlnește acolo, în loc să îi impună o a doua aplicație.
 
-WhatsApp nu e un sistem de mesagerie separat, atasat pe langa. Este un al doilea canal de livrare pentru acelasi chat sofer folosit deja de dispeceri: mesajele si pozele unui sofer ajung in exact acelasi fir de discutie, iar raspunsul dispecerului este trimis automat inapoi prin WhatsApp cand soferul e pe acel canal. Nimic nou de invatat pentru dispeceri - vezi [Dispecerizare → Fila Chat Sofer](/ro/planner/dispatching#driver-chat-tab).
+WhatsApp nu e un sistem de mesagerie separat, atașat pe lângă. Este un al doilea canal de livrare pentru același chat șofer folosit deja de dispeceri: mesajele și pozele unui șofer ajung în exact același fir de discuție, iar răspunsul dispecerului este trimis automat înapoi prin WhatsApp când șoferul e pe acel canal. Nimic nou de învățat pentru dispeceri - vezi [Dispecerizare → Fila Chat Șofer](/ro/planner/dispatching#fila-chat-șofer).
 
-Fiecare sofer e setat pe **fie** aplicatia Druma, **fie** WhatsApp, niciodata ambele - un sofer care deja citeste chatul gratuit nu ar trebui sa declanseze si un mesaj WhatsApp platit pentru aceeasi actualizare.
+Fiecare șofer e setat pe **fie** aplicația Druma, **fie** WhatsApp, niciodată ambele - un șofer care deja citește chatul gratuit nu ar trebui să declanșeze și un mesaj WhatsApp plătit pentru aceeași actualizare.
 
 ---
 
 ## Activarea WhatsApp pentru compania ta
 
-Mesageria WhatsApp se conecteaza o singura data per companie, din setarile Integrari - acelasi loc unde este configurata orice alta conexiune externa (HERE, carduri de combustibil, exporturi contabile).
+Mesageria WhatsApp se conectează o singură dată per companie, din setările Integrări - același loc unde este configurată orice altă conexiune externă (HERE, carduri de combustibil, exporturi contabile).
 
 <Steps>
   <Step title="Creeaza o Aplicatie Meta cu produsul WhatsApp">
-    Mergi la [business.facebook.com](https://business.facebook.com) si creeaza (sau deschide) o Aplicatie Meta, apoi adauga produsul **WhatsApp**. Adauga un numar sub **WhatsApp → API Setup** - cel pe care soferii il vor mesaja.
+    Mergi la [business.facebook.com](https://business.facebook.com) și creează (sau deschide) o Aplicație Meta, apoi adaugă produsul **WhatsApp**. Adaugă un număr sub **WhatsApp → API Setup** - cel pe care șoferii îl vor mesaja.
   </Step>
   <Step title="Aduna-ti credentialele">
-    Pe pagina **WhatsApp → API Setup**, noteaza **Phone Number ID** si **WABA ID**. Sub **App Settings → Basic**, noteaza **App Secret**. Genereaza un **Access Token** permanent (utilizator-sistem, fara expirare). Alege un sir propriu ca **Verify Token** - il refolosesti la pasul urmator.
+    Pe pagina **WhatsApp → API Setup**, notează **Phone Number ID** și **WABA ID**. Sub **App Settings → Basic**, notează **App Secret**. Generează un **Access Token** permanent (utilizator-sistem, fără expirare). Alege un șir propriu ca **Verify Token** - îl refolosești la pasul următor.
   </Step>
   <Step title="Deschide cardul WhatsApp in Druma">
-    Mergi la **Setari → Integrari** si deschide cardul **WhatsApp (canal sofer)**.
+    Mergi la **Setări → Integrări** și deschide cardul **WhatsApp (canal șofer)**.
   </Step>
   <Step title="Copiaza URL-ul webhook in Meta">
-    Apasa iconita de copiere langa **URL Webhook** si lipeste-l in **WhatsApp → Configuration → Webhook** al Aplicatiei Meta, cu acelasi Verify Token. Meta il foloseste ca sa confirme URL-ul si sa livreze mesajele primite.
+    Apasă iconița de copiere lângă **URL Webhook** și lipește-l în **WhatsApp → Configuration → Webhook** al Aplicației Meta, cu același Verify Token. Meta îl folosește ca să confirme URL-ul și să livreze mesajele primite.
   </Step>
   <Step title="Introdu credentialele si salveaza">
-    Completeaza Phone Number ID, WABA ID, Access Token, App Secret si Verify Token, lasa **Activ** pornit si apasa **Salveaza si conecteaza**.
+    Completează Phone Number ID, WABA ID, Access Token, App Secret și Verify Token, lasă **Activ** pornit și apasă **Salvează și conectează**.
   </Step>
 </Steps>
 
-### Ce inseamna campurile
+### Ce înseamnă câmpurile
 
-| Camp | Ce este |
+| Câmp | Ce este |
 |---|---|
-| **URL Webhook** | Adresa fixa de intrare Druma - lipeste-o in Meta, nu invers. Needitabil, generat automat. |
-| **Phone Number ID** | Numarul WhatsApp de la care trimite/primeste Druma. Pe pagina API Setup a Aplicatiei Meta. |
-| **WABA ID** | Contul de business Meta caruia ii apartine numarul. Tot pe API Setup. |
-| **Access Token** | Token permanent, folosit de Druma pentru API-ul WhatsApp. Stocat criptat; il reintroduci doar la rotire. |
-| **App Secret** | Verifica ca apelurile webhook vin cu adevarat de la Meta. Sub App Settings → Basic. |
-| **Verify Token** | Orice sir alegi. Trebuie sa se potriveasca exact cu configuratia webhook Meta. |
-| **Activ** | Porneste/opreste trimiterea fara a sterge credentialele salvate. |
+| **URL Webhook** | Adresa fixă de intrare Druma - lipește-o în Meta, nu invers. Needitabil, generat automat. |
+| **Phone Number ID** | Numărul WhatsApp de la care trimite/primește Druma. Pe pagina API Setup a Aplicației Meta. |
+| **WABA ID** | Contul de business Meta căruia îi aparține numărul. Tot pe API Setup. |
+| **Access Token** | Token permanent, folosit de Druma pentru API-ul WhatsApp. Stocat criptat; îl reintroduci doar la rotire. |
+| **App Secret** | Verifică că apelurile webhook vin cu adevărat de la Meta. Sub App Settings → Basic. |
+| **Verify Token** | Orice șir alegi. Trebuie să se potrivească exact cu configurația webhook Meta. |
+| **Activ** | Pornește/oprește trimiterea fără a șterge credențialele salvate. |
 
-Foloseste **Deconecteaza** pe acelasi card pentru a elimina complet credentialele daca nu mai folosesti WhatsApp.
+Folosește **Deconectează** pe același card pentru a elimina complet credențialele dacă nu mai folosești WhatsApp.
 
 <Note>
-Acest card apare doar daca planul tau include functia de mesagerie sofer. Daca nu il vezi sub Setari → Integrari, contacteaza suportul.
+Acest card apare doar dacă planul tău include funcția de mesagerie șofer. Dacă nu îl vezi sub Setări → Integrări, contactează suportul.
 </Note>
 
 ---
 
-## Trecerea unui sofer pe WhatsApp
+## Trecerea unui șofer pe WhatsApp
 
-Activarea conexiunii la nivel de companie nu muta automat niciun sofer - canalul fiecarui sofer se seteaza individual, cu consimtamantul lui inregistrat.
+Activarea conexiunii la nivel de companie nu mută automat niciun șofer - canalul fiecărui șofer se setează individual, cu consimțământul lui înregistrat.
 
-1. Mergi la **Flota → Soferi** si deschide inregistrarea soferului.
-2. Sub **Canal de Comunicare**, seteaza **Canal Mesaj** la **Doar WhatsApp** (implicit **Doar aplicatia Druma**).
-3. Introdu **Numarul WhatsApp** in format international (de ex. `+40712345678`).
-4. Bifeaza caseta de consimtamant - obligatorie prima data, conform GDPR. Odata inregistrat, fisa soferului arata data acordarii lui in loc de caseta.
-5. Apasa **Salveaza**.
+1. Mergi la **Flotă → Șoferi** și deschide înregistrarea șoferului.
+2. Sub **Canal de Comunicare**, setează **Canal Mesaj** la **Doar WhatsApp** (implicit **Doar aplicația Druma**).
+3. Introdu **Numărul WhatsApp** în format internațional (de ex. `+40712345678`).
+4. Bifează caseta de consimțământ - obligatorie prima dată, conform GDPR. Odată înregistrat, fișa șoferului arată data acordării lui în loc de casetă.
+5. Apasă **Salvează**.
 
-Din acest moment, orice mesaj sau notificare automata (comanda atribuita, sosire, cerere POD, intarziere) e trimisa la numarul lui WhatsApp in loc de aplicatie.
-
----
-
-## Sabloane de mesaj si de ce WhatsApp necesita aprobare
-
-API-ul Business WhatsApp permite text liber doar cat o conversatie e "deschisa" - 24 de ore de la ultimul raspuns al soferului. Dupa, doar un **sablon pre-aprobat** poate redeschide conversatia; Meta revizuieste formularea in avans, ca operatorii sa nu foloseasca WhatsApp pentru marketing nesolicitat. Regula a platformei WhatsApp, nu o limitare Druma.
-
-Druma imparte fiecare notificare in doua parti, ca sa observi rareori diferenta:
-
-- **Mesaj in aplicatie** - formularea libera trimisa cat fereastra e deschisa. Editabila liber per limba, fara aprobare.
-- **Sablon de redeschidere** - formularea trimisa cand fereastra e inchisa si Meta trebuie sa o aprobe, cu eticheta de status (**Ciorna**, **In asteptare**, **Aprobat**, **Respins**).
-
-Pentru a revizui sabloanele, deschide **Setari → Integrari → WhatsApp (canal sofer)** → **Sabloane de mesaj**:
-
-1. Alege un **Sablon** (comanda atribuita, cerere ETA/POD, sosire, intarziere) si o **Limba** - precompletat in toate cele 10 limbi.
-2. Editeaza **mesajul in aplicatie** si apasa **Salveaza mesaj in aplicatie** - efect imediat.
-3. Editeaza **sablonul de redeschidere** si apasa **Trimite spre aprobare**. Statusul devine **In asteptare**, apoi **Aprobat** sau **Respins** (cu motiv).
-
-Pana la aprobare, Druma tot livreaza fiecare mesaj - asteapta redeschiderea ferestrei in loc sa trimita un sablon neaprobat.
+Din acest moment, orice mesaj sau notificare automată (comandă atribuită, sosire, cerere POD, întârziere) e trimisă la numărul lui WhatsApp în loc de aplicație.
 
 ---
 
-## Cum ajung raspunsurile soferilor la dispeceri
+## Șabloane de mesaj și de ce WhatsApp necesită aprobare
 
-Un mesaj WhatsApp primit - text, poza, document sau locatie - ajunge in acelasi chat sofer, marcat **Trimis prin WhatsApp** pe bula mesajului. Vezi [Dispecerizare → Fila Chat Sofer](/ro/planner/dispatching#driver-chat-tab) pentru cum deschizi firul, raspunzi si atasezi fisiere - fluxul e identic indiferent de canal. Raspunsul dispecerului catre un sofer pe WhatsApp e trimis automat inapoi prin WhatsApp; fara pas suplimentar.
+API-ul Business WhatsApp permite text liber doar cât o conversație e "deschisă" - 24 de ore de la ultimul răspuns al șoferului. După, doar un **șablon pre-aprobat** poate redeschide conversația; Meta revizuiește formularea în avans, ca operatorii să nu folosească WhatsApp pentru marketing nesolicitat. Regulă a platformei WhatsApp, nu o limitare Druma.
+
+Druma împarte fiecare notificare în două părți, ca să observi rareori diferența:
+
+- **Mesaj în aplicație** - formularea liberă trimisă cât fereastra e deschisă. Editabilă liber per limbă, fără aprobare.
+- **Șablon de redeschidere** - formularea trimisă când fereastra e închisă și Meta trebuie să o aprobe, cu eticheta de status (**Ciornă**, **În așteptare**, **Aprobat**, **Respins**).
+
+Pentru a revizui șabloanele, deschide **Setări → Integrări → WhatsApp (canal șofer)** → **Șabloane de mesaj**:
+
+1. Alege un **Șablon** (comandă atribuită, cerere ETA/POD, sosire, întârziere) și o **Limbă** - precompletat în toate cele 10 limbi.
+2. Editează **mesajul în aplicație** și apasă **Salvează mesaj în aplicație** - efect imediat.
+3. Editează **șablonul de redeschidere** și apasă **Trimite spre aprobare**. Statusul devine **În așteptare**, apoi **Aprobat** sau **Respins** (cu motiv).
+
+Până la aprobare, Druma tot livrează fiecare mesaj - așteaptă redeschiderea ferestrei în loc să trimită un șablon neaprobat.
+
+---
+
+## Cum ajung răspunsurile șoferilor la dispeceri
+
+Un mesaj WhatsApp primit - text, poză, document sau locație - ajunge în același chat șofer, marcat **Trimis prin WhatsApp** pe bula mesajului. Vezi [Dispecerizare → Fila Chat Șofer](/ro/planner/dispatching#fila-chat-șofer) pentru cum deschizi firul, răspunzi și atașezi fișiere - fluxul e identic indiferent de canal. Răspunsul dispecerului către un șofer pe WhatsApp e trimis automat înapoi prin WhatsApp; fără pas suplimentar.
 
 <Note>
-Atasamentele foto/document trimise **de la** Druma **catre** un sofer pe WhatsApp nu sunt inca suportate - doar text si sabloane ies azi prin WhatsApp. Atasamentele pe care le trimite soferul (poze POD, poze de avarie) functioneaza normal.
+Atașamentele foto/document trimise **de la** Druma **către** un șofer pe WhatsApp nu sunt încă suportate - doar text și șabloane ies azi prin WhatsApp. Atașamentele pe care le trimite șoferul (poze POD, poze de avarie) funcționează normal.
 </Note>
 
 ---
 
-## Cand un sofer nu raspunde imediat
+## Când un șofer nu răspunde imediat
 
-Daca un sofer e offline sau fereastra s-a inchis, Druma nu pierde mesajul. Notificarile automate (precum o cerere POD) sunt puse in coada si trimise la fiecare cateva minute:
+Dacă un șofer e offline sau fereastra s-a închis, Druma nu pierde mesajul. Notificările automate (precum o cerere POD) sunt puse în coadă și trimise la fiecare câteva minute:
 
-- Daca fereastra e inca deschisa, fiecare mesaj din coada iese ca text liber - fara cost suplimentar.
-- Daca s-a inchis, Druma trimite exact un sablon aprobat per sofer pe ciclu, pentru a redeschide conversatia, si retine restul mesajelor pentru urmatorul ciclu, in loc sa plateasca mai multe sabloane la rand.
+- Dacă fereastra e încă deschisă, fiecare mesaj din coadă iese ca text liber - fără cost suplimentar.
+- Dacă s-a închis, Druma trimite exact un șablon aprobat per șofer pe ciclu, pentru a redeschide conversația, și reține restul mesajelor pentru următorul ciclu, în loc să plătească mai multe șabloane la rând.
 
-Fiecare mesaj e livrat in cele din urma - nimic din coada nu e abandonat silentios.
+Fiecare mesaj e livrat în cele din urmă - nimic din coadă nu e abandonat silențios.
 
 ---
 
-## Reincercari de livrare
+## Reîncercări de livrare
 
-Daca trimiterea WhatsApp in sine esueaza - o eroare tranzitorie a API-ului WhatsApp, nu o fereastra de conversatie inchisa - Druma reincearca automat: pana la 3 incercari, cu o asteptare de 5 minute inainte de a doua incercare si 15 minute inainte de a treia. Doar dupa a treia incercare esuata mesajul este marcat **Esuat**.
+Dacă trimiterea WhatsApp în sine eșuează - o eroare tranzitorie a API-ului WhatsApp, nu o fereastră de conversație închisă - Druma reîncearcă automat: până la 3 încercări, cu o așteptare de 5 minute înainte de a doua încercare și 15 minute înainte de a treia. Doar după a treia încercare eșuată mesajul este marcat **Eșuat**.
 
-Cand un mesaj este marcat Esuat, fiecare membru al personalului cu rol de planificator din companie primeste o notificare in aplicatie, astfel incat o trimitere esuata nu este niciodata abandonata silentios.
+Când un mesaj este marcat Eșuat, fiecare membru al personalului cu rol de planificator din companie primește o notificare în aplicație, astfel încât o trimitere eșuată nu este niciodată abandonată silențios.
 
 ---
 
 <CardGroup cols={2}>
   <Card title="Dispecerizare" icon="satellite-dish" href="/ro/planner/dispatching">
-    Fila Chat Sofer unde dispecerii citesc si raspund la mesajele soferilor, WhatsApp sau in aplicatie.
+    Fila Chat Șofer unde dispecerii citesc și răspund la mesajele șoferilor, WhatsApp sau în aplicație.
   </Card>
   <Card title="Gestionarea soferilor" icon="id-card" href="/ro/planner/driver-management">
-    Adauga soferi in Druma si gestioneaza-le profilul, inclusiv canalul de comunicare.
+    Adaugă șoferi în Druma și gestionează-le profilul, inclusiv canalul de comunicare.
   </Card>
   <Card title="Configurare integrari" icon="plug" href="/ro/admin/integration-setup">
-    Pagina completa Setari → Integrari si cum sunt configurate celelalte conexiuni.
+    Pagina completă Setări → Integrări și cum sunt configurate celelalte conexiuni.
   </Card>
   <Card title="Notificari atribuire sofer" icon="bell-concierge" href="/ro/automation/driver-assignment-notifications">
-    Notificarile automate de atribuire comanda care pot fi livrate prin WhatsApp.
+    Notificările automate de atribuire comandă care pot fi livrate prin WhatsApp.
   </Card>
 </CardGroup>

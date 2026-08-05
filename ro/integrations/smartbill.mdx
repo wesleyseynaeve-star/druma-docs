@@ -1,69 +1,69 @@
 ---
 title: "Integrarea SmartBill"
-description: "Trimite automat facturile Druma catre SmartBill cand le trimiti, ca o copie unidirectionala pentru fluxul tau de contabilitate."
+description: "Trimite automat facturile Druma către SmartBill când le trimiți, ca o copie unidirecțională pentru fluxul tău de contabilitate."
 icon: "receipt"
 ---
 
-SmartBill este o platforma romaneasca de facturare si contabilitate in cloud, larg folosita. Integrarea Druma-SmartBill trimite o copie a fiecarei facturi pe care o trimiti catre SmartBill, ca sa existe si in sistemul tau de contabilitate, fara reintroducere manuala.
+SmartBill este o platformă românească de facturare și contabilitate în cloud, larg folosită. Integrarea Druma-SmartBill trimite o copie a fiecărei facturi pe care o trimiți către SmartBill, ca să existe și în sistemul tău de contabilitate, fără reintroducere manuală.
 
 ## Ce face integrarea
 
-- Fiecare factura pe care o **trimiti** in Druma (nu la generare/creare) este trimisa catre SmartBill ca factura ciorna, unidirectional
-- Revizuiesti si emiti factura din SmartBill, ca parte din fluxul tau normal de contabilitate
-- Statusul de trimitere SmartBill al facturii (trimisa sau eroare) este inregistrat pe factura din Druma — nu exista o sincronizare continua, bidirectionala, de status inapoi de la SmartBill
-- Datele de client si produs trimise catre SmartBill sunt marcate explicit "nu salva" in payload-ul de trimitere — SmartBill **nu** creeaza sau actualizeaza propriile inregistrari de client/produs din aceasta integrare
+- Fiecare factură pe care o **trimiți** în Druma (nu la generare/creare) este trimisă către SmartBill ca factură ciornă, unidirecțional
+- Revizuiești și emiți factura din SmartBill, ca parte din fluxul tău normal de contabilitate
+- Statusul de trimitere SmartBill al facturii (trimisă sau eroare) este înregistrat pe factura din Druma — nu există o sincronizare continuă, bidirecțională, de status înapoi de la SmartBill
+- Datele de client și produs trimise către SmartBill sunt marcate explicit "nu salva" în payload-ul de trimitere — SmartBill **nu** creează sau actualizează propriile înregistrări de client/produs din această integrare
 
-## Configurarea integrarii
+## Configurarea integrării
 
 <Steps>
   <Step title="Obtine cheia API SmartBill">
-    Autentifica-te la [smartbill.ro](https://smartbill.ro). Mergi la **Cont → Setari → API**. Genereaza o cheie API noua (token). Copiaz-o — SmartBill o afiseaza o singura data.
+    Autentifică-te la [smartbill.ro](https://smartbill.ro). Mergi la **Cont → Setări → API**. Generează o cheie API nouă (token). Copiaz-o — SmartBill o afișează o singură dată.
   </Step>
   <Step title="Gaseste CIF-ul companiei tale si seria de facturare">
-    CIF-ul companiei tale (Codul de Identificare Fiscala) este afisat in contul tau SmartBill, sub setarile companiei. Vei avea nevoie si de **numele seriei de facturare** configurata in SmartBill, pe care vrei ca facturile trimise sa o foloseasca.
+    CIF-ul companiei tale (Codul de Identificare Fiscală) este afișat în contul tău SmartBill, sub setările companiei. Vei avea nevoie și de **numele seriei de facturare** configurată în SmartBill, pe care vrei ca facturile trimise să o folosească.
   </Step>
   <Step title="Introdu credentialele in Druma">
-    Mergi la **Setari → Integrari → SmartBill**. Introdu **email-ul** contului tau SmartBill, **token-ul API**, **CIF-ul** si **seria de facturare** — toate patru campurile sunt obligatorii.
+    Mergi la **Setări → Integrări → SmartBill**. Introdu **email-ul** contului tău SmartBill, **token-ul API**, **CIF-ul** și **seria de facturare** — toate patru câmpurile sunt obligatorii.
   </Step>
   <Step title="Testeaza conexiunea">
-    Apasa **Testeaza Conexiunea**. Druma se va autentifica cu SmartBill si va confirma ca integrarea este activa.
+    Apasă **Testează Conexiunea**. Druma se va autentifica cu SmartBill și va confirma că integrarea este activă.
   </Step>
 </Steps>
 
-## Cum functioneaza trimiterea facturii
+## Cum funcționează trimiterea facturii
 
-1. Generezi factura in Druma, cu numarul tau secvential de factura
-2. Cand **trimiti** factura (nu la generare), Druma o trimite catre SmartBill ca ciorna, alaturi de orice trimitere ANAF e-Factura sau Peppol care se declanseaza si ea la trimitere
-3. Deschizi SmartBill, revizuiesti ciorna si o emiti (Emite factura)
-4. SmartBill atribuie **propriul sau numar de factura** la emitere — numarul de factura din Druma nu este trimis catre SmartBill si nu este reflectat acolo; numarul SmartBill este stocat inapoi pe factura din Druma, ca referinta
+1. Generezi factura în Druma, cu numărul tău secvențial de factură
+2. Când **trimiți** factura (nu la generare), Druma o trimite către SmartBill ca ciornă, alături de orice trimitere ANAF e-Factura sau Peppol care se declanșează și ea la trimitere
+3. Deschizi SmartBill, revizuiești ciorna și o emiți (Emite factura)
+4. SmartBill atribuie **propriul său număr de factură** la emitere — numărul de factură din Druma nu este trimis către SmartBill și nu este reflectat acolo; numărul SmartBill este stocat înapoi pe factura din Druma, ca referință
 
 <Note>
-Statusul de trimitere SmartBill de pe factura din Druma este un simplu marcaj trimis/eroare, nu un urmaritor Ciorna/Emisa/Platita — Druma nu are vizibilitate asupra a ce se intampla cu factura in interiorul SmartBill dupa trimitere (nu exista un webhook care sa conecteze cele doua sisteme in acea directie).
+Statusul de trimitere SmartBill de pe factura din Druma este un simplu marcaj trimis/eroare, nu un urmăritor Ciornă/Emisă/Plătită — Druma nu are vizibilitate asupra a ce se întâmplă cu factura în interiorul SmartBill după trimitere (nu există un webhook care să conecteze cele două sisteme în acea direcție).
 </Note>
 
-## Limitari importante
+## Limitări importante
 
-**Gestionarea facturii ramane in SmartBill.** Integrarea este o trimitere unidirectionala, la momentul trimiterii. Editarea, anularea, emiterea sau creditarea unei facturi trebuie facute direct in SmartBill — nimic din toate acestea nu se sincronizeaza inapoi in Druma.
+**Gestionarea facturii rămâne în SmartBill.** Integrarea este o trimitere unidirecțională, la momentul trimiterii. Editarea, anularea, emiterea sau creditarea unei facturi trebuie făcute direct în SmartBill — nimic din toate acestea nu se sincronizează înapoi în Druma.
 
-**Nu ai nevoie de SmartBill pentru ANAF e-Factura.** Druma trimite facturi la ANAF direct, folosind propria sa integrare e-Factura, independent de SmartBill. Poti folosi ambele integrari simultan, fara conflict.
+**Nu ai nevoie de SmartBill pentru ANAF e-Factura.** Druma trimite facturi la ANAF direct, folosind propria sa integrare e-Factura, independent de SmartBill. Poți folosi ambele integrări simultan, fără conflict.
 
 <Note>
-Daca folosesti in prezent SmartBill pentru trimiterea e-Factura, decide daca vrei sa continui sa faci asta in SmartBill sau sa treci la integrarea directa ANAF a Druma. Rularea ambelor in paralel va cauza trimiteri duplicate. Contacteaza support@druma.io daca ai nevoie de indrumare pentru migrare.
+Dacă folosești în prezent SmartBill pentru trimiterea e-Factura, decide dacă vrei să continui să faci asta în SmartBill sau să treci la integrarea directă ANAF a Druma. Rularea ambelor în paralel va cauza trimiteri duplicate. Contactează support@druma.io dacă ai nevoie de îndrumare pentru migrare.
 </Note>
 
 ## Depanare
 
-**Trimiterea a esuat:**
-Factura din Druma inregistreaza un detaliu `smartbill_error` la esec. Cauze comune: token API expirat, fereastra de mentenanta SmartBill, sau o inregistrare de client fara CUI/numar de TVA, pe care SmartBill il cere pentru clientii companie.
+**Trimiterea a eșuat:**
+Factura din Druma înregistrează un detaliu `smartbill_error` la eșec. Cauze comune: token API expirat, fereastră de mentenanță SmartBill, sau o înregistrare de client fără CUI/număr de TVA, pe care SmartBill îl cere pentru clienții companie.
 
-**Conflict de numar de factura:**
-Daca o ciorna a fost creata manual in SmartBill cu aceeasi serie/numar inainte de trimitere, SmartBill va respinge duplicatul. Sterge ciorna manuala din SmartBill, apoi apasa **Reincearca SmartBill** din meniul de actiuni al randului facturii, in Druma.
+**Conflict de număr de factură:**
+Dacă o ciornă a fost creată manual în SmartBill cu aceeași serie/număr înainte de trimitere, SmartBill va respinge duplicatul. Șterge ciorna manuală din SmartBill, apoi apasă **Reîncearcă SmartBill** din meniul de acțiuni al rândului facturii, în Druma.
 
 <CardGroup cols={2}>
   <Card title="Generarea facturilor" icon="file-invoice" href="/ro/invoicing/generating-invoices">
-    Cum generezi facturi din comenzile finalizate in Druma, inainte ca ele sa fie trimise catre SmartBill.
+    Cum generezi facturi din comenzile finalizate în Druma, înainte ca ele să fie trimise către SmartBill.
   </Card>
   <Card title="ANAF e-Factura" icon="building-columns" href="/ro/invoicing/efactura-anaf">
-    Trimiterea facturilor direct la ANAF din Druma, fara sa treci prin SmartBill.
+    Trimiterea facturilor direct la ANAF din Druma, fără să treci prin SmartBill.
   </Card>
 </CardGroup>

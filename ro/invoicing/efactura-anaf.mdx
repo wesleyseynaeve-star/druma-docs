@@ -1,98 +1,98 @@
 ---
 title: "e-Factura / Trimitere ANAF"
-description: "Cum trimite Druma automat facturile catre sistemul obligatoriu e-Factura al Romaniei, prin API-ul ANAF SPV, cu urmarirea statusului si gestionarea reincercarilor."
+description: "Cum trimite Druma automat facturile către sistemul obligatoriu e-Factura al României, prin API-ul ANAF SPV, cu urmărirea statusului și gestionarea reîncercărilor."
 icon: "landmark"
 ---
 
 ## Ce este e-Factura
 
-e-Factura este sistemul obligatoriu de facturare electronica al Romaniei, operat de ANAF (Agentia Nationala de Administrare Fiscala). Din 2024, toate tranzactiile B2B intre companii romanesti inregistrate in scopuri de TVA trebuie raportate la ANAF in format UBL XML — formatul standard de factura electronica folosit in toata Europa.
+e-Factura este sistemul obligatoriu de facturare electronică al României, operat de ANAF (Agenția Națională de Administrare Fiscală). Din 2024, toate tranzacțiile B2B între companii românești înregistrate în scopuri de TVA trebuie raportate la ANAF în format UBL XML — formatul standard de factură electronică folosit în toată Europa.
 
-In termeni simpli: fiecare factura pe care o emiti catre o companie romaneasca cu CIF (numar de inregistrare TVA) trebuie trimisa la ANAF electronic, nu doar clientului tau. Druma gestioneaza asta automat, dupa ce generezi factura.
+În termeni simpli: fiecare factură pe care o emiți către o companie românească cu CIF (număr de înregistrare TVA) trebuie trimisă la ANAF electronic, nu doar clientului tău. Druma gestionează asta automat, după ce generezi factura.
 
-## Cum gestioneaza Druma e-Factura
+## Cum gestionează Druma e-Factura
 
-Nu trebuie sa te autentifici in portalul ANAF, sa generezi fisiere XML sau sa faci nimic manual. Iata ce se intampla automat:
+Nu trebuie să te autentifici în portalul ANAF, să generezi fișiere XML sau să faci nimic manual. Iată ce se întâmplă automat:
 
-1. Generezi o factura pentru un client roman care are un CIF pe inregistrarea sa de client
-2. Druma creeaza fisierul UBL XML in formatul corect ANAF
-3. Druma trimite XML-ul la ANAF prin API-ul SPV (Spatiul Privat Virtual)
-4. ANAF returneaza un ID de trimitere si, dupa procesare, un status de acceptare sau respingere
-5. Inregistrarea facturii din Druma se actualizeaza, ca sa arate statusul curent e-Factura
+1. Generezi o factură pentru un client român care are un CIF pe înregistrarea sa de client
+2. Druma creează fișierul UBL XML în formatul corect ANAF
+3. Druma trimite XML-ul la ANAF prin API-ul SPV (Spațiul Privat Virtual)
+4. ANAF returnează un ID de trimitere și, după procesare, un status de acceptare sau respingere
+5. Înregistrarea facturii din Druma se actualizează, ca să arate statusul curent e-Factura
 
-## Urmarirea statusului e-Factura
+## Urmărirea statusului e-Factura
 
-Fiecare factura care necesita trimitere e-Factura arata o eticheta de status pe pagina de detaliu a facturii, sub tabul **e-Factura**:
+Fiecare factură care necesită trimitere e-Factura arată o etichetă de status pe pagina de detaliu a facturii, sub tabul **e-Factura**:
 
-| Status | Ce inseamna |
+| Status | Ce înseamnă |
 |---|---|
-| **In asteptare** | Asteapta sa fie trimisa (de regula se trimite in cateva minute de la generarea facturii) |
-| **Trimisa** | XML trimis la ANAF — se asteapta ca ANAF sa il proceseze |
-| **Acceptata** | ANAF a validat si acceptat factura |
-| **Respinsa** | ANAF a gasit o eroare — vezi codul de eroare pentru detalii |
+| **În așteptare** | Așteaptă să fie trimisă (de regulă se trimite în câteva minute de la generarea facturii) |
+| **Trimisă** | XML trimis la ANAF — se așteaptă ca ANAF să îl proceseze |
+| **Acceptată** | ANAF a validat și acceptat factura |
+| **Respinsă** | ANAF a găsit o eroare — vezi codul de eroare pentru detalii |
 
 <Note>
-Sistemul ANAF are intreruperi regulate, mai ales in diminetile de zi lucratoare si la sfarsit de luna. Daca factura ta arata "Trimisa" de mai mult de cateva ore, de regula este vorba de ANAF pe partea lor, nu o eroare in Druma. Coada de reincercare gestioneaza asta automat.
+Sistemul ANAF are întreruperi regulate, mai ales în diminețile de zi lucrătoare și la sfârșit de lună. Dacă factura ta arată "Trimisă" de mai mult de câteva ore, de regulă este vorba de ANAF pe partea lor, nu o eroare în Druma. Coada de reîncercare gestionează asta automat.
 </Note>
 
-## Coada automata de reincercare
+## Coada automată de reîncercare
 
-Daca o trimitere esueaza pentru ca ANAF este indisponibil, Druma reincearca automat, folosind backoff exponential, pana la 3 incercari in total (incercarea originala plus 2 reincercari):
+Dacă o trimitere eșuează pentru că ANAF este indisponibil, Druma reîncearcă automat, folosind backoff exponențial, până la 3 încercări în total (încercarea originală plus 2 reîncercări):
 
-- Prima reincercare: aproximativ **1 ora** dupa esec (±25% variatie)
-- A doua reincercare: aproximativ **2 ore** dupa prima reincercare (±25% variatie)
+- Prima reîncercare: aproximativ **1 oră** după eșec (±25% variație)
+- A doua reîncercare: aproximativ **2 ore** după prima reîncercare (±25% variație)
 
-Daca si a treia incercare esueaza, factura trece direct in statusul **Esuata** — nu mai exista nicio reincercare automata dupa aceea. Poti apoi declansa o **Retrimitere Manuala** din tabul e-Factura, de pe pagina facturii.
+Dacă și a treia încercare eșuează, factura trece direct în statusul **Eșuată** — nu mai există nicio reîncercare automată după aceea. Poți apoi declanșa o **Retrimitere Manuală** din tabul e-Factura, de pe pagina facturii.
 
 ## Vizualizarea statusului e-Factura
 
 <Steps>
   <Step title="Deschide factura">
-    Mergi la **Facturare** → **Facturi** si apasa pe factura pe care vrei sa o verifici.
+    Mergi la **Facturare** → **Facturi** și apasă pe factura pe care vrei să o verifici.
   </Step>
   <Step title="Apasa tabul e-Factura">
-    Tabul e-Factura arata statusul curent, marcajul temporal al trimiterii, ID-ul de trimitere ANAF (odata primit) si orice mesaje de eroare.
+    Tabul e-Factura arată statusul curent, marcajul temporal al trimiterii, ID-ul de trimitere ANAF (odată primit) și orice mesaje de eroare.
   </Step>
   <Step title="Daca este respinsa, citeste codul de eroare">
-    Mesajele de respingere vin de la ANAF si includ un cod de eroare si o descriere. Cele mai comune sunt listate mai jos.
+    Mesajele de respingere vin de la ANAF și includ un cod de eroare și o descriere. Cele mai comune sunt listate mai jos.
   </Step>
 </Steps>
 
 ## Erori comune de respingere
 
-| Eroare | Cauza probabila | Cum o rezolvi |
+| Eroare | Cauza probabilă | Cum o rezolvi |
 |---|---|---|
-| **CIF invalid** | Numarul de TVA al clientului de pe inregistrarea sa este gresit sau nu este inregistrat in scopuri de TVA | Mergi la **Clienti** → editeaza clientul → corecteaza campul CIF |
-| **Format adresa invalid** | Campul de strada, oras sau judet nu se potriveste cu formatul asteptat de ANAF | Editeaza adresa clientului — asigura-te ca Judetul este setat si foloseste numele romanesc corect al judetului |
-| **Camp obligatoriu lipsa** | Un camp XML necesar este gol | Verifica factura pentru detalii lipsa ale clientului — de regula CIF, adresa sau numele clientului |
-| **Factura duplicata** | ANAF are deja o trimitere cu acelasi numar de factura | De regula inseamna ca o trimitere anterioara a reusit, dar Druma nu a primit confirmarea — verifica direct portalul ANAF SPV |
+| **CIF invalid** | Numărul de TVA al clientului de pe înregistrarea sa este greșit sau nu este înregistrat în scopuri de TVA | Mergi la **Clienți** → editează clientul → corectează câmpul CIF |
+| **Format adresă invalid** | Câmpul de stradă, oraș sau județ nu se potrivește cu formatul așteptat de ANAF | Editează adresa clientului — asigură-te că Județul este setat și folosește numele românesc corect al județului |
+| **Câmp obligatoriu lipsă** | Un câmp XML necesar este gol | Verifică factura pentru detalii lipsă ale clientului — de regulă CIF, adresa sau numele clientului |
+| **Factură duplicată** | ANAF are deja o trimitere cu același număr de factură | De regulă înseamnă că o trimitere anterioară a reușit, dar Druma nu a primit confirmarea — verifică direct portalul ANAF SPV |
 
-## Retrimitere manuala
+## Retrimitere manuală
 
-Daca reincercarile automate esueaza, sau ai corectat o eroare si vrei sa incerci din nou imediat:
+Dacă reîncercările automate eșuează, sau ai corectat o eroare și vrei să încerci din nou imediat:
 
-Mergi la **Facturare** → **Facturi** → deschide factura → tabul **e-Factura** → apasa **Retrimite la ANAF**. Druma trimite din nou XML-ul imediat.
+Mergi la **Facturare** → **Facturi** → deschide factura → tabul **e-Factura** → apasă **Retrimite la ANAF**. Druma trimite din nou XML-ul imediat.
 
-## Cand NU se aplica e-Factura
+## Când NU se aplică e-Factura
 
-Trimiterea e-Factura este necesara doar pentru clientii romani inregistrati in scopuri de TVA. NU se aplica pentru:
+Trimiterea e-Factura este necesară doar pentru clienții români înregistrați în scopuri de TVA. NU se aplică pentru:
 
-- Facturi transfrontaliere UE (clienti cu sediul in afara Romaniei)
-- Clienti fara CIF romanesc
-- Facturi catre persoane fizice (non-business)
+- Facturi transfrontaliere UE (clienți cu sediul în afara României)
+- Clienți fără CIF românesc
+- Facturi către persoane fizice (non-business)
 
-Pentru aceste facturi, Druma genereaza o factura PDF standard, fara pasul de trimitere UBL XML. Tabul e-Factura nu va aparea pe acele facturi.
+Pentru aceste facturi, Druma generează o factură PDF standard, fără pasul de trimitere UBL XML. Tabul e-Factura nu va apărea pe acele facturi.
 
 <Warning>
-Asigura-te ca fiecare client roman B2B din Druma are CIF-ul corect introdus pe inregistrarea sa de client. Fara un CIF, Druma nu poate trimite la e-Factura si poti fi neconform. Poti verifica si actualiza numerele CIF sub Clienti → selecteaza clientul → tabul Detalii.
+Asigură-te că fiecare client român B2B din Druma are CIF-ul corect introdus pe înregistrarea sa de client. Fără un CIF, Druma nu poate trimite la e-Factura și poți fi neconform. Poți verifica și actualiza numerele CIF sub Clienți → selectează clientul → tabul Detalii.
 </Warning>
 
 ---
 
 <Card title="Generarea facturilor" icon="file-invoice-dollar" href="/ro/invoicing/generating-invoices">
-  Cum creezi facturi in Druma, inclusiv multi-valuta si facturare in masa.
+  Cum creezi facturi în Druma, inclusiv multi-valută și facturare în masă.
 </Card>
 
 <Card title="Export SAGA si WinMENTOR" icon="database" href="/ro/invoicing/saga-export">
-  Cum exporti datele de factura catre software-ul de contabilitate romanesc pentru contabilul tau.
+  Cum exporți datele de factură către software-ul de contabilitate românesc pentru contabilul tău.
 </Card>

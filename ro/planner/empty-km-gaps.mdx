@@ -1,12 +1,12 @@
 ---
 title: "Goluri"
-description: "Gaseste comenzi neacoperite, oportunitati de repozitionare cu kilometri goi si camioane goale care ar putea reincarca in apropiere."
+description: "Găsește comenzi neacoperite, oportunități de repoziționare cu kilometri goi și camioane goale care ar putea reîncărca în apropiere."
 icon: "route"
 ---
 
 ## Ce este instrumentul Goluri?
 
-De fiecare data cand un camion finalizeaza o livrare fara o urmatoare comanda planificata, sau o comanda ramane fara camion atribuit pe masura ce se apropie data de preluare, fie consumi kilometri goi, fie risti o preluare rateaza. Pagina **Goluri** (`/operations/gaps`, in bara de taburi Planificare, ca **Goluri**) scoate la iveala ambele probleme intr-un singur loc, pe trei sub-taburi.
+De fiecare dată când un camion finalizează o livrare fără o următoare comandă planificată, sau o comandă rămâne fără camion atribuit pe măsură ce se apropie data de preluare, fie consumi kilometri goi, fie riști să ratezi o preluare. Pagina **Goluri** (`/operations/gaps`, în bara de taburi Planificare, ca **Goluri**) scoate la iveală ambele probleme într-un singur loc, pe trei sub-taburi.
 
 <Frame caption="Instrumentul Goluri — goluri de acoperire cu o actiune recomandata, km goi, preluare, livrare si client.">
   <img src="/images/planner/empty-km-gaps.ro.png" alt="Pagina Goluri listand golurile de acoperire si oportunitatile de reincarcare cu km goi" />
@@ -16,48 +16,48 @@ De fiecare data cand un camion finalizeaza o livrare fara o urmatoare comanda pl
 
 ## Acoperire
 
-Sub-tabul implicit listeaza **comenzile neacoperite** — comenzi viitoare care inca nu au un camion atribuit, ordonate dupa urgenta. Fiecare rand arata:
+Sub-tabul implicit listează **comenzile neacoperite** — comenzi viitoare care încă nu au un camion atribuit, ordonate după urgență. Fiecare rând arată:
 
-- **Recomandat** — o eticheta: **Atribuie** (a fost potrivit un camion in apropiere), **Subcontracteaza** (gaseste un transportator), sau **Trebuie acoperit intern** (nicio optiune gasita)
-- **KM Goi** — distanta de deplasare goala pentru potrivirea recomandata, colorata: verde ≤150 km, chihlimbariu 150–300 km, rosu >300 km
-- **Preluare**, **Data Preluarii**, **Livrare**, **Client**
+- **Recomandat** — o etichetă: **Atribuie** (a fost potrivit un camion în apropiere), **Subcontractează** (găsește un transportator), sau **Trebuie acoperit intern** (nicio opțiune găsită)
+- **KM Goi** — distanța de deplasare goală pentru potrivirea recomandată, colorată: verde ≤150 km, chihlimbariu 150–300 km, roșu >300 km
+- **Preluare**, **Data Preluării**, **Livrare**, **Client**
 
-Actiunile de pe rand iti permit sa atribui direct camionul sugerat, sa sari la **Gaseste transportator**, sau sa deschizi comanda pentru detalii. Un buton **Vinde** (afisat oricand randul nu este blocat de la subcontractare) arata un pret estimat — **Vinde ≈ €X** — si deschide comanda pentru detalii, ca sa o pui la vanzare; cand exista atat o optiune de atribuire, cat si una de vanzare, un mic indiciu de comparare a costurilor, sub actiunile randului, iti spune care e mai ieftina — **Camion propriu mai ieftin** sau **Subcontractare mai ieftina**. Un meniu **Triaj** iti permite sa marchezi un rand ca **In lucru**, **Amana 24h**, sau **Accepta ca subcontract**, ca sa nu mai concureze pentru atentie.
+Acțiunile de pe rând îți permit să atribui direct camionul sugerat, să sari la **Găsește transportator**, sau să deschizi comanda pentru detalii. Un buton **Vinde** (afișat oricând rândul nu este blocat de la subcontractare) arată un preț estimat — **Vinde ≈ €X** — și deschide comanda pentru detalii, ca să o pui la vânzare; când există atât o opțiune de atribuire, cât și una de vânzare, un mic indiciu de comparare a costurilor, sub acțiunile rândului, îți spune care e mai ieftină — **Camion propriu mai ieftin** sau **Subcontractare mai ieftină**. Un meniu **Triaj** îți permite să marchezi un rând ca **În lucru**, **Amână 24h**, sau **Acceptă ca subcontract**, ca să nu mai concureze pentru atenție.
 
-Bara KPI arata **≤12h / ≤24h / ≤72h neacoperite**, **% auto-rezolvabil**, **Necesita transportator** si **Coordonate lipsa** (comenzi ale caror opriri nu au coordonate si nu pot fi potrivite).
+Bara KPI arată **≤12h / ≤24h / ≤72h neacoperite**, **% auto-rezolvabil**, **Necesită transportator** și **Coordonate lipsă** (comenzi ale căror opriri nu au coordonate și nu pot fi potrivite).
 
 ---
 
 ## Optimizator km goi
 
-Acest sub-tab calculeaza oportunitati de repozitionare pe **toate** comenzile (acoperite si neacoperite), rulind o matrice de rutare pentru fiecare pereche livrare→preluare — poate dura cateva secunde sa se incarce. Este un layout permanent de **tabel impartit + harta**, nu un comutator: tabelul listeaza golurile in stanga, iar apasarea unui rand deseneaza o linie punctata pe harta, de la acel punct de livrare la urmatoarea preluare propusa — doar linia randului selectat este desenata, nu toate.
+Acest sub-tab calculează oportunități de repoziționare pe **toate** comenzile (acoperite și neacoperite), rulând o matrice de rutare pentru fiecare pereche livrare→preluare — poate dura câteva secunde să se încarce. Este un layout permanent de **tabel împărțit + hartă**, nu un comutator: tabelul listează golurile în stânga, iar apăsarea unui rând desenează o linie punctată pe hartă, de la acel punct de livrare la următoarea preluare propusă — doar linia rândului selectat este desenată, nu toate.
 
-Coloane: **Recomandat**, **KM Goi**, **Preluare**, **Data Preluarii**, **Repozitioneaza din** (comanda si punctul de livrare din care ar veni camionul), **Livrare**, **Client**. Un filtru **Top 10 / Top 25 / Toate** limiteaza cate randuri sunt calculate si afisate, iar harta are propriul filtru de severitate (Ridicat / Mediu / Scazut / Neacoperit).
+Coloane: **Recomandat**, **KM Goi**, **Preluare**, **Data Preluării**, **Repoziționează din** (comanda și punctul de livrare din care ar veni camionul), **Livrare**, **Client**. Un filtru **Top 10 / Top 25 / Toate** limitează câte rânduri sunt calculate și afișate, iar harta are propriul filtru de severitate (Ridicat / Mediu / Scăzut / Neacoperit).
 
 ---
 
 ## Camioane goale
 
-Acest sub-tab intoarce vizualizarea pe dos: un rand per **camion** care finalizeaza o livrare fara nimic planificat dupa, potrivit cu cea mai apropiata comanda neatribuita cu care ar putea reincarca. Coloane: **Camion** (cu numele soferului), **Se termina la** (loc si data), **Cea mai buna reincarcare** si **KM goi** pentru acea reincarcare. Camioanele fara nicio comanda accesibila nu arata nicio sugestie de reincarcare si necesita o decizie manuala de repozitionare sau subcontractare.
+Acest sub-tab întoarce vizualizarea pe dos: un rând per **camion** care finalizează o livrare fără nimic planificat după, potrivit cu cea mai apropiată comandă neatribuită cu care ar putea reîncărca. Coloane: **Camion** (cu numele șoferului), **Se termină la** (loc și dată), **Cea mai bună reîncărcare** și **KM goi** pentru acea reîncărcare. Camioanele fără nicio comandă accesibilă nu arată nicio sugestie de reîncărcare și necesită o decizie manuală de repoziționare sau subcontractare.
 
-KPI-uri: **Camioane goale**, **Reincarcare gasita**, **Fara reincarcare**, **KM goi medii**, **Coordonate lipsa**.
+KPI-uri: **Camioane goale**, **Reîncărcare găsită**, **Fără reîncărcare**, **KM goi medii**, **Coordonate lipsă**.
 
 ---
 
 ## Exportarea
 
-Bara de instrumente a fiecarui sub-tab are butoane **Printeaza** si **Exporta** pentru tabelul curent — exportul produce un fisier Excel (.xlsx) al coloanelor vizibile. Nu exista un export de coordonate GPS brute.
+Bara de instrumente a fiecărui sub-tab are butoane **Printează** și **Exportă** pentru tabelul curent — exportul produce un fișier Excel (.xlsx) al coloanelor vizibile. Nu există un export de coordonate GPS brute.
 
 ---
 
 ## Filtre
 
-Fiecare sub-tab are o casuta de cautare in text liber (numar de comanda, nume de client, adresa de preluare/livrare). Nu exista un filtru separat de interval de date, camion sau sofer — taburile Acoperire si Optimizator sunt deja limitate la comenzile viitoare, iar tabul Camioane Goale nu are un selector per camion/sofer, deoarece fiecare rand este deja un camion.
+Fiecare sub-tab are o căsuță de căutare în text liber (număr de comandă, nume de client, adresă de preluare/livrare). Nu există un filtru separat de interval de date, camion sau șofer — taburile Acoperire și Optimizator sunt deja limitate la comenzile viitoare, iar tabul Camioane Goale nu are un selector per camion/șofer, deoarece fiecare rând este deja un camion.
 
 ---
 
-## Folosirea acestui instrument pentru a gasi curse de retur
+## Folosirea acestui instrument pentru a găsi curse de retur
 
-Rutele unde vezi constant goluri rosii (>300 km) sunt exact locul unde un aranjament permanent de retur — sau o cautare manuala pe o bursa de transport precum Timocom sau Trans.eu, la livrare — ar avea cel mai mare randament. Druma nu ruleaza o cautare automata de incarcaturi pentru comenzile FTL obisnuite; identificarea si rezervarea cursei de retur raman un pas manual, dupa ce instrumentul te-a indicat spre ruta.
+Rutele unde vezi constant goluri roșii (>300 km) sunt exact locul unde un aranjament permanent de retur — sau o căutare manuală pe o bursă de transport precum Timocom sau Trans.eu, la livrare — ar avea cel mai mare randament. Druma nu rulează o căutare automată de încărcături pentru comenzile FTL obișnuite; identificarea și rezervarea cursei de retur rămân un pas manual, după ce instrumentul te-a indicat spre rută.
 
-Daca golul implica o ruta de grupaj (cu mai multe opriri), verifica daca sugestiile automate de consolidare a curselor de retur ale Druma au semnalat deja o incarcatura potrivita — acestea apar direct in panoul de consolidare grupaj si nu necesita o cautare manuala.
+Dacă golul implică o rută de grupaj (cu mai multe opriri), verifică dacă sugestiile automate de consolidare a curselor de retur ale Druma au semnalat deja o încărcătură potrivită — acestea apar direct în panoul de consolidare grupaj și nu necesită o căutare manuală.
