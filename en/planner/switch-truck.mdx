@@ -42,7 +42,7 @@ The order must be of type **Own Truck**. Subcontracted and capacity sale orders 
 
 <Steps>
   <Step title="Open the Planning Board">
-    Go to **Planner → Planning Board** and find the active order's row.
+    Go to **Planning → Planning Board** and find the active order's row.
   </Step>
   <Step title="Trigger Switch Truck">
     Drag a different truck onto the order's row, or use **Switch truck** in the row's action menu. Druma detects that the order already has a truck assigned and opens the Switch Truck dialog instead of a plain assignment. Switch Truck is only available for Own Truck orders in an active status — it isn't exposed from the order detail panel.
@@ -82,6 +82,16 @@ If you leave the new truck as **Don't know yet**, only the relay stop is recorde
 ## Multiple relays
 
 You can switch the truck more than once on the same order. Each switch inserts another internal relay stop at the point you choose, so a load can pass through several relay points on a long-distance route — for example, a Bucharest → Duisburg load handed off at Budapest and again at Wien.
+
+---
+
+## Segment history
+
+Every truck switch automatically records a **segment** — which truck and driver covered which stretch of the route — the moment the relay stop is created. When you switch trucks a second or third time on the same order, each switch closes out the previous segment and opens a new one, so the full chain of who drove which leg is preserved in order.
+
+This history is stored in the background (no extra planner action needed) and exists for audit and reporting purposes — for example, reconstructing exactly which driver was responsible for a given stretch if a claim or a driving-hours question comes up later.
+
+Cancelling a switch (see Undo below), or a truck reassignment that fails partway through, removes the segment it created — the history only reflects switches that actually completed.
 
 ---
 

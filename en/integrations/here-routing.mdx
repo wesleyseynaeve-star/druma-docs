@@ -29,14 +29,14 @@ HERE also converts a dropped map pin (latitude/longitude) back into a readable a
 Truck-optimised routing (avoiding low bridges, weight restrictions, and other hazards heavy vehicles can't take), toll cost estimation across European toll systems, and live traffic-aware ETA are all calculated by the **PTV Developer Routing API**, not HERE.
 
 <Note>
-PTV's vehicle profile is only populated with your truck's actual **weight and emission class** in the **Pricing Tool**. Order creation, the planning board, and AI truck-matching all call PTV with a generic 40-tonne default profile instead — they don't yet carry the assigned truck's weight/emission data into the routing call. Dimensions (height, width, length) and axle count are not sent to PTV in any flow today; toll and route calculations everywhere rely on distance and the vehicle class PTV is given, not your truck's exact physical specs.
+PTV's vehicle profile now uses your truck's actual **permitted weight, Euro emission class, height, and axle count** wherever a specific truck is known — this covers the **Pricing Tool** and the planning board's remaining-km figure for a switch-truck order's assigned truck. Bulk candidate comparisons — AI truck-matching and other board-wide estimates that compare many trucks at once — deliberately keep the generic 40-tonne default profile, to bound the number of routing calls made per request.
 </Note>
 
 <Warning>
 Toll cost estimates remain approximations regardless of provider. Actual tolls depend on the specific route taken, which axle configuration your truck is registered under in each country's toll system, and whether rates have changed since the last data update. Use these figures as a guide, not a precise invoice input.
 </Warning>
 
-Keeping vehicle technical details up to date in **Fleet → Vehicles → [vehicle] → Technical Details** improves accuracy in the **Pricing Tool** today, where your truck's weight and emission class are actually used. Order creation, board, and AI-matching routing calls don't yet read those fields — so a more detailed vehicle record won't currently change routing/ETA figures outside Pricing Tool.
+Keeping vehicle technical details up to date in **Fleet → Vehicles → [vehicle] → Technical Details** improves accuracy wherever a specific truck is known to the routing call — the **Pricing Tool** and the planning board's switch-truck remaining-km figure. Bulk comparisons (AI truck-matching, other board-wide estimates) use the generic 40-tonne profile by design, so a more detailed vehicle record won't change those figures.
 
 <CardGroup cols={1}>
   <Card title="Fleet Management" icon="truck" href="/en/planner/fleet-management">

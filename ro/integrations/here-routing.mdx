@@ -29,14 +29,14 @@ HERE converteste si un pin plasat pe harta (latitudine/longitudine) inapoi intr-
 Rutarea optimizata pentru camioane (evitarea podurilor joase, restrictiilor de greutate si altor pericole pe care vehiculele grele nu le pot lua), estimarea costului taxelor de drum in sistemele europene de taxare si ETA-ul live, care tine cont de trafic, sunt toate calculate de **PTV Developer Routing API**, nu de HERE.
 
 <Note>
-Profilul de vehicul PTV este populat cu **greutatea si clasa de emisii** reale ale camionului tau doar in **Instrumentul de Pretuire (Pricing Tool)**. Crearea comenzii, planning board-ul si potrivirea AI a camioanelor apeleaza toate PTV cu un profil implicit generic de 40 de tone — inca nu transmit datele de greutate/emisii ale camionului atribuit in apelul de rutare. Dimensiunile (inaltime, latime, lungime) si numarul de axe nu sunt trimise catre PTV in niciun flux, astazi; calculele de taxe si ruta se bazeaza peste tot pe distanta si clasa de vehicul furnizata catre PTV, nu pe specificatiile fizice exacte ale camionului tau.
+Profilul de vehicul PTV foloseste acum **greutatea maxima admisa, clasa de emisii Euro, inaltimea si numarul de axe** reale ale camionului tau, oriunde este cunoscut un camion anume — asta acopera **Instrumentul de Pretuire (Pricing Tool)** si cifra de km ramasi de pe planning board, pentru camionul atribuit unei comenzi cu schimb de camion. Comparatiile de candidati in masa — potrivirea AI a camioanelor si alte estimari la nivel de board, care compara mai multe camioane deodata — pastreaza in mod deliberat profilul implicit generic de 40 de tone, ca sa limiteze numarul de apeluri de rutare facute per cerere.
 </Note>
 
 <Warning>
 Estimarile de cost pentru taxele de drum raman aproximari, indiferent de furnizor. Taxele reale depind de ruta specifica parcursa, de configuratia de axe sub care este inregistrat camionul tau in sistemul de taxare al fiecarei tari si de daca tarifele s-au schimbat de la ultima actualizare a datelor. Foloseste aceste cifre ca un ghid, nu ca un input precis de factura.
 </Warning>
 
-Mentinerea la zi a detaliilor tehnice ale vehiculului in **Flota → Vehicule → [vehicul] → Detalii Tehnice** imbunatateste precizia in **Instrumentul de Pretuire**, astazi, unde greutatea si clasa de emisii ale camionului tau sunt de fapt folosite. Apelurile de rutare din crearea comenzii, board si potrivirea AI inca nu citesc acele campuri — deci o fisa de vehicul mai detaliata nu schimba momentan cifrele de rutare/ETA in afara Instrumentului de Pretuire.
+Mentinerea la zi a detaliilor tehnice ale vehiculului in **Flota → Vehicule → [vehicul] → Detalii Tehnice** imbunatateste precizia oriunde apelul de rutare cunoaste un camion anume — **Instrumentul de Pretuire** si cifra de km ramasi la schimbul de camion, de pe planning board. Comparatiile in masa (potrivirea AI a camioanelor, alte estimari la nivel de board) folosesc profilul generic de 40 de tone in mod deliberat, deci o fisa de vehicul mai detaliata nu schimba acele cifre.
 
 <CardGroup cols={1}>
   <Card title="Gestionarea flotei" icon="truck" href="/ro/planner/fleet-management">

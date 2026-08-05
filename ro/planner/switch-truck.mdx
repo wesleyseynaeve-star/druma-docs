@@ -26,12 +26,12 @@ Principiul cheie: **remorca ramane cu marfa**. Cand schimbi camionul pe o comand
 Poti schimba camionul pe orice comanda care se afla intr-unul din aceste statusuri active:
 
 - In asteptare
-- Atribuita
+- Atribuit
 - Plecat
-- Sosit la Preluare
+- La ridicare
 - Incarcare
 - In Tranzit
-- Sosit la Livrare
+- La livrare
 - Descarcare
 
 Comanda trebuie sa fie de tipul **Camion Propriu**. Comenzile Subcontractate si de vanzare capacitate nu suporta schimbarea camionului — acestea sunt gestionate de transportatorul extern.
@@ -41,8 +41,8 @@ Comanda trebuie sa fie de tipul **Camion Propriu**. Comenzile Subcontractate si 
 ## Cum schimbi camionul
 
 <Steps>
-  <Step title="Deschide Tabla de planificare">
-    Mergi la **Planner → Tabla de planificare** si gaseste randul comenzii active.
+  <Step title="Deschide Panoul de planificare">
+    Mergi la **Planificare → Panou de planificare** si gaseste randul comenzii active.
   </Step>
   <Step title="Declanseaza Schimba Camionul">
     Trage un camion diferit pe randul comenzii, sau foloseste **Schimba camionul** din meniul de actiuni al randului. Druma detecteaza ca la comanda este deja atribuit un camion si deschide dialogul Schimba Camionul, in loc de o atribuire simpla. Schimba Camionul este disponibil doar pentru comenzile Camion Propriu, intr-un status activ — nu este expus din panoul de detaliu al comenzii.
@@ -85,13 +85,23 @@ Poti schimba camionul de mai multe ori pe aceeasi comanda. Fiecare schimb insere
 
 ---
 
+## Istoricul segmentelor
+
+Fiecare schimb de camion inregistreaza automat un **segment** — ce camion si sofer a acoperit ce portiune din ruta — in momentul in care oprirea de releu este creata. Cand schimbi camionul a doua sau a treia oara pe aceeasi comanda, fiecare schimb inchide segmentul anterior si deschide unul nou, astfel incat lantul complet al cine a condus care etapa este pastrat in ordine.
+
+Acest istoric este stocat automat, in fundal (nu este necesara nicio actiune suplimentara din partea planificatorului) si exista in scopuri de audit si raportare — de exemplu, pentru a reconstitui exact care sofer a fost responsabil de o anumita portiune, daca apare ulterior o reclamatie sau o intrebare legata de orele de conducere.
+
+Anularea unui schimb (vezi Undo mai jos), sau o reatribuire de camion care esueaza pe parcurs, elimina segmentul pe care l-a creat — istoricul reflecta doar schimburile care s-au finalizat efectiv.
+
+---
+
 ## Anularea unui schimb (Undo)
 
 Daca noul camion nu a facut inca nicio activitate pe comanda, poti anula schimbul si restaura camionul original.
 
-Cauta pictograma **Anuleaza schimbul** pe randul comenzii, pe tabla de planificare — apare doar cand exista un schimb anulabil (o oprire de releu este prezenta si nicio activitate nu a fost inregistrata de atunci).
+Cauta pictograma **Anuleaza schimbul** pe randul comenzii, pe panoul de planificare — apare doar cand exista un schimb anulabil (o oprire de releu este prezenta si nicio activitate nu a fost inregistrata de atunci).
 
-Alternativ, trage camionul original inapoi pe comanda, pe tabla de planificare — Druma va incerca sa anuleze automat schimbul, inainte sa reatribuie.
+Alternativ, trage camionul original inapoi pe comanda, pe panoul de planificare — Druma va incerca sa anuleze automat schimbul, inainte sa reatribuie.
 
 **Anularea este blocata daca oricare din urmatoarele este adevarat:**
 - Orice oprire la sau dupa punctul de releu are un marcaj temporal real de sosire, plecare sau inceput de incarcare inregistrat
@@ -122,6 +132,6 @@ Schimbarea unui camion **nu** creeaza o comanda noua. Numarul comenzii originale
   Gestioneaza remorcile independent de tractoare — atribuire, detasare si urmarirea locatiei.
 </Card>
 
-<Card title="Tabla de planificare" icon="calendar" href="/ro/planner/planning-board">
+<Card title="Panoul de planificare" icon="calendar" href="/ro/planner/planning-board">
   Vezi toate comenzile si camioanele tale pe tabloul vizual de dispecerizare — butonul de schimbare a camionului este accesibil si de aici.
 </Card>
