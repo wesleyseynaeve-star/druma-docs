@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-05 22:25 UTC
+Generated: 2026-08-08 19:12 UTC
 
 ---
 
@@ -1214,17 +1214,25 @@ Your company is billed under one of two archetypes:
 <Tabs>
   <Tab title="Asset haulier">
     If you operate your own trucks, you pay:
-    - A flat **€25/month company base fee**.
-    - A **banded per-active-truck fee**. Parked trucks are always free; billing floors at a minimum of **3 active trucks**. The total number of active trucks picks one band, and **all** active trucks bill at that band's rate (it is not a marginal/cumulative calculation).
+    - A **monthly base fee set by your fleet-size band**.
+    - A **per-active-truck fee from that same band**. Parked trucks are always free; billing starts from **1 active truck**. Your active-truck count picks one band, and **both** the base and every truck bill at that band (it is not a marginal/cumulative calculation).
     - A **company-level pooled AI allowance** (see below).
 
-    | Band | Active trucks | Monthly / truck | Annual / truck |
-    |------|---------------|------------------|-----------------|
-    | Starter | 3–9 | €41 | €34 |
-    | Growth | 10–24 | €38 | €32 |
-    | Scale | 25–49 | €36 | €30 |
-    | Pro | 50–74 | €34 | €28 |
-    | Enterprise | 75+ | €30 | €25 |
+    | Band | Active trucks | Base / month | Per active truck / month |
+    |------|---------------|--------------|--------------------------|
+    | Starter | 1–9 | €19 | €16.00 |
+    | Growth | 10–24 | €44 | €13.50 |
+    | Scale | 25–49 | €69 | €12.50 |
+    | Pro | 50–99 | €119 | €11.50 |
+    | Enterprise | 100+ | €219 | €10.50 |
+
+    So a 10-truck fleet pays €44 + 10 × €13.50 = **€179/month**. The total never
+    jumps backwards as you grow: each band's higher base exactly offsets its lower
+    per-truck rate, so adding a truck never lowers your bill and never raises it by
+    more than the band rate you are on. Fleets above 150 trucks are quoted individually.
+
+    On annual billing every line — base and trucks — is charged at the 10-month
+    rate across 12 months (see **Billing interval** below).
   </Tab>
   <Tab title="Forwarder / broker">
     If you don't run your own fleet, there's no truck pool and no base fee — you pay pure usage: **the greater of €25/month or your metered usage cost × 2.5**.
@@ -1232,6 +1240,21 @@ Your company is billed under one of two archetypes:
 </Tabs>
 
 Your archetype is set on your account; contact support@druma.io if you believe yours is set incorrectly.
+
+### Your price schedule — what happens when prices change
+
+The table above is Druma's **current** price schedule. Your company is **pinned** to
+the schedule that was current when you signed up, and that pin never moves on its
+own: when Druma publishes new pricing, it applies to new customers, not to you.
+Settings → Billing shows which schedule you are on (for example *Price schedule v2*).
+
+What can change on an existing schedule is an **annual inflation indexation**. When
+it applies, it appears as its own **Price indexation** line on your invoice — next
+to your original contracted base and per-truck prices, which are left exactly as
+they were — rather than as a quietly rewritten rate. On annual billing the
+indexation line is prepaid at the same 10-month rate as everything else.
+
+Moving to a different schedule only ever happens if you ask for it and we agree it.
 
 ---
 
@@ -1254,15 +1277,15 @@ Forwarder/broker companies are always billed monthly, pay-as-you-go — there's 
 
 ### Cost breakdown
 
-Below the plan overview, a line-item table shows exactly how your projected charge is built: the platform base fee, the truck count × band rate, and (for annual plans) the pay-10-get-12 framing. Prices shown are excl. VAT.
+Below the plan overview, a line-item table shows exactly how your projected charge is built: the platform base fee (labelled with the band it comes from), the truck count × band rate, a **Price indexation** line if any applies to your account, and (for annual plans) the pay-10-get-12 framing. Prices shown are excl. VAT.
 
 ### Truck billing cap
 
-Asset-haulier companies (with billing edit permission) can set an optional **truck billing cap** — a maximum number of active trucks you want to be billed for, between **3 and 500**. If your active truck count reaches or exceeds the cap, the page shows a warning before you activate more trucks. Leave it blank for no cap.
+Asset-haulier companies (with billing edit permission) can set an optional **truck billing cap** — a maximum number of active trucks you want to be billed for, up to **500**. If your active truck count reaches or exceeds the cap, the page shows a warning before you activate more trucks. Leave it blank for no cap.
 
 ### Usage & allowance (AI pool)
 
-Every active-truck company gets a **pooled AI allowance**: `€5 base + €1.00 × active trucks`. All metered AI usage across your account — document extraction, eCMR sealing, Ask Druma, KPI insights — draws down this **single, shared pool**; the truck count only sizes the pool, it doesn't attribute usage to individual trucks. A progress bar shows how much of the current month's pool you've used.
+Every active-truck company gets a **pooled AI allowance**: `€5 base + €0.25 × active trucks`. All metered AI usage across your account — document extraction, eCMR sealing, Ask Druma, KPI insights — draws down this **single, shared pool**; the truck count only sizes the pool, it doesn't attribute usage to individual trucks. A progress bar shows how much of the current month's pool you've used.
 
 Usage beyond the pool isn't blocked — Druma never cuts you off mid-month. It's simply billed as overage at **cost × 2.5** on your next invoice.
 
