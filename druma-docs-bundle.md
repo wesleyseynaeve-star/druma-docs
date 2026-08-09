@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-08 19:12 UTC
+Generated: 2026-08-09 00:19 UTC
 
 ---
 
@@ -1218,6 +1218,8 @@ Your company is billed under one of two archetypes:
     - A **per-active-truck fee from that same band**. Parked trucks are always free; billing starts from **1 active truck**. Your active-truck count picks one band, and **both** the base and every truck bill at that band (it is not a marginal/cumulative calculation).
     - A **company-level pooled AI allowance** (see below).
 
+    These are the **12-month-contract** rates, invoiced monthly:
+
     | Band | Active trucks | Base / month | Per active truck / month |
     |------|---------------|--------------|--------------------------|
     | Starter | 1–9 | €19 | €16.00 |
@@ -1231,8 +1233,13 @@ Your company is billed under one of two archetypes:
     per-truck rate, so adding a truck never lowers your bill and never raises it by
     more than the band rate you are on. Fleets above 150 trucks are quoted individually.
 
-    On annual billing every line — base and trucks — is charged at the 10-month
-    rate across 12 months (see **Billing interval** below).
+    **You are never asked for a year upfront.** A 12-month contract is a *term*,
+    not a payment schedule: you are invoiced every month at the rates above,
+    which work out at 10 months' worth spread across 12.
+
+    Prefer not to commit? Month-to-month is the same table **+20%** (€22.80 base
+    + €19.20/truck at the entry band), cancellable any time. The contract rates
+    are the floor — nothing prices below them.
   </Tab>
   <Tab title="Forwarder / broker">
     If you don't run your own fleet, there's no truck pool and no base fee — you pay pure usage: **the greater of €25/month or your metered usage cost × 2.5**.
@@ -1266,18 +1273,27 @@ Go to **Settings → Billing** to see your plan, cost breakdown, AI usage, and i
 
 The top of the page shows your account status (**Active**, **Trial**, **Past Due**, or **Suspended**), your archetype, your billing interval, the number of currently active trucks, your next invoice date, and the amount projected for the current period. If you have an open, unpaid balance on a past invoice, a banner shows the outstanding amount and how many days it's overdue.
 
-### Monthly vs Annual billing
+### Contract term
 
-Asset-haulier companies can switch between **Monthly** and **Annual** billing from the interval toggle on the Billing page.
+**Every subscription is invoiced monthly.** The toggle on the Billing page sets your *contract term*, not how often you are billed.
 
-- **Annual**: pay 10 months, get 12 — the company base fee and per-truck subscription are prepaid upfront for the year as a single e-Factura. Usage overage (AI pool overage) is still billed monthly in arrears.
-- **Monthly**: the subscription renews every month. If you add trucks mid-cycle, the extra cost is billed in arrears on the next invoice.
+- **12-month contract**: you commit for a year and are invoiced each month at the contract rate — the prices in the table above. Over the year that comes to 10 months' worth, which is where "2 months free" comes from. The panel shows the date your term ends and whether it will renew.
+- **Month-to-month**: no commitment, cancel any time, at the contract rate **+20%**. If you add trucks mid-cycle, the extra is billed in arrears on the next invoice.
 
-Forwarder/broker companies are always billed monthly, pay-as-you-go — there's no annual option since there's no truck subscription to prepay.
+Your active-truck count moves freely inside a 12-month term — park a truck and it stops being billed from the next cycle. What you commit to is the term and the rate, not a fixed fleet size.
+
+Forwarder/broker companies are always month-to-month, pay-as-you-go — there is no truck subscription to commit to.
+
+> **Note:** 
+  Invoices are Romanian e-Factura, payable by bank transfer on the terms in your
+  subscription confirmation. Unpaid invoices are subject to the statutory
+  late-payment interest and recovery costs set by Directive 2011/7/EU — in
+  Romania, Law 72/2013.
+
 
 ### Cost breakdown
 
-Below the plan overview, a line-item table shows exactly how your projected charge is built: the platform base fee (labelled with the band it comes from), the truck count × band rate, a **Price indexation** line if any applies to your account, and (for annual plans) the pay-10-get-12 framing. Prices shown are excl. VAT.
+Below the plan overview, a line-item table shows exactly how your projected charge is built: the platform base fee (labelled with the band it comes from), the truck count × band rate, a **Price indexation** line if any applies to your account. Every line is a monthly amount under both contract terms — the term only changes the unit price. Prices shown are excl. VAT.
 
 ### Truck billing cap
 
