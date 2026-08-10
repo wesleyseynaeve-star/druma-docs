@@ -1,108 +1,154 @@
 ---
-title: "Facturation et abonnement"
-description: "Comment Druma facture votre entreprise — paliers par nombre de camions, pool d'usage IA, et facturation e-Factura native."
+title: "Facturation & Abonnement"
+description: "Comment Druma facture votre entreprise — paliers de taille de flotte, pool d'usage IA et facturation native e-Factura."
 icon: "credit-card"
 ---
 
-Druma est **l'émetteur** de votre abonnement : chaque charge de plateforme est facturée sous forme d'**e-Factura roumaine** native (ANAF/SPV) et payée par **virement bancaire** à terme net — il n'y a ni carte enregistrée, ni paiement Stripe, ni tarification par siège utilisateur. Les utilisateurs bureau, les chauffeurs et les comptes du portail client sont toujours gratuits ; ce que vous payez, ce sont vos camions actifs (si vous exploitez votre propre flotte) ou votre usage de la plateforme (si vous êtes un pur transitaire/courtier).
+Druma est l'**émetteur des factures** de votre abonnement : chaque frais de plateforme est facturé sous forme d'**e-Factura roumaine native** (ANAF/SPV) et réglé par **virement bancaire** à échéance — pas de carte enregistrée, pas de paiement Stripe et aucune tarification par utilisateur. Les utilisateurs bureau, les chauffeurs et les comptes du portail client sont toujours gratuits ; vous payez pour vos camions actifs (si vous exploitez votre propre flotte) ou pour votre usage de la plateforme (si vous êtes commissionnaire pur).
 
 <Note>
-Pour les tarifs actuels, visitez [druma.io](https://druma.io) ou contactez support@druma.io.
+**Cette page décrit l'espace de facturation en libre-service de Druma**, déployé progressivement et activé compte par compte. Si votre page **Paramètres → Facturation** affiche actuellement l'espace réservé **« Facturation gérée par Druma »** au lieu de ce qui est décrit ci-dessous, votre compte n'a pas encore basculé en libre-service — vous restez facturé selon votre contrat existant (les factures arrivent par e-Factura comme d'habitude) et il n'y a rien à configurer ici pour l'instant. La suite de cet article décrit l'expérience en libre-service, à mesure que les comptes migrent.
 </Note>
 
-<Frame caption="Paramètres → Facturation — tarification par palier de camions, détail des coûts et pool d'usage IA. Pas de portail Stripe, pas de tarification par siège.">
-  <img src="/images/admin/billing-and-subscription.png" alt="Panneau de facturation affichant le détail du coût de l'abonnement" />
+<Note>
+Pour les tarifs actuels, consultez [druma.io](https://druma.io) ou écrivez à support@druma.io.
+</Note>
+
+<Frame caption="Paramètres → Facturation — tarifs par palier de taille de flotte, détail des coûts et pool d'usage IA. Pas de portail Stripe, pas de tarification par utilisateur.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Panneau des paramètres de facturation affichant le détail des coûts d'abonnement" />
 </Frame>
 
 ---
 
 ## Essai gratuit
 
-Chaque nouvelle entreprise bénéficie d'un **essai gratuit de 30 jours**. Aucune carte bancaire ni coordonnée bancaire n'est requise pour démarrer, et toutes les fonctionnalités sont pleinement disponibles pendant l'essai.
+Chaque nouvelle entreprise bénéficie d'un **essai gratuit de 30 jours**. Aucune carte bancaire ni coordonnées bancaires ne sont nécessaires pour démarrer, et toutes les fonctionnalités sont pleinement disponibles pendant l'essai.
 
 ---
 
-## Modèle de tarification
+## Modèle tarifaire
 
-Votre entreprise est facturée selon l'un des deux profils suivants :
+Votre entreprise est facturée selon l'un des deux archétypes :
 
 <Tabs>
-  <Tab title="Transporteur avec flotte propre">
+  <Tab title="Transporteur avec flotte">
     Si vous exploitez vos propres camions, vous payez :
-    - Un **forfait entreprise fixe de 25 €/mois**.
-    - Un **tarif par camion actif, par palier**. Les camions à l'arrêt sont toujours gratuits ; la facturation applique un plancher de **3 camions actifs minimum**. Le nombre total de camions actifs détermine un seul palier, et **tous** les camions actifs sont facturés à ce tarif (ce n'est pas un calcul marginal/cumulatif).
-    - Un **quota IA mutualisé au niveau entreprise** (voir ci-dessous).
+    - Un **forfait mensuel déterminé par votre palier de taille de flotte**.
+    - Un **tarif par camion actif issu du même palier**. Les camions à l'arrêt sont toujours gratuits ; la facturation démarre dès **1 camion actif**. Votre nombre de camions actifs sélectionne un seul palier, et **à la fois** le forfait et chaque camion sont facturés à ce palier (ce n'est pas un calcul marginal/cumulatif).
+    - Une **enveloppe IA mutualisée au niveau de l'entreprise** (voir ci-dessous).
 
-    | Palier | Camions actifs | Mensuel / camion | Annuel / camion |
-    |------|---------------|------------------|-----------------|
-    | Starter | 3–9 | 41 € | 34 € |
-    | Growth | 10–24 | 38 € | 32 € |
-    | Scale | 25–49 | 36 € | 30 € |
-    | Pro | 50–74 | 34 € | 28 € |
-    | Enterprise | 75+ | 30 € | 25 € |
+    Voici les tarifs en **contrat 12 mois**, facturés mensuellement :
+
+    | Palier | Camions actifs | Forfait / mois | Par camion actif / mois |
+    |--------|----------------|----------------|-------------------------|
+    | Starter | 1–9 | 19 € | 20,00 € |
+    | Growth | 10–24 | 24 € | 19,50 € |
+    | Scale | 25–49 | 29 € | 19,30 € |
+    | Pro | 50–99 | 34 € | 19,20 € |
+    | Enterprise | 100+ | 54 € | 19,00 € |
+
+    Ainsi, une flotte de 10 camions paie 24 € + 10 × 19,50 € = **219 €/mois**. Le total
+    ne recule jamais à mesure que vous grandissez : le forfait plus élevé de chaque palier
+    compense exactement son tarif par camion plus bas, si bien qu'ajouter un camion ne
+    diminue jamais votre facture et ne l'augmente jamais de plus que le tarif du palier
+    où vous êtes. Les flottes de plus de 150 camions font l'objet d'un devis individuel.
+
+    **On ne vous demande jamais une année d'avance.** Un contrat 12 mois est une *durée*,
+    pas un échéancier : vous êtes facturé chaque mois aux tarifs ci-dessus, ce qui
+    représente sur l'année l'équivalent de 10 mois.
+
+    Vous préférez ne pas vous engager ? Le sans-engagement applique la même grille
+    **+20 %** (22,80 € de forfait + 24,00 €/camion au palier d'entrée), résiliable à tout
+    moment. Les tarifs contractuels sont le plancher — rien n'est proposé en dessous.
   </Tab>
-  <Tab title="Transitaire / courtier">
-    Si vous n'exploitez pas votre propre flotte, il n'y a ni pool de camions ni forfait de base — vous payez uniquement à l'usage : **le plus élevé entre 25 €/mois et votre coût d'usage mesuré × 2,5**.
+  <Tab title="Commissionnaire / courtier">
+    Si vous n'exploitez pas de flotte, il n'y a ni pool de camions ni forfait de base — vous payez à l'usage : **le plus élevé entre 25 €/mois et votre coût d'usage mesuré × 2,5**.
   </Tab>
 </Tabs>
 
-Votre profil est défini sur votre compte ; contactez support@druma.io si vous pensez que le vôtre est mal configuré.
+Votre archétype est défini sur votre compte ; contactez support@druma.io si vous pensez que le vôtre est mal configuré.
+
+### Votre grille tarifaire — ce qui se passe quand les prix changent
+
+Le tableau ci-dessus est la grille tarifaire **actuelle** de Druma. Votre entreprise est
+**rattachée** à la grille en vigueur au moment de votre inscription, et ce rattachement ne
+bouge jamais tout seul : quand Druma publie de nouveaux tarifs, ils s'appliquent aux
+nouveaux clients, pas à vous. Paramètres → Facturation indique la grille dont vous
+dépendez (par exemple *Grille tarifaire v2*).
+
+Ce qui peut évoluer sur une grille existante, c'est une **indexation annuelle sur
+l'inflation**. Lorsqu'elle s'applique, elle apparaît comme une ligne distincte
+**Indexation tarifaire** sur votre facture — à côté de vos prix contractuels d'origine
+(forfait et par camion), laissés exactement en l'état — plutôt que comme un tarif
+discrètement réécrit. En facturation annuelle, la ligne d'indexation est prépayée au même
+taux de 10 mois que le reste.
+
+Un changement de grille n'intervient que si vous le demandez et que nous l'acceptons.
 
 ---
 
 ## La page Facturation
 
-Allez dans **Paramètres → Facturation** pour voir votre plan, le détail des coûts, l'usage IA et l'historique des factures.
+Allez dans **Paramètres → Facturation** pour voir votre offre, le détail des coûts, l'usage IA et l'historique des factures.
 
-### Aperçu du plan
+### Aperçu de l'offre
 
-Le haut de la page affiche le statut de votre compte (**Actif**, **Essai**, **En retard** ou **Suspendu**), votre profil, votre intervalle de facturation, le nombre de camions actuellement actifs, la date de votre prochaine facture, et le montant projeté pour la période en cours. Si vous avez un solde impayé sur une facture antérieure, une bannière affiche le montant dû et le nombre de jours de retard.
+Le haut de la page affiche le statut du compte (**Actif**, **Essai**, **En retard** ou **Suspendu**), votre archétype, votre intervalle de facturation, le nombre de camions actuellement actifs, la date de votre prochaine facture et le montant prévu pour la période en cours. En cas de solde impayé sur une facture antérieure, une bannière indique le montant restant dû et le nombre de jours de retard.
 
-### Facturation mensuelle vs annuelle
+### Durée du contrat
 
-Les entreprises avec flotte propre peuvent basculer entre **Mensuel** et **Annuel** via le sélecteur d'intervalle sur la page Facturation.
+**Tout abonnement est facturé mensuellement.** Le sélecteur de la page Facturation définit votre *durée d'engagement*, pas la fréquence de facturation.
 
-- **Annuel** : payez 10 mois, obtenez-en 12 — le forfait entreprise et l'abonnement par camion sont prépayés en une seule e-Factura pour l'année. Le dépassement d'usage (pool IA) reste facturé mensuellement à terme échu.
-- **Mensuel** : l'abonnement se renouvelle chaque mois. Si vous ajoutez des camions en cours de cycle, le coût supplémentaire est facturé à terme échu sur la facture suivante.
+- **Contrat 12 mois** : vous vous engagez pour un an et êtes facturé chaque mois au tarif contractuel — les prix du tableau ci-dessus. Sur l'année, cela représente l'équivalent de 10 mois, d'où les « 2 mois offerts ». Le panneau affiche la date de fin de votre durée et si elle se renouvellera.
+- **Sans engagement** : aucun engagement, résiliable à tout moment, au tarif contractuel **+20 %**. Si vous ajoutez des camions en cours de cycle, le supplément est facturé à terme échu sur la facture suivante.
 
-Les transitaires/courtiers sont toujours facturés mensuellement, à l'usage — il n'y a pas d'option annuelle puisqu'il n'y a pas d'abonnement camion à prépayer.
+Votre nombre de camions actifs évolue librement à l'intérieur d'une durée de 12 mois — mettez un camion à l'arrêt et il cesse d'être facturé dès le cycle suivant. Vous vous engagez sur la durée et le tarif, pas sur une taille de flotte figée.
+
+Les commissionnaires/courtiers sont toujours sans engagement, à l'usage — il n'y a pas d'abonnement camions sur lequel s'engager.
+
+<Note>
+  Les factures sont des e-Factura roumaines, payables par virement bancaire aux
+  conditions figurant dans votre confirmation d'abonnement. Les factures impayées sont
+  soumises aux intérêts de retard légaux et aux frais de recouvrement prévus par la
+  directive 2011/7/UE — en Roumanie, la loi 72/2013.
+</Note>
 
 ### Détail des coûts
 
-Sous l'aperçu du plan, un tableau ligne par ligne montre exactement comment votre charge projetée est construite : le forfait de base de la plateforme, le nombre de camions × tarif du palier, et (pour les plans annuels) le principe « 10 mois payés, 12 mois offerts ». Les prix affichés sont hors TVA.
+Sous l'aperçu de l'offre, un tableau détaillé montre exactement comment votre montant prévu se construit : le forfait de plateforme (étiqueté avec le palier dont il provient), le nombre de camions × le tarif du palier, et une ligne **Indexation tarifaire** si elle s'applique à votre compte. Chaque ligne est un montant mensuel sous les deux durées contractuelles — la durée ne change que le prix unitaire. Prix affichés hors TVA.
 
 ### Plafond de facturation des camions
 
-Les entreprises avec flotte propre (disposant du droit de modifier la facturation) peuvent définir un **plafond de facturation des camions** optionnel — un nombre maximal de camions actifs que vous souhaitez voir facturés, entre **3 et 500**. Si votre nombre de camions actifs atteint ou dépasse ce plafond, la page affiche un avertissement avant d'activer davantage de camions. Laissez le champ vide pour ne pas définir de plafond.
+Les transporteurs avec flotte (disposant du droit de modifier la facturation) peuvent définir un **plafond de facturation des camions** optionnel — un nombre maximum de camions actifs à facturer, jusqu'à **500**. Si votre nombre de camions actifs atteint ou dépasse le plafond, la page affiche un avertissement avant que vous n'en activiez davantage. Laissez vide pour aucun plafond.
 
-### Usage et quota (pool IA)
+### Usage & enveloppe (pool IA)
 
-Chaque entreprise avec camions actifs bénéficie d'un **quota IA mutualisé** : `5 € de base + 1,00 € × camions actifs`. Tout l'usage IA mesuré sur votre compte — extraction de documents, scellement eCMR, Ask Druma, insights KPI — puise dans ce **pool unique et partagé** ; le nombre de camions ne fait que dimensionner le pool, il n'attribue pas l'usage camion par camion. Une barre de progression indique la part du pool du mois en cours déjà consommée.
+Toute entreprise disposant de camions actifs reçoit une **enveloppe IA mutualisée** : `5 € de base + 0,25 € × camions actifs`. Tout l'usage IA mesuré sur votre compte — extraction de documents, scellement eCMR, Ask Druma, analyses KPI — puise dans ce **pool unique et partagé** ; le nombre de camions ne fait que dimensionner le pool, il n'attribue pas l'usage à des camions individuels. Une barre de progression indique la part du pool du mois déjà consommée.
 
-L'usage au-delà du pool n'est jamais bloqué — Druma ne vous coupe jamais en cours de mois. Il est simplement facturé en dépassement au **coût × 2,5** sur votre prochaine facture.
+L'usage au-delà du pool n'est pas bloqué — Druma ne vous coupe jamais en cours de mois. Il est simplement facturé en dépassement à **coût × 2,5** sur votre facture suivante.
 
 ### Plafonds IA par fonctionnalité
 
-Sous le pool, une section **Fonctionnalités IA et usage** liste chaque fonctionnalité IA mesurée et activée en option, avec son usage du mois et un plafond mensuel modifiable (en €) pour limiter les dérapages sur cette fonctionnalité précise.
+Sous le pool, une section **Fonctionnalités & usage IA** liste chaque fonctionnalité IA mesurée que vous avez activée, avec son usage du mois et un maximum mensuel modifiable (en €) pour limiter les dépenses sur cette fonctionnalité précise.
 
 ### Factures
 
-Un tableau **Factures** liste vos factures de plateforme par période, avec la TVA et les montants totaux, le statut (Aperçu, Émise, Payée, En retard), la date d'échéance, et un lien pour consulter la facture lorsque disponible. Les factures sont émises en e-Factura roumaine en EUR, avec la ligne de TVA également affichée en RON au taux de change de la Banque nationale de Roumanie (BNR).
+Un tableau **Factures** liste vos factures de plateforme par période, avec la TVA et les montants totaux, le statut (Aperçu, Émise, Payée, En retard), la date d'échéance et un lien vers la facture lorsque disponible. Les factures sont émises en e-Factura roumaine en EUR, la ligne de TVA étant également indiquée en RON au taux de la Banque nationale de Roumanie (BNR).
 
 ### Paiement
 
-Une section **Paiement** affiche les coordonnées bancaires à utiliser (bénéficiaire, IBAN, référence de paiement) et vos conditions de paiement net. Il n'y a pas d'option de paiement par carte — réglez chaque e-Factura par virement bancaire en utilisant la référence indiquée.
+Une section **Paiement** affiche les coordonnées bancaires à créditer (bénéficiaire, IBAN, référence de paiement) et vos délais de paiement nets. Il n'y a pas d'option de paiement par carte — réglez chaque e-Factura par virement bancaire en utilisant la référence indiquée.
 
 ---
 
 ## Comptes suspendus
 
-Si votre compte est suspendu, tout accès à l'application est remplacé par un écran unique vous demandant de régler le solde impayé ; un bouton ouvre directement **Paramètres → Facturation**. La connexion fonctionne toujours — seul l'espace de travail lui-même est bloqué. Si vous pensez que votre compte a été suspendu par erreur, contactez support@druma.io.
+Si un compte est suspendu, tout l'accès à l'application est remplacé par un écran unique vous demandant de régulariser le solde dû ; un bouton ouvre directement **Paramètres → Facturation**. La connexion fonctionne toujours — seul l'espace de travail est bloqué. Si vous pensez que votre compte a été suspendu par erreur, contactez support@druma.io.
 
 ---
 
-## Besoin d'aide avec la facturation ?
+## Besoin d'aide sur la facturation ?
 
 <Card title="Contacter le support" icon="headset" href="mailto:support@druma.io">
-  Pour toute question de facturation, litige ou demande de facture, envoyez un email à support@druma.io. Indiquez le nom de votre entreprise et votre numéro de TVA. Nous répondons sous un jour ouvré.
+  Pour toute question de facturation, contestation ou demande de facture, écrivez à support@druma.io. Indiquez le nom de votre entreprise et votre numéro de TVA. Nous répondons sous un jour ouvré.
 </Card>
