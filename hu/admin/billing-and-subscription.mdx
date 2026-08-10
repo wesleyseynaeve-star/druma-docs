@@ -1,108 +1,152 @@
 ---
 title: "Számlázás és előfizetés"
-description: "Hogyan számláz a Druma — jármű-szám alapú sávok, az AI-felhasználási keret és a natív e-Factura számlázás."
+description: "Hogyan számláz a Druma — flottaméret-sávok, a közös MI-keret és a natív e-Factura számlázás."
 icon: "credit-card"
 ---
 
-A Druma a számlázás **kibocsátója**: minden platformdíj natív **román e-Factura** (ANAF/SPV) számlaként kerül kiállításra, és **banki átutalással**, halasztott fizetési határidővel fizetendő — nincs bankkártya-tárolás, nincs Stripe checkout, és nincs felhasználónkénti (seat) árazás. Az irodai felhasználók, a sofőrök és az ügyfélportál-fiókok mindig ingyenesek; azért fizetsz, ami az aktív járműveid száma (ha saját flottával rendelkezel), vagy a platformhasználatod (ha tisztán fuvarszervező/bróker vagy).
+Az előfizetés **számlakibocsátója** a Druma: minden platformdíj natív **román e-Factura** (ANAF/SPV) formájában kerül kiszámlázásra, és **banki átutalással**, fizetési határidőre rendezhető — nincs eltárolt bankkártya, nincs Stripe-fizetés és nincs felhasználónkénti díjszabás. Az irodai felhasználók, a sofőrök és az ügyfélportál-fiókok mindig ingyenesek; az aktív járművekért (saját flotta esetén) vagy a platformhasználatért (tiszta szállítmányozó/bróker esetén) fizet.
 
 <Note>
-Az aktuális árakért látogasd meg a [druma.io](https://druma.io) oldalt, vagy írj a support@druma.io címre.
+**Ez az oldal a Druma önkiszolgáló számlázási felületét írja le**, amelyet fokozatosan, fiókonként vezetünk be. Ha a **Beállítások → Számlázás** oldalon jelenleg a **„A számlázást a Druma kezeli”** helyőrző látszik az alább leírtak helyett, a fiókja még nem került át önkiszolgáló számlázásra — továbbra is a meglévő megállapodása szerint számlázunk (a számlák a szokásos módon e-Facturán érkeznek), és itt egyelőre nincs mit beállítani. A cikk további része az önkiszolgáló élményt írja le, ahogy a fiókok átállnak rá.
 </Note>
 
-<Frame caption="Beállítások → Számlázás — jármű-szám alapú sávos árazás, költségbontás és az AI-felhasználási keret. Nincs Stripe-portál, nincs felhasználónkénti árazás.">
-  <img src="/images/admin/billing-and-subscription.png" alt="Számlázási beállítások panel, amely az előfizetés költségbontását mutatja" />
+<Note>
+Az aktuális árakért látogasson el a [druma.io](https://druma.io) oldalra, vagy írjon a support@druma.io címre.
+</Note>
+
+<Frame caption="Beállítások → Számlázás — flottaméret-sáv szerinti árak, költségbontás és MI-használati keret. Nincs Stripe-portál, nincs felhasználónkénti díj.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Számlázási beállítások az előfizetés költségbontásával" />
 </Frame>
 
 ---
 
 ## Ingyenes próbaidőszak
 
-Minden új cég **30 napos ingyenes próbaidőszakot** kap. A kezdéshez nem szükséges bankkártya vagy banki adat, és minden funkció teljes mértékben elérhető a próbaidőszak alatt.
+Minden új cég **30 napos ingyenes próbaidőszakot** kap. Az induláshoz nem kell bankkártya vagy bankszámlaadat, és a próbaidőszak alatt minden funkció teljes körűen elérhető.
 
 ---
 
 ## Árazási modell
 
-A cégedet a két archetípus egyike szerint számlázzuk:
+Cégét két archetípus egyike szerint számlázzuk:
 
 <Tabs>
   <Tab title="Saját flottás fuvarozó">
-    Ha saját járműveket üzemeltetsz, a következőket fizeted:
-    - Egy fix **25 €/hó céges alapdíjat**.
-    - Egy **sávos, aktív jármű szerinti díjat**. A parkoltatott (inaktív) járművek mindig ingyenesek; a számlázás minimum **3 aktív jármű** alapján történik. Az aktív járművek teljes száma határozza meg a sávot, és **az összes** aktív jármű az adott sáv díja szerint kerül számlázásra (nem sávonkénti/kumulatív számítás).
-    - Egy **céges szintű, közös AI-keretet** (lásd lent).
+    Ha saját járműveket üzemeltet, ezt fizeti:
+    - **Havi alapdíj a flottaméret-sáv szerint**.
+    - **Aktív járművenkénti díj ugyanabból a sávból**. A leállított járművek mindig ingyenesek; a számlázás **1 aktív járműtől** indul. Az aktív járművek száma egyetlen sávot választ ki, és **mind** az alapdíj, **mind** minden jármű abban a sávban számlázódik (nem határ- vagy halmozott számítás).
+    - **Cégszintű közös MI-keret** (lásd lent).
 
-    | Sáv | Aktív járművek | Havi / jármű | Éves / jármű |
-    |------|---------------|------------------|-----------------|
-    | Starter | 3–9 | 41 € | 34 € |
-    | Growth | 10–24 | 38 € | 32 € |
-    | Scale | 25–49 | 36 € | 30 € |
-    | Pro | 50–74 | 34 € | 28 € |
-    | Enterprise | 75+ | 30 € | 25 € |
+    Ezek a **12 hónapos szerződés** díjai, havi számlázással:
+
+    | Sáv | Aktív járművek | Alapdíj / hó | Aktív járművenként / hó |
+    |-----|----------------|--------------|--------------------------|
+    | Starter | 1–9 | 19 € | 20,00 € |
+    | Growth | 10–24 | 24 € | 19,50 € |
+    | Scale | 25–49 | 29 € | 19,30 € |
+    | Pro | 50–99 | 34 € | 19,20 € |
+    | Enterprise | 100+ | 54 € | 19,00 € |
+
+    Egy 10 járműves flotta tehát 24 € + 10 × 19,50 € = **219 €/hó** díjat fizet. Az összeg
+    növekedéskor soha nem esik vissza: az egyes sávok magasabb alapdíja pontosan
+    kiegyenlíti az alacsonyabb járműdíjat, így egy jármű hozzáadása soha nem csökkenti a
+    számlát, és soha nem növeli többel, mint az adott sáv díja. A 150 jármű feletti
+    flottákra egyedi ajánlatot adunk.
+
+    **Soha nem kérünk egy évet előre.** A 12 hónapos szerződés *futamidő*, nem fizetési
+    ütemezés: minden hónapban a fenti díjakkal számlázunk, ami az év során 10 hónap
+    értékének felel meg.
+
+    Nem szeretne elköteleződni? A havi konstrukció ugyanez a táblázat **+20%** (22,80 €
+    alapdíj + 24,00 €/jármű a belépő sávban), bármikor felmondható. A szerződéses díjak
+    az alsó határ — ez alatt semmit nem árazunk.
   </Tab>
-  <Tab title="Fuvarszervező / bróker">
-    Ha nincs saját flottád, nincs jármű-keret és nincs alapdíj — tisztán a felhasználás alapján fizetsz: **25 €/hó vagy a mért felhasználási költséged × 2,5, amelyik nagyobb**.
+  <Tab title="Szállítmányozó / bróker">
+    Saját flotta nélkül nincs járműkeret és nincs alapdíj — tisztán a használatért fizet: **a 25 €/hó és a mért használati költsége × 2,5 közül a nagyobb**.
   </Tab>
 </Tabs>
 
-Az archetípusodat a fiókodon állítjuk be; ha úgy gondolod, hogy tévesen van beállítva, írj a support@druma.io címre.
+Az archetípus a fiókjában van beállítva; ha úgy véli, hogy hibásan, írjon a support@druma.io címre.
+
+### Az Ön díjszabása — mi történik, ha az árak változnak
+
+A fenti táblázat a Druma **aktuális** díjszabása. Cége ahhoz a díjszabáshoz van **rögzítve**,
+amely a regisztrációkor érvényes volt, és ez a rögzítés soha nem mozdul el magától: amikor a
+Druma új árakat tesz közzé, azok az új ügyfelekre vonatkoznak, Önre nem. A Beállítások →
+Számlázás megmutatja, melyik díjszabáson van (például *Díjszabás v2*).
+
+Ami egy meglévő díjszabáson változhat, az az **éves inflációs indexálás**. Ha alkalmazzuk,
+külön **Árindexálás** tételként jelenik meg a számlán — az eredetileg szerződött alap- és
+járműárai mellett, amelyek pontosan változatlanok maradnak — nem pedig csendben átírt
+díjként. Éves számlázásnál az indexálási tétel ugyanazzal a 10 hónapos kulccsal van előre
+kifizetve, mint minden más.
+
+Másik díjszabásra való átállás csak akkor történik, ha Ön kéri, és mi elfogadjuk.
 
 ---
 
 ## A Számlázás oldal
 
-Lépj a **Beállítások → Számlázás** menüpontra a csomagod, a költségbontás, az AI-felhasználás és a számlaelőzmények megtekintéséhez.
+Nyissa meg a **Beállítások → Számlázás** oldalt a csomag, a költségbontás, az MI-használat és a számlatörténet megtekintéséhez.
 
-### Csomag áttekintés
+### Csomagáttekintés
 
-Az oldal tetején látod a fiókod állapotát (**Aktív**, **Próbaidőszak**, **Lejárt tartozás** vagy **Felfüggesztve**), az archetípusodat, a számlázási időszakot, az aktuálisan aktív járművek számát, a következő számla dátumát és a folyó időszakra becsült összeget. Ha van nyitott, kifizetetlen egyenleged egy korábbi számlán, egy banner mutatja a hátralék összegét és a késés napjainak számát.
+Az oldal teteje mutatja a fiók állapotát (**Aktív**, **Próbaidőszak**, **Lejárt**, vagy **Felfüggesztett**), az archetípust, a számlázási intervallumot, a jelenleg aktív járművek számát, a következő számla dátumát és az aktuális időszakra várható összeget. Ha korábbi számlán nyitott, kifizetetlen egyenlege van, egy szalag mutatja a fennálló összeget és a késedelem napjainak számát.
 
-### Havi vs. éves számlázás
+### Szerződéses futamidő
 
-A saját flottás cégek a **Havi** és **Éves** számlázás között válthatnak az időszak-kapcsolóval a Számlázás oldalon.
+**Minden előfizetést havonta számlázunk.** A Számlázás oldal kapcsolója a *szerződéses futamidőt* állítja be, nem a számlázás gyakoriságát.
 
-- **Éves**: 10 hónapot fizetsz, 12-t kapsz — a céges alapdíj és a jármű-előfizetés előre, egyetlen e-Factura számlán kerül kiszámlázásra az egész évre. A felhasználási túllépés (AI-keret túllépése) továbbra is havonta, utólag kerül kiszámlázásra.
-- **Havi**: az előfizetés havonta megújul. Ha ciklus közben veszel fel járműveket, a többletköltség a következő számlán, utólag kerül kiszámlázásra.
+- **12 hónapos szerződés**: egy évre kötelezi el magát, és minden hónapban a szerződéses díjjal számlázunk — a fenti táblázat áraival. Az év során ez 10 hónap értékének felel meg, innen ered a „2 hónap ingyen”. A felület mutatja a futamidő végét és azt, hogy megújul-e.
+- **Havi (kötelezettség nélkül)**: nincs elköteleződés, bármikor felmondható, a szerződéses díj **+20%**-áért. Ha ciklus közben ad hozzá járműveket, a többletet a következő számlán, utólag számlázzuk.
 
-A fuvarszervező/bróker cégek mindig havonta, felhasználás alapján kerülnek számlázásra — nincs éves opció, mivel nincs előre fizetendő jármű-előfizetés.
+Az aktív járművek száma a 12 hónapos futamidőn belül szabadon mozog — állítson le egy járművet, és a következő ciklustól nem számlázzuk. A futamidőhöz és a díjhoz kötelezi el magát, nem rögzített flottamérethez.
+
+A szállítmányozó/bróker cégek mindig havi, használatarányos elszámolásúak — nincs járműelőfizetés, amihez el lehetne köteleződni.
+
+<Note>
+  A számlák román e-Factura formátumúak, banki átutalással fizetendők az előfizetési
+  visszaigazolásban szereplő feltételekkel. A kifizetetlen számlákra a 2011/7/EU irányelv
+  szerinti törvényes késedelmi kamat és behajtási költség vonatkozik — Romániában a
+  72/2013. sz. törvény.
+</Note>
 
 ### Költségbontás
 
-A csomag-áttekintés alatt egy tételes táblázat pontosan mutatja, miből áll össze a becsült díjad: a platform alapdíja, a jármű-szám × sávdíj, és (éves csomagok esetén) a "fizess 10-et, kapj 12-t" bontás. Az árak ÁFA nélkül szerepelnek.
+A csomagáttekintés alatt egy tételes táblázat pontosan megmutatja, miből áll össze a várható összeg: a platform alapdíja (a sávval megjelölve, amelyből származik), a járműszám × sávdíj, valamint egy **Árindexálás** tétel, ha a fiókjára vonatkozik. Minden tétel havi összeg mindkét futamidő mellett — a futamidő csak az egységárat változtatja. Az árak áfa nélkül értendők.
 
-### Jármű-számlázási plafon
+### Járműszámlázási felső korlát
 
-A saját flottás cégek (számlázás-szerkesztési jogosultsággal) beállíthatnak egy opcionális **jármű-számlázási plafont** — egy maximális aktív jármű-számot, amely után nem szeretnél tovább fizetni, **3 és 500 között**. Ha az aktív járműveid száma eléri vagy meghaladja a plafont, az oldal figyelmeztetést mutat, mielőtt további járműveket aktiválnál. Üresen hagyva nincs plafon.
+A saját flottás cégek (számlázási szerkesztési joggal) opcionális **járműszámlázási felső korlátot** állíthatnak be — az aktív járművek maximális számát, amelyekért számlázni szeretné magát, legfeljebb **500**-at. Ha az aktív járművek száma eléri vagy meghaladja a korlátot, az oldal figyelmeztet, mielőtt továbbiakat aktiválna. Hagyja üresen, ha nem kíván korlátot.
 
-### Felhasználás és keret (AI-keret)
+### Használat és keret (MI-keret)
 
-Minden aktív-jármű céges fiók egy **közös AI-keretet** kap: `5 € alap + 1,00 € × aktív járművek`. Minden mért AI-felhasználás a fiókodon belül — dokumentum-kinyerés, eCMR-lepecsételés, Ask Druma, KPI-elemzések — ezt az **egyetlen, közös keretet** csökkenti; a jármű-szám csak a keret méretét határozza meg, nem rendeli hozzá a felhasználást egyes járművekhez. Egy folyamatjelző sáv mutatja, hogy a folyó hónap keretéből mennyit használtál fel.
+Minden aktív járművel rendelkező cég **közös MI-keretet** kap: `5 € alap + 0,25 € × aktív járművek`. A fiók összes mért MI-használata — dokumentumkinyerés, eCMR-pecsételés, Ask Druma, KPI-elemzések — ebből az **egyetlen, közös keretből** fogy; a járműszám csak a keret méretét adja, nem rendeli a használatot egyes járművekhez. Egy folyamatjelző mutatja, mennyit használt fel az adott hónap keretéből.
 
-A kereten felüli felhasználás nincs blokkolva — a Druma soha nem vág le hónap közben. Egyszerűen túllépésként kerül kiszámlázásra, **költség × 2,5** áron, a következő számládon.
+A kereten felüli használatot nem tiltjuk le — a Druma soha nem kapcsolja ki Önt hónap közben. Egyszerűen túlhasználatként számlázzuk **költség × 2,5** áron a következő számlán.
 
-### Funkciónkénti AI-plafonok
+### Funkciónkénti MI-korlátok
 
-A keret alatt egy **AI-funkciók és felhasználás** szakasz felsorolja az egyes bekapcsolt, mért AI-funkciókat, azok havi felhasználásával és egy szerkeszthető havi maximummal (€-ban), hogy korlátozhasd az adott funkció elszabaduló költségét.
+A keret alatt az **MI-funkciók és használat** szakasz felsorolja az összes bekapcsolt, mért MI-funkciót, a havi használatával és egy szerkeszthető havi maximummal (€-ban), hogy korlátozza az adott funkción elszabaduló költést.
 
 ### Számlák
 
-Egy **Számlák** táblázat listázza a platform-számláidat időszak szerint, ÁFA-val és bruttó összeggel, státusszal (Előnézet, Kiállítva, Fizetve, Lejárt), fizetési határidővel, és — ahol elérhető — egy hivatkozással a számla megtekintéséhez. A számlák román e-Factura formában, EUR-ban kerülnek kiállításra, az ÁFA-sor RON-ban is feltüntetve, a Román Nemzeti Bank (BNR) árfolyamán.
+A **Számlák** táblázat időszakonként sorolja fel a platformszámlákat, áfával és végösszeggel, státusszal (Előnézet, Kiállítva, Fizetve, Lejárt), fizetési határidővel és — ahol elérhető — a számlára mutató hivatkozással. A számlákat román e-Facturaként állítjuk ki EUR-ban, az áfasort a Román Nemzeti Bank (BNR) árfolyamán RON-ban is feltüntetve.
 
 ### Fizetés
 
-Egy **Fizetés** szakasz mutatja a fizetendő banki adatokat (kedvezményezett, IBAN, közlemény) és a fizetési határidődet. Nincs bankkártyás fizetési opció — minden e-Factura számlát banki átutalással kell rendezni a feltüntetett közleménnyel.
+A **Fizetés** szakasz mutatja a fizetéshez szükséges banki adatokat (kedvezményezett, IBAN, fizetési hivatkozás) és a fizetési határidőt. Kártyás fizetési lehetőség nincs — minden e-Facturát banki átutalással, a megadott hivatkozással rendezzen.
 
 ---
 
 ## Felfüggesztett fiókok
 
-Ha a fiókod fel van függesztve, a teljes alkalmazás-hozzáférés helyett egyetlen képernyő jelenik meg, amely a fennálló tartozás rendezésére kér; egy gomb közvetlenül a **Beállítások → Számlázás** oldalra visz. A bejelentkezés továbbra is működik — csak maga a munkaterület van blokkolva. Ha úgy gondolod, hogy a fiókodat tévesen függesztették fel, írj a support@druma.io címre.
+Ha egy fiók fel van függesztve, az alkalmazás teljes elérését egyetlen képernyő váltja fel, amely a fennálló egyenleg rendezésére kéri; egy gomb közvetlenül a **Beállítások → Számlázás** oldalt nyitja meg. A bejelentkezés továbbra is működik — csak maga a munkaterület van blokkolva. Ha úgy véli, hogy a fiókot tévedésből függesztették fel, írjon a support@druma.io címre.
 
 ---
 
-## Segítségre van szükséged a számlázással kapcsolatban?
+## Segítségre van szüksége a számlázással?
 
 <Card title="Kapcsolat az ügyfélszolgálattal" icon="headset" href="mailto:support@druma.io">
-  Számlázási kérdések, viták vagy számlaigénylés esetén írj a support@druma.io címre. Add meg a céged nevét és ÁFA-számát. Egy munkanapon belül válaszolunk.
+  Számlázási kérdésekkel, reklamációval vagy számlaigényléssel írjon a support@druma.io címre. Adja meg a cégnevet és az adószámot. Egy munkanapon belül válaszolunk.
 </Card>

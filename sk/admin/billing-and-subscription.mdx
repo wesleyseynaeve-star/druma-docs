@@ -1,85 +1,151 @@
 ---
 title: "Fakturácia a predplatné"
-description: "Ako funguje tvorba cien Druma, čo je miesto pre vozidlo a miesto pre používateľa a čo sa stane po skončení skúšobnej verzie."
+description: "Ako Druma fakturuje vašu firmu — pásma podľa veľkosti vozového parku, zdieľaný AI pool a natívnu fakturáciu e-Factura."
 icon: "credit-card"
 ---
 
-## Model tvorby cien
+Druma je **vystaviteľom faktúr** za vaše predplatné: každý platformový poplatok sa fakturuje ako natívna **rumunská e-Factura** (ANAF/SPV) a uhrádza **bankovým prevodom** so splatnosťou — žiadna uložená karta, žiadna platba cez Stripe a žiadna cena za používateľa. Kancelárski používatelia, vodiči aj účty zákazníckeho portálu sú vždy zadarmo; platíte za aktívne vozidlá (ak prevádzkujete vlastný vozový park) alebo za využitie platformy (ak ste čistý zasielateľ/broker).
 
-Druma sa fakturuje na základe dvoch dimenzií:
+<Note>
+**Táto stránka opisuje samoobslužný fakturačný panel Drumy**, ktorý zavádzame postupne a aktivujeme pre jednotlivé účty. Ak vaša stránka **Nastavenia → Fakturácia** momentálne zobrazuje zástupný text **„Fakturáciu spravuje Druma“** namiesto toho, čo je opísané nižšie, váš účet ešte nebol prevedený na samoobslužnú fakturáciu — naďalej vám fakturujeme podľa existujúcej zmluvy (faktúry chodia cez e-Factura ako obvykle) a zatiaľ tu nie je čo nastavovať. Zvyšok článku opisuje samoobslužnú verziu, na ktorú sa účty postupne migrujú.
+</Note>
 
-- **Miesta pre vozidlá** — počet aktívnych vozidiel vo vašej flotile
-- **Miesta pre používateľov** — počet aktívnych interných používateľov na webovej platforme (vodiči a klienti sa nepočítajú)
+<Note>
+Aktuálne ceny nájdete na [druma.io](https://druma.io) alebo napíšte na support@druma.io.
+</Note>
 
-Obe dimenzie majú stupňovité ceny — čím viac ich máte, tým nižšia je cena za jednotku.
+<Frame caption="Nastavenia → Fakturácia — ceny podľa pásma veľkosti vozového parku, rozpis nákladov a AI pool. Bez portálu Stripe, bez ceny za používateľa.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Panel nastavení fakturácie s rozpisom nákladov predplatného" />
+</Frame>
 
-## Skúšobná verzia
+---
 
-Každý nový účet dostáva **30-dňovú bezplatnú skúšobnú verziu**. Počas skúšobnej verzie:
-- Je potrebná žiadna kreditná karta
-- Máte plný prístup ku každej funkcii
-- Limity skúšobnej verzie platia pre vozidlá a používateľov (kontaktujte podporu, ak potrebujete viac)
+## Bezplatná skúšobná verzia
 
-Skúšobná verzia sa skončí automaticky po 30 dňoch. Dostanete e-mail 7 dní a znova 1 deň pred skončením skúšobnej verzie.
+Každá nová firma získa **30-dňovú bezplatnú skúšobnú verziu**. Na začatie nie je potrebná karta ani bankové údaje a počas skúšobnej doby sú plne dostupné všetky funkcie.
 
-## Prechod na platené predplatné
+---
 
-Keď sa vaša skúšobná verzia skončí:
-1. Prihláste sa do Druma
-2. Prejdite na **Nastavenia → Fakturácia**
-3. Kliknite na **Prihlásiť sa teraz**
-4. Zadajte platobné údaje (spracované bezpečne prostredníctvom Stripe)
-5. Vyberte si mesačný alebo ročný fakturačný cyklus
+## Cenový model
 
-Ročné plány ponúkajú úsporu zodpovedajúcu 2 mesiacom.
+Vaša firma sa fakturuje podľa jedného z dvoch archetypov:
 
-## Správa miest
+<Tabs>
+  <Tab title="Dopravca s vlastným vozovým parkom">
+    Ak prevádzkujete vlastné vozidlá, platíte:
+    - **Mesačný základný poplatok podľa pásma veľkosti vozového parku**.
+    - **Sadzbu za aktívne vozidlo z rovnakého pásma**. Odstavené vozidlá sú vždy zadarmo; fakturácia začína od **1 aktívneho vozidla**. Počet aktívnych vozidiel vyberie jedno pásmo a **ako** základný poplatok, **tak** každé vozidlo sa účtujú v tomto pásme (nejde o hraničný/kumulatívny výpočet).
+    - **Zdieľaný AI pool na úrovni firmy** (pozri nižšie).
 
-### Pridanie vozidiel
+    Toto sú sadzby pri **12-mesačnej zmluve**, fakturované mesačne:
 
-Keď pridáte vozidlo do Druma (**Flotila → Vozidlá → Pridať vozidlo**), počet miest pre vozidlá sa automaticky zvyšuje. Váš mesačný účet sa upraví pro-rata od dátumu pridania.
+    | Pásmo | Aktívne vozidlá | Základ / mesiac | Za aktívne vozidlo / mesiac |
+    |-------|-----------------|-----------------|------------------------------|
+    | Starter | 1–9 | 19 € | 20,00 € |
+    | Growth | 10–24 | 24 € | 19,50 € |
+    | Scale | 25–49 | 29 € | 19,30 € |
+    | Pro | 50–99 | 34 € | 19,20 € |
+    | Enterprise | 100+ | 54 € | 19,00 € |
 
-### Odstránenie vozidiel
+    Park s 10 vozidlami teda platí 24 € + 10 × 19,50 € = **219 €/mesiac**. Celková suma
+    sa s rastom nikdy nevracia späť: vyšší základ každého pásma presne vyrovnáva jeho
+    nižšiu sadzbu za vozidlo, takže pridanie vozidla vám nikdy nezníži faktúru a nikdy ju
+    nezvýši o viac než o sadzbu pásma, v ktorom sa nachádzate. Parky nad 150 vozidiel
+    oceňujeme individuálne.
 
-Deaktivácia vozidla (nastavenie na neaktívne) uvoľní jeho miesto. Vaše predplatné sa upraví pri ďalšom fakturačnom cykle.
+    **Nikdy od vás nežiadame rok vopred.** 12-mesačná zmluva je *doba trvania*, nie
+    platobný kalendár: fakturujeme vám každý mesiac vyššie uvedenými sadzbami, čo za rok
+    zodpovedá hodnote 10 mesiacov.
 
-### Pridanie používateľov
+    Nechcete sa viazať? Mesačná verzia je tá istá tabuľka **+20 %** (22,80 € základ
+    + 24,00 €/vozidlo vo vstupnom pásme), vypovedateľná kedykoľvek. Zmluvné sadzby sú
+    dolná hranica — nič sa neoceňuje pod nimi.
+  </Tab>
+  <Tab title="Zasielateľ / broker">
+    Ak nemáte vlastný vozový park, nie je tu pool vozidiel ani základný poplatok — platíte čisto za využitie: **vyššie z 25 €/mesiac alebo vašich nameraných nákladov na využitie × 2,5**.
+  </Tab>
+</Tabs>
 
-Keď pozviete nového interného používateľa, počet miest pre používateľov sa zvyšuje. Ak by pridanie nového používateľa prekročilo váš aktuálny plán, Druma zobrazí upozornenie pred odoslaním pozvánky.
+Archetyp je nastavený na vašom účte; ak si myslíte, že je nastavený nesprávne, napíšte na support@druma.io.
 
-## Platobné metódy
+### Váš cenník — čo sa stane, keď sa ceny zmenia
 
-Druma prijíma všetky hlavné kreditné a debetné karty (Visa, Mastercard, American Express). Platby sú spracovávané Stripe.
+Tabuľka vyššie je **aktuálny** cenník Drumy. Vaša firma je **pripnutá** k cenníku, ktorý
+platil pri vašej registrácii, a toto pripnutie sa nikdy nepohne samo: keď Druma zverejní
+nové ceny, platia pre nových zákazníkov, nie pre vás. Nastavenia → Fakturácia ukazuje,
+na ktorom cenníku ste (napríklad *Cenník v2*).
 
-Platobné metódy môžete spravovať v **Nastavenia → Fakturácia → Platobné metódy**.
+Čo sa v existujúcom cenníku zmeniť môže, je **ročná inflačná indexácia**. Keď sa uplatní,
+objaví sa ako samostatná položka **Indexácia ceny** na vašej faktúre — vedľa vašich pôvodne
+dohodnutých cien za základ a za vozidlo, ktoré zostávajú presne také, aké boli — nie ako
+potichu prepísaná sadzba. Pri ročnej fakturácii je položka indexácie predplatená rovnakou
+10-mesačnou sadzbou ako všetko ostatné.
 
-## Čo sa stane pri neúspešnej platbe
+Prechod na iný cenník nastane len vtedy, ak oň požiadate a my s ním súhlasíme.
 
-Ak mesačná platba zlyhá (neplatná karta, nedostatočné prostriedky):
-1. Druma odošle e-mailové upozornenie s odkazom na aktualizáciu platobnej metódy
-2. Máte **7-dňové obdobie odkladu** na aktualizáciu platobných údajov
-3. Ak platba zostane neúspešná po 7 dňoch, váš účet je pozastavený
-4. Pozastavené účty zachovávajú všetky dáta — stratíte iba prístup, kým sa platba nevyrieši
-5. Po aktualizácii platobnej metódy a spracovaní platby je prístup obnovený okamžite
+---
 
-## Zrušenie predplatného
+## Stránka Fakturácia
 
-Predplatné môžete zrušiť kedykoľvek:
+Prejdite na **Nastavenia → Fakturácia** a uvidíte svoj plán, rozpis nákladov, využitie AI a históriu faktúr.
 
-**Nastavenia → Fakturácia → Zrušiť predplatné**
+### Prehľad plánu
 
-Po zrušení:
-- Prístup pokračuje do konca aktuálneho fakturačného obdobia
-- Za čiastočné mesiace sa nevracajú platby
-- Vaše dáta sú uchované 90 dní po skončení predplatného
-- Po 90 dňoch sú prevádzkové dáta trvalo vymazané (fakturačné a eCMR záznamy sa uchovávajú podľa zákonných požiadaviek)
+Horná časť stránky zobrazuje stav účtu (**Aktívny**, **Skúšobný**, **Po splatnosti** alebo **Pozastavený**), archetyp, fakturačný interval, počet aktuálne aktívnych vozidiel, dátum najbližšej faktúry a sumu predpokladanú na aktuálne obdobie. Ak máte otvorený nezaplatený zostatok zo skoršej faktúry, banner zobrazí dlžnú sumu a počet dní po splatnosti.
 
-## Fakturácia eCMR
+### Doba trvania zmluvy
 
-eCMR je zahrnuté vo vašom predplatnom Druma bez extra nákladov. Neexistuje žiadny poplatok za dokument ani limit využitia — podpisujte toľko eCMR, koľko vaša prevádzka potrebuje.
+**Každé predplatné sa fakturuje mesačne.** Prepínač na stránke Fakturácia nastavuje *dobu trvania zmluvy*, nie to, ako často vám fakturujeme.
 
-Štatistiky využitia eCMR za aktuálne obdobie môžete stále zobraziť v **Nastavenia → Fakturácia** v sekcii **Využitie**.
+- **12-mesačná zmluva**: zaviažete sa na rok a fakturujeme vám každý mesiac zmluvnou sadzbou — cenami z tabuľky vyššie. Za rok to zodpovedá hodnote 10 mesiacov, odtiaľ „2 mesiace zadarmo“. Panel zobrazuje dátum konca vašej doby a či sa predĺži.
+- **Mesačne (bez záväzku)**: bez záväzku, výpoveď kedykoľvek, za zmluvnú sadzbu **+20 %**. Ak pridáte vozidlá uprostred cyklu, rozdiel sa doúčtuje na nasledujúcej faktúre.
 
-<Card title="Nastavenie spoločnosti" icon="building" href="/en/admin/company-setup">
-  Nakonfigurujte právne údaje a fakturačné nastavenia vašej spoločnosti.
+Počet aktívnych vozidiel sa v rámci 12-mesačnej doby voľne mení — odstavte vozidlo a od ďalšieho cyklu sa prestane účtovať. Zaväzujete sa k dobe a sadzbe, nie k pevnej veľkosti parku.
+
+Zasielateľské/brokerské firmy sú vždy mesačne a platia podľa využitia — nie je tu predplatné na vozidlá, ku ktorému by sa dalo zaviazať.
+
+<Note>
+  Faktúry sú rumunské e-Factura, splatné bankovým prevodom za podmienok uvedených v
+  potvrdení predplatného. Na nezaplatené faktúry sa vzťahujú zákonné úroky z omeškania a
+  náklady na vymáhanie stanovené smernicou 2011/7/EÚ — v Rumunsku zákon 72/2013.
+</Note>
+
+### Rozpis nákladov
+
+Pod prehľadom plánu tabuľka položiek presne ukazuje, ako vzniká predpokladaná suma: základný poplatok platformy (označený pásmom, z ktorého pochádza), počet vozidiel × sadzba pásma a položka **Indexácia ceny**, ak sa na váš účet vzťahuje. Každá položka je mesačná suma pri oboch dobách trvania — doba mení iba jednotkovú cenu. Ceny sú uvedené bez DPH.
+
+### Limit fakturovaných vozidiel
+
+Firmy s vlastným parkom (s oprávnením upravovať fakturáciu) môžu nastaviť voliteľný **limit fakturovaných vozidiel** — maximálny počet aktívnych vozidiel, za ktoré chcete byť fakturovaní, až **500**. Ak počet aktívnych vozidiel dosiahne limit alebo ho prekročí, stránka zobrazí varovanie skôr, než aktivujete ďalšie. Nechajte prázdne pre žiadny limit.
+
+### Využitie a prídel (AI pool)
+
+Každá firma s aktívnymi vozidlami dostáva **zdieľaný AI prídel**: `5 € základ + 0,25 € × aktívne vozidlá`. Všetko merané využitie AI na účte — extrakcia dokumentov, pečatenie eCMR, Ask Druma, KPI prehľady — čerpá z tohto **jediného zdieľaného poolu**; počet vozidiel len určuje veľkosť poolu, nepriraďuje využitie jednotlivým vozidlám. Ukazovateľ priebehu zobrazuje, koľko z poolu tohto mesiaca ste využili.
+
+Využitie nad rámec poolu sa neblokuje — Druma vás nikdy neodstrihne uprostred mesiaca. Jednoducho sa doúčtuje ako prečerpanie vo výške **nákladov × 2,5** na nasledujúcej faktúre.
+
+### AI limity podľa funkcie
+
+Pod poolom sekcia **AI funkcie a využitie** vypisuje každú zapnutú meranú AI funkciu s jej využitím v tomto mesiaci a upraviteľným mesačným maximom (v €), aby ste obmedzili nekontrolované výdavky na konkrétnu funkciu.
+
+### Faktúry
+
+Tabuľka **Faktúry** vypisuje vaše platformové faktúry podľa období, s DPH a celkovými sumami, stavom (Náhľad, Vystavená, Zaplatená, Po splatnosti), dátumom splatnosti a odkazom na faktúru, ak je dostupný. Faktúry sa vystavujú ako rumunská e-Factura v EUR, pričom položka DPH je uvedená aj v RON kurzom Rumunskej národnej banky (BNR).
+
+### Platba
+
+Sekcia **Platba** zobrazuje bankové údaje na úhradu (príjemca, IBAN, referencia platby) a vašu splatnosť. Platba kartou nie je k dispozícii — každú e-Factura uhraďte bankovým prevodom s uvedenou referenciou.
+
+---
+
+## Pozastavené účty
+
+Ak je účet pozastavený, celý prístup do aplikácie nahradí jediná obrazovka s výzvou uhradiť dlžný zostatok; tlačidlo otvorí priamo **Nastavenia → Fakturácia**. Prihlásenie stále funguje — zablokovaný je len samotný pracovný priestor. Ak si myslíte, že bol účet pozastavený omylom, napíšte na support@druma.io.
+
+---
+
+## Potrebujete pomoc s fakturáciou?
+
+<Card title="Kontaktovať podporu" icon="headset" href="mailto:support@druma.io">
+  S otázkami k fakturácii, reklamáciami alebo žiadosťami o faktúry píšte na support@druma.io. Uveďte názov firmy a IČ DPH. Odpovedáme do jedného pracovného dňa.
 </Card>

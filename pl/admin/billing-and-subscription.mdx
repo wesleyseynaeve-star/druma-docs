@@ -1,24 +1,28 @@
 ---
-title: "Rozliczenia i subskrypcja"
-description: "Jak Druma rozlicza Twoją firmę — progi cenowe wg liczby pojazdów, pula użycia AI i natywne fakturowanie e-Factura."
+title: "Rozliczenia i abonament"
+description: "Jak Druma rozlicza Twoją firmę — przedziały wielkości floty, wspólna pula AI i natywne fakturowanie e-Factura."
 icon: "credit-card"
 ---
 
-Druma jest **wystawcą faktury** za Twoją subskrypcję: każda opłata platformowa jest wystawiana jako natywna **rumuńska e-Factura** (ANAF/SPV) i płatna **przelewem bankowym** z odroczonym terminem — nie ma karty zapisanej w systemie, nie ma płatności przez Stripe i nie ma opłat za miejsca użytkowników. Użytkownicy biurowi, kierowcy i konta portalu klienta są zawsze bezpłatne; płacisz za aktywne pojazdy (jeśli prowadzisz własną flotę) lub za użycie platformy (jeśli jesteś czystym spedytorem/brokerem).
+Druma jest **wystawcą faktur** za Twój abonament: każda opłata za platformę jest fakturowana jako natywna **rumuńska e-Factura** (ANAF/SPV) i opłacana **przelewem bankowym** z terminem płatności — nie ma zapisanej karty, nie ma płatności przez Stripe i nie ma opłat za użytkownika. Użytkownicy biurowi, kierowcy i konta portalu klienta są zawsze bezpłatne; płacisz za aktywne pojazdy (jeśli masz własną flotę) lub za korzystanie z platformy (jeśli jesteś czystym spedytorem/brokerem).
 
 <Note>
-Aktualne ceny znajdziesz na [druma.io](https://druma.io) lub kontaktując się z support@druma.io.
+**Ta strona opisuje samoobsługowy panel rozliczeń Druma**, który jest wdrażany stopniowo, konto po koncie. Jeśli Twoja strona **Ustawienia → Rozliczenia** pokazuje obecnie zastępczy komunikat **„Rozliczenia obsługiwane przez Drumę”** zamiast opisanego poniżej widoku, Twoje konto nie zostało jeszcze przeniesione na samoobsługę — nadal rozliczamy Cię zgodnie z dotychczasową umową (faktury przychodzą przez e-Factura jak zwykle) i na razie nie ma tu nic do skonfigurowania. Dalsza część artykułu opisuje wariant samoobsługowy, na który konta są sukcesywnie migrowane.
 </Note>
 
-<Frame caption="Ustawienia → Rozliczenia — progi cenowe wg liczby pojazdów, podział kosztów i pula użycia AI. Bez portalu Stripe, bez opłat za miejsca.">
-  <img src="/images/admin/billing-and-subscription.png" alt="Panel ustawień rozliczeń pokazujący podział kosztów subskrypcji" />
+<Note>
+Aktualne ceny znajdziesz na [druma.io](https://druma.io) lub pisząc na support@druma.io.
+</Note>
+
+<Frame caption="Ustawienia → Rozliczenia — ceny według przedziału wielkości floty, rozbicie kosztów i pula wykorzystania AI. Bez portalu Stripe, bez opłat za użytkownika.">
+  <img src="/images/admin/billing-and-subscription.png" alt="Panel ustawień rozliczeń z rozbiciem kosztów abonamentu" />
 </Frame>
 
 ---
 
 ## Bezpłatny okres próbny
 
-Każda nowa firma otrzymuje **30-dniowy bezpłatny okres próbny**. Nie są wymagane dane karty ani dane bankowe, a wszystkie funkcje są w pełni dostępne podczas okresu próbnego.
+Każda nowa firma otrzymuje **30-dniowy bezpłatny okres próbny**. Do rozpoczęcia nie są potrzebne karta ani dane bankowe, a w trakcie okresu próbnego wszystkie funkcje są w pełni dostępne.
 
 ---
 
@@ -28,81 +32,121 @@ Twoja firma jest rozliczana według jednego z dwóch archetypów:
 
 <Tabs>
   <Tab title="Przewoźnik z własną flotą">
-    Jeśli prowadzisz własne pojazdy, płacisz:
-    - Stałą **opłatę bazową firmy 25 €/miesiąc**.
-    - **Opłatę progową za aktywny pojazd**. Zaparkowane pojazdy są zawsze bezpłatne; rozliczenie ma minimum **3 aktywnych pojazdów**. Całkowita liczba aktywnych pojazdów wyznacza jeden próg, a **wszystkie** aktywne pojazdy są rozliczane według stawki tego progu (nie jest to kalkulacja marginalna/narastająca).
-    - **Firmową, wspólną pulę AI** (patrz niżej).
+    Jeśli eksploatujesz własne pojazdy, płacisz:
+    - **Miesięczną opłatę podstawową zależną od przedziału wielkości floty**.
+    - **Stawkę za aktywny pojazd z tego samego przedziału**. Pojazdy odstawione są zawsze bezpłatne; rozliczanie zaczyna się od **1 aktywnego pojazdu**. Liczba aktywnych pojazdów wybiera jeden przedział, a **zarówno** opłata podstawowa, jak i każdy pojazd są rozliczane w tym przedziale (to nie jest wyliczenie krańcowe/kumulacyjne).
+    - **Wspólną pulę AI na poziomie firmy** (patrz niżej).
 
-    | Próg | Aktywne pojazdy | Miesięcznie / pojazd | Rocznie / pojazd |
-    |------|---------------|------------------|-----------------|
-    | Starter | 3–9 | 41 € | 34 € |
-    | Growth | 10–24 | 38 € | 32 € |
-    | Scale | 25–49 | 36 € | 30 € |
-    | Pro | 50–74 | 34 € | 28 € |
-    | Enterprise | 75+ | 30 € | 25 € |
+    To są stawki dla **umowy 12-miesięcznej**, fakturowane co miesiąc:
+
+    | Przedział | Aktywne pojazdy | Podstawa / mies. | Za aktywny pojazd / mies. |
+    |-----------|-----------------|------------------|---------------------------|
+    | Starter | 1–9 | 19 € | 20,00 € |
+    | Growth | 10–24 | 24 € | 19,50 € |
+    | Scale | 25–49 | 29 € | 19,30 € |
+    | Pro | 50–99 | 34 € | 19,20 € |
+    | Enterprise | 100+ | 54 € | 19,00 € |
+
+    Flota 10 pojazdów płaci więc 24 € + 10 × 19,50 € = **219 €/miesiąc**. Suma nigdy nie
+    cofa się wraz ze wzrostem: wyższa podstawa każdego przedziału dokładnie równoważy jego
+    niższą stawkę za pojazd, więc dodanie pojazdu nigdy nie obniża rachunku ani nie
+    podnosi go o więcej niż stawka przedziału, w którym jesteś. Floty powyżej 150 pojazdów
+    wyceniamy indywidualnie.
+
+    **Nigdy nie prosimy o płatność za rok z góry.** Umowa 12-miesięczna to *okres*, a nie
+    harmonogram płatności: fakturujemy Cię co miesiąc według powyższych stawek, co w skali
+    roku daje równowartość 10 miesięcy.
+
+    Wolisz bez zobowiązania? Wariant miesięczny to ta sama tabela **+20%** (22,80 €
+    podstawy + 24,00 €/pojazd w przedziale wejściowym), wypowiadalny w każdej chwili.
+    Stawki umowne są dolną granicą — nic nie jest wyceniane poniżej nich.
   </Tab>
   <Tab title="Spedytor / broker">
-    Jeśli nie prowadzisz własnej floty, nie ma puli pojazdów ani opłaty bazowej — płacisz wyłącznie za użycie: **wyższą z kwot: 25 €/miesiąc lub koszt zmierzonego użycia × 2,5**.
+    Jeśli nie masz własnej floty, nie ma puli pojazdów ani opłaty podstawowej — płacisz wyłącznie za wykorzystanie: **więcej z 25 €/miesiąc albo Twojego zmierzonego kosztu wykorzystania × 2,5**.
   </Tab>
 </Tabs>
 
-Twój archetyp jest ustawiony na koncie; skontaktuj się z support@druma.io, jeśli uważasz, że jest ustawiony nieprawidłowo.
+Archetyp jest ustawiony na Twoim koncie; napisz na support@druma.io, jeśli uważasz, że jest ustawiony błędnie.
+
+### Twój cennik — co się dzieje, gdy ceny się zmieniają
+
+Powyższa tabela to **aktualny** cennik Drumy. Twoja firma jest **przypisana** do cennika,
+który obowiązywał w momencie rejestracji, a to przypisanie nigdy nie zmienia się samo:
+gdy Druma publikuje nowe ceny, dotyczą one nowych klientów, nie Ciebie. Ustawienia →
+Rozliczenia pokazują, na którym cenniku jesteś (na przykład *Cennik v2*).
+
+To, co może się zmienić w istniejącym cenniku, to **coroczna indeksacja inflacyjna**. Gdy
+ma zastosowanie, pojawia się jako osobna pozycja **Indeksacja ceny** na fakturze — obok
+Twoich pierwotnie zakontraktowanych cen podstawy i za pojazd, które pozostają dokładnie
+takie same — a nie jako po cichu przepisana stawka. Przy rozliczeniu rocznym pozycja
+indeksacji jest opłacana z góry według tej samej 10-miesięcznej stawki co reszta.
+
+Przejście na inny cennik następuje wyłącznie wtedy, gdy o to poprosisz i wyrazimy zgodę.
 
 ---
 
 ## Strona Rozliczenia
 
-Przejdź do **Ustawienia → Rozliczenia**, aby zobaczyć swój plan, podział kosztów, użycie AI i historię faktur.
+Przejdź do **Ustawienia → Rozliczenia**, aby zobaczyć plan, rozbicie kosztów, wykorzystanie AI i historię faktur.
 
 ### Przegląd planu
 
-Góra strony pokazuje status konta (**Aktywne**, **Okres próbny**, **Zaległość**, **Zawieszone**), archetyp, interwał rozliczeniowy, liczbę aktualnie aktywnych pojazdów, datę kolejnej faktury oraz prognozowaną kwotę bieżącego okresu. Jeśli masz otwarte, niezapłacone saldo na wcześniejszej fakturze, baner pokazuje zaległą kwotę i liczbę dni opóźnienia.
+Górna część strony pokazuje status konta (**Aktywne**, **Okres próbny**, **Zaległe** lub **Zawieszone**), archetyp, interwał rozliczeniowy, liczbę obecnie aktywnych pojazdów, datę następnej faktury i kwotę prognozowaną na bieżący okres. Jeśli masz otwarte, nieopłacone saldo z wcześniejszej faktury, baner pokazuje zaległą kwotę i liczbę dni opóźnienia.
 
-### Rozliczenie miesięczne vs roczne
+### Okres umowy
 
-Firmy z własną flotą mogą przełączać się między rozliczeniem **miesięcznym** a **rocznym** za pomocą przełącznika interwału na stronie Rozliczenia.
+**Każdy abonament jest fakturowany co miesiąc.** Przełącznik na stronie Rozliczenia ustawia *okres umowy*, a nie częstotliwość fakturowania.
 
-- **Roczne**: płacisz za 10 miesięcy, otrzymujesz 12 — opłata bazowa i subskrypcja za pojazd są opłacane z góry na cały rok jako jedna e-Factura. Nadwyżka użycia (pula AI) wciąż jest rozliczana miesięcznie z dołu.
-- **Miesięczne**: subskrypcja odnawia się co miesiąc. Dodanie pojazdów w trakcie cyklu jest rozliczane z dołu na kolejnej fakturze.
+- **Umowa 12-miesięczna**: zobowiązujesz się na rok i jesteś fakturowany co miesiąc według stawki umownej — cen z powyższej tabeli. W skali roku daje to równowartość 10 miesięcy, stąd „2 miesiące gratis”. Panel pokazuje datę zakończenia okresu i to, czy się odnowi.
+- **Miesięcznie (bez zobowiązania)**: bez zobowiązania, wypowiedzenie w każdej chwili, według stawki umownej **+20%**. Jeśli dodasz pojazdy w trakcie cyklu, różnica zostanie doliczona z dołu na następnej fakturze.
 
-Firmy spedycyjne/brokerskie są zawsze rozliczane miesięcznie, w modelu pay-as-you-go — nie ma opcji rocznej, bo nie ma subskrypcji za pojazd do opłacenia z góry.
+Liczba aktywnych pojazdów zmienia się swobodnie w ramach 12-miesięcznego okresu — odstaw pojazd, a przestanie być rozliczany od następnego cyklu. Zobowiązujesz się do okresu i stawki, a nie do stałej wielkości floty.
 
-### Podział kosztów
+Firmy spedycyjne/brokerskie zawsze rozliczają się miesięcznie, według wykorzystania — nie ma abonamentu na pojazdy, do którego można by się zobowiązać.
 
-Poniżej przeglądu planu tabela pozycji pokazuje dokładnie, jak zbudowana jest prognozowana opłata: opłata bazowa platformy, liczba pojazdów × stawka progu oraz (dla planów rocznych) ujęcie "płać za 10, otrzymaj 12". Ceny podane są bez VAT.
+<Note>
+  Faktury to rumuńskie e-Factura, płatne przelewem bankowym na warunkach z potwierdzenia
+  abonamentu. Do faktur nieopłaconych stosuje się ustawowe odsetki za opóźnienie oraz
+  koszty odzyskiwania należności zgodnie z dyrektywą 2011/7/UE — w Rumunii ustawa
+  72/2013.
+</Note>
+
+### Rozbicie kosztów
+
+Pod przeglądem planu tabela pozycji pokazuje dokładnie, jak powstaje prognozowana kwota: opłata podstawowa platformy (opisana przedziałem, z którego pochodzi), liczba pojazdów × stawka przedziału oraz pozycja **Indeksacja ceny**, jeśli dotyczy Twojego konta. Każda pozycja to kwota miesięczna przy obu okresach umowy — okres zmienia jedynie cenę jednostkową. Ceny podane bez VAT.
 
 ### Limit rozliczanych pojazdów
 
-Firmy z własną flotą (z uprawnieniem do edycji rozliczeń) mogą ustawić opcjonalny **limit rozliczanych pojazdów** — maksymalną liczbę aktywnych pojazdów, za które chcą być rozliczane, między **3 a 500**. Jeśli liczba aktywnych pojazdów osiągnie lub przekroczy limit, strona pokazuje ostrzeżenie przed aktywacją kolejnych pojazdów. Pozostaw puste pole, aby nie ustawiać limitu.
+Firmy z własną flotą (z uprawnieniem do edycji rozliczeń) mogą ustawić opcjonalny **limit rozliczanych pojazdów** — maksymalną liczbę aktywnych pojazdów, za które chcesz być rozliczany, do **500**. Jeśli liczba aktywnych pojazdów osiągnie lub przekroczy limit, strona wyświetli ostrzeżenie, zanim aktywujesz kolejne. Pozostaw puste, aby nie stosować limitu.
 
-### Użycie i pula AI
+### Wykorzystanie i przydział (pula AI)
 
-Każda firma z aktywnymi pojazdami otrzymuje **wspólną pulę AI**: `5 € bazowo + 1,00 € × aktywne pojazdy`. Całe zmierzone użycie AI na koncie — ekstrakcja dokumentów, pieczętowanie eCMR, Ask Druma, wnioski KPI — pobiera z tej **jednej, wspólnej puli**; liczba pojazdów tylko ustala rozmiar puli, nie przypisuje użycia do poszczególnych pojazdów. Pasek postępu pokazuje, ile z puli bieżącego miesiąca wykorzystano.
+Każda firma z aktywnymi pojazdami otrzymuje **wspólną pulę AI**: `5 € podstawy + 0,25 € × aktywne pojazdy`. Całe mierzone wykorzystanie AI na koncie — ekstrakcja dokumentów, pieczętowanie eCMR, Ask Druma, analizy KPI — pomniejsza tę **jedną, wspólną pulę**; liczba pojazdów jedynie wyznacza rozmiar puli, nie przypisuje wykorzystania do konkretnych pojazdów. Pasek postępu pokazuje, ile puli z bieżącego miesiąca już zużyto.
 
-Użycie ponad pulę nie jest blokowane — Druma nigdy nie odcina dostępu w trakcie miesiąca. Jest po prostu rozliczane jako nadwyżka według stawki **koszt × 2,5** na kolejnej fakturze.
+Wykorzystanie ponad pulę nie jest blokowane — Druma nigdy nie odcina Cię w środku miesiąca. Jest po prostu rozliczane jako nadwyżka po **koszcie × 2,5** na następnej fakturze.
 
-### Limity per funkcja AI
+### Limity AI dla poszczególnych funkcji
 
-Poniżej puli sekcja **Funkcje AI i użycie** wylistowuje każdą włączoną, opcjonalną, zmierzoną funkcję AI wraz z użyciem w tym miesiącu i edytowalnym miesięcznym maksimum (w €), aby ograniczyć niekontrolowane wydatki na daną funkcję.
+Pod pulą sekcja **Funkcje i wykorzystanie AI** wymienia każdą włączoną, mierzoną funkcję AI wraz z jej wykorzystaniem w tym miesiącu i edytowalnym miesięcznym maksimum (w €), aby ograniczyć niekontrolowane wydatki na tę konkretną funkcję.
 
 ### Faktury
 
-Tabela **Faktury** wylistowuje faktury platformowe wg okresu, z kwotami VAT i łącznymi, statusem (Wersja robocza, Wystawiona, Opłacona, Zaległa), terminem płatności i linkiem do podglądu faktury, gdzie dostępny. Faktury są wystawiane jako rumuńska e-Factura w EUR, z pozycją VAT pokazaną również w RON według kursu Narodowego Banku Rumunii (BNR).
+Tabela **Faktury** wymienia faktury za platformę według okresów, z VAT i kwotami łącznymi, statusem (Podgląd, Wystawiona, Opłacona, Zaległa), terminem płatności i linkiem do faktury, jeśli jest dostępny. Faktury są wystawiane jako rumuńskie e-Factura w EUR, przy czym pozycja VAT jest podana także w RON według kursu Narodowego Banku Rumunii (BNR).
 
 ### Płatność
 
-Sekcja **Płatność** pokazuje dane bankowe do zapłaty (beneficjent, IBAN, tytuł płatności) oraz Twoje warunki płatności. Nie ma opcji płatności kartą — rozliczaj każdą e-Factura przelewem bankowym, używając podanego tytułu.
+Sekcja **Płatność** pokazuje dane bankowe do zapłaty (beneficjent, IBAN, tytuł przelewu) oraz Twoje terminy płatności netto. Nie ma opcji płatności kartą — reguluj każdą e-Factura przelewem bankowym, podając wskazany tytuł.
 
 ---
 
 ## Konta zawieszone
 
-Jeśli Twoje konto jest zawieszone, cały dostęp do aplikacji jest zastąpiony jednym ekranem z prośbą o uregulowanie zaległego salda; przycisk otwiera bezpośrednio **Ustawienia → Rozliczenia**. Logowanie nadal działa — zablokowany jest tylko dostęp do przestrzeni roboczej. Jeśli uważasz, że konto zostało zawieszone przez pomyłkę, skontaktuj się z support@druma.io.
+Jeśli konto jest zawieszone, cały dostęp do aplikacji zostaje zastąpiony jednym ekranem z prośbą o uregulowanie zaległego salda; przycisk otwiera bezpośrednio **Ustawienia → Rozliczenia**. Logowanie nadal działa — zablokowany jest wyłącznie sam obszar roboczy. Jeśli uważasz, że konto zawieszono przez pomyłkę, napisz na support@druma.io.
 
 ---
 
 ## Potrzebujesz pomocy z rozliczeniami?
 
 <Card title="Kontakt z pomocą techniczną" icon="headset" href="mailto:support@druma.io">
-  W przypadku pytań dotyczących rozliczeń, sporów lub wniosków o fakturę, napisz na support@druma.io. Podaj nazwę firmy i numer VAT. Odpowiadamy w ciągu jednego dnia roboczego.
+  W sprawach rozliczeń, reklamacji lub próśb o faktury pisz na support@druma.io. Podaj nazwę firmy i numer VAT. Odpowiadamy w ciągu jednego dnia roboczego.
 </Card>
