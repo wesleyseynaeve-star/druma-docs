@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-09 00:19 UTC
+Generated: 2026-08-10 15:47 UTC
 
 ---
 
@@ -1222,13 +1222,13 @@ Your company is billed under one of two archetypes:
 
     | Band | Active trucks | Base / month | Per active truck / month |
     |------|---------------|--------------|--------------------------|
-    | Starter | 1–9 | €19 | €16.00 |
-    | Growth | 10–24 | €44 | €13.50 |
-    | Scale | 25–49 | €69 | €12.50 |
-    | Pro | 50–99 | €119 | €11.50 |
-    | Enterprise | 100+ | €219 | €10.50 |
+    | Starter | 1–9 | €19 | €20.00 |
+    | Growth | 10–24 | €24 | €19.50 |
+    | Scale | 25–49 | €29 | €19.30 |
+    | Pro | 50–99 | €34 | €19.20 |
+    | Enterprise | 100+ | €54 | €19.00 |
 
-    So a 10-truck fleet pays €44 + 10 × €13.50 = **€179/month**. The total never
+    So a 10-truck fleet pays €24 + 10 × €19.50 = **€219/month**. The total never
     jumps backwards as you grow: each band's higher base exactly offsets its lower
     per-truck rate, so adding a truck never lowers your bill and never raises it by
     more than the band rate you are on. Fleets above 150 trucks are quoted individually.
@@ -1238,7 +1238,7 @@ Your company is billed under one of two archetypes:
     which work out at 10 months' worth spread across 12.
 
     Prefer not to commit? Month-to-month is the same table **+20%** (€22.80 base
-    + €19.20/truck at the entry band), cancellable any time. The contract rates
+    + €24.00/truck at the entry band), cancellable any time. The contract rates
     are the floor — nothing prices below them.
   </Tab>
   <Tab title="Forwarder / broker">
