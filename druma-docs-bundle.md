@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-10 15:47 UTC
+Generated: 2026-08-11 21:23 UTC
 
 ---
 
@@ -6099,7 +6099,7 @@ Tap this when the delivery is fully complete and you've left the site. The order
 
 Opening an order shows four tabs, with a persistent bar pinned to the bottom of every one of them:
 
-- **Now** — your current stop, and a "Before you can continue" card listing anything blocking your next step (pre-trip checklist, required documents, an outstanding eCMR signature)
+- **Now** — your current stop, and a "Before you can continue" card listing anything blocking your next step (pre-trip checklist, required documents). Only real blockers appear there; the CMR signature row sits below the card, because an unsigned eCMR never stops you — see [Signing the eCMR](/en/driver/signing-ecmr)
 - **Trip** — the full route, all stops, cargo details, and compliance info (ADR, customs references, e-Transport, eFTI)
 - **Docs** — upload and review documents for this order
 - **Chat** — message your dispatcher directly about this order
@@ -6115,7 +6115,7 @@ The bottom bar itself always shows two things: a **Next Step: <status>** button 
     From the Druma app home screen, tap the active order card. This opens the order detail screen on the **Now** tab.
   
   ### Check for anything blocking your next step
-    If the **Now** tab shows a "Before you can continue" card, resolve it first — for example, complete the pre-trip checklist or sign the eCMR.
+    If the **Now** tab lists anything under "Before you can continue", resolve it first — complete the pre-trip checklist, or upload the required documents. When nothing is outstanding the card reads "Nothing blocking — you can continue".
   
   ### Tap Next Step on the bottom bar
     The bar at the bottom of the screen always shows **Next Step: <status>**. Tap it to advance. A confirmation dialog appears showing what you're about to update.
@@ -6211,7 +6211,9 @@ There's nothing for you to do for this step — you won't see a shipper-signing 
 
 ### Step 2: You Sign
 
-On the order's **Now** tab, the "Before you can continue" card shows a **Sign eCMR** row while your signature is still outstanding. Once you've signed, that row collapses into a simple **eCMR signed** chip.
+On the order's **Now** tab — below the "Before you can continue" card, not inside it — a **Sign eCMR** row appears while your signature is still outstanding, marked *eCMR or paper CMR — either is valid*. Once you've signed, that row collapses into a simple **CMR signed** line.
+
+Signing is never a blocker: an outstanding signature does not stop you advancing the order's status, because a signed paper CMR is an equally valid original. See [Paper CMR Fallback](/en/ecmr/paper-cmr-fallback) for when to use paper instead.
 
 
   ### Open your order and tap Sign eCMR
