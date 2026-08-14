@@ -81,9 +81,28 @@ The sealed PDF contains:
 - A unique, unalterable document number
 - Timestamp of each signature
 - Cryptographic hash of the document content bound to the seal
-- Druma's signing certificate details, verifiable by any standard PDF viewer
+- Druma's signing certificate details, readable by any standard PDF viewer
 
-This sealed PDF is what you present to customs authorities, insurers, courts, or clients — not just a simple export. Any standard PDF reader (Adobe Acrobat, etc.) can verify the seal has not been tampered with.
+This sealed PDF is what you present to enforcement authorities, insurers, courts, or clients — not just a simple export. Any standard PDF reader (Adobe Acrobat, etc.) can verify the seal has not been tampered with.
+
+### Signature profile: B-B and B-T
+
+A seal can be issued at two profiles, shown in **Settings → Integrations → eCMR → Test connection**.
+
+**PAdES-B-B** proves the document has not changed since it was sealed. It does *not* prove *when* it was sealed — the only date is one the signer asserts about itself. Once the signing certificate expires, a verifier can no longer establish that the seal was made while that certificate was valid, and validation degrades to "unknown".
+
+**PAdES-B-T** adds a timestamp issued by an independent time-stamping authority. The seal then stays verifiable after the signing certificate expires. Because eCMRs are retained for seven years (below) and can surface in a claim long after the transport, B-T is the profile to run in production.
+
+If the timestamping authority is unreachable at the moment of sealing, the eCMR is still sealed — at B-B — and the downgrade is recorded server-side. A delivery is never blocked by an unavailable authority.
+
+### What the certificate says about trust
+
+The seal's legal weight comes from being an **advanced electronic seal**, not from who issued the certificate. But what a reader *displays* depends on whether the certificate chains to a publicly trusted root:
+
+- A certificate issued by a public CA or an EU-qualified trust service provider shows a **green check**.
+- A **self-signed** certificate shows *"signature validity is unknown — the signer's certificate could not be verified"*.
+
+Both are legally valid advanced seals. The difference is presentation, not admissibility — but it is what an inspector or an insurer sees first. Operators who want the green check should install an organisation eSeal certificate; the document itself does not change.
 
 ---
 
