@@ -1,0 +1,94 @@
+---
+title: "Zadania zlecenia i szablony przepływu pracy"
+description: "Konfigurowalne listy kontrolne, które śledzą wymagane kroki na zleceniu w trakcie jego cyklu życia — oraz sposób, w jaki administratorzy je budują."
+icon: "list-check"
+---
+
+## Przegląd
+
+Silnik zadań dołącza do zlecenia (lub faktury) **listę kontrolną**, która śledzi kroki wymagane przez Twoją firmę na każdym etapie — wyślij potwierdzenie, wygeneruj dokument, skontaktuj się ponownie z klientem — i pokazuje, kto odpowiada oraz czy coś jest po terminie. Administrator buduje listę raz jako wielokrotnego użytku **szablon zadań**; od tej chwili materializuje się ona automatycznie na każdym pasującym zleceniu.
+
+Ta strona opisuje obie strony: co na co dzień widzi planista lub dyspozytor oraz jak administrator konfiguruje stojące za tym szablony.
+
+---
+
+## Co widzisz na zleceniu
+
+Otwórz dowolne zlecenie (lub fakturę) objęte pasującym szablonem zadań, a znajdziesz panel **listy kontrolnej zadań** pokazujący wszystkie wymagane kroki dla bieżącego etapu.
+
+Każdy wiersz pokazuje:
+
+- Ikonę statusu — oczekujące (puste kółko), w toku (zegar), wykonane (haczyk), pominięte lub nieudane
+- Odpowiedzialną rolę, jeśli została ustawiona
+- **Oczekuje na wcześniejszy krok**, jeśli zadanie zależy od innego, jeszcze niewykonanego kroku
+- Plakietkę **Termin** lub **Po terminie**, gdy krok ma datę wykonania
+
+W przypadku otwartych kroków możesz:
+- Kliknąć ikonę haczyka, aby **oznaczyć jako wykonane**
+- Kliknąć ikonę pominięcia, aby **pominąć krok** (opcjonalnie z podaniem powodu)
+
+Obie akcje są niedostępne, gdy krok jest zablokowany zależnością. Jeśli krok skonfigurowano tak, by wykonywał się lub pomijał automatycznie po osiągnięciu przez zlecenie określonego statusu, po prostu zobaczysz, że sam przechodzi w stan Wykonane lub Pominięte — bez kliknięcia.
+
+Wiersze list zleceń i faktur niosą też małą plakietkę podsumowującą: bursztynowy licznik, dopóki zadania pozostają otwarte, albo zielony haczyk **wszystko wykonane**, gdy każde zadanie na danym rekordzie jest ukończone. Jeśli żaden szablon nie pasuje do bieżącego etapu zlecenia, panel pokazuje po prostu *„Brak skonfigurowanej listy kontrolnej dla tego etapu.”*
+
+<Note>
+Zadania są powiązane z **fazą cyklu życia** — tymi samymi statusami, które opisuje [Cykl życia zlecenia](/pl/planner/order-lifecycle). Lista kontrolna pojawia się (lub aktualizuje) automatycznie, gdy zlecenie albo faktura osiągnie fazę objętą szablonem.
+</Note>
+
+---
+
+## Jak administratorzy konfigurują szablony zadań
+
+Przejdź do **Ustawienia → Szablony i strefy → Szablony zadań**. Szablony są dostarczane puste dla każdej firmy — nic nie jest wstępnie skonfigurowane, więc zbudowanie listy kontrolnej jest w pełni dobrowolne.
+
+<Steps>
+  <Step title="Utwórz szablon">
+    Kliknij **Dodaj szablon**. Wybierz **typ obiektu** (Zlecenie lub Faktura), **fazę cyklu życia**, która ma go wyzwalać (np. Potwierdzone, Dostarczone), oraz etykietę. Zostaw go włączonym, aby działał od razu, albo zapisz wyłączony na czas budowania.
+  </Step>
+  <Step title="Opcjonalnie zawęź go warunkami">
+    Użyj **Stosuje się, gdy**, aby ograniczyć szablon wyłącznie do pasujących zleceń — na przykład tylko ładunki ADR, tylko konkretny klient albo tylko przewozy kabotażowe. Pozostaw puste, a szablon obejmie każde zlecenie osiągające docelową fazę.
+  </Step>
+  <Step title="Dodaj kroki">
+    Dla każdego kroku ustaw klucz i etykietę, a następnie **typ kroku**:
+    - **Ręczny** — osoba musi sama oznaczyć go jako wykonany lub pominięty
+    - **Wygeneruj dokument**, **Wyślij e-mail** lub **Uruchom automatyzację** — wybierz konkretne działanie z przygotowanej listy (np. Wygeneruj fakturę, Wyślij potwierdzenie zlecenia, Wygeneruj CMR)
+  </Step>
+  <Step title="Ustaw tryb ukończenia">
+    Wybierz **Ręczny** (ktoś kończy krok z listy kontrolnej) albo **Automatyczny** — krok automatyczny wykonuje się lub pomija sam w chwili, gdy zlecenie bądź faktura osiągnie skonfigurowany status, bez niczyjego kliknięcia.
+  </Step>
+  <Step title="Dodaj odpowiedzialność i kolejność">
+    Opcjonalnie ustaw **odpowiedzialną rolę**, spraw, by krok **zależał od** wcześniejszego kroku (pozostaje zablokowany do jego wykonania), oraz określ jego pozycję na liście.
+  </Step>
+  <Step title="Zapisz">
+    Szablon materializuje teraz listę kontrolną na każdym zleceniu (lub fakturze) zgodnym z jego typem obiektu, fazą i warunkami.
+  </Step>
+</Steps>
+
+---
+
+## Nadpisania dla konkretnego klienta
+
+Niektórzy klienci potrzebują innej listy kontrolnej niż reszta portfela — dodatkowego kroku dokumentowego albo takiego, którego wyraźnie nie potrzebują. Zamiast budować osobny szablon, nadpisz go dla danego klienta.
+
+Otwórz stronę szczegółów klienta i przejdź do zakładki **Nadpisania zadań**. Możesz tam wyłączyć:
+- Cały szablon, tylko dla tego klienta, albo
+- Pojedyncze kroki w obrębie szablonu
+
+Szablon firmowy pozostaje nietknięty dla wszystkich pozostałych klientów — nadpisanie dotyczy wyłącznie edytowanego rekordu klienta.
+
+---
+
+## Co dzieje się w tle
+
+Zaplanowane zadanie sprawdza co kilka minut, które kroki są gotowe do uruchomienia — zależności spełnione, termin nadszedł, tryb automatyczny — i uruchamia je bez konieczności otwierania listy kontrolnej przez kogokolwiek. To wyłącznie szczegół dotyczący niezawodności; na co dzień korzystasz jedynie z panelu listy kontrolnej na samym zleceniu.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Cykl życia zlecenia" icon="circle-dot" href="/pl/planner/order-lifecycle">
+    Wszystkie statusy zlecenia i to, co wyzwala przejścia między nimi.
+  </Card>
+  <Card title="CRM i lejek sprzedaży" icon="user-group" href="/pl/planner/crm">
+    Rekordy klientów, w których żyją nadpisania zadań, obok punktów kontaktu i etapu cyklu życia.
+  </Card>
+</CardGroup>

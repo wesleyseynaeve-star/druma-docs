@@ -1,0 +1,104 @@
+---
+title: "Kontrola drogowa eFTI (kontrola służb)"
+description: "Jak Druma wspiera kontrole służb w rozumieniu rozporządzenia UE 2020/1056 (eFTI) — karta z kodem QR okazywana przez kierowcę i to, co widzi funkcjonariusz."
+icon: "shield-check"
+---
+
+Rozporządzenie (UE) 2020/1056 w sprawie elektronicznych informacji dotyczących transportu towarowego (**eFTI**) wymaga, aby od **9 lipca 2027 r.** organy państw członkowskich UE akceptowały elektroniczne informacje o transporcie towarowym zamiast żądać dokumentów papierowych podczas kontroli drogowych. Druma jest zbudowana tak, by ten wymóg spełnić.
+
+---
+
+## Czym jest eFTI?
+
+Rozporządzenie eFTI tworzy ramy prawne pozwalające:
+
+- Przewoźnikom przechowywać informacje o transporcie towarowym cyfrowo na certyfikowanej platformie eFTI
+- Organom (policja, służba celna, inspektorzy) uzyskiwać dostęp do tych informacji elektronicznie podczas kontroli drogowych, zamiast wymagać od kierowcy okazania papierowych dokumentów
+- Stosować znormalizowany wspólny zbiór danych dla transportu drogowego, odwzorowany z pól listu przewozowego CMR
+
+Druma wdraża **podzbiór transportu drogowego / CMR** wspólnego zbioru danych eFTI, obejmujący wszystkie obowiązkowe pola przewozowe, dane stron oraz status eCMR.
+
+<Frame caption="Karta kontroli drogowej, którą widzi funkcjonariusz po zeskanowaniu kodu QR kierowcy — przesyłka, strony i status eCMR, tylko do odczytu.">
+  <img src="/images/ecmr/efti-roadside-inspection.png" alt="Widok kontroli drogowej eFTI ze szczegółami przesyłki, stronami i statusem eCMR na potrzeby kontroli służb" />
+</Frame>
+
+### Wspólny zbiór danych (CDS)
+
+Warstwa zgodności Drumy zawiera **serializator CDS (wspólnego zbioru danych)**, który tworzy **podzbiór danych drogowych/CMR EU03** zdefiniowany w rozporządzeniu delegowanym Komisji (UE) 2024/2024 — ustrukturyzowaną, nadającą się do odczytu maszynowego reprezentację przesyłki (strony, lokalizacje, towary, podpisy), której oczekuje się od platformy eFTI. Działa on równolegle z opisanym niżej widokiem czytelnym dla człowieka, dzięki czemu ten sam transport można przedstawić albo jako dane ustrukturyzowane, albo jako widok na ekranie — zależnie od tego, czego zażąda organ.
+
+---
+
+## Co widzi kierowca
+
+Każde zlecenie ma unikalny **identyfikator eFTI**. W aplikacji kierowcy, na ekranie szczegółów zlecenia, znajduje się karta **„Kontrola służb (eFTI)”**. Pokazuje ona:
+
+- **Kod QR**, który kierowca może okazać podczas kontroli drogowej
+- Możliwy do skopiowania link eFTI (UIL — wewnętrzny skrót Drumy od **Unique Identifying Link**; rozporządzenie (UE) 2020/1056 art. 9 ust. 1 lit. e) nazywa to „niepowtarzalnym elektronicznym łączem identyfikacyjnym”)
+- Odnośnik otwierający widok eCMR na urządzeniu kierowcy
+
+Kierowca nie musi nic robić, aby to aktywować — karta jest zawsze obecna na przypisanych zleceniach.
+
+<Note>
+Kierowca nigdy nie musi przeglądać menu ani szukać karty eFTI. Jest ona widocznie umieszczona na ekranie aktywnego zlecenia, więc pozostaje natychmiast dostępna, gdy inspektor podchodzi do pojazdu.
+</Note>
+
+---
+
+## Co widzi funkcjonariusz
+
+Funkcjonariusz skanuje kod QR (albo ręcznie wprowadza UIL) i widzi **widok przesyłki tylko do odczytu, czytelny dla człowieka**:
+
+- Opis towaru
+- Strony: nadawca, przewoźnik, odbiorca (nazwy i adresy)
+- Adresy załadunku i rozładunku
+- Numery rejestracyjne ciągnika i naczepy
+- Status podpisanego eCMR
+
+**Nie są pokazywane żadne ceny, stawki ani dane finansowe.** Widok dla funkcjonariusza jest celowo ograniczony do informacji operacyjnych i zgodnościowych — warunki handlowe pozostają prywatne.
+
+Widok automatycznie wykrywa język przeglądarki funkcjonariusza przy wczytaniu, więc otwiera się od razu w języku kraju, w którym prowadzona jest kontrola, bez potrzeby pytania kogokolwiek. W nagłówku znajduje się ręczny wybór języka dla tych samych 10 języków, które obsługuje reszta Drumy (angielski, francuski, niemiecki, rumuński, niderlandzki, bułgarski, czeski, węgierski, polski, słowacki) — na wypadek gdyby język przeglądarki nie odpowiadał językowi funkcjonariusza.
+
+Każdy dostęp funkcjonariusza jest zapisywany w **dzienniku operacji odpornym na manipulacje**. Dziennik ten stanowi część ścieżki audytu eFTI wymaganej na mocy art. 9 rozporządzenia.
+
+<Note>
+Jeśli funkcjonariusz otrzyma zamiast tego sam zapieczętowany PDF eCMR (wydrukowany albo otwarty przez **Zobacz eCMR**), etykiety pól na nim są **trójjęzyczne** — angielski plus języki nadawcy i odbiorcy — więc dokument jest czytelny bez widoku inspektora nawet po drugiej stronie granicy, tak samo jak papierowy CMR tradycyjnie drukuje etykiety pól w kilku językach.
+</Note>
+
+---
+
+## Status certyfikacji
+
+<Warning>
+Druma zbudowała znaczącą **wewnętrzną gotowość techniczną** dla eFTI — serializator CDS, dziennik operacji odporny na manipulacje, UIL oraz ten widok kontroli drogowej. Druma **nie jest jednak certyfikowaną platformą eFTI** w rozumieniu **art. 10** rozporządzenia (UE) 2020/1056: certyfikacja wymaga oceny przez akredytowaną jednostkę oceniającą zgodność (CAB), a według stanu na połowę 2026 r. żadna CAB nie opublikowała jeszcze zakresu eFTI, względem którego można by prowadzić ocenę — to luka ogólnobranżowa, a nie kwestia dotycząca wyłącznie Drumy. Do tego czasu widok inspektora jest dostępny już dziś jako uprzejmość i dobrowolne ujawnienie dla firm, które chcą przejść na bezpapierowość przed terminem 2027 r.
+
+Certyfikowany interfejs maszyna–maszyna dla organów (poprzez bramy eFTI państw członkowskich UE) czeka osobno na dostępność działających bram krajowych, które w połowie 2026 r. nie były jeszcze operacyjne. Gdy jednostki CAB opublikują zakres eFTI, a bramy krajowe zaczną działać, Druma wystąpi o certyfikację i zaktualizuje tę stronę.
+</Warning>
+
+---
+
+## Kalendarium
+
+| Data | Wydarzenie |
+|---|---|
+| 2020 | Przyjęcie rozporządzenia (UE) 2020/1056 |
+| 9 lipca 2025 | Platformy eFTI mogą rozpocząć działalność dobrowolną |
+| 9 lipca 2027 | **Organy muszą akceptować eFTI** — papier nie jest już wymagany tam, gdzie okazano eFTI |
+| Do ustalenia | Bramy eFTI działające w poszczególnych krajach |
+
+Druma zbudowała podstawową gotowość techniczną na unijny obowiązek eFTI z 2027 r. — sam proces certyfikacji i formalnej akredytacji pozostaje w toku w skali całej branży (żadna jednostka certyfikująca nie opublikowała dotąd zakresu eFTI), więc pełny status zgodności zostanie potwierdzony w miarę postępu tego procesu.
+
+---
+
+## Powiązane artykuły
+
+<CardGroup cols={2}>
+  <Card title="Czym jest eCMR?" icon="file-contract" href="/pl/ecmr/what-is-ecmr">
+    Elektroniczny list przewozowy CMR, na którym opiera się zbiór danych eFTI.
+  </Card>
+  <Card title="Proces podpisywania" icon="pen-to-square" href="/pl/ecmr/signing-flow">
+    Jak w Drumie działa trójstronne podpisywanie eCMR.
+  </Card>
+  <Card title="Ważność prawna eCMR" icon="scale-balanced" href="/pl/ecmr/ecmr-legal-validity">
+    Ramy prawne stojące za eCMR i pieczęcią cyfrową PAdES.
+  </Card>
+</CardGroup>

@@ -1,0 +1,114 @@
+---
+title: "Podłącz swoją AI (MCP)"
+description: "Podłącz Claude Code, GitHub Copilot, Codex CLI, Gemini CLI lub Cursor do swoich danych w Drumie za pomocą Model Context Protocol (MCP)."
+icon: "bot"
+---
+
+Druma udostępnia zdalny serwer **MCP (Model Context Protocol)**, dzięki czemu możesz podłączyć własnego klienta AI — Claude Code, Claude Desktop, GitHub Copilot (tryb agenta), OpenAI Codex CLI, Gemini CLI lub Cursor — bezpośrednio do swoich danych w Drumie. Pytaj go o zlecenia, flotę, kierowców i faktury zwykłym językiem, a przy włączonym odpowiednim zakresie pozwól mu **proponować** przypisania ciągników, które sam zatwierdzasz.
+
+<Warning>
+Konektor MCP to funkcja sterowana flagą i domyślnie jest wyłączona. Skontaktuj się z **support@druma.io**, aby włączyć ją dla swojego konta.
+</Warning>
+
+## Dlaczego jest to bezpieczne
+
+- **Wszystko, co widzi AI, respektuje Twoją rolę i firmę** — ma dokładnie taki dostęp, jaki Ty już masz w Drumie. Nie ma możliwości odczytania danych innej firmy.
+- **AI nie może niczego zmienić samodzielnie.** Jedyne działanie, jakie może podjąć, to *zaproponowanie* przypisania ciągnika; nic nie zostaje zastosowane, dopóki wyraźnie nie potwierdzisz. Nie ma operacji usuwania, masowych ani dowolnych działań na bazie danych.
+- **Twój token jest tajny.** Druma przechowuje wyłącznie jego jednokierunkowy skrót — pełny token pokazywany jest raz, przy tworzeniu, i nigdy więcej.
+- Każde żądanie podlega limitom zapytań i jest rejestrowane dla Twoich administratorów.
+
+## 1. Utwórz Personal Access Token
+
+1. Przejdź do **Ustawienia → Integracje → Connected AI (MCP)**.
+2. W sekcji **Utwórz token** nadaj mu nazwę (np. „Claude Code — laptop”).
+3. Wybierz **zakresy**:
+   - `read` (zawsze włączony) — odczyt zleceń, floty, kierowców, faktur i wskaźników.
+   - `write:planning` (opcjonalny) — dodatkowo pozwala AI *proponować* przypisania ciągników. Nawet z nim nic nie zostanie zastosowane bez Twojego wyraźnego potwierdzenia.
+4. Wybierz termin ważności (30 / 90 / 365 dni) i kliknij **Utwórz token**.
+5. **Skopiuj token teraz** — jest pokazywany tylko raz. Wygląda tak: `druma_pat_…`.
+
+Każdy token możesz unieważnić w dowolnej chwili z tego samego ekranu; administratorzy firmy mogą unieważnić dowolny token w firmie.
+
+## 2. Adres Twojego serwera
+
+```
+https://<twój-projekt>.supabase.co/functions/v1/mcp-server
+```
+
+Dokładny adres dla Twojego konta znajdziesz na stronie **Ustawienia → Integracje → Connected AI (MCP)**, wraz z przyciskiem kopiowania.
+
+## 3. Podłącz klienta
+
+Zastąp `<url>` adresem swojego serwera, a `<token>` swoim Personal Access Token.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Utwórz `.vscode/mcp.json`. Użycie `input` sprawia, że token nie trafia do commitowanego pliku:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Dodaj do `~/.codex/config.toml`:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Dodaj do `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Dodaj do `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. O co możesz zapytać
+
+- „Które zlecenia na jutro nie mają jeszcze przypisania?”
+- „Pokaż opóźnione zlecenia z tego tygodnia i wolne ciągniki.”
+- „Jaka jest łączna kwota przeterminowanych należności w podziale na klientów?”
+- Z `write:planning`: „Zaproponuj ciągnik RO-123-ABC do zlecenia 4021.” — AI tworzy propozycję i pokazuje podsumowanie; dopiero gdy każesz potwierdzić, przypisanie zostaje zastosowane.
+
+## Konektory czatu webowego (ChatGPT, claude.ai)
+
+Podłączenie **webowych** aplikacji czatu na chatgpt.com lub claude.ai (zamiast klienta desktopowego czy CLI) wymaga OAuth i **pojawi się później**. Na razie korzystaj z jednego z powyższych klientów.
+
+## Rotacja tokenów
+
+Preferuj tokeny krótkoterminowe. Aby wykonać rotację: utwórz nowy token, zaktualizuj konfigurację klienta, a następnie unieważnij stary. Unieważnij każdy token, przy którym pole „Ostatnio użyty” jest puste — oznacza to, że nic nigdy się nim nie połączyło.
+
+## Powiązane
+
+Jeśli wolisz rozmawiać z AI **wewnątrz Drumy** (używając własnego klucza OpenAI, Anthropic lub Gemini) zamiast podłączać zewnętrznego klienta, zobacz [Druma Copilot](/pl/integrations/copilot).

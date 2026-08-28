@@ -1,12 +1,12 @@
 ---
 title: "Peppol E-Invoicing (Belgium)"
-description: "Connect Druma to the Peppol network via e-invoice.be and automatically route invoices to Belgian business clients — no manual steps required."
+description: "Connect Druma to the Peppol network and automatically route invoices to Belgian business clients — no manual steps required."
 icon: "file-check-2"
 ---
 
 Peppol (Pan-European Public Procurement On-Line) is the EU standard network for exchanging structured electronic invoices between businesses. In Belgium, sending invoices via Peppol is **mandatory for all KBO-registered companies** issuing B2B invoices as of January 2026.
 
-Druma connects to the Peppol network through **e-invoice.be**, an accredited Belgian Peppol Access Point. Once configured, Druma detects which of your clients are reachable on Peppol and routes invoices to them automatically — you do not need to change how you create or send invoices.
+Druma connects to the Peppol network through an accredited Belgian **Peppol Access Point**. Druma holds and manages that Access Point contract at platform level — you never choose, contract, or configure an Access Point yourself, and Druma can change provider without any action on your side. Once configured, Druma detects which of your clients are reachable on Peppol and routes invoices to them automatically — you do not need to change how you create or send invoices.
 
 
 ---
@@ -36,10 +36,10 @@ Belgian companies that do not activate this integration risk non-compliance pena
     Click **Configure** on the card. A settings panel opens.
   </Step>
   <Step title="Enter your KBO and VAT numbers">
-    Enter your company's **KBO number** (10-digit Belgian company registration number) and **VAT number** (BE followed by 10 digits) in the respective fields.
+    Enter your company's **KBO/CBE number** (10-digit Belgian company registration number) and **VAT number** (BE followed by 10 digits) in the respective fields.
   </Step>
   <Step title="Register on the Peppol network">
-    Click **Register on Peppol**. Druma submits your registration to e-invoice.be. This typically completes in a few seconds.
+    Click **Register on Peppol**. Druma submits your registration to the Access Point. This typically completes in a few seconds.
   </Step>
   <Step title="Confirm activation">
     Once registration succeeds, the card shows a **Connected** badge. Your company is now a Peppol participant and can both send and receive structured invoices on the network.
@@ -57,7 +57,7 @@ Only **Admin** and **Company Admin** users can configure integrations. If you do
 After activation, Druma adds a Peppol check whenever you send an invoice:
 
 1. Druma first checks whether the client's VAT number is Belgian (starts with `BE`) — this check happens **before any network call**, so non-Belgian clients never trigger a Peppol lookup at all.
-2. For Belgian clients, Druma looks up the recipient on the Peppol network via e-invoice.be. If found, the invoice is submitted electronically — **no extra steps required on your part**.
+2. For Belgian clients, Druma looks up the recipient on the Peppol network via the Access Point. If found, the invoice is submitted electronically — **no extra steps required on your part**.
 3. Druma also sends the invoice by email, regardless of whether the Peppol submission succeeded — email is not a conditional fallback triggered only when Peppol fails. The one exception: if a client has explicitly opted out of receiving both channels (a separate per-client setting), email is skipped once Peppol delivery succeeds.
 
 You do not need to choose a delivery method per invoice. The routing is fully automatic.
@@ -71,13 +71,13 @@ The invoices list includes a **Peppol** status column with the following states:
 
 | Status | Meaning |
 |---|---|
-| **Submitted** | Sent to e-invoice.be, awaiting delivery confirmation |
+| **Submitted** | Sent to the Access Point, awaiting delivery confirmation |
 | **Delivered** | Confirmed delivered to the recipient's Peppol inbox |
 | **Failed** | Delivery failed at the Access Point — see the error detail on the invoice row |
-| **Validation failed** | Druma's local preflight blocked the send before it reached e-invoice.be (e.g. an invalid KBO/VAT checksum) — no Access Point call was made, so no e-invoice.be quota was used |
+| **Validation failed** | Druma's local preflight blocked the send before it reached the Access Point (e.g. an invalid KBO/VAT checksum) — no Access Point call was made |
 | **Not on network** | The client's VAT isn't a registered Peppol participant; the invoice was emailed as usual (shown as "→ Emailed") |
 
-There is no "Pending" status — an invoice is either not yet sent via Peppol (null), or in one of the five states above. Status updates for submitted invoices are pushed to Druma automatically via a webhook from e-invoice.be.
+There is no "Pending" status — an invoice is either not yet sent via Peppol (null), or in one of the five states above. Status updates for submitted invoices arrive automatically. Druma sweeps the Access Point for status changes on a schedule — that sweep is the authoritative source. An Access Point webhook may deliver the same update sooner, but it is only a speed-up: if it never arrives, the sweep still picks the status up.
 
 ---
 

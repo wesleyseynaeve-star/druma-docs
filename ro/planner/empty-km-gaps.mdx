@@ -1,63 +1,91 @@
 ---
-title: "Goluri"
-description: "Găsește comenzi neacoperite, oportunități de repoziționare cu kilometri goi și camioane goale care ar putea reîncărca în apropiere."
+title: "Acoperire și kilometri goi"
+description: "Găsește cursele care încă nu au camion din coada Acoperire aflată în antet și măsoară kilometrii goi rulați efectiv de flotă în Analiză → KM goi."
 icon: "route"
 ---
 
-## Ce este instrumentul Goluri?
+În spatele fiecărui kilometru gol stau două întrebări: *care cursă încă nu are camion?* și *cât am rulat efectiv în gol?* Druma le răspunde în două locuri diferite, pentru că sunt sarcini diferite — una este o coadă pe care o lucrezi azi, cealaltă un raport pe care îl citești la finalul unei perioade.
 
-De fiecare dată când un camion finalizează o livrare fără o următoare comandă planificată, sau o comandă rămâne fără camion atribuit pe măsură ce se apropie data de preluare, fie consumi kilometri goi, fie riști să ratezi o preluare. Pagina **Goluri** (`/operations/gaps`, în bara de taburi Planificare, ca **Goluri**) scoate la iveală ambele probleme într-un singur loc, pe trei sub-taburi.
-
-<Frame caption="Instrumentul Goluri — goluri de acoperire cu o acțiune recomandată, km goi, preluare, livrare și client.">
-  <img src="/images/planner/empty-km-gaps.ro.png" alt="Pagina Goluri listând golurile de acoperire și oportunitățile de reîncărcare cu km goi" />
-</Frame>
+<Note>
+Nu mai există o pagină **Gaps** în bara de file Planificare. Acoperirea s-a mutat în coada de acțiuni din antet, descrisă mai jos, iar vechile sub-file **Optimizator km goi** și **Camioane goale** au fost eliminate. Linkurile și favoritele vechi către `/operations/gaps` funcționează în continuare — te duc la Comenzi și deschid coada Acoperire, astfel încât alerta orară de acoperire ajunge în locul potrivit.
+</Note>
 
 ---
 
-## Acoperire
+## Coada Acoperire
 
-Sub-tabul implicit listează **comenzile neacoperite** — comenzi viitoare care încă nu au un camion atribuit, ordonate după urgență. Fiecare rând arată:
+Coada Acoperire este un panou glisant, accesibil din pictograma **Coada Acoperire** din grupul de acțiuni din antet, de pe orice pagină. Listează **cursele fără camion atribuit, cele mai urgente primele**.
 
-- **Recomandat** — o etichetă: **Atribuie** (a fost potrivit un camion în apropiere), **Subcontractează** (găsește un transportator), sau **Trebuie acoperit intern** (nicio opțiune găsită)
-- **KM Goi** — distanța de deplasare goală pentru potrivirea recomandată, colorată: verde ≤150 km, chihlimbariu 150–300 km, roșu >300 km
-- **Preluare**, **Data Preluării**, **Livrare**, **Client**
+### Cele două vizualizări
 
-Acțiunile de pe rând îți permit să atribui direct camionul sugerat, să sari la **Găsește transportator**, sau să deschizi comanda pentru detalii. Un buton **Vinde** (afișat oricând rândul nu este blocat de la subcontractare) arată un preț estimat — **Vinde ≈ €X** — și deschide comanda pentru detalii, ca să o pui la vânzare; când există atât o opțiune de atribuire, cât și una de vânzare, un mic indiciu de comparare a costurilor, sub acțiunile rândului, îți spune care e mai ieftină — **Camion propriu mai ieftin** sau **Subcontractare mai ieftină**. Un meniu **Triaj** îți permite să marchezi un rând ca **În lucru**, **Amână 24h**, sau **Acceptă ca subcontract**, ca să nu mai concureze pentru atenție.
+| Vizualizare | Ce conține |
+|---|---|
+| **Are nevoie de camion acum** | Încărcări în următoarele 24 de ore, plus tot ce este deja întârziat cu până la trei zile. Exact ce escaladează alerta orară de acoperire. |
+| **Toate neacoperite** | Orice comandă viitoare fără camion, oricât de departe. Folosește-o ca să planifici din timp, după ce lista urgentă este goală. |
 
-Bara KPI arată **≤12h / ≤24h / ≤72h neacoperite**, **% auto-rezolvabil**, **Necesită transportator** și **Coordonate lipsă** (comenzi ale căror opriri nu au coordonate și nu pot fi potrivite).
+Un câmp de căutare (**Caută goluri…**) filtrează după numărul comenzii, client sau adresă.
 
----
+Dacă lista urgentă este goală, primești **Nimic nu are nevoie de camion acum**. Dacă mai există curse neacoperite mai departe în timp, Druma îți spune și te trimite la **Toate neacoperite**, în loc să te lase cu un panou gol.
 
-## Optimizator km goi
+### Ce oferă fiecare rând
 
-Acest sub-tab calculează oportunități de repoziționare pe **toate** comenzile (acoperite și neacoperite), rulând o matrice de rutare pentru fiecare pereche livrare→preluare — poate dura câteva secunde să se încarce. Este un layout permanent de **tabel împărțit + hartă**, nu un comutator: tabelul listează golurile în stânga, iar apăsarea unui rând desenează o linie punctată pe hartă, de la acel punct de livrare la următoarea preluare propusă — doar linia rândului selectat este desenată, nu toate.
+- **Atribuie camion** — alege un camion pentru cursă. Dacă Druma are un candidat, îl propune direct; altfel **Alege camion** deschide tabla ca să alegi tu.
+- **Caută transportator** — dă cursa unui subcontractor. Când o cursă nu poate fi subcontractată, rândul spune **Fără subcontractare**, iar când Druma nu a găsit nicio opțiune, spune **Trebuie acoperită intern**.
+- **Vinde** — pune cursa la vânzare.
+- **Vezi detaliile comenzii** — deschide comanda fără să părăsești coada.
 
-Coloane: **Recomandat**, **KM Goi**, **Preluare**, **Data Preluării**, **Repoziționează din** (comanda și punctul de livrare din care ar veni camionul), **Livrare**, **Client**. Un filtru **Top 10 / Top 25 / Toate** limitează câte rânduri sunt calculate și afișate, iar harta are propriul filtru de severitate (Ridicat / Mediu / Scăzut / Neacoperit).
+Când sunt posibile atât atribuirea unui camion propriu, cât și subcontractarea, rândul arată care este mai ieftină — **Camion propriu mai ieftin** sau **Subcontractare mai ieftină** — deci comparația este făcută pentru tine, nu în minte.
 
----
+### Triaj
 
-## Camioane goale
+Meniul **Triaj** marchează un rând **În lucru**, **Amână 24 h** sau **Acceptă ca subcontractare**, iar **Șterge** înlătură marcajul.
 
-Acest sub-tab întoarce vizualizarea pe dos: un rând per **camion** care finalizează o livrare fără nimic planificat după, potrivit cu cea mai apropiată comandă neatribuită cu care ar putea reîncărca. Coloane: **Camion** (cu numele șoferului), **Se termină la** (loc și dată), **Cea mai bună reîncărcare** și **KM goi** pentru acea reîncărcare. Camioanele fără nicio comandă accesibilă nu arată nicio sugestie de reîncărcare și necesită o decizie manuală de repoziționare sau subcontractare.
-
-KPI-uri: **Camioane goale**, **Reîncărcare găsită**, **Fără reîncărcare**, **KM goi medii**, **Coordonate lipsă**.
-
----
-
-## Exportarea
-
-Bara de instrumente a fiecărui sub-tab are butoane **Printează** și **Exportă** pentru tabelul curent — exportul produce un fișier Excel (.xlsx) al coloanelor vizibile. Nu există un export de coordonate GPS brute.
+<Warning>
+Amânarea liniștește insigna din antet — **nu** scoate cursa din listă. O cursă amânată rămâne neacoperită și rămâne în coadă.
+</Warning>
 
 ---
 
-## Filtre
+## KM goi (Analiză)
 
-Fiecare sub-tab are o căsuță de căutare în text liber (număr de comandă, nume de client, adresă de preluare/livrare). Nu există un filtru separat de interval de date, camion sau șofer — taburile Acoperire și Optimizator sunt deja limitate la comenzile viitoare, iar tabul Camioane Goale nu are un selector per camion/șofer, deoarece fiecare rând este deja un camion.
+**Analiză → KM goi** măsoară ce a rulat efectiv flota: kilometri încărcați față de kilometri goi (deadhead), per camion și șofer.
+
+### Bara de indicatori
+
+- **Total KM goi** și **Total KM încărcați**
+- **% gol pe flotă** — kilometrii goi ca pondere din total
+- **Acoperire deadhead** — cât din perioadă a putut fi măsurat (vezi mai jos)
+- **Cel mai slab camion** — camionul cu cea mai mare pondere de gol
+- **Vizualizare profit/km** — deschide raportul asociat de profit pe kilometru
+
+### Tabelul
+
+| Coloană | Semnificație |
+|---|---|
+| **Camion**, **Șofer** | Cine a rulat |
+| **KM încărcați** | Kilometri rulați cu marfă la bord |
+| **KM goi** | Kilometri de repoziționare între o livrare și următoarea încărcare |
+| **Total KM** | Încărcați plus goi |
+| **% Gol** | Golul ca pondere din totalul acelui camion |
+| **Medie cursă goală** | Lungimea medie a unei curse de repoziționare |
+| **# Curse goale** | Câte curse de repoziționare au fost măsurate |
+| **Măsurate** | Câte dintre comenzile camionului au putut fi măsurate |
+
+Deasupra tabelului stă un grafic **Top 10 camioane — km încărcați față de km goi**, iar selectorul de perioadă oferă **Azi**, **Săptămâna aceasta**, **Ultimele 30 de zile**, **Ultimele 12 luni** sau un interval **Personalizat**.
+
+### De ce contează „Măsurate”
+
+O comandă are un deadhead măsurabil doar dacă a existat o cursă anterioară suficient de apropiată în timp încât repoziționarea să poată fi măsurată *de la* ea. Comenzile fără o astfel de cursă sunt **lăsate în afara numitorului procentului de gol, nu numărate ca zero km goi** — a le număra ca zero ar înfrumuseța tacit procentul de gol al flotei. **Acoperirea deadhead** îți spune pe cât din perioadă se bazează efectiv cifra; citește procentul de gol alături de ea, nu de unul singur.
 
 ---
 
-## Folosirea acestui instrument pentru a găsi curse de retur
+## Articole conexe
 
-Rutele unde vezi constant goluri roșii (>300 km) sunt exact locul unde un aranjament permanent de retur — sau o căutare manuală pe o bursă de transport precum Timocom sau Trans.eu, la livrare — ar avea cel mai mare randament. Druma nu rulează o căutare automată de încărcături pentru comenzile FTL obișnuite; identificarea și rezervarea cursei de retur rămân un pas manual, după ce instrumentul te-a indicat spre rută.
-
-Dacă golul implică o rută de grupaj (cu mai multe opriri), verifică dacă sugestiile automate de consolidare a curselor de retur ale Druma au semnalat deja o încărcătură potrivită — acestea apar direct în panoul de consolidare grupaj și nu necesită o căutare manuală.
+<CardGroup cols={2}>
+  <Card title="Tabla de planificare" icon="table-columns" href="/ro/planner/planning-board">
+    Atribuirea curselor către camioane și unde te trimite coada Acoperire.
+  </Card>
+  <Card title="Subcontractare" icon="handshake" href="/ro/planner/subcontractors">
+    Predarea unei curse unui transportator când nu o poți acoperi intern.
+  </Card>
+</CardGroup>

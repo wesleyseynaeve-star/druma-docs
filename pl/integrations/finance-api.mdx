@@ -1,0 +1,93 @@
+---
+title: "Finance API"
+description: "Pobieraj zlecenia gotowe do fakturowania do własnego systemu finansowego lub ERP i odsyłaj wystawione faktury z powrotem do Drumy."
+icon: "arrow-right-arrow-left"
+---
+
+Część przewoźników w ogóle nie fakturuje z Drumy — fakturują z istniejącego systemu finansowego lub ERP i chcą, by Druma pozostała operacyjnym źródłem prawdy. Finance API zamyka tę pętlę: Druma mówi Twojemu systemowi finansowemu, co jest gotowe do fakturowania, a Twój system finansowy mówi Drumie, co faktycznie zafakturował.
+
+Zlecenie przechodzi przez cztery stany w obu systemach:
+
+**Niezafakturowane → Gotowe do fakturowania (wyeksportowane) → Zafakturowane (w Twoim systemie) → Opłacone**
+
+<Note>
+To osobne API od tylko-do-odczytu [Publicznego API](/pl/integrations/public-api). Publiczne API odpowiada na pytanie „gdzie jest moja przesyłka”; Finance API to przekazanie rozliczeń z zapisami, idempotencją i własnymi limitami zapytań. Klucz wydany dla jednego nie działa w drugim.
+</Note>
+
+---
+
+## Zanim zaczniesz
+
+<Steps>
+  <Step title="Wyłącz fakturowanie klientów w Drumie">
+    Finance API jest dla przewoźników fakturujących gdzie indziej. Jeśli wystawiasz faktury także z Drumy, zafakturujesz ten sam ładunek dwa razy.
+  </Step>
+  <Step title="Wydaj klucz API o zakresie Finance">
+    Przejdź do **Ustawienia → Integracje → Klucze API**, kliknij **Utwórz klucz**, nadaj mu nazwę (na przykład `Eksport Netsuite`) i wybierz zakres **Finance (eksport do fakturowania + import faktur)**.
+
+    Działa tu wyłącznie klucz `finance`. Klucz `operator` lub `accountant` — choćby całkowicie poprawny — zostanie odrzucony z kodem **403**. Zobacz [Publiczne API](/pl/integrations/public-api), aby poznać zasady kluczy i zakresów.
+  </Step>
+  <Step title="Skopiuj klucz">
+    Pełny klucz jest pokazywany **tylko raz**, w momencie utworzenia. Zapisz go w magazynie poświadczeń swojego systemu finansowego; Druma przechowuje wyłącznie skrót i nigdy nie pokaże go ponownie.
+  </Step>
+</Steps>
+
+---
+
+## Uwierzytelnianie
+
+Każde żądanie przenosi klucz w nagłówku `X-API-Key` — tym samym co w Publicznym API:
+
+```
+X-API-Key: TWÓJ_KLUCZ_FINANCE
+```
+
+---
+
+## Punkty końcowe
+
+| Metoda | Punkt końcowy | Co robi |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Stronicowana lista zleceń gotowych do fakturowania |
+| `POST` | `/finance-api/billable/exported` | Oznacza te zlecenia jako pobrane, aby kolejne `GET` ich nie zwracało |
+| `POST` | `/finance-api/invoices` | Zapisuje w Drumie fakturę, którą wystawiłeś |
+
+### Normalny cykl
+
+<Steps>
+  <Step title="Pobierz to, co jest do zafakturowania">
+    `GET /finance-api/billable` zwraca stronicowaną listę dostarczonych zleceń bez wystawionej faktury.
+  </Step>
+  <Step title="Potwierdź, co pobrałeś">
+    `POST /finance-api/billable/exported` z identyfikatorami zleceń, które faktycznie pobrałeś. To właśnie zapobiega dwukrotnemu przekazaniu tego samego zlecenia do Twojego ERP — dopóki nie potwierdzisz, Druma nadal je oferuje.
+  </Step>
+  <Step title="Odeślij fakturę">
+    Gdy Twój system wystawi fakturę, `POST /finance-api/invoices` zapisuje ją przy zleceniu w Drumie. Zlecenie zmienia stan na **Zafakturowane**, znika z listy niezafakturowanych i zaczyna się starzeć na potrzeby śledzenia płatności, jak każda inna faktura.
+  </Step>
+</Steps>
+
+### Błędy, które trzeba obsłużyć
+
+| Odpowiedź | Znaczenie |
+|---|---|
+| `403` | Klucz jest poprawny, ale nie ma zakresu **Finance** |
+| `409` | Ta faktura została już zaimportowana — żądanie było duplikatem i nic się nie zmieniło |
+| `422` | Jedna lub więcej wartości `order_id` nie została rozpoznana. Odpowiedź wymienia błędne identyfikatory |
+| `429` | Przekroczono limit zapytań — odczekaj i ponów |
+
+<Warning>
+Druma nie zgaduje. Identyfikatory, które odsyłasz, to identyfikatory, które Druma przekazała Ci kilka minut wcześniej przez `GET /finance-api/billable`; jeśli się nie zgadzają, otrzymasz `422` z ich wymienieniem, a nie próbę dopasowania do czegoś innego. Odsyłaj identyfikatory dokładnie w takiej postaci, w jakiej je otrzymałeś.
+</Warning>
+
+---
+
+## Powiązane artykuły
+
+<CardGroup cols={2}>
+  <Card title="Publiczne API" icon="code" href="/pl/integrations/public-api">
+    Dostęp tylko do odczytu do zleceń, klucze API i zakresy.
+  </Card>
+  <Card title="Generowanie faktur" icon="file-invoice" href="/pl/invoicing/generating-invoices">
+    Fakturowanie bezpośrednio z Drumy.
+  </Card>
+</CardGroup>

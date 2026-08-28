@@ -6,9 +6,25 @@ icon: "code"
 
 API-ul Public Druma îți oferă acces REST **doar-citire** la comenzile tale — util pentru un portal de self-service pentru clienți, un instrument BI/de raportare, sau instrumente interne construite de echipa ta.
 
+---
+
+## Chei API și domenii
+
+Administratorii firmei își emit propriile chei din **Setări → Integrări → Chei API** — apasă **Creează cheie**, dă-i un nume (de exemplu `Export QuickBooks`) și alege un domeniu:
+
+| Domeniu | Ce permite |
+|---|---|
+| **Operator (acces complet de citire)** | Endpoint-urile doar-citire de pe această pagină, pentru propria firmă |
+| **Finance (export facturabil + preluare facturi)** | Doar [Finance API](/ro/integrations/finance-api) — preluarea comenzilor facturabile și înregistrarea facturilor emise |
+| **Accountant (citire pe mai multe firme)** | Acces de citire pentru firmele pentru care este emisă cheia |
+
 <Warning>
-API-ul Public este o capacitate controlată printr-un feature-flag și nu este activată implicit. Contactează **support@druma.io** pentru a solicita acces — cheile API sunt momentan furnizate direct de Druma; nu există un ecran de auto-generare a cheii în aplicație.
+Cheia completă este afișată **o singură dată**, în momentul creării. Druma reține doar un hash, deci nu o mai poate afișa niciodată — copiaz-o imediat în sistemul de destinație. Dacă o pierzi, revocă cheia și emite alta.
 </Warning>
+
+Cheile existente își afișează domeniul, un prefix și data ultimei utilizări (sau **niciodată**). **Revocă** scoate o cheie din uz imediat — orice sistem care încă o folosește se oprește pe loc, așa că verifică *Ultima utilizare* înainte de a revoca una pe care nu ai emis-o tu.
+
+Un domeniu nu este o sugestie: apelarea unui endpoint Finance API cu o cheie Operator eșuează cu `403`, și invers.
 
 ## Autentificare
 
@@ -22,7 +38,7 @@ Cererile fără o cheie validă returnează un răspuns `401 Unauthorized`. Aute
 
 ## Endpoint-uri disponibile
 
-API-ul este doar-citire — sunt acceptate doar cererile `GET`. Toate răspunsurile sunt JSON.
+API-ul public este doar-citire — sunt acceptate doar cererile `GET`. Toate răspunsurile sunt JSON. (Scrierea înapoi în Druma este sarcina [Finance API](/ro/integrations/finance-api), cu cheie proprie.)
 
 | Metodă | Endpoint | Descriere |
 |---|---|---|
@@ -41,8 +57,11 @@ Orice altă resursă, sau orice metodă non-GET, returnează o eroare `404`/`405
 
 Pentru limite mai mari, contactează support@druma.io cu cazul tău de utilizare.
 
-<CardGroup cols={1}>
+<CardGroup cols={2}>
   <Card title="Prezentare configurare integrări" icon="plug" href="/ro/admin/integration-setup">
     Prezentare generală a tuturor integrărilor Druma și cum le gestionezi din panoul de Setări.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/ro/integrations/finance-api">
+    Exportă comenzile facturabile în ERP-ul tău și înregistrează facturile emise.
   </Card>
 </CardGroup>

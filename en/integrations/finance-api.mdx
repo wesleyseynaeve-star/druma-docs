@@ -1,0 +1,93 @@
+---
+title: "Finance API"
+description: "Pull billable orders into your own finance or ERP system, and post the invoices you issued back into Druma."
+icon: "arrow-right-arrow-left"
+---
+
+Some operators do not invoice from Druma at all — they invoice from an existing finance or ERP system and want Druma to stay the operational source of truth. The Finance API is the loop that makes that work: Druma tells your finance system what is ready to bill, and your finance system tells Druma what it actually invoiced.
+
+An order moves through four states across the two systems:
+
+**Uninvoiced → Ready to invoice (exported) → Invoiced (in your system) → Paid**
+
+<Note>
+This is a separate API from the read-only [Public API](/en/integrations/public-api). The Public API answers "where is my shipment"; the Finance API is a billing hand-off with writes, idempotency and its own rate limits. A key issued for one does not work on the other.
+</Note>
+
+---
+
+## Before you start
+
+<Steps>
+  <Step title="Turn client invoicing off in Druma">
+    The Finance API is for operators who invoice elsewhere. If you also issue invoices from Druma you will end up billing the same load twice.
+  </Step>
+  <Step title="Issue a Finance-scoped API key">
+    Go to **Settings → Integrations → API Keys**, click **Create key**, give it a name (e.g. `Netsuite export`) and choose the **Finance (billable export + invoice ingest)** scope.
+
+    Only a `finance` key works here. An `operator` or `accountant` key — even a perfectly valid one — is rejected with **403**. See [Public API](/en/integrations/public-api) for how keys and scopes work.
+  </Step>
+  <Step title="Copy the key">
+    The full key is shown **once**, at creation. Store it in your finance system's credential store; Druma keeps only a hash and can never show it to you again.
+  </Step>
+</Steps>
+
+---
+
+## Authentication
+
+Every request carries the key in the `X-API-Key` header — the same header as the Public API:
+
+```
+X-API-Key: YOUR_FINANCE_KEY
+```
+
+---
+
+## Endpoints
+
+| Method | Endpoint | What it does |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Paginated list of orders that are ready to invoice |
+| `POST` | `/finance-api/billable/exported` | Stamp those orders as pulled, so the next `GET` does not return them again |
+| `POST` | `/finance-api/invoices` | Post an invoice you issued back into Druma |
+
+### The normal cycle
+
+<Steps>
+  <Step title="Pull what is billable">
+    `GET /finance-api/billable` returns delivered orders with no issued invoice, paginated.
+  </Step>
+  <Step title="Acknowledge what you took">
+    `POST /finance-api/billable/exported` with the order ids you actually pulled. This is what stops the same order being handed to your ERP twice — until you acknowledge, Druma keeps offering it.
+  </Step>
+  <Step title="Post the invoice back">
+    Once your system has issued the invoice, `POST /finance-api/invoices` records it against the order in Druma. The order becomes **Invoiced**, drops off the uninvoiced list, and starts ageing for payment tracking like any other invoice.
+  </Step>
+</Steps>
+
+### Errors you should expect to handle
+
+| Response | Meaning |
+|---|---|
+| `403` | The key is valid but is not a **Finance**-scoped key |
+| `409` | This invoice was already ingested — the request was a duplicate, and nothing changed |
+| `422` | One or more `order_id` values are not recognised. The response names the bad ids |
+| `429` | Rate limit exceeded — wait and retry |
+
+<Warning>
+Druma does not guess. The ids you post back are ids Druma handed you minutes earlier from `GET /finance-api/billable`; if they do not match, you get a `422` naming them rather than a best-effort match against something else. Echo the ids back exactly as received.
+</Warning>
+
+---
+
+## Related articles
+
+<CardGroup cols={2}>
+  <Card title="Public API" icon="code" href="/en/integrations/public-api">
+    Read-only order access, API keys and scopes.
+  </Card>
+  <Card title="Generating Invoices" icon="file-invoice" href="/en/invoicing/generating-invoices">
+    Invoicing from inside Druma instead.
+  </Card>
+</CardGroup>

@@ -1,59 +1,91 @@
 ---
-title: "Gaps"
-description: "Vind onbedekte ladingen, deadhead (lege-km) herpositioneringskansen en lege trucks die in de buurt kunnen herladen."
+title: "Dekking en lege kilometers"
+description: "Vind ladingen die nog geen truck hebben via de Dekkingswachtrij in de header, en meet de lege kilometers die uw vloot werkelijk reed in Analytics → Lege KM."
 icon: "route"
 ---
 
-## Wat is het hulpmiddel Gaps?
+Achter elke lege kilometer zitten twee vragen: *welke lading heeft nog geen truck?* en *hoeveel leeg hebben we werkelijk gereden?* Druma beantwoordt ze op twee verschillende plaatsen, omdat het verschillende taken zijn — de ene is een wachtrij die u vandaag afwerkt, de andere een rapport dat u aan het eind van een periode leest.
 
-Elke keer dat een truck een levering voltooit zonder volgende lading, of een order zonder toegewezen truck blijft terwijl de ophaaldatum nadert, verbrandt u ofwel lege kilometers, ofwel riskeert u een gemiste ophaling. De pagina **Gaps** (`/operations/gaps`, in de Planning-tabbladbalk als **Gaps**) brengt beide problemen op één plek samen, over drie subtabbladen.
-
----
-
-## Coverage
-
-Het standaard subtabblad toont **onbedekte ladingen** — toekomstige orders die nog geen toegewezen truck hebben, gesorteerd op urgentie. Elke rij toont:
-
-- **Aanbevolen** — een badge: **Toewijzen** (een nabije truck werd gematcht), **Uitbesteden** (zoek een vervoerder), of **Zelf moeten dekken** (geen optie gevonden)
-- **Lege km** — de deadhead-afstand voor de aanbevolen match, kleurgecodeerd: groen ≤150 km, amber 150–300 km, rood >300 km
-- **Ophaling**, **Ophaaldatum**, **Levering**, **Klant**
-
-Rijacties laten u de voorgestelde truck rechtstreeks toewijzen, naar **Vervoerder zoeken** springen, of de order voor detail openen. Een **Triage**-menu laat u een rij markeren als **In behandeling**, **24u snoozen**, of **Aanvaarden als uitbesteding** zodat ze stopt met om aandacht te concurreren.
-
-De KPI-balk toont **≤12u/≤24u/≤72u onbedekt**, **% automatisch oplosbaar**, **Vervoerder nodig**, en **Ontbrekende coördinaten** (orders waarvan de stops geen coördinaten hebben en niet gematcht kunnen worden).
+<Note>
+Er is geen **Gaps**-pagina meer in de Planning-tabbalk. Dekking is verhuisd naar de actiewachtrij in de header die hieronder wordt beschreven, en de oude subtabbladen **Lege-km-optimalisatie** en **Lege trucks** zijn verwijderd. Oude links en bladwijzers naar `/operations/gaps` werken nog steeds — ze leiden door naar Orders en openen de Dekkingswachtrij, zodat het uurlijkse dekkingsalarm op de juiste plek blijft landen.
+</Note>
 
 ---
 
-## Lege-km-optimizer
+## De Dekkingswachtrij
 
-Dit subtabblad berekent herpositioneringskansen over **alle** orders (bedekt en onbedekt) door een routingmatrix te draaien over elk levering→ophaling-paar — dit kan enkele seconden duren om te laden. Het is een permanente **gesplitste tabel + kaart**-indeling, geen schakelaar: de tabel toont gaten links, en klikken op een rij tekent een gestippelde lijn op de kaart van dat leverpunt naar de voorgestelde volgende ophaling — alleen de lijn van de geselecteerde rij wordt getekend, niet allemaal tegelijk.
+De Dekkingswachtrij is een uitschuifpaneel, bereikbaar via het pictogram **Dekkingswachtrij** in het headercluster op elke pagina. Het toont **ladingen zonder toegewezen truck, meest urgent eerst**.
 
-Kolommen: **Aanbevolen**, **Lege km**, **Ophaling**, **Ophaaldatum**, **Herpositioneert vanaf** (de order en het leverpunt waar de truck vandaan zou komen), **Levering**, **Klant**. Een filter **Top 10/Top 25/Alle** beperkt hoeveel rijen worden berekend en getoond, en de kaart heeft zijn eigen ernstfilter (Hoog/Middel/Laag/Onbedekt).
+### De twee weergaven
+
+| Weergave | Wat erin staat |
+|---|---|
+| **Heeft nu een truck nodig** | Ophalingen binnen de komende 24 uur, plus alles dat al tot drie dagen te laat is. Dit is precies wat het uurlijkse dekkingsalarm escaleert. |
+| **Alle ongedekt** | Elke toekomstige order zonder truck, hoe ver weg ook. Gebruik dit om vooruit te plannen zodra de urgente lijst leeg is. |
+
+Een zoekveld (**Zoek gaps…**) filtert op ordernummer, klant of adres.
+
+Is de urgente lijst leeg, dan krijgt u **Er heeft nu niets een truck nodig**. Zijn er nog verderop ongedekte ladingen, dan zegt Druma dat en wijst u naar **Alle ongedekt** in plaats van u met een leeg paneel achter te laten.
+
+### Wat elke regel biedt
+
+- **Truck toewijzen** — kies een truck voor de lading. Heeft Druma een kandidaat, dan wordt die direct voorgesteld; anders opent **Truck kiezen** het bord zodat u zelf kiest.
+- **Vervoerder zoeken** — geef de lading in plaats daarvan aan een onderaannemer. Kan een lading niet uitbesteed worden, dan staat er **Geen uitbesteding**; vond Druma helemaal geen optie, dan staat er **Moet zelf gedekt worden**.
+- **Verkopen** — zet de lading te koop.
+- **Orderdetail bekijken** — open de order zonder de wachtrij te verlaten.
+
+Zijn zowel een eigen truck als uitbesteding mogelijk, dan toont de regel wat goedkoper is — **Eigen truck goedkoper** of **Uitbesteden goedkoper** — zodat de vergelijking voor u gemaakt is in plaats van in uw hoofd.
+
+### Triage
+
+Het menu **Triage** markeert een regel als **In behandeling**, **24 u uitstellen** of **Aanvaarden als uitbesteding**; **Wissen** haalt de markering weg.
+
+<Warning>
+Uitstellen maakt de badge in de header stil — het haalt de lading **niet** uit de lijst. Een uitgestelde lading is nog steeds ongedekt en blijft in de wachtrij staan.
+</Warning>
 
 ---
 
-## Lege trucks
+## Lege KM (Analytics)
 
-Dit subtabblad draait de weergave om: één rij per **truck** die een levering voltooit zonder iets gepland erna, gematcht aan de dichtstbijzijnde niet-toegewezen lading waarmee hij kan herladen. Kolommen: **Truck** (met chauffeursnaam), **Eindigt bij** (plaats en datum), **Beste herlading** en **Lege km** voor die herlading. Trucks zonder bereikbare lading tonen geen herladingssuggestie en vereisen een handmatige herpositionerings- of uitbestedingsbeslissing.
+**Analytics → Lege KM** meet wat de vloot werkelijk reed: beladen kilometers tegenover lege (deadhead) kilometers, per truck en chauffeur.
 
-KPI's: **Lege trucks**, **Herlading gevonden**, **Geen herlading**, **Gem. lege km**, **Ontbrekende coördinaten**.
+### De KPI-balk
+
+- **Totaal lege KM** en **Totaal beladen KM**
+- **Vloot leeg %** — lege kilometers als aandeel van het totaal
+- **Deadhead-dekking** — hoeveel van de periode überhaupt meetbaar was (zie hieronder)
+- **Slechtste truck** — de truck met het hoogste lege aandeel
+- **Winst/km-weergave** — opent het bijbehorende rapport winst per kilometer
+
+### De tabel
+
+| Kolom | Betekenis |
+|---|---|
+| **Truck**, **Chauffeur** | Wie reed |
+| **Beladen KM** | Kilometers met vracht aan boord |
+| **Lege KM** | Repositioneringskilometers tussen een levering en de volgende ophaling |
+| **Totaal KM** | Beladen plus leeg |
+| **% Leeg** | Leeg als aandeel van het totaal van die truck |
+| **Gem. lege rit** | Gemiddelde lengte van één repositioneringsrit |
+| **# Lege ritten** | Hoeveel repositioneringsritten gemeten zijn |
+| **Gemeten** | Hoeveel orders van de truck meetbaar waren |
+
+Boven de tabel staat een grafiek **Top 10 trucks — beladen versus lege km**, en de periodekiezer biedt **Vandaag**, **Deze week**, **Laatste 30 dagen**, **Laatste 12 maanden** of een **Aangepast** bereik.
+
+### Waarom "Gemeten" ertoe doet
+
+Een order heeft alleen een meetbare deadhead als er een eerdere rit was die dicht genoeg in de tijd lag om de repositionering *vanaf* te meten. Orders zonder zo'n rit worden **buiten de noemer van het lege-percentage gelaten in plaats van als nul lege km geteld** — als nul tellen zou het lege percentage van de vloot stilletjes mooier maken. **Deadhead-dekking** vertelt op hoeveel van de periode het cijfer werkelijk gebaseerd is; lees het lege percentage daarnaast, niet op zichzelf.
 
 ---
 
-## Exporteren
+## Gerelateerde artikelen
 
-De werkbalk van elk subtabblad heeft knoppen **Afdrukken** en **Exporteren** voor de huidige tabel — exporteren levert een Excel-bestand (.xlsx) op van de zichtbare kolommen. Er is geen export van ruwe GPS-coördinaten.
-
----
-
-## Filters
-
-Elk subtabblad heeft een vrije-tekstzoekvak (ordernummer, klantnaam, ophaal-/afleveradres). Er is geen apart datumbereik-, truck- of chauffeursfilter — de tabbladen Coverage en Optimizer zijn al beperkt tot aankomende orders, en het tabblad Lege trucks heeft geen truck-/chauffeurkiezer aangezien elke rij al een truck is.
-
----
-
-## Dit hulpmiddel gebruiken om retourvrachten te vinden
-
-Trajecten waar u consequent rode gaten (>300 km) ziet, zijn precies waar een vaste retourvrachtafspraak — of een handmatige zoekactie op een vrachtbeurs zoals Timocom of Trans.eu bij levering — het meeste zou opleveren. Druma voert geen automatische ladingzoekactie uit voor gewone FTL-orders; het identificeren en boeken van de retourvracht is een handmatige stap zodra het hulpmiddel u naar het traject heeft gewezen.
-
-Betreft het gat een groupage-traject (meerdere stops), controleer dan of Druma's automatische backhaul-consolidatiesuggesties al een overeenkomende retourlading hebben gevonden — deze verschijnen rechtstreeks op het groupage-consolidatiepaneel en vereisen geen handmatige zoekactie.
+<CardGroup cols={2}>
+  <Card title="Planbord" icon="table-columns" href="/nl/planner/planning-board">
+    Ladingen aan trucks toewijzen, en waar de Dekkingswachtrij u heen stuurt.
+  </Card>
+  <Card title="Uitbesteden" icon="handshake" href="/nl/planner/subcontractors">
+    Een lading aan een vervoerder geven wanneer u niet zelf kunt dekken.
+  </Card>
+</CardGroup>

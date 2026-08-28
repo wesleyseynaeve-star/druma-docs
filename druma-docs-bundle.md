@@ -4,9 +4,12 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-17 16:23 UTC
+Generated: 2026-08-28 14:19 UTC
 
 ---
+
+
+# Getting Started
 
 ## What is Druma?
 
@@ -534,6 +537,9 @@ Druma does not require a VPN to access. If your company uses a VPN, Druma should
 
 ---
 
+
+# Admin Setup
+
 ## Company setup
 
 
@@ -844,6 +850,174 @@ To switch between companies, click your company name in the top-right corner of 
 
 ---
 
+## Custom Roles
+
+
+Druma ships with eight built-in roles, and for most companies they are enough. But job titles are not universal: a "night dispatcher" who may reassign trucks but must never touch a rate card does not map cleanly onto any of them. Custom roles let you define that role yourself.
+
+You will find this at **Settings → Roles**, and it requires the Admin or Company Admin role.
+
+---
+
+## Built-in roles are read-only
+
+The built-in roles are listed first and marked **Read-only** — you cannot edit or delete them. This is deliberate: they are the baseline every Druma feature is tested against, and the safe thing to fall back to.
+
+What you can do is **Clone** one. That copies its whole permission set into a new custom role you own, which is almost always the right starting point — start from the built-in role closest to the job, then add or remove the few permissions that differ.
+
+---
+
+## Creating a role
+
+
+  ### Clone a built-in role
+    Click **Clone** on the built-in role closest to the job you are describing. The dialog opens as **New role based on {role}**.
+  
+  ### Name it
+    **Name** is what users see — e.g. `Night Dispatcher`.
+
+    **Key** is the internal identifier. **It cannot be changed after creation**, so pick it deliberately. If the key is already taken, Druma tells you before you save.
+  
+  ### Describe it
+    **Description** answers "what is this role for?" for whoever inherits your setup. Worth filling in — six months later, a permission list does not explain intent.
+  
+  ### Adjust the permissions
+    Tick and untick permissions; the header keeps a running **{n} selected** count.
+  
+  ### Save
+    The role appears under **Custom roles**, showing which built-in role it was **Based on** and how many permissions it carries.
+  
+
+
+> **Warning:** 
+**You cannot grant a permission you do not hold yourself.** Druma disables those rows rather than letting you create a role more powerful than your own account — a Company Admin cannot mint a role that escapes their own limits.
+
+
+---
+
+## Editing a role that people already hold
+
+Editing a live role changes what real users can do, so Druma makes you confirm it explicitly. When you save, an **Apply permission changes?** dialog summarises the effect:
+
+- **Granting: {n}** — permissions being added
+- **Revoking: {n}** — permissions being taken away
+- **This affects {n} user(s) who hold this role** — or **No users currently hold this role**, when it is safe
+
+Read the revoke count before clicking **Apply**. Revoking is the half that breaks someone's workflow mid-shift.
+
+---
+
+## Deleting a role
+
+**Delete** asks for confirmation and warns that it cannot be undone.
+
+If anyone still holds the role, Druma refuses with **Role still in use** — reassign those users to another role first. A role in use is never silently removed out from under the people holding it.
+
+---
+
+## Related articles
+
+
+  
+    The eight built-in roles and what each one can do.
+  
+  
+    Adding users and assigning them a role.
+  
+</CardGroup>
+
+---
+
+## Custom Fields
+
+
+Every haulier tracks something Druma does not have a box for: an internal reference number, a customer's own booking code, which depot a truck belongs to, a driver's badge number. Custom fields let you add those without waiting for a product change.
+
+You will find this at **Settings → Custom Fields**, and it requires the Admin or Company Admin role. Without it you will see *"You need Admin or Company Admin role to edit company settings."*
+
+---
+
+## Four entities, separate field sets
+
+Custom fields are defined per entity, on its own tab:
+
+- **Order**
+- **Truck**
+- **Driver**
+- **Client**
+
+Each entity keeps its own independent set — a field added to trucks does not appear on drivers.
+
+> **Warning:** 
+There is a hard limit of **30 active fields per entity**. Once you reach it, the **Add field** button is replaced with *"Field limit reached — max 30 active fields per entity"*. This is a deliberate ceiling: past that point a detail page stops being readable, and a list export stops being usable.
+
+
+---
+
+## Adding a field
+
+
+  ### Pick the entity tab
+    Order, Truck, Driver or Client.
+  
+  ### Click Add field
+    Fill in the **Field label** — what users see, e.g. `Internal reference`.
+  
+  ### Choose a type
+    | Type | Use it for |
+    |---|---|
+    | **Text** | Short free text — a reference, a code |
+    | **Long text** | Notes and multi-line remarks |
+    | **Number** | Quantities, counts, numeric codes |
+    | **Date** | A date the standard fields do not cover |
+    | **Select** | A fixed list of choices |
+    | **Checkbox** | A yes/no flag |
+  
+  ### Set a field key
+    The internal identifier used in exports and integrations. Both label and key are required.
+  
+  ### For a Select field, list the options
+    Enter them comma-separated — e.g. `North, South`. A dropdown with no options cannot be saved: Druma refuses with *"Add at least one option for a dropdown field"*.
+  
+  ### Decide whether it is Required
+    A required field must be filled before the record can be saved.
+  
+  ### Save
+    The field appears immediately on that entity's detail pages.
+  
+
+
+---
+
+## Ordering and editing
+
+Fields render in the order they are listed. **Move up** and **Move down** reorder them — put the ones people fill most often at the top.
+
+**Edit options** changes the choices on a Select field, **Required** toggles the requirement, and **Delete field** removes it.
+
+---
+
+## Where custom fields show up
+
+- **Detail pages** — on a tab of the order, truck, driver or client record
+- **List columns** — opt-in, per list. They are not shown by default, so a company with 30 truck fields does not get an unusable trucks table
+- **Exports** — the columns you opted into come along with the export
+
+---
+
+## Related articles
+
+
+  
+    The rest of the company-level configuration.
+  
+  
+    Defining who may change settings like these.
+  
+</CardGroup>
+
+---
+
 ## Rate cards
 
 
@@ -1067,10 +1241,10 @@ Peppol is the pan-European e-invoicing network. Belgian companies (KBO-registere
     Go to **Settings → Integrations** and click the **Peppol E-Invoicing** card.
   
   ### Enter your registration details
-    Enter your **KBO number** (Belgian company registration number) and your **VAT number**.
+    Enter your **KBO/CBE number** (Belgian company registration number) and your **VAT number**.
   
   ### Register on Peppol
-    Click **Register on Peppol**. Druma submits your registration to the e-invoice.be access point. This typically completes within a few minutes.
+    Click **Register on Peppol**. Druma submits your registration to Druma's Peppol Access Point. This typically completes within a few minutes.
   
   ### Confirm activation
     Once active, the card shows a **Connected** status. Peppol routing is now automatic for eligible Belgian clients — no extra steps are needed when sending invoices to Belgian recipients.
@@ -1633,6 +1807,9 @@ To exercise any of these rights, email **privacy@druma.io** with your company na
 
 
 ---
+
+
+# Planner Guide
 
 ## Creating an Order
 
@@ -4754,66 +4931,262 @@ Wasted journey orders are excluded from fleet utilisation and active load KPI ca
 
 ---
 
-## Gaps
+## Coverage & Empty KM
 
 
-## What is the Gaps tool?
+Two questions sit behind every empty kilometre: *which load still has no truck on it?* and *how much empty running did we actually do?* Druma answers them in two different places, because they are different jobs — one is a queue you work through today, the other is a report you read at the end of a period.
 
-Every time a truck finishes a delivery with no next load lined up, or an order sits without a truck assigned as its pickup date approaches, you're either burning empty kilometres or risking a missed pickup. The **Gaps** page (`/operations/gaps`, in the Planning tab bar as **Gaps**) surfaces both problems in one place, across three sub-tabs.
+> **Note:** 
+There is no longer a **Gaps** page in the Planning tab bar. Coverage moved into the header action queue described below, and the old **Empty-km optimiser** and **Empty trucks** sub-tabs were removed. Old links and bookmarks to `/operations/gaps` still work — they bounce to Orders and open the Coverage queue for you, so the hourly coverage alert keeps landing in the right place.
 
-<Frame caption="The Gaps tool — coverage gaps with a recommended action, empty km, pickup, delivery, and client.">
-  <img src="/images/planner/empty-km-gaps.png" alt="Gaps page listing coverage gaps and empty-km reload opportunities" />
-</Frame>
 
 ---
 
-## Coverage
+## The Coverage queue
 
-The default sub-tab lists **uncovered loads** — future orders that don't yet have a truck assigned, ordered by urgency. Each row shows:
+The Coverage queue is a slide-over panel, reachable from the **Coverage Queue** icon in the header cluster on any page. It lists **loads with no truck assigned, most urgent first**.
 
-- **Recommended** — a badge: **Assign** (a nearby truck was matched), **Subcontract** (find a carrier), or **Must self-cover** (no option found)
-- **Empty KM** — the deadhead distance for the recommended match, colour-coded: green ≤150 km, amber 150–300 km, red >300 km
-- **Pickup**, **Pickup Date**, **Delivery**, **Client**
+### The two views
 
-Row actions let you assign the suggested truck directly, jump to **Find carrier**, or open the order for detail. A **Sell** button (shown whenever the row isn't blocked from subcontracting) shows an estimated price — **Sell ≈ €X** — and opens the order for detail to put it up for sale; when both an assign and a sell option exist, a small cost-comparison hint under the row actions tells you which is cheaper, **Own truck cheaper** or **Subcontract cheaper**. A **Triage** menu lets you mark a row **Working**, **Snooze 24h**, or **Accept as subcontract** so it stops competing for attention.
+| View | What it contains |
+|---|---|
+| **Needs a truck now** | Pickups within the next 24 hours, plus anything already overdue by up to three days. This is exactly what the hourly coverage alert escalates. |
+| **All uncovered** | Every future order without a truck, however far out. Use it to plan ahead once the urgent list is clear. |
 
-The KPI bar shows **≤12h / ≤24h / ≤72h uncovered**, **Auto-resolvable %**, **Need carrier**, and **Missing Coords** (orders whose stops lack coordinates and can't be matched).
+A search box (**Search gaps…**) filters by order number, client, or address.
 
----
+If the urgent list is empty you get **Nothing needs a truck right now**. When there are still uncovered loads further out, Druma says so and points you at **All uncovered** rather than leaving you with a blank panel.
 
-## Empty-km optimiser
+### What each row offers
 
-This sub-tab computes reposition opportunities across **all** orders (covered and uncovered) by running a routing matrix over every delivery→pickup pair — it can take a few seconds to load. It's a permanent **split table + map** layout, not a toggle: the table lists gaps on the left, and clicking a row draws a dashed line on the map from that delivery point to the proposed next pickup — only the selected row's line is drawn, not all of them.
+- **Assign truck** — pick a truck for the load. If Druma has a candidate it offers it directly; otherwise **Choose truck** opens the board so you can pick one yourself.
+- **Find carrier** — hand the load to a subcontractor instead. Where a load cannot be subcontracted the row says **No subcontract**, and where Druma found no option at all it says **Must self-cover**.
+- **Sell** — put the load up for sale.
+- **View order detail** — open the order without leaving the queue.
 
-Columns: **Recommended**, **Empty KM**, **Pickup**, **Pickup Date**, **Repositions from** (the order and delivery point the truck would be coming from), **Delivery**, **Client**. A **Top 10 / Top 25 / All** filter limits how many rows are computed and shown, and the map has its own severity filter (High / Medium / Low / Uncovered).
+When both an own-truck assignment and a subcontract are possible, the row shows which is cheaper — **Own truck cheaper** or **Subcontract cheaper** — so the comparison is made for you rather than in your head.
 
----
+### Triage
 
-## Empty trucks
+The **Triage** menu marks a row **Working**, **Snooze 24h**, or **Accept as subcontract**, and **Clear** removes the mark.
 
-This sub-tab flips the view around: one row per **truck** that finishes a delivery with nothing planned after it, matched to the nearest unassigned load it could reload with. Columns: **Truck** (with driver name), **Ends at** (place and date), **Best reload**, and **Empty km** for that reload. Trucks with no reachable load show no reload suggestion and need a manual reposition or subcontract decision.
+> **Warning:** 
+Snoozing quiets the header badge — it does **not** remove the load from the list. A snoozed load is still uncovered and still shows in the queue.
 
-KPIs: **Empty trucks**, **Reload found**, **No reload**, **Avg empty km**, **Missing Coords**.
-
----
-
-## Exporting
-
-Every sub-tab's toolbar has **Print** and **Export** buttons for the current table — export produces an Excel (.xlsx) file of the visible columns. There's no raw GPS coordinate export.
 
 ---
 
-## Filters
+## Empty KM (Analytics)
 
-Each sub-tab has a free-text search box (order number, client name, pickup/delivery address). There's no separate date-range, truck, or driver filter — the Coverage and Optimiser tabs already scope to upcoming orders, and the Empty Trucks tab has no per-truck/driver picker since every row already is a truck.
+**Analytics → Empty KM** measures what the fleet actually ran: loaded kilometres against empty (deadhead) kilometres, per truck and driver.
+
+### The KPI bar
+
+- **Total Empty KM** and **Total Loaded KM**
+- **Fleet Empty %** — empty kilometres as a share of total
+- **Deadhead Coverage** — how much of the period could be measured at all (see below)
+- **Worst Truck** — the truck with the highest empty share
+- **Profit/km view** — opens the related profit-per-kilometre report
+
+### The table
+
+| Column | Meaning |
+|---|---|
+| **Truck**, **Driver** | Who ran it |
+| **Loaded KM** | Kilometres run with freight on board |
+| **Empty KM** | Repositioning kilometres between a delivery and the next pickup |
+| **Total KM** | Loaded plus empty |
+| **% Empty** | Empty as a share of that truck's total |
+| **Avg Empty Leg** | Average length of one repositioning leg |
+| **# Empty Legs** | How many repositioning legs were measured |
+| **Measured** | How many of the truck's orders could be measured |
+
+A **Top 10 trucks — loaded vs empty km** chart sits above the table, and the period selector offers **Today**, **This Week**, **Last 30 days**, **Last 12 months**, or a **Custom** range.
+
+### Why "Measured" matters
+
+An order only has a measurable deadhead if there was an earlier trip close enough in time to measure the repositioning *from*. Orders without one are **left out of the empty-% denominator rather than counted as zero empty km** — counting them as zero would quietly flatter the fleet's empty percentage. **Deadhead Coverage** tells you how much of the period the number is actually based on; read the empty % alongside it, not on its own.
 
 ---
 
-## Using this tool to find backhauls
+## Related articles
 
-Lanes where you consistently see red gaps (>300 km) are exactly where a standing backhaul arrangement — or a manual search on a freight exchange like Timocom or Trans.eu on delivery — would have the highest payback. Druma does not run an automatic load search for general FTL orders; identifying and booking the backhaul is a manual step once the tool has pointed you to the lane.
 
-If the gap involves a groupage (multi-stop) lane, check whether Druma's automatic backhaul consolidation suggestions already flagged a matching return load — these surface directly on the groupage consolidation panel and don't require a manual search.
+  
+    Assign loads to trucks, and where the Coverage queue sends you.
+  
+  
+    Handing a load to a carrier when you cannot self-cover it.
+  
+</CardGroup>
+
+---
+
+## Upload Inbox
+
+
+Filing documents is the part of the day nobody wants. A driver hands in a stack of PODs, someone scans them, and then someone has to find the right order for each one. The Upload Inbox does the finding.
+
+Open it from the **Upload Inbox** icon in the header cluster — it is available from any page, not just the orders list.
+
+> *Drop documents, we will find the order.*
+
+---
+
+## How it works
+
+
+  ### Add the files
+    **Drag & drop files here**, or **Browse files**. A scanned POD, CMR, delivery note or any other order document.
+  
+  ### Druma reads them
+    Each document shows **Processing…** while Druma detects the document type and matches it against your orders.
+  
+  ### Review and link
+    Each row lands in one of the outcomes below. Certain matches file themselves; everything else waits for one click from you.
+  
+
+
+---
+
+## The four outcomes
+
+The inbox is filtered by status — **All**, or one of:
+
+| Status | What it means | What to do |
+|---|---|---|
+| **Processing** | Druma is still reading the document | Wait |
+| **Matched** | An order was identified | Check the **Matched order** and click **Link** |
+| **Ambiguous** | More than one order could fit | Open the preview, decide, and **Link** |
+| **No match** | No order fits | Either the order does not exist yet, or the document is not one of yours |
+| **Linked** | Filed against its order | Nothing — it is done |
+
+---
+
+## Working a row
+
+- **Preview document** — see the actual scan next to the match, rather than deciding from a filename. This is usually the fastest way to resolve an **Ambiguous** row.
+- **Link** — attach the document to the matched order.
+- **Re-run match** — try the match again. Useful when the order was created *after* the document was uploaded: the first pass had nothing to match against, the second does.
+- **Reject** — the document does not belong here. It leaves the queue.
+
+A row that has not been read at all shows **Not processed**.
+
+> **Note:** 
+**No match** is often a sequencing problem rather than a failure. If the document arrived before the order existed, create the order and then use **Re-run match** — no need to re-upload the file.
+
+
+---
+
+## Related articles
+
+
+  
+    Reading whole orders out of a document, not just filing it.
+  
+  
+    Documents and orders that arrive by email instead.
+  
+</CardGroup>
+
+---
+
+## Fuel Advice & Stop Planning
+
+
+Diesel costs different money in different countries, and on an intra-EU route a truck usually passes through several. Filling the tank in the country you happen to be standing in is the most expensive habit in road freight. Druma prices that decision for you.
+
+It shows up in three places: on the order for the planner, on the load for the driver, and once a week in the digest so you can see whether any of it was actually followed.
+
+---
+
+## Fuel advice on the order
+
+Open an order and find the **Fuel advice** section in the detail pane. (It sits with the financial information, so it is visible only to users who can see order financials.)
+
+| Reading | What it tells you |
+|---|---|
+| **Route fuel need** | Litres this route consumes |
+| **Consumption** | The rate used — labelled **Consumption (fleet default)** when it falls back to your fleet-wide figure rather than this truck's own |
+| **Full tank** | The tank size the numbers assume |
+| **Cheapest net €/L** | The best net price on the route, **excise refund included** |
+| **Dearest net €/L** | The worst, for comparison |
+| **Cheaper per litre** | The spread between them |
+| **Estimated saving** | What the choice is worth on this load |
+
+**Fill here** marks the recommended stop, and **How this is calculated** opens the working behind the number rather than asking you to trust it.
+
+On a route that never leaves one country you get **Single-country route — nothing to compare against** — there is no decision to make, and Druma says so instead of inventing one.
+
+> **Note:** 
+Prices are **net** — the excise refund your company reclaims is already taken off. That is the number that decides where to fill; the pump price is not.
+
+
+---
+
+## What the stop planner actually works out
+
+A price ranking tells you which country is cheapest. That is not yet a decision, because it ignores whether the truck can get there. The planner adds three things:
+
+### Range
+
+A tank has a bottom. If the cheapest country is 700 km away and there are 300 km of usable fuel on board, "fill in Poland" is not advice — it is a breakdown. Range is always computed against a **reserve the truck never eats into**.
+
+### Bridge fills
+
+The classic mistake is filling up completely in the expensive country you are currently in. The right move is to buy **only enough to reach the cheap country**, plus reserve, then fill there. Druma sizes that partial fill — and the saving is the litres you *avoided* buying at the dear price, not the litres you bought.
+
+### Detour economics
+
+A detour only pays if the price spread beats the fuel the detour itself burns, **and** the delivery still happens on time. Every option therefore carries the extra kilometres, the litres they consume, the saving **net of that fuel**, and an explicit on-time verdict — so you see "+50 km, saves €350, still on time" rather than a bare price.
+
+> **Warning:** 
+Two things Druma deliberately does **not** model, so you know where your own judgement is still required:
+
+- **Toll differences on a detour.** A detour can change toll cost as well as fuel. Where a toll delta is not supplied, the saving is reported as **fuel-only** rather than guessed at.
+- **Station-level pricing.** The comparison uses national net prices, not the price at an individual station or on your fuel-card network.
+
+
+---
+
+## What the driver sees
+
+The driver gets the conclusion, not the arithmetic. On the load in the driver app, a **Where to fuel** card names the country and says what it is worth — *"About €120 on a full tank."*
+
+The card states its own basis in the driver's language: national averages, excluding the VAT the company reclaims where that applies, and **advisory only — follow your fuel-card rules**. A fuel-card network agreement always outranks Druma's advice, and the card says so rather than leaving a driver to guess.
+
+---
+
+## The weekly digest
+
+Advice nobody follows looks identical to advice nobody gave. Once a week, the analytics digest reports what the fleet's fuelling actually cost.
+
+The number it gives is: over the week, your routes crossed a known set of countries; the cheapest of those is the price you *could* have paid; every litre bought dearer than that, **in a country the fleet was already driving through**, is money left on the table. No detour is assumed and no route is changed.
+
+> **Note:** 
+Read it as a **ceiling on what the country-choice lever was worth**, not as a loss. A tank cannot be filled entirely in the cheapest country — range, timing and tank size all bite, which is exactly what the per-order advice above accounts for. Druma reports "€X was available on the routes you already ran", not "you lost €X", because a fuel fill records its truck, date, country and price but *not* which load it was bought for.
+
+
+---
+
+## Where the prices come from
+
+Country diesel prices come from the **EU Oil Bulletin**, synced nightly, and are visible in full on **Fleet → Fuel** under **Diesel price board** — pump price, refund, net price, and the gap to the cheapest country.
+
+If you have just started, the board shows **No bulletin prices yet** until the first sync has run.
+
+---
+
+## Related articles
+
+
+  
+    Importing fills automatically, with the country already attached.
+  
+  
+    Reclaiming excise duty on the diesel you bought.
+  
+</CardGroup>
 
 ---
 
@@ -5919,6 +6292,9 @@ Two buttons in the site editor's opening-hours section can fill in data for you 
 
 ---
 
+
+# Driver App
+
 ## Installing the Driver App
 
 
@@ -6837,6 +7213,9 @@ Checklist items are company-wide. All drivers in your company see the same list.
 
 ---
 
+
+# Client Portal
+
 ## Tracking Shipments
 
 
@@ -7118,6 +7497,9 @@ Removing a contact stops all future notifications to that person immediately. Po
 
 
 ---
+
+
+# Carrier Portal
 
 ## Carrier Portal Overview
 
@@ -7575,6 +7957,9 @@ If an operator has invoice auditing on, your uploaded **Carrier Invoice** is aut
 
 ---
 
+
+# Invoicing & Accounting
+
 ## Generating Invoices
 
 
@@ -7678,6 +8063,87 @@ Once an invoice is sent (status moves out of Draft), you cannot edit it directly
 
   Recording payments against invoices and tracking outstanding balances.
 
+
+---
+
+## Consolidated Invoicing
+
+
+Some clients do not want an invoice per load. A shipper running forty loads a month wants one monthly invoice with forty lines on it, and their accounts payable team will reject anything else. Consolidated invoicing bills those clients per period instead of per order.
+
+---
+
+## Setting a client's invoicing mode
+
+Open the client record and find **Invoicing → Invoicing mode**:
+
+| Mode | Behaviour |
+|---|---|
+| **Per order (default)** | One invoice per delivered load, as normal |
+| **Weekly** | Delivered loads accumulate and are billed once a week |
+| **Monthly** | Delivered loads accumulate and are billed once a month |
+
+Choosing Weekly or Monthly reveals the matching day setting:
+
+- **Invoice day (weekday)** for weekly clients — which day of the week the period closes
+- **Invoice day (day of month)** for monthly clients
+
+Druma pre-fills a sensible default the moment you switch to a consolidated mode, so a client can never sit in "weekly, no day chosen".
+
+---
+
+## Where accumulating loads live
+
+Delivered loads for a consolidated client do **not** appear as ordinary uninvoiced orders waiting to be actioned. They collect in their own section on **Finance → Uninvoiced**, headed **Accumulating for period invoicing**:
+
+> *These clients are billed weekly or monthly, not per order — delivered loads accumulate here by policy until the next period close.*
+
+This separation matters. Without it, a monthly client's loads look exactly like revenue you forgot to bill, and the uninvoiced KPIs read as a problem when nothing is wrong.
+
+---
+
+## Closing a period early
+
+Each accumulating client offers **Invoice period as one invoice**. Use it when you need the invoice before the scheduled close — a month-end cut-off, a client asking for it early, or a credit-limit situation.
+
+Otherwise nothing is needed: the period closes on its configured day and the invoice is created automatically.
+
+---
+
+## Auto-invoice drafts
+
+Where automatic invoicing is enabled, drafts are created but not sent. They wait under **Auto-invoice drafts awaiting release**, with the order, the client and when it was **Drafted**.
+
+**Release** issues and sends the invoice. Until you release it, nothing has reached the client — the KPI bar counts these separately as **Auto-invoice drafts held** so a stack of unreleased drafts cannot quietly become unbilled revenue.
+
+---
+
+## Reading the page
+
+The **Uninvoiced deliveries** page shows delivered orders with no issued invoice, with three KPIs:
+
+- **Uninvoiced orders** — the count
+- **Revenue exposure** — the agreed price of each uninvoiced order, summed
+- **Avg days uninvoiced** — the mean of *(today − delivered date)*
+
+Ageing buckets (**< 1 day**, **1–3 days**, **4–7 days**) show how long revenue has been sitting. A search box filters by order, invoice or client.
+
+> **Warning:** 
+The list shows the **first 500 results**. When you see *"Showing first 500 results — use filters to narrow down"*, the totals on screen cover only those 500 — narrow the filters before reading them as a company-wide figure.
+
+
+---
+
+## Related articles
+
+
+  
+    Creating and sending invoices from an order.
+  
+  
+    What happens once the invoice is out.
+  
+</CardGroup>
 
 ---
 
@@ -8738,6 +9204,9 @@ Go to **Finance** → **Invoices** → open the invoice → **KSeF section** →
 
 ---
 
+
+# eCMR (Digital CMR)
+
 ## What Is eCMR?
 
 
@@ -9481,6 +9950,9 @@ Druma has built the core technical readiness for the EU's 2027 eFTI mandate — 
 </CardGroup>
 
 ---
+
+
+# Fleet Compliance
 
 ## Fleet Documents
 
@@ -11029,6 +11501,9 @@ Because both trackers rely on order stops rather than a live position feed, they
 
 ---
 
+
+# Automation
+
 ## Email Order Ingestion
 
 
@@ -11368,6 +11843,9 @@ For orders with multiple pickup or delivery stops, Druma sends a single notifica
 </CardGroup>
 
 ---
+
+
+# Tools
 
 ## Smart Import (AI Bulk Onboarding)
 
@@ -11814,6 +12292,9 @@ Druma's ETA engine accounts for mandatory EU break time in estimated arrival cal
 
 
 ---
+
+
+# Reports
 
 ## Reports Overview
 
@@ -12563,6 +13044,9 @@ Having annual CSRD-aligned emissions data ready — with a recognised methodolog
 
 ---
 
+
+# Integrations
+
 ## TransFollow eCMR (Legacy)
 
 
@@ -12966,9 +13450,25 @@ If a draft was manually created in SmartBill with the same series/number before 
 
 The Druma Public API gives you **read-only** REST access to your orders — useful for a customer self-service portal, a BI/reporting tool, or internal tooling your team has built.
 
-> **Warning:** 
-The Public API is a feature-flagged capability and is not enabled by default. Contact **support@druma.io** to request access — API keys are currently provisioned directly by Druma; there is no self-service key-generation screen in the app.
+---
 
+## API keys and scopes
+
+Company administrators issue their own keys from **Settings → API Keys** — click **Create key**, name it (e.g. `QuickBooks export`), and pick a scope:
+
+| Scope | What it grants |
+|---|---|
+| **Operator (full read access)** | The read-only endpoints on this page, for your own company |
+| **Finance (billable export + invoice ingest)** | The [Finance API](/en/integrations/finance-api) only — pulling billable orders and posting issued invoices back |
+| **Accountant (multi-company read)** | Read access across the companies the key is issued for |
+
+> **Warning:** 
+The full key is shown **once**, at the moment you create it. Druma stores only a hash, so it can never be shown again — copy it into your target system straight away. If you lose it, revoke the key and issue a new one.
+
+
+Existing keys list their scope, a key prefix, and when they were last used (or **never**). **Revoke** takes a key out of service immediately — any system still using it stops working at once, so check *Last used* before revoking one you did not issue yourself.
+
+A scope is not a suggestion: calling a Finance API endpoint with an Operator key fails with `403`, and vice versa.
 
 ## Authentication
 
@@ -12982,7 +13482,7 @@ Requests without a valid key return a `401 Unauthorized` response. Bearer-token 
 
 ## Available Endpoints
 
-The API is read-only — only `GET` requests are accepted. All responses are JSON.
+The Public API is read-only — only `GET` requests are accepted. All responses are JSON. (Writing back into Druma is the [Finance API](/en/integrations/finance-api)'s job, on its own key.)
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -13005,6 +13505,102 @@ For higher limits, contact support@druma.io with your use case.
   
     Overview of all Druma integrations and how to manage them from the Settings panel.
   
+  
+    Export billable orders to your ERP and post issued invoices back.
+  
+</CardGroup>
+
+---
+
+## Finance API
+
+
+Some operators do not invoice from Druma at all — they invoice from an existing finance or ERP system and want Druma to stay the operational source of truth. The Finance API is the loop that makes that work: Druma tells your finance system what is ready to bill, and your finance system tells Druma what it actually invoiced.
+
+An order moves through four states across the two systems:
+
+**Uninvoiced → Ready to invoice (exported) → Invoiced (in your system) → Paid**
+
+> **Note:** 
+This is a separate API from the read-only [Public API](/en/integrations/public-api). The Public API answers "where is my shipment"; the Finance API is a billing hand-off with writes, idempotency and its own rate limits. A key issued for one does not work on the other.
+
+
+---
+
+## Before you start
+
+
+  ### Turn client invoicing off in Druma
+    The Finance API is for operators who invoice elsewhere. If you also issue invoices from Druma you will end up billing the same load twice.
+  
+  ### Issue a Finance-scoped API key
+    Go to **Settings → API Keys**, click **Create key**, give it a name (e.g. `Netsuite export`) and choose the **Finance (billable export + invoice ingest)** scope.
+
+    Only a `finance` key works here. An `operator` or `accountant` key — even a perfectly valid one — is rejected with **403**. See [Public API](/en/integrations/public-api) for how keys and scopes work.
+  
+  ### Copy the key
+    The full key is shown **once**, at creation. Store it in your finance system's credential store; Druma keeps only a hash and can never show it to you again.
+  
+
+
+---
+
+## Authentication
+
+Every request carries the key in the `X-API-Key` header — the same header as the Public API:
+
+```
+X-API-Key: YOUR_FINANCE_KEY
+```
+
+---
+
+## Endpoints
+
+| Method | Endpoint | What it does |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Paginated list of orders that are ready to invoice |
+| `POST` | `/finance-api/billable/exported` | Stamp those orders as pulled, so the next `GET` does not return them again |
+| `POST` | `/finance-api/invoices` | Post an invoice you issued back into Druma |
+
+### The normal cycle
+
+
+  ### Pull what is billable
+    `GET /finance-api/billable` returns delivered orders with no issued invoice, paginated.
+  
+  ### Acknowledge what you took
+    `POST /finance-api/billable/exported` with the order ids you actually pulled. This is what stops the same order being handed to your ERP twice — until you acknowledge, Druma keeps offering it.
+  
+  ### Post the invoice back
+    Once your system has issued the invoice, `POST /finance-api/invoices` records it against the order in Druma. The order becomes **Invoiced**, drops off the uninvoiced list, and starts ageing for payment tracking like any other invoice.
+  
+
+
+### Errors you should expect to handle
+
+| Response | Meaning |
+|---|---|
+| `403` | The key is valid but is not a **Finance**-scoped key |
+| `409` | This invoice was already ingested — the request was a duplicate, and nothing changed |
+| `422` | One or more `order_id` values are not recognised. The response names the bad ids |
+| `429` | Rate limit exceeded — wait and retry |
+
+> **Warning:** 
+Druma does not guess. The ids you post back are ids Druma handed you minutes earlier from `GET /finance-api/billable`; if they do not match, you get a `422` naming them rather than a best-effort match against something else. Echo the ids back exactly as received.
+
+
+---
+
+## Related articles
+
+
+  
+    Read-only order access, API keys and scopes.
+  
+  
+    Invoicing from inside Druma instead.
+  
 </CardGroup>
 
 ---
@@ -13014,7 +13610,7 @@ For higher limits, contact support@druma.io with your use case.
 
 Peppol (Pan-European Public Procurement On-Line) is the EU standard network for exchanging structured electronic invoices between businesses. In Belgium, sending invoices via Peppol is **mandatory for all KBO-registered companies** issuing B2B invoices as of January 2026.
 
-Druma connects to the Peppol network through **e-invoice.be**, an accredited Belgian Peppol Access Point. Once configured, Druma detects which of your clients are reachable on Peppol and routes invoices to them automatically — you do not need to change how you create or send invoices.
+Druma connects to the Peppol network through an accredited Belgian **Peppol Access Point**. Druma holds and manages that Access Point contract at platform level — you never choose, contract, or configure an Access Point yourself, and Druma can change provider without any action on your side. Once configured, Druma detects which of your clients are reachable on Peppol and routes invoices to them automatically — you do not need to change how you create or send invoices.
 
 
 ---
@@ -13044,10 +13640,10 @@ Belgian companies that do not activate this integration risk non-compliance pena
     Click **Configure** on the card. A settings panel opens.
   
   ### Enter your KBO and VAT numbers
-    Enter your company's **KBO number** (10-digit Belgian company registration number) and **VAT number** (BE followed by 10 digits) in the respective fields.
+    Enter your company's **KBO/CBE number** (10-digit Belgian company registration number) and **VAT number** (BE followed by 10 digits) in the respective fields.
   
   ### Register on the Peppol network
-    Click **Register on Peppol**. Druma submits your registration to e-invoice.be. This typically completes in a few seconds.
+    Click **Register on Peppol**. Druma submits your registration to the Access Point. This typically completes in a few seconds.
   
   ### Confirm activation
     Once registration succeeds, the card shows a **Connected** badge. Your company is now a Peppol participant and can both send and receive structured invoices on the network.
@@ -13065,7 +13661,7 @@ Only **Admin** and **Company Admin** users can configure integrations. If you do
 After activation, Druma adds a Peppol check whenever you send an invoice:
 
 1. Druma first checks whether the client's VAT number is Belgian (starts with `BE`) — this check happens **before any network call**, so non-Belgian clients never trigger a Peppol lookup at all.
-2. For Belgian clients, Druma looks up the recipient on the Peppol network via e-invoice.be. If found, the invoice is submitted electronically — **no extra steps required on your part**.
+2. For Belgian clients, Druma looks up the recipient on the Peppol network via the Access Point. If found, the invoice is submitted electronically — **no extra steps required on your part**.
 3. Druma also sends the invoice by email, regardless of whether the Peppol submission succeeded — email is not a conditional fallback triggered only when Peppol fails. The one exception: if a client has explicitly opted out of receiving both channels (a separate per-client setting), email is skipped once Peppol delivery succeeds.
 
 You do not need to choose a delivery method per invoice. The routing is fully automatic.
@@ -13079,13 +13675,13 @@ The invoices list includes a **Peppol** status column with the following states:
 
 | Status | Meaning |
 |---|---|
-| **Submitted** | Sent to e-invoice.be, awaiting delivery confirmation |
+| **Submitted** | Sent to the Access Point, awaiting delivery confirmation |
 | **Delivered** | Confirmed delivered to the recipient's Peppol inbox |
 | **Failed** | Delivery failed at the Access Point — see the error detail on the invoice row |
-| **Validation failed** | Druma's local preflight blocked the send before it reached e-invoice.be (e.g. an invalid KBO/VAT checksum) — no Access Point call was made, so no e-invoice.be quota was used |
+| **Validation failed** | Druma's local preflight blocked the send before it reached the Access Point (e.g. an invalid KBO/VAT checksum) — no Access Point call was made |
 | **Not on network** | The client's VAT isn't a registered Peppol participant; the invoice was emailed as usual (shown as "→ Emailed") |
 
-There is no "Pending" status — an invoice is either not yet sent via Peppol (null), or in one of the five states above. Status updates for submitted invoices are pushed to Druma automatically via a webhook from e-invoice.be.
+There is no "Pending" status — an invoice is either not yet sent via Peppol (null), or in one of the five states above. Status updates for submitted invoices arrive automatically. Druma sweeps the Access Point for status changes on a schedule — that sweep is the authoritative source. An Access Point webhook may deliver the same update sooner, but it is only a speed-up: if it never arrives, the sweep still picks the status up.
 
 ---
 
@@ -13632,6 +14228,9 @@ When a message is marked Failed, every planner-role staff member on the company 
 
 ---
 
+
+# Bulk Import
+
 ## Importing Your Fleet
 
 
@@ -13789,6 +14388,9 @@ Smart Import creates the driver's profile record (name, phone, licence/CPC/ADR/t
 
 
 ---
+
+
+# Legal
 
 ## Privacy Policy
 

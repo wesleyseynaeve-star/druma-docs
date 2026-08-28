@@ -6,9 +6,25 @@ icon: "code"
 
 Publiczne API Druma daje **tylko-do-odczytu** dostęp REST do Twoich zleceń — przydatne dla portalu samoobsługowego klienta, narzędzia BI/raportowego lub wewnętrznych narzędzi zbudowanych przez Twój zespół.
 
+---
+
+## Klucze API i zakresy
+
+Administratorzy firmy wydają własne klucze w **Ustawienia → Integracje → Klucze API** — kliknij **Utwórz klucz**, nadaj mu nazwę (na przykład `Eksport QuickBooks`) i wybierz zakres:
+
+| Zakres | Co daje |
+|---|---|
+| **Operator (pełny dostęp do odczytu)** | Punkty końcowe tylko do odczytu z tej strony, dla własnej firmy |
+| **Finance (eksport do fakturowania + import faktur)** | Wyłącznie [Finance API](/pl/integrations/finance-api) — pobieranie zleceń do zafakturowania i odsyłanie wystawionych faktur |
+| **Accountant (odczyt wielu firm)** | Dostęp do odczytu dla firm, dla których klucz został wydany |
+
 <Warning>
-Publiczne API to funkcja wymagająca aktywacji i domyślnie nie jest włączona. Skontaktuj się z **support@druma.io**, aby zażądać dostępu — klucze API są obecnie wydawane bezpośrednio przez Drumę; nie ma samoobsługowego ekranu generowania kluczy w aplikacji.
+Pełny klucz jest pokazywany **tylko raz**, w chwili utworzenia. Druma przechowuje wyłącznie skrót, więc nigdy nie pokaże go ponownie — skopiuj go od razu do systemu docelowego. Jeśli go zgubisz, unieważnij klucz i wydaj nowy.
 </Warning>
+
+Istniejące klucze pokazują swój zakres, prefiks klucza oraz datę ostatniego użycia (albo **nigdy**). **Unieważnij** natychmiast wycofuje klucz z użycia — każdy system, który wciąż go używa, od razu przestaje działać, więc sprawdź *Ostatnio użyty*, zanim unieważnisz klucz, którego sam nie wydałeś.
+
+Zakres nie jest sugestią: wywołanie punktu końcowego Finance API kluczem Operator kończy się błędem `403` — i odwrotnie.
 
 ## Uwierzytelnianie
 
@@ -22,7 +38,7 @@ X-API-Key: TWÓJ_KLUCZ_API
 
 ## Dostępne endpointy
 
-API jest tylko do odczytu — akceptowane są wyłącznie żądania `GET`. Wszystkie odpowiedzi są w formacie JSON.
+Publiczne API jest tylko do odczytu — akceptowane są wyłącznie żądania `GET`. Wszystkie odpowiedzi są w formacie JSON. (Zapis z powrotem do Drumy to zadanie [Finance API](/pl/integrations/finance-api), na osobnym kluczu.)
 
 | Metoda | Endpoint | Opis |
 |---|---|---|
@@ -41,8 +57,11 @@ Każdy inny zasób lub dowolna metoda inna niż GET zwraca błąd `404`/`405`.
 
 W celu uzyskania wyższych limitów skontaktuj się z support@druma.io, podając swój przypadek użycia.
 
-<CardGroup cols={1}>
+<CardGroup cols={2}>
   <Card title="Przegląd konfiguracji integracji" icon="plug" href="/pl/admin/integration-setup">
     Przegląd wszystkich integracji Druma i jak nimi zarządzać z panelu Ustawienia.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/pl/integrations/finance-api">
+    Eksport zleceń do zafakturowania do ERP i odsyłanie wystawionych faktur.
   </Card>
 </CardGroup>
