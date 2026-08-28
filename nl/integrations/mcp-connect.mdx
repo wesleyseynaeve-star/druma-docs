@@ -1,0 +1,114 @@
+---
+title: "Uw AI koppelen (MCP)"
+description: "Koppel Claude Code, GitHub Copilot, Codex CLI, Gemini CLI of Cursor aan uw Druma-gegevens via het Model Context Protocol (MCP)."
+icon: "bot"
+---
+
+Druma draait een externe **MCP-server (Model Context Protocol)**, zodat u uw eigen AI-client — Claude Code, Claude Desktop, GitHub Copilot (agent-modus), OpenAI Codex CLI, Gemini CLI of Cursor — rechtstreeks aan uw Druma-gegevens kunt koppelen. Stel er vragen over uw orders, vloot, chauffeurs en facturen in gewone taal, en laat de AI — met een opt-in scope — truckstoewijzingen **voorstellen** die u goedkeurt.
+
+<Warning>
+De MCP-connector is een functie achter een feature-flag en staat standaard uit. Neem contact op met **support@druma.io** om hem voor uw account in te schakelen.
+</Warning>
+
+## Hoe het veilig blijft
+
+- **Alles wat de AI kan zien, respecteert uw rol en uw bedrijf** — de AI heeft nooit meer toegang dan u zelf al in Druma heeft. Er is geen manier om gegevens van een ander bedrijf te lezen.
+- **De AI kan niets zelfstandig wijzigen.** De enige actie die ze kan uitvoeren is het *voorstellen* van een truckstoewijzing; er wordt niets toegepast tot u dat uitdrukkelijk bevestigt. Er zijn geen verwijder-, bulk- of vrije databaseacties.
+- **Uw token is geheim.** Druma bewaart er enkel een eenrichtingshash van — het volledige token wordt eenmalig getoond, bij het aanmaken, en daarna nooit meer.
+- Elk verzoek is rate-limited en wordt gelogd voor uw beheerders.
+
+## 1. Maak een Personal Access Token aan
+
+1. Ga naar **Instellingen → Integraties → Connected AI (MCP)**.
+2. Geef onder **Token aanmaken** een naam op (bijv. "Claude Code — laptop").
+3. Kies de **scopes**:
+   - `read` (altijd aan) — orders, vloot, chauffeurs, facturen en KPI's lezen.
+   - `write:planning` (optioneel) — laat de AI daarnaast truckstoewijzingen *voorstellen*. Ook hiermee aan wordt er niets toegepast zonder uw uitdrukkelijke bevestiging.
+4. Kies een vervaltermijn (30 / 90 / 365 dagen) en klik op **Token aanmaken**.
+5. **Kopieer het token nu** — het wordt maar één keer getoond. Het ziet eruit als `druma_pat_…`.
+
+U kunt elk token op elk moment intrekken via hetzelfde scherm; bedrijfsbeheerders kunnen elk token binnen het bedrijf intrekken.
+
+## 2. Uw server-URL
+
+```
+https://<uw-project>.supabase.co/functions/v1/mcp-server
+```
+
+De exacte URL voor uw account staat op de pagina **Instellingen → Integraties → Connected AI (MCP)**, met een kopieerknop.
+
+## 3. Uw client koppelen
+
+Vervang `<url>` door uw server-URL en `<token>` door uw Personal Access Token.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Maak `.vscode/mcp.json` aan. Met een `input` blijft het token buiten het gecommitte bestand:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Voeg toe aan `~/.codex/config.toml`:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Voeg toe aan `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Voeg toe aan `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. Wat u kunt vragen
+
+- "Welke orders zijn nog niet toegewezen voor morgen?"
+- "Toon me de te late orders van deze week en welke trucks vrij zijn."
+- "Wat is mijn totaal aan vervallen vorderingen per klant?"
+- Met `write:planning`: "Stel truck RO-123-ABC voor bij order 4021." — de AI maakt een voorstel en toont u een samenvatting; daarna geeft u aan te bevestigen, en pas dan wordt de toewijzing toegepast.
+
+## Webchat-connectoren (ChatGPT, claude.ai)
+
+Het koppelen van de **web**-chatapps op chatgpt.com of claude.ai (in plaats van een desktop-/CLI-client) vereist OAuth en **komt later**. Gebruik voorlopig een van de bovenstaande clients.
+
+## Tokens roteren
+
+Werk bij voorkeur met kortlopende tokens. Roteren doet u zo: maak een nieuw token aan, werk de configuratie van uw client bij, en trek daarna het oude token in. Trek elk token in waarvan "Laatst gebruikt" leeg is — dat betekent dat er nooit iets mee verbonden heeft.
+
+## Gerelateerd
+
+Wilt u liever met een AI chatten **binnen Druma** (met uw eigen OpenAI-, Anthropic- of Gemini-sleutel) in plaats van een externe client te koppelen, zie dan [Druma Copilot](/nl/integrations/copilot).

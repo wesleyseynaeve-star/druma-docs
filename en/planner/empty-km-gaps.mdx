@@ -1,63 +1,91 @@
 ---
-title: "Gaps"
-description: "Find uncovered loads, deadhead (empty-km) reposition opportunities, and empty trucks that could reload nearby."
+title: "Coverage & Empty KM"
+description: "Find loads that still have no truck from the Coverage queue in the header, and measure the empty kilometres your fleet actually ran in Analytics → Empty KM."
 icon: "route"
 ---
 
-## What is the Gaps tool?
+Two questions sit behind every empty kilometre: *which load still has no truck on it?* and *how much empty running did we actually do?* Druma answers them in two different places, because they are different jobs — one is a queue you work through today, the other is a report you read at the end of a period.
 
-Every time a truck finishes a delivery with no next load lined up, or an order sits without a truck assigned as its pickup date approaches, you're either burning empty kilometres or risking a missed pickup. The **Gaps** page (`/operations/gaps`, in the Planning tab bar as **Gaps**) surfaces both problems in one place, across three sub-tabs.
-
-<Frame caption="The Gaps tool — coverage gaps with a recommended action, empty km, pickup, delivery, and client.">
-  <img src="/images/planner/empty-km-gaps.png" alt="Gaps page listing coverage gaps and empty-km reload opportunities" />
-</Frame>
+<Note>
+There is no longer a **Gaps** page in the Planning tab bar. Coverage moved into the header action queue described below, and the old **Empty-km optimiser** and **Empty trucks** sub-tabs were removed. Old links and bookmarks to `/operations/gaps` still work — they bounce to Orders and open the Coverage queue for you, so the hourly coverage alert keeps landing in the right place.
+</Note>
 
 ---
 
-## Coverage
+## The Coverage queue
 
-The default sub-tab lists **uncovered loads** — future orders that don't yet have a truck assigned, ordered by urgency. Each row shows:
+The Coverage queue is a slide-over panel, reachable from the **Coverage Queue** icon in the header cluster on any page. It lists **loads with no truck assigned, most urgent first**.
 
-- **Recommended** — a badge: **Assign** (a nearby truck was matched), **Subcontract** (find a carrier), or **Must self-cover** (no option found)
-- **Empty KM** — the deadhead distance for the recommended match, colour-coded: green ≤150 km, amber 150–300 km, red >300 km
-- **Pickup**, **Pickup Date**, **Delivery**, **Client**
+### The two views
 
-Row actions let you assign the suggested truck directly, jump to **Find carrier**, or open the order for detail. A **Sell** button (shown whenever the row isn't blocked from subcontracting) shows an estimated price — **Sell ≈ €X** — and opens the order for detail to put it up for sale; when both an assign and a sell option exist, a small cost-comparison hint under the row actions tells you which is cheaper, **Own truck cheaper** or **Subcontract cheaper**. A **Triage** menu lets you mark a row **Working**, **Snooze 24h**, or **Accept as subcontract** so it stops competing for attention.
+| View | What it contains |
+|---|---|
+| **Needs a truck now** | Pickups within the next 24 hours, plus anything already overdue by up to three days. This is exactly what the hourly coverage alert escalates. |
+| **All uncovered** | Every future order without a truck, however far out. Use it to plan ahead once the urgent list is clear. |
 
-The KPI bar shows **≤12h / ≤24h / ≤72h uncovered**, **Auto-resolvable %**, **Need carrier**, and **Missing Coords** (orders whose stops lack coordinates and can't be matched).
+A search box (**Search gaps…**) filters by order number, client, or address.
 
----
+If the urgent list is empty you get **Nothing needs a truck right now**. When there are still uncovered loads further out, Druma says so and points you at **All uncovered** rather than leaving you with a blank panel.
 
-## Empty-km optimiser
+### What each row offers
 
-This sub-tab computes reposition opportunities across **all** orders (covered and uncovered) by running a routing matrix over every delivery→pickup pair — it can take a few seconds to load. It's a permanent **split table + map** layout, not a toggle: the table lists gaps on the left, and clicking a row draws a dashed line on the map from that delivery point to the proposed next pickup — only the selected row's line is drawn, not all of them.
+- **Assign truck** — pick a truck for the load. If Druma has a candidate it offers it directly; otherwise **Choose truck** opens the board so you can pick one yourself.
+- **Find carrier** — hand the load to a subcontractor instead. Where a load cannot be subcontracted the row says **No subcontract**, and where Druma found no option at all it says **Must self-cover**.
+- **Sell** — put the load up for sale.
+- **View order detail** — open the order without leaving the queue.
 
-Columns: **Recommended**, **Empty KM**, **Pickup**, **Pickup Date**, **Repositions from** (the order and delivery point the truck would be coming from), **Delivery**, **Client**. A **Top 10 / Top 25 / All** filter limits how many rows are computed and shown, and the map has its own severity filter (High / Medium / Low / Uncovered).
+When both an own-truck assignment and a subcontract are possible, the row shows which is cheaper — **Own truck cheaper** or **Subcontract cheaper** — so the comparison is made for you rather than in your head.
 
----
+### Triage
 
-## Empty trucks
+The **Triage** menu marks a row **Working**, **Snooze 24h**, or **Accept as subcontract**, and **Clear** removes the mark.
 
-This sub-tab flips the view around: one row per **truck** that finishes a delivery with nothing planned after it, matched to the nearest unassigned load it could reload with. Columns: **Truck** (with driver name), **Ends at** (place and date), **Best reload**, and **Empty km** for that reload. Trucks with no reachable load show no reload suggestion and need a manual reposition or subcontract decision.
-
-KPIs: **Empty trucks**, **Reload found**, **No reload**, **Avg empty km**, **Missing Coords**.
-
----
-
-## Exporting
-
-Every sub-tab's toolbar has **Print** and **Export** buttons for the current table — export produces an Excel (.xlsx) file of the visible columns. There's no raw GPS coordinate export.
+<Warning>
+Snoozing quiets the header badge — it does **not** remove the load from the list. A snoozed load is still uncovered and still shows in the queue.
+</Warning>
 
 ---
 
-## Filters
+## Empty KM (Analytics)
 
-Each sub-tab has a free-text search box (order number, client name, pickup/delivery address). There's no separate date-range, truck, or driver filter — the Coverage and Optimiser tabs already scope to upcoming orders, and the Empty Trucks tab has no per-truck/driver picker since every row already is a truck.
+**Analytics → Empty KM** measures what the fleet actually ran: loaded kilometres against empty (deadhead) kilometres, per truck and driver.
+
+### The KPI bar
+
+- **Total Empty KM** and **Total Loaded KM**
+- **Fleet Empty %** — empty kilometres as a share of total
+- **Deadhead Coverage** — how much of the period could be measured at all (see below)
+- **Worst Truck** — the truck with the highest empty share
+- **Profit/km view** — opens the related profit-per-kilometre report
+
+### The table
+
+| Column | Meaning |
+|---|---|
+| **Truck**, **Driver** | Who ran it |
+| **Loaded KM** | Kilometres run with freight on board |
+| **Empty KM** | Repositioning kilometres between a delivery and the next pickup |
+| **Total KM** | Loaded plus empty |
+| **% Empty** | Empty as a share of that truck's total |
+| **Avg Empty Leg** | Average length of one repositioning leg |
+| **# Empty Legs** | How many repositioning legs were measured |
+| **Measured** | How many of the truck's orders could be measured |
+
+A **Top 10 trucks — loaded vs empty km** chart sits above the table, and the period selector offers **Today**, **This Week**, **Last 30 days**, **Last 12 months**, or a **Custom** range.
+
+### Why "Measured" matters
+
+An order only has a measurable deadhead if there was an earlier trip close enough in time to measure the repositioning *from*. Orders without one are **left out of the empty-% denominator rather than counted as zero empty km** — counting them as zero would quietly flatter the fleet's empty percentage. **Deadhead Coverage** tells you how much of the period the number is actually based on; read the empty % alongside it, not on its own.
 
 ---
 
-## Using this tool to find backhauls
+## Related articles
 
-Lanes where you consistently see red gaps (>300 km) are exactly where a standing backhaul arrangement — or a manual search on a freight exchange like Timocom or Trans.eu on delivery — would have the highest payback. Druma does not run an automatic load search for general FTL orders; identifying and booking the backhaul is a manual step once the tool has pointed you to the lane.
-
-If the gap involves a groupage (multi-stop) lane, check whether Druma's automatic backhaul consolidation suggestions already flagged a matching return load — these surface directly on the groupage consolidation panel and don't require a manual search.
+<CardGroup cols={2}>
+  <Card title="Planning Board" icon="table-columns" href="/en/planner/planning-board">
+    Assign loads to trucks, and where the Coverage queue sends you.
+  </Card>
+  <Card title="Subcontracting" icon="handshake" href="/en/planner/subcontractors">
+    Handing a load to a carrier when you cannot self-cover it.
+  </Card>
+</CardGroup>

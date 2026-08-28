@@ -1,0 +1,93 @@
+---
+title: "Finance API"
+description: "Haal factureerbare orders op in uw eigen boekhoud- of ERP-systeem, en boek de facturen die u heeft uitgegeven terug in Druma."
+icon: "arrow-right-arrow-left"
+---
+
+Sommige vervoerders factureren helemaal niet vanuit Druma — zij factureren vanuit een bestaand boekhoud- of ERP-systeem en willen dat Druma de operationele bron van waarheid blijft. De Finance API is de lus die dat mogelijk maakt: Druma vertelt uw boekhoudsysteem wat klaar is om te factureren, en uw boekhoudsysteem vertelt Druma wat er werkelijk gefactureerd is.
+
+Een order doorloopt vier statussen over de twee systemen heen:
+
+**Niet gefactureerd → Klaar om te factureren (geëxporteerd) → Gefactureerd (in uw systeem) → Betaald**
+
+<Note>
+Dit is een aparte API van de alleen-lezen [Openbare API](/nl/integrations/public-api). De Openbare API beantwoordt "waar is mijn zending"; de Finance API is een factuuroverdracht met schrijfacties, idempotentie en eigen rate limits. Een sleutel voor de ene werkt niet op de andere.
+</Note>
+
+---
+
+## Voordat u begint
+
+<Steps>
+  <Step title="Schakel klantfacturatie in Druma uit">
+    De Finance API is bedoeld voor vervoerders die elders factureren. Geeft u óók facturen uit vanuit Druma, dan factureert u dezelfde lading twee keer.
+  </Step>
+  <Step title="Geef een API-sleutel met Finance-scope uit">
+    Ga naar **Instellingen → Integraties → API-sleutels**, klik op **Sleutel aanmaken**, geef een naam (bijvoorbeeld `Netsuite-export`) en kies de scope **Finance (export factureerbaar + factuurinvoer)**.
+
+    Alleen een `finance`-sleutel werkt hier. Een `operator`- of `accountant`-sleutel — hoe geldig ook — wordt geweigerd met **403**. Zie [Openbare API](/nl/integrations/public-api) voor hoe sleutels en scopes werken.
+  </Step>
+  <Step title="Kopieer de sleutel">
+    De volledige sleutel wordt **eenmalig** getoond, bij het aanmaken. Bewaar hem in de credential-opslag van uw boekhoudsysteem; Druma bewaart enkel een hash en kan hem u nooit opnieuw tonen.
+  </Step>
+</Steps>
+
+---
+
+## Authenticatie
+
+Elk verzoek draagt de sleutel in de header `X-API-Key` — dezelfde header als bij de Openbare API:
+
+```
+X-API-Key: UW_FINANCE_SLEUTEL
+```
+
+---
+
+## Endpoints
+
+| Methode | Endpoint | Wat het doet |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Gepagineerde lijst van orders die klaar zijn om te factureren |
+| `POST` | `/finance-api/billable/exported` | Markeert die orders als opgehaald, zodat de volgende `GET` ze niet opnieuw teruggeeft |
+| `POST` | `/finance-api/invoices` | Boekt een door u uitgegeven factuur terug in Druma |
+
+### De normale cyclus
+
+<Steps>
+  <Step title="Haal op wat factureerbaar is">
+    `GET /finance-api/billable` geeft gepagineerd de geleverde orders zonder uitgegeven factuur terug.
+  </Step>
+  <Step title="Bevestig wat u heeft opgehaald">
+    `POST /finance-api/billable/exported` met de order-id's die u daadwerkelijk heeft opgehaald. Dit voorkomt dat dezelfde order twee keer aan uw ERP wordt aangeboden — zolang u niet bevestigt, blijft Druma hem aanbieden.
+  </Step>
+  <Step title="Boek de factuur terug">
+    Zodra uw systeem de factuur heeft uitgegeven, registreert `POST /finance-api/invoices` die bij de order in Druma. De order wordt **Gefactureerd**, verdwijnt uit de lijst niet-gefactureerd, en begint te verouderen voor betalingsopvolging zoals elke andere factuur.
+  </Step>
+</Steps>
+
+### Fouten waarop u moet voorzien
+
+| Respons | Betekenis |
+|---|---|
+| `403` | De sleutel is geldig, maar heeft niet de scope **Finance** |
+| `409` | Deze factuur is al ingelezen — het verzoek was een duplicaat en er is niets gewijzigd |
+| `422` | Een of meer `order_id`-waarden worden niet herkend. De respons noemt de foutieve id's |
+| `429` | Rate limit overschreden — wacht en probeer opnieuw |
+
+<Warning>
+Druma gokt niet. De id's die u terugstuurt zijn id's die Druma u enkele minuten eerder heeft gegeven via `GET /finance-api/billable`; komen ze niet overeen, dan krijgt u een `422` die ze bij naam noemt in plaats van een poging tot koppeling aan iets anders. Stuur de id's exact terug zoals ontvangen.
+</Warning>
+
+---
+
+## Gerelateerde artikelen
+
+<CardGroup cols={2}>
+  <Card title="Openbare API" icon="code" href="/nl/integrations/public-api">
+    Alleen-lezen ordertoegang, API-sleutels en scopes.
+  </Card>
+  <Card title="Facturen aanmaken" icon="file-invoice" href="/nl/invoicing/generating-invoices">
+    In plaats daarvan factureren vanuit Druma.
+  </Card>
+</CardGroup>

@@ -1,12 +1,12 @@
 ---
 title: "Fakturowanie elektroniczne Peppol (Belgia)"
-description: "Połącz Druma z siecią Peppol przez e-invoice.be i automatycznie kieruj faktury do belgijskich klientów biznesowych — bez żadnych ręcznych kroków."
+description: "Połącz Druma z siecią Peppol i automatycznie kieruj faktury do belgijskich klientów biznesowych — bez żadnych ręcznych kroków."
 icon: "file-check-2"
 ---
 
 Peppol (Pan-European Public Procurement On-Line) to unijna standardowa sieć do wymiany ustrukturyzowanych faktur elektronicznych między firmami. W Belgii wysyłanie faktur przez Peppol jest **obowiązkowe dla wszystkich firm zarejestrowanych w KBO** wystawiających faktury B2B od stycznia 2026 roku.
 
-Druma łączy się z siecią Peppol przez **e-invoice.be**, akredytowany belgijski punkt dostępu Peppol. Po skonfigurowaniu Druma wykrywa, którzy z Twoich klientów są dostępni w Peppol, i automatycznie kieruje do nich faktury — nie musisz zmieniać sposobu tworzenia ani wysyłania faktur.
+Druma łączy się z siecią Peppol przez akredytowany belgijski **punkt dostępu Peppol**. Druma posiada i utrzymuje tę umowę na poziomie platformy — nigdy sam nie wybierasz, nie kontraktujesz ani nie konfigurujesz punktu dostępu, a Druma może zmienić dostawcę bez żadnego działania z Twojej strony. Po skonfigurowaniu Druma wykrywa, którzy z Twoich klientów są dostępni w Peppol, i automatycznie kieruje do nich faktury — nie musisz zmieniać sposobu tworzenia ani wysyłania faktur.
 
 ---
 
@@ -38,7 +38,7 @@ Belgijskie firmy, które nie aktywują tej integracji, ryzykują kary za niezgod
     Wprowadź **numer KBO** Twojej firmy (belgijski numer rejestracyjny firmy) i **numer VAT** w odpowiednich polach.
   </Step>
   <Step title="Zarejestruj się w sieci Peppol">
-    Kliknij **Zarejestruj się w sieci Peppol**. Druma przesyła Twoją rejestrację do e-invoice.be. Zazwyczaj kończy się to w ciągu kilku minut.
+    Kliknij **Zarejestruj się w sieci Peppol**. Druma przesyła Twoją rejestrację do punktu dostępu. Zazwyczaj kończy się to w ciągu kilku minut.
   </Step>
   <Step title="Potwierdź aktywację">
     Po pomyślnej rejestracji karta pokazuje status **Połączono**. Twoja firma jest teraz uczestnikiem Peppol, a routing jest automatyczny dla uprawnionych belgijskich klientów — nie są potrzebne dodatkowe kroki przy wysyłaniu faktur do belgijskich odbiorców.
@@ -56,7 +56,7 @@ Tylko użytkownicy z rolą **Admin** i **Administrator firmy** mogą konfigurowa
 Po aktywacji Druma dodaje sprawdzenie Peppol za każdym razem, gdy wysyłasz fakturę:
 
 1. Druma najpierw sprawdza, czy numer VAT klienta jest belgijski (zaczyna się od `BE`) — ta kontrola odbywa się **przed jakimkolwiek wywołaniem sieciowym**, więc niebelgijscy klienci nigdy nie wyzwalają wyszukiwania w Peppol.
-2. Dla belgijskich klientów Druma wyszukuje odbiorcę w sieci Peppol przez e-invoice.be. Jeśli zostanie znaleziony, faktura jest składana elektronicznie — **bez żadnych dodatkowych kroków z Twojej strony**.
+2. Dla belgijskich klientów Druma wyszukuje odbiorcę w sieci Peppol przez punkt dostępu. Jeśli zostanie znaleziony, faktura jest składana elektronicznie — **bez żadnych dodatkowych kroków z Twojej strony**.
 3. Druma wysyła też fakturę e-mailem, niezależnie od tego, czy zgłoszenie Peppol się powiodło — e-mail nie jest warunkowym zabezpieczeniem wyzwalanym tylko, gdy Peppol zawiedzie. Jeden wyjątek: jeśli klient wyraźnie zrezygnował z otrzymywania obu kanałów (osobne ustawienie per klient), e-mail jest pomijany, gdy dostarczenie przez Peppol się powiedzie.
 
 Nie musisz wybierać metody dostarczenia per faktura. Routing jest w pełni automatyczny.
@@ -69,13 +69,13 @@ Lista faktur zawiera kolumnę statusu **Peppol** z następującymi stanami:
 
 | Status | Znaczenie |
 |---|---|
-| **Wysłano** | Przesłano do e-invoice.be, oczekuje na potwierdzenie dostarczenia |
+| **Wysłano** | Przesłano do punktu dostępu, oczekuje na potwierdzenie dostarczenia |
 | **Dostarczono** | Potwierdzone dostarczenie do skrzynki Peppol odbiorcy |
 | **Nieudane** | Dostarczenie nie powiodło się w punkcie dostępu — patrz szczegóły błędu w wierszu faktury |
-| **Walidacja nieudana** | Lokalna wstępna kontrola Druma zablokowała wysyłkę, zanim dotarła do e-invoice.be (np. nieprawidłowa suma kontrolna KBO/VAT) — nie wykonano żadnego wywołania punktu dostępu, więc nie zużyto limitu e-invoice.be |
+| **Walidacja nieudana** | Lokalna wstępna kontrola Druma zablokowała wysyłkę, zanim dotarła do punktu dostępu (np. nieprawidłowa suma kontrolna KBO/VAT) — nie wykonano żadnego wywołania punktu dostępu |
 | **Poza siecią** | VAT klienta nie jest zarejestrowanym uczestnikiem Peppol; faktura została wysłana e-mailem jak zwykle (pokazywane jako "→ Wysłano e-mailem") |
 
-Nie ma statusu "Oczekująca" — faktura albo nie została jeszcze wysłana przez Peppol (pusty status), albo znajduje się w jednym z pięciu powyższych stanów. Aktualizacje statusu dla przesłanych faktur są przekazywane do Druma automatycznie przez webhook z e-invoice.be.
+Nie ma statusu "Oczekująca" — faktura albo nie została jeszcze wysłana przez Peppol (pusty status), albo znajduje się w jednym z pięciu powyższych stanów. Aktualizacje statusu dla przesłanych faktur docierają automatycznie. Druma cyklicznie odpytuje punkt dostępu o zmiany statusu — to odpytanie jest źródłem rozstrzygającym. Webhook z punktu dostępu może dostarczyć tę samą aktualizację szybciej, ale jest wyłącznie przyspieszeniem: jeśli nie dotrze, zaplanowane odpytanie i tak pobierze status.
 
 ---
 

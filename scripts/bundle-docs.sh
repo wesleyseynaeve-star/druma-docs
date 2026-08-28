@@ -17,9 +17,52 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 DOCS_JSON="$REPO_ROOT/docs.json"
 OUTPUT="$REPO_ROOT/druma-docs-bundle.md"
 
-# Extract ordered page list from docs.json navigation
-# Uses lightweight parsing — grep all "en/" page refs in order
-PAGES=$(grep -o '"en/[^"]*' "$DOCS_JSON" | tr -d '"')
+# Build "group<TAB>page" in navigation order, once, from docs.json.
+#
+# docs.json's `navigation` has been {global, languages} since the
+# multi-language migration — it is NOT a bare list of groups. The previous
+# per-page lookup still iterated it as one, threw AttributeError on every
+# page, and had the error swallowed by `2>/dev/null`, so the bundle silently
+# lost every group header. Resolve the English groups once, here, and let the
+# loop below read the answer instead of re-deriving it 118 times.
+PAGE_MAP="$(mktemp)"
+trap 'rm -f "$PAGE_MAP"' EXIT
+python3 - "$DOCS_JSON" <<'PYMAP' | tr -d '\015' > "$PAGE_MAP" || :
+import io, json, sys
+
+# Windows Python writes CRLF on stdout; a trailing CR on every page path
+# makes every "$REPO_ROOT/${page}.mdx" miss and the bundle come out empty.
+# Belt and braces: force LF here, and strip CR in the pipe above.
+sys.stdout.reconfigure(newline=chr(10))
+
+with io.open(sys.argv[1], encoding='utf-8') as f:          # explicit: Windows defaults to cp1252
+    nav = json.load(f)['navigation']
+
+en = next((L for L in nav.get('languages', []) if L.get('language') == 'en'), {})
+
+def walk(node, group=''):
+    """Yield (group, page) depth-first; a nested subgroup overrides its parent."""
+    if isinstance(node, list):
+        for item in node:
+            yield from walk(item, group)
+    elif isinstance(node, dict):
+        here = node.get('group', group)
+        for item in node.get('pages', []) or node.get('groups', []) or []:
+            yield from walk(item, here)
+    elif isinstance(node, str) and node.startswith('en/'):
+        yield (group, node)
+
+for grp, page in walk(en.get('groups', [])):
+    print(f'{grp}	{page}')
+PYMAP
+
+# Fall back to the old grep if python3 is unavailable — pages still bundle,
+# they just land without group headers.
+if [ ! -s "$PAGE_MAP" ]; then
+  grep -o '"en/[^"]*' "$DOCS_JSON" | tr -d '"' | sed 's/^/	/' > "$PAGE_MAP"
+fi
+
+PAGES=$(cut -f2 "$PAGE_MAP")
 
 # Also find any .mdx files NOT in docs.json (orphans) — append at end
 ALL_EN=$(find "$REPO_ROOT/en" -name "*.mdx" | sed "s|$REPO_ROOT/||" | sed 's/\.mdx$//' | sort)
@@ -56,16 +99,8 @@ HEADER
 
     # Extract title from frontmatter
     TITLE=$(sed -n '/^title:/{ s/^title: *"\{0,1\}//; s/"\{0,1\} *$//; p; q; }' "$FILE")
-    # Extract group from docs.json — find which group contains this page
-    GROUP=$(python3 -c "
-import json, sys
-with open('$DOCS_JSON') as f:
-    nav = json.load(f)['navigation']
-for g in nav:
-    if '$page' in g.get('pages', []):
-        print(g['group'])
-        break
-" 2>/dev/null || echo "")
+    # Group comes from the map resolved once above.
+    GROUP=$(awk -F'	' -v p="$page" '$2 == p { print $1; exit }' "$PAGE_MAP")
 
     # Print group header if changed
     if [ -n "$GROUP" ] && [ "$GROUP" != "$CURRENT_GROUP" ]; then

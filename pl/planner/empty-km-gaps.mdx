@@ -1,63 +1,91 @@
 ---
-title: "Luki"
-description: "Znajdź niepokryte ładunki, możliwości repozycjonowania pustych przebiegów oraz puste pojazdy, które mogłyby doładować się w pobliżu."
+title: "Pokrycie i puste kilometry"
+description: "Znajdź ładunki wciąż bez ciągnika w kolejce Pokrycie w nagłówku i zmierz puste kilometry faktycznie przejechane przez flotę w Analityka → Puste KM."
 icon: "route"
 ---
 
-## Czym jest narzędzie Luki?
+Za każdym pustym kilometrem stoją dwa pytania: *który ładunek wciąż nie ma ciągnika?* i *ile naprawdę przejechaliśmy na pusto?* Druma odpowiada na nie w dwóch różnych miejscach, bo to dwa różne zadania — jedno to kolejka, którą przerabiasz dziś, drugie to raport czytany na koniec okresu.
 
-Za każdym razem, gdy pojazd kończy dostawę bez zaplanowanego kolejnego ładunku, albo zlecenie czeka bez przypisanego pojazdu w miarę zbliżania się daty odbioru, albo tracisz puste kilometry, albo ryzykujesz przegapiony odbiór. Strona **Luki** (`/operations/gaps`, na pasku kart Planowania jako **Luki**) ujawnia oba problemy w jednym miejscu, w trzech podkartach.
-
-<Frame caption="Narzędzie Luki — luki pokrycia z zalecaną akcją, puste km, odbiorem, dostawą i klientem.">
-  <img src="/images/planner/empty-km-gaps.png" alt="Strona Luki wylistowująca luki pokrycia i możliwości doładunku pustych km" />
-</Frame>
+<Note>
+Na pasku zakładek Planowanie nie ma już strony **Gaps**. Pokrycie przeniosło się do opisanej niżej kolejki akcji w nagłówku, a dawne podzakładki **Optymalizator pustych km** i **Puste ciągniki** zostały usunięte. Stare linki i zakładki do `/operations/gaps` nadal działają — przenoszą do Zleceń i otwierają kolejkę Pokrycie, dzięki czemu cogodzinny alert pokrycia trafia we właściwe miejsce.
+</Note>
 
 ---
 
-## Pokrycie
+## Kolejka Pokrycie
 
-Domyślna podkarta wylistowuje **niepokryte ładunki** — przyszłe zlecenia, które jeszcze nie mają przypisanego pojazdu, uporządkowane wg pilności. Każdy wiersz pokazuje:
+Kolejka Pokrycie to panel wysuwany, dostępny ikoną **Kolejka Pokrycie** w grupie akcji w nagłówku, z każdej strony. Wymienia **ładunki bez przypisanego ciągnika, najpilniejsze na górze**.
 
-- **Zalecane** — odznaka: **Przypisz** (dopasowano pobliski pojazd), **Podzleć** (znajdź przewoźnika) lub **Musi pokryć samodzielnie** (nie znaleziono opcji)
-- **Puste km** — odległość pustego przebiegu dla zalecanego dopasowania, oznaczona kolorem: zielony ≤150 km, bursztynowy 150–300 km, czerwony >300 km
-- **Odbiór**, **Data odbioru**, **Dostawa**, **Klient**
+### Dwa widoki
 
-Akcje wiersza pozwalają przypisać sugerowany pojazd bezpośrednio, przejść do **Znajdź przewoźnika** albo otworzyć zlecenie po szczegóły. Menu **Segregacja** pozwala oznaczyć wiersz jako **W trakcie**, **Uśpij 24h** albo **Zaakceptuj jako podzlecenie**, aby przestał konkurować o uwagę.
+| Widok | Co zawiera |
+|---|---|
+| **Potrzebuje ciągnika teraz** | Załadunki w ciągu najbliższych 24 godzin oraz wszystko już opóźnione o maksymalnie trzy dni. Dokładnie to eskaluje cogodzinny alert pokrycia. |
+| **Wszystkie niepokryte** | Każde przyszłe zlecenie bez ciągnika, niezależnie jak odległe. Użyj go do planowania z wyprzedzeniem, gdy pilna lista jest już pusta. |
 
-Pasek KPI pokazuje **≤12h / ≤24h / ≤72h niepokryte**, **% auto-rozwiązywalnych**, **Potrzebny przewoźnik** i **Brak współrzędnych** (zlecenia, których przystanki nie mają współrzędnych i nie mogą zostać dopasowane).
+Pole wyszukiwania (**Szukaj luk…**) filtruje po numerze zlecenia, kliencie lub adresie.
 
----
+Gdy pilna lista jest pusta, zobaczysz **Nic nie potrzebuje teraz ciągnika**. Jeśli dalej w czasie są jeszcze niepokryte ładunki, Druma to powie i skieruje Cię do **Wszystkie niepokryte**, zamiast zostawić pusty panel.
 
-## Optymalizator pustych km
+### Co oferuje każdy wiersz
 
-Ta podkarta oblicza możliwości repozycjonowania we **wszystkich** zleceniach (pokrytych i niepokrytych), uruchamiając macierz routingu dla każdej pary dostawa→odbiór — może to potrwać kilka sekund do załadowania. To stały układ **tabela + mapa podzielona**, nie przełącznik: tabela wylistowuje luki po lewej, a kliknięcie wiersza rysuje przerywaną linię na mapie od tego punktu dostawy do proponowanego następnego odbioru — rysowana jest tylko linia wybranego wiersza, nie wszystkie naraz.
+- **Przypisz ciągnik** — wybierz ciągnik do ładunku. Jeśli Druma ma kandydata, proponuje go od razu; w przeciwnym razie **Wybierz ciągnik** otwiera tablicę do samodzielnego wyboru.
+- **Znajdź przewoźnika** — przekaż ładunek podwykonawcy. Gdy ładunku nie można podzlecić, wiersz pokazuje **Brak podzlecenia**, a gdy Druma nie znalazła żadnej opcji — **Trzeba pokryć własnym taborem**.
+- **Sprzedaj** — wystaw ładunek na sprzedaż.
+- **Zobacz szczegóły zlecenia** — otwórz zlecenie bez opuszczania kolejki.
 
-Kolumny: **Zalecane**, **Puste km**, **Odbiór**, **Data odbioru**, **Repozycjonuje z** (zlecenie i punkt dostawy, z którego pojazd by przyjeżdżał), **Dostawa**, **Klient**. Filtr **Top 10 / Top 25 / Wszystkie** ogranicza, ile wierszy jest obliczanych i pokazywanych, a mapa ma własny filtr ważności (Wysoka / Średnia / Niska / Niepokryte).
+Gdy możliwe jest zarówno przypisanie własnego ciągnika, jak i podzlecenie, wiersz pokazuje, co jest tańsze — **Taniej własnym ciągnikiem** lub **Taniej podzlecić** — więc porównanie jest zrobione za Ciebie, a nie w pamięci.
 
----
+### Triaż
 
-## Puste pojazdy
+Menu **Triaż** oznacza wiersz jako **W toku**, **Odłóż na 24 h** lub **Przyjmij jako podzlecenie**, a **Wyczyść** zdejmuje oznaczenie.
 
-Ta podkarta odwraca widok: jeden wiersz na **pojazd**, który kończy dostawę bez niczego zaplanowanego po niej, dopasowany do najbliższego nieprzypisanego ładunku, którym mógłby się doładować. Kolumny: **Pojazd** (z imieniem kierowcy), **Kończy w** (miejsce i data), **Najlepsze doładowanie** i **Puste km** dla tego doładowania. Pojazdy bez osiągalnego ładunku nie pokazują sugestii doładowania i wymagają ręcznej decyzji o repozycjonowaniu lub podzleceniu.
-
-KPI: **Puste pojazdy**, **Znaleziono doładowanie**, **Brak doładowania**, **Śr. puste km**, **Brak współrzędnych**.
-
----
-
-## Eksportowanie
-
-Pasek narzędzi każdej podkarty ma przyciski **Drukuj** i **Eksportuj** dla bieżącej tabeli — eksport tworzy plik Excel (.xlsx) widocznych kolumn. Nie ma eksportu surowych współrzędnych GPS.
+<Warning>
+Odłożenie wycisza plakietkę w nagłówku — **nie** usuwa ładunku z listy. Odłożony ładunek nadal jest niepokryty i nadal widnieje w kolejce.
+</Warning>
 
 ---
 
-## Filtry
+## Puste KM (Analityka)
 
-Każda podkarta ma pole wyszukiwania tekstowego (numer zlecenia, nazwa klienta, adres odbioru/dostawy). Nie ma osobnego filtra zakresu dat, pojazdu ani kierowcy — karty Pokrycie i Optymalizator już ograniczają się do nadchodzących zleceń, a karta Puste pojazdy nie ma selektora per pojazd/kierowca, ponieważ każdy wiersz już jest pojazdem.
+**Analityka → Puste KM** mierzy, co flota faktycznie przejechała: kilometry z ładunkiem wobec pustych (deadhead), w podziale na ciągniki i kierowców.
+
+### Pasek wskaźników
+
+- **Łącznie puste KM** i **Łącznie KM z ładunkiem**
+- **% pustych we flocie** — puste kilometry jako udział w całości
+- **Pokrycie deadhead** — jaka część okresu dała się w ogóle zmierzyć (patrz niżej)
+- **Najgorszy ciągnik** — ciągnik o najwyższym udziale pustych
+- **Widok zysk/km** — otwiera powiązany raport zysku na kilometr
+
+### Tabela
+
+| Kolumna | Znaczenie |
+|---|---|
+| **Ciągnik**, **Kierowca** | Kto jechał |
+| **KM z ładunkiem** | Kilometry przejechane z towarem na pokładzie |
+| **Puste KM** | Kilometry przebazowania między dostawą a kolejnym załadunkiem |
+| **Łącznie KM** | Z ładunkiem plus puste |
+| **% pustych** | Puste jako udział w całości danego ciągnika |
+| **Śr. pusty odcinek** | Średnia długość jednego odcinka przebazowania |
+| **Liczba pustych odcinków** | Ile odcinków przebazowania zmierzono |
+| **Zmierzone** | Ile zleceń ciągnika dało się zmierzyć |
+
+Nad tabelą znajduje się wykres **Top 10 ciągników — km z ładunkiem wobec pustych**, a wybór okresu obejmuje **Dziś**, **Ten tydzień**, **Ostatnie 30 dni**, **Ostatnie 12 miesięcy** lub zakres **Niestandardowy**.
+
+### Dlaczego „Zmierzone” ma znaczenie
+
+Zlecenie ma mierzalny deadhead tylko wtedy, gdy istniał wcześniejszy przejazd na tyle bliski w czasie, by można było zmierzyć przebazowanie *od niego*. Zlecenia bez takiego przejazdu są **pomijane w mianowniku procentu pustych, a nie liczone jako zero pustych km** — liczenie ich jako zero po cichu upiększałoby procent pustych całej floty. **Pokrycie deadhead** mówi, na jakiej części okresu liczba faktycznie się opiera; czytaj procent pustych razem z nim, a nie samodzielnie.
 
 ---
 
-## Używanie tego narzędzia do znajdowania ładunków powrotnych
+## Powiązane artykuły
 
-Trasy, na których konsekwentnie widzisz czerwone luki (>300 km), to dokładnie te, gdzie stały układ ładunku powrotnego — albo ręczne wyszukiwanie na giełdzie frachtowej jak Timocom czy Trans.eu przy dostawie — przyniosłoby najwyższy zwrot. Druma nie prowadzi automatycznego wyszukiwania ładunków dla ogólnych zleceń FTL; zidentyfikowanie i zarezerwowanie ładunku powrotnego to ręczny krok, gdy narzędzie już wskazało Ci trasę.
-
-Jeśli luka dotyczy trasy grupażowej (wieloprzystankowej), sprawdź, czy automatyczne sugestie konsolidacji ładunku powrotnego Druma już oflagowały pasujący ładunek powrotny — te pojawiają się bezpośrednio na panelu konsolidacji grupażu i nie wymagają ręcznego wyszukiwania.
+<CardGroup cols={2}>
+  <Card title="Tablica planowania" icon="table-columns" href="/pl/planner/planning-board">
+    Przypisywanie ładunków do ciągników i miejsce, do którego kieruje kolejka Pokrycie.
+  </Card>
+  <Card title="Podzlecanie" icon="handshake" href="/pl/planner/subcontractors">
+    Przekazanie ładunku przewoźnikowi, gdy nie możesz pokryć go własnym taborem.
+  </Card>
+</CardGroup>

@@ -1,0 +1,93 @@
+---
+title: "Finance API"
+description: "Preia comenzile facturabile în propriul sistem financiar sau ERP și înregistrează înapoi în Druma facturile pe care le-ai emis."
+icon: "arrow-right-arrow-left"
+---
+
+Unii operatori nu facturează deloc din Druma — facturează dintr-un sistem financiar sau ERP existent și vor ca Druma să rămână sursa de adevăr operațională. Finance API este bucla care face asta posibilă: Druma îi spune sistemului tău financiar ce este gata de facturat, iar sistemul tău financiar îi spune Drumei ce a facturat efectiv.
+
+O comandă trece prin patru stări între cele două sisteme:
+
+**Nefacturată → Gata de facturat (exportată) → Facturată (în sistemul tău) → Plătită**
+
+<Note>
+Este un API separat de [API-ul public](/ro/integrations/public-api), care este doar-citire. API-ul public răspunde la „unde este transportul meu”; Finance API este o predare de facturare cu scrieri, idempotență și limite proprii de rată. O cheie emisă pentru unul nu funcționează pe celălalt.
+</Note>
+
+---
+
+## Înainte de a începe
+
+<Steps>
+  <Step title="Dezactivează facturarea clienților în Druma">
+    Finance API este pentru operatorii care facturează în altă parte. Dacă emiți facturi și din Druma, vei factura aceeași cursă de două ori.
+  </Step>
+  <Step title="Emite o cheie API cu domeniul Finance">
+    Mergi la **Setări → Integrări → Chei API**, apasă **Creează cheie**, dă-i un nume (de exemplu `Export Netsuite`) și alege domeniul **Finance (export facturabil + preluare facturi)**.
+
+    Aici funcționează doar o cheie `finance`. O cheie `operator` sau `accountant` — oricât de validă — este respinsă cu **403**. Vezi [API-ul public](/ro/integrations/public-api) pentru modul în care funcționează cheile și domeniile.
+  </Step>
+  <Step title="Copiază cheia">
+    Cheia completă este afișată **o singură dată**, la creare. Păstreaz-o în seiful de credențiale al sistemului tău financiar; Druma reține doar un hash și nu ți-o mai poate arăta niciodată.
+  </Step>
+</Steps>
+
+---
+
+## Autentificare
+
+Fiecare cerere poartă cheia în header-ul `X-API-Key` — același header ca la API-ul public:
+
+```
+X-API-Key: CHEIA_TA_FINANCE
+```
+
+---
+
+## Endpoint-uri
+
+| Metodă | Endpoint | Ce face |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Listă paginată a comenzilor gata de facturat |
+| `POST` | `/finance-api/billable/exported` | Marchează acele comenzi ca preluate, ca următorul `GET` să nu le mai returneze |
+| `POST` | `/finance-api/invoices` | Înregistrează în Druma o factură pe care ai emis-o |
+
+### Ciclul normal
+
+<Steps>
+  <Step title="Preia ce este facturabil">
+    `GET /finance-api/billable` returnează paginat comenzile livrate fără factură emisă.
+  </Step>
+  <Step title="Confirmă ce ai preluat">
+    `POST /finance-api/billable/exported` cu id-urile comenzilor pe care le-ai preluat efectiv. Asta împiedică predarea aceleiași comenzi de două ori către ERP-ul tău — până confirmi, Druma continuă să o ofere.
+  </Step>
+  <Step title="Înregistrează factura înapoi">
+    Odată ce sistemul tău a emis factura, `POST /finance-api/invoices` o înregistrează pe comandă în Druma. Comanda devine **Facturată**, dispare din lista nefacturate și începe să îmbătrânească pentru urmărirea plăților, ca orice altă factură.
+  </Step>
+</Steps>
+
+### Erori la care trebuie să te aștepți
+
+| Răspuns | Semnificație |
+|---|---|
+| `403` | Cheia este validă, dar nu are domeniul **Finance** |
+| `409` | Factura a fost deja preluată — cererea a fost un duplicat și nu s-a schimbat nimic |
+| `422` | Una sau mai multe valori `order_id` nu sunt recunoscute. Răspunsul numește id-urile greșite |
+| `429` | Limită de rată depășită — așteaptă și reîncearcă |
+
+<Warning>
+Druma nu ghicește. Id-urile pe care le trimiți înapoi sunt id-uri pe care Druma ți le-a dat cu câteva minute înainte prin `GET /finance-api/billable`; dacă nu se potrivesc, primești un `422` care le numește, în loc de o potrivire aproximativă cu altceva. Trimite id-urile exact așa cum le-ai primit.
+</Warning>
+
+---
+
+## Articole conexe
+
+<CardGroup cols={2}>
+  <Card title="API public" icon="code" href="/ro/integrations/public-api">
+    Acces doar-citire la comenzi, chei API și domenii.
+  </Card>
+  <Card title="Generarea facturilor" icon="file-invoice" href="/ro/invoicing/generating-invoices">
+    Facturarea din Druma, ca alternativă.
+  </Card>
+</CardGroup>

@@ -6,9 +6,25 @@ icon: "code"
 
 De openbare API van Druma geeft u **alleen-lezen** REST-toegang tot uw orders — nuttig voor een zelfbedieningsportaal voor klanten, een BI-/rapportagetool, of interne tooling die uw team heeft gebouwd.
 
+---
+
+## API-sleutels en scopes
+
+Bedrijfsbeheerders geven hun eigen sleutels uit via **Instellingen → Integraties → API-sleutels** — klik op **Sleutel aanmaken**, geef een naam (bijvoorbeeld `QuickBooks-export`) en kies een scope:
+
+| Scope | Wat het geeft |
+|---|---|
+| **Operator (volledige leestoegang)** | De alleen-lezen endpoints op deze pagina, voor uw eigen bedrijf |
+| **Finance (export factureerbaar + factuurinvoer)** | Uitsluitend de [Finance API](/nl/integrations/finance-api) — factureerbare orders ophalen en uitgegeven facturen terugboeken |
+| **Accountant (leestoegang over meerdere bedrijven)** | Leestoegang over de bedrijven waarvoor de sleutel is uitgegeven |
+
 <Warning>
-De openbare API is een functie die niet standaard is ingeschakeld. Neem contact op met **support@druma.io** om toegang aan te vragen — API-sleutels worden momenteel rechtstreeks door Druma uitgegeven; er is geen self-service sleutelgeneratiescherm in de app.
+De volledige sleutel wordt **eenmalig** getoond, op het moment dat u hem aanmaakt. Druma bewaart enkel een hash en kan hem dus nooit opnieuw tonen — kopieer hem meteen naar het doelsysteem. Bent u hem kwijt, trek de sleutel dan in en geef een nieuwe uit.
 </Warning>
+
+Bestaande sleutels tonen hun scope, een sleutelprefix en wanneer ze voor het laatst gebruikt zijn (of **nooit**). **Intrekken** haalt een sleutel onmiddellijk uit dienst — elk systeem dat hem nog gebruikt, stopt meteen met werken. Controleer dus *Laatst gebruikt* voordat u er een intrekt die u niet zelf heeft uitgegeven.
+
+Een scope is geen suggestie: een Finance API-endpoint aanroepen met een Operator-sleutel mislukt met `403`, en omgekeerd.
 
 ## Authenticatie
 
@@ -22,7 +38,7 @@ Verzoeken zonder geldige sleutel krijgen een `401 Unauthorized`-respons. Bearer-
 
 ## Beschikbare endpoints
 
-De API is alleen-lezen — alleen `GET`-verzoeken worden geaccepteerd. Alle responses zijn JSON.
+De openbare API is alleen-lezen — alleen `GET`-verzoeken worden geaccepteerd. Alle responses zijn JSON. (Terugschrijven naar Druma is de taak van de [Finance API](/nl/integrations/finance-api), op een eigen sleutel.)
 
 | Methode | Endpoint | Beschrijving |
 |---|---|---|
@@ -41,8 +57,11 @@ Elke andere resource, of elke niet-GET-methode, geeft een `404`/`405`-fout.
 
 Voor hogere limieten, neem contact op met support@druma.io met uw use case.
 
-<CardGroup cols={1}>
+<CardGroup cols={2}>
   <Card title="Overzicht integraties instellen" icon="plug" href="/nl/admin/integration-setup">
     Overzicht van alle Druma-integraties en hoe u ze beheert vanuit het instellingenpaneel.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/nl/integrations/finance-api">
+    Factureerbare orders naar uw ERP exporteren en uitgegeven facturen terugboeken.
   </Card>
 </CardGroup>

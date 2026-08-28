@@ -6,9 +6,25 @@ icon: "code"
 
 The Druma Public API gives you **read-only** REST access to your orders — useful for a customer self-service portal, a BI/reporting tool, or internal tooling your team has built.
 
+---
+
+## API keys and scopes
+
+Company administrators issue their own keys from **Settings → Integrations → API Keys** — click **Create key**, name it (e.g. `QuickBooks export`), and pick a scope:
+
+| Scope | What it grants |
+|---|---|
+| **Operator (full read access)** | The read-only endpoints on this page, for your own company |
+| **Finance (billable export + invoice ingest)** | The [Finance API](/en/integrations/finance-api) only — pulling billable orders and posting issued invoices back |
+| **Accountant (multi-company read)** | Read access across the companies the key is issued for |
+
 <Warning>
-The Public API is a feature-flagged capability and is not enabled by default. Contact **support@druma.io** to request access — API keys are currently provisioned directly by Druma; there is no self-service key-generation screen in the app.
+The full key is shown **once**, at the moment you create it. Druma stores only a hash, so it can never be shown again — copy it into your target system straight away. If you lose it, revoke the key and issue a new one.
 </Warning>
+
+Existing keys list their scope, a key prefix, and when they were last used (or **never**). **Revoke** takes a key out of service immediately — any system still using it stops working at once, so check *Last used* before revoking one you did not issue yourself.
+
+A scope is not a suggestion: calling a Finance API endpoint with an Operator key fails with `403`, and vice versa.
 
 ## Authentication
 
@@ -22,7 +38,7 @@ Requests without a valid key return a `401 Unauthorized` response. Bearer-token 
 
 ## Available Endpoints
 
-The API is read-only — only `GET` requests are accepted. All responses are JSON.
+The Public API is read-only — only `GET` requests are accepted. All responses are JSON. (Writing back into Druma is the [Finance API](/en/integrations/finance-api)'s job, on its own key.)
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -41,8 +57,11 @@ Any other resource, or any non-GET method, returns a `404`/`405` error.
 
 For higher limits, contact support@druma.io with your use case.
 
-<CardGroup cols={1}>
+<CardGroup cols={2}>
   <Card title="Integration Setup Overview" icon="plug" href="/en/admin/integration-setup">
     Overview of all Druma integrations and how to manage them from the Settings panel.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/en/integrations/finance-api">
+    Export billable orders to your ERP and post issued invoices back.
   </Card>
 </CardGroup>
