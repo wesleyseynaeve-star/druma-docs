@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-28 14:39 UTC
+Generated: 2026-08-28 15:55 UTC
 
 ---
 
@@ -1761,8 +1761,7 @@ Druma shares data with the following third-party sub-processors to deliver the s
 |---|---|
 | Supabase | Database hosting and authentication (EU — Frankfurt) |
 | Cloudflare | CDN, DDoS protection, and DNS |
-| Resend | Outbound transactional email delivery |
-| Mailgun | Inbound email ingestion (order, invoice, and payment emails parsed into Druma) |
+| Resend | Transactional email delivery, and inbound email ingestion (order, invoice, and payment emails parsed into Druma) |
 | Stripe | Payment processing and subscription management |
 | PTV Group | Route, distance, and ETA calculation — receives pickup/delivery coordinates |
 | HERE Technologies | Address geocoding and autocomplete |
@@ -14513,8 +14512,7 @@ Alternatively, email privacy@druma.io from your account owner's email address.
 |----------|------------------|----------|
 | Supabase | Database (all data) | EU (Frankfurt) |
 | Cloudflare | CDN, DDoS protection, DNS, request logs | EU |
-| Resend | Outbound transactional email content | EU |
-| Mailgun | Inbound email ingestion (order, invoice, payment emails) | EU |
+| Resend | Transactional email content, and inbound email ingestion (order, invoice, payment emails) | EU |
 | Stripe | Billing and payment data | EU |
 | PTV Group | Route, distance, and ETA data (pickup/delivery coordinates) | EU |
 | HERE Technologies | Geocoding and address autocomplete | EU |
