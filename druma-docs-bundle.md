@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-28 15:55 UTC
+Generated: 2026-08-28 16:34 UTC
 
 ---
 
@@ -5090,7 +5090,7 @@ A row that has not been read at all shows **Not processed**.
 
 ---
 
-## Fuel Advice & Stop Planning
+## Fuel Advice
 
 
 Diesel costs different money in different countries, and on an intra-EU route a truck usually passes through several. Filling the tank in the country you happen to be standing in is the most expensive habit in road freight. Druma prices that decision for you.
@@ -5123,28 +5123,19 @@ Prices are **net** — the excise refund your company reclaims is already taken 
 
 ---
 
-## What the stop planner actually works out
+## The detour hint
 
-A price ranking tells you which country is cheapest. That is not yet a decision, because it ignores whether the truck can get there. The planner adds three things:
+Sometimes the cheapest country on your route is not the cheapest country *near* your route. Where a short deviation would reach a cheaper one, the section adds a line:
 
-### Range
+> *A detour via {country} (≈ +{km} km) could save ≈ €{saving} more — estimate, not yet routed.*
 
-A tank has a bottom. If the cheapest country is 700 km away and there are 300 km of usable fuel on board, "fill in Poland" is not advice — it is a breakdown. Range is always computed against a **reserve the truck never eats into**.
-
-### Bridge fills
-
-The classic mistake is filling up completely in the expensive country you are currently in. The right move is to buy **only enough to reach the cheap country**, plus reserve, then fill there. Druma sizes that partial fill — and the saving is the litres you *avoided* buying at the dear price, not the litres you bought.
-
-### Detour economics
-
-A detour only pays if the price spread beats the fuel the detour itself burns, **and** the delivery still happens on time. Every option therefore carries the extra kilometres, the litres they consume, the saving **net of that fuel**, and an explicit on-time verdict — so you see "+50 km, saves €350, still on time" rather than a bare price.
+Read that caveat literally. The figure is a **straight-line screen**, not a routed plan: it costs no routing call, so it can be offered on every order, but it has not checked road distance, driving time, or whether the delivery window still works. Treat it as a prompt to look, not an instruction to drive.
 
 > **Warning:** 
-Two things Druma deliberately does **not** model, so you know where your own judgement is still required:
+Two things this comparison does **not** account for, so you know where your own judgement is still required:
 
-- **Toll differences on a detour.** A detour can change toll cost as well as fuel. Where a toll delta is not supplied, the saving is reported as **fuel-only** rather than guessed at.
-- **Station-level pricing.** The comparison uses national net prices, not the price at an individual station or on your fuel-card network.
-
+- **Toll differences.** A detour can change toll cost as well as fuel. The saving shown is fuel-only.
+- **Station-level pricing.** It uses national net prices, not the price at an individual station or on your fuel-card network.
 
 ---
 
