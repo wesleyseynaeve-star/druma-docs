@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-28 14:19 UTC
+Generated: 2026-08-28 14:39 UTC
 
 ---
 
@@ -244,7 +244,7 @@ You are now set up and running. Here are some useful next steps:
 
 
 
-  Define truck cost profiles in Settings → Rate Cards so Druma can estimate order cost and margin, and set up Lane Pricing so Druma suggests the right selling price by route.
+  Define truck cost profiles in Settings → Pricing & Costing → Rate Cards so Druma can estimate order cost and margin, and set up Lane Pricing so Druma suggests the right selling price by route.
 
 
 
@@ -855,7 +855,7 @@ To switch between companies, click your company name in the top-right corner of 
 
 Druma ships with eight built-in roles, and for most companies they are enough. But job titles are not universal: a "night dispatcher" who may reassign trucks but must never touch a rate card does not map cleanly onto any of them. Custom roles let you define that role yourself.
 
-You will find this at **Settings → Roles**, and it requires the Admin or Company Admin role.
+You will find this at **Settings → Users → Roles**, and it requires the Admin or Company Admin role.
 
 ---
 
@@ -933,7 +933,7 @@ If anyone still holds the role, Druma refuses with **Role still in use** — rea
 
 Every haulier tracks something Druma does not have a box for: an internal reference number, a customer's own booking code, which depot a truck belongs to, a driver's badge number. Custom fields let you add those without waiting for a product change.
 
-You will find this at **Settings → Custom Fields**, and it requires the Admin or Company Admin role. Without it you will see *"You need Admin or Company Admin role to edit company settings."*
+You will find this at **Settings → Company**, in the **Custom fields** section, and it requires the Admin or Company Admin role. Without it you will see *"You need Admin or Company Admin role to edit company settings."*
 
 ---
 
@@ -1022,22 +1022,22 @@ Fields render in the order they are listed. **Move up** and **Move down** reorde
 
 
 > **Note:** 
-This page covers **Settings → Rate Cards** — truck **cost profiles** used to estimate an order's cost and margin. If you're looking for per-lane **selling** prices (origin/destination-based quote suggestions, e.g. "Romania → Germany, Curtainsider — €1,450"), that's a separate feature called **Lane Pricing**, under **Pricing → Lane Pricing** in the main app — it isn't covered on this page.
+This page covers **Settings → Pricing & Costing → Rate Cards** — truck **cost profiles** used to estimate an order's cost and margin. If you're looking for per-lane **selling** prices (origin/destination-based quote suggestions, e.g. "Romania → Germany, Curtainsider — €1,450"), that's a separate feature called **Lane Pricing**, under **Pricing → Lane Pricing** in the main app — it isn't covered on this page.
 
 
 ## What is a rate card?
 
-A rate card in **Settings → Rate Cards** is a cost profile for a category of truck operation — either your **own fleet** or a **subcontracted** carrier. It captures what it actually costs you to run a truck (fixed cost, driver wage, fuel, ADR/oversize surcharges, tolls) so Druma can estimate the cost and margin of an order alongside the price you charge the client.
+A rate card in **Settings → Pricing & Costing → Rate Cards** is a cost profile for a category of truck operation — either your **own fleet** or a **subcontracted** carrier. It captures what it actually costs you to run a truck (fixed cost, driver wage, fuel, ADR/oversize surcharges, tolls) so Druma can estimate the cost and margin of an order alongside the price you charge the client.
 
 **Who can edit:** Admin, Company Admin, Fleet Manager, and Planner roles.
 
-<Frame caption="Lane Pricing (Pricing → Lane Pricing) — the separate, origin/destination-based selling-price feature. Settings → Rate Cards (this page) is the cost-profile side.">
+<Frame caption="Lane Pricing (Pricing → Lane Pricing) — the separate, origin/destination-based selling-price feature. Settings → Pricing & Costing → Rate Cards (this page) is the cost-profile side.">
   <img src="/images/admin/rate-cards.png" alt="Lane Pricing page with origin, destination, and trailer-type rate cards" />
 </Frame>
 
 ## Creating a rate card
 
-Go to **Settings → Rate Cards** and click **New Card**.
+Go to **Settings → Pricing & Costing → Rate Cards** and click **New Card**.
 
 ### Name
 
@@ -1197,7 +1197,7 @@ Druma exports invoice and order data in formats compatible with SAGA and WinMENT
 
 ### SAGA Classic and WinMENTOR Classic
 
-No API key is needed. SAGA exports as DBF files (`CLI_`, `ART_`, `IE_`, `INT_`, `NC_.xml`); WinMENTOR Classic exports as pipe-delimited `.txt` files. Both formats are generated automatically once a month and emailed to your configured accountant address as a ZIP (Resend, 7-day signed link) — configure the export day in **Settings → Automations &amp; Features → SAGA Export Config**. There is no manual "Export History" list; each month's export only exists as the emailed ZIP.
+No API key is needed. SAGA exports as DBF files (`CLI_`, `ART_`, `IE_`, `INT_`, `NC_.xml`); WinMENTOR Classic exports as pipe-delimited `.txt` files. Both formats are generated automatically once a month and emailed to your configured accountant address as a ZIP (Resend, 7-day signed link) — configure the export day in **Settings → Workflow & Automation → Automations & Featuress &amp; Features → SAGA Export Config**. There is no manual "Export History" list; each month's export only exists as the emailed ZIP.
 
 > **Note:** 
 There is currently no direct REST API integration for WinMENTOR Enterprise or any other accounting package — SAGA and WinMENTOR Classic are the only two supported formats, both file-based.
@@ -1360,14 +1360,14 @@ All four reefer connectors are currently in **beta** — they are being validate
 Druma is the **issuer of record** for your subscription: every platform charge is billed as a native **Romanian e-Factura** (ANAF/SPV) and paid by **bank transfer** on net terms — there is no card-on-file, no Stripe checkout, and no per-seat pricing for users. Office users, drivers, and client-portal accounts are always free; what you pay for is your active trucks (if you run your own fleet) or your platform usage (if you're a pure forwarder/broker).
 
 > **Note:** 
-**This page describes Druma's self-service billing panel**, which is being rolled out gradually and is enabled per account. If your **Settings → Billing** page currently shows a **"Billing managed by Druma"** placeholder instead of what's described below, your account has not been switched over to self-service billing yet — you're still billed under your existing agreement (invoices arrive via e-Factura as usual), and there's nothing to configure on this page for now. The rest of this article describes the self-service experience as accounts are migrated over.
+**This page describes Druma's self-service billing panel**, which is being rolled out gradually and is enabled per account. If your **Settings → Finance & Billing → Billing** page currently shows a **"Billing managed by Druma"** placeholder instead of what's described below, your account has not been switched over to self-service billing yet — you're still billed under your existing agreement (invoices arrive via e-Factura as usual), and there's nothing to configure on this page for now. The rest of this article describes the self-service experience as accounts are migrated over.
 
 
 > **Note:** 
 For current pricing, visit [druma.io](https://druma.io) or contact support@druma.io.
 
 
-<Frame caption="Settings → Billing — truck-count tier pricing, cost breakdown, and the AI usage pool. No Stripe portal, no per-seat pricing.">
+<Frame caption="Settings → Finance & Billing → Billing — truck-count tier pricing, cost breakdown, and the AI usage pool. No Stripe portal, no per-seat pricing.">
   <img src="/images/admin/billing-and-subscription.png" alt="Billing settings panel showing subscription cost breakdown" />
 </Frame>
 
@@ -1425,7 +1425,7 @@ Your archetype is set on your account; contact support@druma.io if you believe y
 The table above is Druma's **current** price schedule. Your company is **pinned** to
 the schedule that was current when you signed up, and that pin never moves on its
 own: when Druma publishes new pricing, it applies to new customers, not to you.
-Settings → Billing shows which schedule you are on (for example *Price schedule v2*).
+Settings → Finance & Billing → Billing shows which schedule you are on (for example *Price schedule v2*).
 
 What can change on an existing schedule is an **annual inflation indexation**. When
 it applies, it appears as its own **Price indexation** line on your invoice — next
@@ -1439,7 +1439,7 @@ Moving to a different schedule only ever happens if you ask for it and we agree 
 
 ## The Billing page
 
-Go to **Settings → Billing** to see your plan, cost breakdown, AI usage, and invoice history.
+Go to **Settings → Finance & Billing → Billing** to see your plan, cost breakdown, AI usage, and invoice history.
 
 ### Plan overview
 
@@ -1493,7 +1493,7 @@ A **Payment** section shows the bank details to pay against (beneficiary, IBAN, 
 
 ## Suspended accounts
 
-If your account is suspended, all app access is replaced with a single screen asking you to resolve the outstanding balance; a button opens **Settings → Billing** directly. Signing in still works — only the workspace itself is blocked. If you believe your account was suspended in error, contact support@druma.io.
+If your account is suspended, all app access is replaced with a single screen asking you to resolve the outstanding balance; a button opens **Settings → Finance & Billing → Billing** directly. Signing in still works — only the workspace itself is blocked. If you believe your account was suspended in error, contact support@druma.io.
 
 ---
 
@@ -1522,7 +1522,7 @@ These settings are company-specific. If you manage multiple companies in Druma, 
 
 ## Accessing the settings
 
-Go to **Settings → Branding & Formats**. The page has four tabs: **Branding**, **Invoice Format**, **Order Format**, and **Row formatting**.
+Go to **Settings → Documents → Formats**. The page has four tabs: **Branding**, **Invoice Format**, **Order Format**, and **Row formatting**.
 
 ---
 
@@ -1648,7 +1648,7 @@ _Last updated: 10 July 2026._
 
 For your **operational data** (orders, clients, drivers, documents, and related records your company stores on the platform), Druma acts as a **data processor** — your company is the data controller, and processing is governed by a Data Processing Agreement (DPA) between your company and Druma. For your **account and billing data** (the details of your Druma subscription and the users who administer it), Druma acts as a **data controller** in its own right. This article explains exactly what is stored, how long it is retained, who processes it, and what actions you can take under GDPR.
 
-<Frame caption="Settings → GDPR & Privacy — Admin and Company Admin only; other roles don't see this tab.">
+<Frame caption="Settings → Compliance → GDPR & Privacy — Admin and Company Admin only; other roles don't see this tab.">
   <img src="/images/admin/gdpr-data-management.png" alt="GDPR and Privacy settings panel" />
 </Frame>
 
@@ -1715,7 +1715,7 @@ At the end of the 90-day retention window described below, Druma's scheduled pur
 You can request a full export of your company's data at any time.
 
 
-  ### Go to Settings → GDPR & Privacy
+  ### Go to Settings → Compliance → GDPR & Privacy
     Only the **Admin** and **Company Admin** roles can open this page — other roles don't see the tab. Company Admin has full edit rights: requesting an export, editing the retention policy, and resolving data subject requests. Uploading or deleting **compliance documents** is the one action reserved for **Admin** only.
   
   ### Click Request Export
@@ -1737,7 +1737,7 @@ Account deletion is permanent and irreversible after the 90-day retention window
 
 
 
-  ### Go to Settings → GDPR & Privacy
+  ### Go to Settings → Compliance → GDPR & Privacy
     Scroll to the **Delete Account** section. Both **Admin** and **Company Admin** can start this.
   
   ### Click Delete Account
@@ -2326,7 +2326,7 @@ Tasks are tied to **lifecycle phase** — the same statuses covered in [Order Li
 
 ## How admins configure task templates
 
-Go to **Settings → Task Templates**. Templates ship empty for every company — nothing is pre-configured, so building your checklist is entirely opt-in.
+Go to **Settings → Templates & Zones → Task Templates**. Templates ship empty for every company — nothing is pre-configured, so building your checklist is entirely opt-in.
 
 
   ### Create a template
@@ -3173,7 +3173,7 @@ Fill in the trailer details:
   - Silo
   - Lowloader
 
-  The list is fully configurable per company — an admin can rename, deactivate, or add types in **Settings → Trailer Types**.
+  The list is fully configurable per company — an admin can rename, deactivate, or add types in **Settings → Fleet & Equipment → Trailer Types**.
 - **Year of manufacture** — The trailer's build year. Useful for tracking age and planning replacements.
 - **Capacity** — The trailer's payload capacity in kilograms.
 - **ADR certified** — Set to **Yes** if this trailer is certified for dangerous goods transport. ADR certification is checked automatically when you assign this trailer to an ADR-flagged order.
@@ -3272,7 +3272,7 @@ To add a document to a trailer:
   
 
 
-When fleet document alerts are enabled (Settings → Automations & Features), Druma warns you in-app as a trailer document approaches expiry — 60 days ahead as a warning and 14 days ahead as critical. See [Fleet Documents](/en/fleet-compliance/fleet-documents) for details.
+When fleet document alerts are enabled (Settings → Workflow & Automation → Automations & Features), Druma warns you in-app as a trailer document approaches expiry — 60 days ahead as a warning and 14 days ahead as critical. See [Fleet Documents](/en/fleet-compliance/fleet-documents) for details.
 
 > **Note:** 
 If a trailer's ADR certificate expires and you have ADR-flagged orders assigned to it, Druma will flag the order with a warning. It will not block dispatch, but the warning is logged.
@@ -3733,7 +3733,7 @@ Each field falls back independently — a client that overrides only the rate st
 
 
   ### Open Rate Cards
-    Go to **Settings → Rate Cards** and open the relevant cost profile.
+    Go to **Settings → Pricing & Costing → Rate Cards** and open the relevant cost profile.
   
   ### Find the waiting time fields
     Locate **Free waiting hours** and **Waiting rate €/h**.
@@ -5536,7 +5536,7 @@ Clicking **Skip** does not reset the threshold counter. The modal will appear ag
 
 ## Configuring thresholds and fee rates
 
-Go to **Settings → Pallet Config** to set the fee rules. This section is only accessible to **admin** and **company_admin** roles.
+Go to **Settings → Clients → Pallet Config** to set the fee rules. This section is only accessible to **admin** and **company_admin** roles.
 
 For each pallet type you can configure:
 
@@ -5692,7 +5692,7 @@ Toll matching from fuel card imports uses the truck and date to find the active 
 
 Not every toll is billed to the client. Some companies absorb tolls for certain corridors as part of their rate; others pass them through in full. Druma lets you configure this at the rate card level.
 
-Go to **Settings → Rate Cards** and open any rate card. There is a **Per-country toll policy** override table at the bottom. Each entry (and the rate card's top-level toll policy) is one of three values:
+Go to **Settings → Pricing & Costing → Rate Cards** and open any rate card. There is a **Per-country toll policy** override table at the bottom. Each entry (and the rate card's top-level toll policy) is one of three values:
 
 | Policy | Behaviour |
 |---|---|
@@ -5717,7 +5717,7 @@ If you need to exclude a specific receipt from the invoice — for example, beca
 ## Tips for accurate reconciliation
 
 - Ask drivers to log tolls immediately after each payment, not at the end of the trip, so receipts stay matched to the correct day and country.
-- If HERE shows grey (no estimate) for a country your trucks frequently cross, raise this in **Settings → Rate Cards** with a manual country surcharge so margins are protected even without HERE data.
+- If HERE shows grey (no estimate) for a country your trucks frequently cross, raise this in **Settings → Pricing & Costing → Rate Cards** with a manual country surcharge so margins are protected even without HERE data.
 - Large amber or red deltas on the same country repeatedly are a signal to adjust the base toll estimate in your rate card.
 
 ---
@@ -6002,7 +6002,7 @@ These alerts are strictly in-app — Druma doesn't email them. Check the Perform
 
 ## Importing a Tender Document
 
-If your admin has enabled AI tender import (**Settings → Automation → AI features**), an **Import document** button appears next to **New Tender**. Upload the shipper's rate table as a PDF or Excel file (max 10 MB) and Druma extracts the title, dates, and lanes into a draft you can review and edit before saving — useful for 20-lane agreements you'd otherwise transcribe by hand.
+If your admin has enabled AI tender import (**Settings → Workflow & Automation → Automations & Features → AI features**), an **Import document** button appears next to **New Tender**. Upload the shipper's rate table as a PDF or Excel file (max 10 MB) and Druma extracts the title, dates, and lanes into a draft you can review and edit before saving — useful for 20-lane agreements you'd otherwise transcribe by hand.
 
 ---
 
@@ -6030,7 +6030,7 @@ If your admin has enabled AI tender import (**Settings → Automation → AI fea
 
 If your fleet runs temperature-controlled (reefer) trailers, Druma can pull live temperature, engine-hours, and alarm data straight from the trailer's telematics unit — no manual logging required. Once a trailer's provider is connected, you'll see its current temperature on the trailer list, get notified the moment it drifts off setpoint or raises an alarm, and can generate a one-page cold-chain PDF for any completed trip.
 
-Reefer features only appear once your company's **Reefer** fleet type is switched on. An admin or company admin does this once, from **Settings → Fleet Types**. Everything below — the Temp column, the Temperature tab, alerts, and the compliance report — is hidden until that flag is on.
+Reefer features only appear once your company's **Reefer** fleet type is switched on. An admin or company admin does this once, from **Settings → Fleet & Equipment → Fleet Types**. Everything below — the Temp column, the Temperature tab, alerts, and the compliance report — is hidden until that flag is on.
 
 > **Note:** 
 Reefer telematics providers vary widely in how open their APIs are, and all four connectors are currently in **beta** — they are being validated with pilot fleets, so involve Druma support during your first sync. Mapon's API is fully public, so credentials connect straight away. Orbcomm needs an account token. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
@@ -6042,7 +6042,7 @@ Reefer telematics providers vary widely in how open their APIs are, and all four
 
 
   ### Turn on the Reefer fleet type
-    Open **Settings → Fleet Types** and enable **Reefer**. This unlocks the reefer-specific screens across Fleet.
+    Open **Settings → Fleet & Equipment → Fleet Types** and enable **Reefer**. This unlocks the reefer-specific screens across Fleet.
   
   ### Go to Integrations
     Open **Settings → Integrations**. Reefer telematics providers are listed alongside the other GPS/tacho connectors.
@@ -6088,7 +6088,7 @@ Thermo King and Carrier require the vendor to grant you API access before the co
 
 ## Alerts and Alarm Acknowledgement
 
-Reefer alert thresholds live in **Settings → Fleet Types**, in the **Reefer temperature alerts** panel that appears once the flag is on:
+Reefer alert thresholds live in **Settings → Fleet & Equipment → Fleet Types**, in the **Reefer temperature alerts** panel that appears once the flag is on:
 
 | Field | What it controls |
 |---|---|
@@ -6660,7 +6660,7 @@ This matters most for:
 - **Other paperwork** — customs stamps, ADR documents, temperature records
 
 > **Note:** 
-The exact list of document types is configured by your company's admin (Settings → Document Types), so it can vary — the types above are the typical defaults, and only enabled types show up when you upload.
+The exact list of document types is configured by your company's admin (Settings → Documents → Document Types), so it can vary — the types above are the typical defaults, and only enabled types show up when you upload.
 
 
 ---
@@ -7188,7 +7188,7 @@ For **Safety Critical** rows, a **Create Work Order** button is available direct
 
 ## Admin configuration
 
-Go to **Settings → Post-trip DVIR** to configure DVIR for your company.
+Go to **Settings → Fleet & Equipment → Post-trip DVIR** to configure DVIR for your company.
 
 | Setting | Description |
 |---|---|
@@ -8032,7 +8032,7 @@ These lines appear automatically in the invoice editor — no manual entry neede
 - **Restore excluded lines** — click **Restore hidden charges** at the bottom of the line items section to bring back any excluded auto-lines.
 - **Add custom lines** — use the **+ Add Line** button to add palette exchange fees, customs clearance charges, handling fees, or any other extra. Pick from your company's **extras catalog** or enter a custom description and amount.
 
-To manage the extras catalog (company-wide line item templates): **Settings → Extras catalog**.
+To manage the extras catalog (company-wide line item templates): **Settings → Pricing & Costing → Extras catalog**.
 
 ## Invoice Numbering
 
@@ -8617,7 +8617,7 @@ The reminder email uses the template configured in your settings. If you want to
 
 ## Automatic Reminders
 
-If you do not want to manually send reminders every week, Druma can do it for you on a schedule — configured per stage under **Settings → Dunning**. See the next section for exactly how the schedule works and what each stage does.
+If you do not want to manually send reminders every week, Druma can do it for you on a schedule — configured per stage under **Settings → Finance & Billing → Dunning**. See the next section for exactly how the schedule works and what each stage does.
 
 > **Warning:** 
 Automatic reminders go to the client's finance contact on record. Make sure each client has a finance contact set up with the correct email address before enabling any stage — otherwise reminders may go to the wrong person or not send at all. Check under Clients → Contacts.
@@ -8630,7 +8630,7 @@ Automatic reminders run on a **4-stage dunning schedule**, configured per compan
 - **Stage 1–3**: emails are sent to the client's finance contacts at configured intervals (for example, 7 days / 14 days / 30 days overdue). Each stage uses a separate email template so the tone can escalate appropriately from polite reminder to firm notice. From stage 2 onward, the reminder email can also include an informational EU late-payment interest line — see below.
 - **Stage 4**: no email is sent automatically. Instead, an escalation notification is sent to your planners and admins — this is a signal to take manual action (legal, factoring, a phone call). Stage 4 never emails the client without human sign-off. If **auto credit-stop** is enabled (see below), reaching stage 4 also puts the client on credit stop automatically.
 
-To configure the schedule, go to **Settings → Dunning**:
+To configure the schedule, go to **Settings → Finance & Billing → Dunning**:
 
 - Set the **days offset** per stage (when each reminder fires relative to the due date)
 - Edit the **email subject and body** per stage, or use the default i18n templates
@@ -8647,7 +8647,7 @@ By default, reaching stage 4 only notifies your team — it does not block the c
 
 ## EU Late-Payment Interest
 
-Dunning reminders from stage 2 onward can include an informational late-payment interest line, based on Directive 2011/7/EU on combating late payment in commercial transactions. Druma calculates simple (non-compounding) interest on the overdue amount using a configurable annual percentage — set it under **Settings → Branding & Formats** (defaults to 8.0%, an approximation of the EU statutory floor).
+Dunning reminders from stage 2 onward can include an informational late-payment interest line, based on Directive 2011/7/EU on combating late payment in commercial transactions. Druma calculates simple (non-compounding) interest on the overdue amount using a configurable annual percentage — set it under **Settings → Documents → Formats** (defaults to 8.0%, an approximation of the EU statutory floor).
 
 > **Note:** 
 This interest amount is shown in the reminder email as a nudge only — it is never added to the invoice total automatically. Whether and how to actually charge late-payment interest is a commercial and legal decision; consult your accountant before enforcing it.
@@ -10020,7 +10020,7 @@ Badges (yellow warning / red expired) on the vehicle in the fleet list always re
 | Expired | Red badge; vehicle blocked from new order assignments | Notification sent |
 
 > **Warning:** 
-The notification is gated behind **Settings → Automations & Features → Fleet document expiry alerts**, which is **off by default** for every company. Until you switch it on, Druma still shows the correct badges on the vehicle and fleet list, but nobody is proactively notified as a document approaches expiry — you have to notice it in the list. When enabled, in-app notifications go to users with the Fleet Manager, Company Admin, or Admin role (there is no separate email channel for this alert).
+The notification is gated behind **Settings → Workflow & Automation → Automations & Featuress & Features → Fleet document expiry alerts**, which is **off by default** for every company. Until you switch it on, Druma still shows the correct badges on the vehicle and fleet list, but nobody is proactively notified as a document approaches expiry — you have to notice it in the list. When enabled, in-app notifications go to users with the Fleet Manager, Company Admin, or Admin role (there is no separate email channel for this alert).
 
 
 > **Warning:** 
@@ -10184,7 +10184,7 @@ Two related checks reinforce this warning elsewhere in the platform:
 
 Orders flagged as ADR automatically include an ADR surcharge as a line item on the invoice. Druma resolves the surcharge amount through a resolution chain:
 
-1. **Rate card** — the client's rate card has its own **ADR fee (€)** field (**Settings → Rate Cards**). If set, this value is used.
+1. **Rate card** — the client's rate card has its own **ADR fee (€)** field (**Settings → Pricing & Costing → Rate Cards**). If set, this value is used.
 2. **Platform default** — if the rate card doesn't specify a value, Druma falls back to a platform-wide ADR surcharge default.
 3. **€75 built-in fallback** — if neither of the above is configured, Druma applies a **€75** flat fee.
 
@@ -10752,7 +10752,7 @@ This is designed for situations where you just need to clear a block quickly (e.
 
 ## Auto-unavailability for safety-critical defects
 
-If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled in **Settings → Post-trip DVIR**, submitting a safety-critical defect automatically:
+If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled in **Settings → Fleet & Equipment → Post-trip DVIR**, submitting a safety-critical defect automatically:
 
 1. Creates a vehicle unavailability record for the truck
 2. Removes the truck from the assignable list on the planning board
@@ -10810,7 +10810,7 @@ The driver marks each checklist item with a tri-state toggle — **OK**, **Advis
 
 ## Admin configuration
 
-Go to **Settings → Post-trip DVIR** to configure DVIR for your company.
+Go to **Settings → Fleet & Equipment → Post-trip DVIR** to configure DVIR for your company.
 
 | Setting | Description |
 |---|---|
@@ -11613,7 +11613,7 @@ Druma alerts your planners **immediately** when a driver's status changes to Arr
 2. A **client-facing in-app notification** is also queued, noting that waiting charges may apply after the free period
 3. The order's activity log records the arrival with the driver name, location, and the free-hours allowance that applies
 
-The free waiting period defaults to **2 hours** but comes from the truck cost profile (Settings → Rate Cards) — this determines when the arrival becomes chargeable, not when the alert fires.
+The free waiting period defaults to **2 hours** but comes from the truck cost profile (Settings → Pricing & Costing → Rate Cards) — this determines when the arrival becomes chargeable, not when the alert fires.
 
 ## Notifying the Client
 
@@ -11652,11 +11652,11 @@ Waiting can also be excluded from billing entirely, per client or per order — 
 The free waiting period and the hourly waiting rate resolve through a fallback chain, checked in this order:
 
 1. **Client** — a per-client override, if the client record has its own free-hours and/or rate set
-2. **Rate card** — the truck cost profile assigned to the order (Settings → Rate Cards, own-fleet or subcontracted)
+2. **Rate card** — the truck cost profile assigned to the order (Settings → Pricing & Costing → Rate Cards, own-fleet or subcontracted)
 3. **Company default** — a company-wide fallback
 4. **Platform default** — used only when none of the above is set
 
-Each field falls back independently — a client that overrides only the rate still inherits the company's free-hours, and vice versa. For most companies the rate-card level is enough: go to **Settings → Rate Cards**, open the relevant cost profile, and set **Free waiting hours** and **Waiting rate €/h**. Set the fields on a client's own record only when that specific client has contractually different waiting terms.
+Each field falls back independently — a client that overrides only the rate still inherits the company's free-hours, and vice versa. For most companies the rate-card level is enough: go to **Settings → Pricing & Costing → Rate Cards**, open the relevant cost profile, and set **Free waiting hours** and **Waiting rate €/h**. Set the fields on a client's own record only when that specific client has contractually different waiting terms.
 
 > **Warning:** 
 If you change a cost profile's waiting rate, it only affects waiting events recorded from that point on. Waiting charges already added to open invoices are not updated automatically.
@@ -12345,7 +12345,7 @@ Export formats vary per page — most table exports produce an **XLSX** file (vi
 Scheduled email delivery in Druma is **not** a per-report feature — none of the Analytics or Finance pages above have their own schedule option. It's scoped to custom **Report Builder** dashboards: build one from **Analytics → Reports**, then use the **Scheduled Delivery** button on that dashboard.
 
 > **Note:** 
-This feature is off by default. A company_admin has to turn it on first, in **Settings → Automations & Features**, before any schedule will send.
+This feature is off by default. A company_admin has to turn it on first, in **Settings → Workflow & Automation → Automations & Features**, before any schedule will send.
 
 
 
@@ -12602,7 +12602,7 @@ Druma supports two ways to produce a payroll run: generate one manually whenever
 For companies that don't want to trigger a run by hand every month, Druma can build one batch automatically.
 
 > **Note:** 
-This is opt-in. Enable **Monthly payroll batch build** under **Settings → Automations & Features** — it is off by default. A human always reviews and approves the batch; drivers never see it until it is approved.
+This is opt-in. Enable **Monthly payroll batch build** under **Settings → Workflow & Automation → Automations & Features** — it is off by default. A human always reviews and approves the batch; drivers never see it until it is approved.
 
 
 **How it works:** once enabled, a daily job checks each company's **payroll cutoff day** (a configurable day of the month, defaulting to the **2nd**). When today matches that day, Druma computes gross pay — the same four components and math as the manual run above — for every active driver over the **previous calendar month**, and saves it as one held **draft** batch for the company. The batch build is idempotent: re-running it for a month that already has a batch is a no-op.
@@ -13218,7 +13218,7 @@ This is self-service — no need to contact support to turn it on:
 
 
   ### Enable the automation
-    An admin or company admin goes to **Settings → Automations & Features** and toggles on **Fuel-card statement auto-ingestion**.
+    An admin or company admin goes to **Settings → Workflow & Automation → Automations & Features** and toggles on **Fuel-card statement auto-ingestion**.
   
   ### Get your inbound alias address
     Druma auto-generates a per-company inbound email alias for fuel statements as soon as the toggle is on. The alias isn't yet shown anywhere in the UI — contact Druma support to get the exact address to forward statements to (or to have it added to a drop folder instead).
@@ -13353,7 +13353,7 @@ Because this is a regular export profile, the same builder also works for any ot
 
 Instead of manually exporting every period, you can have Druma email a SAGA export to your accountant automatically:
 
-**Settings → Automations & Features → SAGA Export Config**
+**Settings → Workflow & Automation → Automations & Featuress & Features → SAGA Export Config**
 
 Configure the **accountant email** (and optional CC), and a **day of month** to run on. A scheduled job checks daily and, on the configured day, exports the **previous full month** and emails the ZIP to the accountant with a summary of invoice/purchase/payment counts and any validation warnings.
 
@@ -13454,7 +13454,7 @@ The Druma Public API gives you **read-only** REST access to your orders — usef
 
 ## API keys and scopes
 
-Company administrators issue their own keys from **Settings → API Keys** — click **Create key**, name it (e.g. `QuickBooks export`), and pick a scope:
+Company administrators issue their own keys from **Settings → Integrations → API Keys** — click **Create key**, name it (e.g. `QuickBooks export`), and pick a scope:
 
 | Scope | What it grants |
 |---|---|
@@ -13534,7 +13534,7 @@ This is a separate API from the read-only [Public API](/en/integrations/public-a
     The Finance API is for operators who invoice elsewhere. If you also issue invoices from Druma you will end up billing the same load twice.
   
   ### Issue a Finance-scoped API key
-    Go to **Settings → API Keys**, click **Create key**, give it a name (e.g. `Netsuite export`) and choose the **Finance (billable export + invoice ingest)** scope.
+    Go to **Settings → Integrations → API Keys**, click **Create key**, give it a name (e.g. `Netsuite export`) and choose the **Finance (billable export + invoice ingest)** scope.
 
     Only a `finance` key works here. An `operator` or `accountant` key — even a perfectly valid one — is rejected with **403**. See [Public API](/en/integrations/public-api) for how keys and scopes work.
   
@@ -13946,7 +13946,7 @@ The MCP connector is a feature-flagged capability and is off by default. Contact
 
 ## 1. Create a Personal Access Token
 
-1. Go to **Settings → Connected AI (MCP)**.
+1. Go to **Settings → Integrations → Connected AI (MCP)**.
 2. Under **Create a token**, give it a name (e.g. "Claude Code — laptop").
 3. Choose the **scopes**:
    - `read` (always on) — read orders, fleet, drivers, invoices and KPIs.
@@ -13962,7 +13962,7 @@ You can revoke any token at any time from the same screen; company administrator
 https://<your-project>.supabase.co/functions/v1/mcp-server
 ```
 
-The exact URL for your account is shown on the **Settings → Connected AI (MCP)** page with a copy button.
+The exact URL for your account is shown on the **Settings → Integrations → Connected AI (MCP)** page with a copy button.
 
 ## 3. Connect your client
 
@@ -14051,7 +14051,7 @@ Druma Copilot is an AI assistant built **into** Druma. Unlike [connecting an ext
 Druma Copilot is a feature-flagged capability and is off by default. Contact **support@druma.io** to enable it for your account.
 
 
-<Frame caption="Settings → Copilot — a mandatory data-sharing consent checkbox gates Save.">
+<Frame caption="Settings → Integrations → Druma Copilot — a mandatory data-sharing consent checkbox gates Save.">
   <img src="/images/integrations/copilot.png" alt="Copilot settings panel" />
 </Frame>
 
@@ -14064,7 +14064,7 @@ Druma Copilot is a feature-flagged capability and is off by default. Contact **s
 
 ## 1. Add your provider key (administrators)
 
-1. Go to **Settings → Druma Copilot**.
+1. Go to **Settings → Integrations → Druma Copilot**.
 2. Choose your **provider** — Anthropic (Claude), OpenAI, or Google Gemini.
 3. Optionally set a **model** (leave blank to use the provider's default).
 4. Paste your provider **API key**.
@@ -14272,7 +14272,7 @@ Druma checks each row's plate against your existing trucks (normalised to upperc
 Bulk import only ever creates new truck records — it never updates an existing one, even if you re-import a file with a matching plate. To change details on a truck that already exists, edit it directly in Fleet → Trucks.
 
 
-There are no columns for trailer dimensions, weight, axle count, payload, daily cost, ADR expiry, or an active/inactive flag in this import — those are configured on the truck record itself after import (cost profile fields live on the [truck cost profile](/en/admin/rate-cards) in Settings → Rate Cards, not on the truck record).
+There are no columns for trailer dimensions, weight, axle count, payload, daily cost, ADR expiry, or an active/inactive flag in this import — those are configured on the truck record itself after import (cost profile fields live on the [truck cost profile](/en/admin/rate-cards) in Settings → Pricing & Costing → Rate Cards, not on the truck record).
 
 ## After importing
 
@@ -14493,7 +14493,7 @@ If an individual team member's account is removed (rather than the whole company
 
 You can request a full export of your company's data at any time:
 
-**Settings → GDPR & Privacy → Request Export**
+**Settings → Compliance → GDPR & Privacy → Request Export**
 
 Your data is packaged as a ZIP file (JSON and CSV formats) and delivered to your account email in about 15 minutes (processed by a background job that runs every 15 minutes). The export includes all orders, clients, drivers, invoices, and settings.
 
@@ -14503,7 +14503,7 @@ Your data is packaged as a ZIP file (JSON and CSV formats) and delivered to your
 Account deletion is irreversible. Once the 90-day retention period passes, older operational data (orders past 3 years, plus clients/trucks/trailers) is permanently deleted; more recent orders, invoices, and eCMR data are anonymised or retained on their own legally-required timelines rather than deleted immediately — see "After account cancellation" above.
 
 
-To delete your account: **Settings → GDPR & Privacy → Delete Account** → confirm by typing your company name.
+To delete your account: **Settings → Compliance → GDPR & Privacy → Delete Account** → confirm by typing your company name.
 
 Alternatively, email privacy@druma.io from your account owner's email address.
 
