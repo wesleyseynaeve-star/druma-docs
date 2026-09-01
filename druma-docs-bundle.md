@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-08-28 16:34 UTC
+Generated: 2026-09-01 09:59 UTC
 
 ---
 
@@ -10565,6 +10565,22 @@ Once enabled:
 > **Note:** 
 Companies without the declarant setting enabled never see the Goods value (RON) prompt and will not trigger auto-declarations. The carrier flow is always available to both declarant and non-declarant companies for orders where the client holds the obligation.
 
+
+### Groupage runs: one UIT per leg, checked before departure
+
+A groupage trailer carries several consignments at once, and **each one is a separate transport with its own UIT obligation**. A run with twenty legs needs twenty codes — not one for the truck.
+
+Druma stores the UIT per leg, because each leg is its own order. What the groupage board adds is the run-level view, so you never have to open twenty orders to find the three that are still short a code.
+
+**On the run's Overview tab**, an **ANAF e-Transport** card shows how many of the run's in-scope legs already have a UIT — for example `UIT codes on file 17 / 20` — and lists the order numbers of the ones that do not. The card only counts legs that actually need a UIT, and it does not appear at all on runs where no leg is in scope, so operators working outside Romania never see it.
+
+**When you confirm the run**, Druma checks the same thing. If any in-scope leg is still without a UIT, confirming raises a warning that names the gap and the specific legs, and asks you to acknowledge it before the run is confirmed.
+
+> **Note:** 
+This is a warning, not a hard block — deliberately. Whether a leg needs a UIT is derived from the route and the goods value, and you may know something Druma does not: that a leg is out of scope, or that the client is sending the code within the hour. You can always confirm past the warning. It exists so the gap is never *invisible*, not to stop you working.
+
+
+Legs that never needed a UIT — no Romanian pickup or delivery, below the declaration threshold, or subcontracted so the carrier declares their own — are not counted as missing.
 
 ---
 
