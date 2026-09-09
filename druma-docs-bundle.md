@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-09-09 11:31 UTC
+Generated: 2026-09-09 15:11 UTC
 
 ---
 
@@ -13382,6 +13382,111 @@ The email contains a download link to the ZIP that **expires after 7 days**. The
 
 ---
 
+## JPK_V7M — Comarch ERP Optima (Poland)
+
+
+Druma produces **JPK_V7M(3)** — the Polish VAT records file (*część ewidencyjna*, sales side) defined by the Ministry of Finance and mandatory since 1 February 2026. Your accountant imports it in Comarch ERP Optima under **Rejestry VAT → Import do rej. VAT**.
+
+Because JPK is a legal standard rather than a vendor format, the same file also imports into enova365, Symfonia and every other Polish accounting package.
+
+> **Note:** 
+Amounts in a currency other than PLN are converted at the **NBP tabela A** rate from the last business day before the tax point, as art. 31a requires. The rate, its date and the table number are stored on the invoice, so a filing stays reproducible if anyone asks which table a figure came from.
+
+
+---
+
+## First, two settings
+
+**Settings → Integrations → JPK_V7M**. Two values cannot be derived from anything else Druma holds, and the export refuses to run without them rather than guessing:
+
+| Setting | Why it is required |
+|---|---|
+| **Tax office code (KodUrzedu)** | One of 400 enumerated codes. Nothing maps an address to one — it is assigned to you. A guess files against the wrong office. |
+| **Filing contact e-mail** | Goes in the file's `Podmiot1` block. Your operational inbox is usually not your bookkeeper, and putting the wrong person on a tax document is worse than asking. |
+
+You can also set the **tax point** (invoice issue date, or the linked order's delivery date) — for freight this is normally the day the service was performed.
+
+---
+
+## Three ways the file reaches Optima
+
+Optima cannot be written into from outside. On-premise, its Web API is a Windows service on your accountant's own network; Comarch's *Chmura Standard* forbids access to the database from the internet altogether, and *Chmura Enterprise* only serves software installed on that same server. So every route below runs **from your side outwards**.
+
+### 1. Download it
+
+**Finance → Export builder → JPK_V7M export (Poland)**. Pick a month, get the `.xml`. Nothing to configure beyond the two settings above.
+
+### 2. Have it e-mailed every month
+
+Switch on **E-mail the file every month** in the same settings panel and pick a day. Druma generates the closed month and sends your bookkeeper a download link valid for 7 days.
+
+The day is capped at the **25th**, because that is the JPK_V7M filing deadline for the previous month — a later day would deliver the file after the deadline it exists to meet. If the month is shorter than the day you picked (the 31st in February), it goes out on the last day rather than being skipped.
+
+If the file cannot be produced — a missing tax office code, say — the e-mail tells you why instead of simply never arriving.
+
+### 3. Let the accountant's computer fetch it
+
+A scheduled task on the machine that runs Optima can download the file itself over ordinary outbound HTTPS. No firewall change, no fixed address, no Comarch licence.
+
+Create an API key under **Settings → Integrations → API Keys** (Operator or Accountant scope), then schedule this monthly:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+The file lands in a folder your accountant imports from. See the [Public API](/en/integrations/public-api#jpk-v7m-poland) page for the endpoint's parameters.
+
+> **Tip:** 
+An **Accountant**-scope key can cover several companies. It then requires `&company_id=…` on each request — a VAT filing is per-taxpayer, and Druma will not guess which one you meant.
+
+
+---
+
+## Filing monthly, or importing continuously
+
+`?period=previous` gives you the closed month — the one you file.
+
+`?period=current` gives the month **in progress**. Optima's import reads the individual rows rather than the period label, so pulling the current month daily is a way to get invoices into the VAT register as they are issued, instead of once a month. Every response carries an `X-Partial-Period` header (`true`/`false`) so the two are never confused.
+
+> **Warning:** 
+**Test this before you automate it.** Whether Optima skips rows it has already booked on a repeat import, or creates them a second time, is Comarch's behaviour and not something Druma controls. Import the same month twice on a test database first. If it duplicates, use the monthly route instead.
+
+
+A partial month is never a file to *file* — only to feed a register.
+
+---
+
+## If Druma is not the system issuing your invoices
+
+The JPK export is deliberately blocked when **client invoicing is switched off** for your company, and answers `409`. With invoicing off, the invoices in Druma were issued somewhere else and ingested for tracking — exporting them would hand the issuing system back its own documents, and for a Polish operator that means a second copy of what Optima already collected from KSeF.
+
+In that setup the useful direction is the opposite one: the [Finance API](/en/integrations/finance-api) hands your accounting system the orders that are ready to invoice, and takes the issued invoice number back.
+
+---
+
+## KSeF
+
+From 1 April 2026, KSeF is mandatory for Polish VAT payers, and Optima's own KSeF module books sales invoices directly from it. Druma submits invoices to KSeF for operators who have it configured, which puts each document into Optima within minutes of being issued — no file, no scheduled task.
+
+JPK_V7M remains the monthly VAT *register* underneath that, and it carries each invoice's KSeF number so Optima matches rather than duplicates.
+
+
+  
+    The endpoint the scheduled task calls, its parameters and its limits.
+  
+  
+    For when your accounting system issues the invoices, not Druma.
+  
+</CardGroup>
+
+---
+
 ## SmartBill Integration
 
 
@@ -13496,13 +13601,114 @@ The Public API is read-only — only `GET` requests are accepted. All responses 
 | `GET` | `/orders/{id}` | Order detail |
 | `GET` | `/orders/{id}/location` | Current truck position and latest ETA |
 | `GET` | `/orders/{id}/documents` | Document list with time-limited signed download URLs |
+| `GET` | `/jpk-v7m` | One month's Polish VAT records, as an XML file |
 
 Any other resource, or any non-GET method, returns a `404`/`405` error.
+
+### `GET /orders`
+
+```json
+{
+  "data": [
+    {
+      "id": "d100000a-0000-0000-0000-000000000085",
+      "order_number": "CCE-0085",
+      "status": "at_delivery",
+      "pickup_address": "Calea Florești 89, Cluj-Napoca, 400516, RO",
+      "delivery_address": "Str. Industriei 8, Brașov, 500001, RO",
+      "pickup_date": "2026-09-08",
+      "delivery_date": "2026-09-09",
+      "client_reference": "EMG-1002635",
+      "currency": "EUR",
+      "total_price": 522,
+      "created_at": "2026-09-04T09:00:00+00:00"
+    }
+  ],
+  "pagination": { "page": 1, "limit": 25, "total": 807, "total_pages": 33 }
+}
+```
+
+Paginate with `?page=` and `?limit=` (max 100), and filter with `?status=`. Results are ordered newest first and the ordering is total, so paging never repeats or skips a row.
+
+`total_price` is the order's agreed sell price, in the order's `currency`. It is `null` on an order that has not been priced yet.
+
+### `GET /orders/{id}`
+
+Adds the client, the assigned truck, free-text notes and a document count:
+
+```json
+{
+  "data": {
+    "id": "d100000a-0000-0000-0000-000000000085",
+    "order_number": "CCE-0085",
+    "status": "at_delivery",
+    "currency": "EUR",
+    "total_price": 522,
+    "notes": null,
+    "clients": { "name": "eMag România", "vat_number": "RO20056789" },
+    "trucks": { "plate_number": "CJ-430-CCE" },
+    "documents_count": 0,
+    "created_at": "2026-09-04T09:00:00+00:00",
+    "updated_at": "2026-09-09T14:08:38+00:00"
+  }
+}
+```
+
+`clients` and `trucks` are `null` when the order has none assigned.
+
+### `GET /orders/{id}/location`
+
+```json
+{
+  "data": {
+    "order_id": "d100000a-0000-0000-0000-000000000085",
+    "status": "at_delivery",
+    "position": {
+      "latitude": 45.64255,
+      "longitude": 25.58858,
+      "speed_kmh": 0,
+      "heading": 109,
+      "recorded_at": "2026-09-09T15:03:02+00:00",
+      "source": "pwa"
+    },
+    "eta": {
+      "estimated_arrival": "2026-09-09T12:34:04+00:00",
+      "calculated_at": "2026-09-09T12:34:04+00:00",
+      "distance_remaining_km": null
+    }
+  }
+}
+```
+
+`position` is `null` when no GPS has ever been received for the order, and `eta` is `null` until one has been calculated. Neither is an error — a just-created order legitimately has both.
+
+### `GET /jpk-v7m` (Poland)
+
+Returns one calendar month's **JPK_V7M(3)** as an XML file rather than JSON — the body *is* the file, so a scheduled task can write it straight to disk. See [JPK_V7M — Comarch ERP Optima](/en/integrations/jpk-optima) for what to do with it.
+
+| Parameter | Meaning |
+|---|---|
+| `period=previous` | The last closed month. This is the one you file. |
+| `period=current` | The month in progress — a **partial** register, for feeding an accounting system continuously. |
+| `year=` & `month=` | A specific month. An unfinished month additionally needs `partial=true`. |
+| `company_id=` | Required when the key covers more than one company. |
+
+| Response header | Meaning |
+|---|---|
+| `Content-Disposition` | `attachment; filename="JPK_V7M_2026-08.xml"` |
+| `X-Invoice-Count` | Number of sales rows in the file |
+| `X-Partial-Period` | `true` when the month is still open |
+| `X-Export-Warnings` | JSON array of anything omitted — an invoice with no NBP rate, for example |
+
+Read `X-Export-Warnings` before filing. A JPK that quietly lost a row still imports perfectly well.
+
+A month that has not finished is refused with `400` unless you ask for it explicitly, and the export is refused with `409` when client invoicing is switched off for the company — see the [JPK page](/en/integrations/jpk-optima#if-druma-is-not-the-system-issuing-your-invoices).
 
 ## Rate Limits
 
 - **100 requests per minute** per API key
-- If you exceed the limit, you receive a `429 Too Many Requests` response with a `Retry-After` header telling you how many seconds to wait
+- `/jpk-v7m` has a second, tighter budget of **12 requests per hour** on top of that. Each call reads a month of invoices, resolves exchange rates and writes back converted amounts, so it is sized for a scheduled job rather than a polling loop
+- If you exceed either limit, you receive a `429 Too Many Requests` response with a `Retry-After` header telling you how many seconds to wait
 - No other rate-limit headers are returned
 
 For higher limits, contact support@druma.io with your use case.
@@ -13513,6 +13719,9 @@ For higher limits, contact support@druma.io with your use case.
   
   
     Export billable orders to your ERP and post issued invoices back.
+  
+  
+    Polish VAT records: download, monthly e-mail, or a scheduled task that fetches the file.
   
 </CardGroup>
 
