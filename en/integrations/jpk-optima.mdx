@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Poland)"
+description: "Get your Polish VAT records into Optima: download, a monthly e-mail, or a scheduled task that fetches the file itself."
+icon: "file-invoice"
+---
+
+Druma produces **JPK_V7M(3)** — the Polish VAT records file (*część ewidencyjna*, sales side) defined by the Ministry of Finance and mandatory since 1 February 2026. Your accountant imports it in Comarch ERP Optima under **Rejestry VAT → Import do rej. VAT**.
+
+Because JPK is a legal standard rather than a vendor format, the same file also imports into enova365, Symfonia and every other Polish accounting package.
+
+<Note>
+Amounts in a currency other than PLN are converted at the **NBP tabela A** rate from the last business day before the tax point, as art. 31a requires. The rate, its date and the table number are stored on the invoice, so a filing stays reproducible if anyone asks which table a figure came from.
+</Note>
+
+---
+
+## First, two settings
+
+**Settings → Integrations → JPK_V7M**. Two values cannot be derived from anything else Druma holds, and the export refuses to run without them rather than guessing:
+
+| Setting | Why it is required |
+|---|---|
+| **Tax office code (KodUrzedu)** | One of 400 enumerated codes. Nothing maps an address to one — it is assigned to you. A guess files against the wrong office. |
+| **Filing contact e-mail** | Goes in the file's `Podmiot1` block. Your operational inbox is usually not your bookkeeper, and putting the wrong person on a tax document is worse than asking. |
+
+You can also set the **tax point** (invoice issue date, or the linked order's delivery date) — for freight this is normally the day the service was performed.
+
+---
+
+## Three ways the file reaches Optima
+
+Optima cannot be written into from outside. On-premise, its Web API is a Windows service on your accountant's own network; Comarch's *Chmura Standard* forbids access to the database from the internet altogether, and *Chmura Enterprise* only serves software installed on that same server. So every route below runs **from your side outwards**.
+
+### 1. Download it
+
+**Finance → Export builder → JPK_V7M export (Poland)**. Pick a month, get the `.xml`. Nothing to configure beyond the two settings above.
+
+### 2. Have it e-mailed every month
+
+Switch on **E-mail the file every month** in the same settings panel and pick a day. Druma generates the closed month and sends your bookkeeper a download link valid for 7 days.
+
+The day is capped at the **25th**, because that is the JPK_V7M filing deadline for the previous month — a later day would deliver the file after the deadline it exists to meet. If the month is shorter than the day you picked (the 31st in February), it goes out on the last day rather than being skipped.
+
+If the file cannot be produced — a missing tax office code, say — the e-mail tells you why instead of simply never arriving.
+
+### 3. Let the accountant's computer fetch it
+
+A scheduled task on the machine that runs Optima can download the file itself over ordinary outbound HTTPS. No firewall change, no fixed address, no Comarch licence.
+
+Create an API key under **Settings → Integrations → API Keys** (Operator or Accountant scope), then schedule this monthly:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+The file lands in a folder your accountant imports from. See the [Public API](/en/integrations/public-api#jpk-v7m-poland) page for the endpoint's parameters.
+
+<Tip>
+An **Accountant**-scope key can cover several companies. It then requires `&company_id=…` on each request — a VAT filing is per-taxpayer, and Druma will not guess which one you meant.
+</Tip>
+
+---
+
+## Filing monthly, or importing continuously
+
+`?period=previous` gives you the closed month — the one you file.
+
+`?period=current` gives the month **in progress**. Optima's import reads the individual rows rather than the period label, so pulling the current month daily is a way to get invoices into the VAT register as they are issued, instead of once a month. Every response carries an `X-Partial-Period` header (`true`/`false`) so the two are never confused.
+
+<Warning>
+**Test this before you automate it.** Whether Optima skips rows it has already booked on a repeat import, or creates them a second time, is Comarch's behaviour and not something Druma controls. Import the same month twice on a test database first. If it duplicates, use the monthly route instead.
+</Warning>
+
+A partial month is never a file to *file* — only to feed a register.
+
+---
+
+## If Druma is not the system issuing your invoices
+
+The JPK export is deliberately blocked when **client invoicing is switched off** for your company, and answers `409`. With invoicing off, the invoices in Druma were issued somewhere else and ingested for tracking — exporting them would hand the issuing system back its own documents, and for a Polish operator that means a second copy of what Optima already collected from KSeF.
+
+In that setup the useful direction is the opposite one: the [Finance API](/en/integrations/finance-api) hands your accounting system the orders that are ready to invoice, and takes the issued invoice number back.
+
+---
+
+## KSeF
+
+From 1 April 2026, KSeF is mandatory for Polish VAT payers, and Optima's own KSeF module books sales invoices directly from it. Druma submits invoices to KSeF for operators who have it configured, which puts each document into Optima within minutes of being issued — no file, no scheduled task.
+
+JPK_V7M remains the monthly VAT *register* underneath that, and it carries each invoice's KSeF number so Optima matches rather than duplicates.
+
+<CardGroup cols={2}>
+  <Card title="Public API" icon="code" href="/en/integrations/public-api">
+    The endpoint the scheduled task calls, its parameters and its limits.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/en/integrations/finance-api">
+    For when your accounting system issues the invoices, not Druma.
+  </Card>
+</CardGroup>

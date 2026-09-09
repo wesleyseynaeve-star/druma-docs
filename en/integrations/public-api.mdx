@@ -46,13 +46,114 @@ The Public API is read-only — only `GET` requests are accepted. All responses 
 | `GET` | `/orders/{id}` | Order detail |
 | `GET` | `/orders/{id}/location` | Current truck position and latest ETA |
 | `GET` | `/orders/{id}/documents` | Document list with time-limited signed download URLs |
+| `GET` | `/jpk-v7m` | One month's Polish VAT records, as an XML file |
 
 Any other resource, or any non-GET method, returns a `404`/`405` error.
+
+### `GET /orders`
+
+```json
+{
+  "data": [
+    {
+      "id": "d100000a-0000-0000-0000-000000000085",
+      "order_number": "CCE-0085",
+      "status": "at_delivery",
+      "pickup_address": "Calea Florești 89, Cluj-Napoca, 400516, RO",
+      "delivery_address": "Str. Industriei 8, Brașov, 500001, RO",
+      "pickup_date": "2026-09-08",
+      "delivery_date": "2026-09-09",
+      "client_reference": "EMG-1002635",
+      "currency": "EUR",
+      "total_price": 522,
+      "created_at": "2026-09-04T09:00:00+00:00"
+    }
+  ],
+  "pagination": { "page": 1, "limit": 25, "total": 807, "total_pages": 33 }
+}
+```
+
+Paginate with `?page=` and `?limit=` (max 100), and filter with `?status=`. Results are ordered newest first and the ordering is total, so paging never repeats or skips a row.
+
+`total_price` is the order's agreed sell price, in the order's `currency`. It is `null` on an order that has not been priced yet.
+
+### `GET /orders/{id}`
+
+Adds the client, the assigned truck, free-text notes and a document count:
+
+```json
+{
+  "data": {
+    "id": "d100000a-0000-0000-0000-000000000085",
+    "order_number": "CCE-0085",
+    "status": "at_delivery",
+    "currency": "EUR",
+    "total_price": 522,
+    "notes": null,
+    "clients": { "name": "eMag România", "vat_number": "RO20056789" },
+    "trucks": { "plate_number": "CJ-430-CCE" },
+    "documents_count": 0,
+    "created_at": "2026-09-04T09:00:00+00:00",
+    "updated_at": "2026-09-09T14:08:38+00:00"
+  }
+}
+```
+
+`clients` and `trucks` are `null` when the order has none assigned.
+
+### `GET /orders/{id}/location`
+
+```json
+{
+  "data": {
+    "order_id": "d100000a-0000-0000-0000-000000000085",
+    "status": "at_delivery",
+    "position": {
+      "latitude": 45.64255,
+      "longitude": 25.58858,
+      "speed_kmh": 0,
+      "heading": 109,
+      "recorded_at": "2026-09-09T15:03:02+00:00",
+      "source": "pwa"
+    },
+    "eta": {
+      "estimated_arrival": "2026-09-09T12:34:04+00:00",
+      "calculated_at": "2026-09-09T12:34:04+00:00",
+      "distance_remaining_km": null
+    }
+  }
+}
+```
+
+`position` is `null` when no GPS has ever been received for the order, and `eta` is `null` until one has been calculated. Neither is an error — a just-created order legitimately has both.
+
+### `GET /jpk-v7m` (Poland)
+
+Returns one calendar month's **JPK_V7M(3)** as an XML file rather than JSON — the body *is* the file, so a scheduled task can write it straight to disk. See [JPK_V7M — Comarch ERP Optima](/en/integrations/jpk-optima) for what to do with it.
+
+| Parameter | Meaning |
+|---|---|
+| `period=previous` | The last closed month. This is the one you file. |
+| `period=current` | The month in progress — a **partial** register, for feeding an accounting system continuously. |
+| `year=` & `month=` | A specific month. An unfinished month additionally needs `partial=true`. |
+| `company_id=` | Required when the key covers more than one company. |
+
+| Response header | Meaning |
+|---|---|
+| `Content-Disposition` | `attachment; filename="JPK_V7M_2026-08.xml"` |
+| `X-Invoice-Count` | Number of sales rows in the file |
+| `X-Partial-Period` | `true` when the month is still open |
+| `X-Export-Warnings` | JSON array of anything omitted — an invoice with no NBP rate, for example |
+
+Read `X-Export-Warnings` before filing. A JPK that quietly lost a row still imports perfectly well.
+
+A month that has not finished is refused with `400` unless you ask for it explicitly, and the export is refused with `409` when client invoicing is switched off for the company — see the [JPK page](/en/integrations/jpk-optima#if-druma-is-not-the-system-issuing-your-invoices).
 
 ## Rate Limits
 
 - **100 requests per minute** per API key
-- If you exceed the limit, you receive a `429 Too Many Requests` response with a `Retry-After` header telling you how many seconds to wait
+- `/jpk-v7m` has a second, tighter budget of **12 requests per hour** on top of that. Each call reads a month of invoices, resolves exchange rates and writes back converted amounts, so it is sized for a scheduled job rather than a polling loop
+- If you exceed either limit, you receive a `429 Too Many Requests` response with a `Retry-After` header telling you how many seconds to wait
 - No other rate-limit headers are returned
 
 For higher limits, contact support@druma.io with your use case.
@@ -63,5 +164,8 @@ For higher limits, contact support@druma.io with your use case.
   </Card>
   <Card title="Finance API" icon="arrow-right-arrow-left" href="/en/integrations/finance-api">
     Export billable orders to your ERP and post issued invoices back.
+  </Card>
+  <Card title="JPK_V7M — Comarch ERP Optima" icon="file-invoice" href="/en/integrations/jpk-optima">
+    Polish VAT records: download, monthly e-mail, or a scheduled task that fetches the file.
   </Card>
 </CardGroup>
