@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-09-01 10:01 UTC
+Generated: 2026-09-09 11:31 UTC
 
 ---
 
@@ -656,7 +656,7 @@ Druma has **eight roles**. Six are for your internal team (web platform), and tw
 | Area | Admin | Company Admin | Planner | Dispatcher | Fleet Manager | Customer Service | Driver | Client |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Orders | Full | Full | Full | Read only | None | Full | Own records only | Own records only |
-| Planning Board | Full | Full | Full | Read only | None | None | None | None |
+| Planning Board | Full | Full | Full | Partial | Partial | None | None | None |
 | Fleet | Full | Full | Read only | Read only | Full | None | None | None |
 | Compliance | Full | Full | Full | Full | Read only | None | None | None |
 | Clients | Full | Full | Full | None | None | Full | None | None |
