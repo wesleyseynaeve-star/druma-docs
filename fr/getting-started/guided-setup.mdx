@@ -1,0 +1,58 @@
+---
+title: "Assistant de configuration guidée"
+description: "L'assistant /welcome qui accompagne une nouvelle entreprise pour confirmer ses informations et importer ses clients et camions."
+icon: "wand-magic-sparkles"
+---
+
+La première fois que quelqu'un se connecte à une entreprise toute neuve, Druma ouvre un assistant de configuration guidée au lieu de vous laisser directement devant un tableau de bord vide. C'est un parcours court et linéaire qui confirme l'identité de votre entreprise et met en place vos données principales (clients, camions) — tout le reste (intégrations, informations de facturation, barèmes de tarifs) renvoie vers les Paramètres plutôt que d'être configuré ici.
+
+<Note>
+L'assistant ne s'ouvre automatiquement que pour une entreprise réellement vide. Si vous avez déjà ajouté des clients ou des camions, ou si vous n'êtes pas la personne ayant fait la configuration initiale, vous ne le verrez pas automatiquement — voir [Rouvrir l'assistant](#rouvrir-lassistant) ci-dessous.
+</Note>
+
+## Les étapes
+
+<Steps>
+  <Step title="Bienvenue — confirmez votre entreprise">
+    Saisissez votre **numéro de TVA** et cliquez sur **Rechercher**. Druma interroge VIES (la base de données TVA de l'UE) et remplit automatiquement votre raison sociale, votre adresse et votre pays — vérifiez les résultats, puis cliquez sur **Commencer**.
+
+    Cela ne remplit que les champs vides ; cela n'écrase jamais une valeur que vous avez déjà saisie ailleurs.
+  </Step>
+  <Step title="Importez vos clients">
+    Cliquez sur **Importer un fichier client** pour ouvrir la boîte de dialogue d'import en masse. Téléchargez le modèle si vous n'avez pas déjà un fichier au bon format, remplissez-le et importez-le — Druma fait correspondre automatiquement les colonnes de votre tableur aux bons champs. Vous pouvez aussi cliquer sur **Passer pour l'instant** et ajouter des clients plus tard depuis la page Clients.
+  </Step>
+  <Step title="Importez vos camions">
+    Même principe pour votre flotte : **Importer un fichier flotte** ouvre la même boîte de dialogue, avec un modèle spécifique aux camions (plaque, marque, modèle, norme Euro, etc.). Passez cette étape et ajoutez des camions plus tard si vous préférez.
+  </Step>
+  <Step title="Données de démonstration (uniquement si vous avez ignoré les deux imports)">
+    Si votre entreprise est toujours vide après les deux étapes précédentes, l'assistant propose un bouton **Charger des données de démonstration** — quelques clients et camions d'exemple pour explorer Druma avant de vous engager dans un import réel. Les données de démonstration peuvent être supprimées à tout moment depuis Paramètres → Onboarding, sans toucher aux données que vous avez depuis liées à de vraies commandes. Cette étape est entièrement ignorée dès que vous avez importé quelque chose de réel.
+  </Step>
+  <Step title="Aperçu">
+    La dernière étape affiche la même [liste de contrôle d'onboarding](/fr/getting-started/onboarding-checklist) que celle des Paramètres — profil d'entreprise, IBAN, informations de facturation, votre première commande, et quelques étapes de « découverte du produit » — plus un raccourci pour ouvrir directement les **paramètres d'intégration**, pour la facturation électronique, la comptabilité ou la télématique. Cliquez sur **Aller au tableau de bord** quand vous êtes prêt à quitter l'assistant.
+  </Step>
+</Steps>
+
+## Smart Import — passez complètement le tableur
+
+Au lieu de télécharger un modèle, vous pouvez cliquer sur **Importer avec Smart Import** (à l'étape Aperçu, ou depuis Paramètres → Onboarding à tout moment) et donner à Druma vos documents existants — PDF, photos, fichiers Word ou Excel — pour que son IA les lise directement. Elle extrait les enregistrements de flotte, de chauffeurs et de clients de ce que vous avez déjà sous la main, plutôt que de vous faire tout ressaisir dans un modèle.
+
+## Rouvrir l'assistant
+
+L'assistant ne se relance pas automatiquement une fois que votre entreprise a de vraies données, même si vous naviguez directement vers `/welcome` — il vous redirige plutôt vers le tableau de bord. Pour le rouvrir délibérément :
+
+<Steps>
+  <Step title="Ouvrez Paramètres → Onboarding">
+    Cliquez sur **Paramètres** dans le menu de gauche, puis sur **Onboarding**.
+  </Step>
+  <Step title="Cliquez sur Ouvrir la configuration guidée">
+    Cela relance l'assistant (`/welcome?force=1`) même si votre entreprise a déjà des données — utile pour guider un nouveau collègue à travers le même parcours, ou pour importer un second lot de clients/camions via les étapes guidées plutôt que via les écrans d'import en masse autonomes.
+  </Step>
+</Steps>
+
+<Card title="Liste de contrôle d'onboarding" icon="list-check" href="/fr/getting-started/onboarding-checklist">
+  Le même suivi de configuration, toujours disponible depuis les Paramètres — profil d'entreprise, informations de facturation et étapes de découverte du produit.
+</Card>
+
+<Card title="Guide de démarrage rapide" icon="rocket" href="/fr/getting-started/quick-start">
+  Le parcours manuel complet, si vous préférez travailler vous-même dans les Paramètres.
+</Card>
