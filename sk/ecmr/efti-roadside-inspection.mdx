@@ -1,0 +1,104 @@
+---
+title: "eFTI cestná kontrola (overenie úradom)"
+description: "Ako Druma podporuje úradné kontroly eFTI podľa nariadenia EÚ 2020/1056 — QR kartu, ktorú vodiči predkladajú pri cestných kontrolách, a čo vidia úradníci."
+icon: "shield-check"
+---
+
+Nariadenie (EÚ) 2020/1056 o elektronických informáciách o nákladnej doprave (**eFTI**) vyžaduje, aby od **9. júla 2027** orgány členských štátov EÚ museli prijímať elektronické informácie o nákladnej doprave namiesto vyžadovania papierových dokladov pri cestných kontrolách. Druma je navrhnutá tak, aby túto požiadavku splnila.
+
+---
+
+## Čo je eFTI?
+
+Nariadenie eFTI vytvára právny rámec pre:
+
+- Dopravcov, aby ukladali informácie o nákladnej doprave digitálne na certifikovanej platforme eFTI
+- Orgány (políciu, colnú správu, inšpektorov), aby k týmto informáciám pristupovali elektronicky pri cestných kontrolách, namiesto toho aby od vodiča vyžadovali fyzické papierové doklady
+- Štandardizovanú spoločnú dátovú sadu pre informácie o cestnej doprave, mapovanú z polí nákladného listu CMR
+
+Druma implementuje **podmnožinu pre cestnú dopravu/CMR** spoločnej dátovej sady eFTI, pokrývajúcu všetky povinné polia zásielky, údaje o stranách, a stav eCMR.
+
+<Frame caption="Karta cestnej kontroly, ktorú úradník vidí po naskenovaní QR kódu vodiča — zásielka, strany a stav eCMR, iba na čítanie.">
+  <img src="/images/ecmr/efti-roadside-inspection.png" alt="Zobrazenie cestnej kontroly eFTI s podrobnosťami zásielky, stranami a stavom eCMR pre úradnú kontrolu" />
+</Frame>
+
+### Spoločná dátová sada (CDS)
+
+Vrstva súladu Drumy zahŕňa **serializátor CDS (spoločnej dátovej sady)**, ktorý vytvára **podmnožinu dát cestnej dopravy/CMR EU03** definovanú vykonávacím nariadením Komisie v prenesenej právomoci (EÚ) 2024/2024 — štruktúrovanú, strojovo čitateľnú reprezentáciu zásielky (strany, miesta, tovar, podpisy), ktorú má platforma eFTI produkovať. Toto beží súbežne s nižšie popísaným ľudsky čitateľným pohľadom pre inšpektora, takže tá istá zásielka môže byť prezentovaná buď ako štruktúrované dáta, alebo ako zobrazenie na obrazovke, podľa toho, čo orgán požaduje.
+
+---
+
+## Čo vidia vodiči
+
+Každá objednávka má jedinečný **identifikátor eFTI**. V aplikácii pre vodiča, na obrazovke detailu objednávky, je karta „Úradná kontrola (eFTI)". Zobrazuje:
+
+- **QR kód**, ktorý môže vodič predložiť pri cestnej kontrole
+- Kopírovateľný odkaz eFTI (UIL — interná skratka Drumy pre **Unique Identifying Link**; čl. 9(1)(e) nariadenia (EÚ) 2020/1056 to nazýva „jedinečný elektronický identifikačný odkaz")
+- Odkaz na otvorenie zobrazenia eCMR na vlastnom zariadení vodiča
+
+Vodič nemusí nič robiť, aby to aktivoval — karta je vždy prítomná pri priradených objednávkach.
+
+<Note>
+Vodič nikdy nemusí prechádzať menu ani hľadať kartu eFTI. Je prominentne zobrazená na obrazovke aktívnej objednávky, takže je okamžite dostupná, keď sa inšpektor priblíži k vozidlu.
+</Note>
+
+---
+
+## Čo vidí úradník
+
+Úradník naskenuje QR kód (alebo ručne zadá UIL) a uvidí **zobrazenie iba na čítanie, čitateľné človekom** zásielky:
+
+- Popis tovaru
+- Strany: odosielateľ, dopravca, príjemca (mená a adresy)
+- Adresy vyzdvihnutia a doručenia
+- Evidenčné čísla vozidla a návesu
+- Stav podpísaného eCMR
+
+**Nezobrazujú sa žiadne ceny, sadzby, ani finančné údaje.** Pohľad úradníka je zámerne obmedzený na prevádzkové informácie a informácie o súlade — obchodné podmienky zostávajú súkromné.
+
+Zobrazenie automaticky rozpozná jazyk prehliadača úradníka pri načítaní, takže sa otvorí už v jazyku krajiny, v ktorej kontroluje, bez toho, aby sa ktokoľvek musel pýtať. Manuálny výber jazyka sa nachádza v záhlaví pre rovnakých 10 jazykov, ktoré podporuje zvyšok Drumy (angličtina, francúzština, nemčina, rumunčina, holandčina, bulharčina, čeština, maďarčina, poľština, slovenčina), pre prípad, že by jazyk prehliadača nezodpovedal jazyku úradníka.
+
+Každý prístup úradníka je zaznamenaný v **protokole operácií odolnom proti neoprávneným zásahom**. Tento protokol je súčasťou audítnej stopy eFTI vyžadovanej podľa čl. 9 nariadenia.
+
+<Note>
+Ak je úradníkovi namiesto toho odovzdaný samotný zapečatený PDF eCMR (vytlačený, alebo otvorený cez **Zobraziť eCMR**), popisky polí na ňom sú **trojjazyčné** — angličtina plus vlastný jazyk odosielateľa a príjemcu — takže dokument je čitateľný bez pohľadu inšpektora aj cez hranicu, rovnako ako papierový CMR tradične tlačí popisky svojich polí vo viacerých jazykoch.
+</Note>
+
+---
+
+## Stav certifikácie
+
+<Warning>
+Druma vybudovala značnú **internú technickú pripravenosť** pre eFTI — serializátor CDS, protokol operácií odolný proti zásahom, UIL, a tento pohľad pre cestného inšpektora. Druma **však nie je** certifikovanou platformou eFTI podľa **čl. 10** nariadenia (EÚ) 2020/1056: certifikácia vyžaduje posúdenie akreditovaným subjektom posudzovania zhody (CAB), a v polovici roku 2026 zatiaľ žiadny CAB nezverejnil rozsah eFTI na posúdenie — ide o medzeru naprieč celým odvetvím, nie špecifickú pre Drumu. Dovtedy je pohľad inšpektora dnes použiteľný ako zdvorilosť a dobrovoľné sprístupnenie pre spoločnosti, ktoré chcú prejsť na bezpapierovú prevádzku pred termínom 2027.
+
+Certifikované rozhranie úradu typu stroj-stroj (cez eFTI Gates členských štátov EÚ) čaká oddelene na dostupnosť živých národných Gates, ktoré v polovici roku 2026 ešte neboli funkčné. Keď CAB zverejnia rozsah eFTI a národné Gates budú online, Druma bude pokračovať v certifikácii a túto stránku aktualizuje.
+</Warning>
+
+---
+
+## Časový harmonogram
+
+| Dátum | Udalosť |
+|---|---|
+| 2020 | Prijaté nariadenie (EÚ) 2020/1056 |
+| 9. júla 2025 | Platformy eFTI môžu začať dobrovoľnú prevádzku |
+| 9. júla 2027 | **Orgány musia prijímať eFTI** — papier už nie je vyžadovaný tam, kde je predložené eFTI |
+| Bude upresnené | Národné Gates eFTI funkčné (postupne po jednotlivých krajinách) |
+
+Druma vybudovala hlavnú technickú pripravenosť pre mandát eFTI EÚ na rok 2027 — samotný proces certifikácie a formálnej akreditácie je stále v očakávaní naprieč odvetvím (žiadny certifikačný orgán zatiaľ nezverejnil rozsah eFTI), takže úplný stav súladu bude potvrdený, akonáhle sa tento proces rozvinie.
+
+---
+
+## Súvisiace články
+
+<CardGroup cols={2}>
+  <Card title="Čo je eCMR?" icon="file-contract" href="/sk/ecmr/what-is-ecmr">
+    Elektronický nákladný list CMR, na ktorom je založená dátová sada eFTI.
+  </Card>
+  <Card title="Proces podpisovania" icon="pen-to-square" href="/sk/ecmr/signing-flow">
+    Ako funguje trojstranný proces podpisovania eCMR v Drume.
+  </Card>
+  <Card title="Právna platnosť eCMR" icon="scale-balanced" href="/sk/ecmr/ecmr-legal-validity">
+    Právny rámec za eCMR a digitálnou pečaťou PAdES.
+  </Card>
+</CardGroup>

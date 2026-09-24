@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Polen)"
+description: "Bringen Sie Ihre polnischen USt-Aufzeichnungen in Optima: Download, eine monatliche E-Mail, oder eine geplante Aufgabe, die die Datei selbst abruft."
+icon: "file-invoice"
+---
+
+Druma erzeugt **JPK_V7M(3)** — die polnische USt-Aufzeichnungsdatei (*część ewidencyjna*, Verkaufsseite), definiert vom Finanzministerium und verpflichtend seit dem 1. Februar 2026. Ihr Buchhalter importiert sie in Comarch ERP Optima unter **Rejestry VAT → Import do rej. VAT**.
+
+Da JPK ein gesetzlicher Standard und kein Herstellerformat ist, wird dieselbe Datei auch in enova365, Symfonia und jedes andere polnische Buchhaltungspaket importiert.
+
+<Note>
+Beträge in einer anderen Währung als PLN werden zum **NBP tabela A**-Kurs des letzten Werktags vor dem Steuerentstehungszeitpunkt umgerechnet, wie es Art. 31a vorschreibt. Der Kurs, sein Datum, und die Tabellennummer werden auf der Rechnung gespeichert, sodass eine Meldung reproduzierbar bleibt, falls jemand fragt, aus welcher Tabelle eine Zahl stammt.
+</Note>
+
+---
+
+## Zuerst, zwei Einstellungen
+
+**Einstellungen → Integrationen → JPK_V7M**. Zwei Werte können aus nichts anderem abgeleitet werden, was Druma besitzt, und der Export weigert sich, ohne sie zu laufen, statt zu raten:
+
+| Einstellung | Warum sie erforderlich ist |
+|---|---|
+| **Finanzamtscode (KodUrzedu)** | Einer von 400 aufgezählten Codes. Nichts ordnet eine Adresse einem Code zu — er wird Ihnen zugewiesen. Ein Raten reicht beim falschen Amt ein. |
+| **Kontakt-E-Mail für die Meldung** | Geht in den `Podmiot1`-Block der Datei. Ihr operatives Postfach ist normalerweise nicht Ihr Buchhalter, und die falsche Person auf ein Steuerdokument zu setzen ist schlimmer, als zu fragen. |
+
+Sie können auch den **Steuerentstehungszeitpunkt** festlegen (Rechnungsausstellungsdatum, oder das Lieferdatum des verknüpften Auftrags) — für Fracht ist dies normalerweise der Tag, an dem die Leistung erbracht wurde.
+
+---
+
+## Drei Wege, wie die Datei Optima erreicht
+
+In Optima kann nicht von außen geschrieben werden. Vor Ort ist seine Web-API ein Windows-Dienst im eigenen Netzwerk Ihres Buchhalters; Comarchs *Chmura Standard* verbietet den Datenbankzugriff aus dem Internet vollständig, und *Chmura Enterprise* bedient nur Software, die auf demselben Server installiert ist. Also läuft jede der folgenden Routen **von Ihrer Seite nach außen**.
+
+### 1. Herunterladen
+
+**Finanzen → Export-Builder → JPK_V7M-Export (Polen)**. Monat wählen, `.xml` erhalten. Nichts zu konfigurieren außer den beiden obigen Einstellungen.
+
+### 2. Jeden Monat per E-Mail zusenden lassen
+
+Aktivieren Sie **Die Datei jeden Monat per E-Mail senden** im selben Einstellungsbereich und wählen Sie einen Tag. Druma erzeugt den abgeschlossenen Monat und sendet Ihrem Buchhalter einen 7 Tage gültigen Download-Link.
+
+Der Tag ist auf den **25.** begrenzt, weil das die JPK_V7M-Meldefrist für den Vormonat ist — ein späterer Tag würde die Datei nach der Frist liefern, die sie erfüllen soll. Ist der Monat kürzer als der gewählte Tag (der 31. im Februar), geht sie am letzten Tag hinaus, statt übersprungen zu werden.
+
+Kann die Datei nicht erzeugt werden — etwa ein fehlender Finanzamtscode — sagt Ihnen die E-Mail, warum, statt einfach nie anzukommen.
+
+### 3. Den Computer des Buchhalters sie abholen lassen
+
+Eine geplante Aufgabe auf dem Rechner, der Optima ausführt, kann die Datei selbst über gewöhnliches ausgehendes HTTPS herunterladen. Keine Firewall-Änderung, keine feste Adresse, keine Comarch-Lizenz.
+
+Erstellen Sie einen API-Schlüssel unter **Einstellungen → Integrationen → API-Schlüssel** (Operator- oder Buchhalter-Bereich), planen Sie dann dies monatlich:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+Die Datei landet in einem Ordner, aus dem Ihr Buchhalter importiert. Siehe die Seite [Public API](/de/integrations/public-api#jpk-v7m-poland) für die Parameter des Endpunkts.
+
+<Tip>
+Ein Schlüssel mit **Buchhalter**-Bereich kann mehrere Unternehmen abdecken. Er erfordert dann `&company_id=…` bei jeder Anfrage — eine USt-Meldung ist pro Steuerpflichtigem, und Druma wird nicht raten, welches Sie meinten.
+</Tip>
+
+---
+
+## Monatlich melden, oder fortlaufend importieren
+
+`?period=previous` gibt Ihnen den abgeschlossenen Monat — den, den Sie melden.
+
+`?period=current` gibt Ihnen den Monat **in Bearbeitung**. Der Import von Optima liest die einzelnen Zeilen statt des Periodenlabels, sodass das tägliche Abrufen des laufenden Monats ein Weg ist, Rechnungen sofort bei Ausstellung ins USt-Register zu bekommen, statt einmal im Monat. Jede Antwort trägt einen `X-Partial-Period`-Header (`true`/`false`), sodass die beiden nie verwechselt werden.
+
+<Warning>
+**Testen Sie dies, bevor Sie es automatisieren.** Ob Optima Zeilen überspringt, die es bei einem wiederholten Import bereits gebucht hat, oder sie ein zweites Mal anlegt, ist Comarchs Verhalten und nicht etwas, das Druma kontrolliert. Importieren Sie zunächst denselben Monat zweimal in einer Testdatenbank. Dupliziert es, nutzen Sie stattdessen die monatliche Route.
+</Warning>
+
+Ein Teilmonat ist nie eine Datei zum *Melden* — nur zum Füttern eines Registers.
+
+---
+
+## Wenn Druma nicht das System ist, das Ihre Rechnungen ausstellt
+
+Der JPK-Export wird bewusst blockiert, wenn die **Kundenrechnungsstellung** für Ihr Unternehmen deaktiviert ist, und antwortet mit `409`. Bei deaktivierter Rechnungsstellung wurden die Rechnungen in Druma anderswo ausgestellt und zur Nachverfolgung erfasst — sie zu exportieren würde dem ausstellenden System seine eigenen Dokumente zurückgeben, und für einen polnischen Betreiber bedeutet das eine zweite Kopie dessen, was Optima bereits von KSeF gesammelt hat.
+
+In dieser Konfiguration ist die nützliche Richtung die entgegengesetzte: Die [Finance API](/de/integrations/finance-api) übergibt Ihrem Buchhaltungssystem die Aufträge, die zur Abrechnung bereit sind, und nimmt die ausgestellte Rechnungsnummer zurück entgegen.
+
+---
+
+## KSeF
+
+Ab dem 1. April 2026 ist KSeF für polnische USt-Pflichtige verpflichtend, und Optimas eigenes KSeF-Modul bucht Verkaufsrechnungen direkt daraus. Druma reicht Rechnungen bei KSeF für Betreiber ein, die es konfiguriert haben, wodurch jedes Dokument innerhalb von Minuten nach Ausstellung in Optima landet — keine Datei, keine geplante Aufgabe.
+
+JPK_V7M bleibt das monatliche USt-*Register* darunter und trägt die KSeF-Nummer jeder Rechnung, sodass Optima abgleicht statt dupliziert.
+
+<CardGroup cols={2}>
+  <Card title="Public API" icon="code" href="/de/integrations/public-api">
+    Der Endpunkt, den die geplante Aufgabe aufruft, seine Parameter und seine Limits.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/de/integrations/finance-api">
+    Für den Fall, dass Ihr Buchhaltungssystem die Rechnungen ausstellt, nicht Druma.
+  </Card>
+</CardGroup>

@@ -1,0 +1,104 @@
+---
+title: "Contrôle routier eFTI (vérification par l'autorité)"
+description: "Comment Druma prend en charge les contrôles d'autorité eFTI du Règlement UE 2020/1056 — la carte QR que les chauffeurs présentent lors des contrôles routiers et ce que voient les agents."
+icon: "shield-check"
+---
+
+Le Règlement (UE) 2020/1056 sur les informations électroniques relatives au transport de marchandises (**eFTI**) exige qu'à partir du **9 juillet 2027**, les autorités des États membres de l'UE doivent accepter les informations électroniques de transport de marchandises au lieu d'exiger des documents papier lors des contrôles routiers. Druma est conçu pour répondre à cette exigence.
+
+---
+
+## Qu'est-ce que l'eFTI ?
+
+Le Règlement eFTI crée un cadre juridique pour :
+
+- Les transporteurs pour stocker les informations de transport de marchandises numériquement sur une plateforme eFTI certifiée
+- Les autorités (police, douanes, inspecteurs) pour accéder à ces informations électroniquement lors des contrôles routiers, au lieu d'exiger que le chauffeur produise des documents papier physiques
+- Un ensemble de données commun standardisé pour les informations de transport routier, mappé depuis les champs de la lettre de voiture CMR
+
+Druma implémente le **sous-ensemble transport routier / CMR** de l'ensemble de données commun eFTI, couvrant tous les champs obligatoires de l'envoi, les détails des parties, et le statut eCMR.
+
+<Frame caption="La carte de contrôle routier qu'un agent voit après avoir scanné le code QR du chauffeur — envoi, parties et statut eCMR, en lecture seule.">
+  <img src="/images/ecmr/efti-roadside-inspection.png" alt="Vue de contrôle routier eFTI montrant les détails de l'envoi, les parties et le statut eCMR pour une vérification par l'autorité" />
+</Frame>
+
+### L'ensemble de données commun (CDS)
+
+La couche de conformité de Druma inclut un **sérialiseur CDS (ensemble de données commun)** qui produit le **sous-ensemble de données routier/CMR EU03** défini par le Règlement délégué (UE) 2024/2024 de la Commission — la représentation structurée et lisible par machine d'un envoi (parties, lieux, marchandises, signatures) qu'une plateforme eFTI est censée produire. Cela fonctionne parallèlement à la vue inspecteur lisible par l'humain décrite ci-dessous, afin que le même envoi puisse être présenté soit comme des données structurées, soit comme une vue à l'écran selon ce que l'autorité demande.
+
+---
+
+## Ce que voient les chauffeurs
+
+Chaque commande a un **identifiant eFTI** unique. Dans l'application chauffeur, sur l'écran de détail de la commande, il y a une carte **« Contrôle d'autorité (eFTI) »**. Elle montre :
+
+- Un **code QR** que le chauffeur peut présenter lors d'un contrôle routier
+- Un lien eFTI copiable (UIL — l'abréviation interne de Druma pour **Unique Identifying Link**, lien d'identification unique ; l'article 9(1)(e) du Règlement (UE) 2020/1056 l'appelle le « lien électronique d'identification unique »)
+- Un lien pour ouvrir la vue eCMR sur le propre appareil du chauffeur
+
+Le chauffeur n'a rien à faire pour activer cela — la carte est toujours présente sur les commandes assignées.
+
+<Note>
+Le chauffeur n'a jamais besoin de naviguer dans des menus ou de chercher la carte eFTI. Elle est affichée de manière proéminente sur l'écran de la commande active, donc immédiatement accessible quand un inspecteur s'approche du véhicule.
+</Note>
+
+---
+
+## Ce que voit l'agent
+
+L'agent scanne le code QR (ou saisit l'UIL manuellement) et voit une **vue en lecture seule, lisible par l'humain** de l'envoi :
+
+- Description des marchandises
+- Parties : expéditeur, transporteur, destinataire (noms et adresses)
+- Adresses de chargement et de livraison
+- Immatriculation du camion et de la remorque
+- Statut de l'eCMR signé
+
+**Aucun prix, tarif, ou donnée financière n'est affiché.** La vue agent est délibérément restreinte aux informations opérationnelles et de conformité — les conditions commerciales restent privées.
+
+La vue détecte automatiquement la langue du navigateur de l'agent au chargement, donc elle s'ouvre déjà dans la langue du pays où il inspecte sans que personne n'ait à demander. Un sélecteur de langue manuel se trouve dans l'en-tête pour les mêmes 10 langues que le reste de Druma prend en charge (anglais, français, allemand, roumain, néerlandais, bulgare, tchèque, hongrois, polonais, slovaque), au cas où la langue du navigateur ne correspondrait pas à celle de l'agent.
+
+Chaque accès par un agent est enregistré dans un **journal d'opérations inviolable**. Ce journal fait partie de la piste d'audit eFTI requise par l'article 9 du Règlement.
+
+<Note>
+Si l'agent reçoit à la place le PDF eCMR scellé lui-même (imprimé, ou ouvert via **Voir l'eCMR**), les libellés des cases dessus sont **trilingues** — anglais plus la langue propre de l'expéditeur et du destinataire — afin que le document soit lisible sans la vue inspecteur, même à travers une frontière, de la même façon qu'un CMR papier imprime traditionnellement ses libellés de case en plusieurs langues.
+</Note>
+
+---
+
+## Statut de certification
+
+<Warning>
+Druma a construit une **préparation technique interne** substantielle pour l'eFTI — un sérialiseur CDS, un journal d'opérations inviolable, l'UIL, et cette vue inspecteur routier. Druma n'est **cependant pas** une plateforme eFTI certifiée selon l'**article 10** du Règlement (UE) 2020/1056 : la certification exige une évaluation par un organisme d'évaluation de la conformité (CAB) accrédité, et à la mi-2026, aucun CAB n'a encore publié de périmètre eFTI à évaluer — une lacune à l'échelle de l'industrie, pas spécifique à Druma. D'ici là, la vue inspecteur est utilisable aujourd'hui comme une courtoisie et une divulgation volontaire pour les entreprises qui veulent passer au sans-papier avant l'échéance de 2027.
+
+L'interface d'autorité machine-à-machine certifiée (via les Portails eFTI des États membres de l'UE) est séparément en attente de la disponibilité de Portails nationaux en direct, qui n'étaient pas encore opérationnels à la mi-2026. Quand les CAB publieront le périmètre eFTI et que les Portails nationaux seront en ligne, Druma poursuivra la certification et mettra à jour cette page.
+</Warning>
+
+---
+
+## Chronologie
+
+| Date | Événement |
+|---|---|
+| 2020 | Règlement (UE) 2020/1056 adopté |
+| 9 juillet 2025 | Les plateformes eFTI peuvent commencer des opérations volontaires |
+| 9 juillet 2027 | **Les autorités doivent accepter l'eFTI** — le papier n'est plus requis là où l'eFTI est présenté |
+| À confirmer | Portails eFTI nationaux opérationnels (pays par pays) |
+
+Druma a construit la préparation technique de base pour le mandat eFTI 2027 de l'UE — le processus de certification et d'accréditation formelle lui-même est encore en attente à l'échelle de l'industrie (aucun organisme de certification n'a encore publié de périmètre eFTI), donc le statut de conformité complet sera confirmé au fur et à mesure que ce processus se déroulera.
+
+---
+
+## Articles associés
+
+<CardGroup cols={2}>
+  <Card title="Qu'est-ce que l'eCMR ?" icon="file-contract" href="/fr/ecmr/what-is-ecmr">
+    L'ensemble de données commun CMR électronique qui sous-tend l'ensemble de données eFTI.
+  </Card>
+  <Card title="Le flux de signature" icon="pen-to-square" href="/fr/ecmr/signing-flow">
+    Comment fonctionne le processus de signature eCMR à trois parties dans Druma.
+  </Card>
+  <Card title="Validité légale de l'eCMR" icon="scale-balanced" href="/fr/ecmr/ecmr-legal-validity">
+    Le cadre juridique derrière l'eCMR et le sceau numérique PAdES.
+  </Card>
+</CardGroup>

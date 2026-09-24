@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Pologne)"
+description: "Faites entrer vos registres TVA polonais dans Optima : téléchargement, un email mensuel, ou une tâche planifiée qui récupère le fichier elle-même."
+icon: "file-invoice"
+---
+
+Druma produit **JPK_V7M(3)** — le fichier de registres TVA polonais (*część ewidencyjna*, côté ventes) défini par le Ministère des Finances et obligatoire depuis le 1er février 2026. Votre comptable l'importe dans Comarch ERP Optima sous **Rejestry VAT → Import do rej. VAT**.
+
+Comme JPK est une norme légale plutôt qu'un format propriétaire, le même fichier s'importe aussi dans enova365, Symfonia et tout autre logiciel comptable polonais.
+
+<Note>
+Les montants dans une devise autre que le PLN sont convertis au taux de la **NBP tabela A** du dernier jour ouvrable avant le fait générateur de la taxe, comme l'exige l'art. 31a. Le taux, sa date, et le numéro du tableau sont stockés sur la facture, afin qu'un dépôt reste reproductible si quelqu'un demande de quel tableau vient un chiffre.
+</Note>
+
+---
+
+## D'abord, deux paramètres
+
+**Paramètres → Intégrations → JPK_V7M**. Deux valeurs ne peuvent être dérivées de rien d'autre que Druma détient, et l'export refuse de s'exécuter sans elles plutôt que de deviner :
+
+| Paramètre | Pourquoi c'est requis |
+|---|---|
+| **Code du bureau des impôts (KodUrzedu)** | L'un des 400 codes énumérés. Rien ne mappe une adresse à un code — il vous est attribué. Une supposition dépose au mauvais bureau. |
+| **Email de contact pour le dépôt** | Va dans le bloc `Podmiot1` du fichier. Votre boîte de réception opérationnelle n'est généralement pas votre comptable, et mettre la mauvaise personne sur un document fiscal est pire que de demander. |
+
+Vous pouvez aussi définir le **fait générateur** (date d'émission de la facture, ou date de livraison de la commande liée) — pour le fret, c'est normalement le jour où le service a été effectué.
+
+---
+
+## Trois façons dont le fichier atteint Optima
+
+Optima ne peut pas être écrit depuis l'extérieur. Sur site, son Web API est un service Windows sur le propre réseau de votre comptable ; le *Chmura Standard* de Comarch interdit entièrement l'accès à la base de données depuis internet, et le *Chmura Enterprise* ne sert que des logiciels installés sur ce même serveur. Donc chaque route ci-dessous fonctionne **de votre côté vers l'extérieur**.
+
+### 1. Téléchargez-le
+
+**Finance → Générateur d'export → Export JPK_V7M (Pologne)**. Choisissez un mois, obtenez le `.xml`. Rien à configurer au-delà des deux paramètres ci-dessus.
+
+### 2. Faites-le envoyer par email chaque mois
+
+Activez **Envoyer le fichier par email chaque mois** dans le même panneau de paramètres et choisissez un jour. Druma génère le mois clos et envoie à votre comptable un lien de téléchargement valide 7 jours.
+
+Le jour est plafonné au **25**, car c'est la date limite de dépôt du JPK_V7M pour le mois précédent — un jour plus tardif livrerait le fichier après la date limite qu'il existe pour respecter. Si le mois est plus court que le jour choisi (le 31 en février), il part le dernier jour plutôt que d'être sauté.
+
+Si le fichier ne peut pas être produit — un code de bureau des impôts manquant, par exemple — l'email vous dit pourquoi au lieu de simplement ne jamais arriver.
+
+### 3. Laissez l'ordinateur du comptable le récupérer
+
+Une tâche planifiée sur la machine qui exécute Optima peut télécharger le fichier elle-même via HTTPS sortant ordinaire. Aucun changement de pare-feu, aucune adresse fixe, aucune licence Comarch.
+
+Créez une clé API sous **Paramètres → Intégrations → Clés API** (portée Opérateur ou Comptable), puis planifiez ceci mensuellement :
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+Le fichier atterrit dans un dossier depuis lequel votre comptable importe. Voir la page [API publique](/fr/integrations/public-api#jpk-v7m-poland) pour les paramètres du point de terminaison.
+
+<Tip>
+Une clé à portée **Comptable** peut couvrir plusieurs entreprises. Elle nécessite alors `&company_id=…` sur chaque requête — un dépôt de TVA est par contribuable, et Druma ne devinera pas lequel vous vouliez dire.
+</Tip>
+
+---
+
+## Déposer mensuellement, ou importer en continu
+
+`?period=previous` vous donne le mois clos — celui que vous déposez.
+
+`?period=current` vous donne le mois **en cours**. L'import d'Optima lit les lignes individuelles plutôt que l'étiquette de période, donc récupérer le mois en cours quotidiennement est un moyen de faire entrer les factures dans le registre TVA au fur et à mesure de leur émission, plutôt qu'une fois par mois. Chaque réponse porte un en-tête `X-Partial-Period` (`true`/`false`), afin que les deux ne soient jamais confondus.
+
+<Warning>
+**Testez ceci avant de l'automatiser.** Qu'Optima saute les lignes qu'il a déjà enregistrées lors d'un import répété, ou les crée une seconde fois, est un comportement de Comarch et non quelque chose que Druma contrôle. Importez le même mois deux fois sur une base de test d'abord. S'il duplique, utilisez la route mensuelle à la place.
+</Warning>
+
+Un mois partiel n'est jamais un fichier à *déposer* — seulement à alimenter un registre.
+
+---
+
+## Si Druma n'est pas le système qui émet vos factures
+
+L'export JPK est délibérément bloqué quand la **facturation client est désactivée** pour votre entreprise, et répond `409`. Avec la facturation désactivée, les factures dans Druma ont été émises ailleurs et ingérées pour suivi — les exporter redonnerait au système émetteur ses propres documents, et pour un opérateur polonais cela signifie une seconde copie de ce qu'Optima a déjà collecté depuis KSeF.
+
+Dans cette configuration, la direction utile est l'opposée : l'[API Finance](/fr/integrations/finance-api) transmet à votre système comptable les commandes prêtes à facturer, et reprend le numéro de facture émis.
+
+---
+
+## KSeF
+
+À partir du 1er avril 2026, KSeF est obligatoire pour les redevables de TVA polonais, et le propre module KSeF d'Optima enregistre les factures de vente directement depuis lui. Druma soumet les factures à KSeF pour les opérateurs qui l'ont configuré, ce qui fait entrer chaque document dans Optima en quelques minutes après son émission — pas de fichier, pas de tâche planifiée.
+
+JPK_V7M reste le *registre* TVA mensuel en dessous, et porte le numéro KSeF de chaque facture afin qu'Optima associe plutôt que de dupliquer.
+
+<CardGroup cols={2}>
+  <Card title="API publique" icon="code" href="/fr/integrations/public-api">
+    Le point de terminaison que la tâche planifiée appelle, ses paramètres et ses limites.
+  </Card>
+  <Card title="API Finance" icon="arrow-right-arrow-left" href="/fr/integrations/finance-api">
+    Pour quand votre système comptable émet les factures, pas Druma.
+  </Card>
+</CardGroup>

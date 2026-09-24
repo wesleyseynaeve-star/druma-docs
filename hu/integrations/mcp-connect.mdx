@@ -1,0 +1,114 @@
+---
+title: "Kapcsold össze az AI-dat (MCP)"
+description: "Kapcsold össze a Claude Code-ot, GitHub Copilotot, Codex CLI-t, Gemini CLI-t, vagy Cursort a Druma adataiddal a Model Context Protocol (MCP) használatával."
+icon: "bot"
+---
+
+A Druma egy távoli **MCP (Model Context Protocol)** szervert futtat, így összekapcsolhatod a saját AI klienesedet — Claude Code, Claude Desktop, GitHub Copilot (ágens mód), OpenAI Codex CLI, Gemini CLI, vagy Cursor — közvetlenül a Druma adataiddal. Kérdezd természetes nyelven a rendeléseidről, flottádról, sofőrjeidről és számláidról, és — egy opcionális hatókörrel — hagyd, hogy **javasoljon** teherautó-hozzárendeléseket, amelyeket te jóváhagysz.
+
+<Warning>
+Az MCP csatlakozó egy feature flag-gel vezérelt képesség, és alapértelmezetten ki van kapcsolva. Lépj kapcsolatba a **support@druma.io** címmel, hogy engedélyezzék a fiókodhoz.
+</Warning>
+
+## Hogyan marad biztonságos
+
+- **Mindent, amit az AI lát, tiszteletben tartja a szerepkörödet és a cégedet** — mindig csak azt a hozzáférést kapja, amellyel te már rendelkezel a Drumában. Nincs mód arra, hogy egy másik cég adatait olvassa.
+- **Semmit sem tud magától megváltoztatni.** Az egyetlen művelet, amit végrehajthat, egy teherautó-hozzárendelés *javaslása*; semmi sem kerül alkalmazásra, amíg kifejezetten meg nem erősíted. Nincsenek törlési, tömeges, vagy szabad formátumú adatbázis-műveletek.
+- **A tokened titkos.** A Druma csak egy egyirányú hash-t tárol belőle — a teljes token egyszer jelenik meg, létrehozáskor, és soha többé.
+- Minden kérés sebességkorlátozott és naplózott az adminjaid számára.
+
+## 1. Hozz létre egy személyes hozzáférési tokent
+
+1. Lépj a **Beállítások → Integrációk → Kapcsolt AI (MCP)** menüpontra.
+2. A **Token létrehozása** alatt adj neki nevet (pl. "Claude Code — laptop").
+3. Válaszd ki a **hatóköröket**:
+   - `read` (mindig bekapcsolva) — rendelések, flotta, sofőrök, számlák és KPI-k olvasása.
+   - `write:planning` (opcionális) — ezenkívül engedd, hogy az AI *javasoljon* teherautó-hozzárendeléseket. Még ezzel bekapcsolva is semmi sem kerül alkalmazásra a kifejezett megerősítésed nélkül.
+4. Válassz egy lejáratot (30 / 90 / 365 nap), és kattints a **Token létrehozása** gombra.
+5. **Másold ki a tokent most** — csak egyszer jelenik meg. Így néz ki: `druma_pat_…`.
+
+Bármelyik tokent bármikor visszavonhatod ugyanarról a képernyőről; a vállalati adminisztrátorok bármelyik tokent visszavonhatják a cégen belül.
+
+## 2. A szervered URL-je
+
+```
+https://<a-te-projekted>.supabase.co/functions/v1/mcp-server
+```
+
+A fiókod pontos URL-je a **Beállítások → Integrációk → Kapcsolt AI (MCP)** oldalon jelenik meg egy másolás gombbal.
+
+## 3. Kapcsold össze a klienesedet
+
+Cseréld ki a `<url>`-t a szervered URL-jére, és a `<token>`-t a személyes hozzáférési tokenedre.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Hozd létre a `.vscode/mcp.json` fájlt. Egy `input` használata kívül tartja a tokent a commitolt fájlból:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Add hozzá a `~/.codex/config.toml` fájlhoz:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Add hozzá a `~/.gemini/settings.json` fájlhoz:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Add hozzá a `~/.cursor/mcp.json` fájlhoz:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. Mit kérdezhetsz
+
+- "Melyik holnapi rendeléseknek nincs még teherautója?"
+- "Mutasd meg az e heti késett szállításokat, és melyik teherautók szabadok."
+- "Mennyi a lejárt követeléseim összege ügyfelenként?"
+- `write:planning`-gal: "Javasold az RO-123-ABC teherautót a 4021-es rendeléshez." — az AI létrehoz egy javaslatot, és megmutat egy összefoglalót; ezután megmondod neki, hogy erősítse meg, és csak ekkor kerül alkalmazásra a hozzárendelés.
+
+## Webes chat-csatlakozók (ChatGPT, claude.ai)
+
+A **webes** chat alkalmazások (chatgpt.com vagy claude.ai) összekapcsolása (asztali/CLI kliens helyett) OAuth-ot igényel, és **később érkezik**. Egyelőre használd a fenti kliensek egyikét.
+
+## Token-rotáció
+
+Részesítsd előnyben a rövid élettartamú tokeneket. A rotáláshoz: hozz létre egy új tokent, frissítsd a kliensed konfigurációját, majd vond vissza a régit. Vonj vissza minden olyan tokent, amelynek az "Utoljára használva" mezője üres — ez azt jelenti, hogy soha semmi nem csatlakozott vele.
+
+## Kapcsolódó
+
+Ha inkább egy AI-val szeretnél csevegni a Drumán **belül** (a saját OpenAI, Anthropic, vagy Gemini kulcsoddal használva), ahelyett hogy külső klienset kapcsolnál össze, lásd a [Druma Copilot](/hu/integrations/copilot) oldalt.

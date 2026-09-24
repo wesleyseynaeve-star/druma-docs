@@ -1,0 +1,91 @@
+---
+title: "Pokrytie a prázdne km"
+description: "Nájdite náklady, ktoré ešte nemajú vozidlo, vo fronte Pokrytie v hlavičke, a zmerajte prázdne kilometre, ktoré váš vozový park skutočne najazdil, v Analytika → Prázdne km."
+icon: "route"
+---
+
+Za každým prázdnym kilometrom stoja dve otázky: *ktorý náklad ešte nemá vozidlo?* a *koľko prázdnej jazdy sme skutočne najazdili?* Druma na ne odpovedá na dvoch rôznych miestach, pretože ide o odlišné úlohy — jedna je fronta, cez ktorú sa prepracúvate dnes, druhá je správa, ktorú čítate na konci obdobia.
+
+<Note>
+Už neexistuje stránka **Medzery** v paneli kariet Plánovania. Pokrytie sa presunulo do frontu akcií v hlavičke opísaného nižšie, a staré podkarty **Optimalizátor prázdnych km** a **Prázdne vozidlá** boli odstránené. Staré odkazy a záložky na `/operations/gaps` stále fungujú — presmerujú vás na Objednávky a otvoria frontu Pokrytie za vás, takže hodinové upozornenie na pokrytie naďalej pristáva na správnom mieste.
+</Note>
+
+---
+
+## Fronta Pokrytie
+
+Fronta Pokrytie je bočný panel, dostupný z ikony **Fronta pokrytia** v klastri hlavičky na ľubovoľnej stránke. Vypisuje **náklady bez priradeného vozidla, najurgentnejšie prvé**.
+
+### Dva pohľady
+
+| Pohľad | Čo obsahuje |
+|---|---|
+| **Potrebuje vozidlo teraz** | Nakládky v nasledujúcich 24 hodinách, plus všetko už meškajúce až tri dni. Toto je presne to, čo eskaluje hodinové upozornenie na pokrytie. |
+| **Všetko nepokryté** | Každá budúca objednávka bez vozidla, bez ohľadu na to, ako ďaleko je. Použite ho na plánovanie dopredu, keď je urgentný zoznam vyčistený. |
+
+Vyhľadávacie pole (**Hľadať medzery…**) filtruje podľa čísla objednávky, klienta, alebo adresy.
+
+Ak je urgentný zoznam prázdny, zobrazí sa **Momentálne nič nepotrebuje vozidlo**. Keď sú stále ďalšie nepokryté náklady, Druma to povie a nasmeruje vás na **Všetko nepokryté** namiesto toho, aby vás nechala s prázdnym panelom.
+
+### Čo ponúka každý riadok
+
+- **Prideliť vozidlo** — vyberte vozidlo pre náklad. Ak má Druma kandidáta, ponúkne ho priamo; inak **Vybrať vozidlo** otvorí tabuľu, aby ste si mohli vybrať sami.
+- **Nájsť dopravcu** — namiesto toho odovzdajte náklad subdodávateľovi. Kde náklad nemožno subdodať, riadok hovorí **Bez subdodávky**, a kde Druma nenašla vôbec žiadnu možnosť, hovorí **Musí sa pokryť sám**.
+- **Predať** — ponúknite náklad na predaj.
+- **Zobraziť detail objednávky** — otvorte objednávku bez opustenia frontu.
+
+Keď je možné vlastné pridelenie aj subdodávka, riadok ukáže, čo je lacnejšie — **Vlastné vozidlo lacnejšie** alebo **Subdodávka lacnejšia** — takže porovnanie je urobené za vás, nie vo vašej hlave.
+
+### Triáž
+
+Menu **Triáž** označí riadok ako **Pracuje sa na tom**, **Odložiť o 24h**, alebo **Prijať ako subdodávku**, a **Vyčistiť** označenie odstráni.
+
+<Warning>
+Odloženie stíši odznak v hlavičke — **nie** odstráni náklad zo zoznamu. Odložený náklad je stále nepokrytý a stále sa zobrazuje vo fronte.
+</Warning>
+
+---
+
+## Prázdne km (Analytika)
+
+**Analytika → Prázdne km** meria, čo vozový park skutočne najazdil: naložené kilometre oproti prázdnym (jazda naprázdno) kilometrom, na vozidlo a vodiča.
+
+### KPI lišta
+
+- **Celkové prázdne km** a **Celkové naložené km**
+- **% prázdnych vozového parku** — prázdne kilometre ako podiel z celku
+- **Pokrytie merania jazdy naprázdno** — koľko z obdobia sa vôbec dalo zmerať (pozri nižšie)
+- **Najhoršie vozidlo** — vozidlo s najvyšším podielom prázdnych
+- **Pohľad zisk/km** — otvorí súvisiacu správu o zisku na kilometer
+
+### Tabuľka
+
+| Stĺpec | Význam |
+|---|---|
+| **Vozidlo**, **Vodič** | Kto ho najazdil |
+| **Naložené km** | Kilometre najazdené s nákladom na palube |
+| **Prázdne km** | Kilometre premiestnenia medzi doručením a ďalšou nakládkou |
+| **Celkové km** | Naložené plus prázdne |
+| **% Prázdne** | Prázdne ako podiel celku daného vozidla |
+| **Priem. prázdny úsek** | Priemerná dĺžka jedného premiestňovacieho úseku |
+| **# Prázdnych úsekov** | Koľko premiestňovacích úsekov bolo zmeraných |
+| **Zmerané** | Koľko z objednávok vozidla sa dalo zmerať |
+
+Graf **Top 10 vozidiel — naložené vs. prázdne km** je nad tabuľkou, a výber obdobia ponúka **Dnes**, **Tento týždeň**, **Posledných 30 dní**, **Posledných 12 mesiacov**, alebo **Vlastný** rozsah.
+
+### Prečo záleží na "Zmerané"
+
+Objednávka má merateľnú jazdu naprázdno iba vtedy, ak existovala skoršia jazda dostatočne blízko v čase, aby sa dalo zmerať premiestnenie *z nej*. Objednávky bez nej sa **vynechajú z menovateľa % prázdnych namiesto toho, aby sa počítali ako nula prázdnych km** — počítanie ako nula by tichoo skrášlilo percento prázdnych vozového parku. **Pokrytie merania jazdy naprázdno** vám hovorí, koľko z obdobia je číslo skutočne založené na; čítajte % prázdnych spolu s ním, nie samostatne.
+
+---
+
+## Súvisiace články
+
+<CardGroup cols={2}>
+  <Card title="Plánovacia tabuľa" icon="table-columns" href="/sk/planner/planning-board">
+    Prideľujte náklady vozidlám, a kam vás posiela fronta Pokrytie.
+  </Card>
+  <Card title="Subdodávatelia" icon="handshake" href="/sk/planner/subcontractors">
+    Odovzdanie nákladu dopravcovi, keď ho nemôžete pokryť sami.
+  </Card>
+</CardGroup>

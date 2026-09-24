@@ -1,0 +1,104 @@
+---
+title: "eFTI-Straßenkontrolle (Behördenprüfung)"
+description: "Wie Druma eFTI-Behördenprüfungen nach EU-Verordnung 2020/1056 unterstützt — die QR-Karte, die Fahrer bei Straßenkontrollen vorzeigen, und was Beamte sehen."
+icon: "shield-check"
+---
+
+Die Verordnung (EU) 2020/1056 über elektronische Frachtbeförderungsinformationen (**eFTI**) verlangt, dass Behörden der EU-Mitgliedstaaten ab dem **9. Juli 2027** elektronische Frachtbeförderungsinformationen akzeptieren müssen, statt bei Straßenkontrollen Papierdokumente zu verlangen. Druma ist darauf ausgelegt, diese Anforderung zu erfüllen.
+
+---
+
+## Was ist eFTI?
+
+Die eFTI-Verordnung schafft einen rechtlichen Rahmen dafür, dass:
+
+- Frachtführer Frachtbeförderungsinformationen digital auf einer zertifizierten eFTI-Plattform speichern
+- Behörden (Polizei, Zoll, Inspektoren) bei Straßenkontrollen elektronisch auf diese Informationen zugreifen können, statt vom Fahrer physische Papierdokumente zu verlangen
+- Ein standardisierter gemeinsamer Datensatz für Straßentransportinformationen existiert, abgebildet aus den CMR-Frachtbrief-Feldern
+
+Druma implementiert die **Straßentransport-/CMR-Teilmenge** des gemeinsamen eFTI-Datensatzes, die alle Pflichtfelder der Sendung, Parteiendetails, und den eCMR-Status abdeckt.
+
+<Frame caption="Die Straßenkontrollkarte, die ein Beamter nach dem Scannen des QR-Codes des Fahrers sieht — Sendung, Parteien und eCMR-Status, schreibgeschützt.">
+  <img src="/images/ecmr/efti-roadside-inspection.png" alt="eFTI-Straßenkontrollansicht mit Sendungsdetails, Parteien und eCMR-Status für eine Behördenprüfung" />
+</Frame>
+
+### Der gemeinsame Datensatz (CDS)
+
+Drumas Compliance-Schicht enthält einen **CDS-(gemeinsamer Datensatz-)Serialisierer**, der die von der Delegierten Verordnung (EU) 2024/2024 der Kommission definierte **EU03-Straßen-/CMR-Datenteilmenge** erzeugt — die strukturierte, maschinenlesbare Darstellung einer Sendung (Parteien, Orte, Waren, Unterschriften), die eine eFTI-Plattform erzeugen soll. Dies läuft parallel zur unten beschriebenen menschenlesbaren Inspektoransicht, sodass dieselbe Sendung entweder als strukturierte Daten oder als Bildschirmansicht präsentiert werden kann, je nachdem, was die Behörde verlangt.
+
+---
+
+## Was Fahrer sehen
+
+Jeder Auftrag hat eine eindeutige **eFTI-Kennung**. In der Fahrer-App, auf dem Auftragsdetailbildschirm, gibt es eine Karte **„Behördenprüfung (eFTI)"**. Sie zeigt:
+
+- Einen **QR-Code**, den der Fahrer bei einer Straßenkontrolle vorzeigen kann
+- Einen kopierbaren eFTI-Link (UIL — Drumas interne Abkürzung für **Unique Identifying Link**; Art. 9(1)(e) der Verordnung (EU) 2020/1056 nennt dies den „eindeutigen elektronischen Identifizierungslink")
+- Einen Link, um die eCMR-Ansicht auf dem eigenen Gerät des Fahrers zu öffnen
+
+Der Fahrer muss nichts tun, um dies zu aktivieren — die Karte ist bei zugewiesenen Aufträgen immer vorhanden.
+
+<Note>
+Der Fahrer muss nie durch Menüs navigieren oder nach der eFTI-Karte suchen. Sie wird prominent auf dem aktiven Auftragsbildschirm angezeigt, sodass sie sofort zugänglich ist, wenn sich ein Inspektor dem Fahrzeug nähert.
+</Note>
+
+---
+
+## Was der Beamte sieht
+
+Der Beamte scannt den QR-Code (oder gibt die UIL manuell ein) und sieht eine **schreibgeschützte, menschenlesbare Ansicht** der Sendung:
+
+- Warenbeschreibung
+- Parteien: Absender, Frachtführer, Empfänger (Namen und Adressen)
+- Abhol- und Lieferadressen
+- LKW- und Anhängerkennzeichen
+- Status des signierten eCMR
+
+**Es werden keine Preise, Tarife, oder Finanzdaten angezeigt.** Die Beamtenansicht ist bewusst auf betriebliche und Compliance-Informationen beschränkt — kommerzielle Bedingungen bleiben privat.
+
+Die Ansicht erkennt automatisch die Browsersprache des Beamten beim Laden, sodass sie bereits in der Sprache des Landes öffnet, in dem er inspiziert, ohne dass jemand fragen muss. Eine manuelle Sprachauswahl befindet sich im Header für dieselben 10 Sprachen, die der Rest von Druma unterstützt (Englisch, Französisch, Deutsch, Rumänisch, Niederländisch, Bulgarisch, Tschechisch, Ungarisch, Polnisch, Slowakisch), falls die Browsersprache nicht mit der des Beamten übereinstimmt.
+
+Jeder Zugriff durch einen Beamten wird in einem **manipulationssicheren Betriebsprotokoll** erfasst. Dieses Protokoll ist Teil der nach Art. 9 der Verordnung erforderlichen eFTI-Prüfspur.
+
+<Note>
+Wird dem Beamten stattdessen das versiegelte eCMR-PDF selbst ausgehändigt (gedruckt, oder über **eCMR ansehen** geöffnet), sind die Feldbeschriftungen darauf **dreisprachig** — Englisch plus die eigene Sprache von Absender und Empfänger — sodass das Dokument auch über eine Grenze hinweg ohne die Inspektoransicht lesbar ist, genauso wie ein Papier-CMR traditionell seine Feldbeschriftungen in mehreren Sprachen druckt.
+</Note>
+
+---
+
+## Zertifizierungsstatus
+
+<Warning>
+Druma hat erhebliche **interne technische Bereitschaft** für eFTI aufgebaut — einen CDS-Serialisierer, ein manipulationssicheres Betriebsprotokoll, die UIL, und diese Straßeninspektoransicht. Druma ist **jedoch keine** zertifizierte eFTI-Plattform gemäß **Art. 10** der Verordnung (EU) 2020/1056: Die Zertifizierung erfordert eine Bewertung durch eine akkreditierte Konformitätsbewertungsstelle (CAB), und Mitte 2026 hat noch keine CAB einen eFTI-Geltungsbereich zur Bewertung veröffentlicht — eine branchenweite Lücke, nicht spezifisch für Druma. Bis dahin ist die Inspektoransicht heute als Kulanz und freiwillige Offenlegung für Unternehmen nutzbar, die vor der Frist 2027 papierlos werden wollen.
+
+Die zertifizierte Machine-to-Machine-Behördenschnittstelle (über EU-Mitgliedstaats-eFTI-Gates) steht separat noch aus, abhängig von der Verfügbarkeit lebender nationaler Gates, die Mitte 2026 noch nicht betriebsbereit waren. Wenn CABs eFTI-Geltungsbereiche veröffentlichen und nationale Gates online gehen, wird Druma die Zertifizierung verfolgen und diese Seite aktualisieren.
+</Warning>
+
+---
+
+## Zeitplan
+
+| Datum | Ereignis |
+|---|---|
+| 2020 | Verordnung (EU) 2020/1056 verabschiedet |
+| 9. Juli 2025 | eFTI-Plattformen dürfen freiwilligen Betrieb aufnehmen |
+| 9. Juli 2027 | **Behörden müssen eFTI akzeptieren** — Papier nicht mehr erforderlich, wo eFTI vorgelegt wird |
+| Offen | Nationale eFTI-Gates betriebsbereit (Land für Land) |
+
+Druma hat die technische Kernbereitschaft für das EU-eFTI-Mandat 2027 aufgebaut — der Zertifizierungs- und formelle Akkreditierungsprozess selbst steht branchenweit noch aus (keine Zertifizierungsstelle hat bisher einen eFTI-Geltungsbereich veröffentlicht), sodass der vollständige Compliance-Status bestätigt wird, sobald sich dieser Prozess entfaltet.
+
+---
+
+## Verwandte Artikel
+
+<CardGroup cols={2}>
+  <Card title="Was ist eCMR?" icon="file-contract" href="/de/ecmr/what-is-ecmr">
+    Der elektronische CMR-Frachtbrief, der dem eFTI-Datensatz zugrunde liegt.
+  </Card>
+  <Card title="Der Signaturablauf" icon="pen-to-square" href="/de/ecmr/signing-flow">
+    Wie der dreiparteiliche eCMR-Signaturprozess in Druma funktioniert.
+  </Card>
+  <Card title="eCMR-Rechtsgültigkeit" icon="scale-balanced" href="/de/ecmr/ecmr-legal-validity">
+    Der rechtliche Rahmen hinter eCMR und dem digitalen PAdES-Siegel.
+  </Card>
+</CardGroup>

@@ -1,0 +1,94 @@
+---
+title: "Úkoly objednávky a šablony workflow"
+description: "Konfigurovatelné kontrolní seznamy, které sledují požadované kroky u objednávky během jejího životního cyklu — a jak je admini vytvářejí."
+icon: "list-check"
+---
+
+## Přehled
+
+Modul úkolů připojí k objednávce (nebo faktuře) **kontrolní seznam**, který sleduje kroky, jež vaše společnost vyžaduje v každé fázi — odeslat potvrzení, vygenerovat dokument, kontaktovat klienta — a zobrazuje, kdo je odpovědný a zda něco není po termínu. Admini sestaví kontrolní seznam jednou jako znovupoužitelnou **šablonu úkolů**; od té chvíle se automaticky materializuje na každé odpovídající objednávce.
+
+Tato stránka pokrývá obě strany: co plánovač nebo dispečer vidí den co den, a jak admin konfiguruje šablony, které za tím stojí.
+
+---
+
+## Co vidíte na objednávce
+
+Otevřete jakoukoli objednávku (nebo fakturu), která má odpovídající šablonu úkolů, a najdete panel **kontrolního seznamu úkolů**, zobrazující každý požadovaný krok pro její aktuální fázi.
+
+Každý řádek zobrazuje:
+
+- Ikonu stavu — čeká (prázdný kruh), probíhá (hodiny), hotovo (fajfka), přeskočeno, nebo selhalo
+- Odpovědnou roli, pokud je nastavena
+- **Čeká na předchozí krok**, pokud úkol závisí na jiném kroku, který ještě není hotový
+- Odznak **Termín** nebo **Po termínu**, když má krok datum splatnosti
+
+U otevřených kroků můžete:
+- Kliknout na ikonu fajfky a **označit ho jako hotový**
+- Kliknout na ikonu přeskočení a **přeskočit ho** (volitelně s důvodem)
+
+Obě akce jsou deaktivované, dokud je krok blokovaný závislostí. Pokud je krok nakonfigurován tak, aby se sám dokončil nebo přeskočil, jakmile objednávka dosáhne určitého stavu, jednoduše uvidíte, jak se sám přepne na Hotovo nebo Přeskočeno — žádné kliknutí není potřeba.
+
+Řádky v seznamu objednávek a faktur nesou také malý souhrnný štítek: oranžový odznak s počtem, dokud úkoly ještě čekají, nebo zelenou fajfku **vše hotovo**, jakmile je dokončen každý úkol na tomto záznamu. Pokud žádná šablona neodpovídá aktuální fázi objednávky, panel jednoduše zobrazí *„Pro tuto fázi není nakonfigurován žádný kontrolní seznam úkolů."*
+
+<Note>
+Úkoly jsou vázané na **fázi životního cyklu** — stejné stavy pokryté v [Životní cyklus objednávky](/cs/planner/order-lifecycle). Kontrolní seznam se objeví (nebo aktualizuje) automaticky, kdykoli objednávka nebo faktura dosáhne fáze, na kterou šablona cílí.
+</Note>
+
+---
+
+## Jak admini konfigurují šablony úkolů
+
+Přejděte do **Nastavení → Šablony a zóny → Šablony úkolů**. Šablony se dodávají pro každou společnost prázdné — nic není předkonfigurováno, takže sestavení kontrolního seznamu je zcela volitelné.
+
+<Steps>
+  <Step title="Vytvořte šablonu">
+    Klikněte na **Přidat šablonu**. Zvolte **typ objektu** (Objednávka nebo Faktura), **fázi životního cyklu**, na kterou by se měla spouštět (např. Potvrzeno, Doručeno), a popisek. Ponechte ji povolenou, aby byla okamžitě aktivní, nebo ji uložte zakázanou, zatímco ji budujete.
+  </Step>
+  <Step title="Volitelně ji omezte podmínkami">
+    Použijte **Platí když**, abyste šablonu omezili pouze na odpovídající objednávky — například pouze ADR náklady, pouze konkrétního klienta, nebo pouze kabotážní přesuny. Ponechte prázdné a šablona se použije na každou objednávku, která dosáhne cílové fáze.
+  </Step>
+  <Step title="Přidejte kroky">
+    Pro každý krok nastavte klíč a popisek kroku, poté **typ kroku**:
+    - **Ruční** — osoba ho musí sama označit jako hotový nebo přeskočit
+    - **Vygenerovat dokument**, **Odeslat e-mail**, nebo **Spustit automatizaci** — vyberte konkrétní akci ze seřazeného seznamu (např. Vygenerovat fakturu, Odeslat potvrzení objednávky, Vygenerovat CMR)
+  </Step>
+  <Step title="Nastavte režim dokončení">
+    Zvolte **Ruční** (někdo ho dokončí z kontrolního seznamu) nebo **Automatický** — automatický krok se sám dokončí nebo přeskočí ve chvíli, kdy objednávka/faktura dosáhne stavu, který nakonfigurujete, aniž by na cokoli musel kdokoli kliknout.
+  </Step>
+  <Step title="Přidejte odpovědnost a řazení">
+    Volitelně nastavte **odpovědnou roli**, nastavte, aby krok **závisel na** dřívějším kroku (zůstane blokovaný, dokud ten není hotový), a nastavte jeho pozici v kontrolním seznamu.
+  </Step>
+  <Step title="Uložte">
+    Šablona nyní materializuje kontrolní seznam na každé objednávce (nebo faktuře), která odpovídá jejímu typu objektu, fázi, a podmínkám.
+  </Step>
+</Steps>
+
+---
+
+## Výjimky za jednotlivého klienta
+
+Někteří zákazníci potřebují jiný kontrolní seznam než zbytek vaší knihy — extra dokumentový krok, nebo takový, který výslovně nepotřebují. Namísto budování celé samostatné šablony ji za klienta přepište.
+
+Otevřete detailní stránku klienta a přejděte na záložku **Výjimky úkolů**. Tam můžete vypnout:
+- Celou šablonu, pouze pro tohoto klienta, nebo
+- Jednotlivé kroky v rámci šablony
+
+Celofiremní šablona zůstává nedotčena pro každého jiného klienta — výjimka ovlivňuje pouze jeden záznam klienta, který upravujete.
+
+---
+
+## V zákulisí
+
+Naplánovaná úloha kontroluje každých pár minut úkoly, které jsou připraveny ke spuštění — splněné závislosti, po termínu, a nakonfigurované pro automatické spuštění — a spouští je, aniž by kdokoli musel otevírat kontrolní seznam. Jde čistě o detail spolehlivosti; den co den interagujete pouze s panelem kontrolního seznamu na samotné objednávce.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Životní cyklus objednávky" icon="circle-dot" href="/cs/planner/order-lifecycle">
+    Podívejte se na každý stav objednávky a co spouští přechod mezi nimi.
+  </Card>
+  <Card title="Obchod a prodejní pipeline" icon="user-group" href="/cs/planner/crm">
+    Záznamy klientů, kde žijí výjimky úkolů za jednotlivého klienta, vedle kontaktních bodů a fáze životního cyklu.
+  </Card>
+</CardGroup>

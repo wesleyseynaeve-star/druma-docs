@@ -1,0 +1,147 @@
+---
+title: "Predaj"
+description: "Sledujte potenciálnych zákazníkov a existujúce účty cez predajný pipeline — od prvého kontaktu po konvertovaného klienta, ponuku, alebo tender."
+icon: "user-group"
+---
+
+## Prehľad
+
+Modul **Predaj** (`/operator-crm`, v hlavnej navigácii ako **Predaj**) je miesto, kde spravujete budovanie vzťahov oddelene od prepravných objednávok, ku ktorým tieto vzťahy vedú. Je postavený okolo dvoch typov záznamov pohybujúcich sa cez rovnaké fázy životného cyklu:
+
+- **Potenciálni zákazníci (leady)** — vyhliadky, ktoré ešte nie sú klientmi v Drume
+- **Účty** — vaši existujúci klienti, sledovaní cez rovnaký pipeline, keď chcete spravovať obnovenia alebo rozšírenia
+
+Predaj je dostupný pre role **admin, company_admin, planner, dispatcher, a customer_service**.
+
+<Frame caption="Karta Predajný pipeline — leady a účty pohybujúce sa cez fázy lead → qualified → proposal → won.">
+  <img src="/images/planner/crm.png" alt="Kanban tabuľa predajného pipeline s leadmi a účtami v štyroch fázach" />
+</Frame>
+
+---
+
+## Panel kariet
+
+<Steps>
+  <Step title="Pipeline">
+    Kanban tabuľa leadov a účtov v štyroch fázach, s premiestňovaním ťahaním a pustením. Toto je vaša predvolená vstupná karta.
+  </Step>
+  <Step title="Kontakty">
+    Tabuľka všetkých leadov, so stĺpcami spoločnosť, kontakt, krajina, zdroj, posledný kontakt, a fáza.
+  </Step>
+  <Step title="Účty">
+    Tabuľka vašich existujúcich klientov, každý voliteľne sledovaný s vlastnou fázou životného cyklu a dátumom posledného kontaktu.
+  </Step>
+  <Step title="Ponuky">
+    Otvorí stránku [Ponuky](/sk/planner/quotes) — okamžité oceňovanie konkrétneho nákladu pre leada alebo klienta.
+  </Step>
+  <Step title="Tendre (ak je aktivované)">
+    Otvorí [Tendre a zmluvy](/sk/planner/tenders-and-contracts) — zobrazuje sa iba vtedy, keď je správa tendrov aktivovaná pre vašu spoločnosť.
+  </Step>
+  <Step title="Reporting">
+    Miera úspešnosti, priemerná veľkosť obchodu, dĺžka predajného cyklu, vážená hodnota pipeline, a rebríček aktivít.
+  </Step>
+</Steps>
+
+<Note>
+Ponuky a Tendre zdieľajú tento panel kariet, aby celý predajný proces — od nízkeho po vysoký záväzok — pôsobil ako jeden celok, ale každý si zachováva vlastné telo stránky a vlastnú stránku dokumentácie.
+</Note>
+
+---
+
+## Fázy životného cyklu
+
+Každý lead a každý sledovaný účet prechádza cez rovnakú sadu fáz:
+
+| Fáza | Význam |
+|---|---|
+| `lead` | Počiatočný kontakt, ešte nekvalifikovaný |
+| `qualified` | Potvrdené ako reálna príležitosť |
+| `proposal` | Bola odoslaná ponuka alebo tender |
+| `won` | Konvertovaný na aktívneho klienta |
+| `lost` | Nekonvertoval |
+| `inactive` | Účet stíchol |
+
+Tabuľa **Pipeline** zobrazuje iba stĺpce `lead` → `qualified` → `proposal` → `won`. `lost` a `inactive` sa nastavujú z rozbaľovacej ponuky fázy vnútri panela detailov záznamu, namiesto zobrazovania ako stĺpce tabule.
+
+---
+
+## Pridanie leada
+
+<Steps>
+  <Step title="Kliknite na Nový lead">
+    Z karty **Pipeline** alebo **Kontakty** kliknite na **Nový lead**.
+  </Step>
+  <Step title="Vyplňte podrobnosti">
+    Zadajte:
+    - **Spoločnosť** (povinné)
+    - **Kontakt**, **Krajina**, **E-mail**, **Telefón**, **IČ DPH**
+    - **Zdroj** — voľný text (napr. "odporúčanie", "burza nákladov")
+    - **Fáza** — predvolene `lead`
+    - **Poznámky**
+  </Step>
+  <Step title="Vytvoriť">
+    Kliknite na **Vytvoriť**. Lead sa objaví na tabuli Pipeline a v tabuľke Kontakty.
+  </Step>
+</Steps>
+
+<Note>
+Leady pochádzajúce z prichádzajúcej RFQ alebo prichádzajúceho e-mailu preposlaného z CRM sú automaticky označené ("Prichádzajúca RFQ" / "Prichádzajúci e-mail") v stĺpci Zdroj tabuľky Kontakty.
+</Note>
+
+---
+
+## Práca s leadom alebo účtom
+
+Kliknite na ľubovoľnú kartu alebo riadok, aby ste otvorili jeho panel detailov:
+
+- **Fáza** — priamo zmeňte fázu životného cyklu.
+- **Poznámky** — voľné poznámky o vzťahu.
+- **Obchod** *(iba leady)* — očakávaná hodnota (EUR/RON), pravdepodobnosť (%), očakávaný dátum uzavretia, tagy oddelené čiarkou, a rozbaľovacia ponuka dôvodu straty, ktorá sa objaví, keď je fáza nastavená na `lost`.
+- **Ľudia / Kontakty** *(iba leady)* — pridajte viacero kontaktných osôb pre rovnaký účet a označte jednu ako primárnu.
+- **Kontaktné body** — zaznamenajte interakciu: vyberte typ (**Hovor, E-mail, Stretnutie, Demo, Poznámka**), voliteľné zhrnutie/výsledok, a voliteľnú prílohu, potom kliknite na **Zaznamenať kontaktný bod**. Kontaktné body sú zdieľané leadmi a účtami a zobrazené od najnovších.
+
+Pre leady, hlavička panela obsahuje aj:
+
+- **Vytvoriť ponuku** — hlboký odkaz do [Ponuky](/sk/planner/quotes) s novou ponukou predvyplnenou z tohto leada.
+- **Vytvoriť tender** *(ak je správa tendrov aktivovaná)* — hlboký odkaz do [Tendre a zmluvy](/sk/planner/tenders-and-contracts) s novým tendrom vopred prepojeným s týmto leadom.
+- **Konvertovať na klienta** — pozri nižšie. Po konverzii sa toto tlačidlo namiesto toho stane **Zobraziť klienta**.
+
+---
+
+## Konverzia leada na klienta
+
+<Steps>
+  <Step title="Otvorte lead a kliknite na Konvertovať na klienta">
+    Potvrďte výzvu. Druma vytvorí nový záznam klienta z detailov leada — toto je idempotentné, takže opätovné kliknutie na už konvertovaný lead jednoducho otvorí existujúceho klienta namiesto jeho duplikovania.
+  </Step>
+  <Step title="Voliteľne vytvorte sadzobník">
+    Budete sa opýtaní, či chcete vytvoriť sadzobník cenotvorby trás pre nového klienta. Výber **Vytvoriť sadzobník** vás vezme na predvyplnený formulár nového sadzobníka; **Teraz nie** nezanechá nič.
+  </Step>
+  <Step title="Nájdite ho pod Účty">
+    Stránka sa prepne na kartu **Účty**, filtrovanú na novo konvertovaného klienta.
+  </Step>
+</Steps>
+
+---
+
+## Reporting
+
+Karta **Reporting** zhŕňa váš pipeline:
+
+- **Miera úspešnosti** — podiel uzavretých obchodov (vyhrané vs. prehrané), ktoré boli vyhrané.
+- **Priemerná veľkosť obchodu** — priemerná očakávaná hodnota naprieč obchodmi s nastavenou hodnotou.
+- **Predajný cyklus** — priemerný počet dní od vytvorenia leada po uzavretie.
+- **Vážený pipeline** — súčet očakávanej hodnoty každého otvoreného obchodu × pravdepodobnosť, rozčlenený podľa fázy (s odhalením výpočtu).
+- **Pipeline tendrov** *(ak je správa tendrov aktivovaná)* — záväzný objem podľa stavu tendra.
+- **Rebríček aktivít** — zaznamenané kontaktné body na člena tímu.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Ponuky" icon="file-invoice" href="/sk/planner/quotes">
+    Vytvorte a odošlite prepravnú ponuku leadovi alebo klientovi, s prijatím jedným kliknutím, ktoré ju premení na potvrdenú objednávku.
+  </Card>
+  <Card title="Tendre a zmluvy" icon="file-signature" href="/sk/planner/tenders-and-contracts">
+    Sledujte tendre klientov od vyhliadky po aktívnu zmluvu a prideľujte sadzby trás do sadzobníka.
+  </Card>
+</CardGroup>

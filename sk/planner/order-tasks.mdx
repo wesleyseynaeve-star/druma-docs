@@ -1,0 +1,94 @@
+---
+title: "Úlohy objednávky a šablóny pracovného postupu"
+description: "Konfigurovateľné kontrolné zoznamy, ktoré sledujú požadované kroky na objednávke počas jej životného cyklu — a ako ich vytvárajú administrátori."
+icon: "list-check"
+---
+
+## Prehľad
+
+Modul úloh pripojí k objednávke (alebo faktúre) **kontrolný zoznam**, ktorý sleduje kroky vyžadované vašou spoločnosťou v každej fáze — odoslanie potvrdenia, vygenerovanie dokumentu, kontaktovanie klienta — a zobrazuje, kto je zodpovedný a či niečo nie je po termíne. Administrátori zostavia kontrolný zoznam raz ako opakovane použiteľnú **šablónu úloh**; odvtedy sa automaticky materializuje na každej zodpovedajúcej objednávke.
+
+Táto stránka pokrýva obe strany: čo plánovač alebo dispečer vidí deň čo deň, a ako administrátor konfiguruje šablóny, ktoré za tým stoja.
+
+---
+
+## Čo vidíte na objednávke
+
+Otvorte akúkoľvek objednávku (alebo faktúru), ktorá má zodpovedajúcu šablónu úloh, a nájdete panel **kontrolného zoznamu úloh**, zobrazujúci každý požadovaný krok pre jej aktuálnu fázu.
+
+Každý riadok zobrazuje:
+
+- Ikonu stavu — čaká (prázdny kruh), prebieha (hodiny), hotovo (fajka), preskočené, alebo zlyhalo
+- Zodpovednú rolu, ak je nastavená
+- **Čaká na predchádzajúci krok**, ak úloha závisí od iného kroku, ktorý ešte nie je hotový
+- Odznak **Termín** alebo **Po termíne**, keď má krok dátum splatnosti
+
+Pri otvorených krokoch môžete:
+- Kliknúť na ikonu fajky a **označiť ho ako hotový**
+- Kliknúť na ikonu preskočenia a **preskočiť ho** (voliteľne s dôvodom)
+
+Obe akcie sú deaktivované, kým je krok blokovaný závislosťou. Ak je krok nakonfigurovaný tak, aby sa sám dokončil alebo preskočil, akonáhle objednávka dosiahne určitý stav, jednoducho uvidíte, ako sa sám prepne na Hotovo alebo Preskočené — nie je potrebné žiadne kliknutie.
+
+Riadky v zozname objednávok a faktúr nesú aj malý súhrnný štítok: jantárový odznak s počtom, kým úlohy ešte čakajú, alebo zelenú fajku **všetko hotové**, akonáhle je dokončená každá úloha na tomto zázname. Ak žiadna šablóna nezodpovedá aktuálnej fáze objednávky, panel jednoducho zobrazí „Pre túto fázu nie je nakonfigurovaný žiadny kontrolný zoznam úloh."
+
+<Note>
+Úlohy sú viazané na **fázu životného cyklu** — rovnaké stavy pokryté v [Životný cyklus objednávky](/sk/planner/order-lifecycle). Kontrolný zoznam sa objaví (alebo aktualizuje) automaticky, kedykoľvek objednávka alebo faktúra dosiahne fázu, na ktorú šablóna cieli.
+</Note>
+
+---
+
+## Ako administrátori konfigurujú šablóny úloh
+
+Prejdite na **Nastavenia → Šablóny a zóny → Šablóny úloh**. Šablóny sa dodávajú pre každú spoločnosť prázdne — nič nie je predkonfigurované, takže zostavenie kontrolného zoznamu je úplne voliteľné.
+
+<Steps>
+  <Step title="Vytvorte šablónu">
+    Kliknite na **Pridať šablónu**. Vyberte **typ objektu** (Objednávka alebo Faktúra), **fázu životného cyklu**, na ktorú by sa mala spúšťať (napr. Potvrdené, Doručené), a popisok. Ponechajte ju povolenú, aby bola okamžite aktívna, alebo ju uložte zakázanú, kým ju budujete.
+  </Step>
+  <Step title="Voliteľne ju obmedzte podmienkami">
+    Použite **Platí keď**, aby ste šablónu obmedzili iba na zodpovedajúce objednávky — napríklad iba ADR náklady, iba konkrétneho klienta, alebo iba kabotážne presuny. Ponechajte prázdne a šablóna sa použije na každú objednávku, ktorá dosiahne cieľovú fázu.
+  </Step>
+  <Step title="Pridajte kroky">
+    Pre každý krok nastavte kľúč a popisok kroku, potom **typ kroku**:
+    - **Manuálny** — osoba ho musí sama označiť ako hotový alebo preskočiť
+    - **Vygenerovať dokument**, **Odoslať e-mail**, alebo **Spustiť automatizáciu** — vyberte konkrétnu akciu zo zoradeného zoznamu (napr. Vygenerovať faktúru, Odoslať potvrdenie objednávky, Vygenerovať CMR)
+  </Step>
+  <Step title="Nastavte režim dokončenia">
+    Vyberte **Manuálny** (niekto ho dokončí z kontrolného zoznamu) alebo **Automatický** — automatický krok sa sám dokončí alebo preskočí vo chvíli, keď objednávka/faktúra dosiahne stav, ktorý nakonfigurujete, bez toho, aby na čokoľvek musel ktokoľvek kliknúť.
+  </Step>
+  <Step title="Pridajte zodpovednosť a poradie">
+    Voliteľne nastavte **zodpovednú rolu**, nastavte, aby krok **závisel od** skoršieho kroku (zostane blokovaný, kým ten nie je hotový), a nastavte jeho pozíciu v kontrolnom zozname.
+  </Step>
+  <Step title="Uložte">
+    Šablóna teraz materializuje kontrolný zoznam na každej objednávke (alebo faktúre), ktorá zodpovedá jej typu objektu, fáze, a podmienkam.
+  </Step>
+</Steps>
+
+---
+
+## Výnimky za jednotlivého klienta
+
+Niektorí klienti potrebujú iný kontrolný zoznam než zvyšok vašej knihy — extra dokumentový krok, alebo taký, ktorý výslovne nepotrebujú. Namiesto budovania celej samostatnej šablóny ju prepíšte za klienta.
+
+Otvorte detailnú stránku klienta a prejdite na kartu **Výnimky úloh**. Tam môžete vypnúť:
+- Celú šablónu, iba pre tohto klienta, alebo
+- Jednotlivé kroky v rámci šablóny
+
+Celofiremná šablóna zostáva nedotknutá pre každého iného klienta — výnimka ovplyvňuje iba jeden záznam klienta, ktorý upravujete.
+
+---
+
+## Za oponou
+
+Naplánovaná úloha kontroluje každých pár minút úlohy, ktoré sú pripravené na spustenie — splnené závislosti, po termíne, a nakonfigurované pre automatické spustenie — a spúšťa ich bez toho, aby ktokoľvek musel otvárať kontrolný zoznam. Ide čisto o detail spoľahlivosti; deň čo deň interagujete iba s panelom kontrolného zoznamu na samotnej objednávke.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Životný cyklus objednávky" icon="circle-dot" href="/sk/planner/order-lifecycle">
+    Pozrite si každý stav objednávky a čo spúšťa prechod medzi nimi.
+  </Card>
+  <Card title="Obchod a predajný pipeline" icon="user-group" href="/sk/planner/crm">
+    Záznamy klientov, kde žijú výnimky úloh za jednotlivého klienta, popri kontaktných bodoch a fáze životného cyklu.
+  </Card>
+</CardGroup>

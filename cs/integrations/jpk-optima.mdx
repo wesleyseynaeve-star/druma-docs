@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Polsko)"
+description: "Dostaňte své polské evidence DPH do Optimy: stažení, měsíční e-mail, nebo naplánovaná úloha, která si soubor sama stáhne."
+icon: "file-invoice"
+---
+
+Druma vytváří **JPK_V7M(3)** — polský soubor evidence DPH (*część ewidencyjna*, strana prodeje) definovaný Ministerstvem financí a povinný od 1. února 2026. Váš účetní ho importuje do Comarch ERP Optima pod **Rejestry VAT → Import do rej. VAT**.
+
+Protože JPK je zákonný standard, ne formát dodavatele, stejný soubor se importuje také do enova365, Symfonia a jakéhokoli jiného polského účetního balíku.
+
+<Note>
+Částky v jiné měně než PLN se přepočítávají kurzem **NBP tabela A** z posledního pracovního dne před datem vzniku daňové povinnosti, jak vyžaduje čl. 31a. Kurz, jeho datum, a číslo tabulky se ukládají na faktuře, takže podání zůstává reprodukovatelné, pokud se někdo zeptá, z jaké tabulky číslo pochází.
+</Note>
+
+---
+
+## Nejprve dvě nastavení
+
+**Nastavení → Integrace → JPK_V7M**. Dvě hodnoty nelze odvodit z ničeho jiného, co Druma vlastní, a export odmítá běžet bez nich, místo aby hádal:
+
+| Nastavení | Proč je vyžadováno |
+|---|---|
+| **Kód finančního úřadu (KodUrzedu)** | Jeden z 400 vyjmenovaných kódů. Nic nemapuje adresu na kód — je vám přidělen. Odhad podá u nesprávného úřadu. |
+| **Kontaktní e-mail pro podání** | Jde do bloku `Podmiot1` souboru. Vaše provozní schránka obvykle není váš účetní, a umístit nesprávnou osobu na daňový dokument je horší než se zeptat. |
+
+Můžete také nastavit **datum vzniku daňové povinnosti** (datum vystavení faktury, nebo datum doručení navázané objednávky) — pro nákladní dopravu je to obvykle den, kdy byla služba provedena.
+
+---
+
+## Tři způsoby, jak soubor dorazí do Optimy
+
+Do Optimy nelze zapisovat zvenčí. Lokálně je její Web API službou Windows ve vlastní síti vašeho účetního; *Chmura Standard* od Comarch zcela zakazuje přístup k databázi z internetu, a *Chmura Enterprise* obsluhuje pouze software nainstalovaný na tomtéž serveru. Takže každá níže uvedená cesta vede **z vaší strany ven**.
+
+### 1. Stáhněte ho
+
+**Finance → Tvůrce exportu → Export JPK_V7M (Polsko)**. Vyberte měsíc, získejte `.xml`. Kromě dvou výše uvedených nastavení není třeba nic konfigurovat.
+
+### 2. Nechte si ho posílat e-mailem každý měsíc
+
+Zapněte **Odesílat soubor e-mailem každý měsíc** ve stejném panelu nastavení a vyberte den. Druma vygeneruje uzavřený měsíc a pošle vašemu účetnímu odkaz ke stažení platný 7 dní.
+
+Den je omezen na **25.**, protože to je termín podání JPK_V7M za předchozí měsíc — pozdější den by doručil soubor po termínu, který má splnit. Pokud je měsíc kratší než zvolený den (31. v únoru), odejde poslední den, místo aby byl vynechán.
+
+Pokud soubor nelze vytvořit — třeba chybí kód finančního úřadu — e-mail vám řekne proč, místo aby jednoduše nikdy nedorazil.
+
+### 3. Nechte počítač účetního, aby si ho sám stáhl
+
+Naplánovaná úloha na stroji, na kterém běží Optima, si může soubor stáhnout sama přes běžné odchozí HTTPS. Žádná změna firewallu, žádná pevná adresa, žádná licence Comarch.
+
+Vytvořte API klíč v **Nastavení → Integrace → API klíče** (rozsah Provozovatel nebo Účetní), poté naplánujte toto měsíčně:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+Soubor skončí ve složce, ze které váš účetní importuje. Podívejte se na stránku [Veřejné API](/cs/integrations/public-api#jpk-v7m-poland) pro parametry koncového bodu.
+
+<Tip>
+Klíč s rozsahem **Účetní** může pokrýt více společností. Vyžaduje pak `&company_id=…` u každého požadavku — podání DPH je za jednotlivého plátce, a Druma nebude hádat, kterého jste měli na mysli.
+</Tip>
+
+---
+
+## Měsíční podávání, nebo průběžný import
+
+`?period=previous` vám dá uzavřený měsíc — ten, který podáváte.
+
+`?period=current` vám dá **probíhající** měsíc. Import Optimy čte jednotlivé řádky, ne štítek období, takže denní stahování aktuálního měsíce je způsob, jak dostat faktury do registru DPH v okamžiku jejich vystavení, místo jednou měsíčně. Každá odpověď nese hlavičku `X-Partial-Period` (`true`/`false`), takže ty dva se nikdy nepletou.
+
+<Warning>
+**Otestujte to, než to zautomatizujete.** Zda Optima přeskočí řádky, které již zaúčtovala při opakovaném importu, nebo je vytvoří podruhé, je chování Comarch, ne něco, co Druma kontroluje. Nejprve importujte stejný měsíc dvakrát na testovací databázi. Pokud duplikuje, použijte místo toho měsíční cestu.
+</Warning>
+
+Částečný měsíc není nikdy soubor k *podání* — jen k napájení registru.
+
+---
+
+## Pokud Druma není systém, který vystavuje vaše faktury
+
+Export JPK je záměrně zablokován, když je **fakturace klientům vypnutá** pro vaši společnost, a odpovídá `409`. S vypnutou fakturací byly faktury v Drumě vystaveny jinde a přijaty ke sledování — jejich exportování by vystavujícímu systému vrátilo jeho vlastní dokumenty, a pro polského provozovatele to znamená druhou kopii toho, co Optima už shromáždila z KSeF.
+
+V takovém uspořádání je užitečný opačný směr: [Finance API](/cs/integrations/finance-api) předává vašemu účetnímu systému objednávky připravené k fakturaci, a přebírá zpět vystavené číslo faktury.
+
+---
+
+## KSeF
+
+Od 1. dubna 2026 je KSeF povinný pro polské plátce DPH, a vlastní modul KSeF v Optimě zaúčtovává prodejní faktury přímo z něj. Druma podává faktury do KSeF za provozovatele, kteří to nakonfigurovali, což dostane každý dokument do Optimy během minut od vystavení — žádný soubor, žádná naplánovaná úloha.
+
+JPK_V7M zůstává pod tím měsíčním *registrem* DPH a nese číslo KSeF každé faktury, takže Optima páruje místo duplikování.
+
+<CardGroup cols={2}>
+  <Card title="Veřejné API" icon="code" href="/cs/integrations/public-api">
+    Koncový bod, který naplánovaná úloha volá, jeho parametry a limity.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/cs/integrations/finance-api">
+    Pro případ, že faktury vystavuje váš účetní systém, ne Druma.
+  </Card>
+</CardGroup>
