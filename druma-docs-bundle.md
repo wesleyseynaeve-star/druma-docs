@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-09-24 15:37 UTC
+Generated: 2026-09-24 17:37 UTC
 
 ---
 
@@ -6788,7 +6788,7 @@ The Workbench is built on two supporting pieces:
     Scroll to the **Check-call log** at the bottom of the detail pane. Choose a **Kind**, **Direction**, and **Channel**, optionally note who you spoke to, write what happened, and click **Log entry**. It appears immediately in the timeline above the composer, with your name and timestamp.
   
   ### Notify the client (optional)
-    Click **Notify client** in the detail header to send the client a branded status-update email. Druma emails the client's contacts flagged for operational or delivery notifications and automatically logs the send as a check-call entry, so the audit trail stays complete.
+    Click **Notify client** in the detail header to open the notify composer — see [Notifying the Client](#notifying-the-client) below for exactly what it sends and how to check it before sending.
   
 
 
@@ -6811,6 +6811,33 @@ Beyond the status stepper and stop breakdown, the detail pane surfaces everythin
 - **Distance remaining** — the remaining kilometres to delivery, computed from the same ETA data as the live map.
 - **View eCMR / POD** — a direct link to the signed eCMR or proof of delivery once one exists on the order.
 - **Client order history** — a panel listing this client's past orders with an on-time/late indicator on each, so a rep can immediately see whether a delay is a one-off or a pattern before they get on the phone.
+
+---
+
+## Notifying the Client
+
+The **Notify client** button opens a composer, not an instant send — so you always see exactly who receives an email, in what language, and what it says before you send it.
+
+
+  ### Open the composer
+    Click **Notify client** in the order detail header.
+  
+  ### Choose a mode
+    **Status update** sends Druma's branded shipment-status email — the delivery site, booked window, expected arrival, and current status, laid out as a table — with an optional intro message of your own on top. **Free text** sends only your own words, with no operational-details table at all; use it for anything that isn't really a status update. Free text requires both a subject and a message before you can send.
+  
+  ### Check the recipients
+    Every checkbox is a client contact flagged to receive operational/delivery email (or the client's primary contact, if none are flagged) — each one shows a language badge, because that contact receives the email written in their own language. Uncheck anyone who shouldn't get this particular message. If no contact is set up to receive notifications at all, the composer says so and links straight to that client's contacts.
+  
+  ### Decide on the tracking link
+    The **Include tracking link** toggle adds the client's portal link to the email — where they can see live status and download documents for this shipment. Turn it off for a message that shouldn't invite the client back into the portal.
+  
+  ### Read the preview
+    The preview below the form is rendered from the exact same template the real send uses — not a summary — so what you see is what the client gets. It groups by distinct wording: if every checked recipient is getting the identical email, you see one card; a different language or a different name in the greeting shows as its own card, each naming who it goes to.
+  
+  ### Send
+    Click **Send**. Druma emails every checked recipient in their own language and logs exactly what was sent — subject and message — as a **Client notify** entry in the check-call log immediately below, so the audit trail always matches what actually went out.
+  
+
 
 ---
 
