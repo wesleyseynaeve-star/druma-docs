@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-09-24 15:36 UTC
+Generated: 2026-09-24 15:37 UTC
 
 ---
 
@@ -85,10 +85,10 @@ You can assign multiple roles to one person if needed.
 
 ## Try it free for 30 days
 
-Druma offers a **30-day free trial** with no credit card required. You get full access to all features from day one. At the end of the trial, you choose a plan based on your fleet size (how many active trucks you run) — users and drivers are always unlimited and free.
+Druma is invite-only while it onboards its first operators — there's no self-service sign-up. [Tell us about your fleet](https://druma.io/contact?intent=access) and Druma sets your company up with a **30-day free trial**, usually within one business day. No credit card is required, and you get full access to all features from day one. At the end of the trial, you choose a plan based on your fleet size (how many active trucks you run) — users and drivers are always unlimited and free.
 
 > **Note:** 
-You do not need to enter payment details to start your trial. Just register, and you have 30 days to explore everything Druma has to offer.
+You do not need to enter payment details to start your trial. Request access, have a quick chat with Druma, and you have 30 days to explore everything Druma has to offer.
 
 
 ## Ready to get started?
@@ -108,11 +108,15 @@ You do not need to enter payment details to start your trial. Just register, and
 
 ## Before you begin
 
-This guide is for the person who registered your company on Druma — you will have the **Company Admin** role by default. Work through these steps in order. The whole process takes about 20–30 minutes if you have your company details and vehicle information to hand.
+Druma is invite-only while it onboards its first operators — [request access](https://druma.io/contact?intent=access) and Druma sets up your company and starts your 30-day trial after a quick chat, usually within one business day. This guide is for the person Druma set that company up for — you'll have the **Company Admin** role by default. Work through these steps in order. The whole process takes about 20–30 minutes if you have your company details and vehicle information to hand.
 
 > **Note:** 
-Your 30-day free trial starts the moment you register. No credit card is needed. You have full access to every feature from day one, so take your time getting set up.
+No credit card is needed for your 30-day trial. You have full access to every feature from day one, so take your time getting set up. See [First login](/en/getting-started/first-login) if this is the first time you or a teammate is opening Druma.
 
+
+
+> **Tip:** 
+The first time you log in, Druma opens a **guided setup wizard** at `/welcome` that walks through confirming your company details and importing your clients and trucks from a spreadsheet — a faster path through steps 1–4 below. See [Guided setup](/en/getting-started/guided-setup) for how it works, or use the manual checklist below if you'd rather work through Settings yourself.
 
 
 ## The 8-step setup checklist
@@ -230,8 +234,8 @@ Your 30-day free trial starts the moment you register. No credit card is needed.
 
 You don't have to memorise this guide. Druma actively helps you along the way:
 
-- **A guided tour** walks you through the key parts of the planner the first time you log in — the navigation, the planning board's views, your truck panel, Ask Druma, and where to find help. Missed it, or want a refresher? Open your profile menu (top right) and click **Take the tour again** any time.
-- **A "Get started" checklist** lives in the app header and tracks your setup progress — roughly the same steps as this guide — plus a few "learn the product" steps like assigning your first load, sending your first invoice, and inviting a teammate. It updates live as you complete things and quietly gets out of the way once you're done.
+- **A [product tour](/en/getting-started/product-tour)** walks you through the key parts of the planner the first time you log in — the navigation, the planning board's views, your truck panel, Ask Druma, and where to find help. Missed it, or want a refresher? Open your profile menu (top right) and click **Take the tour again** any time.
+- **An [onboarding checklist](/en/getting-started/onboarding-checklist)** lives in the app header and tracks your setup progress — roughly the same steps as this guide — plus a few "learn the product" steps like assigning your first load, sending your first invoice, and inviting a teammate. It updates live as you complete things and quietly gets out of the way once you're done.
 - **Help icons** — small "?" marks — sit next to hundreds of fields, KPIs, columns, and status badges throughout the app. Click one any time you wonder what something means or how it's calculated; some link straight back to these docs.
 - **Druma Copilot**, an AI assistant, is also available if your company connects its own AI provider key — see [Druma Copilot](/en/integrations/copilot) if you're curious.
 
@@ -257,12 +261,177 @@ You are now set up and running. Here are some useful next steps:
 
 ---
 
+## Guided setup wizard
+
+
+The first time anyone logs into a brand-new company, Druma opens a guided setup wizard instead of dropping you straight onto an empty dashboard. It's a short, linear flow that gets your company identity confirmed and your master data (clients, trucks) in place — everything else (integrations, invoicing details, rate cards) is linked out to Settings rather than configured here.
+
+> **Note:** 
+The wizard only auto-opens for a genuinely empty company. If you've already added clients or trucks, or you're not the person who did the initial setup, you won't see it automatically — see [Reopening the wizard](#reopening-the-wizard) below.
+
+
+## The steps
+
+
+  ### Welcome — confirm your company
+    Type your **VAT number** and click **Look up**. Druma queries VIES (the EU VAT database) and fills in your legal name, registered address, and country automatically — review what comes back, then click **Get started**.
+
+    This only fills in blank fields; it never overwrites something you've already entered by hand elsewhere.
+  
+  ### Import your clients
+    Click **Upload client file** to open the Bulk Import dialog. Download the template if you don't already have a file in the right shape, fill it in, and upload it — Druma matches your spreadsheet's columns to the right fields automatically. You can also click **Skip for now** and add clients later from the Clients page.
+  
+  ### Import your trucks
+    Same idea, for your fleet: **Upload fleet file** opens the same Bulk Import dialog with a truck-specific template (plate, brand, model, Euro class, and more). Skip and add trucks later if you'd rather.
+  
+  ### Demo data (only if you skipped both imports)
+    If your company is still empty after the previous two steps, the wizard offers a **Load demo data** button — a handful of sample clients and trucks so you can explore Druma before committing to a real import. Demo records are removable at any time from Settings → Onboarding without touching data you've since linked to real orders. This step is skipped entirely once you've imported anything real.
+  
+  ### Overview
+    The final step shows the same [onboarding checklist](/en/getting-started/onboarding-checklist) you'll find in Settings — company profile, IBAN, invoicing details, your first order, and a few "learn the product" steps — plus a shortcut to open **Integration settings** directly for e-invoicing, accounting, or telematics. Click **Go to dashboard** when you're ready to leave the wizard.
+  
+
+
+## Smart Import — skip the spreadsheet entirely
+
+Instead of downloading a template, you can click **Upload with Smart Import** (in the Overview step, or from Settings → Onboarding at any time) and hand Druma your existing documents — PDFs, photos, Word or Excel files — for its AI to read directly. It extracts fleet, driver, and client records from what you already have on hand rather than making you re-type everything into a template first.
+
+## Reopening the wizard
+
+The wizard won't re-run automatically once your company has real data, even if you navigate to `/welcome` directly — it redirects you to the dashboard instead. To deliberately reopen it:
+
+
+  ### Open Settings → Onboarding
+    Click **Settings** in the left-hand menu, then **Onboarding**.
+  
+  ### Click Open guided setup
+    This relaunches the wizard (`/welcome?force=1`) even though your company already has data — useful for walking a new teammate through the same flow, or importing a second batch of clients/trucks through the guided steps rather than the standalone bulk-import screens.
+  
+
+
+
+  The same setup tracking, always available from Settings — company profile, billing details, and "learn the product" steps.
+
+
+
+  The full manual walkthrough, if you'd rather work through Settings yourself.
+
+
+---
+
+## Onboarding checklist
+
+
+Beyond the first-run [guided setup wizard](/en/getting-started/guided-setup), Druma keeps a permanent onboarding checklist you can return to at any time. You'll find it two places:
+
+- A **popover** in the app header — click the setup badge (shows a live `{done}/{total}` count while anything is outstanding, and disappears once everything is complete or dismissed).
+- **Settings → Onboarding** — the same checklist, always visible, with an extra demo-data card and the **Open guided setup** shortcut.
+
+## Data categories
+
+A grid of cards tracks your core master data, each showing a live count pulled straight from your account:
+
+| Card | Complete when |
+|---|---|
+| **Company** | At least 5 of your company profile fields are filled in |
+| **Trucks** | At least one truck exists |
+| **Trailers** | At least one trailer exists |
+| **Drivers** | At least one driver is added *and* linked to a login (see below) |
+| **Clients** | At least one client exists |
+| **Insurance** | At least one insurance document (RCA or CMR liability) is on file |
+
+> **Tip:** 
+If a driver's card shows "**N added, M can't log in yet**" instead of a plain count, it means you've created driver profiles that don't have phone + PIN login set up — see [Invite your team → Driver](/en/getting-started/invite-your-team#driver) to finish setting them up.
+
+
+Click the **Upload with Smart Import** button above the grid at any time to hand Druma existing documents (PDF, photo, Word, Excel) instead of filling in the app by hand — its AI extracts fleet, driver, and client records directly from what you upload.
+
+## Next steps
+
+Below the data grid, a **Next steps** list tracks configuration that isn't master data — a rate card, your IBAN, invoicing details (IBAN + VAT number together), your first order, email order ingestion, an accounting export connection, and native eCMR. Each row has a **Go** button that jumps straight to the right place (Settings section or app page); optional steps also offer **Skip** to mark them done without completing them.
+
+## Learn the product
+
+A separate **Learn the product** list tracks four steps that aren't setup at all — they're there to make sure you've actually used the app once: take the [product tour](/en/getting-started/product-tour), assign your first load on the planning board, send your first invoice, and invite a teammate. Unlike the setup steps, **Take the tour** keeps its action button even after completion — it changes to **Replay**, so you can walk a new teammate through the same tour later.
+
+## Progress and dismissing
+
+The progress bar at the top of the popover reflects every category, config step, and learning step combined. Once everything is complete, the popover dismisses itself automatically; you can also dismiss it early with **Dismiss — I know what I'm doing** at the bottom (Settings → Onboarding has no dismiss option — it stays available there permanently as a reference).
+
+> **Note:** 
+Dismissing only hides the popover badge. Your progress isn't lost, and Settings → Onboarding still shows exactly where you left off.
+
+
+## Demo data
+
+If you loaded sample clients and trucks from the guided setup wizard's demo-data step, Settings → Onboarding shows a **Demo data loaded** card with a **Remove demo data** button. Removing it deletes the sample records — except any you've since linked to a real order, which are kept so nothing breaks.
+
+
+  The first-run flow this checklist's data-import steps are drawn from.
+
+
+
+  What the "Take the tour" learning step actually walks you through.
+
+
+---
+
+## Product tour
+
+
+The first time an office user (Admin, Company Admin, Key User, Planner, Dispatcher, Fleet Manager, or Customer Service) logs in, Druma walks them through a short spotlight tour of the planner — a handful of highlighted elements with a tooltip card explaining what each one does.
+
+> **Note:** 
+The tour is deferred while your company is still empty (there's little point spotlighting the planning board before it has anything on it) and skipped entirely while you're inside the [guided setup wizard](/en/getting-started/guided-setup) at `/welcome`, so the two flows never stack. It picks up on your next login once real data exists.
+
+
+## What it covers
+
+
+  ### Planning
+    The left-hand navigation entry for orders, the planning board, and dispatching.
+  
+  ### Board views
+    The view tabs on the planning board — switching between Now, Timeline, Map, Plan, and Forecast.
+  
+  ### Your trucks
+    The truck panel: every vehicle and driver currently available or en route, and how to click one to see suggested loads.
+  
+  ### Ask Druma
+    The in-app AI assistant that answers questions about the app and your own data in plain language.
+  
+  ### Help & Docs
+    Where full documentation lives, and how the help icons scattered across the app link back to it.
+  
+
+
+If a step's target isn't on screen (for example if you've navigated away mid-tour), Druma skips that step automatically rather than getting stuck.
+
+## Skipping and replaying
+
+Click **Skip** at any point to dismiss the tour, or **Next**/**Done** to walk through it normally. Either way, Druma remembers you've seen it — it won't auto-start again, and that state follows you across devices.
+
+To watch it again (for yourself, or to walk a new teammate through it on your screen):
+
+- Open your **profile menu** (top right) and click **Take the tour again**, or
+- Go to **Settings → Onboarding** and click **Replay** next to "Take the tour" in the [onboarding checklist's](/en/getting-started/onboarding-checklist) Learn the product section.
+
+> **Tip:** 
+Drivers and clients don't get this tour — the driver app and client portal each have their own lightweight first-run coach marks instead. See [Installing the Driver App](/en/driver/installing-the-app) and [Tracking Shipments](/en/client-portal/tracking-shipments).
+
+
+
+  What a newly invited teammate sees from the invite email through to their first tour.
+
+
+---
+
 ## Invite your team
 
 
 ## Who needs access to Druma?
 
-Before you start inviting people, think about what each person in your company needs to do. Druma has eight distinct roles, and giving someone the right role from the start means they only see what is relevant to their job — nothing more, nothing less.
+Before you start inviting people, think about what each person in your company needs to do. Druma has eight standard roles below, plus **Key User** — a delegated super-user role covered separately after Company Admin — and giving someone the right role from the start means they only see what is relevant to their job — nothing more, nothing less.
 
 You do not need to send email invitations to drivers or clients. Drivers log in with a phone number + PIN you set up for them, and clients use a portal link. Only your internal staff need user invitations.
 
@@ -282,7 +451,7 @@ You do not need to send email invitations to drivers or clients. Drivers log in 
   
 
   ### Send the invitation
-    Click **Send Invite**. Druma sends an email to that address with a link to set up their password and access the platform. The link is valid for 72 hours.
+    Click **Send Invite**. Druma sends an email to that address with a link to set up their password and access the platform. The link is valid for 72 hours. See [First login](/en/getting-started/first-login) for what the invited person sees next.
   
 
 
@@ -290,7 +459,7 @@ You do not need to send email invitations to drivers or clients. Drivers log in 
 If someone has not accepted their invitation after 72 hours, go to **Settings → Users**, find their name (shown as "Pending"), and click **Resend Invite**. Check with them that the email has not gone to their spam folder.
 
 
-## The eight roles explained
+## The roles explained
 
 ### Admin
 
@@ -309,6 +478,16 @@ The Admin has unrestricted access to every feature in Druma, including billing, 
 Company Admins can set up the company, manage users, configure integrations, and handle all day-to-day operations including orders, invoicing, fleet, reports, and audit logs — and they have full access to the Billing page too (switching between monthly/annual billing, adjusting the truck cap, setting per-feature usage caps). Only two platform-level billing surfaces (Billing Entities, Billing Config) stay Admin-only.
 
 *Example: Maria, the operations manager, is a Company Admin. She adds new drivers, updates company settings, invites team members, and can also manage the company's billing on the Billing page.*
+
+---
+
+### Key User
+
+**Every operational power a Company Admin has, minus the governance ones.**
+
+Key User is a built-in role for delegating broad day-to-day authority without handing over the company. It covers orders, fleet, clients, the planning board, rate cards, and read access to the audit log — but not billing, integrations, user management, roles, or GDPR settings, which stay with Admin and Company Admin. It's also a good starting point to **Clone** if you want a custom role with similar reach — see [Custom Roles](/en/admin/custom-roles).
+
+*Example: Cristian fixes data issues and covers for the operations manager when she's out, but the owner isn't ready to give him billing or integrations access. Key User gives him everything he needs to do that job.*
 
 ---
 
@@ -387,6 +566,8 @@ You manage client portal access through **Clients** — open any client's profil
 
 ## Role permissions at a glance
 
+Key User isn't a column below — its permissions sit between Admin and Company Admin (see [Key User](#key-user) above) and aren't part of this generated table.
+
 | Permission | Admin | Company Admin | Planner | Dispatcher | Fleet Manager | CS | Driver | Client |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Billing and subscription | Yes | Yes | - | - | - | - | - | - |
@@ -429,6 +610,54 @@ If your email address is used across more than one company in Druma (for example
 
 
   Return to the full 8-step onboarding checklist.
+
+
+---
+
+## First login
+
+
+This page walks through what happens the moment someone opens Druma for the very first time. What you see depends on how you were added — an invited office user, a driver, or a client each land somewhere different.
+
+## Office users (invited by email)
+
+
+  ### Open the invite email
+    Whoever invited you (see [Invite your team](/en/getting-started/invite-your-team)) triggers an email with a link to set up your access. **The link is valid for 72 hours** — if it's expired, ask them to click **Resend Invite** from Settings → Users.
+  
+  ### Set your password — or continue with Google or Microsoft
+    Choose a password, or click **Continue with Google** / **Continue with Microsoft** to sign in with your work account instead. Either way, this is the only time you'll need to do this — after today you sign in directly at the login page.
+  
+  ### Acknowledge the privacy notice
+    Before you reach the app, Druma shows a short, blocking screen explaining what account data it processes (your name, email, role, and the actions you take), why, and for how long — your employer is the data controller, Druma is the processor. This isn't a marketing consent checkbox: it's a one-line confirmation that you've received the notice, required once per notice version. Read the full notice if you want the detail, tick the box, and click **Continue**.
+  
+  ### Land on your role's home page
+    You arrive on the page that matches your role — the dashboard for most office roles. From here, if your company still has real data missing, the [onboarding checklist](/en/getting-started/onboarding-checklist) badge is visible in the header; if not, the [product tour](/en/getting-started/product-tour) starts automatically to orient you.
+  
+
+
+> **Note:** 
+If you were invited to a company that's still using the [guided setup wizard](/en/getting-started/guided-setup) (a brand-new, empty company), you'll land there instead of the dashboard — the product tour waits until the wizard is done.
+
+
+## Drivers
+
+Drivers never receive an invitation email and never see the screens above. Whoever manages your fleet sets you up directly in **Fleet → Drivers** with a phone number and a PIN, then gives you that PIN in person or by message. Open the Druma driver app, enter your phone number and PIN, and on this first login you'll be asked to personalize the PIN — choose your own 6-digit code to replace the one you were given. You'll see the same privacy notice acknowledgement as office users, with wording specific to driver GPS/tacho monitoring rather than account data.
+
+
+  Getting the app on your phone and signing in for the first time.
+
+
+## Clients
+
+Clients don't log in at all — there's no invitation, no password, and no privacy notice to acknowledge, because nothing personal is being collected. Your contact at the carrier shares a private portal link with you; opening it takes you straight to your shipments.
+
+
+  What you can see and do once you open your portal link.
+
+
+
+  How office users get added, and which role fits which job.
 
 
 ---
@@ -643,13 +872,15 @@ Giving every team member the right role means:
 - Accidental changes to orders or settings are less likely
 - You have a clear audit trail of who did what
 
-Druma has **eight roles**. Six are for your internal team (web platform), and two are for external users (drivers and clients) who access Druma through dedicated links rather than the web platform.
+Druma has **nine roles**: the eight below, plus **Key User** — a delegated super-user role described in its own section. Seven are for your internal team (web platform), and two (Driver and Client) are for external users who access Druma through dedicated links rather than the web platform.
 
 <Frame caption="Settings → Users — role badges per team member.">
   <img src="/images/admin/user-roles.png" alt="Users and roles settings panel" />
 </Frame>
 
 ## Role permissions at a glance
+
+Key User is not a column in the table below — its permissions sit between Admin and Company Admin (see [Key User](#key-user) in the detailed descriptions) and aren't part of this generated matrix.
 
 <!-- BEGIN generated:role-matrix -->
 <!-- Generated by scripts/generate-role-matrix.mjs from config/roles.config.js — do not hand-edit. Regenerate with `node scripts/generate-role-matrix.mjs --fix` from the druma repo. -->
@@ -698,6 +929,28 @@ Company Admins can:
 - View audit logs
 
 *Real-world example: Mihaela is Vasile's operations manager. She is a Company Admin. She adds new drivers, updates vehicle documents, invites new dispatchers, keeps the company profile up to date, and can also switch the billing interval or adjust the truck cap on the Billing page — but the platform-level billing config screens stay with Vasile.*
+
+---
+
+### Key User
+
+**Every operational power a Company Admin has, minus the governance ones — plus audit-log read access.**
+
+Key User is a built-in role for the SAP-style "super-user" pattern: a delegated go-to person who can fix data and cover operational work across the company without holding company_admin's governance powers. It grants orders, fleet, clients, the planning board, rate cards, and read-only access to the audit log — but not billing, integrations, user management, role editing, or GDPR/telematics settings, which stay Admin/Company Admin-only.
+
+Key User can:
+- Create, edit, and delete orders; assign vehicles and drivers on the planning board
+- Manage fleet (vehicles, trailers, drivers) and clients
+- View driver hours and read the company's audit log
+- Manage rate cards
+
+Key User cannot:
+- Access Billing, Integrations, GDPR, or Telematics settings
+- Invite users or edit roles
+
+Like every other built-in role, Key User can also be **cloned** as the starting point for a [custom role](/en/admin/custom-roles) if you want similar reach with a few permissions added or removed.
+
+*Real-world example: Cristian is trusted to fix data issues and keep operations running when Mihaela is away, but Vasile isn't ready to hand him billing or integrations access. Key User gives him exactly that middle ground.*
 
 ---
 
@@ -1452,140 +1705,88 @@ All four reefer connectors are currently in **beta** — they are being validate
 Druma is the **issuer of record** for your subscription: every platform charge is billed as a native **Romanian e-Factura** (ANAF/SPV) and paid by **bank transfer** on net terms — there is no card-on-file, no Stripe checkout, and no per-seat pricing for users. Office users, drivers, and client-portal accounts are always free; what you pay for is your active trucks (if you run your own fleet) or your platform usage (if you're a pure forwarder/broker).
 
 > **Note:** 
-**This page describes Druma's self-service billing panel**, which is being rolled out gradually and is enabled per account. If your **Settings → Finance & Billing → Billing** page currently shows a **"Billing managed by Druma"** placeholder instead of what's described below, your account has not been switched over to self-service billing yet — you're still billed under your existing agreement (invoices arrive via e-Factura as usual), and there's nothing to configure on this page for now. The rest of this article describes the self-service experience as accounts are migrated over.
+For current prices, see [druma.io/pricing](https://druma.io/pricing) or contact support@druma.io. This page describes how billing works, not what today's exact band prices are — your own price schedule may differ from a new customer's (see "Your price schedule" below).
 
-
-> **Note:** 
-For current pricing, visit [druma.io](https://druma.io) or contact support@druma.io.
-
-
-<Frame caption="Settings → Finance & Billing → Billing — truck-count tier pricing, cost breakdown, and the AI usage pool. No Stripe portal, no per-seat pricing.">
-  <img src="/images/admin/billing-and-subscription.png" alt="Billing settings panel showing subscription cost breakdown" />
-</Frame>
 
 ---
 
-## Free Trial
+## Free trial
 
-Every new company gets a **30-day free trial**. No credit card or bank details are required to start, and all features are fully available during the trial.
+Druma is invite-only while it onboards its first operators — there is no self-service sign-up form. [Tell us about your fleet](https://druma.io/contact?intent=access) and Druma sets your company up with a **30-day trial**, usually within one business day. No credit card is needed to start, and every feature is fully available during the trial. Billing only begins once you choose to continue after the trial.
 
 ---
 
-## Pricing model
+## One flat price — no metering, ever
 
-Your company is billed under one of two archetypes:
+Your company is billed under one of two archetypes, set on your account by Druma:
 
 <Tabs>
   <Tab title="Asset haulier">
-    If you operate your own trucks, you pay:
-    - A **monthly base fee set by your fleet-size band**.
-    - A **per-active-truck fee from that same band**. Parked trucks are always free; billing starts from **1 active truck**. Your active-truck count picks one band, and **both** the base and every truck bill at that band (it is not a marginal/cumulative calculation).
-    - A **company-level pooled AI allowance** (see below).
+    If you operate your own trucks, your monthly charge is exactly two things:
+    - A **base fee set by your fleet-size band**.
+    - A **per-active-truck fee from that same band**. Parked trucks are always free; billing starts from **1 active truck**. Your active-truck count picks one band, and both the base and every truck bill at that band's rate.
 
-    These are the **12-month-contract** rates, invoiced monthly:
+    That's the whole bill. There is **no usage meter, no AI allowance to track, no € cap, no overage charge, and no annual price-indexation line** — document extraction, eCMR sealing, Ask Druma, and every other AI-assisted feature are included at no extra charge, however much you use them. This is a deliberate product decision, not a temporary simplification: Druma doesn't charge extra for anything on the asset-haulier side.
 
-    | Band | Active trucks | Base / month | Per active truck / month |
-    |------|---------------|--------------|--------------------------|
-    | Starter | 1–9 | €19 | €20.00 |
-    | Growth | 10–24 | €24 | €19.50 |
-    | Scale | 25–49 | €29 | €19.30 |
-    | Pro | 50–99 | €34 | €19.20 |
-    | Enterprise | 100+ | €54 | €19.00 |
+    The only thing that varies your bill mid-term is your **active truck count** — park a truck and it drops off the next invoice; activate one and it's added. A mid-cycle change is reconciled as a single correction line on your next invoice (priced at the rate you're already on), not a running meter.
 
-    So a 10-truck fleet pays €24 + 10 × €19.50 = **€219/month**. The total never
-    jumps backwards as you grow: each band's higher base exactly offsets its lower
-    per-truck rate, so adding a truck never lowers your bill and never raises it by
-    more than the band rate you are on. Fleets above 150 trucks are quoted individually.
-
-    **You are never asked for a year upfront.** A 12-month contract is a *term*,
-    not a payment schedule: you are invoiced every month at the rates above,
-    which work out at 10 months' worth spread across 12.
-
-    Prefer not to commit? Month-to-month is the same table **+20%** (€22.80 base
-    + €24.00/truck at the entry band), cancellable any time. The contract rates
-    are the floor — nothing prices below them.
+    Fleets above 150 trucks are quoted individually — [contact support](mailto:support@druma.io).
   </Tab>
   <Tab title="Forwarder / broker">
-    If you don't run your own fleet, there's no truck pool and no base fee — you pay pure usage: **the greater of €25/month or your metered usage cost × 2.5**.
+    If you don't run your own fleet, there's no truck band and no base fee — you pay **the greater of €25/month or your metered platform usage cost × 2.5**. This archetype is usage-based by design, unlike the asset-haulier side above.
   </Tab>
 </Tabs>
 
-Your archetype is set on your account; contact support@druma.io if you believe yours is set incorrectly.
+Not sure which archetype applies to you, or think yours is set incorrectly? Contact support@druma.io.
 
 ### Your price schedule — what happens when prices change
 
-The table above is Druma's **current** price schedule. Your company is **pinned** to
-the schedule that was current when you signed up, and that pin never moves on its
-own: when Druma publishes new pricing, it applies to new customers, not to you.
-Settings → Finance & Billing → Billing shows which schedule you are on (for example *Price schedule v2*).
+Your company is **pinned** to the price schedule that was current when you signed up, and that pin never moves on its own — when Druma publishes new pricing, it applies to new customers, not to you. Settings → Finance & Billing → Billing shows which schedule you're on.
 
-What can change on an existing schedule is an **annual inflation indexation**. When
-it applies, it appears as its own **Price indexation** line on your invoice — next
-to your original contracted base and per-truck prices, which are left exactly as
-they were — rather than as a quietly rewritten rate. On annual billing the
-indexation line is prepaid at the same 10-month rate as everything else.
+Moving to a different (usually newer, and possibly cheaper) schedule only ever happens if you ask for it and Druma agrees to it. Your rate is never silently changed.
 
-Moving to a different schedule only ever happens if you ask for it and we agree it.
+---
+
+## Contract term
+
+**Every subscription is invoiced monthly, regardless of term.** The choice you make is the *commitment*, not how often you're billed:
+
+- **12-month contract** — you commit for a year and are invoiced each month at the contract rate. The panel shows the date your term ends and whether it renews automatically.
+- **Month-to-month** — no commitment, cancel any time, at the contract rate **+20%**.
+
+Forwarder/broker companies are always month-to-month, pay-as-you-go — there's no truck subscription to commit to.
+
+> **Note:** 
+Invoices are Romanian e-Factura, payable by bank transfer within **30 days**. Unpaid invoices are subject to the statutory late-payment interest and recovery costs set by Directive 2011/7/EU — in Romania, Law 72/2013.
+
 
 ---
 
 ## The Billing page
 
-Go to **Settings → Finance & Billing → Billing** to see your plan, cost breakdown, AI usage, and invoice history.
+Go to **Settings → Finance & Billing → Billing** to see your plan and your invoice history.
 
 ### Plan overview
 
-The top of the page shows your account status (**Active**, **Trial**, **Past Due**, or **Suspended**), your archetype, your billing interval, the number of currently active trucks, your next invoice date, and the amount projected for the current period. If you have an open, unpaid balance on a past invoice, a banner shows the outstanding amount and how many days it's overdue.
-
-### Contract term
-
-**Every subscription is invoiced monthly.** The toggle on the Billing page sets your *contract term*, not how often you are billed.
-
-- **12-month contract**: you commit for a year and are invoiced each month at the contract rate — the prices in the table above. Over the year that comes to 10 months' worth, which is where "2 months free" comes from. The panel shows the date your term ends and whether it will renew.
-- **Month-to-month**: no commitment, cancel any time, at the contract rate **+20%**. If you add trucks mid-cycle, the extra is billed in arrears on the next invoice.
-
-Your active-truck count moves freely inside a 12-month term — park a truck and it stops being billed from the next cycle. What you commit to is the term and the rate, not a fixed fleet size.
-
-Forwarder/broker companies are always month-to-month, pay-as-you-go — there is no truck subscription to commit to.
-
-> **Note:** 
-  Invoices are Romanian e-Factura, payable by bank transfer on the terms in your
-  subscription confirmation. Unpaid invoices are subject to the statutory
-  late-payment interest and recovery costs set by Directive 2011/7/EU — in
-  Romania, Law 72/2013.
-
-
-### Cost breakdown
-
-Below the plan overview, a line-item table shows exactly how your projected charge is built: the platform base fee (labelled with the band it comes from), the truck count × band rate, a **Price indexation** line if any applies to your account. Every line is a monthly amount under both contract terms — the term only changes the unit price. Prices shown are excl. VAT.
-
-### Truck billing cap
-
-Asset-haulier companies (with billing edit permission) can set an optional **truck billing cap** — a maximum number of active trucks you want to be billed for, up to **500**. If your active truck count reaches or exceeds the cap, the page shows a warning before you activate more trucks. Leave it blank for no cap.
-
-### Usage & allowance (AI pool)
-
-Every active-truck company gets a **pooled AI allowance**: `€5 base + €0.25 × active trucks`. All metered AI usage across your account — document extraction, eCMR sealing, Ask Druma, KPI insights — draws down this **single, shared pool**; the truck count only sizes the pool, it doesn't attribute usage to individual trucks. A progress bar shows how much of the current month's pool you've used.
-
-Usage beyond the pool isn't blocked — Druma never cuts you off mid-month. It's simply billed as overage at **cost × 2.5** on your next invoice.
-
-### Per-feature AI caps
-
-Below the pool, an **AI features & usage** section lists each opt-in metered AI feature you've enabled, with its usage this month and an editable monthly maximum (in €) to cap runaway spend on that specific feature.
+A single card shows your account status (**Active**, **Trial**, **Past Due**, or **Suspended**), your archetype, your active truck count, your contract term, and your next invoice date. If you have an open, unpaid balance, a banner shows the outstanding amount and how many days it's overdue.
 
 ### Invoices
 
-An **Invoices** table lists your platform invoices by period, with VAT and total amounts, status (Preview, Issued, Paid, Overdue), due date, and a link to view the invoice where available. Invoices are issued as Romanian e-Factura in EUR, with the VAT line also shown in RON at the National Bank of Romania (BNR) exchange rate.
+An **Invoices** list shows your platform invoices by period, with VAT and total amounts, status (Preview, Issued, Paid, Overdue), due date, and a link to the invoice PDF/UBL where available. Invoices are issued as Romanian e-Factura in EUR, with the VAT line also shown in RON at the National Bank of Romania (BNR) exchange rate.
 
 ### Payment
 
 A **Payment** section shows the bank details to pay against (beneficiary, IBAN, payment reference) and your net payment terms. There is no card payment option — settle each e-Factura by bank transfer using the reference shown.
 
+> **Tip:** 
+There is nothing to configure on this page day-to-day — no usage caps to set, no interval toggle to fiddle with, no AI budget to watch. It's a plan summary and an invoice list. If your truck count or contract term needs to change, contact support@druma.io.
+
+
 ---
 
 ## Suspended accounts
 
-If your account is suspended, all app access is replaced with a single screen asking you to resolve the outstanding balance; a button opens **Settings → Finance & Billing → Billing** directly. Signing in still works — only the workspace itself is blocked. If you believe your account was suspended in error, contact support@druma.io.
+If your account is suspended for non-payment, all app access is replaced with a single screen asking you to resolve the outstanding balance; a button opens **Settings → Finance & Billing → Billing** directly. Signing in still works — only the workspace itself is blocked. If you believe your account was suspended in error, contact support@druma.io.
 
 ---
 
