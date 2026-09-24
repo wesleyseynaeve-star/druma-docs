@@ -1,0 +1,87 @@
+---
+title: "Auto-planning & de Assistent"
+description: "Hoe Druma zelf vrachtwagen-lading-koppelingen voorstelt — het ochtendplan, het reddingsplan en één gerangschikte wachtrij die u beoordeelt en toepast."
+icon: "wand-sparkles"
+---
+
+## Overzicht
+
+Auto-planning is Druma die in stilte een eerste koppelingsronde maakt voordat u dat doet. In plaats van elke niet-toegewezen lading te scannen tegen elke vrije vrachtwagen, beoordelen een aantal achtergrondmotoren de mogelijke paren en geven u een gerangschikte lijst met voorstellen — u blijft degene die op **Toepassen** klikt.
+
+Alles komt op één plek terecht: de **Assistent** — een paneel dat wordt geopend via de knop **Assistent** in de commandobalk van het Planningsbord (**Planning → Planningsbord**). Het schuift als een paneel over de volledige hoogte in vanaf rechts, zodat het open kan blijven terwijl u ernaast op het bord werkt; sluit het met de pil, het **✕** of **Esc**.
+
+<Note>
+Auto-planning wijst nooit iets zelf toe. Elk voorstel wordt beoordeeld en toegepast via exact dezelfde bevestigingsflow als een handmatige sleep — inclusief elke cabotage-, aanhanger- of rijtijdcontrole die zou gelden bij een eerste toewijzing. Wat vanzelf loopt, is de *beoordeling*, nooit de *bevestiging*.
+</Note>
+
+Drie motoren voeden dezelfde wachtrij:
+
+| Motor | Draait | Waar het naar kijkt |
+|---|---|---|
+| **Ochtendplan** | Automatisch om 04:00 UTC, en op aanvraag via **Nu opnieuw optimaliseren** | Elke bestelling zonder vrachtwagen |
+| **Reddingsplan** | Automatisch zodra een vrachtwagen een vertragingswaarschuwing veroorzaakt (beperkt tot één run per 10 minuten per bedrijf), en op aanvraag | Elke bestelling die nog niet vertrokken is, inclusief al **toegewezen** bestellingen — de enige motor die voorstelt een lading van de ene vrachtwagen af te halen en aan een andere te geven |
+| **Proactieve matching / herbelading** | Continu, naarmate vrachtwagens en bestellingen veranderen | Vrachtwagens die binnenkort vrijkomen, gekoppeld aan ladingen die hen opnieuw zouden kunnen beladen |
+
+U hoeft niet te weten welke motor een bepaalde regel heeft geproduceerd — de wachtrij voegt ze allemaal samen in één gerangschikte lijst met een klein bronchipje, zodat "zet lading X op vrachtwagen Y" als één beslissing leest, ongeacht waarom Druma het voorstelde.
+
+<Note>
+Auto-planning is optioneel. Een admin of bedrijfsadmin zet het aan in **Instellingen → Automatisering → Planning**, waar u ook een maandelijks routeringsplafond kunt instellen (standaard 5.000 bestellingen/maand) als kostenbeveiliging. Als het uit staat, opent het Assistent-paneel nog steeds, maar toont het niets om te beoordelen.
+</Note>
+
+---
+
+## Hoe het scoort
+
+Elk kandidaatpaar (deze bestelling, deze vrachtwagen) wordt gescoord op afstand, geschatte ritkosten, timing en twee wettelijke straffen — cabotageblootstelling en resterende rijtijd (EU 561/2006). De twee wettelijke straffen zijn zwaar genoeg om een paar altijd naar de onderkant van de rangschikking te laten zakken, maar verwijderen het nooit stilzwijgend van de lijst: een vrachtwagen die de *enige* optie is, wordt nog steeds getoond, gemarkeerd als geblokkeerd, in plaats van zonder uitleg te verdwijnen.
+
+Elke regel vermeldt alleen de feiten die hij echt heeft:
+
+- **{n} km leeg** — de lege afstand tot het laadpunt.
+- **Ritkosten ~€{n}** — een schatting; als de vrachtwagen geen volledig kostenprofiel heeft om het te berekenen, staat er **"Voeg vrachtwagenkosten toe om op € te rangschikken"** in plaats van te gokken.
+- Een besparing in € of km, wanneer het toepassen van de suggestie goedkoper is dan het alternatief dat het vervangt.
+- **Geblokkeerd**, in rood, wanneer het paar niet door een strikte controle komt (zie hieronder).
+
+Niets wordt verzonnen: een feit dat de motor niet kon berekenen (bijvoorbeeld kosten op een vrachtwagen zonder tariefkaart) verschijnt eenvoudigweg niet als chip, in plaats van als "€0" of "0 km" weergegeven te worden.
+
+**De rangschikking geeft de voorkeur aan een paar dat echt werkt.** Een kandidaatpaar wordt beoordeeld met dezelfde blokkercontrole die ook het bevestigingsblad toepast (cabotagelimiet, verlopen document, werkplaatsblokkade, aanhangermismatch, rijtijdconflict) *voordat* het wordt gerangschikt — niet nadat u op Toepassen klikt. Een paar dat elke controle doorstaat, heeft binnen de haalbare verzameling altijd de voorkeur boven een paar dat dat niet doet; een rood paar wordt alleen aangeboden als het echt de enige kandidaat van de bestelling is. Wanneer een lager scorende maar schone kandidaat een hoger scorende maar geblokkeerde kandidaat vervangt, vermeldt de regel dat — klik door om te zien welke vrachtwagen werd overgeslagen en waarom.
+
+---
+
+## Reddingsplan
+
+Wanneer een vrachtwagen achterloopt op schema en een vertragingswaarschuwing veroorzaakt, herbeoordeelt Druma automatisch elke nog niet vertrokken bestelling — inclusief ladingen die **al aan een andere vrachtwagen zijn toegewezen** — en voegt voorstellen toe aan dezelfde Assistent-wachtrij. Dit is het enige geval waarin auto-planning voorstelt een lading te verplaatsen van de vrachtwagen waarop ze zich momenteel bevindt.
+
+Een reddingsplanregel die een al toegewezen bestelling zou herverdelen, draagt een waarschuwing **Wisselt vrachtwagen**, zodat u weet, voordat u op Toepassen klikt, dat accepteren de lading loskoppelt van waar deze zich momenteel bevindt.
+
+U kunt ook zelf een nieuwe reddingsronde starten met **Nu opnieuw optimaliseren** in het paneel, zonder op een waarschuwing te wachten.
+
+<Note>
+Vrachtwagens die al onderweg zijn (vertrokken, laden, in transit, bij aflevering, lossen) worden nooit voorgesteld als reddingskandidaat voor een *andere* bestelling — alleen bestellingen die nog niet vertrokken zijn, komen in aanmerking voor herverdeling.
+</Note>
+
+---
+
+## Toepassen en blokkers
+
+De wachtrij is zo gerangschikt dat ladingen die op tijd aankomen bovenaan staan, ladingen die te laat zouden aankomen eronder, en geblokkeerde paren onderaan — een lading die echt niet meer te redden is, blijft zichtbaar, op één klik afstand, in plaats van verborgen te worden.
+
+- **Toepassen** op een enkele regel doorloopt de normale toewijzingsflow — het bevestigingsblad, met elke blokker- of aanhangerwisselcontrole, precies alsof u de vrachtwagen zelf had gesleept.
+- **N duidelijke winnaars toepassen** bevestigt met één klik alleen de regels die geen oordeel vergen: niets geblokkeerd, niets verouderd, geen klant nog te bevestigen, niets vertraagd en niets dat een vrachtwagen van een andere lading zou afhalen. Al het andere wordt bewust aan u overgelaten.
+- **Afwijzen** verwijdert een regel en vraagt om een reden — nuttig om de wachtrij eerlijk te houden over welke suggesties echt worden afgewezen en waarom.
+
+**Geleide triage** loopt na Alles toepassen de rest van de wachtrij regel voor regel door — een voortgangsteller ("2 van 198"), **Terug**, **Overslaan** en de eigen Toepassen-knop van de regel, zodat het doorwerken van een lange lijst geen scrollen door een ongedifferentieerde feed betekent. Een regel die op deze manier is bekeken, wordt gemarkeerd als beoordeeld, ongeacht of u er iets mee heeft gedaan.
+
+**Geblokkeerde** regels worden rood weergegeven met de reden waarom een strikte controle mislukte (cabotagelimiet bereikt, verlopen document, rijtijdconflict, enz.). Toepassen is uitgeschakeld op een geblokkeerde regel — u kunt hem toch openen om te zien waarom, en ofwel het onderliggende probleem oplossen, ofwel handmatig een andere vrachtwagen toewijzen.
+
+**Matchbeoordeling** opent een batchbord voor een nauwkeurigere, naast elkaar geplaatste blik op een set kandidaten voordat u bevestigt — nuttig wanneer meerdere vrachtwagens plausibel dezelfde lading zouden kunnen nemen en u ze wilt vergelijken in plaats van meteen de hoogst gerangschikte te accepteren.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Planningsbord" icon="calendar" href="/nl/planner/planning-board">
+    Waar het Assistent-paneel leeft, en hoe handmatige sleep-en-neerzet-toewijzing werkt.
+  </Card>
+  <Card title="Cabotage-tracking" icon="flag" href="/nl/planner/cabotage-tracking">
+    De cabotageregels achter een van de twee strikte straffen die auto-planning controleert.
+  </Card>
+</CardGroup>

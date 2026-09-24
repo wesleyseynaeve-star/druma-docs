@@ -1,0 +1,84 @@
+---
+title: "Livraison Drop-and-Hook"
+description: "Laissez une remorque chargée chez le destinataire pour qu'il la décharge lui-même, et accrochez-en une autre — comment Druma enregistre la livraison et ce que cela signifie pour la facturation."
+icon: "container"
+---
+
+## Qu'est-ce que le drop-and-hook ?
+
+Dans une opération drop-and-hook, la marchandise ne change jamais de remorque. Plutôt que d'attendre au quai du destinataire pendant le déchargement de la remorque, le tracteur **laisse la remorque chargée** — le destinataire la décharge selon son propre planning — et le tracteur **accroche une autre remorque** (vide, ou déjà chargée pour la prochaine mission) et repart.
+
+Cela diffère de tout autre changement de statut dans Druma : c'est le seul point où la **livraison** a lieu sans que la remorque ne quitte physiquement le camion à ce moment-là. La remorque est considérée comme toujours chargée jusqu'à ce que quelqu'un confirme qu'elle a été déchargée.
+
+<Note>
+Ce n'est pas la même chose que [Changer de remorque](/fr/planner/trailer-management) — cette opération déplace la *même* marchandise vers une *autre* remorque. Le drop-and-hook laisse la marchandise exactement où elle est et ne change que la remorque tractée par le *tracteur*.
+</Note>
+
+---
+
+## Quand vous pouvez l'utiliser
+
+**Laisser la remorque chez le destinataire** est disponible sur une commande qui est :
+
+- **Camion propre** (jamais sur une commande sous-traitée — la remorque d'un sous-traitant lui appartient et n'est pas laissée chez votre destinataire)
+- Au statut **En transit, À la livraison** ou **Déchargement**
+- Sur son **dernier arrêt de livraison restant** — si la commande comporte plusieurs livraisons et qu'une précédente est encore en attente, vous ne pouvez pas faire de drop-and-hook tant qu'elle n'est pas terminée
+
+Elle est aussi masquée pour un camion avec **remorque fixe (non séparable)** — une unité rigide n'a rien à quoi accrocher une autre remorque.
+
+---
+
+## Enregistrer la livraison
+
+<Steps>
+  <Step title="Ouvrir l'action">
+    Depuis la ligne de la commande sur le Tableau de planification, ou depuis le panneau de détail, choisissez **Laisser la remorque chez le destinataire**.
+  </Step>
+  <Step title="Définir l'heure de dépôt">
+    Indiquez quand la remorque a été laissée. Cela devient l'**heure de livraison** de la commande — juridiquement, le déchargement par le destinataire fait partie des risques exonératoires du transporteur selon la CMR, donc le dépôt lui-même conclut la livraison, pas une signature ultérieure.
+  </Step>
+  <Step title="Confirmer la réception">
+    Si une signature du destinataire existe déjà sur la commande (case 24 de l'eCMR), elle est affichée et verrouillée. Sinon, choisissez si une signature est en cours, ou enregistrez qu'aucune n'a été obtenue au dépôt — cela est conservé comme une exception sur la commande, pas ignoré silencieusement.
+  </Step>
+  <Step title="Choisir la remorque suivante">
+    Choisissez quelle remorque le tracteur accroche ensuite, ou laissez-le sans remorque.
+  </Step>
+  <Step title="Confirmer">
+    Druma marque la commande **Livrée**, enregistre quelle remorque a été laissée et quand, et libère le tracteur pour continuer avec la nouvelle remorque (ou sans).
+  </Step>
+</Steps>
+
+---
+
+## L'avertissement « présumée chargée »
+
+Une fois qu'une remorque a été laissée de cette façon, Druma la traite comme **présumée encore chargée** partout où cette remorque réapparaît ensuite — le sélecteur de remorque de Changer de remorque, le sélecteur de la réaffectation d'une tournée de groupage, la liste Flotte → Remorques et le flux de repositionnement — jusqu'à ce que quelqu'un confirme qu'elle a effectivement été vidée.
+
+<Warning>
+Ceci est un **avertissement, jamais un blocage**. Vous pouvez toujours choisir une remorque présumée chargée pour une autre mission — Druma vous indique simplement, clairement, où et quand elle a été laissée et pour quelle commande, afin que vous n'envoyiez pas un camion accrocher une remorque encore pleine sans le savoir.
+</Warning>
+
+Effacez l'avertissement avec **Marquer comme déchargée** — disponible depuis la propre ligne de la remorque dans Flotte → Remorques, ou partout où l'avertissement apparaît. Vous pouvez aussi simplement accrocher la remorque à un camion et démarrer une nouvelle mission dessus pour effacer automatiquement le drapeau.
+
+---
+
+## Annuler un dépôt
+
+Si la livraison doit être inversée — par exemple si elle a été enregistrée par erreur — ouvrez la commande et utilisez l'action **annuler** à côté de Laisser la remorque (elle occupe exactement l'emplacement de l'action elle-même, une fois la commande livrée). Ceci est refusé dès que quelque chose en aval dépend déjà du fait que la livraison a eu lieu : une facture a été générée, ou un mouvement de palettes a déjà été enregistré. Dans ce cas, corrigez l'enregistrement manuellement.
+
+---
+
+## Facturer une commande drop-and-hook
+
+Par défaut, une livraison drop-and-hook est facturée exactement comme n'importe quelle autre livraison. Si votre entreprise a activé **Facturer uniquement sur POD signé** dans les Paramètres, un dépôt sans signature encore est retenu de la facturation de la même façon que toute autre livraison non signée — enregistrer le dépôt ne contourne pas cette règle.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Changer de camion (relais tracteur)" icon="arrow-right-arrow-left" href="/fr/planner/switch-truck">
+    Remettez un chargement à un autre tracteur en cours de route, la remorque restant avec la marchandise — l'autre type de changement en cours de route.
+  </Card>
+  <Card title="Gestion des remorques" icon="trailer" href="/fr/planner/trailer-management">
+    Gérez les remorques indépendamment des tracteurs — attribution, découplage et suivi de localisation.
+  </Card>
+</CardGroup>

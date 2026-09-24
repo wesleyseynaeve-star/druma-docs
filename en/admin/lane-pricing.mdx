@@ -1,0 +1,87 @@
+---
+title: "Lane Pricing"
+description: "Set a selling price per lane — origin/destination country, postal prefix, city, or zone — and let Druma auto-suggest it whenever a matching quote or order comes in."
+icon: "route"
+---
+
+<Note>
+This page covers **Pricing → Lane Pricing** — per-lane **selling** prices. If you're looking for truck **cost** profiles (fixed cost, driver wage, fuel, surcharges) used to estimate an order's margin, that's a separate feature — see [Rate cards](/en/admin/rate-cards).
+</Note>
+
+## What is a lane price card?
+
+A lane price card sets what you charge for a lane — for example, "Romania → Germany, Curtainsider — €1,450." Once a card exists, Druma auto-suggests its price the moment a matching quote or order is created, so pricing a routine lane stops being a lookup in a spreadsheet.
+
+**Who can edit:** Admin, Company Admin, Fleet Manager, and Planner roles.
+
+---
+
+## Creating a lane price card
+
+Go to **Pricing → Lane Pricing** and click **Add lane** (or **New card**, depending on whether you're adding to an existing card or starting fresh).
+
+| Field | Meaning |
+|---|---|
+| **Card name** | A short label, e.g. "Standard curtainsider lanes" |
+| **Client** | Optional — scope this card to one client only. A client-specific card always wins over a general one for that client. |
+| **Origin / Destination country** | Required — the two-letter country pair this lane covers |
+| **Postal prefix** | Optional — the first two characters of the postcode (e.g. `RO-30`). A lane with a postal prefix beats a country-only lane for a matching pickup/delivery postcode, and the country-only lane still covers every other postcode in that country. |
+| **City** | Optional — narrows the lane further when the postcode alone isn't precise enough |
+| **Zone** | Optional — one of your own postal zone groups (Settings → Zones), for pricing a whole region at once rather than a single prefix |
+| **Trailer type / Vehicle category** | Optional — restricts the lane to a specific equipment type |
+| **Rate mode** | **Flat rate** (one fixed price, no distance needed), **Per km** (price × route distance), or **Per km (bracketed)** — a different €/km depending on which **Min km / Max km** bracket the route falls into |
+| **Amount** | The price (or €/km rate) for this lane |
+| **Currency** | EUR or RON |
+| **Fuel scheme / Fuel %** | Optional fuel surcharge applied on top |
+| **Valid from / Valid to** | Optional date range — leave blank for an always-valid lane |
+
+Click **Add lane** to save it under the card, or **Delete lane** to remove one.
+
+<Note>
+A **Flat rate** lane needs no route distance to price — useful the moment a quote is created, before any routing has run. A **Per km** or **Per km (bracketed)** lane needs a distance and is skipped if none is available yet.
+</Note>
+
+---
+
+## How Druma picks a lane
+
+When you create an order or quote, click **Suggest price** and Druma scores every lane against the order's own origin/destination, postal codes, trailer, and client, then applies the best match. Matching precedence, most specific first:
+
+1. A card scoped to this **client**
+2. **Postal prefix** match (beats a country-only lane)
+3. **Country** match
+4. **Zone**, **trailer type**, and **vehicle category**, as tie-breakers
+
+A lane's postal prefix, when set, is a hard requirement — it never "loosely" matches a different prefix. If nothing matches, Druma says so (**"No matching lane price for this route"**) rather than guessing.
+
+---
+
+## Lane history — what you've actually charged
+
+Click **Lane history** on a country pair to see what orders on that exact lane have actually billed over the last 6 months — average distance, average total, and the median €/km — with a link through to the individual orders. Use **Use median €/km**, **Use €/km × distance**, or **Use total** to pull one of those figures straight into the price field you're working on.
+
+---
+
+## Suggested from your history
+
+The **Suggestions** tab lists lanes you've actually run in the last 6 months that have **no card yet** — a gap between what you're pricing manually and what's automated. **Accept** creates a card priced at that lane's historical median (a starting point you can edit afterwards, never a commitment); **Accept all visible** does the same for every suggestion on screen in one step. **Dismiss** clears a suggestion without creating a card.
+
+---
+
+## Bulk import
+
+Rather than adding lanes one at a time, import a spreadsheet of them. The importer accepts, per row: card name, origin/destination country, **postal prefix**, **city**, **zone group** (matched by name against your own zone groups), trailer type, rate mode, amount, **min/max km** bracket, fuel surcharge %, and notes.
+
+A row is rejected with a clear reason rather than silently imported wrong:
+
+- A postal prefix must be exactly 2 characters and must be given together with its country — a prefix with no country is meaningless.
+- An unrecognised zone group name is an error, not a silent fallback to "no zone".
+- `min_km` greater than `max_km` is rejected outright.
+
+A row that matches an existing lane — same card, country/prefix/city, trailer, zone, rate mode, and km bracket — is skipped as a duplicate rather than creating a second, conflicting price for the same lane.
+
+---
+
+<Card title="Rate cards" icon="tags" href="/en/admin/rate-cards">
+  The cost-profile side — what a truck actually costs to run, used to estimate order margin alongside this page's selling price.
+</Card>

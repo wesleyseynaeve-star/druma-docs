@@ -1,0 +1,87 @@
+---
+title: "Ceny trás"
+description: "Nastavte predajnú cenu pre trasu — krajinu pôvodu/určenia, poštový prefix, mesto alebo zónu — a nechajte Druma automaticky navrhnúť cenu vždy, keď príde zodpovedajúca ponuka alebo zákazka."
+icon: "route"
+---
+
+<Note>
+Táto stránka pokrýva **Ceny → Ceny trás** — **predajné** ceny podľa trasy. Ak hľadáte nákladové profily vozidiel (fixné náklady, mzda vodiča, palivo, príplatky) používané na odhad marže zákazky, ide o samostatnú funkciu — pozrite [Cenníky](/sk/admin/rate-cards).
+</Note>
+
+## Čo je karta ceny trasy?
+
+Karta ceny trasy určuje, čo účtujete za trasu — napríklad „Rumunsko → Nemecko, plachta — 1 450 €". Akonáhle karta existuje, Druma automaticky navrhne jej cenu vo chvíli, keď vznikne zodpovedajúca ponuka alebo zákazka, takže oceňovanie bežnej trasy prestáva byť vyhľadávaním v tabuľke.
+
+**Kto môže upravovať:** roly Administrátor, Administrátor spoločnosti, Manažér flotily a Dispečer.
+
+---
+
+## Vytvorenie karty ceny trasy
+
+Prejdite na **Ceny → Ceny trás** a kliknite na **Pridať trasu** (alebo **Nová karta**, podľa toho, či pridávate k existujúcej karte, alebo začínate novú).
+
+| Pole | Význam |
+|---|---|
+| **Názov karty** | Krátky popisok, napr. „Štandardné trasy plachta" |
+| **Klient** | Voliteľné — obmedzí kartu len na jedného klienta. Karta špecifická pre klienta vždy vyhrá nad všeobecnou pre daného klienta. |
+| **Krajina pôvodu / určenia** | Povinné — dvojica krajín (dvojpísmenný kód), ktorú trasa pokrýva |
+| **Poštový prefix** | Voliteľné — prvé dva znaky PSČ (napr. `RO-30`). Trasa s poštovým prefixom vyhrá nad trasou len podľa krajiny pre zodpovedajúce PSČ nakládky/doručenia a trasa len podľa krajiny naďalej pokrýva každé iné PSČ v danej krajine. |
+| **Mesto** | Voliteľné — ďalej zúži trasu, keď samotné PSČ nestačí |
+| **Zóna** | Voliteľné — jedna z vašich vlastných skupín poštových zón (Nastavenia → Zóny), na ocenenie celého regiónu naraz, nie len jedného prefixu |
+| **Typ návesu / Kategória vozidla** | Voliteľné — obmedzí trasu na konkrétny typ vybavenia |
+| **Režim sadzby** | **Paušálna sadzba** (jedna pevná cena, bez potreby vzdialenosti), **Za km** (cena × vzdialenosť trasy) alebo **Za km (v pásmach)** — iné €/km podľa toho, do akého pásma **Min. km / Max. km** trasa spadá |
+| **Suma** | Cena (alebo sadzba €/km) pre túto trasu |
+| **Mena** | EUR alebo RON |
+| **Palivová schéma / Príplatok %** | Voliteľný palivový príplatok pridaný k cene |
+| **Platí od / do** | Voliteľné časové rozmedzie — nechajte prázdne pre trvalo platnú trasu |
+
+Kliknite na **Pridať trasu** na uloženie pod kartou alebo **Zmazať trasu** na odstránenie.
+
+<Note>
+Trasa s **Paušálnou sadzbou** nepotrebuje vzdialenosť trasy na ocenenie — užitočné hneď pri vytvorení ponuky, ešte pred akýmkoľvek trasovaním. Trasa **Za km** alebo **Za km (v pásmach)** vzdialenosť potrebuje a bez nej sa preskočí.
+</Note>
+
+---
+
+## Ako Druma vyberá trasu
+
+Keď vytvoríte zákazku alebo ponuku, kliknite na **Navrhnúť cenu** a Druma ohodnotí každú trasu oproti vlastnému pôvodu/určeniu zákazky, PSČ, návesu a klientovi, a potom použije najlepšiu zhodu. Priorita zhody, od najšpecifickejšej:
+
+1. Karta obmedzená na tohto **klienta**
+2. Zhoda **poštového prefixu** (vyhrá nad trasou len podľa krajiny)
+3. Zhoda **krajiny**
+4. **Zóna**, **typ návesu** a **kategória vozidla** ako rozhodujúce kritériá
+
+Poštový prefix trasy, ak je nastavený, je prísna požiadavka — nikdy sa „voľne" nezhoduje s iným prefixom. Ak nič nezodpovedá, Druma to povie priamo („Pre túto trasu žiadna zodpovedajúca cena"), namiesto hádania.
+
+---
+
+## História trasy — čo ste naozaj účtovali
+
+Kliknite na **História trasy** pri dvojici krajín, aby ste videli, čo zákazky na presne tejto trase skutočne účtovali za posledných 6 mesiacov — priemerná vzdialenosť, priemerná celková suma a medián €/km — s odkazom na jednotlivé zákazky. Použite **Použiť medián €/km**, **Použiť €/km × vzdialenosť** alebo **Použiť celkovú sumu** na prenesenie danej hodnoty priamo do poľa ceny, na ktorom pracujete.
+
+---
+
+## Navrhnuté z vašej histórie
+
+Karta **Návrhy** vymenúva trasy, ktoré ste za posledných 6 mesiacov skutočne jazdili a ktoré **ešte nemajú kartu** — medzeru medzi tým, čo cenite ručne, a tým, čo je automatizované. **Prijať** vytvorí kartu ocenenú historickým mediánom danej trasy (východiskový bod, ktorý môžete neskôr upraviť, nikdy záväzok); **Prijať všetky viditeľné** urobí to isté pre každý návrh na obrazovke naraz. **Zamietnuť** vymaže návrh bez vytvorenia karty.
+
+---
+
+## Hromadný import
+
+Namiesto pridávania trás jednu po druhej importujte tabuľku s nimi. Importér prijíma na riadok: názov karty, krajinu pôvodu/určenia, **poštový prefix**, **mesto**, **skupinu zóny** (spárovanú podľa názvu s vašimi vlastnými skupinami zón), typ návesu, režim sadzby, sumu, pásmo **min./max. km**, palivový príplatok % a poznámky.
+
+Riadok je odmietnutý s jasným dôvodom namiesto toho, aby bol potichu importovaný nesprávne:
+
+- Poštový prefix musí mať presne 2 znaky a musí byť uvedený spolu so svojou krajinou — prefix bez krajiny nedáva zmysel.
+- Nerozpoznaný názov skupiny zóny je chyba, nie tiché prepnutie na „bez zóny".
+- `min_km` väčšie ako `max_km` je rovno odmietnuté.
+
+Riadok, ktorý zodpovedá existujúcej trase (rovnaká karta, krajina/prefix/mesto, náves, zóna, režim sadzby a pásmo km), sa preskočí ako duplicita namiesto toho, aby vytvoril druhú, konfliktnú cenu pre rovnakú trasu.
+
+---
+
+<Card title="Cenníky" icon="tags" href="/sk/admin/rate-cards">
+  Nákladová strana — koľko vás skutočne stojí prevádzka vozidla, použité na odhad marže zákazky popri predajnej cene z tejto stránky.
+</Card>

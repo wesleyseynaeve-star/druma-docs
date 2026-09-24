@@ -1,0 +1,87 @@
+---
+title: "Automatické plánování a Asistent"
+description: "Jak Druma sama navrhuje shody náklaďák–náklad — ranní plán, záchranný plán a jedna seřazená fronta, kterou kontrolujete a používáte."
+icon: "wand-sparkles"
+---
+
+## Přehled
+
+Automatické plánování znamená, že Druma tiše provede první průchod párování dřív, než to uděláte vy. Místo procházení každé nepřiřazené zakázky proti každému volnému vozidlu ohodnotí sada mechanismů na pozadí možné dvojice a předloží vám seřazený seznam návrhů — vy zůstáváte tím, kdo klikne na **Použít**.
+
+Vše se sejde na jednom místě: **Asistent** — panel otevíraný tlačítkem **Asistent** v liště příkazů Plánovací tabule (**Plánování → Plánovací tabule**). Vysune se jako panel přes celou výšku vpravo, aby zůstal otevřený, zatímco pracujete na tabuli vedle něj; zavírá se pilulkou, křížkem **✕** nebo klávesou **Esc**.
+
+<Note>
+Automatické plánování nikdy nic samo nepřiřadí. Každý návrh se kontroluje a aplikuje přes stejný potvrzovací postup jako ruční přetažení — včetně kontroly kabotáže, návěsu nebo doby řízení, která by platila při prvním přiřazení. Automaticky běží pouze *hodnocení*, nikdy *potvrzení*.
+</Note>
+
+Do stejné fronty přispívají tři mechanismy:
+
+| Mechanismus | Kdy běží | Na co se dívá |
+|---|---|---|
+| **Ranní plán** | Automaticky ve 04:00 UTC a na vyžádání přes **Znovu optimalizovat** | Každá zakázka bez vozidla |
+| **Záchranný plán** | Automaticky ve chvíli, kdy vozidlo vyvolá upozornění na zpoždění (omezeno na jeden běh za 10 minut na společnost), a na vyžádání | Každá zakázka, která ještě nevyjela, včetně těch **již přiřazených** — jediný mechanismus, který navrhuje přesunout náklad z jednoho vozidla na jiné |
+| **Proaktivní párování / zpětný náklad** | Nepřetržitě, jak se vozidla a zakázky mění | Vozidla, která se chystají uvolnit, spárovaná s náklady, které by je mohly znovu naložit |
+
+Nemusíte vědět, který mechanismus daný řádek vytvořil — fronta je všechny spojuje do jednoho seřazeného seznamu s malým štítkem zdroje, takže „dej náklad X na vozidlo Y" se čte jako jedno rozhodnutí bez ohledu na to, proč to Druma navrhla.
+
+<Note>
+Automatické plánování je volitelné. Administrátor nebo administrátor společnosti jej zapne v **Nastavení → Automatizace → Plánování**, kde lze také nastavit měsíční limit trasování (výchozí 5 000 zakázek/měsíc) jako pojistku nákladů. Pokud je vypnuté, panel Asistent se stále otevře, ale nic ke kontrole neukáže.
+</Note>
+
+---
+
+## Jak se hodnotí
+
+Každá kandidátní dvojice (tato zakázka, toto vozidlo) je hodnocena podle vzdálenosti, odhadovaných nákladů jízdy, časování a dvou zákonných postihů — vystavení kabotáži a zbývajících hodin řízení (EU 561/2006). Oba zákonné postihy jsou dost tvrdé, aby dvojici vždy srazily na spodek žebříčku, ale nikdy ji tiše neodstraní ze seznamu: vozidlo, které je *jedinou* možností, se stále zobrazí, označené jako blokované, místo aby zmizelo bez vysvětlení.
+
+Každý řádek uvádí jen fakta, která skutečně má:
+
+- **{n} km prázdné jízdy** — vzdálenost bez nákladu k místu nakládky.
+- **Náklady jízdy ~€{n}** — odhad; pokud vozidlo nemá kompletní nákladový profil pro výpočet, řádek napíše **„Přidejte náklady vozidla pro řazení podle €"**, místo aby hádal.
+- Úspora v € nebo km, pokud je použití návrhu levnější než alternativa, kterou nahrazuje.
+- **Blokováno**, červeně, když dvojice neprojde přísnou kontrolou (viz níže).
+
+Nic se nevymýšlí: fakt, který mechanismus nedokázal spočítat (například náklady u vozidla bez tarifní karty), se prostě nezobrazí jako štítek, místo aby se ukázal jako „€0" nebo „0 km".
+
+**Řazení upřednostňuje dvojici, která skutečně funguje.** Kandidátní dvojice je hodnocena stejnou kontrolou blokátorů, jakou aplikuje i potvrzovací list (limit kabotáže, propadlý dokument, blokace pro servis, nesoulad návěsu, konflikt doby řízení) *před* zařazením do žebříčku — ne až po kliknutí na Použít. Dvojice, která projde každou kontrolou, je v rámci schůdné sady vždy preferována před tou, která neprojde; červená dvojice se zobrazí, jen když je opravdu jedinou kandidátkou zakázky. Když kandidát s nižším skóre, ale čistý, nahradí toho s vyšším skóre, ale blokovaného, řádek to uvede — klikněte pro zjištění, které vozidlo bylo přeskočeno a proč.
+
+---
+
+## Záchranný plán
+
+Když vozidlo zaostane za plánem a vyvolá upozornění na zpoždění, Druma automaticky přehodnotí každou zakázku, která ještě nevyjela — včetně nákladů **již přiřazených** jinému vozidlu — a přidá návrhy do stejné fronty Asistenta. Je to jediný případ, kdy automatické plánování navrhuje přesunout náklad z vozidla, na kterém se momentálně nachází.
+
+Řádek záchranného plánu, který by přeřadil již přiřazenou zakázku, nese varování **Vymění vozidlo**, takže víte předem, že přijetí odřadí náklad z toho, kde se právě nachází.
+
+Nové kolo záchranného hodnocení můžete spustit i sami přes **Znovu optimalizovat** v panelu, aniž byste čekali na upozornění.
+
+<Note>
+Vozidla, která jsou už na trase (vyjelo, nakládka, v tranzitu, u doručení, vykládka), nejsou nikdy navržena jako kandidát na záchranu pro *jinou* zakázku — jen zakázky, které ještě nevyjely, jsou způsobilé k přeřazení.
+</Note>
+
+---
+
+## Použití a blokátory
+
+Fronta je seřazena tak, že zakázky, které dorazí včas, jsou nahoře, ty se zpožděním pod nimi a blokované dvojice na dně — náklad, který teď opravdu nelze zachránit, zůstává viditelný, jedno kliknutí daleko, místo aby byl skrytý.
+
+- **Použít** na jednom řádku projede běžným postupem přiřazení — potvrzovací list, s kontrolou blokátoru nebo výměny návěsu, přesně jako byste vozidlo přetáhli sami.
+- **Použít N jasných vítězů** jedním kliknutím potvrdí jen řádky, které nevyžadují úsudek: nic blokovaného, nic zastaralého, žádný klient čekající na potvrzení, nic se zpožděním a nic, co by vzalo vozidlo z jiného nákladu. Vše ostatní se záměrně nechává na vás.
+- **Zamítnout** odstraní řádek a zeptá se na důvod — užitečné pro udržení fronty poctivé ohledně toho, které návrhy jsou skutečně odmítány a proč.
+
+**Řízené třídění** projde zbytek fronty po jednom řádku po Použít vše — ukazatel průběhu („2 z 198"), **Zpět**, **Přeskočit** a vlastní Použít daného řádku, takže procházení dlouhého seznamu neznamená rolování nediferencovaného feedu. Takto zobrazený řádek je označen jako zkontrolovaný bez ohledu na to, zda jste na něm jednali.
+
+Řádky **Blokováno** se zobrazují červeně s důvodem, proč přísná kontrola selhala (dosažený limit kabotáže, propadlý dokument, konflikt doby řízení atd.). Na blokovaném řádku je Použít deaktivováno — přesto ho můžete otevřít a zjistit proč, a buď vyřešit základní problém, nebo přiřadit jiné vozidlo ručně.
+
+**Kontrola shody** otevře desku pro dávkové porovnání pro bližší pohled vedle sebe na sadu kandidátů před potvrzením — užitečné, pokud by stejný náklad mohlo věrohodně převzít více vozidel a chcete je porovnat, místo abyste rovnou přijali nejlépe hodnoceného.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Plánovací tabule" icon="calendar" href="/cs/planner/planning-board">
+    Kde panel Asistent žije a jak funguje ruční přiřazení přetažením.
+  </Card>
+  <Card title="Sledování kabotáže" icon="flag" href="/cs/planner/cabotage-tracking">
+    Pravidla kabotáže za jedním ze dvou přísných postihů, které automatické plánování kontroluje.
+  </Card>
+</CardGroup>

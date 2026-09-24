@@ -1,0 +1,87 @@
+---
+title: "Automatyczne planowanie i Asystent"
+description: "Jak Druma sama proponuje dopasowania ciężarówka–ładunek — plan poranny, plan ratunkowy i jedna uszeregowana kolejka, którą przeglądasz i stosujesz."
+icon: "wand-sparkles"
+---
+
+## Przegląd
+
+Automatyczne planowanie to Druma po cichu wykonująca pierwszy przebieg dopasowania, zanim zrobisz to ty. Zamiast skanować każde nieprzypisane zlecenie względem każdej wolnej ciężarówki, zestaw mechanizmów działających w tle ocenia możliwe pary i przedstawia uszeregowaną listę propozycji — to nadal ty klikasz **Zastosuj**.
+
+Wszystko trafia w jedno miejsce: do **Asystenta** — panelu otwieranego przyciskiem **Asystent** na pasku poleceń Tablicy planowania (**Planowanie → Tablica planowania**). Wysuwa się jako panel na pełną wysokość z prawej strony, aby mógł pozostać otwarty, gdy pracujesz obok na tablicy; zamykasz go pigułką, **✕** lub **Esc**.
+
+<Note>
+Automatyczne planowanie nigdy niczego samo nie przypisuje. Każda propozycja jest sprawdzana i stosowana przez dokładnie ten sam przepływ potwierdzenia co ręczne przeciągnięcie — łącznie z każdą kontrolą kabotażu, naczepy czy czasu jazdy, która obowiązywałaby przy pierwszym przypisaniu. Automatycznie działa tylko *ocena*, nigdy *zatwierdzenie*.
+</Note>
+
+Trzy mechanizmy zasilają tę samą kolejkę:
+
+| Mechanizm | Kiedy działa | Na co patrzy |
+|---|---|---|
+| **Plan poranny** | Automatycznie o 04:00 UTC oraz na żądanie przez **Optymalizuj ponownie teraz** | Każde zlecenie bez ciężarówki |
+| **Plan ratunkowy** | Automatycznie w momencie, gdy ciężarówka wywoła alert o opóźnieniu (ograniczony do jednego uruchomienia na 10 minut na firmę), oraz na żądanie | Każde jeszcze niewyjechane zlecenie, w tym **już przypisane** — jedyny mechanizm proponujący zdjęcie ładunku z jednej ciężarówki i przekazanie go innej |
+| **Proaktywne dopasowywanie / doładunek** | Ciągle, w miarę zmian ciężarówek i zleceń | Ciężarówki, które wkrótce się zwolnią, dopasowane do ładunków, które mogłyby je ponownie załadować |
+
+Nie musisz wiedzieć, który mechanizm wygenerował dany wiersz — kolejka łączy je wszystkie w jedną uszeregowaną listę z małą etykietą źródła, więc „umieść ładunek X na ciężarówce Y" czyta się jako jedna decyzja, niezależnie od tego, dlaczego Druma to zaproponowała.
+
+<Note>
+Automatyczne planowanie jest opcjonalne. Administrator lub administrator firmy włącza je w **Ustawienia → Automatyzacja → Planowanie**, gdzie można też ustawić miesięczny limit tras (domyślnie 5000 zleceń/miesiąc) jako zabezpieczenie kosztów. Jeśli jest wyłączone, panel Asystenta i tak się otwiera, ale nie pokazuje niczego do przeglądu.
+</Note>
+
+---
+
+## Jak przebiega ocena
+
+Każda para kandydująca (to zlecenie, ta ciężarówka) jest oceniana pod względem odległości, szacunkowego kosztu trasy, czasu i dwóch kar prawnych — ekspozycji na kabotaż i pozostałego czasu jazdy (UE 561/2006). Obie kary prawne są na tyle dotkliwe, że zawsze zepchną parę na dół rankingu, ale nigdy nie usuwają jej po cichu z listy: ciężarówka, która jest *jedyną* opcją, i tak się pokazuje, oznaczona jako zablokowana, zamiast zniknąć bez wyjaśnienia.
+
+Każdy wiersz podaje tylko te fakty, które faktycznie posiada:
+
+- **{n} km pustego przebiegu** — dystans bez ładunku do punktu załadunku.
+- **Koszt trasy ~{n} €** — szacunek; gdy ciężarówka nie ma pełnego profilu kosztowego do obliczenia, w wierszu widnieje **„Dodaj koszty ciężarówki, aby sortować według €"** zamiast zgadywać.
+- Oszczędność w € lub km, gdy zastosowanie sugestii jest tańsze niż zastępowana alternatywa.
+- **Zablokowane**, na czerwono, gdy para nie przechodzi ścisłej kontroli (patrz niżej).
+
+Nic nie jest wymyślane: fakt, którego mechanizm nie mógł obliczyć (np. koszt dla ciężarówki bez karty taryfowej), po prostu nie pojawia się jako etykieta, zamiast być pokazany jako „0 €" lub „0 km".
+
+**Ranking preferuje parę, która naprawdę działa.** Para kandydująca jest oceniana tą samą kontrolą blokad, którą stosuje też arkusz potwierdzenia (limit kabotażu, wygasły dokument, blokada warsztatowa, niezgodność naczepy, konflikt czasu jazdy) *zanim* zostanie uszeregowana — nie po kliknięciu Zastosuj. Para, która przechodzi każdą kontrolę, jest zawsze preferowana w ramach zbioru wykonalnych opcji nad tą, która nie przechodzi; czerwona para jest proponowana tylko wtedy, gdy naprawdę jest jedynym kandydatem dla zlecenia. Gdy kandydat o niższym wyniku, ale czysty, zastępuje kandydata o wyższym wyniku, ale zablokowanego, wiersz to zaznacza — kliknij, aby zobaczyć, która ciężarówka została pominięta i dlaczego.
+
+---
+
+## Plan ratunkowy
+
+Gdy ciężarówka zaczyna zostawać w tyle za harmonogramem i wywołuje alert o opóźnieniu, Druma automatycznie ponownie ocenia każde jeszcze niewyjechane zlecenie — w tym ładunki **już przypisane** do innej ciężarówki — i dodaje propozycje do tej samej kolejki Asystenta. To jedyny przypadek, gdy automatyczne planowanie proponuje przeniesienie ładunku z ciężarówki, na której się aktualnie znajduje.
+
+Wiersz planu ratunkowego, który przypisałby ponownie już przypisane zlecenie, niesie ostrzeżenie **Zmieni ciężarówkę**, więc wiesz przed kliknięciem Zastosuj, że akceptacja odłącza ładunek od miejsca, w którym aktualnie się znajduje.
+
+Możesz też sam wywołać nowy przebieg ratunkowy przyciskiem **Optymalizuj ponownie teraz** w panelu, bez czekania na alert.
+
+<Note>
+Ciężarówki już w drodze (wyjechała, załadunek, w tranzycie, przy dostawie, rozładunek) nigdy nie są proponowane jako kandydat ratunkowy dla *innego* zlecenia — tylko zlecenia, które jeszcze nie wyjechały, kwalifikują się do ponownego przypisania.
+</Note>
+
+---
+
+## Stosowanie i blokady
+
+Kolejka jest uszeregowana tak, że ładunki, które dotrą na czas, znajdują się na górze, te, które się spóźnią — pod nimi, a zablokowane pary — na dole; ładunek, którego naprawdę teraz nie da się uratować, pozostaje widoczny, o jedno kliknięcie, zamiast być ukryty.
+
+- **Zastosuj** na pojedynczym wierszu przechodzi normalny przepływ przypisania — arkusz potwierdzenia, z każdą kontrolą blokady lub zmiany naczepy, dokładnie tak, jakbyś sam przeciągnął ciężarówkę.
+- **Zastosuj N pewnych zwycięzców** jednym kliknięciem zatwierdza tylko wiersze niewymagające żadnej oceny: nic zablokowanego, nic nieaktualnego, żaden klient jeszcze do potwierdzenia, nic opóźnionego i nic, co zabrałoby ciężarówkę z innego ładunku. Wszystko inne celowo pozostawiono tobie.
+- **Odrzuć** usuwa wiersz i pyta o powód — przydatne do utrzymania uczciwości kolejki co do tego, które sugestie są faktycznie odrzucane i dlaczego.
+
+**Kierowana selekcja** przechodzi przez pozostałą część kolejki wiersz po wierszu po Zastosuj wszystko — licznik postępu („2 z 198"), **Wstecz**, **Pomiń** i własny przycisk Zastosuj danego wiersza, więc przechodzenie przez długą listę nie oznacza przewijania niezróżnicowanego strumienia. Wiersz obejrzany w ten sposób jest oznaczany jako sprawdzony, niezależnie od tego, czy podjęto na nim działanie.
+
+Wiersze **Zablokowane** wyświetlają się na czerwono z powodem, dla którego ścisła kontrola nie powiodła się (osiągnięty limit kabotażu, wygasły dokument, konflikt czasu jazdy itd.). Przycisk Zastosuj jest wyłączony na zablokowanym wierszu — mimo to można go otworzyć, aby zobaczyć dlaczego, i albo rozwiązać podstawowy problem, albo ręcznie przypisać inną ciężarówkę.
+
+**Przegląd dopasowania** otwiera tablicę wsadową do dokładniejszego, obok siebie, porównania zestawu kandydatów przed zatwierdzeniem — przydatne, gdy kilka ciężarówek mogłoby wiarygodnie przyjąć ten sam ładunek, a chcesz je porównać zamiast od razu zaakceptować najwyżej ocenioną.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Tablica planowania" icon="calendar" href="/pl/planner/planning-board">
+    Gdzie mieszka panel Asystenta i jak działa ręczne przypisywanie metodą przeciągnij i upuść.
+  </Card>
+  <Card title="Śledzenie kabotażu" icon="flag" href="/pl/planner/cabotage-tracking">
+    Zasady kabotażu stojące za jedną z dwóch ścisłych kar sprawdzanych przez automatyczne planowanie.
+  </Card>
+</CardGroup>

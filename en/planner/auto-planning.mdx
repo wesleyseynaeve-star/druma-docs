@@ -1,0 +1,87 @@
+---
+title: "Auto-Planning & the Assistant"
+description: "How Druma proposes truck-to-load matches on its own — the morning plan, rescue plan, and the one ranked queue you review and apply from."
+icon: "wand-sparkles"
+---
+
+## Overview
+
+Auto-planning is Druma quietly doing a first pass at matching before you do. Instead of you scanning every unassigned load against every free truck, a set of background engines score the possible pairs and hand you a ranked list of proposals — you stay the one who clicks **Apply**.
+
+Everything lands in one place: the **Assistant** — a panel opened from the **Assistant** button in the Planning Board's command bar (**Planning → Planning Board**). It slides in as a full-height panel on the right so it can stay open while you work the board beside it; close it with the pill, the **✕**, or **Esc**.
+
+<Note>
+Auto-planning never assigns anything by itself. Every proposal is reviewed and applied through the exact same confirmation flow as a manual drag — including any cabotage, trailer, or driving-hours check that would apply to a first-time assignment. What runs on its own is the *scoring*, never the *commit*.
+</Note>
+
+Three engines feed the same queue:
+
+| Engine | Runs | What it looks at |
+|---|---|---|
+| **Morning plan** | Automatically at 04:00 UTC, and on demand via **Re-optimize now** | Every order with no truck yet |
+| **Rescue plan** | Automatically the moment a truck fires a lateness alert (debounced to once per 10 minutes per company), and on demand | Every not-yet-departed order, including ones **already assigned** — this is the one engine that proposes taking a load off one truck and giving it to another |
+| **Proactive / reload matching** | Continuously, as trucks and orders change | Trucks about to free up, matched against loads that could reload them |
+
+You don't need to know which engine produced a given row — the queue merges all of them into one ranked list with a small source chip, so "put load X on truck Y" reads as one decision regardless of why Druma suggested it.
+
+<Note>
+Auto-planning is opt-in. An admin or company admin turns it on in **Settings → Automation → Planning**, where you can also set a monthly routing cap (default 5,000 orders/month) as a cost guardrail. If it's off, the Assistant panel still opens but shows nothing to review.
+</Note>
+
+---
+
+## How it scores
+
+Every candidate pair (this order, this truck) is scored on distance, estimated trip cost, timing, and two legal penalties — cabotage exposure and remaining driving hours (EU 561/2006). The two legal penalties are heavy enough to always sink a pair to the bottom of the ranking, but they never silently remove it from the list: a truck that's the *only* option still shows up, marked blocked, rather than vanishing with no explanation.
+
+Each row states the facts it actually has, and only those:
+
+- **{n} km empty** — the deadhead distance to reach the pickup.
+- **Trip cost ~€{n}** — an estimate; when the truck has no complete cost profile to price it with, the row says **"Add truck costs to rank by €"** instead of guessing.
+- A saving in € or km, when applying the suggestion is cheaper than the alternative it displaces.
+- **Blocked**, in red, when the pair fails a hard check (see below).
+
+Nothing is invented: a fact the engine couldn't compute (for example, cost on a truck with no rate card) simply doesn't appear as a chip, rather than rendering as "€0" or "0 km".
+
+**Ranking favours a pair that actually works.** A candidate is graded by the same blocker check the confirm sheet applies (cabotage limit, expired document, workshop hold, trailer mismatch, driving-hours conflict) *before* it's ranked — not after you click Apply. A pair that clears every check is always preferred over one that doesn't, within the set of viable options; a red pair is only ever surfaced when it's genuinely the order's only candidate. When a lower-scoring but clean candidate displaces a higher-scoring blocked one, the row says so — click through to see which truck was passed over and why.
+
+---
+
+## Rescue plan
+
+When a truck falls behind schedule and triggers a lateness alert, Druma automatically re-scores every order that hasn't departed yet — including loads that are **already assigned** to a different truck — and adds proposals to the same Assistant queue. This is the one case where auto-planning suggests moving a load off the truck it's currently on.
+
+A rescue row that would reassign an already-assigned order carries a **Will switch truck** warning, so you know before you click Apply that accepting it un-assigns the load from wherever it currently sits.
+
+You can also trigger a fresh rescue pass yourself with **Re-optimize now** in the panel, without waiting for an alert.
+
+<Note>
+Trucks that are already mid-route (departed, loading, in transit, at delivery, offloading) are never proposed as a rescue candidate for a *different* order — only orders that haven't left yet are eligible to be reassigned.
+</Note>
+
+---
+
+## Applying and blockers
+
+The queue is ranked so the loads that land on time sit at the top, loads that would arrive late sit below them, and blocked pairs sit at the bottom — a load that genuinely can't be saved right now is still visible, one click away, rather than hidden.
+
+- **Apply** on a single row runs it through the normal assignment flow — the confirm sheet, with any blocker or trailer-swap check, exactly as if you'd dragged the truck yourself.
+- **Apply N clear winners** commits, in one click, only the rows that need no judgement call: nothing blocked, nothing stale, no client still to confirm, nothing arriving late, and nothing that would take a truck off another load. Everything else is deliberately left for you.
+- **Dismiss** removes a row and asks for a reason — useful for keeping the queue honest about which suggestions actually get rejected and why.
+
+**Guided triage** walks what's left of the queue one row at a time after Apply-all — a progress counter ("2 of 198"), **Back**, **Skip**, and the row's own Apply, so working through a long list doesn't mean scrolling an undifferentiated feed. A row you've seen this way is marked as reviewed, whether you acted on it or not.
+
+**Blocked** rows show in red with the reason a red check failed (cabotage limit reached, an expired document, a driving-hours conflict, and so on). Apply is disabled on a blocked row — you can still open it to see why, and either resolve the underlying issue or assign a different truck manually.
+
+**Match review** opens a batch board for a closer, side-by-side look at a set of candidates before committing — useful when several trucks could plausibly take the same load and you want to compare them rather than accept the top-ranked one outright.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Planning Board" icon="calendar" href="/en/planner/planning-board">
+    Where the Assistant panel lives, and how manual drag-and-drop assignment works.
+  </Card>
+  <Card title="Cabotage Tracking" icon="flag" href="/en/planner/cabotage-tracking">
+    The cabotage rules behind one of the two hard penalties auto-planning checks for.
+  </Card>
+</CardGroup>

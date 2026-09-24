@@ -1,0 +1,87 @@
+---
+title: "Tarifare pe rută"
+description: "Setează un preț de vânzare per rută — țară origine/destinație, prefix poștal, oraș sau zonă — și lasă Druma să-l sugereze automat de fiecare dată când apare o ofertă sau comandă potrivită."
+icon: "route"
+---
+
+<Note>
+Această pagină acoperă **Tarifare → Tarifare pe rută** — prețuri de **vânzare** per rută. Dacă cauți profiluri de **cost** ale camioanelor (cost fix, salariu șofer, combustibil, suprataxe) folosite pentru a estima marja unei comenzi, este o funcționalitate separată — vezi [Carduri de tarife](/ro/admin/rate-cards).
+</Note>
+
+## Ce este un card de tarifare pe rută?
+
+Un card de tarifare pe rută setează ce percepi pentru o rută — de exemplu, „România → Germania, prelată — 1.450 €". Odată creat un card, Druma sugerează automat prețul lui în momentul în care se creează o ofertă sau comandă potrivită, astfel încât tarifarea unei rute obișnuite nu mai înseamnă o căutare într-un fișier separat.
+
+**Cine poate edita:** rolurile Admin, Admin companie, Manager flotă și Planificator.
+
+---
+
+## Crearea unui card de tarifare pe rută
+
+Mergi la **Tarifare → Tarifare pe rută** și dă click pe **Adaugă rută** (sau **Card nou**, în funcție de dacă adaugi la un card existent sau începi unul nou).
+
+| Câmp | Semnificație |
+|---|---|
+| **Numele cardului** | O etichetă scurtă, de ex. „Rute standard cu prelată" |
+| **Client** | Opțional — restrânge acest card la un singur client. Un card specific unui client câștigă mereu în fața unuia general, pentru acel client. |
+| **Țară origine / destinație** | Obligatoriu — perechea de țări (cod pe două litere) acoperită de această rută |
+| **Prefix poștal** | Opțional — primele două caractere ale codului poștal (de ex. `RO-30`). O rută cu prefix poștal câștigă în fața unei rute doar-pe-țară pentru un cod poștal de încărcare/livrare care se potrivește, iar ruta doar-pe-țară acoperă în continuare orice alt cod poștal din acea țară. |
+| **Oraș** | Opțional — restrânge ruta suplimentar când codul poștal singur nu e suficient de precis |
+| **Zonă** | Opțional — una dintre propriile tale grupări poștale de zonă (Setări → Zone), pentru a tarifa o regiune întreagă dintr-o dată, nu doar un prefix |
+| **Tip remorcă / Categorie vehicul** | Opțional — restrânge ruta la un anumit tip de echipament |
+| **Mod de tarifare** | **Tarif fix** (un preț fix, fără nevoie de distanță), **Pe km** (preț × distanța rutei) sau **Pe km (pe intervale)** — un €/km diferit în funcție de intervalul **Km minim / Km maxim** în care se încadrează ruta |
+| **Sumă** | Prețul (sau tariful €/km) pentru această rută |
+| **Monedă** | EUR sau RON |
+| **Schemă combustibil / Suprataxă %** | Suprataxă opțională de combustibil aplicată peste preț |
+| **Valabil de la / până la** | Interval de date opțional — lasă necompletat pentru o rută valabilă permanent |
+
+Dă click pe **Adaugă rută** pentru a o salva sub card sau pe **Șterge rută** pentru a elimina una.
+
+<Note>
+O rută cu **Tarif fix** nu are nevoie de distanța rutei pentru a fi tarifată — util imediat ce este creată o ofertă, înainte să fi rulat vreo rutare. O rută **Pe km** sau **Pe km (pe intervale)** are nevoie de o distanță și este omisă dacă niciuna nu e încă disponibilă.
+</Note>
+
+---
+
+## Cum alege Druma o rută
+
+Când creezi o comandă sau o ofertă, dă click pe **Sugerează preț**, iar Druma evaluează fiecare rută față de originea/destinația proprii ale comenzii, codurile poștale, remorca și clientul, apoi aplică cea mai bună potrivire. Ordinea de prioritate, de la cea mai specifică:
+
+1. Un card restrâns la acest **client**
+2. Potrivire pe **prefix poștal** (câștigă în fața unei rute doar-pe-țară)
+3. Potrivire pe **țară**
+4. **Zonă**, **tip remorcă** și **categorie vehicul**, ca departajări
+
+Prefixul poștal al unei rute, atunci când e setat, este o cerință strictă — nu se potrivește niciodată „aproximativ" cu un prefix diferit. Dacă nimic nu se potrivește, Druma spune asta („Niciun preț de rută potrivit pentru această cursă") în loc să ghicească.
+
+---
+
+## Istoricul rutei — ce ai facturat de fapt
+
+Dă click pe **Istoric rută** pe o pereche de țări pentru a vedea ce au facturat efectiv comenzile pe acea rută exactă în ultimele 6 luni — distanța medie, totalul mediu și €/km median — cu o legătură către comenzile individuale. Folosește **Folosește €/km median**, **Folosește €/km × distanță** sau **Folosește total** pentru a prelua direct una dintre acele valori în câmpul de preț la care lucrezi.
+
+---
+
+## Sugerat din istoricul tău
+
+Tabul **Sugestii** listează rutele pe care le-ai rulat efectiv în ultimele 6 luni și care **nu au încă un card** — un decalaj între ce tarifezi manual și ce este automatizat. **Acceptă** creează un card tarifat la mediana istorică a acelei rute (un punct de plecare pe care îl poți edita ulterior, niciodată un angajament); **Acceptă tot ce e vizibil** face același lucru pentru fiecare sugestie de pe ecran, dintr-un pas. **Respinge** elimină o sugestie fără a crea un card.
+
+---
+
+## Import în masă
+
+În loc să adaugi rute una câte una, importă o foaie de calcul cu ele. Importatorul acceptă, pe rând: numele cardului, țara origine/destinație, **prefix poștal**, **oraș**, **grup de zonă** (potrivit după nume cu propriile tale grupuri de zonă), tip remorcă, mod de tarifare, sumă, interval **km minim/maxim**, suprataxă combustibil % și note.
+
+Un rând este respins cu un motiv clar în loc să fie importat greșit în tăcere:
+
+- Un prefix poștal trebuie să aibă exact 2 caractere și trebuie dat împreună cu țara lui — un prefix fără țară nu are sens.
+- Un nume de grup de zonă nerecunoscut este o eroare, nu o revenire tăcută la „fără zonă".
+- `km_minim` mai mare decât `km_maxim` este respins direct.
+
+Un rând care se potrivește cu o rută existentă (același card, țară/prefix/oraș, remorcă, zonă, mod de tarifare și interval km) este omis ca duplicat, în loc să creeze un al doilea preț, în conflict, pentru aceeași rută.
+
+---
+
+<Card title="Carduri de tarife" icon="tags" href="/ro/admin/rate-cards">
+  Latura profilului de cost — cât costă efectiv rularea unui camion, folosit pentru a estima marja comenzii alături de prețul de vânzare de pe această pagină.
+</Card>

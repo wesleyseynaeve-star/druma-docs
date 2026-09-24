@@ -1,0 +1,84 @@
+---
+title: "Drop-and-Hook-Zustellung"
+description: "Lassen Sie einen beladenen Anhänger beim Empfänger, damit er ihn selbst entlädt, und koppeln Sie einen anderen an — wie Druma die Zustellung erfasst und was das für die Rechnungsstellung bedeutet."
+icon: "container"
+---
+
+## Was ist Drop-and-Hook?
+
+Bei einer Drop-and-Hook-Operation wechselt die Ladung nie zwischen Anhängern. Statt an der Rampe des Empfängers zu warten, bis der Anhänger entladen ist, **lässt die Zugmaschine den beladenen Anhänger zurück** — der Empfänger entlädt ihn nach eigenem Zeitplan — und die Zugmaschine **koppelt einen anderen Anhänger an** (leer oder schon für den nächsten Auftrag beladen) und fährt weiter.
+
+Das unterscheidet sich von jeder anderen Statusänderung in Druma: Es ist der einzige Punkt, an dem die **Zustellung** erfolgt, ohne dass der Anhänger den LKW in diesem Moment physisch verlässt. Der Anhänger gilt als weiterhin beladen, bis jemand bestätigt, dass er entladen wurde.
+
+<Note>
+Das ist nicht dasselbe wie [Anhänger wechseln](/de/planner/trailer-management) — dabei wird *dieselbe* Ladung in einen *anderen* Anhänger verlegt. Drop-and-Hook lässt die Ladung genau dort, wo sie ist, und ändert nur, welchen Anhänger die *Zugmaschine* zieht.
+</Note>
+
+---
+
+## Wann Sie es nutzen können
+
+**Anhänger beim Empfänger lassen** ist bei einem Auftrag verfügbar, der:
+
+- **Eigener LKW** ist (nie bei einem subunternommenen Auftrag — der Anhänger eines Subunternehmers gehört ihm und wird nicht bei Ihrem Empfänger gelassen)
+- Im Status **Unterwegs, Bei Zustellung** oder **Entladung** ist
+- An seinem **letzten verbleibenden Zustellstopp** ist — hat der Auftrag mehrere Zustellungen und ist eine frühere noch offen, geht Drop-and-Hook erst, wenn diese erledigt ist
+
+Bei einem LKW mit **festem (nicht trennbarem) Anhänger** ist die Option ebenfalls ausgeblendet — eine starre Einheit hat nichts, woran sie einen anderen Anhänger koppeln könnte.
+
+---
+
+## Zustellung erfassen
+
+<Steps>
+  <Step title="Aktion öffnen">
+    Wählen Sie aus der Auftragszeile in der Planungstafel oder im Detailpanel **Anhänger beim Empfänger lassen**.
+  </Step>
+  <Step title="Zeitpunkt des Zurücklassens setzen">
+    Geben Sie ein, wann der Anhänger zurückgelassen wurde. Das wird zur **Zustellzeit** des Auftrags — rechtlich zählt das Entladen durch den Empfänger nach CMR zu den entlastenden Risiken des Frachtführers, sodass das Zurücklassen selbst die Zustellung abschließt, nicht eine spätere Unterschrift.
+  </Step>
+  <Step title="Empfang bestätigen">
+    Existiert bereits eine Empfängerunterschrift auf dem Auftrag (Feld 24 des eCMR), wird sie angezeigt und ist gesperrt. Andernfalls wählen Sie, ob jetzt eine unterschrieben wird, oder erfassen, dass beim Zurücklassen keine eingeholt wurde — das wird als Ausnahme am Auftrag festgehalten, nicht stillschweigend übergangen.
+  </Step>
+  <Step title="Nächsten Anhänger wählen">
+    Wählen Sie, welchen Anhänger die Zugmaschine als Nächstes koppelt, oder lassen Sie sie ohne Anhänger fahren.
+  </Step>
+  <Step title="Bestätigen">
+    Druma markiert den Auftrag als **Zugestellt**, erfasst, welcher Anhänger wann zurückgelassen wurde, und gibt die Zugmaschine frei, mit dem neuen Anhänger (oder ohne) weiterzufahren.
+  </Step>
+</Steps>
+
+---
+
+## Die Warnung „vermutlich beladen"
+
+Sobald ein Anhänger auf diese Weise zurückgelassen wurde, behandelt Druma ihn überall, wo dieser Anhänger als Nächstes auftaucht, als **vermutlich noch beladen** — bei der Anhängerauswahl im Anhängerwechsel, der Auswahl beim Neubemannen einer Sammelgutfahrt, der Liste Flotte → Anhänger und beim Umsetzungs-Workflow — bis jemand bestätigt, dass er tatsächlich geleert wurde.
+
+<Warning>
+Das ist nur eine **Warnung, niemals eine Blockade**. Sie können weiterhin einen vermutlich beladenen Anhänger für einen anderen Auftrag wählen — Druma sagt Ihnen nur klar, wo und wann er für welchen Auftrag zurückgelassen wurde, damit Sie nicht unwissentlich einen LKW losschicken, um einen noch vollen Anhänger zu koppeln.
+</Warning>
+
+Löschen Sie die Warnung mit **Als entladen markieren** — verfügbar über die eigene Zeile des Anhängers unter Flotte → Anhänger oder wo immer die Warnung erscheint. Alternativ löscht das bloße Ankoppeln des Anhängers an einen LKW und der Beginn einer neuen Ladung darauf die Markierung automatisch.
+
+---
+
+## Ein Zurücklassen rückgängig machen
+
+Muss die Zustellung rückgängig gemacht werden — etwa weil sie irrtümlich erfasst wurde — öffnen Sie den Auftrag und verwenden die **Rückgängig**-Aktion neben Anhänger lassen (sie belegt denselben Platz wie die Aktion selbst, sobald der Auftrag zugestellt ist). Das wird abgelehnt, sobald bereits etwas Nachgelagertes von der erfolgten Zustellung abhängt: eine Rechnung wurde erstellt, oder eine Palettenbewegung wurde bereits erfasst. In dem Fall korrigieren Sie den Datensatz manuell.
+
+---
+
+## Rechnungsstellung für einen Drop-and-Hook-Auftrag
+
+Standardmäßig wird eine Drop-and-Hook-Zustellung genau wie jede andere Zustellung fakturiert. Ist in den Einstellungen Ihres Unternehmens **Nur bei unterschriebenem POD fakturieren** aktiviert, wird ein Zurücklassen ohne Unterschrift genauso von der Rechnungsstellung zurückgehalten wie jede andere unsignierte Zustellung — das Erfassen des Zurücklassens umgeht diese Regel nicht.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="LKW wechseln (Zugmaschinen-Staffel)" icon="arrow-right-arrow-left" href="/de/planner/switch-truck">
+    Übergeben Sie eine Ladung unterwegs an eine andere Zugmaschine, während der Anhänger bei der Ladung bleibt — die andere Art der Änderung unterwegs.
+  </Card>
+  <Card title="Anhängerverwaltung" icon="trailer" href="/de/planner/trailer-management">
+    Verwalten Sie Anhänger unabhängig von Zugmaschinen — Zuweisung, Abkopplung und Standortverfolgung.
+  </Card>
+</CardGroup>

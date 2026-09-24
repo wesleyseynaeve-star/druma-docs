@@ -1,0 +1,84 @@
+---
+title: "Drop-and-Hook Delivery"
+description: "Leave a loaded trailer with the consignee to unload on their own time, and hook a different one — how Druma records the delivery, and what it means for invoicing."
+icon: "container"
+---
+
+## What is drop-and-hook?
+
+In a drop-and-hook operation, cargo never moves between trailers. Instead of waiting at the consignee's dock while the trailer is unloaded, the tractor **leaves the loaded trailer behind** — the consignee unloads it on their own schedule — and the tractor **hooks a different trailer** (empty, or already loaded for the next job) and leaves.
+
+This is different from every other status change in Druma: it's the one point where **delivery** happens without the trailer physically leaving the truck at that moment. The trailer is presumed to still be carrying the cargo until someone confirms it's been offloaded.
+
+<Note>
+This is not the same as [Switch Trailer](/en/planner/trailer-management) — that operation moves the *same* cargo into a *different* trailer. Drop-and-hook leaves the cargo exactly where it is and changes which trailer the *tractor* is pulling.
+</Note>
+
+---
+
+## When you can use it
+
+**Leave trailer with the consignee** is available on an order that is:
+
+- **Own Truck** (never on a subcontracted order — a subcontractor's trailer is theirs, and they don't leave it with your consignee)
+- At **In Transit, At Delivery,** or **Offloading**
+- On its **last remaining delivery stop** — if the order has several drops and an earlier one is still outstanding, you can't drop-and-hook until that one is done
+
+It's also hidden for a truck with a **fixed (non-separable) trailer** — a rigid unit has nothing to hook a different trailer to.
+
+---
+
+## Recording the delivery
+
+<Steps>
+  <Step title="Open the action">
+    From the order's row on the Planning Board, or its detail pane, choose **Leave trailer with the consignee**.
+  </Step>
+  <Step title="Set the drop time">
+    Enter when the trailer was left. This becomes the order's **delivery time** — legally, unloading by the consignee is one of the carrier's exonerating special risks under the CMR, so the drop itself is what completes the delivery, not a later signature.
+  </Step>
+  <Step title="Confirm the receipt">
+    If a consignee signature already exists on the order (box 24 of the eCMR), it's shown and locked. Otherwise, choose whether one is being signed now or record that none was obtained at the drop — this is kept as an exception on the order, not silently ignored.
+  </Step>
+  <Step title="Pick the next trailer">
+    Choose which trailer the tractor hooks next, or leave it bobtail (towing nothing).
+  </Step>
+  <Step title="Confirm">
+    Druma marks the order **Delivered**, records which trailer was left and when, and frees the tractor to continue with its new trailer (or bobtail).
+  </Step>
+</Steps>
+
+---
+
+## The "presumed loaded" warning
+
+Once a trailer has been left this way, Druma treats it as **presumed still loaded** everywhere that trailer shows up next — the trailer picker on Switch Trailer, the run picker for a groupage re-crew, the Fleet → Trailers list, and the repositioning flow — until someone confirms it's actually been emptied.
+
+<Warning>
+This is a **warning, never a block**. You can still pick a presumed-loaded trailer for another job — Druma just tells you, plainly, where and when it was left and for which order, so you don't send a truck to hook a trailer that's still full without knowing it.
+</Warning>
+
+Clear the warning with **Mark as offloaded** — available from the trailer's own row in Fleet → Trailers, or from the warning wherever it appears. Alternatively, simply hooking that trailer onto a truck and starting a new load on it clears the flag automatically.
+
+---
+
+## Undoing a drop
+
+If the delivery needs to be reversed — for example, it was recorded in error — open the order and use the **undo** action next to Leave Trailer (it takes the same slot the action itself occupied once the order is delivered). This is refused once something downstream already depends on the delivery having happened: an invoice has been generated, or a pallet movement has already been recorded against it. In that case, correct the record manually instead.
+
+---
+
+## Invoicing a drop-and-hook order
+
+By default, a drop-and-hook delivery invoices exactly like any other delivery. If your company has **Invoice only on a signed POD** turned on in Settings, a drop with no signature yet is held from invoicing the same way any other unsigned delivery would be — recording the drop doesn't bypass that rule.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Switch Truck (Tractor Relay)" icon="arrow-right-arrow-left" href="/en/planner/switch-truck">
+    Hand a load to a different tractor mid-route while the trailer stays with the cargo — the other kind of mid-route change.
+  </Card>
+  <Card title="Trailer Management" icon="trailer" href="/en/planner/trailer-management">
+    Manage trailers independently from tractors — assignment, detachment, and location tracking.
+  </Card>
+</CardGroup>

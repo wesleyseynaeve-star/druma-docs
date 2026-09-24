@@ -1,0 +1,87 @@
+---
+title: "Cennik tras"
+description: "Ustaw cenę sprzedaży dla trasy — kraj pochodzenia/przeznaczenia, prefiks pocztowy, miasto lub strefa — i pozwól Druma automatycznie ją proponować przy każdej pasującej ofercie lub zleceniu."
+icon: "route"
+---
+
+<Note>
+Ta strona obejmuje **Ceny → Cennik tras** — ceny **sprzedaży** według trasy. Jeśli szukasz profili **kosztowych** ciężarówek (koszt stały, wynagrodzenie kierowcy, paliwo, dopłaty) używanych do szacowania marży zlecenia, to osobna funkcja — zobacz [Karty stawek](/pl/admin/rate-cards).
+</Note>
+
+## Czym jest karta cennika trasy?
+
+Karta cennika trasy określa, co pobierasz za trasę — na przykład „Rumunia → Niemcy, firanka — 1450 €". Gdy karta istnieje, Druma automatycznie proponuje jej cenę w momencie tworzenia pasującej oferty lub zlecenia, więc wycena rutynowej trasy przestaje być wyszukiwaniem w arkuszu.
+
+**Kto może edytować:** role Administrator, Administrator firmy, Menedżer floty i Dyspozytor.
+
+---
+
+## Tworzenie karty cennika trasy
+
+Przejdź do **Ceny → Cennik tras** i kliknij **Dodaj trasę** (lub **Nowa karta**, w zależności od tego, czy dodajesz do istniejącej karty, czy zaczynasz nową).
+
+| Pole | Znaczenie |
+|---|---|
+| **Nazwa karty** | Krótka etykieta, np. „Standardowe trasy firanka" |
+| **Klient** | Opcjonalnie — ogranicza tę kartę do jednego klienta. Karta specyficzna dla klienta zawsze wygrywa z ogólną dla tego klienta. |
+| **Kraj pochodzenia / przeznaczenia** | Wymagane — para krajów (dwuliterowy kod) objęta tą trasą |
+| **Prefiks pocztowy** | Opcjonalnie — pierwsze dwa znaki kodu pocztowego (np. `RO-30`). Trasa z prefiksem pocztowym wygrywa z trasą tylko według kraju dla pasującego kodu pocztowego załadunku/dostawy, a trasa tylko według kraju nadal obejmuje każdy inny kod pocztowy w tym kraju. |
+| **Miasto** | Opcjonalnie — dalej zawęża trasę, gdy sam kod pocztowy nie jest wystarczająco precyzyjny |
+| **Strefa** | Opcjonalnie — jedna z twoich własnych grup stref pocztowych (Ustawienia → Strefy), aby wycenić cały region naraz, a nie tylko jeden prefiks |
+| **Typ naczepy / Kategoria pojazdu** | Opcjonalnie — ogranicza trasę do konkretnego typu sprzętu |
+| **Tryb stawki** | **Stawka ryczałtowa** (jedna stała cena, bez potrzeby odległości), **Za km** (cena × odległość trasy) lub **Za km (w przedziałach)** — inna €/km w zależności od przedziału **Min. km / Maks. km**, w który wpada trasa |
+| **Kwota** | Cena (lub stawka €/km) dla tej trasy |
+| **Waluta** | EUR lub RON |
+| **Schemat paliwowy / Dopłata %** | Opcjonalna dopłata paliwowa naliczana na cenie |
+| **Ważne od / do** | Opcjonalny zakres dat — pozostaw puste dla zawsze ważnej trasy |
+
+Kliknij **Dodaj trasę**, aby zapisać ją pod kartą, lub **Usuń trasę**, aby jedną usunąć.
+
+<Note>
+Trasa ze **Stawką ryczałtową** nie wymaga odległości trasy do wyceny — przydatne od razu przy tworzeniu oferty, zanim jeszcze uruchomiono jakiekolwiek trasowanie. Trasa **Za km** lub **Za km (w przedziałach)** wymaga odległości i jest pomijana, jeśli jeszcze żadnej nie ma.
+</Note>
+
+---
+
+## Jak Druma wybiera trasę
+
+Gdy tworzysz zlecenie lub ofertę, kliknij **Zaproponuj cenę**, a Druma ocenia każdą trasę względem własnego pochodzenia/przeznaczenia zlecenia, kodów pocztowych, naczepy i klienta, a następnie stosuje najlepsze dopasowanie. Kolejność priorytetu, od najbardziej szczegółowej:
+
+1. Karta ograniczona do tego **klienta**
+2. Dopasowanie **prefiksu pocztowego** (wygrywa z trasą tylko według kraju)
+3. Dopasowanie **kraju**
+4. **Strefa**, **typ naczepy** i **kategoria pojazdu**, jako kryteria rozstrzygające
+
+Prefiks pocztowy trasy, jeśli jest ustawiony, jest ścisłym wymogiem — nigdy nie dopasowuje się „luźno" do innego prefiksu. Jeśli nic nie pasuje, Druma to mówi wprost („Brak pasującej ceny trasy dla tego kursu"), zamiast zgadywać.
+
+---
+
+## Historia trasy — co faktycznie fakturowałeś
+
+Kliknij **Historia trasy** przy parze krajów, aby zobaczyć, co zlecenia na dokładnie tej trasie faktycznie fakturowały w ciągu ostatnich 6 miesięcy — średnia odległość, średnia suma i mediana €/km — z linkiem do poszczególnych zleceń. Użyj **Użyj mediany €/km**, **Użyj €/km × odległość** lub **Użyj sumy**, aby przenieść jedną z tych wartości bezpośrednio do pola ceny, nad którym pracujesz.
+
+---
+
+## Zaproponowane na podstawie twojej historii
+
+Karta **Sugestie** wymienia trasy, które faktycznie przejechałeś w ciągu ostatnich 6 miesięcy, a które **nie mają jeszcze karty** — lukę między tym, co wyceniasz ręcznie, a tym, co jest zautomatyzowane. **Akceptuj** tworzy kartę wycenioną na historycznej medianie tej trasy (punkt wyjścia, który możesz później edytować, nigdy zobowiązanie); **Akceptuj wszystkie widoczne** robi to samo dla każdej sugestii na ekranie za jednym razem. **Odrzuć** czyści sugestię bez tworzenia karty.
+
+---
+
+## Import zbiorczy
+
+Zamiast dodawać trasy jedna po drugiej, zaimportuj ich arkusz kalkulacyjny. Importer akceptuje w wierszu: nazwę karty, kraj pochodzenia/przeznaczenia, **prefiks pocztowy**, **miasto**, **grupę strefy** (dopasowaną po nazwie do twoich własnych grup stref), typ naczepy, tryb stawki, kwotę, przedział **min./maks. km**, dopłatę paliwową % i notatki.
+
+Wiersz jest odrzucany z jasnym powodem zamiast być po cichu błędnie zaimportowanym:
+
+- Prefiks pocztowy musi mieć dokładnie 2 znaki i musi być podany razem ze swoim krajem — prefiks bez kraju nie ma sensu.
+- Nierozpoznana nazwa grupy stref to błąd, a nie ciche cofnięcie do „brak strefy".
+- `min_km` większe niż `max_km` jest odrzucane bezpośrednio.
+
+Wiersz, który pasuje do istniejącej trasy (ta sama karta, kraj/prefiks/miasto, naczepa, strefa, tryb stawki i przedział km), jest pomijany jako duplikat, zamiast tworzyć drugą, konfliktową cenę dla tej samej trasy.
+
+---
+
+<Card title="Karty stawek" icon="tags" href="/pl/admin/rate-cards">
+  Strona profilu kosztowego — ile faktycznie kosztuje eksploatacja ciężarówki, wykorzystywana do szacowania marży zlecenia obok ceny sprzedaży z tej strony.
+</Card>

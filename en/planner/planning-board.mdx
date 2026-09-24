@@ -8,17 +8,27 @@ icon: "calendar"
 
 The Planning Board is your main dispatch tool. Go to **Planning → Planning Board** to open it.
 
-The board has three modes, switched with the tabs at the top:
+The board has three modes, switched with the tabs at the left of the command bar:
 
 | Mode | What it's for |
 |---|---|
 | **Now** | The primary dispatch view — two columns matching capacity against demand. Where you assign and reassign trucks. |
-| **Timeline** | A Gantt-style view of every truck's schedule, for spotting gaps and conflicts across a day, three days, or a week. |
+| **Timeline** | A Gantt-style view of every truck's schedule, for spotting gaps and conflicts across a day, three days, or a full week. |
 | **Map** | The same unassigned loads and drivers plotted geographically. |
 
 <Warning>
 The Planning Board is designed for desktop screens of 1280 pixels wide or more. On a phone or tablet, a simplified card feed replaces the two-column layout and drag-and-drop is not available.
 </Warning>
+
+### The command bar
+
+Every mode shares one command bar: the mode tabs on the left, that mode's own toolbar in the middle, and — always on the right — **Focus mode**, the **Assistant**, and **Delays**. There's no separate KPI strip above it; the row/order counts you'd expect from one now live inline in each panel's own header instead.
+
+- **Focus mode** (`F`, or the ⤢ button) hides the sidebar and page header so the board's rows use the full screen. Toggle it again, or press `F`, to bring the chrome back.
+- **Assistant** opens Druma's ranked queue of proposed truck-to-load matches — see [Auto-Planning & the Assistant](/en/planner/auto-planning).
+- **Delays** opens a popover of orders currently running behind schedule.
+
+At narrower widths, labels on the toolbar controls shrink or disappear first — the icon and its tooltip always stay, so nothing becomes unreachable, just more compact.
 
 ---
 
@@ -26,10 +36,10 @@ The Planning Board is designed for desktop screens of 1280 pixels wide or more. 
 
 The **Now** tab is a split, two-column layout:
 
-- **Incoming** (left) — what's freeing up capacity: trucks that are free right now, and trucks about to free up because their current load is delivering within the visible date range.
-- **Outgoing** (right) — orders that still need a truck (unassigned pickups), plus orders that are already assigned, all grouped the same way as Incoming so a truck freeing up in a zone lines up visually against loads picking up in that same zone.
+- **Incoming** — what's freeing up capacity: trucks that are free right now, and trucks about to free up because their current load is delivering within the visible date range.
+- **Outgoing** — orders that still need a truck (unassigned pickups), plus orders that are already assigned, all grouped the same way as Incoming so a truck freeing up in a zone lines up visually against loads picking up in that same zone.
 
-<Frame caption="The Now view — Incoming capacity on the left, Outgoing loads on the right, with the density and Preplan toggles in the toolbar.">
+<Frame caption="The Now view — Incoming capacity on one side, Outgoing loads on the other, with the command bar above and a Balance pane available from the toolbar.">
   <img src="/images/planner/planning-board-split.png" alt="Planning Board Now view showing the Incoming and Outgoing columns" />
 </Frame>
 
@@ -42,18 +52,21 @@ Assigning a truck is a drag: pick up a row on either side and drop it on the mat
 Dragging works in **both directions** — drag an Incoming card onto an Outgoing load, or drag an Outgoing load onto an Incoming card. Either way lands on the same row.
 </Note>
 
+### Row density and layout
+
+Click the **Density** control in the toolbar to switch between three row heights:
+
+| Density | Best for |
+|---|---|
+| **Comfortable** | Richer cards with more visual detail per truck or order — a closer look at a handful of jobs. |
+| **Compact** (default) | Dense, single-line rows, closest to a spreadsheet — fast scanning and bulk planning. |
+| **Dense** | The tightest row height, for a large 1080p screen (especially at 125–150% Windows scaling) where seeing as many rows as possible matters more than visual padding. |
+
+All three densities show the same underlying data and support the same drag-and-drop, filters, and grouping. From the same **Columns** menu you can also swap which side — Incoming or Outgoing — renders on the left, and set the app's text size (small/medium/large), which scales the whole UI rather than just this page.
+
 ### Date range
 
 The board shows a rolling 7-day horizon. Use the arrows next to the date label to page a full week earlier or later, or click **Today** to jump back to the current 7-day window.
-
-### Density: Compact vs Comfortable
-
-A toggle in the toolbar switches how much detail each row shows:
-
-- **Compact** (default) — dense, single-line rows with sortable/reorderable columns, closest to a spreadsheet. Best for fast scanning and bulk planning.
-- **Comfortable** — richer cards with more visual detail per truck or order. Best for a closer look at a handful of jobs.
-
-Both densities show the same underlying data and support the same drag-and-drop, filters, and grouping — switching is purely cosmetic.
 
 ### Grouping and collapsing
 
@@ -73,20 +86,21 @@ The **Views** menu lets you save the current filter, grouping, and column config
 
 ### Filters and search
 
-Click **Filters** to open the filters panel — status, pickup/delivery date range, zone, and load/delivery country, city, or postal code. Active filters show as removable chips under the toolbar; click **Clear all** to reset them. Each column also has its own quick search box for filtering by order number, address, or driver name within that side.
+Click **Filters** to open the filters panel — status, pickup/delivery date range, zone, and load/delivery country, city, or postal code. Active filters show as removable chips under the toolbar; click **Clear all** to reset them. Each panel also has its own quick search box for filtering by order number, address, or driver name within that side.
 
 <Note>
 Search also reaches inside a groupage run's own orders, and a filter lets you show or hide groupage runs entirely — see [Groupage on the Planning Board and Live Map](/en/planner/groupage).
 </Note>
 
-### Triage tiles
+### The Balance pane
 
-Above each column, small tiles summarise what's in it at a glance:
+Click the **Balance** button in the toolbar (its badge shows today's deficit-group count) to open a read-only report of where supply and demand line up — and where they don't — across every group and day in the visible horizon. It has three tabs:
 
-- **Incoming** — how many trucks/loads fall in each capacity bucket.
-- **Outgoing** — **Unplanned**, **Running late**, and **Running on time** counts for loads that already have a preliminary or firm plan.
+- **Table** — a group × day matrix. Each cell shows open supply, open demand, and the net (surplus in blue, deficit in amber/red); a Total column and an "All groups" row give the grand totals.
+- **Chart** — the same rows as a ranked horizontal bar, either for a single day or the whole horizon, worst deficit at the top.
+- **Map** — one bubble per group at its members' average location, sized by volume and coloured the same way as the Table and Chart.
 
-Click a tile to filter that column down to just that bucket; click it again to clear the filter.
+The Balance pane never changes anything on the board — it's a read-only supply/demand summary for planning purposes, built from exactly the rows the board itself is showing, so it can never disagree with what you're looking at.
 
 ### Assign truck / Remove truck / Put for sale
 
@@ -95,6 +109,15 @@ Every Outgoing row that has a truck (firm or penciled) shows action buttons:
 - **Assign truck** — commit a penciled combination as a firm assignment.
 - **Remove truck** — undo the plan and send the order back to unassigned.
 - **Put for sale** — offer the load to a subcontractor/carrier instead of running it on your own fleet. A sold load shows a **For sale** or **Sold · [carrier]** badge; if the carrier is running late, a **Late** badge appears too. You can reclaim a sold load back to your own fleet as long as it hasn't started loading.
+
+### Switching trucks and trailers mid-route
+
+Once an order is already assigned, a row's action menu also offers the ways to change what's physically carrying it without touching the order itself:
+
+- **Switch truck** — hand the load to a different tractor at a relay point, or record a relay point with the next truck still unknown (an open relay) — see [Switch Truck (Tractor Relay)](/en/planner/switch-truck).
+- **Leave trailer with the consignee** — a drop-and-hook delivery: the tractor leaves the loaded trailer for the consignee to unload on their own time and hooks a different one — see [Drop-and-Hook Delivery](/en/planner/drop-and-hook-delivery).
+
+Both are available from the same row action menu the order's status is shown in, and both write a proper record of the handover rather than a silent reassignment.
 
 ### Preplan mode
 
@@ -113,7 +136,7 @@ Nothing here touches the real order until a truck is actually assigned through t
 
 **The Reload Reassignment Optimizer.** Once a chain exists, Druma keeps checking it in the background. For the **tail** of every chain — the last penciled reload, the one nothing else chains after yet — it asks: is there a different, not-yet-penciled reload whose pickup sits closer to where that truck will actually free up?
 
-For example: a truck is pencilled to reload in Cluj tomorrow. A closer, unpicked reload turns up with a pickup in Sibiu instead. If swapping the Sibiu load in would genuinely cut deadhead cost — valued in € using the truck's own cost profile, not just raw kilometres — Druma surfaces a suggestion chip right on that row, something like **"Cheaper reload available: −18 km · €22."** Click **Switch to #...** and the swap applies in one step: the Sibiu load gets penciled in, the Cluj load automatically loses its pencil (the same single-use-anchor rule chains rely on above), and a toast confirms **"Reload #... penciled instead."** This is the same suggestion-chip mechanic described below, applied specifically to chain tails.
+For example: a truck is pencilled to reload in Cluj tomorrow. A closer, unpicked reload turns up with a pickup in Sibiu instead. If swapping the Sibiu load in would genuinely cut deadhead cost — valued in € using the truck's own cost profile, not just raw kilometres — Druma surfaces a suggestion chip right on that row, something like **"Cheaper reload available: −18 km · €22."** Click **Switch to #...** and the swap applies in one step: the Sibiu load gets penciled in, the Cluj load automatically loses its pencil (the same single-use-anchor rule chains rely on above), and a toast confirms **"Reload #... penciled instead."**
 
 A few guardrails keep the suggestions trustworthy:
 
@@ -125,11 +148,11 @@ A few guardrails keep the suggestions trustworthy:
 The optimizer only ever proposes; nothing is applied without a click. It's also silent when there's nothing better to suggest — no chip means Druma didn't find a cheaper reload, not that it didn't check.
 </Note>
 
-**Chain safety on change.** If something upstream in a chain changes — the order is cancelled, its truck is unassigned, or its truck is switched — Druma checks whether anything is pencilled downstream of it. If nothing is, the change goes through with no fuss. If a downstream tail exists, you're prompted to choose: **Remove whole chain** (cascades the removal through every pencilled reload chained after it) or **Keep downstream orders** (severs just that one link and leaves the downstream loads as independent, still-reassignable pins). Either way, a pencilled plan never silently rots into a broken or orphaned state — you decide what happens to the rest of the chain, you're never left to manually hunt down dangling links yourself.
+**Chain safety on change.** If something upstream in a chain changes — the order is cancelled, its truck is unassigned, or its truck is switched — Druma checks whether anything is pencilled downstream of it. If nothing is, the change goes through with no fuss. If a downstream tail exists, you're prompted to choose: **Remove whole chain** (cascades the removal through every pencilled reload chained after it) or **Keep downstream orders** (severs just that one link and leaves the downstream loads as independent, still-reassignable pins).
 
 ### Suggestion chips
 
-Where Druma's auto-planning has a confident recommendation for an unassigned order, a suggestion chip appears inline on that row. Click it to apply the suggested truck directly, or dismiss it if it doesn't fit.
+Where Druma's auto-planning has a confident recommendation for an unassigned order, a suggestion chip appears inline on that row, stating what it knows (empty km, an approximate trip cost, or a saving) — see [Auto-Planning & the Assistant](/en/planner/auto-planning) for the full scoring picture. Click it to apply the suggested truck directly, or dismiss it if it doesn't fit.
 
 ### Cross-column highlighting
 
@@ -138,6 +161,21 @@ Click any row to pin its highlight. If that row is part of a penciled or firm co
 ### Virtual orders
 
 Click **Virtual** to create a placeholder order that reserves a truck for an expected load that doesn't have a firm booking yet — useful when preplanning ahead of a confirmed order.
+
+---
+
+## Keyboard shortcuts
+
+With focus on the Now view (not inside a modal or a text field):
+
+| Key | Action |
+|---|---|
+| `J` / `K` | Walk the Outgoing rows down / up, in the order they're currently displayed (respects your grouping, sorting, and filters) |
+| `A` | Accept the selected row's suggestion — pencils it in under Preplan mode, or opens the confirm sheet otherwise |
+| `Esc` | Clear the current selection |
+| `F` | Toggle Focus mode |
+
+The full list, including shortcuts outside the board, is always available from the **?** overlay.
 
 ---
 
@@ -165,11 +203,17 @@ Use the date navigation controls to move through the schedule, and the **span se
 
 | Span | Best for |
 |---|---|
-| **1 day** | Detailed intra-day planning — see exact loading and unloading windows |
+| **1 day** | Detailed intra-day planning — see exact loading and unloading windows. Today's window opens two hours in the past rather than at midnight, so the morning's finished jobs don't eat half the screen by the afternoon. |
 | **3 days** | Spotting gaps and conflicts over the next 72 hours |
-| **1 week** | A capacity overview — which trucks are free across the full week |
+| **1 week** | A coarse Gantt across the full horizon — the same bar renderer as 1-day/3-day, just zoomed out, rather than a separate summary table |
 
 Timeline shares the same Filters panel as the Now view, so a status, date, zone, or location filter carries over when you switch tabs.
+
+### Zoom, lane height, and grouping
+
+- **Zoom** — `−`/`+` buttons (or Ctrl/⌘ + mouse wheel over the grid) widen or narrow how many hours fit on screen, from half to triple the default scale. The hour under your pointer stays put as you zoom.
+- **Lane height** — a **Normal / Dense** toggle; Dense fits more truck rows on screen at the cost of a more compact label.
+- **Group and sort** — group lanes by zone, country, or planning group, and sort them free-trucks-first, by name, or by hours-left — independent of how the Now view is grouped.
 
 ### Drag-to-reschedule
 
@@ -182,10 +226,6 @@ Each truck's lane label shows small badges for anything affecting that truck rig
 ### Candidate ghost preview
 
 When an unassigned order is focused, hovering a ranked candidate truck in the Timeline shows a ghost placement of that order directly on the truck's lane — including the estimated empty leg to reach the pickup — so you can see exactly where it would land before committing. Click the ghost to assign the order to that truck directly.
-
-### Week span
-
-At the **1 week** span, each truck's row collapses into per-day blocks (order count and utilisation) instead of hour-scale bars. The hourly axis is replaced with a day-name header, and the zone-group header stays sticky as you scroll.
 
 ---
 
@@ -202,6 +242,10 @@ The toolbar has its own filter bar — order search, truck search, and a truck-s
 Click an order marker to open a panel of the best candidate trucks for it, ranked by empty km — each shown as a compact card with a free-from time, drive time, and at-pickup arrival strip. Click a candidate (or a truck marker directly) to open the same confirmation sheet used elsewhere on the board, including any cabotage, trailer, or relay-stop checks. The **Auto Suggest** and **Virtual** actions are available here too.
 
 ---
+
+<Card title="Auto-Planning & the Assistant" icon="wand-sparkles" href="/en/planner/auto-planning">
+  How Druma's background engines propose truck-to-load matches, and how to review and apply them.
+</Card>
 
 <Card title="Today View" icon="sun" href="/en/planner/today-view">
   For your daily morning workflow — active orders, live truck positions, and status alerts all in one screen.

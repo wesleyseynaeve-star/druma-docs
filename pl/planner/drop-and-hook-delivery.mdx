@@ -1,0 +1,84 @@
+---
+title: "Dostawa drop-and-hook"
+description: "Zostaw załadowaną naczepę u odbiorcy, aby sam ją rozładował, i podepnij inną — jak Druma rejestruje dostawę i co to oznacza dla fakturowania."
+icon: "container"
+---
+
+## Czym jest drop-and-hook?
+
+W operacji drop-and-hook ładunek nigdy nie przenosi się między naczepami. Zamiast czekać przy rampie odbiorcy, aż naczepa zostanie rozładowana, ciągnik **zostawia załadowaną naczepę** — odbiorca rozładowuje ją w swoim własnym tempie — a ciągnik **podpina inną naczepę** (pustą lub już załadowaną na kolejne zlecenie) i odjeżdża.
+
+Różni się to od każdej innej zmiany statusu w Druma: to jedyny moment, w którym **dostawa** następuje bez fizycznego opuszczenia ciężarówki przez naczepę w tej chwili. Naczepa jest uznawana za wciąż załadowaną, dopóki ktoś nie potwierdzi, że została rozładowana.
+
+<Note>
+To nie to samo co [Zmiana naczepy](/pl/planner/trailer-management) — ta operacja przenosi *ten sam* ładunek do *innej* naczepy. Drop-and-hook zostawia ładunek dokładnie tam, gdzie jest, i zmienia tylko to, którą naczepę ciągnie *ciągnik*.
+</Note>
+
+---
+
+## Kiedy można tego użyć
+
+**Zostaw naczepę u odbiorcy** jest dostępne dla zlecenia, które jest:
+
+- **Własną ciężarówką** (nigdy na zleceniu podwykonawczym — naczepa podwykonawcy należy do niego i nie zostawia się jej u twojego odbiorcy)
+- W statusie **W tranzycie, Przy dostawie** lub **Rozładunek**
+- Na **ostatnim pozostałym postoju dostawy** — jeśli zlecenie ma kilka dostaw, a wcześniejsza wciąż nie jest zakończona, nie można wykonać drop-and-hook, dopóki ta nie zostanie ukończona
+
+Jest też ukryte dla ciężarówki ze **stałą (nieodłączalną) naczepą** — sztywna jednostka nie ma do czego podpiąć innej naczepy.
+
+---
+
+## Rejestrowanie dostawy
+
+<Steps>
+  <Step title="Otwórz akcję">
+    Z wiersza zlecenia na Tablicy planowania lub z panelu szczegółów wybierz **Zostaw naczepę u odbiorcy**.
+  </Step>
+  <Step title="Ustaw czas pozostawienia">
+    Wprowadź, kiedy naczepa została pozostawiona. Staje się to **czasem dostawy** zlecenia — prawnie rozładunek przez odbiorcę jest jednym ze zwalniających ryzyk przewoźnika według CMR, więc samo pozostawienie kończy dostawę, a nie późniejszy podpis.
+  </Step>
+  <Step title="Potwierdź odbiór">
+    Jeśli na zleceniu już istnieje podpis odbiorcy (pole 24 eCMR), jest on pokazany i zablokowany. W przeciwnym razie wybierz, czy podpis jest składany teraz, czy zarejestruj, że żaden nie został uzyskany przy pozostawieniu — jest to zachowywane jako wyjątek na zleceniu, a nie po cichu ignorowane.
+  </Step>
+  <Step title="Wybierz kolejną naczepę">
+    Wybierz, którą naczepę ciągnik podepnie następnie, lub zostaw go bez naczepy.
+  </Step>
+  <Step title="Potwierdź">
+    Druma oznacza zlecenie jako **Dostarczone**, rejestruje, która naczepa została pozostawiona i kiedy, oraz zwalnia ciągnik do kontynuowania z nową naczepą (lub bez niej).
+  </Step>
+</Steps>
+
+---
+
+## Ostrzeżenie „prawdopodobnie załadowana"
+
+Gdy naczepa zostanie w ten sposób pozostawiona, Druma traktuje ją jako **prawdopodobnie wciąż załadowaną** wszędzie tam, gdzie ta naczepa pojawi się później — w selektorze naczep przy Zmianie naczepy, selektorze przy zmianie obsady kursu groupage, na liście Flota → Naczepy oraz w przepływie przestawienia — dopóki ktoś nie potwierdzi, że faktycznie została opróżniona.
+
+<Warning>
+To tylko **ostrzeżenie, nigdy blokada**. Nadal możesz wybrać prawdopodobnie załadowaną naczepę do innego zlecenia — Druma po prostu jasno informuje, gdzie i kiedy została pozostawiona i dla którego zlecenia, abyś nie wysłał ciężarówki po podpięcie wciąż pełnej naczepy, nie wiedząc o tym.
+</Warning>
+
+Wyczyść ostrzeżenie za pomocą **Oznacz jako rozładowaną** — dostępne z własnego wiersza naczepy we Flota → Naczepy lub wszędzie, gdzie ostrzeżenie się pojawia. Alternatywnie, samo podpięcie naczepy do ciężarówki i rozpoczęcie na niej nowego zlecenia automatycznie czyści flagę.
+
+---
+
+## Cofanie pozostawienia
+
+Jeśli dostawa musi zostać cofnięta — na przykład została zarejestrowana przez pomyłkę — otwórz zlecenie i użyj akcji **cofnij** obok Zostaw naczepę (zajmuje dokładnie miejsce samej akcji, gdy zlecenie zostanie dostarczone). Zostanie to odrzucone, gdy coś dalej już zależy od tego, że dostawa się odbyła: wystawiono fakturę lub już zarejestrowano ruch palet. W takim przypadku popraw zapis ręcznie.
+
+---
+
+## Fakturowanie zlecenia drop-and-hook
+
+Domyślnie dostawa drop-and-hook jest fakturowana dokładnie jak każda inna dostawa. Jeśli twoja firma ma włączoną opcję **Fakturuj tylko przy podpisanym POD** w Ustawieniach, pozostawienie bez podpisu jest wstrzymywane od fakturowania tak samo, jak każda inna niepodpisana dostawa — zarejestrowanie pozostawienia nie omija tej zasady.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Zmiana ciężarówki (sztafeta ciągnika)" icon="arrow-right-arrow-left" href="/pl/planner/switch-truck">
+    Przekaż ładunek innemu ciągnikowi w połowie trasy, przy czym naczepa pozostaje z ładunkiem — inny rodzaj zmiany w połowie trasy.
+  </Card>
+  <Card title="Zarządzanie naczepami" icon="trailer" href="/pl/planner/trailer-management">
+    Zarządzaj naczepami niezależnie od ciągników — przypisywanie, odłączanie i śledzenie lokalizacji.
+  </Card>
+</CardGroup>
