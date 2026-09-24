@@ -1,0 +1,87 @@
+---
+title: "Strecken-Preisgestaltung"
+description: "Legen Sie einen Verkaufspreis pro Strecke fest — Herkunfts-/Zielland, Postleitzahlen-Präfix, Stadt oder Zone — und lassen Sie Druma ihn automatisch vorschlagen, sobald ein passendes Angebot oder ein passender Auftrag eingeht."
+icon: "route"
+---
+
+<Note>
+Diese Seite behandelt **Preise → Strecken-Preisgestaltung** — **Verkaufs**preise pro Strecke. Wenn Sie nach LKW-**Kosten**profilen (Fixkosten, Fahrerlohn, Kraftstoff, Zuschläge) zur Schätzung der Marge eines Auftrags suchen, ist das eine separate Funktion — siehe [Tarifkarten](/de/admin/rate-cards).
+</Note>
+
+## Was ist eine Strecken-Preiskarte?
+
+Eine Strecken-Preiskarte legt fest, was Sie für eine Strecke berechnen — zum Beispiel „Rumänien → Deutschland, Planensattel — 1.450 €". Sobald eine Karte existiert, schlägt Druma ihren Preis automatisch vor, sobald ein passendes Angebot oder ein passender Auftrag erstellt wird — die Preisgestaltung einer Routinestrecke ist dann kein Nachschlagen mehr in einer separaten Tabelle.
+
+**Wer bearbeiten kann:** die Rollen Admin, Firmenadmin, Flottenmanager und Disponent.
+
+---
+
+## Eine Strecken-Preiskarte erstellen
+
+Gehen Sie zu **Preise → Strecken-Preisgestaltung** und klicken Sie auf **Strecke hinzufügen** (oder **Neue Karte**, je nachdem, ob Sie zu einer bestehenden Karte hinzufügen oder neu beginnen).
+
+| Feld | Bedeutung |
+|---|---|
+| **Kartenname** | Ein kurzes Label, z. B. „Standard-Planensattel-Strecken" |
+| **Kunde** | Optional — beschränkt diese Karte auf einen Kunden. Eine kundenspezifische Karte gewinnt für diesen Kunden immer gegen eine allgemeine. |
+| **Herkunfts-/Zielland** | Erforderlich — das Länderpaar (zweistelliger Code), das diese Strecke abdeckt |
+| **Postleitzahlen-Präfix** | Optional — die ersten zwei Zeichen der Postleitzahl (z. B. `RO-30`). Eine Strecke mit Postleitzahlen-Präfix gewinnt bei einer passenden Abhol-/Zustellpostleitzahl gegen eine reine Länderstrecke, und die reine Länderstrecke deckt weiterhin jede andere Postleitzahl in diesem Land ab. |
+| **Stadt** | Optional — grenzt die Strecke weiter ein, wenn die Postleitzahl allein nicht präzise genug ist |
+| **Zone** | Optional — eine Ihrer eigenen Postzonen-Gruppen (Einstellungen → Zonen), um eine ganze Region auf einmal zu bepreisen, statt nur ein Präfix |
+| **Anhängertyp / Fahrzeugkategorie** | Optional — beschränkt die Strecke auf einen bestimmten Ausrüstungstyp |
+| **Preismodus** | **Pauschalpreis** (ein Festpreis, keine Entfernung nötig), **Pro km** (Preis × Streckenentfernung) oder **Pro km (gestaffelt)** — ein anderer €/km je nachdem, in welche **Min. km / Max. km**-Staffel die Strecke fällt |
+| **Betrag** | Der Preis (oder €/km-Satz) für diese Strecke |
+| **Währung** | EUR oder RON |
+| **Kraftstoffschema / Zuschlag %** | Optionaler Kraftstoffzuschlag zusätzlich zum Preis |
+| **Gültig von / bis** | Optionaler Zeitraum — leer lassen für eine dauerhaft gültige Strecke |
+
+Klicken Sie auf **Strecke hinzufügen**, um sie unter der Karte zu speichern, oder auf **Strecke löschen**, um eine zu entfernen.
+
+<Note>
+Eine **Pauschalpreis**-Strecke benötigt keine Streckenentfernung zur Bepreisung — nützlich, sobald ein Angebot erstellt wird, noch bevor eine Routenberechnung gelaufen ist. Eine **Pro km**- oder **Pro km (gestaffelt)**-Strecke benötigt eine Entfernung und wird übersprungen, wenn noch keine verfügbar ist.
+</Note>
+
+---
+
+## Wie Druma eine Strecke auswählt
+
+Wenn Sie einen Auftrag oder ein Angebot erstellen, klicken Sie auf **Preis vorschlagen**, und Druma bewertet jede Strecke gegen Herkunft/Ziel, Postleitzahlen, Anhänger und Kunden des Auftrags und wendet dann die beste Übereinstimmung an. Übereinstimmungspriorität, spezifischste zuerst:
+
+1. Eine auf diesen **Kunden** beschränkte Karte
+2. Übereinstimmung nach **Postleitzahlen-Präfix** (gewinnt gegen eine reine Länderstrecke)
+3. Übereinstimmung nach **Land**
+4. **Zone**, **Anhängertyp** und **Fahrzeugkategorie** als Tie-Breaker
+
+Das Postleitzahlen-Präfix einer Strecke ist, sofern gesetzt, eine strikte Anforderung — es stimmt nie „locker" mit einem anderen Präfix überein. Passt nichts, sagt Druma das klar („Kein passender Streckenpreis für diese Fahrt"), statt zu raten.
+
+---
+
+## Streckenverlauf — was Sie tatsächlich berechnet haben
+
+Klicken Sie auf **Streckenverlauf** bei einem Länderpaar, um zu sehen, was Aufträge auf genau dieser Strecke in den letzten 6 Monaten tatsächlich abgerechnet haben — Durchschnittsentfernung, Durchschnittssumme und Median-€/km — mit einem Link zu den einzelnen Aufträgen. Nutzen Sie **Median €/km verwenden**, **€/km × Entfernung verwenden** oder **Summe verwenden**, um einen dieser Werte direkt in das Preisfeld zu übernehmen, an dem Sie gerade arbeiten.
+
+---
+
+## Aus Ihrem Verlauf vorgeschlagen
+
+Der Tab **Vorschläge** listet Strecken auf, die Sie in den letzten 6 Monaten tatsächlich gefahren sind und die **noch keine Karte haben** — eine Lücke zwischen dem, was Sie manuell bepreisen, und dem, was automatisiert ist. **Übernehmen** erstellt eine Karte, die zum historischen Median dieser Strecke bepreist ist (ein Ausgangspunkt, den Sie danach bearbeiten können, nie eine Verpflichtung); **Alle sichtbaren übernehmen** tut dasselbe für jeden Vorschlag auf dem Bildschirm in einem Schritt. **Verwerfen** löscht einen Vorschlag, ohne eine Karte zu erstellen.
+
+---
+
+## Massenimport
+
+Statt Strecken einzeln hinzuzufügen, importieren Sie eine Tabelle davon. Der Importer akzeptiert pro Zeile: Kartenname, Herkunfts-/Zielland, **Postleitzahlen-Präfix**, **Stadt**, **Zonengruppe** (nach Namen mit Ihren eigenen Zonengruppen abgeglichen), Anhängertyp, Preismodus, Betrag, **Min./Max. km**-Staffel, Kraftstoffzuschlag % und Notizen.
+
+Eine Zeile wird mit einem klaren Grund abgelehnt, statt stillschweigend falsch importiert zu werden:
+
+- Ein Postleitzahlen-Präfix muss genau 2 Zeichen haben und zusammen mit seinem Land angegeben werden — ein Präfix ohne Land ist bedeutungslos.
+- Ein nicht erkannter Zonengruppenname ist ein Fehler, kein stiller Rückfall auf „keine Zone".
+- `min_km` größer als `max_km` wird direkt abgelehnt.
+
+Eine Zeile, die einer bestehenden Strecke entspricht (gleiche Karte, Land/Präfix/Stadt, Anhänger, Zone, Preismodus und km-Staffel), wird als Duplikat übersprungen, statt einen zweiten, widersprüchlichen Preis für dieselbe Strecke zu erstellen.
+
+---
+
+<Card title="Tarifkarten" icon="tags" href="/de/admin/rate-cards">
+  Die Kostenprofil-Seite — was der Betrieb eines LKW tatsächlich kostet, verwendet zur Schätzung der Auftragsmarge neben dem Verkaufspreis dieser Seite.
+</Card>

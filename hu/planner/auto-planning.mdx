@@ -1,0 +1,87 @@
+---
+title: "Automatikus tervezés és az Asszisztens"
+description: "Hogyan javasol a Druma önállóan kamion–rakomány párosításokat — a reggeli terv, a mentőterv és egyetlen rangsorolt sor, amelyet átnéz és alkalmaz."
+icon: "wand-sparkles"
+---
+
+## Áttekintés
+
+Az automatikus tervezés azt jelenti, hogy a Druma csendben elvégzi az első párosítási kört, mielőtt ön megtenné. Ahelyett, hogy minden hozzá nem rendelt rakományt minden szabad kamionnal manuálisan összevetne, háttérben futó motorok pontozzák a lehetséges párokat, és rangsorolt javaslatlistát adnak — ön marad az, aki az **Alkalmazás** gombra kattint.
+
+Minden egy helyre kerül: az **Asszisztensbe** — egy panelbe, amely a Tervezőtábla parancssorának **Asszisztens** gombjával nyílik (**Tervezés → Tervezőtábla**). Teljes magasságú panelként csúszik be jobbról, hogy nyitva maradhasson, miközben ön mellette dolgozik a táblán; a pasztillával, a **✕**-szel vagy az **Esc**-kel zárható be.
+
+<Note>
+Az automatikus tervezés soha nem rendel hozzá önmagától semmit. Minden javaslatot ugyanazon a jóváhagyási folyamaton keresztül vizsgál át és alkalmaz, mint egy kézi húzást — beleértve minden kabotázs-, pótkocsi- vagy vezetési idő-ellenőrzést, amely egy első hozzárendelésnél is érvényes lenne. Csak az *értékelés* fut automatikusan, soha nem a *véglegesítés*.
+</Note>
+
+Három motor táplálja ugyanazt a sort:
+
+| Motor | Mikor fut | Mit vizsgál |
+|---|---|---|
+| **Reggeli terv** | Automatikusan 04:00 UTC-kor, valamint kérésre a **Újraoptimalizálás most** gombbal | Minden még kamion nélküli rendelés |
+| **Mentőterv** | Automatikusan abban a pillanatban, amikor egy kamion késési figyelmeztetést vált ki (vállalatonként 10 percenként egy futásra korlátozva), és kérésre | Minden még el nem indult rendelés, beleértve a **már hozzárendelteket** is — ez az egyetlen motor, amely azt javasolja, hogy egy rakományt vegyünk le egy kamionról, és adjunk másiknak |
+| **Proaktív párosítás / visszaterhelés** | Folyamatosan, ahogy a kamionok és rendelések változnak | Kamionok, amelyek hamarosan felszabadulnak, összepárosítva olyan rakományokkal, amelyek visszaterhelhetnék őket |
+
+Nem kell tudnia, melyik motor hozott létre egy adott sort — a sor az összeset egyetlen rangsorolt listába olvasztja egy kis forráscímkével, így az „X rakomány az Y kamionra" egyetlen döntésként olvasható, függetlenül attól, hogy a Druma miért javasolta.
+
+<Note>
+Az automatikus tervezés opcionális. Egy admin vagy cégadmin kapcsolja be a **Beállítások → Automatizálás → Tervezés** menüben. Ha ki van kapcsolva, az Asszisztens panel akkor is megnyílik, de nincs mit áttekinteni benne.
+</Note>
+
+---
+
+## Hogyan pontoz
+
+Minden jelölt pár (ez a rendelés, ez a kamion) távolság, becsült útiköltség, időzítés és két jogi büntetés alapján kap pontszámot — kabotázs-kitettség és a fennmaradó vezetési idő (EU 561/2006). A két jogi büntetés elég súlyos ahhoz, hogy egy párt mindig a rangsor aljára süllyesszen, de soha nem távolítja el csendben a listáról: az a kamion, amely az *egyetlen* lehetőség, akkor is megjelenik, blokkoltként megjelölve, ahelyett hogy magyarázat nélkül eltűnne.
+
+Minden sor csak azokat a tényeket állítja, amelyekkel valóban rendelkezik:
+
+- **{n} km üresen** — az üres távolság a felrakodási pontig.
+- **Útiköltség ~{n} €** — becslés; ha a kamionnak nincs teljes költségprofilja a számításhoz, a sor azt írja: **„Adja hozzá a kamion költségeit a € szerinti rangsoroláshoz"**, találgatás helyett.
+- Megtakarítás €-ban vagy km-ben, ha a javaslat alkalmazása olcsóbb, mint az alternatíva, amelyet felvált.
+- **Blokkolva**, pirossal, ha a pár nem felel meg egy szigorú ellenőrzésnek (lásd lent).
+
+Semmi sincs kitalálva: az a tény, amelyet a motor nem tudott kiszámítani (például a költség egy díjkártya nélküli kamionnál), egyszerűen nem jelenik meg címkeként, ahelyett hogy „0 €"-ként vagy „0 km"-ként jelenne meg.
+
+**A rangsorolás azt a párt részesíti előnyben, amely valóban működik.** Egy jelölt párt ugyanazzal a blokkoló-ellenőrzéssel pontoznak, mint amit a jóváhagyási lap is alkalmaz (kabotázs-limit, lejárt dokumentum, műhelyi leállás, pótkocsi-eltérés, vezetési idő ütközés) *mielőtt* rangsorolnák — nem azután, hogy ön az Alkalmazásra kattint. Az életképes halmazon belül mindig azt a párt részesítik előnyben, amely megfelel minden ellenőrzésnek, azzal szemben, amelyik nem; egy piros pár csak akkor jelenik meg, ha valóban a rendelés egyetlen jelöltje. Amikor egy alacsonyabb pontszámú, de tiszta jelölt egy magasabb pontszámú, de blokkolt jelöltet vált fel, a sor ezt jelzi — kattintson rá, hogy lássa, melyik kamiont mellőzték és miért.
+
+---
+
+## Mentőterv
+
+Amikor egy kamion lemarad az ütemtervtől, és késési figyelmeztetést vált ki, a Druma automatikusan újraértékeli minden még el nem indult rendelést — beleértve a **már más kamionhoz rendelt** rakományokat is —, és javaslatokat ad hozzá ugyanahhoz az Asszisztens-sorhoz. Ez az egyetlen eset, amikor az automatikus tervezés azt javasolja, hogy egy rakományt vegyünk le arról a kamionról, amelyen jelenleg van.
+
+Egy olyan mentőterv-sor, amely egy már hozzárendelt rendelést újraosztana, **Kamiont cserél** figyelmeztetést visel, hogy tudja, mielőtt az Alkalmazásra kattint: az elfogadás leválasztja a rakományt onnan, ahol jelenleg van.
+
+Ön is elindíthat egy új mentőkört a panel **Újraoptimalizálás most** gombjával, anélkül hogy figyelmeztetésre várna.
+
+<Note>
+Az útközben lévő kamionok (elindult, felrakodás, úton, kirakodásnál, kirakodás) soha nem kerülnek mentőjelöltként felajánlásra egy *másik* rendeléshez — csak a még el nem indult rendelések jogosultak az újraosztásra.
+</Note>
+
+---
+
+## Alkalmazás és blokkolók
+
+A sor úgy van rangsorolva, hogy a határidőre érkező rakományok legyenek felül, az esetlegesen késve érkezők alattuk, a blokkolt párok pedig legalul — egy olyan rakomány, amelyet éppen most valóban nem lehet megmenteni, akkor is látható marad, egy kattintásnyira, ahelyett hogy elrejtenék.
+
+- Az **Alkalmazás** egyetlen soron a szokásos hozzárendelési folyamatot futtatja le — a jóváhagyási lapot, minden blokkoló- vagy pótkocsicsere-ellenőrzéssel, pontosan úgy, mintha ön maga húzta volna a kamiont.
+- Az **N egyértelmű nyertes alkalmazása** egy kattintással csak azokat a sorokat véglegesíti, amelyek nem igényelnek mérlegelést: semmi blokkolva, semmi elavult, egyetlen ügyfél sincs még megerősítésre várva, semmi nem késik, és semmi nem venne el kamiont egy másik rakománytól. Minden más szándékosan önre marad.
+- Az **Elutasítás** eltávolít egy sort, és okot kér — hasznos ahhoz, hogy a sor őszinte maradjon arról, mely javaslatokat utasítják el valójában, és miért.
+
+A **vezérelt átválogatás** az Alkalmazás mind után soronként végigmegy a sor maradékán — egy előrehaladás-számláló („2/198"), **Vissza**, **Kihagyás** és a sor saját Alkalmazás gombja, így egy hosszú lista átdolgozása nem jelenti egy differenciálatlan folyam görgetését. Az így megtekintett sor felülvizsgáltként van megjelölve, függetlenül attól, hogy tett-e valamit vele.
+
+A **Blokkolva** sorok pirossal jelennek meg, azzal az okkal, hogy miért nem felelt meg egy szigorú ellenőrzésnek (elért kabotázs-limit, lejárt dokumentum, vezetési idő ütközés stb.). Az Alkalmazás le van tiltva egy blokkolt soron — ön ennek ellenére megnyithatja, hogy lássa, miért, és vagy megoldja az alapproblémát, vagy manuálisan másik kamiont rendel hozzá.
+
+A **Párosítás felülvizsgálata** egy csoportos táblát nyit meg egy alaposabb, egymás melletti összehasonlításhoz egy jelöltcsoportról véglegesítés előtt — hasznos, ha több kamion is elfogadhatóan felvehetné ugyanazt a rakományt, és ön össze akarja hasonlítani őket, nem pedig egyszerűen elfogadni a legjobban rangsoroltat.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Tervezőtábla" icon="calendar" href="/hu/planner/planning-board">
+    Hol él az Asszisztens panel, és hogyan működik a manuális húzd-és-ejtsd hozzárendelés.
+  </Card>
+  <Card title="Kabotázs nyomon követése" icon="flag" href="/hu/planner/cabotage-tracking">
+    A kabotázs-szabályok, amelyek a két szigorú büntetés egyike mögött állnak, amelyeket az automatikus tervezés ellenőriz.
+  </Card>
+</CardGroup>

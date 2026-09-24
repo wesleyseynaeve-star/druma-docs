@@ -1,0 +1,87 @@
+---
+title: "Planification automatique et l'Assistant"
+description: "Comment Druma propose d'elle-même des correspondances camion-chargement — le plan du matin, le plan de secours et une file unique et classée que vous validez et appliquez."
+icon: "wand-sparkles"
+---
+
+## Vue d'ensemble
+
+La planification automatique, c'est Druma qui fait discrètement une première passe d'appariement avant vous. Plutôt que de parcourir chaque chargement non attribué face à chaque camion libre, un ensemble de moteurs en arrière-plan note les paires possibles et vous fournit une liste classée de propositions — vous restez la personne qui clique sur **Appliquer**.
+
+Tout arrive au même endroit : l'**Assistant** — un panneau ouvert depuis le bouton **Assistant** dans la barre de commandes du Tableau de planification (**Planification → Tableau de planification**). Il glisse en tant que panneau sur toute la hauteur à droite, afin de pouvoir rester ouvert pendant que vous travaillez sur le tableau à côté ; fermez-le avec la pastille, le **✕** ou **Échap**.
+
+<Note>
+La planification automatique n'attribue jamais rien d'elle-même. Chaque proposition est vérifiée et appliquée via exactement le même flux de confirmation qu'un glisser-déposer manuel — y compris toute vérification de cabotage, de remorque ou d'heures de conduite qui s'appliquerait à une première attribution. Ce qui fonctionne tout seul, c'est *l'évaluation*, jamais la *validation*.
+</Note>
+
+Trois moteurs alimentent la même file :
+
+| Moteur | S'exécute | Ce qu'il examine |
+|---|---|---|
+| **Plan du matin** | Automatiquement à 04h00 UTC et à la demande via **Ré-optimiser maintenant** | Chaque commande sans camion |
+| **Plan de secours** | Automatiquement dès qu'un camion déclenche une alerte de retard (limité à une exécution toutes les 10 minutes par entreprise), et à la demande | Chaque commande non encore partie, y compris celles **déjà attribuées** — le seul moteur qui propose de retirer un chargement d'un camion pour le donner à un autre |
+| **Correspondance proactive / rechargement** | En continu, à mesure que les camions et les commandes changent | Camions sur le point de se libérer, appariés à des chargements qui pourraient les recharger |
+
+Vous n'avez pas besoin de savoir quel moteur a produit une ligne donnée — la file les fusionne tous en une seule liste classée avec une petite puce d'origine, de sorte que « mettre le chargement X sur le camion Y » se lit comme une seule décision, quelle que soit la raison pour laquelle Druma l'a suggérée.
+
+<Note>
+La planification automatique est optionnelle. Un admin ou un admin d'entreprise l'active dans **Paramètres → Automatisation → Planification**. Si elle est désactivée, le panneau Assistant s'ouvre quand même, mais n'affiche rien à examiner.
+</Note>
+
+---
+
+## Comment ça note
+
+Chaque paire candidate (cette commande, ce camion) est notée selon la distance, le coût de trajet estimé, le timing et deux pénalités légales — l'exposition au cabotage et les heures de conduite restantes (UE 561/2006). Les deux pénalités légales sont assez lourdes pour toujours faire couler une paire en bas du classement, mais ne la retirent jamais silencieusement de la liste : un camion qui est la *seule* option s'affiche quand même, marqué comme bloqué, plutôt que de disparaître sans explication.
+
+Chaque ligne n'énonce que les faits qu'elle possède réellement :
+
+- **{n} km à vide** — la distance à vide jusqu'au point de chargement.
+- **Coût du trajet ~{n} €** — une estimation ; quand le camion n'a pas de profil de coût complet pour la calculer, la ligne indique **« Ajoutez les coûts du camion pour classer par € »** plutôt que de deviner.
+- Une économie en € ou en km, quand appliquer la suggestion est moins cher que l'alternative qu'elle remplace.
+- **Bloqué**, en rouge, quand la paire échoue à une vérification stricte (voir ci-dessous).
+
+Rien n'est inventé : un fait que le moteur n'a pas pu calculer (par exemple le coût sur un camion sans carte tarifaire) n'apparaît simplement pas comme puce, plutôt que d'afficher « 0 € » ou « 0 km ».
+
+**Le classement favorise une paire qui fonctionne réellement.** Une paire candidate est notée par la même vérification de blocages que le bon de confirmation applique (limite de cabotage, document expiré, immobilisation atelier, incompatibilité de remorque, conflit d'heures de conduite) *avant* d'être classée — pas après que vous ayez cliqué sur Appliquer. Une paire qui passe toutes les vérifications est toujours préférée à une qui échoue, au sein de l'ensemble viable ; une paire rouge n'est proposée que lorsqu'elle est vraiment la seule candidate de la commande. Quand un candidat moins bien noté mais propre remplace un candidat mieux noté mais bloqué, la ligne le précise — cliquez pour voir quel camion a été écarté et pourquoi.
+
+---
+
+## Plan de secours
+
+Quand un camion prend du retard sur son horaire et déclenche une alerte de retard, Druma réévalue automatiquement chaque commande non encore partie — y compris les chargements **déjà attribués** à un autre camion — et ajoute des propositions dans la même file de l'Assistant. C'est le seul cas où la planification automatique suggère de déplacer un chargement du camion sur lequel il se trouve actuellement.
+
+Une ligne de plan de secours qui réattribuerait une commande déjà attribuée porte un avertissement **Changera de camion**, afin que vous sachiez avant de cliquer sur Appliquer que l'acceptation désattribue le chargement de son emplacement actuel.
+
+Vous pouvez aussi déclencher vous-même une nouvelle passe de secours avec **Ré-optimiser maintenant** dans le panneau, sans attendre une alerte.
+
+<Note>
+Les camions déjà en route (parti, chargement, en transit, à la livraison, déchargement) ne sont jamais proposés comme candidat de secours pour une *autre* commande — seules les commandes non encore parties sont éligibles à une réattribution.
+</Note>
+
+---
+
+## Appliquer et blocages
+
+La file est classée de sorte que les chargements qui arrivent à l'heure soient en haut, ceux qui arriveraient en retard en dessous, et les paires bloquées tout en bas — un chargement qui ne peut vraiment pas être sauvé en ce moment reste visible, à un clic de distance, plutôt que caché.
+
+- **Appliquer** sur une seule ligne exécute le flux d'attribution normal — le bon de confirmation, avec toute vérification de blocage ou de changement de remorque, exactement comme si vous aviez glissé le camion vous-même.
+- **Appliquer N gagnants évidents** valide en un clic uniquement les lignes qui ne nécessitent aucun jugement : rien de bloqué, rien de périmé, aucun client encore à confirmer, rien en retard et rien qui retirerait un camion d'un autre chargement. Tout le reste est délibérément laissé pour vous.
+- **Rejeter** retire une ligne et demande un motif — utile pour garder la file honnête sur ce qui est réellement rejeté et pourquoi.
+
+Le **tri guidé** parcourt ce qui reste de la file une ligne à la fois après Appliquer tout — un compteur de progression (« 2 sur 198 »), **Précédent**, **Passer**, et le bouton Appliquer propre à la ligne, de sorte que parcourir une longue liste ne signifie pas faire défiler un flux indifférencié. Une ligne vue de cette façon est marquée comme examinée, que vous ayez agi ou non.
+
+Les lignes **Bloqué** s'affichent en rouge avec le motif de l'échec de la vérification stricte (limite de cabotage atteinte, document expiré, conflit d'heures de conduite, etc.). Appliquer est désactivé sur une ligne bloquée — vous pouvez tout de même l'ouvrir pour voir pourquoi, et soit résoudre le problème sous-jacent, soit attribuer manuellement un autre camion.
+
+**Revue de correspondance** ouvre un tableau de lot pour un examen côte à côte plus approfondi d'un ensemble de candidats avant validation — utile lorsque plusieurs camions pourraient plausiblement prendre le même chargement et que vous voulez les comparer plutôt qu'accepter d'emblée le mieux classé.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Tableau de planification" icon="calendar" href="/fr/planner/planning-board">
+    Où vit le panneau Assistant, et comment fonctionne l'attribution manuelle par glisser-déposer.
+  </Card>
+  <Card title="Suivi du cabotage" icon="flag" href="/fr/planner/cabotage-tracking">
+    Les règles de cabotage derrière l'une des deux pénalités strictes que vérifie la planification automatique.
+  </Card>
+</CardGroup>

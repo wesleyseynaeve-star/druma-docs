@@ -1,0 +1,87 @@
+---
+title: "Auto-planificare și Asistentul"
+description: "Cum propune Druma singur potriviri camion-încărcătură — planul de dimineață, planul de salvare și coada unică, clasificată, pe care o analizezi și o aplici."
+icon: "wand-sparkles"
+---
+
+## Prezentare generală
+
+Auto-planificarea înseamnă că Druma face în liniște o primă trecere de potrivire înainte să o faci tu. În loc să parcurgi manual fiecare încărcătură neatribuită față de fiecare camion liber, un set de motoare care rulează în fundal evaluează perechile posibile și îți oferă o listă clasificată de propuneri — tu rămâi cel care apasă **Aplică**.
+
+Totul ajunge într-un singur loc: **Asistentul** — un panou deschis din butonul **Asistent** din bara de comenzi a Panoului de planificare (**Planificare → Panou de planificare**). Se deschide ca un panou pe toată înălțimea, în dreapta, ca să poată rămâne deschis cât timp lucrezi în panou alături de el; se închide cu pastila, cu **✕** sau cu **Esc**.
+
+<Note>
+Auto-planificarea nu atribuie niciodată nimic de una singură. Fiecare propunere este analizată și aplicată prin exact același flux de confirmare ca o tragere manuală — inclusiv orice verificare de cabotaj, remorcă sau ore de conducere care s-ar aplica unei atribuiri pentru prima dată. Ce rulează singur este *evaluarea*, niciodată *confirmarea*.
+</Note>
+
+Trei motoare alimentează aceeași coadă:
+
+| Motor | Rulează | La ce se uită |
+|---|---|---|
+| **Planul de dimineață** | Automat la ora 04:00 UTC și la cerere, prin **Re-optimizează acum** | Fiecare comandă fără camion încă |
+| **Planul de salvare** | Automat în momentul în care un camion declanșează o alertă de întârziere (cu o limitare la o rulare la 10 minute per companie) și la cerere | Fiecare comandă neplecată încă, inclusiv cele **deja atribuite** — este singurul motor care propune să ia o încărcătură de pe un camion și să o dea altuia |
+| **Potrivire proactivă / reîncărcare** | Continuu, pe măsură ce camioanele și comenzile se schimbă | Camioane pe cale să se elibereze, potrivite cu încărcături care le-ar putea reîncărca |
+
+Nu trebuie să știi care motor a produs un anumit rând — coada le combină pe toate într-o singură listă clasificată, cu o mică etichetă de sursă, astfel încât „pune încărcătura X pe camionul Y" se citește ca o singură decizie, indiferent de motivul pentru care Druma a sugerat-o.
+
+<Note>
+Auto-planificarea se activează opțional. Un admin sau un admin de companie o pornește din **Setări → Automatizare → Planificare**. Dacă e dezactivată, panoul Asistent tot se deschide, dar nu arată nimic de analizat.
+</Note>
+
+---
+
+## Cum evaluează
+
+Fiecare pereche candidată (această comandă, acest camion) este evaluată în funcție de distanță, costul estimat al cursei, timing și două penalizări legale — expunerea la cabotaj și orele de conducere rămase (UE 561/2006). Cele două penalizări legale sunt suficient de mari încât să coboare mereu o pereche spre finalul clasamentului, dar nu o elimină niciodată în tăcere din listă: un camion care e *singura* opțiune tot apare, marcat ca blocat, în loc să dispară fără nicio explicație.
+
+Fiecare rând afirmă doar faptele pe care le are:
+
+- **{n} km gol** — distanța de deplasare fără marfă până la punctul de încărcare.
+- **Cost cursă ~€{n}** — o estimare; când camionul nu are un profil de cost complet pentru a-l calcula, rândul spune **„Adaugă costurile camionului pentru a clasifica pe €"** în loc să ghicească.
+- O economie în € sau km, atunci când aplicarea sugestiei e mai ieftină decât alternativa pe care o înlocuiește.
+- **Blocat**, în roșu, când perechea eșuează la o verificare strictă (vezi mai jos).
+
+Nimic nu este inventat: un fapt pe care motorul nu l-a putut calcula (de exemplu costul pe un camion fără card de tarife) pur și simplu nu apare ca etichetă, în loc să fie afișat ca „€0" sau „0 km".
+
+**Clasificarea favorizează o pereche care chiar funcționează.** O pereche candidată este evaluată prin aceeași verificare de blocaje pe care o aplică fișa de confirmare (limită de cabotaj, document expirat, blocare pentru atelier, nepotrivire de remorcă, conflict de ore de conducere) *înainte* de a fi clasificată — nu după ce apeși Aplică. O pereche care trece de fiecare verificare este mereu preferată în locul uneia care nu trece, în cadrul setului de opțiuni viabile; o pereche roșie apare doar atunci când este cu adevărat singura candidată a comenzii. Când o candidată cu scor mai mic, dar curată, o înlocuiește pe una cu scor mai mare dar blocată, rândul spune asta — dă click pentru a vedea ce camion a fost trecut cu vederea și de ce.
+
+---
+
+## Planul de salvare
+
+Când un camion rămâne în urmă cu programul și declanșează o alertă de întârziere, Druma reevaluează automat fiecare comandă care nu a plecat încă — inclusiv încărcăturile **deja atribuite** unui alt camion — și adaugă propuneri în aceeași coadă a Asistentului. Este singurul caz în care auto-planificarea sugerează mutarea unei încărcături de pe camionul pe care se află în prezent.
+
+Un rând de salvare care ar reatribui o comandă deja atribuită poartă un avertisment **Va schimba camionul**, ca să știi înainte să apeși Aplică faptul că acceptarea dezatribuie încărcătura de oriunde se află acum.
+
+Poți declanșa și tu manual o nouă trecere de salvare cu **Re-optimizează acum** din panou, fără să aștepți o alertă.
+
+<Note>
+Camioanele deja pe traseu (plecat, la încărcare, în tranzit, la livrare, descărcare) nu sunt niciodată propuse ca și candidat de salvare pentru o comandă *diferită* — doar comenzile care nu au plecat încă sunt eligibile pentru reatribuire.
+</Note>
+
+---
+
+## Aplicarea și blocajele
+
+Coada este clasificată astfel încât încărcăturile care ajung la timp stau sus, cele care ar întârzia stau mai jos, iar perechile blocate stau la final — o încărcătură care chiar nu poate fi salvată acum rămâne totuși vizibilă, la un click distanță, în loc să fie ascunsă.
+
+- **Aplică** pe un singur rând rulează prin fluxul normal de atribuire — fișa de confirmare, cu orice verificare de blocaj sau schimb de remorcă, exact ca și cum ai fi tras camionul tu însuți.
+- **Aplică N câștigători clari** confirmă, dintr-un click, doar rândurile care nu necesită nicio decizie: nimic blocat, nimic expirat, niciun client de confirmat încă, nimic care întârzie și nimic care ar lua un camion de pe altă încărcătură. Tot restul este lăsat, în mod deliberat, pentru tine.
+- **Respinge** elimină un rând și cere un motiv — util pentru a păstra coada onestă cu privire la ce sugestii sunt de fapt respinse și de ce.
+
+**Triaj ghidat** parcurge ce a rămas din coadă, rând cu rând, după Aplică-tot — un contor de progres („2 din 198"), **Înapoi**, **Sari peste** și Aplică-ul propriu al rândului, astfel încât parcurgerea unei liste lungi nu înseamnă derularea unui flux nediferențiat. Un rând văzut astfel este marcat ca analizat, indiferent dacă ai acționat sau nu asupra lui.
+
+Rândurile **Blocate** apar în roșu, cu motivul pentru care a eșuat o verificare strictă (limită de cabotaj atinsă, document expirat, conflict de ore de conducere etc.). Butonul Aplică este dezactivat pe un rând blocat — poți totuși să-l deschizi pentru a vedea de ce și fie să rezolvi problema de bază, fie să atribui manual un alt camion.
+
+**Revizuire potrivire** deschide un panou de comparare pentru o privire mai atentă, unul lângă altul, asupra unui set de candidați înainte de a confirma — util atunci când mai multe camioane ar putea prelua în mod plauzibil aceeași încărcătură și vrei să le compari, nu să accepți direct candidatul cel mai bine clasificat.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Panoul de planificare" icon="calendar" href="/ro/planner/planning-board">
+    Unde locuiește panoul Asistent și cum funcționează atribuirea manuală prin tragere și plasare.
+  </Card>
+  <Card title="Urmărirea cabotajului" icon="flag" href="/ro/planner/cabotage-tracking">
+    Regulile de cabotaj din spatele uneia dintre cele două penalizări stricte verificate de auto-planificare.
+  </Card>
+</CardGroup>

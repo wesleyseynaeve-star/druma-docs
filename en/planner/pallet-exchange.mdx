@@ -114,27 +114,43 @@ Leave the threshold blank to disable the fee modal for that pallet type — move
 
 Beyond the per-client balance column, Druma has a dedicated **Operations → Pallet Balances** page that reconciles positions across **both clients and subcontractors** in one view — useful when you want a single sweep of every open pallet position rather than checking counterparties one at a time.
 
-Each row shows a counterparty (client or carrier), pallet type, net balance, and a **status** badge using the same threshold logic as the fee modal, but with an extra tier for positions that have drifted a long way past it:
+Unlike the per-order ledger, this page shows **one row per counterparty**, not one per (counterparty, pallet type). If you trade in more than one pallet standard with the same client, the row folds them into three totals — EUR, Industrial, and Other — plus a combined net and a single status badge, so you always have one line saying what that counterparty owes you (or you owe them) overall.
+
+Each row's status badge uses the same threshold logic as the fee modal, with an extra tier for positions that have drifted a long way past it:
 
 | Status | Meaning |
 |---|---|
-| **OK** | Balance is at or under the configured threshold |
+| **OK** | Balance is at or under the configured threshold (including an exact zero — fully settled) |
 | **Imbalance** | Balance exceeds the threshold |
 | **Severe** | Balance exceeds **twice** the threshold — worth chasing before it grows further |
 
 <Steps>
-  <Step title="Review the list">
-    Open **Operations → Pallet Balances**. Search by counterparty name or pallet type to narrow the list; the KPI bar at the top shows total open positions, how many are imbalanced, and your total exposure in euros.
+  <Step title="Pick a scope tab">
+    Open **Operations → Pallet Balances**. Five scope tabs — **All · Critical · Imbalance · OK · Settled** — sit above the table, each with a live count, so you can jump straight to the positions that need attention.
   </Step>
-  <Step title="Drill into movements">
-    Click **View movements** on any row to see that counterparty's full movement history for that pallet type in a modal, without leaving the list.
+  <Step title="Search, filter, or save a view">
+    Use the search box to find a counterparty by name, and **Filter** to narrow by counterparty type (client/subcontractor). **Columns** lets you choose which fields show; **Views** saves your current scope, search, and column choices as a named view you (or your whole company) can reopen later.
+  </Step>
+  <Step title="Open the settlement pane">
+    Click a row (or its **eye** icon) to slide in a settlement pane on the right, showing that counterparty's full movement ledger across every pallet type, sortable by date, order, or amount.
+  </Step>
+  <Step title="Settle the position">
+    From the pane you can **book a correction** (an order-less ledger entry with a required note — useful for a manually agreed write-off or a migration adjustment) or **charge a fee** for the overage, using the same fee flow as the automatic prompt described above.
   </Step>
   <Step title="Generate a statement">
-    Click **Generate statement** on a row for a CSV statement of that one counterparty's position, or **Export all** at the top of the page for every counterparty at once — useful for sending a reconciliation document to a client or carrier who disputes their balance.
+    From the pane or the row's own menu, generate a **PDF statement** — a branded document with a signature block, ready for a counterparty to confirm and sign — or export the position as **CSV**. **Export ▾** at the top of the page produces a combined CSV of every counterparty at once, for a full reconciliation sweep.
   </Step>
 </Steps>
 
-A **weekly automated reconciliation** run also checks every company's balances against the same thresholds and fires an in-app notification when a position is imbalanced — deduplicated per pallet type and counterparty over a 7-day window, so you're not renotified every run for a position you already know about.
+<Note>
+A client's pallet balance also shows, read-only, on their record: open the client and check the **Overview** tab for a "Pallet balance" line with a link straight into this page's settlement pane for that client.
+</Note>
+
+A **nightly automated reconciliation** run (02:05 UTC) also checks every company's balances against the same thresholds and notifies your company's admins/planners when a position is imbalanced — deduplicated per pallet type and counterparty over a 7-day window, so you're not renotified every run for a position you already know about.
+
+<Note>
+The ledger enforces its own sign convention at the database level: a **Sent** movement always adds to the balance and a **Returned** movement always subtracts from it, regardless of how the number is typed on the add-movement form — **Adjustment**, **Correction**, and **Opening Balance** entries keep whatever sign you enter, since those can legitimately run either direction.
+</Note>
 
 ---
 

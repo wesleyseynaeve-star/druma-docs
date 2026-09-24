@@ -1,0 +1,87 @@
+---
+title: "Útvonal-árazás"
+description: "Állítson be eladási árat útvonalanként — kiindulási/célországonként, irányítószám-előtagonként, városonként vagy zóna szerint —, és a Druma automatikusan javasolja, amikor egy megfelelő ajánlat vagy rendelés érkezik."
+icon: "route"
+---
+
+<Note>
+Ez az oldal a **Árazás → Útvonal-árazás** menüpontot fedi le — útvonalankénti **eladási** árakat. Ha kamion **költség**profilokat keres (fix költség, sofőrbér, üzemanyag, felárak) egy rendelés árréstsének becsléséhez, az egy különálló funkció — lásd [Díjtáblák](/hu/admin/rate-cards).
+</Note>
+
+## Mi az útvonal-árazási kártya?
+
+Egy útvonal-árazási kártya meghatározza, mit számláz egy útvonalért — például „Románia → Németország, ponyvás — 1450 €". Miután a kártya létezik, a Druma automatikusan javasolja az árát abban a pillanatban, amikor megfelelő ajánlat vagy rendelés jön létre, így egy rutinútvonal árazása többé nem külön táblázatban való keresgélés.
+
+**Ki szerkesztheti:** az Admin, Cégadmin, Flottamenedzser és Diszpécser szerepkörök.
+
+---
+
+## Útvonal-árazási kártya létrehozása
+
+Menjen az **Árazás → Útvonal-árazás** menüpontra, és kattintson az **Útvonal hozzáadása** gombra (vagy **Új kártya**, attól függően, hogy meglévő kártyához ad hozzá, vagy újat kezd).
+
+| Mező | Jelentés |
+|---|---|
+| **Kártya neve** | Rövid címke, pl. „Standard ponyvás útvonalak" |
+| **Ügyfél** | Opcionális — egyetlen ügyfélre korlátozza ezt a kártyát. Egy ügyfélspecifikus kártya mindig felülírja az általánosat ennél az ügyfélnél. |
+| **Kiindulási / célország** | Kötelező — a két ország (kétbetűs kód) párja, amelyet ez az útvonal lefed |
+| **Irányítószám-előtag** | Opcionális — az irányítószám első két karaktere (pl. `RO-30`). Egy irányítószám-előtaggal rendelkező útvonal felülírja a csak-ország útvonalat egy megfelelő felvételi/kiszállítási irányítószámnál, a csak-ország útvonal pedig továbbra is lefedi az adott ország minden más irányítószámát. |
+| **Város** | Opcionális — tovább szűkíti az útvonalat, ha maga az irányítószám nem elég pontos |
+| **Zóna** | Opcionális — a saját postai zónacsoportjai egyike (Beállítások → Zónák), hogy egy egész régiót egyszerre árazzon, ne csak egy előtagot |
+| **Pótkocsi típusa / Járműkategória** | Opcionális — egy adott felszereléstípusra korlátozza az útvonalat |
+| **Árazási mód** | **Fix díj** (egy rögzített ár, nincs szükség távolságra), **Km szerinti** (ár × útvonaltávolság) vagy **Km szerinti (sávozott)** — eltérő €/km attól függően, hogy melyik **Min. km / Max. km** sávba esik az útvonal |
+| **Összeg** | Az ár (vagy €/km díj) ehhez az útvonalhoz |
+| **Pénznem** | EUR vagy RON |
+| **Üzemanyag-séma / Felár %** | Opcionális üzemanyag-felár, amely az ár tetejére kerül |
+| **Érvényes ettől / eddig** | Opcionális dátumtartomány — hagyja üresen egy örökké érvényes útvonalhoz |
+
+Kattintson az **Útvonal hozzáadása** gombra a kártya alá mentéshez, vagy az **Útvonal törlése** gombra egy eltávolításához.
+
+<Note>
+Egy **Fix díj** útvonalhoz nincs szükség útvonaltávolságra az árazáshoz — hasznos, amint egy ajánlat létrejön, még mielőtt bármilyen útvonaltervezés lefutott volna. Egy **Km szerinti** vagy **Km szerinti (sávozott)** útvonalhoz szükség van egy távolságra, és kihagyásra kerül, ha még nincs elérhető.
+</Note>
+
+---
+
+## Hogyan választ útvonalat a Druma
+
+Amikor rendelést vagy ajánlatot hoz létre, kattintson az **Ár javaslata** gombra, és a Druma minden útvonalat a rendelés saját kiindulási/célpontja, irányítószámai, pótkocsija és ügyfele alapján pontoz, majd alkalmazza a legjobb egyezést. Egyezési sorrend, a legspecifikustól kezdve:
+
+1. Egy erre az **ügyfélre** korlátozott kártya
+2. **Irányítószám-előtag** egyezés (felülírja a csak-ország útvonalat)
+3. **Ország** egyezés
+4. **Zóna**, **pótkocsi típusa** és **járműkategória**, döntetlen esetén
+
+Egy útvonal irányítószám-előtagja, ha be van állítva, szigorú követelmény — soha nem egyezik „lazán" egy eltérő előtaggal. Ha semmi nem egyezik, a Druma ezt közli („Nincs megfelelő útvonalár erre a fuvarra"), találgatás helyett.
+
+---
+
+## Útvonal-előzmények — amit ténylegesen számlázott
+
+Kattintson az **Útvonal-előzmények** gombra egy országpáron, hogy lássa, mit számláztak ténylegesen a pontosan ezen az útvonalon lévő rendelések az elmúlt 6 hónapban — átlagos távolság, átlagos összeg és medián €/km — az egyes rendelésekre mutató linkkel. Használja a **Medián €/km használata**, **€/km × távolság használata** vagy **Összeg használata** gombokat, hogy közvetlenül átvegye ezen értékek egyikét abba az ármezőbe, amelyen éppen dolgozik.
+
+---
+
+## Az előzményei alapján javasolt
+
+A **Javaslatok** fül felsorolja azokat az útvonalakat, amelyeken az elmúlt 6 hónapban ténylegesen szállított, és amelyeknek **még nincs kártyája** — szakadék a között, amit kézzel áraz, és a között, ami automatizált. Az **Elfogadás** kártyát hoz létre, amely az adott útvonal historikus mediánján van árazva (kiindulópont, amelyet utólag szerkeszthet, soha nem kötelezettségvállalás); a **Minden látható elfogadása** ugyanezt teszi a képernyőn lévő minden javaslattal egy lépésben. Az **Elutasítás** kártya létrehozása nélkül törli a javaslatot.
+
+---
+
+## Tömeges importálás
+
+Ahelyett, hogy egyesével adna hozzá útvonalakat, importáljon egy táblázatot róluk. Az importáló elfogad, soronként: kártya neve, kiindulási/célország, **irányítószám-előtag**, **város**, **zónacsoport** (név szerint egyeztetve a saját zónacsoportjaival), pótkocsi típusa, árazási mód, összeg, **min./max. km** sáv, üzemanyag-felár % és megjegyzések.
+
+Egy sor egyértelmű okkal kerül elutasításra, ahelyett hogy csendben hibásan importálódna:
+
+- Egy irányítószám-előtagnak pontosan 2 karakterből kell állnia, és az országával együtt kell megadni — egy ország nélküli előtagnak nincs értelme.
+- Egy fel nem ismert zónacsoport-név hiba, nem csendes visszalépés a „nincs zóna" állapotra.
+- A `min_km` `max_km`-nél nagyobb értéke egyből elutasításra kerül.
+
+Egy sor, amely egy meglévő útvonalnak felel meg (ugyanaz a kártya, ország/előtag/város, pótkocsi, zóna, árazási mód és km-sáv), duplikátumként kimarad, ahelyett hogy egy második, ütköző árat hozna létre ugyanarra az útvonalra.
+
+---
+
+<Card title="Díjtáblák" icon="tags" href="/hu/admin/rate-cards">
+  A költségprofil oldala — mibe kerül valójában egy kamion üzemeltetése, amelyet a rendelés árrésének becslésére használnak e oldal eladási ára mellett.
+</Card>

@@ -1,0 +1,87 @@
+---
+title: "Tarification par ligne"
+description: "Définissez un prix de vente par ligne — pays d'origine/destination, préfixe postal, ville ou zone — et laissez Druma le suggérer automatiquement dès qu'un devis ou une commande correspondante arrive."
+icon: "route"
+---
+
+<Note>
+Cette page couvre **Tarification → Tarification par ligne** — les prix de **vente** par ligne. Si vous cherchez les profils de **coût** des camions (coût fixe, salaire chauffeur, carburant, suppléments) utilisés pour estimer la marge d'une commande, il s'agit d'une fonctionnalité distincte — voir [Cartes tarifaires](/fr/admin/rate-cards).
+</Note>
+
+## Qu'est-ce qu'une carte tarifaire de ligne ?
+
+Une carte tarifaire de ligne définit ce que vous facturez pour une ligne — par exemple « Roumanie → Allemagne, bâchée — 1 450 € ». Une fois la carte créée, Druma suggère automatiquement son prix dès qu'un devis ou une commande correspondante est créé, de sorte que tarifer une ligne courante n'est plus une recherche dans un tableur.
+
+**Qui peut modifier :** les rôles Admin, Admin d'entreprise, Responsable flotte et Planificateur.
+
+---
+
+## Créer une carte tarifaire de ligne
+
+Allez dans **Tarification → Tarification par ligne** et cliquez sur **Ajouter une ligne** (ou **Nouvelle carte**, selon que vous ajoutez à une carte existante ou en démarrez une nouvelle).
+
+| Champ | Signification |
+|---|---|
+| **Nom de la carte** | Un court libellé, par ex. « Lignes bâchées standard » |
+| **Client** | Optionnel — limite cette carte à un seul client. Une carte spécifique à un client l'emporte toujours sur une carte générale pour ce client. |
+| **Pays d'origine / destination** | Requis — la paire de pays (code à deux lettres) couverte par cette ligne |
+| **Préfixe postal** | Optionnel — les deux premiers caractères du code postal (par ex. `RO-30`). Une ligne avec préfixe postal l'emporte sur une ligne pays-seul pour un code postal d'enlèvement/livraison correspondant, et la ligne pays-seul continue de couvrir tout autre code postal dans ce pays. |
+| **Ville** | Optionnel — affine encore la ligne quand le code postal seul n'est pas assez précis |
+| **Zone** | Optionnel — l'un de vos propres groupes de zones postales (Paramètres → Zones), pour tarifer une région entière d'un coup plutôt qu'un seul préfixe |
+| **Type de remorque / Catégorie de véhicule** | Optionnel — restreint la ligne à un type d'équipement précis |
+| **Mode tarifaire** | **Prix forfaitaire** (un prix fixe, sans besoin de distance), **Au km** (prix × distance de la ligne) ou **Au km (par palier)** — un €/km différent selon le palier **km min / km max** où tombe la ligne |
+| **Montant** | Le prix (ou taux €/km) pour cette ligne |
+| **Devise** | EUR ou RON |
+| **Schéma carburant / Supplément %** | Supplément carburant optionnel appliqué en plus du prix |
+| **Valide du / au** | Plage de dates optionnelle — laissez vide pour une ligne toujours valide |
+
+Cliquez sur **Ajouter une ligne** pour l'enregistrer sous la carte, ou **Supprimer la ligne** pour en retirer une.
+
+<Note>
+Une ligne **Prix forfaitaire** n'a besoin d'aucune distance de trajet pour être tarifée — utile dès qu'un devis est créé, avant même qu'un calcul d'itinéraire ait eu lieu. Une ligne **Au km** ou **Au km (par palier)** a besoin d'une distance et est ignorée si aucune n'est encore disponible.
+</Note>
+
+---
+
+## Comment Druma choisit une ligne
+
+Quand vous créez une commande ou un devis, cliquez sur **Suggérer un prix** et Druma évalue chaque ligne par rapport à l'origine/destination, aux codes postaux, à la remorque et au client propres à la commande, puis applique la meilleure correspondance. Ordre de priorité, du plus spécifique :
+
+1. Une carte limitée à ce **client**
+2. Correspondance par **préfixe postal** (l'emporte sur une ligne pays-seul)
+3. Correspondance par **pays**
+4. **Zone**, **type de remorque** et **catégorie de véhicule**, comme départage
+
+Le préfixe postal d'une ligne, quand il est défini, est une exigence stricte — il ne correspond jamais « approximativement » à un préfixe différent. Si rien ne correspond, Druma le dit (« Aucun prix de ligne correspondant pour ce trajet ») plutôt que de deviner.
+
+---
+
+## Historique de ligne — ce que vous avez réellement facturé
+
+Cliquez sur **Historique de ligne** sur une paire de pays pour voir ce que les commandes sur cette ligne exacte ont réellement facturé au cours des 6 derniers mois — distance moyenne, montant total moyen et €/km médian — avec un lien vers les commandes individuelles. Utilisez **Utiliser €/km médian**, **Utiliser €/km × distance** ou **Utiliser le total** pour reprendre directement l'une de ces valeurs dans le champ de prix sur lequel vous travaillez.
+
+---
+
+## Suggéré depuis votre historique
+
+L'onglet **Suggestions** liste les lignes que vous avez réellement empruntées au cours des 6 derniers mois et qui **n'ont pas encore de carte** — un écart entre ce que vous tarifez manuellement et ce qui est automatisé. **Accepter** crée une carte tarifée à la médiane historique de cette ligne (un point de départ que vous pouvez modifier ensuite, jamais un engagement) ; **Accepter tout ce qui est visible** fait de même pour chaque suggestion à l'écran en une étape. **Rejeter** efface une suggestion sans créer de carte.
+
+---
+
+## Import en masse
+
+Plutôt que d'ajouter des lignes une par une, importez une feuille de calcul. L'importateur accepte, par ligne : nom de la carte, pays d'origine/destination, **préfixe postal**, **ville**, **groupe de zone** (associé par nom à vos propres groupes de zones), type de remorque, mode tarifaire, montant, palier **km min/max**, supplément carburant % et notes.
+
+Une ligne est rejetée avec un motif clair plutôt qu'importée silencieusement de façon incorrecte :
+
+- Un préfixe postal doit faire exactement 2 caractères et doit être fourni avec son pays — un préfixe sans pays n'a pas de sens.
+- Un nom de groupe de zone non reconnu est une erreur, pas un repli silencieux vers « aucune zone ».
+- `min_km` supérieur à `max_km` est rejeté directement.
+
+Une ligne qui correspond à une ligne existante (même carte, pays/préfixe/ville, remorque, zone, mode tarifaire et palier km) est ignorée comme doublon, plutôt que de créer un second prix en conflit pour la même ligne.
+
+---
+
+<Card title="Cartes tarifaires" icon="tags" href="/fr/admin/rate-cards">
+  Le côté profil de coût — ce que coûte réellement l'exploitation d'un camion, utilisé pour estimer la marge de commande aux côtés du prix de vente de cette page.
+</Card>

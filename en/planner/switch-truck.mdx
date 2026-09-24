@@ -36,6 +36,10 @@ You can switch the truck on any order that is in one of these active statuses:
 
 The order must be of type **Own Truck**. Subcontracted and capacity sale orders do not support truck switching — those are managed by the external carrier.
 
+<Note>
+A **groupage run** can also be switched or relayed mid-route the same way a single order can — pick a new truck (or record a relay point for one leg) from the run's own row action, and every leg re-crews in one step. The one difference: a groupage run always needs a named truck — there is no "Don't know yet" open relay at the run level, since releasing one leg with the truck unknown would strand the rest of the run's cargo on the dropping tractor.
+</Note>
+
 ---
 
 ## How to switch the truck
@@ -53,8 +57,8 @@ The order must be of type **Own Truck**. Subcontracted and capacity sale orders 
   <Step title="Choose where to insert it">
     Use **Insert relay after** to pick which stop the relay comes after (it defaults to the last loading stop). Druma inserts a new internal stop into the route at that point.
   </Step>
-  <Step title="Pick the new truck (optional)">
-    Choose the replacement truck from the **New truck** dropdown, or leave it on **Don't know yet** if you only want to record where the handover will happen and assign a truck later.
+  <Step title="Pick the new truck (or leave it open)">
+    Choose the replacement truck from the **New truck** dropdown, or leave it on **Don't know yet** to record an **open relay** — see below.
   </Step>
   <Step title="Confirm">
     Click **Confirm**. If you picked a new truck, Druma immediately runs the normal assign-truck flow on top of the relay — including any trailer-swap or cabotage checks that would apply to a first-time assignment.
@@ -75,7 +79,27 @@ When you confirm, Druma:
 2. **Runs the normal truck-assignment flow**, if you picked a new truck — the order's truck and driver fields are updated the same way a first-time assignment would be, including a trailer-swap prompt if the new truck has a fixed trailer that differs from the one currently on the order.
 3. **Leaves the trailer alone** otherwise — the trailer stays attached to the order regardless of which tractor is pulling it, unless the new truck's fixed trailer forces a swap.
 
-If you leave the new truck as **Don't know yet**, only the relay stop is recorded — the order keeps its current truck until you assign one, either by editing the relay later or by dragging a truck onto the order as normal.
+---
+
+## Open relay — when you don't know the next truck yet
+
+Choosing **Don't know yet** doesn't just note a location for later. It genuinely **releases the load**:
+
+- The order goes back to **Unassigned**, ready to be matched to a truck exactly like any other pending load.
+- The dropping tractor is freed to bobtail on to its own next job — Druma records its new position as the relay point, so it shows up as available from there rather than from wherever it last delivered.
+- The loaded trailer stays behind at the relay point, waiting to be collected.
+
+The order's row shows a **W** badge (hover it for the relay's zone and the name of the tractor that dropped it) so it doesn't disappear into the ordinary unassigned pile unnoticed.
+
+When you later assign a truck to that order — a plain drag, or through the Assistant — Druma already knows this is a trailer collection, not a fresh pickup, and prompts the incoming truck's own trailer-drop check if it's carrying one of its own.
+
+<Note>
+An open relay can only be recorded on a **single order** — a groupage run's legs always require a named truck, since releasing one leg with the truck unknown would leave the rest of the run's header stranded on the dropping tractor.
+</Note>
+
+### Undoing an open relay
+
+If nothing has happened since — no truck has collected the trailer, and the dropping tractor hasn't been recoupled to something else — you can undo an open relay from the order row: look for the **Undo relay** icon next to the row's Assign action. This restores the order to its status before the release, re-couples the trailer to the original tractor, and clears the "waiting" state.
 
 ---
 
@@ -96,6 +120,10 @@ Cancelling a switch (see Undo below), or a truck reassignment that fails partway
 ---
 
 ## Cancelling a switch (Undo)
+
+<Note>
+This section covers undoing a switch to a **named** replacement truck. For undoing an **open relay** ("Don't know yet"), see Undo above.
+</Note>
 
 If the replacement truck has not yet done any work on the order, you can cancel the switch and restore the original truck.
 
@@ -118,19 +146,23 @@ If the cancel is blocked, Druma shows a message explaining why. You can still ma
 Switching a truck does **not** create a new order. The original order number, client, pricing, and all commercial terms remain the same. Only the operational assignment (which truck and driver) changes.
 </Warning>
 
-- The **trailer always stays with the cargo**. If you need to change the trailer as well, that is a different operation — see [Trailer Management](/en/planner/trailer-management).
+- **The trailer stays with the cargo** on an ordinary switch or relay. If you need to change the trailer independently of the cargo, that's Switch Trailer — see [Trailer Management](/en/planner/trailer-management). If the trailer needs to be **left behind, loaded, for the consignee to unload themselves**, that's a different operation entirely — see [Drop-and-Hook Delivery](/en/planner/drop-and-hook-delivery).
 - Truck switches are **logged in the order's audit history** with the planner's name and timestamp.
 - The driver app automatically updates — the outgoing driver sees the order disappear from their active loads, and the incoming driver receives a push notification with the job details.
 
 ---
 
-<Card title="Fleet Management" icon="truck" href="/en/planner/fleet-management">
-  Manage your tractor fleet — add vehicles, track availability, and handle maintenance blocks.
-</Card>
-
-<Card title="Trailer Management" icon="trailer" href="/en/planner/trailer-management">
-  Manage trailers independently from tractors — assignment, detachment, and location tracking.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Drop-and-Hook Delivery" icon="container" href="/en/planner/drop-and-hook-delivery">
+    Leave a loaded trailer with the consignee and hook a different one — a genuinely different operation from a tractor relay.
+  </Card>
+  <Card title="Fleet Management" icon="truck" href="/en/planner/fleet-management">
+    Manage your tractor fleet — add vehicles, track availability, and handle maintenance blocks.
+  </Card>
+  <Card title="Trailer Management" icon="trailer" href="/en/planner/trailer-management">
+    Manage trailers independently from tractors — assignment, detachment, and location tracking.
+  </Card>
+</CardGroup>
 
 <Card title="Planning Board" icon="calendar" href="/en/planner/planning-board">
   See all your orders and trucks on the visual dispatch board — the truck switch button is also accessible from here.

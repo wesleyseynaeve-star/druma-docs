@@ -10,9 +10,11 @@ The CS Workbench is where customer-service reps answer the question clients ask 
 
 **How to access:** click **Customer Service** in the left navigation. It opens on the **Workbench** tab by default; a **Sites** tab sits alongside it.
 
-<Frame caption="CS Workbench — triage view">
+<Frame caption="CS Workbench — a dense, groupable order list on the left, order detail sliding in on the right.">
   <img src="/images/planner/cs-workbench.png" alt="CS Workbench order triage list with filters and detail pane" />
 </Frame>
+
+The order list is a dense table, not a card feed — click a row to slide a detail pane in from the right (it stays in sync with the URL, so a link to `?order=<id>` opens straight on that order). `J`/`K` walk the list up and down, and `Esc` clears the selection, the same keyboard pattern as Orders and Fleet.
 
 The Workbench is built on two supporting pieces:
 
@@ -28,7 +30,7 @@ The Workbench is built on two supporting pieces:
     Go to **Customer Service** — it opens on the Workbench tab.
   </Step>
   <Step title="Find the order">
-    Use the search box (order number, reference, or pickup/delivery city) or narrow the list first — see the filters below. Click an order card to open its detail pane on the right.
+    Use the search box (order number, reference, or pickup/delivery city) or narrow the list first — see the filters below. Click an order row to open its detail pane on the right.
   </Step>
   <Step title="Review the shipment status">
     The detail pane's header shows the order number, status, assigned driver/truck (or subcontractor), and ETA, followed by a status stepper and a stop-by-stop breakdown — each stop shows today's opening hours (in red if currently closed), whether an appointment is required, the client's booking reference, site contacts, and a booking-portal link when the site has one.
@@ -63,23 +65,37 @@ Beyond the status stepper and stop breakdown, the detail pane surfaces everythin
 
 ---
 
-## Filtering and Sorting the Order List
+## Filtering, Grouping, and Sorting the Order List
 
-The left-hand order list has its own toolbar above the cards:
+The command bar above the list is deliberately one line — the everyday controls sit on it directly, and everything else lives behind **More filters**:
 
 - **Scope toggle** — **Active** (default), **All**, or **Historical**.
+- **Group** — the list defaults to Druma's own **Triage** grouping (see below); switch it to **None** for a flat, sortable list instead.
 - **Sort** — by Created, ETA, Delivery date, Status, **Next stop**, or **Check-call age** (the last two need each order's live signal data, so they're greyed out for a moment while that loads).
-- **Status filter**, **Client filter**, and **Client reference filter** — narrow further; client and reference filters accept partial matches.
-- **Loading** and **Unloading** date presets — **Today**, **Tomorrow**, or **This week**, applied against the pickup and delivery dates independently.
-- **Exceptions only** — show only orders currently carrying an exception.
-- **Unassigned** — show only orders with no driver, no truck, and no subcontractor/carrier assigned yet.
-- **Stale check-call** — show only orders whose last check-call is older than a threshold you choose: **12h, 24h, 48h,** or **72h**. An order with no check-call logged at all always counts as stale.
+- **Columns** — choose which of the table's fields are visible; by default the table shows Order #, Status, Client, Route, a combined **Signal** column, and one more — the rest (Assignment, ETA/next-stop breakdown, etc.) are opt-in, so the table doesn't need a horizontal scroll to read the columns that matter most.
 
-Click the **star** on an order card to pin it as a **CS priority** — pinned orders always sort to the top of the list, regardless of the active sort key or direction.
+**More filters** holds: Status, Client, Client reference (client and reference accept partial matches), Loading/Unloading date presets (**Today**, **Tomorrow**, **This week**, applied against pickup and delivery dates independently), **Exceptions only**, **Unassigned** (no driver, no truck, no subcontractor/carrier yet), and **Stale check-call** (choose a threshold — **12h, 24h, 48h,** or **72h** — for how old the last check-call has to be to count).
 
-Each order card also shows an **at-risk badge** (amber for "at risk" when the ETA buffer against the delivery window drops to an hour or less, red for "late" once it's missed), a **check-call-age badge** showing how long since the last touch, and a **next-stop preview** (the upcoming stop's name, city, and time window).
+<Note>
+Stale check-call only flags orders that are actually **moving** right now (assigned through offloading) — a Draft or Pending order with nothing logged yet isn't "stale", it just hasn't started.
+</Note>
 
-A KPI bar above the list shows live counts for Results, In transit, Delivered, and Exceptions.
+Click the **star** on an order row to pin it as a **CS priority** — pinned orders always sort to the top of the list, regardless of the active sort key or direction.
+
+### Triage grouping
+
+The default grouping sorts every order into one of four buckets, worst first:
+
+| Group | What lands here |
+|---|---|
+| **Needs action now** | The most urgent signals — an open exception or an escalation waiting on a reply |
+| **Late / at risk** | The ETA buffer against the delivery window has dropped to an hour or less, or has already been missed |
+| **Awaiting check-call** | Moving, with no check-call logged inside your stale-check-call threshold |
+| **On track** | Everything else |
+
+Each order's row shows a compact **Signal** column (its at-risk/late state and check-call age at a glance) and a next-stop preview — the upcoming stop's name, city, and time window.
+
+The KPI bar above the list — **Results**, **In transit**, **Delivered**, **Exceptions** — is clickable: click a tile to filter the list down to it, click it again to clear the filter. The **Delivered** tile reads a dash rather than a misleading zero while you're on the **Active** scope (which excludes delivered orders by design) — click it to switch to **All** scope filtered to Delivered.
 
 ---
 
@@ -111,6 +127,29 @@ Exceptions also feed the **Exceptions feed** widget on the Home Dashboard, so a 
 
 ---
 
+## Escalating to a Planner
+
+Some issues need a planner's decision, not a check-call — a truck reassignment, a client dispute over the price or terms, a driver who won't answer, missing paperwork. Rather than tracking these by phone or chat, escalate straight from the order.
+
+<Steps>
+  <Step title="Open the order and click Escalate">
+    In the order detail pane, click **Escalate to planner**.
+  </Step>
+  <Step title="Pick a reason">
+    Choose from **Truck reassignment**, **Client dispute**, **Driver unreachable**, **Documentation**, or **Other**.
+  </Step>
+  <Step title="Add a note (optional)">
+    Give the planner the context they'll need — what you've already tried, what the client is asking for, and so on.
+  </Step>
+  <Step title="Submit">
+    Click **Escalate**. The escalation is logged in the order's check-call/communication timeline and an amber strip appears on the order — on the Planning Board and in the Orders detail pane too, so a planner sees it wherever they're already working, not only inside CS.
+  </Step>
+</Steps>
+
+Once the planner has dealt with it, they (or you) click **Mark resolved** on the amber strip — it records who resolved it and when, and the strip clears.
+
+---
+
 ## Sites — Where Opening Hours and Contacts Come From
 
 Manage the site catalogue from the **Sites** tab. Each site holds identity/address, a weekly opening-hours grid (with date-specific exceptions, e.g. a public holiday), appointment/booking settings, dock count and gate/access notes, vehicle restrictions, a contacts repeater, and per-client booking instructions (the same warehouse can require a different reference depending on whose cargo it is).
@@ -118,7 +157,7 @@ Manage the site catalogue from the **Sites** tab. Each site holds identity/addre
 Two buttons in the site editor's opening-hours section can fill in data for you — both require opening an existing site (not available while creating a new one):
 
 - **Suggest from history** — infers opening hours and typical dwell time from your own drivers' past arrival/departure times at that site. Always reviewable before you save; nothing is written automatically.
-- **Research the web** — asks Druma's AI to search the web for the site's published hours, contacts, and booking portal, citing the pages it used. This is a manual, pay-per-call action metered in EUR and must be turned on first in **Settings → Automation → Customer service** (an admin/company-admin setting) — it's off by default because each click has a real cost.
+- **Research the web** — asks Druma's AI to search the web for the site's published hours, contacts, and booking portal, citing the pages it used. It must be turned on first in **Settings → Automation → Customer service** (an admin/company-admin setting) — off by default.
 
 ### What the site fields mean
 

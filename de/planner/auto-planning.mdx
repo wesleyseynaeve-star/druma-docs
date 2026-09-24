@@ -1,0 +1,87 @@
+---
+title: "Auto-Planung & der Assistent"
+description: "Wie Druma von sich aus LKW-Ladung-Zuordnungen vorschlägt — der Morgenplan, der Rettungsplan und eine einzige geordnete Warteschlange, die Sie prüfen und übernehmen."
+icon: "wand-sparkles"
+---
+
+## Überblick
+
+Auto-Planung bedeutet, dass Druma im Hintergrund bereits einen ersten Zuordnungsversuch macht, bevor Sie es tun. Statt jede nicht zugewiesene Ladung gegen jeden freien LKW manuell abzugleichen, bewerten mehrere Hintergrund-Engines die möglichen Paare und liefern Ihnen eine geordnete Vorschlagsliste — Sie bleiben diejenige Person, die auf **Übernehmen** klickt.
+
+Alles landet an einem Ort: dem **Assistenten** — einem Panel, das über die Schaltfläche **Assistent** in der Befehlsleiste der Planungstafel geöffnet wird (**Planung → Planungstafel**). Er schiebt sich als Panel über die volle Höhe von rechts ein, damit er geöffnet bleiben kann, während Sie daneben an der Tafel arbeiten; schließen Sie ihn über die Pille, das **✕** oder **Esc**.
+
+<Note>
+Die Auto-Planung weist nie etwas von sich aus zu. Jeder Vorschlag wird über denselben Bestätigungsablauf geprüft und übernommen wie ein manuelles Ziehen — einschließlich jeder Kabotage-, Anhänger- oder Lenkzeitprüfung, die bei einer Erstzuweisung gelten würde. Automatisch läuft nur die *Bewertung*, nie die *Freigabe*.
+</Note>
+
+Drei Engines speisen dieselbe Warteschlange:
+
+| Engine | Läuft | Worauf sie schaut |
+|---|---|---|
+| **Morgenplan** | Automatisch um 04:00 UTC und auf Anfrage über **Jetzt neu optimieren** | Jeder Auftrag ohne LKW |
+| **Rettungsplan** | Automatisch, sobald ein LKW eine Verspätungswarnung auslöst (begrenzt auf einen Lauf alle 10 Minuten pro Unternehmen), und auf Anfrage | Jeder noch nicht abgefahrene Auftrag, einschließlich bereits **zugewiesener** — die einzige Engine, die vorschlägt, eine Ladung von einem LKW auf einen anderen zu übertragen |
+| **Proaktives Matching / Rückladung** | Fortlaufend, während sich LKW und Aufträge ändern | LKW, die sich bald befreien, abgeglichen mit Ladungen, die sie nachladen könnten |
+
+Sie müssen nicht wissen, welche Engine eine bestimmte Zeile erzeugt hat — die Warteschlange fasst alle in einer geordneten Liste mit kleinem Quellen-Chip zusammen, sodass „Ladung X auf LKW Y setzen" wie eine einzige Entscheidung wirkt, egal warum Druma sie vorgeschlagen hat.
+
+<Note>
+Auto-Planung ist optional. Ein Admin oder Firmenadmin schaltet sie unter **Einstellungen → Automatisierung → Planung** ein. Ist sie deaktiviert, öffnet sich das Assistent-Panel trotzdem, zeigt aber nichts zum Prüfen.
+</Note>
+
+---
+
+## Wie bewertet wird
+
+Jedes Kandidatenpaar (dieser Auftrag, dieser LKW) wird nach Entfernung, geschätzten Fahrtkosten, Timing und zwei rechtlichen Strafen bewertet — Kabotage-Exposition und verbleibende Lenkzeit (EU 561/2006). Beide rechtlichen Strafen sind stark genug, um ein Paar immer ans Ende der Rangliste zu setzen, entfernen es aber nie stillschweigend aus der Liste: Ein LKW, der die *einzige* Option ist, wird weiterhin angezeigt, als blockiert markiert, statt ohne Erklärung zu verschwinden.
+
+Jede Zeile nennt nur die Fakten, die sie tatsächlich hat:
+
+- **{n} km Leerfahrt** — die Leerstrecke bis zur Abholung.
+- **Fahrtkosten ~€{n}** — eine Schätzung; hat der LKW kein vollständiges Kostenprofil, steht in der Zeile **„LKW-Kosten hinzufügen, um nach € zu sortieren"** statt zu raten.
+- Eine Ersparnis in € oder km, wenn die Übernahme des Vorschlags günstiger ist als die Alternative, die er ersetzt.
+- **Blockiert**, in Rot, wenn das Paar eine harte Prüfung nicht besteht (siehe unten).
+
+Nichts wird erfunden: Ein Fakt, den die Engine nicht berechnen konnte (etwa Kosten bei einem LKW ohne Tarifkarte), erscheint einfach nicht als Chip, statt als „€0" oder „0 km" angezeigt zu werden.
+
+**Die Rangfolge bevorzugt ein Paar, das tatsächlich funktioniert.** Ein Kandidatenpaar wird vor der Einstufung — nicht erst nach dem Klick auf Übernehmen — mit derselben Blockprüfung bewertet, die auch das Bestätigungsblatt anwendet (Kabotage-Limit, abgelaufenes Dokument, Werkstattsperre, Anhänger-Mismatch, Lenkzeitkonflikt). Ein Paar, das jede Prüfung besteht, wird innerhalb der machbaren Menge stets einem bevorzugt, das nicht besteht; ein rotes Paar wird nur angezeigt, wenn es tatsächlich die einzige Kandidatur des Auftrags ist. Verdrängt ein niedriger bewerteter, aber sauberer Kandidat einen höher bewerteten, aber blockierten, steht das in der Zeile — klicken Sie durch, um zu sehen, welcher LKW übergangen wurde und warum.
+
+---
+
+## Rettungsplan
+
+Fällt ein LKW hinter den Zeitplan zurück und löst eine Verspätungswarnung aus, bewertet Druma automatisch jeden noch nicht abgefahrenen Auftrag neu — einschließlich Ladungen, die **bereits einem anderen LKW zugewiesen** sind — und fügt Vorschläge in dieselbe Assistenten-Warteschlange ein. Dies ist der einzige Fall, in dem die Auto-Planung vorschlägt, eine Ladung von dem LKW zu nehmen, auf dem sie sich gerade befindet.
+
+Eine Rettungsplan-Zeile, die einen bereits zugewiesenen Auftrag umleiten würde, trägt eine **LKW wird gewechselt**-Warnung, damit Sie vor dem Klick auf Übernehmen wissen, dass die Annahme die Ladung von ihrem aktuellen Platz abmeldet.
+
+Sie können auch selbst über **Jetzt neu optimieren** im Panel einen neuen Rettungslauf auslösen, ohne auf eine Warnung zu warten.
+
+<Note>
+LKW, die bereits unterwegs sind (abgefahren, Beladung, unterwegs, bei Zustellung, Entladung), werden nie als Rettungskandidat für einen *anderen* Auftrag vorgeschlagen — nur Aufträge, die noch nicht abgefahren sind, kommen für eine Umverteilung infrage.
+</Note>
+
+---
+
+## Übernehmen und Blockierer
+
+Die Warteschlange ist so geordnet, dass Ladungen, die rechtzeitig ankommen, oben stehen, solche mit Verspätung darunter und blockierte Paare am Ende — eine Ladung, die gerade wirklich nicht gerettet werden kann, bleibt sichtbar, nur einen Klick entfernt, statt versteckt zu werden.
+
+- **Übernehmen** auf einer einzelnen Zeile durchläuft den normalen Zuweisungsablauf — das Bestätigungsblatt, mit jeder Block- oder Anhängerwechsel-Prüfung, genau wie bei manuellem Ziehen.
+- **N eindeutige Gewinner übernehmen** bestätigt mit einem Klick nur die Zeilen, die keine Beurteilung erfordern: nichts blockiert, nichts veraltet, kein Kunde noch zu bestätigen, nichts verspätet und nichts, das einem LKW eine andere Ladung wegnähme. Alles andere wird bewusst Ihnen überlassen.
+- **Ablehnen** entfernt eine Zeile und fragt nach einem Grund — nützlich, um ehrlich nachzuverfolgen, welche Vorschläge tatsächlich abgelehnt werden und warum.
+
+**Geführte Triage** geht nach Alle übernehmen den Rest der Warteschlange Zeile für Zeile durch — ein Fortschrittszähler („2 von 198"), **Zurück**, **Überspringen** und das eigene Übernehmen der Zeile, sodass das Durcharbeiten einer langen Liste kein Scrollen durch einen undifferenzierten Feed bedeutet. Eine so gesehene Zeile wird als geprüft markiert, unabhängig davon, ob Sie gehandelt haben.
+
+**Blockierte** Zeilen erscheinen rot mit dem Grund, warum eine harte Prüfung fehlschlug (Kabotage-Limit erreicht, abgelaufenes Dokument, Lenkzeitkonflikt usw.). Übernehmen ist bei einer blockierten Zeile deaktiviert — Sie können sie trotzdem öffnen, um den Grund zu sehen, und entweder das zugrunde liegende Problem lösen oder manuell einen anderen LKW zuweisen.
+
+**Match-Überprüfung** öffnet eine Batch-Tafel für einen genaueren Nebeneinander-Vergleich einer Kandidatenmenge vor der Übernahme — nützlich, wenn mehrere LKW die gleiche Ladung plausibel übernehmen könnten und Sie sie vergleichen möchten, statt den bestplatzierten direkt zu akzeptieren.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Planungstafel" icon="calendar" href="/de/planner/planning-board">
+    Wo das Assistenten-Panel lebt und wie die manuelle Drag-and-Drop-Zuweisung funktioniert.
+  </Card>
+  <Card title="Kabotage-Tracking" icon="flag" href="/de/planner/cabotage-tracking">
+    Die Kabotage-Regeln hinter einer der beiden harten Strafen, die die Auto-Planung prüft.
+  </Card>
+</CardGroup>

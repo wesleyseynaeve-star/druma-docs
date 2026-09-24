@@ -1,0 +1,87 @@
+---
+title: "Routeprijzen"
+description: "Stel een verkoopprijs per route in — herkomst-/bestemmingsland, postcodeprefix, stad of zone — en laat Druma deze automatisch voorstellen zodra er een bijpassende offerte of bestelling binnenkomt."
+icon: "route"
+---
+
+<Note>
+Deze pagina behandelt **Prijzen → Routeprijzen** — **verkoop**prijzen per route. Zoekt u vrachtwagen-**kosten**profielen (vaste kosten, chauffeursloon, brandstof, toeslagen) om de marge van een bestelling te schatten, dan is dat een aparte functie — zie [Tariefkaarten](/nl/admin/rate-cards).
+</Note>
+
+## Wat is een routeprijskaart?
+
+Een routeprijskaart bepaalt wat u rekent voor een route — bijvoorbeeld "Roemenië → Duitsland, huifzeil — € 1.450". Zodra een kaart bestaat, stelt Druma de prijs ervan automatisch voor zodra een bijpassende offerte of bestelling wordt aangemaakt, zodat het prijzen van een routineroute geen opzoekwerk in een spreadsheet meer is.
+
+**Wie kan bewerken:** de rollen Admin, Bedrijfsadmin, Wagenparkbeheerder en Planner.
+
+---
+
+## Een routeprijskaart aanmaken
+
+Ga naar **Prijzen → Routeprijzen** en klik op **Route toevoegen** (of **Nieuwe kaart**, afhankelijk van of u toevoegt aan een bestaande kaart of een nieuwe begint).
+
+| Veld | Betekenis |
+|---|---|
+| **Kaartnaam** | Een kort label, bijv. "Standaard huifzeilroutes" |
+| **Klant** | Optioneel — beperkt deze kaart tot één klant. Een klantspecifieke kaart wint altijd van een algemene voor die klant. |
+| **Herkomst-/bestemmingsland** | Verplicht — het landenpaar (tweeletterige code) dat deze route dekt |
+| **Postcodeprefix** | Optioneel — de eerste twee tekens van de postcode (bijv. `RO-30`). Een route met een postcodeprefix wint van een route op alleen land voor een overeenkomende laad-/lospostcode, en de route op alleen land blijft elke andere postcode in dat land dekken. |
+| **Stad** | Optioneel — vernauwt de route verder wanneer de postcode alleen niet precies genoeg is |
+| **Zone** | Optioneel — een van uw eigen postzonegroepen (Instellingen → Zones), om een hele regio in één keer te prijzen in plaats van slechts één prefix |
+| **Aanhangertype / Voertuigcategorie** | Optioneel — beperkt de route tot een specifiek type uitrusting |
+| **Prijsmodus** | **Vaste prijs** (één vaste prijs, geen afstand nodig), **Per km** (prijs × routeafstand) of **Per km (met schijven)** — een andere €/km afhankelijk van in welke **Min. km / Max. km**-schijf de route valt |
+| **Bedrag** | De prijs (of €/km-tarief) voor deze route |
+| **Valuta** | EUR of RON |
+| **Brandstofschema / Toeslag %** | Optionele brandstoftoeslag bovenop de prijs |
+| **Geldig van / tot** | Optioneel datumbereik — laat leeg voor een altijd geldige route |
+
+Klik op **Route toevoegen** om deze onder de kaart op te slaan, of op **Route verwijderen** om er een te verwijderen.
+
+<Note>
+Een route met **Vaste prijs** heeft geen routeafstand nodig om te worden geprijsd — handig zodra een offerte wordt aangemaakt, nog voordat er routering is uitgevoerd. Een route **Per km** of **Per km (met schijven)** heeft een afstand nodig en wordt overgeslagen als er nog geen beschikbaar is.
+</Note>
+
+---
+
+## Hoe Druma een route kiest
+
+Wanneer u een bestelling of offerte aanmaakt, klikt u op **Prijs voorstellen** en beoordeelt Druma elke route tegen de eigen herkomst/bestemming, postcodes, aanhanger en klant van de bestelling, en past vervolgens de beste match toe. Prioriteitsvolgorde, meest specifiek eerst:
+
+1. Een kaart beperkt tot deze **klant**
+2. Match op **postcodeprefix** (wint van een route op alleen land)
+3. Match op **land**
+4. **Zone**, **aanhangertype** en **voertuigcategorie**, als tiebreakers
+
+De postcodeprefix van een route is, indien ingesteld, een strikte vereiste — deze komt nooit "losjes" overeen met een andere prefix. Als niets overeenkomt, zegt Druma dat ("Geen bijpassende routeprijs voor deze rit") in plaats van te gokken.
+
+---
+
+## Routegeschiedenis — wat u daadwerkelijk in rekening heeft gebracht
+
+Klik op **Routegeschiedenis** bij een landenpaar om te zien wat bestellingen op precies die route de afgelopen 6 maanden daadwerkelijk hebben gefactureerd — gemiddelde afstand, gemiddeld totaal en mediane €/km — met een link naar de afzonderlijke bestellingen. Gebruik **Mediane €/km gebruiken**, **€/km × afstand gebruiken** of **Totaal gebruiken** om een van die waarden rechtstreeks over te nemen in het prijsveld waaraan u werkt.
+
+---
+
+## Voorgesteld op basis van uw geschiedenis
+
+Het tabblad **Suggesties** vermeldt routes die u de afgelopen 6 maanden daadwerkelijk heeft gereden en die **nog geen kaart hebben** — een kloof tussen wat u handmatig prijst en wat geautomatiseerd is. **Accepteren** maakt een kaart aan die is geprijsd op de historische mediaan van die route (een startpunt dat u daarna kunt bewerken, nooit een verplichting); **Alle zichtbare accepteren** doet hetzelfde voor elke suggestie op het scherm in één keer. **Afwijzen** wist een suggestie zonder een kaart aan te maken.
+
+---
+
+## Bulkimport
+
+In plaats van routes één voor één toe te voegen, importeert u een spreadsheet ervan. De importer accepteert, per rij: kaartnaam, herkomst-/bestemmingsland, **postcodeprefix**, **stad**, **zonegroep** (gematcht op naam met uw eigen zonegroepen), aanhangertype, prijsmodus, bedrag, **min./max. km**-schijf, brandstoftoeslag % en notities.
+
+Een rij wordt afgewezen met een duidelijke reden, in plaats van stilzwijgend verkeerd geïmporteerd te worden:
+
+- Een postcodeprefix moet precies 2 tekens zijn en moet samen met het land worden opgegeven — een prefix zonder land is zinloos.
+- Een niet-herkende zonegroepnaam is een fout, geen stille terugval naar "geen zone".
+- `min_km` groter dan `max_km` wordt direct afgewezen.
+
+Een rij die overeenkomt met een bestaande route (dezelfde kaart, land/prefix/stad, aanhanger, zone, prijsmodus en km-schijf) wordt overgeslagen als duplicaat, in plaats van een tweede, conflicterende prijs voor dezelfde route te creëren.
+
+---
+
+<Card title="Tariefkaarten" icon="tags" href="/nl/admin/rate-cards">
+  De kostenprofielkant — wat het daadwerkelijk kost om een vrachtwagen te laten rijden, gebruikt om de bestelmarge te schatten naast de verkoopprijs op deze pagina.
+</Card>

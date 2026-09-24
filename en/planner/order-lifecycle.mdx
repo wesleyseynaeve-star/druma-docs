@@ -16,7 +16,7 @@ Here is the full flow:
 
 **Draft → Pending → Assigned → Departed → At Pickup → Loading → In Transit → At Delivery → Offloading → Delivered**
 
-There are also two exception statuses — **Cancelled** and **Wasted Journey** — covered near the end.
+There are also three exception statuses — **Part Delivered**, **Cancelled**, and **Wasted Journey** — covered near the end.
 
 ---
 
@@ -37,6 +37,7 @@ Every status resolves to a single colour (tone) that's shared identically betwee
 | At Delivery | Sky blue |
 | Offloading | Sky blue |
 | Delivered | Green |
+| Part Delivered | Amber |
 | Cancelled | Red |
 | Wasted Journey | Red |
 
@@ -203,6 +204,27 @@ The transport is complete. The order turns green on the planning board and moves
 
 ---
 
+## Part Delivered
+
+**Triggered by:** Driver records a short delivery from the Offloading screen — some, but not all, of what was planned came off the truck.
+
+**Who can trigger it:** Driver (primary action) or Planner.
+
+Delivery isn't always all-or-nothing. If a driver unloads 6 of 10 pallets — a client can't take the full load, there's no space, part of the cargo is damaged — they can record exactly what actually came off, rather than being forced to choose between marking the whole order Delivered (misrepresenting what happened) or refusing the whole thing (when most of it *was* accepted).
+
+The driver enters what was delivered against what was planned; Druma stores the shortfall — quantity and weight, per stop — as a frozen record of what remains undelivered, and notifies the planner.
+
+<Note>
+**Part Delivered is deliberately not a final "done" status** the way Delivered is — it exists precisely so that OTIF reporting, automatic invoicing, and the client portal don't treat a short delivery as complete. It can also be a genuine end state, if the remainder is written off rather than redelivered — Druma doesn't force a follow-up action, it just refuses to pretend the load finished cleanly.
+</Note>
+
+**Actions available from Part Delivered:**
+- View the shortfall (planned vs. delivered quantity/weight) and the driver's reason on the order detail
+- Generate an invoice — **off by default**: a part-delivered order isn't billed until you turn on **Bill on part delivery** for your company in Settings, since whether a short delivery is billable immediately is a commercial decision. With it on, the order invoices for what was actually delivered.
+- Upload or view delivery documents, same as a full delivery
+
+---
+
 ## Cancelled
 
 **Triggered by:** Planner cancels the order.
@@ -276,6 +298,7 @@ Drivers sometimes forget to tap status updates — it happens. As a planner, you
 | At Delivery | — | Yes | Yes (override) |
 | Offloading | — | Yes | Yes (override) |
 | Delivered | — | Yes | Yes (override) |
+| Part Delivered | — | Yes | — |
 | Cancelled | — | — | Yes |
 | Wasted Journey | — | — | Yes (from active statuses) |
 
