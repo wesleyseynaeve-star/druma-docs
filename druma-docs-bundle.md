@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-09-24 17:37 UTC
+Generated: 2026-09-24 17:56 UTC
 
 ---
 
