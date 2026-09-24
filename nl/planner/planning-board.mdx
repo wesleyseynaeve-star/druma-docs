@@ -1,182 +1,254 @@
 ---
 title: "Planningsbord"
-description: "Het visuele dispatchbord — koppel vrijkomende trucks aan ladingen die er één nodig hebben, wijs toe met een sleepbeweging, en plan combinaties vooraf voordat ze definitief zijn."
+description: "Het visuele dispatchbord — koppel trucks die vrijkomen aan ladingen die er een nodig hebben, wijs toe met een sleep, en plan combinaties vooraf voordat ze definitief zijn."
 icon: "calendar"
 ---
 
 ## Overzicht
 
-Het Planningsbord is uw belangrijkste dispatchtool. Ga naar **Planner → Planningsbord** om het te openen.
+Het Planningsbord is uw belangrijkste dispatchtool. Ga naar **Planning → Planningsbord** om het te openen.
 
-Het bord heeft drie modi, te wisselen met de tabbladen bovenaan:
+Het bord heeft drie modi, gewisseld met de tabbladen links in de commandobalk:
 
 | Modus | Waarvoor |
 |---|---|
-| **Nu** | De primaire dispatchweergave — twee kolommen die capaciteit tegenover vraag zetten. Hier wijst u trucks toe en opnieuw toe. |
-| **Tijdlijn** | Een Gantt-achtige weergave van het schema van elke truck, om hiaten en conflicten te herkennen over een dag, drie dagen of een week. |
-| **Kaart** | Dezelfde niet-toegewezen ladingen en chauffeurs, geografisch weergegeven. |
+| **Nu** | De primaire dispatchweergave — twee kolommen die capaciteit tegen vraag afzetten. Hier wijst u trucks toe en herverdeelt u ze. |
+| **Tijdlijn** | Een Gantt-achtige weergave van het schema van elke truck, om gaten en conflicten over een dag, drie dagen, of een hele week te vinden. |
+| **Kaart** | Dezelfde niet-toegewezen ladingen en beschikbare chauffeurs, geografisch weergegeven. |
 
 <Warning>
-Het Planningsbord is ontworpen voor desktopschermen van 1280 pixels breed of meer. Op een telefoon of tablet vervangt een vereenvoudigde kaartenfeed de tweekoloms-indeling en is slepen-en-neerzetten niet beschikbaar.
+Het Planningsbord is ontworpen voor desktopschermen van 1280 pixels breed of meer. Op een telefoon of tablet vervangt een vereenvoudigde kaartfeed de tweekolomsindeling, en is drag-and-drop niet beschikbaar.
 </Warning>
+
+### De commandobalk
+
+Elke modus deelt één commandobalk: de modustabbladen links, de eigen werkbalk van die modus in het midden, en — altijd rechts — **Focusmodus**, de **Assistent**, en **Vertragingen**. Er is geen aparte KPI-balk erboven; de rij-/orderaantallen die u daar zou verwachten, leven nu rechtstreeks in de eigen header van elk paneel.
+
+- **Focusmodus** (`F`, of de ⤢-knop) verbergt de zijbalk en paginaheader zodat de bordrijen het volledige scherm gebruiken. Schakel opnieuw, of druk op `F`, om de chrome terug te brengen.
+- **Assistent** opent Druma's gerangschikte wachtrij van voorgestelde truck-naar-lading-matches — zie [Auto-planning & de Assistent](/nl/planner/auto-planning).
+- **Vertragingen** opent een popover met orders die momenteel achterlopen op schema.
+
+Bij smallere breedtes krimpen of verdwijnen de labels op de werkbalkbediening eerst — het icoon en de tooltip blijven altijd, zodat niets onbereikbaar wordt, alleen compacter.
 
 ---
 
-## Nu — de tweekoloms dispatchweergave
+## Nu — de tweekolomsdispatchweergave
 
-Het tabblad **Nu** is een gesplitste, tweekoloms-indeling:
+Het tabblad **Nu** is een gesplitste, tweekolomsindeling:
 
-- **Inkomend** (links) — wat capaciteit vrijmaakt: trucks die nu al vrij zijn, en trucks die binnenkort vrijkomen omdat hun huidige lading binnen het zichtbare datumbereik wordt afgeleverd.
-- **Uitgaand** (rechts) — orders die nog een truck nodig hebben (niet-toegewezen ophalingen), plus orders die al toegewezen zijn, allemaal op dezelfde manier gegroepeerd als Inkomend, zodat een truck die in een zone vrijkomt visueel aansluit bij ladingen die in diezelfde zone worden opgehaald.
+- **Inkomend** — wat capaciteit vrijmaakt: trucks die nu vrij zijn, en trucks die bijna vrijkomen omdat hun huidige lading binnen het zichtbare datumbereik wordt afgeleverd.
+- **Uitgaand** — orders die nog een truck nodig hebben (niet-toegewezen ophalingen), plus orders die al zijn toegewezen, allemaal op dezelfde manier gegroepeerd als Inkomend, zodat een truck die in een zone vrijkomt visueel aansluit bij ladingen die in diezelfde zone worden opgehaald.
 
-<Frame caption="De Nu-weergave — Inkomende capaciteit links, Uitgaande ladingen rechts, met de dichtheids- en Voorplanning-schakelaars in de werkbalk.">
+<Frame caption="De Nu-weergave — inkomende capaciteit aan de ene kant, uitgaande ladingen aan de andere, met de commandobalk erboven en een Balanspaneel beschikbaar vanuit de werkbalk.">
   <img src="/images/planner/planning-board-split.png" alt="Planningsbord Nu-weergave met de kolommen Inkomend en Uitgaand" />
 </Frame>
 
-Een truck toewijzen is een sleepbeweging: pak een rij aan een van beide kanten op en zet hem neer op de bijpassende rij aan de andere kant.
+Een truck toewijzen is een sleep: pak een rij aan de ene kant en laat hem los op de overeenkomstige rij aan de andere kant.
 
-- Een **truck** naar een lading slepen opent een bevestigingsvenster met de truck, chauffeur en orderdetails — inclusief eventuele cabotage-, aanhangwagen- of aflossingscontroles die uw input vereisen — voordat de toewijzing wordt vastgelegd.
-- Een **afleverende lading** slepen (een Inkomend-kaart die nog niet vrij is, maar dat binnenkort wordt) naar een Uitgaand-lading wijst nog geen truck toe — er is er nog geen vrij om toe te wijzen — het legt een voorlopige koppeling tussen de twee vast. Dit herhalen bouwt een hele **keten** van toekomstige herladingen voor één truck op, nog voordat hij vrij is voor de eerste. Zie **Voorplanningsmodus** hieronder voor de volledige ketenworkflow, inclusief de automatische optimizer die voorlopig gemarkeerde ketens in de gaten houdt voor een goedkopere wissel. Gebruik **Truck toewijzen** op die rij zodra u klaar bent om het vast te leggen.
+- Een **truck** naar een lading slepen opent een bevestigingsvenster met de details van truck, chauffeur, en order — inclusief eventuele cabotage-, aanhanger-, of estafettestop-controles die uw input nodig hebben — voordat de toewijzing wordt vastgelegd.
+- Een **afleverende lading** slepen (een Inkomend-kaart die nog niet vrij is, maar dat bijna wordt) naar een Uitgaand-lading wijst nog geen truck toe — er is er nog geen vrij om toe te wijzen — het schetst een voorlopige link tussen de twee. Dit herhalen bouwt een hele **keten** van toekomstige herladingen voor één truck, nog voordat deze zelfs maar vrij is voor de eerste; zie **Vooruitplanmodus** hieronder voor de volledige ketenworkflow, inclusief de automatische optimalisator die geschetste ketens in de gaten houdt voor een goedkopere wissel. Gebruik **Truck toewijzen** op die rij zodra u klaar bent om vast te leggen.
 
 <Note>
-Slepen werkt in **beide richtingen** — sleep een Inkomend-kaart naar een Uitgaand-lading, of sleep een Uitgaand-lading naar een Inkomend-kaart. Beide manieren komen op dezelfde rij terecht.
+Slepen werkt in **beide richtingen** — sleep een Inkomend-kaart naar een Uitgaand-lading, of een Uitgaand-lading naar een Inkomend-kaart. Beide manieren komen op dezelfde rij terecht.
 </Note>
+
+### Rijdichtheid en indeling
+
+Klik op de **Dichtheid**-besturing in de werkbalk om te wisselen tussen drie rijhoogtes:
+
+| Dichtheid | Beste voor |
+|---|---|
+| **Comfortabel** | Rijkere kaarten met meer visueel detail per truck of order — een nadere blik op een handvol opdrachten. |
+| **Compact** (standaard) | Dichte, eenregelige rijen, het dichtst bij een spreadsheet — snel scannen en bulkplanning. |
+| **Dicht** | De strakste rijhoogte, voor een groot 1080p-scherm (vooral bij 125–150% Windows-schaling) waar zoveel mogelijk rijen zien belangrijker is dan visuele padding. |
+
+Alle drie dichtheden tonen dezelfde onderliggende gegevens en ondersteunen dezelfde drag-and-drop, filters, en groepering. Vanuit hetzelfde **Kolommen**-menu kunt u ook wisselen welke kant — Inkomend of Uitgaand — links wordt weergegeven, en de tekstgrootte van de app instellen (klein/gemiddeld/groot), die de hele UI schaalt in plaats van alleen deze pagina.
 
 ### Datumbereik
 
-Het bord toont een doorlopende horizon van 7 dagen. Gebruik de pijlen naast het datumlabel om een volle week eerder of later te bladeren, of klik op **Vandaag** om terug te springen naar het huidige venster van 7 dagen.
-
-### Dichtheid: Compact versus Comfortabel
-
-Een schakelaar in de werkbalk bepaalt hoeveel detail elke rij toont:
-
-- **Compact** (standaard) — dichte rijen van één regel met sorteerbare/herschikbare kolommen, dicht bij een spreadsheet. Het beste voor snel scannen en bulkplanning.
-- **Comfortabel** — rijkere kaarten met meer visueel detail per truck of order. Het beste voor een nauwkeurigere blik op een handvol opdrachten.
-
-Beide dichtheden tonen dezelfde onderliggende gegevens en ondersteunen dezelfde sleep-en-neerzet-functionaliteit, filters en groepering — wisselen is puur cosmetisch.
+Het bord toont een voortschrijdende horizon van 7 dagen. Gebruik de pijlen naast het datumlabel om een hele week eerder of later te bladeren, of klik op **Vandaag** om terug te springen naar het huidige 7-dagenvenster.
 
 ### Groeperen en samenvouwen
 
-Gebruik de instelling **groeperen op** in de werkbalk om beide kolommen te bundelen op zonegroep, land, stad, planningsgroep of datum — Inkomend en Uitgaand groeperen altijd op dezelfde as, zodat het afstemmen van capaciteit tegenover vraag visueel gelijk blijft. Groepskoppen zijn samenvouwbaar; vouw een sectie aan één kant samen en de bijpassende sectie aan de andere kant vouwt automatisch mee, zodat beide kolommen gesynchroniseerd blijven. Klik op **Alles uitvouwen** om alle samengevouwen groepen in één keer te herstellen.
+Gebruik de **groeperen op**-besturing in de werkbalk om beide kolommen te bundelen op zonegroep, land, stad, planningsgroep, of datum — Inkomend en Uitgaand groeperen altijd op dezelfde as, zodat het afzetten van capaciteit tegen vraag visueel uitgelijnd blijft. Groepsheaders zijn samenvouwbaar; vouw een sectie aan de ene kant samen en de overeenkomstige sectie aan de andere kant vouwt ook samen, waardoor de twee kolommen gesynchroniseerd blijven. Klik op **Alles uitvouwen** om alle samengevouwen groepen in één keer te resetten.
 
 <Note>
-Zonegroepen zijn uw eigen hiërarchische postcodegroeperingen (geconfigureerd in Instellingen), nuttig om in één oogopslag af te stemmen "welk van mijn depots/regio's heeft een truck die vrijkomt" tegenover "welke regio heeft ladingen om op te halen".
+Zonegroepen zijn uw eigen hiërarchische postcodegroeperingen (geconfigureerd in Instellingen), nuttig om in één oogopslag te zien "welk van mijn depots/regio's heeft een truck die vrijkomt" tegen "welke regio heeft ladingen op te halen".
 </Note>
 
 ### Kolommen
 
-Klik op **Kolommen** om te kiezen welke velden elke kant toont, en sleep om ze te herschikken. Inkomend en Uitgaand houden onafhankelijke kolomsets aan — een veld dat u aan één kant toevoegt of verbergt heeft geen invloed op de andere kant. Kernvelden (Status, identiteit, ETA) worden altijd getoond en kunnen niet verborgen of herschikt worden; al het andere (postcode-/stad-/landopsplitsingen, chauffeursnaam, kenteken, aanhangwagen, cabotagestatus, onderaannemer, en meer) is optioneel.
+Klik op **Kolommen** om te kiezen welke velden elke kant toont en sleep om ze opnieuw te ordenen. Inkomend en Uitgaand behouden onafhankelijke kolomsets — een veld dat u aan de ene kant toevoegt of verbergt, heeft geen invloed op de andere. Kernvelden (Status, identiteit, ETA) worden altijd getoond en kunnen niet worden verborgen of herordend; al het andere (postcode-/stad-/landuitsplitsing, chauffeursnaam, kenteken, aanhanger, cabotagestatus, onderaannemer, en meer) is optioneel.
 
 ### Opgeslagen weergaven
 
-Met het menu **Weergaven** kunt u de huidige filter-, groeperings- en kolomconfiguratie opslaan als een benoemde weergave, wisselen tussen opgeslagen weergaven, en er één als uw standaard markeren — die wordt dan automatisch toegepast de volgende keer dat u (of iemand anders met dezelfde weergave) het bord opent.
+In het menu **Weergaven** kunt u de huidige filter-, groeperings-, en kolomconfiguratie opslaan als een benoemde weergave, wisselen tussen opgeslagen weergaven, en er een als standaard markeren — deze wordt dan automatisch toegepast de volgende keer dat u (of iedereen met dezelfde weergave) het bord opent.
 
 ### Filters en zoeken
 
-Klik op **Filters** om het filterpaneel te openen — status, ophaal-/leverdatumbereik, zone, en land, stad of postcode van laden/leveren. Actieve filters verschijnen als verwijderbare chips onder de werkbalk; klik op **Alles wissen** om ze te resetten. Elke kolom heeft ook een eigen snelzoekvak om te filteren op ordernummer, adres of chauffeursnaam binnen die kant.
-
-### Triagetegels
-
-Boven elke kolom vatten kleine tegels in één oogopslag samen wat erin staat:
-
-- **Inkomend** — hoeveel trucks/ladingen in elk capaciteitssegment vallen.
-- **Uitgaand** — aantallen **Niet gepland**, **Te laat** en **Op tijd** voor ladingen die al een voorlopig of definitief plan hebben.
-
-Klik op een tegel om die kolom te filteren tot alleen dat segment; klik er nogmaals op om de filter op te heffen.
-
-### Truck toewijzen / Truck verwijderen / Te koop zetten
-
-Elke Uitgaand-rij die een truck heeft (definitief of voorlopig gemarkeerd) toont actieknoppen:
-
-- **Truck toewijzen** — leg een voorlopig gemarkeerde combinatie definitief vast als een vaste toewijzing.
-- **Truck verwijderen** — maak het plan ongedaan en stuur de order terug naar niet-toegewezen.
-- **Te koop zetten** — bied de lading aan een onderaannemer/vervoerder aan in plaats van deze met uw eigen vloot te rijden. Een verkochte lading toont een badge **Te koop** of **Verkocht · [vervoerder]**; loopt de vervoerder achter, dan verschijnt ook een badge **Te laat**. U kunt een verkochte lading terugvorderen naar uw eigen vloot zolang het laden nog niet is begonnen.
-
-### Voorplanningsmodus
-
-De schakelaar **Voorplanning** in de werkbalk bepaalt wat een sleepactie doet:
-
-- **Uit** (standaard) — slepen wijst de truck onmiddellijk en definitief toe (opent het bevestigingsvenster).
-- **Aan** — slepen legt een voorlopige combinatie vast zonder iets definitief te maken. Voorlopig gemarkeerde combinaties tonen een badge **Voorlopig**, een geschatte (of, waar routegegevens beschikbaar zijn, echte PTV-gerouteerde) ETA, en een oordeel op-tijd/te-laat — zodat u een week aan combinaties kunt uitschetsen voordat u er ook maar één definitief vastlegt. Gebruik **Truck toewijzen** op een voorlopig gemarkeerde rij zodra u klaar bent om hem definitief te maken.
-
-**Een keten bouwen.** Een voorlopige markering hoeft niet te stoppen bij één truck en één lading. Sleep een **afleverende** Inkomend-kaart — een truck die nog niet vrij is, maar dat binnenkort wordt — naar een Uitgaand-lading, en Druma legt een koppeling vast die de nieuwe lading verbindt na de lading die momenteel onderweg is. Sleep opnieuw naar het nieuwe uiteinde en u kunt een hele reeks toekomstige herladingen plannen voor één truck, dagen voordat hij daadwerkelijk vrijkomt — een rit Cluj → Sibiu → Timișoara, op maandag al voorlopig vastgelegd voor een truck die nog richting Cluj rijdt.
-
-Elke voorlopig gemarkeerde rij toont een chip **Na #{order}** die de lading noemt waarachter hij gekoppeld is, zodat de reeks in één oogopslag leesbaar blijft. Onder de motorkap verankert een voorlopige markering aan een specifieke truck, aan de voorgaande order waarna hij volgt, of aan beide — en een anker kan altijd maar één herlading tegelijk voeden: een nieuwe lading naar een anker slepen dat al bezet is, verhuist het anker naar de nieuwe lading en verwijdert de voorlopige markering van de oude, in plaats van dezelfde truck dubbel te boeken over twee ketens.
+Klik op **Filters** om het filterpaneel te openen — status, ophaal-/leverdatumbereik, zone, en land, stad, of postcode van ophaling/levering. Actieve filters worden getoond als verwijderbare chips onder de werkbalk; klik op **Alles wissen** om ze te resetten. Elk paneel heeft ook een eigen snelzoekvak om te filteren op ordernummer, adres, of chauffeursnaam binnen die kant.
 
 <Note>
-Niets hiervan raakt de echte order totdat een truck daadwerkelijk wordt toegewezen via de normale bordpoort — een sleepactie met Voorplanning uit, of **Truck toewijzen** op een voorlopig gemarkeerde rij. Tot dan is een keten pure planningsruimte en kan hij vrij worden herschikt.
+Zoeken reikt ook tot binnen de eigen orders van een groupagerit, en een filter laat u groupageritten volledig tonen of verbergen — zie [Groupage op het Planningsbord en de Live Kaart](/nl/planner/groupage).
 </Note>
 
-**De Retourlading-heraanwijzingsoptimizer.** Zodra er een keten bestaat, blijft Druma deze op de achtergrond controleren. Voor het **uiteinde** van elke keten — de laatst voorlopig gemarkeerde herlading, degene waarna nog niets anders gekoppeld is — vraagt Druma zich af: is er een andere, nog niet gemarkeerde herlading waarvan de ophaling dichter ligt bij waar die truck daadwerkelijk zal vrijkomen?
+### Het Balanspaneel
 
-Bijvoorbeeld: een truck is voorlopig gepland om morgen in Cluj te herladen. Er duikt een dichterbij gelegen, nog niet gekozen herlading op met een ophaling in Sibiu. Verlaagt het inwisselen van de Sibiu-lading werkelijk de lege-kilometerkosten — gewaardeerd in € op basis van het eigen kostenprofiel van de truck, niet enkel de ruwe kilometers — dan toont Druma een suggestiechip rechtstreeks op die rij, zoiets als **"Goedkoper retourlading beschikbaar: −18 km · €22."** Klik op **Wisselen naar #...** en de wissel wordt in één stap toegepast: de Sibiu-lading wordt voorlopig gemarkeerd, de Cluj-lading verliest automatisch zijn voorlopige markering (dezelfde regel van één-anker-per-keer waarop ketens hierboven steunen), en een melding bevestigt **"Retourlading #... in plaats daarvan ingepland."** Dit is hetzelfde suggestiechip-mechanisme dat hieronder beschreven wordt, hier specifiek toegepast op keten-uiteinden.
+Klik op de knop **Balans** in de werkbalk (het badge toont het aantal tekortgroepen van vandaag) om een alleen-lezen rapport te openen van waar aanbod en vraag overeenkomen — en waar niet — over elke groep en dag in de zichtbare horizon. Het heeft drie tabbladen:
 
-Enkele waarborgen houden de suggesties betrouwbaar:
+- **Tabel** — een groep × dag-matrix. Elke cel toont open aanbod, open vraag, en het net (overschot in blauw, tekort in amber/rood); een Totaal-kolom en een "Alle groepen"-rij geven de eindtotalen.
+- **Grafiek** — dezelfde rijen als een gerangschikte horizontale balk, hetzij voor één dag hetzij voor de hele horizon, ergste tekort bovenaan.
+- **Kaart** — één bubbel per groep op de gemiddelde locatie van zijn leden, geschaald naar volume en op dezelfde manier gekleurd als de Tabel en Grafiek.
 
-- Er wordt alleen een wissel voorgesteld die **minstens 15 km en minstens €0** bespaart — nooit een wissel die alleen goedkoop lijkt omdat het kostenprofiel van een truck verkeerd op nul staat.
-- Het is **EU 561/2006-bewust** — er wordt nooit een herlading voorgesteld die de chauffeur van de truck over zijn resterende rijtijd voor die dag zou duwen.
-- Klik op de chip om hem uit te vouwen voor de "waarom" en een echt gerouteerde impact vóór/na, inclusief een waarschuwing dat de verdrongen lading opnieuw niet-toegewezen wordt.
+Het Balanspaneel verandert nooit iets aan het bord — het is een alleen-lezen aanbod-/vraagoverzicht voor planningsdoeleinden, opgebouwd uit precies de rijen die het bord zelf toont, dus het kan nooit in tegenspraak zijn met wat u ziet.
+
+### Truck toewijzen / Truck verwijderen / Te koop aanbieden
+
+Elke Uitgaand-rij met een truck (definitief of geschetst) toont actieknoppen:
+
+- **Truck toewijzen** — een geschetste combinatie vastleggen als een definitieve toewijzing.
+- **Truck verwijderen** — het plan ongedaan maken en de order terugsturen naar niet-toegewezen.
+- **Te koop aanbieden** — de lading aanbieden aan een onderaannemer/vervoerder in plaats van deze met uw eigen vloot te rijden. Een verkochte lading toont een **Te koop**- of **Verkocht · [vervoerder]**-badge; als de vervoerder te laat is, verschijnt er ook een **Te laat**-badge. U kunt een verkochte lading terugclaimen naar uw eigen vloot zolang deze nog niet is begonnen met laden.
+
+### Trucks en aanhangers onderweg wisselen
+
+Zodra een order al is toegewezen, biedt het actiemenu van een rij ook de manieren om te wijzigen wat de lading fysiek vervoert, zonder de order zelf aan te raken:
+
+- **Truck wisselen** — de lading overdragen aan een andere trekker bij een estafettepunt, of een estafettepunt vastleggen met de volgende truck nog onbekend (een open estafette) — zie [Truck wisselen (estafette)](/nl/planner/switch-truck).
+- **Aanhanger achterlaten bij de geadresseerde** — een drop-and-hook-levering: de trekker laat de geladen aanhanger achter zodat de geadresseerde deze op zijn eigen tijd kan lossen, en koppelt een andere aan — zie [Drop-and-hook-levering](/nl/planner/drop-and-hook-delivery).
+
+Beide zijn beschikbaar vanuit hetzelfde rij-actiemenu waarin de orderstatus wordt getoond, en beide leggen een correcte overdrachtsregistratie vast in plaats van een stille herverdeling.
+
+### Vooruitplanmodus
+
+De **Vooruitplan**-schakelaar in de werkbalk wijzigt wat een sleep doet:
+
+- **Uit** (standaard) — slepen wijst de truck direct definitief toe (opent het bevestigingsvenster).
+- **Aan** — slepen schetst een voorlopige combinatie zonder iets vast te leggen. Geschetste combinaties tonen een **Voorlopig**-badge, een geschatte (of, waar routegegevens beschikbaar zijn, echte PTV-geroute) ETA, en een op-tijd/te-laat-verdict — zodat u een hele week aan combinaties kunt schetsen voordat u er een vastlegt. Gebruik **Truck toewijzen** op een geschetste rij wanneer u klaar bent om deze definitief te maken.
+
+**Een keten bouwen.** Een schets hoeft niet te stoppen bij één truck en één lading. Sleep een **afleverende** Inkomend-kaart — een truck die nog niet vrij is maar dat bijna wordt — naar een Uitgaand-lading, en Druma schetst een link die de nieuwe lading koppelt aan die welke momenteel onderweg is. Sleep opnieuw naar het nieuwe uiteinde, en u kunt een hele reeks toekomstige herladingen plannen voor één truck, dagen voordat deze daadwerkelijk vrijkomt — een Cluj → Sibiu → Timișoara-rit, geschetst op maandag voor een truck die nog naar Cluj rijdt.
+
+Elke geschetste rij toont een **Na #{order}**-chip die de lading benoemt waaraan hij is gekoppeld, zodat de reeks in één oogopslag leesbaar blijft. Onder de motorkap ankert een schets zich aan een specifieke truck, aan de voorgaande order waaraan hij is gekoppeld, of aan beide — en een anker kan slechts één herlading tegelijk voeden: een nieuwe lading slepen naar een anker dat al bezet is, herhuisvest het anker naar de nieuwe lading en ontschetst de oude, in plaats van dezelfde truck dubbel te boeken over twee ketens.
 
 <Note>
-De optimizer stelt uitsluitend voor; niets wordt toegepast zonder een klik. Hij is ook stil wanneer er niets beters te suggereren valt — geen chip betekent dat Druma geen goedkopere herlading heeft gevonden, niet dat hij niet gecontroleerd heeft.
+Niets hiervan raakt de echte order aan totdat een truck daadwerkelijk wordt toegewezen via de normale bordpoort — een sleep met Vooruitplan uit, of **Truck toewijzen** op een geschetste rij. Tot die tijd is een keten pure planningsschetsruimte en kan vrij worden herschikt.
 </Note>
 
-**Ketenveiligheid bij wijzigingen.** Als er iets stroomopwaarts in een keten verandert — de order wordt geannuleerd, de truck wordt van de order gehaald, of de truck wordt gewisseld — controleert Druma of er iets stroomafwaarts voorlopig gemarkeerd is. Is dat niet het geval, dan gaat de wijziging zonder poespas door. Bestaat er wel een stroomafwaarts uiteinde, dan wordt u gevraagd te kiezen: **Hele keten verwijderen** (verwijdert trapsgewijs elke voorlopig gemarkeerde herlading die eraan gekoppeld is) of **Stroomafwaartse orders behouden** (verbreekt alleen die ene koppeling en laat de stroomafwaartse ladingen achter als onafhankelijke, nog steeds herplanbare markeringen). Hoe dan ook, een voorlopig plan verrot nooit stilzwijgend tot een gebroken of verweesde toestand — u beslist wat er met de rest van de keten gebeurt, en u hoeft nooit zelf handmatig achter loshangende koppelingen aan te gaan.
+**De Herladingsherverdeling-optimalisator.** Zodra een keten bestaat, blijft Druma deze op de achtergrond controleren. Voor het **uiteinde** van elke keten — de laatste geschetste herlading, degene waarna nog niets anders is gekoppeld — vraagt het zich af: is er een andere, nog niet geschetste herlading waarvan de ophaling dichter bij de plek ligt waar die truck daadwerkelijk vrijkomt?
+
+Bijvoorbeeld: een truck is geschetst om morgen in Cluj te herladen. Er duikt in plaats daarvan een dichterbijgelegen, niet-gekozen herlading op met een ophaling in Sibiu. Als het wisselen naar de Sibiu-lading echt de leegkilometerkosten zou verlagen — gewaardeerd in € met het eigen kostenprofiel van de truck, niet alleen ruwe kilometers — toont Druma een suggestiechip precies op die rij, iets als **"Goedkopere herlading beschikbaar: −18 km · €22"**. Klik op **Wissel naar #...** en de wissel wordt in één stap toegepast: de Sibiu-lading wordt geschetst, de Cluj-lading verliest automatisch zijn schets (dezelfde regel van één-gebruik-anker waarop ketens hierboven berusten), en een toast bevestigt **"Herlading #... in plaats daarvan geschetst"**.
+
+Een paar waarborgen houden de suggesties betrouwbaar:
+
+- Het stelt nooit een wissel voor die minder dan **15 km en minstens €0** bespaart — nooit een wissel die alleen goedkoop lijkt omdat het kostenprofiel van een truck verkeerd op nul is geconfigureerd.
+- Het is zich bewust van **EU 561/2006** — het zal nooit een herlading voorstellen die de chauffeur van de truck over zijn resterende rijuren voor de dag zou duwen.
+- Klik op de chip om deze uit te vouwen voor de "waarom" en een echt geroute impact voor/na, inclusief een waarschuwing dat de verdrongen lading opnieuw niet-toegewezen zal worden.
+
+<Note>
+De optimalisator stelt altijd alleen voor; niets wordt toegepast zonder een klik. Hij is ook stil wanneer er niets beters te suggereren is — geen chip betekent dat Druma geen goedkopere herlading heeft gevonden, niet dat hij niet heeft gecontroleerd.
+</Note>
+
+**Ketenveiligheid bij wijziging.** Als iets stroomopwaarts in een keten verandert — de order wordt geannuleerd, de truck ervan wordt losgekoppeld, of de truck ervan wordt gewisseld — controleert Druma of er iets stroomafwaarts ervan is geschetst. Zo niet, dan gaat de wijziging zonder problemen door. Als er een stroomafwaarts uiteinde bestaat, wordt u gevraagd te kiezen: **Hele keten verwijderen** (cascadeert de verwijdering door elke geschetste herlading die eraan is gekoppeld) of **Downstream orders behouden** (verbreekt alleen die ene link en laat de downstream ladingen als onafhankelijke, nog herwijsbare pins).
 
 ### Suggestiechips
 
-Waar de auto-planning van Druma een zekere aanbeveling heeft voor een niet-toegewezen order, verschijnt inline op die rij een suggestiechip. Klik erop om de voorgestelde truck rechtstreeks toe te passen, of wijs hem af als hij niet past.
+Waar Druma's auto-planning een betrouwbare aanbeveling heeft voor een niet-toegewezen order, verschijnt een suggestiechip direct op die rij, met wat het weet (lege km, een geschatte ritkost, of een besparing) — zie [Auto-planning & de Assistent](/nl/planner/auto-planning) voor het volledige scoringsbeeld. Klik erop om de voorgestelde truck direct toe te passen, of wijs deze af als hij niet past.
 
-### Kruiskolom-markering
+### Kolomoverschrijdende markering
 
-Klik op een willekeurige rij om de markering ervan vast te zetten. Maakt die rij deel uit van een voorlopig gemarkeerde of definitieve combinatie, dan markeert Druma de bijpassende rij(en) in de andere kolom en scrollt ze in beeld — zodat het klikken op een truck bij Inkomend precies toont met welke lading(en) hij gekoppeld is bij Uitgaand, en omgekeerd.
+Klik op een rij om de markering ervan vast te pinnen. Als die rij deel uitmaakt van een geschetste of definitieve combinatie, markeert Druma de overeenkomstige rij(en) in de andere kolom en scrollt ze in beeld — zodat het klikken op een truck bij Inkomend u precies laat zien aan welke lading(en) deze is gekoppeld bij Uitgaand, en omgekeerd.
 
 ### Virtuele orders
 
-Klik op **Virtueel** om een plaatshouderorder aan te maken die een truck reserveert voor een verwachte lading die nog geen definitieve boeking heeft — nuttig bij het vooruit plannen op een bevestigde order.
+Klik op **Virtueel** om een plaatsvervangende order te maken die een truck reserveert voor een verwachte lading die nog geen vaste boeking heeft — nuttig bij vooruitplannen voorafgaand aan een bevestigde order.
+
+---
+
+## Sneltoetsen
+
+Met focus op de Nu-weergave (niet in een modal of een tekstveld):
+
+| Toets | Actie |
+|---|---|
+| `J` / `K` | Loop de Uitgaand-rijen af naar beneden / boven, in de volgorde waarin ze momenteel worden weergegeven (respecteert uw groepering, sortering, en filters) |
+| `A` | Accepteer de suggestie van de geselecteerde rij — schetst deze onder Vooruitplanmodus, of opent anders het bevestigingsvenster |
+| `Esc` | Wis de huidige selectie |
+| `F` | Schakel Focusmodus |
+
+De volledige lijst, inclusief sneltoetsen buiten het bord, is altijd beschikbaar via de **?**-overlay.
 
 ---
 
 ## Conflicten en blokkades
 
-Als een voorgestelde toewijzing een probleem zou veroorzaken — een cabotagelimiet, een aanhangwagen-mismatch, een onopgeloste aflossingsstop — markeert Druma dit als blokkade in het bevestigingsvenster, in plaats van de toewijzing stilzwijgend door te laten. Sommige blokkades vereisen een expliciete bevestiging voordat u verder kunt; andere zijn louter informatief.
+Als een voorgestelde toewijzing een probleem zou veroorzaken — een cabotagelimiet, een aanhangermismatch, een onopgeloste estafettestop — markeert Druma dit als een blokkade in het bevestigingsvenster in plaats van de toewijzing stilletjes door te laten. Sommige blokkades vereisen een expliciete bevestiging voordat u verder kunt gaan; andere zijn alleen informatief.
 
 ---
 
 ## Orderdetails bekijken
 
-**Klik** op een willekeurige rij om een detailpaneel te openen. Van daaruit kunt u de order bewerken, de status wijzigen, of de chauffeur bellen.
+**Klik** op een rij om een detailpaneel te openen. Van daaruit kunt u de order bewerken, de status wijzigen, of de chauffeur bellen.
 
 ---
 
 ## Tijdlijnweergave
 
-Wissel naar het tabblad **Tijdlijn** voor een Gantt-achtige weergave: elke truck is een rij, en zijn schema wordt getekend als tijdgepositioneerde segmenten — rijtrajecten en laad-/losvensters. Geplande (nog niet werkelijke) segmenten worden weergegeven met een arcering; werkelijke/bevestigde segmenten worden vol getekend. Een segment zonder bevestigd tijdstempel wordt vervaagd weergegeven met een gestippelde rand om aan te geven dat het een schatting betreft.
+Schakel naar het tabblad **Tijdlijn** voor een Gantt-achtige weergave: elke truck is een rij, en zijn schema wordt getekend als tijdgepositioneerde segmenten — rijtrajecten, en laad-/losvensters. Geplande (nog niet werkelijke) segmenten worden weergegeven met een gearceerd patroon; werkelijke/bevestigde segmenten worden solide weergegeven. Een segment zonder bevestigd tijdstempel wordt getoond met verminderde dekking en een gestippelde rand om het als geschat te markeren.
 
 <Frame caption="Tijdlijnweergave — elke rij is één truck; een rode lijn markeert de huidige tijd.">
-  <img src="/images/planner/planning-board-timeline.png" alt="Planningsbord Tijdlijnweergave met trucks als rijen en tijdgepositioneerde segmenten" />
+  <img src="/images/planner/planning-board-timeline.png" alt="Tijdlijnweergave van het Planningsbord met trucks als rijen met tijdgepositioneerde segmenten" />
 </Frame>
 
-Gebruik de datumnavigatie om door het schema te bewegen, en de **tijdspanne-kiezer** om te kiezen hoeveel tijd zichtbaar is:
+Gebruik de datumnavigatiebesturingen om door het schema te bewegen, en de **spanneselector** om te kiezen hoeveel tijd zichtbaar is:
 
-| Tijdspanne | Het beste voor |
+| Spanne | Beste voor |
 |---|---|
-| **1 dag** | Gedetailleerde planning binnen de dag — exacte laad- en losvensters bekijken |
-| **3 dagen** | Hiaten en conflicten over de komende 72 uur herkennen |
-| **1 week** | Een capaciteitsoverzicht — welke trucks zijn vrij over de hele week |
+| **1 dag** | Gedetailleerde intra-dagse planning — precieze laad- en losvensters zien. Het venster van vandaag opent twee uur in het verleden in plaats van om middernacht, zodat de afgeronde klussen van de ochtend niet de helft van het scherm opeten 's middags. |
+| **3 dagen** | Gaten en conflicten spotten over de komende 72 uur |
+| **1 week** | Een grofmazige Gantt over de hele horizon — dezelfde balkrenderer als 1 dag/3 dagen, alleen uitgezoomd, in plaats van een aparte samenvattingstabel |
 
-Tijdlijn deelt hetzelfde Filters-paneel als de Nu-weergave, zodat een status-, datum-, zone- of locatiefilter behouden blijft wanneer u van tabblad wisselt.
+Tijdlijn deelt hetzelfde Filterspaneel als de Nu-weergave, zodat een status-, datum-, zone-, of locatiefilter behouden blijft wanneer u van tabblad wisselt.
+
+### Zoom, baanhoogte, en groepering
+
+- **Zoom** — `−`/`+`-knoppen (of Ctrl/⌘ + muiswiel over het raster) verbreden of versmallen hoeveel uren op het scherm passen, van de helft tot het drievoudige van de standaardschaal. Het uur onder uw cursor blijft op zijn plek terwijl u zoomt.
+- **Baanhoogte** — een **Normaal / Dicht**-schakelaar; Dicht past meer truckrijen op het scherm ten koste van een compacter label.
+- **Groeperen en sorteren** — groepeer banen op zone, land, of planningsgroep, en sorteer ze vrije-trucks-eerst, op naam, of op resterende uren — onafhankelijk van hoe de Nu-weergave is gegroepeerd.
+
+### Slepen om te herplannen
+
+Bij de spannen 1 dag en 3 dagen sleept u de body van een gepland segment om deze naar een nieuwe tijd te verplaatsen, of sleept u de randen ervan om het laad-/losvenster te herschalen. Het loslaten van de wijziging opent een bevestigingsvenster dat u waarschuwt voor elke baanoverlap of EU 561/2006-rijurenconflict dat de wijziging zou veroorzaken, voordat u vastlegt — daarna verschijnt een ongedaan-maken-toast, zodat een slechte herplanning met één klik omkeerbaar is.
+
+### Compliance-badges
+
+Het baanlabel van elke truck toont kleine badges voor alles wat die truck op dit moment beïnvloedt: een verlopend of verlopen vlootdocument, een cabotagewaarschuwing of -overtreding, een buiten-dienst-venster, of een openstaande werkplaatsklus. Beweeg over een badge voor het detail.
+
+### Kandidaat-spookvoorbeeld
+
+Wanneer een niet-toegewezen order in focus is, toont het bewegen over een gerangschikte kandidaat-truck in de Tijdlijn een spookplaatsing van die order direct op de baan van de truck — inclusief het geschatte lege traject om de ophaling te bereiken — zodat u precies kunt zien waar hij zou landen voordat u vastlegt. Klik op het spook om de order direct aan die truck toe te wijzen.
 
 ---
 
 ## Kaartweergave
 
-Wissel naar het tabblad **Kaart** om niet-toegewezen ladingen en beschikbare chauffeurs geografisch weergegeven te zien in plaats van als rijen. Dit is nuttig voor een snelle ruimtelijke blik op "wat ligt bij wat" voordat u teruggaat naar Nu om daadwerkelijk toe te wijzen. De acties **Auto Suggest** en **Virtueel** zijn hier ook beschikbaar.
+Schakel naar het tabblad **Kaart** voor een geografische weergave van niet-toegewezen ladingen en beschikbare trucks, aangestuurd door een op urgentie gebaseerd kleursysteem (zie de legenda op de kaart) zodat de ladingen en trucks die het snelst aandacht nodig hebben eruit springen. Orders en trucks clusteren samen bij lage zoom zodat een drukke regio niet verandert in een onleesbare hoop pins.
+
+<Frame caption="Planningsbord — Kaartweergave">
+  <img src="/images/planner/planning-board-map.png" alt="Kaartweergave van het Planningsbord met geclusterde orders en trucks" />
+</Frame>
+
+De werkbalk heeft een eigen filterbalk — orderzoek, truckzoek, en een truckstatus-schakelaar — plus een teller die toont hoeveel urgente orders momenteel op de kaart staan. Een banner verschijnt wanneer een of meer trucks geen bekende GPS-positie hebben en dus niet kunnen worden geplot.
+
+Klik op een ordermarkering om een paneel te openen met de beste kandidaat-trucks ervoor, gerangschikt op lege km — elk getoond als een compacte kaart met een vrij-vanaf-tijd, rijtijd, en aankomststrook bij ophaling. Klik op een kandidaat (of direct op een truckmarkering) om hetzelfde bevestigingsvenster te openen dat elders op het bord wordt gebruikt, inclusief eventuele cabotage-, aanhanger-, of estafettestop-controles. De acties **Auto Suggereren** en **Virtueel** zijn ook hier beschikbaar.
 
 ---
 
+<Card title="Auto-planning & de Assistent" icon="wand-sparkles" href="/nl/planner/auto-planning">
+  Hoe Druma's achtergrondengines truck-naar-lading-matches voorstellen, en hoe u ze beoordeelt en toepast.
+</Card>
+
 <Card title="Vandaag-weergave" icon="sun" href="/nl/planner/today-view">
-  Voor uw dagelijkse ochtendroutine — actieve orders, live truckposities en statusmeldingen allemaal in één scherm.
+  Voor uw dagelijkse ochtendworkflow — actieve orders, live truckposities, en statusmeldingen, allemaal in één scherm.
 </Card>
 
 <Card title="Een order aanmaken" icon="plus" href="/nl/planner/creating-orders">

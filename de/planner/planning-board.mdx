@@ -1,182 +1,254 @@
 ---
 title: "Planungstafel"
-description: "Die visuelle Dispositionstafel — gleichen Sie frei werdende LKW mit Ladungen ab, die noch einen benötigen, weisen Sie per Drag-and-Drop zu, und planen Sie Kombinationen vor, bevor sie feststehen."
+description: "Die visuelle Dispositionstafel — gleichen Sie freiwerdende LKW mit Ladungen ab, die einen brauchen, weisen Sie per Drag zu, und planen Sie Kombinationen vor, bevor sie fest sind."
 icon: "calendar"
 ---
 
-## Übersicht
+## Überblick
 
-Die Planungstafel ist Ihr wichtigstes Dispositionswerkzeug. Gehen Sie zu **Planer → Planungstafel**, um sie zu öffnen.
+Die Planungstafel ist Ihr wichtigstes Dispositionswerkzeug. Gehen Sie zu **Planung → Planungstafel**, um sie zu öffnen.
 
-Die Tafel hat drei Modi, die über die Tabs oben umgeschaltet werden:
+Die Tafel hat drei Modi, die über die Tabs links in der Befehlsleiste gewechselt werden:
 
-| Modus | Wofür er gedacht ist |
+| Modus | Wofür er ist |
 |---|---|
-| **Jetzt** | Die primäre Dispositionsansicht — zwei Spalten, die Kapazität und Bedarf gegenüberstellen. Hier weisen Sie LKW zu und neu zu. |
-| **Zeitstrahl** | Eine Gantt-artige Ansicht des Zeitplans jedes LKW, um Lücken und Konflikte über einen Tag, drei Tage oder eine Woche hinweg zu erkennen. |
-| **Karte** | Dieselben nicht zugewiesenen Ladungen und Fahrer, geografisch dargestellt. |
+| **Jetzt** | Die primäre Dispositionsansicht — zwei Spalten, die Kapazität gegen Bedarf abgleichen. Hier weisen Sie LKW zu und um. |
+| **Zeitachse** | Eine Gantt-artige Ansicht des Zeitplans jedes LKW, um Lücken und Konflikte über einen Tag, drei Tage, oder eine ganze Woche zu erkennen. |
+| **Karte** | Dieselben nicht zugewiesenen Ladungen und verfügbaren Fahrer, geografisch dargestellt. |
 
 <Warning>
-Die Planungstafel ist für Desktop-Bildschirme mit einer Breite von mindestens 1280 Pixeln konzipiert. Auf einem Telefon oder Tablet ersetzt ein vereinfachter Karten-Feed das zweispaltige Layout, und Drag-and-Drop steht nicht zur Verfügung.
+Die Planungstafel ist für Desktop-Bildschirme ab 1280 Pixel Breite ausgelegt. Auf Telefon oder Tablet ersetzt ein vereinfachter Kartenfeed das zweispaltige Layout, und Drag-and-Drop ist nicht verfügbar.
 </Warning>
+
+### Die Befehlsleiste
+
+Jeder Modus teilt sich eine Befehlsleiste: die Modus-Tabs links, die eigene Symbolleiste dieses Modus in der Mitte, und — immer rechts — der **Fokusmodus**, der **Assistent**, und **Verzögerungen**. Es gibt keinen separaten KPI-Streifen darüber; die Zeilen-/Auftragszähler, die Sie dort erwarten würden, leben jetzt direkt im eigenen Kopfbereich jedes Panels.
+
+- **Fokusmodus** (`F`, oder die ⤢-Schaltfläche) blendet die Seitenleiste und den Seitenkopf aus, damit die Tafelzeilen den ganzen Bildschirm nutzen. Schalten Sie ihn erneut um, oder drücken Sie `F`, um die Oberflächenelemente zurückzuholen.
+- **Assistent** öffnet Drumas eingestufte Warteschlange vorgeschlagener LKW-zu-Ladung-Zuordnungen — siehe [Automatische Planung & der Assistent](/de/planner/auto-planning).
+- **Verzögerungen** öffnet eine Popover-Liste von Aufträgen, die derzeit hinter dem Zeitplan zurückliegen.
+
+Bei schmaleren Breiten schrumpfen oder verschwinden zuerst die Beschriftungen der Symbolleisten-Steuerelemente — das Symbol und sein Tooltip bleiben immer, sodass nichts unerreichbar wird, sondern nur kompakter.
 
 ---
 
 ## Jetzt — die zweispaltige Dispositionsansicht
 
-Der Tab **Jetzt** ist ein geteiltes, zweispaltiges Layout:
+Der **Jetzt**-Tab ist ein geteiltes zweispaltiges Layout:
 
-- **Eingehend** (links) — was Kapazität frei macht: LKW, die gerade jetzt frei sind, sowie LKW, die bald frei werden, weil ihre aktuelle Ladung innerhalb des sichtbaren Datumsbereichs zugestellt wird.
-- **Ausgehend** (rechts) — Aufträge, die noch einen LKW benötigen (nicht zugewiesene Abholungen), plus bereits zugewiesene Aufträge, alle auf dieselbe Weise gruppiert wie Eingehend, sodass ein in einer Zone frei werdender LKW optisch mit Ladungen abgeglichen wird, die in derselben Zone abgeholt werden.
+- **Eingehend** — was Kapazität freigibt: LKW, die gerade jetzt frei sind, und LKW, die kurz davor sind frei zu werden, weil ihre aktuelle Ladung innerhalb des sichtbaren Datumsbereichs geliefert wird.
+- **Ausgehend** — Aufträge, die noch einen LKW brauchen (nicht zugewiesene Abholungen), plus bereits zugewiesene Aufträge, genauso gruppiert wie Eingehend, damit ein LKW, der in einer Zone frei wird, sich visuell mit Ladungen ausrichtet, die in derselben Zone abgeholt werden.
 
-<Frame caption="Die Jetzt-Ansicht — eingehende Kapazität links, ausgehende Ladungen rechts, mit den Schaltern für Dichte und Vorbereitung in der Symbolleiste.">
+<Frame caption="Die Jetzt-Ansicht — eingehende Kapazität auf einer Seite, ausgehende Ladungen auf der anderen, mit der Befehlsleiste darüber und einem Balance-Panel, das über die Symbolleiste verfügbar ist.">
   <img src="/images/planner/planning-board-split.png" alt="Planungstafel Jetzt-Ansicht mit den Spalten Eingehend und Ausgehend" />
 </Frame>
 
-Einen LKW zuzuweisen ist ein Drag: Nehmen Sie eine Zeile auf einer der beiden Seiten auf und legen Sie sie auf der passenden Zeile der anderen Seite ab.
+Einen LKW zuzuweisen ist ein Drag: Nehmen Sie eine Zeile auf einer Seite und lassen Sie sie auf der entsprechenden Zeile der anderen Seite fallen.
 
-- Das Ziehen eines **LKW** auf eine Ladung öffnet ein Bestätigungsblatt mit LKW-, Fahrer- und Auftragsdetails — einschließlich etwaiger Kabotage-, Anhänger- oder Relaisstopp-Prüfungen, die Ihre Eingabe erfordern — bevor die Zuweisung bestätigt wird.
-- Das Ziehen einer **ausliefernden Ladung** (eine Eingehend-Karte, die noch nicht frei ist, es aber bald wird) auf eine Ausgehend-Ladung weist noch keinen LKW zu — es gibt ja noch keinen freien —, sondern merkt eine vorläufige Verknüpfung zwischen beiden vor. Wiederholt man das, entsteht eine ganze **Kette** künftiger Anschlussladungen für einen LKW, bevor er auch nur für die erste frei ist; siehe **Vorbereitungsmodus** weiter unten für den vollständigen Ketten-Workflow, einschließlich des automatischen Optimierers, der vorgemerkte Ketten auf einen günstigeren Tausch hin überwacht. Nutzen Sie **LKW zuweisen** in dieser Zeile, sobald Sie bereit sind, die Zuweisung festzumachen.
+- Das Ziehen eines **LKW** auf eine Ladung öffnet ein Bestätigungsblatt mit den Details zu LKW, Fahrer und Auftrag — einschließlich aller Kabotage-, Anhänger-, oder Staffelpunkt-Prüfungen, die Ihre Eingabe benötigen — bevor die Zuweisung festgeschrieben wird.
+- Das Ziehen einer **ankommenden Ladung** (eine Eingehend-Karte, die noch nicht frei ist, aber kurz davor) auf eine Ausgehend-Ladung weist noch keinen LKW zu — es gibt noch keinen freien zuzuweisen — es skizziert stattdessen eine vorläufige Verbindung zwischen den beiden. Dies zu wiederholen baut eine ganze **Kette** zukünftiger Nachladungen für einen LKW auf, noch bevor er für die erste frei ist; siehe **Vorplanungsmodus** unten für den vollständigen Kettenworkflow, einschließlich des automatischen Optimierers, der skizzierte Ketten auf einen günstigeren Tausch hin überwacht. Verwenden Sie **LKW zuweisen** auf dieser Zeile, sobald Sie bereit sind festzuschreiben.
 
 <Note>
-Das Ziehen funktioniert in **beide Richtungen** — ziehen Sie eine Eingehend-Karte auf eine Ausgehend-Ladung, oder eine Ausgehend-Ladung auf eine Eingehend-Karte. Beide Wege landen auf derselben Zeile.
+Drag-and-Drop funktioniert in **beide Richtungen** — ziehen Sie eine Eingehend-Karte auf eine Ausgehend-Ladung, oder eine Ausgehend-Ladung auf eine Eingehend-Karte. So oder so landen Sie auf derselben Zeile.
 </Note>
+
+### Zeilendichte und Layout
+
+Klicken Sie auf das **Dichte**-Steuerelement in der Symbolleiste, um zwischen drei Zeilenhöhen zu wechseln:
+
+| Dichte | Am besten für |
+|---|---|
+| **Komfortabel** | Reichhaltigere Karten mit mehr visuellem Detail pro LKW oder Auftrag — ein genauerer Blick auf eine Handvoll Aufträge. |
+| **Kompakt** (Standard) | Dichte, einzeilige Zeilen, am nächsten an einer Tabellenkalkulation — schnelles Scannen und Massenplanung. |
+| **Dicht** | Die engste Zeilenhöhe, für einen großen 1080p-Bildschirm (besonders bei 125–150 % Windows-Skalierung), wo möglichst viele Zeilen sehen wichtiger ist als visueller Abstand. |
+
+Alle drei Dichten zeigen dieselben zugrunde liegenden Daten und unterstützen dasselbe Drag-and-Drop, dieselben Filter, und dieselbe Gruppierung. Über dasselbe **Spalten**-Menü können Sie auch tauschen, welche Seite — Eingehend oder Ausgehend — links dargestellt wird, und die Textgröße der App (klein/mittel/groß) festlegen, die die gesamte Oberfläche skaliert, nicht nur diese Seite.
 
 ### Datumsbereich
 
-Die Tafel zeigt einen rollierenden 7-Tage-Horizont. Nutzen Sie die Pfeile neben der Datumsangabe, um eine ganze Woche vor oder zurück zu blättern, oder klicken Sie auf **Heute**, um zum aktuellen 7-Tage-Fenster zurückzuspringen.
+Die Tafel zeigt einen rollierenden 7-Tage-Horizont. Verwenden Sie die Pfeile neben der Datumsbeschriftung, um eine ganze Woche vorwärts oder rückwärts zu blättern, oder klicken Sie auf **Heute**, um zum aktuellen 7-Tage-Fenster zurückzuspringen.
 
-### Dichte: Kompakt vs. Komfortabel
+### Gruppieren und Einklappen
 
-Ein Schalter in der Symbolleiste bestimmt, wie viel Detail jede Zeile zeigt:
-
-- **Kompakt** (Standard) — dichte Einzeilenzeilen mit sortier- und neu anordenbaren Spalten, am nächsten an einer Tabellenkalkulation. Am besten für schnelles Überfliegen und Massenplanung.
-- **Komfortabel** — ausführlichere Karten mit mehr visuellem Detail pro LKW oder Auftrag. Am besten für einen genaueren Blick auf eine Handvoll Aufträge.
-
-Beide Dichten zeigen dieselben zugrunde liegenden Daten und unterstützen dasselbe Drag-and-Drop, dieselben Filter und Gruppierungen — das Umschalten ist rein kosmetisch.
-
-### Gruppierung und Einklappen
-
-Nutzen Sie den Regler **Gruppieren nach** in der Symbolleiste, um beide Spalten nach Zonengruppe, Land, Stadt, Planungsgruppe oder Datum zu bündeln — Eingehend und Ausgehend gruppieren immer auf derselben Achse, damit der Abgleich von Kapazität und Bedarf optisch ausgerichtet bleibt. Gruppenüberschriften lassen sich einklappen; klappen Sie einen Abschnitt auf einer Seite ein, klappt sich der passende Abschnitt auf der anderen Seite ebenfalls ein, sodass beide Spalten synchron bleiben. Klicken Sie auf **Alle erweitern**, um alle eingeklappten Gruppen auf einmal zurückzusetzen.
+Verwenden Sie das **Gruppieren nach**-Steuerelement in der Symbolleiste, um beide Spalten nach Zonengruppe, Land, Stadt, Planungsgruppe, oder Datum zu bündeln — Eingehend und Ausgehend gruppieren immer nach derselben Achse, damit der Abgleich von Kapazität gegen Bedarf visuell ausgerichtet bleibt. Gruppenüberschriften sind einklappbar; klappen Sie einen Abschnitt auf einer Seite ein, und der entsprechende Abschnitt auf der anderen Seite klappt sich ebenfalls ein, wodurch die beiden Spalten synchron bleiben. Klicken Sie auf **Alle erweitern**, um alle eingeklappten Gruppen auf einmal zurückzusetzen.
 
 <Note>
-Zonengruppen sind Ihre eigenen hierarchischen Postleitzahl-Gruppierungen (konfiguriert in den Einstellungen) — nützlich, um auf einen Blick abzugleichen, „welches meiner Depots/Regionen einen LKW frei bekommt" gegen „welche Region Ladungen zur Abholung hat".
+Zonengruppen sind Ihre eigenen hierarchischen Postleitzahlengruppierungen (in den Einstellungen konfiguriert), nützlich um auf einen Blick abzugleichen, „welches meiner Depots/Regionen einen freiwerdenden LKW hat" gegen „welche Region Ladungen zum Abholen hat".
 </Note>
 
 ### Spalten
 
-Klicken Sie auf **Spalten**, um festzulegen, welche Felder jede Seite zeigt, und ziehen Sie sie zum Neuanordnen. Eingehend und Ausgehend behalten unabhängige Spaltensätze — ein Feld, das Sie auf einer Seite hinzufügen oder ausblenden, wirkt sich nicht auf die andere aus. Kernfelder (Status, Identität, ETA) werden immer angezeigt und können weder ausgeblendet noch neu angeordnet werden; alles andere (Postleitzahl-/Stadt-/Land-Aufschlüsselungen, Fahrername, Kennzeichen, Anhänger, Kabotagestatus, Unterauftragnehmer und mehr) ist optional zuschaltbar.
+Klicken Sie auf **Spalten**, um auszuwählen, welche Felder jede Seite zeigt, und ziehen Sie sie zum Neuordnen. Eingehend und Ausgehend behalten unabhängige Spaltensätze — ein Feld, das Sie auf einer Seite hinzufügen oder ausblenden, wirkt sich nicht auf die andere aus. Kernfelder (Status, Identität, ETA) werden immer angezeigt und können nicht ausgeblendet oder neu geordnet werden; alles andere (Postleitzahl-/Stadt-/Länderaufschlüsselung, Fahrername, Kennzeichen, Anhänger, Kabotagestatus, Unterauftragnehmer, und mehr) ist optional.
 
 ### Gespeicherte Ansichten
 
-Das Menü **Ansichten** erlaubt es Ihnen, die aktuelle Filter-, Gruppierungs- und Spaltenkonfiguration als benannte Ansicht zu speichern, zwischen gespeicherten Ansichten zu wechseln, und eine als Standard festzulegen — sie wird dann automatisch angewendet, sobald Sie (oder jemand anderes mit Zugriff auf dieselbe Ansicht) die Tafel das nächste Mal öffnet.
+Im Menü **Ansichten** können Sie die aktuelle Filter-, Gruppierungs- und Spaltenkonfiguration als benannte Ansicht speichern, zwischen gespeicherten Ansichten wechseln, und eine als Standard markieren — sie wird dann automatisch angewendet, wenn Sie (oder jemand mit derselben Ansicht) die Tafel das nächste Mal öffnen.
 
 ### Filter und Suche
 
-Klicken Sie auf **Filter**, um das Filterpanel zu öffnen — Status, Abhol-/Lieferdatumsbereich, Zone sowie Land, Stadt oder Postleitzahl von Ladung/Lieferung. Aktive Filter erscheinen als entfernbare Chips unter der Symbolleiste; klicken Sie auf **Alle löschen**, um sie zurückzusetzen. Jede Spalte hat außerdem ein eigenes Schnellsuchfeld, um innerhalb dieser Seite nach Auftragsnummer, Adresse oder Fahrername zu filtern.
+Klicken Sie auf **Filter**, um das Filter-Panel zu öffnen — Status, Abhol-/Lieferdatumsbereich, Zone, und Land, Stadt, oder Postleitzahl von Ladung/Lieferung. Aktive Filter werden als entfernbare Chips unter der Symbolleiste angezeigt; klicken Sie auf **Alle löschen**, um sie zurückzusetzen. Jedes Panel hat auch sein eigenes Schnellsuchfeld zum Filtern nach Auftragsnummer, Adresse, oder Fahrername innerhalb dieser Seite.
 
-### Triage-Kacheln
+<Note>
+Die Suche reicht auch in die eigenen Aufträge einer Sammelgutfahrt hinein, und ein Filter lässt Sie Sammelgutfahrten vollständig ein- oder ausblenden — siehe [Sammelgut auf der Planungstafel und Live-Karte](/de/planner/groupage).
+</Note>
 
-Über jeder Spalte fassen kleine Kacheln auf einen Blick zusammen, was sie enthält:
+### Das Balance-Panel
 
-- **Eingehend** — wie viele LKW/Ladungen in jede Kapazitätskategorie fallen.
-- **Ausgehend** — die Anzahlen **Ungeplant**, **Verspätet** und **Pünktlich** für Ladungen, die bereits einen vorläufigen oder festen Plan haben.
+Klicken Sie auf die Schaltfläche **Balance** in der Symbolleiste (ihr Badge zeigt die Anzahl der Defizitgruppen von heute), um einen schreibgeschützten Bericht darüber zu öffnen, wo Angebot und Nachfrage übereinstimmen — und wo nicht — über jede Gruppe und jeden Tag des sichtbaren Horizonts. Er hat drei Tabs:
 
-Klicken Sie auf eine Kachel, um diese Spalte auf genau diese Kategorie zu filtern; klicken Sie erneut, um den Filter zu entfernen.
+- **Tabelle** — eine Gruppe-×-Tag-Matrix. Jede Zelle zeigt offenes Angebot, offene Nachfrage, und den Saldo (Überschuss in Blau, Defizit in Amber/Rot); eine Gesamt-Spalte und eine „Alle Gruppen"-Zeile geben die Gesamtsummen.
+- **Diagramm** — dieselben Zeilen als eingestufter horizontaler Balken, entweder für einen einzelnen Tag oder den ganzen Horizont, schlimmstes Defizit oben.
+- **Karte** — eine Blase pro Gruppe an der durchschnittlichen Position ihrer Mitglieder, dimensioniert nach Volumen und in derselben Weise eingefärbt wie Tabelle und Diagramm.
 
-### LKW zuweisen / LKW entfernen / Zum Verkauf
+Das Balance-Panel ändert nie etwas an der Tafel — es ist eine schreibgeschützte Angebot-/Nachfrage-Zusammenfassung zu Planungszwecken, aufgebaut aus genau den Zeilen, die die Tafel selbst zeigt, sodass sie nie mit dem, was Sie sehen, im Widerspruch stehen kann.
 
-Jede Ausgehend-Zeile, die einen LKW hat (fest oder vorgemerkt), zeigt Aktionsschaltflächen:
+### LKW zuweisen / LKW entfernen / Zum Verkauf anbieten
 
-- **LKW zuweisen** — eine vorgemerkte Kombination als feste Zuweisung bestätigen.
-- **LKW entfernen** — den Plan rückgängig machen und den Auftrag zurück auf nicht zugewiesen setzen.
-- **Zum Verkauf** — die Ladung einem Unterauftragnehmer/Frachtführer anbieten, statt sie mit der eigenen Flotte zu fahren. Eine verkaufte Ladung zeigt ein Abzeichen **Zu verkaufen** oder **Verkauft · [Frachtführer]**; ist der Frachtführer im Verzug, erscheint zusätzlich ein Abzeichen **Verspätet**. Sie können eine verkaufte Ladung zurück in die eigene Flotte holen, solange die Beladung noch nicht begonnen hat.
+Jede Ausgehend-Zeile mit einem LKW (fest oder skizziert) zeigt Aktionsschaltflächen:
 
-### Vorbereitungsmodus
+- **LKW zuweisen** — eine skizzierte Kombination als feste Zuweisung festschreiben.
+- **LKW entfernen** — den Plan rückgängig machen und den Auftrag zurück zu nicht zugewiesen schicken.
+- **Zum Verkauf anbieten** — die Ladung stattdessen einem Unterauftragnehmer/Frachtführer anbieten, statt sie mit der eigenen Flotte zu fahren. Eine verkaufte Ladung zeigt ein **Zum Verkauf**- oder **Verkauft · [Frachtführer]**-Badge; wenn der Frachtführer verspätet ist, erscheint zusätzlich ein **Verspätet**-Badge. Sie können eine verkaufte Ladung zurück in Ihre eigene Flotte holen, solange sie noch nicht mit dem Beladen begonnen hat.
 
-Der Schalter **Vorbereitung** in der Symbolleiste bestimmt, was ein Drag-and-Drop bewirkt:
+### LKW und Anhänger unterwegs wechseln
+
+Sobald ein Auftrag bereits zugewiesen ist, bietet das Aktionsmenü einer Zeile auch die Möglichkeiten, zu ändern, was die Ladung physisch transportiert, ohne den Auftrag selbst anzufassen:
+
+- **LKW wechseln** — die Ladung an einem Staffelpunkt an eine andere Zugmaschine übergeben, oder einen Staffelpunkt mit noch unbekanntem nächsten LKW erfassen (eine offene Staffel) — siehe [LKW-Wechsel (Zugmaschinenwechsel)](/de/planner/switch-truck).
+- **Anhänger beim Empfänger lassen** — eine Drop-and-Hook-Zustellung: die Zugmaschine lässt den beladenen Anhänger für den Empfänger zurück, damit dieser ihn zu seiner eigenen Zeit entlädt, und koppelt einen anderen an — siehe [Drop-and-Hook-Zustellung](/de/planner/drop-and-hook-delivery).
+
+Beide sind über dasselbe Zeilenaktionsmenü verfügbar, in dem der Auftragsstatus angezeigt wird, und beide erfassen einen ordentlichen Übergabedatensatz statt einer stillen Neuzuweisung.
+
+### Vorplanungsmodus
+
+Die Umschaltung **Vorplanung** in der Symbolleiste ändert, was ein Drag-and-Drop bewirkt:
 
 - **Aus** (Standard) — Ziehen weist den LKW sofort fest zu (öffnet das Bestätigungsblatt).
-- **Ein** — Ziehen merkt eine vorläufige Kombination vor, ohne etwas festzulegen. Vorgemerkte Kombinationen zeigen ein Abzeichen **Vorläufig**, eine geschätzte (oder, wo Routingdaten verfügbar sind, echte PTV-geroutete) ETA, sowie ein Pünktlich-/Verspätet-Urteil — sodass Sie eine ganze Woche an Kombinationen skizzieren können, bevor Sie eine davon festmachen. Nutzen Sie **LKW zuweisen** auf einer vorgemerkten Zeile, sobald Sie bereit sind, sie festzumachen.
+- **Ein** — Ziehen skizziert eine vorläufige Kombination, ohne etwas festzuschreiben. Skizzierte Kombinationen zeigen ein **Vorläufig**-Badge, eine geschätzte (oder, wo Routingdaten verfügbar sind, echte PTV-geroutete) ETA, und ein Pünktlich-/Verspätet-Urteil — sodass Sie eine ganze Woche an Kombinationen skizzieren können, bevor Sie irgendeine festschreiben. Verwenden Sie **LKW zuweisen** auf einer skizzierten Zeile, wenn Sie bereit sind, sie fest zu machen.
 
-**Eine Kette aufbauen.** Eine Vormerkung muss nicht bei einem LKW und einer Ladung enden. Ziehen Sie eine **ausliefernde** Eingehend-Karte — ein LKW, der noch nicht frei ist, es aber bald wird — auf eine Ausgehend-Ladung, und Druma merkt eine Verknüpfung vor, die die neue Ladung an die aktuell laufende anhängt. Ziehen Sie erneut auf das neue Kettenende, und Sie können eine ganze Abfolge künftiger Anschlussladungen für einen einzigen LKW planen, Tage bevor er tatsächlich frei wird — eine Fahrt Cluj → Sibiu → Timișoara, am Montag vorgemerkt für einen LKW, der noch Richtung Cluj unterwegs ist.
+**Eine Kette aufbauen.** Eine Skizze muss nicht bei einem LKW und einer Ladung aufhören. Ziehen Sie eine **ankommende** Eingehend-Karte — einen LKW, der noch nicht frei ist, aber kurz davor — auf eine Ausgehend-Ladung, und Druma skizziert eine Verbindung, die die neue Ladung an die gerade unterwegs befindliche anschließt. Ziehen Sie erneut auf das neue Ende, und Sie können eine ganze Sequenz zukünftiger Nachladungen für einen einzelnen LKW planen, Tage bevor er tatsächlich frei wird — eine Cluj-→-Sibiu-→-Timișoara-Fahrt, am Montag skizziert für einen LKW, der noch auf dem Weg nach Cluj ist.
 
-Jede vorgemerkte Zeile zeigt einen Chip **Nach #Auftrag**, der die Ladung benennt, an die sie angehängt ist, damit die Abfolge auf einen Blick lesbar bleibt. Technisch gesehen verankert sich eine Vormerkung an einem bestimmten LKW, an dem Vorgänger-Auftrag, an den sie anhängt, oder an beidem — und ein Anker kann immer nur eine Anschlussladung gleichzeitig bedienen: Zieht man eine neue Ladung auf einen bereits vergebenen Anker, wird der Anker auf die neue Ladung umgehängt und die alte Vormerkung entfernt, statt denselben LKW doppelt über zwei Ketten zu verplanen.
-
-<Note>
-Nichts davon berührt den echten Auftrag, bis ein LKW tatsächlich über den normalen Tafel-Weg zugewiesen wird — ein Drag bei ausgeschalteter Vorbereitung, oder **LKW zuweisen** auf einer vorgemerkten Zeile. Bis dahin ist eine Kette reiner Planungsspielraum und lässt sich frei umbauen.
-</Note>
-
-**Der Anschlussladung-Neuzuweisungs-Optimierer.** Sobald eine Kette existiert, prüft Druma sie fortlaufend im Hintergrund. Für das **Ende** jeder Kette — die letzte vorgemerkte Anschlussladung, an die noch nichts weiter anhängt — stellt er die Frage: Gibt es eine andere, noch nicht vorgemerkte Anschlussladung, deren Abholung näher an dem Ort liegt, an dem dieser LKW tatsächlich frei wird?
-
-Zum Beispiel: Ein LKW ist vorgemerkt, morgen in Cluj nachzuladen. Es taucht eine näher gelegene, noch nicht vergebene Anschlussladung mit Abholung in Sibiu auf. Würde der Tausch zur Sibiu-Ladung die Leerkilometerkosten tatsächlich senken — bewertet in € anhand des eigenen Kostenprofils des LKW, nicht nur anhand roher Kilometer —, zeigt Druma direkt auf dieser Zeile einen Vorschlags-Chip, etwa **„Günstigere Anschlussladung verfügbar: −18 km · €22."** Klicken Sie auf **Wechseln zu #...**, und der Tausch wird in einem Schritt angewendet: Die Sibiu-Ladung wird vorgemerkt, die Cluj-Ladung verliert automatisch ihre Vormerkung (dieselbe Ein-Anker-Regel, auf der Ketten oben beruhen), und ein Toast bestätigt **„Anschlussladung #... stattdessen vorgemerkt."** Das ist derselbe Vorschlags-Chip-Mechanismus, der weiter unten beschrieben wird, hier speziell auf Kettenenden angewendet.
-
-Ein paar Leitplanken halten die Vorschläge vertrauenswürdig:
-
-- Er schlägt ausschließlich einen Tausch vor, der **mindestens 15 km und mindestens €0** einspart — nie einen Tausch, der nur deshalb günstig wirkt, weil das Kostenprofil eines LKW fälschlich auf null konfiguriert ist.
-- Er berücksichtigt die **EU-Verordnung 561/2006** — er schlägt nie eine Anschlussladung vor, die den Fahrer des LKW über seine verbleibende Tageslenkzeit hinaus bringen würde.
-- Klicken Sie auf den Chip, um ihn für die Begründung sowie eine echte, geroutete Vorher-/Nachher-Auswirkung zu erweitern — inklusive einer Warnung, dass die verdrängte Ladung wieder nicht zugewiesen wird.
+Jede skizzierte Zeile zeigt einen **Nach #{Auftrag}**-Chip, der die Ladung benennt, an die sie angeschlossen ist, damit die Sequenz auf einen Blick lesbar bleibt. Unter der Haube verankert sich eine Skizze an einem bestimmten LKW, an dem Vorgängerauftrag, an den sie anschließt, oder an beidem — und ein Anker kann jeweils nur eine einzige Nachladung bedienen: Das Ziehen einer neuen Ladung auf einen bereits belegten Anker beheimatet den Anker bei der neuen Ladung neu und entskizziert die alte, statt denselben LKW über zwei Ketten hinweg doppelt zu buchen.
 
 <Note>
-Der Optimierer schlägt immer nur vor; nichts wird ohne Klick angewendet. Er bleibt auch still, wenn es nichts Besseres vorzuschlagen gibt — kein Chip bedeutet, dass Druma keine günstigere Anschlussladung gefunden hat, nicht, dass nicht geprüft wurde.
+Nichts hiervon berührt den echten Auftrag, bis ein LKW tatsächlich über das normale Tafelgatter zugewiesen wird — ein Drag mit ausgeschalteter Vorplanung, oder **LKW zuweisen** auf einer skizzierten Zeile. Bis dahin ist eine Kette reiner Planungsentwurfsraum und kann frei umgeordnet werden.
 </Note>
 
-**Kettensicherheit bei Änderungen.** Ändert sich etwas weiter oben in einer Kette — der Auftrag wird storniert, sein LKW wird abgezogen, oder sein LKW wird gewechselt —, prüft Druma, ob dahinter etwas vorgemerkt ist. Ist das nicht der Fall, geht die Änderung ohne Weiteres durch. Existiert ein nachgelagertes Kettenende, werden Sie zur Wahl aufgefordert: **Ganze Kette entfernen** (kaskadiert die Entfernung durch jede danach vorgemerkte Anschlussladung) oder **Nachgelagerte Aufträge behalten** (trennt nur dieses eine Glied und belässt die nachgelagerten Ladungen als eigenständige, weiterhin neu zuweisbare Vormerkungen). So oder so verkommt ein vorgemerkter Plan nie stillschweigend zu einem defekten oder verwaisten Zustand — Sie entscheiden, was mit dem Rest der Kette geschieht, und müssen nie selbst manuell nach hängenden Gliedern suchen.
+**Der Nachladungs-Neuzuweisungs-Optimierer.** Sobald eine Kette existiert, überprüft Druma sie weiter im Hintergrund. Für das **Ende** jeder Kette — die letzte skizzierte Nachladung, an die noch nichts anschließt — fragt er: Gibt es eine andere, noch nicht skizzierte Nachladung, deren Abholpunkt näher an dem Ort liegt, wo dieser LKW tatsächlich frei wird?
 
-### Vorschlags-Chips
+Zum Beispiel: Ein LKW ist skizziert, morgen in Cluj nachzuladen. Eine näher gelegene, nicht ausgewählte Nachladung taucht stattdessen mit einem Abholpunkt in Sibiu auf. Wenn ein Tausch zur Sibiu-Ladung die Leerkilometer-Kosten echt senken würde — bewertet in € anhand des eigenen Kostenprofils des LKW, nicht nur roher Kilometer — zeigt Druma direkt auf dieser Zeile einen Vorschlagschip, etwa **„Günstigere Nachladung verfügbar: −18 km · 22 €"**. Klicken Sie auf **Wechseln zu #...**, und der Tausch wird in einem Schritt angewendet: Die Sibiu-Ladung wird skizziert, die Cluj-Ladung verliert automatisch ihre Skizze (dieselbe Ein-Nutzungs-Anker-Regel, auf der Ketten oben beruhen), und eine Toast-Meldung bestätigt **„Nachladung #... stattdessen skizziert"**.
 
-Wo Drumas Auto-Planung eine zuversichtliche Empfehlung für einen nicht zugewiesenen Auftrag hat, erscheint direkt in dieser Zeile ein Vorschlags-Chip. Klicken Sie darauf, um den vorgeschlagenen LKW direkt anzuwenden, oder verwerfen Sie ihn, falls er nicht passt.
+Ein paar Sicherheitsvorkehrungen halten die Vorschläge vertrauenswürdig:
+
+- Er schlägt nie einen Tausch vor, der weniger als **15 km und mindestens 0 €** spart — nie einen Tausch, der nur deshalb günstig aussieht, weil das Kostenprofil eines LKW fälschlich auf null konfiguriert ist.
+- Er ist **EU-561/2006-bewusst** — er schlägt nie eine Nachladung vor, die den Fahrer des LKW über seine verbleibenden Lenkzeitstunden für den Tag hinaus drängen würde.
+- Klicken Sie auf den Chip, um ihn aufzuklappen für das „Warum" und einen echten geroutet berechneten Vorher/Nachher-Effekt, einschließlich einer Warnung, dass die verdrängte Ladung wieder nicht zugewiesen wird.
+
+<Note>
+Der Optimierer schlägt immer nur vor; nichts wird ohne einen Klick angewendet. Er schweigt auch, wenn es nichts Besseres vorzuschlagen gibt — kein Chip bedeutet, dass Druma keine günstigere Nachladung gefunden hat, nicht, dass er nicht nachgeschaut hat.
+</Note>
+
+**Kettensicherheit bei Änderungen.** Wenn sich stromaufwärts in einer Kette etwas ändert — der Auftrag wird storniert, sein LKW wird abgezogen, oder sein LKW wird gewechselt — prüft Druma, ob stromabwärts davon etwas skizziert ist. Wenn nichts, geht die Änderung reibungslos durch. Wenn ein stromabwärtiges Ende existiert, werden Sie aufgefordert zu wählen: **Gesamte Kette entfernen** (kaskadiert die Entfernung durch jede daran angeschlossene skizzierte Nachladung) oder **Nachgelagerte Aufträge behalten** (trennt nur diese eine Verbindung und belässt die nachgelagerten Ladungen als unabhängige, weiterhin neu zuweisbare Pins).
+
+### Vorschlagschips
+
+Wo Drumas automatische Planung eine zuverlässige Empfehlung für einen nicht zugewiesenen Auftrag hat, erscheint ein Vorschlagschip direkt auf dieser Zeile, der zeigt, was bekannt ist (Leerkilometer, ungefähre Fahrtkosten, oder eine Ersparnis) — siehe [Automatische Planung & der Assistent](/de/planner/auto-planning) für das vollständige Bewertungsbild. Klicken Sie darauf, um den vorgeschlagenen LKW direkt anzuwenden, oder verwerfen Sie ihn, wenn er nicht passt.
 
 ### Spaltenübergreifende Hervorhebung
 
-Klicken Sie auf eine beliebige Zeile, um ihre Hervorhebung zu fixieren. Ist diese Zeile Teil einer vorgemerkten oder festen Kombination, hebt Druma die passende(n) Zeile(n) in der anderen Spalte hervor und scrollt sie in den sichtbaren Bereich — ein Klick auf einen LKW bei Eingehend zeigt Ihnen so genau, mit welcher/welchen Ladung(en) er bei Ausgehend kombiniert ist, und umgekehrt.
+Klicken Sie auf eine Zeile, um ihre Hervorhebung anzuheften. Wenn diese Zeile Teil einer skizzierten oder festen Kombination ist, hebt Druma die entsprechende(n) Zeile(n) in der anderen Spalte hervor und scrollt sie in die Ansicht — so zeigt Ihnen ein Klick auf einen LKW bei Eingehend genau, welcher Ladung/welchen Ladungen er bei Ausgehend zugeordnet ist, und umgekehrt.
 
 ### Virtuelle Aufträge
 
-Klicken Sie auf **Virtuell**, um einen Platzhalterauftrag zu erstellen, der einen LKW für eine erwartete Ladung reserviert, die noch keine feste Buchung hat — nützlich, wenn Sie einer bestätigten Buchung vorausplanen.
+Klicken Sie auf **Virtuell**, um einen Platzhalterauftrag zu erstellen, der einen LKW für eine erwartete Ladung reserviert, die noch keine feste Buchung hat — nützlich, um im Voraus vor einem bestätigten Auftrag vorzuplanen.
+
+---
+
+## Tastenkürzel
+
+Mit Fokus auf der Jetzt-Ansicht (nicht in einem Modal oder einem Textfeld):
+
+| Taste | Aktion |
+|---|---|
+| `J` / `K` | Die Ausgehend-Zeilen nach unten / oben durchlaufen, in der Reihenfolge, in der sie aktuell angezeigt werden (respektiert Ihre Gruppierung, Sortierung, und Filter) |
+| `A` | Den Vorschlag der ausgewählten Zeile akzeptieren — skizziert ihn im Vorplanungsmodus, oder öffnet sonst das Bestätigungsblatt |
+| `Esc` | Die aktuelle Auswahl löschen |
+| `F` | Fokusmodus umschalten |
+
+Die vollständige Liste, einschließlich Tastenkürzel außerhalb der Tafel, ist immer über das **?**-Overlay verfügbar.
 
 ---
 
 ## Konflikte und Blockaden
 
-Würde eine vorgeschlagene Zuweisung ein Problem erzeugen — ein Kabotage-Limit, ein nicht passender Anhängertyp, ein ungelöster Relaisstopp —, markiert Druma dies im Bestätigungsblatt als Blockade, statt die Zuweisung stillschweigend durchzulassen. Manche Blockaden erfordern eine ausdrückliche Bestätigung, bevor Sie fortfahren können; andere sind rein informativ.
+Wenn eine vorgeschlagene Zuweisung ein Problem verursachen würde — ein Kabotage-Limit, eine Anhänger-Inkompatibilität, ein ungelöster Staffelpunkt — markiert Druma dies als Blockade im Bestätigungsblatt, statt die Zuweisung stillschweigend durchzulassen. Manche Blockaden erfordern eine explizite Bestätigung, bevor Sie fortfahren können; andere sind nur informativ.
 
 ---
 
 ## Auftragsdetails ansehen
 
-**Klicken** Sie auf eine beliebige Zeile, um ein Detailpanel zu öffnen. Von dort aus können Sie den Auftrag bearbeiten, seinen Status ändern oder den Fahrer anrufen.
+**Klicken** Sie auf eine beliebige Zeile, um ein Detailpanel zu öffnen. Von dort können Sie den Auftrag bearbeiten, seinen Status ändern, oder den Fahrer anrufen.
 
 ---
 
-## Zeitstrahl-Ansicht
+## Zeitachsen-Ansicht
 
-Wechseln Sie zum Tab **Zeitstrahl** für eine Gantt-artige Ansicht: Jeder LKW ist eine Zeile, und sein Zeitplan wird als zeitlich positionierte Segmente gezeichnet — Fahretappen sowie Be-/Entladefenster. Geplante (noch nicht tatsächliche) Segmente werden schraffiert dargestellt; tatsächliche/bestätigte Segmente werden durchgehend dargestellt. Ein Segment ohne bestätigten Zeitstempel wird mit reduzierter Deckkraft und gestricheltem Rand angezeigt, um es als geschätzt zu kennzeichnen.
+Wechseln Sie zum Tab **Zeitachse** für eine Gantt-artige Ansicht: jeder LKW ist eine Zeile, und sein Zeitplan wird als zeitpositionierte Segmente gezeichnet — Fahrtstrecken, und Be-/Entladefenster. Geplante (noch nicht tatsächliche) Segmente werden mit einem schraffierten Muster dargestellt; tatsächliche/bestätigte Segmente werden durchgehend dargestellt. Ein Segment ohne bestätigten Zeitstempel wird mit reduzierter Deckkraft und gestricheltem Rand dargestellt, um es als geschätzt zu kennzeichnen.
 
-<Frame caption="Zeitstrahl-Ansicht — jede Zeile ist ein LKW; eine rote Linie markiert die aktuelle Uhrzeit.">
-  <img src="/images/planner/planning-board-timeline.png" alt="Planungstafel Zeitstrahl-Ansicht mit LKW als Zeilen und zeitlich positionierten Segmenten" />
+<Frame caption="Zeitachsen-Ansicht — jede Zeile ist ein LKW; eine rote Linie markiert die aktuelle Zeit.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Zeitachsen-Ansicht der Planungstafel mit LKW als Zeilen mit zeitpositionierten Segmenten" />
 </Frame>
 
-Nutzen Sie die Datumsnavigation, um sich durch den Zeitplan zu bewegen, und den **Zeitspannen-Wähler**, um festzulegen, wie viel Zeit sichtbar ist:
+Verwenden Sie die Datumsnavigationssteuerelemente, um durch den Zeitplan zu navigieren, und den **Zeitraumwähler**, um zu wählen, wie viel Zeit sichtbar ist:
 
-| Zeitspanne | Am besten für |
+| Zeitraum | Am besten für |
 |---|---|
-| **1 Tag** | Detaillierte untertägige Planung — genaue Be- und Entladefenster sehen |
+| **1 Tag** | Detaillierte tagesinterne Planung — genaue Be- und Entladefenster sehen. Das heutige Fenster öffnet zwei Stunden in der Vergangenheit statt um Mitternacht, damit die erledigten Aufträge des Morgens nicht nachmittags die halbe Bildschirmfläche fressen. |
 | **3 Tage** | Lücken und Konflikte über die nächsten 72 Stunden erkennen |
-| **1 Woche** | Eine Kapazitätsübersicht — welche LKW über die ganze Woche frei sind |
+| **1 Woche** | Ein grobes Gantt über den gesamten Horizont — derselbe Balken-Renderer wie 1 Tag/3 Tage, nur herausgezoomt, statt einer separaten Übersichtstabelle |
 
-Der Zeitstrahl teilt sich dasselbe Filterpanel mit der Jetzt-Ansicht, sodass ein Status-, Datums-, Zonen- oder Standortfilter beim Tabwechsel erhalten bleibt.
+Zeitachse teilt sich dasselbe Filter-Panel wie die Jetzt-Ansicht, sodass ein Status-, Datums-, Zonen-, oder Ortsfilter beim Wechseln der Tabs erhalten bleibt.
+
+### Zoom, Spurhöhe, und Gruppierung
+
+- **Zoom** — `−`/`+`-Schaltflächen (oder Strg/⌘ + Mausrad über dem Raster) verbreitern oder verschmälern, wie viele Stunden auf den Bildschirm passen, von der halben bis zur dreifachen Standardskala. Die Stunde unter Ihrem Zeiger bleibt beim Zoomen fixiert.
+- **Spurhöhe** — eine **Normal / Dicht**-Umschaltung; Dicht passt mehr LKW-Zeilen auf den Bildschirm auf Kosten einer kompakteren Beschriftung.
+- **Gruppieren und Sortieren** — gruppieren Sie Spuren nach Zone, Land, oder Planungsgruppe, und sortieren Sie sie freie-LKW-zuerst, nach Name, oder nach verbleibenden Stunden — unabhängig davon, wie die Jetzt-Ansicht gruppiert ist.
+
+### Ziehen zum Umplanen
+
+Bei den Zeiträumen 1 Tag und 3 Tage ziehen Sie den Körper eines geplanten Segments, um es zu einer neuen Zeit zu verschieben, oder ziehen Sie seine Kanten, um das Be-/Entladefenster in der Größe zu ändern. Das Loslassen der Änderung öffnet ein Bestätigungsblatt, das Sie vor jeder Spurüberlappung oder EU-561/2006-Lenkzeitkonflikt warnt, den die Änderung verursachen würde, bevor Sie festschreiben — danach erscheint eine Rückgängig-Toast-Meldung, sodass eine schlechte Umplanung mit einem Klick umkehrbar ist.
+
+### Compliance-Badges
+
+Die Spurbeschriftung jedes LKW zeigt kleine Badges für alles, was diesen LKW gerade betrifft: ein ablaufendes oder abgelaufenes Flottendokument, eine Kabotage-Warnung oder -Verletzung, ein außer-Dienst-Fenster, oder einen ausstehenden Werkstattauftrag. Fahren Sie über ein Badge für das Detail.
+
+### Kandidaten-Geistervorschau
+
+Wenn ein nicht zugewiesener Auftrag im Fokus ist, zeigt das Überfahren eines eingestuften Kandidaten-LKW in der Zeitachse eine Geisterplatzierung dieses Auftrags direkt auf der Spur des LKW — einschließlich der geschätzten Leerstrecke zum Erreichen des Abholpunkts — sodass Sie genau sehen können, wo er landen würde, bevor Sie festschreiben. Klicken Sie auf den Geist, um den Auftrag direkt diesem LKW zuzuweisen.
 
 ---
 
-## Karten-Ansicht
+## Kartenansicht
 
-Wechseln Sie zum Tab **Karte**, um nicht zugewiesene Ladungen und verfügbare Fahrer geografisch statt als Zeilen dargestellt zu sehen. Das ist nützlich für einen schnellen räumlichen „was liegt in der Nähe von was"-Überblick, bevor Sie zurück zu Jetzt wechseln, um tatsächlich zuzuweisen. Die Aktionen **Auto Suggest** und **Virtuell** sind auch hier verfügbar.
+Wechseln Sie zum Tab **Karte** für eine geografische Ansicht nicht zugewiesener Ladungen und verfügbarer LKW, gesteuert durch ein dringlichkeitsbasiertes Farbsystem (siehe die Legende auf der Karte), damit Ladungen und LKW, die am dringendsten Aufmerksamkeit brauchen, hervorstechen. Aufträge und LKW clustern bei niedrigem Zoom zusammen, damit eine belebte Region nicht zu einem unlesbaren Haufen von Pins wird.
+
+<Frame caption="Planungstafel — Kartenansicht">
+  <img src="/images/planner/planning-board-map.png" alt="Kartenansicht der Planungstafel mit geclusterten Aufträgen und LKW" />
+</Frame>
+
+Die Symbolleiste hat eine eigene Filterleiste — Auftragssuche, LKW-Suche, und eine LKW-Status-Umschaltung — plus einen Zähler, der anzeigt, wie viele dringende Aufträge derzeit auf der Karte sind. Ein Banner erscheint, wenn ein oder mehrere LKW keine bekannte GPS-Position haben und daher nicht dargestellt werden können.
+
+Klicken Sie auf einen Auftragsmarker, um ein Panel der besten Kandidaten-LKW dafür zu öffnen, eingestuft nach Leerkilometern — jeder als kompakte Karte mit Frei-ab-Zeit, Fahrzeit, und Ankunftsstreifen am Abholpunkt dargestellt. Klicken Sie auf einen Kandidaten (oder direkt auf einen LKW-Marker), um dasselbe Bestätigungsblatt zu öffnen, das anderswo auf der Tafel verwendet wird, einschließlich aller Kabotage-, Anhänger-, oder Staffelpunkt-Prüfungen. Die Aktionen **Automatisch vorschlagen** und **Virtuell** sind auch hier verfügbar.
 
 ---
 
-<Card title="Heute-Ansicht" icon="sun" href="/de/planner/today-view">
-  Für Ihren täglichen Morgen-Workflow — aktive Aufträge, Live-LKW-Positionen und Statuswarnungen auf einem Bildschirm.
+<Card title="Automatische Planung & der Assistent" icon="wand-sparkles" href="/de/planner/auto-planning">
+  Wie Drumas Hintergrund-Engines LKW-zu-Ladung-Zuordnungen vorschlagen, und wie Sie diese prüfen und anwenden.
+</Card>
+
+<Card title="Tagesansicht" icon="sun" href="/de/planner/today-view">
+  Für Ihren täglichen morgendlichen Arbeitsablauf — aktive Aufträge, Live-LKW-Positionen, und Statuswarnungen, alles auf einem Bildschirm.
 </Card>
 
 <Card title="Einen Auftrag erstellen" icon="plus" href="/de/planner/creating-orders">

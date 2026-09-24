@@ -112,27 +112,43 @@ Lasă pragul necompletat pentru a dezactiva modalul de taxă pentru acel tip de 
 
 Pe lângă coloana de sold per client, Druma are o pagină dedicată **Operațiuni → Solduri Paleți**, care reconciliază pozițiile pe **atât clienți, cât și subcontractanți**, într-o singură vizualizare — utilă când vrei o singură trecere prin toate pozițiile de paleți deschise, în loc să verifici contrapărțile una câte una.
 
-Fiecare rând arată o contraparte (client sau transportator), tipul de palet, soldul net și o etichetă de **status**, folosind aceeași logică de prag ca modalul de taxă, dar cu un nivel suplimentar pentru pozițiile care s-au îndepărtat mult peste el:
+Spre deosebire de registrul per comandă, această pagină arată **un rând per contraparte**, nu unul per (contraparte, tip de palet). Dacă tranzacționezi mai mult de un standard de paleți cu același client, rândul îi pliază în trei totaluri — EUR, Industrial, și Altele — plus un net combinat și o singură etichetă de status, așa că ai mereu un rând care spune ce îți datorează acea contraparte (sau tu ei) în ansamblu.
+
+Eticheta de status a fiecărui rând folosește aceeași logică de prag ca modalul de taxă, cu un nivel suplimentar pentru pozițiile care au deraiat mult peste el:
 
 | Status | Semnificație |
 |---|---|
-| **OK** | Soldul este la sau sub pragul configurat |
+| **OK** | Soldul este la sau sub pragul configurat (inclusiv un zero exact — complet achitat) |
 | **Dezechilibru** | Soldul depășește pragul |
 | **Sever** | Soldul depășește **de două ori** pragul — merită urmărit înainte să crească și mai mult |
 
 <Steps>
-  <Step title="Revizuiește lista">
-    Deschide **Operațiuni → Solduri Paleți**. Caută după numele contrapărții sau tipul de palet, pentru a restrânge lista; bara KPI din partea de sus arată totalul pozițiilor deschise, câte sunt dezechilibrate și expunerea ta totală, în euro.
+  <Step title="Alege un tab de scop">
+    Deschide **Operațiuni → Solduri Paleți**. Cinci taburi de scop — **Toate · Critice · Dezechilibru · OK · Achitate** — se află deasupra tabelului, fiecare cu un contor live, ca să poți sări direct la pozițiile care au nevoie de atenție.
   </Step>
-  <Step title="Analizează mișcările">
-    Apasă **Vezi mișcările** pe orice rând, pentru a vedea istoricul complet de mișcări al acelei contrapărți, pentru acel tip de palet, într-un modal, fără să părăsești lista.
+  <Step title="Caută, filtrează, sau salvează o vedere">
+    Folosește caseta de căutare pentru a găsi o contraparte după nume, și **Filtrează** pentru a restrânge după tipul contrapărții (client/subcontractant). **Coloane** îți permite să alegi ce câmpuri apar; **Vederi** salvează scopul, căutarea, și alegerile de coloane curente ca o vedere numită, pe care tu (sau toată compania ta) o poți redeschide mai târziu.
+  </Step>
+  <Step title="Deschide panoul de decontare">
+    Apasă un rând (sau iconița sa de **ochi**) pentru a face să alunece un panou de decontare din dreapta, arătând registrul complet de mișcări al acelei contrapărți pe fiecare tip de palet, sortabil după dată, comandă, sau sumă.
+  </Step>
+  <Step title="Decontează poziția">
+    Din panou poți **înregistra o corecție** (o intrare de registru fără comandă, cu o notă obligatorie — utilă pentru o radiere convenită manual sau un ajustaj de migrare) sau **taxează o taxă** pentru depășire, folosind același flux de taxă ca solicitarea automată descrisă mai sus.
   </Step>
   <Step title="Generează un extras">
-    Apasă **Generează extras** pe un rând, pentru un extras CSV al poziției acelei singure contrapărți, sau **Exportă tot** din partea de sus a paginii, pentru toate contrapărțile deodată — util pentru a trimite un document de reconciliere unui client sau transportator care contestă soldul său.
+    Din panou sau din meniul propriu al rândului, generează un **extras PDF** — un document cu marca ta, cu un bloc de semnătură, gata ca o contraparte să îl confirme și să îl semneze — sau exportă poziția ca **CSV**. **Exportă ▾** din partea de sus a paginii produce un CSV combinat al tuturor contrapărților deodată, pentru o trecere completă de reconciliere.
   </Step>
 </Steps>
 
-O **reconciliere automată săptămânală** verifică de asemenea soldurile fiecărei companii față de aceleași praguri și declanșează o notificare în aplicație, când o poziție este dezechilibrată — deduplicată per tip de palet și contraparte, pe o fereastră de 7 zile, ca să nu fii re-notificat la fiecare rulare, pentru o poziție pe care deja o cunoști.
+<Note>
+Soldul de paleți al unui client apare, de asemenea, doar-citire, pe înregistrarea sa: deschide clientul și verifică tabul **Prezentare generală** pentru o linie "Sold paleți", cu un link direct către panoul de decontare al acestei pagini pentru acel client.
+</Note>
+
+O **reconciliere automată nocturnă** (02:05 UTC) verifică de asemenea soldurile fiecărei companii față de aceleași praguri și notifică adminii/planificatorii companiei tale, când o poziție este dezechilibrată — deduplicată per tip de palet și contraparte, pe o fereastră de 7 zile, ca să nu fii re-notificat la fiecare rulare, pentru o poziție pe care deja o cunoști.
+
+<Note>
+Registrul își impune propria convenție de semn la nivelul bazei de date: o mișcare **Trimis** adaugă mereu la sold, iar o mișcare **Returnat** scade mereu din el, indiferent de cum este tastat numărul în formularul de adăugare a mișcării — intrările **Ajustare**, **Corecție**, și **Sold de deschidere** păstrează orice semn introduci, deoarece acestea pot merge legitim în ambele direcții.
+</Note>
 
 ---
 

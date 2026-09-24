@@ -9,14 +9,14 @@ icon: "circle-dot"
 Každá objednávka v Druma sleduje definovanou cestu. Pochopení životního cyklu vám pomůže vědět, co očekávat v každé fázi, kdy zasáhnout a jak řešit výjimky jako pozdní doručení nebo zapomenuté aktualizace stavu.
 
 <Note>
-Pokud vaše společnost používá šablony úkolů, objednávka může nést i **kontrolní seznam úkolů** vázaný na tyto stejné fáze životního cyklu — viz [Úkoly objednávky a šablony workflow](/en/planner/order-tasks).
+Pokud vaše společnost používá šablony úkolů, objednávka může nést i **kontrolní seznam úkolů** vázaný na tyto stejné fáze životního cyklu — viz [Úkoly objednávky a šablony workflow](/cs/planner/order-tasks).
 </Note>
 
 Zde je celý tok:
 
 **Návrh → Čeká → Přiřazeno → Odjezd → Na vyzvednutí → Nakládka → Na cestě → Na doručení → Vykládka → Doručeno**
 
-Existují také dva výjimečné stavy — **Zrušeno** a **Zmařená jízda** — popsané ke konci.
+Existují také tři výjimečné stavy — **Částečně doručeno**, **Zrušeno** a **Zmařená jízda** — popsané ke konci.
 
 ---
 
@@ -28,6 +28,7 @@ Každý stav se vyhodnocuje na jednu barvu (odstín), která je identicky sdíle
 |---|---|
 | Návrh | Šedá (břidlicová) |
 | Čeká | Šedá (břidlicová) |
+| Virtuální | Fialová |
 | Přiřazeno | Modrá |
 | Odjezd | Indigová |
 | Na vyzvednutí | Oranžová |
@@ -36,6 +37,7 @@ Každý stav se vyhodnocuje na jednu barvu (odstín), která je identicky sdíle
 | Na doručení | Nebesky modrá |
 | Vykládka | Nebesky modrá |
 | Doručeno | Zelená |
+| Částečně doručeno | Oranžová |
 | Zrušeno | Červená |
 | Zmařená jízda | Červená |
 
@@ -60,6 +62,20 @@ Objednávka existuje v systému, ale zatím není aktivní. Řidič ji v aplikac
 - Zrušení objednávky
 
 Použijte Návrh, když klient provedl předběžnou rezervaci, ale ještě ji nepotvrdil, nebo když objednávku sestavujete, ale stále čekáte na podrobnosti.
+
+---
+
+## Virtuální
+
+**Spouští:** Plánovač klikne na **Virtuální** na Plánovací tabuli a vytvoří zástupnou objednávku.
+
+**Kdo to může spustit:** Pouze plánovač.
+
+Virtuální objednávka je lehký zástupce — adresa vyzvednutí a doručení, datum vyzvednutí, a volitelně cena — který rezervuje vozidlo před formální rezervací. Je oddělená od běžného toku Návrh → Čeká → Přiřazeno: jakmile přijde skutečná rezervace, plánovač ji místo toho sloučí do řádné objednávky přes modal Nová objednávka, který automaticky převezme přiřazení vozidla. Virtuální objednávky se na plánovací tabuli zobrazují **fialově**, aby byly na první pohled snadno odlišitelné od skutečné, rezervované objednávky.
+
+<Note>
+Optimalizátor přeřazení doplnění nákladu zachází s Virtuálními objednávkami stejně jako s objednávkami Návrh nebo Čeká při řetězení budoucích doplnění nákladu — takže načrtnutý zástupce lze stále vyměnit za levnější skutečné doplnění nákladu, pokud se nějaké objeví.
+</Note>
 
 ---
 
@@ -188,6 +204,27 @@ Přeprava je dokončena. Objednávka se na plánovací tabuli zbarví zeleně a 
 
 ---
 
+## Částečně doručeno
+
+**Spouští:** Řidič zaznamená částečné doručení z obrazovky Vykládka — část, ale ne vše z plánovaného, sešlo z vozidla.
+
+**Kdo to může spustit:** Řidič (hlavní akce) nebo plánovač.
+
+Doručení není vždy vše-nebo-nic. Pokud řidič vyloží 6 z 10 palet — klient nemůže přijmout celý náklad, není místo, část zásilky je poškozena — může zaznamenat přesně to, co skutečně sešlo, místo aby byl nucen volit mezi označením celé objednávky jako Doručeno (což by zkreslovalo, co se stalo), nebo odmítnutím celého nákladu (zatímco většina *byla* přijata).
+
+Řidič zadá, co bylo doručeno oproti tomu, co bylo plánováno; Druma uloží nedostatek — množství a hmotnost, za zastávku — jako zmrazený záznam toho, co zůstává nedoručeno, a upozorní plánovače.
+
+<Note>
+**Částečně doručeno záměrně není finálním stavem "hotovo"** jako Doručeno — existuje přesně proto, aby reporting OTIF, automatická fakturace, a klientský portál nezacházely s částečným doručením jako s dokončeným. Může to být i skutečný koncový stav, pokud je zbytek odepsán místo předoručení — Druma nevynucuje žádnou následnou akci, jen odmítá předstírat, že se náklad dokončil čistě.
+</Note>
+
+**Dostupné akce z Částečně doručeno:**
+- Zobrazení nedostatku (plánované vs. doručené množství/hmotnost) a důvodu řidiče na detailu objednávky
+- Generování faktury — **ve výchozím nastavení vypnuto**: částečně doručená objednávka se nefakturuje, dokud nezapnete **Fakturovat při částečném doručení** pro vaši společnost v Nastavení, protože to, zda je částečné doručení okamžitě fakturovatelné, je obchodní rozhodnutí. Se zapnutou volbou objednávka fakturuje to, co bylo skutečně doručeno.
+- Nahrání nebo zobrazení dokumentů doručení, stejně jako u úplného doručení
+
+---
+
 ## Zrušeno
 
 **Spouští:** Plánovač zruší objednávku.
@@ -251,6 +288,7 @@ Kompletní průvodce viz [Zmařená jízda](/cs/planner/wasted-journey).
 | Stav | Automaticky | Ručně (řidič) | Ručně (plánovač) |
 |---|---|---|---|
 | Návrh | — | — | Ano |
+| Virtuální | — | — | Ano |
 | Čeká | — | — | Ano |
 | Přiřazeno | — | — | Ano |
 | Odjezd | — | Ano | Ano (přepsání) |
@@ -260,6 +298,7 @@ Kompletní průvodce viz [Zmařená jízda](/cs/planner/wasted-journey).
 | Na doručení | — | Ano | Ano (přepsání) |
 | Vykládka | — | Ano | Ano (přepsání) |
 | Doručeno | — | Ano | Ano (přepsání) |
+| Částečně doručeno | — | Ano | — |
 | Zrušeno | — | — | Ano |
 | Zmařená jízda | — | — | Ano (z aktivních stavů) |
 
@@ -269,7 +308,7 @@ Kompletní průvodce viz [Zmařená jízda](/cs/planner/wasted-journey).
   Sledujte všechny aktivní objednávky, zobrazte živé pozice řidičů a řešte upozornění z vašeho živého provozního dashboardu.
 </Card>
 
-<Card title="Úkoly objednávky a šablony workflow" icon="list-check" href="/en/planner/order-tasks">
+<Card title="Úkoly objednávky a šablony workflow" icon="list-check" href="/cs/planner/order-tasks">
   Konfigurovatelné kontrolní seznamy úkolů vázané na tyto fáze životního cyklu, plus jak správci vytvářejí šablony za nimi.
 </Card>
 

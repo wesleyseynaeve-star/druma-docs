@@ -1,40 +1,44 @@
 ---
 title: "Changer de camion (relais de tracteur)"
-description: "Comment échanger le tracteur en cours de trajet tout en gardant la remorque et la cargaison sur la même commande — pour les opérations de relais, pannes, et changements de chauffeur."
+description: "Comment échanger le tracteur en cours de trajet tout en gardant la remorque et le chargement sur la même commande — pour les opérations de relais, les pannes, et les changements de chauffeur."
 icon: "arrow-right-arrow-left"
 ---
 
 ## Qu'est-ce qu'un relais de tracteur ?
 
-Un relais de tracteur (aussi appelé changement de camion) se produit quand vous changez le tracteur tirant une remorque **pendant une commande active**. La remorque et sa cargaison restent sur la même commande — seuls la cabine et le chauffeur changent.
+Un relais de tracteur (aussi appelé changement de camion) consiste à changer le tracteur qui tire une remorque **pendant une commande active**. La remorque et son chargement restent sur la même commande — seuls la cabine et le chauffeur changent.
 
 Scénarios courants :
 
-- **Conduite en relais** — le chauffeur A prend le chargement de l'origine à un point intermédiaire, puis le chauffeur B récupère la remorque et continue jusqu'à la destination. Cela étend votre portée effective sans enfreindre la réglementation sur le temps de conduite.
-- **Panne** — le camion d'origine a un problème mécanique et un tracteur de remplacement est envoyé pour récupérer la remorque.
-- **Limite d'heures de conduite** — le chauffeur actuel arrive à court de temps de conduite légal et un chauffeur frais avec un camion différent prend le relais.
-- **Passation planifiée** — dans un dépôt ou un hub, les remorques sont routinièrement échangées entre tracteurs.
+- **Conduite en relais** — Le chauffeur A prend le chargement de l'origine à un point intermédiaire, puis le chauffeur B récupère la remorque et continue jusqu'à la destination. Cela étend votre portée effective sans enfreindre les règles de temps de conduite.
+- **Panne** — Le camion d'origine a un problème mécanique et un tracteur de remplacement est envoyé récupérer la remorque.
+- **Limite d'heures du chauffeur** — Le chauffeur actuel manque de temps de conduite légal et un chauffeur reposé avec un autre camion prend le relais.
+- **Relève programmée** — Sur un dépôt ou un hub, les remorques sont régulièrement échangées entre tracteurs.
 
 <Note>
-Le principe clé : **la remorque reste avec la cargaison**. Quand vous changez le camion sur une commande, Druma détache l'ancien tracteur mais garde la remorque attachée. Cela préserve la chaîne de garde des marchandises.
+Le principe clé : **la remorque reste avec le chargement**. Quand vous changez le camion sur une commande, Druma détache l'ancien tracteur mais garde la remorque attachée. Cela préserve la chaîne de custody des marchandises.
 </Note>
 
 ---
 
-## Quand pouvez-vous changer de camion ?
+## Quand pouvez-vous changer le camion ?
 
-Vous pouvez changer le camion sur toute commande se trouvant dans l'un de ces statuts actifs :
+Vous pouvez changer le camion sur toute commande qui est dans l'un de ces statuts actifs :
 
 - En attente
-- Assignée
-- Partie
-- Arrivée au chargement
+- Attribué
+- Parti
+- À l'enlèvement
 - Chargement
 - En transit
-- Arrivée à la livraison
+- À la livraison
 - Déchargement
 
-La commande doit être de type **Camion propre**. Les commandes sous-traitées et de vente de capacité ne prennent pas en charge le changement de camion — celles-ci sont gérées par le transporteur externe.
+La commande doit être de type **Flotte propre**. Les commandes sous-traitées et de vente de capacité ne prennent pas en charge le changement de camion — elles sont gérées par le transporteur externe.
+
+<Note>
+Une **tournée de groupage** peut également être changée ou mise en relais en cours de route de la même façon qu'une commande unique — choisissez un nouveau camion (ou enregistrez un point de relais pour un tronçon) depuis l'action de ligne propre à la tournée, et chaque tronçon change d'équipage en une seule étape. La seule différence : une tournée de groupage a toujours besoin d'un camion nommé — il n'y a pas de relais ouvert « Pas encore su » au niveau de la tournée, puisque libérer un tronçon sans camion connu laisserait le reste du chargement de la tournée échoué sur le tracteur qui se retire.
+</Note>
 
 ---
 
@@ -42,88 +46,95 @@ La commande doit être de type **Camion propre**. Les commandes sous-traitées e
 
 <Steps>
   <Step title="Ouvrez le Tableau de planification">
-    Accédez à **Planificateur → Tableau de planification** et trouvez la ligne de la commande active.
+    Allez sur **Planification → Tableau de planification** et trouvez la ligne de la commande active.
   </Step>
   <Step title="Déclenchez Changer de camion">
-    Faites glisser un camion différent sur la ligne de la commande (ou utilisez le menu d'actions de la ligne). Druma détecte que la commande a déjà un camion affecté et propose de le changer plutôt que de remplacer l'affectation purement et simplement. Changer de camion n'est disponible que pour les commandes Camion propre à un statut actif — ce n'est pas exposé depuis le panneau de détail de commande.
+    Faites glisser un camion différent sur la ligne de la commande, ou utilisez **Changer de camion** dans le menu d'actions de la ligne. Druma détecte que la commande a déjà un camion attribué et ouvre la boîte de dialogue Changer de camion au lieu d'une simple affectation. Changer de camion n'est disponible que pour les commandes Flotte propre dans un statut actif — cette action n'est pas exposée depuis le panneau de détail de la commande.
   </Step>
-  <Step title="Sélectionnez l'arrêt cible">
-    Choisissez l'arrêt où le changement se produit. Par exemple, si le changement a lieu au deuxième arrêt, sélectionnez l'arrêt 2. Tous les arrêts à partir de ce point seront gérés par le nouveau camion.
+  <Step title="Définissez le lieu du relais">
+    Saisissez où le transfert a lieu — tapez une adresse ou déposez une épingle sur un parking enregistré. C'est le seul champ obligatoire.
   </Step>
-  <Step title="Sélectionnez le nouveau camion">
-    Recherchez le camion de remplacement par numéro de plaque. Seuls les camions actifs et disponibles de votre flotte s'affichent. Le chauffeur affecté du nouveau camion est automatiquement sélectionné.
+  <Step title="Choisissez où l'insérer">
+    Utilisez **Insérer le relais après** pour choisir après quel arrêt le relais se produit (par défaut, le dernier arrêt de chargement). Druma insère un nouvel arrêt interne dans l'itinéraire à cet endroit.
   </Step>
-  <Step title="Saisissez une raison et confirmez">
-    Ajoutez une brève raison pour le changement (ex. « Limite d'heures de conduite », « Panne à Timișoara »). Cliquez sur **Confirmer le changement**.
+  <Step title="Choisissez le nouveau camion (ou laissez-le ouvert)">
+    Choisissez le camion de remplacement dans le menu déroulant **Nouveau camion**, ou laissez sur **Pas encore su** pour enregistrer un **relais ouvert** — voir ci-dessous.
+  </Step>
+  <Step title="Confirmez">
+    Cliquez sur **Confirmer**. Si vous avez choisi un nouveau camion, Druma exécute immédiatement le flux normal d'affectation de camion en plus du relais — y compris toute vérification d'échange de remorque ou de cabotage qui s'appliquerait à une première affectation.
   </Step>
 </Steps>
+
+<Note>
+Il n'y a pas de champ de motif ou de commentaire sur la boîte de dialogue Changer de camion — Druma n'enregistre que le lieu du relais et, optionnellement, quel camion récupère le chargement à partir de là. Si vous voulez conserver une trace du *pourquoi* du changement, notez-le dans le journal d'activité de la commande ou dans une note d'arrêt.
+</Note>
 
 ---
 
 ## Ce qui se passe après un changement
 
-Quand vous confirmez un changement de camion, Druma effectue plusieurs actions automatiquement :
+Quand vous confirmez, Druma :
 
-1. **Un segment de camion est créé** pour le camion d'origine, enregistrant les arrêts qu'il a gérés (du premier arrêt au point de changement).
-2. **Un nouveau segment est créé** pour le camion de remplacement, couvrant du point de changement jusqu'à la fin de la commande (ouvert jusqu'à la livraison).
-3. **Tous les arrêts à partir du point de changement** sont mis à jour avec le nouveau camion et chauffeur.
-4. **Les champs camion et chauffeur principaux de la commande** sont mis à jour pour refléter la nouvelle affectation.
-5. **La remorque reste inchangée** — elle reste attachée à la commande quel que soit le tracteur qui la tire.
+1. **Insère un arrêt de relais interne** dans l'itinéraire de la commande, à la position choisie (type d'arrêt `internal`, libellé « Point de relais camion »), en enregistrant le camion d'origine sur cet arrêt afin que le changement puisse être annulé plus tard — voir Annuler ci-dessous.
+2. **Exécute le flux normal d'affectation de camion**, si vous avez choisi un nouveau camion — les champs camion et chauffeur de la commande sont mis à jour de la même façon qu'une première affectation, y compris une invite d'échange de remorque si le nouveau camion a une remorque fixe différente de celle actuellement sur la commande.
+3. **Laisse la remorque intacte** sinon — la remorque reste attachée à la commande quel que soit le tracteur qui la tire, sauf si la remorque fixe du nouveau camion force un échange.
 
 ---
 
-## Consulter l'historique des segments de camion
+## Relais ouvert — quand vous ne connaissez pas encore le prochain camion
 
-Après un changement, le panneau de détail de la commande affiche une section **Segments de camion** listant chaque tracteur ayant été impliqué dans la commande :
+Choisir **Pas encore su** ne se contente pas de noter un lieu pour plus tard. Cela **libère réellement le chargement** :
 
-| Camion | Chauffeur | Arrêts | Raison | Changé le |
-|---|---|---|---|---|
-| B-201-TCL (Volvo FH) | Ion Ionescu | Arrêt 1 → Arrêt 2 | Limite d'heures de conduite | 12 avr. 2026, 14h30 |
-| B-215-TCL (Scania R450) | Vasile Popa | Arrêt 2 → (en cours) | — | — |
+- La commande retourne à **Non affecté**, prête à être associée à un camion exactement comme n'importe quel autre chargement en attente.
+- Le tracteur qui se retire est libéré pour rouler à vide vers son prochain travail — Druma enregistre sa nouvelle position comme le point de relais, afin qu'il apparaisse disponible depuis là plutôt que depuis l'endroit où il a livré en dernier.
+- La remorque chargée reste sur place au point de relais, en attente d'être récupérée.
 
-Chaque segment enregistre :
-- Le nom et la plaque du camion
-- Le chauffeur qui conduisait
-- La plage d'arrêts (de → à)
-- La raison du changement
-- L'horodatage de la passation
+La ligne de la commande affiche un badge **W** (survolez-le pour voir la zone du relais et le nom du tracteur qui l'a déposé) afin qu'elle ne disparaisse pas dans le tas des non affectés sans être remarquée.
 
----
+Quand vous affectez plus tard un camion à cette commande — par un simple glisser-déposer, ou via l'Assistant — Druma sait déjà qu'il s'agit d'une collecte de remorque, pas d'un nouvel enlèvement, et invite le camion entrant à sa propre vérification de dépôt de remorque s'il en transporte une.
 
-## Dérogations camion et chauffeur par arrêt
+<Note>
+Un relais ouvert ne peut être enregistré que sur une **commande unique** — les tronçons d'une tournée de groupage nécessitent toujours un camion nommé, puisque libérer un tronçon sans camion connu laisserait le reste de l'en-tête de la tournée échoué sur le tracteur qui se retire.
+</Note>
 
-Après un changement de camion, des arrêts individuels de la commande peuvent afficher un camion et un chauffeur différents de l'affectation principale de la commande. C'est normal — cela signifie que l'arrêt a été géré par le tracteur précédent avant que le changement n'ait lieu.
+### Annuler un relais ouvert
 
-En consultant la chronologie des arrêts de la commande, chaque arrêt montre quel camion et chauffeur lui étaient affectés. Si un arrêt n'a pas de dérogation, il hérite du camion et chauffeur actuels de la commande.
+Si rien ne s'est passé depuis — aucun camion n'a récupéré la remorque, et le tracteur qui s'est retiré n'a pas été recouplé à autre chose — vous pouvez annuler un relais ouvert depuis la ligne de la commande : cherchez l'icône **Annuler le relais** à côté de l'action Affecter de la ligne. Cela restaure la commande à son statut d'avant la libération, recouple la remorque au tracteur d'origine, et efface l'état « en attente ».
 
 ---
 
-## Changements multiples
+## Relais multiples
 
-Vous pouvez changer le camion plus d'une fois sur la même commande. Chaque changement crée un nouveau segment. C'est utile pour les longs trajets internationaux où le chargement passe par plusieurs points de relais.
-
-Par exemple, un chargement Bucarest → Duisbourg pourrait utiliser trois tracteurs :
-
-1. Camion A : Bucarest → Budapest (Arrêt 1 → Arrêt 2)
-2. Camion B : Budapest → Vienne (Arrêt 2 → Arrêt 3)
-3. Camion C : Vienne → Duisbourg (Arrêt 3 → Arrêt 4)
-
-Chaque segment est suivi indépendamment avec son propre chauffeur, raison, et horodatages.
+Vous pouvez changer le camion plus d'une fois sur la même commande. Chaque changement insère un autre arrêt de relais interne au point que vous choisissez, afin qu'un chargement puisse passer par plusieurs points de relais sur un trajet longue distance — par exemple, un chargement Bucarest → Duisbourg remis à Budapest puis à nouveau à Vienne.
 
 ---
 
-## Annuler un changement (Undo)
+## Historique des segments
 
-Si le camion de remplacement n'a pas encore effectué de travail sur la commande, vous pouvez annuler le changement et restaurer le camion d'origine.
+Chaque changement de camion enregistre automatiquement un **segment** — quel camion et quel chauffeur ont couvert quel tronçon de l'itinéraire — dès que l'arrêt de relais est créé. Quand vous changez de camion une deuxième ou une troisième fois sur la même commande, chaque changement clôture le segment précédent et en ouvre un nouveau, afin que la chaîne complète de qui a conduit quel tronçon soit préservée dans l'ordre.
 
-Cherchez le bouton **Annuler le changement** sur la ligne de commande sur le tableau de planification ou la liste des commandes — il n'apparaît que quand un changement annulable existe (arrêt de relais présent et aucune activité enregistrée sur le nouveau camion).
+Cet historique est stocké en arrière-plan (aucune action supplémentaire du planificateur n'est nécessaire) et existe à des fins d'audit et de reporting — par exemple, reconstituer exactement quel chauffeur était responsable d'un tronçon donné si une réclamation ou une question sur les heures de conduite se pose plus tard.
 
-Alternativement, faites glisser le camion d'origine à nouveau sur la commande sur le tableau de planification — Druma essaiera d'annuler automatiquement le changement avant de réaffecter.
+Annuler un changement (voir Annuler ci-dessous), ou une réaffectation de camion qui échoue en cours de route, supprime le segment qu'il a créé — l'historique ne reflète que les changements qui se sont réellement achevés.
+
+---
+
+## Annuler un changement (Annuler)
+
+<Note>
+Cette section couvre l'annulation d'un changement vers un camion de remplacement **nommé**. Pour annuler un **relais ouvert** (« Pas encore su »), voir Annuler ci-dessus.
+</Note>
+
+Si le camion de remplacement n'a encore effectué aucun travail sur la commande, vous pouvez annuler le changement et restaurer le camion d'origine.
+
+Cherchez l'icône **Annuler l'échange** sur la ligne de la commande dans le tableau de planification — elle n'apparaît que lorsqu'un changement annulable existe (arrêt de relais présent et aucune activité enregistrée depuis).
+
+Vous pouvez aussi faire glisser le camion d'origine à nouveau sur la commande dans le tableau de planification — Druma essaiera d'annuler automatiquement le changement avant de réaffecter.
 
 **L'annulation est bloquée si l'une des conditions suivantes est vraie :**
-- Un arrêt au niveau ou après le point de relais a un horodatage d'arrivée ou de départ réel enregistré
-- Des événements de statut du chauffeur ont été enregistrés après le changement
-- Le camion d'origine est maintenant affecté à une autre commande active
+- Un arrêt au niveau ou après le point de relais a un horodatage d'arrivée, de départ, ou de début de chargement enregistré réel
+- Un événement de statut de chauffeur a été capturé après la création de l'arrêt de relais
+- Le camion d'origine est maintenant occupé sur une autre commande active — Druma ne le retirera pas silencieusement du travail que le planificateur lui a donné après le changement
 
 Si l'annulation est bloquée, Druma affiche un message expliquant pourquoi. Vous pouvez toujours réaffecter manuellement depuis le panneau de détail de la commande dans ce cas.
 
@@ -132,23 +143,27 @@ Si l'annulation est bloquée, Druma affiche un message expliquant pourquoi. Vous
 ## Remarques importantes
 
 <Warning>
-Changer de camion ne crée **pas** une nouvelle commande. Le numéro de commande d'origine, le client, la tarification, et toutes les conditions commerciales restent les mêmes. Seule l'affectation opérationnelle (quel camion et chauffeur) change.
+Changer un camion ne crée **pas** une nouvelle commande. Le numéro de commande d'origine, le client, la tarification, et toutes les conditions commerciales restent les mêmes. Seule l'affectation opérationnelle (quel camion et quel chauffeur) change.
 </Warning>
 
-- La **remorque reste toujours avec la cargaison**. Si vous devez aussi changer la remorque, c'est une opération différente — voir [Gestion des remorques](/fr/planner/trailer-management).
-- Les changements de camion sont **journalisés dans l'historique d'audit de la commande** avec le nom du planificateur, l'horodatage, et la raison.
-- L'application chauffeur se met à jour automatiquement — le chauffeur sortant voit la commande disparaître de ses chargements actifs, et le chauffeur entrant reçoit une notification push avec les détails de la mission.
+- **La remorque reste avec le chargement** lors d'un changement ou relais ordinaire. Si vous devez changer la remorque indépendamment du chargement, c'est Changer de remorque — voir [Gestion des remorques](/fr/planner/trailer-management). Si la remorque doit être **laissée sur place, chargée, pour que le destinataire la décharge lui-même**, c'est une opération entièrement différente — voir [Livraison drop-and-hook](/fr/planner/drop-and-hook-delivery).
+- Les changements de camion sont **enregistrés dans l'historique d'audit de la commande** avec le nom du planificateur et l'horodatage.
+- L'application chauffeur se met à jour automatiquement — le chauffeur sortant voit la commande disparaître de ses chargements actifs, et le chauffeur entrant reçoit une notification push avec les détails du travail.
 
 ---
 
-<Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
-  Gérez votre flotte de tracteurs — ajoutez des véhicules, suivez la disponibilité, et gérez les blocages de maintenance.
-</Card>
-
-<Card title="Gestion des remorques" icon="trailer" href="/fr/planner/trailer-management">
-  Gérez les remorques indépendamment des tracteurs — affectation, détachement, et suivi de localisation.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Livraison drop-and-hook" icon="container" href="/fr/planner/drop-and-hook-delivery">
+    Laissez une remorque chargée chez le destinataire et attelez-en une autre — une opération vraiment différente d'un relais de tracteur.
+  </Card>
+  <Card title="Gestion de la flotte" icon="truck" href="/fr/planner/fleet-management">
+    Gérez votre flotte de tracteurs — ajoutez des véhicules, suivez la disponibilité, et gérez les blocages de maintenance.
+  </Card>
+  <Card title="Gestion des remorques" icon="trailer" href="/fr/planner/trailer-management">
+    Gérez les remorques indépendamment des tracteurs — affectation, détachement, et suivi de localisation.
+  </Card>
+</CardGroup>
 
 <Card title="Tableau de planification" icon="calendar" href="/fr/planner/planning-board">
-  Voyez toutes vos commandes et camions sur le tableau de dispatch visuel — le bouton de changement de camion y est aussi accessible.
+  Voyez toutes vos commandes et camions sur le tableau de répartition visuel — le bouton de changement de camion est aussi accessible depuis ici.
 </Card>

@@ -108,6 +108,50 @@ Laissez le seuil vide pour désactiver la fenêtre de frais pour ce type de pale
 
 ---
 
+## Rapprochement des soldes de palettes
+
+Au-delà de la colonne de solde par client, Druma dispose d'une page dédiée **Opérations → Soldes de palettes** qui rapproche les positions à travers **à la fois les clients et les sous-traitants** en une seule vue — utile quand vous voulez un seul balayage de chaque position de palette ouverte plutôt que de vérifier les contreparties une par une.
+
+Contrairement au registre par commande, cette page montre **une ligne par contrepartie**, pas une par (contrepartie, type de palette). Si vous échangez plus d'un standard de palette avec le même client, la ligne les regroupe en trois totaux — EUR, Industriel, et Autre — plus un net combiné et un seul badge de statut, afin que vous ayez toujours une ligne indiquant ce que cette contrepartie vous doit (ou que vous lui devez) au global.
+
+Le badge de statut de chaque ligne utilise la même logique de seuil que la fenêtre de frais, avec un palier supplémentaire pour les positions qui ont dérivé loin au-delà :
+
+| Statut | Signification |
+|---|---|
+| **OK** | Le solde est au niveau ou en dessous du seuil configuré (y compris un zéro exact — entièrement soldé) |
+| **Déséquilibre** | Le solde dépasse le seuil |
+| **Sévère** | Le solde dépasse **deux fois** le seuil — à relancer avant que cela n'empire |
+
+<Steps>
+  <Step title="Choisissez un onglet de portée">
+    Ouvrez **Opérations → Soldes de palettes**. Cinq onglets de portée — **Tout · Critique · Déséquilibre · OK · Soldé** — se trouvent au-dessus du tableau, chacun avec un compteur en direct, pour que vous puissiez aller directement aux positions nécessitant une attention.
+  </Step>
+  <Step title="Recherchez, filtrez, ou enregistrez une vue">
+    Utilisez la zone de recherche pour trouver une contrepartie par nom, et **Filtrer** pour restreindre par type de contrepartie (client/sous-traitant). **Colonnes** vous permet de choisir quels champs s'affichent ; **Vues** enregistre votre portée, recherche, et choix de colonnes actuels comme une vue nommée que vous (ou toute votre entreprise) pouvez rouvrir plus tard.
+  </Step>
+  <Step title="Ouvrez le panneau de règlement">
+    Cliquez sur une ligne (ou son icône **œil**) pour faire glisser un panneau de règlement depuis la droite, montrant le registre complet de mouvements de cette contrepartie à travers tous les types de palettes, triable par date, commande, ou montant.
+  </Step>
+  <Step title="Réglez la position">
+    Depuis le panneau, vous pouvez **enregistrer une correction** (une entrée de registre sans commande, avec une note obligatoire — utile pour une radiation convenue manuellement ou un ajustement de migration) ou **facturer un frais** pour le dépassement, en utilisant le même flux de frais que l'invite automatique décrite ci-dessus.
+  </Step>
+  <Step title="Générez un relevé">
+    Depuis le panneau ou le propre menu de la ligne, générez un **relevé PDF** — un document à votre image de marque avec un bloc de signature, prêt pour qu'une contrepartie le confirme et le signe — ou exportez la position en **CSV**. **Exporter ▾** en haut de la page produit un CSV combiné de toutes les contreparties à la fois, pour un balayage de rapprochement complet.
+  </Step>
+</Steps>
+
+<Note>
+Le solde de palettes d'un client s'affiche aussi, en lecture seule, sur sa fiche : ouvrez le client et consultez l'onglet **Vue d'ensemble** pour une ligne « Solde de palettes » avec un lien direct vers le panneau de règlement de cette page pour ce client.
+</Note>
+
+Un **rapprochement automatisé nocturne** (02h05 UTC) vérifie aussi les soldes de chaque entreprise par rapport aux mêmes seuils et notifie les admins/planificateurs de votre entreprise quand une position est déséquilibrée — dédupliqué par type de palette et contrepartie sur une fenêtre glissante de 7 jours, afin que vous ne soyez pas renotifié à chaque exécution pour une position que vous connaissez déjà.
+
+<Note>
+Le registre applique sa propre convention de signe au niveau de la base de données : un mouvement **Envoyée** ajoute toujours au solde et un mouvement **Retournée** soustrait toujours du solde, quelle que soit la façon dont le nombre est saisi sur le formulaire d'ajout de mouvement — les entrées **Ajustement**, **Correction**, et **Solde d'ouverture** conservent le signe que vous saisissez, puisque celles-ci peuvent légitimement aller dans les deux sens.
+</Note>
+
+---
+
 ## Synchronisation fournisseur (optionnel)
 
 Si vous utilisez CHEP Connect, Druma peut rapprocher votre registre in-app avec le solde officiel du fournisseur. Accédez à **Paramètres → Intégrations → Échange de palettes**.
@@ -125,10 +169,6 @@ CHEP Connect est actuellement la seule intégration de fournisseur de palettes. 
 
 ---
 
-<Card title="Extras et suppléments de commande" icon="circle-plus" href="/en/planner/order-extras">
+<Card title="Extras et suppléments de commande" icon="circle-plus" href="/fr/invoicing/generating-invoices">
   Découvrez comment les lignes de frais de palettes apparaissent dans l'éditeur de facture aux côtés des autres suppléments de commande.
-</Card>
-
-<Card title="Clients" icon="building-2" href="/en/planner/clients">
-  Gérez les profils clients, les instructions permanentes, et consultez l'historique de solde de palettes par client.
 </Card>

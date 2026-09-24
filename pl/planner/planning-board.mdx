@@ -1,184 +1,256 @@
 ---
 title: "Tablica planowania"
-description: "Wizualna tablica dyspozytorska — dopasuj zwalniające się ciężarówki do ładunków, które ich potrzebują, przypisuj przeciągnięciem i planuj wstępnie kombinacje, zanim staną się ostateczne."
+description: "Wizualna tablica dyspozytorska — dopasuj zwalniające się ciężarówki do ładunków, które ich potrzebują, przypisuj przeciąganiem i wstępnie planuj kombinacje, zanim staną się ostateczne."
 icon: "calendar"
 ---
 
 ## Przegląd
 
-Tablica planowania to Twoje główne narzędzie dyspozytorskie. Przejdź do **Planer → Tablica planowania**, aby ją otworzyć.
+Tablica planowania to Twoje główne narzędzie dyspozytorskie. Przejdź do **Planowanie → Tablica planowania**, aby ją otworzyć.
 
-Tablica ma trzy tryby, przełączane kartami u góry:
+Tablica ma trzy tryby, przełączane kartami po lewej stronie paska poleceń:
 
 | Tryb | Do czego służy |
 |---|---|
-| **Teraz** | Główny widok dyspozycji — dwie kolumny dopasowujące dostępność do zapotrzebowania. Tu przypisujesz i ponownie przypisujesz ciężarówki. |
-| **Oś czasu** | Widok w stylu Gantta na harmonogram każdej ciężarówki, do wykrywania luk i konfliktów w ciągu dnia, trzech dni lub tygodnia. |
-| **Mapa** | Te same nieprzypisane ładunki i kierowcy naniesieni geograficznie. |
+| **Teraz** | Główny widok dyspozytorski — dwie kolumny dopasowujące pojemność do popytu. Tu przypisujesz i zmieniasz przypisanie ciężarówek. |
+| **Oś czasu** | Widok w stylu Gantta harmonogramu każdej ciężarówki, do wykrywania luk i konfliktów w ciągu dnia, trzech dni lub całego tygodnia. |
+| **Mapa** | Te same nieprzypisane ładunki i dostępni kierowcy, przedstawieni geograficznie. |
 
 <Warning>
-Tablica planowania jest zaprojektowana dla ekranów komputerowych o szerokości co najmniej 1280 pikseli. Na telefonie lub tablecie uproszczony strumień kart zastępuje układ dwukolumnowy, a przeciąganie i upuszczanie jest niedostępne.
+Tablica planowania jest zaprojektowana dla ekranów desktopowych o szerokości 1280 pikseli lub więcej. Na telefonie lub tablecie uproszczony strumień kart zastępuje układ dwukolumnowy, a przeciąganie i upuszczanie nie jest dostępne.
 </Warning>
+
+### Pasek poleceń
+
+Każdy tryb dzieli jeden pasek poleceń: karty trybu po lewej, własny pasek narzędzi tego trybu pośrodku, i — zawsze po prawej — **Tryb Focus**, **Asystent** i **Opóźnienia**. Nie ma osobnego paska KPI nad nim; liczniki wierszy/zleceń, których byś tam oczekiwał, żyją teraz bezpośrednio w nagłówku własnym każdego panelu.
+
+- **Tryb Focus** (`F`, lub przycisk ⤢) ukrywa pasek boczny i nagłówek strony, aby wiersze tablicy wykorzystywały cały ekran. Przełącz ponownie, lub naciśnij `F`, aby przywrócić interfejs.
+- **Asystent** otwiera uszeregowaną kolejkę Drumy z proponowanymi dopasowaniami ciężarówka-ładunek — zobacz [Automatyczne planowanie i Asystent](/pl/planner/auto-planning).
+- **Opóźnienia** otwiera popover ze zleceniami aktualnie opóźnionymi względem harmonogramu.
+
+Przy węższych szerokościach etykiety na elementach paska narzędzi kurczą się lub znikają jako pierwsze — ikona i jej podpowiedź zawsze pozostają, więc nic nie staje się niedostępne, tylko bardziej kompaktowe.
 
 ---
 
-## Teraz — dwukolumnowy widok dyspozycji
+## Teraz — dwukolumnowy widok dyspozytorski
 
 Karta **Teraz** to podzielony, dwukolumnowy układ:
 
-- **Przychodzące** (lewa) — to, co zwalnia zdolność przewozową: ciężarówki, które są wolne już teraz, oraz ciężarówki, które zaraz się zwolnią, ponieważ ich bieżący ładunek zostanie dostarczony w widocznym zakresie dat.
-- **Wychodzące** (prawa) — zlecenia, które wciąż potrzebują ciężarówki (nieprzypisane odbiory), plus zlecenia, które są już przypisane, wszystkie grupowane w ten sam sposób co Przychodzące, dzięki czemu ciężarówka zwalniająca się w danej strefie wizualnie ustawia się naprzeciw ładunków odbieranych w tej samej strefie.
+- **Przychodzące** — co zwalnia pojemność: ciężarówki wolne właśnie teraz, i ciężarówki, które zaraz się zwolnią, ponieważ ich obecny ładunek zostanie dostarczony w widocznym zakresie dat.
+- **Wychodzące** — zlecenia wciąż potrzebujące ciężarówki (nieprzypisane odbiory), plus zlecenia już przypisane, pogrupowane tak samo jak Przychodzące, aby ciężarówka zwalniająca się w strefie wizualnie pasowała do ładunków odbieranych w tej samej strefie.
 
-<Frame caption="Widok Teraz — dostępność Przychodzące po lewej, ładunki Wychodzące po prawej, z przełącznikami gęstości i Wstępnego planowania w pasku narzędzi.">
+<Frame caption="Widok Teraz — pojemność Przychodząca po jednej stronie, ładunki Wychodzące po drugiej, z paskiem poleceń nad nimi i panelem Bilans dostępnym z paska narzędzi.">
   <img src="/images/planner/planning-board-split.png" alt="Widok Teraz Tablicy planowania pokazujący kolumny Przychodzące i Wychodzące" />
 </Frame>
 
-Przypisanie ciężarówki odbywa się przez przeciągnięcie: chwyć wiersz po dowolnej stronie i upuść go na pasujący wiersz po drugiej stronie.
+Przypisanie ciężarówki to przeciągnięcie: podnieś wiersz z jednej strony i upuść go na odpowiadający wiersz po drugiej stronie.
 
-- Przeciągnięcie **ciężarówki** na ładunek otwiera arkusz potwierdzenia pokazujący ciężarówkę, kierowcę i szczegóły zlecenia — w tym wszelkie kontrole kabotażu, naczepy lub przystanku przekaźnikowego wymagające Twojej decyzji — zanim przypisanie zostanie zatwierdzone.
-- Przeciągnięcie **dostarczanego ładunku** (karty Przychodzące, która jeszcze nie jest wolna, ale zaraz będzie) na ładunek Wychodzące nie przypisuje jeszcze ciężarówki — żadna nie jest jeszcze wolna do przypisania — tylko wstępnie planuje wstępne powiązanie między nimi. Powtarzanie tego buduje cały **łańcuch** przyszłych doładunków dla jednej ciężarówki, zanim ta zwolni się nawet na pierwszy z nich; zobacz **Tryb Wstępnego planowania** poniżej po pełny opis pracy z łańcuchami, w tym automatyczny optymalizator, który obserwuje wstępnie zaplanowane łańcuchy w poszukiwaniu tańszej zamiany. Użyj **Przypisz ciężarówkę** na tym wierszu, gdy będziesz gotów to zatwierdzić.
+- Przeciągnięcie **ciężarówki** na ładunek otwiera arkusz potwierdzenia pokazujący szczegóły ciężarówki, kierowcy i zlecenia — łącznie z wszelkimi kontrolami kabotażu, naczepy lub postoju przekazania wymagającymi Twojego wkładu — zanim przypisanie zostanie zatwierdzone.
+- Przeciągnięcie **dostarczanego ładunku** (karta Przychodząca, która jeszcze nie jest wolna, ale zaraz będzie) na ładunek Wychodzący nie przypisuje jeszcze ciężarówki — nie ma jeszcze wolnej do przypisania — szkicuje wstępne połączenie między nimi. Powtarzanie tego buduje cały **łańcuch** przyszłych przeładunków dla jednej ciężarówki, zanim jeszcze zwolni się na pierwszy; zobacz **tryb Wstępnego planowania** poniżej po pełny przepływ zarządzania łańcuchami, łącznie z automatycznym optymalizatorem, który obserwuje naszkicowane łańcuchy pod kątem tańszej zamiany. Użyj **Przypisz ciężarówkę** na tym wierszu, gdy będziesz gotowy zatwierdzić.
 
 <Note>
-Przeciąganie działa w **obu kierunkach** — przeciągnij kartę Przychodzące na ładunek Wychodzące, albo przeciągnij ładunek Wychodzące na kartę Przychodzące. W obu przypadkach trafiasz na ten sam wiersz.
+Przeciąganie działa w **obu kierunkach** — przeciągnij kartę Przychodzącą na ładunek Wychodzący, lub ładunek Wychodzący na kartę Przychodzącą. W obu przypadkach lądujesz na tym samym wierszu.
 </Note>
+
+### Gęstość wierszy i układ
+
+Kliknij kontrolkę **Gęstość** na pasku narzędzi, aby przełączać się między trzema wysokościami wiersza:
+
+| Gęstość | Najlepsza dla |
+|---|---|
+| **Komfortowa** | Bogatsze karty z większą ilością szczegółów wizualnych na ciężarówkę lub zlecenie — bliższe spojrzenie na garść zadań. |
+| **Kompaktowa** (domyślna) | Gęste, jednowierszowe wiersze, najbliższe arkuszowi kalkulacyjnemu — szybkie skanowanie i planowanie masowe. |
+| **Ciasna** | Najściślejsza wysokość wiersza, dla dużego ekranu 1080p (zwłaszcza przy skalowaniu Windows 125–150%), gdzie zobaczenie jak największej liczby wierszy liczy się bardziej niż wizualny odstęp. |
+
+Wszystkie trzy gęstości pokazują te same dane bazowe i obsługują to samo przeciąganie i upuszczanie, te same filtry i grupowanie. Z tego samego menu **Kolumny** możesz też zamienić, która strona — Przychodząca czy Wychodząca — renderuje się po lewej, i ustawić rozmiar tekstu aplikacji (mały/średni/duży), który skaluje cały interfejs, a nie tylko tę stronę.
 
 ### Zakres dat
 
-Tablica pokazuje kroczący horyzont 7 dni. Użyj strzałek obok etykiety daty, aby przejść o cały tydzień wcześniej lub później, albo kliknij **Dziś**, aby wrócić do bieżącego 7-dniowego okna.
-
-### Gęstość: Kompaktowy vs Komfortowy
-
-Przełącznik w pasku narzędzi zmienia, ile szczegółów pokazuje każdy wiersz:
-
-- **Kompaktowy** (domyślny) — gęste, jednowierszowe rzędy z sortowalnymi/przestawialnymi kolumnami, najbliższe arkuszowi kalkulacyjnemu. Najlepszy do szybkiego skanowania i masowego planowania.
-- **Komfortowy** — bogatsze karty z większą liczbą szczegółów wizualnych na ciężarówkę lub zlecenie. Najlepszy do bliższego przyjrzenia się garstce zadań.
-
-Obie gęstości pokazują te same dane źródłowe i obsługują to samo przeciąganie i upuszczanie, filtry oraz grupowanie — przełączanie jest wyłącznie kosmetyczne.
+Tablica pokazuje ruchomy horyzont 7 dni. Użyj strzałek obok etykiety daty, aby przewinąć o cały tydzień wcześniej lub później, lub kliknij **Dzisiaj**, aby wrócić do bieżącego okna 7 dni.
 
 ### Grupowanie i zwijanie
 
-Użyj kontrolki **Grupuj wg** w pasku narzędzi, aby podzielić obie kolumny wg grupy stref, kraju, miasta, grupy planowania lub daty — Przychodzące i Wychodzące zawsze grupują się na tej samej osi, dzięki czemu dopasowanie dostępności do zapotrzebowania pozostaje wizualnie spójne. Nagłówki grup można zwijać; zwiń sekcję po dowolnej stronie, a pasująca sekcja po drugiej stronie zwinie się również, utrzymując obie kolumny w synchronizacji. Kliknij **Rozwiń wszystko**, aby zresetować wszystkie zwinięte grupy naraz.
+Użyj kontrolki **grupuj wg** na pasku narzędzi, aby podzielić obie kolumny wg grupy strefy, kraju, miasta, grupy planowania, lub daty — Przychodzące i Wychodzące zawsze grupują się na tej samej osi, dzięki czemu dopasowanie pojemności do popytu pozostaje wizualnie wyrównane. Nagłówki grup są zwijalne; zwiń sekcję po jednej stronie, a odpowiadająca sekcja po drugiej stronie też się zwinie, utrzymując obie kolumny zsynchronizowane. Kliknij **Rozwiń wszystko**, aby zresetować wszystkie zwinięte grupy naraz.
 
 <Note>
-Grupy stref to Twoje własne hierarchiczne grupowania kodów pocztowych (konfigurowane w Ustawieniach), przydatne do jednoczesnego zestawienia "która z moich baz/regionów ma zwalniającą się ciężarówkę" z "który region ma ładunki do odbioru" jednym rzutem oka.
+Grupy stref to Twoje własne hierarchiczne grupowania kodów pocztowych (skonfigurowane w Ustawieniach), przydatne do dopasowania jednym spojrzeniem "które z moich depot/regionów ma zwalniającą się ciężarówkę" do "który region ma ładunki do odbioru".
 </Note>
 
 ### Kolumny
 
-Kliknij **Kolumny**, aby wybrać, które pola pokazuje każda strona, i przeciągnij, aby je przestawić. Przychodzące i Wychodzące mają niezależne zestawy kolumn — pole dodane lub ukryte po jednej stronie nie wpływa na drugą. Pola podstawowe (Status, tożsamość, ETA) są zawsze pokazywane i nie można ich ukryć ani przestawić; wszystko inne (podział wg kodu pocztowego/miasta/kraju, imię kierowcy, tablica rejestracyjna, naczepa, status kabotażu, podwykonawca i więcej) jest opcjonalne.
+Kliknij **Kolumny**, aby wybrać, które pola pokazuje każda strona i przeciągnij, aby je zmienić kolejność. Przychodzące i Wychodzące zachowują niezależne zestawy kolumn — pole dodane lub ukryte po jednej stronie nie wpływa na drugą. Pola podstawowe (Status, tożsamość, ETA) są zawsze pokazywane i nie mogą być ukryte ani zmienione kolejnością; wszystko inne (podział pocztowy/miasto/kraj, imię kierowcy, tablica rejestracyjna, naczepa, status kabotażu, podwykonawca, i więcej) jest opcjonalne.
 
 ### Zapisane widoki
 
-Menu **Widoki** pozwala zapisać bieżący filtr, grupowanie i konfigurację kolumn jako nazwany widok, przełączać się między zapisanymi widokami i oznaczyć jeden jako domyślny — jest on wtedy stosowany automatycznie następnym razem, gdy Ty (lub ktokolwiek inny z dostępem do tego samego widoku) otworzysz tablicę.
+Menu **Widoki** pozwala zapisać bieżącą konfigurację filtrów, grupowania, i kolumn jako nazwany widok, przełączać się między zapisanymi widokami, i oznaczyć jeden jako domyślny — jest on wtedy automatycznie stosowany następnym razem, gdy Ty (lub ktokolwiek na tym samym widoku) otworzy tablicę.
 
 ### Filtry i wyszukiwanie
 
-Kliknij **Filtry**, aby otworzyć panel filtrów — status, zakres dat odbioru/dostawy, strefa oraz kraj, miasto lub kod pocztowy załadunku/dostawy. Aktywne filtry pokazują się jako usuwalne chipy pod paskiem narzędzi; kliknij **Wyczyść wszystko**, aby je zresetować. Każda kolumna ma też własne szybkie pole wyszukiwania do filtrowania wg numeru zlecenia, adresu lub imienia kierowcy w obrębie tej strony.
+Kliknij **Filtry**, aby otworzyć panel filtrów — status, zakres dat odbioru/dostawy, strefa, oraz kraj, miasto, lub kod pocztowy odbioru/dostawy. Aktywne filtry pokazują się jako usuwalne chipy pod paskiem narzędzi; kliknij **Wyczyść wszystko**, aby je zresetować. Każdy panel ma też własne pole szybkiego wyszukiwania do filtrowania wg numeru zlecenia, adresu, lub imienia kierowcy w ramach tej strony.
 
-### Kafelki szybkiego przeglądu
+<Note>
+Wyszukiwanie sięga też do wnętrza zleceń przejazdu grupażowego, a filtr pozwala pokazać lub ukryć przejazdy grupażowe w całości — zobacz [Grupaż na Tablicy planowania i Mapie na żywo](/pl/planner/groupage).
+</Note>
 
-Nad każdą kolumną małe kafelki podsumowują jej zawartość jednym rzutem oka:
+### Panel Bilans
 
-- **Przychodzące** — ile ciężarówek/ładunków przypada na każdy przedział dostępności.
-- **Wychodzące** — liczniki **Niezaplanowane**, **Opóźnione** i **Na czas** dla ładunków, które mają już wstępny lub ostateczny plan.
+Kliknij przycisk **Bilans** na pasku narzędzi (jego odznaka pokazuje dzisiejszą liczbę grup deficytowych), aby otworzyć raport tylko do odczytu o tym, gdzie podaż i popyt się pokrywają — a gdzie nie — dla każdej grupy i dnia w widocznym horyzoncie. Ma trzy karty:
 
-Kliknij kafelek, aby przefiltrować kolumnę tylko do tego przedziału; kliknij go ponownie, aby wyczyścić filtr.
+- **Tabela** — macierz grupa × dzień. Każda komórka pokazuje otwartą podaż, otwarty popyt, i netto (nadwyżka na niebiesko, deficyt na bursztynowo/czerwono); kolumna Razem i wiersz "Wszystkie grupy" dają sumy ogólne.
+- **Wykres** — te same wiersze jako uszeregowany pasek poziomy, albo dla jednego dnia albo całego horyzontu, najgorszy deficyt na górze.
+- **Mapa** — jedna bańka na grupę w średniej lokalizacji jej członków, o rozmiarze wg wolumenu i kolorze zgodnym z Tabelą i Wykresem.
+
+Panel Bilans nigdy nie zmienia niczego na tablicy — to podsumowanie podaży/popytu tylko do odczytu, do celów planowania, zbudowane dokładnie z wierszy, które pokazuje sama tablica, więc nigdy nie może być w niezgodzie z tym, co widzisz.
 
 ### Przypisz ciężarówkę / Usuń ciężarówkę / Wystaw na sprzedaż
 
-Każdy wiersz Wychodzące, który ma ciężarówkę (ostateczną lub wstępnie zaplanowaną), pokazuje przyciski akcji:
+Każdy wiersz Wychodzący z ciężarówką (ostateczną lub naszkicowaną) pokazuje przyciski akcji:
 
-- **Przypisz ciężarówkę** — zatwierdź wstępnie zaplanowaną kombinację jako ostateczne przypisanie.
+- **Przypisz ciężarówkę** — zatwierdź naszkicowaną kombinację jako ostateczne przypisanie.
 - **Usuń ciężarówkę** — cofnij plan i odeślij zlecenie z powrotem do nieprzypisanych.
-- **Wystaw na sprzedaż** — zaoferuj ładunek podwykonawcy/przewoźnikowi zamiast realizować go własną flotą. Sprzedany ładunek pokazuje odznakę **Na sprzedaż** lub **Sprzedano · [przewoźnik]**; jeśli przewoźnik jest opóźniony, pojawia się też odznaka **Opóźniony**. Możesz odzyskać sprzedany ładunek z powrotem do własnej floty, dopóki nie rozpoczął się załadunek.
+- **Wystaw na sprzedaż** — zaoferuj ładunek podwykonawcy/przewoźnikowi zamiast realizować go własną flotą. Sprzedany ładunek pokazuje odznakę **Na sprzedaż** lub **Sprzedano · [przewoźnik]**; jeśli przewoźnik się spóźnia, pojawia się też odznaka **Opóźniony**. Możesz odzyskać sprzedany ładunek z powrotem do własnej floty, dopóki nie rozpoczął się załadunek.
+
+### Zmiana ciężarówek i naczep w trasie
+
+Gdy zlecenie jest już przypisane, menu akcji wiersza oferuje też sposoby zmiany tego, co fizycznie przewozi ładunek, bez dotykania samego zlecenia:
+
+- **Zmień ciężarówkę** — przekaż ładunek innemu ciągnikowi w punkcie przekazania, lub zarejestruj punkt przekazania z jeszcze nieznaną następną ciężarówką (otwarty przekaźnik) — zobacz [Zmiana ciężarówki (przekaźnik ciągnikowy)](/pl/planner/switch-truck).
+- **Zostaw naczepę u odbiorcy** — dostawa drop-and-hook: ciągnik zostawia załadowaną naczepę, aby odbiorca rozładował ją we własnym czasie, i podłącza inną — zobacz [Dostawa drop-and-hook](/pl/planner/drop-and-hook-delivery).
+
+Obie są dostępne z tego samego menu akcji wiersza, w którym pokazany jest status zlecenia, i obie zapisują prawidłowy rekord przekazania zamiast cichej zmiany przypisania.
 
 ### Tryb Wstępnego planowania
 
-Przełącznik **Wstępne planowanie** w pasku narzędzi zmienia, co robi przeciągnięcie i upuszczenie:
+Przełącznik **Wstępne planowanie** na pasku narzędzi zmienia, co robi przeciągnij-i-upuść:
 
-- **Wyłączony** (domyślnie) — przeciągnięcie od razu ostatecznie przypisuje ciężarówkę (otwiera arkusz potwierdzenia).
-- **Włączony** — przeciągnięcie wstępnie planuje kombinację bez zatwierdzania czegokolwiek. Wstępnie zaplanowane kombinacje pokazują odznakę **Wstępne**, szacowany (lub, tam gdzie dostępne są dane routingu, rzeczywisty, obliczony przez PTV) czas przybycia oraz werdykt na czas/opóźniony — dzięki czemu możesz naszkicować kombinacje na cały tydzień, zanim zablokujesz którąkolwiek z nich. Użyj **Przypisz ciężarówkę** na wstępnie zaplanowanym wierszu, gdy będziesz gotów uczynić go ostatecznym.
+- **Wyłączony** (domyślny) — przeciąganie od razu przypisuje ciężarówkę na stałe (otwiera arkusz potwierdzenia).
+- **Włączony** — przeciąganie szkicuje wstępną kombinację bez niczego zatwierdzania. Naszkicowane kombinacje pokazują odznakę **Wstępne**, szacowaną (lub, gdzie dostępne są dane trasowania, rzeczywistą ETA obliczoną przez PTV) i werdykt na-czas/opóźniony — dzięki czemu możesz naszkicować cały tydzień kombinacji, zanim jakąkolwiek zablokujesz. Użyj **Przypisz ciężarówkę** na naszkicowanym wierszu, gdy będziesz gotowy uczynić go ostatecznym.
 
-**Budowanie łańcucha.** Wstępny plan nie musi kończyć się na jednej ciężarówce i jednym ładunku. Przeciągnij **dostarczaną** kartę Przychodzące — ciężarówkę, która jeszcze nie jest wolna, ale zaraz będzie — na ładunek Wychodzące, a Druma wstępnie zaplanuje powiązanie, dołączające nowy ładunek po tym, który jest obecnie w transporcie. Przeciągnij ponownie na nowy koniec łańcucha, a możesz zaplanować całą sekwencję przyszłych doładunków dla jednej ciężarówki na dni przed tym, zanim faktycznie się ona zwolni — trasa Cluj → Sibiu → Timișoara, wstępnie zaplanowana w poniedziałek dla ciężarówki, która wciąż jedzie w kierunku Cluj.
+**Budowanie łańcucha.** Szkic nie musi kończyć się na jednej ciężarówce i jednym ładunku. Przeciągnij **dostarczającą** kartę Przychodzącą — ciężarówkę, która jeszcze nie jest wolna, ale zaraz będzie — na ładunek Wychodzący, a Druma naszkicuje połączenie łączące nowy ładunek za tym aktualnie w tranzycie. Przeciągnij ponownie na nowy koniec, i możesz zaplanować całą sekwencję przyszłych przeładunków dla jednej ciężarówki, dni przed jej rzeczywistym zwolnieniem się — przejazd Kluż → Sybin → Temeszwar, naszkicowany w poniedziałek dla ciężarówki wciąż jadącej w stronę Kluż.
 
-Każdy wstępnie zaplanowany wiersz pokazuje chip **Po #{zlecenie}** wskazujący ładunek, po którym jest dołączony w łańcuchu, dzięki czemu sekwencja pozostaje czytelna jednym rzutem oka. Pod maską, wstępny plan jest zakotwiczony do konkretnej ciężarówki, do zlecenia poprzedzającego, po którym się dołącza, lub do obu naraz — a jedno zakotwiczenie może zasilać tylko jeden doładunek naraz: przeciągnięcie nowego ładunku na zakotwiczenie, które jest już zajęte, przenosi je na nowy ładunek i cofa wstępne zaplanowanie starego, zamiast podwójnie rezerwować tę samą ciężarówkę w dwóch łańcuchach naraz.
-
-<Note>
-Nic tutaj nie dotyka rzeczywistego zlecenia, dopóki ciężarówka nie zostanie faktycznie przypisana przez normalną bramkę tablicy — przeciągnięcie z wyłączonym Wstępnym planowaniem, albo **Przypisz ciężarówkę** na wstępnie zaplanowanym wierszu. Do tego czasu łańcuch jest czystą przestrzenią roboczą do planowania i można go dowolnie przestawiać.
-</Note>
-
-**Optymalizator ponownego przydziału doładunków.** Gdy łańcuch już istnieje, Druma nieustannie sprawdza go w tle. Dla **końca** każdego łańcucha — ostatniego wstępnie zaplanowanego doładunku, po którym jeszcze nic się nie dołącza — zadaje pytanie: czy istnieje inny, jeszcze nie wstępnie zaplanowany doładunek, którego odbiór leży bliżej miejsca, gdzie ta ciężarówka faktycznie się zwolni?
-
-Na przykład: ciężarówka ma wstępnie zaplanowany doładunek w Cluj na jutro. Pojawia się bliższy, niewybrany doładunek z odbiorem w Sibiu. Jeśli zamiana na ładunek z Sibiu rzeczywiście obniżyłaby koszt pustych kilometrów — wyceniony w € na podstawie własnego profilu kosztowego ciężarówki, nie tylko surowych kilometrów — Druma wyświetla chip z sugestią bezpośrednio na tym wierszu, coś w stylu **"Dostępny tańszy doładunek: −18 km · 22 €."** Kliknij **Przełącz na #...**, a zamiana zostaje zastosowana w jednym kroku: ładunek z Sibiu zostaje wstępnie zaplanowany, ładunek z Cluj automatycznie traci wstępne zaplanowanie (ta sama zasada jednorazowego zakotwiczenia, na której opierają się łańcuchy powyżej), a powiadomienie potwierdza **"Zamiast tego wstępnie zaplanowano doładunek #..."**. To ten sam mechanizm chipa z sugestią opisany niżej, zastosowany konkretnie do końców łańcuchów.
-
-Kilka zabezpieczeń utrzymuje wiarygodność sugestii:
-
-- Zawsze sugeruje wyłącznie zamianę, która oszczędza **co najmniej 15 km i co najmniej 0 €** — nigdy zamianę, która wygląda tanio tylko dlatego, że profil kosztowy ciężarówki jest błędnie skonfigurowany na zero.
-- Uwzględnia przepisy **UE 561/2006** — nigdy nie zasugeruje doładunku, który przekroczyłby pozostały dzienny czas jazdy kierowcy tej ciężarówki.
-- Kliknij chip, aby go rozwinąć i zobaczyć uzasadnienie oraz rzeczywisty, obliczony trasą wpływ przed/po, wraz z ostrzeżeniem, że wypierany ładunek ponownie stanie się nieprzypisany.
+Każdy naszkicowany wiersz pokazuje chip **Po #{zlecenie}** nazywający ładunek, za którym jest połączony w łańcuch, aby sekwencja pozostała czytelna na pierwszy rzut oka. Pod maską szkic kotwiczy się do konkretnej ciężarówki, do zlecenia poprzedzającego, za którym jest połączony w łańcuch, lub do obu — a kotwica może zasilać tylko jeden przeładunek naraz: przeciągnięcie nowego ładunku na kotwicę już zajętą przenosi kotwicę na nowy ładunek i odszkicowuje stary, zamiast podwójnie rezerwować tę samą ciężarówkę na dwóch łańcuchach.
 
 <Note>
-Optymalizator wyłącznie proponuje; nic nie jest stosowane bez kliknięcia. Milczy też, gdy nie ma nic lepszego do zasugerowania — brak chipa oznacza, że Druma nie znalazła tańszego doładunku, a nie że nie sprawdziła.
+Nic tutaj nie dotyka prawdziwego zlecenia, dopóki ciężarówka nie zostanie faktycznie przypisana przez normalną bramkę tablicy — przeciągnięcie z wyłączonym Wstępnym planowaniem, lub **Przypisz ciężarówkę** na naszkicowanym wierszu. Do tego czasu łańcuch to czysta przestrzeń robocza planowania, którą można swobodnie przearanżować.
 </Note>
 
-**Bezpieczeństwo łańcucha przy zmianach.** Jeśli coś zmienia się wcześniej w łańcuchu — zlecenie zostaje anulowane, jego ciężarówka zostaje usunięta, albo jego ciężarówka zostaje zmieniona — Druma sprawdza, czy coś jest wstępnie zaplanowane dalej w łańcuchu. Jeśli nic nie ma, zmiana przechodzi bez żadnych komplikacji. Jeśli istnieje dalszy koniec łańcucha, zostajesz poproszony o wybór: **Usuń cały łańcuch** (kaskadowo usuwa każdy wstępnie zaplanowany doładunek dołączony po nim) albo **Zachowaj dalsze zlecenia** (zrywa tylko to jedno powiązanie i pozostawia dalsze ładunki jako niezależne, wciąż możliwe do ponownego przypisania pozycje). Tak czy inaczej, wstępnie zaplanowany plan nigdy po cichu nie popada w zepsuty lub osierocony stan — Ty decydujesz, co dzieje się z resztą łańcucha, nigdy nie musisz sam ręcznie wyszukiwać wiszących powiązań.
+**Optymalizator ponownego przypisania przeładunku.** Gdy łańcuch istnieje, Druma nadal sprawdza go w tle. Dla **końca** każdego łańcucha — ostatniego naszkicowanego przeładunku, tego, po którym nic jeszcze nie jest połączone — pyta: czy istnieje inny, jeszcze nienaszkicowany przeładunek, którego odbiór leży bliżej miejsca, gdzie ta ciężarówka faktycznie się zwolni?
 
-### Chipy z sugestiami
+Na przykład: ciężarówka jest naszkicowana do przeładunku w Kluż jutro. Pojawia się zamiast tego bliższy, niewybrany przeładunek z odbiorem w Sybinie. Jeśli zamiana na ładunek z Sybinu naprawdę obniżyłaby koszt pustych kilometrów — wyceniony w € przy użyciu własnego profilu kosztowego ciężarówki, nie tylko surowych kilometrów — Druma pokazuje chip sugestii bezpośrednio na tym wierszu, coś jak **"Dostępny tańszy przeładunek: −18 km · 22 €"**. Kliknij **Przełącz na #...**, a zamiana zostaje zastosowana w jednym kroku: ładunek z Sybinu zostaje naszkicowany, ładunek z Kluż automatycznie traci swój szkic (ta sama zasada kotwicy jednorazowego użytku, na której opierają się łańcuchy powyżej), a toast potwierdza **"Przeładunek #... naszkicowany zamiast tego"**.
 
-Tam, gdzie automatyczne planowanie Druma ma pewną rekomendację dla nieprzypisanego zlecenia, chip z sugestią pojawia się bezpośrednio na tym wierszu. Kliknij go, aby zastosować sugerowaną ciężarówkę bezpośrednio, albo odrzuć go, jeśli nie pasuje.
+Kilka zabezpieczeń utrzymuje sugestie wiarygodne:
+
+- Nigdy nie sugeruje zamiany oszczędzającej mniej niż **15 km i co najmniej 0 €** — nigdy zamiany, która wygląda na tanią tylko dlatego, że profil kosztowy ciężarówki jest błędnie skonfigurowany na zero.
+- Jest **świadomy Rozporządzenia UE 561/2006** — nigdy nie zasugeruje przeładunku, który wypchnąłby kierowcę ciężarówki poza pozostałe godziny jazdy na dany dzień.
+- Kliknij chip, aby go rozwinąć dla "dlaczego" i rzeczywistego, trasowanego wpływu przed/po, łącznie z ostrzeżeniem, że wypierany ładunek ponownie stanie się nieprzypisany.
+
+<Note>
+Optymalizator zawsze tylko proponuje; nic nie jest stosowane bez kliknięcia. Milczy też, gdy nie ma nic lepszego do zasugerowania — brak chipa oznacza, że Druma nie znalazła tańszego przeładunku, nie że nie sprawdziła.
+</Note>
+
+**Bezpieczeństwo łańcucha przy zmianie.** Jeśli coś w górę łańcucha się zmienia — zlecenie jest anulowane, jego ciężarówka jest odłączona, lub jego ciężarówka jest zmieniana — Druma sprawdza, czy coś jest naszkicowane w dół od niego. Jeśli nic nie ma, zmiana przechodzi bez problemu. Jeśli istnieje koniec w dół łańcucha, jesteś proszony o wybór: **Usuń cały łańcuch** (kaskaduje usunięcie przez każdy naszkicowany przeładunek połączony za nim) lub **Zachowaj zlecenia w dół łańcucha** (przecina tylko to jedno połączenie i pozostawia ładunki w dół łańcucha jako niezależne, wciąż możliwe do ponownego przypisania pinezki).
+
+### Chipy sugestii
+
+Gdzie automatyczne planowanie Drumy ma pewną rekomendację dla nieprzypisanego zlecenia, chip sugestii pojawia się bezpośrednio na tym wierszu, podając to, co wie (puste km, przybliżony koszt trasy, lub oszczędność) — zobacz [Automatyczne planowanie i Asystent](/pl/planner/auto-planning) po pełny obraz punktacji. Kliknij go, aby bezpośrednio zastosować sugerowaną ciężarówkę, lub odrzuć, jeśli nie pasuje.
 
 ### Podświetlanie między kolumnami
 
-Kliknij dowolny wiersz, aby przypiąć jego podświetlenie. Jeśli ten wiersz jest częścią wstępnie zaplanowanej lub ostatecznej kombinacji, Druma podświetla pasujący wiersz (lub wiersze) w drugiej kolumnie i przewija je do widoku — dzięki czemu kliknięcie ciężarówki w Przychodzące pokazuje dokładnie, z którymi ładunkami w Wychodzące jest dopasowana, i na odwrót.
+Kliknij dowolny wiersz, aby przypiąć jego podświetlenie. Jeśli ten wiersz jest częścią naszkicowanej lub ostatecznej kombinacji, Druma podświetla odpowiadający wiersz (wiersze) w drugiej kolumnie i przewija je do widoku — więc kliknięcie ciężarówki w Przychodzących pokazuje dokładnie, z którym ładunkiem/ładunkami jest dopasowana w Wychodzących, i odwrotnie.
 
 ### Zlecenia wirtualne
 
-Kliknij **Wirtualne**, aby utworzyć zlecenie-symbol zastępczy, które rezerwuje ciężarówkę na spodziewany ładunek bez jeszcze ostatecznej rezerwacji — przydatne przy wstępnym planowaniu z wyprzedzeniem przed potwierdzonym zleceniem.
+Kliknij **Wirtualne**, aby utworzyć zlecenie zastępcze, które rezerwuje ciężarówkę dla oczekiwanego ładunku bez jeszcze ostatecznej rezerwacji — przydatne przy wstępnym planowaniu przed potwierdzonym zleceniem.
+
+---
+
+## Skróty klawiaturowe
+
+Z fokusem na widoku Teraz (nie wewnątrz modalu lub pola tekstowego):
+
+| Klawisz | Akcja |
+|---|---|
+| `J` / `K` | Przejdź po wierszach Wychodzących w dół / górę, w kolejności, w jakiej są aktualnie wyświetlane (respektuje Twoje grupowanie, sortowanie, i filtry) |
+| `A` | Zaakceptuj sugestię zaznaczonego wiersza — szkicuje go w trybie Wstępnego planowania, lub w przeciwnym razie otwiera arkusz potwierdzenia |
+| `Esc` | Wyczyść bieżące zaznaczenie |
+| `F` | Przełącz Tryb Focus |
+
+Pełna lista, łącznie ze skrótami poza tablicą, jest zawsze dostępna z nakładki **?**.
 
 ---
 
 ## Konflikty i blokady
 
-Jeśli proponowane przypisanie stworzyłoby problem — limit kabotażu, niezgodność naczepy, nierozwiązany przystanek przekaźnikowy — Druma oznacza to jako blokadę w arkuszu potwierdzenia, zamiast po cichu przepuścić przypisanie. Niektóre blokady wymagają jawnego potwierdzenia, zanim będziesz mógł kontynuować; inne mają charakter wyłącznie informacyjny.
+Jeśli proponowane przypisanie stworzyłoby problem — limit kabotażu, niedopasowanie naczepy, nierozwiązany postój przekazania — Druma oznacza to jako blokadę w arkuszu potwierdzenia, zamiast po cichu przepuścić przypisanie. Niektóre blokady wymagają wyraźnego potwierdzenia, zanim będzie można kontynuować; inne są tylko informacyjne.
 
 ---
 
 ## Przeglądanie szczegółów zlecenia
 
-**Kliknij** dowolny wiersz, aby otworzyć panel szczegółów. Stamtąd możesz edytować zlecenie, zmienić jego status lub zadzwonić do kierowcy.
+**Kliknij** dowolny wiersz, aby otworzyć panel szczegółów. Stamtąd możesz edytować zlecenie, zmienić jego status, lub zadzwonić do kierowcy.
 
 ---
 
 ## Widok Oś czasu
 
-Przełącz się na kartę **Oś czasu** po widok w stylu Gantta: każda ciężarówka to wiersz, a jej harmonogram jest narysowany jako pozycjonowane w czasie segmenty — odcinki jazdy oraz okna załadunku/rozładunku. Zaplanowane (jeszcze niepotwierdzone) segmenty są renderowane w kreskowanym wzorze; rzeczywiste/potwierdzone segmenty są renderowane w pełnym kolorze. Segment bez jeszcze potwierdzonego znacznika czasu jest pokazywany z obniżoną przezroczystością i przerywaną obwódką, aby oznaczyć go jako szacowany.
+Przełącz na kartę **Oś czasu** po widok w stylu Gantta: każda ciężarówka to wiersz, a jej harmonogram jest rysowany jako segmenty rozmieszczone w czasie — odcinki jazdy oraz okna załadunku/rozładunku. Segmenty zaplanowane (jeszcze nierzeczywiste) renderują się we wzorze kreskowanym; segmenty rzeczywiste/potwierdzone renderują się jako jednolite. Segment bez potwierdzonego znacznika czasu jest pokazywany przy zmniejszonej krycie z przerywaną obwódką, aby oznaczyć go jako szacowany.
 
 <Frame caption="Widok Oś czasu — każdy wiersz to jedna ciężarówka; czerwona linia oznacza bieżący czas.">
-  <img src="/images/planner/planning-board-timeline.png" alt="Widok Oś czasu Tablicy planowania pokazujący ciężarówki jako wiersze z pozycjonowanymi w czasie segmentami" />
+  <img src="/images/planner/planning-board-timeline.png" alt="Widok Oś czasu Tablicy planowania pokazujący ciężarówki jako wiersze z segmentami rozmieszczonymi w czasie" />
 </Frame>
 
-Użyj kontrolek nawigacji dat, aby poruszać się po harmonogramie, oraz **selektora zakresu**, aby wybrać, ile czasu jest widoczne:
+Użyj kontrolek nawigacji dat, aby poruszać się po harmonogramie, i **selektora zakresu**, aby wybrać, ile czasu jest widoczne:
 
-| Zakres | Najlepszy do |
+| Zakres | Najlepszy dla |
 |---|---|
-| **1 dzień** | Szczegółowego planowania w ciągu dnia — zobacz dokładne okna załadunku i rozładunku |
-| **3 dni** | Wykrywania luk i konfliktów w ciągu następnych 72 godzin |
-| **1 tydzień** | Przeglądu zdolności przewozowej — które ciężarówki są wolne w ciągu całego tygodnia |
+| **1 dzień** | Szczegółowe planowanie wewnątrzdniowe — zobacz dokładne okna załadunku i rozładunku. Dzisiejsze okno otwiera się dwie godziny wstecz zamiast o północy, aby ukończone zadania z rana nie zjadały połowy ekranu po południu. |
+| **3 dni** | Wykrywanie luk i konfliktów w ciągu najbliższych 72 godzin |
+| **1 tydzień** | Zgrubny Gantt na całym horyzoncie — ten sam renderer pasków co 1 dzień/3 dni, tylko oddalony, zamiast osobnej tabeli podsumowującej |
 
-Oś czasu współdzieli ten sam panel Filtrów co widok Teraz, więc filtr statusu, daty, strefy lub lokalizacji przenosi się przy przełączaniu kart.
+Oś czasu dzieli ten sam panel Filtrów co widok Teraz, więc filtr statusu, daty, strefy, lub lokalizacji przenosi się przy przełączaniu kart.
+
+### Zoom, wysokość pasa, i grupowanie
+
+- **Zoom** — przyciski `−`/`+` (lub Ctrl/⌘ + kółko myszy nad siatką) rozszerzają lub zwężają, ile godzin mieści się na ekranie, od połowy do potrójnej domyślnej skali. Godzina pod kursorem pozostaje na miejscu podczas powiększania.
+- **Wysokość pasa** — przełącznik **Normalny / Ciasny**; Ciasny mieści więcej wierszy ciężarówek na ekranie kosztem bardziej kompaktowej etykiety.
+- **Grupuj i sortuj** — grupuj pasy wg strefy, kraju, lub grupy planowania, i sortuj je wolne-ciężarówki-najpierw, wg nazwy, lub wg pozostałych godzin — niezależnie od tego, jak pogrupowany jest widok Teraz.
+
+### Przeciągnij, by zmienić harmonogram
+
+W zakresach 1 dzień i 3 dni przeciągnij ciało zaplanowanego segmentu, aby przenieść go na nowy czas, lub przeciągnij jego krawędzie, aby zmienić rozmiar okna załadunku/rozładunku. Upuszczenie zmiany otwiera arkusz potwierdzenia, który ostrzega o wszelkim nakładaniu się pasów lub konflikcie godzin jazdy UE 561/2006, jaki zmiana by stworzyła, zanim zatwierdzisz — potem pojawia się toast cofnięcia, więc zła zmiana harmonogramu jest odwracalna jednym kliknięciem.
+
+### Odznaki zgodności
+
+Etykieta pasa każdej ciężarówki pokazuje małe odznaki dla wszystkiego, co dotyczy tej ciężarówki właśnie teraz: wygasający lub wygasły dokument floty, ostrzeżenie lub naruszenie kabotażu, okno wyłączenia z eksploatacji, lub oczekujące zlecenie warsztatowe. Najedź na odznakę po szczegóły.
+
+### Podgląd widma kandydata
+
+Gdy nieprzypisane zlecenie jest w fokusie, najechanie na uszeregowaną kandydacką ciężarówkę w Osi czasu pokazuje widmowe umieszczenie tego zlecenia bezpośrednio na pasie ciężarówki — łącznie z szacowanym pustym odcinkiem do dotarcia do odbioru — dzięki czemu możesz zobaczyć dokładnie, gdzie by wylądowało, zanim zatwierdzisz. Kliknij widmo, aby przypisać zlecenie bezpośrednio do tej ciężarówki.
 
 ---
 
-## Widok Mapa
+## Widok Mapy
 
-Przełącz się na kartę **Mapa**, aby zobaczyć nieprzypisane ładunki i dostępnych kierowców naniesionych geograficznie zamiast jako wiersze. Jest to przydatne do szybkiego przestrzennego odczytu "co jest blisko czego" przed przełączeniem z powrotem na Teraz, aby faktycznie przypisać. Akcje **Auto-sugestia** i **Wirtualne** są dostępne również tutaj.
+Przełącz na kartę **Mapa** po widok geograficzny nieprzypisanych ładunków i dostępnych ciężarówek, napędzany systemem kolorów opartym na pilności (zobacz legendę na mapie), aby ładunki i ciężarówki potrzebujące uwagi najszybciej wyróżniały się. Zlecenia i ciężarówki klastrują się razem przy niskim powiększeniu, aby ruchliwy region nie zamienił się w nieczytelny stos pinezek.
+
+<Frame caption="Tablica planowania — Widok Mapy">
+  <img src="/images/planner/planning-board-map.png" alt="Widok Mapy Tablicy planowania z pogrupowanymi w klastry zleceniami i ciężarówkami" />
+</Frame>
+
+Pasek narzędzi ma własny pasek filtrów — wyszukiwanie zlecenia, wyszukiwanie ciężarówki, i przełącznik statusu ciężarówki — plus licznik pokazujący, ile pilnych zleceń jest obecnie na mapie. Baner pojawia się, gdy jedna lub więcej ciężarówek nie ma znanej pozycji GPS i dlatego nie może być naniesiona.
+
+Kliknij znacznik zlecenia, aby otworzyć panel najlepszych kandydackich ciężarówek dla niego, uszeregowanych wg pustych km — każda pokazana jako kompaktowa karta z czasem wolny-od, czasem jazdy, i paskiem przybycia na odbiór. Kliknij kandydata (lub bezpośrednio znacznik ciężarówki), aby otworzyć ten sam arkusz potwierdzenia używany gdzie indziej na tablicy, łącznie z wszelkimi kontrolami kabotażu, naczepy, lub postoju przekazania. Akcje **Auto-sugestia** i **Wirtualne** są dostępne też tutaj.
 
 ---
 
-<Card title="Widok dziś" icon="sun" href="/pl/planner/today-view">
-  Do codziennego porannego przepływu pracy — aktywne zlecenia, pozycje ciężarówek na żywo i alerty statusów na jednym ekranie.
+<Card title="Automatyczne planowanie i Asystent" icon="wand-sparkles" href="/pl/planner/auto-planning">
+  Jak silniki w tle Drumy proponują dopasowania ciężarówka-ładunek, i jak je przeglądać i stosować.
+</Card>
+
+<Card title="Widok Dziś" icon="sun" href="/pl/planner/today-view">
+  Dla Twojego codziennego porannego przepływu pracy — aktywne zlecenia, pozycje ciężarówek na żywo, i alerty statusu, wszystko na jednym ekranie.
 </Card>
 
 <Card title="Tworzenie zlecenia" icon="plus" href="/pl/planner/creating-orders">
-  Nowy w Druma? Zacznij tutaj, aby dowiedzieć się, jak stworzyć pierwsze zlecenie.
+  Nowy w Druma? Zacznij tutaj, aby nauczyć się tworzyć swoje pierwsze zlecenie.
 </Card>

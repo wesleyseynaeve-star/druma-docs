@@ -108,6 +108,50 @@ Hagyd üresen a küszöböt a díj-ablak letiltásához az adott raklaptípusná
 
 ---
 
+## Raklap-egyenleg egyeztetés
+
+Az ügyfelenkénti egyenleg-oszlopon túl a Drumának van egy dedikált oldala, a **Műveletek → Raklap-egyenlegek**, amely egy nézetben egyezteti a pozíciókat **mind az ügyfelek, mind az alvállalkozók** esetében — hasznos, ha egyetlen áttekintést szeretnél minden nyitott raklap-pozícióról, ahelyett hogy egyesével ellenőriznéd a partnereket.
+
+A rendelésenkénti főkönyvvel ellentétben ez az oldal **soronként egy partnert** mutat, nem soronként egy (partner, raklaptípus) párost. Ha egynél több raklap-szabvánnyal kereskedsz ugyanazzal az ügyféllel, a sor három összegbe hajtja őket — EUR, Ipari, és Egyéb — plusz egy kombinált nettó és egyetlen státusz-jelvény, így mindig van egy soro, amely megmutatja, mivel tartozik neked ez a partner (vagy te neki) összesen.
+
+Minden sor státusz-jelvénye ugyanazt a küszöb-logikát használja, mint a díj-ablak, egy extra szinttel azon pozíciók számára, amelyek messze azon túl sodródtak:
+
+| Státusz | Jelentés |
+|---|---|
+| **Rendben** | Az egyenleg a beállított küszöbön vagy alatta van (beleértve a pontos nullát is — teljesen rendezve) |
+| **Egyensúlyhiány** | Az egyenleg meghaladja a küszöböt |
+| **Súlyos** | Az egyenleg a küszöb **kétszeresét** haladja meg — érdemes utánajárni, mielőtt tovább nő |
+
+<Steps>
+  <Step title="Válassz egy hatókör-fület">
+    Nyisd meg a **Műveletek → Raklap-egyenlegek** oldalt. Öt hatókör-fül — **Összes · Kritikus · Egyensúlyhiány · Rendben · Rendezve** — található a táblázat felett, mindegyik élő számlálóval, így egyenesen a figyelmet igénylő pozíciókra ugorhatsz.
+  </Step>
+  <Step title="Keress, szűrj, vagy ments el egy nézetet">
+    Használd a keresőmezőt egy partner névre keresésére, és a **Szűrés** gombot a partnertípus (ügyfél/alvállalkozó) szerinti szűkítéshez. Az **Oszlopok** segítségével kiválaszthatod, mely mezők jelenjenek meg; a **Nézetek** menü elmenti az aktuális hatókörödet, keresésedet, és oszlopválasztásaidat egy elnevezett nézetként, amelyet te (vagy az egész céged) később újra megnyithat.
+  </Step>
+  <Step title="Nyisd meg a rendezési panelt">
+    Kattints egy sorra (vagy a **szem** ikonjára), hogy jobbról becsússzon egy rendezési panel, amely megmutatja az adott partner teljes mozgás-főkönyvét minden raklaptípuson keresztül, dátum, rendelés, vagy összeg szerint rendezhetően.
+  </Step>
+  <Step title="Rendezd a pozíciót">
+    A panelből **könyvelhetsz korrekciót** (egy rendelés nélküli főkönyvi bejegyzést kötelező megjegyzéssel — hasznos egy manuálisan egyeztetett leíráshoz vagy migrációs kiigazításhoz), vagy **számíthatsz fel díjat** a túllépésre, ugyanazt a díj-folyamatot használva, mint a fent leírt automatikus felszólítás.
+  </Step>
+  <Step title="Generálj kimutatást">
+    A panelből vagy a sor saját menüjéből generálj egy **PDF kimutatást** — egy márkázott dokumentumot aláírási blokkal, készen arra, hogy egy partner megerősítse és aláírja — vagy exportáld a pozíciót **CSV** formátumban. Az oldal tetején lévő **Exportálás ▾** egy kombinált CSV-t készít az összes partnerről egyszerre, egy teljes egyeztetési áttekintéshez.
+  </Step>
+</Steps>
+
+<Note>
+Egy ügyfél raklap-egyenlege csak olvashatóan is megjelenik a rekordján: nyisd meg az ügyfelet, és nézd meg az **Áttekintés** fület egy "Raklap-egyenleg" sorért, amely közvetlen linket tartalmaz ennek az oldalnak a rendezési paneljéhez, az adott ügyfélre vonatkozóan.
+</Note>
+
+Egy **éjszakai automatizált egyeztetés** (02:05 UTC) is ellenőrzi minden cég egyenlegeit ugyanazon küszöbök alapján, és értesíti a céged adminjait/tervezőit, amikor egy pozíció egyensúlyhiányos — raklaptípusonként és partnerenként deduplikálva egy 7 napos ablakban, így nem kapsz újra értesítést minden futtatáskor egy olyan pozícióról, amelyet már ismersz.
+
+<Note>
+A főkönyv adatbázis-szinten kényszeríti ki a saját előjel-konvencióját: egy **Küldött** mozgás mindig hozzáadódik az egyenleghez, egy **Visszaküldött** mozgás pedig mindig levonódik belőle, függetlenül attól, hogyan van beírva a szám a mozgás-hozzáadási űrlapon — a **Kiigazítás**, **Korrekció**, és **Nyitóegyenleg** bejegyzések megtartják a beírt előjelet, mivel ezek jogosan mehetnek bármelyik irányba.
+</Note>
+
+---
+
 ## Szolgáltatói szinkronizálás (opcionális)
 
 Ha a CHEP Connect-et használod, a Druma egyeztetheti az alkalmazáson belüli főkönyvedet a szolgáltató hivatalos egyenlegével. Lépj a **Beállítások → Integrációk → Raklapcsere** menüpontra.
@@ -125,10 +169,6 @@ A CHEP Connect jelenleg az egyetlen raklap-szolgáltatói integráció. Az EUR, 
 
 ---
 
-<Card title="Rendelési extrák és felárak" icon="circle-plus" href="/en/planner/order-extras">
+<Card title="Rendelési extrák és felárak" icon="circle-plus" href="/hu/invoicing/generating-invoices">
   Ismerd meg, hogyan jelennek meg a raklapdíj-tételek a számla-szerkesztőben más rendelési felárak mellett.
-</Card>
-
-<Card title="Ügyfelek" icon="building-2" href="/en/planner/clients">
-  Kezeld az ügyfélprofilokat, az állandó utasításokat, és tekintsd meg a raklap-egyenleg előzményét ügyfelenként.
 </Card>

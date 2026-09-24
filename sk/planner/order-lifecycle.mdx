@@ -1,158 +1,317 @@
 ---
 title: "Životný cyklus objednávky"
-description: "Ako sa objednávka pohybuje od Konceptu po Fakturovanú v Druma — každý stav, kto ho spúšťa a čo sa stane v každom kroku."
+description: "Ako sa objednávka pohybuje od Konceptu po Doručené v Druma — každý stav, kto ho spúšťa a čo sa stane v každom kroku."
 icon: "circle-dot"
 ---
 
 ## Prehľad
 
-Každá objednávka v Druma sleduje definovanú cestu. Pochopenie životného cyklu vám pomôže vedieť, čo očakávať v každej fáze, kedy zasiahnuť a ako zvládať výnimky.
+Každá objednávka v Druma sleduje definovanú cestu. Pochopenie životného cyklu vám pomôže vedieť, čo očakávať v každej fáze, kedy zasiahnuť a ako zvládať výnimky ako neskoré doručenia alebo zabudnuté aktualizácie stavu.
 
-Celý tok:
+<Note>
+Ak vaša spoločnosť používa šablóny úloh, objednávka môže niesť aj **kontrolný zoznam úloh** viazaný na tie isté fázy životného cyklu — pozrite [Úlohy objednávky a šablóny pracovného postupu](/sk/planner/order-tasks).
+</Note>
 
-**Koncept → Potvrdená → V preprave → Na mieste vyzdvihnutia → Nakladanie → Na ceste na doručenie → Na mieste doručenia → Vykladanie → Doručená → Fakturovaná**
+Tu je celý tok:
 
-Na konci je tiež samostatný stav **Zrušená**.
+**Koncept → Čaká → Priradené → Odišlo → Na vyzdvihnutí → Nakládka → Na ceste → Na doručení → Vykládka → Doručené**
 
-![Diagram toku stavov objednávky](/images/placeholder.png)
+Existujú aj tri výnimočné stavy — **Čiastočne doručené**, **Zrušené**, a **Zmarená jazda** — popísané ku koncu.
+
+---
+
+## Farby stavov v prehľade
+
+Každý stav sa vyhodnocuje na jednu farbu (odtieň), ktorá je identicky zdieľaná medzi plánovacou tabuľou a aplikáciou pre vodiča — rovnaký stav nikdy nemá inú farbu na dvoch obrazovkách.
+
+| Stav | Farba |
+|---|---|
+| Koncept | Sivá (bridlicová) |
+| Čaká | Sivá (bridlicová) |
+| Virtuálne | Fialová |
+| Priradené | Modrá |
+| Odišlo | Indigová |
+| Na vyzdvihnutí | Oranžová |
+| Nakládka | Oranžová |
+| Na ceste | Smaragdovo zelená |
+| Na doručení | Nebovo modrá |
+| Vykládka | Nebovo modrá |
+| Doručené | Zelená |
+| Čiastočne doručené | Oranžová |
+| Zrušené | Červená |
+| Zmarená jazda | Červená |
+
+<Note>
+**Na ceste** je úsek vozidla po nakládke smerom k adrese doručenia — je to *jediný* stav, ktorý sa pred Doručené vykresľuje zeleno. **Odišlo** (úsek k adrese vyzdvihnutia) sa vykresľuje indigovo, vizuálne odlišnou farbou, takže na prvý pohľad zistíte, či vozidlo smeruje k nakládke, alebo je už naložené a smeruje doručiť.
+</Note>
 
 ---
 
 ## Koncept
 
-**Spúšťa:** Plánovač uloží novú objednávku bez potvrdenia.
+**Spúšťa:** Plánovač uloží novú objednávku bez jej potvrdenia.
 
-Objednávka existuje v systéme, ale ešte nie je aktívna. Vodič ju nevidí v aplikácii. Na plánovacej tabuli sa zobrazuje sivou farbou.
+**Kto to môže spustiť:** Iba plánovač.
+
+Objednávka existuje v systéme, ale zatiaľ nie je aktívna. Vodič ju v aplikácii nevidí. Na plánovacej tabuli sa zobrazuje sivo.
 
 **Dostupné akcie z Konceptu:**
 - Úprava akéhokoľvek poľa
-- Potvrdenie objednávky (prechod na Potvrdená)
+- Potvrdenie objednávky (prejde na Čaká)
 - Vymazanie objednávky
 - Zrušenie objednávky
 
----
-
-## Potvrdená
-
-**Spúšťa:** Plánovač klikne na **Potvrdiť objednávku**.
-
-Objednávka je teraz aktívna. Priradený vodič dostane upozornenie v aplikácii s podrobnosťami zákazky. Objednávka sa zobrazuje modrou farbou na plánovacej tabuli.
-
-**Odoslané notifikácie:**
-- Push notifikácia priradenému vodičovi (a druhému vodičovi, ak ide o dvojčlenné obsadenie)
-- Voliteľné: automatický e-mail s potvrdením klientovi
+Použite Koncept, keď klient urobil predbežnú rezerváciu, ale ešte ju nepotvrdil, alebo keď objednávku zostavujete, ale stále čakáte na podrobnosti.
 
 ---
 
-## V preprave
+## Virtuálne
 
-**Spúšťa:** Vodič klepne na **Na ceste** v aplikácii pri odchode na miesto vyzdvihnutia.
+**Spúšťa:** Plánovač klikne na **Virtuálne** na Plánovacej tabuli a vytvorí zástupnú objednávku.
 
-Vodič je na cestě k miestu nakladania. Objednávka sa zobrazuje zelenou farbou na plánovacej tabuli.
+**Kto to môže spustiť:** Iba plánovač.
+
+Virtuálna objednávka je ľahký zástupca — adresa vyzdvihnutia a doručenia, dátum vyzdvihnutia, a voliteľne cena — ktorý rezervuje vozidlo pred formálnou rezerváciou. Je oddelená od bežného toku Koncept → Čaká → Priradené: namiesto toho, akonáhle príde skutočná rezervácia, plánovač ju zlúči do riadnej objednávky cez modál Nová objednávka, ktorý automaticky prevezme priradenie vozidla. Virtuálne objednávky sa na plánovacej tabuli zobrazujú **fialovo**, aby boli na prvý pohľad ľahko odlíšiteľné od skutočnej, rezervovanej objednávky.
 
 <Note>
-Ak vodič zabudne klepnúť na Na ceste, stav môžete nastaviť manuálne na stránke objednávky cez **Prepísať stav**.
+Optimalizátor preradenia doplnenia nákladu zaobchádza s Virtuálnymi objednávkami rovnako ako s objednávkami Koncept alebo Čaká pri reťazení budúcich doplnení nákladu — takže načrtnutý zástupca možno stále vymeniť za lacnejšie skutočné doplnenie nákladu, ak sa nejaké objaví.
 </Note>
 
 ---
 
-## Na mieste vyzdvihnutia
+## Čaká
 
-**Spúšťa:** Vodič klepne na **Príchod na vyzdvihnutie** keď dorazí na adresu nakladania.
+**Spúšťa:** Plánovač klikne na **Potvrdiť objednávku** (zo stránky objednávky alebo plánovacej tabule).
 
-Vodič dorazil na nakladacie miesto a čaká na spracovanie. Tento stav automaticky spustí **hodiny čakacej doby**.
+**Kto to môže spustiť:** Iba plánovač.
 
----
+Objednávka je teraz aktívna a pripravená na priradenie k vozidlu a vodičovi — iba jej to ešte nebolo priradené. Na plánovacej tabuli sa stále zobrazuje **sivo**, rovnaký odtieň ako Koncept, keďže k nej zatiaľ nie je viazané žiadne vozidlo.
 
-## Nakladanie
+**Odosielané notifikácie:**
+- Voliteľné: automatický potvrdzovací e-mail klientovi (ak je povolený v nastaveniach vášho účtu)
 
-**Spúšťa:** Vodič klepne na **Nakladanie spustené** keď sa tovar nakladá na vozidlo.
-
-Hodiny čakacej doby zastavia, keď začne nakladanie. Akákoľvek zaznamenaná čakacia doba sa uloží k objednávke.
-
----
-
-## Na ceste na doručenie
-
-**Spúšťa:** Vodič klepne na **Odchod z vyzdvihnutia** po dokončení nakladania.
-
-Vozidlo sa teraz poháňa na adresu doručenia. Objednávka zobrazuje odhadovaný čas príchodu na plánovacej tabuli.
+**Dostupné akcie z Čaká:**
+- Úprava akéhokoľvek poľa
+- Priradenie vozidla a vodiča (prejde na Priradené)
+- Zrušenie objednávky
 
 ---
 
-## Na mieste doručenia
+## Priradené
 
-**Spúšťa:** Vodič klepne na **Príchod na doručenie** keď dorazí na adresu doručenia.
+**Spúšťa:** Plánovač priradí objednávke vozidlo a vodiča — z formulára Nová objednávka, Plánovacej tabule, alebo panela podrobností objednávky.
 
-Hodiny čakacej doby sa znova spustia na mieste doručenia.
+**Kto to môže spustiť:** Iba plánovač.
 
----
+Objednávka má teraz priradené vozidlo a vodiča. Priradený vodič dostane vo svojej aplikácii push notifikáciu s podrobnosťami úlohy — adresa vyzdvihnutia, adresa doručenia, dátum a poznámky pre vodiča, ktoré ste pridali.
 
-## Vykladanie
+Objednávka sa na plánovacej tabuli zobrazuje **modro**.
 
-**Spúšťa:** Vodič klepne na **Vykladanie spustené** keď sa tovar vykladá z vozidla.
-
-Čakacia doba pri doručení sa zastaví.
-
----
-
-## Doručená
-
-**Spúšťa:** Vodič klepne na **Doručené** a voliteľne nahrá fotografiu podpísaného CMR.
-
-Preprava je dokončená. Objednávka sa zobrazuje tmavozeleno na plánovacej tabuli a presunie sa na záložku **Dokončené** v zozname objednávok.
-
-**Odoslané notifikácie:**
-- Voliteľné: e-mail s potvrdením doručenia klientovi s časovou pečiatkou a nahratými dokumentmi.
+**Dostupné akcie z Priradené:**
+- Úprava väčšiny polí (zmeny spustia novú notifikáciu vodičovi)
+- Preradenie vozidla alebo vodiča
+- Zrušenie objednávky
+- Prechod na Odišlo (akcia vodiča, alebo prepísanie plánovačom)
 
 ---
 
-## Fakturovaná
+## Odišlo
 
-**Spúšťa:** Plánovač vygeneruje faktúru pre objednávku.
+**Spúšťa:** Vodič klepne na **Odišiel** vo svojej aplikácii, keď vyráža na miesto vyzdvihnutia.
 
-Objednávka je úplne uzavretá. Je iba na čítanie a prepojená so záznamom faktúry.
+**Kto to môže spustiť:** Vodič (hlavná akcia) alebo plánovač (manuálne prepísanie).
+
+Tento stav znamená, že vodič je na ceste smerom k miestu vyzdvihnutia. Objednávka sa na plánovacej tabuli zafarbí **indigovo**.
+
+<Note>
+Ak vodič zabudne klepnúť na Odišiel, môžete stav nastaviť manuálne zo stránky objednávky. Otvorte objednávku, kliknite na **Prepísať stav** a vyberte Odišlo. Vždy poznamenajte dôvod do poľa komentára, aby ste mali záznam.
+</Note>
 
 ---
 
-## Zrušená
+## Na vyzdvihnutí
+
+**Spúšťa:** Vodič klepne na **Na vyzdvihnutí** pri dosiahnutí adresy nakládky.
+
+**Kto to môže spustiť:** Vodič alebo plánovač.
+
+Vodič dorazil na miesto nakládky a čaká na spracovanie. Tento stav automaticky spustí **hodiny čakacej doby** — užitočné na zdokumentovanie akéhokoľvek oneskorenia na nakladacej rampe.
+
+**Odosielané notifikácie:**
+- Voliteľné: automatická notifikácia klientovi alebo jeho kontaktu na mieste nakládky (konfigurovateľné za klienta)
+
+---
+
+## Nakládka
+
+**Spúšťa:** Vodič klepne na **Nakládka**, keď sa tovar nakladá na vozidlo.
+
+**Kto to môže spustiť:** Vodič alebo plánovač.
+
+Hodiny čakacej doby sa zastavia, akonáhle sa nakládka začne. Akákoľvek zaznamenaná čakacia doba sa uloží k objednávke a možno ju použiť na výpočty príplatkov.
+
+---
+
+## Na ceste
+
+**Spúšťa:** Vodič klepne na **Na ceste**, akonáhle je nakládka dokončená (a CMR podpísané, ak je relevantné).
+
+**Kto to môže spustiť:** Vodič alebo plánovač.
+
+Vozidlo teraz smeruje na adresu doručenia. Objednávka sa na plánovacej tabuli zafarbí **smaragdovo zeleno** — ide o jediný prebiehajúci stav, ktorý sa vykresľuje zeleno, takže je ľahké rozpoznať vozidlo, ktoré je naložené a v pohybe. Objednávka zobrazuje odhadovaný čas príchodu na základe výpočtu trasy PTV.
+
+<Note>
+Toto je vhodný okamih na odoslanie proaktívnej notifikácie o meškaní príjemcovi, ak má vodič meškanie oproti plánu. Použite tlačidlo **Odoslať ETA** na stránke objednávky na odoslanie SMS alebo e-mailu s aktuálnym odhadovaným časom príchodu.
+</Note>
+
+---
+
+## Na doručení
+
+**Spúšťa:** Vodič klepne na **Na doručení** pri dosiahnutí adresy doručenia.
+
+**Kto to môže spustiť:** Vodič alebo plánovač.
+
+Hodiny čakacej doby sa znova spustia v mieste doručenia. Akékoľvek oneskorenie vykládky sa od tohto okamihu zaznamenáva. Objednávka sa zobrazuje v nebovo modrom odtieni.
+
+---
+
+## Vykládka
+
+**Spúšťa:** Vodič klepne na **Vykládka**, keď sa tovar vykladá z vozidla.
+
+**Kto to môže spustiť:** Vodič alebo plánovač.
+
+Čakacia doba pri doručení sa zastaví. Vodič teraz môže pripraviť podpísané doklady o doručení.
+
+---
+
+## Doručené
+
+**Spúšťa:** Vodič klepne na **Doručené** a voliteľne nahrá fotografiu podpísaného CMR alebo dodacieho listu.
+
+**Kto to môže spustiť:** Vodič (hlavná akcia) alebo plánovač.
+
+Preprava je dokončená. Objednávka sa na plánovacej tabuli zafarbí zeleno a presunie sa na kartu **Dokončené** v zozname objednávok.
+
+**Odosielané notifikácie:**
+- Voliteľné: e-mail s potvrdením doručenia klientovi s časovou pečiatkou a akýmikoľvek nahranými dokumentmi.
+
+**Dostupné akcie z Doručené:**
+- Generovanie faktúry pre objednávku (samotná objednávka zostáva v stave Doručené — generovanie faktúry ju nemení; faktúra sa vytvára ako vlastný prepojený záznam)
+- Nahratie alebo zobrazenie dokumentov doručenia (fotografia CMR, POD)
+- Pridanie poznámky o spore alebo poškodení
+
+---
+
+## Čiastočne doručené
+
+**Spúšťa:** Vodič zaznamená čiastočné doručenie z obrazovky Vykládka — časť, ale nie všetko z plánovaného, zišlo z vozidla.
+
+**Kto to môže spustiť:** Vodič (hlavná akcia) alebo plánovač.
+
+Doručenie nie je vždy všetko-alebo-nič. Ak vodič vyloží 6 z 10 paliet — klient nemôže prijať celý náklad, nie je miesto, časť zásielky je poškodená — môže zaznamenať presne to, čo skutočne zišlo, namiesto toho, aby bol nútený voliť medzi označením celej objednávky ako Doručené (čo by skresľovalo, čo sa stalo), alebo odmietnutím celého nákladu (zatiaľ čo väčšina *bola* prijatá).
+
+Vodič zadá, čo bolo doručené oproti tomu, čo bolo plánované; Druma uloží nedostatok — množstvo a hmotnosť, za zastávku — ako zmrazený záznam toho, čo zostáva nedoručené, a upozorní plánovača.
+
+<Note>
+**Čiastočne doručené zámerne nie je finálnym stavom "hotovo"** ako Doručené — existuje presne preto, aby reporting OTIF, automatická fakturácia, a klientský portál nezaobchádzali s čiastočným doručením ako s dokončeným. Môže to byť aj skutočný koncový stav, ak je zvyšok odpísaný namiesto opätovného doručenia — Druma nevynucuje žiadnu následnú akciu, len odmieta predstierať, že sa náklad dokončil čisto.
+</Note>
+
+**Dostupné akcie z Čiastočne doručené:**
+- Zobrazenie nedostatku (plánované vs. doručené množstvo/hmotnosť) a dôvodu vodiča na detaile objednávky
+- Generovanie faktúry — **v predvolenom nastavení vypnuté**: čiastočne doručená objednávka sa nefakturuje, kým nezapnete **Fakturovať pri čiastočnom doručení** pre vašu spoločnosť v Nastaveniach, pretože to, či je čiastočné doručenie okamžite fakturovateľné, je obchodné rozhodnutie. So zapnutou voľbou objednávka fakturuje to, čo bolo skutočne doručené.
+- Nahratie alebo zobrazenie dokumentov doručenia, rovnako ako pri úplnom doručení
+
+---
+
+## Zrušené
 
 **Spúšťa:** Plánovač zruší objednávku.
 
+**Kto to môže spustiť:** Iba plánovač.
+
 <Warning>
-Objednávku v stave **Koncept** alebo **Potvrdená** môžete zrušiť bez špeciálnych krokov. Avšak objednávku, ktorá je V preprave alebo neskôr, **nemôžete** zrušiť bez manuálneho procesu. Kontaktujte správcu účtu, ak potrebujete zrušiť aktívnu objednávku.
+Objednávku v stave **Koncept** alebo **Čaká** môžete zrušiť bez akýchkoľvek špeciálnych krokov. Avšak objednávku, ktorá je vo stave Odišlo alebo neskoršom, **nemôžete** zrušiť bez absolvovania manuálneho procesu. Kontaktujte správcu svojho účtu, ak potrebujete zrušiť aktívnu objednávku — vyžaduje si to zaznamenanie dôvodu a môže to ovplyvniť platby vodičovi.
 </Warning>
+
+Zrušené objednávky zostávajú v systéme na účely auditu. Sú viditeľné v zozname objednávok pod filtrom **Zrušené**.
 
 ---
 
-## Manuálne prepísanie stavu
+## Zmarená jazda
 
-Vodiči niekedy zabudnú klepnúť na aktualizácie stavu. Ako plánovač môžete vždy manuálne prepísať stav:
+**Spúšťa:** Plánovač vyhlási zmarenú jazdu z panela podrobností objednávky.
+
+**Kto to môže spustiť:** Iba plánovač.
+
+Zmarená jazda sa vzťahuje na objednávky, kde vodič **už odišiel**, ale jazda musí byť prerušená — kvôli zrušeniu klientom, vyššej moci, alebo firemnému rozhodnutiu. Líši sa od bežného zrušenia, pretože už vznikli skutočné náklady (palivo, čas vodiča, prázdne kilometre).
+
+Zmarenú jazdu môžete vyhlásiť z ktoréhokoľvek z týchto stavov: **Odišlo, Na vyzdvihnutí, Nakládka, Na ceste, Na doručení, Vykládka**.
+
+Plánovač musí zadať kód dôvodu, aktuálnu polohu vodiča, prejdené prázdne kilometre, a voliteľne označiť objednávku na účtovanie klientovi.
+
+<Warning>
+Vyhlásenie zmarenej jazdy **nemožno vrátiť späť**. Objednávka trvalo prejde do stavu Zmarená jazda, a dôvod, poloha vodiča, prázdne kilometre, a (ak je zapnuté) suma účtovaná klientovi sa zaznamenajú priamo na objednávke pre neskoršiu fakturáciu — žiadny samostatný záznam mzdy alebo poplatku sa automaticky nevytvára.
+</Warning>
+
+Pozrite [Zmarená jazda](/sk/planner/wasted-journey) pre úplného sprievodcu.
+
+---
+
+## Manuálne prepísania stavu
+
+Vodiči niekedy zabudnú klepnúť na aktualizácie stavu — stáva sa to. Ako plánovač môžete stav vždy manuálne prepísať:
 
 <Steps>
   <Step title="Otvorte objednávku">
-    Prejdite na Plánovač → Objednávky a nájdite objednávku.
+    Prejdite na Plánovanie → Objednávky a nájdite objednávku. Kliknutím na ňu otvorte stránku podrobností.
   </Step>
   <Step title="Kliknite na Prepísať stav">
-    Nájdite tlačidlo **Prepísať stav** v blízkosti indikátora aktuálneho stavu.
+    Nájdite tlačidlo **Prepísať stav** vedľa indikátora aktuálneho stavu v hornej časti stránky.
   </Step>
   <Step title="Vyberte správny stav">
-    Vyberte stav, v ktorom by objednávka teraz mala byť.
+    Zvoľte stav, v ktorom by objednávka teraz mala byť.
   </Step>
   <Step title="Pridajte poznámku">
-    Napíšte stručné vysvetlenie. Toto sa uloží v histórii objednávky.
+    Napíšte krátke vysvetlenie (napr. „Vodič zabudol aktualizovať — potvrdené telefonicky"). Toto sa uloží do histórie objednávky.
   </Step>
-  <Step title="Uložte">
-    Kliknite na **Použiť prepísanie**. Stav sa okamžite aktualizuje.
+  <Step title="Uložiť">
+    Kliknite na **Použiť prepísanie**. Stav sa okamžite aktualizuje a zmena sa zaznamená s vaším menom a časovou pečiatkou.
   </Step>
 </Steps>
 
 ---
 
-<Card title="Pohľad dnes" icon="sun" href="/en/planner/today-view">
-  Monitorujte všetky aktívne objednávky na dnešok, sledujte živé polohy vodičov a riešte upozornenia z denného dashboardu.
+## Automatické vs. manuálne prechody
+
+| Stav | Automaticky | Manuálne (vodič) | Manuálne (plánovač) |
+|---|---|---|---|
+| Koncept | — | — | Áno |
+| Virtuálne | — | — | Áno |
+| Čaká | — | — | Áno |
+| Priradené | — | — | Áno |
+| Odišlo | — | Áno | Áno (prepísanie) |
+| Na vyzdvihnutí | — | Áno | Áno (prepísanie) |
+| Nakládka | — | Áno | Áno (prepísanie) |
+| Na ceste | — | Áno | Áno (prepísanie) |
+| Na doručení | — | Áno | Áno (prepísanie) |
+| Vykládka | — | Áno | Áno (prepísanie) |
+| Doručené | — | Áno | Áno (prepísanie) |
+| Čiastočne doručené | — | Áno | — |
+| Zrušené | — | — | Áno |
+| Zmarená jazda | — | — | Áno (z aktívnych stavov) |
+
+---
+
+<Card title="Domovský dashboard" icon="gauge" href="/sk/planner/today-view">
+  Sledujte všetky aktívne objednávky, zobrazte živé polohy vodičov, a riešte upozornenia z vášho živého prevádzkového dashboardu.
 </Card>
 
-<Card title="Generovanie faktúr" icon="file-invoice" href="/en/invoicing/generating-invoices">
-  Po doručení objednávky sa dozviete, ako vytvoriť a odoslať faktúru klientovi.
+<Card title="Úlohy objednávky a šablóny pracovného postupu" icon="list-check" href="/sk/planner/order-tasks">
+  Konfigurovateľné kontrolné zoznamy úloh viazané na tieto fázy životného cyklu, plus ako administrátori vytvárajú šablóny za nimi.
+</Card>
+
+<Card title="Generovanie faktúr" icon="file-invoice" href="/sk/invoicing/generating-invoices">
+  Akonáhle je objednávka Doručená, zistite, ako vytvoriť a odoslať faktúru klientovi.
 </Card>

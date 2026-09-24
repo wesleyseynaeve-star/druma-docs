@@ -9,14 +9,14 @@ icon: "circle-dot"
 Minden Druma-rendelés egy meghatározott utat követ. Az életciklus megértése segít tudni, mire számíts az egyes szakaszokban, mikor kell beavatkoznod, és hogyan kezeld a kivételeket, mint a késett kiszállításokat vagy az elfelejtett státuszfrissítéseket.
 
 <Note>
-Ha a céged feladat-sablonokat használ, egy rendeléshez egy **feladat-ellenőrzőlista** is tartozhat, amely ugyanezekhez az életciklus-fázisokhoz kapcsolódik — lásd a [Rendelési feladatok és munkafolyamat-sablonok](/en/planner/order-tasks) oldalt.
+Ha a céged feladat-sablonokat használ, egy rendeléshez egy **feladat-ellenőrzőlista** is tartozhat, amely ugyanezekhez az életciklus-fázisokhoz kapcsolódik — lásd a [Rendelési feladatok és munkafolyamat-sablonok](/hu/planner/order-tasks) oldalt.
 </Note>
 
 Íme a teljes folyamat:
 
 **Vázlat → Függőben → Hozzárendelve → Elindult → Felvételnél → Rakodás → Úton → Szállításnál → Lerakodás → Kiszállítva**
 
-Van két kivétel-státusz is — **Törölve** és **Elveszett fuvar** —, amelyeket a végén ismertetünk.
+Van három kivétel-státusz is — **Részlegesen kiszállítva**, **Törölve** és **Elveszett fuvar** —, amelyeket a végén ismertetünk.
 
 ---
 
@@ -28,6 +28,7 @@ Minden státusz egyetlen színre (tónusra) oldódik fel, amely azonos a tervez�
 |---|---|
 | Vázlat | Szürke (palaszürke) |
 | Függőben | Szürke (palaszürke) |
+| Virtuális | Lila |
 | Hozzárendelve | Kék |
 | Elindult | Indigó |
 | Felvételnél | Borostyán |
@@ -36,6 +37,7 @@ Minden státusz egyetlen színre (tónusra) oldódik fel, amely azonos a tervez�
 | Szállításnál | Égszínkék |
 | Lerakodás | Égszínkék |
 | Kiszállítva | Zöld |
+| Részlegesen kiszállítva | Borostyán |
 | Törölve | Piros |
 | Elveszett fuvar | Piros |
 
@@ -60,6 +62,20 @@ A rendelés létezik a rendszerben, de még nem aktív. A sofőr nem látja az a
 - A rendelés lemondása
 
 Használd a Vázlatot, amikor egy ügyfél előzetes foglalást tett, de még nem erősítette meg, vagy amikor éppen felépíted a rendelést, de még hiányoznak részletek.
+
+---
+
+## Virtuális
+
+**Kiváltja:** a tervező a **Virtuális** gombra kattint a Tervezőtáblán, hogy helyettesítő rendelést hozzon létre.
+
+**Ki válthatja ki:** csak a tervező.
+
+A Virtuális rendelés egy könnyű helyettesítő — felvételi és szállítási cím, egy felvételi dátum, és opcionálisan egy ár —, amely lefoglal egy teherautót egy formális foglalás előtt. Elkülönül a normál Vázlat → Függőben → Hozzárendelve folyamattól: ehelyett, amint megérkezik a valódi foglalás, a tervező a Új rendelés ablakon keresztül egyesíti egy rendes rendeléssé, amely automatikusan átveszi a teherautó-hozzárendelést. A Virtuális rendelések **lilán** jelennek meg a tervezőtáblán, hogy egy pillantással könnyen megkülönböztethetők legyenek egy valódi, lefoglalt rendeléstől.
+
+<Note>
+Az Újratöltés-újrahozzárendelési Optimalizáló ugyanúgy kezeli a Virtuális rendeléseket, mint a Vázlat vagy Függőben rendeléseket a jövőbeli újratöltések láncolásakor — így egy felvázolt helyettesítő továbbra is kicserélhető egy olcsóbb valódi újratöltésre, ha megjelenik egy.
+</Note>
 
 ---
 
@@ -188,6 +204,27 @@ A szállítás befejeződött. A rendelés zöldre vált a tervezőtáblán, és
 
 ---
 
+## Részlegesen kiszállítva
+
+**Kiváltja:** a sofőr részleges kiszállítást rögzít a Lerakodás képernyőről — a tervezettnek csak egy része, nem az egésze, került le a teherautóról.
+
+**Ki válthatja ki:** sofőr (elsődleges művelet) vagy tervező.
+
+A kiszállítás nem mindig minden-vagy-semmi. Ha egy sofőr 10-ből 6 raklapot rak le — egy ügyfél nem tudja átvenni a teljes rakományt, nincs hely, a rakomány egy része sérült —, rögzítheti pontosan, mi került ténylegesen le, ahelyett hogy kényszerítve lenne választani a teljes rendelés Kiszállítottként való megjelölése (ami félrevezetően ábrázolná a történteket) vagy a teljes elutasítás között (miközben a legtöbbjét *elfogadták*).
+
+A sofőr megadja, mi lett kiszállítva a tervezetthez képest; a Druma tárolja a hiányt — mennyiséget és súlyt, megállónként — mint a még ki nem szállított rész befagyasztott rekordját, és értesíti a tervezőt.
+
+<Note>
+**A Részlegesen kiszállítva szándékosan nem egy végleges "kész" státusz**, ahogy a Kiszállítva az — pontosan azért létezik, hogy az OTIF-jelentés, az automatikus számlázás, és az ügyfélportál ne kezelje kész állapotként a részleges kiszállítást. Valódi végállapot is lehet, ha a maradékot leírják, nem pedig újraszállítják — a Druma nem kényszerít ki semmilyen követő műveletet, csupán megtagadja annak színlelését, hogy a rakomány tisztán befejeződött.
+</Note>
+
+**Részlegesen kiszállítvából elérhető műveletek:**
+- A hiány (tervezett vs. kiszállított mennyiség/súly) és a sofőr indoklásának megtekintése a rendelés részletein
+- Számla generálása — **alapértelmezetten kikapcsolva**: egy részlegesen kiszállított rendelés nem kerül számlázásra, amíg be nem kapcsolod a **Számlázás részleges kiszállításkor** opciót a cégednél a Beállításokban, mivel az, hogy egy részleges kiszállítás azonnal számlázható-e, üzleti döntés. Bekapcsolva a rendelés a ténylegesen kiszállítottat számlázza.
+- Kiszállítási dokumentumok feltöltése vagy megtekintése, ugyanúgy mint egy teljes kiszállításnál
+
+---
+
 ## Törölve
 
 **Kiváltja:** a tervező lemondja a rendelést.
@@ -218,7 +255,7 @@ A tervezőnek meg kell adnia egy ok-kódot, a sofőr jelenlegi helyzetét, a meg
 Egy elveszett fuvar bejelentése **nem vonható vissza**. A rendelés véglegesen Elveszett fuvar státuszra vált, és az ok, a sofőr helyzete, az üres kilométerek, és (ha bekapcsolva) egy ügyfélterhelési összeg közvetlenül a rendelésen kerül rögzítésre későbbi számlázáshoz — nem generálódik automatikusan külön bérszámfejtési vagy terhelési rekord.
 </Warning>
 
-Lásd az [Elveszett fuvar](/en/planner/wasted-journey) oldalt a teljes útmutatóért.
+Lásd az [Elveszett fuvar](/hu/planner/wasted-journey) oldalt a teljes útmutatóért.
 
 ---
 
@@ -251,6 +288,7 @@ A sofőrök néha elfelejtenek koppintani a státuszfrissítésekre — előford
 | Státusz | Automatikus | Manuális (sofőr) | Manuális (tervező) |
 |---|---|---|---|
 | Vázlat | — | — | Igen |
+| Virtuális | — | — | Igen |
 | Függőben | — | — | Igen |
 | Hozzárendelve | — | — | Igen |
 | Elindult | — | Igen | Igen (felülbírálás) |
@@ -260,19 +298,20 @@ A sofőrök néha elfelejtenek koppintani a státuszfrissítésekre — előford
 | Szállításnál | — | Igen | Igen (felülbírálás) |
 | Lerakodás | — | Igen | Igen (felülbírálás) |
 | Kiszállítva | — | Igen | Igen (felülbírálás) |
+| Részlegesen kiszállítva | — | Igen | — |
 | Törölve | — | — | Igen |
 | Elveszett fuvar | — | — | Igen (aktív státuszokból) |
 
 ---
 
-<Card title="Kezdőlap irányítópult" icon="gauge" href="/en/planner/today-view">
+<Card title="Kezdőlap irányítópult" icon="gauge" href="/hu/planner/today-view">
   Figyeld az összes aktív rendelést, lásd az élő sofőr-pozíciókat, és kezeld a riasztásokat az élő operatív irányítópultodból.
 </Card>
 
-<Card title="Rendelési feladatok és munkafolyamat-sablonok" icon="list-check" href="/en/planner/order-tasks">
+<Card title="Rendelési feladatok és munkafolyamat-sablonok" icon="list-check" href="/hu/planner/order-tasks">
   Konfigurálható feladat-ellenőrzőlisták, ezekhez az életciklus-fázisokhoz kapcsolva, plusz hogyan építik fel az adminok a mögöttük álló sablonokat.
 </Card>
 
-<Card title="Számlák generálása" icon="file-invoice" href="/en/finances/generating-invoices">
+<Card title="Számlák generálása" icon="file-invoice" href="/hu/invoicing/generating-invoices">
   Miután egy rendelés Kiszállítva állapotba kerül, ismerd meg, hogyan hozd létre és küldd el a számlát az ügyfelednek.
 </Card>

@@ -108,6 +108,50 @@ Lassen Sie den Schwellenwert leer, um das Gebühren-Modal für diesen Palettenty
 
 ---
 
+## Paletten-Saldo-Abgleich
+
+Über die Saldo-Spalte pro Kunde hinaus hat Druma eine eigene Seite **Betrieb → Palettensalden**, die Positionen über **sowohl Kunden als auch Unterauftragnehmer** in einer Ansicht abgleicht — nützlich, wenn Sie einen einzigen Durchgang durch jede offene Palettenposition wollen, statt Gegenparteien einzeln zu prüfen.
+
+Anders als das Hauptbuch pro Auftrag zeigt diese Seite **eine Zeile pro Gegenpartei**, nicht eine pro (Gegenpartei, Palettentyp). Handeln Sie mehr als einen Palettenstandard mit demselben Kunden, fasst die Zeile sie in drei Summen zusammen — EUR, Industriell, und Sonstige — plus einen kombinierten Saldo und ein einziges Statusabzeichen, sodass Sie immer eine Zeile haben, die angibt, was diese Gegenpartei Ihnen insgesamt schuldet (oder Sie ihr).
+
+Das Statusabzeichen jeder Zeile verwendet dieselbe Schwellenwertlogik wie das Gebühren-Modal, mit einer zusätzlichen Stufe für Positionen, die weit darüber hinaus abgedriftet sind:
+
+| Status | Bedeutung |
+|---|---|
+| **OK** | Saldo liegt bei oder unter dem konfigurierten Schwellenwert (einschließlich exakt null — vollständig beglichen) |
+| **Unausgeglichen** | Saldo überschreitet den Schwellenwert |
+| **Schwerwiegend** | Saldo überschreitet den Schwellenwert um das **Doppelte** — sollte verfolgt werden, bevor es weiter wächst |
+
+<Steps>
+  <Step title="Einen Bereichs-Tab wählen">
+    Öffnen Sie **Betrieb → Palettensalden**. Fünf Bereichs-Tabs — **Alle · Kritisch · Unausgeglichen · OK · Beglichen** — stehen über der Tabelle, jeweils mit Live-Zähler, damit Sie direkt zu den Positionen springen können, die Aufmerksamkeit benötigen.
+  </Step>
+  <Step title="Suchen, filtern, oder eine Ansicht speichern">
+    Verwenden Sie das Suchfeld, um eine Gegenpartei nach Namen zu finden, und **Filter**, um nach Gegenparteityp (Kunde/Unterauftragnehmer) einzugrenzen. **Spalten** lässt Sie wählen, welche Felder angezeigt werden; **Ansichten** speichert Ihren aktuellen Bereich, Ihre Suche, und Spaltenauswahl als benannte Ansicht, die Sie (oder Ihr ganzes Unternehmen) später wieder öffnen können.
+  </Step>
+  <Step title="Das Ausgleichspanel öffnen">
+    Klicken Sie auf eine Zeile (oder deren **Augen**-Symbol), um rechts ein Ausgleichspanel einzublenden, das das vollständige Bewegungshauptbuch dieser Gegenpartei über alle Palettentypen zeigt, sortierbar nach Datum, Auftrag, oder Betrag.
+  </Step>
+  <Step title="Die Position ausgleichen">
+    Aus dem Panel können Sie eine **Korrektur buchen** (ein auftragsloser Hauptbucheintrag mit erforderlicher Notiz — nützlich für eine manuell vereinbarte Abschreibung oder eine Migrationsanpassung) oder eine **Gebühr berechnen** für die Überschreitung, mit demselben Gebührenablauf wie beim oben beschriebenen automatischen Hinweis.
+  </Step>
+  <Step title="Ein Statement erstellen">
+    Erstellen Sie aus dem Panel oder dem eigenen Menü der Zeile ein **PDF-Statement** — ein Dokument in Ihrem Corporate Design mit einem Unterschriftsfeld, bereit für eine Gegenpartei zum Bestätigen und Unterschreiben — oder exportieren Sie die Position als **CSV**. **Exportieren ▾** oben auf der Seite erzeugt ein kombiniertes CSV aller Gegenparteien auf einmal, für einen vollständigen Abgleichsdurchgang.
+  </Step>
+</Steps>
+
+<Note>
+Der Palettensaldo eines Kunden wird auch schreibgeschützt auf dessen Datensatz angezeigt: öffnen Sie den Kunden und prüfen Sie den Tab **Übersicht** auf eine Zeile „Palettensaldo" mit einem direkten Link in das Ausgleichspanel dieser Seite für diesen Kunden.
+</Note>
+
+Ein **nächtlicher automatisierter Abgleich** (02:05 UTC) prüft außerdem die Salden jedes Unternehmens gegen dieselben Schwellenwerte und benachrichtigt die Admins/Planer Ihres Unternehmens, wenn eine Position unausgeglichen ist — dedupliziert pro Palettentyp und Gegenpartei über ein 7-Tage-Fenster, sodass Sie nicht bei jedem Durchlauf erneut über eine Position benachrichtigt werden, die Sie bereits kennen.
+
+<Note>
+Das Hauptbuch erzwingt seine eigene Vorzeichenkonvention auf Datenbankebene: eine **Gesendet**-Bewegung addiert sich immer zum Saldo, und eine **Zurückgegeben**-Bewegung subtrahiert immer davon, unabhängig davon, wie die Zahl im Bewegung-hinzufügen-Formular eingegeben wird — **Anpassung**-, **Korrektur**-, und **Anfangssaldo**-Einträge behalten das eingegebene Vorzeichen bei, da diese legitim in beide Richtungen laufen können.
+</Note>
+
+---
+
 ## Anbietersynchronisierung (optional)
 
 Nutzen Sie CHEP Connect, kann Druma Ihr In-App-Hauptbuch mit dem offiziellen Saldo des Anbieters abgleichen. Gehen Sie zu **Einstellungen → Integrationen → Palettentausch**.
@@ -122,3 +166,9 @@ Jede Abweichung wird als Abgleichszeile angezeigt — Sie können sie als **Korr
 <Note>
 CHEP Connect ist derzeit die einzige Palettenanbieter-Integration. EUR-, LPR-, IPP-, Euro-Pool- und Sonstige-Palettentypen werden manuell im Hauptbuch verfolgt — für sie gibt es heute keine Anbietersynchronisierung. Das Kern-Hauptbuch funktioniert vollständig ohne konfigurierten Anbieter.
 </Note>
+
+---
+
+<Card title="Auftragsextras & Zuschläge" icon="circle-plus" href="/de/invoicing/generating-invoices">
+  Erfahren Sie, wie Palettengebühr-Positionen im Rechnungseditor neben anderen Auftragszuschlägen erscheinen.
+</Card>

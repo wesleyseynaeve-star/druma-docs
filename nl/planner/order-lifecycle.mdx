@@ -16,7 +16,7 @@ Dit is de volledige flow:
 
 **Concept → In afwachting → Toegewezen → Vertrokken → Aangekomen bij ophaling → Laden → Onderweg → Aangekomen bij levering → Lossen → Afgeleverd**
 
-Er zijn ook twee uitzonderingsstatussen — **Geannuleerd** en **Verspilde rit** — behandeld tegen het einde.
+Er zijn ook drie uitzonderingsstatussen — **Deels afgeleverd**, **Geannuleerd** en **Verspilde rit** — behandeld tegen het einde.
 
 <Note>
 Facturering is **geen** stap in deze levenscyclus. Genereert u een factuur voor een afgeleverde order, dan blijft de order zelf in status Afgeleverd — de factuur wordt aangemaakt als zijn eigen gekoppelde record, niet als een orderstatus.
@@ -32,6 +32,7 @@ Elke status krijgt één kleur (tint) toegewezen die identiek gedeeld wordt tuss
 |---|---|
 | Concept | Grijs (slate) |
 | In afwachting | Grijs (slate) |
+| Virtueel | Violet |
 | Toegewezen | Blauw |
 | Vertrokken | Indigo |
 | Aangekomen bij ophaling | Amber |
@@ -40,6 +41,7 @@ Elke status krijgt één kleur (tint) toegewezen die identiek gedeeld wordt tuss
 | Aangekomen bij levering | Hemelsblauw |
 | Lossen | Hemelsblauw |
 | Afgeleverd | Groen |
+| Deels afgeleverd | Amber |
 | Geannuleerd | Rood |
 | Verspilde rit | Rood |
 
@@ -64,6 +66,20 @@ De order bestaat in het systeem maar is nog niet actief. De chauffeur ziet hem n
 - De order annuleren
 
 Gebruik Concept wanneer een klant een voorlopige boeking heeft gedaan maar nog niet bevestigde, of terwijl u de order opbouwt maar nog op details wacht.
+
+---
+
+## Virtueel
+
+**Getriggerd door:** de planner klikt op **Virtueel** op het Planningsbord om een plaatsvervangende order te maken.
+
+**Wie kan het triggeren:** alleen de planner.
+
+Een virtuele order is een lichte plaatsvervanger — ophaal- en afleveradres, een ophaaldatum, en optioneel een prijs — die een truck reserveert voorafgaand aan een formele boeking. Hij staat los van de normale flow Concept → In afwachting → Toegewezen: zodra de echte boeking binnenkomt, voegt de planner hem in plaats daarvan samen tot een echte order via de modal Nieuwe order, die de truck-toewijzing automatisch overneemt. Virtuele orders verschijnen **violet** op het planningsbord, zodat ze in één oogopslag makkelijk te onderscheiden zijn van een echte, geboekte order.
+
+<Note>
+De Herladingsherverdeling-optimalisator behandelt Virtuele orders hetzelfde als Concept- of In afwachting-orders bij het aan elkaar koppelen van toekomstige herladingen — een geschetste plaatsvervanger kan dus nog steeds worden omgewisseld voor een goedkopere echte herlading als die opduikt.
+</Note>
 
 ---
 
@@ -192,6 +208,27 @@ Het transport is voltooid. De order wordt groen op het planningsbord en verhuist
 
 ---
 
+## Deels afgeleverd
+
+**Getriggerd door:** de chauffeur registreert een deellevering vanaf het Lossen-scherm — een deel, maar niet alles wat gepland was, kwam van de truck af.
+
+**Wie kan het triggeren:** de chauffeur (primaire actie) of de planner.
+
+Levering is niet altijd alles-of-niets. Als een chauffeur 6 van de 10 pallets lost — een klant kan de volledige lading niet aannemen, er is geen ruimte, een deel van de lading is beschadigd — kan hij precies registreren wat er daadwerkelijk af kwam, in plaats van gedwongen te worden te kiezen tussen de hele order als Afgeleverd markeren (wat verkeerd weergeeft wat er gebeurde) of het geheel weigeren (terwijl het grootste deel *wel* werd geaccepteerd).
+
+De chauffeur voert in wat er is afgeleverd tegenover wat er gepland was; Druma slaat het tekort — hoeveelheid en gewicht, per stop — op als een bevroren record van wat nog niet is afgeleverd, en meldt het aan de planner.
+
+<Note>
+**Deels afgeleverd is bewust geen finale "klaar"-status** zoals Afgeleverd dat is — hij bestaat er precies om, zodat OTIF-rapportage, automatische facturering, en het klantportaal een deellevering niet als voltooid behandelen. Het kan ook een echte eindtoestand zijn, als de rest wordt afgeschreven in plaats van opnieuw afgeleverd — Druma dwingt geen vervolgactie af, het weigert alleen te doen alsof de lading netjes is voltooid.
+</Note>
+
+**Beschikbare acties vanuit Deels afgeleverd:**
+- Het tekort (geplande vs. afgeleverde hoeveelheid/gewicht) en de reden van de chauffeur bekijken op het orderdetail
+- Een factuur genereren — **standaard uitgeschakeld**: een deels afgeleverde order wordt niet gefactureerd tot u **Factureren bij deellevering** inschakelt voor uw bedrijf in Instellingen, aangezien of een deellevering direct factureerbaar is een commerciële beslissing is. Met deze optie aan factureert de order voor wat daadwerkelijk werd afgeleverd.
+- Leveringsdocumenten uploaden of bekijken, net als bij een volledige levering
+
+---
+
 ## Geannuleerd
 
 **Getriggerd door:** de planner annuleert de order.
@@ -255,6 +292,7 @@ Chauffeurs vergeten soms statusupdates te tikken — het gebeurt. Als planner ku
 | Status | Automatisch | Handmatig (chauffeur) | Handmatig (planner) |
 |---|---|---|---|
 | Concept | — | — | Ja |
+| Virtueel | — | — | Ja |
 | In afwachting | — | — | Ja |
 | Toegewezen | — | — | Ja |
 | Vertrokken | — | Ja | Ja (overschrijving) |
@@ -264,6 +302,7 @@ Chauffeurs vergeten soms statusupdates te tikken — het gebeurt. Als planner ku
 | Aangekomen bij levering | — | Ja | Ja (overschrijving) |
 | Lossen | — | Ja | Ja (overschrijving) |
 | Afgeleverd | — | Ja | Ja (overschrijving) |
+| Deels afgeleverd | — | Ja | — |
 | Geannuleerd | — | — | Ja |
 | Verspilde rit | — | — | Ja (vanuit actieve statussen) |
 

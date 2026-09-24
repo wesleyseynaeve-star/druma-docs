@@ -9,14 +9,14 @@ icon: "circle-dot"
 Każde zlecenie w Druma podąża określoną ścieżką. Zrozumienie cyklu życia pomaga wiedzieć, czego się spodziewać na każdym etapie, kiedy interweniować i jak obsługiwać wyjątki, takie jak opóźnione dostawy czy zapomniane aktualizacje statusu.
 
 <Note>
-Jeśli Twoja firma używa szablonów zadań, zlecenie może też nieść **listę kontrolną zadań** powiązaną z tymi samymi fazami cyklu życia — zobacz [Zadania zlecenia i szablony przepływu pracy](/en/planner/order-tasks).
+Jeśli Twoja firma używa szablonów zadań, zlecenie może też nieść **listę kontrolną zadań** powiązaną z tymi samymi fazami cyklu życia — zobacz [Zadania zlecenia i szablony przepływu pracy](/pl/planner/order-tasks).
 </Note>
 
 Oto pełny przepływ:
 
 **Wersja robocza → Oczekujące → Przypisane → Wyjechał → Przy odbiorze → Załadunek → W transporcie → Przy dostawie → Rozładunek → Dostarczone**
 
-Są też dwa statusy wyjątkowe — **Anulowane** i **Zmarnowany kurs** — omówione bliżej końca.
+Są też trzy statusy wyjątkowe — **Częściowo dostarczone**, **Anulowane** i **Zmarnowany kurs** — omówione bliżej końca.
 
 ---
 
@@ -28,6 +28,7 @@ Każdy status ma jeden kolor (odcień), identyczny między tablicą planowania a
 |---|---|
 | Wersja robocza | Szary (łupkowy) |
 | Oczekujące | Szary (łupkowy) |
+| Wirtualne | Fioletowy |
 | Przypisane | Niebieski |
 | Wyjechał | Indygo |
 | Przy odbiorze | Bursztynowy |
@@ -36,6 +37,7 @@ Każdy status ma jeden kolor (odcień), identyczny między tablicą planowania a
 | Przy dostawie | Błękitny |
 | Rozładunek | Błękitny |
 | Dostarczone | Zielony |
+| Częściowo dostarczone | Bursztynowy |
 | Anulowane | Czerwony |
 | Zmarnowany kurs | Czerwony |
 
@@ -60,6 +62,20 @@ Zlecenie istnieje w systemie, ale nie jest jeszcze aktywne. Kierowca nie widzi g
 - Anulowanie zlecenia
 
 Użyj Wersji roboczej, gdy klient dokonał wstępnej rezerwacji, ale jeszcze nie potwierdził, albo gdy budujesz zlecenie, ale wciąż czekasz na szczegóły.
+
+---
+
+## Wirtualne
+
+**Uruchamiane przez:** planista klika **Wirtualne** na Tablicy planowania, aby utworzyć zlecenie zastępcze.
+
+**Kto może to uruchomić:** tylko planista.
+
+Zlecenie wirtualne to lekki zastępnik — adres odbioru i dostawy, data odbioru, i opcjonalnie cena — który rezerwuje ciężarówkę przed formalną rezerwacją. Jest odrębne od normalnego przepływu Wersja robocza → Oczekujące → Przypisane: zamiast tego, gdy nadejdzie prawdziwa rezerwacja, planista łączy je w prawdziwe zlecenie przez modal Nowe zlecenie, który automatycznie przenosi przypisanie ciężarówki. Zlecenia wirtualne pojawiają się na **fioletowo** na tablicy planowania, dzięki czemu są łatwe do odróżnienia od prawdziwego, zarezerwowanego zlecenia na pierwszy rzut oka.
+
+<Note>
+Optymalizator ponownego przypisania przeładunku traktuje zlecenia wirtualne tak samo jak zlecenia w Wersji roboczej lub Oczekujące przy łączeniu przyszłych przeładunków w łańcuchy — więc naszkicowany zastępnik nadal może zostać zamieniony na tańszy prawdziwy przeładunek, jeśli się pojawi.
+</Note>
 
 ---
 
@@ -188,6 +204,27 @@ Transport jest zakończony. Zlecenie zmienia się na zielone na tablicy planowan
 
 ---
 
+## Częściowo dostarczone
+
+**Uruchamiane przez:** kierowca rejestruje częściową dostawę z ekranu Rozładunek — część, ale nie wszystko z tego, co było zaplanowane, zeszło z ciężarówki.
+
+**Kto może to uruchomić:** kierowca (główna akcja) lub planista.
+
+Dostawa nie zawsze jest wszystko-albo-nic. Jeśli kierowca rozładuje 6 z 10 palet — klient nie może przyjąć całego ładunku, nie ma miejsca, część towaru jest uszkodzona — może zarejestrować dokładnie to, co faktycznie zeszło z ciężarówki, zamiast być zmuszonym wybierać między oznaczeniem całego zlecenia jako Dostarczone (co fałszywie przedstawiałoby to, co się stało) a odmową przyjęcia całości (podczas gdy większość *została* przyjęta).
+
+Kierowca wprowadza, co zostało dostarczone w porównaniu z tym, co było zaplanowane; Druma przechowuje brakującą ilość — ilość i wagę, per postój — jako zamrożony zapis tego, co pozostaje niedostarczone, i powiadamia planistę.
+
+<Note>
+**Częściowo dostarczone celowo nie jest finalnym statusem "gotowe"**, jak jest Dostarczone — istnieje właśnie po to, aby raportowanie OTIF, automatyczne fakturowanie, i portal klienta nie traktowały częściowej dostawy jako kompletnej. Może też być prawdziwym stanem końcowym, jeśli reszta zostanie odpisana zamiast redostarczona — Druma nie wymusza żadnej akcji następczej, po prostu odmawia udawania, że ładunek zakończył się czysto.
+</Note>
+
+**Dostępne akcje z Częściowo dostarczone:**
+- Przegląd braku (planowana vs. dostarczona ilość/waga) i powodu kierowcy na szczegółach zlecenia
+- Generowanie faktury — **domyślnie wyłączone**: częściowo dostarczone zlecenie nie jest fakturowane, dopóki nie włączysz **Faktura przy częściowej dostawie** dla swojej firmy w Ustawieniach, ponieważ to, czy częściowa dostawa jest od razu fakturowalna, jest decyzją komercyjną. Po włączeniu zlecenie fakturuje za to, co faktycznie zostało dostarczone.
+- Przesyłanie lub przeglądanie dokumentów dostawy, tak samo jak przy pełnej dostawie
+
+---
+
 ## Anulowane
 
 **Uruchamiane przez:** planista anuluje zlecenie.
@@ -251,6 +288,7 @@ Kierowcy czasem zapominają stuknąć aktualizacje statusu — zdarza się. Jako
 | Status | Automatyczny | Ręczny (kierowca) | Ręczny (planista) |
 |---|---|---|---|
 | Wersja robocza | — | — | Tak |
+| Wirtualne | — | — | Tak |
 | Oczekujące | — | — | Tak |
 | Przypisane | — | — | Tak |
 | Wyjechał | — | Tak | Tak (nadpisanie) |
@@ -260,6 +298,7 @@ Kierowcy czasem zapominają stuknąć aktualizacje statusu — zdarza się. Jako
 | Przy dostawie | — | Tak | Tak (nadpisanie) |
 | Rozładunek | — | Tak | Tak (nadpisanie) |
 | Dostarczone | — | Tak | Tak (nadpisanie) |
+| Częściowo dostarczone | — | Tak | — |
 | Anulowane | — | — | Tak |
 | Zmarnowany kurs | — | — | Tak (z aktywnych statusów) |
 
@@ -269,7 +308,7 @@ Kierowcy czasem zapominają stuknąć aktualizacje statusu — zdarza się. Jako
   Monitoruj wszystkie aktywne zlecenia, obserwuj pozycje kierowców na żywo i obsługuj alerty z żywego pulpitu operacyjnego.
 </Card>
 
-<Card title="Zadania zlecenia i szablony przepływu pracy" icon="list-check" href="/en/planner/order-tasks">
+<Card title="Zadania zlecenia i szablony przepływu pracy" icon="list-check" href="/pl/planner/order-tasks">
   Konfigurowalne listy kontrolne zadań powiązane z tymi fazami cyklu życia, plus jak administratorzy budują stojące za nimi szablony.
 </Card>
 
