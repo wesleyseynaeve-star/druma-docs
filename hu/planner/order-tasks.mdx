@@ -1,0 +1,94 @@
+---
+title: "Rendelési feladatok és munkafolyamat-sablonok"
+description: "Konfigurálható ellenőrzőlisták, amelyek nyomon követik a rendelésen szükséges lépéseket az életciklusa során — és hogyan építik fel az adminok."
+icon: "list-check"
+---
+
+## Áttekintés
+
+A feladatmotor egy **ellenőrzőlistát** csatol egy rendeléshez (vagy számlához), amely nyomon követi a céged által minden szakaszban megkövetelt lépéseket — visszaigazolás küldése, dokumentum generálása, ügyfél felkeresése — és megmutatja, ki a felelős, és van-e lejárt tétel. Az adminok egyszer építik fel az ellenőrzőlistát mint újrafelhasználható **feladatsablont**; onnantól automatikusan megjelenik minden megfelelő rendelésen.
+
+Ez az oldal mindkét oldalt lefedi: mit lát a tervező vagy diszpécser napi szinten, és hogyan konfigurálja egy admin a mögöttes sablonokat.
+
+---
+
+## Mit látsz egy rendelésen
+
+Nyiss meg egy rendelést (vagy számlát), amelyhez van megfelelő feladatsablon, és találsz egy **feladat-ellenőrzőlista** panelt, amely megmutatja az aktuális szakaszhoz szükséges minden lépést.
+
+Minden sor mutatja:
+
+- Egy státuszikont — függőben (üres kör), folyamatban (óra), kész (pipa), kihagyva, vagy sikertelen
+- A felelős szerepkört, ha be van állítva
+- **Egy korábbi lépésre vár**, ha a feladat egy másik, még be nem fejezett lépéstől függ
+- Egy **Esedékes** vagy **Lejárt** jelvényt, amikor a lépésnek van határideje
+
+Nyitott lépéseknél a következőket teheted:
+- Kattints a pipa ikonra, hogy **kész-ként jelöld**
+- Kattints a kihagyás ikonra, hogy **kihagyd** (opcionálisan indoklással)
+
+Mindkét művelet le van tiltva, amíg a lépés egy függőség miatt blokkolva van. Ha egy lépés úgy van beállítva, hogy automatikusan befejeződjön vagy kihagyódjon, amint a rendelés elér egy bizonyos státuszt, egyszerűen látni fogod, hogy magától Kész-re vagy Kihagyva-ra vált — nincs szükség kattintásra.
+
+A rendelés- és számlalista sorai is hordoznak egy kis összefoglaló chipet: borostyánsárga számjelvényt, amíg még vannak függőben lévő feladatok, vagy zöld **mind kész** pipát, amint minden feladat kész azon a rekordon. Ha egyetlen sablon sem illik a rendelés aktuális szakaszához, a panel egyszerűen ezt írja: *"Ehhez a szakaszhoz nincs konfigurálva feladat-ellenőrzőlista."*
+
+<Note>
+A feladatok az **életciklus-fázishoz** vannak kötve — ugyanazok a státuszok, amelyeket a [Rendelési életciklus](/hu/planner/order-lifecycle) tárgyal. Egy ellenőrzőlista automatikusan megjelenik (vagy frissül), amikor a rendelés vagy számla eléri azt a fázist, amelyet egy sablon céloz.
+</Note>
+
+---
+
+## Hogyan konfigurálják az adminok a feladatsablonokat
+
+Lépj a **Beállítások → Sablonok és zónák → Feladatsablonok** menüpontra. A sablonok minden cég számára üresen érkeznek — semmi sincs előre konfigurálva, így az ellenőrzőlistád felépítése teljesen opcionális.
+
+<Steps>
+  <Step title="Hozz létre egy sablont">
+    Kattints a **Sablon hozzáadása** gombra. Válaszd ki az **objektumtípust** (Rendelés vagy Számla), az **életciklus-fázist**, amelyen ki kell váltania (pl. Visszaigazolva, Kiszállítva), és egy címkét. Hagyd engedélyezve, hogy azonnal élő legyen, vagy mentsd letiltva, amíg felépíted.
+  </Step>
+  <Step title="Opcionálisan szűkítsd feltételekkel">
+    Használd az **Akkor érvényes, ha** funkciót, hogy a sablont csak a megfelelő rendelésekre korlátozd — például csak ADR rakományokra, csak egy adott ügyfélre, vagy csak kabotázs mozgásokra. Hagyd üresen, és a sablon minden olyan rendelésre vonatkozik, amely eléri a célfázist.
+  </Step>
+  <Step title="Adj hozzá lépéseket">
+    Minden lépéshez állíts be egy lépéskulcsot és címkét, majd egy **lépéstípust**:
+    - **Manuális** — egy személynek kell kész-ként jelölnie vagy kihagynia
+    - **Dokumentum generálása**, **E-mail küldése**, vagy **Automatizálás futtatása** — válassz egy konkrét műveletet a válogatott listából (pl. Számla generálása, Rendelés-visszaigazolás küldése, CMR generálása)
+  </Step>
+  <Step title="Állítsd be a befejezési módot">
+    Válaszd a **Manuális** (valaki befejezi az ellenőrzőlistáról) vagy az **Automatikus** módot — egy automatikus lépés magától befejeződik vagy kihagyódik, amint a rendelés/számla eléri az általad konfigurált státuszt, anélkül hogy bárkinek is kattintania kellene.
+  </Step>
+  <Step title="Adj hozzá felelősséget és sorrendet">
+    Opcionálisan állíts be egy **felelős szerepkört**, tedd a lépést **függővé** egy korábbi lépéstől (blokkolva marad, amíg az nincs kész), és állítsd be a pozícióját az ellenőrzőlistán.
+  </Step>
+  <Step title="Mentsd">
+    A sablon mostantól megjelenít egy ellenőrzőlistát minden olyan rendelésen (vagy számlán), amely megfelel az objektumtípusának, fázisának, és feltételeinek.
+  </Step>
+</Steps>
+
+---
+
+## Ügyfelenkénti felülbírálások
+
+Néhány ügyfélnek eltérő ellenőrzőlistára van szüksége, mint a többi ügyfeledének — egy extra dokumentumlépésre, vagy egyre, amire kifejezetten nincs szükségük. Ahelyett hogy egy teljesen külön sablont építenél, bírd felül ügyfelenként.
+
+Nyisd meg az ügyfél részletoldalát, és lépj a **Feladat-felülbírálások** fülre. Ott kikapcsolhatod:
+- Egy teljes sablont, csak arra az ügyfélre, vagy
+- Egyedi lépéseket egy sablonon belül
+
+A cégen belüli sablon minden más ügyfélnél érintetlen marad — a felülbírálás csak azt az egy ügyfélrekordot érinti, amelyet szerkesztesz.
+
+---
+
+## A színfalak mögött
+
+Egy ütemezett feladat néhány percenként ellenőrzi a futtatásra kész feladatokat — teljesült függőségek, esedékes, és automatikus futtatásra konfigurált — és elindítja őket anélkül, hogy bárkinek meg kellene nyitnia az ellenőrzőlistát. Ez tisztán megbízhatósági részlet; napi szinten csak magán a rendelésen lévő ellenőrzőlista panellel lépsz kapcsolatba.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Rendelési életciklus" icon="circle-dot" href="/hu/planner/order-lifecycle">
+    Tekintsd meg minden rendelésstátuszt, és mi váltja ki a köztük lévő átmenetet.
+  </Card>
+  <Card title="Értékesítés és értékesítési csővezeték" icon="user-group" href="/hu/planner/crm">
+    Ügyfélrekordok, ahol az ügyfelenkénti feladat-felülbírálások élnek, az érintkezési pontok és az életciklus-szakasz mellett.
+  </Card>
+</CardGroup>

@@ -1,0 +1,114 @@
+---
+title: "Ihre KI verbinden (MCP)"
+description: "Verbinden Sie Claude Code, GitHub Copilot, Codex CLI, Gemini CLI, oder Cursor mit Ihren Druma-Daten über das Model Context Protocol (MCP)."
+icon: "bot"
+---
+
+Druma betreibt einen entfernten **MCP (Model Context Protocol)**-Server, sodass Sie Ihren eigenen KI-Client — Claude Code, Claude Desktop, GitHub Copilot (Agentenmodus), OpenAI Codex CLI, Gemini CLI, oder Cursor — direkt mit Ihren Druma-Daten verbinden können. Fragen Sie in natürlicher Sprache nach Ihren Aufträgen, Ihrer Flotte, Fahrern und Rechnungen, und — mit einem opt-in Bereich — lassen Sie ihn LKW-Zuweisungen **vorschlagen**, die Sie genehmigen.
+
+<Warning>
+Der MCP-Connector ist eine Feature-Flag-gesteuerte Funktion und standardmäßig deaktiviert. Kontaktieren Sie **support@druma.io**, um sie für Ihr Konto zu aktivieren.
+</Warning>
+
+## Wie es sicher bleibt
+
+- **Alles, was die KI sehen kann, respektiert Ihre Rolle und Ihr Unternehmen** — sie hat immer nur den Zugriff, den Sie bereits in Druma haben. Es gibt keine Möglichkeit für sie, Daten eines anderen Unternehmens zu lesen.
+- **Sie kann nichts von sich aus ändern.** Die einzige Aktion, die sie ausführen kann, ist das *Vorschlagen* einer LKW-Zuweisung; nichts wird angewendet, bis Sie es ausdrücklich bestätigen. Es gibt keine Lösch-, Massen-, oder Freitext-Datenbankaktionen.
+- **Ihr Token ist geheim.** Druma speichert nur einen Einweg-Hash davon — das vollständige Token wird einmalig bei der Erstellung angezeigt und nie wieder.
+- Jede Anfrage ist ratenbegrenzt und wird für Ihre Administratoren protokolliert.
+
+## 1. Ein persönliches Zugriffstoken erstellen
+
+1. Gehen Sie zu **Einstellungen → Integrationen → Verbundene KI (MCP)**.
+2. Geben Sie unter **Token erstellen** ihm einen Namen (z. B. „Claude Code — Laptop").
+3. Wählen Sie die **Bereiche**:
+   - `read` (immer aktiv) — Aufträge, Flotte, Fahrer, Rechnungen und KPIs lesen.
+   - `write:planning` (optional) — der KI zusätzlich erlauben, LKW-Zuweisungen zu *vorzuschlagen*. Selbst mit dieser Einstellung wird nichts ohne Ihre ausdrückliche Bestätigung angewendet.
+4. Wählen Sie ein Ablaufdatum (30 / 90 / 365 Tage) und klicken Sie auf **Token erstellen**.
+5. **Kopieren Sie das Token jetzt** — es wird nur einmal angezeigt. Es sieht aus wie `druma_pat_…`.
+
+Sie können jedes Token jederzeit vom selben Bildschirm aus widerrufen; Unternehmensadministratoren können jedes Token im Unternehmen widerrufen.
+
+## 2. Ihre Server-URL
+
+```
+https://<ihr-projekt>.supabase.co/functions/v1/mcp-server
+```
+
+Die genaue URL für Ihr Konto wird auf der Seite **Einstellungen → Integrationen → Verbundene KI (MCP)** mit einer Kopieren-Schaltfläche angezeigt.
+
+## 3. Verbinden Sie Ihren Client
+
+Ersetzen Sie `<url>` durch Ihre Server-URL und `<token>` durch Ihr persönliches Zugriffstoken.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Erstellen Sie `.vscode/mcp.json`. Die Verwendung eines `input` hält das Token aus der committeten Datei heraus:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma-Token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Hinzufügen zu `~/.codex/config.toml`:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Hinzufügen zu `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Hinzufügen zu `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. Was Sie fragen können
+
+- „Welche Aufträge sind für morgen noch nicht zugewiesen?"
+- „Zeig mir verspätete Aufträge diese Woche und welche LKW frei sind."
+- „Wie hoch ist meine überfällige Forderungssumme pro Kunde?"
+- Mit `write:planning`: „Schlage LKW RO-123-ABC für Auftrag 4021 vor." — die KI erstellt einen Vorschlag und zeigt Ihnen eine Zusammenfassung; Sie sagen ihr dann, ihn zu bestätigen, und erst dann wird die Zuweisung angewendet.
+
+## Web-Chat-Connectoren (ChatGPT, claude.ai)
+
+Die **Web**-Chat-Apps unter chatgpt.com oder claude.ai zu verbinden (statt eines Desktop-/CLI-Clients) erfordert OAuth und kommt **später**. Verwenden Sie vorerst einen der oben genannten Clients.
+
+## Token-Rotation
+
+Bevorzugen Sie kurzlebige Tokens. Zum Rotieren: Erstellen Sie ein neues Token, aktualisieren Sie die Konfiguration Ihres Clients, und widerrufen Sie dann das alte. Widerrufen Sie jedes Token, dessen „Zuletzt verwendet" leer ist — das bedeutet, dass sich noch nie etwas damit verbunden hat.
+
+## Siehe auch
+
+Wenn Sie lieber mit einer KI **innerhalb** von Druma chatten möchten (unter Verwendung Ihres eigenen OpenAI-, Anthropic-, oder Gemini-Schlüssels), statt einen externen Client zu verbinden, siehe [Druma Copilot](/de/integrations/copilot).

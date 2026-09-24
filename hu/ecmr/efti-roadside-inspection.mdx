@@ -1,0 +1,104 @@
+---
+title: "eFTI útmenti ellenőrzés (hatósági ellenőrzés)"
+description: "Hogyan támogatja a Druma az EU 2020/1056 rendelet szerinti eFTI hatósági ellenőrzéseket — a QR-kártyát, amelyet a sofőrök útmenti ellenőrzéseknél bemutatnak, és amit a tisztviselők látnak."
+icon: "shield-check"
+---
+
+Az elektronikus fuvarozási információkról szóló (EU) 2020/1056 rendelet (**eFTI**) megköveteli, hogy **2027. július 9-től** az EU tagállamainak hatóságai elfogadják az elektronikus fuvarozási információkat ahelyett, hogy papíralapú dokumentumokat követelnének útmenti ellenőrzéseknél. A Druma úgy készült, hogy megfeleljen ennek a követelménynek.
+
+---
+
+## Mi az eFTI?
+
+Az eFTI rendelet jogi keretet hoz létre a következőkhöz:
+
+- A fuvarozók digitálisan tárolják a fuvarozási információkat egy tanúsított eFTI platformon
+- A hatóságok (rendőrség, vám, ellenőrök) elektronikusan hozzáférjenek ezekhez az információkhoz útmenti ellenőrzéseknél, ahelyett hogy a sofőrtől fizikai papírdokumentumok bemutatását követelnék
+- Egy szabványosított közös adatkészlet létezzen a közúti fuvarozási információkhoz, a CMR fuvarlevél mezőiből leképezve
+
+A Druma implementálja az eFTI közös adatkészlet **közúti fuvarozási/CMR alkészletét**, amely minden kötelező szállítmánymezőt, félrészleteket, és eCMR-státuszt lefed.
+
+<Frame caption="Az útmenti ellenőrzési kártya, amelyet egy tisztviselő lát a sofőr QR-kódjának beolvasása után — szállítmány, felek és eCMR-státusz, csak olvasható.">
+  <img src="/images/ecmr/efti-roadside-inspection.png" alt="eFTI útmenti ellenőrzési nézet, amely a szállítmány részleteit, feleit és eCMR-státuszát mutatja egy hatósági ellenőrzéshez" />
+</Frame>
+
+### A közös adatkészlet (CDS)
+
+A Druma megfelelőségi rétege tartalmaz egy **CDS (közös adatkészlet) szerializálót**, amely előállítja a Bizottság (EU) 2024/2024 felhatalmazáson alapuló rendelete által meghatározott **EU03 közúti/CMR adat-alkészletet** — a szállítmány (felek, helyszínek, áruk, aláírások) strukturált, géppel olvasható reprezentációját, amelyet egy eFTI platformnak elő kell állítania. Ez az alább leírt emberi olvasásra szánt ellenőri nézettel párhuzamosan fut, így ugyanaz a szállítmány bemutatható strukturált adatként vagy képernyőn megjelenő nézetként is, attól függően, hogy a hatóság mit kér.
+
+---
+
+## Amit a sofőrök látnak
+
+Minden rendelésnek egyedi **eFTI azonosítója** van. A sofőralkalmazásban, a rendelés-részlet képernyőn, van egy "Hatósági ellenőrzés (eFTI)" kártya. Ez mutatja:
+
+- Egy **QR-kódot**, amelyet a sofőr bemutathat egy útmenti ellenőrzésnél
+- Egy másolható eFTI linket (UIL — a Druma belső rövidítése az **Unique Identifying Link** kifejezésre; az (EU) 2020/1056 rendelet 9(1)(e) cikke ezt "egyedi elektronikus azonosító linknek" nevezi)
+- Egy linket az eCMR nézet megnyitásához a sofőr saját eszközén
+
+A sofőrnek nem kell semmit tennie ennek aktiválásához — a kártya mindig jelen van a hozzárendelt rendeléseken.
+
+<Note>
+A sofőrnek soha nem kell menükben navigálnia vagy keresnie az eFTI kártyát. Feltűnően jelenik meg az aktív rendelés képernyőjén, így azonnal elérhető, amikor egy ellenőr közeledik a járműhöz.
+</Note>
+
+---
+
+## Amit a tisztviselő lát
+
+A tisztviselő beolvassa a QR-kódot (vagy manuálisan beírja az UIL-t), és egy **csak olvasható, ember számára olvasható nézetet** lát a szállítmányról:
+
+- Áruleírás
+- Felek: feladó, fuvarozó, címzett (nevek és címek)
+- Felvételi és kiszállítási címek
+- Teherautó és pótkocsi rendszáma
+- Az aláírt eCMR státusza
+
+**Nem jelennek meg árak, díjak, vagy pénzügyi adatok.** A tisztviselői nézet szándékosan az operatív és megfelelőségi információkra korlátozódik — a kereskedelmi feltételek magánjellegűek maradnak.
+
+A nézet automatikusan felismeri a tisztviselő böngészőjének nyelvét betöltéskor, így már annak az országnak a nyelvén nyílik meg, ahol ellenőriz, anélkül hogy bárkinek kérdeznie kellene. A fejlécben egy manuális nyelvválasztó található ugyanahhoz a 10 nyelvhez, amelyet a Druma többi része támogat (angol, francia, német, román, holland, bolgár, cseh, magyar, lengyel, szlovák), arra az esetre, ha a böngésző nyelve nem egyezne a tisztviselőével.
+
+Minden tisztviselői hozzáférés rögzítésre kerül egy **hamisítás ellen védett műveleti naplóban**. Ez a napló a rendelet 9. cikke szerint megkövetelt eFTI audit-nyomvonal része.
+
+<Note>
+Ha a tisztviselőnek ehelyett magát a lepecsételt eCMR PDF-et adják át (kinyomtatva, vagy a **eCMR megtekintése** funkción keresztül megnyitva), a mezőcímkék rajta **háromnyelvűek** — angol, plusz a feladó és a címzett saját nyelve — így a dokumentum a tisztviselői nézet nélkül is olvasható, akár egy határon átnyúlva is, ugyanúgy, ahogy egy papír CMR hagyományosan több nyelven nyomtatja mezőcímkéit.
+</Note>
+
+---
+
+## Tanúsítási állapot
+
+<Warning>
+A Druma jelentős **belső technikai felkészültséget** épített ki az eFTI-hez — egy CDS szerializálót, egy hamisítás ellen védett műveleti naplót, az UIL-t, és ezt az útmenti ellenőri nézetet. A Druma azonban **nem** tanúsított eFTI platform az (EU) 2020/1056 rendelet **10. cikke** szerint: a tanúsítás egy akkreditált megfelelőségértékelő szervezet (CAB) általi értékelést igényel, és 2026 közepéig egyetlen CAB sem tett közzé eFTI hatókört értékelésre — ez iparági szintű hiányosság, nem a Drumára jellemző. Addig az ellenőri nézet ma udvariasságként és önkéntes közzétételként használható azoknak a cégeknek, amelyek a 2027-es határidő előtt papírmentessé akarnak válni.
+
+A tanúsított gép-gép hatósági interfész (az EU tagállami eFTI Gate-eken keresztül) külön függőben van az élő nemzeti Gate-ek elérhetőségétől, amelyek 2026 közepén még nem voltak működőképesek. Amikor a CAB-ok közzéteszik az eFTI hatókört, és a nemzeti Gate-ek online lesznek, a Druma folytatja a tanúsítást, és frissíti ezt az oldalt.
+</Warning>
+
+---
+
+## Idővonal
+
+| Dátum | Esemény |
+|---|---|
+| 2020 | Az (EU) 2020/1056 rendelet elfogadva |
+| 2025. július 9. | Az eFTI platformok megkezdhetik az önkéntes működést |
+| 2027. július 9. | **A hatóságoknak el kell fogadniuk az eFTI-t** — papír már nem szükséges, ahol eFTI-t mutatnak be |
+| Meghatározandó | Nemzeti eFTI Gate-ek működőképesek (országonként) |
+
+A Druma kiépítette a Core technikai felkészültséget az EU 2027-es eFTI mandátumához — maga a tanúsítási és formális akkreditációs folyamat még iparágilag függőben van (egyetlen tanúsító szervezet sem tett még közzé eFTI hatókört), így a teljes megfelelőségi állapot megerősítésre kerül, ahogy ez a folyamat kibontakozik.
+
+---
+
+## Kapcsolódó cikkek
+
+<CardGroup cols={2}>
+  <Card title="Mi az az eCMR?" icon="file-contract" href="/hu/ecmr/what-is-ecmr">
+    Az elektronikus CMR fuvarlevél, amely az eFTI adatkészlet alapját képezi.
+  </Card>
+  <Card title="Az aláírási folyamat" icon="pen-to-square" href="/hu/ecmr/signing-flow">
+    Hogyan működik a háromfeles eCMR aláírási folyamat a Drumában.
+  </Card>
+  <Card title="eCMR jogi érvényesség" icon="scale-balanced" href="/hu/ecmr/ecmr-legal-validity">
+    Az eCMR és a PAdES digitális pecsét mögötti jogi keret.
+  </Card>
+</CardGroup>

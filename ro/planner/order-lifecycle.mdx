@@ -16,7 +16,7 @@ Iată fluxul complet:
 
 **Ciornă → În așteptare → Atribuit → Plecat → La ridicare → Încărcare → În Tranzit → La livrare → Descărcare → Livrat**
 
-Mai există și două statusuri de excepție — **Anulat** și **Călătorie risipită** — acoperite spre finalul paginii.
+Mai există și trei statusuri de excepție — **Livrare parțială**, **Anulat**, și **Călătorie risipită** — acoperite spre finalul paginii.
 
 ---
 
@@ -37,6 +37,7 @@ Fiecare status se traduce într-o singură culoare (nuanță), identică pe pano
 | La livrare | Albastru cer |
 | Descărcare | Albastru cer |
 | Livrat | Verde |
+| Livrare parțială | Portocaliu |
 | Anulat | Roșu |
 | Călătorie risipită | Roșu |
 
@@ -203,6 +204,27 @@ Transportul este complet. Comanda devine verde pe panoul de planificare și trec
 
 ---
 
+## Livrare parțială
+
+**Declanșat de:** Șoferul înregistrează o livrare parțială din ecranul Descărcare — o parte, dar nu tot ce era planificat, a coborât de pe camion.
+
+**Cine poate declanșa:** Șoferul (acțiunea principală) sau Planificatorul.
+
+Livrarea nu este întotdeauna totul-sau-nimic. Dacă un șofer descarcă 6 din 10 paleți — un client nu poate prelua încărcătura completă, nu este loc, o parte din marfă este deteriorată — el poate înregistra exact ce a coborât efectiv, în loc să fie forțat să aleagă între a marca întreaga comandă Livrat (denaturând ce s-a întâmplat) sau a refuza totul (când majoritatea *a fost* acceptată).
+
+Șoferul introduce ce a fost livrat față de ce era planificat; Druma stochează deficitul — cantitate și greutate, per oprire — ca o înregistrare înghețată a ce rămâne nelivrat, și notifică planificatorul.
+
+<Note>
+**Livrare parțială nu este în mod deliberat un status final "gata"** așa cum este Livrat — există tocmai pentru ca raportarea OTIF, facturarea automată, și portalul de client să nu trateze o livrare parțială ca fiind completă. Poate fi și o stare finală reală, dacă restul este trecut pe pierderi în loc de re-livrat — Druma nu forțează nicio acțiune de urmărire, pur și simplu refuză să pretindă că încărcătura s-a terminat curat.
+</Note>
+
+**Acțiuni disponibile din Livrare parțială:**
+- Vizualizează deficitul (cantitate/greutate planificată vs. livrată) și motivul șoferului pe detaliul comenzii
+- Generează o factură — **dezactivat implicit**: o comandă livrată parțial nu este facturată până când nu activezi **Facturează la livrare parțială** pentru compania ta din Setări, deoarece dacă o livrare parțială este imediat facturabilă este o decizie comercială. Cu opțiunea activată, comanda facturează ce a fost livrat efectiv.
+- Încarcă sau vizualizează documentele de livrare, la fel ca la o livrare completă
+
+---
+
 ## Anulat
 
 **Declanșat de:** Planificatorul anulează comanda.
@@ -276,6 +298,7 @@ Vezi [Călătorie risipită](/ro/planner/wasted-journey) pentru ghidul complet.
 | La livrare | — | Da | Da (suprascriere) |
 | Descărcare | — | Da | Da (suprascriere) |
 | Livrat | — | Da | Da (suprascriere) |
+| Livrare parțială | — | Da | — |
 | Anulat | — | — | Da |
 | Călătorie risipită | — | — | Da (din statusuri active) |
 

@@ -108,6 +108,50 @@ Laat de drempel leeg om de kostmodal voor dat pallettype uit te schakelen — be
 
 ---
 
+## Pallet-saldo-afstemming
+
+Naast de saldokolom per klant heeft Druma een eigen pagina **Operaties → Palletsaldi** die posities afstemt over **zowel klanten als onderaannemers** in één weergave — nuttig wanneer u één doorloop wilt van elke openstaande pallet-positie in plaats van tegenpartijen één voor één te controleren.
+
+In tegenstelling tot het grootboek per order toont deze pagina **één rij per tegenpartij**, niet één per (tegenpartij, pallettype). Als u meer dan één pallet-standaard verhandelt met dezelfde klant, vouwt de rij deze samen tot drie totalen — EUR, Industrieel, en Overig — plus een gecombineerd net en één statusbadge, zodat u altijd één regel heeft die zegt wat die tegenpartij u schuldig is (of u hen) in het geheel.
+
+De statusbadge van elke rij gebruikt dezelfde drempellogica als de kostmodal, met een extra niveau voor posities die er ver bovenuit zijn gedreven:
+
+| Status | Betekenis |
+|---|---|
+| **OK** | Saldo is op of onder de geconfigureerde drempel (inclusief exact nul — volledig vereffend) |
+| **Onbalans** | Saldo overschrijdt de drempel |
+| **Ernstig** | Saldo overschrijdt **tweemaal** de drempel — het loont om op te volgen voordat het verder groeit |
+
+<Steps>
+  <Step title="Kies een scopetabblad">
+    Open **Operaties → Palletsaldi**. Vijf scopetabbladen — **Alle · Kritiek · Onbalans · OK · Vereffend** — staan boven de tabel, elk met een live telling, zodat u direct naar de posities kunt springen die aandacht nodig hebben.
+  </Step>
+  <Step title="Zoek, filter, of sla een weergave op">
+    Gebruik het zoekvak om een tegenpartij op naam te vinden, en **Filter** om te beperken op tegenpartijtype (klant/onderaannemer). **Kolommen** laat u kiezen welke velden getoond worden; **Weergaven** slaat uw huidige scope, zoekopdracht, en kolomkeuzes op als een benoemde weergave die u (of uw hele bedrijf) later kunt heropenen.
+  </Step>
+  <Step title="Open het afwikkelingspaneel">
+    Klik op een rij (of het **oog**-icoon ervan) om rechts een afwikkelingspaneel te laten inschuiven, dat het volledige bewegingsgrootboek van die tegenpartij toont over elk pallettype, sorteerbaar op datum, order, of bedrag.
+  </Step>
+  <Step title="Wikkel de positie af">
+    Vanuit het paneel kunt u een **correctie boeken** (een orderloze grootboekinvoer met verplichte notitie — nuttig voor een handmatig overeengekomen afschrijving of een migratieaanpassing) of een **kost in rekening brengen** voor het overschot, met dezelfde kostflow als de automatische prompt hierboven beschreven.
+  </Step>
+  <Step title="Genereer een overzicht">
+    Genereer vanuit het paneel of het eigen menu van de rij een **PDF-overzicht** — een document in uw huisstijl met een handtekeningblok, klaar voor een tegenpartij om te bevestigen en te ondertekenen — of exporteer de positie als **CSV**. **Exporteren ▾** boven aan de pagina produceert een gecombineerde CSV van alle tegenpartijen tegelijk, voor een volledige afstemmingsronde.
+  </Step>
+</Steps>
+
+<Note>
+Het palletsaldo van een klant wordt ook alleen-lezen getoond op diens record: open de klant en bekijk het tabblad **Overzicht** voor een regel "Palletsaldo" met een link rechtstreeks naar het afwikkelingspaneel van deze pagina voor die klant.
+</Note>
+
+Een **nachtelijke geautomatiseerde afstemming** (02:05 UTC) controleert ook de saldi van elk bedrijf tegen dezelfde drempels en meldt aan de admins/planners van uw bedrijf wanneer een positie uit balans is — gededupliceerd per pallettype en tegenpartij over een venster van 7 dagen, zodat u niet bij elke run opnieuw gemeld wordt over een positie die u al kent.
+
+<Note>
+Het grootboek dwingt zijn eigen tekenconventie af op databaseniveau: een **Verzonden**-beweging telt altijd op bij het saldo en een **Geretourneerd**-beweging trekt er altijd van af, ongeacht hoe het getal wordt ingetypt op het formulier voor het toevoegen van een beweging — **Aanpassing**-, **Correctie**-, en **Openingssaldo**-invoeren behouden het teken dat u invoert, aangezien die legitiem beide kanten op kunnen gaan.
+</Note>
+
+---
+
 ## Providersync (optioneel)
 
 Gebruikt u CHEP Connect, dan kan Druma uw in-app-grootboek afstemmen tegen het officiële saldo van de provider. Ga naar **Instellingen → Integraties → Palletuitwisseling**.
@@ -125,10 +169,6 @@ CHEP Connect is momenteel de enige pallet-provider-integratie. EUR, LPR, IPP, Eu
 
 ---
 
-<Card title="Order-extra's & toeslagen" icon="circle-plus" href="/nl/planner/creating-orders">
+<Card title="Order-extra's & toeslagen" icon="circle-plus" href="/nl/invoicing/generating-invoices">
   Leer hoe palletkostregels verschijnen in de factuureditor naast andere ordertoeslagen.
-</Card>
-
-<Card title="Klanten" icon="building-2" href="/nl/planner/crm">
-  Beheer klantprofielen, standaardinstructies en bekijk de palletsaldogeschiedenis per klant.
 </Card>

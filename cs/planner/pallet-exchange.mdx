@@ -108,6 +108,50 @@ Ponechte práh prázdný pro vypnutí modálního okna poplatku pro daný typ pa
 
 ---
 
+## Odsouhlasení zůstatků palet
+
+Kromě sloupce zůstatku za jednotlivého klienta má Druma vyhrazenou stránku **Provoz → Zůstatky palet**, která odsouhlasuje pozice napříč **jak klienty, tak subdodavateli** v jednom zobrazení — užitečné, když chcete jeden průchod všemi otevřenými pozicemi palet, místo kontroly protistran jedna po druhé.
+
+Na rozdíl od evidence za objednávku tato stránka zobrazuje **jeden řádek na protistranu**, ne jeden na (protistrana, typ palety). Pokud obchodujete s více než jedním standardem palet u stejného klienta, řádek je sloučí do tří součtů — EUR, Průmyslové, a Ostatní — plus kombinované netto a jeden odznak stavu, takže vždy máte jeden řádek udávající, co vám tato protistrana dluží (nebo vy jí) celkově.
+
+Odznak stavu každého řádku používá stejnou logiku prahu jako modální okno poplatku, s dodatečnou úrovní pro pozice, které se od něj vzdálily daleko:
+
+| Stav | Význam |
+|---|---|
+| **OK** | Zůstatek je na nebo pod nakonfigurovaným prahem (včetně přesné nuly — plně vyrovnáno) |
+| **Nerovnováha** | Zůstatek přesahuje práh |
+| **Závažné** | Zůstatek přesahuje **dvojnásobek** prahu — stojí za to to řešit, než to naroste dál |
+
+<Steps>
+  <Step title="Vyberte záložku rozsahu">
+    Otevřete **Provoz → Zůstatky palet**. Pět záložek rozsahu — **Vše · Kritické · Nerovnováha · OK · Vyrovnáno** — se nachází nad tabulkou, každá s počtem v reálném čase, takže můžete přejít přímo na pozice vyžadující pozornost.
+  </Step>
+  <Step title="Vyhledejte, filtrujte, nebo uložte pohled">
+    Použijte vyhledávací pole pro nalezení protistrany podle jména, a **Filtrovat** pro zúžení podle typu protistrany (klient/subdodavatel). **Sloupce** vám umožní vybrat, která pole se zobrazují; **Pohledy** uloží váš aktuální rozsah, vyhledávání, a výběr sloupců jako pojmenovaný pohled, který vy (nebo celá vaše společnost) můžete později znovu otevřít.
+  </Step>
+  <Step title="Otevřete panel vyrovnání">
+    Klikněte na řádek (nebo jeho ikonu **oka**), aby se zprava vysunul panel vyrovnání, zobrazující úplnou evidenci pohybů této protistrany napříč všemi typy palet, řaditelnou podle data, objednávky, nebo částky.
+  </Step>
+  <Step title="Vyrovnejte pozici">
+    Z panelu můžete **zaúčtovat opravu** (záznam evidence bez objednávky s povinnou poznámkou — užitečné pro ručně dohodnutý odpis nebo úpravu migrace) nebo **naúčtovat poplatek** za převýšení, pomocí stejného toku poplatků jako automatická výzva popsaná výše.
+  </Step>
+  <Step title="Vygenerujte výpis">
+    Z panelu nebo vlastní nabídky řádku vygenerujte **PDF výpis** — dokument ve vaší firemní identitě s polem pro podpis, připravený pro protistranu k potvrzení a podpisu — nebo exportujte pozici jako **CSV**. **Exportovat ▾** v horní části stránky vytvoří kombinované CSV všech protistran najednou, pro úplný průchod odsouhlasením.
+  </Step>
+</Steps>
+
+<Note>
+Zůstatek palet klienta se také zobrazuje, pouze pro čtení, na jeho záznamu: otevřete klienta a zkontrolujte záložku **Přehled** pro řádek „Zůstatek palet" s odkazem přímo do panelu vyrovnání této stránky pro daného klienta.
+</Note>
+
+**Noční automatizované odsouhlasení** (02:05 UTC) také kontroluje zůstatky každé společnosti proti stejným prahům a upozorňuje adminy/plánovače vaší společnosti, když je pozice nerovnovážná — deduplikováno za typ palety a protistranu v okně 7 dnů, takže nejste znovu upozorňováni při každém běhu na pozici, kterou už znáte.
+
+<Note>
+Evidence vynucuje vlastní konvenci znaménka na úrovni databáze: pohyb **Odesláno** vždy přičítá k zůstatku a pohyb **Vráceno** vždy odečítá, bez ohledu na to, jak je číslo zadáno ve formuláři pro přidání pohybu — záznamy **Úprava**, **Oprava**, a **Počáteční zůstatek** zachovávají znaménko, které zadáte, protože ty mohou oprávněně jít oběma směry.
+</Note>
+
+---
+
 ## Synchronizace s poskytovatelem (volitelné)
 
 Pokud používáte CHEP Connect, Druma může odsouhlasit vaši evidenci v aplikaci proti oficiálnímu zůstatku poskytovatele. Přejděte do **Nastavení → Integrace → Výměna palet**.
@@ -125,10 +169,6 @@ CHEP Connect je aktuálně jedinou integrací poskytovatele palet. Typy palet EU
 
 ---
 
-<Card title="Doplňky a příplatky objednávky" icon="circle-plus" href="/en/planner/order-extras">
+<Card title="Doplňky a příplatky objednávky" icon="circle-plus" href="/cs/invoicing/generating-invoices">
   Zjistěte, jak se řádky poplatků za palety zobrazují v editoru faktury spolu s ostatními příplatky objednávky.
-</Card>
-
-<Card title="Klienti" icon="building-2" href="/en/planner/clients">
-  Spravujte profily klientů, stálé pokyny a zobrazte historii zůstatku palet za jednotlivého klienta.
 </Card>

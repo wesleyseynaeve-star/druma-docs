@@ -9,14 +9,14 @@ icon: "circle-dot"
 Chaque commande dans Druma suit un parcours défini. Comprendre le cycle de vie vous aide à savoir à quoi vous attendre à chaque étape, quand intervenir, et comment gérer les exceptions comme les livraisons en retard ou les mises à jour de statut oubliées.
 
 <Note>
-Si votre entreprise utilise des modèles de tâches, une commande peut aussi porter une **liste de tâches** rattachée à ces mêmes phases de cycle de vie — voir [Tâches de commande et modèles de workflow](/en/planner/order-tasks).
+Si votre entreprise utilise des modèles de tâches, une commande peut aussi porter une **liste de tâches** rattachée à ces mêmes phases de cycle de vie — voir [Tâches de commande et modèles de workflow](/fr/planner/order-tasks).
 </Note>
 
 Voici le flux complet :
 
 **Brouillon → En attente → Assignée → Partie → Arrivée au chargement → Chargement → En transit → Arrivée à la livraison → Déchargement → Livrée**
 
-Il existe aussi deux statuts d'exception — **Annulée** et **Trajet perdu** — couverts vers la fin.
+Il existe aussi trois statuts d'exception — **Livrée partiellement**, **Annulée**, et **Trajet perdu** — couverts vers la fin.
 
 ---
 
@@ -28,6 +28,7 @@ Chaque statut se résout en une seule couleur (teinte) partagée à l'identique 
 |---|---|
 | Brouillon | Gris (ardoise) |
 | En attente | Gris (ardoise) |
+| Virtuelle | Violet |
 | Assignée | Bleu |
 | Partie | Indigo |
 | Arrivée au chargement | Ambre |
@@ -36,6 +37,7 @@ Chaque statut se résout en une seule couleur (teinte) partagée à l'identique 
 | Arrivée à la livraison | Bleu ciel |
 | Déchargement | Bleu ciel |
 | Livrée | Vert |
+| Livrée partiellement | Ambre |
 | Annulée | Rouge |
 | Trajet perdu | Rouge |
 
@@ -60,6 +62,20 @@ La commande existe dans le système mais n'est pas encore active. Le chauffeur n
 - Annuler la commande
 
 Utilisez Brouillon quand un client a fait une réservation provisoire mais n'a pas encore confirmé, ou quand vous construisez la commande mais attendez encore des détails.
+
+---
+
+## Virtuelle
+
+**Déclenché par :** le planificateur clique sur **Virtuel** sur le Tableau de planification pour créer une commande de substitution.
+
+**Qui peut le déclencher :** planificateur uniquement.
+
+Une commande Virtuelle est une substitution légère — adresse de chargement et de livraison, une date de chargement, et optionnellement un prix — qui réserve un camion en amont d'une réservation formelle. Elle est distincte du flux normal Brouillon → En attente → Assignée : à la place, une fois la réservation réelle reçue, le planificateur la fusionne dans une commande en bonne et due forme via la fenêtre Nouvelle commande, qui reporte automatiquement l'affectation du camion. Les commandes Virtuelles apparaissent en **violet** sur le tableau de planification afin d'être facilement distinguées d'une commande réelle et réservée, en un coup d'œil.
+
+<Note>
+L'optimiseur de réaffectation de rechargement traite les commandes Virtuelles de la même façon que les commandes Brouillon ou En attente lors de l'enchaînement de rechargements futurs — un substitut esquissé peut donc toujours être échangé contre un rechargement réel moins cher s'il en apparaît un.
+</Note>
 
 ---
 
@@ -188,6 +204,27 @@ Le transport est terminé. La commande passe au vert sur le tableau de planifica
 
 ---
 
+## Livrée partiellement
+
+**Déclenché par :** le chauffeur enregistre une livraison partielle depuis l'écran Déchargement — une partie, mais pas la totalité, de ce qui était prévu est descendue du camion.
+
+**Qui peut le déclencher :** chauffeur (action principale) ou planificateur.
+
+La livraison n'est pas toujours tout-ou-rien. Si un chauffeur décharge 6 palettes sur 10 — un client ne peut pas prendre le chargement complet, il n'y a pas de place, une partie de la cargaison est endommagée — il peut enregistrer exactement ce qui est réellement descendu, plutôt que d'être forcé de choisir entre marquer toute la commande Livrée (ce qui déformerait ce qui s'est passé) ou refuser le tout (alors que la plupart *a* été acceptée).
+
+Le chauffeur saisit ce qui a été livré par rapport à ce qui était prévu ; Druma stocke le manquant — quantité et poids, par arrêt — comme un enregistrement figé de ce qui reste non livré, et notifie le planificateur.
+
+<Note>
+**Livrée partiellement n'est délibérément pas un statut final « terminé »** comme Livrée l'est — elle existe précisément pour que le reporting OTIF, la facturation automatique, et le portail client ne traitent pas une livraison partielle comme complète. Elle peut aussi être un véritable état final, si le reste est passé en perte plutôt que redélivré — Druma ne force aucune action de suivi, il refuse simplement de prétendre que le chargement s'est terminé proprement.
+</Note>
+
+**Actions disponibles depuis Livrée partiellement :**
+- Consulter le manquant (quantité/poids prévu vs. livré) et la raison du chauffeur sur le détail de commande
+- Générer une facture — **désactivé par défaut** : une commande livrée partiellement n'est pas facturée tant que vous n'activez pas **Facturer sur livraison partielle** pour votre entreprise dans Paramètres, puisque le caractère immédiatement facturable ou non d'une livraison partielle est une décision commerciale. Une fois activé, la commande facture ce qui a été réellement livré.
+- Téléverser ou consulter les documents de livraison, comme pour une livraison complète
+
+---
+
 ## Annulée
 
 **Déclenché par :** le planificateur annule la commande.
@@ -251,6 +288,7 @@ Les chauffeurs oublient parfois de toucher les mises à jour de statut — cela 
 | Statut | Automatique | Manuel (chauffeur) | Manuel (planificateur) |
 |---|---|---|---|
 | Brouillon | — | — | Oui |
+| Virtuelle | — | — | Oui |
 | En attente | — | — | Oui |
 | Assignée | — | — | Oui |
 | Partie | — | Oui | Oui (remplacement) |
@@ -260,6 +298,7 @@ Les chauffeurs oublient parfois de toucher les mises à jour de statut — cela 
 | Arrivée à la livraison | — | Oui | Oui (remplacement) |
 | Déchargement | — | Oui | Oui (remplacement) |
 | Livrée | — | Oui | Oui (remplacement) |
+| Livrée partiellement | — | Oui | — |
 | Annulée | — | — | Oui |
 | Trajet perdu | — | — | Oui (depuis les statuts actifs) |
 
@@ -269,7 +308,7 @@ Les chauffeurs oublient parfois de toucher les mises à jour de statut — cela 
   Surveillez toutes les commandes actives, voyez les positions chauffeur en direct, et gérez les alertes depuis votre tableau de bord opérationnel en direct.
 </Card>
 
-<Card title="Tâches de commande et modèles de workflow" icon="list-check" href="/en/planner/order-tasks">
+<Card title="Tâches de commande et modèles de workflow" icon="list-check" href="/fr/planner/order-tasks">
   Listes de tâches configurables rattachées à ces phases de cycle de vie, plus comment les admins construisent les modèles derrière elles.
 </Card>
 

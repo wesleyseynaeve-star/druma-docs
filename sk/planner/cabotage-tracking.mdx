@@ -1,45 +1,118 @@
 ---
 title: "Sledovanie kabotáže"
-description: "Automatické sledovanie kabotážnych jázd podľa krajiny a vozidla, limity EÚ a varovania na plánovacej tabuli."
-icon: "map"
+description: "Sledujte kabotážne operácie za jednotlivé vozidlo, aby ste zostali v limitoch EÚ a vyhli sa vysokým pokutám pri cestných kontrolách."
+icon: "flag"
 ---
 
-## Čo je kabotáž
+<Note>
+Sledovanie kabotáže sa nachádza v **Plánovanie → Súlad**, na karte **Vozidlá** — na tej istej stránke, ktorá sleduje aj povinnosti návratu vozidla/vodiča podľa Balíka mobility EÚ a deklarácie vysielania IMI, zlúčené do jednej stránky s troma kartami, aby ste nemuseli kontrolovať dve oddelené miesta kvôli celkovému riziku súladu vozidla. Pozrite si [Súlad s balíkom mobility](/sk/fleet-compliance/mobility-package) pre karty Vodiči a Deklarácie.
+</Note>
 
-Kabotáž je domáca preprava v cudzej krajine uskutočnená zahraničným dopravcom. Napríklad rumunský dopravca vykonávajúci doručenia medzi dvoma nemeckými mestami.
+## Čo je kabotáž?
 
-Nariadenie EÚ 1072/2009 obmedzuje kabotáž na **3 kabotážne zákazky do 7 dní** po medzinárodnej dodávke v danej krajine.
+Kabotáž nastáva, keď vozidlo registrované v jednej krajine vykonáva domácu prepravu vnútri inej krajiny — teda vyzdvihnutie aj doručenie sú v rámci tej istej zahraničnej krajiny.
+
+**Príklad:** Rumunsky registrované vozidlo doručí zásielku z Bukurešti do Mníchova (medzinárodná preprava). Po tomto doručení vozidlo vyzdvihne náklad v Mníchove a doručí ho do Frankfurtu. Táto jazda Mníchov → Frankfurt, ktorú vykoná rumunské vozidlo úplne vnútri Nemecka, je **kabotážna operácia**.
+
+Kabotáž je v EÚ legálna — ale prísne obmedzená.
+
+---
+
+## Pravidlá EÚ pre kabotáž
+
+Podľa nariadenia EÚ 1072/2009, po dokončení medzinárodného doručenia do členského štátu:
+
+- Zahraničné vozidlo môže vykonať **až 3 kabotážne operácie** v danej krajine
+- Všetky 3 operácie musia byť dokončené **do 7 dní** od medzinárodného doručenia
+- Po týchto 3 operáciách (alebo 7 dňoch, podľa toho, čo nastane skôr) musí vozidlo túto krajinu opustiť
+- Pred návratom vozidla do danej krajiny a opätovným vykonaním kabotáže platí povinná **4-dňová prestávka**
+
+**Prečo na tom záleží:** Orgány cestnej kontroly v krajinách ako Nemecko, Francúzsko a Holandsko aktívne kontrolujú porušenia pravidiel kabotáže. Pokuty môžu dosiahnuť niekoľko tisíc eur za porušenie. Opakované porušenia môžu viesť k problémom s prevádzkovou licenciou.
+
+<Warning>
+Pravidlá kabotáže boli ďalej sprísnené v rámci Balíka mobility EÚ. 4-dňová prestávka je prísne vymáhaná v krajinách západnej EÚ. Vždy si overte, že platia aktuálne pravidlá — predpisy sa môžu meniť.
+</Warning>
+
+---
 
 ## Ako Druma sleduje kabotáž
 
-Druma automaticky zaznamenáva kabotážnu zákazku keď:
-- Objednávka je označená ako doručená
-- Krajina vyzdvihnutia a krajina doručenia sú rovnaké
-- Táto krajina nie je krajinou registrácie spoločnosti
+Druma sleduje kabotáž automaticky na základe údajov objednávok, ktoré zadáte. Tu je, čo kontroluje:
 
-## Dashboard kabotáže
+1. **Rozpoznanie krajiny** — pri každej objednávke Druma skontroluje krajinu adresy vyzdvihnutia a krajinu adresy doručenia
+2. **Príznak nerezidenta** — ak je vozidlo registrované v inej krajine ako vyzdvihnutie aj doručenie, a vyzdvihnutie aj doručenie sú v tej istej krajine, objednávka je označená ako kabotážna operácia
+3. **Počítadlo za vozidlo** — Druma počíta kabotážne operácie za krajinu, za vozidlo, za kĺzavé 7-dňové okno po poslednom kvalifikujúcom medzinárodnom doručení
+4. **Sledovanie prestávky** — Druma sleduje, kedy vyprší 7-dňové okno a kedy začína a končí 4-dňová prestávka
 
-Prejdite na **Súlad flotily → Kabotáž** pre zobrazenie:
+---
 
-- **Okno 7 dní po vozidlách** — Zákazky za posledných 7 dní podľa krajiny a vozidla
-- **Upozornenia na limit** — Vozidlá s 2 alebo viac kabotážnymi zákazkami v okne (blízko limitu 3)
-- **Porušenia** — Vozidlá, ktoré prekročili 3 zákazky
+## Zobrazenie záznamu kabotáže
 
-## Varovania na plánovacej tabuli
+Ak chcete zobraziť úplnú históriu kabotáže vášho vozového parku:
 
-Keď sa pokúšate priradiť zákazku, ktorá by spôsobila porušenie kabotáže, Druma zobrazí varovanie:
-- Aktuálny počet kabotážnych zákaziek v 7-dňovom okne
-- Dátum, kedy sa okno resetuje
-- Možnosť pokračovať alebo vybrať iné vozidlo
+<Steps>
+  <Step title="Prejdite do Plánovania">
+    Kliknite na **Plánovanie** v hornej navigácii.
+  </Step>
+  <Step title="Otvorte Súlad">
+    Kliknite na kartu **Súlad** (`/operations/compliance`), vedľa Plánovacej tabule, Objednávok a ďalších kariet plánovania. Otvorí sa na karte **Vozidlá**.
+  </Step>
+  <Step title="Vyhľadajte, zoraďte alebo filtrujte podľa rizika">
+    Použite vyhľadávacie pole na nájdenie konkrétneho vozidla, evidenčného čísla alebo krajiny, alebo kliknite na **Filter** a vyberte úroveň rizika — napr. **blízko limitu**, **na limite**, **prestávka**, alebo **po termíne** — na zúženie zoznamu na vozidlá vyžadujúce pozornosť. Kliknutím na hlavičku stĺpca zoradíte.
+  </Step>
+</Steps>
 
-## Export CSV
+Každý riadok na karte Vozidlá zobrazuje **obidve** hodiny súladu vozidla vedľa seba: jeho počítadlo kabotáže pre krajinu, v ktorej je aktuálne vystavené, a jeho hodiny návratu vozidla podľa Balíka mobility EÚ (pozrite si [Súlad s balíkom mobility](/sk/fleet-compliance/mobility-package)) — vidíte tak úplný obraz súladu vozidla bez prepínania kariet. Kliknite na riadok na otvorenie panela podrobností zobrazujúceho:
 
-Pre účely auditu exportujte záznamy kabotáže:
+- Každú kabotážnu operáciu pre toto vozidlo (referencia objednávky, krajina, dátumy)
+- Počet operácií v rámci 7-dňového okna
+- Stav prestávky: aktívna, uplynutá, alebo spôsobilá pre nové operácie
+- Akékoľvek spustené upozornenia
 
-**Súlad flotily → Kabotáž → Exportovať CSV**
+---
 
-Export zahŕňa všetky kabotážne zákazky s vozidlom, krajinou, dátumami a stavom.
+## Upozornenia na kabotáž
 
-<Card title="Plánovacia tabuľa" icon="calendar" href="/en/planner/planning-board">
-  Ako sa varovania kabotáže zobrazujú pri priradení zákaziek.
-</Card>
+Druma vás upozorní pred prekročením limitu, nie až potom — upozornením v aplikácii v okamihu, keď priradíte vozidlo k domácej objednávke na Plánovacej tabuli:
+
+**Upozornenie** — vozidlo sa blíži k povolenému počtu kabotážnych operácií v danej krajine v rámci 7-dňového okna. Priradenie stále môžete potvrdiť, ale najprv sa vám zobrazí počet a dátum konca okna.
+
+**Limit prekročený** — vozidlo už vyčerpalo všetky 3 operácie a priradenie by porušilo nariadenie EÚ 1072/2009. Upozornenie sa zobrazí červenou farbou a potvrdenie je označené ako **Priradiť (porušenie zákona)**.
+
+**Aktívna prestávka** — vozidlo je stále v rámci svojej povinnej 4-dňovej prestávky v danej krajine. Upozornenie uvádza dátum konca prestávky a priradenie je pri pokračovaní opäť označené ako porušenie zákona.
+
+Tieto upozornenia sa zobrazujú v okamihu priradenia, takže problém zachytíte skôr, než je vozidlo vyslané.
+
+---
+
+## Čo Druma sleduje vs. čo musíte stále spravovať sami
+
+Sledovanie kabotáže v Druma je založené výlučne na údajoch objednávok, ktoré zadáte do systému. Je presné, pokiaľ sú vaše objednávky zadávané správne a včas.
+
+<Note>
+Sledovanie kabotáže v Druma je nástroj na podporu plánovania — nenahrádza vyhradený systém súladu s kabotážou ani právne poradenstvo. Vždy zabezpečte, aby vodiči mali pri cestnej kontrole správnu dokumentáciu: originál medzinárodného CMR, tri kabotážne CMR (ak sú relevantné), s jasne viditeľnými dátumami. Kontrolné orgány kontrolujú papierovú dokumentáciu, nie váš TMS.
+</Note>
+
+**Druma sleduje:**
+- Počet operácií za vozidlo, za krajinu, za 7-dňové okno
+- Obdobia prestávky
+- Príznaky kabotáže na úrovni objednávky
+
+**Stále musíte spravovať sami:**
+- Dokumentáciu vodiča pri cestnej kontrole
+- Právne aktualizácie pri zmene predpisov EÚ
+- Operácie vykonané mimo Druma (napr. náklady nezadané do systému)
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Súlad s balíkom mobility" icon="globe" href="/sk/fleet-compliance/mobility-package">
+    Karty Vodiči a Deklarácie tej istej stránky Súlad — hodiny návratu vozidla/vodiča a IMI deklarácie vysielania.
+  </Card>
+  <Card title="Správa vozového parku" icon="truck" href="/sk/planner/fleet-management">
+    Spravujte svoje vozidlá, krajiny registrácie a profily vozidiel.
+  </Card>
+  <Card title="Hodiny jazdy EÚ" icon="clock" href="/sk/fleet-compliance/eu-driving-hours">
+    Sledujte hodiny vodičov a doby odpočinku, aby ste zostali v súlade s pravidlami tachografu EÚ.
+  </Card>
+</CardGroup>

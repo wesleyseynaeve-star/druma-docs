@@ -1,19 +1,25 @@
 ---
 title: "CS Workbench"
-description: "Het klantenservice-antwoord op \"waar is mijn zending?\" — één paneel voor live status, sitegegevens, check-calls en proactieve uitzonderingen."
+description: "Het antwoord van de klantenservice op \"waar is mijn zending?\" — één paneel voor live status, locatiedetails, check-calls, en proactieve uitzonderingen."
 icon: "headset"
 ---
 
 ## Overzicht
 
-De CS Workbench is waar klantenservicemedewerkers de meest gestelde vraag beantwoorden: *waar is mijn zending?* In plaats van te schakelen tussen orderlijst, orderdetail en klantrecord, staat alles wat een medewerker nodig heeft — live status, ETA, chauffeur en truck, openingstijden en contacten per stop, en een log van elk klantcontact — in één master-detailpaneel.
+De CS Workbench is waar klantenservicemedewerkers de vraag beantwoorden die klanten het vaakst stellen: *waar is mijn zending?* In plaats van te schakelen tussen de orderlijst, het orderdetail, en het klantrecord, leeft alles wat een medewerker nodig heeft — live status, ETA, chauffeur en truck, openingstijden en contacten per stop, en een logboek van elk klantcontact — in één master-detailpaneel.
 
-**Toegang:** klik op **Klantenservice** in het linkermenu. Opent standaard op het tabblad **Workbench**; een tabblad **Sites** staat ernaast.
+**Toegang:** klik op **Klantenservice** in de linkernavigatie. Deze opent standaard op het tabblad **Workbench**; een tabblad **Locaties** staat ernaast.
 
-De Workbench bouwt op twee onderdelen:
+<Frame caption="CS Workbench — een dichte, groepeerbare orderlijst links, orderdetail dat rechts inschuift.">
+  <img src="/images/planner/cs-workbench.png" alt="CS Workbench ordertriage-lijst met filters en detailpaneel" />
+</Frame>
 
-- **Sites** — een herbruikbare catalogus van ophaal-/afleverlocaties met openingstijden, contacten en per-klant boekingsinstructies.
-- **Uitzonderingen** — Druma markeert automatisch twee situaties: een ETA die na sluitingstijd van de aflever-site valt, en een stop die een boeking nodig heeft zonder registratie.
+De orderlijst is een dichte tabel, geen kaartenfeed — klik op een rij om een detailpaneel van rechts te laten inschuiven (het blijft gesynchroniseerd met de URL, dus een link naar `?order=<id>` opent direct op die order). `J`/`K` lopen de lijst op en neer, en `Esc` wist de selectie, hetzelfde toetsenbordpatroon als Orders en Vloot.
+
+De Workbench is gebouwd op twee ondersteunende onderdelen:
+
+- **Locaties** — een herbruikbare catalogus van ophaal-/leverlocaties (magazijnen, fabrieken, distributiecentra, havens, terminals, erven) met openingstijden, contacten, dock-/toegangsnotities, en boekingsinstructies per klant. Kies een locatie eenmaal op een orderstop en het adres wordt automatisch ingevuld; de Workbench haalt vervolgens de openingstijden en contacten van die locatie op voor elke order die deze bezoekt.
+- **Uitzonderingen** — Druma markeert automatisch twee situaties die gemiste leveringen veroorzaken: een ETA die na sluiting van de leverlocatie valt, en een stop die een boeking nodig heeft zonder dat er een geregistreerd is.
 
 ---
 
@@ -21,70 +27,165 @@ De Workbench bouwt op twee onderdelen:
 
 <Steps>
   <Step title="Open de Workbench">
-    Ga naar **Klantenservice** — opent op de Workbench-tab.
+    Ga naar **Klantenservice** — deze opent op het tabblad Workbench.
   </Step>
-  <Step title="Vind de order">
-    Gebruik de zoekbalk of filters, klik op een orderkaart om het detailpaneel rechts te openen.
+  <Step title="Zoek de order">
+    Gebruik het zoekvak (ordernummer, referentie, of ophaal-/leverstad) of beperk de lijst eerst — zie de filters hieronder. Klik op een orderrij om het detailpaneel rechts te openen.
   </Step>
   <Step title="Bekijk de zendingsstatus">
-    De header toont ordernummer, status, toegewezen chauffeur/truck (of onderaannemer) en ETA, gevolgd door een stop-voor-stop overzicht met openingstijden en boekingsreferentie.
+    De header van het detailpaneel toont het ordernummer, de status, de toegewezen chauffeur/truck (of onderaannemer), en ETA, gevolgd door een statusstepper en een stop-voor-stop-uitsplitsing — elke stop toont de openingstijden van vandaag (rood indien momenteel gesloten), of een afspraak vereist is, de boekingsreferentie van de klant, locatiecontacten, en een link naar het boekingsportaal wanneer de locatie er een heeft.
   </Step>
-  <Step title="Log de call">
-    Scroll naar het **Check-call log**. Kies Soort, Richting en Kanaal, noteer optioneel met wie u sprak, schrijf wat er gebeurde, klik op **Invoer loggen**.
+  <Step title="Log het gesprek">
+    Scroll naar het **Check-call-logboek** onderaan het detailpaneel. Kies een **Soort**, **Richting**, en **Kanaal**, noteer optioneel met wie u sprak, schrijf wat er gebeurde, en klik op **Vermelding loggen**. Deze verschijnt onmiddellijk in de tijdlijn boven de opsteller, met uw naam en tijdstempel.
   </Step>
   <Step title="Informeer de klant (optioneel)">
-    Klik op **Klant informeren** om een merkgebonden statusupdate-e-mail te sturen. Druma logt de verzending automatisch als check-call.
+    Klik op **Klant informeren** in de detailheader om de klant een gebrande status-update-e-mail te sturen. Druma e-mailt naar de contacten van de klant die gemarkeerd zijn voor operationele of leveringsmeldingen en logt de verzending automatisch als een check-call-vermelding, zodat het audittraject compleet blijft.
   </Step>
 </Steps>
 
+### Wat de check-call-velden betekenen
+
+| Veld | Opties / betekenis |
+|---|---|
+| **Soort** | Check-call · Notitie · Boeking · Uitzondering · Klant informeren — welk type contact dit was. |
+| **Richting** | Inkomend (klant/locatie belde u) · Uitgaand (u belde hen) · Intern (een notitie voor uw team). |
+| **Kanaal** | Telefoon · E-mail · SMS · Portaal · Systeem. |
+| **Contact** | Vrije tekstnaam van met wie u sprak, voor uw eigen referentie. |
+| **Notitie** | Wat er gebeurde — vereist voordat u de vermelding kunt loggen. |
+
+### Wat het detailpaneel verder toont
+
+Naast de statusstepper en stopuitsplitsing toont het detailpaneel alles wat een medewerker nodig heeft zonder de Workbench te verlaten:
+
+- **Ladingchips** — een **ADR**-chip (met de gevaarlijkestoffenklasse, indien ingesteld) en een **temperatuurbereik**-chip verschijnen naast gewicht, pallets, en laadmeters voor lading die deze draagt.
+- **Live positieregel** — terwijl de order onderweg is, toont een minikaart de huidige positie van de truck, met de acties **Trackinglink kopiëren** en **Trackinglink per e-mail versturen** er direct naast — geen noodzaak om naar de orderdetailpagina te springen om een klant een link te geven.
+- **Resterende afstand** — de resterende kilometers tot levering, berekend uit dezelfde ETA-gegevens als de livekaart.
+- **eCMR / POD bekijken** — een directe link naar de ondertekende eCMR of het leveringsbewijs, zodra deze op de order bestaat.
+- **Klantorderhistorie** — een paneel met de vorige orders van deze klant met een op-tijd/te-laat-indicator op elk, zodat een medewerker meteen kan zien of een vertraging een eenmalig geval is of een patroon voordat hij de telefoon oppakt.
+
 ---
 
-## De orderlijst filteren en sorteren
+## De orderlijst filteren, groeperen, en sorteren
 
-Boven de kaarten in de linkerlijst: **Scope** (Actief/Alle/Historisch), **Sorteren** (Aangemaakt, ETA, Levering, Status), status-/klant-/referentiefilters, en **Alleen uitzonderingen**. Een KPI-balk toont live tellingen voor Resultaten, Onderweg, Afgeleverd en Uitzonderingen.
+De commandobalk boven de lijst is bewust één regel — de dagelijkse bedieningselementen staan er direct op, en al het andere leeft achter **Meer filters**:
+
+- **Scope-schakelaar** — **Actief** (standaard), **Alle**, of **Historisch**.
+- **Groep** — de lijst gebruikt standaard Druma's eigen **Triage**-groepering (zie hieronder); schakel naar **Geen** voor een platte, sorteerbare lijst in plaats daarvan.
+- **Sorteren** — op Aangemaakt, ETA, Leverdatum, Status, **Volgende stop**, of **Check-call-leeftijd** (de laatste twee hebben de live signaalgegevens van elke order nodig, dus ze zijn even grijs terwijl deze laden).
+- **Kolommen** — kies welke van de tabelvelden zichtbaar zijn; standaard toont de tabel Ordernr., Status, Klant, Route, een gecombineerde **Signaal**-kolom, en nog één — de rest (Toewijzing, ETA-/volgende-stop-uitsplitsing, enz.) is optioneel, zodat de tabel niet horizontaal hoeft te scrollen om de belangrijkste kolommen te lezen.
+
+**Meer filters** bevat: Status, Klant, Klantreferentie (klant en referentie accepteren gedeeltelijke overeenkomsten), Laad-/losdatumvoorinstellingen (**Vandaag**, **Morgen**, **Deze week**, onafhankelijk toegepast op ophaal- en leverdata), **Alleen uitzonderingen**, **Niet toegewezen** (geen chauffeur, geen truck, nog geen onderaannemer/vervoerder), en **Verouderde check-call** (kies een drempel — **12u, 24u, 48u,** of **72u** — voor hoe oud de laatste check-call moet zijn om te tellen).
+
+<Note>
+Verouderde check-call markeert alleen orders die op dit moment daadwerkelijk **in beweging** zijn (toegewezen tot lossen) — een Concept- of In afwachting-order zonder nog iets gelogd is niet "verouderd", hij is gewoon nog niet begonnen.
+</Note>
+
+Klik op de **ster** van een orderrij om deze vast te pinnen als **CS-prioriteit** — vastgepinde orders sorteren altijd bovenaan de lijst, ongeacht de actieve sorteersleutel of -richting.
+
+### Triage-groepering
+
+De standaardgroepering sorteert elke order in een van vier categorieën, ergste eerst:
+
+| Groep | Wat hier terechtkomt |
+|---|---|
+| **Vereist actie nu** | De meest urgente signalen — een open uitzondering of een escalatie die op antwoord wacht |
+| **Te laat / risico** | De ETA-marge ten opzichte van het levervenster is gedaald tot een uur of minder, of is al gemist |
+| **Wacht op check-call** | In beweging, zonder gelogde check-call binnen uw drempel voor verouderde check-calls |
+| **Op schema** | Al het andere |
+
+De rij van elke order toont een compacte **Signaal**-kolom (diens risico-/te-laat-status en check-call-leeftijd in één oogopslag) en een voorbeeld van de volgende stop — naam, stad, en tijdvenster van de komende stop.
+
+De KPI-balk boven de lijst — **Resultaten**, **Onderweg**, **Afgeleverd**, **Uitzonderingen** — is klikbaar: klik op een tegel om de lijst erop te filteren, klik opnieuw om het filter te wissen. De tegel **Afgeleverd** toont een streepje in plaats van een misleidende nul terwijl u op de scope **Actief** zit (die afgeleverde orders per ontwerp uitsluit) — klik erop om te schakelen naar scope **Alle** gefilterd op Afgeleverd.
 
 ---
 
-## De uitzonderingenwachtrij afhandelen
+## De uitzonderingswachtrij verwerken
 
-Elke open order wordt automatisch gecontroleerd op twee faalmodi:
+Elke open order wordt automatisch gecontroleerd op twee faalmodi op het moment dat de gegevens ervan veranderen — u hoeft niet elke order te openen om een probleem te vinden:
 
-- **ETA na sluiting** — de huidige ETA valt na de openingstijden van de aflever-site.
-- **Boeking ontbreekt** — een stop vereist een boeking, maar er is geen boekingsreferentie of gelogde `booking`-check-call.
+- **ETA na sluiting** — de huidige ETA van de order valt na de openingstijden van de leverlocatie voor die dag.
+- **Afspraak ontbreekt** — de locatie van een stop vereist een boeking, maar er bestaat nog geen boekingsreferentie en geen gelogde `boeking`-check-call ervoor.
 
 <Steps>
-  <Step title="Zie gemarkeerde orders">
-    Gemarkeerde orders krijgen een amberkleurige badge; de KPI **Uitzonderingen** toont het aantal betrokken orders.
+  <Step title="Spot gemarkeerde orders">
+    Gemarkeerde orders dragen een amberkleurig uitzonderingsbadge in de orderlijst, en de **Uitzonderingen**-KPI van de Workbench toont hoeveel afzonderlijke orders momenteel getroffen zijn. Schakel **Alleen uitzonderingen** om alleen die te zien.
   </Step>
   <Step title="Open de order en bekijk het detail">
-    Het paneel **Uitzonderingen** toont elke voorwaarde en de betrokken site. Voorspelde uitzonderingen krijgen een **Voorspeld**-badge.
+    Het detailpaneel toont een amberkleurig **Uitzonderingen**-paneel met elke getriggerde voorwaarde en de locatie waarop deze betrekking heeft. Een voorspelde uitzondering (uit Druma's voorspellende vertragingsmodel) is gemarkeerd met een **Voorspeld**-badge en een ernstniveau, los van de hierboven beschreven regelgebaseerde.
   </Step>
   <Step title="Los het op">
-    Log een `booking`-check-call, of werk de boekingsreferentie van de site bij. Bel bij een ETA-na-sluiting vooraf de site of informeer de klant.
+    Afhankelijk van de uitzondering: log een `boeking`-check-call zodra u een slot heeft bevestigd, of werk de boekingsreferentie van de locatie voor die klant bij. Bij een ETA-na-sluiting-situatie belt u vooraf naar de locatie of informeert u de klant zodat deze zich kan aanpassen.
   </Step>
-  <Step title="Bevestig dat het verdwijnt">
-    Uitzonderingen worden live berekend — zodra de onderliggende voorwaarde is opgelost, verdwijnt de vlag automatisch.
+  <Step title="Bevestig dat het wordt opgelost">
+    Uitzonderingen worden live berekend uit huidige gegevens, niet handmatig weggeklikt — zodra de onderliggende voorwaarde is opgelost (een boeking wordt gelogd, of de ETA valt weer binnen de openingstijden), verdwijnt de markering vanzelf.
   </Step>
 </Steps>
 
+<Note>
+Uitzonderingen voeden ook de **Uitzonderingenfeed**-widget op het Startdashboard, zodat een proactieve controle helemaal geen toegang tot de CS-sectie vereist.
+</Note>
+
 ---
 
-## Sites — waar openingstijden en contacten vandaan komen
+## Escaleren naar een planner
 
-Beheer de sitecatalogus via het tabblad **Sites**. Elke site bevat identiteit/adres, een weekrooster van openingstijden (met datumspecifieke uitzonderingen), boekingsinstellingen, dock-aantal en toegangsnotities, en per-klant boekingsinstructies.
+Sommige problemen vereisen een planner-beslissing, geen check-call — een truck-herverdeling, een klantgeschil over prijs of voorwaarden, een chauffeur die niet reageert, ontbrekende documenten. In plaats van dit via telefoon of chat bij te houden, escaleert u rechtstreeks vanuit de order.
 
-Twee knoppen in de editor kunnen gegevens voor u invullen (alleen bij een bestaande site):
+<Steps>
+  <Step title="Open de order en klik op Escaleren">
+    Klik in het orderdetailpaneel op **Escaleren naar planner**.
+  </Step>
+  <Step title="Kies een reden">
+    Kies uit **Truck-herverdeling**, **Klantgeschil**, **Chauffeur onbereikbaar**, **Documentatie**, of **Anders**.
+  </Step>
+  <Step title="Voeg een notitie toe (optioneel)">
+    Geef de planner de context die hij nodig heeft — wat u al heeft geprobeerd, wat de klant vraagt, enzovoort.
+  </Step>
+  <Step title="Verzenden">
+    Klik op **Escaleren**. De escalatie wordt gelogd in de check-call-/communicatietijdlijn van de order en er verschijnt een amberkleurige strook op de order — zowel op het Planningsbord als in het orderdetailpaneel, zodat een planner deze ziet waar hij ook al aan het werk is, niet alleen binnen CS.
+  </Step>
+</Steps>
 
-- **Suggestie op basis van historie** — leidt openingstijden en typische wachttijd af uit eerdere aankomst-/vertrektijden van uw eigen chauffeurs.
-- **Onderzoek op het web** — vraagt Druma's AI om gepubliceerde openingstijden, contacten en boekingsportaal op te zoeken. Moet eerst worden ingeschakeld via **Instellingen → Workflow en automatisering → Automatisering → Klantenservice** — standaard uitgeschakeld.
+Zodra de planner ermee aan de slag is gegaan, klikt hij (of u) op **Markeren als opgelost** op de amberkleurige strook — dit legt vast wie het heeft opgelost en wanneer, en de strook verdwijnt.
+
+---
+
+## Locaties — waar openingstijden en contacten vandaan komen
+
+Beheer de locatiecatalogus vanaf het tabblad **Locaties**. Elke locatie bevat identiteit/adres, een wekelijks openingstijdenrooster (met datumspecifieke uitzonderingen, bijv. een feestdag), afspraak-/boekingsinstellingen, dockaantal en poort-/toegangsnotities, voertuigbeperkingen, een contactenherhaler, en boekingsinstructies per klant (hetzelfde magazijn kan een andere referentie vereisen afhankelijk van wiens lading het is).
+
+Twee knoppen in de openingstijdensectie van de locatie-editor kunnen gegevens voor u invullen — beide vereisen het openen van een bestaande locatie (niet beschikbaar tijdens het aanmaken van een nieuwe):
+
+- **Suggereren op basis van geschiedenis** — leidt openingstijden en typische verblijftijd af uit de eerdere aankomst-/vertrektijden van uw eigen chauffeurs op die locatie. Altijd controleerbaar voordat u opslaat; er wordt niets automatisch geschreven.
+- **Web onderzoeken** — vraagt Druma's AI om op het web te zoeken naar de gepubliceerde uren, contacten, en het boekingsportaal van de locatie, met bronvermelding van de gebruikte pagina's. Moet eerst worden ingeschakeld in **Instellingen → Automatisering → Klantenservice** (een admin-/bedrijfsadmin-instelling) — standaard uitgeschakeld.
+
+### Wat de locatievelden betekenen
+
+| Veld | Betekenis |
+|---|---|
+| **Type** | Magazijn, Fabriek, Distributiecentrum, Haven, Terminal, Erf, Overig. |
+| **Tijdzone** | De lokale tijdzone van de locatie — gebruikt om openingstijden correct te evalueren ongeacht waar de order werd aangemaakt. |
+| **Openingstijden** | Een rooster per weekdag van open vensters, met optionele datumspecifieke uitzonderingen (sluitingen/feestdagen). |
+| **Afspraak vereist** | Of er een boekingsslot geregeld moet worden vóór aankomst; kan per klant worden overschreven. |
+| **Dockaantal / Poortinstructies / Toegangsnotities** | Praktische aankomstinformatie voor chauffeurs en planners. |
+| **Boekingsportaal-URL** | Link naar het eigen boekingssysteem van de locatie, indien aanwezig. |
+| **Voertuigbeperkingen** | Op vlaggen gebaseerde limieten (bijv. grootte-/gewichtsbeperkingen) vastgelegd op de locatie. |
+| **Contacten** | Benoemde boekings-/portiers-/magazijn-/beveiligingscontacten met telefoon/e-mail. |
+| **Instructies per klant** | Boekingsreferentie, klantcode, en vrije-tekstinstructies specifiek voor één klant op deze locatie. |
 
 ---
 
 <CardGroup cols={2}>
-  <Card title="Order aanmaken" icon="plus" href="/nl/planner/creating-orders">
-    Kies een site op een stop om het adres automatisch in te vullen.
+  <Card title="Een order aanmaken" icon="plus" href="/nl/planner/creating-orders">
+    Kies een locatie op een stop om het adres automatisch in te vullen — de Workbench haalt vervolgens de details van die locatie op voor de order.
+  </Card>
+  <Card title="Orderlevenscyclus" icon="circle-dot" href="/nl/planner/order-lifecycle">
+    Elke orderstatus die de Workbench toont, en wat elke overgang triggert.
   </Card>
   <Card title="Dispatching" icon="route" href="/nl/planner/dispatching">
-    De live kaart en chauffeurchat waar de Workbench uit put.
+    De livekaart en chauffeurschat waaruit de live positieregel en toewijzingskaart van de Workbench putten.
+  </Card>
+  <Card title="Startdashboard" icon="gauge" href="/nl/planner/home-dashboard">
+    Voeg de Uitzonderingenfeed-widget toe om CS-uitzonderingen te zien zonder het dashboard te verlaten.
   </Card>
 </CardGroup>

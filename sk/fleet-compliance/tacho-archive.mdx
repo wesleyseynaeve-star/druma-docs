@@ -1,0 +1,124 @@
+---
+title: "Archív tachografu"
+description: "Ako Druma uchováva súbory DDD a TGD tachografu, aby splnila požiadavky na frekvenciu sťahovania a uchovávanie podľa Nariadenia EÚ 165/2014 — automatické nočné sťahovanie a ručné nahrávanie."
+icon: "hard-drive"
+---
+
+Nariadenie EÚ 165/2014 vyžaduje, aby dopravní prevádzkovatelia sťahovali dáta tachografu z palubných jednotiek a kariet vodičov v definovaných intervaloch, a aby tieto dáta uchovávali aspoň 12 mesiacov. Druma ukladá tieto súbory v Archíve tachografu, takže môžete dokázať súlad počas cestnej kontroly alebo kontroly úradov bez udržiavania samostatného systému archivácie.
+
+<Frame caption="Archív tachografu — každé stiahnutie z palubnej jednotky a karty vodiča, s ďalším splatným dátumom podľa zdroja.">
+  <img src="/images/fleet-compliance/tacho-archive.png" alt="Zoznam Archívu tachografu zobrazujúci sťahovania tachografu so splatnými dátumami podľa vozidla a karty vodiča" />
+</Frame>
+
+---
+
+## Požiadavky na frekvenciu sťahovania
+
+| Typ súboru | Požadovaná frekvencia sťahovania |
+|---|---|
+| Dáta palubnej jednotky (VU / `.ddd`) | Aspoň každých **90 dní** |
+| Dáta karty vodiča (DDC / `.tgd`) | Aspoň každých **28 dní** |
+
+Zmeškanie termínu sťahovania je priame regulačné porušenie, bez ohľadu na to, či vodič spôsobil porušenie počas daného obdobia. Inšpektori kontrolujú, či boli dáta stiahnuté včas, nielen či boli nakoniec získané.
+
+---
+
+## Kde nájsť Archív tachografu
+
+Prejdite na **Vozový park → Archív tachografu**. Stránka vypisuje všetky uložené súbory tachografu zoradené podľa dátumu nahratia. Každý riadok zobrazuje:
+
+- Meno vodiča alebo vozidla
+- Typ súboru (VU alebo DDC)
+- Rozsah dátumov pokrytý súborom
+- Dni od posledného stiahnutia
+- Odznak stavu
+
+### Odznaky stavu
+
+| Odznak | Význam |
+|---|---|
+| **OK** | V rámci termínu sťahovania |
+| **Čoskoro splatné** | V rámci 5 dní od termínu |
+| **Po termíne** | Termín uplynul |
+
+Súbory označené **Po termíne** vyžadujú okamžitú akciu — stiahnite súbor z vozidla alebo karty vodiča a nahrajte ho, aby ste vyčistili stav po termíne.
+
+---
+
+## Automatické sťahovanie
+
+Pre nákladné vozidlá pripojené cez rFMS (štandardizované OEM rozhranie telematiky), Druma sťahuje nové súbory DDD a TGD automaticky každú noc. Pre pripojené vozidlá a vodičov nie je potrebná žiadna ručná akcia.
+
+Podporované integrácie automatického sťahovania:
+
+| Poskytovateľ | Názov integrácie | Stav |
+|---|---|---|
+| Scania | rFMS | Živé |
+| Volvo | rFMS | Beta |
+| DAF | rFMS | Beta |
+| MAN | rFMS | Beta |
+| Mercedes-Benz | rFMS | Beta |
+| IVECO | rFMS | Beta |
+| Renault | rFMS | Beta |
+| Webfleet | TachoShare | Ešte nie je implementované — čaká na prístup k partnerskému účtu Webfleet |
+
+Všetkých sedem OEM implementuje rovnaký otvorený štandard rFMS, takže kód konektora a logika spracovania súborov sú zdieľané naprieč značkami. Scania je potvrdená ako funkčná voči živým produkčným účtom. Ostatných šesť (Volvo, DAF, MAN, Mercedes-Benz, IVECO, Renault) používa identické rozhranie rFMS a očakáva sa, že budú fungovať rovnako, ale ešte neboli potvrdené voči živému účtu danej značky — považujte ich za beta, kým nebudú overené na pilotnom vozovom parku.
+
+Na aktiváciu automatického sťahovania prejdite na **Nastavenia → Integrácie** a pripojte svojho OEM poskytovateľa telematiky podporujúceho rFMS. Po pripojení Druma získava dostupné súbory počas okna nočnej synchronizácie a aktualizuje odznaky stavu podľa toho.
+
+<Note>
+Automatické sťahovanie závisí od toho, či poskytovateľ telematiky sprístupní súbor na diaľku. Niektoré staršie modely palubných jednotiek alebo kariet vodičov nemusia podporovať vzdialené získavanie — pre tieto sa vyžaduje ručné nahranie. Webfleet TachoShare je na pláne, ale ešte nie je živé; pripojené vozidlá Webfleet momentálne vyžadujú ručné nahranie. Ak prevádzkujete inú značku rFMS ako Scania a narazíte na neočakávané výsledky, ručné nahranie zostáva dostupné ako záloha, kým sa konektor overí.
+</Note>
+
+---
+
+## Ručné nahranie
+
+Pre vozidlá a vodičov nepokrytých automatickou integráciou nahrajte súbory priamo z nástroja na sťahovanie tachografu (napr. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+<Steps>
+  <Step title="Otvorte Archív tachografu">
+    Prejdite na **Vozový park → Archív tachografu**.
+  </Step>
+  <Step title="Kliknite na Nahrať súbor">
+    Kliknite na tlačidlo **Nahrať súbor** v pravom hornom rohu.
+  </Step>
+  <Step title="Vyberte vodiča alebo vozidlo">
+    Vyberte, či je súbor súborom karty vodiča (DDC) alebo súborom palubnej jednotky (VU), potom vyberte vodiča alebo vozidlo zo zoznamu.
+  </Step>
+  <Step title="Vyberte súbor">
+    Vyberte súbor `.ddd`, `.tgd`, `.v1b`, alebo `.c1b` zo svojho počítača. Maximálna veľkosť súboru je **10 MB**.
+  </Step>
+  <Step title="Potvrďte nahranie">
+    Kliknite na **Nahrať**. Druma analyzuje hlavičku súboru na extrahovanie rozsahu dátumov a uloží súbor do archívu. Hodiny meškania sa resetujú pre vybraného vodiča alebo vozidlo.
+  </Step>
+</Steps>
+
+<Warning>
+Akceptujú sa iba súbory `.ddd`, `.tgd`, `.v1b`, a `.c1b` — `.v1b`/`.c1b` sú ekvivalenty 2. generácie smart tachografu pre `.ddd`/`.tgd`. Súbory exportované v iných formátoch (CSV, PDF) nemožno nahrať a nespĺňajú požiadavku EÚ na uchovávanie dát. Vždy uchovávajte pôvodný binárny súbor.
+</Warning>
+
+---
+
+## Uchovávanie
+
+Druma uchováva všetky nahraté a automaticky stiahnuté súbory tachografu po zákonne požadované minimum 12 mesiacov. Súbory staršie ako 12 mesiacov podliehajú automatickému archivovaniu. Kontaktujte podporu, ak potrebujete získať súbory nad rámec štandardného okna uchovávania.
+
+---
+
+## Súvisiace články
+
+<CardGroup cols={2}>
+  <Card title="Pravidlá EÚ o hodinách jazdy" icon="clock" href="/sk/fleet-compliance/eu-driving-hours">
+    Denné a týždenné limity jazdy podľa Nariadenia 561/2006, sledované z dát tachografu.
+  </Card>
+  <Card title="Pracovný čas vodiča (WTD)" icon="clock" href="/sk/fleet-compliance/driver-working-time">
+    Limity pracovného času podľa Smernice 2002/15/ES a ako ich Druma monitoruje.
+  </Card>
+  <Card title="Dokumenty vozového parku" icon="folder-open" href="/sk/fleet-compliance/fleet-documents">
+    Súlad dokumentov vozidiel a sledovanie vypršania.
+  </Card>
+  <Card title="Balík mobility" icon="globe" href="/sk/fleet-compliance/mobility-package">
+    Povinnosti návratu vozidiel a vodičov a deklarácie vyslania IMI.
+  </Card>
+</CardGroup>

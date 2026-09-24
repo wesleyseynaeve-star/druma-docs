@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Polen)"
+description: "Krijg uw Poolse btw-registraties in Optima: download, een maandelijkse e-mail, of een geplande taak die het bestand zelf ophaalt."
+icon: "file-invoice"
+---
+
+Druma produceert **JPK_V7M(3)** — het Poolse btw-registratiebestand (*część ewidencyjna*, verkoopzijde) gedefinieerd door het Ministerie van Financiën en verplicht sinds 1 februari 2026. Uw boekhouder importeert het in Comarch ERP Optima onder **Rejestry VAT → Import do rej. VAT**.
+
+Omdat JPK een wettelijke standaard is in plaats van een leveranciersformaat, wordt hetzelfde bestand ook geïmporteerd in enova365, Symfonia en elk ander Pools boekhoudpakket.
+
+<Note>
+Bedragen in een andere valuta dan PLN worden omgerekend tegen de **NBP tabela A**-koers van de laatste werkdag vóór het belastbare feit, zoals art. 31a vereist. De koers, de datum ervan, en het tabelnummer worden op de factuur opgeslagen, zodat een aangifte reproduceerbaar blijft als iemand vraagt uit welke tabel een cijfer kwam.
+</Note>
+
+---
+
+## Eerst, twee instellingen
+
+**Instellingen → Integraties → JPK_V7M**. Twee waarden kunnen nergens anders vandaan worden afgeleid dan wat Druma al heeft, en de export weigert te draaien zonder ze in plaats van te raden:
+
+| Instelling | Waarom het vereist is |
+|---|---|
+| **Belastingkantoorcode (KodUrzedu)** | Een van 400 opgesomde codes. Niets koppelt een adres aan een code — deze wordt aan u toegewezen. Een gok dient in bij het verkeerde kantoor. |
+| **Contact-e-mail voor aangifte** | Komt in het `Podmiot1`-blok van het bestand. Uw operationele inbox is meestal niet uw boekhouder, en de verkeerde persoon op een belastingdocument zetten is erger dan vragen. |
+
+U kunt ook het **belastbare feit** instellen (factuurdatum, of de leverdatum van de gekoppelde order) — voor vracht is dit normaal gesproken de dag waarop de dienst werd verricht.
+
+---
+
+## Drie manieren waarop het bestand Optima bereikt
+
+Er kan niet van buitenaf naar Optima worden geschreven. On-premise is de Web API een Windows-service op het eigen netwerk van uw boekhouder; Comarch's *Chmura Standard* verbiedt toegang tot de database vanaf het internet volledig, en *Chmura Enterprise* bedient alleen software die op diezelfde server is geïnstalleerd. Dus elke onderstaande route loopt **van uw kant naar buiten**.
+
+### 1. Downloaden
+
+**Financiën → Export-builder → JPK_V7M-export (Polen)**. Kies een maand, krijg de `.xml`. Niets te configureren behalve de twee bovenstaande instellingen.
+
+### 2. Elke maand per e-mail laten sturen
+
+Schakel **Het bestand elke maand e-mailen** in hetzelfde instellingenpaneel in en kies een dag. Druma genereert de gesloten maand en stuurt uw boekhouder een downloadlink die 7 dagen geldig is.
+
+De dag is beperkt tot de **25e**, omdat dat de indieningsdeadline voor JPK_V7M voor de vorige maand is — een latere dag zou het bestand na de deadline afleveren die het beoogt te halen. Als de maand korter is dan de gekozen dag (31 in februari), gaat het op de laatste dag uit in plaats van te worden overgeslagen.
+
+Als het bestand niet kan worden geproduceerd — bijvoorbeeld een ontbrekende belastingkantoorcode — vertelt de e-mail u waarom, in plaats van gewoon nooit aan te komen.
+
+### 3. Laat de computer van de boekhouder het ophalen
+
+Een geplande taak op de machine die Optima draait kan het bestand zelf downloaden via gewone uitgaande HTTPS. Geen firewallwijziging, geen vast adres, geen Comarch-licentie.
+
+Maak een API-sleutel aan onder **Instellingen → Integraties → API-sleutels** (Operator- of Boekhouder-scope), plan dan dit maandelijks:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+Het bestand komt terecht in een map van waaruit uw boekhouder importeert. Zie de pagina [Public API](/nl/integrations/public-api#jpk-v7m-poland) voor de parameters van het endpoint.
+
+<Tip>
+Een sleutel met **Boekhouder**-scope kan meerdere bedrijven bestrijken. Deze vereist dan `&company_id=…` bij elk verzoek — een btw-aangifte is per belastingplichtige, en Druma zal niet raden welke u bedoelde.
+</Tip>
+
+---
+
+## Maandelijks aangeven, of continu importeren
+
+`?period=previous` geeft u de gesloten maand — degene die u aangeeft.
+
+`?period=current` geeft u de maand **in uitvoering**. De import van Optima leest de individuele rijen in plaats van het periodelabel, dus dagelijks de huidige maand ophalen is een manier om facturen in het btw-register te krijgen zodra ze worden uitgegeven, in plaats van eenmaal per maand. Elk antwoord draagt een `X-Partial-Period`-header (`true`/`false`), zodat de twee nooit worden verward.
+
+<Warning>
+**Test dit voordat u het automatiseert.** Of Optima rijen overslaat die het al heeft geboekt bij een herhaalde import, of ze een tweede keer aanmaakt, is het gedrag van Comarch en niet iets dat Druma controleert. Importeer dezelfde maand eerst twee keer op een testdatabase. Als het dupliceert, gebruik dan in plaats daarvan de maandelijkse route.
+</Warning>
+
+Een gedeeltelijke maand is nooit een bestand om *in te dienen* — alleen om een register te voeden.
+
+---
+
+## Als Druma niet het systeem is dat uw facturen uitgeeft
+
+De JPK-export wordt bewust geblokkeerd wanneer **klantfacturering is uitgeschakeld** voor uw bedrijf, en antwoordt `409`. Met facturering uitgeschakeld, zijn de facturen in Druma ergens anders uitgegeven en opgenomen voor tracking — ze exporteren zou het uitgevende systeem zijn eigen documenten teruggeven, en voor een Poolse exploitant betekent dat een tweede kopie van wat Optima al van KSeF heeft verzameld.
+
+In die opstelling is de nuttige richting de tegenovergestelde: de [Finance API](/nl/integrations/finance-api) geeft uw boekhoudsysteem de orders die klaar zijn om te factureren, en neemt het uitgegeven factuurnummer terug.
+
+---
+
+## KSeF
+
+Vanaf 1 april 2026 is KSeF verplicht voor Poolse btw-plichtigen, en boekt de eigen KSeF-module van Optima verkoopfacturen er rechtstreeks uit. Druma dient facturen in bij KSeF voor exploitanten die het hebben geconfigureerd, waardoor elk document binnen enkele minuten na uitgifte in Optima terechtkomt — geen bestand, geen geplande taak.
+
+JPK_V7M blijft het maandelijkse btw-*register* daaronder, en draagt het KSeF-nummer van elke factuur zodat Optima matcht in plaats van dupliceert.
+
+<CardGroup cols={2}>
+  <Card title="Public API" icon="code" href="/nl/integrations/public-api">
+    Het endpoint dat de geplande taak aanroept, de parameters en de limieten ervan.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/nl/integrations/finance-api">
+    Voor wanneer uw boekhoudsysteem de facturen uitgeeft, niet Druma.
+  </Card>
+</CardGroup>

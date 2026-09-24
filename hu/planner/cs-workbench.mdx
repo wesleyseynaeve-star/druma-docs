@@ -1,19 +1,25 @@
 ---
 title: "Ügyfélszolgálati munkaterület"
-description: "Az ügyfélszolgálat válasza a \"hol van a szállítmányom?\" kérdésre — egy panel az élő státuszhoz, telephely-adatokhoz, ellenőrző hívásokhoz és proaktív kivételekhez."
+description: "Az ügyfélszolgálat válasza a \"hol van a szállítmányom?\" kérdésre — egy panel az élő státuszhoz, telephely-részletekhez, ellenőrző hívásokhoz, és proaktív kivételekhez."
 icon: "headset"
 ---
 
 ## Áttekintés
 
-Az Ügyfélszolgálati munkaterület (CS Workbench) az a hely, ahol az ügyfélszolgálati munkatársak megválaszolják a leggyakoribb ügyfélkérdést: *hol van a szállítmányom?* Ahelyett, hogy a rendeléslista, a rendelésrészletek és az ügyfélrekord között ugrálnának, minden, amire egy munkatársnak szüksége van — élő státusz, ETA, sofőr és teherautó, megállónkénti nyitvatartás és kapcsolattartók, valamint minden ügyfélkapcsolat naplója — egyetlen panelen található.
+Az Ügyfélszolgálati munkaterület az a hely, ahol az ügyfélszolgálati munkatársak megválaszolják azt a kérdést, amit az ügyfelek leggyakrabban feltesznek: *hol van a szállítmányom?* Ahelyett hogy a rendeléslista, a rendelés részletei, és az ügyfél rekordja között váltogatnának, minden, amire egy munkatársnak szüksége van — élő státusz, ETA, sofőr és teherautó, nyitvatartási idők és kapcsolatok megállónként, és minden ügyfélérintkezés naplója — egyetlen master-detail panelben él.
 
-**Elérés:** kattints az **Ügyfélszolgálat** menüpontra a bal oldali navigációban. Alapértelmezetten a **Munkaterület** fülre nyílik; mellette egy **Telephelyek** fül található.
+**Elérés:** kattints az **Ügyfélszolgálat** menüpontra a bal oldali navigációban. Alapértelmezetten a **Munkaterület** fülön nyílik meg; egy **Telephelyek** fül található mellette.
 
-A munkaterület két kiegészítő elemre épül:
+<Frame caption="Ügyfélszolgálati munkaterület — sűrű, csoportosítható rendeléslista balra, rendelés-részletek jobbról becsúszva.">
+  <img src="/images/planner/cs-workbench.png" alt="Ügyfélszolgálati munkaterület rendelés-triázs lista szűrőkkel és részletpanellel" />
+</Frame>
 
-- **Telephelyek** — újrafelhasználható katalógus a felvételi/szállítási helyekről (raktárak, gyárak, elosztóközpontok, kikötők, terminálok, telephelyek) nyitvatartással, kapcsolattartókkal, dokk/hozzáférési megjegyzésekkel és ügyfelenkénti foglalási utasításokkal.
-- **Kivételek** — a Druma automatikusan jelöli a két leggyakoribb kihagyott szállítási okot: olyan ETA, amely a szállítási telephely zárása után érkezik, és olyan megálló, amely foglalást igényel, de nincs rögzítve.
+A rendeléslista egy sűrű táblázat, nem kártyafolyam — kattints egy sorra, hogy jobbról becsússzon egy részletpanel (szinkronban marad az URL-lel, így egy `?order=<id>` linkre mutató hivatkozás közvetlenül azon a rendelésen nyílik meg). A `J`/`K` végigjárja a listát le és fel, az `Esc` pedig törli a kijelölést — ugyanaz a billentyűzetminta, mint a Rendeléseknél és a Flottánál.
+
+A Munkaterület két támogató elemre épül:
+
+- **Telephelyek** — a felvételi/kiszállítási helyek (raktárak, gyárak, elosztóközpontok, kikötők, terminálok, udvarok) újrafelhasználható katalógusa, nyitvatartási idővel, kapcsolatokkal, dokk-/hozzáférési jegyzetekkel, és ügyfelenkénti foglalási utasításokkal. Válassz ki egy telephelyet egyszer egy rendelés megállóján, és a címe automatikusan kitöltődik; a Munkaterület ezután lekéri az adott telephely nyitvatartási idejét és kapcsolatait minden rendeléshez, amely meglátogatja.
+- **Kivételek** — a Druma automatikusan megjelöl két helyzetet, amelyek elmulasztott kiszállításokat okoznak: egy ETA-t, amely a kiszállítási telephely zárása után esik, és egy megállót, amely foglalást igényel anélkül, hogy egy rögzítve lenne.
 
 ---
 
@@ -24,16 +30,16 @@ A munkaterület két kiegészítő elemre épül:
     Lépj az **Ügyfélszolgálat** menüpontra — a Munkaterület fülön nyílik meg.
   </Step>
   <Step title="Találd meg a rendelést">
-    Használd a keresőmezőt (rendelésszám, referencia, vagy felvételi/szállítási város), vagy szűkítsd előbb a listát. Kattints egy rendeléskártyára a jobb oldali részletpanel megnyitásához.
+    Használd a keresőmezőt (rendelésszám, hivatkozás, vagy felvételi/kiszállítási város), vagy először szűkítsd a listát — lásd a szűrőket lent. Kattints egy rendelés sorára, hogy megnyisd a részletpanelét jobbra.
   </Step>
-  <Step title="Tekintsd át a szállítmány státuszát">
-    A részletpanel fejléce mutatja a rendelésszámot, státuszt, hozzárendelt sofőrt/teherautót (vagy alvállalkozót) és ETA-t, majd egy státuszlépcsőt és megállónkénti bontást — minden megálló mutatja a mai nyitvatartást (pirossal, ha épp zárva van), hogy szükséges-e időpont, az ügyfél foglalási referenciáját, a telephely kapcsolattartóit.
+  <Step title="Nézd át a szállítmány státuszát">
+    A részletpanel fejléce mutatja a rendelésszámot, a státuszt, a hozzárendelt sofőrt/teherautót (vagy alvállalkozót), és az ETA-t, majd egy státusz-léptető és egy megállónkénti lebontás következik — minden megálló mutatja a mai nyitvatartási időt (pirossal, ha jelenleg zárva van), hogy szükséges-e időpont, az ügyfél foglalási hivatkozását, a telephely kapcsolatait, és egy linket a foglalási portálra, ha a telephelynek van ilyen.
   </Step>
   <Step title="Naplózd a hívást">
-    Görgess az **Ellenőrző hívás napló**hoz a részletpanel alján. Válassz **Típust**, **Irányt** és **Csatornát**, opcionálisan jegyezd fel, kivel beszéltél, írd le, mi történt, és kattints a **Bejegyzés naplózása** gombra.
+    Görgess az **Ellenőrző hívás naplója** részhez a részletpanel alján. Válassz egy **Fajtát**, **Irányt**, és **Csatornát**, opcionálisan jegyezd fel, kivel beszéltél, írd le, mi történt, és kattints a **Bejegyzés naplózása** gombra. Azonnal megjelenik az időbeli áttekintésben a szerkesztő fölött, a neveddel és időbélyeggel.
   </Step>
   <Step title="Értesítsd az ügyfelet (opcionális)">
-    Kattints az **Ügyfél értesítése** gombra a részletpanel fejlécében, hogy márkázott státuszfrissítő e-mailt küldj. A Druma automatikusan naplózza a küldést ellenőrző hívásként is.
+    Kattints az **Ügyfél értesítése** gombra a részletek fejlécében, hogy márkázott státuszfrissítő e-mailt küldj az ügyfélnek. A Druma elküldi az ügyfél operatív vagy kiszállítási értesítésekre megjelölt kapcsolatainak, és automatikusan naplózza a küldést ellenőrző hívás bejegyzésként, így az audit-nyomvonal teljes marad.
   </Step>
 </Steps>
 
@@ -41,91 +47,145 @@ A munkaterület két kiegészítő elemre épül:
 
 | Mező | Opciók / jelentés |
 |---|---|
-| **Típus** | Ellenőrző hívás · Megjegyzés · Foglalás · Kivétel · Ügyfél-értesítés |
-| **Irány** | Bejövő (ügyfél/telephely hívott) · Kimenő (te hívtad) · Belső (csapatod számára szóló jegyzet) |
-| **Csatorna** | Telefon · E-mail · SMS · Portál · Rendszer |
-| **Kapcsolattartó** | Szabad szöveges név, kivel beszéltél |
-| **Megjegyzés** | Mi történt — a bejegyzés naplózásához szükséges |
+| **Fajta** | Ellenőrző hívás · Jegyzet · Foglalás · Kivétel · Ügyfélértesítés — milyen típusú érintkezés volt ez. |
+| **Irány** | Bejövő (az ügyfél/telephely hívott téged) · Kimenő (te hívtad őket) · Belső (jegyzet a csapatodnak). |
+| **Csatorna** | Telefon · E-mail · SMS · Portál · Rendszer. |
+| **Kapcsolat** | Szabad szöveges neve annak, akivel beszéltél, saját referenciaként. |
+| **Jegyzet** | Mi történt — szükséges, mielőtt naplózhatod a bejegyzést. |
+
+### Mit mutat még a részletpanel
+
+A státusz-léptetőn és a megállók lebontásán túl a részletpanel mindent megmutat, amire egy munkatársnak szüksége van, anélkül hogy elhagyná a Munkaterületet:
+
+- **Rakomány-chipek** — egy **ADR** chip (a veszélyesáru-osztállyal, ha be van állítva) és egy **hőmérséklet-tartomány** chip jelenik meg a súly, raklapok, és rakodóméterek mellett azoknál a rakományoknál, amelyek ezeket viselik.
+- **Élő pozíció sor** — amíg a rendelés úton van, egy mini-térkép mutatja a teherautó aktuális pozícióját, a **Nyomkövetési link másolása** és **Nyomkövetési link küldése e-mailben** műveletekkel közvetlenül mellette — nincs szükség a rendelés-részletoldalra ugrani, hogy linket adj az ügyfélnek.
+- **Hátralévő távolság** — a kiszállításig hátralévő kilométerek, ugyanazokból az ETA-adatokból számítva, mint az élő térkép.
+- **eCMR / POD megtekintése** — közvetlen link az aláírt eCMR-hez vagy a kézbesítési igazoláshoz, amint az létezik a rendelésen.
+- **Ügyfél rendeléstörténete** — egy panel, amely felsorolja ennek az ügyfélnek a korábbi rendeléseit, mindegyiken időben/késésben jelzéssel, így egy munkatárs azonnal láthatja, hogy egy késés egyszeri eset-e vagy minta, mielőtt felveszi a telefont.
 
 ---
 
-## Rendeléslista szűrése és rendezése
+## A rendeléslista szűrése, csoportosítása, és rendezése
 
-A bal oldali rendeléslista saját eszköztárral rendelkezik:
+A lista feletti parancssáv szándékosan egysoros — a mindennapi vezérlők közvetlenül rajta vannak, és minden más a **További szűrők** mögött él:
 
-- **Hatókör-váltó** — **Aktív** (alapértelmezett), **Összes**, vagy **Előzmény**
-- **Rendezés** — Létrehozás, ETA, Szállítás vagy Státusz szerint
-- **Státuszszűrő**, **Ügyfélszűrő** és **Ügyfélreferencia-szűrő**
-- **Csak kivételek** — csak azok a rendelések, amelyeken jelenleg kivétel van
+- **Hatókör-kapcsoló** — **Aktív** (alapértelmezett), **Összes**, vagy **Történeti**.
+- **Csoport** — a lista alapértelmezetten a Druma saját **Triázs** csoportosítását használja (lásd lent); kapcsold **Nincs**-re egy lapos, rendezhető listáért helyette.
+- **Rendezés** — Létrehozva, ETA, Kiszállítási dátum, Státusz, **Következő megálló**, vagy **Ellenőrző hívás kora** szerint (az utolsó kettőnek szüksége van minden rendelés élő jelzésadatára, így egy pillanatra szürkék, amíg ez betöltődik).
+- **Oszlopok** — válaszd ki, mely táblázatmezők láthatók; alapértelmezetten a táblázat mutatja a Rendelésszámot, Státuszt, Ügyfelet, Útvonalat, egy kombinált **Jelzés** oszlopot, és még egyet — a többi (Hozzárendelés, ETA-/következő megálló-lebontás, stb.) opcionális, így a táblázatnak nincs szüksége vízszintes görgetésre a legfontosabb oszlopok olvasásához.
 
-Egy KPI-sáv a lista felett mutatja az élő számokat: Találatok, Úton, Kiszállítva, Kivételek.
+A **További szűrők** tartalmazza: Státusz, Ügyfél, Ügyfélhivatkozás (az ügyfél és a hivatkozás részleges egyezéseket is elfogad), Rakodási/kirakodási dátum előbeállítások (**Ma**, **Holnap**, **Ezen a héten**, függetlenül alkalmazva a felvételi és kiszállítási dátumokra), **Csak kivételek**, **Hozzá nem rendelt** (nincs sofőr, nincs teherautó, még nincs alvállalkozó/fuvarozó), és **Elavult ellenőrző hívás** (válassz egy küszöböt — **12ó, 24ó, 48ó,** vagy **72ó** — arra, hogy milyen régi legyen az utolsó ellenőrző hívás, hogy számítson).
+
+<Note>
+Az Elavult ellenőrző hívás csak azokat a rendeléseket jelöli meg, amelyek éppen most ténylegesen **mozgásban** vannak (hozzárendelve a kirakodásig) — egy Vázlat vagy Függőben rendelés, amelyen még semmi nincs naplózva, nem "elavult", csak még nem kezdődött el.
+</Note>
+
+Kattints egy rendelés sorának **csillagára**, hogy **CS prioritásként** rögzítsd — a rögzített rendelések mindig a lista tetejére rendeződnek, függetlenül az aktív rendezési kulcstól vagy iránytól.
+
+### Triázs csoportosítás
+
+Az alapértelmezett csoportosítás minden rendelést négy kategória egyikébe sorol, a legrosszabbal kezdve:
+
+| Csoport | Mi kerül ide |
+|---|---|
+| **Azonnali beavatkozást igényel** | A legsürgősebb jelzések — egy nyitott kivétel vagy egy válaszra váró eszkaláció |
+| **Késésben / kockázatban** | Az ETA puffer a kiszállítási ablakhoz képest egy órára vagy kevesebbre csökkent, vagy már elmulasztották |
+| **Ellenőrző hívásra vár** | Mozgásban, elavult ellenőrző hívás küszöbödön belül naplózott hívás nélkül |
+| **Terv szerint** | Minden más |
+
+Minden rendelés sora egy kompakt **Jelzés** oszlopot mutat (kockázatos/késésben állapotát és az ellenőrző hívás korát egy pillantásra) és egy következő megálló előnézetet — a közelgő megálló nevét, városát, és időablakát.
+
+A lista feletti KPI-sáv — **Eredmények**, **Úton**, **Kiszállítva**, **Kivételek** — kattintható: kattints egy csempére, hogy arra szűrd a listát, kattints újra, hogy törölje a szűrőt. A **Kiszállítva** csempe kötőjelet mutat félrevezető nulla helyett, amíg az **Aktív** hatókörön vagy (amely tervezetten kizárja a kiszállított rendeléseket) — kattints rá, hogy átváltson az **Összes** hatókörre, Kiszállítva-ra szűrve.
 
 ---
 
 ## A kivétel-sor kezelése
 
-Minden nyitott rendelést automatikusan ellenőriznek két hibamódra, amint az adatok változnak:
+Minden nyitott rendelést automatikusan ellenőriz a rendszer két hibamódra, abban a pillanatban, amikor az adatai megváltoznak — nem kell mindegyiket megnyitnod, hogy megtalálj egy problémát:
 
-- **ETA a zárás után** — a rendelés jelenlegi ETA-ja a szállítási telephely aznapi nyitvatartása után érkezik.
-- **Hiányzó időpont** — egy megálló telephelye foglalást igényel, de nincs foglalási referencia és nincs naplózott `foglalás` ellenőrző hívás sem.
+- **ETA zárás után** — a rendelés aktuális ETA-ja a kiszállítási telephely aznapi nyitvatartási ideje után esik.
+- **Hiányzó időpont** — egy megálló telephelye foglalást igényel, de még nem létezik hozzá sem foglalási hivatkozás, sem naplózott `foglalás` ellenőrző hívás.
 
 <Steps>
-  <Step title="Vedd észre a jelölt rendeléseket">
-    A jelölt rendelések borostyán kivétel-jelvényt viselnek a listában, és a Munkaterület **Kivételek** KPI-ja mutatja, hány rendelés érintett. Kapcsold be a **Csak kivételek** szűrőt.
+  <Step title="Vedd észre a megjelölt rendeléseket">
+    A megjelölt rendelések borostyánsárga kivétel-jelvényt viselnek a rendeléslistán, és a Munkaterület **Kivételek** KPI-ja mutatja, hány különálló rendelést érint jelenleg. Kapcsold be a **Csak kivételek** opciót, hogy csak ezeket lásd.
   </Step>
-  <Step title="Nyisd meg a rendelést és tekintsd át a részleteket">
-    A részletpanel egy borostyán **Kivételek** panelt mutat, amely felsorolja az egyes kiváltott feltételeket. Egy előre jelzett kivétel (a Druma előrejelző modelljéből) **Előre jelzett** jelvényt kap.
+  <Step title="Nyisd meg a rendelést és nézd át a részleteket">
+    A részletpanel egy borostyánsárga **Kivételek** panelt mutat, amely felsorolja minden kiváltott feltételt és a telephelyet, amelyre vonatkozik. Egy előrejelzett kivétel (a Druma előrejelző késés-modelljéből) **Előrejelzett** jelvénnyel és súlyossági szinttel van megjelölve, elkülönítve a fent leírt szabály-alapúaktól.
   </Step>
-  <Step title="Old meg">
-    A kivétel típusától függően: naplózz egy `foglalás` ellenőrző hívást, miután megerősítettél egy időpontot, vagy frissítsd a telephely foglalási referenciáját. ETA a zárás után esetén hívd fel előre a telephelyet, vagy értesítsd az ügyfelet.
+  <Step title="Oldd meg">
+    A kivételtől függően: naplózz egy `foglalás` ellenőrző hívást, miután megerősítettél egy időpontot, vagy frissítsd a telephely foglalási hivatkozását ehhez az ügyfélhez. Egy ETA-zárás-után helyzetnél hívd fel előre a telephelyet, vagy értesítsd az ügyfelet, hogy alkalmazkodhasson.
   </Step>
-  <Step title="Erősítsd meg, hogy megszűnt">
-    A kivételek élőben, az aktuális adatokból számítódnak, nem manuálisan törölhetők — amint az alapfeltétel megoldódik, a jelzés magától eltűnik.
+  <Step title="Erősítsd meg, hogy megszűnik">
+    A kivételeket élőben számítják ki az aktuális adatokból, nem manuálisan utasítják el — amint a mögöttes feltétel megoldódik (egy foglalás naplózásra kerül, vagy az ETA visszakerül a nyitvatartási időbe), a jelzés magától eltűnik.
   </Step>
 </Steps>
 
 <Note>
-A kivételek a Kezdőlap **Kivétel-hírfolyam** widgetjét is táplálják, így egy proaktív ellenőrzéshez nem kell megnyitni az Ügyfélszolgálat szekciót.
+A kivételek táplálják a Kezdőlap irányítópult **Kivétel-folyam** widgetjét is, így egy proaktív ellenőrzés egyáltalán nem igényli a CS szakasz megnyitását.
 </Note>
 
 ---
 
-## Telephelyek — honnan származnak a nyitvatartás és kapcsolattartó adatok
+## Eszkalálás tervezőhöz
 
-Kezeld a telephely-katalógust a **Telephelyek** fülről. Minden telephely tartalmaz azonosítót/címet, egy heti nyitvatartási rácsot (dátum-specifikus kivételekkel, pl. munkaszüneti nap), foglalási beállításokat, dokkszámot és kapu/hozzáférési megjegyzéseket, jármű-korlátozásokat, kapcsolattartó-listát és ügyfelenkénti foglalási utasításokat.
+Néhány probléma tervezői döntést igényel, nem ellenőrző hívást — egy teherautó-újrahozzárendelést, egy árral vagy feltételekkel kapcsolatos ügyfélvitát, egy elérhetetlen sofőrt, hiányzó dokumentációt. Ahelyett hogy telefonon vagy chaten keresztül követnéd nyomon, eszkalálj közvetlenül a rendelésből.
 
-Két gomb a telephely-szerkesztő nyitvatartási részében kitöltheti helyetted az adatokat (mindkettő meglévő telephely megnyitását igényli):
+<Steps>
+  <Step title="Nyisd meg a rendelést és kattints az Eszkalálásra">
+    A rendelés részletpaneljén kattints az **Eszkalálás tervezőhöz** gombra.
+  </Step>
+  <Step title="Válassz egy okot">
+    Válassz a **Teherautó-újrahozzárendelés**, **Ügyfélvita**, **Sofőr elérhetetlen**, **Dokumentáció**, vagy **Egyéb** közül.
+  </Step>
+  <Step title="Adj hozzá egy jegyzetet (opcionális)">
+    Add meg a tervezőnek a szükséges kontextust — mit próbáltál már, mit kér az ügyfél, és így tovább.
+  </Step>
+  <Step title="Küldd be">
+    Kattints az **Eszkalálás** gombra. Az eszkaláció rögzítésre kerül a rendelés ellenőrző hívás/kommunikációs idővonalán, és egy borostyánsárga sáv jelenik meg a rendelésen — mind a Tervezőtáblán, mind a Rendelések részletpaneljén, így a tervező látja, bárhol is dolgozik már, nem csak a CS-en belül.
+  </Step>
+</Steps>
 
-- **Javaslat előzményekből** — kikövetkezteti a nyitvatartást és a jellemző tartózkodási időt a saját sofőreid korábbi érkezési/indulási idejéből. Mindig áttekinthető mentés előtt.
-- **Kutatás a weben** — megkéri a Druma AI-t, hogy keresse meg a telephely közzétett nyitvatartását, kapcsolattartóit és foglalási portálját a weben, hivatkozva a felhasznált oldalakra. Előbb be kell kapcsolni a **Beállítások → Automatizálás → Ügyfélszolgálat** menüben — alapértelmezetten kikapcsolva.
+Miután a tervező foglalkozott vele, ő (vagy te) a **Megoldottként jelölés** gombra kattint a borostyánsárga sávon — ez rögzíti, ki oldotta meg és mikor, és a sáv eltűnik.
+
+---
+
+## Telephelyek — honnan származnak a nyitvatartási idők és kapcsolatok
+
+Kezeld a telephely-katalógust a **Telephelyek** fülről. Minden telephely tartalmaz identitást/címet, egy heti nyitvatartási idő rácsot (dátum-specifikus kivételekkel, pl. egy ünnepnap), időpont-/foglalási beállításokat, dokkszámot és kapu-/hozzáférési jegyzeteket, jármű-korlátozásokat, egy kapcsolat-ismétlőt, és ügyfelenkénti foglalási utasításokat (ugyanaz a raktár eltérő hivatkozást igényelhet attól függően, kinek a rakománya).
+
+Két gomb a telephely-szerkesztő nyitvatartási idő szakaszában kitöltheti helyetted az adatokat — mindkettőhöz meglévő telephely megnyitása szükséges (új létrehozásakor nem elérhető):
+
+- **Javaslat előzményekből** — kikövetkezteti a nyitvatartási időt és a jellemző tartózkodási időt a saját sofőrjeid múltbeli érkezési/indulási idejéből ezen a telephelyen. Mentés előtt mindig felülvizsgálható; semmi sem íródik automatikusan.
+- **Web kutatása** — megkéri a Druma AI-ját, hogy keresse meg a weben a telephely közzétett nyitvatartási idejét, kapcsolatait, és foglalási portálját, hivatkozva a felhasznált oldalakra. Előbb be kell kapcsolni a **Beállítások → Automatizálás → Ügyfélszolgálat** menüpontban (admin/vállalati admin beállítás) — alapértelmezetten ki van kapcsolva.
 
 ### Mit jelentenek a telephely mezői
 
 | Mező | Jelentés |
 |---|---|
-| **Típus** | Raktár, Gyár, Elosztóközpont, Kikötő, Terminál, Telephely, Egyéb |
-| **Időzóna** | A telephely helyi időzónája |
-| **Nyitvatartás** | Heti bontású nyitási ablakok, opcionális dátum-specifikus kivételekkel |
-| **Időpont szükséges** | Kell-e foglalási időpontot egyeztetni érkezés előtt |
-| **Dokkszám / Kapuutasítások / Hozzáférési megjegyzések** | Gyakorlati érkezési információk sofőrök és tervezők számára |
-| **Foglalási portál URL** | Link a telephely saját foglalási rendszeréhez, ha van |
-| **Jármű-korlátozások** | Jelzés-alapú korlátok (pl. méret/súly) |
-| **Kapcsolattartók** | Névvel ellátott foglalási/portaszolgálati/raktári/biztonsági kapcsolattartók |
-| **Ügyfelenkénti utasítások** | Foglalási referencia, ügyfélkód és szabad szöveges utasítások adott ügyfélhez |
+| **Típus** | Raktár, Gyár, Elosztóközpont, Kikötő, Terminál, Udvar, Egyéb. |
+| **Időzóna** | A telephely helyi időzónája — a nyitvatartási idő helyes kiértékelésére szolgál, függetlenül attól, hol jött létre a rendelés. |
+| **Nyitvatartási idő** | Egy hetenkénti napokra bontott nyitott ablak rács, opcionális dátum-specifikus kivételekkel (zárva tartás/ünnepnapok). |
+| **Időpont szükséges** | Hogy kell-e foglalási időpontot egyeztetni érkezés előtt; ügyfelenként felülírható. |
+| **Dokkszám / Kapu-utasítások / Hozzáférési jegyzetek** | Gyakorlati érkezési információk sofőrök és tervezők számára. |
+| **Foglalási portál URL** | Link a telephely saját foglalási rendszeréhez, ha van neki. |
+| **Jármű-korlátozások** | Jelző-alapú korlátok (pl. méret-/súlykorlátozások) rögzítve a telephelyen. |
+| **Kapcsolatok** | Elnevezett foglalási/portás/raktári/biztonsági kapcsolatok telefonnal/e-maillel. |
+| **Ügyfelenkénti utasítások** | Foglalási hivatkozás, ügyfélkód, és szabad szöveges utasítások, amelyek egy adott ügyfélre specifikusak ezen a telephelyen. |
 
 ---
 
 <CardGroup cols={2}>
-  <Card title="Rendelés létrehozása" icon="plus" href="/en/planner/creating-orders">
-    Válassz telephelyet egy megállón a cím automatikus kitöltéséhez.
+  <Card title="Rendelés létrehozása" icon="plus" href="/hu/planner/creating-orders">
+    Válassz egy telephelyet egy megállón, hogy automatikusan kitöltsd a címét — a Munkaterület ezután lekéri annak a telephelynek a részleteit a rendeléshez.
   </Card>
-  <Card title="Rendelés életciklus" icon="circle-dot" href="/en/planner/order-lifecycle">
-    Minden rendelésstátusz, amit a Munkaterület megjelenít.
+  <Card title="Rendelési életciklus" icon="circle-dot" href="/hu/planner/order-lifecycle">
+    Minden rendelésstátusz, amit a Munkaterület megjelenít, és mi váltja ki az egyes átmeneteket.
   </Card>
-  <Card title="Diszpécselés" icon="route" href="/en/planner/dispatching">
-    Az élő térkép és sofőrcsevegés, amelyből a Munkaterület élő pozíció-sora és hozzárendelési kártyája merít.
+  <Card title="Diszpécselés" icon="route" href="/hu/planner/dispatching">
+    Az élő térkép és a sofőr-chat, amelyekből a Munkaterület élő pozíció sora és hozzárendelési kártyája merít.
   </Card>
-  <Card title="Kezdőlap" icon="gauge" href="/en/planner/home-dashboard">
-    Add hozzá a Kivétel-hírfolyam widgetet, hogy a CS-kivételeket a dashboardon is lásd.
+  <Card title="Kezdőlap irányítópult" icon="gauge" href="/hu/planner/home-dashboard">
+    Add hozzá a Kivétel-folyam widgetet, hogy lásd a CS kivételeket az irányítópult elhagyása nélkül.
   </Card>
 </CardGroup>

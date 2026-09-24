@@ -1,42 +1,174 @@
 ---
-title: "Výmena paliet"
-description: "Sledovanie výmeny EUR paliet na objednávkach — debety, kredity a zostatok paliet podľa klienta."
-icon: "pallet"
+title: "Register výmeny paliet"
+description: "Sledujte zostatky EUR, CHEP, a iných paliet za protistranu pomocou registra len na pridávanie, automatizácie poplatkov, a voliteľnej synchronizácie s poskytovateľom."
+icon: "package"
 ---
 
-## Čo je výmena paliet
+## Prehľad
 
-Mnohé európske prepravné zákazky zahŕňajú výmenu EUR paliet — príjemca vracia rovnaký počet prázdnych paliet, aký dostane s nákladom. Druma sleduje tieto transakcie tak, aby ste vždy vedeli, koľko paliet dlhuje každý klient.
+Keď prepravujete tovar na EUR paletách, CHEP, alebo iných výmenných paletách, vstupujete do priebežného zostatku s každým klientom a subdodávateľom — odoslané palety sa musia vrátiť, alebo sa účtuje poplatok. Register výmeny paliet Druma sleduje každý pohyb ako nemenný záznam a poskytuje vám živý zostatok za protistranu, aby vám nič neuniklo.
 
-## Záznamy výmeny paliet na zákazke
+Register je **len na pridávanie**: pohyby sa pridávajú pri každej zastávke objednávky a priebežný zostatok sa počíta automaticky. Môžete zaznamenávať opravy a úpravy bez mazania histórie.
 
-Na každej zákazke môžete zaznamenať pohyby paliet:
+---
 
-- **Odoslaných paliet** — Počet paliet odoslaných s nákladom
-- **Vrátených paliet** — Počet paliet vrátených vodičovi pri vykladaní
+## Podporované typy paliet
 
-Tieto polia sú voliteľné. Vyplňte ich na zákazke v sekcii **Výmena paliet** alebo ich vodič môže zaznamenať v mobilnej aplikácii.
+| Typ | Celý názov |
+|---|---|
+| EUR | EUR-paleta (EPAL) |
+| CHEP | CHEP paleta |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Iné | Akýkoľvek iný typ výmennej palety, ktorý vaša prevádzka používa |
 
-## Zostatok paliet podľa klienta
+Každý typ palety má vlastný stĺpec zostatku. Protistrana vám môže dlžiť EUR palety, zatiaľ čo vy jej dlžíte CHEP palety súčasne.
 
-Súhrnný zostatok paliet pre každého klienta si pozriete v:
+---
 
-**Klienti → [Meno klienta] → záložka Palety**
+## Zaznamenávanie pohybov paliet na objednávke
 
-Zostatok zobrazuje:
-- Celkovo odoslaných paliet
-- Celkovo vrátených paliet
-- Aktuálny zostatok (pozitívny = klient vám dlhuje palety, negatívny = vy dlhujete klientovi)
+Pohyby paliet sa zaznamenávajú na úrovni zastávky — zastávky nakládky, doručenia, a vykládky majú všetky vlastnú sekciu **Pohyby paliet**.
 
-## Fakturácia za palety
+<Steps>
+  <Step title="Otvorte panel podrobností objednávky">
+    Kliknite na objednávku na Plánovacej tabuli alebo v zozname Objednávky, aby ste otvorili jej panel podrobností vpravo.
+  </Step>
+  <Step title="Prejdite na kartu zastávky">
+    Prejdite na zastávku, kde sa vymieňajú palety — zvyčajne nakládka (palety odchádzajúce) alebo doručenie (palety vrátené). Každá karta zastávky zobrazuje sekciu **Pohyby paliet**.
+  </Step>
+  <Step title="Pridajte pohyb">
+    Kliknite na **+ Pridať pohyb** na karte zastávky. Zobrazí sa malý formulár s:
+    - **Typ palety** — vyberte z EUR, CHEP, LPR, IPP, Euro Pool, alebo Iné
+    - **Typ pohybu** — Odoslané (kladné), Vrátené (záporné), Úprava, Oprava, alebo Počiatočný zostatok
+    - **Množstvo** — počet paliet
+    - **Poznámky** (voliteľné) — referenčné číslo alebo komentár vodiča
+  </Step>
+  <Step title="Uložte">
+    Kliknite na **Uložiť**, aby ste potvrdili pohyb. Okamžite sa pridá do registra a priebežný zostatok protistrany sa aktualizuje.
+  </Step>
+</Steps>
 
-Ak klient nedodrží parity paliet, môžete vystaviť poplatok za chýbajúce palety:
+Ak chcete odstrániť chybný záznam, kliknite na ikonu **koša** vedľa pohybu.
 
-1. Otvorte zákazku
-2. Pridajte ručnú položku faktúry: „Poplatok za chýbajúce palety — X paliet × €[sadzba]"
+<Note>
+Použite **Počiatočný zostatok** raz za protistranu, aby ste nastavili jej počiatočný zostatok, ak migrujete z tabuľky alebo predchádzajúceho systému. Nasledujúce pohyby na ňom stavajú.
+</Note>
 
-Alternatívne nakonfigurujte automatické pravidlo poplatku za palety v **Nastavenia → Výmena paliet** (ak je nakonfigurované).
+---
 
-<Card title="Generovanie faktúr" icon="file-invoice" href="/en/invoicing/generating-invoices">
-  Ako pridávať poplatky za palety na faktúry.
+## Zobrazenie zostatkov
+
+### Stĺpec zostatku v zozname klientov
+
+Zoznam **Klienti** (Obchod → Klienti) obsahuje stĺpec **Zostatok paliet**. Indikátor používa farebné kódovanie na prvý pohľad:
+
+| Farba | Význam |
+|---|---|
+| Jantárová | Klient vám dlží palety |
+| Modrá | Vy dlžíte palety klientovi |
+| Neutrálna (sivá) | Zostatok je vyrovnaný |
+
+Prejdite myšou nad indikátor zostatku, aby ste videli tooltip podľa typu, ktorý rozpisuje zostatok naprieč všetkými typmi paliet — napríklad +12 EUR, −4 CHEP.
+
+### História pohybov za protistranu
+
+Kliknite na riadok klienta, aby ste otvorili panel podrobností klienta, potom prejdite na kartu **Palety**. Zobrazuje sa tu úplný register pre danú protistranu: každý pohyb, dátum, referencia objednávky, a priebežný súčet.
+
+---
+
+## Prah poplatku a automatické vytvorenie poplatku
+
+Ak zostatok paliet klienta narastie nad nakonfigurovaný prah, Druma vás môže automaticky vyzvať na naúčtovanie poplatku za výmenu paliet.
+
+Keď pohyb spôsobí, že zostatok prekročí prah, zobrazí sa modál **Potvrdenie poplatku za palety**:
+
+- **Potvrdiť** — pridá riadok poplatku do extra položiek objednávky (viditeľný v editore faktúr ako poplatok za výmenu paliet)
+- **Preskočiť** — zruší výzvu bez vytvorenia poplatku; zostatok zostáva nezmenený
+
+<Warning>
+Kliknutie na **Preskočiť** neresetuje počítadlo prahu. Modál sa znova zobrazí pri ďalšom pohybe presahujúcom prah, pokiaľ najprv nesnížite zostatok zaznamenaním vrátených paliet.
+</Warning>
+
+---
+
+## Konfigurácia prahov a sadzieb poplatkov
+
+Prejdite na **Nastavenia → Klienti → Konfigurácia paliet**, aby ste nastavili pravidlá poplatkov. Táto sekcia je dostupná iba pre roly **admin** a **company_admin**.
+
+Pre každý typ palety môžete nakonfigurovať:
+
+| Nastavenie | Popis |
+|---|---|
+| Prah poplatku | Počet paliet, pri ktorom sa spustí modál poplatku |
+| Sadzba poplatku | Cena za paletu (vo vašej firemnej mene) použitá na automaticky vygenerovaný riadok poplatku |
+
+Ponechajte prah prázdny, aby ste vypli modál poplatku pre daný typ palety — pohyby sa naďalej sledujú, ale žiadny poplatok sa nikdy nenavrhne.
+
+---
+
+## Odsúhlasenie zostatkov paliet
+
+Okrem stĺpca zostatku za jednotlivého klienta má Druma vyhradenú stránku **Prevádzka → Zostatky paliet**, ktorá odsúhlasuje pozície naprieč **klientmi aj subdodávateľmi** v jednom zobrazení — užitočné, keď chcete jeden prechod cez každú otvorenú pozíciu paliet namiesto kontroly protistrán jedna po druhej.
+
+Na rozdiel od registra za objednávku táto stránka zobrazuje **jeden riadok na protistranu**, nie jeden na (protistrana, typ palety). Ak obchodujete s viac ako jedným štandardom paliet s tým istým klientom, riadok ich zlúči do troch súčtov — EUR, Priemyselné, a Ostatné — plus kombinovanú netto hodnotu a jeden odznak stavu, takže vždy máte jeden riadok, ktorý hovorí, čo vám táto protistrana dlží (alebo vy jej) celkovo.
+
+Odznak stavu každého riadku používa rovnakú logiku prahu ako modál poplatku, s dodatočnou úrovňou pre pozície, ktoré sa od neho vzdialili ďaleko:
+
+| Stav | Význam |
+|---|---|
+| **OK** | Zostatok je na alebo pod nakonfigurovaným prahom (vrátane presnej nuly — plne vyrovnané) |
+| **Nerovnováha** | Zostatok prekračuje prah |
+| **Závažné** | Zostatok prekračuje prah **dvojnásobne** — oplatí sa to riešiť, kým to ďalej nenarastie |
+
+<Steps>
+  <Step title="Vyberte kartu rozsahu">
+    Otvorte **Prevádzka → Zostatky paliet**. Päť kariet rozsahu — **Všetky · Kritické · Nerovnováha · OK · Vyrovnané** — sa nachádza nad tabuľkou, každá so živým počtom, takže môžete prejsť priamo na pozície vyžadujúce pozornosť.
+  </Step>
+  <Step title="Vyhľadajte, filtrujte, alebo uložte pohľad">
+    Použite vyhľadávacie pole na nájdenie protistrany podľa mena, a **Filter** na zúženie podľa typu protistrany (klient/subdodávateľ). **Stĺpce** vám umožnia vybrať, ktoré polia sa zobrazujú; **Pohľady** uložia váš aktuálny rozsah, vyhľadávanie, a výber stĺpcov ako pomenovaný pohľad, ktorý vy (alebo celá vaša spoločnosť) môžete neskôr znova otvoriť.
+  </Step>
+  <Step title="Otvorte panel vyrovnania">
+    Kliknite na riadok (alebo jeho ikonu **oka**), aby sa sprava vysunul panel vyrovnania, zobrazujúci úplný register pohybov tejto protistrany naprieč všetkými typmi paliet, triediteľný podľa dátumu, objednávky, alebo sumy.
+  </Step>
+  <Step title="Vyrovnajte pozíciu">
+    Z panela môžete **zaúčtovať opravu** (záznam registra bez objednávky s povinnou poznámkou — užitočné pre ručne dohodnutý odpis alebo úpravu migrácie) alebo **naúčtovať poplatok** za prekročenie, pomocou rovnakého toku poplatkov ako automatická výzva popísaná vyššie.
+  </Step>
+  <Step title="Vygenerujte výpis">
+    Z panela alebo vlastnej ponuky riadku vygenerujte **PDF výpis** — dokument s vašou značkou s poľom na podpis, pripravený na to, aby ho protistrana potvrdila a podpísala — alebo exportujte pozíciu ako **CSV**. **Exportovať ▾** v hornej časti stránky vytvorí kombinovaný CSV všetkých protistrán naraz, pre úplný prechod odsúhlasením.
+  </Step>
+</Steps>
+
+<Note>
+Zostatok paliet klienta sa tiež zobrazuje, len na čítanie, na jeho zázname: otvorte klienta a skontrolujte kartu **Prehľad** pre riadok „Zostatok paliet" s odkazom priamo do panela vyrovnania tejto stránky pre daného klienta.
+</Note>
+
+**Nočné automatizované odsúhlasenie** (02:05 UTC) tiež kontroluje zostatky každej spoločnosti oproti rovnakým prahom a upozorňuje adminov/plánovačov vašej spoločnosti, keď je pozícia nerovnovážna — deduplikované za typ palety a protistranu v okne 7 dní, takže nie ste znova upozornení pri každom behu na pozíciu, ktorú už poznáte.
+
+<Note>
+Register vynucuje vlastnú konvenciu znamienka na úrovni databázy: pohyb **Odoslané** vždy pripočíta k zostatku a pohyb **Vrátené** vždy odpočíta, bez ohľadu na to, ako je číslo zadané vo formulári na pridanie pohybu — záznamy **Úprava**, **Oprava**, a **Počiatočný zostatok** zachovávajú znamienko, ktoré zadáte, keďže tie môžu oprávnene ísť oboma smermi.
+</Note>
+
+---
+
+## Synchronizácia s poskytovateľom (voliteľné)
+
+Ak používate CHEP Connect, Druma môže odsúhlasiť váš register v aplikácii oproti oficiálnemu zostatku poskytovateľa. Prejdite na **Nastavenia → Integrácie → Výmena paliet**.
+
+**CHEP Connect** je aktívny. Zadajte prihlasovacie údaje svojho účtu CHEP, potom:
+
+- Kliknite na **Otestovať pripojenie** na overenie, že prihlasovacie údaje sú prijaté
+- Kliknite na **Synchronizovať zostatok** na stiahnutie aktuálneho zostatku poskytovateľa a jeho porovnanie s priebežným súčtom Druma
+
+Akákoľvek nezrovnalosť sa zobrazí ako riadok odsúhlasenia — môžete ju prijať ako záznam **Oprava** na zosúladenie oboch registrov.
+
+<Note>
+CHEP Connect je momentálne jedinou integráciou poskytovateľa paliet. Typy paliet EUR, LPR, IPP, Euro Pool, a Iné sa v registri sledujú ručne — pre ne dnes neexistuje synchronizácia s poskytovateľom. Základný register funguje plne bez akéhokoľvek nakonfigurovaného poskytovateľa.
+</Note>
+
+---
+
+<Card title="Extra položky a príplatky objednávky" icon="circle-plus" href="/sk/invoicing/generating-invoices">
+  Zistite, ako sa riadky poplatkov za palety zobrazujú v editore faktúr spolu s ostatnými príplatkami objednávky.
 </Card>

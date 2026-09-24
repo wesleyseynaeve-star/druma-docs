@@ -1,0 +1,114 @@
+---
+title: "Pripojte svoju AI (MCP)"
+description: "Pripojte Claude Code, GitHub Copilot, Codex CLI, Gemini CLI, alebo Cursor k svojim dátam Druma pomocou Model Context Protocol (MCP)."
+icon: "bot"
+---
+
+Druma prevádzkuje vzdialený server **MCP (Model Context Protocol)**, takže môžete pripojiť svojho vlastného AI klienta — Claude Code, Claude Desktop, GitHub Copilot (agentný režim), OpenAI Codex CLI, Gemini CLI, alebo Cursor — priamo k svojim dátam Druma. Opýtajte sa ho na svoje objednávky, vozový park, vodičov a faktúry prirodzeným jazykom, a — s voliteľným rozsahom — nechajte ho **navrhovať** priradenia vozidiel, ktoré schválite.
+
+<Warning>
+Konektor MCP je funkcia riadená príznakom funkcie a je predvolene vypnutá. Kontaktujte **support@druma.io**, aby ju zapli pre váš účet.
+</Warning>
+
+## Ako zostáva bezpečné
+
+- **Všetko, čo AI vidí, rešpektuje vašu rolu a spoločnosť** — má vždy iba prístup, ktorý už máte v Drume. Neexistuje spôsob, akým by mohla čítať dáta inej spoločnosti.
+- **Sama od seba nemôže nič zmeniť.** Jedinou akciou, ktorú môže vykonať, je *navrhnúť* priradenie vozidla; nič sa neaplikuje, kým to výslovne nepotvrdíte. Neexistujú žiadne mazacie, hromadné, alebo voľne formátované databázové akcie.
+- **Váš token je tajný.** Druma ukladá iba jednosmerný hash z neho — celý token sa zobrazí raz, pri vytvorení, a nikdy znova.
+- Každá požiadavka je limitovaná rýchlosťou a zaznamenávaná pre vašich administrátorov.
+
+## 1. Vytvorte osobný prístupový token
+
+1. Prejdite na **Nastavenia → Integrácie → Pripojená AI (MCP)**.
+2. Pod **Vytvoriť token** mu dajte názov (napr. „Claude Code — notebook").
+3. Vyberte **rozsahy**:
+   - `read` (vždy zapnuté) — čítanie objednávok, vozového parku, vodičov, faktúr a KPI.
+   - `write:planning` (voliteľné) — navyše umožniť AI *navrhovať* priradenia vozidiel. Aj s týmto zapnutým sa nič neaplikuje bez vášho výslovného potvrdenia.
+4. Vyberte platnosť (30 / 90 / 365 dní) a kliknite na **Vytvoriť token**.
+5. **Skopírujte token teraz** — zobrazí sa iba raz. Vyzerá ako `druma_pat_…`.
+
+Ktorýkoľvek token môžete kedykoľvek odvolať z rovnakej obrazovky; správcovia spoločnosti môžu odvolať ktorýkoľvek token v spoločnosti.
+
+## 2. URL vášho servera
+
+```
+https://<váš-projekt>.supabase.co/functions/v1/mcp-server
+```
+
+Presná URL pre váš účet je zobrazená na stránke **Nastavenia → Integrácie → Pripojená AI (MCP)** s tlačidlom na kopírovanie.
+
+## 3. Pripojte svojho klienta
+
+Nahraďte `<url>` URL vášho servera a `<token>` vaším osobným prístupovým tokenom.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Vytvorte `.vscode/mcp.json`. Použitie `input` udrží token mimo commitnutého súboru:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Pridajte do `~/.codex/config.toml`:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Pridajte do `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Pridajte do `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. Na čo sa môžete opýtať
+
+- „Ktoré zajtrajšie objednávky ešte nemajú priradené vozidlo?"
+- „Ukáž mi meškajúce objednávky tento týždeň a ktoré vozidlá sú voľné."
+- „Aká je moja celková suma pohľadávok po splatnosti podľa klienta?"
+- S `write:planning`: „Navrhni vozidlo RO-123-ABC pre objednávku 4021." — AI vytvorí návrh a zobrazí vám zhrnutie; potom jej poviete, aby to potvrdila, a až vtedy sa priradenie použije.
+
+## Webové chatové konektory (ChatGPT, claude.ai)
+
+Pripojenie **webových** chatovacích aplikácií na chatgpt.com alebo claude.ai (namiesto desktopového/CLI klienta) vyžaduje OAuth a **prichádza neskôr**. Zatiaľ použite jedného z vyššie uvedených klientov.
+
+## Rotácia tokenov
+
+Uprednostňujte krátkodobé tokeny. Na rotáciu: vytvorte nový token, aktualizujte konfiguráciu svojho klienta, potom odvolajte starý. Odvolajte akýkoľvek token, ktorého „Naposledy použité" je prázdne — znamená to, že sa s ním nikdy nič nepripojilo.
+
+## Súvisiace
+
+Ak by ste radšej chatovali s AI **vnútri** Drumy (pomocou vlastného kľúča OpenAI, Anthropic, alebo Gemini) namiesto pripojenia externého klienta, pozrite [Druma Copilot](/sk/integrations/copilot).

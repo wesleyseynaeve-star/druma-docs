@@ -1,0 +1,93 @@
+---
+title: "Finance API"
+description: "Získajte fakturovateľné objednávky do vlastného finančného alebo ERP systému a zapíšte faktúry, ktoré ste vystavili, späť do Drumy."
+icon: "arrow-right-arrow-left"
+---
+
+Niektorí prevádzkovatelia nefakturujú z Drumy vôbec — fakturujú z existujúceho finančného alebo ERP systému a chcú, aby Druma zostala prevádzkovým zdrojom pravdy. Finance API je slučka, ktorá to umožňuje: Druma povie vášmu finančnému systému, čo je pripravené na fakturáciu, a váš finančný systém povie Drume, čo skutočne vyfakturoval.
+
+Objednávka prechádza štyrmi stavmi naprieč oboma systémami:
+
+**Nevyfakturované → Pripravené na fakturáciu (exportované) → Vyfakturované (vo vašom systéme) → Zaplatené**
+
+<Note>
+Toto je samostatné API oproti iba na čítanie určenému [Verejnému API](/sk/integrations/public-api). Verejné API odpovedá na „kde je moja zásielka"; Finance API je fakturačné odovzdanie so zápismi, idempotenciou a vlastnými limitmi rýchlosti. Kľúč vydaný pre jedno nefunguje na druhom.
+</Note>
+
+---
+
+## Skôr než začnete
+
+<Steps>
+  <Step title="Vypnite fakturáciu klientom v Drume">
+    Finance API je pre prevádzkovateľov, ktorí fakturujú inde. Ak tiež vystavujete faktúry z Drumy, skončíte s dvojitým fakturovaním rovnakého nákladu.
+  </Step>
+  <Step title="Vydajte API kľúč s rozsahom Finance">
+    Prejdite na **Nastavenia → Integrácie → API kľúče**, kliknite na **Vytvoriť kľúč**, dajte mu názov (napr. `Export Netsuite`) a zvoľte rozsah **Finance (fakturovateľný export + príjem faktúr)**.
+
+    Tu funguje iba kľúč `finance`. Kľúč `operator` alebo `accountant` — aj dokonale platný — je odmietnutý s **403**. Pozrite [Verejné API](/sk/integrations/public-api), ako fungujú kľúče a rozsahy.
+  </Step>
+  <Step title="Skopírujte kľúč">
+    Celý kľúč sa zobrazí **iba raz**, pri vytvorení. Uložte ho do úložiska prihlasovacích údajov svojho finančného systému; Druma uchováva iba hash a už vám ho nikdy znova nemôže ukázať.
+  </Step>
+</Steps>
+
+---
+
+## Autentifikácia
+
+Každá požiadavka nesie kľúč v hlavičke `X-API-Key` — rovnaká hlavička ako pri Verejnom API:
+
+```
+X-API-Key: VÁŠ_FINANCE_KĽÚČ
+```
+
+---
+
+## Koncové body
+
+| Metóda | Koncový bod | Čo robí |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Stránkovaný zoznam objednávok pripravených na fakturáciu |
+| `POST` | `/finance-api/billable/exported` | Označí tieto objednávky ako stiahnuté, aby ich ďalší `GET` znova nevrátil |
+| `POST` | `/finance-api/invoices` | Zapíše faktúru, ktorú ste vystavili, späť do Drumy |
+
+### Normálny cyklus
+
+<Steps>
+  <Step title="Stiahnite, čo je fakturovateľné">
+    `GET /finance-api/billable` vracia stránkovane doručené objednávky bez vystavenej faktúry.
+  </Step>
+  <Step title="Potvrďte, čo ste prevzali">
+    `POST /finance-api/billable/exported` s ID objednávok, ktoré ste skutočne stiahli. Toto zabraňuje tomu, aby bola rovnaká objednávka odovzdaná vášmu ERP dvakrát — kým nepotvrdíte, Druma ju naďalej ponúka.
+  </Step>
+  <Step title="Zapíšte faktúru späť">
+    Akonáhle váš systém vystaví faktúru, `POST /finance-api/invoices` ju zaznamená voči objednávke v Drume. Objednávka sa stane **Vyfakturovanou**, vypadne zo zoznamu nevyfakturovaných, a začne starnúť pre sledovanie platieb ako každá iná faktúra.
+  </Step>
+</Steps>
+
+### Chyby, s ktorými by ste mali počítať
+
+| Odpoveď | Význam |
+|---|---|
+| `403` | Kľúč je platný, ale nejde o kľúč s rozsahom **Finance** |
+| `409` | Táto faktúra už bola spracovaná — požiadavka bola duplicitná, a nič sa nezmenilo |
+| `422` | Jedna alebo viac hodnôt `order_id` nie je rozpoznaná. Odpoveď menuje chybné ID |
+| `429` | Prekročený limit rýchlosti — počkajte a skúste znova |
+
+<Warning>
+Druma nehádže. ID, ktoré zapisujete späť, sú ID, ktoré vám Druma dala pred chvíľou z `GET /finance-api/billable`; ak sa nezhodujú, dostanete `422`, ktorý ich menuje, namiesto priradenia k niečomu inému s najlepším úsilím. Vráťte ID presne tak, ako ste ich dostali.
+</Warning>
+
+---
+
+## Súvisiace články
+
+<CardGroup cols={2}>
+  <Card title="Verejné API" icon="code" href="/sk/integrations/public-api">
+    Prístup k objednávkam iba na čítanie, API kľúče a rozsahy.
+  </Card>
+  <Card title="Generovanie faktúr" icon="file-invoice" href="/sk/invoicing/generating-invoices">
+    Fakturácia zvnútra Drumy namiesto toho.
+  </Card>
+</CardGroup>

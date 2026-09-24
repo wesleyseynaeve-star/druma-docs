@@ -1,0 +1,94 @@
+---
+title: "Tâches de commande et modèles de workflow"
+description: "Listes de contrôle configurables qui suivent les étapes requises sur une commande au fil de son cycle de vie — et comment les admins les construisent."
+icon: "list-check"
+---
+
+## Vue d'ensemble
+
+Le moteur de tâches attache une **liste de contrôle** à une commande (ou facture) qui suit les étapes que votre entreprise exige à chaque stade — envoyer une confirmation, générer un document, relancer un client — et montre qui est responsable et si quelque chose est en retard. Les admins construisent la liste de contrôle une fois comme un **modèle de tâches** réutilisable ; à partir de là, elle se matérialise automatiquement sur chaque commande correspondante.
+
+Cette page couvre les deux aspects : ce qu'un planificateur ou répartiteur voit au quotidien, et comment un admin configure les modèles qui se cachent derrière.
+
+---
+
+## Ce que vous voyez sur une commande
+
+Ouvrez n'importe quelle commande (ou facture) qui a un modèle de tâches correspondant, et vous trouverez un panneau **liste de contrôle des tâches** montrant chaque étape requise pour son stade actuel.
+
+Chaque ligne montre :
+
+- Une icône de statut — en attente (cercle vide), en cours (horloge), terminée (coche), ignorée, ou échouée
+- Le rôle responsable, s'il en est défini un
+- **En attente d'une étape précédente**, si la tâche dépend d'une autre étape pas encore terminée
+- Un badge **Échéance** ou **En retard** quand l'étape a une date d'échéance
+
+Pour les étapes ouvertes, vous pouvez :
+- Cliquer sur l'icône coche pour **la marquer terminée**
+- Cliquer sur l'icône ignorer pour **l'ignorer** (optionnellement avec une raison)
+
+Les deux actions sont désactivées tant que l'étape est bloquée par une dépendance. Si une étape est configurée pour se terminer ou s'ignorer automatiquement une fois que la commande atteint un certain statut, vous la verrez simplement basculer sur Terminée ou Ignorée d'elle-même — aucun clic nécessaire.
+
+Les lignes des listes de commandes et de factures portent aussi une petite puce récapitulative : un badge de comptage ambre tant que des tâches sont encore en attente, ou une coche verte **tout terminé** une fois que chaque tâche sur cet enregistrement est complète. Si aucun modèle ne correspond au stade actuel d'une commande, le panneau indique simplement *« Aucune liste de tâches configurée pour ce stade. »*
+
+<Note>
+Les tâches sont liées à la **phase du cycle de vie** — les mêmes statuts couverts dans [Cycle de vie d'une commande](/fr/planner/order-lifecycle). Une liste de contrôle apparaît (ou se met à jour) automatiquement chaque fois que la commande ou la facture atteint une phase qu'un modèle cible.
+</Note>
+
+---
+
+## Comment les admins configurent les modèles de tâches
+
+Allez sur **Paramètres → Modèles & Zones → Modèles de tâches**. Les modèles sont livrés vides pour chaque entreprise — rien n'est préconfiguré, donc construire votre liste de contrôle est entièrement optionnel.
+
+<Steps>
+  <Step title="Créez un modèle">
+    Cliquez sur **Ajouter un modèle**. Choisissez le **type d'objet** (Commande ou Facture), la **phase du cycle de vie** sur laquelle il doit se déclencher (par ex. Confirmée, Livrée), et un libellé. Laissez-le activé pour qu'il soit actif immédiatement, ou enregistrez-le désactivé pendant que vous le construisez.
+  </Step>
+  <Step title="Optionnellement, limitez-le avec des conditions">
+    Utilisez **S'applique quand** pour restreindre le modèle aux commandes correspondantes uniquement — par exemple, seulement les chargements ADR, seulement un client spécifique, ou seulement les mouvements de cabotage. Laissez-le vide et le modèle s'applique à chaque commande qui atteint la phase cible.
+  </Step>
+  <Step title="Ajoutez des étapes">
+    Pour chaque étape, définissez une clé et un libellé d'étape, puis un **type d'étape** :
+    - **Manuelle** — une personne doit la marquer terminée ou l'ignorer elle-même
+    - **Générer un document**, **Envoyer un email**, ou **Exécuter une automatisation** — choisissez une action spécifique dans la liste organisée (par ex. Générer facture, Envoyer confirmation de commande, Générer CMR)
+  </Step>
+  <Step title="Définissez le mode de complétion">
+    Choisissez **Manuel** (quelqu'un la complète depuis la liste de contrôle) ou **Auto** — une étape automatique se termine ou s'ignore elle-même dès que la commande/facture atteint un statut que vous configurez, sans que personne n'ait besoin de cliquer sur quoi que ce soit.
+  </Step>
+  <Step title="Ajoutez la responsabilité et l'ordre">
+    Optionnellement, définissez un **rôle responsable**, faites en sorte que l'étape **dépende de** une étape antérieure (elle reste bloquée jusqu'à ce que celle-ci soit terminée), et définissez sa position dans la liste de contrôle.
+  </Step>
+  <Step title="Enregistrez">
+    Le modèle matérialise désormais une liste de contrôle sur chaque commande (ou facture) qui correspond à son type d'objet, sa phase, et ses conditions.
+  </Step>
+</Steps>
+
+---
+
+## Dérogations par client
+
+Certains clients ont besoin d'une liste de contrôle différente du reste de votre portefeuille — une étape de document supplémentaire, ou une qu'ils n'ont explicitement pas besoin. Plutôt que de construire tout un modèle séparé, dérogez-y par client.
+
+Ouvrez la page de détail du client et allez à l'onglet **Dérogations de tâches**. Là, vous pouvez désactiver :
+- Un modèle entier, pour ce client uniquement, ou
+- Des étapes individuelles au sein d'un modèle
+
+Le modèle à l'échelle de l'entreprise reste inchangé pour chaque autre client — la dérogation n'affecte que l'enregistrement du client unique que vous modifiez.
+
+---
+
+## Dans les coulisses
+
+Une tâche planifiée vérifie toutes les quelques minutes les tâches prêtes à s'exécuter — dépendances satisfaites, échues, et configurées pour s'exécuter automatiquement — et les déclenche sans que personne n'ait besoin d'ouvrir la liste de contrôle. C'est purement un détail de fiabilité ; au quotidien, vous n'interagissez qu'avec le panneau de liste de contrôle sur la commande elle-même.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Cycle de vie d'une commande" icon="circle-dot" href="/fr/planner/order-lifecycle">
+    Voyez chaque statut de commande et ce qui déclenche la transition entre eux.
+  </Card>
+  <Card title="Ventes & Pipeline commercial" icon="user-group" href="/fr/planner/crm">
+    Fiches clients où vivent les dérogations de tâches par client, aux côtés des points de contact et du stade du cycle de vie.
+  </Card>
+</CardGroup>

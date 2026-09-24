@@ -1,0 +1,114 @@
+---
+title: "Connectez votre IA (MCP)"
+description: "Connectez Claude Code, GitHub Copilot, Codex CLI, Gemini CLI, ou Cursor à vos données Druma en utilisant le Model Context Protocol (MCP)."
+icon: "bot"
+---
+
+Druma exécute un serveur **MCP (Model Context Protocol)** distant, afin que vous puissiez connecter votre propre client IA — Claude Code, Claude Desktop, GitHub Copilot (mode agent), OpenAI Codex CLI, Gemini CLI, ou Cursor — directement à vos données Druma. Posez-lui des questions sur vos commandes, votre flotte, vos chauffeurs et vos factures en langage naturel, et — avec une portée optionnelle — laissez-le **proposer** des affectations de camions que vous approuvez.
+
+<Warning>
+Le connecteur MCP est une fonctionnalité soumise à un indicateur de fonctionnalité et est désactivé par défaut. Contactez **support@druma.io** pour l'activer pour votre compte.
+</Warning>
+
+## Comment ça reste sûr
+
+- **Tout ce que l'IA peut voir respecte votre rôle et votre entreprise** — elle n'a jamais que l'accès que vous avez déjà dans Druma. Il n'y a aucun moyen pour elle de lire les données d'une autre entreprise.
+- **Elle ne peut rien changer d'elle-même.** La seule action qu'elle peut entreprendre est de *proposer* une affectation de camion ; rien n'est appliqué tant que vous ne le confirmez pas explicitement. Il n'y a pas d'actions de suppression, en masse, ou en format libre sur la base de données.
+- **Votre jeton est secret.** Druma ne stocke qu'un hash à sens unique de celui-ci — le jeton complet est montré une fois, à la création, et jamais à nouveau.
+- Chaque requête est limitée en débit et journalisée pour vos administrateurs.
+
+## 1. Créez un jeton d'accès personnel
+
+1. Allez sur **Paramètres → Intégrations → IA connectée (MCP)**.
+2. Sous **Créer un jeton**, donnez-lui un nom (par ex. « Claude Code — portable »).
+3. Choisissez les **portées** :
+   - `read` (toujours activé) — lire les commandes, la flotte, les chauffeurs, les factures et les KPI.
+   - `write:planning` (optionnel) — laisser en plus l'IA *proposer* des affectations de camions. Même avec cette option activée, rien n'est appliqué sans votre confirmation explicite.
+4. Choisissez une expiration (30 / 90 / 365 jours) et cliquez sur **Créer le jeton**.
+5. **Copiez le jeton maintenant** — il n'est montré qu'une seule fois. Il ressemble à `druma_pat_…`.
+
+Vous pouvez révoquer n'importe quel jeton à tout moment depuis le même écran ; les administrateurs d'entreprise peuvent révoquer n'importe quel jeton dans l'entreprise.
+
+## 2. L'URL de votre serveur
+
+```
+https://<votre-projet>.supabase.co/functions/v1/mcp-server
+```
+
+L'URL exacte pour votre compte est affichée sur la page **Paramètres → Intégrations → IA connectée (MCP)** avec un bouton de copie.
+
+## 3. Connectez votre client
+
+Remplacez `<url>` par l'URL de votre serveur et `<token>` par votre jeton d'accès personnel.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Créez `.vscode/mcp.json`. Utiliser un `input` garde le jeton hors du fichier validé :
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Jeton Druma", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Ajoutez à `~/.codex/config.toml` :
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Ajoutez à `~/.gemini/settings.json` :
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Ajoutez à `~/.cursor/mcp.json` :
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. Ce que vous pouvez demander
+
+- « Quelles commandes ne sont pas affectées pour demain ? »
+- « Montre-moi les commandes en retard cette semaine et quels camions sont libres. »
+- « Quel est mon total de créances en retard par client ? »
+- Avec `write:planning` : « Propose le camion RO-123-ABC pour la commande 4021. » — l'IA crée une proposition et vous montre un résumé ; vous lui dites ensuite de confirmer, et c'est seulement alors que l'affectation est appliquée.
+
+## Connecteurs de chat web (ChatGPT, claude.ai)
+
+Connecter les applications de chat **web** sur chatgpt.com ou claude.ai (plutôt qu'un client de bureau/CLI) nécessite OAuth et **arrive plus tard**. Pour l'instant, utilisez l'un des clients ci-dessus.
+
+## Rotation des jetons
+
+Préférez des jetons de courte durée. Pour effectuer une rotation : créez un nouveau jeton, mettez à jour la configuration de votre client, puis révoquez l'ancien. Révoquez tout jeton dont « Dernière utilisation » est vide — cela signifie que rien ne s'y est jamais connecté.
+
+## Voir aussi
+
+Si vous préférez discuter avec une IA **à l'intérieur** de Druma (en utilisant votre propre clé OpenAI, Anthropic, ou Gemini) plutôt que de connecter un client externe, voir [Druma Copilot](/fr/integrations/copilot).

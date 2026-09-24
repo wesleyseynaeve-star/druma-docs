@@ -1,0 +1,74 @@
+---
+title: "Eskalácie AI chatu"
+description: "Ako nevyriešené konverzácie Ask Druma eskalujú do živého chatu, a ako personál Drumy spracúva relácie v Live Sessions."
+icon: "messages"
+---
+
+## Prehľad
+
+Ask Druma je AI asistent dostupný pre plánovačov, vodičov, a klientov, s dvoma kartami: **Dokumentácia** (odpovedá na otázky z dokumentácie) a **Asistent** (odpovedá na otázky o vašich vlastných dátach, a — kde je oprávnený — koná ako agent). **Eskalácia platí iba pre kartu Dokumentácia** — ak používateľ odoslal 6 správ v konverzácii v Dokumentácii, Ask Druma ponúkne tlačidlo **Požiadať o ľudskú pomoc**. Toto spustí eskaláciu — reláciu živého chatu, ktorá pristane v **Nástroje → Live Sessions** pre personál Drumy, aby ju prevzal. Karta Asistent toto tlačidlo nikdy nezobrazuje, bez ohľadu na to, ako dlho konverzácia trvá.
+
+<Note>
+Toto je odlišné od [Správy](/sk/planner/messages) — každodenného centra chatu medzi ľuďmi a s vodičmi. Live Sessions je konkrétne fronta pre AI konverzácie, ktoré karta Dokumentácia Ask Druma nedokázala vyriešiť, a spracúva ju podporný personál Drumy, nie vaši vlastní administrátori spoločnosti.
+</Note>
+
+<Frame caption="Nástroje → Live Sessions — eskalované konverzácie Ask Druma čakajúce, kým ich niekto prevezme.">
+  <img src="/images/tools/chat-escalations.png" alt="Fronta Live Sessions zobrazujúca eskalované konverzácie chatu Ask Druma" />
+</Frame>
+
+---
+
+## Ako funguje eskalácia
+
+1. **Používateľ odošle 6 správ** v konverzácii na karte Dokumentácia bez uspokojivej odpovede.
+2. Ask Druma ponúkne tlačidlo **Požiadať o ľudskú pomoc**.
+3. Používateľ naň klikne.
+4. Vytvorí sa relácia chatu (alebo, ak ten istý používateľ už má otvorenú reláciu, tá existujúca sa znovu použije namiesto vytvorenia duplikátu).
+5. Odošle sa e-mailové upozornenie na podpornú adresu Drumy — nie administrátorom vašej spoločnosti — s doterajšou AI konverzáciou pre kontext. E-mail neobsahuje priamy odkaz do aplikácie; iba hovorí podpore, aby otvorila Live Sessions.
+6. Používateľ sa prepne do živého chatu vnútri toho istého panela Ask Druma a čaká na odpoveď.
+
+---
+
+## Live Sessions
+
+**Nástroje → Live Sessions** vypisuje eskalované konverzácie. Zoznam je rozdelený podľa stavu:
+
+| Stav | Význam |
+|---|---|
+| Čaká | Eskalované, ešte neprevzaté agentom |
+| Aktívne | Agent odpovedal aspoň raz |
+| Zatvorené | Konverzácia ukončená |
+
+### Spracovanie relácie
+
+1. Otvorte reláciu v stave **Čaká**.
+2. Prečítajte si históriu AI konverzácie — každú správu odoslanú používateľom a každú odpoveď AI pred odovzdaním.
+3. Napíšte odpoveď do poľa na odpoveď a odošlite ju. Toto presunie reláciu do **Aktívne** a používateľ vidí odpoveď v reálnom čase na svojej strane.
+4. Pokračujte v konverzácii, kým sa problém nevyrieši.
+5. Zatvorte reláciu po dokončení.
+
+Aktualizácie sa objavujú v reálnom čase na oboch stranách cez Supabase Realtime — netreba obnovovať stránku.
+
+---
+
+## Role s prístupom
+
+Sekcia **Nástroje** v bočnom paneli je iba pre platform-admin — vôbec sa nezobrazuje roliam company_admin, planner, alebo dispatcher. V praxi eskalované relácie vidí a odpovedá na ne vlastný podporný personál Drumy, nie používatelia vo vašej spoločnosti.
+
+---
+
+## E-mailové upozornenie
+
+Keď príde nová eskalácia, Druma odošle e-mail na svoju podpornú adresu (nie žiadnemu používateľovi vo vašej spoločnosti). E-mail obsahuje:
+
+- Meno a e-mail používateľa (ako odpovedať-na)
+- AI konverzáciu do daného bodu
+- Poznámku otvoriť Live Sessions v aplikácii pre odpoveď — nie je zahrnutý žiadny priamy odkaz
+
+<Note>
+Prah eskalácie je pevne stanovený na 6 správ používateľa na karte Dokumentácia. Momentálne ho nemožno meniť podľa spoločnosti, a nikdy sa nespúšťa z karty Asistent.
+</Note>
+
+<Card title="Ask Druma" icon="sparkles" href="/sk/tools/smart-import">
+  Ask Druma vie tiež pomôcť s extrakciou a importom dát — pozri Smart Import.
+</Card>

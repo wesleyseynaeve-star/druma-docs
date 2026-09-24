@@ -108,6 +108,50 @@ Pozostaw próg pusty, aby wyłączyć modal opłaty dla tego typu palety — ruc
 
 ---
 
+## Uzgadnianie sald palet
+
+Poza kolumną salda per klient, Druma ma dedykowaną stronę **Operacje → Salda palet**, która uzgadnia pozycje zarówno dla **klientów, jak i podwykonawców** w jednym widoku — przydatne, gdy chcesz jednego przejścia przez każdą otwartą pozycję palet, zamiast sprawdzać kontrahentów jeden po drugim.
+
+W przeciwieństwie do rejestru per zlecenie, ta strona pokazuje **jeden wiersz na kontrahenta**, a nie jeden na (kontrahenta, typ palety). Jeśli handlujesz więcej niż jednym standardem palet z tym samym klientem, wiersz zwija je w trzy sumy — EUR, Przemysłowe, i Inne — plus łączne netto i jedną odznakę statusu, więc zawsze masz jeden wiersz mówiący, co ten kontrahent jest Ci winien (lub Ty jemu) ogółem.
+
+Odznaka statusu każdego wiersza używa tej samej logiki progu co modal opłaty, z dodatkowym poziomem dla pozycji, które odjechały daleko poza niego:
+
+| Status | Znaczenie |
+|---|---|
+| **OK** | Saldo jest na poziomie lub poniżej skonfigurowanego progu (włącznie z dokładnym zerem — w pełni rozliczone) |
+| **Brak równowagi** | Saldo przekracza próg |
+| **Poważne** | Saldo przekracza próg **dwukrotnie** — warto dopilnować, zanim urośnie dalej |
+
+<Steps>
+  <Step title="Wybierz kartę zakresu">
+    Otwórz **Operacje → Salda palet**. Pięć kart zakresu — **Wszystkie · Krytyczne · Brak równowagi · OK · Rozliczone** — znajduje się nad tabelą, każda z licznikiem na żywo, więc możesz przejść bezpośrednio do pozycji wymagających uwagi.
+  </Step>
+  <Step title="Wyszukaj, filtruj, lub zapisz widok">
+    Użyj pola wyszukiwania, aby znaleźć kontrahenta po nazwie, i **Filtruj**, aby zawęzić wg typu kontrahenta (klient/podwykonawca). **Kolumny** pozwala wybrać, które pola się wyświetlają; **Widoki** zapisuje bieżący zakres, wyszukiwanie, i wybór kolumn jako nazwany widok, który Ty (lub cała Twoja firma) możecie później ponownie otworzyć.
+  </Step>
+  <Step title="Otwórz panel rozliczenia">
+    Kliknij wiersz (lub jego ikonę **oka**), aby wsunąć panel rozliczenia z prawej strony, pokazujący pełny rejestr ruchów tego kontrahenta dla każdego typu palety, sortowalny wg daty, zlecenia, lub kwoty.
+  </Step>
+  <Step title="Rozlicz pozycję">
+    Z panelu możesz **zaksięgować korektę** (wpis rejestru bez zlecenia z wymaganą notatką — przydatne dla ręcznie uzgodnionego odpisu lub korekty migracji) lub **naliczyć opłatę** za nadwyżkę, używając tego samego przepływu opłat co automatyczny monit opisany powyżej.
+  </Step>
+  <Step title="Wygeneruj zestawienie">
+    Z panelu lub własnego menu wiersza wygeneruj **zestawienie PDF** — dokument z Twoją marką z blokiem podpisu, gotowy dla kontrahenta do potwierdzenia i podpisania — lub wyeksportuj pozycję jako **CSV**. **Eksportuj ▾** u góry strony tworzy połączony CSV wszystkich kontrahentów naraz, dla pełnego przejścia uzgadniającego.
+  </Step>
+</Steps>
+
+<Note>
+Saldo palet klienta pokazuje się też, tylko do odczytu, na jego rekordzie: otwórz klienta i sprawdź kartę **Przegląd** po wiersz "Saldo palet" z linkiem bezpośrednio do panelu rozliczenia tej strony dla tego klienta.
+</Note>
+
+**Nocne automatyczne uzgadnianie** (02:05 UTC) sprawdza też salda każdej firmy względem tych samych progów i powiadamia adminów/planistów Twojej firmy, gdy pozycja jest niezrównoważona — deduplikowane per typ palety i kontrahenta w oknie 7 dni, więc nie jesteś ponownie powiadamiany przy każdym uruchomieniu o pozycji, którą już znasz.
+
+<Note>
+Rejestr wymusza własną konwencję znaku na poziomie bazy danych: ruch **Wysłano** zawsze dodaje do salda, a ruch **Zwrócono** zawsze odejmuje od niego, niezależnie od tego, jak liczba jest wpisana w formularzu dodawania ruchu — wpisy **Korekta**, **Poprawka**, i **Saldo początkowe** zachowują znak, który wpiszesz, ponieważ te mogą zasadnie iść w obu kierunkach.
+</Note>
+
+---
+
 ## Synchronizacja z dostawcą (opcjonalnie)
 
 Jeśli używasz CHEP Connect, Druma może uzgodnić Twój rejestr w aplikacji z oficjalnym saldem dostawcy. Przejdź do **Ustawienia → Integracje → Wymiana palet**.
@@ -125,10 +169,6 @@ CHEP Connect to obecnie jedyna integracja z dostawcą palet. Typy palet EUR, LPR
 
 ---
 
-<Card title="Dodatki i dopłaty zlecenia" icon="circle-plus" href="/pl/planner/creating-orders">
+<Card title="Dodatki i dopłaty zlecenia" icon="circle-plus" href="/pl/invoicing/generating-invoices">
   Dowiedz się, jak linie opłat za palety pojawiają się w edytorze faktury obok innych dopłat zlecenia.
-</Card>
-
-<Card title="Klienci" icon="building-2" href="/pl/planner/crm">
-  Zarządzaj profilami klientów, stałymi instrukcjami i przeglądaj historię sald palet per klient.
 </Card>

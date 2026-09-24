@@ -1,0 +1,93 @@
+---
+title: "API Finance"
+description: "Récupérez les commandes facturables dans votre propre système de finance ou ERP, et republiez les factures que vous avez émises dans Druma."
+icon: "arrow-right-arrow-left"
+---
+
+Certains opérateurs ne facturent pas du tout depuis Druma — ils facturent depuis un système de finance ou ERP existant et veulent que Druma reste la source de vérité opérationnelle. L'API Finance est la boucle qui rend cela possible : Druma indique à votre système financier ce qui est prêt à facturer, et votre système financier indique à Druma ce qu'il a réellement facturé.
+
+Une commande passe par quatre états à travers les deux systèmes :
+
+**Non facturée → Prête à facturer (exportée) → Facturée (dans votre système) → Payée**
+
+<Note>
+Ceci est une API distincte de l'[API publique](/fr/integrations/public-api) en lecture seule. L'API publique répond à « où est mon envoi » ; l'API Finance est une remise de facturation avec des écritures, une idempotence et ses propres limites de débit. Une clé émise pour l'une ne fonctionne pas sur l'autre.
+</Note>
+
+---
+
+## Avant de commencer
+
+<Steps>
+  <Step title="Désactivez la facturation client dans Druma">
+    L'API Finance est destinée aux opérateurs qui facturent ailleurs. Si vous émettez aussi des factures depuis Druma, vous finirez par facturer le même chargement deux fois.
+  </Step>
+  <Step title="Émettez une clé API à portée Finance">
+    Allez sur **Paramètres → Intégrations → Clés API**, cliquez sur **Créer une clé**, donnez-lui un nom (par ex. `Export Netsuite`) et choisissez la portée **Finance (export facturable + ingestion de factures)**.
+
+    Seule une clé `finance` fonctionne ici. Une clé `operator` ou `accountant` — même parfaitement valide — est rejetée avec **403**. Voir [API publique](/fr/integrations/public-api) pour savoir comment fonctionnent les clés et les portées.
+  </Step>
+  <Step title="Copiez la clé">
+    La clé complète n'est montrée **qu'une seule fois**, à la création. Stockez-la dans le coffre d'identifiants de votre système financier ; Druma ne garde qu'un hash et ne peut plus jamais vous la montrer.
+  </Step>
+</Steps>
+
+---
+
+## Authentification
+
+Chaque requête porte la clé dans l'en-tête `X-API-Key` — le même en-tête que l'API publique :
+
+```
+X-API-Key: VOTRE_CLE_FINANCE
+```
+
+---
+
+## Points de terminaison
+
+| Méthode | Point de terminaison | Ce que ça fait |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Liste paginée des commandes prêtes à facturer |
+| `POST` | `/finance-api/billable/exported` | Marque ces commandes comme récupérées, afin que le prochain `GET` ne les renvoie pas à nouveau |
+| `POST` | `/finance-api/invoices` | Republie une facture que vous avez émise dans Druma |
+
+### Le cycle normal
+
+<Steps>
+  <Step title="Récupérez ce qui est facturable">
+    `GET /finance-api/billable` renvoie les commandes livrées sans facture émise, paginées.
+  </Step>
+  <Step title="Accusez réception de ce que vous avez pris">
+    `POST /finance-api/billable/exported` avec les identifiants de commande que vous avez réellement récupérés. C'est ce qui empêche la même commande d'être transmise deux fois à votre ERP — jusqu'à ce que vous accusiez réception, Druma continue de la proposer.
+  </Step>
+  <Step title="Republiez la facture">
+    Une fois que votre système a émis la facture, `POST /finance-api/invoices` l'enregistre contre la commande dans Druma. La commande devient **Facturée**, sort de la liste non facturée, et commence à vieillir pour le suivi des paiements comme n'importe quelle autre facture.
+  </Step>
+</Steps>
+
+### Erreurs à gérer
+
+| Réponse | Signification |
+|---|---|
+| `403` | La clé est valide mais n'est pas une clé à portée **Finance** |
+| `409` | Cette facture a déjà été ingérée — la requête était un doublon, et rien n'a changé |
+| `422` | Une ou plusieurs valeurs `order_id` ne sont pas reconnues. La réponse nomme les identifiants incorrects |
+| `429` | Limite de débit dépassée — attendez et réessayez |
+
+<Warning>
+Druma ne devine pas. Les identifiants que vous republiez sont des identifiants que Druma vous a donnés quelques minutes plus tôt depuis `GET /finance-api/billable` ; s'ils ne correspondent pas, vous obtenez un `422` qui les nomme plutôt qu'une correspondance au mieux avec autre chose. Renvoyez les identifiants exactement tels que reçus.
+</Warning>
+
+---
+
+## Articles associés
+
+<CardGroup cols={2}>
+  <Card title="API publique" icon="code" href="/fr/integrations/public-api">
+    Accès en lecture seule aux commandes, clés API et portées.
+  </Card>
+  <Card title="Générer des factures" icon="file-invoice" href="/fr/invoicing/generating-invoices">
+    Facturer depuis l'intérieur de Druma à la place.
+  </Card>
+</CardGroup>

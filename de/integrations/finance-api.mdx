@@ -1,0 +1,93 @@
+---
+title: "Finance API"
+description: "Ziehen Sie abrechenbare Aufträge in Ihr eigenes Finanz- oder ERP-System, und buchen Sie die von Ihnen ausgestellten Rechnungen zurück in Druma."
+icon: "arrow-right-arrow-left"
+---
+
+Manche Betreiber stellen überhaupt keine Rechnungen aus Druma — sie rechnen aus einem bestehenden Finanz- oder ERP-System ab und möchten, dass Druma die operative Quelle der Wahrheit bleibt. Die Finance API ist die Schleife, die das ermöglicht: Druma teilt Ihrem Finanzsystem mit, was abrechnungsbereit ist, und Ihr Finanzsystem teilt Druma mit, was es tatsächlich in Rechnung gestellt hat.
+
+Ein Auftrag durchläuft vier Zustände über die beiden Systeme hinweg:
+
+**Nicht berechnet → Bereit zur Abrechnung (exportiert) → In Rechnung gestellt (in Ihrem System) → Bezahlt**
+
+<Note>
+Dies ist eine separate API von der schreibgeschützten [Public API](/de/integrations/public-api). Die Public API beantwortet „wo ist meine Sendung"; die Finance API ist eine Abrechnungsübergabe mit Schreibzugriffen, Idempotenz und eigenen Ratenlimits. Ein für die eine ausgestellter Schlüssel funktioniert nicht bei der anderen.
+</Note>
+
+---
+
+## Bevor Sie beginnen
+
+<Steps>
+  <Step title="Kundenabrechnung in Druma ausschalten">
+    Die Finance API ist für Betreiber, die anderswo abrechnen. Stellen Sie auch aus Druma Rechnungen aus, berechnen Sie am Ende dieselbe Ladung doppelt.
+  </Step>
+  <Step title="Einen Finance-bereichten API-Schlüssel ausstellen">
+    Gehen Sie zu **Einstellungen → Integrationen → API-Schlüssel**, klicken Sie auf **Schlüssel erstellen**, geben Sie ihm einen Namen (z. B. `Netsuite-Export`) und wählen Sie den Bereich **Finance (abrechenbarer Export + Rechnungserfassung)**.
+
+    Nur ein `finance`-Schlüssel funktioniert hier. Ein `operator`- oder `accountant`-Schlüssel — selbst ein völlig gültiger — wird mit **403** abgelehnt. Siehe [Public API](/de/integrations/public-api), wie Schlüssel und Bereiche funktionieren.
+  </Step>
+  <Step title="Den Schlüssel kopieren">
+    Der vollständige Schlüssel wird **einmalig** bei der Erstellung angezeigt. Speichern Sie ihn im Anmeldedaten-Speicher Ihres Finanzsystems; Druma behält nur einen Hash und kann ihn Ihnen nie wieder anzeigen.
+  </Step>
+</Steps>
+
+---
+
+## Authentifizierung
+
+Jede Anfrage trägt den Schlüssel im `X-API-Key`-Header — derselbe Header wie bei der Public API:
+
+```
+X-API-Key: IHR_FINANCE_SCHLÜSSEL
+```
+
+---
+
+## Endpunkte
+
+| Methode | Endpunkt | Was er tut |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Paginierte Liste der Aufträge, die abrechnungsbereit sind |
+| `POST` | `/finance-api/billable/exported` | Markiert diese Aufträge als abgeholt, sodass das nächste `GET` sie nicht erneut zurückgibt |
+| `POST` | `/finance-api/invoices` | Bucht eine von Ihnen ausgestellte Rechnung zurück in Druma |
+
+### Der normale Zyklus
+
+<Steps>
+  <Step title="Abrechenbares abholen">
+    `GET /finance-api/billable` gibt zugestellte Aufträge ohne ausgestellte Rechnung zurück, paginiert.
+  </Step>
+  <Step title="Bestätigen, was Sie übernommen haben">
+    `POST /finance-api/billable/exported` mit den tatsächlich abgeholten Auftrags-IDs. Das verhindert, dass derselbe Auftrag zweimal an Ihr ERP übergeben wird — bis Sie bestätigen, bietet Druma ihn weiter an.
+  </Step>
+  <Step title="Die Rechnung zurückbuchen">
+    Sobald Ihr System die Rechnung ausgestellt hat, erfasst `POST /finance-api/invoices` sie gegen den Auftrag in Druma. Der Auftrag wird **In Rechnung gestellt**, fällt von der Nicht-berechnet-Liste, und beginnt wie jede andere Rechnung für die Zahlungsverfolgung zu altern.
+  </Step>
+</Steps>
+
+### Fehler, mit denen Sie rechnen sollten
+
+| Antwort | Bedeutung |
+|---|---|
+| `403` | Der Schlüssel ist gültig, ist aber kein **Finance**-bereichter Schlüssel |
+| `409` | Diese Rechnung wurde bereits erfasst — die Anfrage war ein Duplikat, und nichts hat sich geändert |
+| `422` | Ein oder mehrere `order_id`-Werte werden nicht erkannt. Die Antwort nennt die fehlerhaften IDs |
+| `429` | Ratenlimit überschritten — warten und erneut versuchen |
+
+<Warning>
+Druma rät nicht. Die IDs, die Sie zurückbuchen, sind IDs, die Druma Ihnen Minuten zuvor von `GET /finance-api/billable` gegeben hat; stimmen sie nicht überein, erhalten Sie ein `422`, das sie benennt, statt einer Best-Effort-Zuordnung zu etwas anderem. Geben Sie die IDs exakt so zurück, wie empfangen.
+</Warning>
+
+---
+
+## Verwandte Artikel
+
+<CardGroup cols={2}>
+  <Card title="Public API" icon="code" href="/de/integrations/public-api">
+    Schreibgeschützter Auftragszugriff, API-Schlüssel und Bereiche.
+  </Card>
+  <Card title="Rechnungen erstellen" icon="file-invoice" href="/de/invoicing/generating-invoices">
+    Stattdessen aus Druma heraus abrechnen.
+  </Card>
+</CardGroup>

@@ -9,14 +9,14 @@ icon: "circle-dot"
 Jeder Auftrag in Druma folgt einem definierten Weg. Das Verständnis des Lebenszyklus hilft Ihnen zu wissen, was in jeder Phase zu erwarten ist, wann Sie eingreifen sollten, und wie Sie mit Ausnahmen wie verspäteten Lieferungen oder vergessenen Statusaktualisierungen umgehen.
 
 <Note>
-Nutzt Ihr Unternehmen Aufgabenvorlagen, kann ein Auftrag auch eine **Aufgaben-Checkliste** tragen, die an dieselben Lebenszyklusphasen gebunden ist — siehe [Auftragsaufgaben & Workflow-Vorlagen](/en/planner/order-tasks).
+Nutzt Ihr Unternehmen Aufgabenvorlagen, kann ein Auftrag auch eine **Aufgaben-Checkliste** tragen, die an dieselben Lebenszyklusphasen gebunden ist — siehe [Auftragsaufgaben & Workflow-Vorlagen](/de/planner/order-tasks).
 </Note>
 
 Hier der vollständige Ablauf:
 
 **Entwurf → Ausstehend → Zugewiesen → Abgefahren → An der Abholung → Beladung → Unterwegs → An der Lieferung → Entladung → Zugestellt**
 
-Es gibt außerdem zwei Ausnahmestatus — **Storniert** und **Fehlfahrt** — die gegen Ende behandelt werden.
+Es gibt außerdem drei Ausnahmestatus — **Teilweise zugestellt**, **Storniert**, und **Fehlfahrt** — die gegen Ende behandelt werden.
 
 ---
 
@@ -28,6 +28,7 @@ Jeder Status hat eine einzige Farbe (Ton), die identisch zwischen Planungstafel 
 |---|---|
 | Entwurf | Grau (Schiefer) |
 | Ausstehend | Grau (Schiefer) |
+| Virtuell | Violett |
 | Zugewiesen | Blau |
 | Abgefahren | Indigo |
 | An der Abholung | Gelb |
@@ -36,6 +37,7 @@ Jeder Status hat eine einzige Farbe (Ton), die identisch zwischen Planungstafel 
 | An der Lieferung | Himmelblau |
 | Entladung | Himmelblau |
 | Zugestellt | Grün |
+| Teilweise zugestellt | Gelb |
 | Storniert | Rot |
 | Fehlfahrt | Rot |
 
@@ -60,6 +62,20 @@ Der Auftrag existiert im System, ist aber noch nicht aktiv. Der Fahrer sieht ihn
 - Den Auftrag stornieren
 
 Nutzen Sie Entwurf, wenn ein Kunde eine vorläufige Buchung gemacht, aber noch nicht bestätigt hat, oder während Sie den Auftrag aufbauen, aber noch auf Details warten.
+
+---
+
+## Virtuell
+
+**Ausgelöst von:** Planer klickt auf der Planungstafel auf **Virtuell**, um einen Platzhalterauftrag zu erstellen.
+
+**Wer kann es auslösen:** Nur der Planer.
+
+Ein virtueller Auftrag ist ein leichter Platzhalter — Abhol- und Lieferadresse, ein Abholdatum, und optional ein Preis — der einen LKW vor einer formellen Buchung reserviert. Er ist vom normalen Ablauf Entwurf → Ausstehend → Zugewiesen getrennt: sobald die echte Buchung eingeht, führt der Planer ihn stattdessen über das Neuer-Auftrag-Formular in einen richtigen Auftrag zusammen, das die LKW-Zuweisung automatisch übernimmt. Virtuelle Aufträge erscheinen **violett** auf der Planungstafel, damit sie auf einen Blick leicht von einem echten, gebuchten Auftrag zu unterscheiden sind.
+
+<Note>
+Der Nachladungs-Neuzuweisungs-Optimierer behandelt virtuelle Aufträge beim Verketten zukünftiger Nachladungen genauso wie Entwurf- oder Ausstehend-Aufträge — ein skizzierter Platzhalter kann also immer noch gegen eine günstigere echte Nachladung ausgetauscht werden, falls eine auftaucht.
+</Note>
 
 ---
 
@@ -188,6 +204,27 @@ Der Transport ist abgeschlossen. Der Auftrag wird grün auf der Planungstafel un
 
 ---
 
+## Teilweise zugestellt
+
+**Ausgelöst von:** Fahrer erfasst eine Teillieferung vom Entladung-Bildschirm — ein Teil, aber nicht alles, was geplant war, wurde vom LKW abgeladen.
+
+**Wer kann es auslösen:** Fahrer (primäre Aktion) oder Planer.
+
+Zustellung ist nicht immer alles-oder-nichts. Entlädt ein Fahrer 6 von 10 Paletten — ein Kunde kann die volle Ladung nicht annehmen, es fehlt Platz, ein Teil der Ladung ist beschädigt — kann er genau erfassen, was tatsächlich abgeladen wurde, statt gezwungen zu sein, zwischen dem Markieren des gesamten Auftrags als Zugestellt (was das Geschehene falsch darstellen würde) oder der Ablehnung des Ganzen (obwohl das meiste *angenommen* wurde) zu wählen.
+
+Der Fahrer gibt ein, was geliefert wurde im Vergleich zu dem, was geplant war; Druma speichert die Differenz — Menge und Gewicht, pro Stopp — als eingefrorenen Datensatz dessen, was noch nicht geliefert ist, und benachrichtigt den Planer.
+
+<Note>
+**Teilweise zugestellt ist absichtlich kein finaler „erledigt"-Status** wie Zugestellt — er existiert genau deshalb, damit OTIF-Reporting, automatische Rechnungsstellung, und das Kundenportal eine Teillieferung nicht als vollständig behandeln. Er kann auch ein echter Endzustand sein, falls der Rest abgeschrieben statt nachgeliefert wird — Druma erzwingt keine Folgeaktion, es weigert sich nur, vorzugeben, dass die Ladung sauber abgeschlossen wurde.
+</Note>
+
+**Verfügbare Aktionen ab Teilweise zugestellt:**
+- Die Differenz (geplante vs. gelieferte Menge/Gewicht) und den Grund des Fahrers im Auftragsdetail einsehen
+- Eine Rechnung erstellen — **standardmäßig deaktiviert**: ein teilweise zugestellter Auftrag wird nicht abgerechnet, bis Sie **Bei Teillieferung abrechnen** für Ihr Unternehmen in den Einstellungen aktivieren, da die sofortige Abrechenbarkeit einer Teillieferung eine kaufmännische Entscheidung ist. Ist es aktiviert, rechnet der Auftrag ab, was tatsächlich geliefert wurde.
+- Lieferdokumente hochladen oder ansehen, wie bei einer vollständigen Lieferung
+
+---
+
 ## Storniert
 
 **Ausgelöst von:** Planer storniert den Auftrag.
@@ -251,6 +288,7 @@ Fahrer vergessen manchmal, Statusaktualisierungen zu tippen — es passiert. Als
 | Status | Automatisch | Manuell (Fahrer) | Manuell (Planer) |
 |---|---|---|---|
 | Entwurf | — | — | Ja |
+| Virtuell | — | — | Ja |
 | Ausstehend | — | — | Ja |
 | Zugewiesen | — | — | Ja |
 | Abgefahren | — | Ja | Ja (Überschreibung) |
@@ -260,6 +298,7 @@ Fahrer vergessen manchmal, Statusaktualisierungen zu tippen — es passiert. Als
 | An der Lieferung | — | Ja | Ja (Überschreibung) |
 | Entladung | — | Ja | Ja (Überschreibung) |
 | Zugestellt | — | Ja | Ja (Überschreibung) |
+| Teilweise zugestellt | — | Ja | — |
 | Storniert | — | — | Ja |
 | Fehlfahrt | — | — | Ja (aus aktiven Status) |
 
@@ -269,7 +308,7 @@ Fahrer vergessen manchmal, Statusaktualisierungen zu tippen — es passiert. Als
   Überwachen Sie alle aktiven Aufträge, sehen Sie Live-Fahrerpositionen, und bearbeiten Sie Warnungen von Ihrem Live-Betriebsdashboard.
 </Card>
 
-<Card title="Auftragsaufgaben & Workflow-Vorlagen" icon="list-check" href="/en/planner/order-tasks">
+<Card title="Auftragsaufgaben & Workflow-Vorlagen" icon="list-check" href="/de/planner/order-tasks">
   Konfigurierbare Aufgaben-Checklisten, gebunden an diese Lebenszyklusphasen, sowie wie Admins die zugrunde liegenden Vorlagen bauen.
 </Card>
 

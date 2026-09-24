@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Lengyelország)"
+description: "Juttasd el a lengyel ÁFA-nyilvántartásaidat az Optimába: letöltés, havi e-mail, vagy egy ütemezett feladat, amely maga hozza le a fájlt."
+icon: "file-invoice"
+---
+
+A Druma előállítja a **JPK_V7M(3)** fájlt — a Pénzügyminisztérium által meghatározott lengyel ÁFA-nyilvántartási fájlt (*część ewidencyjna*, értékesítési oldal), amely 2026. február 1. óta kötelező. A könyvelőd importálja a Comarch ERP Optimába a **Rejestry VAT → Import do rej. VAT** menüpontban.
+
+Mivel a JPK jogszabályi szabvány, nem gyártói formátum, ugyanez a fájl importálható az enova365-be, a Symfoniába, és bármely más lengyel könyvelési csomagba is.
+
+<Note>
+A PLN-től eltérő pénznemben szereplő összegeket az adófizetési kötelezettség keletkezése előtti utolsó munkanap **NBP tabela A** árfolyamán számítják át, ahogy a 31a. cikk megköveteli. Az árfolyam, annak dátuma, és a táblázat száma tárolódik a számlán, így a bevallás reprodukálható marad, ha valaki megkérdezi, melyik táblázatból származik egy szám.
+</Note>
+
+---
+
+## Először, két beállítás
+
+**Beállítások → Integrációk → JPK_V7M**. Két érték semmi másból nem vezethető le, amivel a Druma már rendelkezik, és az export megtagadja a futást nélkülük, ahelyett hogy találgatna:
+
+| Beállítás | Miért szükséges |
+|---|---|
+| **Adóhivatal kódja (KodUrzedu)** | 400 felsorolt kód egyike. Semmi sem képez le egy címet egy kódra — ezt hozzád rendelik. Egy találgatás rossz hivatalhoz nyújtja be. |
+| **Bevallási kapcsolattartó e-mail** | A fájl `Podmiot1` blokkjába kerül. Az operatív postaládád általában nem a könyvelőd, és a rossz személy megadása egy adódokumentumon rosszabb, mint a kérdezés. |
+
+Beállíthatod az **adófizetési kötelezettség keletkezésének időpontját** is (számla kiállítási dátuma, vagy a kapcsolódó rendelés kiszállítási dátuma) — fuvarozás esetén ez általában a szolgáltatás teljesítésének napja.
+
+---
+
+## Három módja, ahogy a fájl eljut az Optimába
+
+Az Optimába nem lehet kívülről írni. On-premise a Web API-ja egy Windows szolgáltatás a könyvelőd saját hálózatán; a Comarch *Chmura Standard*-ja teljesen tiltja az adatbázis-hozzáférést az internetről, a *Chmura Enterprise* pedig csak az ugyanazon a szerveren telepített szoftvert szolgálja ki. Így az alábbi utak mindegyike **a te oldaladról kifelé** fut.
+
+### 1. Töltsd le
+
+**Pénzügy → Exportkészítő → JPK_V7M export (Lengyelország)**. Válassz egy hónapot, kapd meg az `.xml`-t. A fenti két beállításon kívül nincs mit konfigurálni.
+
+### 2. Küldesd el e-mailben minden hónapban
+
+Kapcsold be a **Fájl e-mailben küldése minden hónapban** funkciót ugyanabban a beállítási panelben, és válassz egy napot. A Druma előállítja a lezárt hónapot, és 7 napig érvényes letöltési linket küld a könyvelődnek.
+
+A nap **25.**-re van korlátozva, mivel ez az előző havi JPK_V7M bevallási határideje — egy későbbi nap a határidő után szállítaná a fájlt, amelynek teljesítésére létezik. Ha a hónap rövidebb, mint a választott nap (31. februárban), az utolsó napon megy ki, ahelyett hogy kimaradna.
+
+Ha a fájl nem állítható elő — mondjuk hiányzik az adóhivatal kódja —, az e-mail megmondja, miért, ahelyett hogy egyszerűen soha nem érkezne meg.
+
+### 3. Hagyd, hogy a könyvelő számítógépe hozza le
+
+Egy ütemezett feladat az Optimát futtató gépen maga is letöltheti a fájlt közönséges kimenő HTTPS-en keresztül. Nincs tűzfalváltoztatás, nincs rögzített cím, nincs Comarch licenc.
+
+Hozz létre egy API-kulcsot a **Beállítások → Integrációk → API-kulcsok** menüpontban (Operator vagy Accountant hatókörrel), majd ütemezd ezt havonta:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+A fájl egy olyan mappába kerül, ahonnan a könyvelőd importál. Az endpoint paramétereiért lásd a [Nyilvános API](/hu/integrations/public-api#jpk-v7m-poland) oldalt.
+
+<Tip>
+Egy **Accountant** hatókörű kulcs több céget is lefedhet. Ilyenkor `&company_id=…` szükséges minden kéréshez — egy ÁFA-bevallás adóalanyonkénti, és a Druma nem fogja találgatni, melyikre gondoltál.
+</Tip>
+
+---
+
+## Havi bevallás, vagy folyamatos import
+
+A `?period=previous` a lezárt hónapot adja — amelyet bevallasz.
+
+A `?period=current` a **folyamatban lévő** hónapot adja. Az Optima importja az egyes sorokat olvassa, nem az időszak-címkét, így a folyó hónap napi lehívása egy módja annak, hogy a számlák a kiállításukkor kerüljenek be az ÁFA-nyilvántartásba, havonta egyszer helyett. Minden válasz hordoz egy `X-Partial-Period` fejlécet (`true`/`false`), így a kettő soha nem keveredik.
+
+<Warning>
+**Teszteld ezt, mielőtt automatizálnád.** Hogy az Optima kihagyja-e az ismételt importnál már lekönyvelt sorokat, vagy másodszor is létrehozza őket, a Comarch viselkedése, nem valami, amit a Druma kontrollál. Először importáld kétszer ugyanazt a hónapot egy teszt adatbázisba. Ha duplikálja, használd inkább a havi utat.
+</Warning>
+
+Egy részleges hónap soha nem *bevallandó* fájl — csak egy nyilvántartás táplálására szolgál.
+
+---
+
+## Ha nem a Druma a rendszer, amely kiállítja a számláidat
+
+A JPK export szándékosan blokkolva van, amikor az **ügyfélszámlázás ki van kapcsolva** a cégednél, és `409`-cel válaszol. Kikapcsolt számlázás mellett a Drumában lévő számlákat máshol állították ki, és nyomon követés céljából vették fel — exportálásuk visszaadná a kiállító rendszernek a saját dokumentumait, és egy lengyel üzemeltető esetében ez azt jelenti, hogy egy második másolat készülne arról, amit az Optima már összegyűjtött a KSeF-ből.
+
+Ebben a beállításban a hasznos irány az ellentétes: a [Pénzügyi API](/hu/integrations/finance-api) átadja a könyvelőrendszerednek a számlázásra kész rendeléseket, és visszaveszi a kiállított számlaszámot.
+
+---
+
+## KSeF
+
+2026. április 1-től a KSeF kötelező a lengyel ÁFA-alanyok számára, és az Optima saját KSeF modulja közvetlenül onnan könyveli az értékesítési számlákat. A Druma benyújtja a számlákat a KSeF-hez azoknak az üzemeltetőknek, akik konfigurálták, ami minden dokumentumot néhány percen belül bejuttat az Optimába a kiállítástól számítva — nincs fájl, nincs ütemezett feladat.
+
+A JPK_V7M marad az alatta lévő havi ÁFA-*nyilvántartás*, és hordozza minden számla KSeF-számát, így az Optima párosít, nem duplikál.
+
+<CardGroup cols={2}>
+  <Card title="Nyilvános API" icon="code" href="/hu/integrations/public-api">
+    Az endpoint, amelyet az ütemezett feladat hív, annak paraméterei és korlátai.
+  </Card>
+  <Card title="Pénzügyi API" icon="arrow-right-arrow-left" href="/hu/integrations/finance-api">
+    Arra az esetre, ha a könyvelőrendszered állítja ki a számlákat, nem a Druma.
+  </Card>
+</CardGroup>

@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Polska)"
+description: "Wprowadź swoje polskie ewidencje VAT do Optimy: pobranie, comiesięczny e-mail, lub zaplanowane zadanie, które samo pobiera plik."
+icon: "file-invoice"
+---
+
+Druma generuje **JPK_V7M(3)** — plik ewidencji VAT (część ewidencyjna, strona sprzedaży) zdefiniowany przez Ministerstwo Finansów i obowiązkowy od 1 lutego 2026. Twój księgowy importuje go w Comarch ERP Optima w **Rejestry VAT → Import do rej. VAT**.
+
+Ponieważ JPK jest standardem prawnym, a nie formatem dostawcy, ten sam plik importuje się też do enova365, Symfonii i każdego innego polskiego pakietu księgowego.
+
+<Note>
+Kwoty w walucie innej niż PLN są przeliczane po kursie z **tabeli A NBP** z ostatniego dnia roboczego przed momentem powstania obowiązku podatkowego, zgodnie z wymogiem art. 31a. Kurs, jego data, i numer tabeli są przechowywane na fakturze, więc rozliczenie pozostaje odtwarzalne, jeśli ktoś zapyta, skąd wzięła się dana liczba.
+</Note>
+
+---
+
+## Najpierw dwa ustawienia
+
+**Ustawienia → Integracje → JPK_V7M**. Dwóch wartości nie da się wywieść z niczego innego, co posiada Druma, a eksport odmawia działania bez nich, zamiast zgadywać:
+
+| Ustawienie | Dlaczego jest wymagane |
+|---|---|
+| **Kod urzędu skarbowego (KodUrzedu)** | Jeden z 400 wyliczonych kodów. Nic nie mapuje adresu na kod — jest on Ci przypisany. Zgadywanie składa deklarację do niewłaściwego urzędu. |
+| **E-mail kontaktowy do rozliczeń** | Trafia do bloku `Podmiot1` pliku. Twoja operacyjna skrzynka zwykle nie jest Twoim księgowym, a umieszczenie niewłaściwej osoby na dokumencie podatkowym jest gorsze niż zapytanie. |
+
+Możesz też ustawić **moment powstania obowiązku podatkowego** (data wystawienia faktury, lub data dostawy powiązanego zlecenia) — dla frachtu jest to zwykle dzień wykonania usługi.
+
+---
+
+## Trzy sposoby, jak plik dociera do Optimy
+
+Do Optimy nie da się zapisać z zewnątrz. Lokalnie jej Web API jest usługą Windows w sieci własnej Twojego księgowego; *Chmura Standard* Comarch całkowicie zabrania dostępu do bazy danych z internetu, a *Chmura Enterprise* obsługuje tylko oprogramowanie zainstalowane na tym samym serwerze. Więc każda poniższa droga biegnie **od Twojej strony na zewnątrz**.
+
+### 1. Pobierz go
+
+**Finanse → Kreator eksportu → Eksport JPK_V7M (Polska)**. Wybierz miesiąc, otrzymaj `.xml`. Nic do skonfigurowania poza dwoma ustawieniami powyżej.
+
+### 2. Otrzymuj go e-mailem co miesiąc
+
+Włącz **Wysyłaj plik e-mailem co miesiąc** w tym samym panelu ustawień i wybierz dzień. Druma generuje zamknięty miesiąc i wysyła Twojemu księgowemu link do pobrania ważny 7 dni.
+
+Dzień jest ograniczony do **25.**, ponieważ to termin złożenia JPK_V7M za poprzedni miesiąc — późniejszy dzień dostarczyłby plik po terminie, który ma spełnić. Jeśli miesiąc jest krótszy niż wybrany dzień (31 w lutym), plik wychodzi ostatniego dnia zamiast być pominięty.
+
+Jeśli pliku nie da się wygenerować — powiedzmy, brakuje kodu urzędu skarbowego — e-mail mówi Ci dlaczego, zamiast po prostu nigdy nie dotrzeć.
+
+### 3. Niech komputer księgowego sam go pobierze
+
+Zaplanowane zadanie na maszynie, na której działa Optima, może pobrać plik samo, przez zwykłe wychodzące HTTPS. Żadnej zmiany firewalla, żadnego stałego adresu, żadnej licencji Comarch.
+
+Utwórz klucz API w **Ustawienia → Integracje → Klucze API** (zakres Operator lub Księgowy), następnie zaplanuj to co miesiąc:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+Plik trafia do folderu, z którego importuje Twój księgowy. Zobacz stronę [Public API](/pl/integrations/public-api#jpk-v7m-poland), aby poznać parametry endpointu.
+
+<Tip>
+Klucz o zakresie **Księgowy** może obejmować kilka firm. Wymaga wtedy `&company_id=…` przy każdym żądaniu — rozliczenie VAT jest per podatnik, a Druma nie będzie zgadywać, o który Ci chodziło.
+</Tip>
+
+---
+
+## Rozliczanie co miesiąc, czy ciągły import
+
+`?period=previous` daje Ci zamknięty miesiąc — ten, który rozliczasz.
+
+`?period=current` daje Ci miesiąc **w toku**. Import Optimy czyta poszczególne wiersze, a nie etykietę okresu, więc pobieranie bieżącego miesiąca codziennie to sposób na wprowadzanie faktur do rejestru VAT w miarę ich wystawiania, zamiast raz w miesiącu. Każda odpowiedź niesie nagłówek `X-Partial-Period` (`true`/`false`), więc te dwa nigdy się nie mylą.
+
+<Warning>
+**Przetestuj to, zanim to zautomatyzujesz.** Czy Optima pomija wiersze, które już zaksięgowała przy powtórnym imporcie, czy tworzy je po raz drugi, jest zachowaniem Comarch, a nie czymś kontrolowanym przez Drumę. Zaimportuj ten sam miesiąc dwukrotnie na bazie testowej najpierw. Jeśli duplikuje, użyj zamiast tego drogi miesięcznej.
+</Warning>
+
+Częściowy miesiąc nigdy nie jest plikiem do *rozliczenia* — tylko do zasilenia rejestru.
+
+---
+
+## Jeśli Druma nie jest systemem wystawiającym Twoje faktury
+
+Eksport JPK jest celowo zablokowany, gdy **fakturowanie klientów jest wyłączone** dla Twojej firmy, i odpowiada `409`. Przy wyłączonym fakturowaniu, faktury w Drumie zostały wystawione gdzie indziej i pobrane do śledzenia — eksportowanie ich oddałoby systemowi wystawiającemu jego własne dokumenty, a dla polskiego operatora oznacza to drugą kopię tego, co Optima już zebrała z KSeF.
+
+W takiej konfiguracji użyteczny jest kierunek odwrotny: [Finance API](/pl/integrations/finance-api) przekazuje Twojemu systemowi księgowemu zlecenia gotowe do zafakturowania, i pobiera z powrotem wystawiony numer faktury.
+
+---
+
+## KSeF
+
+Od 1 kwietnia 2026 KSeF jest obowiązkowy dla polskich podatników VAT, a własny moduł KSeF Optimy księguje faktury sprzedaży bezpośrednio z niego. Druma wysyła faktury do KSeF dla operatorów, którzy to skonfigurowali, co wprowadza każdy dokument do Optimy w ciągu kilku minut od wystawienia — bez pliku, bez zaplanowanego zadania.
+
+JPK_V7M pozostaje pod spodem comiesięcznym *rejestrem* VAT, i niesie numer KSeF każdej faktury, dzięki czemu Optima dopasowuje, a nie duplikuje.
+
+<CardGroup cols={2}>
+  <Card title="Public API" icon="code" href="/pl/integrations/public-api">
+    Endpoint, który wywołuje zaplanowane zadanie, jego parametry i limity.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/pl/integrations/finance-api">
+    Na wypadek, gdy to Twój system księgowy wystawia faktury, nie Druma.
+  </Card>
+</CardGroup>

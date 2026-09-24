@@ -1,0 +1,105 @@
+---
+title: "JPK_V7M — Comarch ERP Optima (Polonia)"
+description: "Introdu-ți înregistrările TVA poloneze în Optima: descărcare, un e-mail lunar, sau o sarcină programată care preia singură fișierul."
+icon: "file-invoice"
+---
+
+Druma produce **JPK_V7M(3)** — fișierul de înregistrări TVA poloneze (*część ewidencyjna*, partea de vânzări) definit de Ministerul Finanțelor și obligatoriu de la 1 februarie 2026. Contabilul tău îl importă în Comarch ERP Optima la **Rejestry VAT → Import do rej. VAT**.
+
+Deoarece JPK este un standard legal, nu un format de furnizor, același fișier se importă și în enova365, Symfonia și în orice alt pachet de contabilitate polonez.
+
+<Note>
+Sumele într-o altă monedă decât PLN sunt convertite la cursul **NBP tabela A** din ultima zi lucrătoare înainte de momentul taxării, conform cerinței art. 31a. Cursul, data lui, și numărul tabelului sunt stocate pe factură, astfel încât o depunere rămâne reproductibilă dacă cineva întreabă de unde a venit o cifră.
+</Note>
+
+---
+
+## Mai întâi, două setări
+
+**Setări → Integrări → JPK_V7M**. Două valori nu pot fi derivate din nimic altceva ce deține Druma, iar exportul refuză să ruleze fără ele, în loc să ghicească:
+
+| Setare | De ce este necesară |
+|---|---|
+| **Codul biroului fiscal (KodUrzedu)** | Unul din 400 de coduri enumerate. Nimic nu mapează o adresă la unul — îți este atribuit. O ghicire depune la biroul greșit. |
+| **E-mail de contact pentru depunere** | Merge în blocul `Podmiot1` al fișierului. Inbox-ul tău operațional de obicei nu este contabilul tău, iar a pune persoana greșită pe un document fiscal este mai rău decât a întreba. |
+
+Poți seta și **momentul taxării** (data emiterii facturii, sau data livrării comenzii legate) — pentru transport, aceasta este în mod normal ziua în care a fost prestat serviciul.
+
+---
+
+## Trei căi prin care fișierul ajunge la Optima
+
+Optima nu poate fi scrisă din exterior. La sediu, API-ul său Web este un serviciu Windows pe propria rețea a contabilului tău; *Chmura Standard* al Comarch interzice complet accesul la baza de date din internet, iar *Chmura Enterprise* servește doar software instalat pe acel server. Așa că fiecare rută de mai jos rulează **din partea ta spre exterior**.
+
+### 1. Descarcă-l
+
+**Finanțe → Generator de export → Export JPK_V7M (Polonia)**. Alege o lună, obții `.xml`-ul. Nimic de configurat în afara celor două setări de mai sus.
+
+### 2. Trimite-l pe e-mail în fiecare lună
+
+Activează **Trimite fișierul pe e-mail în fiecare lună** în același panou de setări și alege o zi. Druma generează luna închisă și trimite contabilului tău un link de descărcare valabil 7 zile.
+
+Ziua este plafonată la **a 25-a**, pentru că acesta este termenul de depunere JPK_V7M pentru luna anterioară — o zi mai târzie ar livra fișierul după termenul pe care există să-l îndeplinească. Dacă luna e mai scurtă decât ziua aleasă (31 în februarie), pleacă în ultima zi în loc să fie sărit.
+
+Dacă fișierul nu poate fi produs — de exemplu, lipsește codul biroului fiscal — e-mailul îți spune de ce, în loc pur și simplu să nu sosească niciodată.
+
+### 3. Lasă calculatorul contabilului să-l preia
+
+O sarcină programată pe mașina care rulează Optima poate descărca fișierul singură prin HTTPS ieșire obișnuit. Fără schimbare de firewall, fără adresă fixă, fără licență Comarch.
+
+Creează o cheie API la **Setări → Integrări → Chei API** (scop Operator sau Contabil), apoi programează asta lunar:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+Fișierul ajunge într-un folder de unde contabilul tău importă. Vezi pagina [API Public](/ro/integrations/public-api#jpk-v7m-poland) pentru parametrii endpoint-ului.
+
+<Tip>
+O cheie cu scop **Contabil** poate acoperi mai multe companii. Necesită atunci `&company_id=…` la fiecare cerere — o depunere TVA este per-plătitor, iar Druma nu va ghici pe care ai vrut-o.
+</Tip>
+
+---
+
+## Depunere lunară, sau import continuu
+
+`?period=previous` îți dă luna închisă — cea pe care o depui.
+
+`?period=current` îți dă luna **în curs**. Importul Optima citește rândurile individuale, nu eticheta perioadei, deci extragerea lunii curente zilnic e un mod de a aduce facturile în registrul TVA pe măsură ce sunt emise, în loc de o dată pe lună. Fiecare răspuns poartă un antet `X-Partial-Period` (`true`/`false`), ca cele două să nu se confunde niciodată.
+
+<Warning>
+**Testează asta înainte să automatizezi.** Dacă Optima sare rândurile pe care le-a înregistrat deja la o reimportare, sau le creează a doua oară, este comportamentul Comarch, nu ceva controlat de Druma. Importă aceeași lună de două ori pe o bază de date de test mai întâi. Dacă duplică, folosește ruta lunară în schimb.
+</Warning>
+
+O lună parțială nu este niciodată un fișier de *depus* — doar de a hrăni un registru.
+
+---
+
+## Dacă Druma nu este sistemul care emite facturile tale
+
+Exportul JPK este blocat deliberat când **facturarea clienților este dezactivată** pentru compania ta, și răspunde `409`. Cu facturarea dezactivată, facturile din Druma au fost emise altundeva și preluate pentru urmărire — exportarea lor ar preda sistemului emitent propriile documente, iar pentru un operator polonez asta înseamnă o a doua copie a ceea ce Optima a colectat deja din KSeF.
+
+În acea configurație, direcția utilă este cea opusă: [API Finance](/ro/integrations/finance-api) predă sistemului tău de contabilitate comenzile gata de facturat, și preia înapoi numărul facturii emise.
+
+---
+
+## KSeF
+
+De la 1 aprilie 2026, KSeF este obligatoriu pentru plătitorii de TVA polonezi, iar propriul modul KSeF al Optima înregistrează facturile de vânzare direct din el. Druma trimite facturi la KSeF pentru operatorii care l-au configurat, ceea ce introduce fiecare document în Optima în câteva minute de la emitere — fără fișier, fără sarcină programată.
+
+JPK_V7M rămâne *registrul* TVA lunar dedesubt, și poartă numărul KSeF al fiecărei facturi, astfel încât Optima se potrivește în loc să dubleze.
+
+<CardGroup cols={2}>
+  <Card title="API Public" icon="code" href="/ro/integrations/public-api">
+    Endpoint-ul pe care îl apelează sarcina programată, parametrii lui și limitele lui.
+  </Card>
+  <Card title="API Finance" icon="arrow-right-arrow-left" href="/ro/integrations/finance-api">
+    Pentru când sistemul tău de contabilitate emite facturile, nu Druma.
+  </Card>
+</CardGroup>

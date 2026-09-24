@@ -1,0 +1,79 @@
+---
+title: "Vrátenie spotrebnej dane z paliva"
+description: "Sledujte a generujte žiadosti o vrátenie spotrebnej dane z paliva v EÚ pre Belgicko a Rumunsko na základe importovaných dát z palivových kariet."
+icon: "gas-pump"
+---
+
+## Čo je vrátenie spotrebnej dane z paliva?
+
+Niekoľko členských štátov EÚ umožňuje profesionálnym cestným dopravcom vrátiť si časť spotrebnej dane zaplatenej z nafty. Druma podporuje dve schémy:
+
+- **Belgicko — Gasoil professionnel**: belgickí dopravcovia si môžu vrátiť časť spotrebnej dane z nafty použitej na profesionálnu prepravu. Žiadosti sa podávajú štvrťročne na SPF Finances.
+- **Rumunsko — vrátenie dane z nafty TICAD**: rumunskí dopravcovia si môžu vrátiť časť spotrebných daní z nafty použitej v medzinárodnej a národnej cestnej doprave. Žiadosti sa podávajú na ANAF.
+
+Vrátenie spotrebnej dane z paliva sa nachádza v sekcii **Financie**, podmienené príznakom modulu dane z paliva — riadi sa normálnym prístupom k sekcii Financie, bez dodatočného obmedzenia podľa role.
+
+<Frame caption="Financie → Daň z paliva — schémy Belgicka a Rumunska.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Stránka Vrátenie spotrebnej dane z paliva" />
+</Frame>
+
+---
+
+## Predpoklady
+
+Táto správa vyžaduje najprv importované dáta z palivových kariet. Bez záznamov o tankovaní nie sú žiadne litre, voči ktorým by sa počítalo.
+
+<Card title="Import palivových kariet" icon="credit-card" href="/sk/integrations/fuel-card-import">
+  Importujte tankovania z DKV, UTA, AS24, a iných poskytovateľov.
+</Card>
+
+---
+
+## Generovanie žiadosti o vrátenie
+
+<Steps>
+  <Step title="Vyberte krajinu a obdobie">
+    Vyberte **Belgicko** alebo **Rumunsko** z rozbaľovacej ponuky krajiny, potom nastavte obdobie žiadosti (typicky štvrťrok pre Belgicko, mesiac alebo štvrťrok pre Rumunsko).
+  </Step>
+  <Step title="Kliknite na Generovať">
+    Druma získa všetky záznamy o tankovaní za dané obdobie, ktoré sú oprávnené podľa vybranej schémy, vypočíta celkové oprávnené litre, a vynásobí aktuálnou sadzbou vrátenia pre danú krajinu.
+  </Step>
+  <Step title="Preskúmajte žiadosť">
+    Výsledok zobrazuje oprávnené litre, sadzbu vrátenia na liter, a celkovú sumu vrátenia v EUR. Preskúmajte pred podaním.
+  </Step>
+  <Step title="Nastavte stav a referenciu">
+    Zmeňte stav na **Podané** a zadajte referenčné číslo od úradu, ktoré dostanete po podaní. Toto prepojí záznam v Drume s vaším oficiálnym podaním.
+  </Step>
+</Steps>
+
+---
+
+## Životný cyklus stavu žiadosti
+
+```
+Návrh → Podané → Vrátené
+              → Zamietnuté
+```
+
+- **Návrh** — vypočítané, ale ešte nepodané úradu
+- **Podané** — odoslané na SPF Finances (BE) alebo ANAF (RO); zaznamenané referenčné číslo
+- **Vrátené** — platba prijatá; zadajte dátum vrátenia
+- **Zamietnuté** — žiadosť bola zamietnutá; pridajte poznámku s dôvodom pre ďalšie kroky
+
+---
+
+## Graf súm vrátenia
+
+Plošný graf zobrazuje sumy vrátenia podľa obdobia za posledných 12 mesiacov. Užitočné na odhalenie sezónnych vzorov spotreby paliva a na plánovanie peňažných tokov.
+
+---
+
+## Export CSV
+
+Kliknite na **Exportovať CSV**, aby ste stiahli detaily žiadosti — rozpis po jednotlivých tankovaniach, oprávnené litre, sadzbu, a vypočítané vrátenie — na účely podania alebo kontroly.
+
+---
+
+<Warning>
+Druma počíta oprávnené litre z vašich importovaných dát palivových kariet. Je vašou zodpovednosťou overiť, že všetky tankovania sú správne importované a že sadzba vrátenia zodpovedá aktuálne publikovanej sadzbe od príslušného daňového úradu pred podaním žiadosti.
+</Warning>

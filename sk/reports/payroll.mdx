@@ -1,0 +1,119 @@
+---
+title: "Mzdy vodičov"
+description: "Generujte automatizované výpočty miezd na vodiča na základe najazdených km, aktívnych dní, a hodín čakania."
+icon: "money-bill-wave"
+---
+
+## Prehľad
+
+Druma počíta mzdu vodiča z prevádzkových dát, ktoré už zachytáva — najazdené kilometre, odpracované dni, a zaznamenané hodiny čakania. Neexistuje samostatný systém sledovania času; dáta prúdia z objednávok a stavových klepnutí.
+
+Mzdy vodičov sa nachádzajú v sekcii **Financie**, podmienené príznakom modulu miezd — riadi sa normálnym prístupom k sekcii Financie, bez dodatočného obmedzenia podľa role pre zobrazenie. Schválenie/finalizácia dávky a pridávanie riadkov úpravy majú každé svoje vlastné užšie oprávnenie — pozri [Mesačné mzdové dávky](#mesačné-mzdové-dávky-automatizované) nižšie.
+
+<Frame caption="Financie → Mzdy — mzda za prázdne km je percento z naloženej sadzby, nie nezávislá sadzba.">
+  <img src="/images/reports/payroll.png" alt="Stránka Mzdy" />
+</Frame>
+
+---
+
+## Zložky mzdy
+
+Každý výpočet mzdy počíta štyri zložky:
+
+| Zložka | Základ |
+|---|---|
+| **Mzda za km** | Naložené km × sadzba za km |
+| **Mzda za prázdne km** | Prázdne/jazda naprázdno km × sadzba za km × percento za prázdne km (konfigurovateľný podiel z naloženej sadzby, nie samostatná sadzba za prázdne km — predvolene 100%, t. j. platené rovnako ako naložené km) |
+| **Denná mzda** | Aktívne pracovné dni × denná sadzba |
+| **Mzda za čakanie** | Celkové hodiny čakania × hodinová sadzba čakania |
+
+Celková suma je súčet všetkých štyroch zložiek v EUR.
+
+---
+
+Druma podporuje dva spôsoby vytvorenia výpočtu miezd: vygenerujte jeden ručne, kedykoľvek ho potrebujete, alebo nechajte voliteľnú mesačnú dávku vytvoriť jeden automaticky pre každého vodiča a pridržte ho na schválenie. Väčšina spoločností používa automatizovanú dávku dennodenne a vracia sa k ručnému výpočtu pre ad-hoc obdobia (vodič, ktorý začal v polovici mesiaca, špeciálna oprava mzdového cyklu, atď.).
+
+## Generovanie výpočtu miezd (ručne)
+
+<Steps>
+  <Step title="Vyberte vodiča a obdobie">
+    Vyberte vodiča z rozbaľovacej ponuky a nastavte dátum začiatku a konca obdobia. Typické obdobia sú kalendárny mesiac alebo dvojtýždňový mzdový cyklus.
+  </Step>
+  <Step title="Kliknite na Generovať">
+    Druma vypočíta všetky štyri zložky mzdy z objednávok a záznamov čakania v rámci vybraného obdobia.
+  </Step>
+  <Step title="Preskúmajte rozpis">
+    Výsledok zobrazuje každú zložku samostatne, aby ste mohli overiť čísla pred exportom.
+  </Step>
+  <Step title="Exportovať do CSV">
+    Kliknite na **Exportovať CSV**, aby ste stiahli súhrn miezd na použitie vo vašom účtovnom alebo mzdovom systéme.
+  </Step>
+</Steps>
+
+---
+
+## Mesačné mzdové dávky (automatizované)
+
+Pre spoločnosti, ktoré nechcú spúšťať výpočet ručne každý mesiac, Druma vie vytvoriť dávku automaticky.
+
+<Note>
+Toto je voliteľné. Aktivujte **Vytváranie mesačnej mzdovej dávky** pod **Nastavenia → Pracovný postup a automatizácia → Automatizácie a funkcie** — predvolene je vypnuté. Človek vždy preskúma a schváli dávku; vodiči ju nikdy nevidia, kým nie je schválená.
+</Note>
+
+**Ako to funguje:** po aktivácii denná úloha kontroluje **deň uzávierky miezd** každej spoločnosti (konfigurovateľný deň v mesiaci, predvolene **2.**). Keď dnešný deň zodpovedá tomuto dňu, Druma vypočíta hrubú mzdu — rovnaké štyri zložky a matematiku ako ručný výpočet vyššie — pre každého aktívneho vodiča za **predchádzajúci kalendárny mesiac**, a uloží ju ako jednu pridržanú dávku **návrh** pre spoločnosť. Vytvorenie dávky je idempotentné: jeho opätovné spustenie pre mesiac, ktorý už má dávku, nemá žiadny efekt.
+
+### Životný cyklus stavu dávky
+
+```
+Návrh (pridržaný) → Schválený → Finalizovaný
+```
+
+- **Návrh** — čerstvo vytvorený, alebo ešte preskúmavaný. Jednotlivé výpočty vodičov v dávke možno stále upravovať.
+- **Schválený** — preskúmaný a uvoľnený. Vodiči teraz vidia svoju výplatnú pásku v aplikácii pre vodičov.
+- **Finalizovaný** — trvalo uzamknutý. Nie sú možné žiadne ďalšie úpravy pre žiadny výpočet v dávke.
+
+Schvaľovanie a finalizácia dávky je obmedzené na role **admin** a **company_admin** — kliknite na **Schváliť dávku** alebo **Finalizovať dávku** zo stránky Mzdy. Akonáhle je výpočet finalizovaný, nemožno ho znovu otvoriť.
+
+### Pridávanie úprav
+
+Pred schválením dávky môžu oprávnení používatelia pridať **riadky úpravy** k výpočtu jednotlivého vodiča — bonus, diéta, zrážka, alebo iné. Toto je dostupné pre role **admin**, **company_admin**, a **fleet_manager** (širšia množina ako schválenie/finalizácia). Každá úprava sa zobrazuje v rozpise výpočtu spolu so štyrmi štandardnými zložkami mzdy, takže konečný súčet je plne vysledovateľný. Úpravy už nemožno pridávať, keď výpočet opustí stav Návrh.
+
+### Čo vidia vodiči
+
+Vodiči vždy vidia iba **schválené** alebo **finalizované** dávky vo svojej aplikácii — návrhové dávky (vrátane čohokoľvek, čo sa ešte upravuje) sú pre nich neviditeľné. Finalizovaný výpočet je označený **Finálny** v zobrazení výplatnej pásky vodiča, signalizujúc, že je uzamknutý a už sa nezmení.
+
+---
+
+## Konfigurácia sadzieb
+
+Mzdové sadzby (sadzba za km, denná sadzba, percento za prázdne km, hodinová sadzba čakania) sú uložené na vodiča — so spoločným predvoleným pravidlom platným pre celú spoločnosť, ktoré sa vzťahuje na vodiča bez vlastného — v základnej tabuľke mzdových pravidiel.
+
+<Note>
+Momentálne neexistuje obrazovka v aplikácii na zobrazenie alebo úpravu týchto sadzieb. Sadzby musia byť nastavené priamo v databáze (alebo predinicializované), kým nebude spustené UI sadzieb Vozový park → Vodiči. Ak vodič nemá pravidlo a neexistuje predvolené pravidlo spoločnosti, každá zložka pre daného vodiča sa počíta ako nula.
+</Note>
+
+---
+
+## Historické výpočty
+
+Každý vygenerovaný výpočet miezd je uložený a uvedený pod záznamom vodiča. Návrhové a schválené výpočty možno stále preskúmať alebo znovu exportovať; **finalizovaný** výpočet je trvalo uzamknutý a nemožno ho znovu otvoriť alebo zmeniť.
+
+---
+
+## Graf mesačných súčtov
+
+Stĺpcový graf pod výberom vodiča zobrazuje celkové mesačné sumy miezd pre vybraného vodiča za posledných 12 mesiacov. Užitočné na odhalenie sezónnych vzorov alebo mesiacov s neobvykle vysokými poplatkami za čakanie.
+
+---
+
+<Note>
+Mzdové čísla v Drume sú informatívne — Druma sa neintegruje s procesormi miezd ani daňovými úradmi. Export CSV je určený na import do vášho mzdového systému alebo na ručné preskúmanie účtovníkom.
+</Note>
+
+<Card title="Čas čakania" icon="clock" href="/sk/planner/waiting-time">
+  Naučte sa, ako sa zaznamenáva čas čakania a ako sa vkladá do výpočtov miezd.
+</Card>
+
+<Card title="Zmarená jazda" icon="triangle-exclamation" href="/sk/planner/wasted-journey">
+  Mŕtve kilometre zo zmarených jázd sa tiež objavujú v záznamoch miezd vodiča.
+</Card>

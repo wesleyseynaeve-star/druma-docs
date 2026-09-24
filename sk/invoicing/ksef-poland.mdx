@@ -1,0 +1,106 @@
+---
+title: "KSeF — Poľská e-fakturácia"
+description: "Ako Druma automaticky odosiela faktúry do KSeF (Krajowy System e-Faktur), poľského povinného národného systému e-fakturácie prevádzkovaného KAS, so sledovaním stavu, spracovaním opakovaných pokusov, a sťahovaním potvrdenky UPO."
+icon: "file-invoice"
+---
+
+<Warning>
+**Skorý prístup — čaká na prvé overenie živým operátorom.** Odosielanie do KSeF od Drumy je funkčne kompletné, ale k dátumu písania tohto textu ešte nebolo overené od konca do konca voči živému API KSeF Poľska reálnym operátorom s poľským DPH číslom. Odosielanie zostáva zablokované, kým nie je pripojený token živého operátora. Ak ste medzi prvými operátormi pripájajúcimi KSeF, považujte svoje prvotné odoslania za skorý prístup — pozorne sledujte odznaky stavu a promptne kontaktujte podporu, ak niečo vyzerá nesprávne. Kroky nastavenia a správanie popísané nižšie sú správne inštrukcie; jedinou otvorenou položkou je živá produkčná história.
+</Warning>
+
+## Čo je KSeF?
+
+KSeF (Krajowy System e-Faktur) je poľský národný štruktúrovaný systém e-fakturácie, prevádzkovaný poľskou daňovou správou (KAS — Krajowa Administracja Skarbowa). Je povinný pre poľské spoločnosti registrované na DPH. Každá faktúra vystavená spoločnosťou s poľským DPH musí byť odoslaná do KSeF v oficiálnom formáte XML FA(3) — samotný portál KAS nestačí.
+
+<Frame caption="Nastavenia KSeF — pripojte token operátora, potom sledujte stav odoslania a potvrdenky UPO na faktúru.">
+  <img src="/images/invoicing/ksef-poland.png" alt="Nastavenia poľskej e-fakturácie KSeF a stav odoslania v Drume" />
+</Frame>
+
+<Note>
+Mandát KSeF sa zavádza vo fázach počas roku 2026 a jeho dátumy nábehu boli opakovane odložené poľskou vládou. Potvrďte konkrétny platný dátum nábehu pre vašu spoločnosť so svojím účtovníkom alebo na oficiálnom portáli [ksef.mf.gov.pl](https://ksef.mf.gov.pl) skôr, ako sa spoľahnete na akýkoľvek tu uvedený dátum.
+</Note>
+
+KSeF sa vzťahuje iba vtedy, ak má vaša spoločnosť **poľské DPH číslo** (formát: `PL` nasledované 10 číslicami, napr. `PL1234567890`). Spoločnosti registrované v Rumunsku, Belgicku, alebo inej ne-poľskej krajine nepodliehajú KSeF. Ak Druma nezistí poľské DPH číslo v zázname vašej spoločnosti, karta integrácie KSeF zostane neaktívna.
+
+## Ako Druma spracúva KSeF
+
+Nemusíte sa prihlasovať do portálu KAS, vytvárať XML súbory, alebo nič ručne odosielať. Toto sa deje automaticky, keď vygenerujete faktúru a KSeF je aktivovaný:
+
+1. Druma konvertuje faktúru do oficiálneho formátu **XML FA(3)** vyžadovaného KAS.
+2. Druma sa autentifikuje voči API KSeF pomocou vášho **tokenu operátora**, bezpečne uloženého v Supabase Vault — token nie je nikdy viditeľný v čistom texte po tom, čo ho vložíte.
+3. Druma odošle XML do KSeF a dostane **číslo KSeF** (oficiálnu referenciu od KAS).
+4. Druma stiahne **UPO** (Urzędowe Poświadczenie Odbioru — oficiálne potvrdenie o prijatí) a uloží ho k záznamu faktúry.
+
+Celý proces beží na pozadí. Výsledok uvidíte na faktúre ako farebný odznak stavu.
+
+## Odznaky stavu KSeF
+
+Každá faktúra podliehajúca KSeF zobrazuje odznak stavu na stránke detailu faktúry pod sekciou **KSeF**:
+
+| Odznak | Význam |
+|---|---|
+| **Čaká** | Faktúra vygenerovaná; odoslanie do KSeF je vo fronte. |
+| **Odoslané** | XML odoslané do KSeF; čaká sa, kým to KAS spracuje (zvyčajne 1–5 minút). |
+| **Prijaté** | KAS prijala faktúru. Číslo KSeF je uložené a UPO je dostupné. |
+| **Neúspešné** | KSeF odmietla faktúru kvôli chybe validácie. Pozri chybovú správu na faktúre. |
+| **Zamietnuté** | KAS vrátila formálne zamietnutie. Skontrolujte UPO pre kód dôvodu. |
+
+<Note>
+Úloha na pozadí kontroluje neúspešné odoslania každých 30 minút, ale každá faktúra v skutočnosti opakuje pokus iba podľa exponenciálneho harmonogramu — približne 1 hodinu po prvom zlyhaní, potom približne 2 hodiny potom (±25% variabilita). Ak zlyhá aj tretí pokus (pôvodné odoslanie plus tieto 2 opakovania), faktúra prejde priamo do stavu **Neúspešné**, typicky do približne 3 hodín od prvého zlyhania — potom sa už automaticky neopakuje. Spustite ručné opakovanie z panela detailu faktúry, akonáhle vyriešite základnú chybu.
+</Note>
+
+## Nastavenie KSeF
+
+<Steps>
+  <Step title="Prejdite na Nastavenia → Integrácie">
+    Otvorte menu **Nastavenia** z hornej navigačnej lišty a vyberte **Integrácie**.
+  </Step>
+  <Step title="Nájdite kartu KSeF a kliknite na Pripojiť">
+    Nájdite kartu **KSeF (poľská e-fakturácia)**. Kliknite na **Pripojiť**.
+  </Step>
+  <Step title="Vložte svoj token operátora">
+    Zadajte svoj token operátora KSeF. Toto je autentifikačný token vydaný KAS pre prístup API vašej spoločnosti. Váš účtovník alebo IT tím ho môže vygenerovať z portálu KSeF na [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  </Step>
+  <Step title="Uložiť">
+    Kliknite na **Uložiť**. Druma overí, že záznam vašej spoločnosti má poľské DPH číslo, pred aktiváciou. Ak validácia zlyhá, skontrolujte, či je DPH číslo v detailoch vašej spoločnosti vo formáte `PL` + 10 číslic.
+  </Step>
+</Steps>
+
+Po pripojení sa všetky nové faktúry vygenerované vašou spoločnosťou odosielajú do KSeF automaticky. Existujúce faktúry už v Drume sa **neodosielajú** retroaktívne.
+
+## Odpojenie KSeF
+
+Prejdite na **Nastavenia → Integrácie → KSeF → Odpojiť**. Toto odstráni token operátora z Vault a okamžite zastaví nové odosielania. Faktúry, ktoré už boli prijaté, si zachovávajú svoje čísla KSeF — odpojenie nemá vplyv na prijaté záznamy.
+
+## Faktúry s prenesenou daňovou povinnosťou
+
+Druma správne spracúva DPH s prenesenou daňovou povinnosťou vo formáte XML FA(3). Keď faktúra nesie zaobchádzanie s prenesenou daňovou povinnosťou, Druma vynechá sumu DPH a nastaví správne pole **P_12** v XML. Nie je potrebná žiadna ručná úprava — zaobchádzanie s DPH sa odvodzuje z riadkových položiek faktúry, ako sú nakonfigurované v Drume.
+
+## Sťahovanie UPO
+
+UPO (oficiálna potvrdenka od KAS) sa sťahuje automaticky, akonáhle faktúra dosiahne stav **Prijaté**, a uloží sa k záznamu faktúry. Na ručné stiahnutie:
+
+1. Otvorte faktúru z **Financie** → **Faktúry**.
+2. Prejdite dole na sekciu **KSeF**.
+3. Kliknite na **Stiahnuť UPO**.
+
+<Warning>
+UPO je právny dôkaz, že KAS prijala vašu faktúru. Uchovávajte kópiu vo svojich záznamoch — poľské daňové právo vyžaduje, aby ste ju vedeli predložiť počas daňovej kontroly.
+</Warning>
+
+## Ručné opakovanie
+
+Ak sú automatické opakovania vyčerpané, alebo ste opravili chybu a chcete okamžite znova odoslať:
+
+Prejdite na **Financie** → **Faktúry** → otvorte faktúru → **sekcia KSeF** → kliknite na **Opakovať odoslanie**. Druma okamžite znova odošle XML FA(3).
+
+---
+
+<CardGroup cols={2}>
+  <Card title="e-Factura / Odosielanie do ANAF" icon="landmark" href="/sk/invoicing/efactura-anaf">
+    Rumunský ekvivalentný povinný systém e-fakturácie — ako Druma odosiela do ANAF cez API SPV.
+  </Card>
+  <Card title="Fakturácia Peppol" icon="network-wired" href="/sk/integrations/peppol-invoicing">
+    Elektronická fakturácia v celej EÚ cez sieť Peppol — nastavenie, odosielanie, a sledovanie stavu.
+  </Card>
+</CardGroup>

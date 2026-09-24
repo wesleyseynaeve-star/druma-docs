@@ -1,0 +1,93 @@
+---
+title: "Pénzügyi API"
+description: "Húzd be a számlázható rendeléseket a saját pénzügyi vagy ERP rendszeredbe, és könyveld vissza a Drumába a kiállított számláidat."
+icon: "arrow-right-arrow-left"
+---
+
+Néhány üzemeltető egyáltalán nem a Drumából számláz — egy meglévő pénzügyi vagy ERP rendszerből számláznak, és azt szeretnék, hogy a Druma maradjon az operatív igazságforrás. A Pénzügyi API az a hurok, amely ezt lehetővé teszi: a Druma megmondja a pénzügyi rendszerednek, mi áll készen a számlázásra, a pénzügyi rendszered pedig megmondja a Drumának, mit számlázott ki ténylegesen.
+
+Egy rendelés négy állapoton megy keresztül a két rendszer között:
+
+**Számlázatlan → Számlázásra kész (exportálva) → Kiszámlázva (a rendszeredben) → Fizetve**
+
+<Note>
+Ez egy különálló API a csak olvasható [Nyilvános API](/hu/integrations/public-api)-tól. A Nyilvános API arra válaszol, "hol van a szállítmányom"; a Pénzügyi API egy számlázási átadás írásokkal, idempotenciával és saját sebességkorlátaival. Az egyikhez kiadott kulcs nem működik a másikon.
+</Note>
+
+---
+
+## Mielőtt elkezdenéd
+
+<Steps>
+  <Step title="Kapcsold ki az ügyfélszámlázást a Drumában">
+    A Pénzügyi API azoknak az üzemeltetőknek szól, akik máshol számláznak. Ha a Drumából is számlákat állítasz ki, kétszer fogod számlázni ugyanazt a rakományt.
+  </Step>
+  <Step title="Adj ki egy Finance hatókörű API-kulcsot">
+    Lépj a **Beállítások → Integrációk → API-kulcsok** menüpontra, kattints a **Kulcs létrehozása** gombra, adj neki nevet (pl. `Netsuite export`), és válaszd a **Finance (számlázható export + számlabefogadás)** hatókört.
+
+    Itt csak egy `finance` kulcs működik. Egy `operator` vagy `accountant` kulcsot — még ha tökéletesen érvényes is — **403**-mal elutasítja. Lásd a [Nyilvános API](/hu/integrations/public-api) oldalt, hogyan működnek a kulcsok és hatókörök.
+  </Step>
+  <Step title="Másold ki a kulcsot">
+    A teljes kulcs csak **egyszer** jelenik meg, a létrehozáskor. Tárold a pénzügyi rendszered hitelesítő adattárában; a Druma csak egy hash-t őriz meg, és soha többé nem tudja megmutatni neked.
+  </Step>
+</Steps>
+
+---
+
+## Hitelesítés
+
+Minden kérés az `X-API-Key` fejlécben hordozza a kulcsot — ugyanaz a fejléc, mint a Nyilvános API-nál:
+
+```
+X-API-Key: A_TE_FINANCE_KULCSOD
+```
+
+---
+
+## Végpontok
+
+| Módszer | Végpont | Mit csinál |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Lapozott lista a számlázásra kész rendelésekről |
+| `POST` | `/finance-api/billable/exported` | Lebélyegzi ezeket a rendeléseket lehívottként, hogy a következő `GET` ne adja vissza őket újra |
+| `POST` | `/finance-api/invoices` | Visszakönyveli az általad kiállított számlát a Drumába |
+
+### A normál ciklus
+
+<Steps>
+  <Step title="Húzd le a számlázhatót">
+    A `GET /finance-api/billable` lapozva visszaadja a kiszállított, számla nélküli rendeléseket.
+  </Step>
+  <Step title="Igazold vissza, amit átvettél">
+    `POST /finance-api/billable/exported` a ténylegesen lehívott rendelés-azonosítókkal. Ez akadályozza meg, hogy ugyanaz a rendelés kétszer kerüljön át az ERP-dbe — amíg nem igazolod vissza, a Druma továbbra is felajánlja.
+  </Step>
+  <Step title="Könyveld vissza a számlát">
+    Amint a rendszered kiállította a számlát, a `POST /finance-api/invoices` rögzíti azt a rendeléshez a Drumában. A rendelés **Kiszámlázva** állapotba kerül, lekerül a számlázatlan listáról, és elkezd öregedni a fizetéskövetéshez, mint bármely más számla.
+  </Step>
+</Steps>
+
+### Hibák, amelyekre számítanod kell
+
+| Válasz | Jelentés |
+|---|---|
+| `403` | A kulcs érvényes, de nem **Finance** hatókörű kulcs |
+| `409` | Ezt a számlát már befogadták — a kérés duplikátum volt, és semmi sem változott |
+| `422` | Egy vagy több `order_id` érték nem felismert. A válasz megnevezi a hibás azonosítókat |
+| `429` | Túllépted a sebességkorlátot — várj és próbáld újra |
+
+<Warning>
+A Druma nem találgat. Az azonosítók, amelyeket visszaküldesz, olyan azonosítók, amelyeket a Druma perceken belül adott neked a `GET /finance-api/billable`-ból; ha nem egyeznek, egy `422`-t kapsz, amely megnevezi őket, ahelyett hogy legjobb tudása szerint máshoz párosítaná. Küldd vissza az azonosítókat pontosan úgy, ahogy megkaptad.
+</Warning>
+
+---
+
+## Kapcsolódó cikkek
+
+<CardGroup cols={2}>
+  <Card title="Nyilvános API" icon="code" href="/hu/integrations/public-api">
+    Csak olvasható rendeléshozzáférés, API-kulcsok és hatókörök.
+  </Card>
+  <Card title="Számlák generálása" icon="file-invoice" href="/hu/invoicing/generating-invoices">
+    Számlázás helyette a Drumán belülről.
+  </Card>
+</CardGroup>
