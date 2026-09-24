@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-09-09 15:11 UTC
+Generated: 2026-09-24 15:36 UTC
 
 ---
 
@@ -569,7 +569,7 @@ If you are setting up a brand-new Druma account, follow this sequence. Each step
     Add planners, dispatchers, and other team members and assign each one the right role. See [User roles and permissions](/en/admin/user-roles) for a full breakdown of the eight Druma roles and what each can access.
   
   ### Set up a truck cost profile
-    Define your own-fleet and subcontractor cost profiles (fixed cost, driver wage, fuel, surcharges) so Druma can estimate order cost and margin. See [Rate cards](/en/admin/rate-cards) to get started. If you also want Druma to auto-suggest a **selling** price by lane, that's the separate Lane Pricing feature under Pricing → Lane Pricing.
+    Define your own-fleet and subcontractor cost profiles (fixed cost, driver wage, fuel, surcharges) so Druma can estimate order cost and margin. See [Rate cards](/en/admin/rate-cards) to get started. If you also want Druma to auto-suggest a **selling** price by lane, see [Lane Pricing](/en/admin/lane-pricing).
   
 
 
@@ -1022,7 +1022,7 @@ Fields render in the order they are listed. **Move up** and **Move down** reorde
 
 
 > **Note:** 
-This page covers **Settings → Pricing & Costing → Rate Cards** — truck **cost profiles** used to estimate an order's cost and margin. If you're looking for per-lane **selling** prices (origin/destination-based quote suggestions, e.g. "Romania → Germany, Curtainsider — €1,450"), that's a separate feature called **Lane Pricing**, under **Pricing → Lane Pricing** in the main app — it isn't covered on this page.
+This page covers **Settings → Pricing & Costing → Rate Cards** — truck **cost profiles** used to estimate an order's cost and margin. If you're looking for per-lane **selling** prices (origin/destination-based quote suggestions, e.g. "Romania → Germany, Curtainsider — €1,450"), that's a separate feature called **Lane Pricing**, under **Pricing → Lane Pricing** in the main app — see [Lane Pricing](/en/admin/lane-pricing).
 
 
 ## What is a rate card?
@@ -1106,7 +1106,99 @@ Below your rate cards, a separate **Default routing profile** card sets the vehi
 ## Related pages
 
 
-  Configure your company profile, which works alongside rate cards when Druma calculates order costs.
+  
+    The selling-price side — per-lane prices Druma auto-suggests on a quote or order, including bulk import.
+  
+  
+    Configure your company profile, which works alongside rate cards when Druma calculates order costs.
+  
+</CardGroup>
+
+---
+
+## Lane Pricing
+
+
+> **Note:** 
+This page covers **Pricing → Lane Pricing** — per-lane **selling** prices. If you're looking for truck **cost** profiles (fixed cost, driver wage, fuel, surcharges) used to estimate an order's margin, that's a separate feature — see [Rate cards](/en/admin/rate-cards).
+
+
+## What is a lane price card?
+
+A lane price card sets what you charge for a lane — for example, "Romania → Germany, Curtainsider — €1,450." Once a card exists, Druma auto-suggests its price the moment a matching quote or order is created, so pricing a routine lane stops being a lookup in a spreadsheet.
+
+**Who can edit:** Admin, Company Admin, Fleet Manager, and Planner roles.
+
+---
+
+## Creating a lane price card
+
+Go to **Pricing → Lane Pricing** and click **Add lane** (or **New card**, depending on whether you're adding to an existing card or starting fresh).
+
+| Field | Meaning |
+|---|---|
+| **Card name** | A short label, e.g. "Standard curtainsider lanes" |
+| **Client** | Optional — scope this card to one client only. A client-specific card always wins over a general one for that client. |
+| **Origin / Destination country** | Required — the two-letter country pair this lane covers |
+| **Postal prefix** | Optional — the first two characters of the postcode (e.g. `RO-30`). A lane with a postal prefix beats a country-only lane for a matching pickup/delivery postcode, and the country-only lane still covers every other postcode in that country. |
+| **City** | Optional — narrows the lane further when the postcode alone isn't precise enough |
+| **Zone** | Optional — one of your own postal zone groups (Settings → Zones), for pricing a whole region at once rather than a single prefix |
+| **Trailer type / Vehicle category** | Optional — restricts the lane to a specific equipment type |
+| **Rate mode** | **Flat rate** (one fixed price, no distance needed), **Per km** (price × route distance), or **Per km (bracketed)** — a different €/km depending on which **Min km / Max km** bracket the route falls into |
+| **Amount** | The price (or €/km rate) for this lane |
+| **Currency** | EUR or RON |
+| **Fuel scheme / Fuel %** | Optional fuel surcharge applied on top |
+| **Valid from / Valid to** | Optional date range — leave blank for an always-valid lane |
+
+Click **Add lane** to save it under the card, or **Delete lane** to remove one.
+
+> **Note:** 
+A **Flat rate** lane needs no route distance to price — useful the moment a quote is created, before any routing has run. A **Per km** or **Per km (bracketed)** lane needs a distance and is skipped if none is available yet.
+
+
+---
+
+## How Druma picks a lane
+
+When you create an order or quote, click **Suggest price** and Druma scores every lane against the order's own origin/destination, postal codes, trailer, and client, then applies the best match. Matching precedence, most specific first:
+
+1. A card scoped to this **client**
+2. **Postal prefix** match (beats a country-only lane)
+3. **Country** match
+4. **Zone**, **trailer type**, and **vehicle category**, as tie-breakers
+
+A lane's postal prefix, when set, is a hard requirement — it never "loosely" matches a different prefix. If nothing matches, Druma says so (**"No matching lane price for this route"**) rather than guessing.
+
+---
+
+## Lane history — what you've actually charged
+
+Click **Lane history** on a country pair to see what orders on that exact lane have actually billed over the last 6 months — average distance, average total, and the median €/km — with a link through to the individual orders. Use **Use median €/km**, **Use €/km × distance**, or **Use total** to pull one of those figures straight into the price field you're working on.
+
+---
+
+## Suggested from your history
+
+The **Suggestions** tab lists lanes you've actually run in the last 6 months that have **no card yet** — a gap between what you're pricing manually and what's automated. **Accept** creates a card priced at that lane's historical median (a starting point you can edit afterwards, never a commitment); **Accept all visible** does the same for every suggestion on screen in one step. **Dismiss** clears a suggestion without creating a card.
+
+---
+
+## Bulk import
+
+Rather than adding lanes one at a time, import a spreadsheet of them. The importer accepts, per row: card name, origin/destination country, **postal prefix**, **city**, **zone group** (matched by name against your own zone groups), trailer type, rate mode, amount, **min/max km** bracket, fuel surcharge %, and notes.
+
+A row is rejected with a clear reason rather than silently imported wrong:
+
+- A postal prefix must be exactly 2 characters and must be given together with its country — a prefix with no country is meaningless.
+- An unrecognised zone group name is an error, not a silent fallback to "no zone".
+- `min_km` greater than `max_km` is rejected outright.
+
+A row that matches an existing lane — same card, country/prefix/city, trailer, zone, rate mode, and km bracket — is skipped as a duplicate rather than creating a second, conflicting price for the same lane.
+
+---
+
+
+  The cost-profile side — what a truck actually costs to run, used to estimate order margin alongside this page's selling price.
 
 
 ---
@@ -2008,7 +2100,7 @@ Here is the full flow:
 
 **Draft → Pending → Assigned → Departed → At Pickup → Loading → In Transit → At Delivery → Offloading → Delivered**
 
-There are also two exception statuses — **Cancelled** and **Wasted Journey** — covered near the end.
+There are also three exception statuses — **Part Delivered**, **Cancelled**, and **Wasted Journey** — covered near the end.
 
 ---
 
@@ -2029,6 +2121,7 @@ Every status resolves to a single colour (tone) that's shared identically betwee
 | At Delivery | Sky blue |
 | Offloading | Sky blue |
 | Delivered | Green |
+| Part Delivered | Amber |
 | Cancelled | Red |
 | Wasted Journey | Red |
 
@@ -2195,6 +2288,27 @@ The transport is complete. The order turns green on the planning board and moves
 
 ---
 
+## Part Delivered
+
+**Triggered by:** Driver records a short delivery from the Offloading screen — some, but not all, of what was planned came off the truck.
+
+**Who can trigger it:** Driver (primary action) or Planner.
+
+Delivery isn't always all-or-nothing. If a driver unloads 6 of 10 pallets — a client can't take the full load, there's no space, part of the cargo is damaged — they can record exactly what actually came off, rather than being forced to choose between marking the whole order Delivered (misrepresenting what happened) or refusing the whole thing (when most of it *was* accepted).
+
+The driver enters what was delivered against what was planned; Druma stores the shortfall — quantity and weight, per stop — as a frozen record of what remains undelivered, and notifies the planner.
+
+> **Note:** 
+**Part Delivered is deliberately not a final "done" status** the way Delivered is — it exists precisely so that OTIF reporting, automatic invoicing, and the client portal don't treat a short delivery as complete. It can also be a genuine end state, if the remainder is written off rather than redelivered — Druma doesn't force a follow-up action, it just refuses to pretend the load finished cleanly.
+
+
+**Actions available from Part Delivered:**
+- View the shortfall (planned vs. delivered quantity/weight) and the driver's reason on the order detail
+- Generate an invoice — **off by default**: a part-delivered order isn't billed until you turn on **Bill on part delivery** for your company in Settings, since whether a short delivery is billable immediately is a commercial decision. With it on, the order invoices for what was actually delivered.
+- Upload or view delivery documents, same as a full delivery
+
+---
+
 ## Cancelled
 
 **Triggered by:** Planner cancels the order.
@@ -2268,6 +2382,7 @@ Drivers sometimes forget to tap status updates — it happens. As a planner, you
 | At Delivery | — | Yes | Yes (override) |
 | Offloading | — | Yes | Yes (override) |
 | Delivered | — | Yes | Yes (override) |
+| Part Delivered | — | Yes | — |
 | Cancelled | — | — | Yes |
 | Wasted Journey | — | — | Yes (from active statuses) |
 
@@ -2388,17 +2503,27 @@ A scheduled job checks every few minutes for tasks that are ready to run — dep
 
 The Planning Board is your main dispatch tool. Go to **Planning → Planning Board** to open it.
 
-The board has three modes, switched with the tabs at the top:
+The board has three modes, switched with the tabs at the left of the command bar:
 
 | Mode | What it's for |
 |---|---|
 | **Now** | The primary dispatch view — two columns matching capacity against demand. Where you assign and reassign trucks. |
-| **Timeline** | A Gantt-style view of every truck's schedule, for spotting gaps and conflicts across a day, three days, or a week. |
+| **Timeline** | A Gantt-style view of every truck's schedule, for spotting gaps and conflicts across a day, three days, or a full week. |
 | **Map** | The same unassigned loads and drivers plotted geographically. |
 
 > **Warning:** 
 The Planning Board is designed for desktop screens of 1280 pixels wide or more. On a phone or tablet, a simplified card feed replaces the two-column layout and drag-and-drop is not available.
 
+
+### The command bar
+
+Every mode shares one command bar: the mode tabs on the left, that mode's own toolbar in the middle, and — always on the right — **Focus mode**, the **Assistant**, and **Delays**. There's no separate KPI strip above it; the row/order counts you'd expect from one now live inline in each panel's own header instead.
+
+- **Focus mode** (`F`, or the ⤢ button) hides the sidebar and page header so the board's rows use the full screen. Toggle it again, or press `F`, to bring the chrome back.
+- **Assistant** opens Druma's ranked queue of proposed truck-to-load matches — see [Auto-Planning & the Assistant](/en/planner/auto-planning).
+- **Delays** opens a popover of orders currently running behind schedule.
+
+At narrower widths, labels on the toolbar controls shrink or disappear first — the icon and its tooltip always stay, so nothing becomes unreachable, just more compact.
 
 ---
 
@@ -2406,10 +2531,10 @@ The Planning Board is designed for desktop screens of 1280 pixels wide or more. 
 
 The **Now** tab is a split, two-column layout:
 
-- **Incoming** (left) — what's freeing up capacity: trucks that are free right now, and trucks about to free up because their current load is delivering within the visible date range.
-- **Outgoing** (right) — orders that still need a truck (unassigned pickups), plus orders that are already assigned, all grouped the same way as Incoming so a truck freeing up in a zone lines up visually against loads picking up in that same zone.
+- **Incoming** — what's freeing up capacity: trucks that are free right now, and trucks about to free up because their current load is delivering within the visible date range.
+- **Outgoing** — orders that still need a truck (unassigned pickups), plus orders that are already assigned, all grouped the same way as Incoming so a truck freeing up in a zone lines up visually against loads picking up in that same zone.
 
-<Frame caption="The Now view — Incoming capacity on the left, Outgoing loads on the right, with the density and Preplan toggles in the toolbar.">
+<Frame caption="The Now view — Incoming capacity on one side, Outgoing loads on the other, with the command bar above and a Balance pane available from the toolbar.">
   <img src="/images/planner/planning-board-split.png" alt="Planning Board Now view showing the Incoming and Outgoing columns" />
 </Frame>
 
@@ -2422,18 +2547,21 @@ Assigning a truck is a drag: pick up a row on either side and drop it on the mat
 Dragging works in **both directions** — drag an Incoming card onto an Outgoing load, or drag an Outgoing load onto an Incoming card. Either way lands on the same row.
 
 
+### Row density and layout
+
+Click the **Density** control in the toolbar to switch between three row heights:
+
+| Density | Best for |
+|---|---|
+| **Comfortable** | Richer cards with more visual detail per truck or order — a closer look at a handful of jobs. |
+| **Compact** (default) | Dense, single-line rows, closest to a spreadsheet — fast scanning and bulk planning. |
+| **Dense** | The tightest row height, for a large 1080p screen (especially at 125–150% Windows scaling) where seeing as many rows as possible matters more than visual padding. |
+
+All three densities show the same underlying data and support the same drag-and-drop, filters, and grouping. From the same **Columns** menu you can also swap which side — Incoming or Outgoing — renders on the left, and set the app's text size (small/medium/large), which scales the whole UI rather than just this page.
+
 ### Date range
 
 The board shows a rolling 7-day horizon. Use the arrows next to the date label to page a full week earlier or later, or click **Today** to jump back to the current 7-day window.
-
-### Density: Compact vs Comfortable
-
-A toggle in the toolbar switches how much detail each row shows:
-
-- **Compact** (default) — dense, single-line rows with sortable/reorderable columns, closest to a spreadsheet. Best for fast scanning and bulk planning.
-- **Comfortable** — richer cards with more visual detail per truck or order. Best for a closer look at a handful of jobs.
-
-Both densities show the same underlying data and support the same drag-and-drop, filters, and grouping — switching is purely cosmetic.
 
 ### Grouping and collapsing
 
@@ -2453,20 +2581,21 @@ The **Views** menu lets you save the current filter, grouping, and column config
 
 ### Filters and search
 
-Click **Filters** to open the filters panel — status, pickup/delivery date range, zone, and load/delivery country, city, or postal code. Active filters show as removable chips under the toolbar; click **Clear all** to reset them. Each column also has its own quick search box for filtering by order number, address, or driver name within that side.
+Click **Filters** to open the filters panel — status, pickup/delivery date range, zone, and load/delivery country, city, or postal code. Active filters show as removable chips under the toolbar; click **Clear all** to reset them. Each panel also has its own quick search box for filtering by order number, address, or driver name within that side.
 
 > **Note:** 
 Search also reaches inside a groupage run's own orders, and a filter lets you show or hide groupage runs entirely — see [Groupage on the Planning Board and Live Map](/en/planner/groupage).
 
 
-### Triage tiles
+### The Balance pane
 
-Above each column, small tiles summarise what's in it at a glance:
+Click the **Balance** button in the toolbar (its badge shows today's deficit-group count) to open a read-only report of where supply and demand line up — and where they don't — across every group and day in the visible horizon. It has three tabs:
 
-- **Incoming** — how many trucks/loads fall in each capacity bucket.
-- **Outgoing** — **Unplanned**, **Running late**, and **Running on time** counts for loads that already have a preliminary or firm plan.
+- **Table** — a group × day matrix. Each cell shows open supply, open demand, and the net (surplus in blue, deficit in amber/red); a Total column and an "All groups" row give the grand totals.
+- **Chart** — the same rows as a ranked horizontal bar, either for a single day or the whole horizon, worst deficit at the top.
+- **Map** — one bubble per group at its members' average location, sized by volume and coloured the same way as the Table and Chart.
 
-Click a tile to filter that column down to just that bucket; click it again to clear the filter.
+The Balance pane never changes anything on the board — it's a read-only supply/demand summary for planning purposes, built from exactly the rows the board itself is showing, so it can never disagree with what you're looking at.
 
 ### Assign truck / Remove truck / Put for sale
 
@@ -2475,6 +2604,15 @@ Every Outgoing row that has a truck (firm or penciled) shows action buttons:
 - **Assign truck** — commit a penciled combination as a firm assignment.
 - **Remove truck** — undo the plan and send the order back to unassigned.
 - **Put for sale** — offer the load to a subcontractor/carrier instead of running it on your own fleet. A sold load shows a **For sale** or **Sold · [carrier]** badge; if the carrier is running late, a **Late** badge appears too. You can reclaim a sold load back to your own fleet as long as it hasn't started loading.
+
+### Switching trucks and trailers mid-route
+
+Once an order is already assigned, a row's action menu also offers the ways to change what's physically carrying it without touching the order itself:
+
+- **Switch truck** — hand the load to a different tractor at a relay point, or record a relay point with the next truck still unknown (an open relay) — see [Switch Truck (Tractor Relay)](/en/planner/switch-truck).
+- **Leave trailer with the consignee** — a drop-and-hook delivery: the tractor leaves the loaded trailer for the consignee to unload on their own time and hooks a different one — see [Drop-and-Hook Delivery](/en/planner/drop-and-hook-delivery).
+
+Both are available from the same row action menu the order's status is shown in, and both write a proper record of the handover rather than a silent reassignment.
 
 ### Preplan mode
 
@@ -2493,7 +2631,7 @@ Nothing here touches the real order until a truck is actually assigned through t
 
 **The Reload Reassignment Optimizer.** Once a chain exists, Druma keeps checking it in the background. For the **tail** of every chain — the last penciled reload, the one nothing else chains after yet — it asks: is there a different, not-yet-penciled reload whose pickup sits closer to where that truck will actually free up?
 
-For example: a truck is pencilled to reload in Cluj tomorrow. A closer, unpicked reload turns up with a pickup in Sibiu instead. If swapping the Sibiu load in would genuinely cut deadhead cost — valued in € using the truck's own cost profile, not just raw kilometres — Druma surfaces a suggestion chip right on that row, something like **"Cheaper reload available: −18 km · €22."** Click **Switch to #...** and the swap applies in one step: the Sibiu load gets penciled in, the Cluj load automatically loses its pencil (the same single-use-anchor rule chains rely on above), and a toast confirms **"Reload #... penciled instead."** This is the same suggestion-chip mechanic described below, applied specifically to chain tails.
+For example: a truck is pencilled to reload in Cluj tomorrow. A closer, unpicked reload turns up with a pickup in Sibiu instead. If swapping the Sibiu load in would genuinely cut deadhead cost — valued in € using the truck's own cost profile, not just raw kilometres — Druma surfaces a suggestion chip right on that row, something like **"Cheaper reload available: −18 km · €22."** Click **Switch to #...** and the swap applies in one step: the Sibiu load gets penciled in, the Cluj load automatically loses its pencil (the same single-use-anchor rule chains rely on above), and a toast confirms **"Reload #... penciled instead."**
 
 A few guardrails keep the suggestions trustworthy:
 
@@ -2505,11 +2643,11 @@ A few guardrails keep the suggestions trustworthy:
 The optimizer only ever proposes; nothing is applied without a click. It's also silent when there's nothing better to suggest — no chip means Druma didn't find a cheaper reload, not that it didn't check.
 
 
-**Chain safety on change.** If something upstream in a chain changes — the order is cancelled, its truck is unassigned, or its truck is switched — Druma checks whether anything is pencilled downstream of it. If nothing is, the change goes through with no fuss. If a downstream tail exists, you're prompted to choose: **Remove whole chain** (cascades the removal through every pencilled reload chained after it) or **Keep downstream orders** (severs just that one link and leaves the downstream loads as independent, still-reassignable pins). Either way, a pencilled plan never silently rots into a broken or orphaned state — you decide what happens to the rest of the chain, you're never left to manually hunt down dangling links yourself.
+**Chain safety on change.** If something upstream in a chain changes — the order is cancelled, its truck is unassigned, or its truck is switched — Druma checks whether anything is pencilled downstream of it. If nothing is, the change goes through with no fuss. If a downstream tail exists, you're prompted to choose: **Remove whole chain** (cascades the removal through every pencilled reload chained after it) or **Keep downstream orders** (severs just that one link and leaves the downstream loads as independent, still-reassignable pins).
 
 ### Suggestion chips
 
-Where Druma's auto-planning has a confident recommendation for an unassigned order, a suggestion chip appears inline on that row. Click it to apply the suggested truck directly, or dismiss it if it doesn't fit.
+Where Druma's auto-planning has a confident recommendation for an unassigned order, a suggestion chip appears inline on that row, stating what it knows (empty km, an approximate trip cost, or a saving) — see [Auto-Planning & the Assistant](/en/planner/auto-planning) for the full scoring picture. Click it to apply the suggested truck directly, or dismiss it if it doesn't fit.
 
 ### Cross-column highlighting
 
@@ -2518,6 +2656,21 @@ Click any row to pin its highlight. If that row is part of a penciled or firm co
 ### Virtual orders
 
 Click **Virtual** to create a placeholder order that reserves a truck for an expected load that doesn't have a firm booking yet — useful when preplanning ahead of a confirmed order.
+
+---
+
+## Keyboard shortcuts
+
+With focus on the Now view (not inside a modal or a text field):
+
+| Key | Action |
+|---|---|
+| `J` / `K` | Walk the Outgoing rows down / up, in the order they're currently displayed (respects your grouping, sorting, and filters) |
+| `A` | Accept the selected row's suggestion — pencils it in under Preplan mode, or opens the confirm sheet otherwise |
+| `Esc` | Clear the current selection |
+| `F` | Toggle Focus mode |
+
+The full list, including shortcuts outside the board, is always available from the **?** overlay.
 
 ---
 
@@ -2545,11 +2698,17 @@ Use the date navigation controls to move through the schedule, and the **span se
 
 | Span | Best for |
 |---|---|
-| **1 day** | Detailed intra-day planning — see exact loading and unloading windows |
+| **1 day** | Detailed intra-day planning — see exact loading and unloading windows. Today's window opens two hours in the past rather than at midnight, so the morning's finished jobs don't eat half the screen by the afternoon. |
 | **3 days** | Spotting gaps and conflicts over the next 72 hours |
-| **1 week** | A capacity overview — which trucks are free across the full week |
+| **1 week** | A coarse Gantt across the full horizon — the same bar renderer as 1-day/3-day, just zoomed out, rather than a separate summary table |
 
 Timeline shares the same Filters panel as the Now view, so a status, date, zone, or location filter carries over when you switch tabs.
+
+### Zoom, lane height, and grouping
+
+- **Zoom** — `−`/`+` buttons (or Ctrl/⌘ + mouse wheel over the grid) widen or narrow how many hours fit on screen, from half to triple the default scale. The hour under your pointer stays put as you zoom.
+- **Lane height** — a **Normal / Dense** toggle; Dense fits more truck rows on screen at the cost of a more compact label.
+- **Group and sort** — group lanes by zone, country, or planning group, and sort them free-trucks-first, by name, or by hours-left — independent of how the Now view is grouped.
 
 ### Drag-to-reschedule
 
@@ -2562,10 +2721,6 @@ Each truck's lane label shows small badges for anything affecting that truck rig
 ### Candidate ghost preview
 
 When an unassigned order is focused, hovering a ranked candidate truck in the Timeline shows a ghost placement of that order directly on the truck's lane — including the estimated empty leg to reach the pickup — so you can see exactly where it would land before committing. Click the ghost to assign the order to that truck directly.
-
-### Week span
-
-At the **1 week** span, each truck's row collapses into per-day blocks (order count and utilisation) instead of hour-scale bars. The hourly axis is replaced with a day-name header, and the zone-group header stays sticky as you scroll.
 
 ---
 
@@ -2584,12 +2739,103 @@ Click an order marker to open a panel of the best candidate trucks for it, ranke
 ---
 
 
+  How Druma's background engines propose truck-to-load matches, and how to review and apply them.
+
+
+
   For your daily morning workflow — active orders, live truck positions, and status alerts all in one screen.
 
 
 
   New to Druma? Start here to learn how to create your first order.
 
+
+---
+
+## Auto-Planning & the Assistant
+
+
+## Overview
+
+Auto-planning is Druma quietly doing a first pass at matching before you do. Instead of you scanning every unassigned load against every free truck, a set of background engines score the possible pairs and hand you a ranked list of proposals — you stay the one who clicks **Apply**.
+
+Everything lands in one place: the **Assistant** — a panel opened from the **Assistant** button in the Planning Board's command bar (**Planning → Planning Board**). It slides in as a full-height panel on the right so it can stay open while you work the board beside it; close it with the pill, the **✕**, or **Esc**.
+
+> **Note:** 
+Auto-planning never assigns anything by itself. Every proposal is reviewed and applied through the exact same confirmation flow as a manual drag — including any cabotage, trailer, or driving-hours check that would apply to a first-time assignment. What runs on its own is the *scoring*, never the *commit*.
+
+
+Three engines feed the same queue:
+
+| Engine | Runs | What it looks at |
+|---|---|---|
+| **Morning plan** | Automatically at 04:00 UTC, and on demand via **Re-optimize now** | Every order with no truck yet |
+| **Rescue plan** | Automatically the moment a truck fires a lateness alert (debounced to once per 10 minutes per company), and on demand | Every not-yet-departed order, including ones **already assigned** — this is the one engine that proposes taking a load off one truck and giving it to another |
+| **Proactive / reload matching** | Continuously, as trucks and orders change | Trucks about to free up, matched against loads that could reload them |
+
+You don't need to know which engine produced a given row — the queue merges all of them into one ranked list with a small source chip, so "put load X on truck Y" reads as one decision regardless of why Druma suggested it.
+
+> **Note:** 
+Auto-planning is opt-in. An admin or company admin turns it on in **Settings → Automation → Planning**. If it's off, the Assistant panel still opens but shows nothing to review.
+
+
+---
+
+## How it scores
+
+Every candidate pair (this order, this truck) is scored on distance, estimated trip cost, timing, and two legal penalties — cabotage exposure and remaining driving hours (EU 561/2006). The two legal penalties are heavy enough to always sink a pair to the bottom of the ranking, but they never silently remove it from the list: a truck that's the *only* option still shows up, marked blocked, rather than vanishing with no explanation.
+
+Each row states the facts it actually has, and only those:
+
+- **{n} km empty** — the deadhead distance to reach the pickup.
+- **Trip cost ~€{n}** — an estimate; when the truck has no complete cost profile to price it with, the row says **"Add truck costs to rank by €"** instead of guessing.
+- A saving in € or km, when applying the suggestion is cheaper than the alternative it displaces.
+- **Blocked**, in red, when the pair fails a hard check (see below).
+
+Nothing is invented: a fact the engine couldn't compute (for example, cost on a truck with no rate card) simply doesn't appear as a chip, rather than rendering as "€0" or "0 km".
+
+**Ranking favours a pair that actually works.** A candidate is graded by the same blocker check the confirm sheet applies (cabotage limit, expired document, workshop hold, trailer mismatch, driving-hours conflict) *before* it's ranked — not after you click Apply. A pair that clears every check is always preferred over one that doesn't, within the set of viable options; a red pair is only ever surfaced when it's genuinely the order's only candidate. When a lower-scoring but clean candidate displaces a higher-scoring blocked one, the row says so — click through to see which truck was passed over and why.
+
+---
+
+## Rescue plan
+
+When a truck falls behind schedule and triggers a lateness alert, Druma automatically re-scores every order that hasn't departed yet — including loads that are **already assigned** to a different truck — and adds proposals to the same Assistant queue. This is the one case where auto-planning suggests moving a load off the truck it's currently on.
+
+A rescue row that would reassign an already-assigned order carries a **Will switch truck** warning, so you know before you click Apply that accepting it un-assigns the load from wherever it currently sits.
+
+You can also trigger a fresh rescue pass yourself with **Re-optimize now** in the panel, without waiting for an alert.
+
+> **Note:** 
+Trucks that are already mid-route (departed, loading, in transit, at delivery, offloading) are never proposed as a rescue candidate for a *different* order — only orders that haven't left yet are eligible to be reassigned.
+
+
+---
+
+## Applying and blockers
+
+The queue is ranked so the loads that land on time sit at the top, loads that would arrive late sit below them, and blocked pairs sit at the bottom — a load that genuinely can't be saved right now is still visible, one click away, rather than hidden.
+
+- **Apply** on a single row runs it through the normal assignment flow — the confirm sheet, with any blocker or trailer-swap check, exactly as if you'd dragged the truck yourself.
+- **Apply N clear winners** commits, in one click, only the rows that need no judgement call: nothing blocked, nothing stale, no client still to confirm, nothing arriving late, and nothing that would take a truck off another load. Everything else is deliberately left for you.
+- **Dismiss** removes a row and asks for a reason — useful for keeping the queue honest about which suggestions actually get rejected and why.
+
+**Guided triage** walks what's left of the queue one row at a time after Apply-all — a progress counter ("2 of 198"), **Back**, **Skip**, and the row's own Apply, so working through a long list doesn't mean scrolling an undifferentiated feed. A row you've seen this way is marked as reviewed, whether you acted on it or not.
+
+**Blocked** rows show in red with the reason a red check failed (cabotage limit reached, an expired document, a driving-hours conflict, and so on). Apply is disabled on a blocked row — you can still open it to see why, and either resolve the underlying issue or assign a different truck manually.
+
+**Match review** opens a batch board for a closer, side-by-side look at a set of candidates before committing — useful when several trucks could plausibly take the same load and you want to compare them rather than accept the top-ranked one outright.
+
+---
+
+
+  
+    Where the Assistant panel lives, and how manual drag-and-drop assignment works.
+  
+  
+    The cabotage rules behind one of the two hard penalties auto-planning checks for.
+  
+</CardGroup>
 
 ---
 
@@ -3439,6 +3685,25 @@ Druma tracks five expiry-dated driver documents, each showing an **Expiring soon
 
 > **Note:** 
 A document is flagged **Expiring soon** within 30 days of its expiry date, and **Expired** once past it — this is a fixed threshold with no settings UI to adjust it.
+
+
+---
+
+## Driver Performance Scoring
+
+Go to **Fleet → Performance** for a per-driver scorecard blending five signals Druma already holds — on-time delivery, fuel economy, idling, incidents, and EU 561/2006 + working-time compliance — into a single 0–100 score. It's opt-in: turn on **Driver scoring** in Settings if the page shows a prompt instead of a table.
+
+Each driver's row shows their score, a per-component breakdown, and a monthly trend chart built from a snapshot taken automatically at the start of each month. A signal Druma doesn't have enough data for (for example, no telematics idle source) is **excluded, not scored as zero** — the remaining components are reweighted so a missing signal never unfairly drags the score down. A driver with too few data points for a reliable score is marked low-confidence rather than given a number that looks more certain than it is.
+
+Click a driver's row to open a detail pane with more than the raw number:
+
+- **Rank** among your scored drivers, and how much the score moved since last month
+- A bar for each component next to the **fleet average**, so you can see at a glance which one is pulling the score down
+- The **biggest lever** — whichever component has the most room to improve, weighted by how much it counts toward the total
+- Where the data supports it, an estimated **€ impact** of the driver's fuel consumption against the fleet benchmark over the distance they've driven
+
+> **Note:** 
+This is a coaching and reward tool built entirely from data Druma already holds — no new hardware, no external service, and no cost to turn on.
 
 
 ---
@@ -4720,6 +4985,10 @@ You create the four orders normally, then create a groupage run, add all four or
 ## Cabotage Tracking
 
 
+> **Note:** 
+Cabotage tracking lives inside **Planning → Compliance**, on the **Trucks** tab — the same page that tracks EU Mobility Package vehicle/driver return obligations and IMI posting declarations, merged into one page with three tabs so you don't have to check two separate places for a truck's overall compliance risk. See [Mobility Package Compliance](/en/fleet-compliance/mobility-package) for the Drivers and Declarations tabs.
+
+
 ## What Is Cabotage?
 
 Cabotage is when a truck registered in one country performs domestic transport inside a different country — meaning both the pickup and the delivery are within the same foreign country.
@@ -4761,23 +5030,24 @@ Druma monitors cabotage automatically based on the order data you enter. Here's 
 
 ## Viewing the Cabotage Log
 
-To see the full cabotage history for your fleet:
+To see cabotage exposure for your fleet:
 
 
   ### Go to Planning
     Click **Planning** in the top navigation.
   
-  ### Open Cabotage
-    Click the **Cabotage** tab (`/operations/cabotage`), alongside Planning Board, Orders, and the other planning tabs.
+  ### Open Compliance
+    Click the **Compliance** tab (`/operations/compliance`), alongside Planning Board, Orders, and the other planning tabs. It opens on the **Trucks** tab.
   
-  ### Search or sort
-    Use the search box to find a specific truck, plate, or country. Click a column header to sort.
+  ### Search, sort, or filter by risk
+    Use the search box to find a specific truck, plate, or country, or click **Filter** and pick a risk level — for example, **near limit**, **at limit**, **cooling-off**, or **overdue** — to narrow the list to trucks that need attention. Click a column header to sort.
   
 
 
-The log shows:
-- Each cabotage operation (order reference, country, dates)
-- Operation count within the 7-day window per truck
+Each row on the Trucks tab carries **both** of a truck's compliance clocks side by side: its cabotage counter for whichever country it's currently exposed in, and its EU Mobility Package vehicle-return clock (see [Mobility Package Compliance](/en/fleet-compliance/mobility-package)) — so you can see a truck's full compliance picture without switching tabs. Click a row to open a detail pane with:
+
+- Each cabotage operation for that truck (order reference, country, dates)
+- Operation count within the 7-day window
 - Cooldown status: active cooldown, cooldown expired, or eligible for new operations
 - Any alerts triggered
 
@@ -4818,6 +5088,9 @@ Druma's cabotage tracking is a planning assistance tool — it does not replace 
 ---
 
 
+  
+    The Drivers and Declarations tabs of the same Compliance page — vehicle/driver return clocks and IMI posting declarations.
+  
   
     Manage your vehicles, registration countries, and truck profiles.
   
@@ -5159,9 +5432,23 @@ Read it as a **ceiling on what the country-choice lever was worth**, not as a lo
 
 ---
 
-## Where the prices come from
+## Fleet → Fuel — the fuel hub
 
-Country diesel prices come from the **EU Oil Bulletin**, synced nightly, and are visible in full on **Fleet → Fuel** under **Diesel price board** — pump price, refund, net price, and the gap to the cheapest country.
+Everything fuel-related lives under one page, **Fleet → Fuel**, with its own sub-tab strip:
+
+| Tab | What it holds |
+|---|---|
+| **Fills** | The fuel-fill log per truck — the page's default view |
+| **Prices** | The **Diesel price board** described below |
+| **Anomalies** | Fills that look off against the truck's expected consumption, each linking straight back to the fill that triggered it |
+| **Import queue** | Fuel-card imports waiting on a manual match |
+| **Excise refund** | Fuel tax reclaim (formerly a separate Finance page) |
+
+Anomalies/Import queue/Excise refund are opt-in — they only show as tabs once the corresponding automation is switched on in the hub's own ⚙ settings popover (admin/company admin). Any bookmark to an old separate fuel page (`Fleet → Fuel optimisation`, `Fleet → Fuel anomalies`, `Fleet → Fuel exceptions`, or `Finance → Fuel tax`) still works — it redirects into the matching tab here.
+
+### Where the prices come from
+
+Country diesel prices come from the **EU Oil Bulletin**, synced nightly, and are visible in full on the **Prices** tab under **Diesel price board** — pump price, refund, net price, and the gap to the cheapest country.
 
 If you have just started, the board shows **No bulletin prices yet** until the first sync has run.
 
@@ -5328,6 +5615,10 @@ You can switch the truck on any order that is in one of these active statuses:
 
 The order must be of type **Own Truck**. Subcontracted and capacity sale orders do not support truck switching — those are managed by the external carrier.
 
+> **Note:** 
+A **groupage run** can also be switched or relayed mid-route the same way a single order can — pick a new truck (or record a relay point for one leg) from the run's own row action, and every leg re-crews in one step. The one difference: a groupage run always needs a named truck — there is no "Don't know yet" open relay at the run level, since releasing one leg with the truck unknown would strand the rest of the run's cargo on the dropping tractor.
+
+
 ---
 
 ## How to switch the truck
@@ -5345,8 +5636,8 @@ The order must be of type **Own Truck**. Subcontracted and capacity sale orders 
   ### Choose where to insert it
     Use **Insert relay after** to pick which stop the relay comes after (it defaults to the last loading stop). Druma inserts a new internal stop into the route at that point.
   
-  ### Pick the new truck (optional)
-    Choose the replacement truck from the **New truck** dropdown, or leave it on **Don't know yet** if you only want to record where the handover will happen and assign a truck later.
+  ### Pick the new truck (or leave it open)
+    Choose the replacement truck from the **New truck** dropdown, or leave it on **Don't know yet** to record an **open relay** — see below.
   
   ### Confirm
     Click **Confirm**. If you picked a new truck, Druma immediately runs the normal assign-truck flow on top of the relay — including any trailer-swap or cabotage checks that would apply to a first-time assignment.
@@ -5367,7 +5658,27 @@ When you confirm, Druma:
 2. **Runs the normal truck-assignment flow**, if you picked a new truck — the order's truck and driver fields are updated the same way a first-time assignment would be, including a trailer-swap prompt if the new truck has a fixed trailer that differs from the one currently on the order.
 3. **Leaves the trailer alone** otherwise — the trailer stays attached to the order regardless of which tractor is pulling it, unless the new truck's fixed trailer forces a swap.
 
-If you leave the new truck as **Don't know yet**, only the relay stop is recorded — the order keeps its current truck until you assign one, either by editing the relay later or by dragging a truck onto the order as normal.
+---
+
+## Open relay — when you don't know the next truck yet
+
+Choosing **Don't know yet** doesn't just note a location for later. It genuinely **releases the load**:
+
+- The order goes back to **Unassigned**, ready to be matched to a truck exactly like any other pending load.
+- The dropping tractor is freed to bobtail on to its own next job — Druma records its new position as the relay point, so it shows up as available from there rather than from wherever it last delivered.
+- The loaded trailer stays behind at the relay point, waiting to be collected.
+
+The order's row shows a **W** badge (hover it for the relay's zone and the name of the tractor that dropped it) so it doesn't disappear into the ordinary unassigned pile unnoticed.
+
+When you later assign a truck to that order — a plain drag, or through the Assistant — Druma already knows this is a trailer collection, not a fresh pickup, and prompts the incoming truck's own trailer-drop check if it's carrying one of its own.
+
+> **Note:** 
+An open relay can only be recorded on a **single order** — a groupage run's legs always require a named truck, since releasing one leg with the truck unknown would leave the rest of the run's header stranded on the dropping tractor.
+
+
+### Undoing an open relay
+
+If nothing has happened since — no truck has collected the trailer, and the dropping tractor hasn't been recoupled to something else — you can undo an open relay from the order row: look for the **Undo relay** icon next to the row's Assign action. This restores the order to its status before the release, re-couples the trailer to the original tractor, and clears the "waiting" state.
 
 ---
 
@@ -5388,6 +5699,10 @@ Cancelling a switch (see Undo below), or a truck reassignment that fails partway
 ---
 
 ## Cancelling a switch (Undo)
+
+> **Note:** 
+This section covers undoing a switch to a **named** replacement truck. For undoing an **open relay** ("Don't know yet"), see Undo above.
+
 
 If the replacement truck has not yet done any work on the order, you can cancel the switch and restore the original truck.
 
@@ -5410,23 +5725,111 @@ If the cancel is blocked, Druma shows a message explaining why. You can still ma
 Switching a truck does **not** create a new order. The original order number, client, pricing, and all commercial terms remain the same. Only the operational assignment (which truck and driver) changes.
 
 
-- The **trailer always stays with the cargo**. If you need to change the trailer as well, that is a different operation — see [Trailer Management](/en/planner/trailer-management).
+- **The trailer stays with the cargo** on an ordinary switch or relay. If you need to change the trailer independently of the cargo, that's Switch Trailer — see [Trailer Management](/en/planner/trailer-management). If the trailer needs to be **left behind, loaded, for the consignee to unload themselves**, that's a different operation entirely — see [Drop-and-Hook Delivery](/en/planner/drop-and-hook-delivery).
 - Truck switches are **logged in the order's audit history** with the planner's name and timestamp.
 - The driver app automatically updates — the outgoing driver sees the order disappear from their active loads, and the incoming driver receives a push notification with the job details.
 
 ---
 
 
-  Manage your tractor fleet — add vehicles, track availability, and handle maintenance blocks.
-
-
-
-  Manage trailers independently from tractors — assignment, detachment, and location tracking.
-
+  
+    Leave a loaded trailer with the consignee and hook a different one — a genuinely different operation from a tractor relay.
+  
+  
+    Manage your tractor fleet — add vehicles, track availability, and handle maintenance blocks.
+  
+  
+    Manage trailers independently from tractors — assignment, detachment, and location tracking.
+  
+</CardGroup>
 
 
   See all your orders and trucks on the visual dispatch board — the truck switch button is also accessible from here.
 
+
+---
+
+## Drop-and-Hook Delivery
+
+
+## What is drop-and-hook?
+
+In a drop-and-hook operation, cargo never moves between trailers. Instead of waiting at the consignee's dock while the trailer is unloaded, the tractor **leaves the loaded trailer behind** — the consignee unloads it on their own schedule — and the tractor **hooks a different trailer** (empty, or already loaded for the next job) and leaves.
+
+This is different from every other status change in Druma: it's the one point where **delivery** happens without the trailer physically leaving the truck at that moment. The trailer is presumed to still be carrying the cargo until someone confirms it's been offloaded.
+
+> **Note:** 
+This is not the same as [Switch Trailer](/en/planner/trailer-management) — that operation moves the *same* cargo into a *different* trailer. Drop-and-hook leaves the cargo exactly where it is and changes which trailer the *tractor* is pulling.
+
+
+---
+
+## When you can use it
+
+**Leave trailer with the consignee** is available on an order that is:
+
+- **Own Truck** (never on a subcontracted order — a subcontractor's trailer is theirs, and they don't leave it with your consignee)
+- At **In Transit, At Delivery,** or **Offloading**
+- On its **last remaining delivery stop** — if the order has several drops and an earlier one is still outstanding, you can't drop-and-hook until that one is done
+
+It's also hidden for a truck with a **fixed (non-separable) trailer** — a rigid unit has nothing to hook a different trailer to.
+
+---
+
+## Recording the delivery
+
+
+  ### Open the action
+    From the order's row on the Planning Board, or its detail pane, choose **Leave trailer with the consignee**.
+  
+  ### Set the drop time
+    Enter when the trailer was left. This becomes the order's **delivery time** — legally, unloading by the consignee is one of the carrier's exonerating special risks under the CMR, so the drop itself is what completes the delivery, not a later signature.
+  
+  ### Confirm the receipt
+    If a consignee signature already exists on the order (box 24 of the eCMR), it's shown and locked. Otherwise, choose whether one is being signed now or record that none was obtained at the drop — this is kept as an exception on the order, not silently ignored.
+  
+  ### Pick the next trailer
+    Choose which trailer the tractor hooks next, or leave it bobtail (towing nothing).
+  
+  ### Confirm
+    Druma marks the order **Delivered**, records which trailer was left and when, and frees the tractor to continue with its new trailer (or bobtail).
+  
+
+
+---
+
+## The "presumed loaded" warning
+
+Once a trailer has been left this way, Druma treats it as **presumed still loaded** everywhere that trailer shows up next — the trailer picker on Switch Trailer, the run picker for a groupage re-crew, the Fleet → Trailers list, and the repositioning flow — until someone confirms it's actually been emptied.
+
+> **Warning:** 
+This is a **warning, never a block**. You can still pick a presumed-loaded trailer for another job — Druma just tells you, plainly, where and when it was left and for which order, so you don't send a truck to hook a trailer that's still full without knowing it.
+
+
+Clear the warning with **Mark as offloaded** — available from the trailer's own row in Fleet → Trailers, or from the warning wherever it appears. Alternatively, simply hooking that trailer onto a truck and starting a new load on it clears the flag automatically.
+
+---
+
+## Undoing a drop
+
+If the delivery needs to be reversed — for example, it was recorded in error — open the order and use the **undo** action next to Leave Trailer (it takes the same slot the action itself occupied once the order is delivered). This is refused once something downstream already depends on the delivery having happened: an invoice has been generated, or a pallet movement has already been recorded against it. In that case, correct the record manually instead.
+
+---
+
+## Invoicing a drop-and-hook order
+
+By default, a drop-and-hook delivery invoices exactly like any other delivery. If your company has **Invoice only on a signed POD** turned on in Settings, a drop with no signature yet is held from invoicing the same way any other unsigned delivery would be — recording the drop doesn't bypass that rule.
+
+---
+
+
+  
+    Hand a load to a different tractor mid-route while the trailer stays with the cargo — the other kind of mid-route change.
+  
+  
+    Manage trailers independently from tractors — assignment, detachment, and location tracking.
+  
+</CardGroup>
 
 ---
 
@@ -5543,27 +5946,43 @@ Leave the threshold blank to disable the fee modal for that pallet type — move
 
 Beyond the per-client balance column, Druma has a dedicated **Operations → Pallet Balances** page that reconciles positions across **both clients and subcontractors** in one view — useful when you want a single sweep of every open pallet position rather than checking counterparties one at a time.
 
-Each row shows a counterparty (client or carrier), pallet type, net balance, and a **status** badge using the same threshold logic as the fee modal, but with an extra tier for positions that have drifted a long way past it:
+Unlike the per-order ledger, this page shows **one row per counterparty**, not one per (counterparty, pallet type). If you trade in more than one pallet standard with the same client, the row folds them into three totals — EUR, Industrial, and Other — plus a combined net and a single status badge, so you always have one line saying what that counterparty owes you (or you owe them) overall.
+
+Each row's status badge uses the same threshold logic as the fee modal, with an extra tier for positions that have drifted a long way past it:
 
 | Status | Meaning |
 |---|---|
-| **OK** | Balance is at or under the configured threshold |
+| **OK** | Balance is at or under the configured threshold (including an exact zero — fully settled) |
 | **Imbalance** | Balance exceeds the threshold |
 | **Severe** | Balance exceeds **twice** the threshold — worth chasing before it grows further |
 
 
-  ### Review the list
-    Open **Operations → Pallet Balances**. Search by counterparty name or pallet type to narrow the list; the KPI bar at the top shows total open positions, how many are imbalanced, and your total exposure in euros.
+  ### Pick a scope tab
+    Open **Operations → Pallet Balances**. Five scope tabs — **All · Critical · Imbalance · OK · Settled** — sit above the table, each with a live count, so you can jump straight to the positions that need attention.
   
-  ### Drill into movements
-    Click **View movements** on any row to see that counterparty's full movement history for that pallet type in a modal, without leaving the list.
+  ### Search, filter, or save a view
+    Use the search box to find a counterparty by name, and **Filter** to narrow by counterparty type (client/subcontractor). **Columns** lets you choose which fields show; **Views** saves your current scope, search, and column choices as a named view you (or your whole company) can reopen later.
+  
+  ### Open the settlement pane
+    Click a row (or its **eye** icon) to slide in a settlement pane on the right, showing that counterparty's full movement ledger across every pallet type, sortable by date, order, or amount.
+  
+  ### Settle the position
+    From the pane you can **book a correction** (an order-less ledger entry with a required note — useful for a manually agreed write-off or a migration adjustment) or **charge a fee** for the overage, using the same fee flow as the automatic prompt described above.
   
   ### Generate a statement
-    Click **Generate statement** on a row for a CSV statement of that one counterparty's position, or **Export all** at the top of the page for every counterparty at once — useful for sending a reconciliation document to a client or carrier who disputes their balance.
+    From the pane or the row's own menu, generate a **PDF statement** — a branded document with a signature block, ready for a counterparty to confirm and sign — or export the position as **CSV**. **Export ▾** at the top of the page produces a combined CSV of every counterparty at once, for a full reconciliation sweep.
   
 
 
-A **weekly automated reconciliation** run also checks every company's balances against the same thresholds and fires an in-app notification when a position is imbalanced — deduplicated per pallet type and counterparty over a 7-day window, so you're not renotified every run for a position you already know about.
+> **Note:** 
+A client's pallet balance also shows, read-only, on their record: open the client and check the **Overview** tab for a "Pallet balance" line with a link straight into this page's settlement pane for that client.
+
+
+A **nightly automated reconciliation** run (02:05 UTC) also checks every company's balances against the same thresholds and notifies your company's admins/planners when a position is imbalanced — deduplicated per pallet type and counterparty over a 7-day window, so you're not renotified every run for a position you already know about.
+
+> **Note:** 
+The ledger enforces its own sign convention at the database level: a **Sent** movement always adds to the balance and a **Returned** movement always subtracts from it, regardless of how the number is typed on the add-movement form — **Adjustment**, **Correction**, and **Opening Balance** entries keep whatever sign you enter, since those can legitimately run either direction.
+
 
 ---
 
@@ -6139,9 +6558,11 @@ The CS Workbench is where customer-service reps answer the question clients ask 
 
 **How to access:** click **Customer Service** in the left navigation. It opens on the **Workbench** tab by default; a **Sites** tab sits alongside it.
 
-<Frame caption="CS Workbench — triage view">
+<Frame caption="CS Workbench — a dense, groupable order list on the left, order detail sliding in on the right.">
   <img src="/images/planner/cs-workbench.png" alt="CS Workbench order triage list with filters and detail pane" />
 </Frame>
+
+The order list is a dense table, not a card feed — click a row to slide a detail pane in from the right (it stays in sync with the URL, so a link to `?order=<id>` opens straight on that order). `J`/`K` walk the list up and down, and `Esc` clears the selection, the same keyboard pattern as Orders and Fleet.
 
 The Workbench is built on two supporting pieces:
 
@@ -6157,7 +6578,7 @@ The Workbench is built on two supporting pieces:
     Go to **Customer Service** — it opens on the Workbench tab.
   
   ### Find the order
-    Use the search box (order number, reference, or pickup/delivery city) or narrow the list first — see the filters below. Click an order card to open its detail pane on the right.
+    Use the search box (order number, reference, or pickup/delivery city) or narrow the list first — see the filters below. Click an order row to open its detail pane on the right.
   
   ### Review the shipment status
     The detail pane's header shows the order number, status, assigned driver/truck (or subcontractor), and ETA, followed by a status stepper and a stop-by-stop breakdown — each stop shows today's opening hours (in red if currently closed), whether an appointment is required, the client's booking reference, site contacts, and a booking-portal link when the site has one.
@@ -6192,23 +6613,37 @@ Beyond the status stepper and stop breakdown, the detail pane surfaces everythin
 
 ---
 
-## Filtering and Sorting the Order List
+## Filtering, Grouping, and Sorting the Order List
 
-The left-hand order list has its own toolbar above the cards:
+The command bar above the list is deliberately one line — the everyday controls sit on it directly, and everything else lives behind **More filters**:
 
 - **Scope toggle** — **Active** (default), **All**, or **Historical**.
+- **Group** — the list defaults to Druma's own **Triage** grouping (see below); switch it to **None** for a flat, sortable list instead.
 - **Sort** — by Created, ETA, Delivery date, Status, **Next stop**, or **Check-call age** (the last two need each order's live signal data, so they're greyed out for a moment while that loads).
-- **Status filter**, **Client filter**, and **Client reference filter** — narrow further; client and reference filters accept partial matches.
-- **Loading** and **Unloading** date presets — **Today**, **Tomorrow**, or **This week**, applied against the pickup and delivery dates independently.
-- **Exceptions only** — show only orders currently carrying an exception.
-- **Unassigned** — show only orders with no driver, no truck, and no subcontractor/carrier assigned yet.
-- **Stale check-call** — show only orders whose last check-call is older than a threshold you choose: **12h, 24h, 48h,** or **72h**. An order with no check-call logged at all always counts as stale.
+- **Columns** — choose which of the table's fields are visible; by default the table shows Order #, Status, Client, Route, a combined **Signal** column, and one more — the rest (Assignment, ETA/next-stop breakdown, etc.) are opt-in, so the table doesn't need a horizontal scroll to read the columns that matter most.
 
-Click the **star** on an order card to pin it as a **CS priority** — pinned orders always sort to the top of the list, regardless of the active sort key or direction.
+**More filters** holds: Status, Client, Client reference (client and reference accept partial matches), Loading/Unloading date presets (**Today**, **Tomorrow**, **This week**, applied against pickup and delivery dates independently), **Exceptions only**, **Unassigned** (no driver, no truck, no subcontractor/carrier yet), and **Stale check-call** (choose a threshold — **12h, 24h, 48h,** or **72h** — for how old the last check-call has to be to count).
 
-Each order card also shows an **at-risk badge** (amber for "at risk" when the ETA buffer against the delivery window drops to an hour or less, red for "late" once it's missed), a **check-call-age badge** showing how long since the last touch, and a **next-stop preview** (the upcoming stop's name, city, and time window).
+> **Note:** 
+Stale check-call only flags orders that are actually **moving** right now (assigned through offloading) — a Draft or Pending order with nothing logged yet isn't "stale", it just hasn't started.
 
-A KPI bar above the list shows live counts for Results, In transit, Delivered, and Exceptions.
+
+Click the **star** on an order row to pin it as a **CS priority** — pinned orders always sort to the top of the list, regardless of the active sort key or direction.
+
+### Triage grouping
+
+The default grouping sorts every order into one of four buckets, worst first:
+
+| Group | What lands here |
+|---|---|
+| **Needs action now** | The most urgent signals — an open exception or an escalation waiting on a reply |
+| **Late / at risk** | The ETA buffer against the delivery window has dropped to an hour or less, or has already been missed |
+| **Awaiting check-call** | Moving, with no check-call logged inside your stale-check-call threshold |
+| **On track** | Everything else |
+
+Each order's row shows a compact **Signal** column (its at-risk/late state and check-call age at a glance) and a next-stop preview — the upcoming stop's name, city, and time window.
+
+The KPI bar above the list — **Results**, **In transit**, **Delivered**, **Exceptions** — is clickable: click a tile to filter the list down to it, click it again to clear the filter. The **Delivered** tile reads a dash rather than a misleading zero while you're on the **Active** scope (which excludes delivered orders by design) — click it to switch to **All** scope filtered to Delivered.
 
 ---
 
@@ -6240,6 +6675,29 @@ Exceptions also feed the **Exceptions feed** widget on the Home Dashboard, so a 
 
 ---
 
+## Escalating to a Planner
+
+Some issues need a planner's decision, not a check-call — a truck reassignment, a client dispute over the price or terms, a driver who won't answer, missing paperwork. Rather than tracking these by phone or chat, escalate straight from the order.
+
+
+  ### Open the order and click Escalate
+    In the order detail pane, click **Escalate to planner**.
+  
+  ### Pick a reason
+    Choose from **Truck reassignment**, **Client dispute**, **Driver unreachable**, **Documentation**, or **Other**.
+  
+  ### Add a note (optional)
+    Give the planner the context they'll need — what you've already tried, what the client is asking for, and so on.
+  
+  ### Submit
+    Click **Escalate**. The escalation is logged in the order's check-call/communication timeline and an amber strip appears on the order — on the Planning Board and in the Orders detail pane too, so a planner sees it wherever they're already working, not only inside CS.
+  
+
+
+Once the planner has dealt with it, they (or you) click **Mark resolved** on the amber strip — it records who resolved it and when, and the strip clears.
+
+---
+
 ## Sites — Where Opening Hours and Contacts Come From
 
 Manage the site catalogue from the **Sites** tab. Each site holds identity/address, a weekly opening-hours grid (with date-specific exceptions, e.g. a public holiday), appointment/booking settings, dock count and gate/access notes, vehicle restrictions, a contacts repeater, and per-client booking instructions (the same warehouse can require a different reference depending on whose cargo it is).
@@ -6247,7 +6705,7 @@ Manage the site catalogue from the **Sites** tab. Each site holds identity/addre
 Two buttons in the site editor's opening-hours section can fill in data for you — both require opening an existing site (not available while creating a new one):
 
 - **Suggest from history** — infers opening hours and typical dwell time from your own drivers' past arrival/departure times at that site. Always reviewable before you save; nothing is written automatically.
-- **Research the web** — asks Druma's AI to search the web for the site's published hours, contacts, and booking portal, citing the pages it used. This is a manual, pay-per-call action metered in EUR and must be turned on first in **Settings → Automation → Customer service** (an admin/company-admin setting) — it's off by default because each click has a real cost.
+- **Research the web** — asks Druma's AI to search the web for the site's published hours, contacts, and booking portal, citing the pages it used. It must be turned on first in **Settings → Automation → Customer service** (an admin/company-admin setting) — off by default.
 
 ### What the site fields mean
 
@@ -6279,6 +6737,59 @@ Two buttons in the site editor's opening-hours section can fill in data for you 
     Add the Exceptions feed widget to see CS exceptions without leaving the dashboard.
   
 </CardGroup>
+
+---
+
+## Feedback & What's New
+
+
+## Overview
+
+Click your name/avatar in the top-right corner and choose **Feedback** to open a panel with three tabs: **Send feedback**, **History**, and **What's New**.
+
+---
+
+## Sending feedback
+
+On the **Send feedback** tab, pick a type — **Bug**, **Suggestion**, or **Question** — write what happened or what you'd like, and optionally attach a screenshot (JPEG or PNG, up to 5 MB). Click **Send** to submit.
+
+Every report is timestamped and gets a short reference number so you can refer to it later.
+
+---
+
+## Tracking your reports
+
+The **History** tab shows what's been sent, with a scope toggle:
+
+- **Mine** — only the reports you personally submitted.
+- **Team** — everything anyone at your company has submitted, so you can see if a colleague already reported the same thing.
+
+Each entry shows its type, status, and the text you (or a colleague) wrote:
+
+| Status | Meaning |
+|---|---|
+| **Open** | Received, not yet reviewed |
+| **In Review** | Someone's looking at it |
+| **Done** | Resolved or shipped |
+| **Won't Fix** | Reviewed, not being actioned |
+
+If a report has been linked to something that shipped, you'll see a line like **"Fixed in DRUMA-88 · Shipped in v3.5"** — a direct link from the thing you reported to the change that addressed it. If the team has replied directly, their reply shows underneath.
+
+---
+
+## What's New
+
+The **What's New** tab is a running list of what Druma has shipped or is currently building — filterable by area (Planning, Invoicing, Fleet & Drivers, eCMR & Compliance, and so on). Each entry shows a type badge (**Feature**, **Fix**, **Improvement**, **Security**, **Compliance**), a short title and description, and either the version it shipped in or **"In progress"** if it's still being built.
+
+> **Note:** 
+This list only shows what's actually been released or is currently being worked on for real — there's no roadmap, no estimate, and no sprint board behind it. It's a running changelog, not a planning tool.
+
+
+---
+
+
+  Your daily operational overview — a different surface from the release feed described here.
+
 
 ---
 
@@ -11366,6 +11877,10 @@ Druma retains all uploaded and automatically downloaded tachograph files for the
 
 The EU Mobility Package, in force since February 2022, introduced three binding obligations for cross-border road transport operators. Non-compliance is checked during roadside inspections and can result in fines in any EU member state where the truck is stopped.
 
+> **Note:** 
+Mobility Package tracking lives inside **Planning → Compliance**, on the **Drivers** and **Declarations** tabs — the same page that tracks cabotage exposure, merged into one page with three tabs (**Trucks · Drivers · Declarations**) so a truck's or driver's whole compliance picture is in one place. The vehicle-return clock described below actually shows on the **Trucks** tab, next to that truck's cabotage counter — see [Cabotage Tracking](/en/planner/cabotage-tracking).
+
+
 <Frame caption="Mobility Package tracking — vehicle and driver return clocks per unit, with the next due date and days remaining.">
   <img src="/images/fleet-compliance/mobility-package.png" alt="Mobility Package compliance view showing vehicle 8-week and driver 4-week return clocks" />
 </Frame>
@@ -11388,13 +11903,13 @@ Vehicle return means the vehicle physically crosses back into the country where 
 
 ## Where to Find the Mobility Package Dashboard
 
-Go to **Planning → Mobility Package**. The page is divided into three sections: Vehicle Returns, Driver Returns, and IMI Declarations.
+Go to **Planning → Compliance** (`/operations/compliance`) and select the **Drivers** or **Declarations** tab — vehicle returns show on the **Trucks** tab alongside cabotage, since both are clocks kept per truck.
 
 ---
 
 ## Vehicle Returns
 
-The Vehicle Returns table shows one row per truck with the last date the vehicle returned to the home country, the number of days elapsed since that return, and a status badge.
+The **Trucks** tab shows one row per truck, with its cabotage counter and its vehicle-return clock merged side by side. The vehicle-return part shows the last date the vehicle returned to the home country, the number of days elapsed since that return, and a status badge. Use **Filter → Risk** to narrow the list to trucks in a particular risk state across either clock.
 
 | Status | Condition |
 |---|---|
@@ -11412,7 +11927,7 @@ An **Overdue** vehicle must return to the home country immediately to restore co
 
 ## Driver Returns
 
-The Driver Returns table shows one row per driver with the last recorded return date, days elapsed, and a status badge.
+The **Drivers** tab shows one row per driver with the last recorded return date, days elapsed, and a status badge.
 
 | Status | Condition |
 |---|---|
@@ -11428,7 +11943,7 @@ If your drivers' orders don't naturally route them through the base country, thi
 
 ## IMI Posting Declarations
 
-The IMI Declarations section lists all active and historical posting declarations for drivers working in other EU member states. Each entry shows:
+The **Declarations** tab lists all active and historical posting declarations for drivers working in other EU member states. Each entry shows:
 
 - Driver name
 - Host country
@@ -11450,8 +11965,8 @@ Declarations flagged **Expiring** are highlighted with an amber badge so you can
 ## Creating a Posting Declaration
 
 
-  ### Open IMI Declarations
-    Go to **Planning → Mobility Package** and select the **IMI Declarations** tab.
+  ### Open Declarations
+    Go to **Planning → Compliance** and select the **Declarations** tab.
   
   ### Click New declaration
     Click the **New declaration** button.
@@ -11491,6 +12006,9 @@ Because both trackers rely on order stops rather than a live position feed, they
 ## Related articles
 
 
+  
+    The Trucks tab of the same Compliance page — cabotage counters and cooldowns per vehicle.
+  
   
     Regulation 561/2006 driving limits — separate from but enforced alongside the Mobility Package.
   
