@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-09-28 13:53 UTC
+Generated: 2026-10-03 00:34 UTC
 
 ---
 
@@ -893,7 +893,7 @@ Key User is not a column in the table below — its permissions sit between Admi
 | Clients | Full | Full | Full | Partial | None | Full | None | None |
 | Margin & Finance | Full | Full | Full | None | None | Partial | None | None |
 | Invoicing | Full | Full | Full | None | None | Full | None | None |
-| Pricing & Rate Cards | Full | Full | Full | None | Full | None | None | None |
+| Pricing | Full | Full | Full | None | Full | None | None | None |
 | Freight Exchange | Full | Full | Full | None | None | None | None | None |
 | Payroll | Full | Full | None | None | Partial | None | None | None |
 | Reports | Full | Full | Full | None | None | Full | None | None |
