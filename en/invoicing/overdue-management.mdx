@@ -10,32 +10,24 @@ Chasing payments is one of the less enjoyable parts of running a freight company
 
 ## Viewing Overdue Invoices
 
-Go to **Finance** → **Overdue** tab. This shows all unpaid and partially paid invoices where the due date has passed, sorted by the number of days overdue — the oldest debts at the top.
+Go to **Finance** → **Overdue**. This shows all unpaid and partially paid invoices where the due date has passed. It is a snapshot of today, so it has no date range or comparison picker.
 
 <Frame caption="Finance → Overdue — the manual-send rate limit is 50/hour per user, not per company.">
   <img src="/images/invoicing/overdue-management.png" alt="Overdue Management page" />
 </Frame>
 
-Each row shows:
+At the top you get KPI tiles (**Total Overdue**, **90+ Days** with its share of the overdue amount, **Clients overdue**, **Avg days overdue**) and two charts: **Overdue value by aging bucket** and **Top clients by overdue balance**. The amount per invoice is its total minus what has been paid. The charts show one currency (the dominant one); invoices in other currencies are listed in the table but not summed into the charts.
 
-- Invoice number and date
-- Client name
-- Invoice amount and amount still outstanding
-- Due date and how many days overdue it is
-- Last reminder sent (if any)
+**Click a bar** in either chart to filter the table to that bucket or client; click it again to clear. The **Aging bucket** and **Client** pickers do the same without the chart, and the filter chips plus **Clear all** show what is active.
 
-## Aged Debtors View
-
-The aged debtors view groups your outstanding amounts into time buckets so you can see at a glance where your credit risk sits:
+Each table row shows the invoice number, client, issue and due date, total, amount paid, **Days Overdue**, aging bucket and a **Dunning** column with the current stage badge (**Stage 1**–**Stage 3**, **Escalated**, **Paused**, **Exempt** or **Suppressed**). Click a row to open a side pane; **Open invoice** takes you to the full invoice.
 
 | Bucket | What it shows |
 |---|---|
-| **1–30 days** | Recently overdue — likely just slow payment |
-| **31–60 days** | Getting serious — needs a follow-up |
-| **61–90 days** | Problem accounts — escalate |
-| **90+ days** | High risk — consider legal or collection action |
-
-To access the aged debtors view: **Finance** → **Overdue** → click the **Aged Debtors** toggle at the top of the page.
+| **0–30d** | Recently overdue — likely just slow payment |
+| **31–60d** | Getting serious — needs a follow-up |
+| **61–90d** | Problem accounts — escalate |
+| **90d+** | High risk — consider legal or collection action |
 
 ## Per-Client Outstanding Balance
 
@@ -43,30 +35,24 @@ To see the full picture for a specific client — outstanding balance, credit ex
 
 This is useful before a call with a client: you can see exactly what they owe and for how long.
 
-## Sending a Payment Reminder
+## Sending a Payment Reminder Now
 
 <Steps>
-  <Step title="Go to the Overdue tab">
-    Navigate to **Finance** → **Overdue**.
+  <Step title="Find the invoice">
+    Go to **Finance** → **Overdue** and find the invoice (search, or click a chart bar to narrow the list).
   </Step>
-  <Step title="Select the invoices to remind">
-    Tick the checkboxes next to the invoices you want to include in the reminder. You can select multiple invoices from the same client to send one reminder covering all of them.
+  <Step title="Open the Dunning actions menu">
+    Click the **···** button at the end of the row and choose **Send reminder now…**.
   </Step>
-  <Step title="Click Send Reminder">
-    Click the **Send Reminder** button. Druma generates a polite reminder email that includes:
-
-    - A summary of the overdue invoices with dates and amounts
-    - The total outstanding amount
-    - Your bank details for payment
-    - The attached invoice PDFs
-  </Step>
-  <Step title="Review and send">
-    A preview of the email appears. You can edit the message before sending. Click **Send** to deliver it to the client's finance contact.
+  <Step title="Pick the stage and send">
+    Choose the **Stage** (1, 2, 3 or Final) and click **Send**. Druma emails the client's finance contact with that stage's template.
   </Step>
 </Steps>
 
+The same menu has **Pause 14 days** (pauses dunning for that invoice's client for 14 days) and **Skip next stage…** (asks for a **Reason**, then skips the next scheduled reminder).
+
 <Note>
-The reminder email uses the template configured in your settings. If you want to adjust the tone or language of the standard reminder, go to **Settings** → **Templates** → **Payment Reminder**. You can set up separate templates per language if you have clients in multiple countries.
+The wording of the reminder emails comes from the dunning stage policies and the reminder templates in your Communication settings. See Dunning Schedule below.
 </Note>
 
 
@@ -91,6 +77,31 @@ To configure the schedule, go to **Settings → Finance & Billing → Dunning**:
 - Edit the **email subject and body** per stage, or use the default i18n templates
 - Optionally enable **Attach invoice PDF** and/or **Attach statement of account** per stage
 - Click **Preview** on any stage to run a **dry-run preview** and see the email before it goes live
+
+## Dunning Rules — Exceptions to the Schedule
+
+The stage policies apply to every overdue invoice. When you need an exception, add a **dunning rule** instead of switching a stage off for everyone. Go to **Settings → Finance & Billing → Dunning**; the **Dunning rules** section sits under the stage policies. With no rules, every overdue invoice follows the stage policies exactly as before.
+
+<Steps>
+  <Step title="Add a rule">
+    Click **Add rule** (or **Describe with AI** and write the exception in your own words, for example "No reminder for RON invoices under 500"). Give it a **Rule name**.
+  </Step>
+  <Step title="Choose when it applies">
+    Pick the **Stage** (a single stage or **Every stage**) and **Applies to**: **Every client**, **One client** or **A client group**. Under **Only for invoices where**, add conditions on the invoice. When several rules match, the most specific scope wins.
+  </Step>
+  <Step title="Choose what happens">
+    Under **Then**, pick **Do not send this stage**, or **Change how it is sent**: set the **Days after the due date**, **attach the invoice PDF** or the **statement**, or add an **Internal copy (email)**. Anything you leave on **Keep the policy default** stays as the stage policy says. The **In plain words** box restates the rule so you can check it.
+  </Step>
+  <Step title="Save, check, switch on">
+    Click **Save rule**. A new rule is always saved **switched off**. Before you switch it on, Druma checks it against your open overdue invoices and shows how many it would apply to, and asks you to confirm. If that check fails, the rule is not switched on. You can also test a rule against a single invoice and look at its version history.
+  </Step>
+</Steps>
+
+A rule can only make Druma do **less** than the stage policy (skip a reminder, send it later, add an attachment or internal copy); it can never make Druma contact a client the policy would not. A skipped stage is simply not sent; the next stage is still considered. An enabled rule is not edited in place: switch it off, change it, then check and switch it on again.
+
+### Automation rules
+
+The same pattern exists for the order automations (auto-invoicing, self-billing, carrier invoice audit). Under the master switches in **Settings → Automation**, the **Automation rules** section lets you add exceptions: for orders that match (by client, client group or a site), **skip** the automation or **hold** it for a person. For example, "never auto-send invoices for heavy loads". Rules are saved switched off, are checked against the last 30 days of orders before you switch them on, and can never turn an automation on that the master switch has off. The order's **Rules** section shows which rule fired.
 
 ## Stage-4 Auto Credit-Stop
 
@@ -121,10 +132,10 @@ Not every client should receive automated reminders. Druma gives you three level
 To send a reminder immediately, outside the automatic schedule:
 
 1. Go to **Finance → Overdue**
-2. Select the invoice or invoices
-3. Click **Send Reminder**
+2. Click **···** on the invoice's row and choose **Send reminder now…**
+3. Choose the stage and click **Send**
 
-This triggers the stage-appropriate template right now, regardless of whether the scheduled send date has been reached.
+This sends that stage's template right now, regardless of whether the scheduled send date has been reached.
 
 <Note>
 Rate limit: 50 manual sends per hour per user. Each planner has their own allowance, so multiple team members can each send up to 50 reminders per hour. This prevents accidental bulk-sends to large client lists.

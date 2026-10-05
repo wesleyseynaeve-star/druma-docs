@@ -80,6 +80,26 @@ Click a client row to open the client detail panel, then go to the **Pallets** t
 
 ---
 
+## Exchange modes and open obligations
+
+A net balance says how many pallets a counterparty holds, not whether that is a problem. Exchange **modes** record what was agreed, and **open obligations** say what is still owed and when.
+
+| Mode | What it means |
+|---|---|
+| **None (no exchange agreed)** | Default. Pallets are only recorded; nothing is owed on a deadline |
+| **Bonner (return within 30 days)** | Pallets are lent and due back 30 days after the signed voucher |
+| **Koelner (swap at the stop)** | Pallets are swapped at the stop; no timed obligation |
+| **Own (our pallets lent)** | Our own pallets lent to the client — open, no due date, never overdue, chargeable |
+
+**Where you set the mode**
+
+- **Per client** — open the client, go to the **Pallets** tab and use **Pallet settings → Exchange mode**. New orders for that client start with this mode. Past vouchers keep the mode they were captured under, so changing a client later never rewrites history.
+- **Per order** — in **Add Order** pick **Pallet exchange** next to the pallet count (default **Client default**). In the order pane use **Override the exchange mode for this order**. The pane also shows the mode, **Expected in X / out Y** for each stop and **On the truck: N** pallets.
+
+**Open obligations.** The client's **Pallets** tab lists **Open obligations**, each marked **Due** with a date, **N days overdue**, **No due date** or **No signed voucher**. Obligations are worked out from the signed pallet vouchers and closed oldest first as pallets come back — empties are interchangeable, so returned pallets always close the oldest obligation first. A stop captured without a signed voucher is shown as **Unconfirmed** under every mode and is never counted as overdue. Pallets in dispute are left out of the balance. The Clients list has an **Open pallet obligations** filter.
+
+---
+
 ## Fee threshold and automatic fee creation
 
 If a client's pallet balance grows beyond a configured threshold, Druma can automatically prompt you to raise a pallet exchange fee.
@@ -175,3 +195,42 @@ CHEP Connect is currently the only pallet provider integration. EUR, LPR, IPP, E
   Learn how pallet fee lines appear in the invoice editor alongside other order surcharges.
 </Card>
 
+
+{/* BEGIN: pallet charging (invoicing) — added by the finance docs refresh */}
+
+## Charging missing pallets to a client
+
+When a client keeps pallets that should have come back, you can turn the debt into a fee on their invoice straight from the client's **Pallets** tab (the tab is on every client and every subcontractor when the pallet exchange module is on). Charging works for **clients**; subcontractors cannot be charged from here.
+
+### Set the fee
+
+- **Company default:** **Settings → Clients → Pallet Config** (per pallet type), as described above.
+- **Per client:** on the client's **Pallets** tab, open **Pallet settings**. Under **Fee per missing pallet (this client)** type a fee for any pallet type; leave it blank to use the company default (shown as the placeholder). The same panel has the **Exchange mode** for that client's new orders.
+
+### Charge the pallets
+
+<Steps>
+  <Step title="Open the client's Pallets tab">
+    Go to **Clients**, open the client and click **Pallets**. Check **Balance** and **Open obligations** (overdue obligations show as "N days overdue").
+  </Step>
+  <Step title="Click Charge missing pallets">
+    Druma proposes a quantity per pallet type: the part of the balance that is overdue, or the amount above the threshold, whichever is larger, capped at the balance. The fee is the client's own fee if set, otherwise the company default. Pallets that are in dispute are never charged.
+  </Step>
+  <Step title="Pick the order and confirm">
+    The fee is added to an order that is **not invoiced yet** (by default the client's newest such order). Use **Add the fee to order** to pick a different one, then click **Add fee to order**. If the client has no order open for invoicing, the button is disabled: create or reopen an order first.
+  </Step>
+</Steps>
+
+Druma adds a **palette exchange** line to that order's extras (it shows in the invoice editor like other extras) and, at the same moment, posts an offsetting **adjustment** movement so the charged pallets leave the balance. Clicking twice does not charge twice ("These pallets were already charged").
+
+### Undoing a charge
+
+- If you **delete or exclude** the palette exchange line from the order's extras, the pallets come back onto the balance.
+- If you issue a **full credit note** that credits that line, the pallets also come back onto the balance.
+- A **partial credit note** does **not** put the pallets back. Adjust the balance with **Book correction** instead (a reason is required).
+
+<Note>
+If you credit a full invoice and re-issue it, the pallets return to the balance, but the re-issued draft may still contain the fee. Remove the line from the new draft, or the client is charged and the balance is also restored.
+</Note>
+
+{/* END: pallet charging */}

@@ -39,7 +39,7 @@ Tasks are tied to **lifecycle phase** — the same statuses covered in [Order Li
 
 ## How admins configure task templates
 
-Go to **Settings → Templates & Zones → Task Templates**. Templates ship empty for every company — nothing is pre-configured, so building your checklist is entirely opt-in.
+Go to **Settings → Rules → Task Templates**. Templates ship empty for every company — nothing is pre-configured, so building your checklist is entirely opt-in.
 
 <Steps>
   <Step title="Create a template">
@@ -82,13 +82,46 @@ The company-wide template stays untouched for every other client — the overrid
 
 A scheduled job checks every few minutes for tasks that are ready to run — dependencies satisfied, due, and configured to auto-run — and dispatches them without anyone needing to open the checklist. This is purely a reliability detail; day to day, you only interact with the checklist panel on the order itself.
 
+## Client action rules
+
+A **client action rule** runs an action automatically when an order or invoice of a client group reaches a stage — hold an invoice until the POD is signed, notify a team, send an email. Rules belong to a **client rule group**: create the group under **Settings → Client Rule Groups**, then manage its rules under **Settings → Rules → Client Action Rules**.
+
+**Add a rule:** pick the group, click **Add rule**, name it, choose the object (order or invoice) and the stage it fires on, then add up to three actions under **Then** (for example send an email, notify a role with a message, or place a hold with an optional reason). Click **Save rule**.
+
+**Conditions on invoice rules.** An invoice rule no longer fires for every invoice that reaches its stage. You can add conditions on **Invoice type**, **Invoice currency**, **Invoice total**, **Amount outstanding**, **Billing country**, **Payment terms (days)**, **Days overdue**, **VAT treatment** and **Delivery channel** (Peppol, ANAF e-Factura, KSeF, email, or none — a draft that has not been sent counts as none). Examples: "hold the invoice, but only the RON ones", or "chase only EU clients over 5000 once 14 days overdue". A rule with no conditions fires for every invoice, exactly as before.
+
+**Scope a rule to a site.** In **Client Action Rules**, switch from **Client groups** to **Sites**, pick a site and add an order rule: it fires only for orders that have a stop at that site — for example "every delivery to the Constanța dock". Site rules apply to orders only (an invoice has no stops), and a site rule on the **Draft** stage does not fire because the order has no stops yet; later stages do.
+
+**Check before you switch on.**
+- Each rule shows how many clients it applies to and how many orders (or invoices) it would have fired on in the last 30 days.
+- **Test against an order** (or **Test against an invoice**) lets you pick a recent one and shows whether the rule matches and why, plus whether its client or site is within scope.
+- **Describe with AI** turns a sentence in plain language into a rule suggestion. Rules added from a suggestion are always created **turned off** — review them and enable them yourself.
+
+---
+
+## Exception rules
+
+**Exception rules** decide what Druma flags — or blocks — on an order. Find them under **Settings → Rules → Exception Rules** (admin and company admin). **Load default rules** adds the standard set (for example missing customer VAT, missing booking reference, stop not geocoded, client over credit limit). For each rule you set the severity: **Warning** only flags the order; **Blocking** prevents confirming the order or assigning it to a truck until fixed. Blocking only takes effect when **Enforce blocking exception rules** is on in **Automations & Features**; otherwise a blocking rule is marked **Advisory only**.
+
+**Custom rules.** Click **Add Rule** to describe a problem with conditions. A rule fires when its conditions **match** — you describe the problem, not the fix. For example "Client reference is empty" flags orders with no client reference. Conditions can combine any/all groups and cover the order, its stops (for example a delivery stop) and the goods. A plain-language readback shows how Druma understands the rule; **Test against an order** and a 30-day history check show what it would have caught.
+
+**Describe with AI** builds a custom rule from a sentence. It lists any part it could not build (for instance conditions on a specific truck, driver or contact are not supported), and the rule is created turned off until you enable it.
+
+Blocking is checked on the server when an order is confirmed or assigned, using the order as it is being saved — so fixing the missing field in the same save lets the confirmation through. The order pane and the order lists show the same gaps the server finds.
+
+---
+
+## Stop extras
+
+A stop can need equipment the vehicle must bring. In **Add Order → Route**, each pickup and delivery stop has **Stop extras**: **Tail lift**, **Crane** and **Mega trailer**. They show on the order's stop card and on the driver's stop card, and they are a field you can use in assignment rules: use **Stop extras** with *contains*, *is one of*, *is present* or *is empty* — for example "orders with a stop that needs a tail lift go to the group with suitably equipped vehicles" (there is a ready-made template, **Stops that need a tail lift or crane**). To express "does not need a tail lift", use *is empty* for all stops rather than "is not".
+
 ---
 
 <CardGroup cols={2}>
   <Card title="Order Lifecycle" icon="circle-dot" href="/en/planner/order-lifecycle">
     See every order status and what triggers the transition between them.
   </Card>
-  <Card title="CRM & Sales Pipeline" icon="user-group" href="/en/planner/crm">
-    Client records where per-client task overrides live, alongside touchpoints and lifecycle stage.
+  <Card title="Sales" icon="user-group" href="/en/planner/crm">
+    Leads, quotes, tenders and the client record's Sales section.
   </Card>
 </CardGroup>

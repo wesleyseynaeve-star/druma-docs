@@ -1,0 +1,57 @@
+---
+title: "AI corrections and learned rules"
+description: "How Druma remembers the values your team fixes after AI extraction, how three identical fixes become a learned rule, and how to review or delete both in Settings → Compliance → AI corrections."
+icon: "robot"
+---
+
+When Druma's AI reads a document (a transport order PDF, a Smart Import file) and someone on your team fixes a value, Druma remembers the fix **for your company only** and uses it to read similar documents better next time. This page is where you see and control that memory.
+
+Go to **Settings → Compliance → AI corrections**. It is available to **Company Admin**, **Key User** and **Admin** (anyone allowed to manage settings).
+
+<Note>
+Corrections are never shared with other companies. They may contain names or licence plates, so they are deleted automatically after **180 days**.
+</Note>
+
+## What gets recorded
+
+A correction is recorded when you change a value the AI extracted and save:
+
+- **Order document**: you fix a field on an order created from a document in the Add Order form.
+- **Smart Import**: you fix a cell in a category table before importing.
+- **Carrier invoice** and **supplier invoice** are listed as sources too, but only when an invoice review step records a correction.
+
+The list under **AI corrections** shows the most recent 200 corrections with **Source**, **Field**, **AI read**, **Corrected to** and **Date**.
+
+## Learned rules
+
+When the same correction is made on **three different documents** for the same sender or document type, Druma turns it into a **learned rule**. Examples: `"Roemenie" becomes "RO"`, or a value is cleared.
+
+- Rules appear under **Learned rules** in the same page, with the rule in plain words, the field, and **Learned from** (the number of documents).
+- A rule only fixes a value the AI **already read**. It does not replace the AI for a layout it has not seen, and it never invents a value.
+- Rules are created by a nightly job, so a rule shows up the day after the third correction, not instantly.
+- A rule is retired if a later correction contradicts it, and rules expire 180 days after they were learned.
+- Smart Import rules are matched by file kind (PDF, image, spreadsheet) and apply to the exact value they learned.
+
+## Delete a correction or a rule
+
+- **Delete correction** removes one row. **Delete all** removes every stored correction for the company, including those not shown in the 200-row list. Future extractions are no longer told about them. Learned rules are **not** deleted by this; remove them separately under **Learned rules**.
+- **Delete rule** stops applying that rule. It only comes back after the same correction is made on three new documents.
+
+## Common questions
+
+**Why did the AI repeat a mistake I corrected?** One correction is a hint, not a rule. A rule needs the same fix on three separate documents, and takes effect after the nightly job.
+
+**Can a rule be wrong?** A rule is value-specific. If it does not fit, delete it under **Learned rules**.
+
+**Does this change the AI for other customers?** No. Everything stays inside your company.
+
+**I want a clean slate.** Use **Delete all** for corrections and **Delete rule** for each learned rule.
+
+<CardGroup cols={2}>
+  <Card title="Smart Import" icon="brain" href="/en/tools/smart-import">
+    Extract data from documents, review, then import.
+  </Card>
+  <Card title="GDPR data retention" icon="shield" href="/en/legal/gdpr-data-retention">
+    How long Druma keeps data.
+  </Card>
+</CardGroup>

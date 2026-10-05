@@ -20,7 +20,7 @@ There's a single access link per client — not separate account creation, and n
 
 <Steps>
   <Step title="Client opens the portal link">
-    The client clicks the link you sent them. There's no account to create or password to remember — but the link alone isn't quite enough either: the client enters their email address, Druma sends a 6-digit verification code to that address (valid for 10 minutes), and they enter it to confirm their identity before seeing any data.
+    The client clicks the link you sent them. There's no account to create or password to remember — but the link alone isn't quite enough either: the client enters their email address, Druma sends a 6-digit verification code to that address (valid for 10 minutes), and they enter it to confirm their identity before seeing any data. The code email contains only the code, no link. Wrong codes are limited: after 15 wrong attempts in a day, or 10 code emails requested in a day for the same address, sign-in for that address pauses for 24 hours, and asking for a new code does not lift it. The screen gives the same answer for a wrong, expired or locked code.
   </Step>
   <Step title="Client lands on the Shipments list">
     The portal opens straight to the **Shipments** page — a table of the client's orders with reference, route, status badge, pickup date, and ETA for each. A search box lets them jump straight to an order by reference, origin, or destination.
@@ -70,6 +70,18 @@ Clients can filter their order list by:
 
 The filters sit at the top of the order list.
 
+## Quotes, Claims and Invoices
+
+Besides **Shipments** and **Documents**, the portal has three more pages. On each, a row click opens a details pane, and tabs with live counts narrow the list.
+
+| Page | What the client does |
+|---|---|
+| **Quotes** | Request a quote with **Request a Quote** (operator, origin, destination, dates, weight, volume, trailer type, ADR, notes). Open a quote to see the full cargo detail and price, then click **Accept** or **Decline** (a decline can carry an optional reason). Tabs: All, Pending, Accepted, Rejected, Expired. |
+| **Claims** | **File New Claim** for a shipment issue (order reference, claim type, subject, description). Tabs: All, Open, In Review, Resolved, Rejected. The pane shows the full description. |
+| **Invoices** | See the billing history with **Outstanding** and **Overdue** totals. Tabs: All, Pending, Paid, Overdue. **Download invoice** is on the row and in the pane. "Invoice link not yet available" means the invoice has no download link yet. |
+
+When a tab or search matches nothing, the page says, for example, "No quotes match your filter" instead of the first-time empty state. The links in quote emails (Accept / Reject) and the one-click feedback link open the matching portal page directly. The portal also has a video guides entry in the profile menu.
+
 ## Mobile-Friendly
 
 The portal is fully responsive. Clients on a phone or tablet get the same information as on desktop — cards stack vertically, the timeline adapts, and buttons are touch-sized. No app download needed.
@@ -86,8 +98,32 @@ The portal is intentionally limited to operational information:
 The client portal shows order status, not a live GPS position — the tracking card only updates when the order's status changes. Make sure your drivers tap statuses promptly (Departed, Arrived, Loaded, Unloaded) so clients see timely updates. It helps to brief new drivers on this during onboarding.
 </Note>
 
+**Ferry crossings.** If the trip includes a ferry, the shipment shows a **Ferry crossing** row (operator, ports, sailing time) and an **On ferry** chip while the truck is on board. Booking numbers and driver notes are never shown to the client.
+
+## Sharing a Shipment With Someone Else
+
+A client contact can give a colleague (or a partner) access without involving you.
+
+<Steps>
+  <Step title="Open the shipment and tap Share">
+    In the portal, open the shipment and click **Share**. Enter the person's **Email address**.
+  </Step>
+  <Step title="Choose what they can see">
+    **This shipment only (read-only)** shows status, route, stops, ETA, timeline and delivery documents (CMR/POD). Prices, invoices, claims, driver details and client references are never shown. **The whole account, including prices and invoices** gives full access to every shipment, document and invoice, so it is limited to the client's **portal-primary contact** (and to you, the operator).
+  </Step>
+  <Step title="Send invitation">
+    The person opens the invitation, confirms their own email with a one-time code, and sees the **Shared shipment** page. Whole-account access ends after 90 days unless renewed. Use **Remove access** to end it immediately.
+  </Step>
+</Steps>
+
+Someone who was given access cannot share further. An invitation can also be cut off at any time by whoever sent it, the portal-primary contact, or you.
+
+**As the operator**, open the client on the **Clients** page and look at the portal section (**Portal access**): it lists who has signed in, via **Emailed code** or **Invitation**, and lets you **Revoke** a person. Pick the client's **Portal-primary contact** there. Until one is set, only you can invite someone to the whole account (the page warns "No portal-primary contact is set"). You can also invite someone to the whole account yourself with **Invite to the whole account**.
+
 <Warning>
-The portal link is valid for 90 days by default. If a client contact leaves the company or you want to cut off access sooner, go to the client's record on the **Clients** page and click **Revoke** — the link stops working immediately. Click **Generate portal link** afterward if you want to issue a fresh one.
+The portal link is valid for 90 days by default. If a client contact leaves the company or you want to cut off access sooner, go to the client's record on the **Clients** page and click **Revoke** — the link stops working immediately, and everyone currently signed in (including invited people) is signed out and has to confirm their email again. Click **Generate portal link** afterward if you want to issue a fresh one.
+
+To cut off one person instead, use **Revoke** next to their name in **Portal access**: only that person is signed out. Removing a contact, or changing a contact's email address, also ends the portal access that address had.
 </Warning>
 
 ---

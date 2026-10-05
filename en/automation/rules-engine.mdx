@@ -1,0 +1,91 @@
+---
+title: "Rules: automate tagging, blocking, checklists and emails"
+description: "Where Druma's rules live (Settings → Rules), how to write one in plain words or from a template, test it against a real order before saving, restore an older version, and see which rule acted on an order."
+icon: "gears"
+---
+
+Rules let Druma do routine decisions for you: send an order to the right department, block a confirmation when data is missing, build a checklist for the driver, or email a client when an order reaches a status. All of them live in one place.
+
+Go to **Settings → Rules**. This area is for **Admin** and **Company Admin** users.
+
+## The kinds of rules
+
+| Rule type | What it does |
+|---|---|
+| **Exception Rules** | Warns about, or blocks, an order before it is confirmed or assigned (for example an ADR order with no ADR class). |
+| **Assignment Rules** | Automatically sets an order's department, resource group or planning group. |
+| **Truck & Driver Rules** | Limits or ranks which trucks and drivers can be suggested for an order (for example "ADR loads need an ADR driver"). |
+| **Activity Duration Rules** | Sets how many minutes loading or unloading takes at a stop, for planning. |
+| **Task Templates** | Builds a checklist and runs actions (including sending an email) when an order or invoice reaches a status. See [Order Tasks & Workflow Templates](/en/planner/order-tasks). |
+| **Stop Action Templates** | Shows the driver a per-stop checklist (photos, notes, a call, tick-boxes). |
+| **Client Action Rules** | The same idea as task templates, but attached to a **Client Rule Group**, so it applies to one client, a group of clients or a site. |
+
+<Note>
+Settings → Automations (the feature switches) is a separate page. The client-email switches that used to live there were replaced by rules — see [Client emails: wording, recipients and timing](/en/admin/client-email-templates).
+</Note>
+
+## Three ways to create a rule
+
+Every rules page offers the same three starting points.
+
+<Steps>
+  <Step title="Build it by hand">
+    Click the add button on the page and use the condition builder. Conditions can be grouped ("all of these" / "any of these") and can look at the order, its stops, its goods lines, and the time or weekday of a pickup.
+  </Step>
+  <Step title="Start from a template">
+    Click **Start from a template**. Pick a ready-made rule, filter by scenario (dangerous goods, cold chain, lanes and countries, timing, customers, equipment, data quality, compliance), fill in your own department, group, client or country, and choose **Open in the builder** or **Refine with AI**. Examples: ADR cargo to the ADR department, temperature-controlled loads to the reefer group, lane into Romania from HU, PL, CZ, SK or BG, weekend loading, night pickups, missing CMR data (block), cabotage watch.
+  </Step>
+  <Step title="Describe it with AI">
+    Click **Describe with AI** and type what you want in your own words, for example "All ADR orders go to the ADR department". Romanian, Bulgarian, Hungarian, Polish and other languages work. Druma shows a **Suggested rule** read back in plain language, plus a **Parts I could not build** list for anything it could not turn into a rule. Ask for a change in the box below to refine it, then click **Create rule (switched off)**.
+  </Step>
+</Steps>
+
+<Warning>
+A rule made from a template or by AI is always created **switched off**. Nothing changes until you test it and turn it on yourself in the list.
+</Warning>
+
+You can also ask **Ask Druma** (the in-app assistant) to draft a rule. It saves a draft you open with **Review in Rules**; you then test it and create it (switched off).
+
+## Read it back and test it before saving
+
+Rules can be hard to judge from the conditions alone, so Druma explains them.
+
+- **Plain-language readback.** A rule is shown as a sentence, with a **Technical** toggle if you prefer the expression form.
+- **Test against an order.** Click **Test against an order**, search an order number (or pick one from the last 30 days) and Druma tells you whether the rule matches, why (what the order has versus what the rule expects), and what it would change, for example "If saved, this rule would set 'Department' to ADR desk." It also tells you when the order is outside the rule's scope, when an earlier rule decides first, or when a value was set by hand and would stay as it is.
+- **Check the last 30 days.** **Check the last 30 days** shows how many recent orders the rule would have matched and changed, with examples. If it takes too long, narrow the conditions.
+- For exception rules the test says whether the rule would **block**, **warn** or **not flag** the order. For activity duration rules it shows the minutes per stop.
+
+Testing needs permission to manage settings.
+
+## Version history and restore
+
+Every create, edit and delete of an assignment, truck/driver, exception, client-action, stop-action or activity-duration rule is recorded (the latest 50 versions of each rule are kept).
+
+1. Open the rule and click **Version history**.
+2. Versions are listed newest first with who changed it, when, what changed (name, conditions, scope, what it does, switch, position) and a **Before** / **After** reading.
+3. Click **Restore**, then **Restore as new version**.
+
+A restored rule always comes back **switched off**, so nothing changes until you turn it on. A restore can be refused if a client, group or site the rule used no longer exists.
+
+## See which rules acted on an order
+
+Open an order and go to the **Rules** tab. It lists the automatic rules that acted on the order: what each one set (for example "Set Department to ADR desk"), which rule and version, and a **Why it matched** trace. Anything set by hand is never changed by a rule. Values that come from financial data are hidden if you do not have access to financials. Admins get an **Open assignment rules** link.
+
+## Common questions
+
+**Why did my rule not fire?** Open the order, go to the **Rules** tab, and use **Test against an order** on the rule. The answer is one of: conditions do not match, the order is outside the rule's client/group/site scope, an earlier rule decided first, the value was set by hand, or the order has not reached the rule's phase yet.
+
+**Can I undo a bad edit?** Yes: **Version history** → **Restore**. The restored rule is switched off until you enable it.
+
+**Does the AI turn rules on by itself?** No. The AI only proposes; you create the rule (switched off), test it and enable it.
+
+**Who can edit rules?** Admin and Company Admin.
+
+<CardGroup cols={2}>
+  <Card title="Client emails: wording, recipients and timing" icon="envelope" href="/en/admin/client-email-templates">
+    How the "Send email" rule action and the Communication editor work together.
+  </Card>
+  <Card title="Order Tasks & Workflow Templates" icon="list-check" href="/en/planner/order-tasks">
+    Task templates in detail.
+  </Card>
+</CardGroup>

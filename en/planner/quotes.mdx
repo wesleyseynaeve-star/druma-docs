@@ -6,55 +6,82 @@ icon: "file-invoice"
 
 ## What Are Quotes?
 
-Before a load becomes a confirmed order, most clients want a price. Druma's quoting system lets you build a professional freight quote in a few minutes, send it by email with a one-click Accept/Reject link for the client, and automatically turn it into a confirmed order the moment they say yes.
+Before a load becomes a confirmed order, most clients want a price. Druma's quoting lets you build a freight quote in a few minutes — for a client or for a lead that is not a client yet — send it by email with a one-click Accept/Reject link, and turn it into a confirmed order the moment they say yes.
 
-No copy-pasting between systems. No re-entering the same data twice. The quote becomes the order.
+Quotes live under **Sales → Quotes**, next to the Pipeline, Contracts and Pricing tabs (see [Sales](/en/planner/crm)). Roles that can use Quotes: admin, company admin, key user, planner and customer service.
 
-<Frame caption="The Quotes list — status badges track each quote from Draft through Sent, Accepted, or Superseded.">
+<Frame caption="The Quotes list — scope tabs sort quotes into Open, Won and Lost.">
   <img src="/images/planner/quotes.png" alt="Quotes list page with status badges" />
 </Frame>
+
+---
+
+## The Quotes list
+
+The list has scope tabs, each with a count:
+
+| Scope | Contains |
+|---|---|
+| **Open** | Drafts and quotes sent and waiting for an answer (default) |
+| **Accepted – to convert** | Accepted quotes that are not yet an order — the ones you still have to act on |
+| **Won** | Accepted quotes and quotes already converted to an order |
+| **Lost** | Rejected and expired quotes |
+| **All** | Everything |
+
+At the top you see the **win rate** (won ÷ won + lost) and the **open value** in EUR (open quotes in other currencies are not mixed into the euro total). The **Client** column shows the client's name, or a **Lead** badge while the quote is for a lead that has not been converted yet. The **Source** column shows whether a quote came from an RFQ email or the client portal. Use **Columns** to choose columns and **Views** to save your scope.
+
+Click a row to open the quote in a side pane. Its buttons depend on the status:
+
+- **Send to Client** / **Resend** — draft or sent quotes
+- **Convert to Order** — accepted quotes
+- **Reprice** — opens the quote in the composer
+- **Escalate to tender** — accepted quotes, when tender management is on
+- **Open quote** — the full quote with the negotiation history
 
 ---
 
 ## Creating a New Quote
 
 <Steps>
-  <Step title="Go to Quotes">
-    In the top navigation, click **Sales → Quotes → New Quote**.
+  <Step title="Click New quote">
+    Go to **Sales → Quotes** and click **New quote**. The quote composer opens over the page. You can also open it from a lead's pane (**Create quote**), from a client's **Sales** section (**New quote**), or from a tender lane (**Quote this lane**, which pre-fills the route).
   </Step>
-  <Step title="Fill in the quote details">
-    Complete the following fields:
-
-    - **Client** — select from your client registry or type to search
-    - **Origin** — pickup address or city
-    - **Destination** — delivery address or city
-    - **Cargo description** — brief description of the goods (e.g., "22 Euro pallets, general cargo, 18t")
-    - **Trailer type** — Curtainsider, Reefer, Flatbed, Tanker, etc.
-    - **Valid until** — the date after which this quote expires
-    - **Price** — your rate for the transport
-    - **Currency** — EUR, RON, GBP, USD, etc.
-    - **Notes** — conditions, exclusions, fuel surcharge terms, or anything the client should know
+  <Step title="Who is it for">
+    Search a client or a lead. If you type a company that matches neither, choose **Add "…" as a new lead** — Druma creates the lead together with the quote, so a quote is never orphaned. Optionally type the new lead's email, which you need to send the quote.
   </Step>
-  <Step title="Save the quote">
-    Click **Save as Draft** to keep editing later, or go straight to **Send to Client** when you're ready.
+  <Step title="Route stops and Load">
+    Add at least one **+ Loading** and one **+ Offloading** stop, then set trailer, weight, pickup and delivery dates. Tick **ADR (dangerous goods)** if it applies — ADR can be set right here.
+  </Step>
+  <Step title="Price and Terms">
+    Enter the **Quoted price**, **Currency** and **Validity (days)**, give the quote a **Quote title**, and add internal **Notes** (visible to your own team only). If you have access to pricing analysis, the composer also shows distance, tolls, cost and margin so you can price with confidence.
+  </Step>
+  <Step title="Save or send">
+    **Create** saves a draft you can keep editing. **Save & send** saves and emails the quote at once. A draft can be saved without a price; sending needs one.
   </Step>
 </Steps>
 
+<Note>
+Cost and margin are calculated in EUR. If you quote in another currency the margin read-out is hidden. Roles without pricing analysis (for example customer service) enter the price manually and can still save and send.
+</Note>
+
+<Note>
+**Pricing tool.** The **Pricing tool** button in **Sales → Pricing** opens the same composer for planners and above. There is no separate Pricing Tool page and no separate "worksheet" any more — every calculation is saved as a quote.
+</Note>
 
 ---
 
 ## Sending a Quote to the Client
 
-When you click **Send to Client**, Druma:
+When you **Send to Client** (or **Save & send**), Druma:
 
-1. Generates a clean, branded PDF of the quote
-2. Emails it to the contact email on the client's profile
+1. Generates a branded PDF of the quote
+2. Emails it to the client's contact email — or the lead's email, for a lead quote
 3. Embeds two buttons in the email: **Accept this Quote** and **Reject**
 
-The client clicks directly from their email inbox — no login, no portal, no friction. One click and the job is done.
+The client clicks directly from their inbox — no login needed.
 
 <Note>
-Make sure the client profile has a valid email address before sending. Go to **Settings → Clients** and open the client to check. You can also add a specific contact email on the quote itself if you want to reach a different person.
+Druma will not send if there is no email address to send to. Add one to the client or lead (Clients, or the lead pane), or type it for a new lead in the composer. If the send fails, the quote stays saved and you can **Resend** it from the list.
 </Note>
 
 ---
@@ -62,95 +89,78 @@ Make sure the client profile has a valid email address before sending. Go to **S
 ## What Happens When the Client Responds
 
 **Client clicks Accept:**
-- The quote automatically converts into a confirmed order
+- The quote becomes **Accepted** and is converted into a confirmed order
 - You receive an in-app notification and email
-- The order appears in your **Orders** list, ready to assign a driver and get moving
+- The order appears in your **Orders** list, ready to assign a driver
 
 **Client clicks Reject:**
-- The quote is marked as **Rejected**
-- You receive a notification so you can follow up, renegotiate, or move on
+- The quote is marked **Rejected** (it moves to the **Lost** scope) and you are notified so you can follow up or renegotiate
 
 **Client does nothing:**
-- After the **Valid Until** date, the quote automatically changes to **Expired**
-- Expired quotes are visible in the **Expired** tab of your Quotes list — they don't clutter your active pipeline
+- After the validity period the quote becomes **Expired** and moves to the **Lost** scope
+
+If the quote was for a lead, the lead follows along: a sent quote moves it to **Proposal**, an accepted quote to **Won**. A rejected or expired quote never marks a lead as lost by itself — see [Sales](/en/planner/crm).
 
 ---
 
 ## Quote Versioning
 
-Prices change. Clients negotiate. Druma handles this cleanly with versioning — every time you reprice a quote that has already been sent, Druma creates a new version and keeps the previous one intact.
-
-This means you always have a record of what you offered, when, and at what price. Useful for audits, client disputes, and understanding how long negotiations typically take.
-
-**To revise a quote:**
+Every time you reprice a quote that has already been sent, Druma keeps the earlier version and adds a new round, so you always have a record of what you offered and when.
 
 <Steps>
-  <Step title="Open the existing quote">
-    Go to **Sales → Quotes** and click the quote to open it.
+  <Step title="Open the quote">
+    Go to **Sales → Quotes**, click the quote and choose **Reprice**.
   </Step>
-  <Step title="Click Reprice in Pricing Tool">
-    Click the **Reprice in Pricing Tool** button at the top of the page. This opens the quote's route, cargo, and cost details in the pricing worksheet.
+  <Step title="Change the route, load or price">
+    The composer shows a banner explaining what saving will do. For a sent quote it reads "Renegotiating a sent quote".
   </Step>
-  <Step title="Make your changes">
-    Recalculate distance, tolls, cost, and margin, and adjust the price as needed.
-  </Step>
-  <Step title="Write the price back">
-    Save the worksheet. If the quote's status is still **Draft**, your changes are saved in place — no new version. If the quote has already been **Sent**, **Rejected**, **Expired**, or **Accepted**, Druma automatically forks a new version instead of overwriting what was already quoted, and the button label changes to **Start new negotiation round** to make that clear.
+  <Step title="Save">
+    For a **draft**, **Save** updates it in place. For a quote that was already sent, accepted, rejected or expired, click **Save as new round**: the old version becomes **Superseded** and the new round is a fresh draft linked to it.
   </Step>
 </Steps>
 
-<Note>
-Forking a new version automatically marks the previous version's status as **Superseded** — its Accept link stops being the active one for that thread. There's no separate "Cancelled" quote status or manual cancel action; superseding happens automatically the moment you start a new round.
-</Note>
-
-Once a quote has more than one round, the **negotiation history** appears in the main column of the quote detail view (alongside the shipment and financial details) — the panel on the right side of the page is the route map, not the version history.
+A quote that has been **converted to an order** or **superseded** by a newer round opens read-only. The negotiation history is shown on the full quote (**Open quote**).
 
 <Note>
-ADR (dangerous goods) travels with the quote through every version, but you can't set it from the quick **New Quote** form — the flag and class are only set from the **Reprice in Pricing Tool** worksheet described above. If a quote needs an ADR class, create it as a draft first and reprice it once to add ADR before sending.
+Repricing a quote that was not in EUR: the calculator works in EUR, so re-enter the price; saving overwrites the quote in EUR.
 </Note>
 
 ---
 
 ## Converting a Quote Manually
 
-Sometimes clients confirm by phone, WhatsApp, or email outside Druma — they never click the link. In that case, convert the quote to an order yourself:
+When a client confirms by phone, WhatsApp or email instead of clicking the link:
 
 <Steps>
   <Step title="Open the quote">
-    Go to **Sales → Quotes** and open the relevant quote.
+    Go to **Sales → Quotes** and filter to **Accepted – to convert**, or open the quote from any scope.
   </Step>
   <Step title="Click Convert to Order">
-    Click the **Convert to Order** button at the top of the quote detail page.
-  </Step>
-  <Step title="Confirm">
-    A dialog appears asking you to confirm. Click **Confirm** — the quote becomes a confirmed order immediately.
+    Click **Convert to Order** in the side pane (or on the full quote) and confirm. The quote becomes a confirmed order immediately.
   </Step>
 </Steps>
 
+If the quote is for a **lead**, Druma converts the lead to a client first, then creates the order for that client. If a quote has neither a client nor a lead, add one before converting.
+
 <Warning>
-Converting a quote to an order cannot be undone. Make sure the price, route, and cargo details are correct before you confirm. If something needs changing, edit the order after conversion.
+Converting a quote to an order cannot be undone. Make sure price, route and cargo are right before you confirm. If something needs changing, edit the order afterwards.
 </Warning>
 
 ---
 
-## Promoting a Quote to a Tender
+## Escalating a Quote to a Tender
 
-Sometimes an accepted one-off quote is the start of a bigger relationship — the client wants to lock in the same lane and rate as a recurring commitment. If [Tenders & Contracts](/en/planner/tenders-and-contracts) is enabled for your company, an **accepted** quote shows a **Promote to Tender** button alongside **Convert to Order**.
-
-Click it and Druma creates a new tender pre-filled with the quote's client, route, and rate — one seeded lane, ready for you to flesh out. The tender starts at **Prospect** status, not Active: a single accepted quote is one shipment, not yet a negotiated recurring contract, so period dates, committed volume, and the final per-lane rate are left for you to fill in on the tender itself.
+When a one-off quote turns into a recurring commitment, click **Escalate to tender** on an accepted quote (only shown when [Tenders & Contracts](/en/planner/tenders-and-contracts) is enabled). Druma creates a tender pre-filled with the quote's client, route and rate as one lane. It starts as an early-stage deal, not as a contract — period dates, committed volume and the final rate are yours to fill in.
 
 ---
 
-## Quotes KPI Bar
+## Common questions
 
-The **Sales → Quotes** list page shows a KPI bar at the top so you can gauge your pipeline at a glance:
+**Where is the Expired tab?** Expired quotes are in the **Lost** scope, together with rejected ones.
 
-- **Total Quotes** — every quote you've created, across all statuses
-- **Sent** — quotes currently sent to a client, awaiting a response
-- **Accepted** — quotes the client has accepted
-- **Conversion Rate** — the share of quotes that have been accepted
+**Can I quote a company that is not a client yet?** Yes — type the name in **Who is it for** and choose **Add "…" as a new lead**.
 
-There isn't a separate analytics page for quotes today — these four numbers on the list page are the full picture. For deeper trend analysis (win rate over time, quote value by client), use the [Reports](/en/reports/analytics-overview) section.
+**Where do I find the quote conversion rate?** On **Sales → Reporting → Quotes**: win rate, order conversion, open value, quotes by status and win rate by margin band.
 
 ---
 

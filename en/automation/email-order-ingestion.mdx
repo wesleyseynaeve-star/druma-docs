@@ -34,9 +34,20 @@ Supported attachment formats:
 There is currently no Excel/CSV parsing — a spreadsheet attachment is not read by the extraction pipeline.
 
 
+## How Druma Fills In the Draft
+
+- **Client matching.** If the sender's email address exactly matches a contact of exactly one of your clients, that client is assigned automatically. A document whose company name (or legal name) exactly equals one client's name, with a matching city or country, is also assigned automatically. Matches based only on an email domain or a similar name are shown as suggestions for you to confirm.
+- **Client address.** If the email states the ordering company's VAT number, its address comes from the VAT registry (ANAF for Romania, VIES for other EU countries) rather than from a guess. If the lookup fails, the fields stay empty for you to type.
+- **Addresses and countries.** A loading or unloading address with no country of its own is placed using the client's country, then your company's country, so a Cluj address in Romania stays in Romania. A pin that would land in a different country than the one written on the order is rejected rather than shown wrongly. If you correct a stop's address, its map position is recalculated on save.
+- **Dates.** Druma knows today's date, so wording like "tomorrow" or "06.10." resolves to a real date. Dates in European notation are converted automatically.
+- **Several stops.** Every stop in the order is kept, including multi-drop orders with more than one unloading point.
+- **Rate requests.** An email that is only asking for a price (an RFQ), not placing a firm order, is recognised as such. "Please confirm availability" inside an otherwise firm order is not treated as an RFQ.
+
+---
+
 ## Reviewing Draft Orders
 
-Extracted orders land in your **Orders** list with **Draft** status, not directly as active orders. This is intentional — you must review each draft before it enters your system. Emails that couldn't be auto-extracted (low confidence, an unrecognised sender, or a parsing failure) don't create a draft at all — they wait in a collapsible **"N emails pending extraction"** banner at the top of the Orders page instead.
+Extracted orders land in your **Orders** list with **Draft** status, not directly as active orders. This is intentional — you must review each draft before it enters your system. Emails that couldn't be auto-extracted (low confidence, an unrecognised sender, or a parsing failure) don't create a draft at all — they wait in a collapsible **"N emails pending extraction"** banner at the top of the Orders page instead. All incoming drafts — from email, the Outlook add-in, browser captures and client API orders — also show together under the **Intake** scope on the Orders page.
 
 <Steps>
   <Step title="Open the Orders page">
@@ -56,6 +67,34 @@ Extracted orders land in your **Orders** list with **Draft** status, not directl
 <Warning>
 AI extraction is not 100% accurate. Addresses written in unusual formats, scanned PDFs with low image quality, and emails mixing multiple languages all increase the chance of errors. Always verify the extracted fields before confirming.
 </Warning>
+
+## Outlook Add-in — Send an Email to Druma
+
+If your team works in Outlook, the **Druma — Email to Order** add-in sends an email to Druma without leaving Outlook, and without waiting. Install it from **Settings → Integrations → Outlook add-in** (the **Install guide** there walks you through adding it in Outlook; your Microsoft 365 admin can also deploy it to the whole team). It needs Outlook on the web or a recent Outlook desktop version that can read attachments.
+
+<Steps>
+  <Step title="Open an email">
+    Open the order email in Outlook and click **Druma → Email to Order** on the ribbon. The first time, click **Connect Druma** and sign in with your normal Druma account.
+  </Step>
+  <Step title="Click Send to Druma">
+    The pane says **Send this email to Druma**. Click **Send to Druma**. Druma reads the email and its attachments in the background, so you can move on to the next email right away.
+  </Step>
+  <Step title="Check the result">
+    The pane shows **Queued** while Druma works, and later:
+    - a draft order was created — **Linked to order**, with **Open in Druma** (opens your Orders filtered to drafts), or
+    - Druma was not confident enough to create an order — **In review queue**. A planner checks the email in the **Intake** scope of the Orders page.
+  </Step>
+</Steps>
+
+Good to know:
+
+- The pane follows the email you select, so you can keep it pinned open and click through your inbox. An email already sent shows **Linked to order** or **In review queue** instead of a second send button.
+- Replies in the same conversation attach to the same order instead of creating duplicates.
+- Attachments the add-in cannot send (for example spreadsheets, Word .doc files, attached emails, files over 10 MB, or more than 10 files) are listed in a warning before you send — they are not silently dropped.
+- Prefer to edit before anything is created? Use the **Review before creating** link: Druma reads the email and shows the extracted fields so you can correct them, then you create the order yourself.
+- An email that does not look like a transport order, or that Druma reads with low confidence, goes to the review queue instead of becoming a draft.
+
+---
 
 ## Whitelisting Senders
 

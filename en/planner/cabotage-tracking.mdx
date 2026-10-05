@@ -63,12 +63,29 @@ To see cabotage exposure for your fleet:
   </Step>
 </Steps>
 
-Each row on the Trucks tab carries **both** of a truck's compliance clocks side by side: its cabotage counter for whichever country it's currently exposed in, and its EU Mobility Package vehicle-return clock (see [Mobility Package Compliance](/en/fleet-compliance/mobility-package)) — so you can see a truck's full compliance picture without switching tabs. Click a row to open a detail pane with:
+Each row on the Trucks tab carries **both** of a truck's compliance clocks side by side: its cabotage counter for whichever country it's currently exposed in, and its EU Mobility Package vehicle-return clock (see [Mobility Package Compliance](/en/fleet-compliance/mobility-package)) — so you can see a truck's full compliance picture without switching tabs. A truck can be in more than one country at once (for example 2 of 3 in Poland and 0 of 3 in Austria), so it can appear once per country; use **Group by country** to read it that way. Click a row to open a side pane with:
 
-- Each cabotage operation for that truck (order reference, country, dates)
-- Operation count within the 7-day window
+- Each cabotage operation for that truck (order reference, country, dates), with a link to the order that opened the window
+- Operation count within the 7-day window and how many are **Left**
 - Cooldown status: active cooldown, cooldown expired, or eligible for new operations
+- A **Planned** section (see below)
 - Any alerts triggered
+
+### Status labels
+
+| Status | Meaning |
+|---|---|
+| **OK** | 0 or 1 cabotage operations used in the current 7-day window |
+| **Near limit** | 2 of 3 used — one more reaches the ceiling |
+| **At limit** | 3 of 3 used — the lawful maximum, **not** a breach (shown in amber) |
+| **Exceeded** | More than 3 operations in the window — a real breach, the only status shown in red. Stays visible for 90 days as a record |
+| **Cooling off** | The window closed after at least one cabotage operation; no new cabotage may start in that country for 4 days after the last operation |
+
+The **Used** column shows the operation count as dots (up to three). The scope tabs at the top and the **Risk** filter narrow the list to the trucks that need attention.
+
+### Planned orders (projection)
+
+The Trucks tab also looks forward. The **Planned** column shows, for example, **+1 planned**: orders already assigned to the truck, not yet delivered, whose pickup and delivery are both in that same host country while the window is still open. The side pane's **Planned** section shows the sum, for example "2 used + 1 planned = 3"; if the total would go over the limit it says "this plan would breach the limit". Use this before dispatching, not just after the fact. A delivery back in your own company's country is never counted as cabotage.
 
 ---
 
@@ -78,7 +95,7 @@ Druma warns you before you cross the limit, not after — with an in-app warning
 
 **Warning** — the truck is about to reach its allowed cabotage operations in that country within the 7-day window. You can still confirm the assignment, but you're shown the count and the window end date first.
 
-**Limit exceeded** — the truck has already used all 3 operations, and the assignment would violate EU Regulation 1072/2009. The warning is shown in red, and confirming it is flagged as **Assign (Legal Violation)**.
+**Limit exceeded** — the truck has already used all 3 operations, so one more would be a 4th and violate EU Regulation 1072/2009. The warning is shown in red, and confirming it is flagged as **Assign (Legal Violation)**.
 
 **Cooldown active** — the truck is still inside its mandatory 4-day cooldown in that country. The warning names the date cooldown ends and the assignment is again flagged as a legal violation if you proceed.
 

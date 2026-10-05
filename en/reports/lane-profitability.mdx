@@ -10,31 +10,37 @@ Many operators know their revenue per lane but not their actual margin once fuel
 
 Go to **Analytics → Lane Profitability**.
 
-Select your date range at the top. The report defaults to the current month. For a meaningful comparison you generally want at least a full month of data, ideally a quarter.
+The page opens on the **Last 12 months**. Change the date range in the filter bar at the top, and optionally set **Compare to** (**Previous period** or **Same period last year**) to see how the KPI tiles moved. A longer range, at least a full quarter, gives a more meaningful comparison.
 
-<Frame caption="Lane Profitability — margin per origin-destination pair; rows highlight red only when margin is negative, and the fixed 15% threshold drives the Avg Margin % KPI tile's colour instead.">
+Above the table, two charts answer the page's question: **Best and worst lanes by margin %**, and **Revenue vs margin % per lane** (a scatter where bubble size is the number of orders; dashed lines mark the overall margin and the median lane revenue). Click a bar or bubble to filter the table to that lane.
+
+<Frame caption="Lane Profitability — margin per origin-destination pair; rows highlight red only when margin is negative, and the fixed 15% threshold drives the margin KPI tile's colour instead.">
   <img src="/images/reports/lane-profitability.png" alt="Lane Profitability report" />
 </Frame>
 
 
 ## What the Report Shows
 
-Each row in the table is one origin-destination country pair. For each lane you see:
+Each row in the table is one origin-destination pair. By default lanes are grouped by country; **Group lanes by** lets you group each side (origin and destination independently) by **country**, **postal zone**, **city** or your own postcode zones (set up in Settings → Postcode zones), and **Reset grouping** goes back. **Min orders** hides lanes with too few orders ("{n} below the min-orders floor"). For each lane you see:
 
 | Column | What It Means |
 |---|---|
+| **Origin / Destination** | The two ends of the lane at the grouping you chose |
 | **Revenue** | Total invoiced amount for orders on this lane in the period |
-| **Fuel Cost** | Estimated: distance × average consumption × fuel price |
-| **Toll Cost** | PTV toll data for the route |
-| **Driver Cost** | Daily cost × trip days, based on the per-driver rate you configure |
-| **Total Costs** | Sum of fuel + tolls + driver cost |
-| **Margin €** | Revenue minus total costs |
+| **Fuel** | Estimated: distance × average consumption × fuel price |
+| **Toll** | PTV toll data for the route |
+| **Driver** | Daily cost × trip days, based on the per-driver rate you configure |
+| **Truck** | The truck's standing cost share |
+| **Costs** | Sum of the cost columns |
 | **Margin %** | Margin as a percentage of revenue |
-| **Trips** | Number of completed orders on this lane in the period |
-| **Avg Price/Trip** | Average revenue per order |
-| **Trend** | Arrow indicating whether margin % improved or declined vs the prior period |
+| **Orders** | Number of completed orders on this lane in the period |
+| **Total KM** | Kilometres driven on this lane |
+| **Rev/KM** | Revenue per kilometre |
+| **Market Rate (€/km)** and **vs Market** | Filled after you click **Load benchmarks**: compares your Rev/KM with current market rates (up to 20 lanes per load) |
 
-Rows with a **negative margin** are highlighted in red — a lane actively losing money once fuel, tolls, and driver costs are counted. The 15% target margin only affects the **Avg Margin %** KPI tile at the top of the page: it shows green at or above 15%, amber below it. This 15% threshold is currently fixed — it is not yet configurable from Settings.
+Only EUR-priced orders are in these figures; a row shows an **excluded** badge with the number of orders left out because they are priced in another currency. A **Margin basis** switch (**Excluding pass-through tolls** or **Including tolls and toll recharges**) changes how tolls count in margin.
+
+Rows with a **negative margin** are highlighted in red — a lane actively losing money once fuel, tolls, and driver costs are counted. The headline margin tile (**Weighted margin %**, total margin ÷ total revenue across the lanes shown) is the same figure as the Margin tile; the 15% target only affects its colour: it shows green at or above 15%, amber below it. This 15% threshold is currently fixed — it is not yet configurable from Settings.
 
 ## How Cost Estimates Work
 
@@ -46,7 +52,7 @@ Cost estimates in this report are approximations based on your configured parame
 Distance (from PTV routing) × fleet average consumption (litres/100km, set in Settings → Fleet → Default Consumption) × your fuel price (set in Settings → Fleet → Fuel Price, or imported from fuel card data if you use fuel card import).
 
 **Toll cost calculation:**
-HERE Maps toll data for the route. Covers most European motorway toll systems. Less accurate for routes through countries with complex vignette systems.
+PTV toll data for the route. Covers most European motorway toll systems. Less accurate for routes through countries with complex vignette systems.
 
 **Driver cost calculation:**
 Number of trip days × the daily cost rate you have set for each driver in their profile (Fleet → Drivers → [driver] → Daily Cost Rate). If no driver is assigned, Druma uses your global default driver daily cost.

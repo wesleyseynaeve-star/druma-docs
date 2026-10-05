@@ -12,6 +12,18 @@ Go to **Planning → Orders → New Order** to get started.
 
 ---
 
+## Scan Order — fill the order from a document
+
+If the client sent you a transport order as a PDF or Word file, don't retype it. On the **Orders** page click **Scan Order** (it can sit in the **More** menu on a narrow screen), choose a **PDF or DOCX** file, and Druma reads it and opens the New Order modal pre-filled.
+
+- **Every stop is kept**, in document order — a multi-drop order with two or more unloading points gets one stop on the **Route** tab for each, not just the first.
+- **Dates** written in European notation (for example 14.10.2026 or a written-out month) are converted to proper dates, and an address written as "91074 Herzogenaurach" or with the country on a second line is split into postcode, city and country.
+- Client, cargo and price fields are filled as far as the document states them.
+
+Always check the filled fields — especially stop addresses and dates — before saving; the scan reads what the document says and can still misread poor scans. If a file cannot be read you get **Could not extract order data from document**.
+
+---
+
 ## The New Order modal at a glance
 
 The modal is organised into tabs. Here's the fastest path through it — the sections below go deeper on each field.
@@ -97,6 +109,8 @@ The delivery section works the same as pickup:
 If you have multiple pickup or delivery stops, use **Add loading point**, **Add offloading point**, or **Add internal stop** (rest, refuel, trailer-parking waypoints) on the **Route** tab to insert intermediate points. Each stop has its own address, time, and reference.
 </Note>
 
+**Stop extras.** Each pickup and delivery stop on the **Route** tab has **Stop extras** toggles — **Tail lift**, **Crane** and **Mega trailer** — for equipment the vehicle must bring to that stop. They show on the order's stop card and on the driver's stop card, and assignment rules can use them to route such orders to suitably equipped vehicles (see [Order Tasks & Workflow Templates](/en/planner/order-tasks#stop-extras)).
+
 ---
 
 ## Step 5 — Goods details
@@ -107,6 +121,7 @@ Describe what is being transported:
 - **Weight (kg)** — Gross weight of the cargo.
 - **Volume (m³)** — Total volume, if known.
 - **Pallet count** — Number of EUR pallets or other loading units.
+- **Pallet exchange** — shown when the pallet count is above zero and the pallet ledger is on. Choose how pallets are exchanged on this order, or leave **Client default** to use the mode set on the client. If the client's mode is **None** and you pick nothing, an amber hint reminds you to choose a mode so the pallets are tracked. See [Pallet Exchange Ledger](/en/planner/pallet-exchange#exchange-modes-and-open-obligations).
 
 <Note>
 Weight, pallet count, and LDM (if entered) feed the **Load size** fill-percentage shown for this order on the Orders workbench, and whether it gets flagged as a part-load worth combining — see [Groupage](/en/planner/groupage).
@@ -137,7 +152,7 @@ Enter the commercial terms:
   - **Per ton** — Price calculated by multiplying the rate by the cargo weight.
 
 <Note>
-If you have rate cards set up for this client, Druma will suggest a price automatically based on the origin, destination, and order type. You can accept the suggestion or type your own price.
+If you have lane prices set up for this client or in general (**Sales → Pricing**), Druma will suggest a price automatically based on the origin, destination, and order type. You can accept the suggestion or type your own price.
 </Note>
 
 ---
@@ -147,6 +162,19 @@ If you have rate cards set up for this client, Druma will suggest a price automa
 The New Order modal does not assign a truck or driver — an order saves without either, whatever order type you picked. Assignment happens afterwards on the [Planning Board](/en/planner/planning-board): drag the order onto a truck to assign it, or open the order there to pick a truck, primary driver, and (for double-manning on long-distance international routes) a second driver. Druma shows each truck's availability there — green for free on the loading date, orange for another order nearby, red for a conflict.
 
 **For Subcontracted orders**, the **Financial** tab shows a **Subcontractor details** section instead of truck/driver fields: a **Subcontractor / Carrier** search field to pick the carrier company, a buy-rate builder to set what you're paying them, and an internal **Arrangement notes** textarea for anything the client shouldn't see. See [Subcontractors](/en/planner/subcontractors) for how the carrier is then notified.
+
+---
+
+## Ferry crossings
+
+If the driver travels with the truck on a ferry, click **Add ferry crossing** on the **Route** tab. The **Ferry crossing** card is inserted before the last delivery; use the arrows (**Move ferry crossing up** / **Move ferry crossing down**) to place it elsewhere, or **Remove ferry crossing**. Fill in:
+
+- **Ferry operator**, **Booking number**, **Vessel**
+- **Departure port** and **Arrival port** (required), plus optional UN/LOCODEs
+- **Departure**, **Check-in cut-off** (must not be after the departure) and **Crossing time** in hours and minutes
+- **Notes for the driver**, for example the lane or what to show at check-in
+
+The driver sees these on a **FERRY CROSSING** card with a copyable booking number, and taps **Boarded** and **Off the ferry** (see [Status Updates](/en/driver/status-updates)). Druma adds the crossing time to the ETA, and the client portal shows an **On ferry** chip while the truck is on board. A missing booking number only shows a warning ("No booking number") and does not block saving. On the planning board the order shows a **Ferry** badge with the check-in time, highlighted when check-in closes within 3 hours. When you copy an order, the crossing is kept but the booking number and times are cleared so the driver never gets the old booking. A key user can also add a ferry crossing to an existing trip with **Trip surgery**. A trailer-only crossing without a driver stays a sea leg, not a ferry stop.
 
 ---
 
@@ -167,6 +195,10 @@ Every order created from this modal is saved as a **Draft** — whether you clic
 </Warning>
 
 A new order always starts without a truck or driver assigned, and appears grey/unassigned on the Planning Board. Confirming the order — assigning a truck and driver, at which point the driver can see it in their app — happens afterwards, on the [Planning Board](/en/planner/planning-board) or the Orders workbench: drag the order onto a truck to assign it, or open the order there to pick a truck and driver.
+
+<Note>
+If your company uses the **Dispatcher confirmation gate**, an assignment made by someone who is not a dispatcher waits as pending until a dispatcher confirms it — the driver and client are only notified then. See [Dispatching](/en/planner/dispatching#confirmations-tab).
+</Note>
 
 ---
 

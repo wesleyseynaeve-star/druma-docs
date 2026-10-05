@@ -1,0 +1,82 @@
+---
+title: "Key User Hub: fix blocked items and correct records"
+description: "How a Key User (or admin) works through everything that is blocked, searches any record, corrects orders, trips, plates and finance entries with a reason and an audit trail, and reverts a correction."
+icon: "shield-halved"
+---
+
+The **Key User Hub** is the place where your go-to person fixes data without waiting for Druma support. It is available to **Admin**, **Company Admin** and **Key User** (anyone allowed to correct data). Every correction asks for a reason, is checked for side effects before it runs, and is written to a ledger you can filter and, where allowed, revert.
+
+## Open the hub
+
+- Click the **Key User Hub** shield icon in the top bar. It shows the number of open items. A slide-over opens with **Inbox** and **Find & fix** tabs, and **Open full view** takes you to the full pages.
+- The full pages have five tabs: **Inbox**, **Find & fix**, **Fleet history**, **Finance** and **Ledger**.
+
+## Inbox: everything blocked right now
+
+The Inbox is one queue of open problems. Each row says what is wrong, shows the order, client, route, dates and plates, and has a **Fix** button that opens a details panel beside the hub with the order's context and the right fix pre-opened.
+
+Sources you will see include: **Data quality**, **Dispatch confirmation pending**, **Credit stop**, **Exception rule block**, **CMR missing at delivery**, **POD missing at delivery**, **Leg/order inconsistency**, **eCMR stuck**, **eCMR signed, not sealed**, **e-Transport pending**, **e-Transport vehicle changed**, **Automation failed**, **Auto-invoice blocked**, **Carrier not responding**, and requests from colleagues (**Ask a key user request**).
+
+You can filter by severity and by source. A failed automation job can be resolved from the Inbox.
+
+### Missing CMR or POD
+
+A missing CMR or POD never stops a driver or a carrier from marking a delivery. It does stop **invoicing**: an invoice needs a CMR on file (or a key-user release). In the Inbox, a missing CMR or POD opens an upload control. If the document will not come, record why (for example expected later, lost, or kept by the client); the item is then chased again after about 7 days for the "expected later" and "not returned by driver" reasons.
+
+## Find & fix
+
+Search by order number, client reference, plate, driver name or invoice number (at least 2 characters). Results cover orders, trucks, trailers, drivers and invoices, and also a plate a vehicle no longer carries. Opening an order takes you to its **Correction workspace**.
+
+## The Correction workspace
+
+The workspace shows an order's legs, stops, history and its **Artefacts**, each marked as **locked** (issued, sealed or filed) or still correctable:
+
+- A signed or sealed **eCMR** is never changed.
+- An issued **invoice** is never changed; structural fixes use a credit note and re-issue.
+- An **ANAF e-Transport** declaration already filed is not re-filed; a plate change is handled by a vehicle-change message.
+
+From the workspace a key user can:
+
+| Correction | Notes |
+|---|---|
+| **Correct assignment** (truck, trailer, driver) and **Correct times** | Also available directly in the order pane for people allowed to correct. |
+| **Correct leg** | Fix the truck, trailer or driver of one leg without touching the other legs. |
+| **Trip surgery** on a delivered trip | Insert or remove a relay, add a stop, void a stop, re-order stops, reopen a leg, or add a repositioning run. Nothing issued is rewritten and a stop on a signed eCMR can never be voided. |
+| **Correct field**, **correct status**, **recompute** | Generic fixes with a reason. |
+| **Resolve an eCMR exception** | Acknowledge a refusal or stuck item (for example resolved offline, paper CMR used). It never alters signatures or a sealed document. |
+| Override a **dispatch confirmation**, **exception block** or **credit stop** | Shown only when relevant. |
+
+Every correction form asks for a **reason** (at least 10 characters) and a reason code, shows high-impact side effects you must acknowledge, and, on a live order, lets you choose whether to notify.
+
+## Fleet history (plates)
+
+Fuel and toll statements name the plate a vehicle carried on the day. In **Fleet history** pick a truck or trailer to see its **Plate periods**, then **Edit** a mistyped plate, **Re-register** (the plate changed on a date) or **Add older period**. Plate history starts from when the vehicle was added; add older plates by hand.
+
+## Finance
+
+**Finance** holds reversals, never rewrites: **Expenses** (reopen a decision so it can be decided again), **Payments** (reverse a wrong allocation; a payment made from a client's credit balance shows a **Credit balance** badge and uses **Reverse credit offset** instead, which restores the invoice balance and gives the credit back to the client, with no currency conversion), **Write-offs** (reverse one made in error), **e-Transport UIT** (fix a UIT the client provided; a UIT Druma filed cannot be changed) and **Credit & re-issue** (create a draft credit note and a draft replacement invoice, which you edit and send in the normal invoice flow; nothing is sent automatically). For an invoice that covers a single order, **Re-issue to** can be **Another client**, which moves the order to the **New client**, so it leaves the old client's portal and appears in the new one. It warns about a differing currency or VAT position, an already-paid or already-submitted invoice, and a client over its credit limit, and a client on credit stop cannot be chosen until the stop is lifted. Client credit status and outstanding balances are counted in EUR, invoice by invoice. Payroll is not reopened by any of these.
+
+## Ledger and reverting
+
+The **Ledger** lists every correction in one place: field and assignment corrections, credit-stop overrides, status fixes, gate overrides and trip surgery. Filter by source, person or date range. Use **Revert** on rows that allow it. A revert is refused when something changed since, or when a downstream document (such as an issued invoice) now depends on it.
+
+## For everyone else: Ask a key user
+
+If you cannot correct something yourself, click **Ask a key user** in the order pane (or inside Ask Druma). Choose **Something looks wrong**, **I am blocked** or **Something else**, describe it (at least 10 characters) and send. The request lands in the key users' Inbox. You can have up to 20 open requests.
+
+## Common questions
+
+**Who can use the hub?** Admin, Company Admin and Key User.
+
+**Can a key user change billing, integrations or roles?** No. Key User covers operational fixes only; see [User Roles](/en/admin/user-roles).
+
+**A correction was wrong. Can I undo it?** Often yes: **Ledger → Revert**. If it is refused, a later change or an issued document blocks it, and you correct forward instead.
+
+<CardGroup cols={2}>
+  <Card title="User Roles" icon="users" href="/en/admin/user-roles">
+    What a Key User can and cannot do.
+  </Card>
+  <Card title="AI corrections" icon="robot" href="/en/admin/ai-corrections">
+    Review what the AI learned from your team's corrections.
+  </Card>
+</CardGroup>

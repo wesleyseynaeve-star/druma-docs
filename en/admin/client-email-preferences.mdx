@@ -1,0 +1,83 @@
+---
+title: "Client email preferences"
+description: "Control which automatic emails each client contact receives: per-contact, per-client and per-client-group defaults, plus the unsubscribe link in every email."
+icon: "envelope-open-text"
+---
+
+Druma sends many automatic emails to your clients (order confirmations, dispatch and delivery notices, ETA alerts and so on). You decide who receives which kind, at three levels, and your clients' own contacts can also adjust their choices.
+
+## The email categories
+
+Preferences work per **category**, not per individual email:
+
+| Category | Shown as |
+|---|---|
+| Order confirmation | **Order confirmation** |
+| Dispatch and delivery notices | **Dispatch & delivery** |
+| ETA and delay alerts | **ETA & delay alerts** |
+| Proof of delivery and signed eCMR | **Proof of delivery** |
+| Waiting-charge notices | **Waiting charges** |
+| CO2 reports | **CO2 reports** |
+| Messages from customer service | **Support updates** |
+| Emails sent by your rules | **Automated rule emails** |
+
+<Note>
+Invoices, payment reminders (dunning) and security codes are **always sent**. They are routed by the contact's invoicing flags, not by these categories, and cannot be switched off here.
+</Note>
+
+## How Druma decides: most specific wins
+
+For each contact and category Druma checks, in this order:
+
+1. The **contact's own setting** (if someone set one explicitly)
+2. The **client's default**
+3. The **client rule group's default**
+4. Druma's default: **send**, except **CO2 reports**, which are only sent to contacts who opted in
+
+A contact with nothing set simply follows the level above. A new contact therefore receives the standard emails without anyone ticking boxes.
+
+If a contact (or an inherited client or group rule) turns a category off, **nobody** is mailed in its place, including the client's primary contact.
+
+If a client has no contact with a usable email address at all, the standard automatic emails fall back to the client's general email address; CO2 reports never do, and an opted-out contact is never replaced by the general address.
+
+## Set it up
+
+### For one contact
+
+Open **Clients**, open the client, edit a contact and use **Receives by email**. Each category can be switched, or set back with **Use default** (marked **Inherited**). The categories other than the first can be set after the contact is saved.
+
+### For a whole client
+
+Open the client record, **Billing** tab, and find **Email defaults for this client**. For each category choose **No rule**, **Send** or **Don't send**. Under **No rule**, the line below shows what the category falls back to (the client's group, or the account default).
+
+### For a client rule group
+
+Go to **Settings → Clients → Client Rule Groups**, open or add a group, and answer **When should clients in this group be emailed?** in the **Client emails** step. Leave a category on **No rule** to let each client, or its contacts, decide. The group summary shows how many email rules are set.
+
+## The unsubscribe link in every email
+
+Every automatic email to a known client contact carries:
+
+- a one-click unsubscribe in the email header (supported by Gmail and other mail apps), which opts that contact out of that **category**, and
+- a **Manage email preferences** link in the footer. It opens a page titled **Manage your email preferences** where the contact sees their categories, with the one the email belongs to highlighted, and saves with **Save preferences**.
+
+The link does not expire. It works for that contact only, and the page says invoices, security codes and dunning reminders are always sent.
+
+Clients can also edit their own email preferences in the client portal's settings.
+
+## Common questions
+
+**A client says they never get ETA emails.** Check the contact's **Receives by email**, then the client's **Email defaults for this client**, then the client's group. An explicit **Don't send** at any level stops it. Also check that an automatic rule exists for that email — see [Client emails: wording, recipients and timing](/en/admin/client-email-templates).
+
+**Can a contact opt out of invoices?** No. Invoices and payment reminders always send.
+
+**A contact unsubscribed by mistake.** Open the contact in Clients and set the category back with **Use default** or **Send**, or the contact can re-enable it on their **Manage your email preferences** page.
+
+<CardGroup cols={2}>
+  <Card title="Client emails: wording, recipients and timing" icon="envelope" href="/en/admin/client-email-templates">
+    Edit the words and set the rules that send each email.
+  </Card>
+  <Card title="Rules" icon="gears" href="/en/automation/rules-engine">
+    Settings → Rules overview.
+  </Card>
+</CardGroup>
