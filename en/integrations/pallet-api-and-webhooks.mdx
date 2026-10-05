@@ -1,0 +1,34 @@
+---
+title: "Pallet API, Webhooks and Pallet Statements"
+description: "Read pallet balances, movements and signed vouchers through the Public API, push pallet events to a client's webhook, and let clients and carriers see and confirm their pallet account."
+icon: "package"
+---
+
+Your pallet ledger can be read by your own systems and shared with the counterparty.
+
+## Public API (read-only)
+
+Use an **Operator** API key (see [Public API](/en/integrations/public-api); other scopes get `403`) in the `X-API-Key` header:
+
+| Method | Path | Returns |
+|---|---|---|
+| `GET` | `/pallet-balances` | The pallet position per client and subcontractor, per pallet type |
+| `GET` | `/pallet-movements` | The pallet ledger, newest first, paginated |
+| `GET` | `/pallet-vouchers/{id}` | One signed pallet voucher with its lines and a short-lived (5-minute) PDF link |
+
+Filters: balances accept `counterparty_type`, `counterparty_id` (needs `counterparty_type`) and `pallet_type`; movements also accept `from`, `to`, `movement_type`, `provider`, `external_ref` and `order_id`, plus `page` and `limit`. Data is always scoped to your own company; a voucher from another company returns `404`. Movement rows never include internal notes, the user who created them or dispute reasons, and the internal fee-offset entries are not listed. Pallet endpoints are limited to 60 requests per minute per key.
+
+## Webhooks to a client
+
+A client with an outbound webhook configured (**Clients → client → API** tab, see [Client API](/en/integrations/client-api)) can receive two pallet events: **pallet.movement.created** (a movement is booked for that client) and **pallet.voucher.signed** (a pallet voucher is captured/signed). The payload has the same shape as the API rows. Pallet events are not tied to an order. Subcontractors have no webhooks, so their movements never fire an event. Select the events in the webhook's event picker.
+
+## Client and carrier portals
+
+- **Client portal:** clients whose account has pallet data get a **Pallets** page showing their own position, movements and statements. It shows no notes, dispute reasons or fee amounts; fee offsets appear as "Adjustment".
+- **Carrier portal:** a subcontractor sees its own pallet account the same way.
+
+## E-mailed pallet statement
+
+On a client's or subcontractor's **Pallets** tab, click **Email statement**. Druma sends a branded PDF statement to the counterparty's contacts, in their language, and shows a **Last sent** chip. The recipient can answer with **Confirm** or **Dispute**: the chip then reads **Confirmed** or **Disputed**. A dispute from the counterparty only flags the statement; no movement is changed, and you resolve it from the ledger. If there is no balance or no contact with an email address, Druma tells you instead of sending. The wording of this email can be customised like other client emails in the Communication settings.
+
+See also [Pallet Exchange Ledger](/en/planner/pallet-exchange) and [Pallet Statement Import](/en/planner/pallet-statement-import).

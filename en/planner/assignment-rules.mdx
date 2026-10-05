@@ -1,0 +1,134 @@
+---
+title: "Assignment Rules and Truck & Driver Rules"
+description: "Auto-tag orders with a department, resource group or planning group, and tell the planner which trucks and drivers an order needs, must not get, or should go to first."
+icon: "list-checks"
+---
+
+Druma has two kinds of rules in **Settings → Rules**. Both are set up by company admins.
+
+| Rule type | What it does |
+|---|---|
+| **Assignment Rules** | Automatically tags an order with a department, resource group or planning group, based on the order's fields. |
+| **Truck & Driver Rules** | Shapes which trucks and drivers are suggested and auto-assigned for an order. |
+
+---
+
+## Assignment Rules
+
+An assignment rule reads **When** the order looks a certain way, and **Then assign** a department, resource group and/or planning group.
+
+### Adding a rule
+
+<Steps>
+  <Step title="Open Settings → Rules → Assignment Rules">
+    Click **Add rule** and give it a **Rule label**, for example "Reefer orders → Reefer Fleet A".
+  </Step>
+  <Step title="Choose who it applies to">
+    Under **Applies to**, pick **Every order (company-wide)**, **One client**, **A client group** or **A site (any stop at it)**.
+  </Step>
+  <Step title="Build the conditions under When">
+    The condition builder can test order fields, stops (pickup or delivery, including the stop's local time of day and weekday), goods lines, and nested any/all groups. Leave it empty to match all orders. Values such as clients, zones and sites are picked by name, not by ID.
+  </Step>
+  <Step title="Choose what to assign under Then assign">
+    Pick the department, resource group and/or planning group. A field you leave empty stays unchanged.
+  </Step>
+  <Step title="Save rule">
+    Click **Save rule**. Use the toggle on the rule to switch it on or off.
+  </Step>
+</Steps>
+
+You can also use **Describe a rule** to write the rule in your own words and let Druma draft it for you to review before it is created.
+
+### Which rule wins
+
+More specific rules are checked first: **Site rules**, then **Client rules**, then **Client group rules**, then **Company-wide rules**. Within one level, the order in the list decides. Use **Move up** and **Move down** to reorder rules within a level.
+
+The first matching rule that sets a given tag claims it. A rule with **Stop evaluating further rules once this one matches** also stops every less specific rule for the orders it matches. This is off by default for a client, group or site rule, because switching it on also silences company-wide rules for those orders.
+
+### How rules treat manual choices
+
+- A tag you set yourself on an order is **never overwritten** by a rule.
+- A tag a rule set earlier can be changed or cleared when the order is still **draft, virtual or pending** and the facts change: another rule now wins, a stop moves out of the zone, or the rule is switched off.
+- Once an order has moved further along, rules only fill tags that are still empty.
+
+### When rules run
+
+Rules apply however the order arrives: Add Order, the client portal, an import or the API. They also run again when an order's stops or goods lines change, so a zone rule works even though the stops are added after the order itself.
+
+<Note>
+If you change a client's client group, existing orders are not re-evaluated immediately; they pick up the new group's rules the next time the order or its stops are edited.
+</Note>
+
+### Seeing a client's rules
+
+Open a client from **Clients** and go to the **Rules** tab. It lists the assignment rules scoped to that client or its client group (read-only), with **Manage assignment rules** to jump to Settings.
+
+---
+
+## Truck & Driver Rules
+
+Open **Settings → Rules → Truck & Driver Rules**. Use them to say things like "ADR loads need an ADR-skilled driver" or "this client prefers truck 12 for morning pickups". The rules feed the same matching that powers suggestions and Auto-planning; they never override legal blockers such as driving hours or cabotage.
+
+### The four effects
+
+| Effect | What it does |
+|---|---|
+| **Require** | Only trucks that match the selector can be suggested. Every other truck is removed for these orders. |
+| **Forbid** | Trucks that match the selector are removed for these orders and never auto-assigned. |
+| **Prefer** | Matching trucks score better and rank higher. Nothing is removed. |
+| **Avoid** | Matching trucks score worse and rank lower. Nothing is removed. |
+
+Require and Forbid need at least one entry in the selector. Prefer and Avoid have a **How strongly** slider from 0 to 100: a low value only decides between otherwise close trucks, a high value outranks almost any cost difference.
+
+### Creating a rule
+
+<Steps>
+  <Step title="Click Add rule">
+    Name the rule, for example "ADR loads need an ADR driver".
+  </Step>
+  <Step title="Set When the order matches">
+    Use the same condition builder as assignment rules. Leave it empty to apply to every order in the scope.
+  </Step>
+  <Step title="Choose the scope and the effect (Then)">
+    Scope can be company-wide, a client group, a client or a site.
+  </Step>
+  <Step title="Fill in These trucks and drivers">
+    Pick any of: **Trucks**, **Drivers**, **Trailer types**, **Emission classes**, **Driver skills (any of)**, **Subcontractors**. A truck matches when it meets every list you filled in; within one list any one value is enough. For a team of two drivers, the skill counts if either driver holds it, but an ADR skill whose certificate expires before delivery does not count.
+  </Step>
+  <Step title="Read In plain words and Heads-up before you save">
+    Druma spells the rule out in a sentence and warns about conflicts: one rule requiring what another forbids, a Forbid with no selector, duplicates, and Prefer and Avoid cancelling each other.
+  </Step>
+  <Step title="Save rule">
+    New rules are created **Off**.
+  </Step>
+</Steps>
+
+### Test before you turn it on
+
+Use **Simulate this rule** and choose a **Day**. Druma replays that day's open orders with and without your rule and tells you how many would get a different best truck, be left with no truck, or newly get one. It uses straight-line distances, saves nothing and costs no routing. When you switch the rule on, Druma asks you to confirm after showing a fresh simulation. You can also use **Describe a rule** to have Druma draft a truck and driver rule; it is always created Off.
+
+### Which level wins
+
+All rules that apply are evaluated. A truck removed by a Require or Forbid stays removed. For Prefer and Avoid, only the most specific level (site, then client, then client group, then company) counts for a given truck.
+
+### Seeing why a truck was suggested
+
+The Auto-matched popover on the [Planning Board](/en/planner/planning-board) and the review window of the Planning Assistant list every rule that fired, with its effect and score change.
+
+### Orders no truck can serve
+
+If your rules leave an order with no possible truck, [Auto-planning](/en/planner/auto-planning) shows it in a **Blocked by your rules** list so you can see which rule is responsible and adjust it or plan the order by hand.
+
+---
+
+## Q&A
+
+**Can I limit a rule to one client?** Yes, set the scope to One client. A client group or a site works too.
+
+**A rule is set but the order was not tagged. Why?** Check that the rule is switched on, that the order is in the rule's scope, that a manual tag was not already set, and that a more specific rule did not claim the tag first.
+
+**Does a Require rule force a truck onto the order?** No. It narrows the candidates; the best remaining truck is still chosen by the usual scoring, and Auto-planning still checks that there is a clear winner.
+
+**Can a Prefer rule beat driving-hours limits?** No. Rules never override legal blockers.
+
+**Does "Require a subcontractor" mean a subcontractor gets the order?** It keeps own trucks off the order. Own trucks never match a subcontractor selector.

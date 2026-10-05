@@ -1,0 +1,106 @@
+---
+title: "Client emails: wording, recipients and timing"
+description: "Change the wording of the emails Druma sends your clients and carriers (Settings → Communication), and decide who receives them and when with the Send email rule action (Settings → Rules)."
+icon: "envelope"
+---
+
+Druma splits email control into two places, so each setting has exactly one home:
+
+- **Settings → Communication** decides the **words**: subject, headline, message and button, in each language.
+- **Settings → Rules** decides **when** an email goes out and **to whom**: the audience, extra recipients, copies and any delay.
+
+Both are for **Admin** and **Company Admin** users.
+
+<Note>
+Until you change something, your clients get Druma's default email in their own language. The header, footer, button style and your brand colours always stay fixed — you edit the words, not the frame.
+</Note>
+
+## Edit the wording (Settings → Communication)
+
+<Steps>
+  <Step title="Pick an email">
+    Open **Settings → Communication**. The left list groups every email: **Orders**, **Delivery and tracking**, **Invoicing and reminders**, **Quotes**, **Client portal**, **Carriers** and **Custom emails**. Each shows **Druma default** or **Customised (n)**.
+  </Step>
+  <Step title="Choose a language">
+    There is one tab per language you write emails in, plus **All other languages**. English is always on. Use **Languages you write emails in** to enable more, then **Save languages**. A client in a language you did not enable gets the **All other languages** version, or the English default.
+  </Step>
+  <Step title="Write it">
+    Edit **Subject line**, **Headline**, **Message** and **Button label**. Click a value under **Insert a value** to drop it at your cursor (order number, client name, and so on). The toolbar gives bold, italic, bulleted and numbered lists, and links. Links must start with `https://`. You can add an **Extra button label** with an **Extra button link**.
+  </Step>
+  <Step title="Choose what to show">
+    Under **Show these blocks**, tick or untick sections such as order details, truck plate, your contact card, route, estimated arrival, documents or the amount strip.
+  </Step>
+  <Step title="Check and save">
+    The **Preview** is rendered by the same code that sends the real email, with sample data. Click **Save**, then **Send me a test** to receive it at your own address only.
+  </Step>
+</Steps>
+
+Other buttons: **Copy from** (copy another language's version) and **Reset to default** (discard your version).
+
+### Custom emails
+
+Under **Custom emails**, click **Add a custom email**, give it a name and a short name (lower-case letters, numbers and underscores — it cannot be changed later), and say whether it is about an order, an invoice or a client. Write the default-language version first, then turn it on. A custom email only goes out when a rule sends it.
+
+### The contact's language
+
+Each client contact has an **Email language** field (Clients → the client → contacts). The language used for an email is the contact's language, then the client's, then your company's, then English.
+
+## Decide who gets it and when (Settings → Rules)
+
+Emails are sent by a rule with a **Send email** action. You can use it in **Task Templates** and **Client Action Rules** (see [Rules](/en/automation/rules-engine)).
+
+In the Send email action:
+
+| Field | What it does |
+|---|---|
+| **Which email?** | Pick a built-in email (such as order confirmation, shipment departed, delivery confirmed) or one of your custom emails. Customised ones are marked. **Edit wording in Communication** jumps to the editor. |
+| **Who gets it?** | **Everyone who opted in to this email**, **Primary contact**, **Operations contacts**, **Invoicing contacts** or **Delivery-confirmation contacts**. |
+| **Also send to / CC / BCC** | Up to 5 extra addresses in each. Copies go on the first recipient's message. |
+| **Replies go to** | One address. Leave empty to use your planner. |
+| **Also copy the planner** | On by default. |
+| **Wait before sending** | In minutes or hours (up to one year), counted from the moment the rule fires. Delayed emails go out within a few minutes of the time. |
+| **Preview** | Shows the real email. |
+
+A step with an invalid address or delay cannot be saved. A contact who has turned off that kind of email is not mailed just because a rule named their audience; extra addresses you type are always used.
+
+Under each email in Communication you see **Sent by N rules** (or **No rule sends this email automatically yet.**) with an **Open rules** link.
+
+### Emails sent when something happens
+
+Some emails are sent the moment Druma detects something. In a rule's phase picker these appear under **When something happens**:
+
+- Arriving soon, and running late (ETA)
+- Delay reported by the driver
+- Truck assigned
+- Driver arrived, free waiting, and waiting-charge notices 1 to 3 (a waiting-charge rule also has **Show the hourly rate and the total charge**)
+
+These send immediately, so they have no wait. A rule on one of these events is both the on/off switch and the audience for that email. If no rule exists for an event, nothing is sent.
+
+### Default rules and the retired switches
+
+Order confirmation (when the order is **pending**), the dispatch notice (**departed**), delivery confirmation (**delivered**) and the truck-assigned email are ordinary default rules that Druma sets up for your company. Open **Settings → Rules** to see, edit or switch them. The old on/off switches for these emails in **Settings → Automations & Features** were removed: that page now points you to **Open Rules** and **Open Communication**.
+
+Order confirmation has one automatic path (its rule). If you resend it by hand from the order, Druma warns you when it was already sent and asks before sending again.
+
+Emails a person triggers by hand — such as asking a client to move a pickup slot or sending a tracking link — are not rules.
+
+## Common questions
+
+**I changed the wording but the client still got the old one.** Wording applies to emails sent after you save. Check you edited the language version the contact receives (the contact's Email language).
+
+**Where do I turn off the dispatch email?** Open **Settings → Rules** and switch off the dispatch rule.
+
+**Can I put my own link in an email?** Yes, `https://` links only. Operator text is shown as plain text apart from bold, italic, lists and links.
+
+**Which emails can I not reword?** Sign-in codes, security mail, invitations and mail that quotes an agent's own words are fixed.
+
+**Do carriers get customisable emails too?** Yes: transport order, cancellation, documents request and invoice dispute emails appear under **Carriers**.
+
+<CardGroup cols={2}>
+  <Card title="Client email preferences" icon="envelope-open-text" href="/en/admin/client-email-preferences">
+    What each client and contact receives, and the unsubscribe link.
+  </Card>
+  <Card title="Rules" icon="gears" href="/en/automation/rules-engine">
+    Create, test and restore rules.
+  </Card>
+</CardGroup>

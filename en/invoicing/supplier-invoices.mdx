@@ -117,8 +117,8 @@ Use the filter tabs at the top to switch between **Pending**, **Applied**, and *
 
     | Action | When to use |
     |--------|------------|
-    | **Approve** | Data looks correct and the match is right — creates or confirms the purchase invoice |
-    | **Reject** | Invoice is not valid, a duplicate, or belongs to a different company — removes it from the queue |
+    | **Approve** | Data looks correct and the match is right — creates or confirms the purchase invoice; the row moves to **Applied** and stays there after you reload |
+    | **Reject** | Invoice is not valid, a duplicate, or belongs to a different company — moves it to **Rejected** and out of the Pending list |
     | **Re-assign** | The suggested purchase invoice is wrong — opens a search to pick the correct one |
     | **View PDF** | Opens the original attached file in a new tab for manual verification |
 
@@ -134,30 +134,32 @@ The Aged Creditors dashboard shows everything your company owes across all suppl
 
 ### Reading the Dashboard
 
-The top of the page shows three summary cards:
+The page follows the standard report layout (see [Analytics Overview](/en/reports/analytics-overview)): KPI tiles at the top, two charts, then the supplier table.
 
-- **Total outstanding** — sum of all unpaid purchase invoices
-- **Invoices by aging bucket** — count in each bucket
-- **Number of suppliers** — distinct suppliers with outstanding balances
+- **Total Outstanding** — sum of everything unpaid on purchase invoices, with the number of suppliers behind it.
+- **90+ days overdue** — how much of that is in the worst bucket, and its share of the total outstanding.
+- **Days Payable Outstanding (DPO)** — the average number of days it takes you to pay a purchase invoice: open payables ÷ purchase invoices billed in the last 12 months × 365. It covers purchase invoices only. Amounts in other currencies (for example RON) are converted to EUR at the BNR rate before the ratio is taken. It is the same figure as the DPO tile on the Finance dashboard.
+- **Charts** — **Outstanding by aging bucket** and **Outstanding by supplier type**. Click a bar to filter the table below to that bucket or supplier type; click it again to clear. The filter chips and **Clear all** above the table show what is active. You can also use the **Supplier type** and **Aging bucket** pickers instead of clicking a chart.
 
-Below the summary, a sortable table lists each supplier with a row per invoice. Click any column header to sort. Click a supplier row to expand it and see individual invoices.
+Below that, a sortable table lists each supplier. Click a supplier row to open its side pane with the aging breakdown and the individual unpaid invoices.
 
 Aging buckets follow standard AP convention:
 
 | Bucket | Definition |
 |--------|-----------|
-| **0–30 days** | Current — within standard payment terms |
-| **31–60 days** | Slightly overdue |
-| **61–90 days** | Overdue — follow up recommended |
-| **90+ days** | Significantly overdue — escalate |
+| **Not due** | Not yet past the due date |
+| **0–30d** | Current — within standard payment terms |
+| **31–60d** | Slightly overdue |
+| **61–90d** | Overdue — follow up recommended |
+| **90d+** | Significantly overdue — escalate |
 
 <Note>
-The Aged Creditors view is capped at 500 rows. If your company has more than 500 outstanding purchase invoices, a truncation warning banner appears at the top of the table. Use the **Export CSV** button to download the full dataset for analysis in Excel.
+Aged Creditors is a snapshot of what you owe **as of today**, so it has no date range or comparison picker. The totals are computed over all your unpaid purchase invoices, not just the first 500. Invoices priced in a currency other than EUR are excluded from the figures, and the page shows a warning with how many were left out.
 </Note>
 
 ### Exporting
 
-Click **Export CSV** to download the full aged creditors report as a CSV file. The export includes all supplier rows regardless of the 500-row display cap, making it suitable for AP reconciliation in your accounting system.
+Click **Export CSV** to download the aged creditors report as a CSV file for AP reconciliation in your accounting system.
 
 
 ---

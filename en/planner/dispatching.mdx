@@ -5,7 +5,7 @@ description: "The real-time operations centre — fleet health, live map, compli
 
 ## Overview
 
-The Dispatching module is the real-time operations centre. It brings together a ranked, worst-first view of every truck's health, the live map, a driver compliance summary, and driver chat into one place — so dispatchers can monitor everything in motion without switching between tabs.
+The Dispatching module is the real-time operations centre. It brings together a ranked, worst-first view of every truck's health, the live map, pending assignment confirmations, a driver compliance summary, and driver chat into one place — so dispatchers can monitor everything in motion without switching between tabs.
 
 **How to access:** Click **Dispatching** in the left navigation menu. The module opens to the **Fleet Health** tab by default.
 
@@ -74,12 +74,41 @@ Clicking a row opens a slide-over rail with every signal currently triggered for
 The Live Map is a dedicated full-screen map view for fleet-wide visibility. It includes:
 
 - **All active trucks** — GPS markers auto-refresh when drivers update statuses, coloured by the same severity system as the Fleet Health list (critical/warning/watch trucks stand out at a glance) and clustered together at low zoom so a busy region doesn't turn into an unreadable pile of pins.
-- **Route polylines and stop markers** — click a truck to see its planned route and pickup/delivery stop markers from its current position to the destination. These render only for the currently-selected truck, not for every active load at once.
+- **The selected truck's whole route chain** — click a truck and its pane opens with the route of its **active order and its next assigned orders**, drawn as one chain on the map. Every stop gets a numbered pin (green for loading, red for offloading, grey for other stops), and the line turns amber for trucks in warning or critical state. The drive between one order and the next is drawn dashed as a repositioning estimate.
+- **Route status line** — the pane tells you what you are looking at: **Stored road route**, **Part stored road route, part straight-line estimate**, **No stored route — straight-line estimate shown**, or **No active order — nothing to route**. It also lists **Orders on this route**. An order without a stored road route is drawn as a dashed straight line instead of nothing.
+- **Camera** — selecting a truck moves the map only if its route is off-screen. **Fit route** always fits the whole chain plus the truck's position. Closing the pane clears the route.
 - **Parking layer toggle** — enables the truck parking map overlay (see [Truck Parking Map](/en/tools/parking-map))
+
+Routes shown here are the ones already stored on the orders; opening the map never triggers a new routing calculation.
 
 <Note>
 The Live Map tab is identical to the full-screen map available from **Tools → Live Map** — it is the same component exposed in two places for convenience.
 </Note>
+
+---
+
+## Confirmations Tab
+
+When the **Dispatcher confirmation gate** is on (**Settings → Automations & Features**, on by default), a new truck or driver assignment made by someone without dispatch authority (for example a planner, or the automatic planner) waits as **pending** until a dispatcher or company admin confirms it. Until then the driver gets no push, the client gets no email with the plate, and no e-Transport declaration is sent. A dispatcher, company admin or admin who assigns a load themselves skips the wait. With the gate off, every assignment is confirmed automatically.
+
+**Dispatching → Confirmations** is where you handle pending assignments without opening the planning board.
+
+- **Scope** — it opens on **My trucks** (the trucks where you are the dispatcher). Switch to **All** to see every truck. If you have no trucks of your own it shows every truck.
+- **To confirm** — every pending assignment in scope, oldest first, with the truck and driver, order number and client, and the loading and unloading windows. Tap **Confirm** or **Decline**. When you decline, you give a reason, and the load goes back to the pool. On a phone the section is called **To confirm** and shows a card per assignment with large buttons; when nothing is left it reads **All assignments confirmed.**
+- **Confirm all pending** — confirms every pending assignment of one truck in one go.
+- **Timeline (desktop)** — a read-only view of each truck's lane with an hour axis. Pending blocks are ringed amber and labelled **Awaiting**, and carry their own Confirm and Decline buttons.
+- **Planned per truck (phone)** — one section per truck listing its jobs in time order; the truck with the oldest pending job opens first.
+- **Dispatch details** — click any job to open a side pane with the assigned truck, driver, trailer, stops and cargo. It deliberately shows no prices or margins, so every dispatcher can open it; **Open full order** is shown only to roles that may edit orders.
+
+The **Dispatching** item in the sidebar and the phone bottom bar show a badge with the number of pending confirmations on your trucks.
+
+### Get notified
+
+As soon as an assignment lands as pending, Druma notifies the truck's own dispatcher (or every active dispatcher if the truck has none) with a push and a bell notification, **Dispatch confirmation needed**. Several legs on the same truck collapse into one growing notification rather than one per leg. Opening it takes you straight to **Confirmations** for that truck. If someone declines an assignment, the person who made it is notified (everyone is, if that person is not known).
+
+### Relay and split legs
+
+The same gate applies to every truck change on a multi-leg order. Each leg that gets a different truck needs its own confirmation: in the order pane's **Legs** section, each leg shows its status with **Confirm dispatch** and **Decline**; the planning board's trip view does the same per leg. Confirming a leg notifies that leg's driver. A leg that has already started cannot be declined.
 
 ---
 

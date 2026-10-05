@@ -1,0 +1,46 @@
+---
+title: "Pallet Statement Import"
+description: "Upload a CHEP, Paki or other provider pallet statement and compare it line by line with the pallet movements Druma holds, then open a dispute on any mismatch."
+icon: "file-up"
+---
+
+Pallet pools such as CHEP and Paki bill from their own statement. Druma can compare that statement with your pallet ledger so you can see exactly where the two disagree. **Importing never books anything**: the statement lines are kept for comparison only and never become pallet movements.
+
+## Import a statement
+
+<Steps>
+  <Step title="Open the Pallets tab">
+    Go to **Clients** (or **Subcontractors**), open the counterparty the statement is for, and open the **Pallets** tab. Scroll to **Provider statements** below the movement ledger.
+  </Step>
+  <Step title="Choose the file">
+    Click **Import statement** and drop a **CSV or XLSX** file (maximum 5 MB and 5,000 rows; the file needs a header row). Choose the **Provider** (**CHEP**, **Paki** or **Other provider**).
+  </Step>
+  <Step title="Match your columns">
+    Under **Match your columns**, map the file's columns to **Date**, **Pallet type**, **Quantity**, **Direction**, **Reference** and **Voucher number**. A column can be set to "(not in file)". If the file has no pallet type column, set **Pallet type for every row**. **Pallet type names** lets you map the provider's names onto Druma's pallet types. If the provider reports the quantities from its own point of view, tick **The statement shows the provider's side (reverse the signs)** so that pallets sent are positive and pallets returned are negative.
+  </Step>
+  <Step title="Compare with ledger">
+    Click **Compare with ledger**, review the preview, then **Import statement**. Rows that can't be read (bad date, quantity or pallet type) are skipped and counted.
+  </Step>
+</Steps>
+
+Importing the same file again updates the result instead of duplicating it.
+
+## Reading the result
+
+Each statement line gets a **Result**:
+
+| Result | Meaning |
+|---|---|
+| **Matched** | Druma holds a movement with the same reference or voucher number (or the same date, pallet type and quantity) |
+| **Quantity differs** | A movement was found by reference or voucher number but the quantity is different. The **Difference** column shows statement minus Druma |
+| **Not in Druma** | No matching movement exists in your ledger |
+
+Use the filter chips (**All**, **Matched**, **Quantity differs**, **Not in Druma**) to focus on the differences. A movement is matched at most once, and movements that are already disputed are not matched.
+
+## Open a dispute from a line
+
+On a **Quantity differs** line, click **Open dispute**. This marks the Druma movement as **Disputed**: it is excluded from the balance, statements and charges until you resolve it (**Withdraw** or **Uphold**, see [Pallet Exchange Ledger](/en/planner/pallet-exchange)). A line that is **Not in Druma** has no movement to dispute; book a correction or an opening balance if the provider is right.
+
+<Note>
+CHEP's own balance sync is not configured, so the supported route for CHEP and Paki is this statement import.
+</Note>

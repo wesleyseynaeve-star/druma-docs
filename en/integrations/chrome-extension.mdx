@@ -1,0 +1,138 @@
+---
+title: "Druma Capture (Chrome Extension)"
+description: "Turn a freight-exchange listing into a draft order, or save the posting company as a client or lead, with one click from your browser."
+icon: "puzzle-piece"
+---
+
+**Druma Capture** is a Chrome extension that lets you capture a load from a freight-exchange listing without copying and pasting anything. It reads the listing you are looking at and sends it to Druma, where it becomes a **draft order** for a planner to review.
+
+It does two things:
+
+- **Capture load** — turns the listing into a draft order.
+- **Save company** — saves the company that posted the listing, either as a client you already have or as a new CRM lead.
+
+## Where the button appears
+
+On these exchanges a floating **Druma Capture** button appears in the bottom-right corner of the page on its own:
+
+- Timocom
+- Trans.eu
+- Bursa de Transport
+
+**On any other website** the button is not shown until you ask for it. Either:
+
+- right-click the page and choose **Capture with Druma**, or
+- click the Druma Capture icon in the Chrome toolbar and choose **Capture from this page**.
+
+Druma does not need a ready-made setup for the site. The first time you capture from a site Druma has not seen before, it works out where the fields are on that page and remembers it for next time (see [What it learns per site](#what-it-learns-per-site)).
+
+## Set it up
+
+You need a Druma account with an operational role (planner, dispatcher, customer service, company admin or admin) and Google Chrome, or another Chromium-based browser that supports extensions (such as Edge or Brave).
+
+<Steps>
+  <Step title="Generate a token in Druma">
+    Go to **Settings → Integrations → Browser Extension** and click **Generate extension token**. Give it a name, then copy the token straight away. It is shown only once. The token can only be used for capturing, nothing else.
+  </Step>
+  <Step title="Download and unzip the extension">
+    On the same page, click **Download druma-capture.zip** and unzip it to a folder on your computer. Keep that folder, because Chrome loads the extension from it.
+  </Step>
+  <Step title="Load it in Chrome">
+    Open `chrome://extensions`, turn on **Developer mode** (top-right), click **Load unpacked** and select the unzipped folder.
+  </Step>
+  <Step title="Paste the token">
+    Click the Druma Capture icon in the toolbar and open **Settings** (or right-click the icon and choose **Options**). Paste the token into **Personal access token**, leave **Environment** on **Production**, and click **Test connection**.
+  </Step>
+  <Step title="Check the result">
+    On success you see **Connected as** followed by your company name, and the token is saved in this browser only. The toolbar popup then shows **Connected**. If the test fails, nothing is saved. Fix the token and try again.
+  </Step>
+</Steps>
+
+<Note>
+Druma Capture is installed manually for now (it is not in the Chrome Web Store). The token is stored only in the browser where you pasted it. It is never synced to your other devices, so repeat the setup on each computer.
+</Note>
+
+## Capture a load
+
+<Steps>
+  <Step title="Open a listing">
+    Open the load listing on the exchange.
+  </Step>
+  <Step title="Open the menu">
+    Click the floating **Druma Capture** button (or use the right-click or toolbar route on other sites).
+  </Step>
+  <Step title="Click Capture load">
+    A result card replaces the menu and shows the route, dates, weight, price and the client Druma matched. Click **Open order** to open the draft in a new tab. Nothing opens by itself.
+  </Step>
+  <Step title="Review the draft in Druma">
+    Check the stops, cargo and price, then confirm it like any other draft. A captured listing is never a live order until a planner confirms it.
+  </Step>
+</Steps>
+
+Captured drafts also appear under the **Intake** scope on the **Orders** page, together with drafts from email and the Outlook add-in.
+
+**Duplicates.** If the same listing, or the same lane and date, was already captured in the last 7 days, the card shows a duplicate warning instead. Click **Open order** to see the existing draft, or **Capture anyway** if you really want a second one.
+
+## Save a company
+
+Choose **Save company** instead of **Capture load** to save the company behind the listing. The card tells you which happened:
+
+- **Already a client**, with a link to that client, or
+- **Lead saved**, with a link to the lead in your CRM.
+
+See [CRM](/en/planner/crm) for how leads are worked.
+
+## What it learns per site
+
+For each site you capture from, Druma keeps a field mapping (which label on the page means pickup, price, weight and so on). The first capture from a new site is read by AI and creates the mapping. Later captures use it, which is faster and more consistent. If a site changes its layout, Druma falls back to AI for that capture and may propose an updated mapping.
+
+In **Settings → Integrations → Browser Extension** you can see:
+
+- **Recent captures** — what was captured, with an outcome such as **Matched template**, **Partial match**, **AI extracted** or **Possible duplicate**.
+- **Approved templates** — the mappings in use per exchange.
+- **Pending approvals** — a proposed mapping that needs a human look, which only happens when Druma was not confident enough to apply it on its own. Click **Approve** or **Reject**.
+- Your tokens, with **Revoke** to switch one off.
+
+Approving a mapping only decides how fields are read. The order you capture is a draft either way.
+
+## Limits
+
+- It works on normal web pages (`http` and `https`). Chrome's own pages (`chrome://`), other extensions' pages, local files and `view-source:` pages cannot be captured, and you get a message instead.
+- It reads only the page you invoked it on. It does not watch the other sites you visit.
+- Only the visible listing content is read, up to a fixed amount of text per page, so very long pages may be cut off.
+- Captures are rate-limited per user. If you capture many listings in a row, wait a moment.
+
+## Troubleshooting
+
+**The floating button does not appear.**
+Automatic buttons only show on Timocom, Trans.eu and Bursa de Transport. On other sites use the right-click **Capture with Druma** or the popup's **Capture from this page**. Also check on `chrome://extensions` that the extension is enabled.
+
+**"Test connection" never succeeds.**
+Check that **Environment** is set to **Production** and that you pasted the whole token. A token from one environment does not work in another.
+
+**"Your token is invalid or expired."**
+The token was revoked, has expired or was never saved. Generate a new one under **Settings → Integrations → Browser Extension** and run **Test connection** again.
+
+**"Too many captures — wait a moment and try again."**
+You hit the per-user limit. Wait a moment and retry.
+
+**"Druma didn't respond in time."**
+Try again. The request stops waiting after 30 seconds rather than hanging.
+
+**Nothing happens when I right-click or use the toolbar on a page.**
+The page is probably one Chrome does not allow extensions on (see Limits). Try a normal web page.
+
+**The capture got the wrong fields.**
+Correct them on the draft order in Druma. If a site is consistently misread, you can **Reject** its mapping under **Pending approvals**, or tell support.
+
+**How do I stop a computer from capturing?**
+Click **Revoke** on its token in **Settings → Integrations → Browser Extension**. It stops working immediately on every machine that token was pasted into.
+
+<CardGroup cols={2}>
+  <Card title="Email Order Ingestion" icon="envelope-open-text" href="/en/automation/email-order-ingestion">
+    Let Druma turn emailed orders into drafts too.
+  </Card>
+  <Card title="Outlook Add-in" icon="envelope" href="/en/integrations/outlook-add-in">
+    Send an email to Druma from inside Outlook.
+  </Card>
+</CardGroup>

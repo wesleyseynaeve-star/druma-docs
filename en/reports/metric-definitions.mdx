@@ -1,0 +1,68 @@
+---
+title: "How Druma Calculates Key Metrics"
+description: "Exact definitions of DSO, DPO, average days to pay, OTIF, fuel consumption (L/100km), month-to-date trends, margin and savings, so the same number reads the same on every page."
+icon: "calculator"
+---
+
+The same metric always uses the same definition, wherever it appears in Druma (Analytics dashboard, Finance dashboard, Client Scorecard, Driver Performance, Eco Score). Every KPI with a small help icon explains its own formula. This page collects the definitions in one place.
+
+## DSO and DPO (Days Sales / Payable Outstanding)
+
+- **DSO (days)** = open client receivables ÷ client sales billed in the last 12 months × 365. "Open" means unpaid, partially paid and overdue invoices of any age; a partial payment counts only its remaining balance. An invoice that is never paid still counts in full, so DSO reflects the real state of collections.
+- **DPO (days)** = open payables ÷ purchase invoices billed in the last 12 months × 365. It covers **purchase invoices only** (the invoices you owe suppliers and carriers). It appears as **Days Payable Outstanding** on the Aged Creditors page and as DPO on the Finance dashboard.
+- **Cash Conversion Cycle** (Finance dashboard) = DSO minus DPO.
+- Invoices in other currencies (for example RON) are **converted to EUR at the BNR rate before** the ratio is taken, so DSO is the same on the Analytics dashboard and the Finance dashboard.
+
+<Note>
+Because DSO divides by trailing 12-month sales, a young or low-volume book can give a noisy figure. The tile shows how many invoices it is based on.
+</Note>
+
+### Related but different numbers
+
+| Label | What it is |
+|---|---|
+| **Avg days to pay** (Client Scorecard, Analytics dashboard "Avg Days to Pay") | Average days between issue date and payment, over invoices that **have actually been paid** (dashboard: paid in the last 90 days). An invoice that is never paid never enters this average, so it says nothing about collection risk by itself. Use DSO for the full picture. |
+| **Avg age of open invoices** (Finance dashboard) | Amount-weighted average age (issue date to today) of currently open client invoices. It is **not** DSO. |
+| **Predicted pay date / risk band** (Finance → Overdue, if the DSO payment forecast is on) | A forecast per open invoice from that client's own payment history. Clients whose history is good are labelled "Usually pays on time"; a red "Broke own forecast" label means that invoice is already past its own predicted pay date. |
+
+## OTIF (On Time In Full)
+
+OTIF is the share of deliveries that arrived **on time AND were confirmed complete and undamaged**, out of the deliveries whose condition is **known**. A delivery is "known" when a CMR document was uploaded and tagged to the delivery stop and the damage question was answered. Deliveries with no CMR discrepancy record are **excluded**, not counted as "in full". The **Coverage** figure next to OTIF shows what share of the month's deliveries is known; a low coverage means the OTIF % rests on a small sample. The Analytics dashboard splits deliveries into **On Time & In Full**, **Late**, **Short / Damaged** and **Unknown**. The **Client Scorecard** shows OTIF per client on the same basis.
+
+## Fuel consumption (L/100km)
+
+Litres per 100 km is **tank-to-tank** everywhere (Eco Score and Driver Performance agree): the litres of each fill divided by the odometer kilometres since the truck's previous fill. It shows "—" when there are fewer than two odometer-backed fills, under 100 km of history, or an implausible value. It is not computed from order kilometres.
+
+## Month-to-date trends
+
+Revenue and order counts on the Analytics dashboard compare the **month so far** with the **same number of elapsed days last month**, not with the full previous month. Early in the month a partial month is therefore compared with an equally short stretch of the last one. On **Truck P&L**, money and count changes are hidden while the month is still running for the same reason.
+
+## Margin
+
+- **Margin** = revenue minus costs; **Margin %** = margin ÷ revenue.
+- Totals and KPI tiles are **revenue-weighted**: total margin ÷ total revenue, not the average of the individual lane or client percentages. This is why the lane tile is called **Weighted margin %**.
+- Some pages have a **Margin basis** switch: **Excluding pass-through tolls** (default) or **Including tolls and toll recharges**.
+- Revenue and margin are reported in **EUR**. Orders priced in another currency are left out of the EUR totals and counted in an **excluded** badge on the row, so currencies are never mixed in one sum. A chart that blends currencies tells you to add "Currency" as a dimension.
+- **Profit/km** and **Cost/km** charge each order its full share of fixed cost (truck standing cost, driver pay, allowances) on top of fuel and tolls.
+
+## Savings
+
+The **Savings** headline counts **realised** savings only (decisions you accepted). **Modelled** savings are shown as a separate sub-line and are never added into the headline.
+
+## Negative money
+
+Negative amounts show the minus sign before the currency symbol (for example -€1,200).
+
+## Questions
+
+<AccordionGroup>
+  <Accordion title="Why do DSO and 'Avg days to pay' differ?">
+    DSO includes invoices that are still unpaid, however old; "Avg days to pay" only averages invoices that were paid. If collections get worse, DSO rises while "Avg days to pay" can stay flat.
+  </Accordion>
+  <Accordion title="Why does OTIF show a high % with low Coverage?">
+    OTIF only counts deliveries with a known condition. Upload and tag the CMR on each delivery stop to raise coverage and make the figure representative.
+  </Accordion>
+  <Accordion title="Why is my RON invoice missing from a report?">
+    Reports that total in EUR leave non-EUR orders out and tell you how many were excluded. DSO/DPO are the exception: they convert to EUR at the BNR rate.
+  </Accordion>
+</AccordionGroup>
