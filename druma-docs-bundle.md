@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-05 17:11 UTC
+Generated: 2026-10-05 17:18 UTC
 
 ---
 
@@ -6653,22 +6653,27 @@ Use **Opening Balance** once per counterparty to seed their starting balance if 
 
 ## Viewing balances
 
-### Clients list balance column
+There is no separate pallet balances page. Each client and each subcontractor has a **Pallets** tab, and the lists flag the ones that need attention. The tab only shows when the pallet exchange module is on and you can read orders.
 
-The **Clients** list (Commercial → Clients) includes a **Pallet Balance** column. The indicator uses colour coding at a glance:
+### The Pallets tab
 
-| Colour | Meaning |
-|---|---|
-| Amber | The client owes you pallets |
-| Blue | You owe the client pallets |
-| Neutral (grey) | Balance is even |
+Open **Clients** (or **Subcontractors**), open the counterparty and click **Pallets** (on a client it sits after **Billing**). It shows:
 
-Hover over the balance indicator to see a per-type tooltip breaking down the balance across all pallet types — for example, +12 EUR, −4 CHEP.
+- **Balance** per pallet type (EUR, CHEP and so on)
+- **Open obligations** — what is still owed and when (see below)
+- the **movement ledger** — every movement with date, order reference and running total, where you can **dispute** a movement, **withdraw** your dispute or **uphold** it
+- **Book correction** — an order-less ledger entry with a required note, for a manually agreed write-off or a migration adjustment
+- the **statement** menu — generate a PDF statement or export CSV, and **Email statement**, which shows a last-sent chip (**Confirmed** or **Disputed**)
+- **Provider statements** — import a CHEP, Paki or other pool statement and compare it with your ledger (see [Pallet Statement Import](/en/planner/pallet-statement-import))
+- **Pallet settings** — the exchange mode and the fee per missing pallet for this counterparty
 
-### Movement history per counterparty
+A disputed or upheld movement is left out of balances, statements, obligations and charges until the dispute is withdrawn.
 
-Click a client row to open the client detail panel, then go to the **Pallets** tab. This shows the full ledger for that counterparty: every movement, date, order reference, and running total.
+### Lists, filter and badge
 
+- The **Clients** and **Subcontractors** lists have an optional **Pallets overdue** column and an **Open pallet obligations** filter, so you can see every counterparty with something overdue.
+- The **Clients** item in the navigation shows a badge with the number of clients and subcontractors that have an overdue pallet obligation.
+- The client side panel shows a compact **Pallets** section, and for a client a balance chip per site.
 
 ---
 
@@ -6692,77 +6697,24 @@ A net balance says how many pallets a counterparty holds, not whether that is a 
 
 ---
 
-## Fee threshold and automatic fee creation
+## Fee threshold and fee rates
 
-If a client's pallet balance grows beyond a configured threshold, Druma can automatically prompt you to raise a pallet exchange fee.
+Pallet fees are no longer suggested by a pop-up while you record a movement. Instead you decide when to charge, from the counterparty's **Pallets** tab — see **Charging missing pallets to a client** below.
 
-When a movement causes the balance to exceed the threshold, a **Pallet Fee Confirmation** modal appears:
-
-- **Confirm** — adds a fee line to the order's extras (visible in the invoice editor as a pallet exchange charge)
-- **Skip** — dismisses the prompt without creating a fee; the balance remains as-is
-
-> **Warning:** 
-Clicking **Skip** does not reset the threshold counter. The modal will appear again on the next movement that exceeds the threshold unless you reduce the balance first by logging returned pallets.
-
-
----
-
-## Configuring thresholds and fee rates
-
-Go to **Settings → Clients → Pallet Config** to set the fee rules. This section is only accessible to **admin** and **company_admin** roles.
-
-For each pallet type you can configure:
+Go to **Settings → Clients → Pallet Config** to set the company defaults. This section is only accessible to **admin** and **company_admin** roles. For each pallet type you can configure:
 
 | Setting | Description |
 |---|---|
-| Fee threshold | Number of pallets at which the fee modal triggers |
-| Fee rate | Price per pallet (in your company currency) applied to the auto-generated fee line |
+| Fee threshold | Number of pallets above which a balance counts as too high when Druma proposes a charge quantity |
+| Fee rate | Default price per pallet (in your company currency) for the charge |
 
-Leave the threshold blank to disable the fee modal for that pallet type — movements are still tracked, but no fee is ever suggested.
-
----
-
-## Pallet Balance Reconciliation
-
-Beyond the per-client balance column, Druma has a dedicated **Operations → Pallet Balances** page that reconciles positions across **both clients and subcontractors** in one view — useful when you want a single sweep of every open pallet position rather than checking counterparties one at a time.
-
-Unlike the per-order ledger, this page shows **one row per counterparty**, not one per (counterparty, pallet type). If you trade in more than one pallet standard with the same client, the row folds them into three totals — EUR, Industrial, and Other — plus a combined net and a single status badge, so you always have one line saying what that counterparty owes you (or you owe them) overall.
-
-Each row's status badge uses the same threshold logic as the fee modal, with an extra tier for positions that have drifted a long way past it:
-
-| Status | Meaning |
-|---|---|
-| **OK** | Balance is at or under the configured threshold (including an exact zero — fully settled) |
-| **Imbalance** | Balance exceeds the threshold |
-| **Severe** | Balance exceeds **twice** the threshold — worth chasing before it grows further |
-
-
-  ### Pick a scope tab
-    Open **Operations → Pallet Balances**. Five scope tabs — **All · Critical · Imbalance · OK · Settled** — sit above the table, each with a live count, so you can jump straight to the positions that need attention.
-  
-  ### Search, filter, or save a view
-    Use the search box to find a counterparty by name, and **Filter** to narrow by counterparty type (client/subcontractor). **Columns** lets you choose which fields show; **Views** saves your current scope, search, and column choices as a named view you (or your whole company) can reopen later.
-  
-  ### Open the settlement pane
-    Click a row (or its **eye** icon) to slide in a settlement pane on the right, showing that counterparty's full movement ledger across every pallet type, sortable by date, order, or amount.
-  
-  ### Settle the position
-    From the pane you can **book a correction** (an order-less ledger entry with a required note — useful for a manually agreed write-off or a migration adjustment) or **charge a fee** for the overage, using the same fee flow as the automatic prompt described above.
-  
-  ### Generate a statement
-    From the pane or the row's own menu, generate a **PDF statement** — a branded document with a signature block, ready for a counterparty to confirm and sign — or export the position as **CSV**. **Export ▾** at the top of the page produces a combined CSV of every counterparty at once, for a full reconciliation sweep.
-  
-
+A client can have its own fee per pallet type under **Pallet settings** on the client's **Pallets** tab; leave it blank to use the company default.
 
 > **Note:** 
-A client's pallet balance also shows, read-only, on their record: open the client and check the **Overview** tab for a "Pallet balance" line with a link straight into this page's settlement pane for that client.
+The ledger enforces its own sign convention at the database level: a **Sent** movement always adds to the balance and a **Returned** movement always subtracts from it, regardless of how the number is typed on the add-movement form — **Adjustment**, **Correction** and **Opening Balance** entries keep the sign you enter.
 
 
-A **nightly automated reconciliation** run (02:05 UTC) also checks every company's balances against the same thresholds and notifies your company's admins/planners when a position is imbalanced — deduplicated per pallet type and counterparty over a 7-day window, so you're not renotified every run for a position you already know about.
-
-> **Note:** 
-The ledger enforces its own sign convention at the database level: a **Sent** movement always adds to the balance and a **Returned** movement always subtracts from it, regardless of how the number is typed on the add-movement form — **Adjustment**, **Correction**, and **Opening Balance** entries keep whatever sign you enter, since those can legitimately run either direction.
-
+A nightly automated reconciliation run also checks balances against the thresholds and notifies your company's admins and planners when a position is imbalanced.
 
 ---
 
@@ -6778,7 +6730,7 @@ If you use CHEP Connect, Druma can reconcile your in-app ledger against the prov
 Any discrepancy is shown as a reconciliation row — you can accept it as a **Correction** entry to align the two ledgers.
 
 > **Note:** 
-CHEP Connect is currently the only pallet provider integration. EUR, LPR, IPP, Euro Pool, and Other pallet types are tracked manually in the ledger — there is no provider sync for them today. The core ledger works fully without any provider configured.
+CHEP Connect is currently the only live balance sync. For other pools (Paki and others) you can import their statement file and compare it line by line — see [Pallet Statement Import](/en/planner/pallet-statement-import). EUR, LPR, IPP, Euro Pool and Other pallet types are otherwise tracked manually in the ledger. The core ledger works fully without any provider configured.
 
 
 ---
