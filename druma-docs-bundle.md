@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-05 17:18 UTC
+Generated: 2026-10-05 17:37 UTC
 
 ---
 
@@ -1702,6 +1702,57 @@ Scania is validated against live fleet accounts. Volvo, Webfleet, Geotab, and Sa
 
 > **Note:** 
 All four reefer connectors are currently in **beta** — they are being validated with pilot fleets, so involve Druma support during your first sync. Mapon's API is fully public, so credentials connect straight away. Orbcomm needs an account token from ORBCOMM before it returns live data. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
+
+
+---
+
+## 9. Freight Exchanges & Market Data
+
+These cards connect Druma to freight-exchange and market-price providers. None of them has a self-service signup: each provider issues API access to your company through a partner agreement, so ask your account manager at that provider first. Each card's "Where do I get these?" link repeats this.
+
+| Card | Credential fields | What you need |
+|---|---|---|
+| **Timocom** | Username, Password | API credentials issued as part of a Timocom marketplace API partner agreement, for your freight exchange account. Used for freight exchange search and return-load automation. |
+| **Trans.eu** | Client ID, Client Secret | An OAuth Client ID and Client Secret from Trans.eu's Partner API programme. Used for European lane price data for market benchmarking. |
+| **Transporeon** | API Key, Webhook Signing Secret | A TIAP partnership with Transporeon (beta). Lets you receive and respond to freight tenders from Transporeon. Transporeon access is switched on for your company by Druma once the partnership is in place, so contact support first. |
+
+Open the card, enter the credentials and click **Test Connection**, then **Save**. If a card is not visible for your company, your Druma admin may have hidden it or restricted it by country.
+
+> **Note:** 
+Looking for loads on an exchange you use in the browser? You do not need an API connection for that. See [Druma Capture](/en/integrations/chrome-extension), which turns a Timocom, Trans.eu or Bursa de Transport listing into a draft order.
+
+
+---
+
+## 10. Browser Extension and Outlook Add-in
+
+Two more cards in **Settings → Integrations** turn incoming loads into draft orders without retyping:
+
+- **Browser Extension** — Druma Capture for Chrome. Generate a token, download the zip, load it in Chrome and paste the token. Full steps: [Druma Capture](/en/integrations/chrome-extension).
+- **Outlook add-in** — click **Download manifest** and follow the **Install guide** to add **Send to Druma** to Outlook. Full steps: [Outlook Add-in](/en/integrations/outlook-add-in).
+
+---
+
+## 11. Compliance & E-Invoicing Cards
+
+These have their own guides:
+
+- **ANAF e-Factura** — [e-Factura / ANAF Submission](/en/invoicing/efactura-anaf)
+- **ANAF e-Transport** — [e-Transport Romania](/en/fleet-compliance/etransport-romania)
+- **KSeF e-Invoicing (PL)** — [KSeF — Polish e-Invoicing](/en/invoicing/ksef-poland)
+- **JPK_V7M (Poland)** — [JPK_V7M — Comarch ERP Optima (Poland)](/en/integrations/jpk-optima)
+- **Peppol E-Invoicing** — [Peppol E-Invoicing](/en/integrations/peppol-invoicing)
+
+Driver messaging has its own tab, linked from the card: **WhatsApp (driver channel)** — see [WhatsApp Driver Channel](/en/integrations/whatsapp-driver-channel).
+
+---
+
+## 12. Platform Cards (nothing to set up)
+
+The **Platform** category lists services Druma runs for you: **HERE Geocoding**, **Resend Email**, **Mailgun Inbound**, **Stripe Billing** and **Gemini AI (Vertex AI)**. They are managed by Druma and need no credentials from you. **Message Translation** auto-translates driver and planner messages; each user can opt out in their own profile. **Web research (Google Search)** is optional and off by default. When Druma enables it for your company, users can click **Research the web** on a company or site.
+
+> **Note:** 
+The Android app is not set up from this page. Drivers and office staff install it from a link inside Druma. See [Installing the Driver App](/en/driver/installing-the-app).
 
 
 ---
@@ -13411,7 +13462,7 @@ AI extraction is not 100% accurate. Addresses written in unusual formats, scanne
 
 ## Outlook Add-in — Send an Email to Druma
 
-If your team works in Outlook, the **Druma — Email to Order** add-in sends an email to Druma without leaving Outlook, and without waiting. Install it from **Settings → Integrations → Outlook add-in** (the **Install guide** there walks you through adding it in Outlook; your Microsoft 365 admin can also deploy it to the whole team). It needs Outlook on the web or a recent Outlook desktop version that can read attachments.
+If your team works in Outlook, the **Druma — Email to Order** add-in sends an email to Druma without leaving Outlook, and without waiting. Install it from **Settings → Integrations → Outlook add-in** (the **Install guide** there walks you through adding it in Outlook; your Microsoft 365 admin can also deploy it to the whole team). It needs Outlook on the web or a recent Outlook desktop version that can read attachments. See [Outlook Add-in](/en/integrations/outlook-add-in) for the full install steps, the three pane states and troubleshooting.
 
 
   ### Open an email
@@ -16710,6 +16761,255 @@ A client with an outbound webhook configured (**Clients → client → API** tab
 On a client's or subcontractor's **Pallets** tab, click **Email statement**. Druma sends a branded PDF statement to the counterparty's contacts, in their language, and shows a **Last sent** chip. The recipient can answer with **Confirm** or **Dispute**: the chip then reads **Confirmed** or **Disputed**. A dispute from the counterparty only flags the statement; no movement is changed, and you resolve it from the ledger. If there is no balance or no contact with an email address, Druma tells you instead of sending. The wording of this email can be customised like other client emails in the Communication settings.
 
 See also [Pallet Exchange Ledger](/en/planner/pallet-exchange) and [Pallet Statement Import](/en/planner/pallet-statement-import).
+
+---
+
+## Druma Capture (Chrome Extension)
+
+
+**Druma Capture** is a Chrome extension that lets you capture a load from a freight-exchange listing without copying and pasting anything. It reads the listing you are looking at and sends it to Druma, where it becomes a **draft order** for a planner to review.
+
+It does two things:
+
+- **Capture load** — turns the listing into a draft order.
+- **Save company** — saves the company that posted the listing, either as a client you already have or as a new CRM lead.
+
+## Where the button appears
+
+On these exchanges a floating **Druma Capture** button appears in the bottom-right corner of the page on its own:
+
+- Timocom
+- Trans.eu
+- Bursa de Transport
+
+**On any other website** the button is not shown until you ask for it. Either:
+
+- right-click the page and choose **Capture with Druma**, or
+- click the Druma Capture icon in the Chrome toolbar and choose **Capture from this page**.
+
+Druma does not need a ready-made setup for the site. The first time you capture from a site Druma has not seen before, it works out where the fields are on that page and remembers it for next time (see [What it learns per site](#what-it-learns-per-site)).
+
+## Set it up
+
+You need a Druma account with an operational role (planner, dispatcher, customer service, company admin or admin) and Google Chrome, or another Chromium-based browser that supports extensions (such as Edge or Brave).
+
+
+  ### Generate a token in Druma
+    Go to **Settings → Integrations → Browser Extension** and click **Generate extension token**. Give it a name, then copy the token straight away. It is shown only once. The token can only be used for capturing, nothing else.
+  
+  ### Download and unzip the extension
+    On the same page, click **Download druma-capture.zip** and unzip it to a folder on your computer. Keep that folder, because Chrome loads the extension from it.
+  
+  ### Load it in Chrome
+    Open `chrome://extensions`, turn on **Developer mode** (top-right), click **Load unpacked** and select the unzipped folder.
+  
+  ### Paste the token
+    Click the Druma Capture icon in the toolbar and open **Settings** (or right-click the icon and choose **Options**). Paste the token into **Personal access token**, leave **Environment** on **Production**, and click **Test connection**.
+  
+  ### Check the result
+    On success you see **Connected as** followed by your company name, and the token is saved in this browser only. The toolbar popup then shows **Connected**. If the test fails, nothing is saved. Fix the token and try again.
+  
+
+
+> **Note:** 
+Druma Capture is installed manually for now (it is not in the Chrome Web Store). The token is stored only in the browser where you pasted it. It is never synced to your other devices, so repeat the setup on each computer.
+
+
+## Capture a load
+
+
+  ### Open a listing
+    Open the load listing on the exchange.
+  
+  ### Open the menu
+    Click the floating **Druma Capture** button (or use the right-click or toolbar route on other sites).
+  
+  ### Click Capture load
+    A result card replaces the menu and shows the route, dates, weight, price and the client Druma matched. Click **Open order** to open the draft in a new tab. Nothing opens by itself.
+  
+  ### Review the draft in Druma
+    Check the stops, cargo and price, then confirm it like any other draft. A captured listing is never a live order until a planner confirms it.
+  
+
+
+Captured drafts also appear under the **Intake** scope on the **Orders** page, together with drafts from email and the Outlook add-in.
+
+**Duplicates.** If the same listing, or the same lane and date, was already captured in the last 7 days, the card shows a duplicate warning instead. Click **Open order** to see the existing draft, or **Capture anyway** if you really want a second one.
+
+## Save a company
+
+Choose **Save company** instead of **Capture load** to save the company behind the listing. The card tells you which happened:
+
+- **Already a client**, with a link to that client, or
+- **Lead saved**, with a link to the lead in your CRM.
+
+See [CRM](/en/planner/crm) for how leads are worked.
+
+## What it learns per site
+
+For each site you capture from, Druma keeps a field mapping (which label on the page means pickup, price, weight and so on). The first capture from a new site is read by AI and creates the mapping. Later captures use it, which is faster and more consistent. If a site changes its layout, Druma falls back to AI for that capture and may propose an updated mapping.
+
+In **Settings → Integrations → Browser Extension** you can see:
+
+- **Recent captures** — what was captured, with an outcome such as **Matched template**, **Partial match**, **AI extracted** or **Possible duplicate**.
+- **Approved templates** — the mappings in use per exchange.
+- **Pending approvals** — a proposed mapping that needs a human look, which only happens when Druma was not confident enough to apply it on its own. Click **Approve** or **Reject**.
+- Your tokens, with **Revoke** to switch one off.
+
+Approving a mapping only decides how fields are read. The order you capture is a draft either way.
+
+## Limits
+
+- It works on normal web pages (`http` and `https`). Chrome's own pages (`chrome://`), other extensions' pages, local files and `view-source:` pages cannot be captured, and you get a message instead.
+- It reads only the page you invoked it on. It does not watch the other sites you visit.
+- Only the visible listing content is read, up to a fixed amount of text per page, so very long pages may be cut off.
+- Captures are rate-limited per user. If you capture many listings in a row, wait a moment.
+
+## Troubleshooting
+
+**The floating button does not appear.**
+Automatic buttons only show on Timocom, Trans.eu and Bursa de Transport. On other sites use the right-click **Capture with Druma** or the popup's **Capture from this page**. Also check on `chrome://extensions` that the extension is enabled.
+
+**"Test connection" never succeeds.**
+Check that **Environment** is set to **Production** and that you pasted the whole token. A token from one environment does not work in another.
+
+**"Your token is invalid or expired."**
+The token was revoked, has expired or was never saved. Generate a new one under **Settings → Integrations → Browser Extension** and run **Test connection** again.
+
+**"Too many captures — wait a moment and try again."**
+You hit the per-user limit. Wait a moment and retry.
+
+**"Druma didn't respond in time."**
+Try again. The request stops waiting after 30 seconds rather than hanging.
+
+**Nothing happens when I right-click or use the toolbar on a page.**
+The page is probably one Chrome does not allow extensions on (see Limits). Try a normal web page.
+
+**The capture got the wrong fields.**
+Correct them on the draft order in Druma. If a site is consistently misread, you can **Reject** its mapping under **Pending approvals**, or tell support.
+
+**How do I stop a computer from capturing?**
+Click **Revoke** on its token in **Settings → Integrations → Browser Extension**. It stops working immediately on every machine that token was pasted into.
+
+
+  
+    Let Druma turn emailed orders into drafts too.
+  
+  
+    Send an email to Druma from inside Outlook.
+  
+</CardGroup>
+
+---
+
+## Outlook Add-in
+
+
+The **Druma — Email to Order** add-in puts a **Druma** button on the Outlook ribbon. Click it on an order email, click **Send to Druma**, and carry on. Druma reads the email and its attachments in the background and either creates a draft order or queues the email for a planner to check.
+
+It works the same way as the [order inbox address](/en/automation/email-order-ingestion), but starts from an email you already received.
+
+## Install it
+
+The add-in installs from Outlook or the Microsoft 365 admin center, not from Druma. Go to **Settings → Integrations → Outlook add-in** and click **Download manifest** (the small file Outlook needs), then follow the **Install guide** on the same card.
+
+
+  ### Download the Druma file
+    Click **Download manifest** to save it to your computer.
+  
+  ### Open Outlook and pick any email
+    Use outlook.office.com or Outlook on your computer.
+  
+  ### Find Get Add-ins
+    At the top of the email click the three dots (•••) and choose **Get Add-ins**.
+  
+  ### Add the file
+    Choose **My add-ins**, then **Add a custom add-in → Add from file...**, and pick the file you downloaded.
+  
+  ### Look for the Druma button
+    Open any email. The **Druma** button now shows, with **Email to Order** inside.
+  
+
+
+> **Note:** 
+Setting it up for a whole team? Ask whoever manages your Microsoft 365 account to install it once for everyone from **Microsoft 365 admin settings → Integrated apps**, using the same file. Each person then only has to connect (below).
+
+
+It needs Outlook on the web or a recent Outlook desktop version that can read attachments.
+
+## Send an email to Druma
+
+
+  ### Connect Druma (first time only)
+    Open an email and click **Druma → Email to Order**. Click **Connect Druma** and sign in with your normal Druma account.
+  
+  ### Click Send to Druma
+    The pane says **Send this email to Druma**. Click **Send to Druma**. You do not have to wait. You can move straight on to the next email.
+  
+  ### Check the result
+    The pane shows one of three states, described below.
+  
+
+
+### What the pane shows
+
+| State | What it means |
+|---|---|
+| **Queued** | Druma is reading the email and creating the order in the background. |
+| **Linked to order** | A draft order was created from this email (or an earlier email in the same conversation). **Open in Druma** opens your Orders filtered to drafts. |
+| **In review queue** | Druma was not confident enough to create an order. A planner checks the email in the **Intake** scope of the **Orders** page. |
+
+The pane follows the email you select, so you can keep it open and click through your inbox. An email you already sent shows **Linked to order** or **In review queue** instead of a second send button.
+
+## Review before creating
+
+If you want to edit before anything is created, use the **Review before creating** link instead. Druma reads the email and shows the extracted fields (client, stops, cargo, price) so you can correct them. When you are happy, click **Create order** and you create the order yourself.
+
+## What happens to the email
+
+- **Intake scope.** Drafts, and emails sent to review, show under the **Intake** scope on the **Orders** page, together with drafts from email, browser capture and the client API. Check each draft and confirm it before it becomes a live order.
+- **Client address.** If the email states the ordering company's VAT number, Druma fills the client address from the VAT registry (ANAF for Romania, VIES for other EU countries) instead of guessing. If the lookup fails, the fields stay empty for you to type.
+- **Replies.** Replies in the same conversation attach to the same order instead of creating duplicates.
+- **Rate requests.** An email that only asks for a price is shown as a rate request (RFQ), not a firm order.
+- **Not an order.** An email that does not look like a transport order, or that Druma reads with low confidence, goes to the review queue rather than becoming a draft.
+
+## Attachments
+
+Druma reads PDF, Word (.docx), text and image attachments. These cannot be sent, and the pane lists them in a warning before you send, so nothing is dropped silently:
+
+- spreadsheets and Word .doc files,
+- attached emails,
+- files over 10 MB,
+- more than 10 files.
+
+## Troubleshooting
+
+**I do not see the Druma button.**
+Check the add-in was added (**Get Add-ins → My add-ins**) and that you have an email open, not just the inbox list.
+
+**The pane asks me to connect.**
+Click **Connect Druma** and sign in with your Druma account.
+
+**"Could not send this email to Druma."**
+Try again. If it keeps failing, forward the email to your Druma order inbox address as a fallback (see [Email Order Ingestion](/en/automation/email-order-ingestion)).
+
+**The email went to the review queue.**
+Open **Orders → Intake**, find the email and check it. This is normal for emails Druma could not read with confidence, such as a very short message, a scan with poor quality, or an email that is not an order.
+
+**I sent it twice.**
+You cannot. An already-sent email shows its state instead of a send button, and replies attach to the same order.
+
+**Can everyone in the team use it?**
+Yes. Each person connects with their own Druma account, and drafts land in your company's Orders list.
+
+
+  
+    The order inbox address and how drafts are reviewed.
+  
+  
+    Capture loads from freight exchanges in your browser.
+  
+</CardGroup>
 
 ---
 

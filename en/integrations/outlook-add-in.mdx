@@ -1,0 +1,111 @@
+---
+title: "Outlook Add-in"
+description: "Send an order email to Druma from inside Outlook. Druma reads it in the background and creates a draft order for your planners to review."
+icon: "envelope"
+---
+
+The **Druma — Email to Order** add-in puts a **Druma** button on the Outlook ribbon. Click it on an order email, click **Send to Druma**, and carry on. Druma reads the email and its attachments in the background and either creates a draft order or queues the email for a planner to check.
+
+It works the same way as the [order inbox address](/en/automation/email-order-ingestion), but starts from an email you already received.
+
+## Install it
+
+The add-in installs from Outlook or the Microsoft 365 admin center, not from Druma. Go to **Settings → Integrations → Outlook add-in** and click **Download manifest** (the small file Outlook needs), then follow the **Install guide** on the same card.
+
+<Steps>
+  <Step title="Download the Druma file">
+    Click **Download manifest** to save it to your computer.
+  </Step>
+  <Step title="Open Outlook and pick any email">
+    Use outlook.office.com or Outlook on your computer.
+  </Step>
+  <Step title="Find Get Add-ins">
+    At the top of the email click the three dots (•••) and choose **Get Add-ins**.
+  </Step>
+  <Step title="Add the file">
+    Choose **My add-ins**, then **Add a custom add-in → Add from file...**, and pick the file you downloaded.
+  </Step>
+  <Step title="Look for the Druma button">
+    Open any email. The **Druma** button now shows, with **Email to Order** inside.
+  </Step>
+</Steps>
+
+<Note>
+Setting it up for a whole team? Ask whoever manages your Microsoft 365 account to install it once for everyone from **Microsoft 365 admin settings → Integrated apps**, using the same file. Each person then only has to connect (below).
+</Note>
+
+It needs Outlook on the web or a recent Outlook desktop version that can read attachments.
+
+## Send an email to Druma
+
+<Steps>
+  <Step title="Connect Druma (first time only)">
+    Open an email and click **Druma → Email to Order**. Click **Connect Druma** and sign in with your normal Druma account.
+  </Step>
+  <Step title="Click Send to Druma">
+    The pane says **Send this email to Druma**. Click **Send to Druma**. You do not have to wait. You can move straight on to the next email.
+  </Step>
+  <Step title="Check the result">
+    The pane shows one of three states, described below.
+  </Step>
+</Steps>
+
+### What the pane shows
+
+| State | What it means |
+|---|---|
+| **Queued** | Druma is reading the email and creating the order in the background. |
+| **Linked to order** | A draft order was created from this email (or an earlier email in the same conversation). **Open in Druma** opens your Orders filtered to drafts. |
+| **In review queue** | Druma was not confident enough to create an order. A planner checks the email in the **Intake** scope of the **Orders** page. |
+
+The pane follows the email you select, so you can keep it open and click through your inbox. An email you already sent shows **Linked to order** or **In review queue** instead of a second send button.
+
+## Review before creating
+
+If you want to edit before anything is created, use the **Review before creating** link instead. Druma reads the email and shows the extracted fields (client, stops, cargo, price) so you can correct them. When you are happy, click **Create order** and you create the order yourself.
+
+## What happens to the email
+
+- **Intake scope.** Drafts, and emails sent to review, show under the **Intake** scope on the **Orders** page, together with drafts from email, browser capture and the client API. Check each draft and confirm it before it becomes a live order.
+- **Client address.** If the email states the ordering company's VAT number, Druma fills the client address from the VAT registry (ANAF for Romania, VIES for other EU countries) instead of guessing. If the lookup fails, the fields stay empty for you to type.
+- **Replies.** Replies in the same conversation attach to the same order instead of creating duplicates.
+- **Rate requests.** An email that only asks for a price is shown as a rate request (RFQ), not a firm order.
+- **Not an order.** An email that does not look like a transport order, or that Druma reads with low confidence, goes to the review queue rather than becoming a draft.
+
+## Attachments
+
+Druma reads PDF, Word (.docx), text and image attachments. These cannot be sent, and the pane lists them in a warning before you send, so nothing is dropped silently:
+
+- spreadsheets and Word .doc files,
+- attached emails,
+- files over 10 MB,
+- more than 10 files.
+
+## Troubleshooting
+
+**I do not see the Druma button.**
+Check the add-in was added (**Get Add-ins → My add-ins**) and that you have an email open, not just the inbox list.
+
+**The pane asks me to connect.**
+Click **Connect Druma** and sign in with your Druma account.
+
+**"Could not send this email to Druma."**
+Try again. If it keeps failing, forward the email to your Druma order inbox address as a fallback (see [Email Order Ingestion](/en/automation/email-order-ingestion)).
+
+**The email went to the review queue.**
+Open **Orders → Intake**, find the email and check it. This is normal for emails Druma could not read with confidence, such as a very short message, a scan with poor quality, or an email that is not an order.
+
+**I sent it twice.**
+You cannot. An already-sent email shows its state instead of a send button, and replies attach to the same order.
+
+**Can everyone in the team use it?**
+Yes. Each person connects with their own Druma account, and drafts land in your company's Orders list.
+
+<CardGroup cols={2}>
+  <Card title="Email Order Ingestion" icon="envelope-open-text" href="/en/automation/email-order-ingestion">
+    The order inbox address and how drafts are reviewed.
+  </Card>
+  <Card title="Druma Capture" icon="puzzle-piece" href="/en/integrations/chrome-extension">
+    Capture loads from freight exchanges in your browser.
+  </Card>
+</CardGroup>
