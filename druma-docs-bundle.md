@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-05 18:14 UTC
+Generated: 2026-10-08 07:35 UTC
 
 ---
 
@@ -892,7 +892,7 @@ Key User is not a column in the table below — its permissions sit between Admi
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Orders | Full | Full | Full | Partial | None | Full | Own records only | Own records only |
 | Planning Board | Full | Full | Full | Partial | Partial | None | None | None |
-| Fleet | Full | Full | Read only | Read only | Full | None | None | None |
+| Fleet | Full | Full | Partial | Read only | Full | None | None | None |
 | Compliance | Full | Full | Full | Full | Read only | None | None | None |
 | Clients | Full | Full | Full | Partial | None | Full | None | None |
 | Margin & Finance | Full | Full | Full | None | None | Partial | None | None |
@@ -4087,6 +4087,21 @@ The import process does not update existing vehicles — it only creates new one
 The Fleet → Trucks toolbar also has a **Reposition** action, next to **Bulk Import** and **Add Truck**. Use it to move an empty truck to a new location — pre-positioning ahead of a load, an empty return leg, or a fleet relocation — without an actual client order. It creates a repositioning order with an origin (auto-resolved from the truck's last delivery), a destination you pick or type, and an optional reason.
 
 If the truck is currently carrying a linked trailer, the Reposition modal also lets you **Drop Trailer** as part of the move — see [Detaching a trailer via Reposition](/en/planner/trailer-management#detaching-a-trailer-via-reposition-trailer-still-loaded) for what happens to the trailer and any load still on it.
+
+---
+
+## Driver roster
+
+**Fleet → Roster** is where you plan which driver is on which truck, day by day. It replaces the spreadsheet calendar many operators keep: one row per driver, one column per day, and each cell holds either a truck or a code such as vacation, sick leave, weekly rest at base or standby.
+
+- **Fast entry.** Drag over a block of cells, type a truck number (for example `197`) or a code (for example `UW`) and press Enter. Add `a` or `p` for a morning or afternoon half day. You can also pick a code or truck in the palette and paint cells, copy and paste, fill right, undo, or apply a repeating rotation (for example three weeks on a truck, one week at home).
+- **Two views.** *Drivers* shows each driver's plan. *Trucks* shows who drives each truck, the truck's history, and the days it has no driver.
+- **Blockers.** Days a truck is in the workshop, has an open safety-critical defect or an expired mandatory document are greyed out and cannot be given a driver. An admin can override with a reason. Conflict badges flag things like a driver's expired documents or a missing weekly rest.
+- **Orders follow the roster.** Orders not yet started take the driver rostered for their dates. When the driver of a truck changes in the middle of an order, Druma adds a handover stop at the outgoing driver's base and splits the order into two legs, one per driver. Past days never change orders. Orders with an issued eCMR are flagged for the planner instead of being split.
+- **Counters.** The Counts tab shows, per driver and month, how many days fell under each code group, and exports them as CSV. The roster does not calculate pay.
+- **Settings → Driver Roster** holds your own code list (each code is a working day, available, or unavailable), the list of handover bases, and the default base per driver and per truck.
+
+Drivers see their own roster, read-only, under **Profile → My roster** in the driver app.
 
 ---
 
