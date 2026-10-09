@@ -1,98 +1,187 @@
 ---
 title: "KSeF — Polish e-Invoicing"
-description: "How Druma automatically submits invoices to KSeF (Krajowy System e-Faktur), Poland's mandatory national e-invoicing system operated by KAS, with status tracking, retry handling, and UPO receipt download."
+description: "How Druma submits invoices to KSeF (Krajowy System e-Faktur), Poland's mandatory national e-invoicing system: environments, token or certificate setup, statuses, UPO, QR code, VAT codes, foreign currency and credit notes."
 icon: "file-invoice"
 ---
 
 <Warning>
-**Early access — pending first live-operator validation.** Druma's KSeF submission is feature-complete, but as of this writing it has not yet been exercised end-to-end against Poland's live KSeF API by a real Polish-VAT operator. Submission stays gated until a live operator token is connected. If you are among the first operators to connect KSeF, treat your initial submissions as early access — watch the status badges closely and contact support promptly if anything looks off. The setup steps and behaviour described below are the correct instructions; the only open item is a live production track record.
+**Early access — no live production track record yet.** Druma's KSeF submission is complete and has been tested end to end on the KSeF Test sandbox, but it has not yet filed invoices for a real operator on Production. Rehearse in the **Demo** environment first (see below), and contact support promptly if anything looks off in your first production filings.
 </Warning>
 
 ## What is KSeF?
 
-KSeF (Krajowy System e-Faktur) is Poland's national structured e-invoicing system, operated by the Polish tax authority (KAS — Krajowa Administracja Skarbowa). It is mandatory for Polish VAT-registered companies. Every invoice issued by a PL-VAT company must be sent to KSeF in the official FA(3) XML format — the KAS portal alone is not sufficient.
+KSeF (Krajowy System e-Faktur) is Poland's national structured e-invoicing system, operated by the Polish tax authority (KAS — Krajowa Administracja Skarbowa). Invoices are issued in the official **FA(3) XML** format; the KAS portal alone is not sufficient.
 
-<Frame caption="KSeF settings — connect the operator token, then watch submission status and UPO receipts per invoice.">
+<Frame caption="KSeF settings — connect your token or certificate, then watch submission status and UPO receipts per invoice.">
   <img src="/images/invoicing/ksef-poland.png" alt="KSeF Polish e-invoicing settings and submission status in Druma" />
 </Frame>
 
-<Note>
-The KSeF mandate is being rolled out in phases during 2026 and its go-live dates have been repeatedly delayed by the Polish government. Confirm your company's specific applicable go-live date with your accountant or the official [ksef.mf.gov.pl](https://ksef.mf.gov.pl) portal before relying on any date mentioned here.
-</Note>
+### Who must use it
 
-KSeF only applies if your company has a **Polish VAT number** (format: `PL` followed by 10 digits, e.g. `PL1234567890`). Companies registered in Romania, Belgium, or any other non-Polish country are not subject to KSeF. If Druma does not detect a PL VAT number on your company record, the KSeF integration card will remain inactive.
-
-## How Druma Handles KSeF
-
-You do not need to log into the KAS portal, produce XML files, or submit anything manually. Here is what happens automatically when you generate an invoice and KSeF is enabled:
-
-1. Druma converts the invoice into the official **FA(3) XML** format required by KAS.
-2. Druma authenticates with the KSeF API using your **operator token**, stored securely in Supabase Vault — the token is never visible in plain text after you paste it.
-3. Druma submits the XML to KSeF and receives a **KSeF number** (the official reference from KAS).
-4. Druma downloads the **UPO** (Urzędowe Poświadczenie Odbioru — official receipt of receipt) and stores it against the invoice record.
-
-The entire process runs in the background. You will see the result on the invoice as a coloured status badge.
-
-## KSeF Status Badges
-
-Each invoice subject to KSeF shows a status badge on the invoice detail page under the **KSeF** section:
-
-| Badge | Meaning |
+| Taxpayer | KSeF mandatory from |
 |---|---|
-| **Pending** | Invoice generated; KSeF submission is queued. |
-| **Submitted** | XML sent to KSeF; waiting for KAS to process it (usually 1–5 minutes). |
-| **Accepted** | KAS accepted the invoice. The KSeF number is stored and the UPO is available. |
-| **Failed** | KSeF rejected the invoice due to a validation error. See the error message on the invoice. |
-| **Rejected** | KAS returned a formal rejection. Check the UPO for the reason code. |
+| Large taxpayers | 1 February 2026 |
+| All other VAT payers | 1 April 2026 |
 
-<Note>
-A background job checks for failed submissions every 30 minutes, but each invoice only actually retries on an exponential backoff schedule — roughly 1 hour after the first failure, then roughly 2 hours after that (±25% jitter). If the third attempt (the original submission plus these 2 retries) also fails, the invoice moves straight to **Failed** status, typically within about 3 hours of the first failure — it will not retry automatically after that. Trigger a manual retry from the invoice detail panel once you have resolved the underlying error.
-</Note>
+No penalties apply until the end of 2026. Confirm your own situation with your accountant or the official [ksef.mf.gov.pl](https://ksef.mf.gov.pl) portal.
 
-## Setting Up KSeF
+KSeF only applies if your company has a **Polish VAT number** (`PL` followed by 10 digits, e.g. `PL1234567890`). Companies in Romania, Belgium or any other non-Polish country are not subject to it. Without a PL VAT number on the company record, the KSeF card stays inactive.
+
+## Environments
+
+You choose the environment when you connect. Each company has its own.
+
+| Environment | Use it for | Effect |
+|---|---|---|
+| **Test (sandbox)** | Trying the connection with fictional data. | Nothing is filed with the tax authority. |
+| **Demo (pre-production, real NIP)** | A dry run with your real NIP before going live. | Real-looking data, no legal effect. |
+| **Production** | Live invoicing. | Every invoice sent is a binding fiscal filing. |
+
+**Recommended path: Demo → Production.** Connect in Demo, send one real invoice from Druma, check that it shows up in the KSeF demo application, then reconnect with a production token or certificate. The Druma panel shows this as the **Go-live checklist**.
+
+<Warning>
+A token or certificate only works in the environment it was created in. A Demo token will be refused on Production, and the other way round.
+</Warning>
+
+## Getting your credential
+
+You can authenticate with either of two credentials. Both give the same access.
+
+### Option A — KSeF token (simplest)
+
+1. Log in to the KSeF application for your environment: [ap-demo.ksef.mf.gov.pl](https://ap-demo.ksef.mf.gov.pl) for Demo, [ap.ksef.mf.gov.pl](https://ap.ksef.mf.gov.pl) for Production.
+2. Generate a token for your company's NIP with the permissions **InvoiceWrite** and **InvoiceRead**.
+3. Copy it. KSeF shows it once.
+
+### Option B — KSeF certificate
+
+Use this if your company already manages KSeF certificates. Druma needs the certificate (`.pem` or `.crt`) and its private key as a **PKCS#8 PEM** (`.pem` or `.key`). If your certificate came as a `.p12` or `.pfx` file, convert it first:
+
+```bash
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+openssl pkcs12 -in cert.p12 -out key.pem -nocerts
+```
+
+If the private key is encrypted, you will enter its passphrase when connecting. It is used once to unlock the key and is never stored.
+
+## Connecting KSeF
 
 <Steps>
-  <Step title="Go to Settings → Integrations">
-    Open the **Settings** menu from the top navigation bar and select **Integrations**.
+  <Step title="Open Settings → Integrations → KSeF">
+    Open **Settings** from the top bar, choose **Integrations**, and find the KSeF card.
   </Step>
-  <Step title="Find the KSeF card and click Connect">
-    Locate the **KSeF (Polish e-invoicing)** card. Click **Connect**.
+  <Step title="Choose the environment">
+    Pick **Demo (pre-production, real NIP)** for your first connection.
   </Step>
-  <Step title="Paste your operator token">
-    Enter your KSeF operator token. This is the authentication token issued by KAS for your company's API access. Your accountant or IT team can generate one from the KSeF portal at [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  <Step title="Enter your NIP">
+    Enter the 10-digit **Company NIP**, without the `PL` prefix.
   </Step>
-  <Step title="Save">
-    Click **Save**. Druma validates that your company record has a Polish VAT number before activating. If validation fails, check that the VAT number on your company details is in the `PL` + 10-digit format.
+  <Step title="Choose Authentication">
+    Select **KSeF token** and paste the token, or **KSeF certificate** and choose the certificate and private key files (plus the passphrase if the key is encrypted).
+  </Step>
+  <Step title="Click Connect & test">
+    Druma performs a real login against KSeF before saving anything. If it fails you get a specific message, for example that the credentials were rejected, the token is inactive or revoked, or KSeF could not be reached. Nothing is stored until the login succeeds.
   </Step>
 </Steps>
 
-Once connected, all new invoices generated by your company are submitted to KSeF automatically. Existing invoices already in Druma are **not** retroactively submitted.
+Once connected the card shows **Connected to KSeF** with the environment, NIP and the result of the last test. Use **Test connection** at any time to re-check it.
 
-## Disconnecting KSeF
+<Note>
+If you connect a certificate that does not appear to belong to your NIP, Druma still connects but warns you, because KSeF may refuse to issue invoices with it.
+</Note>
 
-Go to **Settings → Integrations → KSeF → Disconnect**. This removes the operator token from Vault and stops new submissions immediately. Invoices that have already been accepted retain their KSeF numbers — disconnecting does not affect accepted records.
+Only invoices sent after you connect are submitted. Invoices already in Druma are not filed retroactively.
 
-## Reverse-Charge Invoices
+### Several billing entities
 
-Druma correctly handles reverse-charge VAT in the FA(3) XML format. When an invoice carries reverse-charge VAT treatment, Druma omits the VAT amount and sets the correct **P_12** field in the XML. No manual adjustment is needed — the VAT treatment is derived from the invoice line items as configured in Druma.
+If your company invoices through a Polish billing entity whose PL NIP differs from the company's, an **Issuer (NIP)** selector appears in the KSeF card (it stays hidden while every billing entity shares the company's NIP). The default is **Company (default)**; each entity is listed as name, NIP and **connected** or **not connected**. Choose an entity to connect its own KSeF credential: the **Issuer NIP** field is prefilled with the entity's NIP and is read-only. An invoice is then filed under the NIP of the entity that issues it, using that entity's credential and environment.
 
-## Downloading the UPO
+### Disconnecting
 
-The UPO (official receipt from KAS) is downloaded automatically once the invoice reaches **Accepted** status and is stored against the invoice record. To download it manually:
+**Disconnect** deletes the stored token or certificate and stops new submissions immediately. Invoices already accepted keep their KSeF numbers.
 
-1. Open the invoice from **Finance** → **Invoices**.
-2. Scroll to the **KSeF** section.
-3. Click **Download UPO**.
+## What happens when you send an invoice
+
+For a company with KSeF connected, sending a client invoice (or a credit note) submits it to KSeF automatically:
+
+1. Druma builds the FA(3) XML from the invoice and stores exactly what it sends.
+2. Druma logs in with your credential and submits the invoice.
+3. KSeF answers asynchronously. Usually within seconds Druma receives the verdict.
+4. On acceptance, Druma stores the **KSeF number**, downloads the **UPO** and adds the **QR code** to the invoice.
+
+If you send the same invoice again, Druma resends the identical content, so KSeF recognises it as a duplicate and the invoice is never filed twice.
+
+Documents issued by your client (client self-billing) are never sent by Druma.
+
+### Statuses and what to do
+
+The status appears on the invoice under the **KSeF** section.
+
+| Status | Meaning | What to do |
+|---|---|---|
+| **Submitted** | Sent; waiting for KSeF's verdict. | Usually resolves in seconds. If it stays, use **Check KSeF status**; Druma also polls automatically. |
+| **Accepted** | KSeF issued a KSeF number. | Nothing. The UPO is available. |
+| **Rejected** | KSeF refused the content, so the invoice was **never filed**. KSeF's own explanation is shown on the invoice. | Fix the client or company master data (VAT number, address, name) or set the **KSeF VAT code (PL)** override, then **Retry KSeF**. Druma rebuilds the invoice from the current data. If **amounts or lines** are wrong, issue a credit note and a new invoice instead. |
+| **Error** | A technical problem (KSeF unreachable, rate limiting, content mismatch). | Druma retries automatically; you can also **Retry KSeF**. |
+| **Failed** | Automatic retries are exhausted. | Resolve the cause shown, then **Retry KSeF**. |
+| **Not applicable** | This document is not sent to KSeF (for example a document type KSeF does not take, a consolidated invoice with a line that has no order, or a billing entity whose VAT number differs from the one connected). | Send it by email, or fix the cause and retry. |
+
+<Note>
+Automatic retries use a growing delay with random jitter. A background job checks for retryable invoices every 30 minutes.
+</Note>
+
+## KSeF number, UPO and QR code
+
+Once an invoice is **Accepted**, the invoice's KSeF section shows:
+
+- **KSeF number** — KSeF's official reference for the invoice.
+- **Verify in KSeF** — a link to KSeF's public verification page for this invoice.
+- **Download UPO** — the official receipt (Urzędowe Poświadczenie Odbioru) from KAS. Download it from the invoice, or from **Finance → Invoices**.
+
+The printed and PDF invoice also carries a **QR code** labelled with the KSeF number, so your client can verify it.
 
 <Warning>
-The UPO is the legal proof that KAS received your invoice. Keep a copy for your records — Polish tax law requires you to be able to produce it during a tax audit.
+The UPO is the legal proof that KAS received your invoice. Keep it for audits.
 </Warning>
 
-## Manual Retry
+### TEST and DEMO chip
 
-If automatic retries are exhausted or you have corrected an error and want to resubmit immediately:
+An invoice filed in the Test or Demo environment carries a **TEST** or **DEMO** chip and the notice *Filed in the KSeF test system. This is not a fiscal filing.* Such an invoice has **no legal effect**. Only production acceptances count, so they are the only ones that appear as a KSeF number in your accounting exports (see [JPK_V7M — Comarch ERP Optima](/en/integrations/jpk-optima)).
 
-Go to **Finance** → **Invoices** → open the invoice → **KSeF section** → click **Retry submission**. Druma sends the FA(3) XML again immediately.
+## The KSeF VAT code (PL)
+
+Druma derives the FA(3) VAT code from the invoice's VAT treatment, the buyer's country and the VAT rate, so normally no action is needed. When the automatic choice is not right for a particular invoice, the invoice editor has a **KSeF VAT code (PL)** field (visible for Polish operators). Leave it on **Automatic**, or override it:
+
+| Choice in the field | KSeF code | Typical use |
+|---|---|---|
+| np II: intra-EU services (art. 28b) | `np II` | Services to a business customer in another EU country, such as a transport service. |
+| np I: outside Poland, non-EU | `np I` | Services outside Poland to a non-EU customer. |
+| 0% WDT: intra-EU supply of goods | `0 WDT` | Intra-community supply of goods. |
+| 0% export | `0 EX` | Export of goods outside the EU. |
+| 0% domestic (KR) | `0 KR` | 0% rate on a domestic supply. |
+| oo: domestic reverse charge | `oo` | Domestic reverse charge. |
+| zw: exempt | `zw` | VAT-exempt supply. |
+
+<Note>
+Which code applies to a given transport lane is a tax question, and the rules are not always clear-cut. **Ask your accountant** which code to use, and set it as an override where Druma's automatic choice differs.
+</Note>
+
+## Foreign currency
+
+An invoice in a foreign currency with Polish VAT is filed with the VAT amount in PLN, converted at the **NBP rate from the last business day before the tax point**. If no NBP rate is available for that date, the submission is refused with a clear message and can be retried later.
+
+## Consolidated invoices
+
+A consolidated invoice that combines several orders is filed with a billing period running from the earliest to the latest delivery date among its lines. Every line must be linked to an order; otherwise Druma refuses the filing.
+
+## Credit notes
+
+A credit note is filed to KSeF as a correction of the original invoice. It references the original's KSeF number when it has one, and shows the original lines and the corrected lines with the differences. If the original was never filed in KSeF, the correction is filed without a KSeF number reference.
+
+## What is not supported
+
+- **Offline mode.** Druma files online only.
+- **Receiving purchase invoices** from KSeF. Druma submits your sales invoices; it does not fetch your suppliers' invoices.
 
 ---
 

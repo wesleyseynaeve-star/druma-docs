@@ -1,70 +1,195 @@
 ---
-title: "KSeF — Poolse e-facturering"
-description: "Hoe Druma facturen automatisch indient bij KSeF (Krajowy System e-Faktur), Polens verplichte nationale e-facturatiesysteem beheerd door KAS, met statusopvolging, retries en UPO-ontvangstbewijs."
+title: "KSeF — Poolse e-facturatie"
+description: "Hoe Druma facturen indient bij KSeF (Krajowy System e-Faktur), het verplichte Poolse nationale e-facturatiesysteem: omgevingen, koppelen met token of certificaat, statussen, UPO, QR-code, btw-codes, vreemde valuta en creditnota's."
 icon: "file-invoice"
 ---
 
 <Warning>
-**Early access — wacht op eerste live-operatorvalidatie.** Druma's KSeF-indiening is functioneel compleet, maar is nog niet end-to-end getest tegen Polens live KSeF-API door een echte PL-BTW-operator. Indiening blijft vergrendeld tot een live operatortoken is gekoppeld. Bent u een van de eerste operators die KSeF koppelt, behandel uw eerste indieningen dan als early access — houd de statusbadges nauwlettend in de gaten en neem snel contact op met support bij twijfel.
+**Early access — nog geen praktijkervaring in productie.** De KSeF-indiening van Druma is volledig en end-to-end getest in de KSeF-testomgeving, maar heeft nog geen facturen van een echte operator in productie ingediend. Oefen eerst in de omgeving **Demo** (zie hieronder) en neem snel contact op met support als uw eerste productie-indieningen er vreemd uitzien.
 </Warning>
 
 ## Wat is KSeF?
 
-KSeF (Krajowy System e-Faktur) is Polens nationale gestructureerde e-facturatiesysteem, beheerd door de Poolse belastingdienst (KAS). Het is verplicht voor Pools BTW-geregistreerde bedrijven — elke factuur moet naar KSeF in het officiële FA(3) XML-formaat.
+KSeF (Krajowy System e-Faktur) is het nationale Poolse systeem voor gestructureerde e-facturatie, beheerd door de Poolse belastingdienst (KAS — Krajowa Administracja Skarbowa). Facturen worden uitgegeven in het officiële formaat **FA(3) XML**; het KAS-portaal alleen volstaat niet.
 
-<Note>
-De KSeF-verplichting wordt gefaseerd ingevoerd tijdens 2026 en de ingangsdatums zijn herhaaldelijk uitgesteld door de Poolse overheid. Bevestig de specifieke ingangsdatum voor uw bedrijf bij uw boekhouder of via [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
-</Note>
+<Frame caption="KSeF-instellingen — koppel uw token of certificaat en volg daarna de indieningsstatus en UPO-bewijzen per factuur.">
+  <img src="/images/invoicing/ksef-poland.png" alt="KSeF-instellingen voor Poolse e-facturatie en indieningsstatus in Druma" />
+</Frame>
 
-KSeF geldt alleen bij een **Pools BTW-nummer** (`PL` + 10 cijfers). Andere landen vallen er niet onder — Druma houdt de KSeF-kaart inactief zonder gedetecteerd PL-BTW-nummer.
+### Wie het moet gebruiken
 
-## Hoe Druma KSeF afhandelt
-
-Volledig automatisch zodra KSeF is ingeschakeld: Druma zet de factuur om naar **FA(3) XML**, authenticeert met uw **operatortoken** (veilig in Supabase Vault), dient de XML in bij KSeF en ontvangt een **KSeF-nummer**, en downloadt de **UPO** (officieel ontvangstbewijs) bij de factuur.
-
-## Statusbadges
-
-| Badge | Betekenis |
+| Belastingplichtige | KSeF verplicht vanaf |
 |---|---|
-| **In behandeling** | Factuur aangemaakt, indiening in wachtrij |
-| **Ingediend** | XML verzonden, wacht op verwerking door KAS (meestal 1–5 min) |
-| **Geaccepteerd** | KAS accepteerde de factuur; KSeF-nummer en UPO beschikbaar |
-| **Mislukt** | KSeF wees de factuur af wegens een validatiefout |
-| **Afgewezen** | Formele afwijzing door KAS — controleer de UPO voor de redencode |
+| Grote belastingplichtigen | 1 februari 2026 |
+| Alle andere btw-plichtigen | 1 april 2026 |
 
-<Note>
-Een achtergrondtaak controleert elke 30 minuten op mislukte indieningen, maar elke factuur wordt in werkelijkheid opnieuw geprobeerd volgens een schema met exponentieel uitstel — ongeveer 1 uur na de eerste mislukking, dan ongeveer 2 uur daarna (±25% variatie). Mislukt ook de derde poging (de originele indiening plus deze 2 herhalingen), dan gaat de factuur direct naar status **Mislukt**, doorgaans binnen ongeveer 3 uur na de eerste mislukking — daarna wordt niet meer automatisch opnieuw geprobeerd. Trigger een handmatige retry vanaf het factuurdetailpaneel zodra u de onderliggende fout heeft opgelost.
-</Note>
+Tot eind 2026 gelden geen boetes. Controleer uw situatie bij uw boekhouder of op het officiële portaal [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
 
-## KSeF instellen
+KSeF geldt alleen voor bedrijven met een **Pools btw-nummer** (`PL` plus 10 cijfers, bv. `PL1234567890`). Bedrijven in Roemenië, België of elders vallen er niet onder. Zonder Pools btw-nummer op het bedrijfsrecord blijft de KSeF-kaart inactief.
+
+## Omgevingen
+
+U kiest de omgeving bij het koppelen. Elk bedrijf heeft de zijne.
+
+| Omgeving | Waarvoor | Effect |
+|---|---|---|
+| **Test (sandbox)** | De verbinding proberen met fictieve gegevens. | Er wordt niets bij de belastingdienst ingediend. |
+| **Demo (pre-productie, echte NIP)** | Een proefrun met uw echte NIP vóór livegang. | Realistische gegevens, geen juridisch gevolg. |
+| **Productie** | Echte facturatie. | Elke verzonden factuur is een bindende fiscale aangifte. |
+
+**Aanbevolen route: Demo → Productie.** Koppel in Demo, verstuur één echte factuur vanuit Druma, controleer of die in de KSeF-demo-applicatie verschijnt en koppel dan opnieuw met een productietoken of -certificaat. Druma toont dit als **Checklist voor livegang**.
+
+<Warning>
+Een token of certificaat werkt alleen in de omgeving waarin het is aangemaakt. Een Demo-token wordt in Productie geweigerd en omgekeerd.
+</Warning>
+
+## Uw inloggegevens verkrijgen
+
+U kunt zich met een van twee inloggegevens authenticeren. Beide geven dezelfde toegang.
+
+### Optie A — KSeF-token (eenvoudigst)
+
+1. Log in op de KSeF-applicatie van uw omgeving: [ap-demo.ksef.mf.gov.pl](https://ap-demo.ksef.mf.gov.pl) voor Demo, [ap.ksef.mf.gov.pl](https://ap.ksef.mf.gov.pl) voor Productie.
+2. Genereer een token voor de NIP van uw bedrijf met de rechten **InvoiceWrite** en **InvoiceRead**.
+3. Kopieer het. KSeF toont het maar één keer.
+
+### Optie B — KSeF-certificaat
+
+Gebruik dit als uw bedrijf al KSeF-certificaten beheert. Druma heeft het certificaat (`.pem` of `.crt`) en de privésleutel als **PKCS#8 PEM** (`.pem` of `.key`) nodig. Hebt u een `.p12`- of `.pfx`-bestand, zet het dan eerst om:
+
+```bash
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+openssl pkcs12 -in cert.p12 -out key.pem -nocerts
+```
+
+Is de privésleutel versleuteld, dan voert u bij het koppelen de wachtzin in. Die wordt eenmalig gebruikt om de sleutel te ontgrendelen en nooit opgeslagen.
+
+## KSeF koppelen
 
 <Steps>
-  <Step title="Ga naar Instellingen → Integraties">
-    Zoek de kaart **KSeF (Poolse e-facturering)** en klik op **Verbinden**.
+  <Step title="Open Instellingen → Integraties → KSeF">
+    Open **Instellingen** in de bovenbalk, kies **Integraties** en zoek de KSeF-kaart.
   </Step>
-  <Step title="Plak uw operatortoken">
-    Het authenticatietoken uitgegeven door KAS, te genereren door uw boekhouder via [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  <Step title="Kies de omgeving">
+    Kies voor de eerste koppeling **Demo (pre-productie, echte NIP)**.
   </Step>
-  <Step title="Opslaan">
-    Druma controleert of uw bedrijfsrecord een Pools BTW-nummer heeft (formaat `PL` + 10 cijfers) voordat activering plaatsvindt.
+  <Step title="Voer de NIP in">
+    Voer de 10-cijferige **NIP van het bedrijf** in, zonder het voorvoegsel `PL`.
+  </Step>
+  <Step title="Kies de authenticatie">
+    Kies **KSeF-token** en plak het token, of **KSeF-certificaat** en kies de bestanden **Certificaat (.pem, .crt)** en **Privésleutel (.pem, .key)** (plus **Wachtzin van de sleutel (optioneel)** als de sleutel versleuteld is).
+  </Step>
+  <Step title="Klik op Verbinden en testen">
+    Druma logt echt in bij KSeF voordat er iets wordt opgeslagen. Mislukt dat, dan krijgt u een concrete melding, bv. dat de inloggegevens zijn geweigerd, het token inactief of ingetrokken is of KSeF onbereikbaar is. Er wordt niets opgeslagen tot het inloggen slaagt.
   </Step>
 </Steps>
 
-Eenmaal verbonden worden alle **nieuwe** facturen automatisch ingediend — bestaande facturen worden niet met terugwerkende kracht ingediend.
+Na het koppelen toont de kaart **Verbonden met KSeF** met omgeving, NIP en het resultaat van de laatste test. Met **Verbinding testen** controleert u het op elk moment opnieuw.
 
-## Loskoppelen, terugbetaling en handmatige retry
+<Note>
+Koppelt u een certificaat dat niet bij uw NIP lijkt te horen, dan verbindt Druma toch maar waarschuwt u, omdat KSeF kan weigeren er facturen mee uit te geven.
+</Note>
 
-**Instellingen → Integraties → KSeF → Loskoppelen** verwijdert het operatortoken uit Vault en stopt nieuwe indiening direct; reeds geaccepteerde facturen behouden hun KSeF-nummer. Reverse-charge BTW wordt correct verwerkt in het FA(3)-veld **P_12**, zonder handmatige aanpassing. De UPO wordt automatisch bewaard bij de factuur zodra deze **Geaccepteerd** is; handmatig downloaden via **Facturering → factuur → sectie KSeF → UPO downloaden**. Voor een handmatige retry: **Facturering → factuur → sectie KSeF → Indiening opnieuw proberen**.
+Alleen facturen die u na het koppelen verstuurt, worden ingediend. Bestaande facturen in Druma worden niet met terugwerkende kracht ingediend.
+
+### Meerdere factuurentiteiten
+
+Factureert uw bedrijf via een Poolse factuurentiteit waarvan het Poolse NIP verschilt van dat van het bedrijf, dan verschijnt in de KSeF-kaart een keuzelijst **Uitgever (NIP)** (die blijft verborgen zolang alle factuurentiteiten het NIP van het bedrijf delen). De standaardkeuze is **Bedrijf (standaard)**; elke entiteit staat vermeld met naam, NIP en **verbonden** of **niet verbonden**. Kies een entiteit om haar eigen KSeF-inloggegevens te koppelen: het veld **NIP van de uitgever** is vooraf ingevuld met het NIP van de entiteit en alleen-lezen. De factuur wordt dan ingediend onder het NIP van de uitgevende entiteit, met haar inloggegevens en omgeving.
+
+### Verbinding verbreken
+
+**Verbinding verbreken** verwijdert het opgeslagen token of certificaat en stopt nieuwe indieningen direct. Reeds geaccepteerde facturen behouden hun KSeF-nummer.
+
+## Wat er gebeurt bij het versturen van een factuur
+
+Bij een bedrijf met gekoppeld KSeF wordt het versturen van een klantfactuur (of creditnota) automatisch bij KSeF ingediend:
+
+1. Druma bouwt de FA(3)-XML uit de factuur en bewaart precies wat het verstuurt.
+2. Druma logt in met uw inloggegevens en dient de factuur in.
+3. KSeF antwoordt asynchroon. Meestal ontvangt Druma het oordeel binnen enkele seconden.
+4. Bij acceptatie slaat Druma het **KSeF-nummer** op, downloadt de **UPO** en voegt de **QR-code** aan de factuur toe.
+
+Verstuurt u dezelfde factuur opnieuw, dan stuurt Druma identieke inhoud, zodat KSeF een duplicaat herkent en de factuur nooit dubbel wordt ingediend.
+
+Door uw klant uitgegeven documenten (zelffacturatie door de klant) worden nooit door Druma verstuurd.
+
+### Statussen en wat te doen
+
+De status staat op de factuur in het onderdeel **KSeF**.
+
+| Status | Betekenis | Wat te doen |
+|---|---|---|
+| **Ingediend** | Verzonden; wacht op het oordeel van KSeF. | Lost meestal binnen seconden op. Blijft het staan, gebruik dan **KSeF-status controleren**; Druma vraagt ook automatisch op. |
+| **Geaccepteerd** | KSeF heeft een KSeF-nummer toegekend. | Niets. De UPO is beschikbaar. |
+| **Afgewezen** | KSeF weigerde de inhoud, dus de factuur is **nooit ingediend**. De uitleg van KSeF staat op de factuur. | Corrigeer de stamgegevens van klant of bedrijf (btw-nummer, adres, naam) of stel de overschrijving **KSeF-btw-code (PL)** in, en gebruik dan **KSeF opnieuw proberen**. Druma bouwt de factuur opnieuw op uit de actuele gegevens. Zijn **bedragen of regels** fout, geef dan een creditnota en een nieuwe factuur uit. |
+| **Fout** | Technisch probleem (KSeF onbereikbaar, snelheidsbeperking, inhoudsverschil). | Druma probeert automatisch opnieuw; u kunt ook **KSeF opnieuw proberen**. |
+| **Mislukt** | Automatische nieuwe pogingen zijn op. | Los de getoonde oorzaak op en gebruik dan **KSeF opnieuw proberen**. |
+| **Niet van toepassing** | Het document wordt niet naar KSeF gestuurd (bv. een documenttype dat KSeF niet aanneemt, een verzamelfactuur met een regel zonder order, of een factuurentiteit met een ander btw-nummer dan het gekoppelde). | Verstuur het per e-mail, of los de oorzaak op en probeer opnieuw. |
+
+<Note>
+Automatische nieuwe pogingen gebruiken toenemende wachttijden met willekeurige spreiding. Een achtergrondtaak zoekt elke 30 minuten naar facturen die opnieuw kunnen worden geprobeerd.
+</Note>
+
+## KSeF-nummer, UPO en QR-code
+
+Is een factuur **Geaccepteerd**, dan toont het KSeF-onderdeel van de factuur:
+
+- **KSeF-nummer** — de officiële referentie van de factuur in KSeF.
+- **Controleren in KSeF** — een link naar de openbare verificatiepagina van deze factuur in KSeF.
+- **UPO downloaden** — het officiële ontvangstbewijs (Urzędowe Poświadczenie Odbioru) van de KAS. Download het vanaf de factuur of via **Financiën → Facturen**.
+
+De afgedrukte factuur en de pdf bevatten ook een **QR-code** met het KSeF-nummer, zodat uw klant de factuur kan verifiëren.
 
 <Warning>
-De UPO is het wettelijke bewijs dat KAS uw factuur heeft ontvangen — bewaar een kopie; de Poolse belastingwet vereist dat u deze tijdens een controle kunt tonen.
+De UPO is het wettelijke bewijs dat de KAS uw factuur heeft ontvangen. Bewaar hem voor controles.
 </Warning>
+
+### Label TEST en DEMO
+
+Een factuur die in de omgeving Test of Demo is ingediend, draagt een label **TEST** of **DEMO** en de melding *Ingediend in het KSeF-testsysteem. Dit is geen fiscale aangifte.* Zo'n factuur heeft **geen juridisch gevolg**. Alleen acceptaties in productie tellen, dus alleen die verschijnen als KSeF-nummer in uw boekhoudexports (zie [JPK_V7M — Comarch ERP Optima](/nl/integrations/jpk-optima)).
+
+## De KSeF-btw-code (PL)
+
+Druma leidt de FA(3)-btw-code af uit de btw-behandeling van de factuur, het land van de koper en het btw-tarief; meestal hoeft u niets te doen. Past de automatische keuze niet bij een bepaalde factuur, dan heeft de factuureditor het veld **KSeF-btw-code (PL)** (zichtbaar voor Poolse operators). Laat het op **Automatisch** staan of overschrijf het:
+
+| Keuze in het veld | KSeF-code | Typisch gebruik |
+|---|---|---|
+| np II: intra-EU-diensten (art. 28b) | `np II` | Diensten aan een bedrijf in een ander EU-land, bv. een transportdienst. |
+| np I: buiten Polen, niet-EU | `np I` | Diensten buiten Polen aan een klant buiten de EU. |
+| 0% WDT: intracommunautaire levering van goederen | `0 WDT` | Intracommunautaire levering van goederen. |
+| 0% export | `0 EX` | Uitvoer van goederen buiten de EU. |
+| 0% binnenlands (KR) | `0 KR` | 0%-tarief op een binnenlandse levering. |
+| oo: binnenlandse verlegging | `oo` | Binnenlandse btw-verlegging. |
+| zw: vrijgesteld | `zw` | Van btw vrijgestelde levering. |
+
+<Note>
+Welke code voor een bepaalde transportlijn geldt, is een fiscale vraag waarvan de regels niet altijd duidelijk zijn. **Vraag uw boekhouder** welke code u moet gebruiken en stel de overschrijving in waar de automatische keuze van Druma afwijkt.
+</Note>
+
+## Vreemde valuta
+
+Een factuur in vreemde valuta met Poolse btw wordt ingediend met het btw-bedrag in PLN, omgerekend tegen de **NBP-koers van de laatste werkdag vóór het belastbare feit**. Is er voor die datum geen NBP-koers, dan wordt de indiening met een duidelijke melding geweigerd en kan ze later opnieuw worden geprobeerd.
+
+## Verzamelfacturen
+
+Een verzamelfactuur van meerdere orders wordt ingediend met een factuurperiode van de vroegste tot de laatste leverdatum van haar regels. Elke regel moet aan een order gekoppeld zijn; anders weigert Druma de indiening.
+
+## Creditnota's
+
+Een creditnota wordt bij KSeF ingediend als correctie van de oorspronkelijke factuur. Ze verwijst naar het KSeF-nummer van het origineel, als dat er is, en toont de oorspronkelijke en gecorrigeerde regels met de verschillen. Is het origineel nooit in KSeF ingediend, dan wordt de correctie zonder verwijzing naar een KSeF-nummer ingediend.
+
+## Niet ondersteund
+
+- **Offlinemodus.** Druma dient alleen online in.
+- **Ontvangst van inkoopfacturen** uit KSeF. Druma dient uw verkoopfacturen in; het haalt geen facturen van uw leveranciers op.
+
+---
 
 <CardGroup cols={2}>
   <Card title="e-Factura / ANAF-indiening" icon="landmark" href="/nl/invoicing/efactura-anaf">
-    Roemeniës equivalente verplichte e-facturatiesysteem via de ANAF SPV-API.
+    Het Roemeense equivalent van het verplichte e-facturatiesysteem — hoe Druma via de SPV-API bij ANAF indient.
   </Card>
-  <Card title="Peppol-facturering" icon="network-wired" href="/nl/integrations/peppol-invoicing">
-    EU-brede elektronische facturering via het Peppol-netwerk.
+  <Card title="Peppol-facturatie" icon="network-wired" href="/nl/integrations/peppol-invoicing">
+    EU-brede elektronische facturatie via het Peppol-netwerk — instellen, versturen en status volgen.
   </Card>
 </CardGroup>

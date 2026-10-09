@@ -1,102 +1,195 @@
 ---
 title: "KSeF — lengyel e-számlázás"
-description: "Hogyan nyújtja be automatikusan a Druma a számlákat a KSeF-nek (Krajowy System e-Faktur), Lengyelország kötelező, a KAS által üzemeltetett nemzeti e-számlázási rendszerébe, állapotkövetéssel, újrapróbálkozás-kezeléssel és UPO-nyugta letöltéssel."
+description: "Hogyan nyújtja be a Druma a számlákat a KSeF-nek (Krajowy System e-Faktur), Lengyelország kötelező nemzeti e-számlázási rendszerébe: környezetek, token vagy tanúsítvány beállítása, állapotok, UPO, QR-kód, ÁFA-kódok, devizás számlák és jóváíró számlák."
 icon: "file-invoice"
 ---
 
 <Warning>
-**Korai hozzáférés — az első élő operátori validálásra vár.** A Druma KSeF-benyújtása funkcionálisan kész, de e sorok írásakor még nem futott végig teljes körűen Lengyelország élő KSeF API-jával szemben egy valódi, lengyel ÁFA-alany operátornál. A benyújtás zárolt marad, amíg egy élő operátori token nem kerül csatlakoztatásra. Ha az elsők között vagy, akik csatlakoztatják a KSeF-et, kezeld korai hozzáférésként a kezdeti benyújtásaidat — figyeld szorosan a státusz-jelvényeket, és haladéktalanul lépj kapcsolatba az ügyfélszolgálattal, ha valami furcsának tűnik. A lentebb leírt beállítási lépések és viselkedés helyesek; az egyetlen nyitott tétel egy élő éles nyomvonal.
+**Korai hozzáférés — még nincs éles üzemi tapasztalat.** A Druma KSeF-benyújtása kész, és végigtesztelték a KSeF Test homokozóban, de még nem nyújtott be számlákat valódi üzemeltető nevében éles környezetben. Először próbálja ki a **Demo** környezetben (lásd lent), és ha az első éles benyújtásoknál bármi furcsának tűnik, azonnal forduljon az ügyfélszolgálathoz.
 </Warning>
 
-## Mi az a KSeF?
+## Mi a KSeF?
 
-A KSeF (Krajowy System e-Faktur) Lengyelország nemzeti strukturált e-számlázási rendszere, amelyet a lengyel adóhatóság (KAS — Krajowa Administracja Skarbowa) üzemeltet. Kötelező a lengyel ÁFA-alany cégek számára. Minden PL-ÁFA cég által kiállított számlát el kell küldeni a KSeF-nek a hivatalos FA(3) XML-formátumban — önmagában a KAS-portál nem elegendő.
+A KSeF (Krajowy System e-Faktur) Lengyelország nemzeti strukturált e-számlázási rendszere, amelyet a lengyel adóhatóság (KAS — Krajowa Administracja Skarbowa) üzemeltet. A számlákat a hivatalos **FA(3) XML** formátumban kell kiállítani; a KAS portálja önmagában nem elég.
 
-<Note>
-A KSeF-kötelezettséget szakaszosan vezetik be 2026 folyamán, és élesítési dátumait a lengyel kormány ismételten elhalasztotta. Erősítsd meg a céged konkrét, alkalmazandó élesítési dátumát a könyvelőddel vagy a hivatalos [ksef.mf.gov.pl](https://ksef.mf.gov.pl) portállal, mielőtt bármelyik itt említett dátumra hagyatkoznál.
-</Note>
+<Frame caption="KSeF-beállítások — csatlakoztassa a tokent vagy a tanúsítványt, majd kövesse számlánként a beküldés állapotát és az UPO-nyugtákat.">
+  <img src="/images/invoicing/ksef-poland.png" alt="KSeF lengyel e-számlázási beállítások és beküldési állapot a Drumában" />
+</Frame>
 
-A KSeF csak akkor vonatkozik rád, ha a céged **lengyel ÁFA-számmal** rendelkezik (formátum: `PL`, majd 10 számjegy, pl. `PL1234567890`). A Romániában, Belgiumban vagy bármely más, nem lengyel országban bejegyzett cégekre nem vonatkozik a KSeF. Ha a Druma nem észlel PL ÁFA-számot a céges rekordodon, a KSeF integrációs kártya inaktív marad.
+### Kire vonatkozik
 
-## Hogyan kezeli a Druma a KSeF-et?
-
-Nem kell bejelentkezned a KAS-portálra, XML-fájlokat készítened, vagy bármit manuálisan benyújtanod. Íme, mi történik automatikusan, amikor egy számlát generálsz, és a KSeF engedélyezve van:
-
-1. A Druma átalakítja a számlát a KAS által megkövetelt hivatalos **FA(3) XML** formátumra.
-2. A Druma hitelesíti magát a KSeF API-val a **operátori tokened** segítségével, amely biztonságosan a Supabase Vault-ban van tárolva — a token soha nem látható egyszerű szövegként, miután beillesztetted.
-3. A Druma benyújtja az XML-t a KSeF-nek, és megkap egy **KSeF-számot** (a KAS hivatalos hivatkozása).
-4. A Druma letölti az **UPO**-t (Urzędowe Poświadczenie Odbioru — hivatalos átvételi igazolás), és a számlarekordhoz tárolja.
-
-A teljes folyamat a háttérben fut. Az eredményt egy színes státusz-jelvényként látod a számlán.
-
-## KSeF-státusz jelvények
-
-Minden KSeF-köteles számla egy státusz-jelvényt mutat a számla-részletező oldalon, a **KSeF** szakasz alatt:
-
-| Jelvény | Jelentés |
+| Adózó | A KSeF kötelező ettől |
 |---|---|
-| **Függőben** | A számla generálva; a KSeF-benyújtás sorba állítva. |
-| **Benyújtva** | Az XML elküldve a KSeF-nek; a KAS feldolgozására vár (jellemzően 1–5 perc). |
-| **Elfogadva** | A KAS elfogadta a számlát. A KSeF-szám tárolva van, és az UPO elérhető. |
-| **Sikertelen** | A KSeF elutasította a számlát egy validálási hiba miatt. Lásd a hibaüzenetet a számlán. |
-| **Elutasítva** | A KAS formális elutasítást adott vissza. Ellenőrizd az UPO-t az ok-kódért. |
+| Nagy adózók | 2026. február 1. |
+| Minden más ÁFA-alany | 2026. április 1. |
 
-<Note>
-Egy háttérfeladat 30 percenként ellenőrzi a sikertelen benyújtásokat, de minden számla ténylegesen csak egy exponenciális visszavárási ütemterv szerint próbálkozik újra — nagyjából 1 óra múlva az első sikertelenség után, majd nagyjából 2 óra múlva ezután (±25% eltéréssel). Ha a harmadik kísérlet (az eredeti benyújtás plusz ez a 2 újrapróbálkozás) is meghiúsul, a számla egyenesen **Sikertelen** státuszra vált, jellemzően az első sikertelenségtől számított kb. 3 órán belül — ezután nem próbálkozik automatikusan újra. Indíts manuális újrapróbálkozást a számla-részletező panelről, miután megoldottad a mögöttes hibát.
-</Note>
+2026 végéig nem alkalmaznak szankciókat. Egyeztesse a saját helyzetét a könyvelőjével, vagy nézze meg a hivatalos [ksef.mf.gov.pl](https://ksef.mf.gov.pl) portált.
 
-## A KSeF beállítása
+A KSeF csak akkor vonatkozik Önre, ha a cégének **lengyel adószáma** van (`PL` és 10 számjegy, pl. `PL1234567890`). A romániai, belgiumi vagy más, nem lengyel országbeli cégekre nem vonatkozik. Ha a cég adatlapján nincs PL adószám, a KSeF kártya inaktív marad.
+
+## Környezetek
+
+A környezetet csatlakozáskor választja ki. Minden cégnek saját környezete van.
+
+| Környezet | Mire használja | Hatás |
+|---|---|---|
+| **Teszt (homokozó)** | A kapcsolat kipróbálása fiktív adatokkal. | Semmi nem kerül bejelentésre az adóhatóságnak. |
+| **Demo (éles előtti, valódi NIP)** | Próbafutás a valódi NIP-jével az élesítés előtt. | Valósághű adatok, jogi hatás nélkül. |
+| **Éles** | Éles számlázás. | Minden elküldött számla kötelező adóbevallási tétel. |
+
+**Ajánlott út: Demo → Éles.** Csatlakozzon Demo környezetben, küldjön egy valódi számlát a Drumából, ellenőrizze, hogy megjelenik-e a KSeF demó alkalmazásban, majd csatlakozzon újra éles tokennel vagy tanúsítvánnyal. A Druma panelje ezt **Élesítés előtti ellenőrzőlista** néven mutatja.
+
+<Warning>
+A token vagy a tanúsítvány csak abban a környezetben működik, amelyben létrehozták. A Demo token Éles környezetben elutasításra kerül, és fordítva.
+</Warning>
+
+## A hitelesítő adat megszerzése
+
+Két hitelesítő adat közül választhat. Mindkettő ugyanazt a hozzáférést adja.
+
+### A) lehetőség — KSeF-token (a legegyszerűbb)
+
+1. Jelentkezzen be a környezetének megfelelő KSeF alkalmazásba: Demo esetén [ap-demo.ksef.mf.gov.pl](https://ap-demo.ksef.mf.gov.pl), Éles esetén [ap.ksef.mf.gov.pl](https://ap.ksef.mf.gov.pl).
+2. Generáljon tokent a cége NIP-jéhez **InvoiceWrite** és **InvoiceRead** jogosultsággal.
+3. Másolja ki. A KSeF csak egyszer mutatja meg.
+
+### B) lehetőség — KSeF-tanúsítvány
+
+Akkor használja, ha a cége már kezel KSeF-tanúsítványokat. A Drumának a tanúsítványra (`.pem` vagy `.crt`) és a privát kulcsára van szüksége **PKCS#8 PEM** formátumban (`.pem` vagy `.key`). Ha a tanúsítványa `.p12` vagy `.pfx` fájlként érkezett, előbb alakítsa át:
+
+```bash
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+openssl pkcs12 -in cert.p12 -out key.pem -nocerts
+```
+
+Ha a privát kulcs titkosított, a csatlakozáskor meg kell adnia a jelmondatát. A rendszer egyszer használja a kulcs feloldásához, és soha nem tárolja.
+
+## A KSeF csatlakoztatása
 
 <Steps>
-  <Step title="Lépj a Beállítások → Integrációk menüpontra">
-    Nyisd meg a **Beállítások** menüt a felső navigációs sávból, és válaszd az **Integrációk** menüpontot.
+  <Step title="Nyissa meg a Beállítások → Integrációk → KSeF oldalt">
+    Nyissa meg a **Beállítások** menüt a felső sávban, válassza az **Integrációk** lehetőséget, és keresse meg a KSeF kártyát.
   </Step>
-  <Step title="Keresd meg a KSeF kártyát, és kattints a Csatlakozás gombra">
-    Keresd meg a **KSeF (lengyel e-számlázás)** kártyát. Kattints a **Csatlakozás** gombra.
+  <Step title="Válassza ki a környezetet">
+    Az első csatlakozáshoz válassza a **Demo (éles előtti, valódi NIP)** lehetőséget.
   </Step>
-  <Step title="Illeszd be az operátori tokened">
-    Add meg a KSeF operátori tokenedet. Ez a KAS által a céged API-hozzáféréséhez kiadott hitelesítő token. A könyvelőd vagy IT-csapatod generálhat egyet a KSeF portálon, a [ksef.mf.gov.pl](https://ksef.mf.gov.pl) oldalon.
+  <Step title="Adja meg a NIP-t">
+    Adja meg a 10 számjegyű **cég NIP-jét**, a `PL` előtag nélkül.
   </Step>
-  <Step title="Mentés">
-    Kattints a **Mentés** gombra. A Druma aktiválás előtt ellenőrzi, hogy a céges rekordodon van-e lengyel ÁFA-szám. Ha a validáció meghiúsul, ellenőrizd, hogy a cégadataidon szereplő ÁFA-szám `PL` + 10 számjegy formátumú-e.
+  <Step title="Válassza ki a hitelesítést">
+    Válassza a **KSeF-token** lehetőséget és illessze be a tokent, vagy a **KSeF-tanúsítvány** lehetőséget, és válassza ki a tanúsítvány- és a privátkulcs-fájlt (valamint a jelmondatot, ha a kulcs titkosított).
+  </Step>
+  <Step title="Kattintson a Csatlakozás és teszt gombra">
+    A Druma mentés előtt valódi bejelentkezést hajt végre a KSeF-ben. Ha ez sikertelen, konkrét üzenetet kap, például hogy a hitelesítő adatokat elutasították, a token inaktív vagy visszavont, illetve hogy a KSeF nem érhető el. A sikeres bejelentkezésig semmi nem kerül tárolásra.
   </Step>
 </Steps>
 
-Csatlakozás után a céged által generált összes új számla automatikusan benyújtásra kerül a KSeF-nek. A Drumában már meglévő számlák **nem** kerülnek visszamenőleg benyújtásra.
+Csatlakozás után a kártya a **Csatlakoztatva a KSeF-hez** üzenetet mutatja a környezettel, a NIP-pel és az utolsó teszt eredményével. A **Kapcsolat tesztelése** gombbal bármikor újraellenőrizheti.
 
-## A KSeF lecsatlakoztatása
+<Note>
+Ha olyan tanúsítványt csatlakoztat, amely láthatóan nem az Ön NIP-jéhez tartozik, a Druma ennek ellenére csatlakozik, de figyelmeztet, mert a KSeF megtagadhatja a számlák kiállítását vele.
+</Note>
 
-Lépj a **Beállítások → Integrációk → KSeF → Lecsatlakoztatás** menüpontra. Ez eltávolítja az operátori tokent a Vault-ból, és azonnal leállítja az új benyújtásokat. A már elfogadott számlák megtartják a KSeF-számukat — a lecsatlakoztatás nem érinti az elfogadott rekordokat.
+Csak a csatlakozás után elküldött számlákat nyújtja be a rendszer. A Drumában már meglévő számlákat nem nyújtja be visszamenőleg.
 
-## Fordított adózású számlák
+### Több számlázó entitás
 
-A Druma helyesen kezeli a fordított adózású ÁFA-t az FA(3) XML-formátumban. Amikor egy számla fordított adózású ÁFA-kezelést hordoz, a Druma elhagyja az ÁFA-összeget, és beállítja a helyes **P_12** mezőt az XML-ben. Nincs szükség manuális beavatkozásra — az ÁFA-kezelés a Drumában konfigurált számlatételekből származik.
+Ha a cége olyan lengyel számlázó entitáson keresztül számláz, amelynek lengyel NIP-je eltér a cégétől, a KSeF kártyán megjelenik a **Kibocsátó (NIP)** választó (rejtve marad, amíg minden számlázó entitás a cég NIP-jét használja). Az alapértelmezett a **Cég (alapértelmezett)**; minden entitás névvel, NIP-pel és **csatlakoztatva** vagy **nincs csatlakoztatva** állapottal szerepel. Válasszon egy entitást a saját KSeF-hitelesítő adatának csatlakoztatásához: **A kibocsátó NIP-je** mező előre ki van töltve az entitás NIP-jével, és csak olvasható. A számla ekkor a kiállító entitás NIP-je alatt kerül benyújtásra, az entitás hitelesítő adatával és környezetével.
 
-## Az UPO letöltése
+### Leválasztás
 
-Az UPO (a KAS hivatalos nyugtája) automatikusan letöltésre kerül, amint a számla eléri az **Elfogadva** státuszt, és a számlarekordhoz tárolódik. Manuális letöltéshez:
+A **Leválasztás** törli a tárolt tokent vagy tanúsítványt, és azonnal leállítja az új beküldéseket. A már elfogadott számlák megtartják KSeF-számukat.
 
-1. Nyisd meg a számlát a **Számlázás** menüpontból.
-2. Görgess a **KSeF** szakaszhoz.
-3. Kattints az **UPO letöltése** gombra.
+## Mi történik számla küldésekor
+
+Ha a cégnél csatlakoztatva van a KSeF, egy ügyfélszámla (vagy jóváíró számla) elküldése automatikusan beküldi azt a KSeF-be:
+
+1. A Druma felépíti a számlából az FA(3) XML-t, és pontosan azt tárolja, amit elküld.
+2. A Druma a hitelesítő adatával bejelentkezik, és beküldi a számlát.
+3. A KSeF aszinkron válaszol. A Druma általában másodpercek alatt megkapja az ítéletet.
+4. Elfogadáskor a Druma eltárolja a **KSeF-számot**, letölti az **UPO**-t, és hozzáadja a **QR-kódot** a számlához.
+
+Ha ugyanazt a számlát újra elküldi, a Druma azonos tartalmat küld újra, így a KSeF duplikátumként ismeri fel, és a számla soha nem kerül kétszer benyújtásra.
+
+Az ügyfele által kiállított dokumentumokat (ügyfél általi önszámlázás) a Druma soha nem küldi be.
+
+### Állapotok és teendők
+
+Az állapot a számlán, a **KSeF** szakaszban jelenik meg.
+
+| Állapot | Jelentés | Teendő |
+|---|---|---|
+| **Beküldve** | Elküldve; a KSeF ítéletére vár. | Általában másodpercek alatt megoldódik. Ha nem, használja a **KSeF-állapot ellenőrzése** gombot; a Druma automatikusan is lekérdezi. |
+| **Elfogadva** | A KSeF KSeF-számot adott ki. | Semmi. Az UPO elérhető. |
+| **Elutasítva** | A KSeF elutasította a tartalmat, ezért a számlát **soha nem nyújtották be**. A KSeF saját magyarázata megjelenik a számlán. | Javítsa az ügyfél vagy a cég adatait (adószám, cím, név), vagy állítsa be a **KSeF ÁFA-kód (PL)** mezőt, majd kattintson a **KSeF újrapróbálása** gombra. A Druma a jelenlegi adatokból újraépíti a számlát. Ha az **összegek vagy a tételek** hibásak, állítson ki helyette jóváíró számlát és új számlát. |
+| **Hiba** | Technikai probléma (a KSeF nem érhető el, kérésszám-korlátozás, tartalmi eltérés). | A Druma automatikusan újrapróbálja; Ön is kattinthat a **KSeF újrapróbálása** gombra. |
+| **Sikertelen** | Az automatikus újrapróbálkozások elfogytak. | Hárítsa el a megjelenített okot, majd **KSeF újrapróbálása**. |
+| **Nem alkalmazható** | Ezt a dokumentumot nem küldik a KSeF-be (például a KSeF által nem fogadott dokumentumtípus, olyan összevont számla, amelynek egy tétele nem tartozik megrendeléshez, vagy olyan számlázó entitás, amelynek adószáma eltér a csatlakoztatottól). | Küldje el e-mailben, vagy hárítsa el az okot, és próbálja újra. |
+
+<Note>
+Az automatikus újrapróbálkozások növekvő késleltetést és véletlenszerű időeltolódást használnak. Egy háttérfeladat 30 percenként ellenőrzi az újrapróbálható számlákat.
+</Note>
+
+## KSeF-szám, UPO és QR-kód
+
+Amint a számla **Elfogadva** állapotú, a számla KSeF szakasza a következőket mutatja:
+
+- **KSeF-szám** — a KSeF hivatalos hivatkozása a számlára.
+- **Ellenőrzés a KSeF-ben** — hivatkozás a KSeF nyilvános ellenőrző oldalára ehhez a számlához.
+- **UPO letöltése** — a KAS hivatalos nyugtája (Urzędowe Poświadczenie Odbioru). Letöltheti a számláról vagy a **Pénzügy → Számlák** oldalról.
+
+A nyomtatott és a PDF számlán a KSeF-számmal ellátott **QR-kód** is szerepel, hogy az ügyfele ellenőrizhesse.
 
 <Warning>
-Az UPO a jogi bizonyíték arra, hogy a KAS megkapta a számládat. Tarts meg egy másolatot a nyilvántartásodban — a lengyel adójog megköveteli, hogy be tudd mutatni egy adóellenőrzés során.
+Az UPO a jogi bizonyíték arra, hogy a KAS megkapta a számláját. Őrizze meg ellenőrzésekre.
 </Warning>
 
-## Manuális újrapróbálkozás
+### TEST és DEMO jelzés
 
-Ha az automatikus újrapróbálkozások kimerültek, vagy javítottál egy hibát, és azonnal újra szeretnéd küldeni:
+A Test vagy Demo környezetben benyújtott számlán **TEST** vagy **DEMO** jelzés és a *A KSeF tesztrendszerében benyújtva. Ez nem adóbevallási tétel.* felirat látható. Az ilyen számlának **nincs jogi hatása**. Csak az éles elfogadások számítanak, ezért csak azok jelennek meg KSeF-számként a könyvelési exportokban (lásd [JPK_V7M — Comarch ERP Optima](/hu/integrations/jpk-optima)).
 
-Lépj a **Számlázás** menüpontra → nyisd meg a számlát → **KSeF szakasz** → kattints az **Újraküldés próbálkozása** gombra. A Druma azonnal újra elküldi az FA(3) XML-t.
+## A KSeF ÁFA-kód (PL)
+
+A Druma a számla ÁFA-kezeléséből, a vevő országából és az ÁFA-kulcsból származtatja az FA(3) ÁFA-kódot, ezért általában nincs teendője. Ha az automatikus választás egy adott számlánál nem megfelelő, a számlaszerkesztőben van egy **KSeF ÁFA-kód (PL)** mező (lengyel üzemeltetőknek látható). Hagyja **Automatikus** értéken, vagy írja felül:
+
+| Választás a mezőben | KSeF-kód | Tipikus felhasználás |
+|---|---|---|
+| np II: EU-n belüli szolgáltatások (28b. cikk) | `np II` | Másik EU-országbeli üzleti ügyfélnek nyújtott szolgáltatás, például fuvarozás. |
+| np I: Lengyelországon kívül, EU-n kívül | `np I` | Lengyelországon kívüli szolgáltatás EU-n kívüli ügyfélnek. |
+| 0% WDT: közösségen belüli termékértékesítés | `0 WDT` | Közösségen belüli termékértékesítés. |
+| 0% export | `0 EX` | Termékek exportja az EU-n kívülre. |
+| 0% belföldi (KR) | `0 KR` | 0%-os kulcs belföldi értékesítésnél. |
+| oo: belföldi fordított adózás | `oo` | Belföldi fordított adózás. |
+| zw: mentes | `zw` | ÁFA-mentes értékesítés. |
+
+<Note>
+Hogy egy adott fuvarvonalra melyik kód vonatkozik, adózási kérdés, és a szabályok nem mindig egyértelműek. **Kérdezze meg a könyvelőjét**, melyik kódot használja, és ott állítsa be felülírásként, ahol a Druma automatikus választása eltér.
+</Note>
+
+## Devizás számlák
+
+A lengyel ÁFA-val kiállított devizás számla az ÁFA-összeggel PLN-ben kerül benyújtásra, az **adózási időpontot megelőző utolsó munkanap NBP-árfolyamán** átváltva. Ha arra a napra nincs NBP-árfolyam, a beküldést a rendszer egyértelmű üzenettel elutasítja, és később újra lehet próbálni.
+
+## Összevont számlák
+
+A több megrendelést egyesítő összevont számla számlázási időszaka a tételei legkorábbi és legkésőbbi szállítási dátuma között húzódik. Minden tételnek kapcsolódnia kell egy megrendeléshez; ellenkező esetben a Druma elutasítja a benyújtást.
+
+## Jóváíró számlák
+
+A jóváíró számla a KSeF-be az eredeti számla helyesbítéseként kerül benyújtásra. Hivatkozik az eredeti KSeF-számára, ha van ilyen, és megmutatja az eredeti és a helyesbített tételeket a különbségekkel. Ha az eredetit soha nem nyújtották be a KSeF-be, a helyesbítés KSeF-számra való hivatkozás nélkül kerül benyújtásra.
+
+## Ami nem támogatott
+
+- **Offline mód.** A Druma csak online nyújt be.
+- **Beszerzési számlák fogadása** a KSeF-ből. A Druma az Ön értékesítési számláit nyújtja be; a beszállítói számlákat nem tölti le.
 
 ---
 
 <CardGroup cols={2}>
-  <Card title="e-Factura / ANAF benyújtás" icon="landmark" href="/en/invoicing/efactura-anaf">
-    Románia egyenértékű, kötelező e-számlázási rendszere — hogyan nyújt be a Druma az ANAF-nak az SPV API-n keresztül.
+  <Card title="e-Factura / ANAF-benyújtás" icon="landmark" href="/hu/invoicing/efactura-anaf">
+    Románia megfelelő kötelező e-számlázási rendszere — hogyan nyújt be a Druma az ANAF-nak az SPV API-n keresztül.
   </Card>
-  <Card title="Peppol e-számlázás" icon="network-wired" href="/en/integrations/peppol-invoicing">
-    EU-szintű elektronikus számlázás a Peppol-hálózaton keresztül — beállítás, küldés és állapotkövetés.
+  <Card title="Peppol számlázás" icon="network-wired" href="/hu/integrations/peppol-invoicing">
+    EU-szintű elektronikus számlázás a Peppol hálózaton — beállítás, küldés és állapotkövetés.
   </Card>
 </CardGroup>

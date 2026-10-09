@@ -1,98 +1,187 @@
 ---
 title: "KSeF — Poľská e-fakturácia"
-description: "Ako Druma automaticky odosiela faktúry do KSeF (Krajowy System e-Faktur), poľského povinného národného systému e-fakturácie prevádzkovaného KAS, so sledovaním stavu, spracovaním opakovaných pokusov, a sťahovaním potvrdenky UPO."
+description: "Ako Druma odosiela faktúry do KSeF (Krajowy System e-Faktur), povinného poľského národného systému e-fakturácie: prostredia, nastavenie tokenu alebo certifikátu, stavy, UPO, QR kód, kódy DPH, cudzia mena a dobropisy."
 icon: "file-invoice"
 ---
 
 <Warning>
-**Skorý prístup — čaká na prvé overenie živým operátorom.** Odosielanie do KSeF od Drumy je funkčne kompletné, ale k dátumu písania tohto textu ešte nebolo overené od konca do konca voči živému API KSeF Poľska reálnym operátorom s poľským DPH číslom. Odosielanie zostáva zablokované, kým nie je pripojený token živého operátora. Ak ste medzi prvými operátormi pripájajúcimi KSeF, považujte svoje prvotné odoslania za skorý prístup — pozorne sledujte odznaky stavu a promptne kontaktujte podporu, ak niečo vyzerá nesprávne. Kroky nastavenia a správanie popísané nižšie sú správne inštrukcie; jedinou otvorenou položkou je živá produkčná história.
+**Skorý prístup — zatiaľ bez skúseností z ostrej prevádzky.** Odosielanie do KSeF od Drumy je kompletné a bolo otestované od začiatku do konca v pieskovisku KSeF Test, no zatiaľ nepodalo faktúry za skutočného prevádzkovateľa v Produkcii. Najprv si všetko vyskúšajte v prostredí **Demo** (pozri nižšie) a ak sa pri prvých ostrých podaniach niečo zdá nesprávne, ihneď kontaktujte podporu.
 </Warning>
 
 ## Čo je KSeF?
 
-KSeF (Krajowy System e-Faktur) je poľský národný štruktúrovaný systém e-fakturácie, prevádzkovaný poľskou daňovou správou (KAS — Krajowa Administracja Skarbowa). Je povinný pre poľské spoločnosti registrované na DPH. Každá faktúra vystavená spoločnosťou s poľským DPH musí byť odoslaná do KSeF v oficiálnom formáte XML FA(3) — samotný portál KAS nestačí.
+KSeF (Krajowy System e-Faktur) je poľský národný systém štruktúrovanej elektronickej fakturácie, ktorý prevádzkuje poľská daňová správa (KAS — Krajowa Administracja Skarbowa). Faktúry sa vystavujú v oficiálnom formáte **FA(3) XML**; samotný portál KAS nestačí.
 
-<Frame caption="Nastavenia KSeF — pripojte token operátora, potom sledujte stav odoslania a potvrdenky UPO na faktúru.">
+<Frame caption="Nastavenia KSeF — pripojte token alebo certifikát a potom sledujte stav odoslania a potvrdenky UPO pri každej faktúre.">
   <img src="/images/invoicing/ksef-poland.png" alt="Nastavenia poľskej e-fakturácie KSeF a stav odoslania v Drume" />
 </Frame>
 
-<Note>
-Mandát KSeF sa zavádza vo fázach počas roku 2026 a jeho dátumy nábehu boli opakovane odložené poľskou vládou. Potvrďte konkrétny platný dátum nábehu pre vašu spoločnosť so svojím účtovníkom alebo na oficiálnom portáli [ksef.mf.gov.pl](https://ksef.mf.gov.pl) skôr, ako sa spoľahnete na akýkoľvek tu uvedený dátum.
-</Note>
+### Koho sa to týka
 
-KSeF sa vzťahuje iba vtedy, ak má vaša spoločnosť **poľské DPH číslo** (formát: `PL` nasledované 10 číslicami, napr. `PL1234567890`). Spoločnosti registrované v Rumunsku, Belgicku, alebo inej ne-poľskej krajine nepodliehajú KSeF. Ak Druma nezistí poľské DPH číslo v zázname vašej spoločnosti, karta integrácie KSeF zostane neaktívna.
-
-## Ako Druma spracúva KSeF
-
-Nemusíte sa prihlasovať do portálu KAS, vytvárať XML súbory, alebo nič ručne odosielať. Toto sa deje automaticky, keď vygenerujete faktúru a KSeF je aktivovaný:
-
-1. Druma konvertuje faktúru do oficiálneho formátu **XML FA(3)** vyžadovaného KAS.
-2. Druma sa autentifikuje voči API KSeF pomocou vášho **tokenu operátora**, bezpečne uloženého v Supabase Vault — token nie je nikdy viditeľný v čistom texte po tom, čo ho vložíte.
-3. Druma odošle XML do KSeF a dostane **číslo KSeF** (oficiálnu referenciu od KAS).
-4. Druma stiahne **UPO** (Urzędowe Poświadczenie Odbioru — oficiálne potvrdenie o prijatí) a uloží ho k záznamu faktúry.
-
-Celý proces beží na pozadí. Výsledok uvidíte na faktúre ako farebný odznak stavu.
-
-## Odznaky stavu KSeF
-
-Každá faktúra podliehajúca KSeF zobrazuje odznak stavu na stránke detailu faktúry pod sekciou **KSeF**:
-
-| Odznak | Význam |
+| Daňovník | KSeF je povinný od |
 |---|---|
-| **Čaká** | Faktúra vygenerovaná; odoslanie do KSeF je vo fronte. |
-| **Odoslané** | XML odoslané do KSeF; čaká sa, kým to KAS spracuje (zvyčajne 1–5 minút). |
-| **Prijaté** | KAS prijala faktúru. Číslo KSeF je uložené a UPO je dostupné. |
-| **Neúspešné** | KSeF odmietla faktúru kvôli chybe validácie. Pozri chybovú správu na faktúre. |
-| **Zamietnuté** | KAS vrátila formálne zamietnutie. Skontrolujte UPO pre kód dôvodu. |
+| Veľkí daňovníci | 1. februára 2026 |
+| Všetci ostatní platitelia DPH | 1. apríla 2026 |
 
-<Note>
-Úloha na pozadí kontroluje neúspešné odoslania každých 30 minút, ale každá faktúra v skutočnosti opakuje pokus iba podľa exponenciálneho harmonogramu — približne 1 hodinu po prvom zlyhaní, potom približne 2 hodiny potom (±25% variabilita). Ak zlyhá aj tretí pokus (pôvodné odoslanie plus tieto 2 opakovania), faktúra prejde priamo do stavu **Neúspešné**, typicky do približne 3 hodín od prvého zlyhania — potom sa už automaticky neopakuje. Spustite ručné opakovanie z panela detailu faktúry, akonáhle vyriešite základnú chybu.
-</Note>
+Do konca roka 2026 sa neuplatňujú žiadne sankcie. Svoju situáciu si overte u účtovníka alebo na oficiálnom portáli [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
 
-## Nastavenie KSeF
+KSeF sa uplatňuje, iba ak má vaša spoločnosť **poľské IČ DPH** (`PL` a 10 číslic, napr. `PL1234567890`). Spoločnosti v Rumunsku, Belgicku či inej nepoľskej krajine mu nepodliehajú. Bez poľského IČ DPH v údajoch spoločnosti zostane karta KSeF neaktívna.
+
+## Prostredia
+
+Prostredie si vyberiete pri pripájaní. Každá spoločnosť má svoje.
+
+| Prostredie | Na čo ho použiť | Účinok |
+|---|---|---|
+| **Test (pieskovisko)** | Vyskúšanie pripojenia s fiktívnymi údajmi. | Nič sa nepodáva daňovému úradu. |
+| **Demo (predprodukčné, skutočné NIP)** | Skúšobný beh s vaším skutočným NIP pred spustením. | Údaje ako skutočné, bez právneho účinku. |
+| **Produkcia** | Ostrá fakturácia. | Každá odoslaná faktúra je záväzné daňové podanie. |
+
+**Odporúčaný postup: Demo → Produkcia.** Pripojte sa v Demo, odošlite z Druma jednu skutočnú faktúru, overte, že sa zobrazí v demo aplikácii KSeF, a potom sa pripojte znova s produkčným tokenom alebo certifikátom. Panel Druma to zobrazuje ako **Kontrolný zoznam pred spustením**.
+
+<Warning>
+Token alebo certifikát funguje iba v prostredí, v ktorom bol vytvorený. Token z Demo bude v Produkcii odmietnutý a naopak.
+</Warning>
+
+## Získanie prihlasovacích údajov
+
+Môžete sa overovať jedným z dvoch spôsobov. Oba poskytujú rovnaký prístup.
+
+### Možnosť A — token KSeF (najjednoduchšia)
+
+1. Prihláste sa do aplikácie KSeF pre svoje prostredie: [ap-demo.ksef.mf.gov.pl](https://ap-demo.ksef.mf.gov.pl) pre Demo, [ap.ksef.mf.gov.pl](https://ap.ksef.mf.gov.pl) pre Produkciu.
+2. Vygenerujte token pre NIP vašej spoločnosti s oprávneniami **InvoiceWrite** a **InvoiceRead**.
+3. Skopírujte ho. KSeF ho zobrazí iba raz.
+
+### Možnosť B — certifikát KSeF
+
+Použite ju, ak vaša spoločnosť už spravuje certifikáty KSeF. Druma potrebuje certifikát (`.pem` alebo `.crt`) a jeho súkromný kľúč vo formáte **PKCS#8 PEM** (`.pem` alebo `.key`). Ak ste certifikát dostali ako súbor `.p12` alebo `.pfx`, najprv ho preveďte:
+
+```bash
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+openssl pkcs12 -in cert.p12 -out key.pem -nocerts
+```
+
+Ak je súkromný kľúč šifrovaný, pri pripájaní zadáte jeho heslo. Použije sa raz na odomknutie kľúča a nikdy sa neukladá.
+
+## Pripojenie KSeF
 
 <Steps>
-  <Step title="Prejdite na Nastavenia → Integrácie">
-    Otvorte menu **Nastavenia** z hornej navigačnej lišty a vyberte **Integrácie**.
+  <Step title="Otvorte Nastavenia → Integrácie → KSeF">
+    V hornom paneli otvorte **Nastavenia**, vyberte **Integrácie** a nájdite kartu KSeF.
   </Step>
-  <Step title="Nájdite kartu KSeF a kliknite na Pripojiť">
-    Nájdite kartu **KSeF (poľská e-fakturácia)**. Kliknite na **Pripojiť**.
+  <Step title="Vyberte prostredie">
+    Pre prvé pripojenie zvoľte **Demo (predprodukčné, skutočné NIP)**.
   </Step>
-  <Step title="Vložte svoj token operátora">
-    Zadajte svoj token operátora KSeF. Toto je autentifikačný token vydaný KAS pre prístup API vašej spoločnosti. Váš účtovník alebo IT tím ho môže vygenerovať z portálu KSeF na [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  <Step title="Zadajte NIP">
+    Zadajte 10-miestny **NIP firmy** bez predpony `PL`.
   </Step>
-  <Step title="Uložiť">
-    Kliknite na **Uložiť**. Druma overí, že záznam vašej spoločnosti má poľské DPH číslo, pred aktiváciou. Ak validácia zlyhá, skontrolujte, či je DPH číslo v detailoch vašej spoločnosti vo formáte `PL` + 10 číslic.
+  <Step title="Vyberte Overovanie">
+    Vyberte **Token KSeF** a vložte token, alebo **Certifikát KSeF** a vyberte súbory certifikátu a súkromného kľúča (a heslo, ak je kľúč šifrovaný).
+  </Step>
+  <Step title="Kliknite na Pripojiť a otestovať">
+    Druma pred uložením čohokoľvek vykoná skutočné prihlásenie do KSeF. Ak zlyhá, dostanete konkrétnu správu, napríklad že prihlasovacie údaje boli odmietnuté, token je neaktívny alebo zrušený, alebo že KSeF nie je dostupný. Kým sa prihlásenie nepodarí, nič sa neuloží.
   </Step>
 </Steps>
 
-Po pripojení sa všetky nové faktúry vygenerované vašou spoločnosťou odosielajú do KSeF automaticky. Existujúce faktúry už v Drume sa **neodosielajú** retroaktívne.
+Po pripojení karta zobrazí **Pripojené ku KSeF** spolu s prostredím, NIP a výsledkom posledného testu. Pomocou **Otestovať pripojenie** ho môžete kedykoľvek znova overiť.
 
-## Odpojenie KSeF
+<Note>
+Ak pripojíte certifikát, ktorý podľa všetkého nepatrí k vášmu NIP, Druma sa napriek tomu pripojí, ale upozorní vás, pretože KSeF môže odmietnuť vystavovanie faktúr s ním.
+</Note>
 
-Prejdite na **Nastavenia → Integrácie → KSeF → Odpojiť**. Toto odstráni token operátora z Vault a okamžite zastaví nové odosielania. Faktúry, ktoré už boli prijaté, si zachovávajú svoje čísla KSeF — odpojenie nemá vplyv na prijaté záznamy.
+Odosielajú sa iba faktúry odoslané po pripojení. Faktúry, ktoré už v Drume sú, sa spätne nepodávajú.
 
-## Faktúry s prenesenou daňovou povinnosťou
+### Viac fakturačných subjektov
 
-Druma správne spracúva DPH s prenesenou daňovou povinnosťou vo formáte XML FA(3). Keď faktúra nesie zaobchádzanie s prenesenou daňovou povinnosťou, Druma vynechá sumu DPH a nastaví správne pole **P_12** v XML. Nie je potrebná žiadna ručná úprava — zaobchádzanie s DPH sa odvodzuje z riadkových položiek faktúry, ako sú nakonfigurované v Drume.
+Ak vaša spoločnosť fakturuje cez poľský fakturačný subjekt, ktorého poľský NIP sa líši od NIP spoločnosti, na karte KSeF sa zobrazí výber **Vystaviteľ (NIP)** (zostáva skrytý, kým všetky fakturačné subjekty zdieľajú NIP spoločnosti). Predvolená voľba je **Spoločnosť (predvolené)**; každý subjekt je uvedený s názvom, NIP a stavom **pripojené** alebo **nepripojené**. Vyberte subjekt, aby ste pripojili jeho vlastné prihlasovacie údaje KSeF: pole **NIP vystaviteľa** je predvyplnené NIP subjektu a je len na čítanie. Faktúra sa potom podá pod NIP subjektu, ktorý ju vystavuje, s prihlasovacími údajmi a prostredím tohto subjektu.
 
-## Sťahovanie UPO
+### Odpojenie
 
-UPO (oficiálna potvrdenka od KAS) sa sťahuje automaticky, akonáhle faktúra dosiahne stav **Prijaté**, a uloží sa k záznamu faktúry. Na ručné stiahnutie:
+**Odpojiť** odstráni uložený token alebo certifikát a okamžite zastaví nové odosielanie. Už prijaté faktúry si ponechajú svoje čísla KSeF.
 
-1. Otvorte faktúru z **Financie** → **Faktúry**.
-2. Prejdite dole na sekciu **KSeF**.
-3. Kliknite na **Stiahnuť UPO**.
+## Čo sa stane, keď odošlete faktúru
+
+Pri spoločnosti s pripojeným KSeF sa odoslaním faktúry zákazníkovi (alebo dobropisu) automaticky podá do KSeF:
+
+1. Druma zostaví z faktúry XML FA(3) a uloží presne to, čo odošle.
+2. Druma sa prihlási vašimi údajmi a faktúru podá.
+3. KSeF odpovedá asynchrónne. Druma zvyčajne dostane verdikt v priebehu sekúnd.
+4. Po prijatí Druma uloží **číslo KSeF**, stiahne **UPO** a pridá na faktúru **QR kód**.
+
+Ak tú istú faktúru odošlete znova, Druma znova pošle identický obsah, takže ju KSeF rozpozná ako duplikát a faktúra sa nikdy nepodá dvakrát.
+
+Doklady vystavené vaším zákazníkom (samofakturácia zákazníkom) Druma nikdy neodosiela.
+
+### Stavy a čo robiť
+
+Stav sa zobrazuje na faktúre v sekcii **KSeF**.
+
+| Stav | Význam | Čo robiť |
+|---|---|---|
+| **Odoslaná** | Odoslaná; čaká sa na verdikt KSeF. | Zvyčajne sa vyrieši v priebehu sekúnd. Ak zostane, použite **Skontrolovať stav v KSeF**; Druma kontroluje aj automaticky. |
+| **Prijatá** | KSeF pridelil číslo KSeF. | Nič. UPO je k dispozícii. |
+| **Zamietnutá** | KSeF odmietol obsah, takže faktúra **nebola nikdy podaná**. Vysvetlenie od KSeF sa zobrazí na faktúre. | Opravte údaje o zákazníkovi alebo spoločnosti (IČ DPH, adresa, názov) alebo nastavte pole **Kód DPH pre KSeF (PL)** a potom kliknite na **Skúsiť KSeF znova**. Druma faktúru zostaví znova z aktuálnych údajov. Ak sú **sumy alebo riadky** nesprávne, vystavte namiesto toho dobropis a novú faktúru. |
+| **Chyba** | Technický problém (KSeF nedostupný, obmedzenie počtu požiadaviek, nezhoda obsahu). | Druma to skúša automaticky znova; môžete kliknúť aj na **Skúsiť KSeF znova**. |
+| **Zlyhalo** | Automatické opakovania sa vyčerpali. | Odstráňte zobrazenú príčinu a potom **Skúsiť KSeF znova**. |
+| **Nevzťahuje sa** | Doklad sa do KSeF neodosiela (napríklad typ dokladu, ktorý KSeF neprijíma, súhrnná faktúra s riadkom bez objednávky alebo fakturačný subjekt, ktorého IČ DPH sa líši od pripojeného). | Pošlite ho e-mailom alebo odstráňte príčinu a skúste znova. |
+
+<Note>
+Automatické opakovania používajú rastúce oneskorenie s náhodným rozptylom. Úloha na pozadí kontroluje faktúry vhodné na opakovanie každých 30 minút.
+</Note>
+
+## Číslo KSeF, UPO a QR kód
+
+Keď je faktúra **Prijatá**, sekcia KSeF na faktúre zobrazuje:
+
+- **Číslo KSeF** — oficiálny odkaz KSeF na faktúru.
+- **Overiť v KSeF** — odkaz na verejnú overovaciu stránku KSeF pre túto faktúru.
+- **Stiahnuť UPO** — oficiálna potvrdenka (Urzędowe Poświadczenie Odbioru) od KAS. Stiahnite ju z faktúry alebo z **Financie → Faktúry**.
+
+Vytlačená aj PDF faktúra obsahuje aj **QR kód** s číslom KSeF, aby ju mohol overiť váš zákazník.
 
 <Warning>
-UPO je právny dôkaz, že KAS prijala vašu faktúru. Uchovávajte kópiu vo svojich záznamoch — poľské daňové právo vyžaduje, aby ste ju vedeli predložiť počas daňovej kontroly.
+UPO je právny dôkaz, že KAS vašu faktúru prijala. Uschovajte ho pre prípad kontroly.
 </Warning>
 
-## Ručné opakovanie
+### Štítok TEST a DEMO
 
-Ak sú automatické opakovania vyčerpané, alebo ste opravili chybu a chcete okamžite znova odoslať:
+Faktúra podaná v prostredí Test alebo Demo nesie štítok **TEST** alebo **DEMO** a oznam *Podané v testovacom systéme KSeF. Nejde o daňové podanie.* Takáto faktúra **nemá žiadny právny účinok**. Počítajú sa iba prijatia v produkcii, a preto sú jediné, ktoré sa v účtovných exportoch zobrazia ako číslo KSeF (pozri [JPK_V7M — Comarch ERP Optima](/sk/integrations/jpk-optima)).
 
-Prejdite na **Financie** → **Faktúry** → otvorte faktúru → **sekcia KSeF** → kliknite na **Opakovať odoslanie**. Druma okamžite znova odošle XML FA(3).
+## Kód DPH pre KSeF (PL)
+
+Druma odvodzuje kód DPH FA(3) z režimu DPH faktúry, krajiny odberateľa a sadzby DPH, takže zvyčajne nemusíte nič robiť. Ak automatická voľba pre konkrétnu faktúru nie je správna, editor faktúr obsahuje pole **Kód DPH pre KSeF (PL)** (viditeľné pre poľských operátorov). Nechajte ho na **Automaticky** alebo ho prepíšte:
+
+| Voľba v poli | Kód KSeF | Typické použitie |
+|---|---|---|
+| np II: služby v rámci EÚ (čl. 28b) | `np II` | Služby podnikateľskému zákazníkovi v inej krajine EÚ, napríklad dopravná služba. |
+| np I: mimo Poľska, mimo EÚ | `np I` | Služby mimo Poľska zákazníkovi mimo EÚ. |
+| 0 % WDT: dodanie tovaru v rámci EÚ | `0 WDT` | Dodanie tovaru v rámci Spoločenstva. |
+| 0 % vývoz | `0 EX` | Vývoz tovaru mimo EÚ. |
+| 0 % tuzemsko (KR) | `0 KR` | Sadzba 0 % pri tuzemskej dodávke. |
+| oo: tuzemský prenos daňovej povinnosti | `oo` | Tuzemský prenos daňovej povinnosti. |
+| zw: oslobodené | `zw` | Dodávka oslobodená od DPH. |
+
+<Note>
+Ktorý kód platí pre konkrétnu prepravnú trasu, je daňová otázka a pravidlá nie sú vždy jednoznačné. **Opýtajte sa účtovníka**, ktorý kód použiť, a nastavte ho ako prepísanie tam, kde sa automatická voľba Druma líši.
+</Note>
+
+## Cudzia mena
+
+Faktúra v cudzej mene s poľskou DPH sa podáva so sumou DPH v PLN, prepočítanou **kurzom NBP z posledného pracovného dňa pred dátumom zdaniteľného plnenia**. Ak pre daný dátum nie je dostupný kurz NBP, odoslanie sa odmietne s jasnou správou a možno ho zopakovať neskôr.
+
+## Súhrnné faktúry
+
+Súhrnná faktúra, ktorá spája viac objednávok, sa podáva s fakturačným obdobím od najskoršieho po najneskorší dátum dodania medzi jej riadkami. Každý riadok musí byť prepojený s objednávkou; inak Druma podanie odmietne.
+
+## Dobropisy
+
+Dobropis sa podáva do KSeF ako oprava pôvodnej faktúry. Odkazuje na číslo KSeF originálu, ak ho má, a zobrazuje pôvodné aj opravené riadky s rozdielmi. Ak originál nebol do KSeF nikdy podaný, oprava sa podá bez odkazu na číslo KSeF.
+
+## Čo nie je podporované
+
+- **Režim offline.** Druma podáva iba online.
+- **Prijímanie nákupných faktúr** z KSeF. Druma podáva vaše predajné faktúry; faktúry vašich dodávateľov nesťahuje.
 
 ---
 

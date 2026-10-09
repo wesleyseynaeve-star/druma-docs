@@ -1,102 +1,195 @@
 ---
 title: "KSeF — Facturation électronique polonaise"
-description: "Comment Druma soumet automatiquement les factures à KSeF (Krajowy System e-Faktur), le système national de facturation électronique obligatoire de Pologne géré par le KAS, avec suivi de statut, gestion des nouvelles tentatives, et téléchargement du reçu UPO."
+description: "Comment Druma soumet les factures à KSeF (Krajowy System e-Faktur), le système national obligatoire de facturation électronique en Pologne : environnements, configuration par jeton ou certificat, statuts, UPO, code QR, codes TVA, devises étrangères et notes de crédit."
 icon: "file-invoice"
 ---
 
 <Warning>
-**Accès anticipé — en attente de la première validation avec un opérateur en production.** La soumission KSeF de Druma est fonctionnellement complète, mais à l'heure de la rédaction, elle n'a pas encore été exercée de bout en bout contre l'API KSeF en direct de la Pologne par un véritable opérateur PL-TVA. La soumission reste conditionnée jusqu'à ce qu'un jeton d'opérateur en direct soit connecté. Si vous faites partie des premiers opérateurs à connecter KSeF, traitez vos soumissions initiales comme un accès anticipé — surveillez de près les badges de statut et contactez le support rapidement si quelque chose semble anormal. Les étapes de configuration et le comportement décrits ci-dessous sont les instructions correctes ; le seul point ouvert est un historique de production en direct.
+**Accès anticipé — pas encore d'historique en production.** La soumission KSeF de Druma est complète et a été testée de bout en bout sur le bac à sable KSeF, mais elle n'a pas encore déposé de factures d'un vrai opérateur en production. Répétez d'abord dans l'environnement **Demo** (voir ci-dessous) et contactez rapidement le support si vos premiers dépôts en production vous semblent anormaux.
 </Warning>
 
 ## Qu'est-ce que KSeF ?
 
-KSeF (Krajowy System e-Faktur) est le système national polonais de facturation électronique structurée, géré par l'administration fiscale polonaise (KAS — Krajowa Administracja Skarbowa). Il est obligatoire pour les entreprises polonaises immatriculées à la TVA. Chaque facture émise par une entreprise PL-TVA doit être envoyée à KSeF au format XML officiel FA(3) — le portail KAS seul ne suffit pas.
+KSeF (Krajowy System e-Faktur) est le système national polonais de facturation électronique structurée, exploité par l'administration fiscale polonaise (KAS — Krajowa Administracja Skarbowa). Les factures sont émises au format officiel **XML FA(3)** ; le portail KAS seul ne suffit pas.
 
-<Note>
-Le mandat KSeF est déployé par phases durant 2026 et ses dates de mise en application ont été repoussées à plusieurs reprises par le gouvernement polonais. Confirmez la date de mise en application spécifique de votre entreprise avec votre comptable ou le portail officiel [ksef.mf.gov.pl](https://ksef.mf.gov.pl) avant de vous fier à toute date mentionnée ici.
-</Note>
+<Frame caption="Paramètres KSeF — connectez votre jeton ou certificat, puis suivez le statut de soumission et les accusés UPO par facture.">
+  <img src="/images/invoicing/ksef-poland.png" alt="Paramètres de facturation électronique polonaise KSeF et statut de soumission dans Druma" />
+</Frame>
 
-KSeF ne s'applique que si votre entreprise a un **numéro de TVA polonais** (format : `PL` suivi de 10 chiffres, ex. `PL1234567890`). Les entreprises enregistrées en Roumanie, en Belgique, ou dans tout autre pays non polonais ne sont pas soumises à KSeF. Si Druma ne détecte pas de numéro de TVA PL sur la fiche de votre entreprise, la carte d'intégration KSeF restera inactive.
+### Qui doit l'utiliser
 
-## Comment Druma gère KSeF
-
-Vous n'avez pas besoin de vous connecter au portail KAS, de produire des fichiers XML, ni de soumettre quoi que ce soit manuellement. Voici ce qui se passe automatiquement quand vous générez une facture et que KSeF est activé :
-
-1. Druma convertit la facture au format officiel **XML FA(3)** requis par le KAS.
-2. Druma s'authentifie auprès de l'API KSeF en utilisant votre **jeton d'opérateur**, stocké de façon sécurisée dans Supabase Vault — le jeton n'est jamais visible en clair après l'avoir collé.
-3. Druma soumet le XML à KSeF et reçoit un **numéro KSeF** (la référence officielle du KAS).
-4. Druma télécharge l'**UPO** (Urzędowe Poświadczenie Odbioru — accusé de réception officiel) et le stocke sur la fiche de la facture.
-
-L'ensemble du processus s'exécute en arrière-plan. Vous verrez le résultat sur la facture sous forme de badge de statut coloré.
-
-## Badges de statut KSeF
-
-Chaque facture soumise à KSeF affiche un badge de statut sur la page de détail de la facture sous la section **KSeF** :
-
-| Badge | Signification |
+| Contribuable | KSeF obligatoire à partir du |
 |---|---|
-| **En attente** | Facture générée ; la soumission KSeF est mise en file. |
-| **Soumise** | XML envoyé à KSeF ; en attente de traitement par le KAS (généralement 1 à 5 minutes). |
-| **Acceptée** | Le KAS a accepté la facture. Le numéro KSeF est stocké et l'UPO est disponible. |
-| **Échec** | KSeF a rejeté la facture en raison d'une erreur de validation. Voir le message d'erreur sur la facture. |
-| **Rejetée** | Le KAS a retourné un rejet formel. Vérifiez l'UPO pour le code de raison. |
+| Grands contribuables | 1er février 2026 |
+| Tous les autres assujettis à la TVA | 1er avril 2026 |
 
-<Note>
-Une tâche de fond vérifie les soumissions échouées toutes les 30 minutes, mais chaque facture ne réessaie réellement que selon un calendrier de délai exponentiel — environ 1 heure après le premier échec, puis environ 2 heures après cela (±25 % de variation aléatoire). Si la troisième tentative (la soumission d'origine plus ces 2 nouvelles tentatives) échoue aussi, la facture passe directement au statut **Échec**, généralement dans les 3 heures suivant le premier échec — elle ne réessaiera plus automatiquement après cela. Déclenchez une nouvelle tentative manuelle depuis le panneau de détail de la facture une fois que vous avez résolu l'erreur sous-jacente.
-</Note>
+Aucune pénalité n'est appliquée avant la fin de 2026. Confirmez votre situation auprès de votre comptable ou sur le portail officiel [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
 
-## Configurer KSeF
+KSeF ne concerne que les sociétés disposant d'un **numéro de TVA polonais** (`PL` suivi de 10 chiffres, p. ex. `PL1234567890`). Les sociétés établies en Roumanie, en Belgique ou ailleurs n'y sont pas soumises. Sans numéro de TVA polonais sur la fiche société, la carte KSeF reste inactive.
+
+## Environnements
+
+Vous choisissez l'environnement à la connexion. Chaque société a le sien.
+
+| Environnement | Usage | Effet |
+|---|---|---|
+| **Test (bac à sable)** | Essayer la connexion avec des données fictives. | Rien n'est déposé auprès de l'administration fiscale. |
+| **Demo (préproduction, vrai NIP)** | Répétition avec votre vrai NIP avant la mise en service. | Données réalistes, sans effet juridique. |
+| **Production** | Facturation réelle. | Chaque facture envoyée est une déclaration fiscale contraignante. |
+
+**Parcours recommandé : Demo → Production.** Connectez-vous en Demo, envoyez une vraie facture depuis Druma, vérifiez qu'elle apparaît dans l'application Demo de KSeF, puis reconnectez-vous avec un jeton ou certificat de production. Druma l'affiche sous **Liste de contrôle avant mise en service**.
+
+<Warning>
+Un jeton ou certificat ne fonctionne que dans l'environnement où il a été créé. Un jeton Demo sera refusé en Production, et inversement.
+</Warning>
+
+## Obtenir vos identifiants
+
+Vous pouvez vous authentifier avec l'un de deux identifiants. Les deux donnent le même accès.
+
+### Option A — jeton KSeF (le plus simple)
+
+1. Connectez-vous à l'application KSeF de votre environnement : [ap-demo.ksef.mf.gov.pl](https://ap-demo.ksef.mf.gov.pl) pour Demo, [ap.ksef.mf.gov.pl](https://ap.ksef.mf.gov.pl) pour Production.
+2. Générez un jeton pour le NIP de votre société avec les permissions **InvoiceWrite** et **InvoiceRead**.
+3. Copiez-le. KSeF ne l'affiche qu'une fois.
+
+### Option B — certificat KSeF
+
+À utiliser si votre société gère déjà des certificats KSeF. Druma a besoin du certificat (`.pem` ou `.crt`) et de sa clé privée au format **PKCS#8 PEM** (`.pem` ou `.key`). Si votre certificat est un fichier `.p12` ou `.pfx`, convertissez-le d'abord :
+
+```bash
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+openssl pkcs12 -in cert.p12 -out key.pem -nocerts
+```
+
+Si la clé privée est chiffrée, vous saisirez sa phrase secrète à la connexion. Elle sert une seule fois à déverrouiller la clé et n'est jamais stockée.
+
+## Connecter KSeF
 
 <Steps>
-  <Step title="Accédez à Paramètres → Intégrations">
-    Ouvrez le menu **Paramètres** depuis la barre de navigation supérieure et sélectionnez **Intégrations**.
+  <Step title="Ouvrir Paramètres → Intégrations → KSeF">
+    Ouvrez **Paramètres** dans la barre supérieure, choisissez **Intégrations** et trouvez la carte KSeF.
   </Step>
-  <Step title="Trouvez la carte KSeF et cliquez sur Connecter">
-    Repérez la carte **KSeF (facturation électronique polonaise)**. Cliquez sur **Connecter**.
+  <Step title="Choisir l'environnement">
+    Pour la première connexion, choisissez **Demo (préproduction, vrai NIP)**.
   </Step>
-  <Step title="Collez votre jeton d'opérateur">
-    Saisissez votre jeton d'opérateur KSeF. C'est le jeton d'authentification délivré par le KAS pour l'accès API de votre entreprise. Votre comptable ou équipe informatique peut en générer un depuis le portail KSeF à [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  <Step title="Saisir le NIP">
+    Saisissez le **NIP de la société** à 10 chiffres, sans le préfixe `PL`.
   </Step>
-  <Step title="Enregistrer">
-    Cliquez sur **Enregistrer**. Druma valide que la fiche de votre entreprise a un numéro de TVA polonais avant l'activation. Si la validation échoue, vérifiez que le numéro de TVA sur les détails de votre entreprise est au format `PL` + 10 chiffres.
+  <Step title="Choisir l'authentification">
+    Sélectionnez **Jeton KSeF** et collez le jeton, ou **Certificat KSeF** et choisissez les fichiers **Certificat (.pem, .crt)** et **Clé privée (.pem, .key)** (plus **Phrase secrète de la clé (facultatif)** si la clé est chiffrée).
+  </Step>
+  <Step title="Cliquer sur Connecter et tester">
+    Druma effectue une vraie connexion à KSeF avant d'enregistrer quoi que ce soit. En cas d'échec, vous obtenez un message précis, par exemple identifiants refusés, jeton inactif ou révoqué, ou KSeF injoignable. Rien n'est enregistré tant que la connexion n'a pas réussi.
   </Step>
 </Steps>
 
-Une fois connecté, toutes les nouvelles factures générées par votre entreprise sont soumises à KSeF automatiquement. Les factures déjà existantes dans Druma ne sont **pas** soumises rétroactivement.
+Une fois connectée, la carte affiche **Connecté à KSeF** avec l'environnement, le NIP et le résultat du dernier test. Utilisez **Tester la connexion** pour la revérifier à tout moment.
 
-## Déconnecter KSeF
+<Note>
+Si vous connectez un certificat qui ne semble pas appartenir à votre NIP, Druma se connecte quand même mais vous avertit, car KSeF peut refuser d'émettre des factures avec lui.
+</Note>
 
-Accédez à **Paramètres → Intégrations → KSeF → Déconnecter**. Cela retire le jeton d'opérateur de Vault et arrête immédiatement les nouvelles soumissions. Les factures déjà acceptées conservent leurs numéros KSeF — la déconnexion n'affecte pas les enregistrements acceptés.
+Seules les factures envoyées après la connexion sont soumises. Les factures déjà présentes dans Druma ne sont pas déposées rétroactivement.
 
-## Factures en autoliquidation
+### Plusieurs entités de facturation
 
-Druma gère correctement la TVA en autoliquidation dans le format XML FA(3). Quand une facture porte un traitement TVA en autoliquidation, Druma omet le montant de TVA et définit le champ **P_12** correct dans le XML. Aucun ajustement manuel n'est nécessaire — le traitement TVA est dérivé des postes de la facture tels que configurés dans Druma.
+Si votre société facture via une entité de facturation polonaise dont le NIP polonais diffère de celui de la société, un sélecteur **Émetteur (NIP)** apparaît dans la carte KSeF (il reste masqué tant que toutes les entités de facturation partagent le NIP de la société). Le choix par défaut est **Société (par défaut)** ; chaque entité est listée avec son nom, son NIP et **connecté** ou **non connecté**. Choisissez une entité pour connecter ses propres identifiants KSeF : le champ **NIP de l'émetteur** est prérempli avec le NIP de l'entité et en lecture seule. La facture est alors déposée sous le NIP de l'entité qui l'émet, avec ses identifiants et son environnement.
 
-## Télécharger l'UPO
+### Déconnexion
 
-L'UPO (accusé de réception officiel du KAS) est téléchargé automatiquement une fois que la facture atteint le statut **Acceptée** et est stocké sur la fiche de la facture. Pour le télécharger manuellement :
+**Déconnecter** supprime le jeton ou certificat stocké et arrête immédiatement les nouvelles soumissions. Les factures déjà acceptées conservent leur numéro KSeF.
 
-1. Ouvrez la facture depuis **Facturation**.
-2. Faites défiler jusqu'à la section **KSeF**.
-3. Cliquez sur **Télécharger l'UPO**.
+## Ce qui se passe à l'envoi d'une facture
+
+Pour une société avec KSeF connecté, l'envoi d'une facture client (ou d'une note de crédit) la soumet automatiquement à KSeF :
+
+1. Druma construit le XML FA(3) à partir de la facture et conserve exactement ce qu'il envoie.
+2. Druma se connecte avec vos identifiants et soumet la facture.
+3. KSeF répond de façon asynchrone. En général, Druma reçoit le verdict en quelques secondes.
+4. À l'acceptation, Druma enregistre le **numéro KSeF**, télécharge l'**UPO** et ajoute le **code QR** à la facture.
+
+Si vous renvoyez la même facture, Druma renvoie un contenu identique : KSeF reconnaît un doublon et la facture n'est jamais déposée deux fois.
+
+Les documents émis par votre client (autofacturation du client) ne sont jamais envoyés par Druma.
+
+### Statuts et que faire
+
+Le statut apparaît sur la facture, dans la section **KSeF**.
+
+| Statut | Signification | Que faire |
+|---|---|---|
+| **Soumis** | Envoyée ; en attente du verdict de KSeF. | Se résout en général en quelques secondes. Sinon, utilisez **Vérifier le statut KSeF** ; Druma interroge aussi automatiquement. |
+| **Accepté** | KSeF a attribué un numéro KSeF. | Rien. L'UPO est disponible. |
+| **Rejeté** | KSeF a refusé le contenu : la facture n'a **jamais été déposée**. L'explication de KSeF figure sur la facture. | Corrigez les données de base du client ou de la société (numéro de TVA, adresse, nom) ou définissez la dérogation **Code TVA KSeF (PL)**, puis **Réessayer KSeF**. Druma reconstruit la facture à partir des données actuelles. Si les **montants ou lignes** sont faux, émettez une note de crédit et une nouvelle facture. |
+| **Erreur** | Problème technique (KSeF injoignable, limitation de débit, écart de contenu). | Druma réessaie automatiquement ; vous pouvez aussi **Réessayer KSeF**. |
+| **Échoué** | Les nouvelles tentatives automatiques sont épuisées. | Corrigez la cause affichée, puis **Réessayer KSeF**. |
+| **Non applicable** | Le document n'est pas envoyé à KSeF (p. ex. un type de document non accepté par KSeF, une facture groupée avec une ligne sans commande, ou une entité de facturation dont le numéro de TVA diffère de celui connecté). | Envoyez-le par e-mail, ou corrigez la cause et réessayez. |
+
+<Note>
+Les nouvelles tentatives automatiques utilisent des délais croissants avec une part d'aléa. Une tâche de fond recherche toutes les 30 minutes les factures à réessayer.
+</Note>
+
+## Numéro KSeF, UPO et code QR
+
+Une fois la facture **Accepté**, la section KSeF de la facture affiche :
+
+- **Numéro KSeF** — la référence officielle de la facture dans KSeF.
+- **Vérifier dans KSeF** — un lien vers la page publique de vérification de cette facture dans KSeF.
+- **Télécharger l'UPO** — l'accusé officiel (Urzędowe Poświadczenie Odbioru) de la KAS. Téléchargez-le depuis la facture ou depuis **Finance → Factures**.
+
+La facture imprimée et le PDF portent aussi un **code QR** légendé du numéro KSeF, afin que votre client puisse la vérifier.
 
 <Warning>
-L'UPO est la preuve légale que le KAS a reçu votre facture. Conservez-en une copie pour vos archives — la loi fiscale polonaise exige que vous puissiez la produire lors d'un contrôle fiscal.
+L'UPO est la preuve juridique que la KAS a reçu votre facture. Conservez-le en vue des contrôles.
 </Warning>
 
-## Nouvelle tentative manuelle
+### Pastille TEST et DEMO
 
-Si les nouvelles tentatives automatiques sont épuisées ou que vous avez corrigé une erreur et voulez resoumettre immédiatement :
+Une facture déposée dans l'environnement Test ou Demo porte une pastille **TEST** ou **DEMO** et l'avis *Déposée dans le système de test KSeF. Ce n'est pas une déclaration fiscale.* Une telle facture n'a **aucun effet juridique**. Seules les acceptations en production comptent : ce sont les seules à apparaître comme numéro KSeF dans vos exports comptables (voir [JPK_V7M — Comarch ERP Optima](/fr/integrations/jpk-optima)).
 
-Accédez à **Facturation** → ouvrez la facture → **section KSeF** → cliquez sur **Réessayer la soumission**. Druma envoie à nouveau le XML FA(3) immédiatement.
+## Le code TVA KSeF (PL)
+
+Druma déduit le code TVA FA(3) du traitement TVA de la facture, du pays de l'acheteur et du taux ; en principe, rien à faire. Quand le choix automatique ne convient pas à une facture, l'éditeur de facture propose le champ **Code TVA KSeF (PL)** (visible pour les opérateurs polonais). Laissez **Automatique** ou remplacez-le :
+
+| Choix dans le champ | Code KSeF | Usage typique |
+|---|---|---|
+| np II : services intra-UE (art. 28b) | `np II` | Services à une entreprise d'un autre pays de l'UE, p. ex. un service de transport. |
+| np I : hors de Pologne, hors UE | `np I` | Services hors de Pologne à un client hors UE. |
+| 0 % WDT : livraison intracommunautaire de biens | `0 WDT` | Livraison intracommunautaire de biens. |
+| 0 % export | `0 EX` | Exportation de biens hors de l'UE. |
+| 0 % national (KR) | `0 KR` | Taux de 0 % sur une livraison nationale. |
+| oo : autoliquidation nationale | `oo` | Autoliquidation nationale. |
+| zw : exonéré | `zw` | Opération exonérée de TVA. |
+
+<Note>
+Le code applicable à un trajet de transport donné relève du conseil fiscal, et les règles ne sont pas toujours tranchées. **Demandez à votre comptable** quel code utiliser et définissez la dérogation là où le choix automatique de Druma diffère.
+</Note>
+
+## Devises étrangères
+
+Une facture en devise étrangère avec TVA polonaise est déposée avec le montant de TVA en PLN, converti au **taux NBP du dernier jour ouvrable précédant le fait générateur**. S'il n'existe pas de taux NBP pour cette date, le dépôt est refusé avec un message clair et peut être réessayé plus tard.
+
+## Factures groupées
+
+Une facture groupée réunissant plusieurs commandes est déposée avec une période de facturation allant de la plus ancienne à la plus récente date de livraison de ses lignes. Chaque ligne doit être liée à une commande ; sinon, Druma refuse le dépôt.
+
+## Notes de crédit
+
+Une note de crédit est déposée dans KSeF comme une correction de la facture d'origine. Elle renvoie au numéro KSeF de l'originale si elle en a un, et présente les lignes d'origine et les lignes corrigées avec les écarts. Si l'originale n'a jamais été déposée dans KSeF, la correction est déposée sans référence à un numéro KSeF.
+
+## Non pris en charge
+
+- **Mode hors ligne.** Druma ne dépose qu'en ligne.
+- **Réception des factures d'achat** depuis KSeF. Druma dépose vos factures de vente ; il ne récupère pas les factures de vos fournisseurs.
 
 ---
 
 <CardGroup cols={2}>
-  <Card title="Soumission e-Factura / ANAF" icon="landmark" href="/fr/invoicing/efactura-anaf">
-    L'équivalent roumain du système de facturation électronique obligatoire — comment Druma soumet à l'ANAF via l'API SPV.
+  <Card title="e-Factura / Soumission ANAF" icon="landmark" href="/fr/invoicing/efactura-anaf">
+    L'équivalent roumain du système obligatoire de facturation électronique — comment Druma soumet à l'ANAF via l'API SPV.
   </Card>
   <Card title="Facturation Peppol" icon="network-wired" href="/fr/integrations/peppol-invoicing">
-    Facturation électronique à l'échelle de l'UE via le réseau Peppol — configuration, envoi, et suivi de statut.
+    Facturation électronique à l'échelle de l'UE via le réseau Peppol — configuration, envoi et suivi du statut.
   </Card>
 </CardGroup>

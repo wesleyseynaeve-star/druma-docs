@@ -1,98 +1,187 @@
 ---
 title: "KSeF — e-Facturare în Polonia"
-description: "Cum trimite Druma automat facturile către KSeF (Krajowy System e-Faktur), sistemul național obligatoriu de e-facturare al Poloniei operat de KAS, cu urmărirea statusului, gestionarea reîncercărilor și descărcarea recipisei UPO."
+description: "Cum trimite Druma facturile către KSeF (Krajowy System e-Faktur), sistemul național obligatoriu de e-facturare al Poloniei: medii, configurarea tokenului sau a certificatului, statusuri, UPO, cod QR, coduri TVA, valută și note de credit."
 icon: "file-invoice"
 ---
 
 <Warning>
-**Early access — în așteptarea primei validări live cu un operator.** Trimiterea KSeF a Druma este completă funcțional, dar la data acestui text nu a fost încă exercitată integral, cap la cap, pe API-ul live KSeF al Poloniei, de către un operator real cu TVA polonez. Trimiterea rămâne blocată până la conectarea unui token de operator live. Dacă ești printre primii operatori care conectează KSeF, tratează trimiterile inițiale ca early access — urmărește îndeaproape indicatoarele de status și contactează suportul rapid, dacă ceva pare greșit. Pașii de configurare și comportamentul descrise mai jos sunt instrucțiunile corecte; singurul aspect deschis este un istoric de producție live.
+**Early access — fără istoric live în producție încă.** Trimiterea KSeF a Druma este completă și a fost testată cap la cap în sandbox-ul KSeF Test, dar nu a depus încă facturi pentru un operator real în Producție. Exersează mai întâi în mediul **Demo** (vezi mai jos) și contactează suportul imediat dacă ceva pare greșit la primele depuneri în producție.
 </Warning>
 
 ## Ce este KSeF?
 
-KSeF (Krajowy System e-Faktur) este sistemul național polonez de facturare electronică structurată, operat de autoritatea fiscală poloneză (KAS — Krajowa Administracja Skarbowa). Este obligatoriu pentru companiile înregistrate TVA în Polonia. Fiecare factură emisă de o companie cu TVA-PL trebuie trimisă la KSeF în formatul oficial XML **FA(3)** — portalul KAS singur nu este suficient.
+KSeF (Krajowy System e-Faktur) este sistemul național polonez de facturare electronică structurată, operat de autoritatea fiscală poloneză (KAS — Krajowa Administracja Skarbowa). Facturile se emit în formatul oficial **FA(3) XML**; portalul KAS singur nu este suficient.
 
-<Frame caption="Setările KSeF — conectezi tokenul de operator, apoi urmărești statusul trimiterii și confirmările UPO pentru fiecare factură.">
+<Frame caption="Setările KSeF — conectezi tokenul sau certificatul, apoi urmărești statusul trimiterii și confirmările UPO pentru fiecare factură.">
   <img src="/images/invoicing/ksef-poland.ro.png" alt="Setările de facturare electronică KSeF și statusul trimiterilor în Druma" />
 </Frame>
 
-<Note>
-Implementarea obligației KSeF se face în etape pe parcursul lui 2026, iar datele de intrare în vigoare au fost amânate repetat de guvernul polonez. Confirmă data aplicabilă companiei tale cu contabilul sau pe portalul oficial [ksef.mf.gov.pl](https://ksef.mf.gov.pl), înainte să te bazezi pe orice dată menționată aici.
-</Note>
+### Cine trebuie să îl folosească
 
-KSeF se aplică doar dacă firma ta are un **număr de TVA polonez** (format `PL` urmat de 10 cifre, de exemplu `PL1234567890`). Companiile înregistrate în România, Belgia sau orice altă țară non-poloneză nu sunt supuse KSeF. Dacă Druma nu detectează un număr de TVA-PL pe înregistrarea companiei tale, cardul de integrare KSeF va rămâne inactiv.
-
-## Cum gestionează Druma KSeF
-
-Nu trebuie să te autentifici în portalul KAS, să produci fișiere XML sau să trimiți nimic manual. Iată ce se întâmplă automat când generezi o factură și KSeF este activat:
-
-1. Druma convertește factura în formatul oficial **FA(3) XML** cerut de KAS.
-2. Druma se autentifică la API-ul KSeF folosind **tokenul tău de operator**, stocat securizat în Supabase Vault — tokenul nu este niciodată vizibil în text simplu, după ce îl lipești.
-3. Druma trimite XML-ul la KSeF și primește un **număr KSeF** (referința oficială de la KAS).
-4. Druma descarcă **UPO**-ul (Urzędowe Poświadczenie Odbioru — confirmarea oficială de primire) și îl stochează pe înregistrarea facturii.
-
-Întregul proces rulează în fundal. Vei vedea rezultatul pe factură, ca o etichetă de status colorată.
-
-## Indicatoare de status KSeF
-
-Fiecare factură supusă KSeF arată o etichetă de status pe pagina de detaliu a facturii, sub secțiunea **KSeF**:
-
-| Eticheta | Semnificație |
+| Contribuabil | KSeF obligatoriu de la |
 |---|---|
-| **În așteptare** | Factura generată; trimiterea KSeF este în coadă. |
-| **Trimisă** | XML trimis la KSeF; se așteaptă ca KAS să îl proceseze (de obicei 1–5 minute). |
-| **Acceptată** | KAS a acceptat factura. Numărul KSeF este stocat și UPO-ul este disponibil. |
-| **Eșuată** | KSeF a respins factura, din cauza unei erori de validare. Vezi mesajul de eroare de pe factură. |
-| **Respinsă** | KAS a returnat o respingere formală. Verifică UPO-ul pentru codul motiv. |
+| Contribuabili mari | 1 februarie 2026 |
+| Toți ceilalți plătitori de TVA | 1 aprilie 2026 |
 
-<Note>
-Un job din fundal verifică trimiterile eșuate la fiecare 30 de minute, dar fiecare factură reîncearcă de fapt pe un program de backoff exponențial — aproximativ 1 oră după primul eșec, apoi aproximativ 2 ore după aceea (±25% variație). Dacă și a treia încercare (trimiterea originală plus aceste 2 reîncercări) eșuează, factura trece direct în statusul **Eșuată**, de regulă în aproximativ 3 ore de la primul eșec — nu va mai reîncerca automat după aceea. Declanșează o reîncercare manuală din panoul de detaliu al facturii, după ce ai rezolvat eroarea de bază.
-</Note>
+Nu se aplică sancțiuni până la sfârșitul lui 2026. Confirmă situația ta cu contabilul sau pe portalul oficial [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
 
-## Configurarea KSeF
+KSeF se aplică doar dacă firma ta are un **număr de TVA polonez** (format `PL` urmat de 10 cifre, de exemplu `PL1234567890`). Companiile din România, Belgia sau orice altă țară non-poloneză nu sunt supuse KSeF. Fără un număr de TVA-PL pe înregistrarea companiei, cardul KSeF rămâne inactiv.
+
+## Medii
+
+Alegi mediul la conectare. Fiecare companie are mediul ei.
+
+| Mediu | Pentru ce îl folosești | Efect |
+|---|---|---|
+| **Test (sandbox)** | Încercarea conexiunii cu date fictive. | Nimic nu este declarat autorității fiscale. |
+| **Demo (preproducție, NIP real)** | O probă cu NIP-ul tău real înainte de lansare. | Date cu aspect real, fără efect juridic. |
+| **Producție** | Facturare reală. | Fiecare factură trimisă este o declarație fiscală obligatorie. |
+
+**Traseul recomandat: Demo → Producție.** Conectează-te în Demo, trimite o factură reală din Druma, verifică dacă apare în aplicația demo KSeF, apoi reconectează-te cu un token sau un certificat de producție. Panoul Druma afișează acest traseu ca **Listă de verificare înainte de lansare**.
+
+<Warning>
+Un token sau un certificat funcționează doar în mediul în care a fost creat. Un token Demo va fi refuzat în Producție și invers.
+</Warning>
+
+## Obținerea datelor de autentificare
+
+Te poți autentifica cu oricare dintre cele două variante. Ambele oferă același acces.
+
+### Varianta A — token KSeF (cea mai simplă)
+
+1. Autentifică-te în aplicația KSeF a mediului tău: [ap-demo.ksef.mf.gov.pl](https://ap-demo.ksef.mf.gov.pl) pentru Demo, [ap.ksef.mf.gov.pl](https://ap.ksef.mf.gov.pl) pentru Producție.
+2. Generează un token pentru NIP-ul companiei tale, cu permisiunile **InvoiceWrite** și **InvoiceRead**.
+3. Copiază-l. KSeF îl afișează o singură dată.
+
+### Varianta B — certificat KSeF
+
+Folosește-o dacă firma ta gestionează deja certificate KSeF. Druma are nevoie de certificat (`.pem` sau `.crt`) și de cheia sa privată în format **PKCS#8 PEM** (`.pem` sau `.key`). Dacă certificatul a venit ca fișier `.p12` sau `.pfx`, convertește-l mai întâi:
+
+```bash
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+openssl pkcs12 -in cert.p12 -out key.pem -nocerts
+```
+
+Dacă cheia privată este criptată, introduci fraza ei de acces la conectare. Aceasta este folosită o singură dată pentru deblocarea cheii și nu este stocată niciodată.
+
+## Conectarea KSeF
 
 <Steps>
-  <Step title="Mergi la Setări → Integrări">
-    Deschide meniul **Setări** din bara de navigare de sus și selectează **Integrări**.
+  <Step title="Deschide Setări → Integrări → KSeF">
+    Deschide **Setări** din bara de sus, alege **Integrări** și găsește cardul KSeF.
   </Step>
-  <Step title="Găsește cardul KSeF și apasă Conectează">
-    Localizează cardul **KSeF (e-facturare Polonia)**. Apasă **Conectează**.
+  <Step title="Alege mediul">
+    Pentru prima conectare alege **Demo (preproducție, NIP real)**.
   </Step>
-  <Step title="Lipește tokenul tău de operator">
-    Introdu tokenul tău de operator KSeF. Acesta este tokenul de autentificare emis de KAS, pentru accesul API al companiei tale. Contabilul tău sau echipa IT îl pot genera din portalul KSeF, la [ksef.mf.gov.pl](https://ksef.mf.gov.pl).
+  <Step title="Introdu NIP-ul">
+    Introdu **NIP-ul companiei** din 10 cifre, fără prefixul `PL`.
   </Step>
-  <Step title="Salvează">
-    Apasă **Salvează**. Druma validează că înregistrarea companiei tale are un număr de TVA polonez, înainte de activare. Dacă validarea eșuează, verifică că numărul de TVA din detaliile companiei tale este în formatul `PL` + 10 cifre.
+  <Step title="Alege Autentificare">
+    Selectează **Token KSeF** și lipește tokenul, sau **Certificat KSeF** și alege fișierele certificatului și ale cheii private (plus fraza de acces, dacă cheia este criptată).
+  </Step>
+  <Step title="Apasă Conectează și testează">
+    Druma efectuează o autentificare reală în KSeF înainte de a salva ceva. Dacă eșuează, primești un mesaj concret, de exemplu că datele de autentificare au fost respinse, că tokenul este inactiv sau revocat ori că KSeF nu poate fi contactat. Nimic nu se stochează până când autentificarea reușește.
   </Step>
 </Steps>
 
-Odată conectat, toate facturile noi generate de compania ta sunt trimise automat la KSeF. Facturile deja existente în Druma **nu** sunt retrimise retroactiv.
+După conectare, cardul afișează **Conectat la KSeF**, cu mediul, NIP-ul și rezultatul ultimului test. Folosește **Testează conexiunea** oricând pentru a o reverifica.
 
-## Deconectarea KSeF
+<Note>
+Dacă conectezi un certificat care nu pare să aparțină NIP-ului tău, Druma se conectează oricum, dar te avertizează, deoarece KSeF poate refuza emiterea de facturi cu el.
+</Note>
 
-Mergi la **Setări → Integrări → KSeF → Deconectează**. Asta elimină tokenul de operator din Vault și oprește imediat trimiterile noi. Facturile deja acceptate își păstrează numerele KSeF — deconectarea nu afectează înregistrările acceptate.
+Se trimit doar facturile trimise după conectare. Facturile deja existente în Druma nu sunt depuse retroactiv.
 
-## Facturi cu taxare inversă
+### Mai multe entități de facturare
 
-Druma gestionează corect TVA-ul cu taxare inversă în formatul XML FA(3). Când o factură poartă regimul de TVA cu taxare inversă, Druma omite suma de TVA și setează corect câmpul **P_12** din XML. Nu este necesară nicio ajustare manuală — regimul de TVA este derivat din elementele de linie ale facturii, așa cum sunt configurate în Druma.
+Dacă firma ta facturează printr-o entitate poloneză de facturare al cărei NIP polonez diferă de cel al companiei, în cardul KSeF apare un selector **Emitent (NIP)** (rămâne ascuns cât timp toate entitățile de facturare au NIP-ul companiei). Implicit este **Companie (implicit)**; fiecare entitate este listată cu nume, NIP și **conectat** sau **neconectat**. Alege o entitate pentru a-i conecta propriile date de autentificare KSeF: câmpul **NIP emitent** este precompletat cu NIP-ul entității și este doar pentru citire. Factura este apoi depusă sub NIP-ul entității care o emite, cu datele de autentificare și mediul acelei entități.
 
-## Descărcarea UPO
+### Deconectarea
 
-UPO-ul (recipisa oficială de la KAS) este descărcat automat, odată ce factura ajunge la statusul **Acceptată**, și este stocat pe înregistrarea facturii. Pentru a-l descărca manual:
+**Deconectează** șterge tokenul sau certificatul stocat și oprește imediat trimiterile noi. Facturile deja acceptate își păstrează numerele KSeF.
 
-1. Deschide factura din **Facturare** → **Facturi**.
-2. Derulează până la secțiunea **KSeF**.
-3. Apasă **Descarcă UPO**.
+## Ce se întâmplă când trimiți o factură
+
+Pentru o companie cu KSeF conectat, trimiterea unei facturi către client (sau a unei note de credit) o transmite automat la KSeF:
+
+1. Druma construiește XML-ul FA(3) din factură și stochează exact ce trimite.
+2. Druma se autentifică cu datele tale și trimite factura.
+3. KSeF răspunde asincron. De obicei, în câteva secunde Druma primește verdictul.
+4. La acceptare, Druma stochează **numărul KSeF**, descarcă **UPO** și adaugă **codul QR** pe factură.
+
+Dacă trimiți din nou aceeași factură, Druma retrimite conținutul identic, astfel că KSeF o recunoaște ca duplicat, iar factura nu este depusă niciodată de două ori.
+
+Documentele emise de client (autofacturare de către client) nu sunt trimise niciodată de Druma.
+
+### Statusuri și ce ai de făcut
+
+Statusul apare pe factură, în secțiunea **KSeF**.
+
+| Status | Semnificație | Ce faci |
+|---|---|---|
+| **Trimisă** | Trimisă; se așteaptă verdictul KSeF. | De obicei se rezolvă în câteva secunde. Dacă rămâne așa, folosește **Verifică statusul KSeF**; Druma interoghează și automat. |
+| **Acceptată** | KSeF a emis un număr KSeF. | Nimic. UPO este disponibil. |
+| **Respinsă** | KSeF a refuzat conținutul, deci factura **nu a fost niciodată depusă**. Explicația KSeF apare pe factură. | Corectează datele clientului sau ale companiei (cod TVA, adresă, denumire) sau completează câmpul **Cod TVA KSeF (PL)**, apoi apasă **Reîncearcă KSeF**. Druma reconstruiește factura din datele curente. Dacă **sumele sau liniile** sunt greșite, emite în schimb o notă de credit și o factură nouă. |
+| **Eroare** | O problemă tehnică (KSeF indisponibil, limitare de cereri, neconcordanță de conținut). | Druma reîncearcă automat; poți apăsa și **Reîncearcă KSeF**. |
+| **Eșuată** | Reîncercările automate sunt epuizate. | Rezolvă cauza afișată, apoi **Reîncearcă KSeF**. |
+| **Nu se aplică** | Documentul nu se trimite la KSeF (de exemplu un tip de document pe care KSeF nu îl primește, o factură consolidată cu o linie fără comandă sau o entitate de facturare al cărei număr de TVA diferă de cel conectat). | Trimite-l prin email sau remediază cauza și reîncearcă. |
+
+<Note>
+Reîncercările automate folosesc o întârziere crescătoare, cu variație aleatorie. Un job din fundal verifică facturile reîncercabile la fiecare 30 de minute.
+</Note>
+
+## Număr KSeF, UPO și cod QR
+
+Odată ce o factură este **Acceptată**, secțiunea KSeF a facturii afișează:
+
+- **Număr KSeF** — referința oficială KSeF a facturii.
+- **Verifică în KSeF** — un link către pagina publică de verificare KSeF pentru această factură.
+- **Descarcă UPO** — recipisa oficială (Urzędowe Poświadczenie Odbioru) de la KAS. Descarcă-l din factură sau din **Finanțe → Facturi**.
+
+Factura tipărită și cea PDF conțin și un **cod QR** însoțit de numărul KSeF, astfel încât clientul tău o poate verifica.
 
 <Warning>
-UPO este dovada legală că KAS a primit factura ta. Păstrează o copie pentru evidențele tale — legea fiscală poloneză cere să o poți prezenta în timpul unui control fiscal.
+UPO este dovada legală că KAS a primit factura ta. Păstrează-l pentru controale.
 </Warning>
 
-## Reîncercare manuală
+### Eticheta TEST și DEMO
 
-Dacă reîncercările automate sunt epuizate, sau ai corectat o eroare și vrei să retrimiți imediat:
+O factură depusă în mediul Test sau Demo poartă o etichetă **TEST** sau **DEMO** și mesajul *Depusă în sistemul de test KSeF. Nu este o declarație fiscală.* O astfel de factură **nu are efect juridic**. Contează doar acceptările din producție, iar acestea sunt singurele care apar ca număr KSeF în exporturile tale contabile (vezi [JPK_V7M — Comarch ERP Optima](/ro/integrations/jpk-optima)).
 
-Mergi la **Facturare** → **Facturi** → deschide factura → **secțiunea KSeF** → apasă **Reîncearcă trimiterea**. Druma trimite din nou XML-ul FA(3) imediat.
+## Codul TVA KSeF (PL)
+
+Druma deduce codul TVA FA(3) din regimul TVA al facturii, țara cumpărătorului și cota de TVA, deci în mod normal nu trebuie să faci nimic. Când alegerea automată nu este potrivită pentru o anumită factură, editorul de facturi are câmpul **Cod TVA KSeF (PL)** (vizibil operatorilor polonezi). Lasă-l pe **Automat** sau suprascrie-l:
+
+| Alegere în câmp | Cod KSeF | Utilizare tipică |
+|---|---|---|
+| np II: servicii intra-UE (art. 28b) | `np II` | Servicii către un client business din altă țară UE, de exemplu un serviciu de transport. |
+| np I: în afara Poloniei, non-UE | `np I` | Servicii în afara Poloniei către un client din afara UE. |
+| 0% WDT: livrare intracomunitară de bunuri | `0 WDT` | Livrare intracomunitară de bunuri. |
+| 0% export | `0 EX` | Export de bunuri în afara UE. |
+| 0% intern (KR) | `0 KR` | Cotă 0% la o livrare internă. |
+| oo: taxare inversă internă | `oo` | Taxare inversă internă. |
+| zw: scutit | `zw` | Livrare scutită de TVA. |
+
+<Note>
+Ce cod se aplică unei anumite rute de transport este o chestiune fiscală, iar regulile nu sunt întotdeauna clare. **Întreabă-ți contabilul** ce cod să folosești și setează-l ca suprascriere acolo unde alegerea automată a Druma diferă.
+</Note>
+
+## Valută
+
+O factură în valută cu TVA polonez este depusă cu suma TVA în PLN, convertită la **cursul NBP din ultima zi lucrătoare dinaintea datei fiscale**. Dacă nu există curs NBP pentru acea dată, trimiterea este refuzată cu un mesaj clar și poate fi reîncercată mai târziu.
+
+## Facturi consolidate
+
+O factură consolidată care grupează mai multe comenzi este depusă cu o perioadă de facturare de la cea mai timpurie până la cea mai târzie dată de livrare dintre liniile ei. Fiecare linie trebuie legată de o comandă; în caz contrar, Druma refuză depunerea.
+
+## Note de credit
+
+O notă de credit este depusă la KSeF ca o corecție a facturii originale. Face referire la numărul KSeF al originalei, dacă aceasta are unul, și arată liniile originale și cele corectate, cu diferențele. Dacă originala nu a fost niciodată depusă în KSeF, corecția este depusă fără referință la un număr KSeF.
+
+## Ce nu este acceptat
+
+- **Modul offline.** Druma depune doar online.
+- **Primirea facturilor de achiziție** din KSeF. Druma trimite facturile tale de vânzare; nu preia facturile furnizorilor tăi.
 
 ---
 
