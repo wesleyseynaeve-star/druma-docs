@@ -104,7 +104,66 @@ Push is sent within about 15 minutes. These three alerts are in-app and push onl
 
 **Defects.** When a driver submits a post-trip inspection with a **Safety Critical** defect, it appears under **Defects**. Click **Request job** to open the job form pre-filled with the vehicle and the defect, then plan it on the board. If *Auto-create vehicle unavailability for safety-critical defects* is enabled in **Settings → Fleet & Equipment → Post-trip DVIR**, the truck is already blocked from the moment the defect is submitted. See [Post-Trip Vehicle Inspection (DVIR)](/en/fleet-compliance/post-trip-dvir).
 
-**Maintenance schedules.** Schedules track recurring intervals per vehicle (by km, by days or by engine hours), compute the **Next Due** date or km from the last service, and sort overdue items to the top. Kilometre schedules use the truck's current odometer. Druma does not create jobs by itself; click **Plan service** on a due schedule to turn it into a job. Trailers have no odometer, so their km schedules show no due state.
+**Maintenance schedules.** Schedules track recurring intervals per vehicle (by km, by days or by engine hours), compute the **Next Due** date or km from the last service, and sort overdue items to the top. Kilometre schedules use the truck's current odometer. Click **Plan service** on a due schedule to turn it into a job, or let Druma file the request for you (see [Maintenance automation](#maintenance-automation)). Trailers have no odometer, so their km schedules show no due state.
+
+---
+
+## Technicians
+
+Technicians work from their phone or a shared tablet. Give each person an account with the **Mechanic** role (Settings → Users) and link it to their technician resource under **Resources** on the board. A mechanic sees only the workshop: no fleet, driver, client or cost data.
+
+### On the phone
+
+A mechanic who signs in lands in the **Workshop** mode of the mobile app with four tabs.
+
+| Tab | What it shows |
+|---|---|
+| **My jobs** | Jobs assigned to you or to the bay you work in, grouped as *Running now*, *Today*, *Next* and *Awaiting sign-off*. |
+| **Queue** | Open jobs nobody has taken yet. Starting one assigns it to you. |
+| **Board** | The same agenda as the desk board, read-only. |
+| **More** | Account actions such as sign out. |
+
+Open a job to see the job card:
+
+1. **Start** the timer. **Pause** and **Waiting for parts** stop it; starting a second job pauses the first.
+2. Tick the **Checklist** as you go.
+3. Add **Parts used** (name, optional part number, quantity), **Photos** and **Notes**.
+4. **Finish** and enter the **Odometer (km)** for a truck. Druma warns if it is lower than the last known reading. The job moves to *Done* and waits for sign-off.
+
+A job assigned to another technician can be read but not worked on. Without signal your taps are saved on the device and sync when the connection returns; a counter shows what is waiting. A technician is notified when a job is assigned to them and the notification opens the job card.
+
+The first time a new technician signs in they are asked to acknowledge the Privacy Notice.
+
+### Shared tablet
+
+A tablet in the bay lets technicians sign in with a PIN instead of a password.
+
+1. Go to **Fleet → Workshop → Workshop settings → Devices**, choose **Add a device**, pick **Shared tablet (PIN sign-in)**, name it and **Create and show code**. The 8-character code is valid for 15 minutes, works once and is shown only now.
+2. On the tablet open the address shown, enter the code and **Pair**. You do this once; the tablet stays paired for 180 days.
+3. Under **Technicians** set a 6-digit PIN for each technician with **Set PIN**. Only accounts whose *only* role is Mechanic can use the tablet. At first sign-in the technician chooses their own PIN.
+4. The technician taps their name, enters the PIN and works on the same screens as on the phone, in large type. After 90 seconds without a touch the tablet warns and then signs out (set the time under **Maintenance**, 30 to 900 seconds); **Switch technician** signs out at once.
+
+Repeated wrong PINs lock the technician for a few minutes, and a supervisor can reset the PIN or choose **Sign out everywhere**. **Revoke** on a device stops it immediately; to use that tablet again create a new device.
+
+### Wall screen
+
+A **Wall screen (read-only board)** shows today's board on a TV. Create it under **Devices**, open the address on the screen (it pairs itself) and use **Full screen**. It refreshes every minute and shows jobs, plates and resources only, never names, hours or costs. If you revoke it, the screen shows *This screen is not paired*.
+
+### Hours on the job
+
+Everything a technician times appears on the job in the desk view under **Time**: who worked, when, and the total. Once time is logged, the job's labour hours come from it. A user with the approve permission can correct a log, with a reason. Time records are personal data and are kept for 24 months.
+
+---
+
+## Maintenance automation
+
+Druma keeps one odometer figure per truck and files service requests for you.
+
+- **Odometer sources.** The Maintenance page shows the reading, where it came from (manual, workshop, telematics, tachograph or fuel card), how old it is, and a flag when a reading looks wrong (an implausible jump) or is missing (*unknown km*). The finish odometer of a workshop job updates the truck.
+- **Automatic requests.** Every night, and whenever you press **Check now** under **Workshop settings → Maintenance**, Druma looks at each truck's schedules. A schedule that comes due within the lead time (by default 14 days, 1,500 km or 50 reefer hours) becomes a **Requested** job, and the other schedules of the same truck due within the bundle window (30 days, 3,000 km, 100 hours) join the same job so the truck goes to the workshop once. A schedule that an open job already covers is not filed again, and pressing **Check now** twice files nothing new.
+- **Settings.** The lead times, bundle windows, the plausible kilometres per day, the default labour rate and the on/off switch **File maintenance requests automatically** are under **Workshop settings → Maintenance**.
+
+Planners are notified when requests are filed; plan them from the request inbox like any other.
 
 ---
 
