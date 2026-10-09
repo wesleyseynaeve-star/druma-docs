@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-08 07:35 UTC
+Generated: 2026-10-09 06:56 UTC
 
 ---
 
@@ -4098,6 +4098,7 @@ If the truck is currently carrying a linked trailer, the Reposition modal also l
 - **Two views.** *Drivers* shows each driver's plan. *Trucks* shows who drives each truck, the truck's history, and the days it has no driver.
 - **Blockers.** Days a truck is in the workshop, has an open safety-critical defect or an expired mandatory document are greyed out and cannot be given a driver. An admin can override with a reason. Conflict badges flag things like a driver's expired documents or a missing weekly rest.
 - **Orders follow the roster.** Orders not yet started take the driver rostered for their dates. When the driver of a truck changes in the middle of an order, Druma adds a handover stop at the outgoing driver's base and splits the order into two legs, one per driver. Past days never change orders. Orders with an issued eCMR are flagged for the planner instead of being split.
+- **Several bases.** In Settings → Driver Roster you can link a truck or a driver to several bases (depots) and mark one as the default with the star; handovers use the outgoing driver's default base, then the truck's, then the company default. The truck picker in the roster palette has a Base filter that shows only the trucks linked to the bases you choose, and remembers your choice.
 - **Counters.** The Counts tab shows, per driver and month, how many days fell under each code group, and exports them as CSV. The roster does not calculate pay.
 - **Settings → Driver Roster** holds your own code list (each code is a working day, available, or unavailable), the list of handover bases, and the default base per driver and per truck.
 
