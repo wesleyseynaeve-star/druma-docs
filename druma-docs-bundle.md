@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-09 11:28 UTC
+Generated: 2026-10-09 11:33 UTC
 
 ---
 
@@ -4319,6 +4319,49 @@ The trailers list at **Fleet → Trailers** includes a **Location** column showi
 
   Track and manage all compliance documents for both vehicles and trailers in one place.
 
+
+## Client yards and trailers held for a client
+
+**Planning → Trailer parkings** shows which trailers stand where *for which client*. This view is internal: clients never see yards, trailers or equipment checks in their portal or emails.
+
+- **Yard kind.** When you add or edit a yard, set its **Kind**: *Our yard*, *Client's site* or *Third-party yard*. A client's site must name its client. Yards used as a standby pool for a single client's sites are marked as that client's site automatically.
+- **Client badges.** Each trailer row shows why it belongs to a client: it is **preloaded** for an open order of that client, **dedicated** to that client under a capacity contract, or it stands in that client's yard.
+- **Client filter and By client.** Use the client filter to see one client's yards and trailers, or switch the grouping to **By client** to see one card per client.
+- **Client-owned trailers.** Trailers your client owns and stores with you under a storage agreement appear as their own rows in the yard. They count toward the yard's capacity but not toward your own trailer counts.
+- **Agreements.** Each yard shows the storage agreements held there (client, period and status). Users with the **View and edit trailer storage agreement rates** permission can open the agreement in Finance to see or change its amounts.
+
+Who can see this page is controlled by the **View the Trailer parkings overview** permission in **Settings → Roles** (listed under both Fleet and Planning).
+
+## Equipment requirements
+
+Equipment requirements stop the wrong trailer from being planned without anyone noticing. You can set them at three levels; the most specific value wins:
+
+1. **Client** — the default for every order of that client (client card → Transport).
+2. **Site for a client** — overrides the client default at one loading site (site editor).
+3. **Order** — overrides both for a single order (order pane → Cargo & Stops).
+
+A requirement can ask for: allowed **trailer types**, a **reefer temperature range**, **ADR**, a **tail lift**, a **curtain** side and a **minimum internal height**.
+
+### Warn or Block
+
+Each requirement is either **Warn** (the default) or **Block**:
+
+- **Warn** shows an amber note on the planning board and in the trailer pickers, but planning continues.
+- **Block** shows a red blocker and refuses the assignment until someone overrides it. If any level sets a requirement to Block, it stays a block — a less strict level cannot soften it.
+
+### Trailer capabilities
+
+Fill in each trailer's capabilities on the trailer's **Specs** tab (temperature range, tail lift, curtain, internal height). A capability left empty counts as **unknown**: it shows a warning and is never treated as a pass or a block, so you can start using requirements before every trailer is filled in.
+
+### Pickers and the parkings overview
+
+Trailer pickers list compatible trailers first and mark the others with **"Does not meet: …"** (or **"Not verified: …"** when a capability is unknown). On Trailer parkings, a preloaded trailer that does not meet its order's requirements shows a mismatch chip.
+
+### Overriding a block
+
+A user with the **Override a trailer equipment mismatch** permission can assign anyway by entering a reason (at least 5 characters) in the assignment sheet. The override is recorded with the user, time, trailer and the requirements it bypassed.
+
+Viewing and editing requirements is controlled by the **View equipment requirements and trailer-fit blockers** and **Edit equipment requirements** permissions.
 
 ---
 
