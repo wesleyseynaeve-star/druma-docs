@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-09 06:56 UTC
+Generated: 2026-10-09 10:04 UTC
 
 ---
 
@@ -4096,13 +4096,13 @@ If the truck is currently carrying a linked trailer, the Reposition modal also l
 
 - **Fast entry.** Drag over a block of cells, type a truck number (for example `197`) or a code (for example `UW`) and press Enter. Add `a` or `p` for a morning or afternoon half day. You can also pick a code or truck in the palette and paint cells, copy and paste, fill right, undo, or apply a repeating rotation (for example three weeks on a truck, one week at home).
 - **Two views.** *Drivers* shows each driver's plan. *Trucks* shows who drives each truck, the truck's history, and the days it has no driver.
-- **Blockers.** Days a truck is in the workshop, has an open safety-critical defect or an expired mandatory document are greyed out and cannot be given a driver. An admin can override with a reason. Conflict badges flag things like a driver's expired documents or a missing weekly rest.
+- **Blockers.** Days a truck is in the workshop **or has a workshop job planned**, has an open safety-critical defect or an expired mandatory document are greyed out and cannot be given a driver. A job that covers only the morning or only the afternoon blocks just that half of the day. An admin can override with a reason. Conflict badges flag things like a driver's expired documents or a missing weekly rest. Planning a workshop job over a rostered stretch shows you the affected drivers first and can move them to a free truck for you (see [Workshop & Maintenance](/en/fleet-compliance/workshop-maintenance)).
 - **Orders follow the roster.** Orders not yet started take the driver rostered for their dates. When the driver of a truck changes in the middle of an order, Druma adds a handover stop at the outgoing driver's base and splits the order into two legs, one per driver. Past days never change orders. Orders with an issued eCMR are flagged for the planner instead of being split.
 - **Several bases.** In Settings → Driver Roster you can link a truck or a driver to several bases (depots) and mark one as the default with the star; handovers use the outgoing driver's default base, then the truck's, then the company default. The truck picker in the roster palette has a Base filter that shows only the trucks linked to the bases you choose, and remembers your choice.
 - **Counters.** The Counts tab shows, per driver and month, how many days fell under each code group, and exports them as CSV. The roster does not calculate pay.
 - **Settings → Driver Roster** holds your own code list (each code is a working day, available, or unavailable), the list of handover bases, and the default base per driver and per truck.
 
-Drivers see their own roster, read-only, under **Profile → My roster** in the driver app.
+Drivers see their own roster, read-only, under **Profile → My roster** in the driver app. When their truck is booked into the workshop, the affected days show *Truck in workshop until …* and the driver gets a notification.
 
 ---
 
@@ -12546,127 +12546,111 @@ Druma's automation eliminates the most common compliance failures: missing decla
 
 ## Overview
 
-The Workshop & Maintenance module gives fleet managers a structured way to track every maintenance job — from routine oil changes to safety-critical defect repairs. Work orders tie directly into the planning board (blocking trucks when needed) and into the post-trip inspection flow (safety-critical defects can create work orders automatically or with one click).
+The Workshop module is where fleet managers and planners plan every maintenance job — from a routine oil change to a safety-critical repair — on bays, technicians, a mobile mechanic or an external garage. A planned job takes the vehicle off the road for the time it needs, and Druma checks first which rostered drivers and orders that would strand.
 
-Find the module under **Fleet → Work Orders** and **Fleet → Maintenance**.
+Find it under **Fleet → Workshop**. One tab holds five sub-tabs:
 
-<Frame caption="Fleet → Work Orders — jobs tracked from Open through Completed, by Service Type.">
-  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Work Orders page listing maintenance jobs by status and service type" />
+| Sub-tab | What it is for |
+|---|---|
+| **Board** | The planning board: bays, technicians, mobile units and garages as rows, time on the horizontal axis. Plan, move and resize jobs here. |
+| **Jobs** | The list of every job with its status, resource, planned start and expected ready time. |
+| **Defects** | Defects reported by drivers (post-trip inspections). Each one can become a job with **Request job**. |
+| **Maintenance** | Recurring service schedules per vehicle. A due schedule becomes a job with **Plan service**. |
+| **Tyres** | Tyre condition and replacement per vehicle (see [Fleet Tyres](/en/fleet-compliance/tyres)). |
+
+<Frame caption="Fleet → Workshop → Jobs — every job with its status, resource and ready time.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Workshop jobs list showing maintenance jobs by status and service type" />
 </Frame>
+
+> **Note:** 
+The old pages **Fleet → Work Orders**, **Defects**, **Maintenance** and **Tyres** moved into this tab. Old links and bookmarks still open the right sub-tab.
+
 
 ---
 
-## Work orders
+## Jobs and statuses
 
-### What a work order is
-
-A work order is a record of a maintenance job on a specific truck. It captures what needs to be done, the parts and labour costs, and the current status of the job. Every safety-critical vehicle defect should have a corresponding work order before the truck goes back into service.
-
-### Creating a work order
-
-
-  ### Open the Work Orders tab
-    Go to **Fleet → Work Orders** and click **Create Work Order**.
-  
-  ### Fill in the details
-    Select the truck and fill in:
-
-    - **Service Type** — choose one of: Oil Change, Brake Service, Tyre Change, Inspection, Repair, ADR Recertification, Tacho Calibration, Other, plus three reefer-specific types for trailers (Filter & Oil Service, Full Reefer Service, ATP Inspection)
-    - **Description** — what needs to be done
-    - **Assigned to** — the workshop or technician responsible (free text)
-    - **Scheduled date** — when the work is planned
-  
-  ### Add line items
-    Add one or more line items for parts and labour. Each line item has a description, quantity, unit cost, and type (Parts / Labour). The **total cost** is calculated automatically from all line items.
-  
-  ### Save
-    Click **Save**. The work order is created in **Pending** status.
-  
-
-
-### Status machine
+A job is a maintenance task on one truck or trailer. It captures what is to be done, who does it, when, the parts and labour costs, and a checklist and photos.
 
 | Status | Meaning | Next actions |
 |---|---|---|
-| **Pending** | Job created, not yet started | Start Work, Cancel |
-| **In Progress** | Work has begun | Mark Complete, Cancel |
-| **Completed** | Work is done, truck cleared | — |
-| **Cancelled** | Job will not be completed | — |
+| **Requested** | Asked for (by a planner, a defect or a due schedule) but not scheduled. Waits in the board's request inbox. Blocks nothing. | Plan it, Cancel |
+| **Planned** | Has a start and a ready time. **Blocks the vehicle** for that time. | Start Work, Unplan, Cancel |
+| **In progress** | The vehicle is in the workshop. | Waiting for parts, Mark Complete, Cancel |
+| **Waiting for parts** | Still in the workshop, work paused. | Resume work, Cancel |
+| **Done** | The work is finished (a truck job asks for the odometer reading). The vehicle is free again. Waits for sign-off. | Approve, Reopen |
+| **Approved** | Signed off. Final. | — |
+| **Cancelled** | Will not be done. A job that never started removes its block. | — |
 
-Click **Start Work** to move from Pending → In Progress. Click **Mark Complete** when the job is done. A completed or cancelled work order lifts any auto-block on the truck.
-
-> **Note:** 
-**Open** is a filter/KPI grouping, not a status of its own — it bundles **Pending** and **In Progress** work orders together on the Work Orders list. Only work orders in **Pending** or **In Progress** status keep a truck blocked on the planning board. Completing or cancelling the work order restores the truck to the assignable list immediately.
-
-
----
-
-## Creating a work order from a defect
-
-When a driver submits a post-trip inspection with a **Safety Critical** defect, the defect appears in **Fleet → Defects**. Each safety-critical row has a **Create Work Order** button.
-
-Clicking it opens the work order form pre-filled with the truck that was inspected and linked to the originating defect ticket. There is no "Safety Critical" work order type — choose the **Service Type** that matches the repair (e.g. Repair, Brake Service), enter a description, then add line items and a scheduled date and save.
+What you may do depends on your role: planning (requested, planned, cancel) needs *workshop:plan*, running work (start, waiting for parts, complete) needs *workshop:execute*, and **Approve** and the override described below need *workshop:approve*. Dispatchers can read the board but not change it.
 
 ---
 
-## Maintenance schedules
+## The planning board
 
-Maintenance schedules let you track recurring service intervals per truck — so you always know when the next oil change, belt replacement, or statutory inspection is due.
+Rows are your resources grouped as **Bays**, **Technicians**, **Mobile units** and **External garages**, plus a **No resource yet** row. Add or edit resources with **Resources** in the toolbar.
 
-Go to **Fleet → Maintenance** to manage schedules.
+- **Zoom.** Day, Week or Month changes the grain of the time axis; **Today** and the date jump move around. Times are always read in your company's time zone.
+- **Request inbox.** On the left are the requested jobs, oldest first, each with a 14-day availability strip for its vehicle. Drag a card onto a resource row at the time you want to plan it.
+- **Move and resize.** Drag a planned bar to move it (also onto another resource), drag its edges to change start or end. A running job can only move its right edge — that is its expected ready time.
+- **Badges.** A clock means the job is running past its expected ready time; a warning triangle means the resource or the vehicle is double-booked; a shield means the job was saved with an override.
 
-### Adding a schedule
+On a phone the board is a read-only agenda for today and the next seven days.
 
-Click **Add Schedule** and configure:
+### New job
 
-| Field | Description |
-|---|---|
-| **Truck** | Which vehicle this schedule applies to |
-| **Service type** | Free text description (e.g., "Oil change", "Tyre rotation") |
-| **Interval type** | **km** (distance-based), **days** (calendar-based), or **engine hours** |
-| **Interval value** | The numeric interval (e.g., 15,000 km, 90 days, 500 hours) |
-| **Last performed** | Date and odometer/hours reading of the last service |
-
-Druma calculates the **Next Due** date or km from the last performed values and the interval. The schedule list sorts by next due date so overdue items appear at the top.
-
-You can edit or delete any schedule. Druma does not automatically create work orders from schedules — the schedule is a planning tool; you create the work order manually when the service is due.
+Click **New job** (or **Request job** on a defect, **Plan service** on a maintenance schedule). Pick the vehicle, the service type, a title, and optionally a bay, technician or garage. Fill in **Planned start** and **Truck ready again at** (for a garage these read **Drop-off** and **Expected return**). Leave both empty to save the job as a request.
 
 ---
 
-## Planning board: the wrench badge
+## The impact check and the blocking rule
 
-When a truck has one or more **Pending** or **In Progress** work orders, an amber wrench badge appears on that truck's card on the planning board. The badge is a quick signal to dispatchers that the vehicle has outstanding maintenance.
+As soon as a job has a start and a ready time, the **Impact check** shows what it affects:
 
-### Workshop Quick Resolve
+- **Rostered drivers** who are on that vehicle on those days, each with a **Move to free truck** list, so you can put the driver on another truck in the same save.
+- **Orders** assigned to the vehicle in that period.
+- **Other jobs and blocks** already on the vehicle.
+- **Suggested slots** — up to three nearby times when the vehicle is free or idle, one click to apply.
 
-Click the wrench badge to open the **Workshop Quick Resolve** modal. From here you can:
-
-- **Mark Complete** — closes the work order and removes the block without leaving the planning board
-- **Cancel** — cancels the work order and removes the block
-
-This is designed for situations where you just need to clear a block quickly (e.g., the repair is finished and you need to reassign the truck) without navigating to the full Work Orders tab.
-
----
-
-## Auto-unavailability for safety-critical defects
-
-If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled in **Settings → Fleet & Equipment → Post-trip DVIR**, submitting a safety-critical defect automatically:
-
-1. Creates a vehicle unavailability record for the truck
-2. Removes the truck from the assignable list on the planning board
-3. Shows the amber wrench badge on the truck's card
-
-The truck remains unavailable until the linked work order is marked **Completed** or **Cancelled**. Future orders already assigned to the truck are not automatically unassigned — the dispatcher receives a notification and needs to review them manually.
+If a job clashes and nothing is moved, **Plan job** stays disabled. A user with the *approve* permission can keep the job anyway by giving a reason of at least 10 characters (the **override**); everyone else sees *An approver must sign this off*. Every override is stored with the job and shown on its bar.
 
 > **Warning:** 
-If a driver submits a safety-critical defect at the end of a shift and no one checks the planning board before the morning, the truck will not appear as assignable. Build a habit of checking **Fleet → Defects** as part of the daily morning review.
+**A planned job blocks the vehicle for the calendar days it touches.** The roster and the planning board work in days and half days, so even a two-hour tyre change greys out that day on the roster. A job that only covers the morning (for example 08:00–12:00) blocks only the **morning** half; the afternoon stays free.
 
+
+A running job stays blocking until it is marked **Done**, even if its expected ready time has passed — the vehicle is physically in the workshop. Such a job is flagged as overrunning on the board.
+
+### Where the block shows
+
+- **Roster.** Days a vehicle is blocked are greyed out on **Fleet → Roster** and cannot be given a driver (an admin can override with a reason). The blocked-truck dialog names the cause *In the workshop*.
+- **Planning board.** The truck card shows a wrench badge: amber for a planned job, red when the truck is in the workshop, red with a ring when the job is overrunning. The tooltip shows the planned start or the expected ready time. Click-to-assign checks the order's pickup against the exact ready time, so a truck that is ready at 12:00 can still take a 14:00 loading the same day.
+- **Auto-plan and AI matching** skip or heavily penalise a truck inside its workshop window and score it normally again once it is back.
+
+---
+
+## Notifications
+
+When a job is saved that affects the roster, the right people are told:
+
+- **Planners and dispatchers** get a bell notification (and a push) *Workshop job blocks the roster* with the vehicle and the number of affected driver days and orders.
+- **Affected drivers** get *Your truck goes to the workshop* — in the bell and as a push that opens **Profile → My roster**, where the affected days show *Truck in workshop until …*. Dispatch tells them which truck to take.
+- **A technician** gets *Workshop job assigned to you* when a job is put on their resource.
+
+Push is sent within about 15 minutes. These three alerts are in-app and push only — never email — and cannot be switched off individually.
+
+---
+
+## Defects and maintenance schedules
+
+**Defects.** When a driver submits a post-trip inspection with a **Safety Critical** defect, it appears under **Defects**. Click **Request job** to open the job form pre-filled with the vehicle and the defect, then plan it on the board. If *Auto-create vehicle unavailability for safety-critical defects* is enabled in **Settings → Fleet & Equipment → Post-trip DVIR**, the truck is already blocked from the moment the defect is submitted. See [Post-Trip Vehicle Inspection (DVIR)](/en/fleet-compliance/post-trip-dvir).
+
+**Maintenance schedules.** Schedules track recurring intervals per vehicle (by km, by days or by engine hours), compute the **Next Due** date or km from the last service, and sort overdue items to the top. Kilometre schedules use the truck's current odometer. Druma does not create jobs by itself; click **Plan service** on a due schedule to turn it into a job. Trailers have no odometer, so their km schedules show no due state.
 
 ---
 
 
   
-    How drivers report defects at the end of a trip, severity levels, and how safety-critical defects trigger work orders.
+    How drivers report defects at the end of a trip, severity levels, and how safety-critical defects reach the workshop.
   
   
     Track ITP, insurance, CEMT, and ADR certificate expiry — with planning board warnings when documents are close to expiring.
