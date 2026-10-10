@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-10 15:09 UTC
+Generated: 2026-10-10 15:17 UTC
 
 ---
 
@@ -16046,7 +16046,7 @@ $dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
 
 Invoke-WebRequest `
   -Headers @{ 'X-API-Key' = $key } `
-  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -Uri "https://iyegqyqnihupmhmrxfnx.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
   -OutFile $dest
 ```
 
@@ -16220,7 +16220,7 @@ The Public API is read-only — only `GET` requests are accepted. All responses 
 
 Any other resource, or any non-GET method, returns a `404`/`405` error.
 
-Errors are always JSON in the shape `{ "error": "message" }` with the matching HTTP status (`400`, `401`, `403`, `404`, `405`, `429`, `500`). The full machine-readable reference (OpenAPI 3.1, every parameter and field) is under **API reference** in the navigation, file `openapi/public-api.v1.yaml`. The base URL is `https://YOUR-PROJECT.supabase.co/functions/v1`.
+Errors are always JSON in the shape `{ "error": "message" }` with the matching HTTP status (`400`, `401`, `403`, `404`, `405`, `429`, `500`). The full machine-readable reference (OpenAPI 3.1, every parameter and field) is under **API reference** in the navigation, file `openapi/public-api.v1.yaml`. The base URL is `https://iyegqyqnihupmhmrxfnx.supabase.co/functions/v1`.
 
 ### `GET /orders`
 
@@ -16384,6 +16384,8 @@ Every request carries the key in the `X-API-Key` header — the same header as t
 ```
 X-API-Key: YOUR_FINANCE_KEY
 ```
+
+Base URL: `https://iyegqyqnihupmhmrxfnx.supabase.co/functions/v1/finance-api`.
 
 The API is **v1**: the paths below also work as `/finance-api/v1/...`, and every response carries a `Druma-Api-Version` header. See [API versioning](/en/integrations/api-versioning). Limits: 120 requests per hour per key for `GET /billable` and `POST /billable/exported`, 300 per hour for `POST /invoices`.
 
@@ -17195,7 +17197,7 @@ The V2 header is only sent with the **HMAC-SHA256** auth type. If you verify wit
 
 ## API reference
 
-The machine-readable OpenAPI 3.1 reference for every endpoint lives under **API reference** in the navigation: [Public API](/en/integrations/public-api) (`openapi/public-api.v1.yaml`) and [Finance API](/en/integrations/finance-api) (`openapi/finance-api.v1.yaml`). Base URL: `https://YOUR-PROJECT.supabase.co/functions/v1`, then `/public-api/v1/...` or `/finance-api/v1/...`.
+The machine-readable OpenAPI 3.1 reference for every endpoint lives under **API reference** in the navigation: [Public API](/en/integrations/public-api) (`openapi/public-api.v1.yaml`) and [Finance API](/en/integrations/finance-api) (`openapi/finance-api.v1.yaml`). Base URL: `https://iyegqyqnihupmhmrxfnx.supabase.co/functions/v1`, then `/public-api/v1/...` or `/finance-api/v1/...`.
 
 ---
 
