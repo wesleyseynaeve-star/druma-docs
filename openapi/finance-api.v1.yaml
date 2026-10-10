@@ -1,0 +1,306 @@
+openapi: 3.1.0
+info:
+  title: Druma Finance API
+  version: "1"
+  summary: Pull billable orders into your finance or ERP system and post issued invoices back.
+  description: |
+    For operators who invoice outside Druma. Authenticate with a **Finance** scoped API key in the `X-API-Key` header;
+    any other scope gets `403`.
+
+    **Cycle.** `GET /billable` -> `POST /billable/exported` with the ids you took -> `POST /invoices` once your system
+    has issued the invoice.
+
+    **Versioning.** This is v1. Paths work with or without the `/v1` segment, you may send `Druma-Api-Version: 1`
+    (a mismatch with the path is a `400`), and every response carries a `Druma-Api-Version` header. Additive changes
+    happen inside v1 without notice, so ignore unknown fields. Breaking changes ship as v2 alongside v1, and v1 stays
+    available at least 6 months after that.
+
+    **Rate limits.** `GET /billable` and `POST /billable/exported`: 120 per hour per key. `POST /invoices`: 300 per hour.
+    Over the limit you get `429` with `Retry-After`.
+  contact:
+    email: support@druma.io
+servers:
+  - url: https://{project}.supabase.co/functions/v1/finance-api/v1
+    description: Production. Replace the project with the host given to you by Druma. The unversioned path `/functions/v1/finance-api` also works and means v1.
+    variables:
+      project:
+        default: YOUR-PROJECT
+security:
+  - ApiKeyAuth: []
+paths:
+  /billable:
+    get:
+      operationId: listBillable
+      summary: List orders that are ready to invoice
+      description: Delivered orders with an agreed price and no issued (non-cancelled) client or proforma invoice, in ascending `id` order. Paginate with the opaque `next_cursor`.
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+        - name: cursor
+          in: query
+          description: The `next_cursor` of the previous page.
+          schema: { type: string }
+      responses:
+        "200":
+          description: A page of billable orders.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, next_cursor, has_more]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/BillableOrder" }
+                  next_cursor:
+                    type: [string, "null"]
+                    description: Pass as `cursor` to get the next page. `null` on the last page.
+                  has_more: { type: boolean }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /billable/exported:
+    post:
+      operationId: markBillableExported
+      summary: Acknowledge the orders you pulled
+      description: Stamps the orders as exported (`exported_at`). Up to 500 ids per request; duplicates are ignored. Ids of other companies are ignored.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_ids]
+              properties:
+                order_ids:
+                  type: array
+                  minItems: 1
+                  maxItems: 500
+                  items: { type: string, minLength: 1 }
+                  description: The `order_id` values received from `GET /billable`, echoed exactly.
+      responses:
+        "200":
+          description: Stamped.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean, const: true }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /invoices:
+    post:
+      operationId: postInvoice
+      summary: Post an issued invoice back into Druma
+      description: |
+        Records the invoice against its orders; the orders become Invoiced. The call is **idempotent on
+        `external_invoice_number`**: repeating the exact same invoice returns `200` with the existing `invoice_id`
+        (a first-time create returns `201`). The same number with a different order set, amount or currency is `409`.
+        The orders must belong to one client and the currency must match the orders' own currency.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/InvoiceIngestRequest" }
+      responses:
+        "201":
+          description: Invoice created.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InvoiceIngestResult" }
+        "200":
+          description: The same invoice was already posted (replay). Nothing changed.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InvoiceIngestResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409":
+          description: The `external_invoice_number` already exists with a different order set, amount or currency.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
+                  reason: { type: string, enum: [duplicate_external_number] }
+        "422":
+          description: Validation failed.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Finance scoped API key.
+  headers:
+    DrumaApiVersion:
+      description: The API version that served the request. Present on every response, including errors.
+      schema: { type: string, example: "1" }
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+    BillableOrder:
+      type: object
+      required: [order_id, order_number, status, currency, agreed_price, charges, total, exported_at]
+      properties:
+        order_id: { type: string, format: uuid }
+        order_number: { type: string }
+        status: { type: string, example: delivered }
+        delivered_at:
+          type: [string, "null"]
+          format: date-time
+          description: Latest recorded delivery time.
+        currency: { type: string, example: EUR }
+        agreed_price: { type: number }
+        client:
+          type: [object, "null"]
+          properties:
+            id: { type: string, format: uuid }
+            name: { type: string }
+            vat_number: { type: [string, "null"] }
+            address: { type: [string, "null"] }
+            country: { type: [string, "null"] }
+        charges:
+          type: array
+          description: Extras on the order that are not excluded from invoicing.
+          items: { $ref: "#/components/schemas/Charge" }
+        total:
+          type: number
+          description: "`agreed_price` plus all charges, rounded to 2 decimals."
+        exported_at:
+          type: [string, "null"]
+          format: date-time
+    Charge:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [detention, surcharge]
+          description: "`detention` for automatic waiting-time charges, otherwise `surcharge`."
+        source_id: { type: string, format: uuid }
+        description: { type: string }
+        quantity: { type: number }
+        unit:
+          type: string
+          enum: [flat, unit]
+          description: "`flat` when quantity is 1."
+        unit_price: { type: number }
+        amount: { type: number }
+        currency: { type: string }
+    InvoiceIngestRequest:
+      type: object
+      required: [external_invoice_number, order_ids, amount, currency, issue_date]
+      properties:
+        external_invoice_number:
+          type: string
+          description: Your own invoice number. It is the idempotency key.
+        order_ids:
+          type: array
+          minItems: 1
+          items: { type: string }
+          description: Order ids (as received from `GET /billable`) or order numbers.
+        amount:
+          type: number
+          exclusiveMinimum: 0
+          description: Invoice total.
+        currency:
+          type: string
+          pattern: "^[A-Za-z]{3}$"
+          description: ISO 4217. Must match the orders' currency.
+        issue_date: { type: string, format: date }
+        due_date: { type: [string, "null"], format: date }
+        pdf_url:
+          type: [string, "null"]
+          format: uri
+          description: Must start with `https://`.
+    InvoiceIngestResult:
+      type: object
+      properties:
+        invoice_id: { type: string, format: uuid }
+        external_invoice_number: { type: string }
+        order_ids: { type: array, items: { type: string, format: uuid } }
+        origin: { type: string, enum: [external_api] }
+    ValidationError:
+      type: object
+      properties:
+        error: { type: string }
+        reason: { type: string, enum: [unknown_order, already_invoiced, validation_failed] }
+        invalid_order_ids: { type: array, items: { type: string } }
+        field_errors:
+          type: object
+          additionalProperties: { type: string }
+  responses:
+    BadRequest:
+      description: Invalid `limit`, `cursor` or body, or an unsupported API version (`{"error":"unsupported_api_version","supported":["1"],"requested":"2"}`).
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Missing, invalid or revoked key.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: The key is valid but is not a Finance scoped key.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    TooManyRequests:
+      description: Rate limit exceeded.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+        Retry-After:
+          description: Seconds to wait.
+          schema: { type: integer }
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, example: Too many requests }
+              message: { type: string }
+              limit: { type: integer }
+              used: { type: integer }
+    ServerError:
+      description: Internal error. Details are never returned.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }

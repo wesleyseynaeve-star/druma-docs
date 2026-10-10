@@ -113,7 +113,7 @@ If a client's system silently renames or moves a field, Druma detects the mismat
     - **None** — no authentication header (use only on trusted private networks)
     - **Bearer token** — Druma adds `Authorization: Bearer <value>` to every request
     - **Basic auth** — Druma adds an `Authorization: Basic` header with a base64-encoded username and password
-    - **HMAC-SHA256** — Druma signs each request body with a shared secret and includes the signature in a header; the client verifies it before processing
+    - **HMAC-SHA256** — Druma signs each request body with a shared secret and sends the signature in the `X-Druma-Signature` header (`sha256=<hex>` of the raw body) and, for replay protection, `X-Druma-Signature-V2` (`t=<unix seconds>,v1=<hex>`, signed over `<t>.<body>`); the client verifies it before processing. See [API versioning](/en/integrations/api-versioning) for a verification example
 
     Fill in the credentials for whichever type you choose. Leave a credential field blank to keep the currently saved value.
   </Step>
@@ -147,6 +147,10 @@ Clients can also configure their own outbound webhook — URL, auth, events, and
 | `actual_delivery_at` | `actual_delivery_datetime` |
 
 Unmapped fields are passed through using Druma's default field names.
+
+`api_version` and `event_id` are reserved keys: do not use them as targets of the outbound field map. Druma adds them after the map is applied, so they always keep these names.
+
+Every event also carries `api_version` and `event_id` (stable across retries, use it to ignore duplicates), and the headers `X-Druma-Event-Id`, `X-Druma-Event-Type` and `X-Druma-Timestamp`. See [API versioning](/en/integrations/api-versioning).
 
 ---
 

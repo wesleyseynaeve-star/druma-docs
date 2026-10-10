@@ -42,6 +42,8 @@ Every request carries the key in the `X-API-Key` header — the same header as t
 X-API-Key: YOUR_FINANCE_KEY
 ```
 
+The API is **v1**: the paths below also work as `/finance-api/v1/...`, and every response carries a `Druma-Api-Version` header. See [API versioning](/en/integrations/api-versioning). Limits: 120 requests per hour per key for `GET /billable` and `POST /billable/exported`, 300 per hour for `POST /invoices`.
+
 ---
 
 ## Endpoints
@@ -71,9 +73,11 @@ X-API-Key: YOUR_FINANCE_KEY
 | Response | Meaning |
 |---|---|
 | `403` | The key is valid but is not a **Finance**-scoped key |
-| `409` | This invoice was already ingested — the request was a duplicate, and nothing changed |
-| `422` | One or more `order_id` values are not recognised. The response names the bad ids |
+| `409` | The `external_invoice_number` already exists with a different order set, amount or currency (`reason: duplicate_external_number`) |
+| `422` | Validation failed: an unknown order id, an order that is already invoiced, orders from more than one client, or a currency that does not match. The response has a `reason` and names the bad ids or fields |
 | `429` | Rate limit exceeded — wait and retry |
+
+Posting the exact same invoice again (same `external_invoice_number`, orders, amount and currency) is safe: it returns `200` with the existing `invoice_id` instead of `201`, and nothing changes.
 
 <Warning>
 Druma does not guess. The ids you post back are ids Druma handed you minutes earlier from `GET /finance-api/billable`; if they do not match, you get a `422` naming them rather than a best-effort match against something else. Echo the ids back exactly as received.

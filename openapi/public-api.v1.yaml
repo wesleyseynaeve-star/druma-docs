@@ -1,0 +1,579 @@
+openapi: 3.1.0
+info:
+  title: Druma Public API
+  version: "1"
+  summary: Read-only access to orders, tracking, documents, pallet ledger and Polish VAT records.
+  description: |
+    Read-only REST API (only `GET`). Authenticate with an **Operator** or **Accountant** API key in the `X-API-Key` header
+    (Settings -> Integrations -> API Keys). Pallet endpoints need an **Operator** key.
+
+    **Versioning.** This is v1. Paths work with or without the `/v1` segment (`/public-api/v1/orders` and `/public-api/orders`
+    are the same). You may also send `Druma-Api-Version: 1`; if it disagrees with the path the request fails with `400`.
+    Every response, including errors, carries a `Druma-Api-Version` response header. Additive changes (new fields,
+    endpoints, optional parameters) happen inside v1 without notice: **ignore fields you do not know**. Breaking changes
+    ship as v2 alongside v1, and v1 stays available at least 6 months after that. Deprecations add the `Deprecation`,
+    `Sunset` and `Link` headers.
+
+    **Rate limits.** 100 requests per minute per key. Pallet endpoints have their own budget of 60 per minute and
+    `/jpk-v7m` 12 per hour. Over the limit you get `429` with a `Retry-After` header (seconds).
+  contact:
+    email: support@druma.io
+servers:
+  - url: https://{project}.supabase.co/functions/v1/public-api/v1
+    description: Production. Replace the project with the host given to you by Druma. The unversioned path `/functions/v1/public-api` also works and means v1.
+    variables:
+      project:
+        default: YOUR-PROJECT
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: Orders
+  - name: Pallets
+  - name: Poland
+paths:
+  /orders:
+    get:
+      tags: [Orders]
+      operationId: listOrders
+      summary: List orders
+      description: Newest first. The ordering is total (`created_at`, then `id`), so paging never repeats or skips a row.
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          description: Page size, maximum 100.
+          schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+        - name: status
+          in: query
+          description: Only orders with this status.
+          schema: { type: string, example: at_delivery }
+      responses:
+        "200":
+          description: A page of orders.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/OrderListItem" }
+                  pagination: { $ref: "#/components/schemas/Pagination" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /orders/{id}:
+    get:
+      tags: [Orders]
+      operationId: getOrder
+      summary: Order detail
+      description: Adds the client, the assigned truck, free-text notes and a document count. `clients` and `trucks` are `null` when the order has none assigned.
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "200":
+          description: The order.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data: { $ref: "#/components/schemas/OrderDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /orders/{id}/location:
+    get:
+      tags: [Orders]
+      operationId: getOrderLocation
+      summary: Current truck position and latest ETA
+      description: "`position` is `null` when no GPS has ever been received for the order and `eta` is `null` until one has been calculated. Neither is an error."
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "200":
+          description: Position and ETA.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data: { $ref: "#/components/schemas/OrderLocation" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /orders/{id}/documents:
+    get:
+      tags: [Orders]
+      operationId: listOrderDocuments
+      summary: Order documents with signed download URLs
+      description: Active (non-archived) documents, newest first. `download_url` is a signed URL valid for one hour.
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "200":
+          description: The documents.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/OrderDocument" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /pallet-balances:
+    get:
+      tags: [Pallets]
+      operationId: listPalletBalances
+      summary: Pallet position per counterparty
+      description: Operator keys only (other scopes get `403`). Sorted by counterparty name. The `pallet_type` filter narrows `balances` and `net_balance` to that type.
+      parameters:
+        - $ref: "#/components/parameters/CounterpartyType"
+        - $ref: "#/components/parameters/CounterpartyId"
+        - $ref: "#/components/parameters/PalletType"
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+      responses:
+        "200":
+          description: A page of balances.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/PalletBalance" }
+                  pagination: { $ref: "#/components/schemas/Pagination" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /pallet-movements:
+    get:
+      tags: [Pallets]
+      operationId: listPalletMovements
+      summary: The pallet ledger
+      description: Operator keys only. Newest `movement_date` first. Internal notes, the creating user, dispute reasons and internal fee-offset entries are never returned.
+      parameters:
+        - name: from
+          in: query
+          description: First movement date, inclusive.
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          description: Last movement date, inclusive. Must not be before `from`.
+          schema: { type: string, format: date }
+        - $ref: "#/components/parameters/CounterpartyType"
+        - $ref: "#/components/parameters/CounterpartyId"
+        - $ref: "#/components/parameters/PalletType"
+        - name: movement_type
+          in: query
+          schema: { type: string, enum: [sent, returned, adjustment, correction, opening_balance] }
+        - name: provider
+          in: query
+          schema: { type: string, enum: [manual, chep, paki, epal, lpr, ipp, euro_pool, capture] }
+        - name: external_ref
+          in: query
+          schema: { type: string, maxLength: 200 }
+        - name: order_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+      responses:
+        "200":
+          description: A page of movements.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/PalletMovement" }
+                  pagination: { $ref: "#/components/schemas/Pagination" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /pallet-vouchers/{id}:
+    get:
+      tags: [Pallets]
+      operationId: getPalletVoucher
+      summary: One signed pallet voucher
+      description: Operator keys only. Returns `404` for an unknown id or a voucher of another company. `pdf_url` is valid for 5 minutes.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: The voucher.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data: { $ref: "#/components/schemas/PalletVoucher" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+  /jpk-v7m:
+    get:
+      tags: [Poland]
+      operationId: getJpkV7m
+      summary: One month of Polish VAT records (JPK_V7M)
+      description: |
+        Returns the file itself (XML), not JSON, so a scheduled task can write the body straight to disk.
+        Choose the month with `period=previous` (the last closed month, the one you file), `period=current`
+        (a **partial** register, for feeding an accounting system continuously) or `year` and `month`.
+        An unfinished month needs `partial=true`, otherwise `400`. Refused with `409` when client invoicing is switched
+        off for the company. Read `X-Export-Warnings` before filing.
+      parameters:
+        - name: period
+          in: query
+          schema: { type: string, enum: [previous, current] }
+        - name: year
+          in: query
+          schema: { type: integer, example: 2026 }
+        - name: month
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 12 }
+        - name: partial
+          in: query
+          description: Needed for an explicit `year` and `month` that has not finished yet.
+          schema: { type: boolean }
+        - name: company_id
+          in: query
+          description: Required when the key covers more than one company.
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: The JPK_V7M XML file.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+            Content-Disposition:
+              description: 'attachment; filename="JPK_V7M_2026-08.xml"'
+              schema: { type: string }
+            X-Invoice-Count:
+              description: Number of sales rows in the file.
+              schema: { type: integer }
+            X-Partial-Period:
+              description: "`true` when the month is still open."
+              schema: { type: string, enum: ["true", "false"] }
+            X-Export-Warnings:
+              description: JSON array (ASCII-escaped, at most 20 entries) of anything omitted, for example an invoice with no NBP rate.
+              schema: { type: string }
+          content:
+            application/xml:
+              schema: { type: string }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Client invoicing is switched off for the company, so there is nothing to export.
+          headers:
+            Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/ServerError" }
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Operator or Accountant API key. Bearer tokens are not supported.
+  headers:
+    DrumaApiVersion:
+      description: The API version that served the request. Present on every response, including errors.
+      schema: { type: string, example: "1" }
+  parameters:
+    OrderId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    CounterpartyType:
+      name: counterparty_type
+      in: query
+      schema: { type: string, enum: [client, subcontractor] }
+    CounterpartyId:
+      name: counterparty_id
+      in: query
+      description: Requires `counterparty_type`.
+      schema: { type: string, format: uuid }
+    PalletType:
+      name: pallet_type
+      in: query
+      schema: { type: string, enum: [eur, chep, lpr, ipp, euro_pool, other] }
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: Human-readable message. Never contains internal details.
+          example: Invalid or revoked API key
+    Pagination:
+      type: object
+      required: [page, limit, total, total_pages]
+      properties:
+        page: { type: integer, example: 1 }
+        limit: { type: integer, example: 25 }
+        total: { type: integer, example: 807 }
+        total_pages: { type: integer, example: 33 }
+    OrderListItem:
+      type: object
+      required: [id, order_number, status, created_at, total_price]
+      properties:
+        id: { type: string, format: uuid }
+        order_number: { type: string, example: CCE-0085 }
+        status: { type: string, example: at_delivery }
+        pickup_address: { type: [string, "null"] }
+        delivery_address: { type: [string, "null"] }
+        pickup_date: { type: [string, "null"], format: date }
+        delivery_date: { type: [string, "null"], format: date }
+        client_reference: { type: [string, "null"] }
+        currency: { type: [string, "null"], example: EUR }
+        total_price:
+          type: [number, "null"]
+          description: The order's agreed sell price in `currency`. `null` on an order that has not been priced yet.
+        created_at: { type: string, format: date-time }
+    OrderDetail:
+      type: object
+      required: [id, order_number, status, created_at, updated_at, total_price, documents_count]
+      properties:
+        id: { type: string, format: uuid }
+        order_number: { type: string }
+        status: { type: string }
+        pickup_address: { type: [string, "null"] }
+        delivery_address: { type: [string, "null"] }
+        pickup_date: { type: [string, "null"], format: date }
+        delivery_date: { type: [string, "null"], format: date }
+        client_reference: { type: [string, "null"] }
+        currency: { type: [string, "null"] }
+        total_price: { type: [number, "null"] }
+        notes: { type: [string, "null"] }
+        clients:
+          type: [object, "null"]
+          properties:
+            name: { type: string }
+            vat_number: { type: [string, "null"] }
+        trucks:
+          type: [object, "null"]
+          properties:
+            plate_number: { type: string }
+        documents_count: { type: integer }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    OrderLocation:
+      type: object
+      required: [order_id, status, position, eta]
+      properties:
+        order_id: { type: string, format: uuid }
+        status: { type: string }
+        position:
+          type: [object, "null"]
+          properties:
+            latitude: { type: number }
+            longitude: { type: number }
+            speed_kmh: { type: [number, "null"] }
+            heading: { type: [number, "null"] }
+            recorded_at: { type: string, format: date-time }
+            source: { type: [string, "null"], example: pwa }
+        eta:
+          type: [object, "null"]
+          properties:
+            estimated_arrival: { type: string, format: date-time }
+            calculated_at: { type: string, format: date-time }
+            distance_remaining_km: { type: [integer, "null"] }
+    OrderDocument:
+      type: object
+      required: [id, type, file_name, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        type: { type: [string, "null"] }
+        file_name: { type: [string, "null"] }
+        mime_type:
+          type: [string, "null"]
+          description: Resolved from the file extension (`application/pdf`, `image/png`, `image/jpeg`); `null` when unknown.
+        created_at: { type: string, format: date-time }
+        download_url:
+          type: [string, "null"]
+          format: uri
+          description: Signed URL valid for one hour. `null` when the file has no stored copy.
+    PalletBalance:
+      type: object
+      properties:
+        counterparty_type: { type: string, enum: [client, subcontractor] }
+        counterparty_id: { type: string, format: uuid }
+        counterparty_name: { type: string }
+        net_balance: { type: number }
+        disputed_qty: { type: number }
+        open_qty: { type: number }
+        overdue_qty: { type: number }
+        next_due_date: { type: [string, "null"], format: date }
+        balances:
+          type: object
+          description: Net balance per pallet type, keyed by `eur`, `chep`, `lpr`, `ipp`, `euro_pool` or `other`.
+          additionalProperties: { type: number }
+        last_movement_at: { type: [string, "null"], format: date-time }
+    PalletMovement:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        order_id: { type: [string, "null"], format: uuid }
+        stop_id: { type: [string, "null"], format: uuid }
+        client_id: { type: [string, "null"], format: uuid }
+        subcontractor_id: { type: [string, "null"], format: uuid }
+        movement_type: { type: string, enum: [sent, returned, adjustment, correction, opening_balance] }
+        pallet_type: { type: string, enum: [eur, chep, lpr, ipp, euro_pool, other] }
+        quantity: { type: number }
+        provider: { type: string, enum: [manual, chep, paki, epal, lpr, ipp, euro_pool, capture] }
+        external_ref: { type: [string, "null"] }
+        movement_date: { type: string, format: date }
+        dispute_status: { type: [string, "null"] }
+        voucher_number: { type: [string, "null"] }
+    PalletVoucher:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        voucher_number: { type: [string, "null"] }
+        status: { type: string }
+        order_id: { type: [string, "null"], format: uuid }
+        stop_id: { type: [string, "null"], format: uuid }
+        stop_type: { type: [string, "null"] }
+        stop_address: { type: [string, "null"] }
+        client_id: { type: [string, "null"], format: uuid }
+        subcontractor_id: { type: [string, "null"], format: uuid }
+        exchange_mode: { type: string }
+        signer_name: { type: [string, "null"] }
+        signed_at: { type: string, format: date-time }
+        lines:
+          type: array
+          items:
+            type: object
+            properties:
+              pallet_type: { type: string }
+              planned_qty: { type: number }
+              given_qty: { type: number }
+              taken_qty: { type: number }
+              damaged_qty: { type: number }
+              refused_qty: { type: number }
+        pdf_url:
+          type: [string, "null"]
+          format: uri
+          description: Signed PDF link valid for 5 minutes.
+  responses:
+    BadRequest:
+      description: Invalid parameter, or an unsupported API version (`{"error":"unsupported_api_version","supported":["1"],"requested":"2"}`).
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/Error"
+              - type: object
+                required: [error, supported, requested]
+                properties:
+                  error: { type: string, enum: [unsupported_api_version] }
+                  supported: { type: array, items: { type: string } }
+                  requested: { type: string }
+    Unauthorized:
+      description: Missing, invalid or revoked key.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: The key's scope does not allow this endpoint (for example a Finance key, or a non-Operator key on pallet endpoints).
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Unknown resource, or one that belongs to another company.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    TooManyRequests:
+      description: Rate limit exceeded.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+        Retry-After:
+          description: Seconds to wait.
+          schema: { type: integer }
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, example: Too many requests }
+              message: { type: string }
+              limit: { type: integer }
+              used: { type: integer }
+    ServerError:
+      description: Internal error. Details are never returned.
+      headers:
+        Druma-Api-Version: { $ref: "#/components/headers/DrumaApiVersion" }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }

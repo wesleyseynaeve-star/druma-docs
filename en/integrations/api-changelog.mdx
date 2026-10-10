@@ -1,0 +1,20 @@
+---
+title: "API changelog"
+description: "Dated list of changes to the Druma public API, Finance API, Client API and webhooks."
+icon: "clock-rotate-left"
+---
+
+Changes inside v1 are additive. Breaking changes and deprecations are listed here first. See [API versioning](/en/integrations/api-versioning) for the policy.
+
+## 2026-10-10
+
+**Added (v1, no action needed)**
+
+- **Version headers.** Every response from the Public API, Finance API and inbound Client API carries `Druma-Api-Version: 1`. You can also send `Druma-Api-Version: 1` on requests.
+- **`/v1/` paths.** `/public-api/v1/orders` and `/finance-api/v1/billable` now work. Existing unversioned paths are unchanged and mean v1.
+- **Webhook `event_id` and `api_version`.** Every webhook body gains these two fields. `event_id` is stable across retries, use it to deduplicate.
+- **Webhook headers.** `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` and `Druma-Api-Version` on every delivery.
+- **Timestamped signature.** HMAC deliveries add `X-Druma-Signature-V2: t=<unix>,v1=<hex>` for replay protection. `X-Druma-Signature` is unchanged.
+- **OpenAPI 3.1 reference** for the Public API and Finance API (`openapi/public-api.v1.yaml`, `openapi/finance-api.v1.yaml`).
+
+**Deprecated / removed:** nothing.

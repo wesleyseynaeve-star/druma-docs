@@ -1,0 +1,97 @@
+---
+title: "API versioning"
+description: "How Druma versions its public API, what can change without notice, and how to verify webhook signatures and deduplicate events."
+icon: "code-branch"
+---
+
+Druma's integration surface, the [Public API](/en/integrations/public-api), the [Finance API](/en/integrations/finance-api), the inbound [Client API](/en/integrations/client-api) and outbound webhooks, is **version 1 (v1)**.
+
+## The rules
+
+- **Additive changes happen inside v1, without notice.** New response fields, new endpoints, new webhook event types and new optional parameters can appear at any time. Your integration must **ignore fields it does not know**.
+- **Breaking changes ship as v2, alongside v1.** Removing or renaming a field, changing a field's type or meaning, or changing authentication or error behaviour is only ever done in a new major version.
+- **v1 stays available for at least 6 months** after v2 is released.
+- **Deprecations are announced three ways:** response headers, an email to your integration contact, and the [API changelog](/en/integrations/api-changelog).
+
+## Choosing a version
+
+Every request can name the version in the path, in a header, or both (they must agree):
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+The older unversioned paths (`/public-api/orders`) keep working and mean v1. When you name no version, the version your API key or integration is pinned to is used (v1 today). An unsupported version returns:
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## Response headers
+
+Every response from the Public API, the Finance API and the inbound Client API, including errors such as `401` and `429`, carries:
+
+```
+Druma-Api-Version: 1
+```
+
+Once something is deprecated, responses also carry the standard headers:
+
+| Header | Meaning |
+|---|---|
+| `Deprecation: @1798761600` | The Unix time at which it was deprecated (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | The date after which it may stop working (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | Where the migration guide is |
+
+If your client logs these headers, you will see a deprecation long before anything stops working.
+
+## Webhooks
+
+Every webhook body keeps all existing fields and adds:
+
+| Field | Meaning |
+|---|---|
+| `api_version` | `"1"` |
+| `event_id` | A unique id for this event. **It stays the same when Druma retries a delivery**, so use it to ignore duplicates. |
+
+Each delivery also carries these headers: `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (Unix seconds) and `Druma-Api-Version`.
+
+<Note>
+`api_version` and `event_id` are **reserved** keys. Druma adds them after your outbound field map has been applied, so they always keep these names and the map can neither rename nor overwrite them. Do not use them as field-map targets.
+</Note>
+
+### Verifying signatures (HMAC-SHA256)
+
+With the **HMAC-SHA256** auth type, each delivery is signed with your shared secret in two headers:
+
+| Header | Value |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, HMAC-SHA256 of the raw body. Unchanged, kept for existing integrations. It carries no timestamp, so it cannot detect a replayed request. |
+| `X-Druma-Signature-V2` | `t=<unix seconds>,v1=<hex>`, HMAC-SHA256 of `"<t>.<raw body>"`. Because the timestamp is part of what is signed, you can reject old requests. **Use this one for new integrations.** |
+
+Verify against the **raw** request body, not a re-serialised copy. In Node:
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+Accept a delivery only if the signature verifies and its `event_id` has not been processed before. Return any `2xx` status to acknowledge; Druma retries other responses on a back-off schedule. The `X-Druma-Timestamp` header is refreshed on every attempt, so a retry is not rejected by the replay window.
+
+The V2 header is only sent with the **HMAC-SHA256** auth type. If you verify with the older `X-Druma-Signature` only, keep doing so; nothing about it changed.
+
+## API reference
+
+The machine-readable OpenAPI 3.1 reference for every endpoint lives under **API reference** in the navigation: [Public API](/en/integrations/public-api) (`openapi/public-api.v1.yaml`) and [Finance API](/en/integrations/finance-api) (`openapi/finance-api.v1.yaml`). Base URL: `https://YOUR-PROJECT.supabase.co/functions/v1`, then `/public-api/v1/...` or `/finance-api/v1/...`.
