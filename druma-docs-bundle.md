@@ -772,3 +772,17018 @@ Druma does not require a VPN to access. If your company uses a VPN, Druma should
 
 ## Versions, What's new and feedback
 
+
+## Which version am I on?
+
+Open your profile menu in the app. At the bottom it shows **Version 3.x.y**. Hover over it to see the build's short commit id and the platform (web, installed app, Android or iOS). If you contact support, quoting this number helps us find the exact build you are using.
+
+Druma also publishes the version of the running web build as a small file at `/version.json` on the app address, which is handy for an IT department that wants to check it without logging in.
+
+## What the number means
+
+Druma uses a simple `major.minor.patch` number that continues the 3.x line.
+
+| Part | Changes when | Example |
+|---|---|---|
+| **Minor** (the middle number) | Every regular production release, which brings new features and fixes | 3.5.0 to 3.6.0 |
+| **Patch** (the last number) | A hotfix released between two regular releases | 3.6.0 to 3.6.1 |
+| **Major** (the first number) | Only for a deliberate, announced change of generation | 3.x to 4.0 |
+
+Your production app always shows a released version. Builds on Druma's test environment carry a `-dev` suffix (for example `3.6.0-dev.a1b2c3d`) and are not meant for operators.
+
+## What's New and "Shipped in"
+
+The **What's New** tab of the feedback window lists what Druma has shipped or is building, filterable by area. Each entry that is finished shows **Shipped in v3.x.y**, the release it arrived in. Anything still being built shows **In progress**. See [Feedback & What's New](/en/planner/whats-new) for the list itself.
+
+## Send feedback
+
+Feedback is available everywhere you use Druma: the planner, the driver app, and the client and carrier portals. Open **Send feedback**, choose **Bug**, **Suggestion** or **Question**, describe it and submit. Step by step instructions, the duplicate check and the status of your reports are in [Send feedback, see replies and what's new](/en/tools/feedback).
+
+Every report is sent together with the Druma version you were on, the platform and the language of the screen, so the team knows which build the problem happened in. It does not include your browser's user agent.
+
+## Get a "fixed in" email
+
+When the Druma team links your report to the change that addresses it, and that change ships in a published release, you get one email telling you so. The subject reads **Your Druma feedback is in v3.x.y**, and the email names your report, the version and the title of the change.
+
+- The email arrives in your own language (your user language, otherwise your company's language, otherwise English).
+- You get one email per report, never a repeat for the same one.
+- A report we decided not to act on (**Won't Fix**) does not trigger an email.
+- Open reports that this release addresses are marked **Done** in **Mine**, with a **Fixed in** line showing the version.
+
+> **Note:** 
+If no email arrives, check **Mine** in the feedback window: the status and the **Fixed in** line are always shown there.
+
+
+
+  
+    Write a report, check for duplicates and follow replies.
+  
+  
+    Changes to the Druma APIs and webhooks, listed by date.
+  
+</CardGroup>
+
+---
+
+
+# Admin Setup
+
+## Company setup
+
+
+## Where to find company settings
+
+Go to **Settings → Company** in the left-hand menu. This is the first place you should visit when setting up a new Druma account. The information you enter here appears on every invoice, every eCMR document, and in the client portal — so it is worth taking a few minutes to get it right.
+
+<Frame caption="Settings → Company — no timezone, default-language, or default-currency field exists here.">
+  <img src="/images/admin/company-setup.png" alt="Company settings panel" />
+</Frame>
+
+## First-time setup checklist
+
+If you are setting up a brand-new Druma account, follow this sequence. Each step links to more detail — either further down this page or on its own page.
+
+
+  ### Fill in your company profile
+    In **Settings → Company**, enter your legal company name, VAT number, and registered address. These three fields appear on every invoice and eCMR document, so get them right first. See [Legal company name](#legal-company-name), [VAT number](#vat-number), and [Registered address](#registered-address) below.
+  
+  ### Upload your logo
+    Add your company logo so it appears on invoices, eCMR documents, and the client portal header. See [Logo](#logo) below for format and size recommendations.
+  
+  ### Add your banking details
+    Enter your bank name, IBAN, and BIC/SWIFT — these appear on invoices and in payment emails sent to your clients. See [Banking details](#banking-details) below.
+  
+  ### Invite your team
+    Add planners, dispatchers, and other team members and assign each one the right role. See [User roles and permissions](/en/admin/user-roles) for a full breakdown of the eight Druma roles and what each can access.
+  
+  ### Set up a truck cost profile
+    Define your own-fleet and subcontractor cost profiles (fixed cost, driver wage, fuel, surcharges) so Druma can estimate order cost and margin. See [Rate cards](/en/admin/rate-cards) to get started. If you also want Druma to auto-suggest a **selling** price by lane, see [Lane Pricing](/en/admin/lane-pricing).
+  
+
+
+## Fields on the Company settings page
+
+### Legal company name
+
+Enter your company's full legal name exactly as it appears on your registration certificate (Certificat de Înmatriculare) or equivalent document. This name appears in the header of every invoice and eCMR.
+
+*Example: SC TRANSPORT EXAMPLE SRL*
+
+### VAT number
+
+Enter your VAT registration number. Druma automatically checks that the format is valid for the country you have selected (for example, Romanian VAT numbers start with "RO" followed by digits).
+
+> **Warning:** 
+Your VAT number is printed on every invoice and every eCMR document. An incorrect VAT number can cause legal and accounting problems for you and your clients. Double-check this before saving.
+
+
+### Registered address
+
+Enter the official registered address of your business. This is used on invoices and official documents. If your operational address is different from your registered address, use the registered address here.
+
+### Logo
+
+Upload your company logo. Druma accepts **PNG, JPEG, SVG, or WebP** files up to **2 MB**. Your logo appears:
+- In the header of every PDF invoice
+- In the client portal header
+- In eCMR documents
+
+There is no minimum-width check or background-colour requirement — Druma doesn't validate either. For best print results, use a reasonably high-resolution file (an SVG or a PNG a few hundred pixels wide is a safe choice).
+
+If you do not upload a logo, Druma shows your company name as plain text in documents.
+
+### Banking details
+
+Enter your **bank name**, **IBAN**, and **BIC/SWIFT** code. These details appear on invoices and in payment emails sent to your clients.
+
+> **Note:** 
+There is no company-wide default language, default currency, timezone, or invoice-numbering field on this page:
+- **Timezone** — Druma does not currently have a company timezone setting; timestamps use a fixed default.
+- **Default language** — each user sets their own interface language in their profile; there's no company-wide override on this page.
+- **Currency** — currency is set per client, not at the company level.
+- **Invoice numbering** — the invoice number prefix and pattern are configured on the [Branding & Formats](/en/admin/branding-formats) page, not here.
+
+
+## Saving your settings
+
+Click **Save** at the bottom of the page. Changes take effect immediately — the next invoice or eCMR you generate will use the updated information.
+
+## What to do next
+
+
+  Learn how to control what each person in your team can see and do in Druma.
+
+
+
+  Understand how Druma pricing works and how to manage your subscription.
+
+
+---
+
+## User roles and permissions
+
+
+## Why roles matter
+
+Giving every team member the right role means:
+- People only see what is relevant to their job
+- Sensitive data (billing, client financials) stays protected
+- Accidental changes to orders or settings are less likely
+- You have a clear audit trail of who did what
+
+Druma has **nine roles**: the eight below, plus **Key User** — a delegated super-user role described in its own section. Seven are for your internal team (web platform), and two (Driver and Client) are for external users who access Druma through dedicated links rather than the web platform.
+
+<Frame caption="Settings → Users — role badges per team member.">
+  <img src="/images/admin/user-roles.png" alt="Users and roles settings panel" />
+</Frame>
+
+## Role permissions at a glance
+
+Key User is not a column in the table below — its permissions sit between Admin and Company Admin (see [Key User](#key-user) in the detailed descriptions) and aren't part of this generated matrix.
+
+<!-- BEGIN generated:role-matrix -->
+<!-- Generated by scripts/generate-role-matrix.mjs from config/roles.config.js — do not hand-edit. Regenerate with `node scripts/generate-role-matrix.mjs --fix` from the druma repo. -->
+| Area | Admin | Company Admin | Planner | Dispatcher | Fleet Manager | Customer Service | Driver | Client |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Orders | Full | Full | Full | Partial | None | Full | Own records only | Own records only |
+| Planning Board | Full | Full | Full | Partial | Partial | Partial | None | None |
+| Fleet | Full | Full | Partial | Read only | Full | None | None | None |
+| Compliance | Full | Full | Full | Full | Read only | None | None | None |
+| Clients | Full | Full | Full | Partial | None | Full | None | None |
+| Margin & Finance | Full | Full | Full | None | None | Partial | None | None |
+| Invoicing | Full | Full | Full | None | None | Full | None | None |
+| Pricing | Full | Full | Full | None | Full | None | None | None |
+| Freight Exchange | Full | Full | Full | None | None | None | None | None |
+| Payroll | Full | Full | None | None | Partial | None | None | None |
+| Reports | Full | Full | Full | None | None | Full | None | None |
+| Users | Full | Full | Read only | Read only | Read only | Partial | None | None |
+| Settings | Full | Full | None | None | None | None | None | None |
+| Driver App | None | None | None | None | None | None | Full | None |
+| Client Portal | None | None | None | None | None | None | None | Full |
+<!-- END generated:role-matrix -->
+
+## Detailed role descriptions
+
+### Admin
+
+The Admin has **full system access**, including platform-level billing configuration. This is the role for the business owner or the person ultimately responsible for the Druma account.
+
+Admins can do everything a Company Admin can, plus:
+- Access **Billing Entities** and **Billing Config** — platform-level billing surfaces reserved for Admin only
+
+*Real-world example: Vasile owns the transport company. He is the Admin. He controls the subscription, manages billing, and has visibility over everything in the platform.*
+
+---
+
+### Company Admin
+
+The Company Admin has full access to nearly everything, **including the Billing page** — this is the right role for a trusted operations manager or senior dispatcher who runs the day-to-day setup of the platform, and can also manage the subscription itself (billing interval, truck cap, per-feature usage caps). The two platform-level billing surfaces (**Billing Entities**, **Billing Config**) remain Admin-only.
+
+Company Admins can:
+- Configure everything in Settings, including Billing
+- Invite and manage other users
+- Set up integrations (SmartBill, SAGA, Native eCMR, ANAF, Timocom, etc.)
+- Manage company profile, rate cards, and default settings
+- Create and manage orders, invoices, fleet, and reports
+- View audit logs
+
+*Real-world example: Mihaela is Vasile's operations manager. She is a Company Admin. She adds new drivers, updates vehicle documents, invites new dispatchers, keeps the company profile up to date, and can also switch the billing interval or adjust the truck cap on the Billing page — but the platform-level billing config screens stay with Vasile.*
+
+---
+
+### Key User
+
+**Every operational power a Company Admin has, minus the governance ones — plus audit-log read access.**
+
+Key User is a built-in role for the SAP-style "super-user" pattern: a delegated go-to person who can fix data and cover operational work across the company without holding company_admin's governance powers. It grants orders, fleet, clients, the planning board, rate cards, and read-only access to the audit log — but not billing, integrations, user management, role editing, or GDPR/telematics settings, which stay Admin/Company Admin-only.
+
+Key User can:
+- Create, edit, and delete orders; assign vehicles and drivers on the planning board
+- Manage fleet (vehicles, trailers, drivers) and clients
+- View driver hours and read the company's audit log
+- Manage rate cards
+- Use the [Key User Hub](/en/admin/key-user-hub): work the inbox of blocked items, correct orders, trips, plate history and finance entries with a reason, and revert corrections
+- Review and delete the company's [AI corrections and learned rules](/en/admin/ai-corrections)
+
+Key User cannot:
+- Access Billing, Integrations, GDPR, or Telematics settings
+- Invite users or edit roles
+
+Like every other built-in role, Key User can also be **cloned** as the starting point for a [custom role](/en/admin/custom-roles) if you want similar reach with a few permissions added or removed.
+
+*Real-world example: Cristian is trusted to fix data issues and keep operations running when Mihaela is away, but Vasile isn't ready to hand him billing or integrations access. Key User gives him exactly that middle ground.*
+
+---
+
+### Planner
+
+The Planner is the core operational role — the dispatcher who runs the day-to-day freight work. Planners have full access to orders, the planning board, and invoicing, with read-only access to fleet, but they cannot change company-level settings or manage users.
+
+Planners can:
+- Create, edit, and delete transport orders
+- Assign vehicles and drivers on the planning board
+- Generate and send invoices
+- View fleet vehicles and drivers (read-only)
+- Access dashboard, live map, and driver hours
+- Work with reports and exports
+
+*Real-world example: Radu is a dispatcher. He creates all orders, assigns trucks, monitors deliveries, and sends invoices when orders are completed. He does not need to change company settings or manage user access.*
+
+---
+
+### Dispatcher
+
+The Dispatcher is a **monitoring-focused role** for people who need to watch operations in real time but do not create or edit orders. Dispatchers see the dashboard, live map, driver hours, fleet (read-only), and — read-only — orders and the planning board.
+
+Dispatchers can:
+- View the dashboard and today's operations overview
+- View all orders (read-only)
+- View the planning board (read-only)
+- Monitor the live map with truck positions
+- Check driver hours and compliance
+- View fleet vehicles and drivers (read-only)
+- Add internal notes on orders (notes your clients never see)
+
+Dispatchers cannot:
+- Create, edit, or delete orders
+- Assign vehicles or drivers on the planning board
+- Generate or view invoices
+- View reports or exports
+- Change any settings
+
+*Real-world example: Bogdan works the night shift. He watches the live map and driver hours dashboard to make sure all drivers are on schedule and compliant. If something goes wrong, he calls the day-shift planner — he does not need to touch orders or invoices.*
+
+---
+
+### Fleet Manager
+
+The Fleet Manager has **full control over fleet operations** — vehicles, trailers, drivers, documents, fuel card imports, cabotage tracking, and rate cards. They also see driver hours. They do not have access to orders, invoicing, the planning board, or reports.
+
+Fleet Managers can:
+- Add, edit, and remove vehicles, trailers, and drivers
+- Manage fleet documents (ITP, insurance, CEMT, ADR certificates)
+- Import fuel card data (DKV, UTA, AS24)
+- Track cabotage compliance
+- Manage rate cards
+- View driver hours
+
+Fleet Managers cannot:
+- Create, edit, or view orders
+- Access the planning board
+- Generate or view invoices
+- View reports or exports
+- Change company settings or manage users
+
+*Real-world example: Ion is responsible for the fleet. He handles vehicle inspections, insurance renewals, driver licence tracking, and fuel card imports. He does not need to see orders or invoices — that is the planner's job.*
+
+---
+
+### Customer Service
+
+The Customer Service role gives **operational access to orders, invoicing, clients, and reports**. CS users can create and edit orders, generate invoices, manage client relationships, and invite new users. They cannot assign vehicles on the planning board or manage fleet.
+
+Customer Service users can:
+- Create, edit, and view all orders
+- Generate and send invoices
+- Manage clients and client portal settings
+- Access reports and exports
+- Invite new users
+
+Customer Service users cannot:
+- Assign vehicles or drivers on the planning board
+- Manage fleet (vehicles, trailers, drivers)
+- View the live map or dashboard
+- Change company settings or integrations
+
+*Real-world example: Elena handles client relationships end to end. She creates orders when clients call in, generates invoices after delivery, and sends reports. When a new team member joins, she can send them an invitation — but she leaves fleet management and planning to the operations team.*
+
+---
+
+### Driver
+
+The Driver role is different from all others — **drivers never access the Druma web platform**. Instead, they log in to the Druma Driver App on their smartphone using a **phone number and PIN** that you set up for them in Fleet → Drivers.
+
+Through the driver app, a driver can:
+- See their assigned orders for the day and upcoming days
+- Update order status: Loaded, Departed, At delivery point, Delivered
+- Upload photos (cargo condition, delivery proof, damage reports)
+- Sign eCMR documents digitally on screen
+- View pickup and delivery addresses and contact information
+
+Drivers cannot see any other driver's orders, client financials, or company settings.
+
+> **Warning:** 
+Do not try to invite drivers through Settings → Users. Drivers do not need an invitation email. Go to Fleet → Drivers, open the driver's profile, set their phone number, and generate a PIN under **Phone + PIN login**. Give the driver this PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
+
+
+*Real-world example: Gheorghe is a long-haul driver. He opens the Druma app on his phone each morning to see his order details, updates his status at each stop, and signs the eCMR digitally at the delivery point.*
+
+---
+
+### Client
+
+Like drivers, clients never access the Druma web platform. Each client company has a **private portal link** that gives them a view of all their shipments with your company.
+
+Through the client portal, a client can:
+- See all their current and past orders with your company
+- Track live delivery status
+- Download eCMR documents, proof of delivery, and invoices
+- View estimated arrival times
+
+Clients cannot see other clients' data, your internal order notes, your costs, or anything beyond their own shipments.
+
+*Real-world example: Schmidt GmbH regularly sends cargo with your company. You share their portal link once. From then on, their logistics manager opens the link whenever they want to check on a delivery — without calling you.*
+
+## Who can hand out which role
+
+You can only give someone a role if **you hold every permission that role carries**. Nobody can assign a role that is more powerful than their own. This is the same limit that applies when you [build a custom role](/en/admin/custom-roles), and it stops anyone raising their own or a colleague's access above their own level.
+
+Custom roles are honoured across the platform: an action that is open to a built-in role (for example Planner) is also open to a custom role built with the same permission, in the web app and in the server functions behind it.
+
+## Assigning multiple roles
+
+One user can hold more than one role. You set this when you invite the user or when you edit their profile later.
+
+Common multi-role combinations:
+- **Company Admin + Planner** — owner or senior dispatcher who also manages the platform
+- **Planner + Customer Service** — small-team dispatcher who also handles client queries
+
+> **Note:** 
+Use multi-role assignments sparingly. In a small team it makes sense, but giving everyone broad access makes it harder to track changes and increases the risk of mistakes. Start with the most limited role that covers what the person needs.
+
+
+## Multi-company support
+
+A single email address can belong to **more than one Druma company account**. This is useful if:
+- You manage multiple legal entities (a holding company with separate carriers)
+- An external accountant works with several of your clients who all use Druma
+- A driver agency provides drivers to multiple carriers
+
+To switch between companies, click your company name in the top-right corner of the platform and select the other company from the dropdown. Each company's data is completely separate — users in Company A cannot see Company B's orders or clients.
+
+
+  Step-by-step instructions for inviting users and setting up driver phone + PIN logins.
+
+
+
+  Configure your legal details, logo, and invoice settings.
+
+
+---
+
+## Custom Roles
+
+
+Druma ships with built-in roles, and for most companies they are enough. But job titles are not universal: a "night dispatcher" who may reassign trucks but must never touch a rate card does not map cleanly onto any of them. Custom roles let you define that role yourself.
+
+You will find this at **Settings → Users → Roles**, and it requires the Admin or Company Admin role.
+
+---
+
+## Built-in roles are read-only
+
+The built-in roles are listed first and marked **Read-only** — you cannot edit or delete them. This is deliberate: they are the baseline every Druma feature is tested against, and the safe thing to fall back to.
+
+What you can do is **Clone** one. That copies its whole permission set into a new custom role you own, which is almost always the right starting point — start from the built-in role closest to the job, then add or remove the few permissions that differ.
+
+---
+
+## Creating a role
+
+
+  ### Clone a built-in role
+    Click **Clone** on the built-in role closest to the job you are describing. The dialog opens as **New role based on {role}**.
+  
+  ### Name it
+    **Name** is what users see — e.g. `Night Dispatcher`.
+
+    **Key** is the internal identifier. **It cannot be changed after creation**, so pick it deliberately. If the key is already taken, Druma tells you before you save.
+  
+  ### Describe it
+    **Description** answers "what is this role for?" for whoever inherits your setup. Worth filling in — six months later, a permission list does not explain intent.
+  
+  ### Adjust the permissions
+    Tick and untick permissions; the header keeps a running **{n} selected** count.
+  
+  ### Save
+    The role appears under **Custom roles**, showing which built-in role it was **Based on** and how many permissions it carries.
+  
+
+
+> **Warning:** 
+**You cannot grant a permission you do not hold yourself.** Druma disables those rows rather than letting you create a role more powerful than your own account — a Company Admin cannot mint a role that escapes their own limits. This applies to everyone who can manage roles, including a custom role that only holds "manage roles" and "manage users": it cannot be used to give itself, or anyone else, more than it already has.
+
+
+## Assigning a role to a user
+
+The same limit applies when you give a role to a teammate in **Settings → Users**: you can only assign a role (built-in or custom) whose permissions you hold in full. If Druma refuses an assignment, it is because the role carries a permission you do not have yourself — ask an Admin or Company Admin to assign it.
+
+## Custom roles reach everything their permissions allow
+
+A custom role works anywhere its permissions apply — pages, actions and the server functions behind them. If you build a role with the same permissions as Planner, it can do what a Planner can do. A permission you did not tick stays out of reach, whatever the role is called.
+
+---
+
+## Editing a role that people already hold
+
+Editing a live role changes what real users can do, so Druma makes you confirm it explicitly. When you save, an **Apply permission changes?** dialog summarises the effect:
+
+- **Granting: {n}** — permissions being added
+- **Revoking: {n}** — permissions being taken away
+- **This affects {n} user(s) who hold this role** — or **No users currently hold this role**, when it is safe
+
+Read the revoke count before clicking **Apply**. Revoking is the half that breaks someone's workflow mid-shift.
+
+---
+
+## Deleting a role
+
+**Delete** asks for confirmation and warns that it cannot be undone.
+
+If anyone still holds the role, Druma refuses with **Role still in use** — reassign those users to another role first. A role in use is never silently removed out from under the people holding it.
+
+---
+
+## Related articles
+
+
+  
+    The built-in roles and what each one can do.
+  
+  
+    Adding users and assigning them a role.
+  
+</CardGroup>
+
+---
+
+## Custom Fields
+
+
+Every haulier tracks something Druma does not have a box for: an internal reference number, a customer's own booking code, which depot a truck belongs to, a driver's badge number. Custom fields let you add those without waiting for a product change.
+
+You will find this at **Settings → Company**, in the **Custom fields** section, and it requires the Admin or Company Admin role. Without it you will see *"You need Admin or Company Admin role to edit company settings."*
+
+---
+
+## Four entities, separate field sets
+
+Custom fields are defined per entity, on its own tab:
+
+- **Order**
+- **Truck**
+- **Driver**
+- **Client**
+
+Each entity keeps its own independent set — a field added to trucks does not appear on drivers.
+
+> **Warning:** 
+There is a hard limit of **30 active fields per entity**. Once you reach it, the **Add field** button is replaced with *"Field limit reached — max 30 active fields per entity"*. This is a deliberate ceiling: past that point a detail page stops being readable, and a list export stops being usable.
+
+
+---
+
+## Adding a field
+
+
+  ### Pick the entity tab
+    Order, Truck, Driver or Client.
+  
+  ### Click Add field
+    Fill in the **Field label** — what users see, e.g. `Internal reference`.
+  
+  ### Choose a type
+    | Type | Use it for |
+    |---|---|
+    | **Text** | Short free text — a reference, a code |
+    | **Long text** | Notes and multi-line remarks |
+    | **Number** | Quantities, counts, numeric codes |
+    | **Date** | A date the standard fields do not cover |
+    | **Select** | A fixed list of choices |
+    | **Checkbox** | A yes/no flag |
+  
+  ### Set a field key
+    The internal identifier used in exports and integrations. Both label and key are required.
+  
+  ### For a Select field, list the options
+    Enter them comma-separated — e.g. `North, South`. A dropdown with no options cannot be saved: Druma refuses with *"Add at least one option for a dropdown field"*.
+  
+  ### Decide whether it is Required
+    A required field must be filled before the record can be saved.
+  
+  ### Save
+    The field appears immediately on that entity's detail pages.
+  
+
+
+---
+
+## Ordering and editing
+
+Fields render in the order they are listed. **Move up** and **Move down** reorder them — put the ones people fill most often at the top.
+
+**Edit options** changes the choices on a Select field, **Required** toggles the requirement, and **Delete field** removes it.
+
+---
+
+## Where custom fields show up
+
+- **Detail pages** — on a tab of the order, truck, driver or client record
+- **List columns** — opt-in, per list. They are not shown by default, so a company with 30 truck fields does not get an unusable trucks table
+- **Exports** — the columns you opted into come along with the export
+
+---
+
+## Related articles
+
+
+  
+    The rest of the company-level configuration.
+  
+  
+    Defining who may change settings like these.
+  
+</CardGroup>
+
+---
+
+## Rate cards
+
+
+> **Note:** 
+This page covers **Settings → Pricing & Costing → Cost profiles** — truck **cost profiles** used to estimate an order's cost and margin. If you're looking for per-lane **selling** prices (origin/destination-based quote suggestions, e.g. "Romania → Germany, Curtainsider — €1,450"), that's a separate feature called **Lane Pricing**, under **Sales → Pricing** in the main app — see [Lane Pricing](/en/admin/lane-pricing).
+
+
+## What is a rate card?
+
+A rate card in **Settings → Pricing & Costing → Cost profiles** is a cost profile for a category of truck operation — either your **own fleet** or a **subcontracted** carrier. It captures what it actually costs you to run a truck (fixed cost, driver wage, fuel, ADR/oversize surcharges, tolls) so Druma can estimate the cost and margin of an order alongside the price you charge the client.
+
+**Who can edit:** Admin, Company Admin, Fleet Manager, and Planner roles.
+
+<Frame caption="Lane Pricing (Sales → Pricing) — the separate, origin/destination-based selling-price feature. Settings → Pricing & Costing → Cost profiles (this page) is the cost-profile side.">
+  <img src="/images/admin/rate-cards.png" alt="Lane Pricing page with origin, destination, and trailer-type rate cards" />
+</Frame>
+
+## Creating a rate card
+
+Go to **Settings → Pricing & Costing → Cost profiles** and click **New Card**.
+
+If saving an edit fails, Druma shows an error message and reverts the field; until it saves, cost estimates keep using the old values.
+
+### Name
+
+Give the card a clear name, e.g. "Own fleet — standard" or "Subcontractor — RO/BG lanes".
+
+### Type
+
+Choose **Own Fleet** or **Subcontracted** — this determines which category of order the cost profile applies to.
+
+### Rate / km (€)
+
+An optional flat per-kilometre cost rate.
+
+### Cost basis
+
+Choose how the fixed operating cost is calculated:
+- **Daily rate** — enter a **Daily fixed cost (€)** and a **Driver wage / day (€)**.
+- **Weekly rent** — enter a **Weekly fixed cost (€)** and a **Driver wage / week (€)**.
+
+### Waiting time
+
+- **Free waiting hours** — how many hours of waiting time are included before a charge applies.
+- **Waiting rate €/h** — the hourly cost once free waiting hours are exceeded.
+
+### Surcharges
+
+- **ADR fee (€)** — additional cost applied to dangerous-goods shipments.
+- **Oversize fee (€)** — additional cost applied to oversized loads.
+
+### Fuel
+
+- **Fuel base (€/L)** — the fuel price used in cost calculations.
+- **Fuel consumption (L/100km)** — the truck's expected consumption, used together with the fuel base price and route distance to estimate fuel cost.
+
+### Margin targets
+
+- **Target margin %** — the margin you aim for on orders using this cost profile.
+- **Min margin %** — the minimum acceptable margin before Druma should flag the order.
+
+### Toll policy
+
+Choose the default toll handling for this cost profile:
+- **Included in rate** — tolls are absorbed into your rate, not billed separately.
+- **Pass-through to client** — tolls are billed to the client as incurred.
+- **Separate line item** — tolls appear as their own line on the order/invoice.
+
+You can override this default for specific countries or specific toll operators:
+
+- **Per-country toll policy overrides** — pick a country and a policy (Billed to client / Included in rate / Not charged). Useful when, say, French tolls are pass-through but German ones are included.
+- **Per-operator toll policy overrides** — enter a toll operator name exactly as it appears on receipts (e.g. `ASFINAG`, `HU-GO`, `Viapass`) and a policy. An operator-level override takes priority over the country-level policy.
+
+### Saving
+
+Click **Save changes** on an existing card, or **Create** when adding a new one.
+
+## Editing or deleting a rate card
+
+Expand a card in the list to edit any of its fields inline. Click the **X** next to a card to delete it — you'll be asked to confirm, since this can't be undone.
+
+Rate card cost profiles feed into the order cost/margin estimate shown when creating or pricing an order — that's a separate calculation surface from this settings page, not covered here.
+
+## Default routing profile
+
+Below your rate cards, a separate **Default routing profile** card sets the vehicle dimensions Druma assumes when estimating tolls and routes before a specific truck has been picked for an order — **height (cm)**, **axle count**, and **weight (kg)**. These feed HERE/PTV's truck-aware routing and toll calculation. Once an order is assigned to an actual truck, Druma uses that truck's real dimensions instead.
+
+## Related pages
+
+
+  
+    The selling-price side — per-lane prices Druma auto-suggests on a quote or order, including bulk import.
+  
+  
+    Configure your company profile, which works alongside rate cards when Druma calculates order costs.
+  
+</CardGroup>
+
+---
+
+## Lane Pricing
+
+
+> **Note:** 
+This page covers **Sales → Pricing** — per-lane **selling** prices. If you're looking for truck **cost** profiles (fixed cost, driver wage, fuel, surcharges) used to estimate an order's margin, that's a separate feature — see [Rate cards](/en/admin/rate-cards).
+
+
+## What is a lane price card?
+
+A lane price card sets what you charge for a lane — for example, "Romania → Germany, Curtainsider — €1,450." Once a card exists, Druma auto-suggests its price the moment a matching quote or order is created, so pricing a routine lane stops being a lookup in a spreadsheet.
+
+**Who can edit:** Admin, Company Admin, Fleet Manager, and Planner roles.
+
+---
+
+## Creating a lane price card
+
+Go to **Sales → Pricing** and click **Add lane** (or **New card**, depending on whether you're adding to an existing card or starting fresh).
+
+| Field | Meaning |
+|---|---|
+| **Card name** | A short label, e.g. "Standard curtainsider lanes" |
+| **Client** | Optional — scope this card to one client only. A client-specific card always wins over a general one for that client. |
+| **Origin / Destination country** | Required — the two-letter country pair this lane covers |
+| **Postal prefix** | Optional — the first two characters of the postcode (e.g. `RO-30`). A lane with a postal prefix beats a country-only lane for a matching pickup/delivery postcode, and the country-only lane still covers every other postcode in that country. |
+| **City** | Optional — narrows the lane further when the postcode alone isn't precise enough |
+| **Zone** | Optional — one of your own postal zone groups (Settings → Zones), for pricing a whole region at once rather than a single prefix |
+| **Trailer type / Vehicle category** | Optional — restricts the lane to a specific equipment type |
+| **Rate mode** | **Flat rate** (one fixed price, no distance needed), **Per km** (price × route distance), or **Per km (bracketed)** — a different €/km depending on which **Min km / Max km** bracket the route falls into |
+| **Amount** | The price (or €/km rate) for this lane |
+| **Currency** | EUR or RON |
+| **Fuel scheme / Fuel %** | Optional fuel surcharge applied on top |
+| **Valid from / Valid to** | Optional date range — leave blank for an always-valid lane |
+
+Click **Add lane** to save it under the card, or **Delete lane** to remove one.
+
+> **Note:** 
+A **Flat rate** lane needs no route distance to price — useful the moment a quote is created, before any routing has run. A **Per km** or **Per km (bracketed)** lane needs a distance and is skipped if none is available yet.
+
+
+---
+
+> **Note:** 
+If saving a lane or rate card edit fails, Druma shows an error message and puts the field back to its previous value. Until the save succeeds, quotes keep using the old rate, so watch for that message when you change a price.
+
+
+## How Druma picks a lane
+
+When you create an order or quote, click **Suggest price** and Druma scores every lane against the order's own origin/destination, postal codes, trailer, and client, then applies the best match. Matching precedence, most specific first:
+
+1. A card scoped to this **client**
+2. **Postal prefix** match (beats a country-only lane)
+3. **Country** match
+4. **Zone**, **trailer type**, and **vehicle category**, as tie-breakers
+
+A lane's postal prefix, when set, is a hard requirement — it never "loosely" matches a different prefix. If nothing matches, Druma says so (**"No matching lane price for this route"**) rather than guessing.
+
+---
+
+## Lane history — what you've actually charged
+
+Click **Lane history** on a country pair to see what orders on that exact lane have actually billed over the last 6 months — average distance, average total, and the median €/km — with a link through to the individual orders. Use **Use median €/km**, **Use €/km × distance**, or **Use total** to pull one of those figures straight into the price field you're working on.
+
+---
+
+## Suggested from your history
+
+The **Suggestions** tab lists lanes you've actually run in the last 6 months that have **no card yet** — a gap between what you're pricing manually and what's automated. **Accept** creates a card priced at that lane's historical median (a starting point you can edit afterwards, never a commitment); **Accept all visible** does the same for every suggestion on screen in one step. **Dismiss** clears a suggestion without creating a card.
+
+---
+
+## Bulk import
+
+Rather than adding lanes one at a time, import a spreadsheet of them. The importer accepts, per row: card name, origin/destination country, **postal prefix**, **city**, **zone group** (matched by name against your own zone groups), trailer type, rate mode, amount, **min/max km** bracket, fuel surcharge %, and notes.
+
+A row is rejected with a clear reason rather than silently imported wrong:
+
+- A postal prefix must be exactly 2 characters and must be given together with its country — a prefix with no country is meaningless.
+- An unrecognised zone group name is an error, not a silent fallback to "no zone".
+- `min_km` greater than `max_km` is rejected outright.
+
+A row that matches an existing lane — same card, country/prefix/city, trailer, zone, rate mode, and km bracket — is skipped as a duplicate rather than creating a second, conflicting price for the same lane.
+
+---
+
+
+  The cost-profile side — what a truck actually costs to run, used to estimate order margin alongside this page's selling price.
+
+
+---
+
+## Integration Setup
+
+
+Every integration your company uses is configured in one place: **Settings → Integrations**. You do not need a developer — all setups are form-based and take less than five minutes each.
+
+<Frame caption="Settings → Integrations — the eCMR provider card has only two states: Native and Disabled.">
+  <img src="/images/admin/integration-setup.png" alt="Integrations settings panel" />
+</Frame>
+
+---
+
+## Finding an integration
+
+The Integrations page groups every card into categories — GPS/Telematics, Reefer/Trailer Temperature, Compliance, eCMR, Freight, Market Data, Accounting, Messaging, and Platform. A row of **category chips** at the top of the page lets you filter to just one category (each chip shows how many integrations are in it); click **All** to see everything again. A **search box** next to the chips filters cards by name or description as you type — useful once your company has several integrations configured and you just want to jump straight to one.
+
+---
+
+## 1. eCMR Provider
+
+Druma issues electronic consignment notes **in-house using the Druma native provider** — no external account, API key, or setup is required. eCMR is available out of the box for cross-border orders, and Druma seals each completed document with a PAdES digital signature.
+
+The eCMR provider card offers only two states: **Native** and **Disabled**. TransFollow is not a selectable option — it exists only as a legacy path for a small number of companies with a pre-existing configuration (see the note below).
+
+
+  ### Open the eCMR provider card
+    Go to **Settings → Integrations** and open the **eCMR provider** card. **Native** is selected by default.
+  
+  ### Test the connection
+    Click **Test Connection**. Druma verifies that its signing certificate is configured and ready.
+  
+  ### Save
+    Click **Save**. eCMR creation is active for cross-border orders.
+  
+
+
+> **Note:** 
+Most companies never need to change this — Native is the only real option. If your company has a pre-existing TransFollow configuration, it keeps working as before and is shown here as **Native**; it silently migrates to the true native provider the next time you save this card, with nothing for you to switch or configure. See [eCMR Providers](/en/ecmr/ecmr-providers) for details.
+
+
+---
+
+## 2. HERE Maps &amp; PTV Routing
+
+HERE Maps powers address autocomplete when creating orders. Truck-optimised route calculation, distance, ETA, and toll estimation are handled by **PTV**, a separate routing provider.
+
+**No setup required for either.** Both API keys are managed at the platform level by Druma. There is nothing to configure, and you will not be billed separately for HERE or PTV usage — both are included in your subscription.
+
+> **Note:** 
+If address autocomplete or routing stops working, this is a platform-level issue. Contact Druma support rather than trying to reconfigure HERE or PTV yourself.
+
+
+---
+
+## 3. Fuel Card Import
+
+Druma does not connect directly to fuel card provider APIs. Instead, you download a CSV export from your provider's web portal and upload it into Druma. This keeps fuel costs linked to vehicles and orders automatically.
+
+**Supported providers:** DKV, UTA, AS24, Shell, TotalEnergies, BP, Circle K, Eurowag, WEG, MOL, E100.
+
+
+  ### Export from your provider portal
+    Log in to your fuel card provider's web portal and export transactions as CSV. Most portals offer this under **Reports → Transaction Export**.
+  
+  ### Open Fuel Card Import
+    Go to **Fleet → Fuel** and open the import dialog.
+  
+  ### Select your provider
+    Choose your provider from the dropdown so Druma knows which CSV column format to expect.
+  
+  ### Upload the CSV
+    Click **Upload CSV**, select your file, and click **Import**. Druma will match transactions to vehicles by plate number.
+  
+
+
+> **Note:** 
+If a transaction's plate number does not match a vehicle in your fleet, Druma will list it as **unmatched**. You can manually assign it or leave it. Regularly check the unmatched list — it often catches fuel card fraud or incorrect plate entries.
+
+
+---
+
+## 4. SAGA / WinMENTOR Accounting
+
+Druma exports invoice and order data in formats compatible with SAGA and WinMENTOR, the two most common Romanian accounting packages.
+
+### SAGA Classic and WinMENTOR Classic
+
+No API key is needed. SAGA exports as DBF files (`CLI_`, `ART_`, `IE_`, `INT_`, `NC_.xml`); WinMENTOR Classic exports as pipe-delimited `.txt` files. Both formats are generated automatically once a month and emailed to your configured accountant address as a ZIP (Resend, 7-day signed link) — configure the export day in **Settings → Automations & Features → SAGA Export Config**. There is no manual "Export History" list; each month's export only exists as the emailed ZIP.
+
+> **Note:** 
+There is currently no direct REST API integration for WinMENTOR Enterprise or any other accounting package — SAGA and WinMENTOR Classic are the only two supported formats, both file-based.
+
+
+---
+
+## 5. SmartBill
+
+SmartBill is a Romanian cloud invoicing platform. With this integration active, Druma pushes an invoice to SmartBill automatically when you **send** it (not when it's created or marked confirmed) — no manual re-entry.
+
+
+  ### Get your SmartBill credentials
+    In your SmartBill account, find your account **Email**, **API Token**, **CIF** (fiscal registration number), and **Invoice Series** — all four are required.
+  
+  ### Open the SmartBill card in Druma
+    Go to **Settings → Integrations → SmartBill**.
+  
+  ### Enter your credentials
+    Enter the Email, API Token, CIF, and Invoice Series. SmartBill uses the CIF to route invoices to the correct company account.
+  
+  ### Save
+    Click **Save**. From this point, sending an invoice in Druma also pushes it to SmartBill.
+  
+
+
+> **Note:** 
+SmartBill assigns its own invoice number on push — it does not reuse Druma's invoice number. Status is tracked simply as pushed or error; Druma does not track SmartBill's Draft/Issued/Paid state, and there is no webhook keeping the two systems in sync after the push (no client or product records are created in SmartBill either). If your SmartBill subscription lapses or your API key is regenerated, the push will start failing — check **Settings → Integrations** periodically to confirm the SmartBill status is green.
+
+
+---
+
+## 6. Peppol E-Invoicing (Belgium)
+
+Peppol is the pan-European e-invoicing network. Belgian companies (KBO-registered) are required to send invoices to other Belgian businesses via Peppol — this has been mandatory since January 2026.
+
+**Required for:** Belgian companies sending B2B invoices to other Belgian businesses.
+
+
+  ### Find the Peppol E-Invoicing card
+    Go to **Settings → Integrations** and click the **Peppol E-Invoicing** card.
+  
+  ### Enter your registration details
+    Enter your **KBO/CBE number** (Belgian company registration number) and your **VAT number**.
+  
+  ### Register on Peppol
+    Click **Register on Peppol**. Druma submits your registration to Druma's Peppol Access Point. This typically completes within a few minutes.
+  
+  ### Confirm activation
+    Once active, the card shows a **Connected** status. Peppol routing is now automatic for eligible Belgian clients — no extra steps are needed when sending invoices to Belgian recipients.
+  
+
+
+> **Note:** 
+See [Peppol E-Invoicing](/en/integrations/peppol-invoicing) for full details on how the routing works, what happens when a recipient is not on the Peppol network, and how to handle rejections.
+
+
+---
+
+## 7. Supplier Invoice Email Inbox
+
+This gives your company a dedicated email address for receiving supplier invoices — from fuel card providers, workshop services, toll operators, or any other supplier. Received invoices are AI-classified and routed to a review queue, so nothing slips through.
+
+
+  ### Go to Company Settings
+    Navigate to **Settings → Company** and scroll to the **Supplier Invoice Email** section.
+  
+  ### Enable the inbox
+    Toggle on **Enable supplier invoice inbox**. Druma generates a dedicated inbound email address for your company.
+  
+  ### Add sender addresses to the whitelist
+    In the **Sender Whitelist** field, add the email addresses or domains you expect invoices from (for example, `invoices@dkv.com` or `@uta.eu`). Emails from non-whitelisted senders are rejected and never enter your queue.
+  
+  ### Share the address with your suppliers
+    Copy the generated email address and give it to each supplier as their invoice-submission address for your company.
+  
+
+
+Received invoices appear in **Finance → Forwarding → Invoice Queue** for review, matching, and approval.
+
+> **Note:** 
+See [Supplier Invoices](/en/invoicing/supplier-invoices) for full details on the review queue, auto-matching logic, and how to handle unmatched invoices.
+
+
+---
+
+## 8. Telematics, Tachograph & Reefer Providers
+
+Druma connects to your trucks' GPS, tachograph (driving-hours), and trailer reefer providers directly from **Settings → Integrations**, so live positions, EU 561/2006 driving-hours data, and cargo temperature readings flow into Druma automatically instead of requiring manual entry.
+
+### GPS & Tachograph (Telematics)
+
+Open the card for your provider under **Settings → Integrations** and enter the credentials below. Each card's "Where do I get these?" link repeats this guidance in-app.
+
+| Provider | Credential fields | Where you get them |
+|---|---|---|
+| **Scania (rFMS)** | Client ID, Client Secret | Register an application at `developer.scania.com` to get a Client ID and Client Secret. The truck also needs a Scania Communicator onboard unit plus a Location (GPS) subscription — and, for driver hours, a Performance subscription. Auth uses Scania's HMAC challenge-response, handled for you. |
+| **Volvo (rFMS)** | Username, Password | Volvo exposes the same rFMS API standard as Scania, but with HTTP Basic auth — enter the Username and Password issued for your fleet via Volvo Connect / Dynafleet rFMS access. |
+| **Webfleet** | Account, Username, Password, API key | From a Webfleet user with an "expert" profile and external access enabled. The API key itself is issued by Webfleet support or through the WEBFLEET.connect partner programme. |
+| **Geotab** | Database, Username, Password | Create a Service Account (View Only) under MyGeotab → Administration → Users. "Database" is the name in your `my.geotab.com/<database>` URL. |
+| **Samsara** | API Token, Base URL (optional) | Generate a token in the Samsara dashboard under Settings → API Tokens, scoped to "Read Vehicle Statistics". Leave Base URL blank for EU fleets; set it if your organisation runs on the US shard. GPS positions only — Samsara does not supply tachograph/driving-hours data. |
+| **Frotcom** | Username, Password, Provider | Your Frotcom account credentials, with API access enabled by Frotcom support or your local reseller. Currently in **beta** — the connection works, but field mapping is still being validated against live accounts. |
+| **Continental VDO** | Client ID, Secret, Account/Company ID | Requires a Continental partner agreement — contact Continental via the `fleet.vdo.com` contact form. **Partner-gated** — there is no public self-service signup. |
+| **Webeye / Eurowag** | Username, Secret | Generated in `selfcare.eurowag.com` → Telematics → Fleet management → System connections. Your company must first be approved as a partner by Eurowag. **Partner-gated** — there is no public self-service signup. |
+
+> **Note:** 
+Scania is validated against live fleet accounts. Volvo, Webfleet, Geotab, and Samsara use the vendors' standard public APIs but are still being validated with pilot fleets — you can set them up self-service, and we recommend involving Druma support during your first sync so we can confirm the field mapping against your account. Frotcom is in beta — the connection works, but its field mapping is still being confirmed. Continental VDO and Webeye/Eurowag additionally require the vendor to approve your company as a partner before the connection returns live data; the credential form still lets you save and test, but syncing won't start until that partner access is active.
+
+
+### Reefer / Trailer Temperature
+
+
+  ### Open the reefer provider card
+    In **Settings → Integrations**, find the card for your trailer's telematics provider — **Mapon**, **Orbcomm**, **Thermo King TracKing**, or **Carrier Lynx Fleet** — and open it.
+  
+  ### Enter your credentials
+    Each card's "Where do I get these?" link explains how to obtain credentials for that provider (see the table below).
+  
+  ### Test and save
+    Click **Test Connection**, then **Save**. Temperature readings begin syncing automatically once the connection is confirmed.
+  
+
+
+| Provider | Credential fields | Where you get them |
+|---|---|---|
+| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — credentials connect straight away. |
+| **Orbcomm** | Access Token, or Username + Password, Base URL (optional) | Issued via your ORBCOMM Platform API account. If you only have a username/password, Druma exchanges it for a token automatically. |
+| **Thermo King TracKing** | API Key, or Username + Password, Base URL (optional) | Request a TracKing API key from your Thermo King dealer or via the TracKing portal. No public self-service signup — this is a partner-gated integration. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (or a legacy API Key), Base URL (optional) | Obtained through Carrier Transicold or your Carrier dealer as part of the Lynx Fleet API toolkit. No public self-service signup. |
+
+> **Note:** 
+All four reefer connectors are currently in **beta** — they are being validated with pilot fleets, so involve Druma support during your first sync. Mapon's API is fully public, so credentials connect straight away. Orbcomm needs an account token from ORBCOMM before it returns live data. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
+
+
+---
+
+## 9. Freight Exchanges & Market Data
+
+These cards connect Druma to freight-exchange and market-price providers. None of them has a self-service signup: each provider issues API access to your company through a partner agreement, so ask your account manager at that provider first. Each card's "Where do I get these?" link repeats this.
+
+| Card | Credential fields | What you need |
+|---|---|---|
+| **Timocom** | Username, Password | API credentials issued as part of a Timocom marketplace API partner agreement, for your freight exchange account. Used for freight exchange search and return-load automation. |
+| **Trans.eu** | Client ID, Client Secret | An OAuth Client ID and Client Secret from Trans.eu's Partner API programme. Used for European lane price data for market benchmarking. |
+| **Transporeon** | API Key, Webhook Signing Secret | A TIAP partnership with Transporeon (beta). Lets you receive and respond to freight tenders from Transporeon. Transporeon access is switched on for your company by Druma once the partnership is in place, so contact support first. |
+
+Open the card, enter the credentials and click **Test Connection**, then **Save**. If a card is not visible for your company, your Druma admin may have hidden it or restricted it by country.
+
+> **Note:** 
+Looking for loads on an exchange you use in the browser? You do not need an API connection for that. See [Druma Capture](/en/integrations/chrome-extension), which turns a Timocom, Trans.eu or Bursa de Transport listing into a draft order.
+
+
+---
+
+## 10. Browser Extension and Outlook Add-in
+
+Two more cards in **Settings → Integrations** turn incoming loads into draft orders without retyping:
+
+- **Browser Extension** — Druma Capture for Chrome. Generate a token, download the zip, load it in Chrome and paste the token. Full steps: [Druma Capture](/en/integrations/chrome-extension).
+- **Outlook add-in** — click **Download manifest** and follow the **Install guide** to add **Send to Druma** to Outlook. Full steps: [Outlook Add-in](/en/integrations/outlook-add-in).
+
+---
+
+## 11. Compliance & E-Invoicing Cards
+
+These have their own guides:
+
+- **ANAF e-Factura** — [e-Factura / ANAF Submission](/en/invoicing/efactura-anaf)
+- **ANAF e-Transport** — [e-Transport Romania](/en/fleet-compliance/etransport-romania)
+- **KSeF e-Invoicing (PL)** — [KSeF — Polish e-Invoicing](/en/invoicing/ksef-poland). To connect: choose the **Environment** (start with **Demo (pre-production, real NIP)**), enter your **Company NIP**, pick **KSeF token** or **KSeF certificate**, and click **Connect & test**. Nothing is saved until a real login to KSeF succeeds. Move to **Production** only after a Demo invoice has gone through.
+- **JPK_V7M (Poland)** — [JPK_V7M — Comarch ERP Optima (Poland)](/en/integrations/jpk-optima)
+- **Peppol E-Invoicing** — [Peppol E-Invoicing](/en/integrations/peppol-invoicing)
+
+Driver messaging has its own tab, linked from the card: **WhatsApp (driver channel)** — see [WhatsApp Driver Channel](/en/integrations/whatsapp-driver-channel).
+
+---
+
+## 12. Platform Cards (nothing to set up)
+
+The **Platform** category lists services Druma runs for you: **HERE Geocoding**, **Resend Email**, **Mailgun Inbound**, **Stripe Billing** and **Gemini AI (Vertex AI)**. They are managed by Druma and need no credentials from you. **Message Translation** auto-translates driver and planner messages; each user can opt out in their own profile. **Web research (Google Search)** is optional and off by default. When Druma enables it for your company, users can click **Research the web** on a company or site.
+
+> **Note:** 
+The Android app is not set up from this page. Drivers and office staff install it from a link inside Druma. See [Installing the Driver App](/en/driver/installing-the-app).
+
+
+---
+
+## Deep-dive articles
+
+
+  Understand how eCMR works, who signs, and when it applies.
+
+
+
+  Step-by-step guide to issuing eCMR documents from an order.
+
+
+
+  How fuel costs link to vehicles and orders.
+
+
+
+  How PTV routing distances feed into your CO2 calculations.
+
+
+---
+
+## Billing & Subscription
+
+
+Druma is the **issuer of record** for your subscription: every platform charge is billed as a native **Romanian e-Factura** (ANAF/SPV) and paid by **bank transfer** on net terms — there is no card-on-file, no Stripe checkout, and no per-seat pricing for users. Office users, drivers, and client-portal accounts are always free; what you pay for is your active trucks (if you run your own fleet) or your platform usage (if you're a pure forwarder/broker).
+
+> **Note:** 
+For current prices, see [druma.io/pricing](https://druma.io/pricing) or contact support@druma.io. This page describes how billing works, not what today's exact band prices are — your own price schedule may differ from a new customer's (see "Your price schedule" below).
+
+
+---
+
+## Free trial
+
+Druma is invite-only while it onboards its first operators — there is no self-service sign-up form. [Tell us about your fleet](https://druma.io/contact?intent=access) and Druma sets your company up with a **30-day trial**, usually within one business day. No credit card is needed to start, and every feature is fully available during the trial. Billing only begins once you choose to continue after the trial.
+
+---
+
+## One flat price — no metering, ever
+
+Your company is billed under one of two archetypes, set on your account by Druma:
+
+<Tabs>
+  <Tab title="Asset haulier">
+    If you operate your own trucks, your monthly charge is exactly two things:
+    - A **base fee set by your fleet-size band**.
+    - A **per-active-truck fee from that same band**. Parked trucks are always free; billing starts from **1 active truck**. Your active-truck count picks one band, and both the base and every truck bill at that band's rate.
+
+    That's the whole bill. There is **no usage meter, no AI allowance to track, no € cap, no overage charge, and no annual price-indexation line** — document extraction, eCMR sealing, Ask Druma, and every other AI-assisted feature are included at no extra charge, however much you use them. This is a deliberate product decision, not a temporary simplification: Druma doesn't charge extra for anything on the asset-haulier side.
+
+    The only thing that varies your bill mid-term is your **active truck count** — park a truck and it drops off the next invoice; activate one and it's added. A mid-cycle change is reconciled as a single correction line on your next invoice (priced at the rate you're already on), not a running meter.
+
+    Fleets above 150 trucks are quoted individually — [contact support](mailto:support@druma.io).
+  </Tab>
+  <Tab title="Forwarder / broker">
+    If you don't run your own fleet, there's no truck band and no base fee — you pay **the greater of €25/month or your metered platform usage cost × 2.5**. This archetype is usage-based by design, unlike the asset-haulier side above.
+  </Tab>
+</Tabs>
+
+Not sure which archetype applies to you, or think yours is set incorrectly? Contact support@druma.io.
+
+### Your price schedule — what happens when prices change
+
+Your company is **pinned** to the price schedule that was current when you signed up, and that pin never moves on its own — when Druma publishes new pricing, it applies to new customers, not to you. Settings → Finance & Billing → Billing shows which schedule you're on.
+
+Moving to a different (usually newer, and possibly cheaper) schedule only ever happens if you ask for it and Druma agrees to it. Your rate is never silently changed.
+
+---
+
+## Contract term
+
+**Every subscription is invoiced monthly, regardless of term.** The choice you make is the *commitment*, not how often you're billed:
+
+- **12-month contract (Committed Term)** — you commit for a year and are invoiced each month at the contract rate. It starts when you sign and Druma approves the Order Form (see below). The panel shows the date your term ends and whether it renews automatically.
+- **Month-to-month** — no commitment, cancel any time, at the contract rate **+20%**.
+
+Forwarder/broker companies are always month-to-month, pay-as-you-go — there's no truck subscription to commit to.
+
+### Committed Term: early exit and the Discount Clawback
+
+The 12-month contract is the **Committed Term**. Its price is 20% lower than month-to-month (month-to-month is the contract rate +20%), and that difference is what the Discount is.
+
+- **Leaving early.** You can end a Committed Term before it runs out with **30 days' written notice**, effective at the end of a billing month. Fees keep running normally until then. On top of that, Druma invoices a one-off **Discount Clawback**: the Discount you received on the months already invoiced in the current Term (20% of the fees invoiced in the Term), **capped** at the fees that would still have been invoiced for the rest of the Term. You do **not** pay all the remaining monthly fees.
+- **No clawback** when you leave because Druma breached the Terms, after a material change to the Terms, or if Druma becomes insolvent.
+- **Renewal.** A Committed Term renews for another 12 months at the same rates unless you give **60 days' notice** before it ends.
+- Druma issues the clawback on your final invoice; there is nothing to configure in the app.
+
+### Signing the Order Form
+
+A Committed Term starts only once an **Order Form** has been signed and approved. The Order Form is the signed document that sets out the parties, the Term, your price schedule, the Discount Clawback and the order of precedence (Order Form, then Terms of Service, then Data Processing Agreement; the DPA prevails for personal data). It also records your express acceptance of the standard clauses that Romanian law requires you to accept in writing (liability limits, suspension and termination, tacit renewal, choice of court). Once signed, a later version of the Terms never changes it. The Order Form is in English, and the English text is the binding one. Month-to-month customers do not need one; they accept the Terms in the app.
+
+
+  ### Open the card
+    Go to **Settings → Finance & Billing → Billing**. The **Committed-term Order Form** card is visible to users who can manage billing (company admins).
+  
+  ### Generate it
+    Click **Generate Order Form** and fill in **Signatory name**, **Signatory function** (optionally **Add a second signatory**), **Company registry number**, **REGON** (Poland, optional), **Email for legal notices**, **Billing contact** and **Start date**. The dialog shows your **Price bands (per month, excl. VAT)**. If it says the company profile is incomplete, fill in legal name, address and VAT number in Settings first, then try again.
+  
+  ### Sign it outside Druma
+    Click **Download Order Form** (the card shows **Ready to sign**). Sign the PDF with a qualified electronic signature, or print, sign and scan it. Don't edit the PDF otherwise.
+  
+  ### Upload the signed file
+    Click **Upload signed Order Form** (PDF only, up to 5 MB). The status changes to **Under review**. Your trial and access are not affected while it is reviewed. Uploading the unsigned PDF unchanged is refused.
+  
+  ### Druma approves it
+    Druma checks the company register and the signature, then approves. The card shows **Approved** and **Committed until** your end date, and you receive the executed copy and an execution certificate by email (also under **Download executed copy** and **Download execution certificate**).
+  
+
+
+- **Start date.** The Term starts on the start date you entered, or on the day Druma approves the Order Form if that is later, and runs for 12 months (to the day before the anniversary).
+- **Rejected.** If Druma rejects it, the card shows **Rejected** with the reason; fix the issue and upload a corrected signed file. Only one Order Form can be in progress per company at a time.
+- **What the upload check means.** Druma reports whether the file is **verified unchanged from the document we generated** and how many electronic signatures it found. A file with no electronic signature is treated as a signed scan. Where the check can't confirm this automatically, Druma compares the file manually. The automatic check is not a legal validation of the signature; Druma staff review every Order Form before approving it.
+
+> **Note:** 
+Invoices are Romanian e-Factura, payable by bank transfer within **30 days**. Unpaid invoices are subject to the statutory late-payment interest and recovery costs set by Directive 2011/7/EU — in Romania, Law 72/2013.
+
+
+---
+
+## The Billing page
+
+Go to **Settings → Finance & Billing → Billing** to see your plan and your invoice history.
+
+### Plan overview
+
+A single card shows your account status (**Active**, **Trial**, **Past Due**, or **Suspended**), your archetype, your active truck count, your contract term, and your next invoice date. If you have an open, unpaid balance, a banner shows the outstanding amount and how many days it's overdue.
+
+### Invoices
+
+An **Invoices** list shows your platform invoices by period, with VAT and total amounts, status (Preview, Issued, Paid, Overdue), due date, and a link to the invoice PDF/UBL where available. Invoices are issued as Romanian e-Factura in EUR, with the VAT line also shown in RON at the National Bank of Romania (BNR) exchange rate.
+
+### Payment
+
+A **Payment** section shows the bank details to pay against (beneficiary, IBAN, payment reference) and your net payment terms. There is no card payment option — settle each e-Factura by bank transfer using the reference shown.
+
+> **Tip:** 
+There is nothing to configure on this page day-to-day — no usage caps to set, no interval toggle to fiddle with, no AI budget to watch. It's a plan summary and an invoice list. If your truck count or contract term needs to change, contact support@druma.io.
+
+
+---
+
+## Suspended accounts
+
+If your account is suspended for non-payment, all app access is replaced with a single screen asking you to resolve the outstanding balance; a button opens **Settings → Finance & Billing → Billing** directly. Signing in still works — only the workspace itself is blocked. If you believe your account was suspended in error, contact support@druma.io.
+
+---
+
+## Need help with billing?
+
+
+  For billing questions, disputes, or invoice requests, email support@druma.io. Include your company name and VAT number. We respond within one business day.
+
+
+---
+
+## Branding & Document Formats
+
+
+The **Branding & Formats** settings control how your company appears on generated documents and how invoice and order reference numbers are built.
+
+These settings are company-specific. If you manage multiple companies in Druma, each company has its own branding and format configuration.
+
+**Who can edit:** Admin and Company Admin roles only.
+
+<Frame caption="Branding & Formats — 4 tabs: Branding, Invoice, Order, Row formatting.">
+  <img src="/images/admin/branding-formats.png" alt="Branding and Formats settings panel" />
+</Frame>
+
+---
+
+## Accessing the settings
+
+Go to **Settings → Documents → Formats**. The page has four tabs: **Branding**, **Invoice Format**, **Order Format**, and **Row formatting**.
+
+---
+
+## Branding tab
+
+The Branding tab controls your company's two brand colours. These are applied **live across the whole Druma app UI** for your company — not just on generated documents. Saving a colour here writes it into a CSS variable at the root of the app, so it immediately re-colours buttons, badges, highlights, and other themed elements throughout the planner, driver app, and client/carrier portals, in addition to invoice PDFs and email templates.
+
+### Primary colour
+
+Your company's main brand colour — used throughout the app UI, plus for document borders, labels, and totals on invoice PDFs and email templates.
+
+### Accent colour
+
+A secondary colour used for accents throughout the app UI, plus table headers and body text on the same documents.
+
+Each colour has a hex-code field plus a colour-picker swatch, and a live preview shows both swatches side by side.
+
+### Saving
+
+Click **Save changes** to apply your colours, or **Reset to defaults** to restore the built-in colours.
+
+> **Note:** 
+Your company **logo** is not configured on this page — it's uploaded under **Settings → Company**. Druma accepts PNG, JPEG, SVG, or WebP files up to 2 MB; there's no minimum-width requirement or transparent-background guidance enforced.
+
+
+---
+
+## Invoice Format tab
+
+The Invoice Format tab controls the invoice number pattern, the invoice header title, late-payment interest, payment instructions, terms & conditions, footer text, and which optional sections appear on the invoice PDF.
+
+### Format tokens
+
+Number patterns are built from a template string that combines fixed text with dynamic tokens wrapped in curly braces:
+
+| Token | What it inserts |
+|---|---|
+| `{PREFIX}` | The prefix you define (e.g. `INV`, `ORD`, your own abbreviation) |
+| `{YYYY}` | Four-digit year (e.g. `2026`) |
+| `{YY}` | Two-digit year (e.g. `26`) |
+| `{MM}` | Two-digit month (e.g. `04`) |
+| `{DD}` | Two-digit day (e.g. `07`) |
+| `{YYMMDD}` | Combined two-digit year, month, and day (e.g. `260407`) |
+| `{SEQ3}` | Sequential number, zero-padded to 3 digits (e.g. `042`) |
+| `{SEQ4}` | Sequential number, zero-padded to 4 digits (e.g. `0042`) |
+| `{SEQ5}` | Sequential number, zero-padded to 5 digits |
+| `{SEQ6}` | Sequential number, zero-padded to 6 digits |
+
+There is no `{NNN}`/`{NNNN}` token — use one of the `{SEQ3}`–`{SEQ6}` tokens for a zero-padded sequence. You can combine tokens freely with separator characters such as `-` or `/`.
+
+The sequence resets whenever a date token in the pattern (`{YYMMDD}`, `{DD}`, `{MM}`, `{YY}`, or `{YYYY}`) changes value — in practice, this means a pattern that includes `{YYMMDD}` resets **daily**, not once a year. A pattern using only `{YYYY}` resets once a year, as you'd expect.
+
+### Invoice number format
+
+Enter your desired template in the **Invoice number format** field. A live preview below the field updates as you type, showing a sample number using today's date and an example sequence value.
+
+**Default:** invoice prefix `INV`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produces something like `INV-260407-042`.
+
+**Example customisations:**
+
+| Template | Sample output |
+|---|---|
+| `{PREFIX}-{YYYY}-{SEQ4}` | `INV-2026-0042` |
+| `{PREFIX}/{YY}/{SEQ3}` | `INV/26/042` |
+| `{YYYY}{MM}-{SEQ3}` | `202604-042` |
+
+> **Note:** 
+Credit notes use their own numbering series (prefix `CN` by default) and their own counter, but do not currently have an editable pattern field on this page.
+
+
+### Saving
+
+Click **Save changes**. The new format applies to the next invoice created after saving — existing invoices keep the reference number they were issued with.
+
+---
+
+## Order Format tab
+
+The Order Format tab defines the numbering pattern for order reference numbers — the identifier shown on the planning board, order detail panel, and any driver or client communications.
+
+### Order number format
+
+The same token system applies as for invoices. Enter a **Prefix** and a **Number pattern**, and watch the live preview update below the fields.
+
+**Default:** order prefix `ORD`, pattern `{PREFIX}-{YYMMDD}-{SEQ3}` → produces something like `ORD-260407-042`.
+
+**Example:** a haulier operating in Belgium might use prefix `BE` with pattern `{PREFIX}-{YYYY}-{SEQ4}` to produce references like `BE-2026-0042`.
+
+### Saving
+
+Click **Save changes**. The new format applies to all orders created after saving. Existing orders keep their original reference numbers.
+
+---
+
+## Row formatting tab
+
+The Row formatting tab lets you highlight table rows across Druma based on simple conditions — for example, colour a row red when its margin drops below a threshold, or when it's overdue.
+
+Each rule has a name, a field to evaluate (margin %, is overdue, status, days since created), a condition (less than, at most, greater than, at least, equals, does not equal), a value to compare against, and a highlight colour. Click **Add rule** to create one, and **Save changes** to apply your rules.
+
+---
+
+## Related pages
+
+
+  Connect your eCMR provider (Druma's native, in-house eCMR — TransFollow is kept alive only for a small number of companies with a pre-existing legacy configuration), fuel card providers, and accounting software.
+
+
+
+  Automatically route invoices to Belgian business clients via the Peppol network.
+
+
+
+  How to generate, send, and track sales invoices in Druma.
+
+
+---
+
+## GDPR & Data Management
+
+
+_Last updated: 10 July 2026._
+
+For your **operational data** (orders, clients, drivers, documents, and related records your company stores on the platform), Druma acts as a **data processor** — your company is the data controller, and processing is governed by a Data Processing Agreement (DPA) between your company and Druma. For your **account and billing data** (the details of your Druma subscription and the users who administer it), Druma acts as a **data controller** in its own right. This article explains exactly what is stored, how long it is retained, who processes it, and what actions you can take under GDPR.
+
+<Frame caption="Settings → Compliance → GDPR & Privacy — Admin and Company Admin only; other roles don't see this tab.">
+  <img src="/images/admin/gdpr-data-management.png" alt="GDPR and Privacy settings panel" />
+</Frame>
+
+---
+
+## What Data Druma Stores
+
+### Company and account data
+- Company name, CIF, address, contact details
+- User accounts: name, email address, role, login timestamps
+
+### Operational data
+- Orders: route details, cargo descriptions, pickup and delivery addresses, status history, assigned driver and vehicle, timestamps
+- Client records: company name, address, contact person, CIF
+- Driver information: name, contact number, license number, ADR certificate details, document expiry dates
+- Vehicle records: plate number, make/model, Euro standard, document expiry dates
+
+### Financial data
+- Invoice records, line items, amounts, payment status
+- Fuel card import data linked to vehicles
+
+### eCMR documents
+- Electronic consignment notes issued and PAdES-sealed **in-house by Druma's native provider**, including signature data and certified PDFs. TransFollow remains available as a legacy fallback for companies that were already using it before the native provider was introduced.
+
+### GPS position data
+- **Live truck tracking**: Druma stores only the truck's current position, continuously overwritten as new GPS pings arrive — no historical log of past positions is kept for the live map.
+- **Order-event GPS stamps**: when a driver reports a status change, delay, or incident, a single GPS coordinate may be captured and attached to that specific order event. These stamps are retained as part of the order's own record (see "Operational data" retention below), not as a separate rolling position history.
+- **Romania e-Transport**: for shipments requiring ANAF e-Transport declaration, GPS coordinates forwarded to ANAF are logged separately and purged after **30 days**.
+
+### Tachograph archive data
+- Raw DDD (vehicle unit) and TGD (driver card) tachograph files, downloaded automatically via a connected telematics provider or uploaded manually, stored in the Tacho Archive to meet EU Regulation 165/2014 retention obligations. See [Tachograph Archive](/en/fleet-compliance/tacho-archive).
+
+### Audit logs
+- A log of significant user actions: login events, order status changes, user role changes, document uploads, and billing events
+
+> **Note:** 
+Druma does not store call recordings, driver biometric data, or driver health information.
+
+
+---
+
+## Data Retention Periods
+
+| Data category | Retention period |
+|---|---|
+| Operational data (orders, clients, drivers, vehicles) | Duration of subscription + 90 days after cancellation |
+| User account data | Duration of subscription + 90 days after cancellation |
+| Audit logs | 12 months from the date of the logged event |
+| eCMR documents | 7 years post-delivery, via a yearly purge (legal requirement under the e-CMR Protocol) |
+| GPS position data (live tracking) | Not retained — only the current position is stored, overwritten on each update |
+| GPS order-event stamps | Retained with the order (see operational data retention above) |
+| GPS data forwarded to ANAF e-Transport | 30 days, then automatically purged |
+| Tachograph files (DDD/TGD) | Retained indefinitely (12 months is the legal minimum, not a purge target) |
+| Billing records | 10 years (EU fiscal law ceiling) |
+
+> **Note:** 
+At the end of the 90-day retention window described below, Druma's scheduled purge deletes **orders older than 3 years**, order messages, order notes, clients, trucks, and trailers, and removes company integrations and preferences. It deliberately **does not delete invoices or eCMR signatures** — both are retained under the legal retention rules above regardless of account deletion. Orders younger than 3 years old at the time of purge are not deleted by this process either.
+
+
+---
+
+## Requesting a Data Export
+
+You can request a full export of your company's data at any time.
+
+
+  ### Go to Settings → Compliance → GDPR & Privacy
+    Only the **Admin** and **Company Admin** roles can open this page — other roles don't see the tab. Company Admin has full edit rights: requesting an export, editing the retention policy, and resolving data subject requests. Uploading or deleting **compliance documents** is the one action reserved for **Admin** only.
+  
+  ### Click Request Export
+    Click the **Request Export** button. Druma will prepare a ZIP archive of all your company's data in machine-readable format (JSON and CSV).
+  
+  ### Receive the export
+    You will receive an email with a download link **within about 15 minutes** (the export is processed by a background job that runs every 15 minutes). The link expires after 7 days.
+  
+
+
+The export includes: orders, clients, invoices, fleet vehicles, in-app order messages, audit log entries, consent records, and eCMR digital signature records. The `drivers.csv` file in the export is filtered to user accounts with the **driver** role only — it is not a full roster of your office users. It does not include eCMR certified PDFs — those are downloadable individually from each order's eCMR tab.
+
+---
+
+## Deleting Your Account
+
+> **Warning:** 
+Account deletion is permanent and irreversible after the 90-day retention window. Download any data you need before requesting deletion.
+
+
+
+  ### Go to Settings → Compliance → GDPR & Privacy
+    Scroll to the **Delete Account** section. Both **Admin** and **Company Admin** can start this.
+  
+  ### Click Delete Account
+    You will be asked to type your company name to confirm you understand the action.
+  
+  ### 90-day retention period begins
+    Your account is immediately deactivated — no one can log in. Druma retains the data for 90 days in case of regulatory or legal need. You can cancel the scheduled deletion at any point during this window from the same page.
+  
+  ### Scheduled purge
+    After 90 days, Druma deletes orders older than 3 years, order messages, order notes, clients, trucks, trailers, and company integrations, and removes the company record itself. **Invoices and eCMR digital signatures are not deleted** by this process — they're retained for their full legal retention period (see the retention table above) regardless of account deletion. Orders younger than 3 years at the time of purge are also not deleted by this step.
+  
+
+
+---
+
+## Sub-processors
+
+Druma shares data with the following third-party sub-processors to deliver the service:
+
+| Sub-processor | Purpose |
+|---|---|
+| Supabase | Database hosting and authentication (EU — Frankfurt) |
+| Cloudflare | CDN, DDoS protection, and DNS |
+| Resend | Transactional email delivery, and inbound email ingestion (order, invoice, and payment emails parsed into Druma) |
+| Stripe | Payment processing and subscription management |
+| PTV Group | Route, distance, and ETA calculation — receives pickup/delivery coordinates |
+| HERE Technologies | Address geocoding and autocomplete |
+| Google Vertex AI (europe-west1) | AI-assisted features (document parsing, email extraction) — no model training |
+| Google Cloud Translation | On-demand translation of UI and document content |
+| Sentry | Error monitoring and crash reporting |
+| Google Firebase Cloud Messaging | Push notifications to the driver app |
+| WhatsApp Business Cloud API (Meta) | Driver messaging — only if your company enables WhatsApp notifications |
+| Telematics providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | GPS and tachograph data — only the provider your company connects |
+| Reefer telematics providers (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Reefer temperature data — only the provider your company connects |
+| TransFollow | Legacy eCMR fallback only — the native in-house Druma provider is the default for issuance, signing, and archiving |
+
+All sub-processors are contractually bound to process data only as instructed and in compliance with GDPR.
+
+If your company enables the optional **Druma Copilot** feature with your own AI provider API key ("bring your own AI"), your prompts and the data you query are sent directly to your chosen AI provider (OpenAI, Anthropic, or Google) under your company's own agreement with that provider — this may transfer data outside the EU. Druma Copilot is **off by default** and only activates once your company supplies its own key.
+
+---
+
+## Your GDPR Rights
+
+As a data subject or as a controller on behalf of your employees, you have the following rights:
+
+- **Right of access** — request a copy of personal data held about you
+- **Right to rectification** — correct inaccurate personal data
+- **Right to erasure** — request deletion (subject to legal retention obligations)
+- **Right to data portability** — receive your data in a structured, machine-readable format (use the Data Export feature)
+- **Right to restriction** — ask Druma to restrict processing in certain circumstances
+- **Right to object** — object to processing based on legitimate interests
+
+To exercise any of these rights, email **privacy@druma.io** with your company name, CIF, and a description of your request. Druma will respond within 30 days.
+
+---
+
+## Further reading
+
+
+  Full privacy policy including legal basis for processing.
+
+
+
+  Detailed breakdown of retention periods and deletion procedures.
+
+
+---
+
+## Key User Hub: fix blocked items and correct records
+
+
+The **Key User Hub** is the place where your go-to person fixes data without waiting for Druma support. It is available to **Admin**, **Company Admin** and **Key User** (anyone allowed to correct data). Every correction asks for a reason, is checked for side effects before it runs, and is written to a ledger you can filter and, where allowed, revert.
+
+## Open the hub
+
+- Click the **Key User Hub** shield icon in the top bar. It shows the number of open items. A slide-over opens with **Inbox** and **Find & fix** tabs, and **Open full view** takes you to the full pages.
+- The full pages have five tabs: **Inbox**, **Find & fix**, **Fleet history**, **Finance** and **Ledger**.
+
+## Inbox: everything blocked right now
+
+The Inbox is one queue of open problems. Each row says what is wrong, shows the order, client, route, dates and plates, and has a **Fix** button that opens a details panel beside the hub with the order's context and the right fix pre-opened.
+
+Sources you will see include: **Data quality**, **Dispatch confirmation pending**, **Credit stop**, **Exception rule block**, **CMR missing at delivery**, **POD missing at delivery**, **Leg/order inconsistency**, **eCMR stuck**, **eCMR signed, not sealed**, **e-Transport pending**, **e-Transport vehicle changed**, **Automation failed**, **Auto-invoice blocked**, **Carrier not responding**, and requests from colleagues (**Ask a key user request**).
+
+You can filter by severity and by source. A failed automation job can be resolved from the Inbox.
+
+### Missing CMR or POD
+
+A missing CMR or POD never stops a driver or a carrier from marking a delivery. It does stop **invoicing**: an invoice needs a CMR on file (or a key-user release). In the Inbox, a missing CMR or POD opens an upload control. If the document will not come, record why (for example expected later, lost, or kept by the client); the item is then chased again after about 7 days for the "expected later" and "not returned by driver" reasons.
+
+## Find & fix
+
+Search by order number, client reference, plate, driver name or invoice number (at least 2 characters). Results cover orders, trucks, trailers, drivers and invoices, and also a plate a vehicle no longer carries. Opening an order takes you to its **Correction workspace**.
+
+## The Correction workspace
+
+The workspace shows an order's legs, stops, history and its **Artefacts**, each marked as **locked** (issued, sealed or filed) or still correctable:
+
+- A signed or sealed **eCMR** is never changed.
+- An issued **invoice** is never changed; structural fixes use a credit note and re-issue.
+- An **ANAF e-Transport** declaration already filed is not re-filed; a plate change is handled by a vehicle-change message.
+
+From the workspace a key user can:
+
+| Correction | Notes |
+|---|---|
+| **Correct assignment** (truck, trailer, driver) and **Correct times** | Also available directly in the order pane for people allowed to correct. |
+| **Correct leg** | Fix the truck, trailer or driver of one leg without touching the other legs. |
+| **Trip surgery** on a delivered trip | Insert or remove a relay, add a stop, void a stop, re-order stops, reopen a leg, or add a repositioning run. Nothing issued is rewritten and a stop on a signed eCMR can never be voided. |
+| **Correct field**, **correct status**, **recompute** | Generic fixes with a reason. |
+| **Resolve an eCMR exception** | Acknowledge a refusal or stuck item (for example resolved offline, paper CMR used). It never alters signatures or a sealed document. |
+| Override a **dispatch confirmation**, **exception block** or **credit stop** | Shown only when relevant. |
+
+Every correction form asks for a **reason** (at least 10 characters) and a reason code, shows high-impact side effects you must acknowledge, and, on a live order, lets you choose whether to notify.
+
+## Fleet history (plates)
+
+Fuel and toll statements name the plate a vehicle carried on the day. In **Fleet history** pick a truck or trailer to see its **Plate periods**, then **Edit** a mistyped plate, **Re-register** (the plate changed on a date) or **Add older period**. Plate history starts from when the vehicle was added; add older plates by hand.
+
+## Finance
+
+**Finance** holds reversals, never rewrites: **Expenses** (reopen a decision so it can be decided again), **Payments** (reverse a wrong allocation; a payment made from a client's credit balance shows a **Credit balance** badge and uses **Reverse credit offset** instead, which restores the invoice balance and gives the credit back to the client, with no currency conversion), **Write-offs** (reverse one made in error), **e-Transport UIT** (fix a UIT the client provided; a UIT Druma filed cannot be changed) and **Credit & re-issue** (create a draft credit note and a draft replacement invoice, which you edit and send in the normal invoice flow; nothing is sent automatically). For an invoice that covers a single order, **Re-issue to** can be **Another client**, which moves the order to the **New client**, so it leaves the old client's portal and appears in the new one. It warns about a differing currency or VAT position, an already-paid or already-submitted invoice, and a client over its credit limit, and a client on credit stop cannot be chosen until the stop is lifted. Client credit status and outstanding balances are counted in EUR, invoice by invoice. Payroll is not reopened by any of these.
+
+## Ledger and reverting
+
+The **Ledger** lists every correction in one place: field and assignment corrections, credit-stop overrides, status fixes, gate overrides and trip surgery. Filter by source, person or date range. Use **Revert** on rows that allow it. A revert is refused when something changed since, or when a downstream document (such as an issued invoice) now depends on it.
+
+## For everyone else: Ask a key user
+
+If you cannot correct something yourself, click **Ask a key user** in the order pane (or inside Ask Druma). Choose **Something looks wrong**, **I am blocked** or **Something else**, describe it (at least 10 characters) and send. The request lands in the key users' Inbox. You can have up to 20 open requests.
+
+## Common questions
+
+**Who can use the hub?** Admin, Company Admin and Key User.
+
+**Can a key user change billing, integrations or roles?** No. Key User covers operational fixes only; see [User Roles](/en/admin/user-roles).
+
+**A correction was wrong. Can I undo it?** Often yes: **Ledger → Revert**. If it is refused, a later change or an issued document blocks it, and you correct forward instead.
+
+
+  
+    What a Key User can and cannot do.
+  
+  
+    Review what the AI learned from your team's corrections.
+  
+</CardGroup>
+
+---
+
+## Client emails: wording, recipients and timing
+
+
+Druma splits email control into two places, so each setting has exactly one home:
+
+- **Settings → Communication** decides the **words**: subject, headline, message and button, in each language.
+- **Settings → Rules** decides **when** an email goes out and **to whom**: the audience, extra recipients, copies and any delay.
+
+Both are for **Admin** and **Company Admin** users.
+
+> **Note:** 
+Until you change something, your clients get Druma's default email in their own language. The header, footer, button style and your brand colours always stay fixed — you edit the words, not the frame.
+
+
+## Edit the wording (Settings → Communication)
+
+
+  ### Pick an email
+    Open **Settings → Communication**. The left list groups every email: **Orders**, **Delivery and tracking**, **Invoicing and reminders**, **Quotes**, **Client portal**, **Carriers** and **Custom emails**. Each shows **Druma default** or **Customised (n)**.
+  
+  ### Choose a language
+    There is one tab per language you write emails in, plus **All other languages**. English is always on. Use **Languages you write emails in** to enable more, then **Save languages**. A client in a language you did not enable gets the **All other languages** version, or the English default.
+  
+  ### Write it
+    Edit **Subject line**, **Headline**, **Message** and **Button label**. Click a value under **Insert a value** to drop it at your cursor (order number, client name, and so on). The toolbar gives bold, italic, bulleted and numbered lists, and links. Links must start with `https://`. You can add an **Extra button label** with an **Extra button link**.
+  
+  ### Choose what to show
+    Under **Show these blocks**, tick or untick sections such as order details, truck plate, your contact card, route, estimated arrival, documents or the amount strip.
+  
+  ### Check and save
+    The **Preview** is rendered by the same code that sends the real email, with sample data. Click **Save**, then **Send me a test** to receive it at your own address only.
+  
+
+
+Other buttons: **Copy from** (copy another language's version) and **Reset to default** (discard your version).
+
+### Custom emails
+
+Under **Custom emails**, click **Add a custom email**, give it a name and a short name (lower-case letters, numbers and underscores — it cannot be changed later), and say whether it is about an order, an invoice or a client. Write the default-language version first, then turn it on. A custom email only goes out when a rule sends it.
+
+### The contact's language
+
+Each client contact has an **Email language** field (Clients → the client → contacts). The language used for an email is the contact's language, then the client's, then your company's, then English.
+
+## Decide who gets it and when (Settings → Rules)
+
+Emails are sent by a rule with a **Send email** action. You can use it in **Task Templates** and **Client Action Rules** (see [Rules](/en/automation/rules-engine)).
+
+In the Send email action:
+
+| Field | What it does |
+|---|---|
+| **Which email?** | Pick a built-in email (such as order confirmation, shipment departed, delivery confirmed) or one of your custom emails. Customised ones are marked. **Edit wording in Communication** jumps to the editor. |
+| **Who gets it?** | **Everyone who opted in to this email**, **Primary contact**, **Operations contacts**, **Invoicing contacts** or **Delivery-confirmation contacts**. |
+| **Also send to / CC / BCC** | Up to 5 extra addresses in each. Copies go on the first recipient's message. |
+| **Replies go to** | One address. Leave empty to use your planner. |
+| **Also copy the planner** | On by default. |
+| **Wait before sending** | In minutes or hours (up to one year), counted from the moment the rule fires. Delayed emails go out within a few minutes of the time. |
+| **Preview** | Shows the real email. |
+
+A step with an invalid address or delay cannot be saved. A contact who has turned off that kind of email is not mailed just because a rule named their audience; extra addresses you type are always used.
+
+Under each email in Communication you see **Sent by N rules** (or **No rule sends this email automatically yet.**) with an **Open rules** link.
+
+### Emails sent when something happens
+
+Some emails are sent the moment Druma detects something. In a rule's phase picker these appear under **When something happens**:
+
+- Arriving soon, and running late (ETA)
+- Delay reported by the driver
+- Truck assigned
+- Driver arrived, free waiting, and waiting-charge notices 1 to 3 (a waiting-charge rule also has **Show the hourly rate and the total charge**)
+
+These send immediately, so they have no wait. A rule on one of these events is both the on/off switch and the audience for that email. If no rule exists for an event, nothing is sent.
+
+### Default rules and the retired switches
+
+Order confirmation (when the order is **pending**), the dispatch notice (**departed**), delivery confirmation (**delivered**) and the truck-assigned email are ordinary default rules that Druma sets up for your company. Open **Settings → Rules** to see, edit or switch them. The old on/off switches for these emails in **Settings → Automations & Features** were removed: that page now points you to **Open Rules** and **Open Communication**.
+
+Order confirmation has one automatic path (its rule). If you resend it by hand from the order, Druma warns you when it was already sent and asks before sending again.
+
+Emails a person triggers by hand — such as asking a client to move a pickup slot or sending a tracking link — are not rules.
+
+## Common questions
+
+**I changed the wording but the client still got the old one.** Wording applies to emails sent after you save. Check you edited the language version the contact receives (the contact's Email language).
+
+**Where do I turn off the dispatch email?** Open **Settings → Rules** and switch off the dispatch rule.
+
+**Can I put my own link in an email?** Yes, `https://` links only. Operator text is shown as plain text apart from bold, italic, lists and links.
+
+**Which emails can I not reword?** Sign-in codes, security mail, invitations and mail that quotes an agent's own words are fixed.
+
+**Do carriers get customisable emails too?** Yes: transport order, cancellation, documents request and invoice dispute emails appear under **Carriers**.
+
+
+  
+    What each client and contact receives, and the unsubscribe link.
+  
+  
+    Create, test and restore rules.
+  
+</CardGroup>
+
+---
+
+## Client email preferences
+
+
+Druma sends many automatic emails to your clients (order confirmations, dispatch and delivery notices, ETA alerts and so on). You decide who receives which kind, at three levels, and your clients' own contacts can also adjust their choices.
+
+## The email categories
+
+Preferences work per **category**, not per individual email:
+
+| Category | Shown as |
+|---|---|
+| Order confirmation | **Order confirmation** |
+| Dispatch and delivery notices | **Dispatch & delivery** |
+| ETA and delay alerts | **ETA & delay alerts** |
+| Proof of delivery and signed eCMR | **Proof of delivery** |
+| Waiting-charge notices | **Waiting charges** |
+| CO2 reports | **CO2 reports** |
+| Messages from customer service | **Support updates** |
+| Emails sent by your rules | **Automated rule emails** |
+
+> **Note:** 
+Invoices, payment reminders (dunning) and security codes are **always sent**. They are routed by the contact's invoicing flags, not by these categories, and cannot be switched off here.
+
+
+## How Druma decides: most specific wins
+
+For each contact and category Druma checks, in this order:
+
+1. The **contact's own setting** (if someone set one explicitly)
+2. The **client's default**
+3. The **client rule group's default**
+4. Druma's default: **send**, except **CO2 reports**, which are only sent to contacts who opted in
+
+A contact with nothing set simply follows the level above. A new contact therefore receives the standard emails without anyone ticking boxes.
+
+If a contact (or an inherited client or group rule) turns a category off, **nobody** is mailed in its place, including the client's primary contact.
+
+If a client has no contact with a usable email address at all, the standard automatic emails fall back to the client's general email address; CO2 reports never do, and an opted-out contact is never replaced by the general address.
+
+## Set it up
+
+### For one contact
+
+Open **Clients**, open the client, edit a contact and use **Receives by email**. Each category can be switched, or set back with **Use default** (marked **Inherited**). The categories other than the first can be set after the contact is saved.
+
+### For a whole client
+
+Open the client record, **Billing** tab, and find **Email defaults for this client**. For each category choose **No rule**, **Send** or **Don't send**. Under **No rule**, the line below shows what the category falls back to (the client's group, or the account default).
+
+### For a client rule group
+
+Go to **Settings → Clients → Client Rule Groups**, open or add a group, and answer **When should clients in this group be emailed?** in the **Client emails** step. Leave a category on **No rule** to let each client, or its contacts, decide. The group summary shows how many email rules are set.
+
+## The unsubscribe link in every email
+
+Every automatic email to a known client contact carries:
+
+- a one-click unsubscribe in the email header (supported by Gmail and other mail apps), which opts that contact out of that **category**, and
+- a **Manage email preferences** link in the footer. It opens a page titled **Manage your email preferences** where the contact sees their categories, with the one the email belongs to highlighted, and saves with **Save preferences**.
+
+The link does not expire. It works for that contact only, and the page says invoices, security codes and dunning reminders are always sent.
+
+Clients can also edit their own email preferences in the client portal's settings.
+
+## Common questions
+
+**A client says they never get ETA emails.** Check the contact's **Receives by email**, then the client's **Email defaults for this client**, then the client's group. An explicit **Don't send** at any level stops it. Also check that an automatic rule exists for that email — see [Client emails: wording, recipients and timing](/en/admin/client-email-templates).
+
+**Can a contact opt out of invoices?** No. Invoices and payment reminders always send.
+
+**A contact unsubscribed by mistake.** Open the contact in Clients and set the category back with **Use default** or **Send**, or the contact can re-enable it on their **Manage your email preferences** page.
+
+
+  
+    Edit the words and set the rules that send each email.
+  
+  
+    Settings → Rules overview.
+  
+</CardGroup>
+
+---
+
+## AI corrections and learned rules
+
+
+When Druma's AI reads a document (a transport order PDF, a Smart Import file) and someone on your team fixes a value, Druma remembers the fix **for your company only** and uses it to read similar documents better next time. This page is where you see and control that memory.
+
+Go to **Settings → Compliance → AI corrections**. It is available to **Company Admin**, **Key User** and **Admin** (anyone allowed to manage settings).
+
+> **Note:** 
+Corrections are never shared with other companies. They may contain names or licence plates, so they are deleted automatically after **180 days**.
+
+
+## What gets recorded
+
+A correction is recorded when you change a value the AI extracted and save:
+
+- **Order document**: you fix a field on an order created from a document in the Add Order form.
+- **Smart Import**: you fix a cell in a category table before importing.
+- **Carrier invoice** and **supplier invoice** are listed as sources too, but only when an invoice review step records a correction.
+
+The list under **AI corrections** shows the most recent 200 corrections with **Source**, **Field**, **AI read**, **Corrected to** and **Date**.
+
+## Learned rules
+
+When the same correction is made on **three different documents** for the same sender or document type, Druma turns it into a **learned rule**. Examples: `"Roemenie" becomes "RO"`, or a value is cleared.
+
+- Rules appear under **Learned rules** in the same page, with the rule in plain words, the field, and **Learned from** (the number of documents).
+- A rule only fixes a value the AI **already read**. It does not replace the AI for a layout it has not seen, and it never invents a value.
+- Rules are created by a nightly job, so a rule shows up the day after the third correction, not instantly.
+- A rule is retired if a later correction contradicts it, and rules expire 180 days after they were learned.
+- Smart Import rules are matched by file kind (PDF, image, spreadsheet) and apply to the exact value they learned.
+
+## Delete a correction or a rule
+
+- **Delete correction** removes one row. **Delete all** removes every stored correction for the company, including those not shown in the 200-row list. Future extractions are no longer told about them. Learned rules are **not** deleted by this; remove them separately under **Learned rules**.
+- **Delete rule** stops applying that rule. It only comes back after the same correction is made on three new documents.
+
+## Common questions
+
+**Why did the AI repeat a mistake I corrected?** One correction is a hint, not a rule. A rule needs the same fix on three separate documents, and takes effect after the nightly job.
+
+**Can a rule be wrong?** A rule is value-specific. If it does not fit, delete it under **Learned rules**.
+
+**Does this change the AI for other customers?** No. Everything stays inside your company.
+
+**I want a clean slate.** Use **Delete all** for corrections and **Delete rule** for each learned rule.
+
+
+  
+    Extract data from documents, review, then import.
+  
+  
+    How long Druma keeps data.
+  
+</CardGroup>
+
+---
+
+
+# Planner Guide
+
+## Creating an Order
+
+
+## Overview
+
+Every job starts with an order. In Druma, an order holds everything in one place — the client, pickup and delivery addresses, goods details, the driver, and the agreed price. Once saved, the order flows through the system automatically, from planning all the way to invoicing.
+
+Go to **Planning → Orders → New Order** to get started.
+
+---
+
+## Scan Order — fill the order from a document
+
+If the client sent you a transport order as a PDF or Word file, don't retype it. On the **Orders** page click **Scan Order** (it can sit in the **More** menu on a narrow screen), choose a **PDF or DOCX** file, and Druma reads it and opens the New Order modal pre-filled.
+
+- **Every stop is kept**, in document order — a multi-drop order with two or more unloading points gets one stop on the **Route** tab for each, not just the first.
+- **Dates** written in European notation (for example 14.10.2026 or a written-out month) are converted to proper dates, and an address written as "91074 Herzogenaurach" or with the country on a second line is split into postcode, city and country.
+- Client, cargo and price fields are filled as far as the document states them.
+
+Always check the filled fields — especially stop addresses and dates — before saving; the scan reads what the document says and can still misread poor scans. If a file cannot be read you get **Could not extract order data from document**.
+
+---
+
+## The New Order modal at a glance
+
+The modal is organised into tabs. Here's the fastest path through it — the sections below go deeper on each field.
+
+
+  ### Open New Order
+    Go to **Planning → Orders** and click **New Order**. The modal opens on the **Client** tab.
+  
+  ### Client tab — pick or add the client
+    Search by company name or VAT number. If nothing matches, click **Add client** to create one inline without leaving the modal.
+  
+  ### Route tab — add stops
+    Click **Add loading point** and **Add offloading point** to build the stop list, and **Add internal stop** for rest, refuel, or trailer-parking waypoints. Each stop gets an address, date, and time window.
+  
+  ### Cargo tab — describe the load
+    Enter weight, pallets, volume, LDM, and trailer type. Tick **ADR (hazardous goods)** or **Reefer** if the load needs hazmat or temperature-controlled handling — the relevant extra fields appear automatically.
+  
+  ### Financial tab — set the order type and price
+    Choose **Own truck**, **Subcontracted**, or **Repositioning** as the order type, then enter the agreed price, currency, and price type. Use **Suggest price** to pull a rate-card or lane-history benchmark for the route.
+  
+  ### Extras and Documents tabs (optional)
+    Add billable extras (waiting time, ADR surcharge, etc.) on **Extras**, and attach fleet documents to share with the client on **Documents**.
+  
+  ### Save
+    Click **Save**. The order is created without a truck or driver assigned yet — assign one afterwards by dragging the order onto a truck on the [Planning Board](/en/planner/planning-board).
+  
+
+
+---
+
+## Step 1 — Choose a client
+
+Start by selecting the client this order belongs to. Type the company name or VAT number in the search box and Druma will find matching records.
+
+If the client doesn't appear, you need to add them first in **Clients** before creating the order.
+
+> **Note:** 
+The client you select here is who gets invoiced. Make sure you're picking the right entity — especially for group companies with multiple VAT numbers.
+
+
+---
+
+## Step 2 — Select the order type
+
+Choose one of three order types:
+
+- **Own Truck** — You carry the goods yourself with your own vehicle and driver. This is the most common type.
+- **Subcontracted** — You outsource the job to another carrier. You manage the order in Druma, but the actual transport is done by a third-party truck. The truck and driver fields are replaced by a **Subcontractor / Carrier** section (see Step 7).
+- **Repositioning** — A non-revenue move to get a truck where it needs to be for the next job. No client or price is attached. You select a repositioning reason code and the distance is tracked as internal dead kilometres. See [Repositioning Orders](/en/planner/repositioning) for details.
+
+> **Note:** 
+To sell spare capacity on an existing load, use the board's **Put for sale** action instead of creating a new order — see [Planning Board](/en/planner/planning-board). There is no separate "Capacity Sale" order type.
+
+
+> **Note:** 
+A fourth order type, **Shunt**, exists for moving a trailer — empty or loaded — between yards or parkings for a client, billed as its own job. It's opt-in per company (Settings → Automation → "Paid shunts (yard moves)") and only appears in the order type list once your admin turns it on.
+
+
+---
+
+## Step 3 — Pickup address
+
+Fill in where the goods will be collected:
+
+- **Address** — Start typing and Druma uses HERE Maps autocomplete to suggest addresses. Select from the list to get precise coordinates for routing.
+- **Contact person** — The name of who to ask for at the loading site.
+- **Phone number** — Contact number at the pickup location.
+- **Loading date and time** — When the driver should arrive to load.
+- **Reference number** — The client's own reference (purchase order number, CMR reference, etc.). This appears on the CMR document.
+
+---
+
+## Step 4 — Delivery address
+
+The delivery section works the same as pickup:
+
+- Full address with HERE autocomplete
+- Contact person and phone at the delivery site
+- Delivery date and time (must be after the loading date)
+- Delivery reference number (optional)
+
+> **Note:** 
+If you have multiple pickup or delivery stops, use **Add loading point**, **Add offloading point**, or **Add internal stop** (rest, refuel, trailer-parking waypoints) on the **Route** tab to insert intermediate points. Each stop has its own address, time, and reference.
+
+
+**Stop extras.** Each pickup and delivery stop on the **Route** tab has **Stop extras** toggles — **Tail lift**, **Crane** and **Mega trailer** — for equipment the vehicle must bring to that stop. They show on the order's stop card and on the driver's stop card, and assignment rules can use them to route such orders to suitably equipped vehicles (see [Order Tasks & Workflow Templates](/en/planner/order-tasks#stop-extras)).
+
+---
+
+## Step 5 — Goods details
+
+Describe what is being transported:
+
+- **Commodity** — What the goods are (e.g., "palletised food products", "steel coils", "automotive parts").
+- **Weight (kg)** — Gross weight of the cargo.
+- **Volume (m³)** — Total volume, if known.
+- **Pallet count** — Number of EUR pallets or other loading units.
+- **Pallet exchange** — shown when the pallet count is above zero and the pallet ledger is on. Choose how pallets are exchanged on this order, or leave **Client default** to use the mode set on the client. If the client's mode is **None** and you pick nothing, an amber hint reminds you to choose a mode so the pallets are tracked. See [Pallet Exchange Ledger](/en/planner/pallet-exchange#exchange-modes-and-open-obligations).
+
+> **Note:** 
+Weight, pallet count, and LDM (if entered) feed the **Load size** fill-percentage shown for this order on the Orders workbench, and whether it gets flagged as a part-load worth combining — see [Groupage](/en/planner/groupage).
+
+
+### Special flags
+
+- **ADR (Dangerous Goods)** — Tick this if the cargo is classified as dangerous under ADR regulations. Druma will automatically apply any ADR surcharge configured in your rate cards, and the order will be flagged so you know to check the driver holds the correct ADR certificate. Ticking it reveals ADR class, UN number, packing group, tunnel restriction code, proper shipping name, and an ADR notes field.
+- **Reefer (temperature controlled)** — Tick this if the load needs temperature-controlled handling. Ticking it reveals minimum and maximum temperature fields.
+
+> **Note:** 
+There is no separate oversize/abnormal-load flag at the cargo level. If a load requires an oversize permit, handle the extra cost as a surcharge/billable extra line on the **Extras** tab — the cargo tab itself only tracks ADR and reefer.
+
+
+
+---
+
+## Step 6 — Agreed price
+
+Enter the commercial terms:
+
+- **Amount** — The price agreed with the client.
+- **Currency** — EUR, RON, or any other currency configured in your account.
+- **Price type**:
+  - **Flat rate** — A fixed total price regardless of distance.
+  - **Per km** — Price calculated by multiplying the rate by the PTV-calculated route distance.
+  - **Per pallet** — Price calculated by multiplying the rate by the pallet count.
+  - **Per ton** — Price calculated by multiplying the rate by the cargo weight.
+
+> **Note:** 
+If you have lane prices set up for this client or in general (**Sales → Pricing**), Druma will suggest a price automatically based on the origin, destination, and order type. You can accept the suggestion or type your own price.
+
+
+---
+
+## Step 7 — Truck and driver assignment
+
+The New Order modal does not assign a truck or driver — an order saves without either, whatever order type you picked. Assignment happens afterwards on the [Planning Board](/en/planner/planning-board): drag the order onto a truck to assign it, or open the order there to pick a truck, primary driver, and (for double-manning on long-distance international routes) a second driver. Druma shows each truck's availability there — green for free on the loading date, orange for another order nearby, red for a conflict.
+
+**For Subcontracted orders**, the **Financial** tab shows a **Subcontractor details** section instead of truck/driver fields: a **Subcontractor / Carrier** search field to pick the carrier company, a buy-rate builder to set what you're paying them, and an internal **Arrangement notes** textarea for anything the client shouldn't see. See [Subcontractors](/en/planner/subcontractors) for how the carrier is then notified.
+
+---
+
+## Ferry crossings
+
+If the driver travels with the truck on a ferry, click **Add ferry crossing** on the **Route** tab. The **Ferry crossing** card is inserted before the last delivery; use the arrows (**Move ferry crossing up** / **Move ferry crossing down**) to place it elsewhere, or **Remove ferry crossing**. Fill in:
+
+- **Ferry operator**, **Booking number**, **Vessel**
+- **Departure port** and **Arrival port** (required), plus optional UN/LOCODEs
+- **Departure**, **Check-in cut-off** (must not be after the departure) and **Crossing time** in hours and minutes
+- **Notes for the driver**, for example the lane or what to show at check-in
+
+The driver sees these on a **FERRY CROSSING** card with a copyable booking number, and taps **Boarded** and **Off the ferry** (see [Status Updates](/en/driver/status-updates)). Druma adds the crossing time to the ETA, and the client portal shows an **On ferry** chip while the truck is on board. A missing booking number only shows a warning ("No booking number") and does not block saving. On the planning board the order shows a **Ferry** badge with the check-in time, highlighted when check-in closes within 3 hours. When you copy an order, the crossing is kept but the booking number and times are cleared so the driver never gets the old booking. A key user can also add a ferry crossing to an existing trip with **Trip surgery**. A trailer-only crossing without a driver stays a sea leg, not a ferry stop.
+
+---
+
+## Step 8 — Notes per stop
+
+Each stop on the **Route** tab has its own **Notes** field. Use it for practical instructions: gate codes, special unloading instructions, "call 30 minutes before arrival", or any client-specific requirements — the driver app shows this same field as "Instructions" on the stop once a truck and driver are assigned.
+
+> **Note:** 
+There is no separate driver-notes vs. internal-notes split. It's a single shared field per stop — anything you type here is visible to whoever plans the order and to the driver assigned to it.
+
+
+---
+
+## Saving the order
+
+> **Warning:** 
+Every order created from this modal is saved as a **Draft** — whether you click **Save draft** or **Save**, both call the same save action and the order is inserted with status **Draft**. There is no "Confirm Order" step in this modal.
+
+
+A new order always starts without a truck or driver assigned, and appears grey/unassigned on the Planning Board. Confirming the order — assigning a truck and driver, at which point the driver can see it in their app — happens afterwards, on the [Planning Board](/en/planner/planning-board) or the Orders workbench: drag the order onto a truck to assign it, or open the order there to pick a truck and driver.
+
+> **Note:** 
+If your company uses the **Dispatcher confirmation gate**, an assignment made by someone who is not a dispatcher waits as pending until a dispatcher confirms it — the driver and client are only notified then. See [Dispatching](/en/planner/dispatching#confirmations-tab).
+
+
+---
+
+## What happens next
+
+Once assigned to a truck and driver, the order follows a defined journey from dispatch to invoicing. The driver updates statuses from their app as they progress through the trip.
+
+
+  Learn about every status an order goes through, who triggers each step, and what notifications are sent.
+
+
+
+  See all your confirmed orders on the visual dispatch board, drag and drop to reassign, and spot conflicts at a glance.
+
+
+---
+
+## Order Lifecycle
+
+
+## Overview
+
+Every order in Druma follows a defined journey. Understanding the lifecycle helps you know what to expect at each stage, when to step in, and how to handle exceptions like late deliveries or forgotten status updates.
+
+> **Note:** 
+If your company uses task templates, an order can also carry a **task checklist** tied to these same lifecycle phases — see [Order Tasks & Workflow Templates](/en/planner/order-tasks).
+
+
+Here is the full flow:
+
+**Draft → Pending → Assigned → Departed → At Pickup → Loading → In Transit → At Delivery → Offloading → Delivered**
+
+There are also three exception statuses — **Part Delivered**, **Cancelled**, and **Wasted Journey** — covered near the end.
+
+---
+
+## Status colours at a glance
+
+Every status resolves to a single colour (tone) that's shared identically between the planning board and the driver app — the same status is never a different colour on two screens.
+
+| Status | Colour |
+|---|---|
+| Draft | Grey (slate) |
+| Pending | Grey (slate) |
+| Virtual | Violet |
+| Assigned | Blue |
+| Departed | Indigo |
+| At Pickup | Amber |
+| Loading | Amber |
+| In Transit | Emerald green |
+| At Delivery | Sky blue |
+| Offloading | Sky blue |
+| Delivered | Green |
+| Part Delivered | Amber |
+| Cancelled | Red |
+| Wasted Journey | Red |
+
+> **Note:** 
+**In Transit** is the truck's post-loading leg to the delivery address — it is the *only* status that renders in green before Delivered. **Departed** (the leg to the pickup address) renders in indigo, a visually distinct colour, so you can tell at a glance whether a truck is heading to load or already loaded and heading to deliver.
+
+
+---
+
+## Draft
+
+**Triggered by:** Planner saves a new order without confirming it.
+
+**Who can trigger it:** Planner only.
+
+The order exists in the system but is not yet active. The driver does not see it in their app. It appears grey on the planning board.
+
+**Actions available from Draft:**
+- Edit any field
+- Confirm the order (moves to Pending)
+- Delete the order
+- Cancel the order
+
+Use Draft when a client has made a tentative booking but hasn't confirmed yet, or when you're building the order but still waiting on details.
+
+---
+
+## Virtual
+
+**Triggered by:** Planner clicks **Virtual** on the Planning Board to create a placeholder order.
+
+**Who can trigger it:** Planner only.
+
+A Virtual order is a lightweight placeholder — pickup and delivery address, a pickup date, and optionally a price — that reserves a truck ahead of a formal booking. It's separate from the normal Draft → Pending → Assigned flow: instead, once the real booking comes in, the planner merges it into a proper order via the New Order modal, which automatically carries over the truck assignment. Virtual orders appear **violet** on the planning board so they're easy to tell apart from a real, booked order at a glance.
+
+> **Note:** 
+The reload reassignment optimizer treats Virtual orders the same as Draft or Pending ones when chaining future reloads — so a pencilled-in placeholder can still be swapped out for a cheaper real reload if one turns up.
+
+
+---
+
+## Pending
+
+**Triggered by:** Planner clicks **Confirm Order** (from the order page or planning board).
+
+**Who can trigger it:** Planner only.
+
+The order is now live and ready to be matched to a truck and driver — it just hasn't been assigned yet. It still appears **grey** on the planning board, the same tone as Draft, since no truck is committed to it yet.
+
+**Notifications sent:**
+- Optional: automatic email confirmation to the client (if enabled in your account settings)
+
+**Actions available from Pending:**
+- Edit any field
+- Assign a truck and driver (moves to Assigned)
+- Cancel the order
+
+---
+
+## Assigned
+
+**Triggered by:** Planner assigns a truck and driver to the order — from the New Order form, the Planning Board, or the order detail panel.
+
+**Who can trigger it:** Planner only.
+
+The order now has a truck and driver attached. The assigned driver receives a push notification in their app showing the job details — pickup address, delivery address, date, and the driver notes you added.
+
+The order appears **blue** on the planning board.
+
+> **Note:** 
+**Dispatcher confirmation.** With the **Dispatcher confirmation gate** on (**Settings → Automations & Features**), an assignment made by someone without dispatch authority — for example a planner or the automatic planner — is held as **pending** ("Awaiting dispatcher confirmation") until a dispatcher confirms it under **Dispatching → Confirmations** or on the planning board. Until then the driver is not notified, the client does not get the plate by email and no e-Transport declaration is sent. A declined assignment is unassigned and the order goes back to the pool. A dispatcher, company admin or admin who assigns the load themselves skips the wait. The same applies per leg when a multi-leg order changes truck. See [Dispatching](/en/planner/dispatching#confirmations-tab).
+
+
+**Actions available from Assigned:**
+- Edit most fields (changes trigger a new notification to the driver)
+- Reassign the truck or driver
+- Cancel the order
+- Move to Departed (driver action, or planner override)
+
+---
+
+## Departed
+
+**Triggered by:** Driver taps **Departed** in their app when they leave for the pickup location.
+
+**Who can trigger it:** Driver (primary action) or Planner (manual override).
+
+This status means the driver is on the move toward the pickup point. The order turns **indigo** on the planning board.
+
+> **Note:** 
+If a driver forgets to tap Departed, you can set the status manually from the order page. Open the order, click **Override Status**, and select Departed. Always note the reason in the comment box so you have a record.
+
+
+---
+
+## At Pickup
+
+**Triggered by:** Driver taps **At Pickup** when they reach the loading address.
+
+**Who can trigger it:** Driver or Planner.
+
+The driver has arrived at the loading site and is waiting to be processed. This status starts the **waiting time clock** automatically — useful for documenting any delays at the loading dock.
+
+**Notifications sent:**
+- Optional: automatic notification to the client or their contact at the loading site (configurable per client)
+
+---
+
+## Loading
+
+**Triggered by:** Driver taps **Loading** when goods are being loaded onto the truck.
+
+**Who can trigger it:** Driver or Planner.
+
+The waiting time clock stops when loading begins. Any waiting time recorded is saved to the order and can be used for surcharge calculations.
+
+---
+
+## In Transit
+
+**Triggered by:** Driver taps **In Transit** once loading is complete (and the CMR is signed, if applicable).
+
+**Who can trigger it:** Driver or Planner.
+
+The truck is now heading to the delivery address. The order turns **emerald green** on the planning board — this is the only in-progress status that renders green, so it's easy to spot a truck that's loaded and moving. The order shows an estimated arrival time based on the PTV route calculation.
+
+> **Note:** 
+This is a good point to send a proactive delay notification to the consignee if the driver is running behind schedule. Use the **Send ETA** button on the order page to send an SMS or email with the current estimated arrival.
+
+
+---
+
+## At Delivery
+
+**Triggered by:** Driver taps **At Delivery** when they reach the delivery address.
+
+**Who can trigger it:** Driver or Planner.
+
+The waiting time clock starts again at the delivery point. Any unloading delays are recorded from this moment. The order appears in a sky-blue tone.
+
+---
+
+## Offloading
+
+**Triggered by:** Driver taps **Offloading** when goods are being removed from the truck.
+
+**Who can trigger it:** Driver or Planner.
+
+Waiting time at delivery stops. The driver can now prepare the signed delivery documents.
+
+---
+
+## Delivered
+
+**Triggered by:** Driver taps **Delivered** and optionally uploads a photo of the signed CMR or delivery note.
+
+**Who can trigger it:** Driver (primary action) or Planner.
+
+The transport is complete. The order turns green on the planning board and moves to the **Completed** tab in the order list.
+
+**Notifications sent:**
+- Optional: delivery confirmation email to the client with timestamp and any uploaded documents.
+
+**Actions available from Delivered:**
+- Generate invoice for the order (the order itself stays in Delivered status — generating an invoice does not change it; the invoice is created as its own linked record)
+- Upload or view delivery documents (CMR photo, POD)
+- Add a dispute or damage note
+
+---
+
+## Part Delivered
+
+**Triggered by:** Driver records a short delivery from the Offloading screen — some, but not all, of what was planned came off the truck.
+
+**Who can trigger it:** Driver (primary action) or Planner.
+
+Delivery isn't always all-or-nothing. If a driver unloads 6 of 10 pallets — a client can't take the full load, there's no space, part of the cargo is damaged — they can record exactly what actually came off, rather than being forced to choose between marking the whole order Delivered (misrepresenting what happened) or refusing the whole thing (when most of it *was* accepted).
+
+The driver enters what was delivered against what was planned; Druma stores the shortfall — quantity and weight, per stop — as a frozen record of what remains undelivered, and notifies the planner.
+
+> **Note:** 
+**Part Delivered is deliberately not a final "done" status** the way Delivered is — it exists precisely so that OTIF reporting, automatic invoicing, and the client portal don't treat a short delivery as complete. It can also be a genuine end state, if the remainder is written off rather than redelivered — Druma doesn't force a follow-up action, it just refuses to pretend the load finished cleanly.
+
+
+**Actions available from Part Delivered:**
+- View the shortfall (planned vs. delivered quantity/weight) and the driver's reason on the order detail
+- Generate an invoice — **off by default**: a part-delivered order isn't billed until you turn on **Bill on part delivery** for your company in Settings, since whether a short delivery is billable immediately is a commercial decision. With it on, the order invoices for what was actually delivered.
+- Upload or view delivery documents, same as a full delivery
+
+---
+
+## Cancelled
+
+**Triggered by:** Planner cancels the order.
+
+**Who can trigger it:** Planner only.
+
+> **Warning:** 
+You can cancel an order that is in **Draft** or **Pending** status without any special steps. However, you **cannot** cancel an order that is Departed or later without going through a manual process. Contact your account administrator if you need to cancel an active order — this requires logging the reason and may affect driver payments.
+
+
+Cancelled orders are kept in the system for audit purposes. They are visible in the order list under the **Cancelled** filter.
+
+---
+
+## Wasted Journey
+
+**Triggered by:** Planner declares a wasted journey from the order detail panel.
+
+**Who can trigger it:** Planner only.
+
+A wasted journey applies to orders where the driver has **already departed** but the trip needs to be aborted — due to client cancellation, force majeure, or a company decision. This is different from a regular cancellation because real costs have already been incurred (fuel, driver time, dead kilometres).
+
+You can declare a wasted journey from any of these statuses: **Departed, At Pickup, Loading, In Transit, At Delivery, Offloading**.
+
+The planner must provide a reason code, the driver's current location, dead kilometres driven, and optionally flag the order for client charging.
+
+> **Warning:** 
+Declaring a wasted journey **cannot be undone**. The order moves permanently to Wasted Journey status, and the reason, driver location, dead kilometres, and (if toggled) a client charge amount are recorded directly on the order for later invoicing — no separate payroll or charge record is generated automatically.
+
+
+See [Wasted Journey](/en/planner/wasted-journey) for the full guide.
+
+---
+
+## Manual status overrides
+
+Drivers sometimes forget to tap status updates — it happens. As a planner, you can always override the status manually:
+
+
+  ### Open the order
+    Go to Planning → Orders and find the order. Click it to open the detail page.
+  
+  ### Click Override Status
+    Find the **Override Status** button near the current status indicator at the top of the page.
+  
+  ### Select the correct status
+    Choose the status the order should be at now.
+  
+  ### Add a note
+    Type a brief explanation (e.g., "Driver forgot to update — confirmed by phone"). This is saved in the order history.
+  
+  ### Save
+    Click **Apply Override**. The status updates immediately and the change is logged with your name and a timestamp.
+  
+
+
+---
+
+## Automatic vs manual transitions
+
+| Status | Automatic | Manual (driver) | Manual (planner) |
+|---|---|---|---|
+| Draft | — | — | Yes |
+| Virtual | — | — | Yes |
+| Pending | — | — | Yes |
+| Assigned | — | — | Yes |
+| Departed | — | Yes | Yes (override) |
+| At Pickup | — | Yes | Yes (override) |
+| Loading | — | Yes | Yes (override) |
+| In Transit | — | Yes | Yes (override) |
+| At Delivery | — | Yes | Yes (override) |
+| Offloading | — | Yes | Yes (override) |
+| Delivered | — | Yes | Yes (override) |
+| Part Delivered | — | Yes | — |
+| Cancelled | — | — | Yes |
+| Wasted Journey | — | — | Yes (from active statuses) |
+
+---
+
+
+  Monitor all active orders, see live driver positions, and handle alerts from your live operational dashboard.
+
+
+
+  Configurable task checklists tied to these lifecycle phases, plus how admins build the templates behind them.
+
+
+
+  Once an order is Delivered, learn how to create and send the invoice to your client.
+
+
+---
+
+## Order Tasks & Workflow Templates
+
+
+## Overview
+
+The task engine attaches a **checklist** to an order (or invoice) that tracks the steps your company requires at each stage — send a confirmation, generate a document, follow up with a client — and shows who's responsible and whether anything is overdue. Admins build the checklist once as a reusable **task template**; from then on it materialises automatically on every matching order.
+
+This page covers both sides: what a planner or dispatcher sees day-to-day, and how an admin configures the templates behind it.
+
+---
+
+## What you see on an order
+
+Open any order (or invoice) that has a matching task template, and you'll find a **task checklist** panel showing every required step for its current stage.
+
+Each row shows:
+
+- A status icon — pending (empty circle), in progress (clock), done (check), skipped, or failed
+- The responsible role, if one is set
+- **Waiting on a prior step**, if the task depends on another step that isn't done yet
+- A **Due** or **Overdue** badge when the step has a due date
+
+For open steps, you can:
+- Click the check icon to **mark it done**
+- Click the skip icon to **skip it** (optionally with a reason)
+
+Both actions are disabled while the step is blocked on a dependency. If a step is configured to complete or skip itself automatically once the order reaches a certain status, you'll simply see it flip to Done or Skipped on its own — no click needed.
+
+Order and invoice list rows also carry a small summary chip: an amber count badge while tasks are still outstanding, or a green **all done** check once every task on that record is complete. If no template matches an order's current stage, the panel simply reads *"No task checklist configured for this stage."*
+
+> **Note:** 
+Tasks are tied to **lifecycle phase** — the same statuses covered in [Order Lifecycle](/en/planner/order-lifecycle). A checklist appears (or updates) automatically whenever the order or invoice reaches a phase a template targets.
+
+
+---
+
+## How admins configure task templates
+
+Go to **Settings → Rules → Task Templates**. Templates ship empty for every company — nothing is pre-configured, so building your checklist is entirely opt-in.
+
+
+  ### Create a template
+    Click **Add template**. Choose the **object type** (Order or Invoice), the **lifecycle phase** it should trigger on (e.g. Confirmed, Delivered), and a label. Leave it enabled so it's live immediately, or save it disabled while you build it out.
+  
+  ### Optionally scope it with conditions
+    Use **Applies when** to restrict the template to matching orders only — for example, only ADR loads, only a specific client, or only cabotage moves. Leave it empty and the template applies to every order that reaches the target phase.
+  
+  ### Add steps
+    For each step, set a step key and label, then a **step type**:
+    - **Manual** — a person must mark it done or skip it themselves
+    - **Generate document**, **Send email**, or **Run automation** — pick a specific action from the curated list (e.g. Generate invoice, Send order confirmation, Generate CMR)
+  
+  ### Set completion mode
+    Choose **Manual** (someone completes it from the checklist) or **Auto** — an auto step completes or skips itself the moment the order/invoice reaches a status you configure, with no one needing to click anything.
+  
+  ### Add responsibility and ordering
+    Optionally set a **responsible role**, make the step **depend on** an earlier step (it stays blocked until that one is done), and set its position in the checklist.
+  
+  ### Save
+    The template now materialises a checklist on every order (or invoice) that matches its object type, phase, and conditions.
+  
+
+
+---
+
+## Per-client overrides
+
+Some customers need a different checklist than the rest of your book — an extra document step, or one they explicitly don't need. Rather than build a whole separate template, override it per client.
+
+Open the client's detail page and go to the **Task Overrides** tab. There you can toggle off:
+- An entire template, for that client only, or
+- Individual steps within a template
+
+The company-wide template stays untouched for every other client — the override only affects the one client record you're editing.
+
+---
+
+## Behind the scenes
+
+A scheduled job checks every few minutes for tasks that are ready to run — dependencies satisfied, due, and configured to auto-run — and dispatches them without anyone needing to open the checklist. This is purely a reliability detail; day to day, you only interact with the checklist panel on the order itself.
+
+## Client action rules
+
+A **client action rule** runs an action automatically when an order or invoice of a client group reaches a stage — hold an invoice until the POD is signed, notify a team, send an email. Rules belong to a **client rule group**: create the group under **Settings → Client Rule Groups**, then manage its rules under **Settings → Rules → Client Action Rules**.
+
+**Add a rule:** pick the group, click **Add rule**, name it, choose the object (order or invoice) and the stage it fires on, then add up to three actions under **Then** (for example send an email, notify a role with a message, or place a hold with an optional reason). Click **Save rule**.
+
+**Conditions on invoice rules.** An invoice rule no longer fires for every invoice that reaches its stage. You can add conditions on **Invoice type**, **Invoice currency**, **Invoice total**, **Amount outstanding**, **Billing country**, **Payment terms (days)**, **Days overdue**, **VAT treatment** and **Delivery channel** (Peppol, ANAF e-Factura, KSeF, email, or none — a draft that has not been sent counts as none). Examples: "hold the invoice, but only the RON ones", or "chase only EU clients over 5000 once 14 days overdue". A rule with no conditions fires for every invoice, exactly as before.
+
+**Scope a rule to a site.** In **Client Action Rules**, switch from **Client groups** to **Sites**, pick a site and add an order rule: it fires only for orders that have a stop at that site — for example "every delivery to the Constanța dock". Site rules apply to orders only (an invoice has no stops), and a site rule on the **Draft** stage does not fire because the order has no stops yet; later stages do.
+
+**Check before you switch on.**
+- Each rule shows how many clients it applies to and how many orders (or invoices) it would have fired on in the last 30 days.
+- **Test against an order** (or **Test against an invoice**) lets you pick a recent one and shows whether the rule matches and why, plus whether its client or site is within scope.
+- **Describe with AI** turns a sentence in plain language into a rule suggestion. Rules added from a suggestion are always created **turned off** — review them and enable them yourself.
+
+---
+
+## Exception rules
+
+**Exception rules** decide what Druma flags — or blocks — on an order. Find them under **Settings → Rules → Exception Rules** (admin and company admin). **Load default rules** adds the standard set (for example missing customer VAT, missing booking reference, stop not geocoded, client over credit limit). For each rule you set the severity: **Warning** only flags the order; **Blocking** prevents confirming the order or assigning it to a truck until fixed. Blocking only takes effect when **Enforce blocking exception rules** is on in **Automations & Features**; otherwise a blocking rule is marked **Advisory only**.
+
+**Custom rules.** Click **Add Rule** to describe a problem with conditions. A rule fires when its conditions **match** — you describe the problem, not the fix. For example "Client reference is empty" flags orders with no client reference. Conditions can combine any/all groups and cover the order, its stops (for example a delivery stop) and the goods. A plain-language readback shows how Druma understands the rule; **Test against an order** and a 30-day history check show what it would have caught.
+
+**Describe with AI** builds a custom rule from a sentence. It lists any part it could not build (for instance conditions on a specific truck, driver or contact are not supported), and the rule is created turned off until you enable it.
+
+Blocking is checked on the server when an order is confirmed or assigned, using the order as it is being saved — so fixing the missing field in the same save lets the confirmation through. The order pane and the order lists show the same gaps the server finds.
+
+---
+
+## Stop extras
+
+A stop can need equipment the vehicle must bring. In **Add Order → Route**, each pickup and delivery stop has **Stop extras**: **Tail lift**, **Crane** and **Mega trailer**. They show on the order's stop card and on the driver's stop card, and they are a field you can use in assignment rules: use **Stop extras** with *contains*, *is one of*, *is present* or *is empty* — for example "orders with a stop that needs a tail lift go to the group with suitably equipped vehicles" (there is a ready-made template, **Stops that need a tail lift or crane**). To express "does not need a tail lift", use *is empty* for all stops rather than "is not".
+
+---
+
+
+  
+    See every order status and what triggers the transition between them.
+  
+  
+    Leads, quotes, tenders and the client record's Sales section.
+  
+</CardGroup>
+
+---
+
+## Planning Board
+
+
+## Overview
+
+The Planning Board is your main dispatch tool. Go to **Planning → Planning Board** to open it.
+
+The board has three modes, switched with the tabs at the left of the command bar:
+
+| Mode | What it's for |
+|---|---|
+| **Now** | The primary dispatch view — two columns matching capacity against demand. Where you assign and reassign trucks. |
+| **Timeline** | A Gantt-style view of every truck's schedule, for spotting gaps and conflicts across a day, three days, or a full week. |
+| **Map** | The same unassigned loads and drivers plotted geographically. |
+
+> **Warning:** 
+The Planning Board is designed for desktop screens of 1280 pixels wide or more. On a phone or tablet, a simplified card feed replaces the two-column layout and drag-and-drop is not available.
+
+
+### The command bar
+
+Every mode shares one command bar: the mode tabs on the left, that mode's own toolbar in the middle, and — always on the right — **Focus mode**, the **Assistant**, and **Delays**. There's no separate KPI strip above it; the row/order counts you'd expect from one now live inline in each panel's own header instead.
+
+- **Focus mode** (`F`, or the ⤢ button) hides the sidebar and page header so the board's rows use the full screen. Toggle it again, or press `F`, to bring the chrome back.
+- **Assistant** opens Druma's ranked queue of proposed truck-to-load matches — see [Auto-Planning & the Assistant](/en/planner/auto-planning).
+- **Delays** opens a popover of orders currently running behind schedule.
+
+At narrower widths, labels on the toolbar controls shrink or disappear first — the icon and its tooltip always stay, so nothing becomes unreachable, just more compact.
+
+---
+
+## Now — the two-column dispatch view
+
+The **Now** tab is a split, two-column layout:
+
+- **Incoming** — what's freeing up capacity: trucks that are free right now, and trucks about to free up because their current load is delivering within the visible date range.
+- **Outgoing** — orders that still need a truck (unassigned pickups), plus orders that are already assigned, all grouped the same way as Incoming so a truck freeing up in a zone lines up visually against loads picking up in that same zone.
+
+<Frame caption="The Now view — Incoming capacity on one side, Outgoing loads on the other, with the command bar above and a Balance pane available from the toolbar.">
+  <img src="/images/planner/planning-board-split.png" alt="Planning Board Now view showing the Incoming and Outgoing columns" />
+</Frame>
+
+**Incoming shows trucks, not runs.** A truck whose current load is a groupage run appears like any other Incoming truck: the run's reference and **G** marker are not shown in the truck cell, because Incoming is about when and where the truck frees up. The run itself still appears on the Outgoing side.
+
+**ETAs stay fresh.** The ETA chips on both sides refresh on their own shortly after each ETA recalculation (every few minutes), without reloading the board or moving rows around.
+
+Assigning a truck is a drag: pick up a row on either side and drop it on the matching row on the other side.
+
+- Dragging a **truck** onto a load opens a confirmation sheet showing the truck, driver, and order details — including any cabotage, trailer, or relay-stop checks that need your input — before the assignment is committed.
+- Dragging a **delivering load** (an Incoming card that isn't free yet, just about to be) onto an Outgoing load doesn't assign a truck yet — there isn't one free to assign — it pencils in a preliminary link between the two. Repeating this builds a whole **chain** of future reloads for one truck before it's even free for the first one; see **Preplan mode** below for the full chain workflow, including the automatic optimizer that watches penciled chains for a cheaper swap. Use **Assign truck** on that row once you're ready to commit.
+
+> **Note:** 
+Dragging works in **both directions** — drag an Incoming card onto an Outgoing load, or drag an Outgoing load onto an Incoming card. Either way lands on the same row.
+
+
+### Row density and layout
+
+Click the **Density** control in the toolbar to switch between three row heights:
+
+| Density | Best for |
+|---|---|
+| **Comfortable** | Richer cards with more visual detail per truck or order — a closer look at a handful of jobs. |
+| **Compact** (default) | Dense, single-line rows, closest to a spreadsheet — fast scanning and bulk planning. |
+| **Dense** | The tightest row height, for a large 1080p screen (especially at 125–150% Windows scaling) where seeing as many rows as possible matters more than visual padding. |
+
+All three densities show the same underlying data and support the same drag-and-drop, filters, and grouping. From the same **Columns** menu you can also swap which side — Incoming or Outgoing — renders on the left, and set the app's text size (small/medium/large), which scales the whole UI rather than just this page.
+
+### Date range
+
+The board shows a rolling 7-day horizon. Use the arrows next to the date label to page a full week earlier or later, or click **Today** to jump back to the current 7-day window.
+
+### Grouping and collapsing
+
+Use the **group-by** control in the toolbar to bucket both columns by zone group, country, city, planning group, or date — Incoming and Outgoing always group on the same axis so matching capacity against demand stays visually aligned. Group headers are collapsible; collapse a section on either side and the matching section on the other side collapses too, keeping the two columns in sync. Click **Expand all** to reset every collapsed group at once.
+
+> **Note:** 
+Zone groups are your own hierarchical postcode groupings (configured in Settings), useful for lining up "which of my depots/regions has a truck freeing up" against "which region has loads to pick up" at a glance.
+
+
+### Columns
+
+Click **Columns** to choose which fields each side shows and drag to reorder them. Incoming and Outgoing keep independent column sets — a field you add or hide on one side doesn't affect the other. Core fields (Status, identity, ETA) are always shown and can't be hidden or reordered; everything else (postal/city/country breakdowns, driver name, plate, trailer, cabotage status, subcontractor, and more) is opt-in.
+
+### Saved Views
+
+The **Views** menu lets you save the current filter, grouping, and column configuration as a named view, switch between saved views, and mark one as your default — it's then applied automatically the next time you (or anyone on the same view) open the board.
+
+### Filters and search
+
+Click **Filters** to open the filters panel — status, pickup/delivery date range, zone, and load/delivery country, city, or postal code. Active filters show as removable chips under the toolbar; click **Clear all** to reset them. Each panel also has its own quick search box for filtering by order number, address, or driver name within that side.
+
+> **Note:** 
+Search also reaches inside a groupage run's own orders, and a filter lets you show or hide groupage runs entirely — see [Groupage on the Planning Board and Live Map](/en/planner/groupage).
+
+
+### The Balance pane
+
+Click the **Balance** button in the toolbar (its badge shows today's deficit-group count) to open a read-only report of where supply and demand line up — and where they don't — across every group and day in the visible horizon. It has three tabs:
+
+- **Table** — a group × day matrix. Each cell shows open supply, open demand, and the net (surplus in blue, deficit in amber/red); a Total column and an "All groups" row give the grand totals.
+- **Chart** — the same rows as a ranked horizontal bar, either for a single day or the whole horizon, worst deficit at the top.
+- **Map** — one bubble per group at its members' average location, sized by volume and coloured the same way as the Table and Chart.
+
+The Balance pane never changes anything on the board — it's a read-only supply/demand summary for planning purposes, built from exactly the rows the board itself is showing, so it can never disagree with what you're looking at.
+
+### Assign truck / Remove truck / Put for sale
+
+Every Outgoing row that has a truck (firm or penciled) shows action buttons:
+
+- **Assign truck** — commit a penciled combination as a firm assignment.
+- **Remove truck** — undo the plan and send the order back to unassigned.
+- **Put for sale** — offer the load to a subcontractor/carrier instead of running it on your own fleet. A sold load shows a **For sale** or **Sold · [carrier]** badge; if the carrier is running late, a **Late** badge appears too. You can reclaim a sold load back to your own fleet as long as it hasn't started loading.
+
+### Switching trucks and trailers mid-route
+
+Once an order is already assigned, a row's action menu also offers the ways to change what's physically carrying it without touching the order itself:
+
+- **Switch truck** — hand the load to a different tractor at a relay point, or record a relay point with the next truck still unknown (an open relay) — see [Switch Truck (Tractor Relay)](/en/planner/switch-truck).
+- **Leave trailer with the consignee** — a drop-and-hook delivery: the tractor leaves the loaded trailer for the consignee to unload on their own time and hooks a different one — see [Drop-and-Hook Delivery](/en/planner/drop-and-hook-delivery).
+
+Both are available from the same row action menu the order's status is shown in, and both write a proper record of the handover rather than a silent reassignment.
+
+### Preplan mode
+
+The **Preplan** toggle in the toolbar switches what a drag-and-drop does:
+
+- **Off** (default) — dragging firmly assigns the truck immediately (opens the confirmation sheet).
+- **On** — dragging pencils in a preliminary combination without committing anything. Penciled combinations show a **Preliminary** badge, an estimated (or, where routing data is available, real PTV-routed) ETA, and an on-time/running-late verdict — so you can sketch out a week's worth of combinations before locking any of them in. Use **Assign truck** on a penciled row when you're ready to make it firm.
+
+**Building a chain.** A pencil doesn't have to stop at one truck and one load. Drag a **delivering** Incoming card — a truck that isn't free yet but is about to be — onto an Outgoing load, and Druma pencils a link chaining the new load after the one currently in transit. Drag again onto the new tail and you can plan a whole sequence of future reloads for a single truck days before it actually frees up — a Cluj → Sibiu → Timișoara run, pencilled in on Monday for a truck that's still driving toward Cluj.
+
+Each penciled row shows an **After #{order}** chip naming the load it's chained behind, so the sequence stays readable at a glance. Under the hood, a pencil anchors to a specific truck, to the predecessor order it chains after, or both — and an anchor can only ever feed one reload at a time: dragging a new load onto an anchor that's already spoken for re-homes the anchor to the new load and un-pencils the old one, instead of double-booking the same truck across two chains.
+
+> **Note:** 
+Nothing here touches the real order until a truck is actually assigned through the normal board gate — a drag with Preplan off, or **Assign truck** on a penciled row. Until then, a chain is pure planning scratch space and can be rearranged freely.
+
+
+**The Reload Reassignment Optimizer.** Once a chain exists, Druma keeps checking it in the background. For the **tail** of every chain — the last penciled reload, the one nothing else chains after yet — it asks: is there a different, not-yet-penciled reload whose pickup sits closer to where that truck will actually free up?
+
+For example: a truck is pencilled to reload in Cluj tomorrow. A closer, unpicked reload turns up with a pickup in Sibiu instead. If swapping the Sibiu load in would genuinely cut deadhead cost — valued in € using the truck's own cost profile, not just raw kilometres — Druma surfaces a suggestion chip right on that row, something like **"Cheaper reload available: −18 km · €22."** Click **Switch to #...** and the swap applies in one step: the Sibiu load gets penciled in, the Cluj load automatically loses its pencil (the same single-use-anchor rule chains rely on above), and a toast confirms **"Reload #... penciled instead."**
+
+A few guardrails keep the suggestions trustworthy:
+
+- It only ever suggests a swap that saves **at least 15 km and at least €0** — never a swap that looks cheap only because a truck's cost profile is misconfigured to zero.
+- It's **EU 561/2006-aware** — it will never suggest a reload that would push the truck's driver over their remaining driving hours for the day.
+- Click the chip to expand it for the "why" and a real routed before/after impact, including a warning that the displaced load will become unassigned again.
+
+> **Note:** 
+The optimizer only ever proposes; nothing is applied without a click. It's also silent when there's nothing better to suggest — no chip means Druma didn't find a cheaper reload, not that it didn't check.
+
+
+**Chain safety on change.** If something upstream in a chain changes — the order is cancelled, its truck is unassigned, or its truck is switched — Druma checks whether anything is pencilled downstream of it. If nothing is, the change goes through with no fuss. If a downstream tail exists, you're prompted to choose: **Remove whole chain** (cascades the removal through every pencilled reload chained after it) or **Keep downstream orders** (severs just that one link and leaves the downstream loads as independent, still-reassignable pins).
+
+### Suggestion chips
+
+Where Druma's auto-planning has a confident recommendation for an unassigned order, a suggestion chip appears inline on that row, stating what it knows (empty km, an approximate trip cost, or a saving) — see [Auto-Planning & the Assistant](/en/planner/auto-planning) for the full scoring picture. Click it to apply the suggested truck directly, or dismiss it if it doesn't fit.
+
+### Cross-column highlighting
+
+Click any row to pin its highlight. If that row is part of a penciled or firm combination, Druma highlights the matching row(s) on the other column and scrolls them into view — so clicking a truck on Incoming shows you exactly which load(s) it's matched to on Outgoing, and vice versa.
+
+### Virtual orders
+
+Click **Virtual** to create a placeholder order that reserves a truck for an expected load that doesn't have a firm booking yet — useful when preplanning ahead of a confirmed order.
+
+---
+
+## Keyboard shortcuts
+
+With focus on the Now view (not inside a modal or a text field):
+
+| Key | Action |
+|---|---|
+| `J` / `K` | Walk the Outgoing rows down / up, in the order they're currently displayed (respects your grouping, sorting, and filters) |
+| `A` | Accept the selected row's suggestion — pencils it in under Preplan mode, or opens the confirm sheet otherwise |
+| `Esc` | Clear the current selection |
+| `F` | Toggle Focus mode |
+
+The full list, including shortcuts outside the board, is always available from the **?** overlay.
+
+---
+
+## Conflicts and blockers
+
+If a proposed assignment would create a problem — a cabotage limit, a trailer mismatch, an unresolved relay stop — Druma flags it as a blocker in the confirmation sheet rather than letting the assignment through silently. Some blockers require an explicit acknowledgement before you can continue; others are informational only.
+
+---
+
+## Viewing order details
+
+**Click** any row to open a detail panel. From there you can edit the order, change its status, or call the driver.
+
+---
+
+## Timeline view
+
+Switch to the **Timeline** tab for a Gantt-style view: each truck is a row, and its schedule is drawn as time-positioned segments — driving legs, and loading/unloading windows. Planned (not-yet-actual) segments render as a hatched pattern; actual/confirmed segments render solid. A segment with no confirmed timestamp yet is shown at reduced opacity with a dashed border to mark it as estimated.
+
+<Frame caption="Timeline view — each row is one truck; a red line marks the current time.">
+  <img src="/images/planner/planning-board-timeline.png" alt="Planning Board Timeline view showing trucks as rows with time-positioned segments" />
+</Frame>
+
+Use the date navigation controls to move through the schedule, and the **span selector** to choose how much time is visible:
+
+| Span | Best for |
+|---|---|
+| **1 day** | Detailed intra-day planning — see exact loading and unloading windows. Today's window opens two hours in the past rather than at midnight, so the morning's finished jobs don't eat half the screen by the afternoon. |
+| **3 days** | Spotting gaps and conflicts over the next 72 hours |
+| **1 week** | A coarse Gantt across the full horizon — the same bar renderer as 1-day/3-day, just zoomed out, rather than a separate summary table |
+
+Timeline shares the same Filters panel as the Now view, so a status, date, zone, or location filter carries over when you switch tabs.
+
+### Zoom, lane height, and grouping
+
+- **Zoom** — `−`/`+` buttons (or Ctrl/⌘ + mouse wheel over the grid) widen or narrow how many hours fit on screen, from half to triple the default scale. The hour under your pointer stays put as you zoom.
+- **Lane height** — a **Normal / Dense** toggle; Dense fits more truck rows on screen at the cost of a more compact label.
+- **Group and sort** — group lanes by zone, country, or planning group, and sort them free-trucks-first, by name, or by hours-left — independent of how the Now view is grouped.
+
+### Drag-to-reschedule
+
+On the 1-day and 3-day spans, drag a planned segment's body to move it to a new time, or drag its edges to resize the loading/unloading window. Dropping the change opens a confirm sheet that warns you about any lane overlap or EU 561/2006 driving-hours conflict the change would create, before you commit — an undo toast appears afterwards so a bad reschedule is one click to reverse.
+
+### Compliance badges
+
+Each truck's lane label shows small badges for anything affecting that truck right now: an expiring or expired fleet document, a cabotage warning or breach, an out-of-service window, or a pending workshop job. Hover a badge for the detail.
+
+### Candidate ghost preview
+
+When an unassigned order is focused, hovering a ranked candidate truck in the Timeline shows a ghost placement of that order directly on the truck's lane — including the estimated empty leg to reach the pickup — so you can see exactly where it would land before committing. Click the ghost to assign the order to that truck directly.
+
+---
+
+## Map view
+
+Switch to the **Map** tab for a geographic view of unassigned loads and available trucks, driven by an urgency-based colour system (see the legend on the map) so the loads and trucks that need attention soonest stand out. Orders and trucks cluster together at low zoom so a busy region doesn't turn into an unreadable pile of pins.
+
+<Frame caption="Planning Board — Map view">
+  <img src="/images/planner/planning-board-map.png" alt="Planning Board map view with clustered orders and trucks" />
+</Frame>
+
+The toolbar has its own filter bar — order search, truck search, and a truck-status toggle — plus a counter showing how many urgent orders are currently on the map. A banner appears when one or more trucks have no known GPS position and so can't be plotted.
+
+Click an order marker to open a panel of the best candidate trucks for it, ranked by empty km — each shown as a compact card with a free-from time, drive time, and at-pickup arrival strip. Click a candidate (or a truck marker directly) to open the same confirmation sheet used elsewhere on the board, including any cabotage, trailer, or relay-stop checks. The **Auto Suggest** and **Virtual** actions are available here too.
+
+---
+
+
+  How Druma's background engines propose truck-to-load matches, and how to review and apply them.
+
+
+
+  For your daily morning workflow — active orders, live truck positions, and status alerts all in one screen.
+
+
+
+  New to Druma? Start here to learn how to create your first order.
+
+
+---
+
+## Auto-Planning & the Assistant
+
+
+## Overview
+
+Auto-planning is Druma quietly doing a first pass at matching before you do. Instead of you scanning every unassigned load against every free truck, a set of background engines score the possible pairs and hand you a ranked list of proposals — you stay the one who clicks **Apply**.
+
+Everything lands in one place: the **Assistant** — a panel opened from the **Assistant** button in the Planning Board's command bar (**Planning → Planning Board**). It slides in as a full-height panel on the right so it can stay open while you work the board beside it; close it with the pill, the **✕**, or **Esc**.
+
+> **Note:** 
+Auto-planning never assigns anything by itself. Every proposal is reviewed and applied through the exact same confirmation flow as a manual drag — including any cabotage, trailer, or driving-hours check that would apply to a first-time assignment. What runs on its own is the *scoring*, never the *commit*.
+
+
+Three engines feed the same queue:
+
+| Engine | Runs | What it looks at |
+|---|---|---|
+| **Morning plan** | Automatically at 04:00 UTC, and on demand via **Re-optimize now** | Every order with no truck yet |
+| **Rescue plan** | Automatically the moment a truck fires a lateness alert (debounced to once per 10 minutes per company), and on demand | Every not-yet-departed order, including ones **already assigned** — this is the one engine that proposes taking a load off one truck and giving it to another |
+| **Proactive / reload matching** | Continuously, as trucks and orders change | Trucks about to free up, matched against loads that could reload them |
+
+You don't need to know which engine produced a given row — the queue merges all of them into one ranked list with a small source chip, so "put load X on truck Y" reads as one decision regardless of why Druma suggested it.
+
+> **Note:** 
+Auto-planning is opt-in. An admin or company admin turns it on in **Settings → Automations & Features → Planning**. If it's off, the Assistant panel still opens but shows nothing to review.
+
+
+---
+
+## How it scores
+
+Every candidate pair (this order, this truck) is scored on distance, estimated trip cost, timing, and two legal penalties — cabotage exposure and remaining driving hours (EU 561/2006). The two legal penalties are heavy enough to always sink a pair to the bottom of the ranking, but they never silently remove it from the list: a truck that's the *only* option still shows up, marked blocked, rather than vanishing with no explanation.
+
+Each row states the facts it actually has, and only those:
+
+- **{n} km empty** — the deadhead distance to reach the pickup.
+- **Trip cost ~€{n}** — an estimate; when the truck has no complete cost profile to price it with, the row says **"Add truck costs to rank by €"** instead of guessing.
+- A saving in € or km, when applying the suggestion is cheaper than the alternative it displaces.
+- **Blocked**, in red, when the pair fails a hard check (see below).
+
+Nothing is invented: a fact the engine couldn't compute (for example, cost on a truck with no rate card) simply doesn't appear as a chip, rather than rendering as "€0" or "0 km".
+
+**Ranking favours a pair that actually works.** A candidate is graded by the same blocker check the confirm sheet applies (cabotage limit, expired document, workshop hold, trailer mismatch, driving-hours conflict) *before* it's ranked — not after you click Apply. A pair that clears every check is always preferred over one that doesn't, within the set of viable options; a red pair is only ever surfaced when it's genuinely the order's only candidate. When a lower-scoring but clean candidate displaces a higher-scoring blocked one, the row says so — click through to see which truck was passed over and why.
+
+---
+
+## Rescue plan
+
+When a truck falls behind schedule and triggers a lateness alert, Druma automatically re-scores every order that hasn't departed yet — including loads that are **already assigned** to a different truck — and adds proposals to the same Assistant queue. This is the one case where auto-planning suggests moving a load off the truck it's currently on.
+
+A rescue row that would reassign an already-assigned order carries a **Will switch truck** warning, so you know before you click Apply that accepting it un-assigns the load from wherever it currently sits.
+
+You can also trigger a fresh rescue pass yourself with **Re-optimize now** in the panel, without waiting for an alert.
+
+> **Note:** 
+Trucks that are already mid-route (departed, loading, in transit, at delivery, offloading) are never proposed as a rescue candidate for a *different* order — only orders that haven't left yet are eligible to be reassigned.
+
+
+---
+
+## Applying and blockers
+
+The queue is ranked so the loads that land on time sit at the top, loads that would arrive late sit below them, and blocked pairs sit at the bottom — a load that genuinely can't be saved right now is still visible, one click away, rather than hidden.
+
+- **Apply** on a single row runs it through the normal assignment flow — the confirm sheet, with any blocker or trailer-swap check, exactly as if you'd dragged the truck yourself.
+- **Apply N clear winners** commits, in one click, only the rows that need no judgement call: nothing blocked, nothing stale, no client still to confirm, nothing arriving late, and nothing that would take a truck off another load. Everything else is deliberately left for you.
+- **Dismiss** removes a row and asks for a reason — useful for keeping the queue honest about which suggestions actually get rejected and why.
+
+**Guided triage** walks what's left of the queue one row at a time after Apply-all — a progress counter ("2 of 198"), **Back**, **Skip**, and the row's own Apply, so working through a long list doesn't mean scrolling an undifferentiated feed. A row you've seen this way is marked as reviewed, whether you acted on it or not.
+
+**Blocked** rows show in red with the reason a red check failed (cabotage limit reached, an expired document, a driving-hours conflict, and so on). Apply is disabled on a blocked row — you can still open it to see why, and either resolve the underlying issue or assign a different truck manually.
+
+**Match review** opens a batch board for a closer, side-by-side look at a set of candidates before committing — useful when several trucks could plausibly take the same load and you want to compare them rather than accept the top-ranked one outright.
+
+---
+
+
+  
+    Where the Assistant panel lives, and how manual drag-and-drop assignment works.
+  
+  
+    The cabotage rules behind one of the two hard penalties auto-planning checks for.
+  
+</CardGroup>
+
+---
+
+## Home Dashboard
+
+
+## Overview
+
+The **Home** page (`/home`) is your live operational dashboard. It is the first thing you see after logging in. Unlike the Analytics section — which runs historical reports — the Home dashboard runs real-time queries against live data throughout the working day, giving you an always-current view of what is happening right now.
+
+Every operator at your company can configure their own layout independently. The dashboard remembers your arrangement per user.
+
+<Frame caption="The Home dashboard on a normal morning — live KPI tiles above, configurable widgets below.">
+  <img src="/images/planner/home-dashboard.png" alt="Druma Home dashboard showing live KPI tiles and configurable operational widgets" />
+</Frame>
+
+---
+
+## Reading your dashboard on a normal morning
+
+Above your configurable widgets, Home always shows a fixed "cockpit" — the fastest read on what needs attention right now.
+
+
+  ### Start with the Status strip
+    At the top of Home, the **Status** strip shows click-through count chips — Unassigned, Running late, Empty legs, Today's pickups, Hours/cabotage, and Compliance expiry. Click any chip to jump straight to the filtered view (e.g. the Planning Board for unassigned orders).
+  
+  ### Review the Action Queue
+    Below the strip, the **Action Queue** lists ranked recommendation cards — for example, an unassigned order matched to a free truck — each showing the € impact of applying it. Click **Apply** to act on a suggestion in one click; every apply is reversible with **Undo**.
+  
+  ### Scan the Watch List
+    The **Watch List** surfaces items trending toward a problem before they become one — an ETA slipping, a document about to expire, an unresolved delay report. It's read-only: click any row to open the relevant page.
+  
+  ### Check your widgets
+    Below the cockpit sections, your configured KPI tiles, charts, and tables give you the numbers for the day (see below on adding and arranging them). Widgets refresh automatically — no need to reload the page.
+  
+  ### Jump out with Quick Links
+    If you've pinned any pages to your nav favourites, they appear as **Quick links** at the bottom of Home for one-click access.
+  
+
+
+---
+
+## Adding and Arranging Widgets
+
+Click **Add widget** in the top-right corner of the dashboard to open the widget gallery. There are 26 widgets in total, grouped by category:
+
+| Category | Available widgets |
+|---|---|
+| **KPIs** (8) | Open orders, In transit, Delivered today, Pending assignments, Active trucks, Overdue invoices, Revenue this month, Unassigned orders |
+| **Charts** (8) | Orders by status, Revenue trend, On-time deliveries, Fleet utilisation, Compliance status, Aged receivables, Live map, Reefer status |
+| **Tables** (10) | Unassigned orders, Today's pickups, Delayed loads, Driver hours alerts, Exceptions feed, Document expiries, Top clients, Top lanes, Activity feed, KPI insights |
+
+Select any widget from the gallery to add it to your dashboard.
+
+### Rearranging widgets
+
+Drag any widget card by its header to move it to a different position on the grid. Drop it where you want it — other widgets shift to make room.
+
+### Resizing widgets
+
+Drag the **corner handle** (bottom-right corner of the widget) to resize it. Wider widgets are useful for chart and table types; compact KPI tiles work well at their default size.
+
+All layout changes are saved automatically — there is no Save button.
+
+> **Note:** 
+The layout is saved **per user**. If you and a colleague both log into the same company, each of you has a completely independent dashboard arrangement.
+
+
+---
+
+## Role Templates
+
+If you are setting up your dashboard for the first time, or want to reset to a sensible default, click **Templates** at the top of the dashboard and choose one of seven preset layouts:
+
+| Template | Best for | What it includes |
+|---|---|---|
+| **Dispatcher** | Day-to-day dispatch operations | Open orders, Unassigned orders, In transit, Delivered today, Live map, Exceptions feed, Today's pickups, Delayed loads, Orders by status |
+| **Planner** | Scheduling and capacity planning | Open orders, Unassigned orders, Pending assignments, Active trucks, Unassigned orders (table), Today's pickups, Orders by status, Live map, Top lanes |
+| **Finance** | Invoice and revenue monitoring | Revenue this month, Overdue invoices, Delivered today, Open orders, Revenue trend, Aged receivables, Top clients, Top lanes, On-time deliveries |
+| **Fleet Manager** | Vehicle and driver management | Active trucks, In transit, Pending assignments, Delivered today, Live map, Fleet utilisation, Document expiries, Driver hours alerts, Orders by status |
+| **Full Overview** | Managers wanting a broad view | Revenue this month, Open orders, In transit, Overdue invoices, Revenue trend, Orders by status, Exceptions feed, Top lanes, Fleet utilisation |
+| **Compliance** | e-Transport, e-Factura, cabotage, and driver-hours tracking | In transit, Delivered today, Active trucks, Overdue invoices, Compliance status, Document expiries, Driver hours alerts, Activity feed, Orders by status |
+| **Customer Service** | Staying on top of deliveries, exceptions, and client activity | Open orders, In transit, Delivered today, Overdue invoices, Live map, Today's pickups, Exceptions feed, Top clients, Activity feed |
+
+> **Warning:** 
+Choosing a template **replaces your current layout** immediately. Your previous arrangement is not recoverable. If you have a custom layout you want to keep, note down which widgets you have before applying a template.
+
+
+---
+
+## Data Refresh
+
+All widgets update automatically — you do not need to refresh the page.
+
+| Widget type | Refresh frequency |
+|---|---|
+| KPI tiles (counts, revenue, %) | Every **120 seconds** |
+| Dispatch and exception-tracking widgets | Every **180 seconds** — slower than the KPI tiles, since these queries are heavier |
+| Live map | Every **60 seconds** |
+
+Data always comes from live tables, not nightly aggregates. The figures you see on the Home dashboard and the figures on the Planning Board are drawn from the same live source.
+
+---
+
+
+  
+    Assign and reassign orders across your fleet on a visual dispatch board.
+  
+  
+    Historical analytics and scheduled reports — the complement to the live dashboard.
+  
+</CardGroup>
+
+---
+
+## Today View
+
+
+## What replaced the Today View?
+
+Druma does not have a fixed-layout "Today View" dashboard. Instead, every operator gets the **Home Dashboard** (`/home`) — a fully customisable live operational view that you build yourself from a widget gallery, rather than a fixed set of panels everyone sees the same way.
+
+Above your own widgets, Home always shows a fixed "cockpit": a **Status strip** (click-through count chips for unassigned orders, running-late loads, empty legs, today's pickups, and document expiry), an **Action Queue** of ranked recommendations you can apply or undo in one click, and a **Watch List** of items trending toward a problem. Below that, you add whichever KPI tiles, charts, and tables matter to your role — there's no guaranteed "Active Orders" list or live map unless you add those widgets yourself.
+
+Go to **Home** in the navigation (or `/home`) to open it.
+
+
+  The full guide — the fixed cockpit, the widget gallery, role templates, and how often each widget refreshes.
+
+
+---
+
+## Where did the old Today View concepts go?
+
+- **Active orders / live map** — add the relevant widgets from the Home widget gallery, or use the [Planning Board](/en/planner/planning-board) for a full dispatch view of every order and truck.
+- **Status alerts (overdue, waiting time, late departure, document expiry)** — surfaced today in the Home dashboard's **Watch List** and **Status strip**, not in a separate alerts panel.
+- **Waiting time surcharges** — still tracked the same way; see [Waiting Time](/en/planner/waiting-time).
+
+
+  Assign and reassign orders across your fleet on a visual dispatch board.
+
+
+---
+
+## Dispatching
+
+
+## Overview
+
+The Dispatching module is the real-time operations centre. It brings together a ranked, worst-first view of every truck's health, the live map, pending assignment confirmations, a driver compliance summary, and driver chat into one place — so dispatchers can monitor everything in motion without switching between tabs.
+
+**How to access:** Click **Dispatching** in the left navigation menu. The module opens to the **Fleet Health** tab by default.
+
+<Frame caption="Dispatching — the Live Map tab, showing real-time truck positions with severity-coloured markers.">
+  <img src="/images/planner/dispatching.png" alt="Dispatching module with live truck map" />
+</Frame>
+
+---
+
+## Your first five minutes in Dispatching
+
+
+  ### Open Dispatching
+    Click **Dispatching** in the left navigation. It opens directly on the **Fleet Health** tab.
+  
+  ### Scan the severity bar
+    The **Critical / Warning / Unknown / Watch / OK** chips at the top show how many trucks fall in each bucket. Click a chip to filter the list down to just that severity.
+  
+  ### Check the KPI row
+    **On-Time %**, **Active Trucks**, **Delayed**, and **Completed Today** give you the headline numbers at a glance.
+  
+  ### Work the ranked list
+    Every active truck is listed worst-severity-first, so whatever needs attention most is already at the top — no separate "Needs Attention" panel to check.
+  
+  ### Open a truck for detail
+    Click any row to open the truck detail rail — every triggered signal (driver-reported delay, stale GPS, hours pressure, expiring documents, and more), plus one-tap call, chat, and open-order actions where they apply.
+  
+  ### Switch to Live Map for a spatial view
+    Use the **Live Map** tab (see below) when you need to see truck positions and routes on a map rather than a ranked list.
+  
+
+
+---
+
+## Fleet Health Tab
+
+Fleet Health is the default view — one ranked list of every active truck, worst severity first, replacing the old separate Dashboard and Trucks tabs. It's built for triage: whatever needs a dispatcher's attention most is already at the top of the list, with a single detail rail instead of hopping between an order panel, a trucks table, and a "Needs Attention" dropdown.
+
+**Toolbar:** a search box (plate, truck name, driver, order number), a dispatcher filter, a zone filter, and a grouping control (no grouping / by severity / by zone).
+
+### Severity bar
+
+Five chips — **Critical, Warning, Unknown, Watch, OK** — each showing a live count. Click a chip to filter the list to that severity; click it again to clear the filter.
+
+### KPI row
+
+| KPI | What it shows |
+|---|---|
+| **On-Time %** | Share of active trucks that aren't currently flagged as delayed |
+| **Active Trucks** | Distinct trucks currently on an active load |
+| **Delayed** | Active trucks whose ETA has slipped or that have a driver-reported delay |
+| **Completed Today** | Loads marked delivered today |
+
+### The ranked list
+
+Each row shows the truck, driver, current activity, and a severity badge with the driving reason (e.g. stale GPS, hours pressure, an expired document). Rows are sorted worst-first: Critical trucks at the top, then Warning, then the rest — ties are broken by how urgent the underlying signal is, including how soon a driver's return-home window is due. Click **Columns** or the grouping control to view the list grouped by zone or by severity band instead of one flat list.
+
+### Truck detail rail
+
+Clicking a row opens a slide-over rail with every signal currently triggered for that truck, each with the one-tap action that makes sense for it — call the driver, open the chat thread, open the current order, or jump to Gaps to find that truck a load. Signals you've already seen and don't need reminding of again (e.g. "idle, no next load") can be dismissed individually.
+
+---
+
+## Live Map Tab
+
+The Live Map is a dedicated full-screen map view for fleet-wide visibility. It includes:
+
+- **All active trucks** — GPS markers auto-refresh when drivers update statuses, coloured by the same severity system as the Fleet Health list (critical/warning/watch trucks stand out at a glance) and clustered together at low zoom so a busy region doesn't turn into an unreadable pile of pins.
+- **The selected truck's whole route chain** — click a truck and its pane opens with the route of its **active order and its next assigned orders**, drawn as one chain on the map. Every stop gets a numbered pin (green for loading, red for offloading, grey for other stops), and the line turns amber for trucks in warning or critical state. The drive between one order and the next is drawn dashed as a repositioning estimate.
+- **Route status line** — the pane tells you what you are looking at: **Stored road route**, **Part stored road route, part straight-line estimate**, **No stored route — straight-line estimate shown**, or **No active order — nothing to route**. It also lists **Orders on this route**. An order without a stored road route is drawn as a dashed straight line instead of nothing.
+- **Camera** — selecting a truck moves the map only if its route is off-screen. **Fit route** always fits the whole chain plus the truck's position. Closing the pane clears the route.
+- **Parking layer toggle** — enables the truck parking map overlay (see [Truck Parking Map](/en/tools/parking-map))
+
+Routes shown here are the ones already stored on the orders; opening the map never triggers a new routing calculation.
+
+> **Note:** 
+The Live Map tab is identical to the full-screen map available from **Tools → Live Map** — it is the same component exposed in two places for convenience.
+
+
+---
+
+## Confirmations Tab
+
+When the **Dispatcher confirmation gate** is on (**Settings → Automations & Features**, on by default), a new truck or driver assignment made by someone without dispatch authority (for example a planner, or the automatic planner) waits as **pending** until a dispatcher or company admin confirms it. Until then the driver gets no push, the client gets no email with the plate, and no e-Transport declaration is sent. A dispatcher, company admin or admin who assigns a load themselves skips the wait. With the gate off, every assignment is confirmed automatically.
+
+**Dispatching → Confirmations** is where you handle pending assignments without opening the planning board.
+
+- **Scope** — it opens on **My trucks** (the trucks where you are the dispatcher). Switch to **All** to see every truck. If you have no trucks of your own it shows every truck.
+- **To confirm** — every pending assignment in scope, oldest first, with the truck and driver, order number and client, and the loading and unloading windows. Tap **Confirm** or **Decline**. When you decline, you give a reason, and the load goes back to the pool. On a phone the section is called **To confirm** and shows a card per assignment with large buttons; when nothing is left it reads **All assignments confirmed.**
+- **Confirm all pending** — confirms every pending assignment of one truck in one go.
+- **Timeline (desktop)** — a read-only view of each truck's lane with an hour axis. Pending blocks are ringed amber and labelled **Awaiting**, and carry their own Confirm and Decline buttons.
+- **Planned per truck (phone)** — one section per truck listing its jobs in time order; the truck with the oldest pending job opens first.
+- **Dispatch details** — click any job to open a side pane with the assigned truck, driver, trailer, stops and cargo. It deliberately shows no prices or margins, so every dispatcher can open it; **Open full order** is shown only to roles that may edit orders.
+
+The **Dispatching** item in the sidebar and the phone bottom bar show a badge with the number of pending confirmations on your trucks.
+
+### Get notified
+
+As soon as an assignment lands as pending, Druma notifies the truck's own dispatcher (or every active dispatcher if the truck has none) with a push and a bell notification, **Dispatch confirmation needed**. Several legs on the same truck collapse into one growing notification rather than one per leg. Opening it takes you straight to **Confirmations** for that truck. If someone declines an assignment, the person who made it is notified (everyone is, if that person is not known).
+
+### Relay and split legs
+
+The same gate applies to every truck change on a multi-leg order. Each leg that gets a different truck needs its own confirmation: in the order pane's **Legs** section, each leg shows its status with **Confirm dispatch** and **Decline**; the planning board's trip view does the same per leg. Confirming a leg notifies that leg's driver. A leg that has already started cannot be declined.
+
+---
+
+## Compliance Tab
+
+The Compliance tab (formerly labelled "Driver Hours") provides a driving-hours and cabotage summary per driver, sorted worst-risk-first so the drivers closest to a limit surface at the top.
+
+Each row shows:
+- **Status** — colour-coded compliance status (with the reason: daily, weekly, or fortnightly limit) plus **Source** (which system the data came from) and current **Activity**
+- **Program** — the driver's applicable daily working-time ceiling (13h/15h/21h) and when today's shift spread started
+- **Working Left**, **Remaining Daily**, **Remaining Weekly**, **Remaining Fortnightly** — time still available under each EU 561/2006 limit, each tone-graded (normal / amber / red) as the driver gets closer to the ceiling
+- **WTD This Week** and **WTD 17-wk Avg** — working time directive tracking against the 60h weekly / 48h averaged limits
+- **Cabotage** — that driver's worst current cabotage status across their truck's recent international operations (OK, near limit, cooldown, or exceeded)
+- **Return-home** — how close the driver is to (or overdue for) their mandatory return-home window, with days remaining
+
+Click any driver row to open an edit form for that driver's manually-entered hours — not a day-by-day breakdown.
+
+> **Note:** 
+Hours shown here are based on order activity and planner-entered tachograph data — not a live tachograph feed. For legal tachograph compliance, use your dedicated tachograph analysis system.
+
+
+---
+
+## Driver Chat Tab
+
+The Driver Chat tab is a real-time messaging interface between dispatchers and drivers. Each driver conversation is threaded separately.
+
+### For dispatchers
+
+- All driver conversations are listed on the left panel
+- Unread messages show a badge count
+- Click a driver to open the thread and type a message
+- Messages are delivered instantly to the driver's app
+- Files and photos can be attached to messages (PDF, JPG, PNG — max 5 MB per file)
+
+### For drivers (in the mobile app)
+
+- Drivers see a **Chat** tab in the bottom navigation of the driver app
+- New messages from dispatch show a push notification
+- Drivers can attach photos — useful for damage photos, POD confirmation before formal upload, etc.
+
+> **Note:** 
+Chat messages are stored and visible on the order record if the conversation was initiated from an order context. There is no automatic expiry — direct messages are kept indefinitely in the chat log.
+
+
+---
+
+
+  
+    Manage your daily load plan and assign trucks and drivers to orders.
+  
+  
+    Full reference guide to EU Regulation 561/2006 driving time rules.
+  
+  
+    Find safe truck parking along your drivers' routes directly from the Live Map.
+  
+  
+    How Druma tracks and alerts you when drivers are waiting beyond the free period.
+  
+</CardGroup>
+
+---
+
+## Messages
+
+
+## Overview
+
+**Messages** is a single global hub for every conversation you have inside Druma — colleagues and drivers alike. It replaced two separate chat icons that used to live in the header: one is now gone, and everything lives behind the one **Messages** button instead.
+
+**How to access:** Click the **Messages** icon in the top-right of the page header (it shows your total unread count as a badge). Messages is available to every operator role — admin, company_admin, planner, dispatcher, fleet_manager, and customer_service.
+
+Messages opens as a drawer with two tabs: **Internal** and **Drivers**.
+
+<Frame caption="Driver Chat — attachments capped at 5 MB per file.">
+  <img src="/images/planner/messages.png" alt="Messages hub Driver Chat tab" />
+</Frame>
+
+> **Note:** 
+Don't confuse Messages with [AI Chat Escalations](/en/tools/chat-escalations). Messages is person-to-person chat you use every day. Chat Escalations is a separate, narrower feature — it's the admin/company_admin-only **Live Sessions** queue that Ask Druma escalates to when its AI assistant can't resolve a conversation on its own.
+
+
+---
+
+## Internal tab — chat with your team
+
+The **Internal** tab is 1:1 and group direct messaging between your colleagues — planners, dispatchers, fleet managers, customer service, anyone in your company.
+
+
+  ### Open Messages
+    Click the **Messages** icon in the header. It opens on the **Internal** tab by default.
+  
+  ### Start a conversation
+    Click the **+** button above the conversation list. Search for a colleague by name and click them to open (or create) a 1:1 conversation.
+  
+  ### Or start a group
+    In the same picker, toggle **New group**, select multiple colleagues, optionally give the group a name, then click **Create group**.
+  
+  ### Check who's online
+    Colleagues currently online show a green dot on their avatar in the conversation list — updated live, no refresh needed.
+  
+  ### Send a message
+    Type in the composer at the bottom and press Enter to send. You can also attach files or photos.
+  
+
+
+### Presence
+
+Every avatar in the Internal tab's conversation list carries a live online/offline indicator — a small green dot in the bottom corner when that colleague is currently active in Druma. There's no manual "away" status; it reflects whether they have the app open.
+
+### Sharing the view you're looking at
+
+If you want a colleague to see exactly what you're looking at — a filtered board, a report, a specific page — you don't have to explain it in words.
+
+1. Open (or start) a conversation with them in the **Internal** tab.
+2. Click the **Share this view** button in the message composer (next to the attachment icon).
+3. Druma captures your current page as a short label (e.g. "Board" or "Board (filtered)" if you have filters applied) and attaches it to your next message.
+4. Add an optional note and click send.
+
+The recipient sees a **Shared view** card in the conversation with an **Open view** link — clicking it jumps them straight to that exact page, filters and all.
+
+### Managing a group
+
+Open a group conversation and use **Manage members** to add or remove people, or to leave the group yourself.
+
+---
+
+## Drivers tab — driver chat
+
+The **Drivers** tab is real-time chat with your drivers — the same driver chat that also appears standalone under **Dispatching → Driver Chat**. It's the same underlying feature exposed in two places for convenience: use whichever one is closer to your workflow at the time.
+
+- Every driver conversation is threaded separately, with unread badges.
+- Click a driver to open the thread and type a message — delivered instantly to their app.
+- Files and photos can be attached (PDF, JPG, PNG — max 5 MB per file).
+- Drivers see a **Chat** tab in their mobile app and get a push notification for new messages.
+- Dispatchers can chat with drivers from the phone too: in the Druma mobile app's Dispatcher mode, the **Chat** tab shows an unread badge, and opening a truck on the **Fleet** tab has a **Chat** shortcut straight to that driver. See [The Druma Mobile App](/en/driver/mobile-app).
+
+See [Dispatching](/en/planner/dispatching#driver-chat-tab) for the full driver-chat reference.
+
+---
+
+
+  
+    The real-time operations centre — live map, active orders, and the same Driver Chat tab.
+  
+  
+    A different, narrower feature — how unresolved Ask Druma conversations reach your Live Sessions queue.
+  
+</CardGroup>
+
+---
+
+## Fleet Management
+
+
+## Overview
+
+Your fleet is the foundation of everything in Druma. Before you can assign trucks to orders, you need to add each vehicle to the system with its details. This takes a few minutes per truck and you only need to do it once.
+
+Go to **Fleet → Trucks** to manage your vehicles.
+
+<Frame caption="Fleet → Trucks — the vehicle list, with plate, Euro class, and trailer type at a glance.">
+  <img src="/images/planner/fleet-management.png" alt="Fleet Trucks page listing vehicles" />
+</Frame>
+
+---
+
+## Adding a new vehicle
+
+Click **Add Truck** in the top-right corner of the Fleet page to open the vehicle form. The form is organised into tabs — fill in whichever tabs are relevant and click **Save** at any point; only **Name** and **Plate** are required.
+
+<Tabs>
+  <Tab title="General">
+    - **Name** and **Plate** (required) — type the plate exactly as it appears on the vehicle's documents. This is how you search for and identify the truck throughout Druma.
+    - **Brand / Model / Year / VIN**, **Ownership** (Own / Leased / Rented), and **Status**.
+    - **Euro Class** — **Euro 1** through **Euro 6**, plus **Euro 6d** and **EEV**. Used in CO2 emission reporting and may affect routing through low-emission zones. Check the vehicle's registration document if you're unsure.
+    - **Fuel Type** and **CO₂ Emission Class**.
+    - **Vehicle Category** — there's no free-choice "vehicle type" field; instead this is an EU type-approval classification. Leave it unset for a standard **HGV** (the default), or choose **N1 — LCV ≤3.5t**, **N2 — LCV 3.5–12t**, or **N3 — HGV >12t** if you need LCV-specific driving-hours or compliance handling.
+    - **Tachograph** (Fitted / Exempt), **Tacho Generation**, and **International carriage** toggle.
+    - An **Assignment** section further down: **Primary Driver**, **Second Driver**, **Assigned Planner**, **Assigned Dispatcher**, and **Linked Trailer** — see [Trailer Management](/en/planner/trailer-management) for how the Linked Trailer dropdown attaches a trailer to this truck.
+    - An **Operations** section: **Start Address**, **Available From**, **Notes**, and an **Exclude from auto-assignment** toggle.
+  </Tab>
+  <Tab title="Specs">
+    - **Trailer Type** — select from your company's configured trailer types (by default: Tautliner, Mega, Box, Reefer, Flatbed, Tanker, Lowboy, Curtainside, Container chassis, Silo, Lowloader — company-configurable).
+    - **Max Weight kg**, **Max Payload kg**, **Max Pallets**, **Max Volume m³**, **Height cm** — used by PTV truck routing to avoid low bridges and respect payload limits.
+    - **GVW kg** — gross vehicle weight, used by PTV truck routing for weight-restricted roads.
+    - **Axle Count** — used for routing through roads with axle restrictions.
+    - A **Compatibility** group for catalogue-level restriction: **Vehicle Category (catalogue)**, free-text **Body Type**, **Axle Configuration**, and **Roof Type**.
+  </Tab>
+  <Tab title="Costs">
+    What this truck costs to run — see [Cost Rates](#cost-rates-rate-cards-and-overrides) below for the full Rate Card / Cost Basis model.
+  </Tab>
+  <Tab title="Compliance">
+    ADR certificate expiry, insurance, MOT/roadworthiness, and tachograph calibration expiry dates. If this vehicle is certified to carry dangerous goods, set the **ADR Cert Expiry** date here — Druma will alert you before it expires so you have time to renew.
+  </Tab>
+  <Tab title="Telematics">
+    Maps this truck to a vehicle ID from a connected GPS/telematics provider, once one is configured in `Settings → Integrations`.
+  </Tab>
+  <Tab title="Notes">
+    Free-text internal notes about the vehicle.
+  </Tab>
+  <Tab title="Comments">
+    A threaded comment log for the vehicle, visible to your team.
+  </Tab>
+</Tabs>
+
+### Cost Rates — Rate Cards and overrides
+
+The Costs tab doesn't take a flat daily figure by default — it assigns a **Rate Card** (the same cost profile used for pricing and profitability elsewhere in Druma):
+
+- **Rate Card** — pick one of your company's configured rate cards (Own Fleet or Subcontracted), or leave it as **— Company default —**.
+- **Cost Basis** — a toggle between **Daily rate** and **Weekly rent**, defaulting to whatever the assigned rate card uses. This governs whether the truck's fixed cost is split per day or per ISO week across its trips.
+- **Daily Fixed Cost €** (or **Weekly Fixed Cost €** if the basis is set to weekly) and **Fuel Consumption L/100km** — both are pre-filled from the assigned rate card. Type a different value to override it for this truck only; an amber outline and a **Reset to rate card** link appear once a field is overridden.
+
+This figure — whether inherited from the rate card or overridden per truck — is what this truck costs to run regardless of whether it moves: insurance, depreciation, finance payments, tax, and so on. It feeds the profitability reports to show you whether each order is actually making money after fixed costs.
+
+---
+
+## Active and inactive vehicles
+
+Each vehicle has an **Active / Inactive** toggle at the top of its profile page.
+
+- **Active** — The vehicle appears in assignment dropdowns and on the planning board.
+- **Inactive** — The vehicle is hidden from dispatch workflows. Use this for trucks you have sold, permanently retired, or seasonally parked.
+
+> **Note:** 
+Deactivating a vehicle does not delete its order history. All past orders remain linked to the vehicle and appear in reports. You can reactivate it at any time.
+
+
+---
+
+## When a vehicle is temporarily unavailable
+
+Druma doesn't have a manual "mark this truck unavailable for a date range" form. Instead, unavailability periods are created automatically from the safety-critical side of fleet operations: a driver's post-trip inspection (DVIR) that flags a defect opens a workshop work order, and an open work order blocks that truck from planning until it's resolved.
+
+> **Note:** 
+If you need a truck out of service for a reason that doesn't go through a DVIR/workshop defect (e.g. a planned service you're scheduling manually), the closest equivalent today is to switch it to **Inactive** for the period and reactivate it afterwards — see below.
+
+
+---
+
+## Viewing a vehicle's history and current status
+
+Click any vehicle in the list to open its full profile. From here you can see:
+
+- **Current assignment** — Which order the truck is currently on, if any.
+- **Order history** — A full list of all completed and active orders for this vehicle, filterable by date.
+- **Document expiry status** — A summary of all linked documents and their expiry dates (see Fleet Documents for details).
+- **Unavailability periods** — Past and upcoming blocks created by workshop work orders (see above).
+
+---
+
+## Bulk importing vehicles
+
+If you are setting up Druma for the first time and have a large fleet, you can import all vehicles at once using an Excel file instead of adding them one by one.
+
+
+  ### Download the import template
+    Go to **Fleet → Trucks → Import** and click **Download Template**. This gives you an Excel (.xlsx) file with all the correct column headers: Plate (required), Name, Brand, Model, Year, Euro class, Fuel type, and Trailer type.
+  
+  ### Fill in the template
+    Open it in Excel or Google Sheets. Add one vehicle per row — only **Plate** is required, everything else is optional.
+  
+  ### Upload the file
+    Back in Druma, upload your completed file. Druma will validate each row and show you any errors before importing.
+  
+  ### Review and confirm
+    Check the preview of the vehicles to be imported. If everything looks correct, click **Import**. Vehicles are added immediately.
+  
+
+
+> **Warning:** 
+The import process does not update existing vehicles — it only creates new ones. If you upload a file with a plate number that already exists in Druma, that row will be skipped with an error.
+
+
+---
+
+## Repositioning a truck
+
+The Fleet → Trucks toolbar also has a **Reposition** action, next to **Bulk Import** and **Add Truck**. Use it to move an empty truck to a new location — pre-positioning ahead of a load, an empty return leg, or a fleet relocation — without an actual client order. It creates a repositioning order with an origin (auto-resolved from the truck's last delivery), a destination you pick or type, and an optional reason.
+
+If the truck is currently carrying a linked trailer, the Reposition modal also lets you **Drop Trailer** as part of the move — see [Detaching a trailer via Reposition](/en/planner/trailer-management#detaching-a-trailer-via-reposition-trailer-still-loaded) for what happens to the trailer and any load still on it.
+
+---
+
+## Driver roster
+
+**Fleet → Roster** is where you plan which driver is on which truck, day by day. It replaces the spreadsheet calendar many operators keep: one row per driver, one column per day, and each cell holds either a truck or a code such as vacation, sick leave, weekly rest at base or standby.
+
+- **Fast entry.** Drag over a block of cells, type a truck number (for example `197`) or a code (for example `UW`) and press Enter. Add `a` or `p` for a morning or afternoon half day. You can also pick a code or truck in the palette and paint cells, copy and paste, fill right, undo, or apply a repeating rotation (for example three weeks on a truck, one week at home).
+- **Two views.** *Drivers* shows each driver's plan. *Trucks* shows who drives each truck, the truck's history, and the days it has no driver.
+- **Blockers.** Days a truck is in the workshop **or has a workshop job planned**, has an open safety-critical defect or an expired mandatory document are greyed out and cannot be given a driver. A job that covers only the morning or only the afternoon blocks just that half of the day. An admin can override with a reason. Conflict badges flag things like a driver's expired documents or a missing weekly rest. Planning a workshop job over a rostered stretch shows you the affected drivers first and can move them to a free truck for you (see [Workshop & Maintenance](/en/fleet-compliance/workshop-maintenance)).
+- **Orders follow the roster.** Orders not yet started take the driver rostered for their dates. When the driver of a truck changes in the middle of an order, Druma adds a handover stop at the outgoing driver's base and splits the order into two legs, one per driver. Past days never change orders. Orders with an issued eCMR are flagged for the planner instead of being split.
+- **Several bases.** In Settings → Driver Roster you can link a truck or a driver to several bases (depots) and mark one as the default with the star; handovers use the outgoing driver's default base, then the truck's, then the company default. The truck picker in the roster palette has a Base filter that shows only the trucks linked to the bases you choose, and remembers your choice.
+- **Counters.** The Counts tab shows, per driver and month, how many days fell under each code group, and exports them as CSV. The roster does not calculate pay.
+- **Settings → Driver Roster** holds your own code list (each code is a working day, available, or unavailable), the list of handover bases, and the default base per driver and per truck.
+
+Drivers see their own roster, read-only, under **Profile → My roster** in the driver app. When their truck is booked into the workshop, the affected days show *Truck in workshop until …* and the driver gets a notification.
+
+---
+
+## Fleet Map tab
+
+Inside the Trucks list, there is a **Map** tab at the top of the page. Click it to switch from the list view to a live map showing all vehicles with GPS positions.
+
+Every truck renders as the same graphite marker with its plate number — there's no colour coding by status. Trailers get their own darker-grey marker, and nearby vehicles cluster into a single numbered marker until you zoom in.
+
+Click any marker to open the vehicle detail panel. See [Truck Parking Map](/en/tools/parking-map) for full details on the map view, layers, and finding safe parking along a route.
+
+---
+
+
+  
+    Manage trailers that are not permanently attached to a single tractor.
+  
+  
+    Track insurance, roadworthiness certificates, and other vehicle documents with automatic expiry alerts.
+  
+  
+    Track tyre condition, tread depth, and replacement costs per vehicle.
+  
+  
+    Log accidents, damage events, and insurance claims for your fleet.
+  
+  
+    Driver vehicle inspection reports and how safety-critical defects trigger workshop work orders.
+  
+  
+    Step-by-step guide to importing vehicles and drivers from a spreadsheet when you first set up Druma.
+  
+</CardGroup>
+
+---
+
+## Trailer Management
+
+
+## Do you need independent trailer management?
+
+Before diving in, it's worth checking whether this feature applies to your operation.
+
+**You need independent trailer management if:** Your tractors regularly swap trailers — for example, a driver drops a loaded trailer at a hub and picks up a different one, or trailers move between tractors depending on the job.
+
+**You probably don't need it if:** Each of your trucks always uses the same trailer and they are never separated. In that case, just set the trailer type on the vehicle record and you're done. See [Fleet Management](/en/planner/fleet-management) for how to do that.
+
+If you do run a swap-trailer or multi-trailer operation, read on.
+
+<Frame caption="Fleet → Trailers — 11 seeded types, fully company-configurable.">
+  <img src="/images/planner/trailer-management.png" alt="Trailer Management page" />
+</Frame>
+
+---
+
+## Adding a trailer
+
+Go to **Fleet → Trailers** and click **Add Trailer**.
+
+
+Fill in the trailer details:
+
+- **Plate number or ID** — The trailer's registration plate. If your trailer doesn't have a plate (some internal trailers don't), use your own internal ID code.
+- **Trailer type** — Choose the type that matches the trailer body. Druma seeds 11 default types for every company:
+  - Tautliner
+  - Mega
+  - Box
+  - Reefer
+  - Flatbed
+  - Tanker
+  - Lowboy
+  - Curtainside
+  - Container chassis
+  - Silo
+  - Lowloader
+
+  The list is fully configurable per company — an admin can rename, deactivate, or add types in **Settings → Fleet & Equipment → Trailer Types**.
+- **Year of manufacture** — The trailer's build year. Useful for tracking age and planning replacements.
+- **Capacity** — The trailer's payload capacity in kilograms.
+- **ADR certified** — Set to **Yes** if this trailer is certified for dangerous goods transport. ADR certification is checked automatically when you assign this trailer to an ADR-flagged order.
+- **Current location** — Enter a free text description of where the trailer is right now, such as "Depot Timișoara" or "Client warehouse Cluj". This updates automatically afterwards on delivery and on truck detach — see [Trailer location tracking](#trailer-location-tracking) below.
+
+Click **Save** when done.
+
+---
+
+## Attaching a trailer to a truck
+
+A trailer is linked to a truck directly on the **truck's** record — there's no separate "assign" step on the trailer, and order creation doesn't ask you to pick a specific trailer either (order creation only asks for a **Trailer type**, e.g. "needs a Reefer" — the actual trailer and truck are assigned afterwards on the [Planning Board](/en/planner/planning-board)).
+
+
+  ### Open the truck
+    Go to **Fleet → Trucks** and click the tractor you want to attach a trailer to.
+  
+  ### Find the Assignment section
+    On the **General** tab, scroll to the **Assignment** section (below Primary/Second Driver and Assigned Planner/Dispatcher).
+  
+  ### Set the Linked Trailer dropdown
+    Choose the trailer from the **Linked Trailer** dropdown. It lists every trailer in your fleet by plate (and name, if set) — Druma doesn't currently block picking a trailer that's already linked to another truck, so double-check the trailer's **Status** column first (see [Trailer availability view](#trailer-availability-view) below).
+  
+  ### Save
+    Click **Save**. The trailer now shows as **In Use** in the trailer list, and is linked to this truck wherever the truck is used for planning.
+  
+
+
+> **Note:** 
+A trailer can only be genuinely linked to one truck at a time (the field is a straightforward 1:1 pointer, not an assignment-with-dates record) — but Druma doesn't validate that on save, so avoid manually linking a trailer that's already showing **In Use** on another truck.
+
+
+---
+
+## Detaching a trailer
+
+There are two ways to detach a trailer, and which one you want depends on whether the trailer still has cargo on it.
+
+### Simple unlink (empty trailer, or just correcting a record)
+
+Open the truck's **General** tab, set **Linked Trailer** back to **— None —**, and click **Save**. This is instant and doesn't touch the trailer's recorded location — use it when the trailer is genuinely empty or you're just fixing a data-entry mistake.
+
+### Detaching a trailer via Reposition (trailer still loaded)
+
+If the tractor is leaving a **loaded** trailer behind — a driver swap, a breakdown, an end-of-shift drop at a yard — use the **Reposition** action instead (Fleet → Trucks toolbar, or from a truck's row menu; see [Repositioning a truck](/en/planner/fleet-management#repositioning-a-truck)):
+
+
+  ### Open Reposition and select the truck
+    Click **Reposition**, then pick the truck. Its linked trailer (if any) appears automatically.
+  
+  ### Toggle Drop Trailer
+    Click **Drop Trailer** next to the trailer name. A warning confirms the trailer will be detached and left at the truck's current location.
+  
+  ### Create the repositioning
+    Fill in the destination for the truck and click **Create Repositioning**.
+  
+
+
+Behind the scenes this calls the `flag_trailer_collection` database function (migration `0372`), which:
+
+- Records the trailer's drop location as its current position.
+- Detaches the tractor from the trailer (`trucks.trailer_id` cleared).
+- If the trailer still has an **active, loaded** order on it (any status from pickup through delivery), that order is bounced back to **pending**: its truck, driver, and second driver are all cleared, and it's flagged **awaiting trailer collection**.
+
+> **Note:** 
+An order flagged "awaiting trailer collection" surfaces distinctly on the Planning Board from an ordinary unassigned order — it needs a truck sent out to go collect the trailer and finish the delivery, not a fresh assignment from scratch. If the trailer was empty, dropping it just repositions the trailer with no order impact.
+
+
+---
+
+## Trailer availability view
+
+The trailer list at **Fleet → Trailers** has four quick-filter tabs:
+
+- **All** — Every trailer in your fleet.
+- **In Use** — Trailers currently linked to a truck (see [Attaching a trailer to a truck](#attaching-a-trailer-to-a-truck) above).
+- **Still** — Trailers not linked to any truck and not in maintenance. These are the ones free to link.
+- **Maintenance** — Trailers with an active maintenance window (a **Maintenance until** date in the future).
+
+Click any trailer to open its profile (General / Specs / Compliance / Temperature / Notes / Comments tabs).
+
+---
+
+## Trailer documents
+
+Trailers need their own paperwork — insurance, roadworthiness inspection certificates, and ADR certificates if applicable. These are tracked separately from vehicle documents.
+
+To add a document to a trailer:
+
+
+  ### Open Fleet Documents
+    Go to **Fleet → Documents** — trailer paperwork is managed on the central Fleet Documents page, not on the trailer profile itself.
+  
+  ### Add the document
+    Click **Add Document**, pick the trailer as the linked asset, select the document type, enter the expiry date, and upload a scan or photo of the certificate.
+  
+
+
+When fleet document alerts are enabled (Settings → Automations & Features), Druma warns you in-app as a trailer document approaches expiry — 60 days ahead as a warning and 14 days ahead as critical. See [Fleet Documents](/en/fleet-compliance/fleet-documents) for details.
+
+> **Note:** 
+If a trailer's ADR certificate expires and you have ADR-flagged orders assigned to it, Druma will flag the order with a warning. It will not block dispatch, but the warning is logged.
+
+
+---
+
+## Trailer location tracking
+
+Druma keeps a trailer's location current from three sources. Which one last updated a given trailer is recorded internally (used for troubleshooting) — day to day, the trailers list and profile just show you the location itself, not a "source" label.
+
+### Automatic: on delivery
+
+When an order is marked as **Delivered**, Druma automatically updates the trailer's location to the last offloading stop address. This means that after every completed delivery, the trailer's position is current without any manual input.
+
+### Automatic: dropping a trailer via Reposition
+
+When you use the Reposition modal's **Drop Trailer** toggle to detach a loaded or empty trailer from its truck (see [Detaching a trailer via Reposition](#detaching-a-trailer-via-reposition-trailer-still-loaded) above), the trailer's location is set to the truck's last known position. A plain manual unlink from the truck's Linked Trailer dropdown does **not** update the trailer's location — only the Reposition flow does.
+
+### Manual update
+
+Dispatchers can update the trailer's location at any time from the trailer profile page. The **Current Location** field supports HERE address autocomplete — start typing an address and select from the suggestions to get precise coordinates.
+
+> **Note:** 
+Trailer location tracking is limited to these three sources today — there is no GPS-tracker integration that updates a trailer's position automatically. If your trailers carry their own telematics unit, that data isn't currently wired into Druma's trailer location field.
+
+
+### Location column in the trailer list
+
+The trailers list at **Fleet → Trailers** includes a **Location** column showing each trailer's current address and a timestamp of when the location was last updated. This gives you a fleet-wide view of where all your trailers are without opening individual profiles.
+
+---
+
+
+  Manage your tractors and rigid trucks — add vehicles, set dimensions, and track availability.
+
+
+
+  Track and manage all compliance documents for both vehicles and trailers in one place.
+
+
+## Client yards and trailers held for a client
+
+**Planning → Trailer parkings** shows which trailers stand where *for which client*. This view is internal: clients never see yards, trailers or equipment checks in their portal or emails.
+
+- **Yard kind.** When you add or edit a yard, set its **Kind**: *Our yard*, *Client's site* or *Third-party yard*. A client's site must name its client. Yards used as a standby pool for a single client's sites are marked as that client's site automatically.
+- **Client badges.** Each trailer row shows why it belongs to a client: it is **preloaded** for an open order of that client, **dedicated** to that client under a capacity contract, or it stands in that client's yard.
+- **Client filter and By client.** Use the client filter to see one client's yards and trailers, or switch the grouping to **By client** to see one card per client.
+- **Client-owned trailers.** Trailers your client owns and stores with you under a storage agreement appear as their own rows in the yard. They count toward the yard's capacity but not toward your own trailer counts.
+- **Agreements.** Each yard shows the storage agreements held there (client, period and status). Users with the **View and edit trailer storage agreement rates** permission can open the agreement in Finance to see or change its amounts.
+
+Who can see this page is controlled by the **View the Trailer parkings overview** permission in **Settings → Roles** (listed under both Fleet and Planning).
+
+## Equipment requirements
+
+Equipment requirements stop the wrong trailer from being planned without anyone noticing. You can set them at three levels; the most specific value wins:
+
+1. **Client** — the default for every order of that client (client card → Transport).
+2. **Site for a client** — overrides the client default at one loading site (site editor).
+3. **Order** — overrides both for a single order (order pane → Cargo & Stops).
+
+A requirement can ask for: allowed **trailer types**, a **reefer temperature range**, **ADR**, a **tail lift**, a **curtain** side and a **minimum internal height**.
+
+### Warn or Block
+
+Each requirement is either **Warn** (the default) or **Block**:
+
+- **Warn** shows an amber note on the planning board and in the trailer pickers, but planning continues.
+- **Block** shows a red blocker and refuses the assignment until someone overrides it. If any level sets a requirement to Block, it stays a block — a less strict level cannot soften it.
+
+### Trailer capabilities
+
+Fill in each trailer's capabilities on the trailer's **Specs** tab (temperature range, tail lift, curtain, internal height). A capability left empty counts as **unknown**: it shows a warning and is never treated as a pass or a block, so you can start using requirements before every trailer is filled in.
+
+### Pickers and the parkings overview
+
+Trailer pickers list compatible trailers first and mark the others with **"Does not meet: …"** (or **"Not verified: …"** when a capability is unknown). On Trailer parkings, a preloaded trailer that does not meet its order's requirements shows a mismatch chip.
+
+### Overriding a block
+
+A user with the **Override a trailer equipment mismatch** permission can assign anyway by entering a reason (at least 5 characters) in the assignment sheet. The override is recorded with the user, time, trailer and the requirements it bypassed.
+
+Viewing and editing requirements is controlled by the **View equipment requirements and trailer-fit blockers** and **Edit equipment requirements** permissions.
+
+---
+
+## Driver Management
+
+
+## Overview
+
+Your drivers are the people who actually update orders in the field. To do that, they need access to the Druma driver app — a simple mobile web app (PWA) that works on any smartphone without needing to install anything from an app store.
+
+Managing drivers in Druma means: adding their details, sharing the app link with them, and keeping their licence and document records up to date.
+
+Go to **Fleet → Drivers** to manage your drivers.
+
+<Frame caption="Fleet → Drivers — licence, certificates, compatibility, and pay all live on the driver's profile.">
+  <img src="/images/planner/driver-management.png" alt="Fleet Drivers page listing drivers" />
+</Frame>
+
+---
+
+## Adding a new driver
+
+Click **Add Driver** in the top-right corner.
+
+
+  ### Enter the driver's full name
+    Use the name exactly as it appears on their driving licence. This is what appears on orders, CMR documents, and reports.
+  
+  ### Enter their phone number
+    This is the most important field. The phone number is how the driver accesses the Druma app — their login is tied to this number. Use the international format with the country code (e.g., +40721234567 for Romania).
+  
+  ### Enter email address (optional)
+    If the driver has a work email, enter it here. Email is optional — the app works with phone number only.
+  
+  ### Enter licence details
+    - **Licence number** — The number printed on their driving licence.
+    - **Licence expiry date** — Druma will alert you before the licence expires.
+
+    > **Note:** 
+    There's no field to record the licence category (CE/C) — Druma tracks the licence number and expiry date only.
+    
+  
+  ### Enter tachograph card details (optional)
+    If you want to track the driver's digital tachograph card number, enter it here. This is optional but useful for cross-referencing with tachograph analysis software.
+  
+  ### Add any notes
+    Use the **Notes** field for anything relevant — languages spoken, special skills (ADR certified, crane operator), or any operational notes for the dispatch team.
+  
+  ### Save the driver
+    Click **Save**. The driver now appears in the driver assignment dropdown when creating orders.
+  
+
+
+
+---
+
+## Setting up the driver app (phone + PIN login)
+
+Once you've saved a driver, they need a PIN before they can log in — the driver app is a Progressive Web App (PWA), shared at one common address for every driver, and drivers sign in with their phone number and PIN rather than a personal link.
+
+
+  ### Open the driver's profile
+    Go to Fleet → Drivers and click the driver's name.
+  
+  ### Set a PIN
+    Find the **Phone + PIN login** section and click **Set PIN** — type one in yourself, or click **Generate** for a random 6-digit code — then click **Save PIN**.
+  
+  ### Tell the driver their PIN
+    Share the PIN directly with the driver (in person or by a quick message) — there is no link to send.
+  
+  ### Driver installs and logs in
+    The driver installs the Druma driver app (see [Installing the Driver App](/en/driver/installing-the-app)) and logs in with their phone number and this PIN. On first login, they're prompted to personalize the PIN — choosing their own 6-digit code to replace the one you set.
+  
+
+
+> **Note:** 
+If a driver loses their phone, don't try to resend anything — open their profile and click **Revoke device sessions** to force a fresh login on any new device.
+
+
+---
+
+## Push notifications
+
+When an order is confirmed and a driver is assigned, they receive a push notification to let them know they have a new job.
+
+- **Android** — Push notifications work automatically via FCM (Firebase Cloud Messaging) when the driver saves the app to their home screen.
+- **iPhone (iOS)** — Push notifications are available through Safari on iOS 16.4 and later. The driver needs to save the app to their home screen first, then allow notifications when prompted.
+
+If a driver says they are not receiving notifications, check that:
+1. They have saved the app to their home screen (not just bookmarked it in the browser).
+2. They have allowed notifications when the app asked — they can check this in their phone's Settings → Notifications.
+
+---
+
+## Double-manning (two drivers, one truck)
+
+For long-distance international routes where two drivers share the cab, Druma supports double-manning — set up on the **truck**, not the order.
+
+Open the truck's profile and find the **Assignment** section: it has a **Primary Driver** dropdown and a **Second Driver** dropdown, both always visible (there's no toggle to enable). Set both and every order later assigned to that truck carries both drivers.
+
+> **Note:** 
+Both drivers must be added to Druma and have active PWA access for double-manning to work correctly. Driving hours are tracked separately for each driver.
+
+
+---
+
+## Document expiry tracking
+
+Druma tracks five expiry-dated driver documents, each showing an **Expiring soon** or **Expired** badge next to its date field:
+
+- **Driving licence** and **CPC (Certificate of Professional Competence)** number/expiry — on the driver profile's **Licence** tab.
+- **ADR certificate**, **Medical certificate**, and **Tachograph card** number/expiry — on the driver profile's **Certificates** tab, which also shows an overall Document Expiry summary for the driver.
+
+
+  ### Open the driver profile
+    Go to Fleet → Drivers and click the driver's name.
+  
+  ### Go to the relevant tab
+    **Licence** for the driving licence and CPC, or **Certificates** for ADR, medical, and tacho card.
+  
+  ### Enter or update the expiry date
+    Save the profile — the badge and any summary status update immediately.
+  
+
+
+> **Note:** 
+A document is flagged **Expiring soon** within 30 days of its expiry date, and **Expired** once past it — this is a fixed threshold with no settings UI to adjust it.
+
+
+---
+
+## Driver Performance Scoring
+
+Go to **Fleet → Performance** for a per-driver scorecard blending five signals Druma already holds — on-time delivery, fuel economy, idling, incidents, and EU 561/2006 + working-time compliance — into a single 0–100 score. It's opt-in: turn on **Driver scoring** in Settings if the page shows a prompt instead of a table.
+
+Each driver's row shows their score, a per-component breakdown, and a monthly trend chart built from a snapshot taken automatically at the start of each month. A signal Druma doesn't have enough data for (for example, no telematics idle source) is **excluded, not scored as zero** — the remaining components are reweighted so a missing signal never unfairly drags the score down. A driver with too few data points for a reliable score is marked low-confidence rather than given a number that looks more certain than it is.
+
+Click a driver's row to open a detail pane with more than the raw number:
+
+- **Rank** among your scored drivers, and how much the score moved since last month
+- A bar for each component next to the **fleet average**, so you can see at a glance which one is pulling the score down
+- The **biggest lever** — whichever component has the most room to improve, weighted by how much it counts toward the total
+- Where the data supports it, an estimated **€ impact** of the driver's fuel consumption against the fleet benchmark over the distance they've driven
+
+> **Note:** 
+This is a coaching and reward tool built entirely from data Druma already holds — no new hardware, no external service, and no cost to turn on.
+
+
+---
+
+## Deactivating a driver
+
+If a driver leaves your company or is no longer available, you can deactivate their account:
+
+- Open the driver's profile.
+- Click the **Active** toggle to switch it to **Inactive**.
+- Inactive drivers no longer appear in the assignment dropdown and cannot log into the driver app.
+
+Their order history is fully preserved. You can reactivate the driver at any time.
+
+---
+
+
+  Step-by-step instructions to help your drivers install and set up the Druma PWA on their phones.
+
+
+
+  Track EU driving hours limits and get alerts when drivers approach their weekly limits.
+
+
+---
+
+## Driver Hours
+
+
+## Why driving hours matter
+
+EU Regulation 561/2006 sets strict limits on how long a professional driver can drive without a break, and how many hours they can drive each week. Breaching these limits is a serious matter — it puts the driver at risk, and it exposes your company to significant fines during roadside inspections or when Transport Authority auditors review your records.
+
+Druma helps you keep track of these limits so you can plan routes sensibly and catch problems before they happen.
+
+> **Warning:** 
+Druma is a scheduling and planning aid — it does not replace a dedicated tachograph analysis system. For full legal compliance, your tachograph data must be analysed using approved software. Druma's driving hours feature is designed to help planners make better scheduling decisions, not to serve as your official records system.
+
+
+---
+
+## The EU driving hours rules at a glance
+
+### Daily driving limits
+
+- **Standard daily limit:** 9 hours of driving per day.
+- **Extended daily limit:** 10 hours of driving, allowed up to twice per calendar week.
+
+The daily rest period resets the daily driving counter.
+
+### Weekly driving limits
+
+- **Weekly limit:** 56 hours of driving in a single week (Monday to Sunday).
+- **Fortnightly limit:** No more than 90 hours of driving across any two consecutive weeks.
+
+### Break requirements
+
+A driver must take a break after a maximum of **4.5 hours of continuous driving**. The break must be at least **45 minutes** and must be taken all at once, or in two parts:
+- First part: at least 15 minutes
+- Second part: at least 30 minutes (in this order — not the other way around)
+
+### Daily rest
+
+A driver must take a minimum of **11 consecutive hours of rest** between any two working periods. This can be reduced to **9 consecutive hours** up to three times per week (a "reduced daily rest"), but each reduction must be compensated before the end of the following week.
+
+### Weekly rest
+
+A driver must take a **regular weekly rest of at least 45 consecutive hours** at least once every two weeks. A reduced weekly rest (minimum 24 consecutive hours) is permitted in alternating weeks, but the reduction must be compensated in full by the end of the third week after it was taken.
+
+---
+
+## Double-manning rules
+
+When two drivers share a truck cab (double-manning), each driver is still subject to the same individual driving and rest limits. However:
+
+- The daily driving limit for the vehicle can extend to **20 hours** because the drivers take turns.
+- Each driver's daily rest requirement (9 hours minimum) can be taken in the cab while the other driver is driving, **provided the cab has a bunk** that complies with the regulation.
+- The 45-minute break rule applies individually to each driver based on their own accumulated driving time.
+
+In Druma, double-manning is set up on the **truck**, not the order: each truck's profile has a **Primary Driver** and a **Second Driver** field in its Assignment section. Whichever driver(s) are set there travel with that truck for whatever order it's assigned to, and both drivers' hours are tracked separately.
+
+---
+
+## How Druma tracks driving hours
+
+Druma's **Compliance** tab (inside [Dispatching](/en/planner/dispatching), at `/dispatching/compliance` — the tab was formerly labelled "Driver Hours"; old `/dispatching/driver-hours` bookmarks redirect automatically) shows a live driver hours table per driver — status, source, current activity, applicable daily working-time program, and remaining time under the daily/weekly/fortnightly and working-time-directive limits. Two sources feed it:
+
+### Manually-entered hours
+
+If a driver's hours aren't coming from a telematics feed, click their row on the Compliance tab to open an edit form and enter the figures from a tachograph printout or digital download yourself.
+
+### Automatic sync via integration
+
+If your fleet uses **Continental VDO** or **Webfleet**, Druma can pull driving hours data automatically. This is self-service: go to **Settings → Integrations**, open the provider, and enter its credentials yourself — there's no need to contact anyone to enable it (VDO is currently in beta).
+
+When the integration is active and connected, that driver's row is fed from the telematics source instead of manual entry.
+
+---
+
+## Alerts and indicators
+
+The Compliance tab shows a colour-coded **Status** column per driver (with the specific limit — daily, weekly, or fortnightly — that's driving the status), plus the exact time remaining under each limit in the Working Left / Remaining Daily / Remaining Weekly / Remaining Fortnightly columns. It also carries **Cabotage** and **Return-home** columns (the same statuses shown on the Fleet Health truck rail), and rows are sorted worst-risk-first, so the drivers closest to a breach are always at the top.
+
+> **Note:** 
+There is no separate traffic-light indicator on the driver's profile, and no email alert at 80%/100% of the weekly limit — the Compliance tab itself is the place to watch, not the driver profile or your inbox.
+
+
+---
+
+## Checking hours before assigning an order
+
+Order creation and editing has no driver-assignment step — trucks and drivers are assigned afterwards, by dragging the order onto a truck on the [Planning Board](/en/planner/planning-board). Before you do that, check the driver's row on the [Compliance tab](/en/planner/dispatching) for their current status and remaining hours.
+
+---
+
+## Common questions
+
+**The driver drove over the limit on one day. What do I do?**
+
+Record the actual hours accurately. Druma will flag the breach with a red status on the Compliance tab. Keep a note of the circumstances — sometimes there are legitimate exemptions (e.g., reaching a safe place to stop). Your transport manager or legal adviser can advise on how to handle the record.
+
+**Can Druma stop a driver being assigned to an order if they're over the limit?**
+
+No. There's no assignment-time check at all — assignment happens by dragging an order onto a truck on the Planning Board, and Druma doesn't cross-reference that against the Compliance tab. The responsibility for checking a driver's remaining hours before assigning them sits with the planner, not the software.
+
+**We have drivers who also do loading and unloading. Does that count toward their driving hours?**
+
+Other work time (loading, administration, waiting) counts toward the driver's **working time** under EU Directive 2002/15/EC but is separate from the **driving time** tracked under Regulation 561/2006. Druma currently tracks driving hours only. For full working time records, you need your tachograph analysis system.
+
+---
+
+
+  Add drivers, share the app link, and manage licence documents.
+
+
+
+  Full reference guide to EU Regulation 561/2006 and how it applies to your fleet.
+
+
+---
+
+## Waiting Time Charges
+
+
+## What Is Waiting Time?
+
+When your driver arrives at a pickup or delivery point and has to wait — the loading dock is busy, the warehouse isn't ready, customs paperwork is delayed — that time costs you money. The driver is sitting, the truck isn't moving, and you're absorbing the cost.
+
+Waiting time charges (also called detention or demurrage) let you bill the client for that lost time once a free allowance period is used up. Druma automates the whole thing — timing, calculation, client notification, and invoicing — and backs it up with GPS evidence so disputes are easy to win.
+
+**Druma's platform default settings:**
+- Free waiting allowance: **2 hours** after arrival
+- Charge rate: **€45/hour** after the free period expires
+
+These are only the last-resort fallback — free hours and the hourly rate can be set at the **client** level, the **Rate Card** level, or company-wide, and Druma resolves them in that order. See [Configuring Free Hours and the Hourly Rate](#configuring-free-hours-and-the-hourly-rate) below.
+
+---
+
+## How the Timer Works
+
+The clock starts the instant your driver taps their arrival status in the Druma app:
+
+- **"Arrived at Pickup"** — starts the waiting timer at the loading address
+- **"Arrived at Delivery"** — starts the waiting timer at the delivery address
+
+At that exact moment, Druma captures:
+- A **GPS coordinate** showing where the driver is
+- A **precise timestamp** of the arrival
+
+This GPS stamp is your evidence. It cannot be backdated or edited by the driver after the fact.
+
+Once the driver taps the next status (**"Loading"** or **"Unloading"**), the waiting period ends and Druma calculates the total wait.
+
+
+---
+
+## Automatic Planner Alert
+
+You don't need to watch a clock. When the free allowance expires, Druma sends an automatic **in-app notification** — to your company's planners, dispatchers, and admins — showing:
+
+- Which driver and truck
+- Which order and location
+- How long they've been waiting beyond the free period
+- The charge accrued so far
+
+The alert fires the moment the 2-hour (or custom) free period runs out. You can act immediately — notify the client, call the site — before the bill gets any bigger.
+
+---
+
+## Notifying the Client in One Click
+
+From the order page or the waiting time alert, click **"Notify Client"**. Druma sends a professional email to your client contact that includes:
+
+- Arrival time and, once loading/unloading has started, that timestamp too (plain text — no GPS coordinates or map link)
+- Free waiting time and chargeable waiting time so far, at your configured hourly rate
+- The total waiting charge calculated so far
+- If the driver attached a photo or voice note, a time-limited link to it
+
+This puts the client on notice early, with a paper trail attached. Most clients respond much faster once they've seen a written notice — it's no longer your word against theirs.
+
+
+> **Note:** 
+Send the notification the moment the free period expires, not after the driver finally leaves. Early notification gives the client a chance to act — and protects your right to charge if they don't.
+
+
+---
+
+## Viewing Waiting Charges on an Order
+
+Open any order and go to the **Financials** tab. You'll see a waiting time section showing:
+
+| Field | Details |
+|---|---|
+| Arrival timestamp | GPS-stamped time the driver tapped "Arrived" |
+| Free period | 2h default (or your custom setting) |
+| Chargeable time | Hours and minutes beyond the free period |
+| Hourly rate | €45/h default (or your custom rate) |
+| **Total charge** | Calculated automatically |
+
+If waiting occurred at both pickup and delivery, both are listed as separate line items.
+
+---
+
+## Adding Waiting Time to an Invoice
+
+When you generate the invoice for the order, Druma automatically suggests the waiting time charge as a line item. You can:
+
+- **Keep it as-is** — the amount is pre-filled from the order record
+- **Adjust the amount** — if you agreed a different rate in a phone conversation
+- **Remove it** — if you decided to waive the charge for this client
+
+
+  ### Open the order
+    Go to **Orders** and open the order that has waiting time recorded.
+  
+  ### Generate the invoice
+    Click **Generate Invoice** or open the existing draft invoice linked to this order.
+  
+  ### Review the waiting time line item
+    It appears automatically with the calculated amount. Adjust or remove if needed.
+  
+  ### Send the invoice
+    Finalise and send as normal. The waiting time charge is clearly itemised for the client.
+  
+
+
+---
+
+## The Finance → Waiting to Bill Queue
+
+Beyond adding waiting time while an invoice is being generated, Druma also runs a nightly sweep of delivered orders and queues any waiting time you haven't invoiced yet as a draft charge. Go to **Finance → Waiting to bill** to review it. The page has three call-out sections layered on top of the base pending-charges queue:
+
+- **Late-arrival waiting charges** — needs planner review. See [Late-Arrival Blocking](#late-arrival-blocking) below.
+- **Recently auto-approved** — geofence-backed charges that were billed automatically, with no planner click. See [Geofence Auto-Approval](#geofence-auto-approval) below. Each one can be reversed with one click if it shouldn't have gone through.
+- **Other charge gaps** — draft charges unrelated to waiting time (fuel surcharge, ADR surcharge, weekend surcharge, failed pickup, reefer surcharge, overweight surcharge) that Druma also detected as missing from an invoice.
+
+The base queue beneath these sections lists every other draft waiting charge Druma has detected — approve one to add it to the order's invoice, or dismiss it.
+
+### Geofence Auto-Approval
+
+A waiting charge skips the planner-review queue and is billed automatically when **all** of the following are true:
+
+- The arrival was **geofence-verified** (the driver's "Arrived" status was captured automatically by the geofence, not a manual tap).
+- The waiting period ended when **loading/unloading started** (not some other close-out path).
+- The billable time clears a **30-minute margin** past the free period.
+
+A company only gets auto-approval once it has at least one prior charge a planner approved by hand — this trust gate keeps the first few charges human-reviewed before Druma starts approving on its own.
+
+### Late-Arrival Blocking
+
+If your own truck arrives more than 30 minutes late to a pickup or delivery stop, and that order has a waiting charge that hasn't been sent to the client yet, Druma **pauses auto-invoicing for that order** rather than billing the client automatically — the driver's own lateness may have caused or extended the wait, so a planner should confirm the charge is fair first. These paused orders are what populate the **Late-arrival waiting charges** section; a planner picks **Include** (keep the charge, resume auto-invoicing) or **Drop** (remove the charge, resume auto-invoicing).
+
+> **Note:** 
+For the full mechanics of planner alerts, client notification emails, and escalation tiers, see [Waiting Time Charge Alerts](/en/automation/waiting-charge-alerts).
+
+
+---
+
+## Configuring Free Hours and the Hourly Rate
+
+Free waiting hours and the hourly waiting rate resolve through a fallback chain, checked in this order:
+
+1. **Client** — a per-client override, if the client record has its own free-hours and/or rate set.
+2. **Rate Card** — the truck cost profile assigned to the order (own-fleet or subcontracted).
+3. **Company default** — a company-wide fallback (**Settings → Company**).
+4. **Platform default** — used only when none of the above is set (2h / €45).
+
+Each field falls back independently — a client that overrides only the rate still inherits the company's free-hours, and vice versa.
+
+### Setting it on a Rate Card (most companies)
+
+
+  ### Open Rate Cards
+    Go to **Settings → Pricing & Costing → Cost profiles** and open the relevant cost profile.
+  
+  ### Find the waiting time fields
+    Locate **Free waiting hours** and **Waiting rate €/h**.
+  
+  ### Set your values
+    Enter the agreed free hours allowance and hourly rate for this cost profile.
+  
+  ### Save
+    Click **Save**. Every order priced against this cost profile now uses these values, unless the order's client overrides them.
+  
+
+
+### Setting it on a client (contractual exceptions)
+
+If one specific client has contractually different waiting terms, set it on their own record instead of touching the rate card:
+
+
+  ### Open the client
+    Go to **Clients** and open the client's record.
+  
+  ### Find the waiting time fields
+    Locate **Free hours before charging** and **Hourly rate after free hours**.
+  
+  ### Set your values
+    Enter the agreed figures for this client. Leave either blank to keep inheriting the rate-card (or company/platform) value for that field.
+  
+  ### Save
+    Click **Save**. Every order for this client now uses these values, regardless of which truck or rate card is assigned.
+  
+
+
+> **Warning:** 
+If you change a rate card's or a client's waiting rate, it only affects waiting events recorded from that point on. Waiting charges already added to open invoices are not updated automatically.
+
+
+---
+
+## Turning Off Waiting Billing
+
+Not every client or order should turn waiting into a charge. Druma still logs the waiting event either way — arrival, free period, and chargeable minutes are all recorded — it just won't generate a bill for it when this is off.
+
+- **Per client** — open the client's record and uncheck **Bill waiting hours for this client**. Every order for that client stops generating waiting charges (waiting time is still tracked).
+- **Per order** — on the Add Order screen, **Client tab**, set **Bill waiting hours** to **Inherit from client** (the default), **Always bill**, or **Never bill**. The order-level setting always wins over the client setting, in either direction — so you can bill one exceptional order for an otherwise opted-out client, or exempt a single order from an otherwise-billing client.
+- If neither is set anywhere, the company-wide default is to bill.
+
+---
+
+## Why GPS Evidence Changes the Game
+
+Before GPS-stamped waiting time, disputes were common: "Your driver arrived at 3pm, not 1pm." With Druma, you have an automatically recorded, timestamped GPS position captured at the moment the driver tapped "Arrived" — plus the notification email you sent the client during the wait, carrying that same timestamp in writing.
+
+This combination — a GPS-backed timestamp on your side, plus a written notice already in the client's inbox — resolves the vast majority of waiting time disputes in your favour, without arguments.
+
+> **Note:** 
+In covered loading bays or areas with poor signal, GPS may fall back to network-based location, which is slightly less precise. The timestamp is always accurate regardless of GPS quality.
+
+
+---
+
+
+  
+    See all active drivers, live wait times, and waiting alerts on the map.
+  
+  
+    Add waiting time and other charges as line items on client invoices.
+  
+  
+    Planner/client notifications, escalation tiers, and the full late-arrival and auto-approval mechanics.
+  
+</CardGroup>
+
+---
+
+## Quotes
+
+
+## What Are Quotes?
+
+Before a load becomes a confirmed order, most clients want a price. Druma's quoting lets you build a freight quote in a few minutes — for a client or for a lead that is not a client yet — send it by email with a one-click Accept/Reject link, and turn it into a confirmed order the moment they say yes.
+
+Quotes live under **Sales → Quotes**, next to the Pipeline, Contracts and Pricing tabs (see [Sales](/en/planner/crm)). Roles that can use Quotes: admin, company admin, key user, planner and customer service.
+
+<Frame caption="The Quotes list — scope tabs sort quotes into Open, Won and Lost.">
+  <img src="/images/planner/quotes.png" alt="Quotes list page with status badges" />
+</Frame>
+
+---
+
+## The Quotes list
+
+The list has scope tabs, each with a count:
+
+| Scope | Contains |
+|---|---|
+| **Open** | Drafts and quotes sent and waiting for an answer (default) |
+| **Accepted – to convert** | Accepted quotes that are not yet an order — the ones you still have to act on |
+| **Won** | Accepted quotes and quotes already converted to an order |
+| **Lost** | Rejected and expired quotes |
+| **All** | Everything |
+
+At the top you see the **win rate** (won ÷ won + lost) and the **open value** in EUR (open quotes in other currencies are not mixed into the euro total). The **Client** column shows the client's name, or a **Lead** badge while the quote is for a lead that has not been converted yet. The **Source** column shows whether a quote came from an RFQ email or the client portal. Use **Columns** to choose columns and **Views** to save your scope.
+
+Click a row to open the quote in a side pane. Its buttons depend on the status:
+
+- **Send to Client** / **Resend** — draft or sent quotes
+- **Convert to Order** — accepted quotes
+- **Reprice** — opens the quote in the composer
+- **Escalate to tender** — accepted quotes, when tender management is on
+- **Open quote** — the full quote with the negotiation history
+
+---
+
+## Creating a New Quote
+
+
+  ### Click New quote
+    Go to **Sales → Quotes** and click **New quote**. The quote composer opens over the page. You can also open it from a lead's pane (**Create quote**), from a client's **Sales** section (**New quote**), or from a tender lane (**Quote this lane**, which pre-fills the route).
+  
+  ### Who is it for
+    Search a client or a lead. If you type a company that matches neither, choose **Add "…" as a new lead** — Druma creates the lead together with the quote, so a quote is never orphaned. Optionally type the new lead's email, which you need to send the quote.
+  
+  ### Route stops and Load
+    Add at least one **+ Loading** and one **+ Offloading** stop, then set trailer, weight, pickup and delivery dates. Tick **ADR (dangerous goods)** if it applies — ADR can be set right here.
+  
+  ### Price and Terms
+    Enter the **Quoted price**, **Currency** and **Validity (days)**, give the quote a **Quote title**, and add internal **Notes** (visible to your own team only). If you have access to pricing analysis, the composer also shows distance, tolls, cost and margin so you can price with confidence.
+  
+  ### Save or send
+    **Create** saves a draft you can keep editing. **Save & send** saves and emails the quote at once. A draft can be saved without a price; sending needs one.
+  
+
+
+> **Note:** 
+Cost and margin are calculated in EUR. If you quote in another currency the margin read-out is hidden. Roles without pricing analysis (for example customer service) enter the price manually and can still save and send.
+
+
+> **Note:** 
+**Pricing tool.** The **Pricing tool** button in **Sales → Pricing** opens the same composer for planners and above. There is no separate Pricing Tool page and no separate "worksheet" any more — every calculation is saved as a quote.
+
+
+---
+
+## Sending a Quote to the Client
+
+When you **Send to Client** (or **Save & send**), Druma:
+
+1. Generates a branded PDF of the quote
+2. Emails it to the client's contact email — or the lead's email, for a lead quote
+3. Embeds two buttons in the email: **Accept this Quote** and **Reject**
+
+The client clicks directly from their inbox — no login needed.
+
+> **Note:** 
+Druma will not send if there is no email address to send to. Add one to the client or lead (Clients, or the lead pane), or type it for a new lead in the composer. If the send fails, the quote stays saved and you can **Resend** it from the list.
+
+
+---
+
+## What Happens When the Client Responds
+
+**Client clicks Accept:**
+- The quote becomes **Accepted** and is converted into a confirmed order
+- You receive an in-app notification and email
+- The order appears in your **Orders** list, ready to assign a driver
+
+**Client clicks Reject:**
+- The quote is marked **Rejected** (it moves to the **Lost** scope) and you are notified so you can follow up or renegotiate
+
+**Client does nothing:**
+- After the validity period the quote becomes **Expired** and moves to the **Lost** scope
+
+If the quote was for a lead, the lead follows along: a sent quote moves it to **Proposal**, an accepted quote to **Won**. A rejected or expired quote never marks a lead as lost by itself — see [Sales](/en/planner/crm).
+
+---
+
+## Quote Versioning
+
+Every time you reprice a quote that has already been sent, Druma keeps the earlier version and adds a new round, so you always have a record of what you offered and when.
+
+
+  ### Open the quote
+    Go to **Sales → Quotes**, click the quote and choose **Reprice**.
+  
+  ### Change the route, load or price
+    The composer shows a banner explaining what saving will do. For a sent quote it reads "Renegotiating a sent quote".
+  
+  ### Save
+    For a **draft**, **Save** updates it in place. For a quote that was already sent, accepted, rejected or expired, click **Save as new round**: the old version becomes **Superseded** and the new round is a fresh draft linked to it.
+  
+
+
+A quote that has been **converted to an order** or **superseded** by a newer round opens read-only. The negotiation history is shown on the full quote (**Open quote**).
+
+> **Note:** 
+Repricing a quote that was not in EUR: the calculator works in EUR, so re-enter the price; saving overwrites the quote in EUR.
+
+
+---
+
+## Converting a Quote Manually
+
+When a client confirms by phone, WhatsApp or email instead of clicking the link:
+
+
+  ### Open the quote
+    Go to **Sales → Quotes** and filter to **Accepted – to convert**, or open the quote from any scope.
+  
+  ### Click Convert to Order
+    Click **Convert to Order** in the side pane (or on the full quote) and confirm. The quote becomes a confirmed order immediately.
+  
+
+
+If the quote is for a **lead**, Druma converts the lead to a client first, then creates the order for that client. If a quote has neither a client nor a lead, add one before converting.
+
+> **Warning:** 
+Converting a quote to an order cannot be undone. Make sure price, route and cargo are right before you confirm. If something needs changing, edit the order afterwards.
+
+
+---
+
+## Escalating a Quote to a Tender
+
+When a one-off quote turns into a recurring commitment, click **Escalate to tender** on an accepted quote (only shown when [Tenders & Contracts](/en/planner/tenders-and-contracts) is enabled). Druma creates a tender pre-filled with the quote's client, route and rate as one lane. It starts as an early-stage deal, not as a contract — period dates, committed volume and the final rate are yours to fill in.
+
+---
+
+## Common questions
+
+**Where is the Expired tab?** Expired quotes are in the **Lost** scope, together with rejected ones.
+
+**Can I quote a company that is not a client yet?** Yes — type the name in **Who is it for** and choose **Add "…" as a new lead**.
+
+**Where do I find the quote conversion rate?** On **Sales → Reporting → Quotes**: win rate, order conversion, open value, quotes by status and win rate by margin band.
+
+---
+
+
+  Once a quote converts to an order, learn how to assign a driver, plan the route, and get the load moving.
+
+
+---
+
+## Subcontractors
+
+
+## What Is the Subcontractor Registry?
+
+When you outsource a load to another carrier — a partner company, a spot market truck, a small owner-operator — you still need visibility. You need to know when they picked up, when they delivered, and you need the CMR scan and proof of delivery in your records.
+
+Druma's subcontractor registry solves this without phone calls. Each carrier gets a lightweight portal link — no app to install, no expensive software — where they can update order status and upload documents. You stay in control without chasing people by phone.
+
+<Frame caption="The Subcontractor registry — portal access, documents, and rating per carrier.">
+  <img src="/images/planner/subcontractors.png" alt="Subcontractors registry page" />
+</Frame>
+
+---
+
+## Adding a Subcontractor
+
+
+  ### Go to Subcontractors
+    Click **Forwarding → Subcontractors** in the navigation (`/forwarding/subcontractors`).
+  
+  ### Click Add Subcontractor
+    Click **Add Subcontractor** to open a new carrier record.
+  
+  ### Fill in the company details
+    Enter the following required fields:
+
+    - **Company name**
+    - **VAT number**
+    - **Country**
+    - **Contact name**
+    - **Contact email**
+
+    Optionally also record **payment terms (days)**, a **default buy rate (€/km)** to pre-fill offers, and the **operating countries** this carrier runs in — all three feed the transport-order PDF and auto-tender ranking once set.
+  
+  ### Save
+    Click **Save**. The company is added to your subcontractor registry, ready to be picked when you assign a load.
+  
+
+
+> **Note:** 
+The subcontractor registry (and the rest of **Forwarding**) is restricted to operations roles — admin, company_admin, planner, dispatcher, fleet_manager, and customer_service. A driver account can't create carriers, upload their compliance documents, or grant self-billing agreements.
+
+
+---
+
+## The Carrier Portal Link
+
+There's no portal account or password to set up in advance. Druma generates a link per order, and the carrier signs in to it with a one-time code emailed to an address you hold for them. Druma generates it the first time you subcontract an order to this carrier: open the order, use **Assign Carrier** to pick this subcontractor, and click **Assign & Send Order**. Druma creates a unique portal link for that order and emails it to the carrier's contact.
+
+**What you need to know:**
+- The link is valid for **30 days** by default, scoped to **that one order**
+- It doesn't grant access to any other order — even other loads from the same carrier arrive as separate links
+- There's no account and no password. The link alone does not open the order: the carrier enters an email address that is on file for them (an active contact on the subcontractor, or its contact email) and confirms it with an emailed 6-digit code. **Add a contact email for every carrier** — with no email on file nobody can sign in, and the order pane and this page warn you
+- The carrier can invite colleagues to one order (view only, or view and update status); you can see and revoke every signed-in device and invitation
+
+> **Note:** 
+Only share the link with the intended carrier. If it ends up with the wrong person, open **Carrier portal access** on the order and use **Revoke all and create a new link**: it signs out every device of that carrier, revokes invited colleagues, and creates a new link (copied to your clipboard) while the old one stops working. **Open portal** on this page is now a read-only preview of what the carrier sees, labelled **Preview as carrier**. See [Portal Access](/en/carrier-portal/portal-access).
+
+
+---
+
+## Opening the Link
+
+The carrier doesn't sign up or log in — they just click through:
+
+
+  ### Carrier receives the link
+    Typically by email, when you assign and send the order to them.
+  
+  ### They open it in any browser
+    No installation — phone or desktop both work. They confirm their email with a one-time code.
+  
+  ### They act on the order
+    From the same link they can accept or decline the load, update its status, and upload documents, right up until it's delivered.
+  
+
+
+---
+
+## What the Carrier Can Do in the Portal
+
+From their link, the carrier sees only that one order. From the portal they can:
+
+- **Accept or decline the offer** — the status-update cards below only unlock once they've accepted; a document-upload request can still be answered before that, so a carrier can send paperwork even on an offer they haven't formally accepted yet
+- **Enter their vehicle and driver** — truck plate, trailer plate, driver name, and driver phone number. This is where Druma gets the carrier's truck/driver details from — there's nothing to type in on your side
+- **Update order status** — step through 8 granular stages: Confirmed, En Route to Loading, At Loading, Loaded, En Route to Delivery, At Delivery, Offloading, Delivered
+- **Upload a CMR scan** — photograph or scan of the signed paper CMR
+- **Upload Proof of Delivery** — signed delivery note, warehouse receipt, or photo evidence
+- **View order details** — pickup address, delivery address, cargo description, reference numbers
+
+They cannot see your other orders, your rates with clients, your fleet, or anything else in your Druma account.
+
+### Status changes follow a state machine
+
+The carrier can't drive the status into an inconsistent state — Druma enforces the same rules server-side that the buttons respect in the UI:
+
+- **Delivered requires a prior pickup.** They can't jump straight from Confirmed to Delivered — the load has to have reached Loaded (or have a recorded loading arrival) first.
+- **Backward moves are a one-step correction only.** If they mis-tap a stage, they can step back exactly one stage to fix it. Anything further back needs you to intervene.
+- **Delivered is terminal.** Once an order is marked Delivered, the carrier can't reopen it from the portal — contact them to confirm what actually happened and correct it from your side if needed.
+
+---
+
+## Renewing a Link
+
+Portal links expire after 30 days. If a carrier's link has expired, or you need to send it again:
+
+
+  ### Open the order
+    Find the order in **Orders** and open **Assign Carrier**.
+  
+  ### Resend
+    Click **Resend**. If the existing link has expired, Druma generates a fresh one automatically and re-sends it — the old link stops working immediately.
+  
+
+
+> **Note:** 
+There's no separate "carrier account" to manage — every renewal simply issues a new link for that order and emails it out again.
+
+
+---
+
+## Blacklisting a Carrier
+
+Sometimes a carrier's service was bad enough that you never want to use them again. Open the carrier's record and go to the **Blacklist** section:
+
+
+  ### Click Blacklist carrier
+    In the carrier's detail panel, open the **Blacklist** section and click **Blacklist carrier**.
+  
+  ### Give a reason
+    Enter a reason — this is required and stays on the record for whoever reviews it later.
+  
+  ### Confirm
+    Click **Confirm blacklist**.
+  
+
+
+A blacklisted carrier is excluded from subcontractor order emails and from auto-tendering candidate selection — Druma simply won't offer them a load again. This is a durable, manual decision: unlike the automated carrier-screening checks that run when you assign a new load (VAT validity, insurance expiry, and similar risk signals), blacklisting is never recomputed or cleared automatically. It stays in effect until you remove it yourself from the same section. Blacklisting doesn't cancel a load already assigned to that carrier — you can still stand them down from an in-progress order.
+
+---
+
+## Carrier Scorecard
+
+Every carrier's detail panel has a **Performance** tab showing a scorecard built from the orders and offers already on record — no setup required:
+
+- **Total Orders** and **Delivered** — volume this carrier has actually carried for you
+- **Acceptance Rate** and **Rejection Rate** — how often they say yes or no to an offered load
+- **Avg. Time to Accept** — how long it typically takes them to respond to an offer
+- **On-Time Delivery** — the share of their deliveries that landed on schedule
+- **Invoice Disputes** — how often their invoice didn't match what you recorded as the buy rate
+- **Avg. Margin** — the average margin you've made on loads carried by this carrier
+
+The scorecard fills in once the carrier has at least one order or offer on record; new carriers show an empty state until then. Use it to compare carriers objectively instead of relying on a hand-typed rating.
+
+---
+
+## Viewing Carrier Activity on an Order
+
+To see everything a carrier has done on a specific order:
+
+1. Open the order in **Orders**
+2. Click the **Carrier Updates** tab
+3. You'll see a full timeline — every status update and document upload, with timestamps and the carrier user who made each change
+
+This is your audit trail. If a client asks when their load was picked up, this is where you look.
+
+---
+
+## When to Use the Subcontractor Registry
+
+The subcontractor registry is built for this specific scenario: **you've sold a transport to a client, and you're using another carrier to physically move the load**. You remain responsible to your client for the delivery, but you need visibility into what the carrier is doing without being on the phone with them all day.
+
+This is different from brokers, who give loads to you — brokers are now managed as plain Clients, not in this registry. See the [Brokers](/en/planner/brokers) article for that side of the relationship.
+
+---
+
+
+  
+    Learn how Druma handles split invoicing when you act as a freight forwarder.
+  
+  
+    Brokers give you loads to carry — they're managed as Clients now, not in this registry.
+  
+</CardGroup>
+
+---
+
+## Brokers
+
+
+## Brokers Are Now Clients
+
+A broker is a company that gives you loads to carry — a freight exchange operator, a logistics company without their own trucks, or a trading company that needs transport. In Druma, a broker is simply a **Client**: the same register, contacts, documents, and portal access as any other company you invoice.
+
+There is no separate broker registry anymore. The dedicated Brokers tab and its own set of fields were removed and folded into the Clients register, so every company you deal with — whoever gives you loads — lives in one place with one consistent set of tools (contacts, documents, credit terms, portal access, pallet balances).
+
+> **Note:** 
+If you land on `/clients/brokers`, Druma redirects you straight to the **Clients** list — the old URL still works, it just opens the unified register.
+
+
+---
+
+## What Happened to Existing Broker Records
+
+Every broker record that existed before the unification was migrated automatically into the Clients register — no data was lost. Their name, VAT number, address, contacts, and payment terms carried over as a plain client record. Nothing to redo.
+
+---
+
+## Where to Go Instead
+
+
+  
+    Track prospective accounts on the Sales Pipeline and convert a lead to a client. Former brokers live in the Clients register, with contacts, credit terms and documents.
+  
+  
+    The other side of the relationship: carriers you give loads to. Managed separately, with their own portal for status updates and document upload.
+  
+</CardGroup>
+
+> **Note:** 
+Don't mix these up: a client (including a former broker) **gives you** loads. A subcontractor is a carrier **you give** loads to. A company can be both — add them as a client for the loads they hand you, and as a subcontractor for the loads you outsource to them; the two records are independent.
+
+
+---
+
+## Sales
+
+
+## Overview
+
+**Sales** in the main navigation is one section with five tabs. Together they cover the whole commercial flow, from a first contact to a priced lane you deliver every week:
+
+| Tab | What it is for |
+|---|---|
+| **Pipeline** | Every open deal — leads and tenders that are still being bid — as a board or a table |
+| **Quotes** | Every priced offer you sent: send, reprice, convert to an order |
+| **Contracts** | Every won tender, from award to renewal, with delivered vs. committed loads (only if tender management is enabled) |
+| **Pricing** | Your lane prices — what you charge per lane — and the lanes you run without a price |
+| **Reporting** | Win rates, pipeline value, quote and contract figures over one period |
+
+You only see the tabs your role may use. A dispatcher, for example, sees **Pipeline** and **Reporting** but not **Quotes**; **Pricing** is limited to admin, company admin, key user and planner roles. If a tab is missing for you, ask your company admin. Company admins can also switch the **Sales CRM** and **Tenders & contracts** modules on or off in **Settings → Modules**; with Sales CRM off, Pipeline and Reporting are hidden.
+
+<Frame caption="The Sales Pipeline — leads and tenders moving from Lead to Won.">
+  <img src="/images/planner/crm.png" alt="Sales pipeline board with leads across stages" />
+</Frame>
+
+### Words used in Sales
+
+- A **lead** is a company you want to win — not a person.
+- A **contact** is a person at a lead or a client.
+- A **deal** is a lead or a tender that has not been decided yet.
+- A **contract** is a tender you won.
+- A **lane price** is what you charge for one lane, kept in a **price list** (general or for one client).
+
+> **Note:** 
+There is no separate "Accounts" tab, "Leads" tab or "Tenders" tab any more. Your existing clients live under **Clients** in the main navigation; leads are on the Pipeline (**Table** view lists them all); tenders are on the Pipeline until they are won, and then on **Contracts**. Old links and bookmarks to those pages still work and land on the right tab.
+
+
+---
+
+## Pipeline
+
+Open **Sales → Pipeline**. Leads and tenders sit side by side.
+
+### Board or table
+
+Use **View** to switch between **Board** and **Table**. The board is the default on a desktop; on a phone the table is shown. Both views show exactly the same deals and the same counts.
+
+- **Board** — columns for **Lead → Qualified → Proposal**. Drag a card to another column to change its stage. Under the **Open** scope, **Won** and **Lost** appear as narrow strips you can drop a card on; click a strip to switch to that scope.
+- **Table** — one row per deal with Name, Type, Company / Client, Stage, Value, Probability, Close date, Owner, Last activity and Next task. Use **Columns** to choose which columns show.
+
+### Scope, type and search
+
+- The scope tabs are **Open** (Lead, Qualified, Proposal), **Won**, **Lost** and **All**, each with a count.
+- **Type** (only when tender management is on) filters to **All types**, **Leads** or **Tenders**.
+- **Search deals…** filters by name.
+- The **Views** menu saves your current view, scope and type filter so you can come back to it.
+- The board shows deals lost in the last 90 days; older lost deals leave the board but are still counted in Reporting.
+
+At the top you see two figures: **Weighted pipeline (€)** and the **Deal win rate**.
+
+### Tender stages on the board
+
+A tender is a deal at higher fidelity, so it uses the same words: a tender being prospected shows as **Lead**, one being priced as **Qualified** and one that has been sent as **Proposal**. When you win it, it moves to **Won** and, once awarded, to **Contracts**.
+
+### Adding a lead
+
+
+  ### Click New lead
+    Click **New lead** (shortcut **N**) on the Pipeline.
+  
+  ### Fill in the details
+    Enter the **Company** (required), plus contact person, country, email, phone, VAT, source, stage and notes.
+  
+  ### Create
+    Click **Create**. The lead appears on the board and in the table.
+  
+
+
+The menu next to **New lead** (**More ways to add a deal**) has **New tender** and **Import tender document** (the import needs AI tender import to be enabled, and both need tender management). Leads that arrive from an inbound RFQ or a forwarded email are tagged with their source automatically.
+
+> **Note:** 
+**Is there a way to list all my leads in a table?** Yes — switch **View** to **Table** and choose the **All** scope.
+
+
+---
+
+## Working a lead
+
+Click a card or a row to open the lead in a side pane. It has:
+
+- **Stage** — change the stage directly. Setting it to **Lost** shows a **Lost reason** dropdown under **Deal**.
+- **Deal** — expected value, probability, expected close date, tags and the lost reason.
+- **Contacts** — the people at the company; mark one as primary.
+- **Activity** — log a touchpoint (**Call, Email, Meeting, Demo, Note**) with an optional summary and attachment, and keep a task list for the next steps.
+- **Quotes** and **Tenders** — everything already created for this lead.
+- **Source** — where the lead came from.
+
+The pane footer has **Create quote**, **Create tender** (when tender management is on), **Convert to client** and **Delete lead**.
+
+### Converting a lead to a client
+
+
+  ### Open the lead and click Convert to client
+    Confirm the prompt. Druma creates the client in one go and carries everything over: the people become the client's contacts, the activity history and tasks move to the client, and its quotes and tenders are re-linked to the client. The lead is marked **Won**.
+  
+  ### Optionally create lane prices
+    Druma asks **Create lane prices?** Choose **Create price list** to open a new price list pre-filled for this client, or **Not now** to skip it.
+  
+  ### Find the client under Clients
+    The new client opens in the **Clients** list. If a client with the same VAT number already exists, Druma links the lead to that client instead of creating a duplicate. Clicking **Convert to client** again on an already converted lead just opens the existing client.
+  
+
+
+The converted lead keeps its card on the board with a **View client** link.
+
+### How quotes move a lead along
+
+The lead's stage follows its quotes, forward only:
+
+- A quote is **sent** — a lead in **Lead** or **Qualified** moves to **Proposal**.
+- A quote is **accepted** or **converted** to an order — the lead moves to **Won**.
+- A quote that is **rejected** or **expires** never moves a lead to **Lost** on its own. Mark a lead as lost yourself.
+
+You can quote a lead that is not a client yet. When you convert such a quote to an order, Druma first converts the lead to a client.
+
+---
+
+## Sales on the client record
+
+Open a client under **Clients** and scroll to the **Sales** section (visible to roles that can see the Pipeline). It shows the client's **Activity**, **Quotes**, and **Tenders & contracts**, with **New quote**, **New tender** and **Log activity** buttons. Each list follows your access to its own tab — a dispatcher sees the activity but no quote list.
+
+---
+
+## Pricing tab
+
+**Sales → Pricing** (admin, company admin, key user, planner) is one table of **lane prices**. A lane price is one lane under a **price list**; a price list is general or for one client, with a currency, validity dates and an active flag.
+
+- The scope tabs are **Active**, **Inactive**, **Unpriced lanes** and **All**.
+- **Unpriced lanes** lists lanes you already run that have no price. Click **Create lane price** on a row to create a price list priced at the historical median for that lane, or **Create all visible** (with a confirmation) to do all rows shown. Edit the price afterwards.
+- Click a row to open the price list in a side pane with all its lanes. Use **New price list** to start one from scratch.
+- A price list created by awarding a tender shows **From contract** in the Source column and links back to the contract. Others show **Manual**.
+- Once a lane price exists, Druma suggests it whenever a matching quote or order comes in.
+- The **Pricing tool** button opens the quote composer's calculator (distance, tolls and your cost profile) — see [Quotes](/en/planner/quotes).
+
+> **Note:** 
+Truck **cost profiles** (what a truck costs you) are a different thing and live in **Settings → Cost profiles**.
+
+
+---
+
+## Reporting
+
+**Sales → Reporting** has one **Period** picker — **All time**, **Last 30 days**, **Last 90 days** or **Last 12 months** — over three sections. Each section shows only if you can see the matching tab:
+
+- **Deals** — win rate, weighted pipeline, sales cycle, average deal size, plus **Deals by stage**, **Why deals were lost** and the activity leaderboard.
+- **Quotes** — quote win rate, order conversion and open value, plus **Quotes by status** and **Win rate by quoted margin band**.
+- **Contracts** — active and expiring contracts and **Delivered vs committed** loads, with a **Committed vs delivered loads** chart.
+
+Each tile compares against the previous period of the same length ("vs previous period"). The figures are the same ones the tabs show, so they always agree. **Quote win rate** is won quotes divided by won plus lost quotes; drafts and open quotes are not counted.
+
+---
+
+## Common questions
+
+**Where did the Accounts tab go?** Use **Clients** in the main navigation. The client's sales history is in the **Sales** section of the client record.
+
+**Where did the Leads/Contacts tab go?** Into the Pipeline's **Table** view.
+
+**Where are my tenders now?** On the Pipeline while they are being bid, and under **Contracts** once won. See [Tenders & Contracts](/en/planner/tenders-and-contracts).
+
+**Why can't I see Quotes or Pricing?** Each tab has its own access rules; ask your company admin to adjust your role.
+
+---
+
+
+  
+    Build and send a freight quote to a lead or client, with one-click accept turning it into a confirmed order.
+  
+  
+    Track tenders from first bid to contract, and watch delivered vs. committed loads.
+  
+</CardGroup>
+
+---
+
+## Freight Forwarding
+
+
+## What Is a Subcontracted Order?
+
+Sometimes you take a load from a client but don't carry it yourself — you hire another carrier to do it. You're acting as a freight forwarder: you're the commercial layer between the client and the actual carrier.
+
+In Druma, this is called a **Subcontracted** order type. You create one order, assign it to a carrier from your subcontractor registry, and Druma handles the rest: split invoicing, status tracking, document flow, and margin calculation — all from that single order with no double data entry.
+
+<Frame caption="The Forwarding Pipeline — buy-rate/sell-rate margin tracked per subcontracted order.">
+  <img src="/images/planner/freight-forwarding.png" alt="Freight Forwarding pipeline board" />
+</Frame>
+
+---
+
+## Creating a Subcontracted Order
+
+
+  ### Create a new order
+    Go to **Orders → New Order**.
+  
+  ### Set the order type to Subcontracted
+    In the order form, find the **Order Type** field and select **Subcontracted**.
+  
+  ### Fill in the standard order details
+    Enter pickup address, delivery address, cargo description, trailer type, and your agreed price with the client (the sell rate).
+  
+  ### Select the carrier
+    In the **Subcontractor / Carrier** field, choose the company from your subcontractor registry who will physically move this load.
+  
+  ### Enter the carrier cost
+    Enter what you're paying the carrier (the buy rate). This is kept separate from the client price and is only visible to planners — not to the client.
+  
+  ### Save and assign
+    Click **Save**. The carrier receives access to this order through their portal automatically.
+  
+
+
+
+---
+
+## Split Invoicing
+
+A subcontracted order tracks both sides of the money from one set of data — no double entry of route, dates, or cargo:
+
+**Sell side** — what you charge your client (the agreed price). You generate this invoice the same way as for any other order, from the order's own invoicing action.
+
+**Buy side** — what you pay the carrier. Open the order's **Carrier & Money** tab to see the **Buy rate** you agreed with the carrier alongside your **Revenue**, with the **Margin** (Revenue − Buy rate) calculated automatically.
+
+> **Note:** 
+There's no separate "Generate Purchase Invoice" button on the order — when the carrier sends you their own invoice for the load, match it against a subcontractor invoice on the dedicated **Subcontractor Invoices** page, which handles ingestion and matching against the buy rate you recorded here.
+
+
+Carrier waiting time is billable too. When a carrier announces waiting at a stop through their portal, it opens a waiting log against the subcontractor the same way a driver's own waiting time does — feeding the same `waiting_logs` → order extras → invoice line chain, so it flows through to the client invoice without any manual re-entry on your side.
+
+---
+
+## Status Sync: Carrier → Your System → Client
+
+When the carrier updates the order status in their portal (Picked Up, In Transit, Delivered), that update flows through automatically:
+
+1. The order status in your Druma updates immediately
+2. Your client sees the updated status in their portal, on their shipment's timeline
+3. Your planners see the update on the order detail pane and, if the truck is live, on the Live Map
+
+You don't need to manually relay status updates from the carrier to your client. The information flows through Druma automatically.
+
+
+---
+
+## Document Flow
+
+When the carrier uploads documents through their portal — CMR scan, proof of delivery, photos — those documents appear in two places at once:
+
+- **Your Druma account** — under the order's Documents tab
+- **Your client's portal** — in their Documents page, filterable by type (CMR, eCMR, POD, Invoice, CO2)
+
+The client gets access to the CMR and delivery confirmation without you having to manually forward anything. It just arrives.
+
+> **Note:** 
+There's no per-document visibility toggle — every document attached to an order the client can see is visible to them. If you need to keep a carrier-uploaded file internal, don't attach it to the order's Documents.
+
+
+---
+
+## Margin Tracking
+
+On every subcontracted order, Druma shows you your margin at a glance:
+
+**Margin = Sell price − Carrier cost**
+
+You'll see this on the order's Carrier & Money tab and in the order list view. This makes it easy to review profitability across your forwarding loads without building spreadsheets.
+
+If actual costs change (carrier charges waiting time or extra km), update the buy rate on the order and the margin recalculates automatically.
+
+---
+
+## Carrier Updates
+
+Once a subcontracted order is assigned to a carrier and they begin providing updates via the carrier portal, Druma surfaces their real-time data on the forwarding board and in the order detail panel — no manual relay needed on your side.
+
+### On the forwarding board (In Transit cards)
+
+- **Carrier ETA** — the carrier's own ETA for delivery, labelled "Carrier ETA" to distinguish it from Druma's PTV-calculated ETA
+- **Carrier truck plate** badge — the actual plate the carrier is using on this load
+- **Missing buy rate warning** — an amber badge appears on any card where no buy rate has been set. This signals a margin data gap — open the order and enter the buy rate before invoicing
+
+### In the order detail pane
+
+For subcontracted orders, a **Carrier Updates** section appears in the order detail pane showing:
+
+- Carrier truck plate and driver name
+- Driver phone number (shown as plain text, not a tap-to-call link)
+- Carrier ETA
+- Loading actuals: carrier-reported arrival and departure at the pickup point
+- Delivery actuals: carrier-reported arrival and departure at the delivery point
+
+These fields are populated by the carrier via their portal — no manual entry is needed on your side. If a carrier hasn't sent updates yet, the section shows placeholders.
+
+---
+
+## When to Use Subcontracted Orders
+
+Use a Subcontracted order type whenever:
+
+- You've taken a load but your own trucks are full
+- You're acting purely as a forwarder and don't carry loads yourself
+- You're using a spot carrier for a one-off load
+- You need to track the margin between what you charge the client and what you pay the carrier
+
+> **Warning:** 
+If you use your own driver and truck, use a standard order type — not Subcontracted. Subcontracted orders are specifically for loads carried by external carriers.
+
+
+---
+
+
+  
+    Add carrier companies to your registry before you can assign them to subcontracted orders.
+  
+  
+    Learn how to generate sell and purchase invoices from your orders.
+  
+</CardGroup>
+
+---
+
+## Groupage (LTL)
+
+
+## What Is Groupage?
+
+Groupage — also called LTL (less-than-truckload) or consolidation — is when you load multiple small shipments from different clients onto the same truck going in the same direction. Each client only pays for their portion of the truck space, and you fill the truck with combined loads to make the run profitable.
+
+In Druma, groupage is its own module (`/groupage`) — a **groupage run** holds multiple existing order **legs**. The run tracks the truck, driver, and route; each leg keeps its own client, cargo, pickup/delivery address, and price.
+
+> **Note:** 
+Groupage isn't a fourth "order type" alongside Own Truck / Subcontracted / Repositioning — it's a separate module that groups existing orders together.
+
+
+<Frame caption="The Groupage module — a run's legs with per-leg client, cargo, and fill-rate tracking.">
+  <img src="/images/planner/groupage.png" alt="Groupage run with multiple legs and fill-rate indicator" />
+</Frame>
+
+---
+
+## Finding Orders to Combine
+
+Before you build a run, Druma helps you spot which orders are worth combining — right on the Orders workbench, and on the order itself.
+
+### Load size column
+
+The Orders workbench shows a **Load size** column by default: each order's fill percentage of a standard trailer (13.6 LDM / 24 t / 33 EUR-pallet places), alongside its loading metres (LDM).
+
+> **Note:** 
+If an order has no LDM value but does have a pallet count, Druma estimates LDM at 0.4 LDM per EUR pallet — the column's tooltip flags the figure as an estimate whenever it's calculated this way.
+
+
+Orders under 85% fill get a violet **PART** chip, flagging them as part-loads — good candidates for consolidating onto a groupage run.
+
+### Part-loads quick filter
+
+Click the **Part-loads** filter on the Orders workbench to show only ungrouped part-loads: orders small enough to combine that aren't riding on a groupage run yet. The filter persists in the URL, so you can bookmark or share a link straight to the filtered list.
+
+### Spotting orders already in a run
+
+Two indicators tell you an order is already part of a run, so you don't go looking to add it to another one:
+
+- **G badge** — an amber **G** badge sits next to the order number on the Orders workbench, and next to the corresponding invoice on the Invoices list. Click it to jump straight into that run's detail panel.
+- **Groupage strip** — opening an order that belongs to a run shows a strip at the top of its detail pane: *"Part of groupage run {ref} · {n} orders · {truck}"*. Click through to the run from there too.
+
+---
+
+## Creating a Groupage Run
+
+
+  ### Go to Groupage
+    Open the **Groupage** module from the navigation.
+  
+  ### Click Create Groupage
+    Click **Create Groupage**. Druma creates an empty run (with an auto-generated reference like `GRP-XXXXX`) and opens its detail panel — there's no truck/driver/date/route form at this step.
+  
+  ### Add orders to the run
+    See the next section — you build the run by adding existing eligible orders to it, not by filling in a form.
+  
+
+
+---
+
+## Adding Orders to a Groupage Run
+
+
+  ### Open the run and click Add Orders
+    Open the groupage run and click **Add Orders to Groupage**.
+  
+  ### Check off eligible orders
+    The modal lists existing orders eligible to join this run — order number, client, route, LDM, weight, and trailer type — with a checkbox per row. There's no data-entry form here; you're selecting orders that already exist, not typing in new shipment details.
+  
+  ### Use Auto-fill if you want Druma to pick for you
+    Click **Auto-fill** to have Druma select the best-fitting combination of eligible orders up to the trailer's remaining loading-metre capacity.
+  
+  ### Add to Groupage
+    Click **Add to Groupage**. If your selection would exceed the trailer's LDM capacity, the action is blocked with a validation error — you'll need to deselect something first. A trailer-type mismatch (an order's trailer type differs from the run's) shows as a warning but doesn't block the action.
+  
+
+
+> **Note:** 
+Weight and volume don't block adding orders — only loading metres (LDM) do. Fill-rate bars for weight and volume are still shown for reference (see below), but they're informational, not gating.
+
+
+---
+
+## Open Slots
+
+Adding orders one at a time works from the order side. **Open Slots** works from the truck side: a third view on the Groupage page, next to **Table** and **Map**, that lists upcoming assigned trucks with spare capacity — and open runs that don't have a truck yet — and suggests which ungrouped part-loads fit each one.
+
+
+  ### Switch to the Open Slots view
+    Open the **Groupage** module and click **Open Slots** in the view toggle.
+  
+  ### Review a slot's spare capacity
+    Each slot — a truck, or a draft/confirmed run still waiting for one — lists what's already committed against its capacity, jointly across LDM, weight, and pallets, plus the space still remaining in each. A run with no truck assigned yet is marked **No truck yet**. The first slot with fitting orders auto-expands, and the search box matches truck, plate, driver, cities, and run references.
+  
+  ### Check the suggested orders
+    Below each slot, Druma lists the top fitting orders: matched on a pickup-date window of ±2 days, route compatibility within roughly a 100 km detour radius, and fit across LDM, weight, and pallets. Each candidate shows its pickup date and time window (e.g. `07/08 08:00–10:00`), so a tight window is visible before you commit. Orders already riding in a *different* open run show up here too, tagged **In GRP-XXXXX**. A trailer-type mismatch between the order and the truck shows as a warning — it doesn't block the match.
+  
+  ### Add — or move — with one click
+    Click **Add to run** on a candidate that isn't grouped yet. For a candidate tagged **In GRP-XXXXX**, the button reads **Move here** instead: one click moves the order out of that run and into this slot, and both runs' cost splits recalculate automatically. If the truck was carrying a single order, Druma creates a draft groupage run and adds both orders to it. If the truck is already on a run, the order is simply added to it as a new leg.
+  
+
+
+> **Note:** 
+Runs that have already departed (in progress) aren't offered as Open Slots targets, and their orders can't be pulled out of them either — only trucks and runs still ahead of departure show up here, on both sides of a move.
+
+
+> **Note:** 
+Capacity comes from the trailer attached to the truck's orders. When none is set, Druma falls back to the standard-trailer assumption (13.6 LDM / 24 t / 33 pallets) and notes that it's an estimate.
+
+
+---
+
+## Stop Sequencing
+
+New stops are appended to the end of the run in the order you add them — Druma doesn't auto-optimise the route as you go. The exception is a run's opening stop list: when a run comes together in one shot — via **Auto-fill**, or by adding the first orders through **Open Slots** — Druma sequences it loads-first, all pickups before any deliveries, rather than leaving stops in raw add order.
+
+To optimise further, click **Auto-sequence** (only shown with 2+ stops): it re-orders the stop list to minimise total distance (pickups before deliveries) and reports how much distance it saved, or that the order was already optimal. You can also drag-and-drop stops manually, or use the up/down arrows on each stop row, at any time.
+
+---
+
+## Per-Leg Status Tracking
+
+Each order leg has its own status flow, independent of the other shipments on the truck. When the driver updates their status for a specific stop, only that leg's order updates — the run overview shows which stops are complete and which are pending.
+
+For example: if the truck has four deliveries and the driver completes stops 1 and 2, those legs show **Delivered** while stops 3 and 4 still show **En Route to Delivery**. Each client sees only their own shipment status in their portal.
+
+---
+
+## Loading Metres (LDM), Weight, and Volume Tracking
+
+Each leg can have **CBM**, **Weight (kg)**, and **LDM** values entered directly on its stop card. LDM represents the linear length of trailer floor space the shipment occupies — the standard measure for groupage planning across Europe.
+
+The groupage run shows fill-rate progress bars across whichever dimensions the assigned truck/trailer has a known capacity for — **Weight**, **Volume (CBM)**, and **Loading Metres**:
+
+| Colour | Fill level |
+|---|---|
+| Green | ≤70% of capacity |
+| Amber | 70–90% of capacity |
+| Red | >90% of capacity (including over 100%, which is shown uncapped) |
+
+### Cost split mode
+
+The **cost split mode** controls how shared costs are divided between legs. Four modes are available: **CBM**, **Weight**, **LDM**, and **Chargeable**. Click a mode button on the run's Cost Split tab to switch — it triggers an automatic recalculation of each leg's cost share, split percentage, allocated cost, and margin.
+
+Choose the mode that matches your commercial agreement with the clients on that run. CBM is most common for general cargo, LDM for floor-space-critical loads, weight for dense goods, and Chargeable when you bill on whichever of weight/volume yields the higher figure.
+
+> **Note:** 
+Every path that adds an order to a run — manual add, Auto-fill, or Open Slots — copies that order's cargo dimensions (CBM, weight, LDM) onto its leg, so the cost split allocates correctly regardless of mode. For legs added before this copy step existed, use **Recalculate split** on the run's Cost Split tab to backfill the correct figures.
+
+
+---
+
+## Groupage Manifest
+
+Before the driver sets off, print the groupage manifest — a list of stops and cargo for the run.
+
+
+  ### Open the groupage run
+    Open the run's detail panel.
+  
+  ### Print Manifest
+    Click **Print Manifest**. Druma opens a new browser tab with a printable HTML manifest — there's no separate PDF download.
+  
+  ### Share with the driver
+    Print it and hand it over, or share it via the driver app message thread.
+  
+
+
+The manifest includes: stop sequence, pickup/delivery address, client, order number, weight, and any notes per stop. It does not include a cargo-description column.
+
+---
+
+## Per-Leg Invoicing
+
+The run has its own **Invoices** tab, listing every leg with its invoice status (**Not invoiced → Generated → Sent → Paid**) and a **Generate invoice** button per leg:
+
+
+  ### Open the run's Invoices tab
+    Open the groupage run and go to the **Invoices** tab.
+  
+  ### Generate invoice
+    Click **Generate invoice** next to any not-yet-invoiced leg. The invoice is created for that leg's client only, with their specific cargo, price, and reference.
+  
+
+
+Clients on the same truck never see each other's invoices or prices — each one gets a clean, separate document, and you can generate them one at a time as each leg is ready to bill.
+
+---
+
+## Tracking
+
+Clients tracking a groupage shipment see a static **Expected delivery** date on the public tracking page, not a live, multi-stop-sequenced ETA.
+
+---
+
+## Correcting a Finished Run
+
+When every shipment of a run is delivered, a **key user** can still correct mistakes through the Key User Hub: change the truck, trailer or driver recorded on the run, move a shipment to the run that really carried it (or take it off groupage), and fix a run-sheet stop time the driver never stamped. These corrections are silent: they never change statuses, invoices, prices or eCMRs and send nothing to anyone. Runs that are still live, relayed, subcontracted or part of a hub distribution can't be corrected this way and keep being managed here. To fix the truck of a single member of a run, correct the run as a whole, not one order at a time.
+
+## Groupage on the Planning Board and Live Map
+
+Groupage runs stay visible outside the Groupage module too:
+
+- **A row, not a card** — a groupage run appears on the Planning Board as a standard row in the Outgoing list, grouped under the same day as its first loading stop, exactly like any order. It shows a status pill, a **G** marker plus reference, a compact stops marker like **2P+3D** (2 pickups, 3 deliveries across the whole run), and an LDM fill figure colour-coded the same way as elsewhere: green under 75%, amber 75–94%, red 95% and up.
+- **Assign truck like an order** — the row carries the same **Assign truck** cell as any order row: drag a truck onto it to assign, exactly like assigning a truck to a single order.
+- **Approximate route** — a second line shows the approximate (**≈**) total route distance and time, plus the first-load date and time window. The ≈ figure comes from the route optimizer once the run has been sequenced; before that, Druma falls back to a straight-line estimate across the legs. Hover the row for the full pickup-city → … → delivery-city chain; open the run's detail panel for the complete per-dimension fill-rate breakdown (see the fill-rate table above).
+- **Search and filters** — searching an order number or client on the board matches orders riding inside a groupage run too, not just its own reference, and a board filter lets you show or hide groupage runs entirely.
+- **Live Map** — a truck executing a groupage run shows the run reference and its stop progress (e.g. "stop 3 of 6") in its map popup, with an **Open run** link straight into the run's detail panel.
+
+---
+
+## A Typical Use Case
+
+You have four clients needing loads moved from Bucharest towards Vienna this Thursday. Individually, none of them fills a truck. Together, they do:
+
+- Client A: 8 pallets to Bratislava
+- Client B: 4 pallets to Budapest
+- Client C: 10 pallets to Vienna
+- Client D: 6 pallets to Linz
+
+You create the four orders normally, then create a groupage run, add all four orders to it, assign your driver, auto-sequence the stops, and print the manifest. Each client pays for their portion, each gets their own invoice and status updates, and you run a full truck.
+
+---
+
+
+  
+    Learn how standard orders work in Druma — you'll create the individual orders first, then group them.
+  
+  
+    See all your orders in the weekly planning view before grouping them into a run.
+  
+</CardGroup>
+
+---
+
+## Cabotage Tracking
+
+
+> **Note:** 
+Cabotage tracking lives inside **Planning → Compliance**, on the **Trucks** tab — the same page that tracks EU Mobility Package vehicle/driver return obligations and IMI posting declarations, merged into one page with three tabs so you don't have to check two separate places for a truck's overall compliance risk. See [Mobility Package Compliance](/en/fleet-compliance/mobility-package) for the Drivers and Declarations tabs.
+
+
+## What Is Cabotage?
+
+Cabotage is when a truck registered in one country performs domestic transport inside a different country — meaning both the pickup and the delivery are within the same foreign country.
+
+**Example:** A Romanian-registered truck delivers a load from Bucharest to Munich (international). After that delivery, the truck picks up a load in Munich and delivers it to Frankfurt. That Munich → Frankfurt movement, performed by a Romanian truck entirely within Germany, is a **cabotage operation**.
+
+Cabotage is legal in the EU — but strictly limited.
+
+---
+
+## The EU Cabotage Rules
+
+Under EU Regulation 1072/2009, after completing an international delivery into a member state:
+
+- A foreign truck may perform **up to 3 cabotage operations** in that country
+- All 3 operations must be completed **within 7 days** of the international delivery
+- After those 3 operations (or 7 days, whichever comes first), the truck must leave that country
+- There is a mandatory **4-day cooldown** before the truck can return to that country and do cabotage again
+
+**Why it matters:** Roadside inspection authorities in countries like Germany, France, and the Netherlands actively check for cabotage violations. Fines can reach several thousand euros per violation. Repeat violations can result in operating licence issues.
+
+> **Warning:** 
+Cabotage rules were tightened further under the EU Mobility Package. The 4-day cooling-off period is strictly enforced in western EU countries. Always verify current rules apply — regulations can be updated.
+
+
+---
+
+## How Druma Tracks Cabotage
+
+Druma monitors cabotage automatically based on the order data you enter. Here's what it looks for:
+
+1. **Country detection** — on every order, Druma checks the country of the pickup address and the country of the delivery address
+2. **Non-resident flag** — if the truck is registered in a different country from both the pickup and delivery countries, and both pickup and delivery are in the same country, the order is flagged as a cabotage operation
+3. **Counter per truck** — Druma counts cabotage operations per country, per vehicle, per rolling 7-day window after the last qualifying international delivery
+4. **Cooldown monitoring** — Druma tracks when the 7-day window expires and when the 4-day cooldown begins and ends
+
+
+---
+
+## Viewing the Cabotage Log
+
+To see cabotage exposure for your fleet:
+
+
+  ### Go to Planning
+    Click **Planning** in the top navigation.
+  
+  ### Open Compliance
+    Click the **Compliance** tab (`/operations/compliance`), alongside Planning Board, Orders, and the other planning tabs. It opens on the **Trucks** tab.
+  
+  ### Search, sort, or filter by risk
+    Use the search box to find a specific truck, plate, or country, or click **Filter** and pick a risk level — for example, **near limit**, **at limit**, **cooling-off**, or **overdue** — to narrow the list to trucks that need attention. Click a column header to sort.
+  
+
+
+Each row on the Trucks tab carries **both** of a truck's compliance clocks side by side: its cabotage counter for whichever country it's currently exposed in, and its EU Mobility Package vehicle-return clock (see [Mobility Package Compliance](/en/fleet-compliance/mobility-package)) — so you can see a truck's full compliance picture without switching tabs. A truck can be in more than one country at once (for example 2 of 3 in Poland and 0 of 3 in Austria), so it can appear once per country; use **Group by country** to read it that way. Click a row to open a side pane with:
+
+- Each cabotage operation for that truck (order reference, country, dates), with a link to the order that opened the window
+- Operation count within the 7-day window and how many are **Left**
+- Cooldown status: active cooldown, cooldown expired, or eligible for new operations
+- A **Planned** section (see below)
+- Any alerts triggered
+
+### Status labels
+
+| Status | Meaning |
+|---|---|
+| **OK** | 0 or 1 cabotage operations used in the current 7-day window |
+| **Near limit** | 2 of 3 used — one more reaches the ceiling |
+| **At limit** | 3 of 3 used — the lawful maximum, **not** a breach (shown in amber) |
+| **Exceeded** | More than 3 operations in the window — a real breach, the only status shown in red. Stays visible for 90 days as a record |
+| **Cooling off** | The window closed after at least one cabotage operation; no new cabotage may start in that country for 4 days after the last operation |
+
+The **Used** column shows the operation count as dots (up to three). The scope tabs at the top and the **Risk** filter narrow the list to the trucks that need attention.
+
+### Planned orders (projection)
+
+The Trucks tab also looks forward. The **Planned** column shows, for example, **+1 planned**: orders already assigned to the truck, not yet delivered, whose pickup and delivery are both in that same host country while the window is still open. The side pane's **Planned** section shows the sum, for example "2 used + 1 planned = 3"; if the total would go over the limit it says "this plan would breach the limit". Use this before dispatching, not just after the fact. A delivery back in your own company's country is never counted as cabotage.
+
+---
+
+## Cabotage Alerts
+
+Druma warns you before you cross the limit, not after — with an in-app warning at the moment you assign a truck to a domestic order on the Planning Board:
+
+**Warning** — the truck is about to reach its allowed cabotage operations in that country within the 7-day window. You can still confirm the assignment, but you're shown the count and the window end date first.
+
+**Limit exceeded** — the truck has already used all 3 operations, so one more would be a 4th and violate EU Regulation 1072/2009. The warning is shown in red, and confirming it is flagged as **Assign (Legal Violation)**.
+
+**Cooldown active** — the truck is still inside its mandatory 4-day cooldown in that country. The warning names the date cooldown ends and the assignment is again flagged as a legal violation if you proceed.
+
+These alerts appear at assign-time, so you can catch the issue before the truck is dispatched.
+
+---
+
+## What Druma Tracks vs. What You Still Need to Manage
+
+Druma's cabotage tracking is based entirely on the order data you enter into the system. It is accurate as long as your orders are entered correctly and promptly.
+
+> **Note:** 
+Druma's cabotage tracking is a planning assistance tool — it does not replace a dedicated cabotage compliance system or legal advice. Always ensure drivers carry the correct documentation at the roadside: the original international CMR, the three cabotage CMRs (if applicable), and the dates clearly visible. Inspection authorities check paper documentation, not your TMS.
+
+
+**Druma tracks:**
+- Operations count per truck per country per 7-day window
+- Cooldown periods
+- Order-level cabotage flags
+
+**You still need to manage:**
+- Driver documentation at the roadside
+- Legal updates if EU regulations change
+- Operations carried out outside Druma (e.g., loads not entered into the system)
+
+---
+
+
+  
+    The Drivers and Declarations tabs of the same Compliance page — vehicle/driver return clocks and IMI posting declarations.
+  
+  
+    Manage your vehicles, registration countries, and truck profiles.
+  
+  
+    Track driver hours and rest periods to stay compliant with EU tachograph rules.
+  
+</CardGroup>
+
+---
+
+## Wasted Journey
+
+
+## What is a wasted journey?
+
+A wasted journey occurs when a driver has already departed for a job — or is partway through it — and the trip is cancelled or becomes impossible to complete. Common causes include:
+
+- The client cancels the order after the driver is already en route.
+- Force majeure — road closures, border issues, or severe weather.
+- A company decision to abort the trip (e.g., vehicle breakdown).
+
+Unlike a simple cancellation (which applies to orders still in Draft or Pending status), a wasted journey affects orders that are already **active** — the driver has left the depot and incurred real costs.
+
+---
+
+## When can you declare a wasted journey?
+
+You can declare a wasted journey on any order that is in one of these active statuses:
+
+- Departed
+- At Pickup
+- Loading
+- In Transit
+- At Delivery
+- Offloading
+
+Orders in Draft, Pending, or Assigned status should be cancelled normally — no wasted journey declaration is needed because the driver hasn't moved yet.
+
+> **Warning:** 
+Declaring a wasted journey **cannot be undone**. The order moves to the **Wasted Journey** status permanently. Make sure you have confirmed the situation with the driver before proceeding.
+
+
+---
+
+## How to declare a wasted journey
+
+
+  ### Open the order
+    Go to **Planning → Orders** and click the order you need to mark as a wasted journey. The order detail panel opens on the right.
+  
+  ### Click Declare Wasted Journey
+    In the order detail panel, find the **Declare Wasted Journey** button. This button only appears for orders in an active status (Departed through Offloading).
+  
+  ### Fill in the details
+    The wasted journey modal asks for:
+    - **Reason code** — Select the reason from the dropdown (e.g., client cancellation, force majeure, company decision).
+    - **Cancelled by** — Choose who initiated the cancellation: Client, Own Decision, or Force Majeure.
+    - **Driver location** — Where the driver is right now. Required for Own Truck orders. **Hidden for subcontracted orders** — the carrier manages their own driver, so Druma doesn't ask for it.
+    - **Dead kilometres** — The number of kilometres the driver has already travelled with no revenue to show for it.
+    - **Comment** — Add a free-text explanation of what happened.
+    - **Carrier cancellation fee** — Shown only for **subcontracted orders**, pre-filled from the order's buy rate. What you owe (or want to negotiate down) the carrier for the aborted trip.
+    - **Charge client** — Toggle this on if you intend to invoice the client for the wasted journey.
+  
+  ### Confirm
+    Click **Declare Wasted Journey** to confirm. The order status changes to **Wasted Journey** immediately.
+  
+
+
+---
+
+## What happens after declaration
+
+Once an order is marked as a wasted journey:
+
+1. **The order status changes to Wasted Journey** — it appears with a red badge on the orders list and planning board.
+2. **The driver is released** — for Own Truck orders, the truck becomes available for new assignments on the planning board.
+3. **The event is recorded on the order** — the reason code, who cancelled (client, own decision, or force majeure), dead kilometres, the driver's location (Own Truck orders), a carrier cancellation fee (subcontracted orders), and (if you toggled "Charge client") a client invoice amount are all saved directly on the order record.
+
+> **Note:** 
+Declaring a wasted journey does not automatically generate a separate payroll entry or a standalone charge record. What's recorded lives on the order itself — use that information manually for driver payroll and, if you toggled "Charge client", when building the client invoice.
+
+
+---
+
+## Charging the client
+
+If the wasted journey was caused by a client cancellation, you may want to recover costs. When you toggle **Charge client** in the wasted journey modal, you enter the client invoice amount directly (pre-filled from the order's agreed price, if one exists). This amount is saved on the order for you to bring into the invoice later — it isn't auto-converted into an invoice line item on its own.
+
+> **Note:** 
+Whether you charge the client depends on your contractual terms. Druma records the amount — it's up to you to decide whether and how to invoice it.
+
+
+---
+
+## Wasted journey on the planning board
+
+Orders with **Wasted Journey** status appear with a red pill on the planning board. You can filter for them using the **Wasted Journey** filter chip in the orders panel.
+
+Wasted journey orders are excluded from fleet utilisation and active load KPI calculations.
+
+---
+
+
+  See how Wasted Journey fits into the full order status flow — including which statuses can transition to it.
+
+
+
+  Learn how to create orders and understand the different order types.
+
+
+---
+
+## Coverage & Empty KM
+
+
+Two questions sit behind every empty kilometre: *which load still has no truck on it?* and *how much empty running did we actually do?* Druma answers them in two different places, because they are different jobs — one is a queue you work through today, the other is a report you read at the end of a period.
+
+> **Note:** 
+There is no longer a **Gaps** page in the Planning tab bar. Coverage moved into the header action queue described below, and the old **Empty-km optimiser** and **Empty trucks** sub-tabs were removed. Old links and bookmarks to `/operations/gaps` still work — they bounce to Orders and open the Coverage queue for you, so the hourly coverage alert keeps landing in the right place.
+
+
+---
+
+## The Coverage queue
+
+The Coverage queue is a slide-over panel, reachable from the **Coverage Queue** icon in the header cluster on any page. It lists **loads with no truck assigned, most urgent first**.
+
+### The two views
+
+| View | What it contains |
+|---|---|
+| **Needs a truck now** | Pickups within the next 24 hours, plus anything already overdue by up to three days. This is exactly what the hourly coverage alert escalates. |
+| **All uncovered** | Every future order without a truck, however far out. Use it to plan ahead once the urgent list is clear. |
+
+A search box (**Search gaps…**) filters by order number, client, or address.
+
+If the urgent list is empty you get **Nothing needs a truck right now**. When there are still uncovered loads further out, Druma says so and points you at **All uncovered** rather than leaving you with a blank panel.
+
+### What each row offers
+
+- **Assign truck** — pick a truck for the load. If Druma has a candidate it offers it directly; otherwise **Choose truck** opens the board so you can pick one yourself.
+- **Find carrier** — hand the load to a subcontractor instead. Where a load cannot be subcontracted the row says **No subcontract**, and where Druma found no option at all it says **Must self-cover**.
+- **Sell** — put the load up for sale.
+- **View order detail** — open the order without leaving the queue.
+
+When both an own-truck assignment and a subcontract are possible, the row shows which is cheaper — **Own truck cheaper** or **Subcontract cheaper** — so the comparison is made for you rather than in your head.
+
+### Triage
+
+The **Triage** menu marks a row **Working**, **Snooze 24h**, or **Accept as subcontract**, and **Clear** removes the mark.
+
+> **Warning:** 
+Snoozing quiets the header badge — it does **not** remove the load from the list. A snoozed load is still uncovered and still shows in the queue.
+
+
+---
+
+## Empty KM (Analytics)
+
+**Analytics → Empty KM** measures what the fleet actually ran: loaded kilometres against empty (deadhead) kilometres, per truck and driver.
+
+### The KPI bar
+
+- **Total Empty KM** and **Total Loaded KM**
+- **Fleet Empty %** — empty kilometres as a share of total
+- **Deadhead Coverage** — how much of the period could be measured at all (see below)
+- **Worst Truck** — the truck with the highest empty share
+- **Profit/km view** — opens the related profit-per-kilometre report
+
+### The table
+
+| Column | Meaning |
+|---|---|
+| **Truck**, **Driver** | Who ran it |
+| **Loaded KM** | Kilometres run with freight on board |
+| **Empty KM** | Repositioning kilometres between a delivery and the next pickup |
+| **Total KM** | Loaded plus empty |
+| **% Empty** | Empty as a share of that truck's total |
+| **Avg Empty Leg** | Average length of one repositioning leg |
+| **# Empty Legs** | How many repositioning legs were measured |
+| **Measured** | How many of the truck's orders could be measured |
+
+A **Top 10 trucks — loaded vs empty km** chart sits above the table, and the period selector offers **Today**, **This Week**, **Last 30 days**, **Last 12 months**, or a **Custom** range.
+
+### Why "Measured" matters
+
+An order only has a measurable deadhead if there was an earlier trip close enough in time to measure the repositioning *from*. Orders without one are **left out of the empty-% denominator rather than counted as zero empty km** — counting them as zero would quietly flatter the fleet's empty percentage. **Deadhead Coverage** tells you how much of the period the number is actually based on; read the empty % alongside it, not on its own.
+
+---
+
+## Related articles
+
+
+  
+    Assign loads to trucks, and where the Coverage queue sends you.
+  
+  
+    Handing a load to a carrier when you cannot self-cover it.
+  
+</CardGroup>
+
+---
+
+## Upload Inbox
+
+
+Filing documents is the part of the day nobody wants. A driver hands in a stack of PODs, someone scans them, and then someone has to find the right order for each one. The Upload Inbox does the finding.
+
+Open it from the **Upload Inbox** icon in the header cluster — it is available from any page, not just the orders list.
+
+> *Drop documents, we will find the order.*
+
+---
+
+## How it works
+
+
+  ### Add the files
+    **Drag & drop files here**, or **Browse files**. A scanned POD, CMR, delivery note or any other order document.
+  
+  ### Druma reads them
+    Each document shows **Processing…** while Druma detects the document type and matches it against your orders.
+  
+  ### Review and link
+    Each row lands in one of the outcomes below. Certain matches file themselves; everything else waits for one click from you.
+  
+
+
+---
+
+## The four outcomes
+
+The inbox is filtered by status — **All**, or one of:
+
+| Status | What it means | What to do |
+|---|---|---|
+| **Processing** | Druma is still reading the document | Wait |
+| **Matched** | An order was identified | Check the **Matched order** and click **Link** |
+| **Ambiguous** | More than one order could fit | Open the preview, decide, and **Link** |
+| **No match** | No order fits | Either the order does not exist yet, or the document is not one of yours |
+| **Linked** | Filed against its order | Nothing — it is done |
+
+---
+
+## Working a row
+
+- **Preview document** — see the actual scan next to the match, rather than deciding from a filename. This is usually the fastest way to resolve an **Ambiguous** row.
+- **Link** — attach the document to the matched order.
+- **Re-run match** — try the match again. Useful when the order was created *after* the document was uploaded: the first pass had nothing to match against, the second does.
+- **Reject** — the document does not belong here. It leaves the queue.
+
+A row that has not been read at all shows **Not processed**.
+
+> **Note:** 
+**No match** is often a sequencing problem rather than a failure. If the document arrived before the order existed, create the order and then use **Re-run match** — no need to re-upload the file.
+
+
+---
+
+## Related articles
+
+
+  
+    Reading whole orders out of a document, not just filing it.
+  
+  
+    Documents and orders that arrive by email instead.
+  
+</CardGroup>
+
+---
+
+## Fuel Advice
+
+
+Diesel costs different money in different countries, and on an intra-EU route a truck usually passes through several. Filling the tank in the country you happen to be standing in is the most expensive habit in road freight. Druma prices that decision for you.
+
+It shows up in three places: on the order for the planner, on the load for the driver, and once a week in the digest so you can see whether any of it was actually followed.
+
+---
+
+## Fuel advice on the order
+
+Open an order and find the **Fuel advice** section in the detail pane. (It sits with the financial information, so it is visible only to users who can see order financials.)
+
+| Reading | What it tells you |
+|---|---|
+| **Route fuel need** | Litres this route consumes |
+| **Consumption** | The rate used — labelled **Consumption (fleet default)** when it falls back to your fleet-wide figure rather than this truck's own |
+| **Full tank** | The tank size the numbers assume |
+| **Cheapest net €/L** | The best net price on the route, **excise refund included** |
+| **Dearest net €/L** | The worst, for comparison |
+| **Cheaper per litre** | The spread between them |
+| **Estimated saving** | What the choice is worth on this load |
+
+**Fill here** marks the recommended stop, and **How this is calculated** opens the working behind the number rather than asking you to trust it.
+
+On a route that never leaves one country you get **Single-country route — nothing to compare against** — there is no decision to make, and Druma says so instead of inventing one.
+
+> **Note:** 
+Prices are **net** — the excise refund your company reclaims is already taken off. That is the number that decides where to fill; the pump price is not.
+
+
+---
+
+## The detour hint
+
+Sometimes the cheapest country on your route is not the cheapest country *near* your route. Where a short deviation would reach a cheaper one, the section adds a line:
+
+> *A detour via {country} (≈ +{km} km) could save ≈ €{saving} more — estimate, not yet routed.*
+
+Read that caveat literally. The figure is a **straight-line screen**, not a routed plan: it costs no routing call, so it can be offered on every order, but it has not checked road distance, driving time, or whether the delivery window still works. Treat it as a prompt to look, not an instruction to drive.
+
+> **Warning:** 
+Two things this comparison does **not** account for, so you know where your own judgement is still required:
+
+- **Toll differences.** A detour can change toll cost as well as fuel. The saving shown is fuel-only.
+- **Station-level pricing.** It uses national net prices, not the price at an individual station or on your fuel-card network.
+
+---
+
+## What the driver sees
+
+The driver gets the conclusion, not the arithmetic. On the load in the driver app, a **Where to fuel** card names the country and says what it is worth — *"About €120 on a full tank."*
+
+The card states its own basis in the driver's language: national averages, excluding the VAT the company reclaims where that applies, and **advisory only — follow your fuel-card rules**. A fuel-card network agreement always outranks Druma's advice, and the card says so rather than leaving a driver to guess.
+
+---
+
+## The weekly digest
+
+Advice nobody follows looks identical to advice nobody gave. Once a week, the analytics digest reports what the fleet's fuelling actually cost.
+
+The number it gives is: over the week, your routes crossed a known set of countries; the cheapest of those is the price you *could* have paid; every litre bought dearer than that, **in a country the fleet was already driving through**, is money left on the table. No detour is assumed and no route is changed.
+
+> **Note:** 
+Read it as a **ceiling on what the country-choice lever was worth**, not as a loss. A tank cannot be filled entirely in the cheapest country — range, timing and tank size all bite, which is exactly what the per-order advice above accounts for. Druma reports "€X was available on the routes you already ran", not "you lost €X", because a fuel fill records its truck, date, country and price but *not* which load it was bought for.
+
+
+---
+
+## Fleet → Fuel — the fuel hub
+
+Everything fuel-related lives under one page, **Fleet → Fuel**, with its own sub-tab strip:
+
+| Tab | What it holds |
+|---|---|
+| **Fills** | The fuel-fill log per truck — the page's default view |
+| **Prices** | The **Diesel price board** described below |
+| **Anomalies** | Fills that look off against the truck's expected consumption, each linking straight back to the fill that triggered it |
+| **Import queue** | Fuel-card imports waiting on a manual match |
+| **Excise refund** | Fuel tax reclaim (formerly a separate Finance page) |
+
+Anomalies/Import queue/Excise refund are opt-in — they only show as tabs once the corresponding automation is switched on in the hub's own ⚙ settings popover (admin/company admin). Any bookmark to an old separate fuel page (`Fleet → Fuel optimisation`, `Fleet → Fuel anomalies`, `Fleet → Fuel exceptions`, or `Finance → Fuel tax`) still works — it redirects into the matching tab here.
+
+### Where the prices come from
+
+Country diesel prices come from the **EU Oil Bulletin**, synced nightly, and are visible in full on the **Prices** tab under **Diesel price board** — pump price, refund, net price, and the gap to the cheapest country.
+
+If you have just started, the board shows **No bulletin prices yet** until the first sync has run.
+
+---
+
+## Related articles
+
+
+  
+    Importing fills automatically, with the country already attached.
+  
+  
+    Reclaiming excise duty on the diesel you bought.
+  
+</CardGroup>
+
+---
+
+## Repositioning Orders
+
+
+## What is a repositioning order?
+
+A repositioning order tracks a **non-revenue move** — when you send a truck from one location to another without carrying cargo for a paying client. Common scenarios include:
+
+- Sending an empty truck from a delivery point to a different city where a pickup is waiting.
+- Moving a truck back to the home depot at the end of a working week.
+- Relocating a vehicle to cover a driver swap or maintenance appointment.
+
+Repositioning orders are not invoiced to clients. They exist to give you full visibility of your fleet's movements, track dead kilometres, and calculate the true cost of your operations.
+
+---
+
+## Creating a repositioning order
+
+
+  ### Open the new order form
+    Go to **Planning → Orders → New Order**.
+  
+  ### Select Repositioning as the order type
+    In the **Order Type** field, choose **Repositioning**. This is the third option alongside Own Truck and Subcontracted.
+  
+  ### Select the reason
+    Choose a **Repositioning Reason** from the dropdown. This is a fixed list of 5 reasons — there's no Settings UI to add or change them:
+    - Empty Return
+    - Fleet Relocation
+    - Maintenance Transfer
+    - Pre-Positioning
+    - Other
+  
+  ### Fill in the route
+    Enter the pickup address (where the truck is now) and the delivery address (where it needs to go). The PTV routing engine calculates the distance automatically.
+  
+  ### Add notes (optional)
+    Use the **Repositioning Notes** field to explain why this move is happening. This is visible to planners only, not to the driver.
+  
+  ### Assign a truck and save
+    Select the truck and driver as you would for any order. Save as Draft or Confirm immediately.
+  
+
+
+---
+
+## How repositioning orders differ
+
+| Feature | Regular order | Repositioning order |
+|---|---|---|
+| Invoiced to client | Yes | No |
+| Appears on planning board | Yes | Yes (with **Repo** badge) |
+| Counts in revenue reports | Yes | No |
+| Distance tracked | `distance_km` | `distance_km_internal` |
+| Driver sees in app | Yes | Yes |
+| Status flow | Full lifecycle | Full lifecycle |
+
+> **Note:** 
+Repositioning orders follow the same status lifecycle as regular orders (Draft → Delivered). The driver taps statuses in their app as normal. The only difference is that no client or price is attached.
+
+
+---
+
+## Internal stops
+
+During a repositioning move (or any order), you can add **internal stops** — unplanned stops for fuel, rest, maintenance, or other operational needs.
+
+Internal stops are tracked separately from loading and offloading stops. Each internal stop has:
+
+- **Address** — where the stop was made.
+- **Reason code** — selected from a fixed system list: Rest, Refuel, Overnight, Personal, Trailer Parking, Other.
+- **Notes** — free text explanation.
+
+Internal stops appear in the order's stop timeline but are visually distinguished from cargo stops. They do not affect delivery ETA calculations.
+
+---
+
+## Reason codes
+
+### Repositioning reasons
+
+The 5 repositioning reasons (Empty Return, Fleet Relocation, Maintenance Transfer, Pre-Positioning, Other) are fixed in the product — there is currently no Settings screen to add, rename, or remove them.
+
+### Internal stop reasons
+
+The 6 internal stop reasons (Rest, Refuel, Overnight, Personal, Trailer Parking, Other) are likewise fixed and apply to all order types, not just repositioning orders. There is no UI today to add custom reason codes on top of these, even though the underlying capability exists at the API level.
+
+---
+
+## Repositioning on the planning board
+
+Repositioning orders appear on the planning board with a small grey **R** badge, making them easy to distinguish from revenue-generating loads. They are included in fleet utilisation calculations (the truck is in use) but excluded from revenue KPIs.
+
+---
+
+## Reporting
+
+Repositioning kilometres are tracked via the `distance_km_internal` field and appear in:
+
+- **Lane Profitability Report** — as a separate "dead km" column so you can see the true cost of serving each lane.
+- **CO2 Report** — repositioning moves contribute to emissions and are reported separately from loaded journeys.
+
+---
+
+
+  See how repositioning orders appear on the dispatch board alongside regular loads.
+
+
+
+  Full guide to creating orders of all types — Own Truck, Subcontracted, and Repositioning.
+
+
+---
+
+## Switch Truck (Tractor Relay)
+
+
+## What is a tractor relay?
+
+A tractor relay (also called a truck switch) is when you change the tractor unit pulling a trailer **during an active order**. The trailer and its cargo stay on the same order — only the cab and driver change.
+
+Common scenarios:
+
+- **Relay driving** — Driver A takes the load from origin to a midpoint, then Driver B picks up the trailer and continues to the destination. This extends your effective range without breaking driving time regulations.
+- **Breakdown** — The original truck has a mechanical issue and a replacement tractor is sent to collect the trailer.
+- **Driver hours limit** — The current driver is running out of legal driving time and a fresh driver with a different truck takes over.
+- **Scheduled handover** — At a depot or hub, trailers are routinely swapped between tractors.
+
+> **Note:** 
+The key principle: **the trailer stays with the cargo**. When you switch the truck on an order, Druma detaches the old tractor but keeps the trailer attached. This preserves the chain of custody for the goods.
+
+
+---
+
+## When can you switch the truck?
+
+You can switch the truck on any order that is in one of these active statuses:
+
+- Pending
+- Assigned
+- Departed
+- At Pickup
+- Loading
+- In Transit
+- At Delivery
+- Offloading
+
+The order must be of type **Own Truck**. Subcontracted and capacity sale orders do not support truck switching — those are managed by the external carrier.
+
+> **Note:** 
+A **groupage run** can also be switched or relayed mid-route the same way a single order can — pick a new truck (or record a relay point for one leg) from the run's own row action, and every leg re-crews in one step. The one difference: a groupage run always needs a named truck — there is no "Don't know yet" open relay at the run level, since releasing one leg with the truck unknown would strand the rest of the run's cargo on the dropping tractor.
+
+
+---
+
+## How to switch the truck
+
+
+  ### Open the Planning Board
+    Go to **Planning → Planning Board** and find the active order's row.
+  
+  ### Trigger Switch Truck
+    Drag a different truck onto the order's row, or use **Switch truck** in the row's action menu. Druma detects that the order already has a truck assigned and opens the Switch Truck dialog instead of a plain assignment. Switch Truck is only available for Own Truck orders in an active status — it isn't exposed from the order detail panel.
+  
+  ### Set the relay location
+    Enter where the handover happens — type an address or drop a pin on a saved parking. This is the only required field.
+  
+  ### Choose where to insert it
+    Use **Insert relay after** to pick which stop the relay comes after (it defaults to the last loading stop). Druma inserts a new internal stop into the route at that point.
+  
+  ### Pick the new truck (or leave it open)
+    Choose the replacement truck from the **New truck** dropdown, or leave it on **Don't know yet** to record an **open relay** — see below.
+  
+  ### Confirm
+    Click **Confirm**. If you picked a new truck, Druma immediately runs the normal assign-truck flow on top of the relay — including any trailer-swap or cabotage checks that would apply to a first-time assignment.
+  
+
+
+> **Note:** 
+There is no reason or comment field on the Switch Truck dialog — Druma only records where the relay happens and, optionally, which truck picks up the load from there. If you want a record of *why* the switch happened, note it in the order's activity log or a stop note.
+
+
+---
+
+## What happens after a switch
+
+When you confirm, Druma:
+
+1. **Inserts an internal relay stop** into the order's route at the position you chose (stop type `internal`, labelled "Truck relay point"), recording the original truck on that stop so the switch can be cancelled later — see Undo below.
+2. **Runs the normal truck-assignment flow**, if you picked a new truck — the order's truck and driver fields are updated the same way a first-time assignment would be, including a trailer-swap prompt if the new truck has a fixed trailer that differs from the one currently on the order.
+3. **Leaves the trailer alone** otherwise — the trailer stays attached to the order regardless of which tractor is pulling it, unless the new truck's fixed trailer forces a swap.
+
+---
+
+## Open relay — when you don't know the next truck yet
+
+Choosing **Don't know yet** doesn't just note a location for later. It genuinely **releases the load**:
+
+- The order goes back to **Unassigned**, ready to be matched to a truck exactly like any other pending load.
+- The dropping tractor is freed to bobtail on to its own next job — Druma records its new position as the relay point, so it shows up as available from there rather than from wherever it last delivered.
+- The loaded trailer stays behind at the relay point, waiting to be collected.
+
+The order's row shows a **W** badge (hover it for the relay's zone and the name of the tractor that dropped it) so it doesn't disappear into the ordinary unassigned pile unnoticed.
+
+When you later assign a truck to that order — a plain drag, or through the Assistant — Druma already knows this is a trailer collection, not a fresh pickup, and prompts the incoming truck's own trailer-drop check if it's carrying one of its own.
+
+> **Note:** 
+An open relay can only be recorded on a **single order** — a groupage run's legs always require a named truck, since releasing one leg with the truck unknown would leave the rest of the run's header stranded on the dropping tractor.
+
+
+### Undoing an open relay
+
+If nothing has happened since — no truck has collected the trailer, and the dropping tractor hasn't been recoupled to something else — you can undo an open relay from the order row: look for the **Undo relay** icon next to the row's Assign action. This restores the order to its status before the release, re-couples the trailer to the original tractor, and clears the "waiting" state.
+
+---
+
+## Multiple relays
+
+You can switch the truck more than once on the same order. Each switch inserts another internal relay stop at the point you choose, so a load can pass through several relay points on a long-distance route — for example, a Bucharest → Duisburg load handed off at Budapest and again at Wien.
+
+---
+
+## Segment history
+
+Every truck switch automatically records a **segment** — which truck and driver covered which stretch of the route — the moment the relay stop is created. When you switch trucks a second or third time on the same order, each switch closes out the previous segment and opens a new one, so the full chain of who drove which leg is preserved in order.
+
+This history is stored in the background (no extra planner action needed) and exists for audit and reporting purposes — for example, reconstructing exactly which driver was responsible for a given stretch if a claim or a driving-hours question comes up later.
+
+Cancelling a switch (see Undo below), or a truck reassignment that fails partway through, removes the segment it created — the history only reflects switches that actually completed.
+
+---
+
+## Cancelling a switch (Undo)
+
+> **Note:** 
+This section covers undoing a switch to a **named** replacement truck. For undoing an **open relay** ("Don't know yet"), see Undo above.
+
+
+If the replacement truck has not yet done any work on the order, you can cancel the switch and restore the original truck.
+
+Look for the **Undo swap** icon on the order row in the planning board — it appears only when a cancellable switch exists (relay stop present and no activity recorded since).
+
+Alternatively, drag the original truck back onto the order on the planning board — Druma will try to auto-cancel the switch before re-assigning.
+
+**The cancel is blocked if any of the following are true:**
+- Any stop at or after the relay point has an actual arrival, departure, or loading-started timestamp recorded
+- Any driver status event was captured after the relay stop was created
+- The original truck is now tied up on another active order — Druma won't silently pull it off work the planner gave it after the switch
+
+If the cancel is blocked, Druma shows a message explaining why. You can still manually reassign from the order detail panel in that case.
+
+---
+
+## Important notes
+
+> **Warning:** 
+Switching a truck does **not** create a new order. The original order number, client, pricing, and all commercial terms remain the same. Only the operational assignment (which truck and driver) changes.
+
+
+- **The trailer stays with the cargo** on an ordinary switch or relay. If you need to change the trailer independently of the cargo, that's Switch Trailer — see [Trailer Management](/en/planner/trailer-management). If the trailer needs to be **left behind, loaded, for the consignee to unload themselves**, that's a different operation entirely — see [Drop-and-Hook Delivery](/en/planner/drop-and-hook-delivery).
+- Truck switches are **logged in the order's audit history** with the planner's name and timestamp.
+- The driver app automatically updates — the outgoing driver sees the order disappear from their active loads, and the incoming driver receives a push notification with the job details.
+
+---
+
+
+  
+    Leave a loaded trailer with the consignee and hook a different one — a genuinely different operation from a tractor relay.
+  
+  
+    Manage your tractor fleet — add vehicles, track availability, and handle maintenance blocks.
+  
+  
+    Manage trailers independently from tractors — assignment, detachment, and location tracking.
+  
+</CardGroup>
+
+
+  See all your orders and trucks on the visual dispatch board — the truck switch button is also accessible from here.
+
+
+---
+
+## Drop-and-Hook Delivery
+
+
+## What is drop-and-hook?
+
+In a drop-and-hook operation, cargo never moves between trailers. Instead of waiting at the consignee's dock while the trailer is unloaded, the tractor **leaves the loaded trailer behind** — the consignee unloads it on their own schedule — and the tractor **hooks a different trailer** (empty, or already loaded for the next job) and leaves.
+
+This is different from every other status change in Druma: it's the one point where **delivery** happens without the trailer physically leaving the truck at that moment. The trailer is presumed to still be carrying the cargo until someone confirms it's been offloaded.
+
+> **Note:** 
+This is not the same as [Switch Trailer](/en/planner/trailer-management) — that operation moves the *same* cargo into a *different* trailer. Drop-and-hook leaves the cargo exactly where it is and changes which trailer the *tractor* is pulling.
+
+
+---
+
+## When you can use it
+
+**Leave trailer with the consignee** is available on an order that is:
+
+- **Own Truck** (never on a subcontracted order — a subcontractor's trailer is theirs, and they don't leave it with your consignee)
+- At **In Transit, At Delivery,** or **Offloading**
+- On its **last remaining delivery stop** — if the order has several drops and an earlier one is still outstanding, you can't drop-and-hook until that one is done
+
+It's also hidden for a truck with a **fixed (non-separable) trailer** — a rigid unit has nothing to hook a different trailer to.
+
+---
+
+## Recording the delivery
+
+
+  ### Open the action
+    From the order's row on the Planning Board, or its detail pane, choose **Leave trailer with the consignee**.
+  
+  ### Set the drop time
+    Enter when the trailer was left. This becomes the order's **delivery time** — legally, unloading by the consignee is one of the carrier's exonerating special risks under the CMR, so the drop itself is what completes the delivery, not a later signature.
+  
+  ### Confirm the receipt
+    If a consignee signature already exists on the order (box 24 of the eCMR), it's shown and locked. Otherwise, choose whether one is being signed now or record that none was obtained at the drop — this is kept as an exception on the order, not silently ignored.
+  
+  ### Pick the next trailer
+    Choose which trailer the tractor hooks next, or leave it bobtail (towing nothing).
+  
+  ### Confirm
+    Druma marks the order **Delivered**, records which trailer was left and when, and frees the tractor to continue with its new trailer (or bobtail).
+  
+
+
+---
+
+## The "presumed loaded" warning
+
+Once a trailer has been left this way, Druma treats it as **presumed still loaded** everywhere that trailer shows up next — the trailer picker on Switch Trailer, the run picker for a groupage re-crew, the Fleet → Trailers list, and the repositioning flow — until someone confirms it's actually been emptied.
+
+> **Warning:** 
+This is a **warning, never a block**. You can still pick a presumed-loaded trailer for another job — Druma just tells you, plainly, where and when it was left and for which order, so you don't send a truck to hook a trailer that's still full without knowing it.
+
+
+Clear the warning with **Mark as offloaded** — available from the trailer's own row in Fleet → Trailers, or from the warning wherever it appears. Alternatively, simply hooking that trailer onto a truck and starting a new load on it clears the flag automatically.
+
+---
+
+## Undoing a drop
+
+If the delivery needs to be reversed — for example, it was recorded in error — open the order and use the **undo** action next to Leave Trailer (it takes the same slot the action itself occupied once the order is delivered). This is refused once something downstream already depends on the delivery having happened: an invoice has been generated, or a pallet movement has already been recorded against it. In that case, correct the record manually instead.
+
+---
+
+## Invoicing a drop-and-hook order
+
+By default, a drop-and-hook delivery invoices exactly like any other delivery. If your company has **Invoice only on a signed POD** turned on in Settings, a drop with no signature yet is held from invoicing the same way any other unsigned delivery would be — recording the drop doesn't bypass that rule.
+
+---
+
+
+  
+    Hand a load to a different tractor mid-route while the trailer stays with the cargo — the other kind of mid-route change.
+  
+  
+    Manage trailers independently from tractors — assignment, detachment, and location tracking.
+  
+</CardGroup>
+
+---
+
+## Pallet Exchange Ledger
+
+
+## Overview
+
+When you transport goods on EUR-pallets, CHEP, or other exchange pallets, you enter into a running balance with every client and subcontractor — pallets sent out must come back, or a fee is owed. Druma's pallet exchange ledger tracks every movement as an immutable record and gives you a live balance per counterparty so nothing falls through the cracks.
+
+The ledger is **append-only**: movements are added on each order stop, and the running balance is calculated automatically. You can record corrections and adjustments without deleting history.
+
+
+---
+
+## Supported pallet types
+
+| Type | Full name |
+|---|---|
+| EUR | EUR-pallet (EPAL) |
+| CHEP | CHEP pallet |
+| LPR | La Palette Rouge |
+| IPP | Industrial Pool Pallet |
+| Euro Pool | Euro Pool System |
+| Other | Any other exchange pallet type your operation uses |
+
+Each pallet type has its own balance column. A counterparty can owe you EUR-pallets while you owe them CHEP pallets simultaneously.
+
+---
+
+## Recording pallet movements on an order
+
+Pallet movements are logged at the stop level — pickup, delivery, and offloading stops all have their own **Pallet Movements** section.
+
+
+  ### Open the order detail pane
+    Click the order on the Planning Board or in the Orders list to open its detail pane on the right.
+  
+  ### Navigate to the stop card
+    Scroll to the stop where pallets are being exchanged — typically the pickup (pallets out) or delivery (pallets returned). Each stop card shows a **Pallet Movements** section.
+  
+  ### Add a movement
+    Click **+ Add Movement** on the stop card. A small form appears with:
+    - **Pallet type** — select from EUR, CHEP, LPR, IPP, Euro Pool, or Other
+    - **Movement type** — Sent (positive), Returned (negative), Adjustment, Correction, or Opening Balance
+    - **Quantity** — number of pallets
+    - **Notes** (optional) — reference number or driver comment
+  
+  ### Save
+    Click **Save** to commit the movement. It is added to the ledger immediately and the counterparty's running balance updates.
+  
+
+
+To remove a mistaken entry, click the **trash icon** next to the movement.
+
+> **Note:** 
+Use **Opening Balance** once per counterparty to seed their starting balance if you are migrating from a spreadsheet or a previous system. Subsequent movements build on top of it.
+
+
+---
+
+## Viewing balances
+
+There is no separate pallet balances page. Each client and each subcontractor has a **Pallets** tab, and the lists flag the ones that need attention. The tab only shows when the pallet exchange module is on and you can read orders.
+
+### The Pallets tab
+
+Open **Clients** (or **Subcontractors**), open the counterparty and click **Pallets** (on a client it sits after **Billing**). It shows:
+
+- **Balance** per pallet type (EUR, CHEP and so on)
+- **Open obligations** — what is still owed and when (see below)
+- the **movement ledger** — every movement with date, order reference and running total, where you can **dispute** a movement, **withdraw** your dispute or **uphold** it
+- **Book correction** — an order-less ledger entry with a required note, for a manually agreed write-off or a migration adjustment
+- the **statement** menu — generate a PDF statement or export CSV, and **Email statement**, which shows a last-sent chip (**Confirmed** or **Disputed**)
+- **Provider statements** — import a CHEP, Paki or other pool statement and compare it with your ledger (see [Pallet Statement Import](/en/planner/pallet-statement-import))
+- **Pallet settings** — the exchange mode and the fee per missing pallet for this counterparty
+
+A disputed or upheld movement is left out of balances, statements, obligations and charges until the dispute is withdrawn.
+
+### Lists, filter and badge
+
+- The **Clients** and **Subcontractors** lists have an optional **Pallets overdue** column and an **Open pallet obligations** filter, so you can see every counterparty with something overdue.
+- The **Clients** item in the navigation shows a badge with the number of clients and subcontractors that have an overdue pallet obligation.
+- The client side panel shows a compact **Pallets** section, and for a client a balance chip per site.
+
+---
+
+## Exchange modes and open obligations
+
+A net balance says how many pallets a counterparty holds, not whether that is a problem. Exchange **modes** record what was agreed, and **open obligations** say what is still owed and when.
+
+| Mode | What it means |
+|---|---|
+| **None (no exchange agreed)** | Default. Pallets are only recorded; nothing is owed on a deadline |
+| **Bonner (return within 30 days)** | Pallets are lent and due back 30 days after the signed voucher |
+| **Koelner (swap at the stop)** | Pallets are swapped at the stop; no timed obligation |
+| **Own (our pallets lent)** | Our own pallets lent to the client — open, no due date, never overdue, chargeable |
+
+**Where you set the mode**
+
+- **Per client** — open the client, go to the **Pallets** tab and use **Pallet settings → Exchange mode**. New orders for that client start with this mode. Past vouchers keep the mode they were captured under, so changing a client later never rewrites history.
+- **Per order** — in **Add Order** pick **Pallet exchange** next to the pallet count (default **Client default**). In the order pane use **Override the exchange mode for this order**. The pane also shows the mode, **Expected in X / out Y** for each stop and **On the truck: N** pallets.
+
+**Open obligations.** The client's **Pallets** tab lists **Open obligations**, each marked **Due** with a date, **N days overdue**, **No due date** or **No signed voucher**. Obligations are worked out from the signed pallet vouchers and closed oldest first as pallets come back — empties are interchangeable, so returned pallets always close the oldest obligation first. A stop captured without a signed voucher is shown as **Unconfirmed** under every mode and is never counted as overdue. Pallets in dispute are left out of the balance. The Clients list has an **Open pallet obligations** filter.
+
+---
+
+## Fee threshold and fee rates
+
+Pallet fees are no longer suggested by a pop-up while you record a movement. Instead you decide when to charge, from the counterparty's **Pallets** tab — see **Charging missing pallets to a client** below.
+
+Go to **Settings → Clients → Pallet Config** to set the company defaults. This section is only accessible to **admin** and **company_admin** roles. For each pallet type you can configure:
+
+| Setting | Description |
+|---|---|
+| Fee threshold | Number of pallets above which a balance counts as too high when Druma proposes a charge quantity |
+| Fee rate | Default price per pallet (in your company currency) for the charge |
+
+A client can have its own fee per pallet type under **Pallet settings** on the client's **Pallets** tab; leave it blank to use the company default.
+
+> **Note:** 
+The ledger enforces its own sign convention at the database level: a **Sent** movement always adds to the balance and a **Returned** movement always subtracts from it, regardless of how the number is typed on the add-movement form — **Adjustment**, **Correction** and **Opening Balance** entries keep the sign you enter.
+
+
+A nightly automated reconciliation run also checks balances against the thresholds and notifies your company's admins and planners when a position is imbalanced.
+
+---
+
+## Provider sync (optional)
+
+If you use CHEP Connect, Druma can reconcile your in-app ledger against the provider's official balance. Go to **Settings → Integrations → Pallet Exchange**.
+
+**CHEP Connect** is live. Enter your CHEP account credentials, then:
+
+- Click **Test Connection** to verify the credentials are accepted
+- Click **Sync Balance** to pull the provider's current balance and compare it against Druma's running total
+
+Any discrepancy is shown as a reconciliation row — you can accept it as a **Correction** entry to align the two ledgers.
+
+> **Note:** 
+CHEP Connect is currently the only live balance sync. For other pools (Paki and others) you can import their statement file and compare it line by line — see [Pallet Statement Import](/en/planner/pallet-statement-import). EUR, LPR, IPP, Euro Pool and Other pallet types are otherwise tracked manually in the ledger. The core ledger works fully without any provider configured.
+
+
+---
+
+
+  Learn how pallet fee lines appear in the invoice editor alongside other order surcharges.
+
+
+
+{/* BEGIN: pallet charging (invoicing) — added by the finance docs refresh */}
+
+## Charging missing pallets to a client
+
+When a client keeps pallets that should have come back, you can turn the debt into a fee on their invoice straight from the client's **Pallets** tab (the tab is on every client and every subcontractor when the pallet exchange module is on). Charging works for **clients**; subcontractors cannot be charged from here.
+
+### Set the fee
+
+- **Company default:** **Settings → Clients → Pallet Config** (per pallet type), as described above.
+- **Per client:** on the client's **Pallets** tab, open **Pallet settings**. Under **Fee per missing pallet (this client)** type a fee for any pallet type; leave it blank to use the company default (shown as the placeholder). The same panel has the **Exchange mode** for that client's new orders.
+
+### Charge the pallets
+
+
+  ### Open the client's Pallets tab
+    Go to **Clients**, open the client and click **Pallets**. Check **Balance** and **Open obligations** (overdue obligations show as "N days overdue").
+  
+  ### Click Charge missing pallets
+    Druma proposes a quantity per pallet type: the part of the balance that is overdue, or the amount above the threshold, whichever is larger, capped at the balance. The fee is the client's own fee if set, otherwise the company default. Pallets that are in dispute are never charged.
+  
+  ### Pick the order and confirm
+    The fee is added to an order that is **not invoiced yet** (by default the client's newest such order). Use **Add the fee to order** to pick a different one, then click **Add fee to order**. If the client has no order open for invoicing, the button is disabled: create or reopen an order first.
+  
+
+
+Druma adds a **palette exchange** line to that order's extras (it shows in the invoice editor like other extras) and, at the same moment, posts an offsetting **adjustment** movement so the charged pallets leave the balance. Clicking twice does not charge twice ("These pallets were already charged").
+
+### Undoing a charge
+
+- If you **delete or exclude** the palette exchange line from the order's extras, the pallets come back onto the balance.
+- If you issue a **full credit note** that credits that line, the pallets also come back onto the balance.
+- A **partial credit note** does **not** put the pallets back. Adjust the balance with **Book correction** instead (a reason is required).
+
+> **Note:** 
+If you credit a full invoice and re-issue it, the pallets return to the balance, but the re-issued draft may still contain the fee. Remove the line from the new draft, or the client is charged and the balance is also restored.
+
+
+{/* END: pallet charging */}
+
+---
+
+## Toll Receipts & Reconciliation
+
+
+## Overview
+
+Toll costs are a significant and often opaque part of road freight. PTV's routing API gives you a per-country toll estimate when an order is created, but the actual amount paid on the road routinely differs — different vehicle categories, missing vignettes, seasonal rates, and border crossing variations all cause drift.
+
+Druma closes this gap by letting drivers log toll receipts directly from the PWA, then presents a colour-coded reconciliation panel in the order detail so planners can spot large variances before they affect margins or client invoices.
+
+
+---
+
+## How drivers log toll receipts
+
+During an active load, the driver's PWA shows a red **Report** button on the load detail screen. Tapping it opens the **Report a problem** sheet, which lists **Log toll** alongside Report Delay, Report Incident, and (where applicable) the cannot-complete actions. Tapping **Log toll** opens the **Toll Receipt** sheet.
+
+
+  ### Tap Report, then Log toll
+    **Log toll** is offered whenever the load status is at_pickup, loading, in_transit, at_delivery, or offloading — any status where the truck is on the road.
+  
+  ### Enter the toll details
+    Fill in:
+    - **Country** — required. The driver always selects it from a list; it is not pre-filled from GPS.
+    - **Toll operator** (optional) — free text, e.g. "Autobahn GmbH" or "HU-GO".
+    - **Amount (EUR)** — required: the toll paid, converted to EUR.
+    - **Local amount** (optional) — the amount in the local currency, plus the currency code and exchange rate, if you want to record the original figures too.
+    - **Date & time** — required, defaults to the current time but is editable, for logging a toll after the fact.
+    - **Payment method** — required: **Cash**, **Fuel card**, **Credit card**, **On-board unit (OBU)**, or **Reverse charge**.
+    - **Notes** (optional) — motorway reference, booth number, or any driver comment.
+  
+  ### Attach a receipt photo (optional)
+    Tap the camera or file icon to attach a photo of the receipt. Accepted formats: JPEG, PNG, WebP, HEIC, PDF. Maximum file size: 5 MB.
+  
+  ### Confirm
+    Tap **Save**. The receipt is stored immediately.
+  
+
+
+### Offline support
+
+Toll receipts work offline. If the driver is in an area without connectivity, the receipt is queued locally and synced automatically as soon as the device reconnects. The planner sees it arrive in the reconciliation panel once sync completes.
+
+---
+
+## The reconciliation panel (planner view)
+
+Open any order's detail pane and scroll to the **Toll Reconciliation** section. The panel shows a table with one row per country where either a HERE estimate or a logged actual exists.
+
+### Delta colour coding
+
+| Colour | Condition | What it means |
+|---|---|---|
+| Green | Delta ≤ 5% | Actual is within the expected range |
+| Amber | Delta 6–15% | Moderate variance — worth reviewing |
+| Red | Delta > 15% | Significant variance — check receipts |
+| Grey | No HERE estimate | HERE had no toll data for this country segment |
+
+The delta is calculated as `(actual − estimate) / estimate`. A positive delta means the driver paid more than estimated; a negative delta means less.
+
+### Receipt list
+
+Below the summary table, each individual receipt is listed with:
+- Date and time logged
+- Country and amount
+- Notes (if any)
+- A thumbnail if a photo was attached — click to open the full image
+
+Planners can add receipts manually using the **Add Receipt** button at the bottom of the section — useful when the driver forgot to log a toll but has the paper receipt.
+
+
+---
+
+## Fuel card import — automatic toll splitting
+
+DKV, UTA, and AS24 fuel card statements often bundle fuel and toll transactions in the same export file. When you import a fuel card file in **Fleet → Fuel Cards**, Druma automatically separates toll lines from fuel lines:
+
+- **Fuel lines** are added to the truck's fuel ledger as normal
+- **Toll lines** are routed into toll receipts and matched to the order active on that date for that truck
+
+Re-importing the same file is safe — duplicate entries (matched by transaction reference and amount) are skipped automatically.
+
+> **Note:** 
+Toll matching from fuel card imports uses the truck and date to find the active order. If a truck had more than one order on the same date, the import attaches the receipt to the first matching order and flags the row for manual review in the import summary.
+
+
+---
+
+## Per-country pass-through policy
+
+Not every toll is billed to the client. Some companies absorb tolls for certain corridors as part of their rate; others pass them through in full. Druma lets you configure this at the rate card level.
+
+Go to **Settings → Pricing & Costing → Cost profiles** and open any rate card. There is a **Per-country toll policy** override table at the bottom. Each entry (and the rate card's top-level toll policy) is one of three values:
+
+| Policy | Behaviour |
+|---|---|
+| Billed to client (pass-through) | Actual toll appears as an order extras line on the invoice |
+| Included in rate | Toll is tracked internally but does not appear on the client invoice — the cost is assumed to already be baked into the linehaul rate |
+| Not charged | Toll is tracked internally but does not appear on the client invoice — used when the corridor genuinely isn't tolled or the cost isn't passed on |
+
+Countries not listed in the override table inherit the rate card's top-level toll policy.
+
+### Auto invoice line
+
+When a country is set to **Billed to client**, logged toll receipts for that country are automatically summed and added as an order extras line on the invoice during generation. The line is labelled with the country name.
+
+> **Note:** 
+The pass-through only applies to clients that have **Invoice tolls** enabled on their client record. For clients without it, logged tolls are tracked internally but never added to the invoice, regardless of the per-country policy.
+
+
+If you need to exclude a specific receipt from the invoice — for example, because it is covered by a separate surcharge agreement — open the invoice editor and toggle **Exclude from invoice** on that extras line.
+
+---
+
+## Tips for accurate reconciliation
+
+- Ask drivers to log tolls immediately after each payment, not at the end of the trip, so receipts stay matched to the correct day and country.
+- If HERE shows grey (no estimate) for a country your trucks frequently cross, raise this in **Settings → Pricing & Costing → Cost profiles** with a manual country surcharge so margins are protected even without HERE data.
+- Large amber or red deltas on the same country repeatedly are a signal to adjust the base toll estimate in your rate card.
+
+---
+
+
+  Configure toll pass-through policy, base surcharges, and per-country overrides.
+
+
+
+  Import DKV, UTA, and AS24 statements to automatically populate fuel and toll records.
+
+
+---
+
+## Intermodal & Multimodal Transport
+
+
+## Overview
+
+Intermodal transport moves cargo across multiple transport modes in sequence — for example, a truck pre-hauls a trailer from a Romanian factory to Calais, it crosses to Folkestone on a Channel Tunnel RoRo ferry, and a second truck handles the on-haul to the UK delivery address. Each segment is a **leg**. A single Druma order manages the whole journey: scheduling, carrier assignment, costs, eCMR, and driver visibility per leg.
+
+This is different from a standard order with internal stops. Internal stops are waypoints on a single continuous road journey with one truck. Intermodal legs are distinct transport events that may use different modes, different carriers, and even different countries of jurisdiction.
+
+> **Note:** 
+Groupage runs and intermodal legs are separate concepts — legs belong to a single order, groupage consolidates multiple orders onto one truck. There's no combined "intermodal groupage" flow today.
+
+
+---
+
+## Practical example: Romania → UK via Channel Tunnel
+
+| Leg | Mode | Route | Carrier |
+|---|---|---|---|
+| 1 | Road | Bucharest → Calais | Own fleet — truck RO-01 |
+| 2 | Sea | Calais → Folkestone (Eurotunnel Le Shuttle) | Subcontractor: Eurotunnel |
+| 3 | Road | Folkestone → Birmingham | Subcontractor: UK haulier |
+
+Druma tracks the booking reference and container number for leg 2, generates a separate eCMR for legs 1 and 3 (both cross borders), and shows the UK haulier only the stops relevant to leg 3.
+
+---
+
+## Creating an intermodal order
+
+There's no "Intermodal" toggle to switch on — legs are added to an order you've already created, and Druma treats the order as intermodal automatically once it has legs.
+
+
+  ### Create or open the order
+    Create the order normally (see [Creating an Order](/en/planner/creating-orders)), then open it and go to its **Cargo & Stops** tab.
+  
+  ### Add legs
+    In the **Transport legs** section, click **Add leg** to create the first leg. Add as many as the journey requires — there is no limit. Each new leg's origin defaults to the previous leg's destination (or the order's pickup, for the first leg), so you're not re-typing the same address.
+  
+  ### Fill in each leg
+    Expand a leg card to set its mode, origin/destination, planned start/end, and carrier (see below).
+  
+
+
+---
+
+## Managing legs
+
+Each leg card has the following fields:
+
+| Field | Notes |
+|---|---|
+| **Mode** | Road, Sea, Rail, Air, or Barge |
+| **Origin** | Free-text or address autocomplete |
+| **Destination** | Free-text or address autocomplete |
+| **Planned start** | Date and time the leg begins |
+| **Planned end** | Expected date and time the leg finishes |
+| **Carrier** | Own fleet (road only) or subcontractor |
+| **Buy rate** | Cost you pay for this leg |
+| **Cost breakdown** | Fuel, tolls, ferry, or other line items |
+
+### Road legs
+
+Road legs can be assigned to your own fleet (truck and driver) or to a subcontractor carrier — pick which via a radio choice on the leg card, then select the truck/driver or subcontractor from a dropdown.
+
+### Non-road legs (Sea, Rail, Air, Barge)
+
+Non-road legs can only be assigned to a subcontractor carrier — your own fleet trucks and drivers cannot be assigned to a sea or rail leg. The carrier field searches your subcontractors list.
+
+### Leg controls
+
+- **Up/down arrows** — reorder legs. The leg timeline strip (see below) updates as you drag.
+- **Remove leg** — delete a leg. There's no status-based restriction on this in the UI, so double-check before removing a leg that's already underway.
+- **Complete leg** button — marks the leg as done. It's shown once the leg's status reaches **In Transit**, **At Delivery**, or **Offloading** — this is gated on status, not on any date.
+
+### Leg timeline strip
+
+A compact horizontal strip appears above the legs accordion. It shows all legs in sequence with a mode badge (road, sea, rail, etc.) and the city names for origin and destination. Use it to quickly verify the journey sequence makes sense before saving.
+
+
+---
+
+## Sea / intermodal leg details
+
+For any leg with mode **Sea**, **Rail**, **Air**, or **Barge**, a collapsible **Sea / intermodal details** section appears on the leg card. All fields are optional.
+
+| Field | Format | Notes |
+|---|---|---|
+| Booking Reference | Free text | Carrier's booking confirmation number |
+| Container Number | Free text | ISO container ID |
+| Seal Number | Free text | |
+| Vessel Name | Free text | Ship or train service name |
+| Voyage Number | Free text | |
+| Carrier SCAC | 4 characters | Standard Carrier Alpha Code |
+| Port of Loading | 5-character LOCODE | e.g. `FRXXX` for Calais |
+| Port of Discharge | 5-character LOCODE | e.g. `GBFXT` for Folkestone |
+| Cut-off date/time | Date + time | Cargo acceptance deadline at Port of Loading |
+| ETD | Date + time | Estimated time of departure from Port of Loading |
+| ETA at POD | Date + time | Estimated time of arrival at Port of Discharge |
+
+> **Warning:** 
+If the cut-off date is within 48 hours of the leg's planned end, Druma shows an amber warning banner on the leg card. Review the timeline to make sure the truck reaches the port in time.
+
+
+Switching a leg's mode back to **Road** clears the sea/intermodal detail fields automatically.
+
+---
+
+## Planning board behaviour
+
+### Truck availability
+
+The planning board calculates truck availability based on the **road leg end date**, not the final delivery date of the order. This means a truck assigned to leg 1 (road) is shown as free from the moment that leg ends — even if the order's last delivery is days later on leg 3 with a different carrier.
+
+### Assigning a truck to an intermodal order
+
+Dragging a truck onto an intermodal order shows an **Intermodal leg** section in the assignment confirmation sheet instead of the standard flow. It lists every road leg on the order (sequence, origin → destination, planned dates) — clicking a leg row selects it directly; there's no separate "Assign" button to click afterwards.
+
+> **Note:** 
+A truck can only be assigned to one road leg per intermodal order. To cover multiple road legs with different trucks, repeat the drag-and-drop process for each leg.
+
+
+---
+
+## eCMR per road leg
+
+Each road leg that crosses an international border gets its own eCMR. To create one, open the leg card and click **Create eCMR**. Druma registers the document using its native, in-house eCMR provider, with the leg's origin, destination, and assigned carrier pre-filled — completing a cross-border leg auto-triggers this the same way. (There's no provider choice to make: Native is the only path for new documents; only pre-existing legacy TransFollow rows still function, unrelated to legs created here.)
+
+Legs that stay within a single country do not require an eCMR (unless your company policy mandates one). The **Create eCMR** button is always available if you need to override this.
+
+Three-party signature flow and certified PDF download work identically to standard eCMR — see the [eCMR documentation](/en/ecmr/what-is-ecmr) for details.
+
+---
+
+## Driver PWA — leg-scoped view
+
+Drivers only see the stops that belong to their assigned road leg. If the order has three legs and the driver covers leg 1, they see only the pickup and any internal stops for leg 1 — not the delivery address in the UK.
+
+An info banner at the top of the load detail reads:
+
+> **Leg 1 of 3 — Road: Bucharest → Calais**
+
+This keeps the driver's view clean and avoids confusion about stops that belong to a different carrier.
+
+Status taps (at_pickup, loading, in_transit, at_delivery, etc.) work exactly as on a standard order, but they only advance the status for the driver's road leg. The planner sees per-leg progress in the order detail pane.
+
+
+---
+
+## Cost and margin tracking
+
+Each leg has its own **Buy rate** and **Cost breakdown**. The order's total cost is the sum across all legs. The margin calculation in the order detail pane compares the agreed sell price against the total multi-leg cost, giving you a consolidated margin figure for the whole intermodal journey.
+
+---
+
+
+  How native eCMR creation, three-party signatures, and certified PDFs work.
+
+
+
+  Manage your subcontractor carrier list — the same carriers appear in intermodal leg assignment.
+
+
+
+  How truck availability and intermodal order blocks appear on the dispatch timeline.
+
+
+---
+
+## Tenders & Contracts
+
+
+## Overview
+
+Eastern European hauliers often manage client rate commitments in spreadsheets: a shipper issues a tender (RFT) for a set of lanes, volumes and SLA targets over a fixed period, and once you win it, those rates govern every load booked under that contract. Tenders & Contracts gives that process a proper lifecycle inside Druma.
+
+The lifecycle is split across two places in **Sales**:
+
+- **Sales → Pipeline** — a tender that is still being bid is a deal, shown next to your leads. It uses the same stage words: **Lead** (early interest), **Qualified** (you are pricing the bid), **Proposal** (the offer is out), then **Won** — or **Lost**.
+- **Sales → Contracts** — once you award a won tender, it is a contract. Contracts move through **Awaiting start**, **Running**, **Expiring (60 d)** and **Expired**, with delivered vs. committed loads next to each.
+
+There is no separate Tenders tab any more. Old links to `/tenders` open the Pipeline (for a specific tender) or Contracts.
+
+> **Note:** 
+Tenders & Contracts is an opt-in module. If you don't see **Contracts** under **Sales**, or the **Type** filter and **New tender** on the Pipeline, ask your company admin to switch on **Tenders & contracts** in **Settings → Modules**. Contracts is available to admin, company admin, key user, planner and customer service roles.
+
+
+<Frame caption="Tenders on the Sales Pipeline — awarding a won tender creates its lane prices.">
+  <img src="/images/planner/tenders-and-contracts.png" alt="Tenders on the Sales Pipeline" />
+</Frame>
+
+---
+
+## Creating and Awarding a Tender
+
+A tender can start three ways: from scratch, imported from a document, or escalated from an accepted quote.
+
+
+  ### Open the Pipeline
+    Go to **Sales → Pipeline**.
+  
+  ### Create the tender
+    Use the menu next to **New lead** (**More ways to add a deal**) and choose **New tender**. Give it a title (for example "Acme Logistics RFT 2026 — RO→DE lanes"), optionally link it to a client or a lead, set the currency, the tender period and the total committed volume, then create it. You can also start one from a lead's pane (**Create tender**) or a client's **Sales** section (**New tender**). The form opens over the page you are on.
+
+    The other two routes end in the same place: **Import tender document** (see below), and **Escalate to tender** on an accepted quote (see [Quotes](/en/planner/quotes)), which creates a tender pre-filled with that quote's client, route and rate.
+  
+  ### Open it and add committed lanes
+    Click the tender card or row to open its pane. In **Committed Lanes**, click **Add lane** for each lane: origin and destination country, trailer type, agreed rate and rate mode (per km, flat, or bracketed per km), committed loads per period, an SLA on-time % target and penalty terms. Add lanes as you learn the shipper's lane list — you don't need them all up front. A lane has a **Quote this lane** button that opens the quote composer pre-filled with that route and the tender's client.
+  
+  ### Advance the stage
+    Use **Move to …** in the pane footer to move the tender forward (Lead → Qualified → Proposal → Won), or drag its card on the board. If the deal falls through, click **Mark as Lost**. A **Quotes** section in the pane lists quotes for the same client and has a **New quote** button.
+  
+  ### Award the tender
+    When a tender is **Won**, an **Award tender & activate** panel appears. Click **Award & create lane prices**, then **Confirm award**. Druma creates a price list from the tender's lanes and the tender becomes a **contract**. Those lane prices now pre-fill quotes and orders for that client, and orders you book against the contract count toward its committed volume.
+  
+
+
+> **Note:** 
+Once a tender is Active, Expired or Lost, its details and lanes are read-only — the agreed terms are locked in. To change awarded rates, edit the generated price list on **Sales → Pricing**.
+
+
+### What the tender and lane fields mean
+
+| Field | Where | What it means |
+|---|---|---|
+| **Title** | Tender | Free-text name — usually the client plus the purpose |
+| **Link to account** | Tender | Ties the tender to a client or a lead so it shows on that record |
+| **Currency** | Tender | Currency for all agreed rates on this tender |
+| **Period from / to** | Tender | The contract's validity window. Contracts ending within 60 days are flagged as expiring |
+| **Committed volume** | Tender | Total loads the client committed to over the whole period — what actuals are measured against |
+| **Origin / destination country** | Lane | The lane's country pair. Leave as "Any" for a wildcard lane |
+| **Trailer type** | Lane | Tautliner, mega, flatbed, reefer, box, tanker, or other |
+| **Rate mode** | Lane | €/km, a flat price, or a bracketed €/km scale |
+| **Agreed rate** | Lane | The negotiated price for this lane, in the tender's currency |
+| **Committed loads/period** | Lane | Loads on this lane the client committed to per period |
+| **SLA on-time % target** | Lane | The on-time percentage this lane must hit |
+| **Penalty terms** | Lane | Free-text note on what happens if the SLA is missed |
+
+---
+
+## The Contracts tab
+
+**Sales → Contracts** lists every won tender through its life. Scope tabs (each with a count):
+
+| Scope | Meaning |
+|---|---|
+| **Awaiting start** | Won, not running yet |
+| **Running** | Active and not ending within 60 days |
+| **Expiring (60 d)** | Active and ending within 60 days |
+| **Expired** | Past the end date |
+| **All** | Everything |
+
+Columns: **Contract**, **Client**, **Period**, **Lanes**, **Loads (delivered / committed)**, **Pricing** (link to the lane prices), and **Renewal** (days left, highlighted amber inside 60 days). **Search contracts…** filters the list. There is no "New" button — tenders are created on the Pipeline. Click a row to open the contract pane with its lanes and performance.
+
+The headline **Active contracts** figure counts every running contract (including ones in renewal), so it can be larger than the **Running** scope, which leaves out the ones about to expire.
+
+---
+
+## Tracking realised volume vs. committed
+
+Open an awarded contract to see **Contract performance**:
+
+- **Delivered vs committed** — a progress bar of completed orders linked to the contract against the committed volume
+- **On current pace** — a projection of loads delivered by the end of the period
+- **Revenue to date**, **Avg margin** and **On-time SLA**
+- Delivered counts and on-time % next to each lane
+
+Four alert badges appear on a contract when they apply:
+
+| Alert | Triggers when |
+|---|---|
+| **Under-delivery** | Completed loads fall below 80% of the committed volume |
+| **SLA breach** | On-time delivery drops below the lane's SLA target |
+| **Margin drift** | Average margin falls below 5% |
+| **Expiring soon** | The contract period ends within 60 days |
+
+Alerts are in-app only — Druma does not email them. Watch the **Expiring (60 d)** scope on Contracts so a renewal never catches you late. For totals across all contracts see **Sales → Reporting → Contracts** (active, expiring, delivered vs committed).
+
+---
+
+## Importing a Tender Document
+
+If your admin has switched on **Tender document import** (**Settings → Automations & Features**), the menu next to **New lead** also shows **Import tender document**. Upload the shipper's rate table as a PDF or Excel file (max 10 MB), click **Extract with AI**, review the extracted title, dates and lanes, and click **Create tender from draft**. Useful for 20-lane agreements you would otherwise transcribe by hand.
+
+---
+
+## Common questions
+
+**Where did the Tenders tab, the tender board and the Performance tab go?** Open tenders are on the Sales Pipeline (set **Type** to **Tenders**); won tenders and their performance are on **Contracts**.
+
+**Why can't I create a tender from Contracts?** Tenders start as deals, so you create them on the Pipeline. They appear on Contracts once won.
+
+**How do I know a lane price came from a contract?** On **Sales → Pricing** the price list shows **From contract** in the Source column, with a link back to the contract.
+
+---
+
+
+  
+    The Pipeline, Quotes, Contracts, Pricing and Reporting tabs in one place.
+  
+  
+    Spot quoting for one-off loads — the lighter-weight counterpart to a full tender.
+  
+  
+    Check whether a lane is actually profitable before committing to a tender rate.
+  
+</CardGroup>
+
+---
+
+## Reefer Fleet Management
+
+
+## Overview
+
+If your fleet runs temperature-controlled (reefer) trailers, Druma can pull live temperature, engine-hours, and alarm data straight from the trailer's telematics unit — no manual logging required. Once a trailer's provider is connected, you'll see its current temperature on the trailer list, get notified the moment it drifts off setpoint or raises an alarm, and can generate a one-page cold-chain PDF for any completed trip.
+
+Reefer features only appear once your company's **Reefer** fleet type is switched on. An admin or company admin does this once, from **Settings → Fleet & Equipment → Fleet Types**. Everything below — the Temp column, the Temperature tab, alerts, and the compliance report — is hidden until that flag is on.
+
+> **Note:** 
+Reefer telematics providers vary widely in how open their APIs are, and all four connectors are currently in **beta** — they are being validated with pilot fleets, so involve Druma support during your first sync. Mapon's API is fully public, so credentials connect straight away. Orbcomm needs an account token. Thermo King TracKing and Carrier Lynx Fleet are partner-only — you'll need to apply for API access through the vendor before Druma can pull live data, even though the connection form is available for all four.
+
+
+---
+
+## Connecting a Reefer Provider
+
+
+  ### Turn on the Reefer fleet type
+    Open **Settings → Fleet & Equipment → Fleet Types** and enable **Reefer**. This unlocks the reefer-specific screens across Fleet.
+  
+  ### Go to Integrations
+    Open **Settings → Integrations**. Reefer telematics providers are listed alongside the other GPS/tacho connectors.
+  
+  ### Pick your provider
+    Find the card for your trailer's telematics provider — **Mapon**, **Orbcomm**, **Thermo King TracKing**, or **Carrier Lynx Fleet** — and open it. Each card's "Where do I get these?" link explains how to obtain credentials for that provider (see the table below).
+  
+  ### Enter your credentials
+    Fill in the fields for your provider (they differ per provider — see below) and click **Connect**. Credentials are stored securely and are never shown again in full; entering a new value later rotates the key.
+  
+  ### Test the connection
+    Click **Test connection** to confirm Druma can reach your provider's API with the credentials you entered.
+  
+  ### Set each trailer's telematics unit ID
+    Open **Fleet → Trailers**, select a reefer trailer, go to its **Compliance** tab, and fill in **Telematics unit ID** — the unit/asset ID your provider uses to identify that specific trailer. This is what links incoming readings to the right trailer in Druma.
+  
+
+
+Once connected, Druma's sync job pulls new readings automatically. There's no manual refresh — the Temp column and Temperature tab fill in as readings arrive.
+
+### Provider credential fields
+
+| Provider | Fields you enter | Where to get them |
+|---|---|---|
+| **Mapon** | API Key, Base URL (optional) | Generate an API key in the Mapon platform under Settings → API. Fully public API — credentials connect straight away. |
+| **Orbcomm** | Access Token, or Username + Password, Base URL (optional) | Issued via your ORBCOMM Platform API account. If you only have a username/password, Druma exchanges it for a token automatically. |
+| **Thermo King TracKing** | API Key, or Username + Password, Base URL (optional) | Request a TracKing API key from your Thermo King dealer or via the TracKing portal. No public self-service signup — this is a partner-gated integration. |
+| **Carrier Lynx Fleet** | Client ID + Client Secret (or a legacy API Key), Base URL (optional) | Obtained through Carrier Transicold or your Carrier dealer as part of the Lynx Fleet API toolkit. No public self-service signup. |
+
+> **Warning:** 
+Thermo King and Carrier require the vendor to grant you API access before the connection will return real data — Druma cannot bypass that. If you're waiting on partner approval, the credential form still lets you save and test, but syncing won't start until the account is active.
+
+
+---
+
+## Where Trailer Temperature Shows Up
+
+- **Trailers list** — a **Temp** column shows each reefer trailer's latest actual temperature, an engine Running/Stopped badge, and an amber Alarm flag if the most recent reading carries an alarm code.
+- **Trailer detail → Temperature tab** — appears on any trailer once the reefer flag is on. Shows the latest reading in detail (setpoint vs. actual, door status, engine hours, alarm codes) plus a history table. If the trailer has no telematics unit ID set yet, this tab tells you to add one in the Compliance tab first.
+- **Home dashboard → Reefer status widget** — add it from the widget gallery for an at-a-glance count of trailers with active alarms, trailers running outside their temperature threshold, and reefer maintenance coming due, with the soonest-due trailer named in the footer.
+
+---
+
+## Alerts and Alarm Acknowledgement
+
+Reefer alert thresholds live in **Settings → Fleet & Equipment → Fleet Types**, in the **Reefer temperature alerts** panel that appears once the flag is on:
+
+| Field | What it controls |
+|---|---|
+| **Enable reefer alerts** | Master on/off switch for reefer alerting. |
+| **Temperature deviation threshold (°C)** | How far a reading can drift from setpoint before it's flagged (default 3°C). |
+| **Door-open threshold (minutes)** | How long a door can stay open before it's flagged (default 10 minutes). |
+| **Alert on unit alarm codes** | Whether a raw alarm code from the unit itself triggers a notification. |
+| **Re-alert cooldown (minutes)** | Minimum gap between repeat alerts for the same trailer/condition, so one ongoing issue doesn't spam notifications (default 60 minutes). |
+
+When a threshold is crossed, Druma notifies **in-app** (a bell notification to company admins) and sends a **push notification to the driver** operating that trailer — there is no email for reefer alerts, since the driver is the one who can actually act on a door-open or unit alarm.
+
+**Acknowledging an alarm:** open the trailer's **Temperature tab** — any unacknowledged alarm codes appear in a dedicated section with the last-seen time and an **Acknowledge** button. Acknowledging creates a permanent sign-off record; if the same alarm code fires again later, it resurfaces as unacknowledged.
+
+---
+
+## Generating a Temperature Compliance PDF
+
+For any order carried on a connected reefer trailer, you can generate a one-page cold-chain proof document:
+
+1. Open the order in **Operations** and go to its **Documents** tab.
+2. Click **Temperature report** (only shown when the order's trailer has a reefer telematics unit configured).
+3. Druma builds and downloads a PDF covering the setpoint-vs-actual temperature trace for the trip, alarm and door-open events, engine run time, the trailer's ATP class, and the order reference — ready to hand to a shipper or auditor as proof the cold chain held.
+
+---
+
+## ATP Certificates and Reefer Maintenance
+
+Reefer trailers also get two compliance extras once the flag is on:
+
+- **ATP certificate tracking** — in **Fleet → Fleet Documents**, the document type dropdown gains an **ATP** option; pick the trailer and its ATP class (A/B/C/D/F/IN/IR per the ATP Agreement). The certificate then shows on the trailer's Compliance tab with an expiry badge, and surfaces in the dashboard's expiry-alerts widget like any other fleet document.
+- **Reefer maintenance scheduling** — in **Fleet → Maintenance**, a **Reefer Units** tab tracks service intervals in **engine hours** rather than kilometres (filter service, full service, ATP inspection), using each trailer's current reefer engine hours.
+
+---
+
+
+  
+    Manage trailers, assignment, availability, and documents — including the Compliance tab where reefer telematics IDs are set.
+  
+  
+    Track ATP certificates alongside insurance, ITP, and other vehicle documents with expiry alerts.
+  
+  
+    Add and manage vehicles, vehicle types, dimensions, and documents.
+  
+  
+    Add the Reefer status widget to your dashboard for an at-a-glance view of alarms and maintenance due.
+  
+</CardGroup>
+
+---
+
+## CS Workbench
+
+
+## Overview
+
+The CS Workbench is where customer-service reps answer the question clients ask most: *where's my shipment?* Instead of bouncing between the orders list, the order detail, and the client record, everything a rep needs — live status, ETA, driver and truck, stop-by-stop opening hours and contacts, and a log of every client touch — lives in one master-detail pane.
+
+**How to access:** click **Customer Service** in the left navigation. It opens on the **Workbench** tab by default; a **Sites** tab sits alongside it.
+
+<Frame caption="CS Workbench — a dense, groupable order list on the left, order detail sliding in on the right.">
+  <img src="/images/planner/cs-workbench.png" alt="CS Workbench order triage list with filters and detail pane" />
+</Frame>
+
+The order list is a dense table, not a card feed — click a row to slide a detail pane in from the right (it stays in sync with the URL, so a link to `?order=<id>` opens straight on that order). `J`/`K` walk the list up and down, and `Esc` clears the selection, the same keyboard pattern as Orders and Fleet.
+
+The Workbench is built on two supporting pieces:
+
+- **Sites** — a reusable catalogue of pickup/delivery locations (warehouses, factories, distribution centres, ports, terminals, yards) with opening hours, contacts, dock/access notes, and per-client booking instructions. Pick a site once on an order's stop and its address autofills; the Workbench then pulls that site's hours and contacts for every order that visits it.
+- **Exceptions** — Druma automatically flags two situations that cause missed deliveries: an ETA that lands after the delivery site is closed, and a stop that needs a booking with none recorded.
+
+---
+
+## Logging a Check-Call on an Order
+
+
+  ### Open the Workbench
+    Go to **Customer Service** — it opens on the Workbench tab.
+  
+  ### Find the order
+    Use the search box (order number, reference, or pickup/delivery city) or narrow the list first — see the filters below. Click an order row to open its detail pane on the right.
+  
+  ### Review the shipment status
+    The detail pane's header shows the order number, status, assigned driver/truck (or subcontractor), and ETA, followed by a status stepper and a stop-by-stop breakdown — each stop shows today's opening hours (in red if currently closed), whether an appointment is required, the client's booking reference, site contacts, and a booking-portal link when the site has one.
+  
+  ### Log the call
+    Scroll to the **Check-call log** at the bottom of the detail pane. Choose a **Kind**, **Direction**, and **Channel**, optionally note who you spoke to, write what happened, and click **Log entry**. It appears immediately in the timeline above the composer, with your name and timestamp.
+  
+  ### Notify the client (optional)
+    Click **Notify client** in the detail header to open the notify composer — see [Notifying the Client](#notifying-the-client) below for exactly what it sends and how to check it before sending.
+  
+
+
+### The Conversation Thread
+
+The check-call log is a full conversation thread, not just your own notes — every client email lands in it too, four ways:
+
+1. **Client replies arrive automatically.** Every branded email Druma sends carries a reply address that routes straight back to the order it was about. When a client hits Reply in their own inbox, their message appears in this thread within moments — no one has to check a shared inbox for it.
+2. **Attach an email by hand.** Click **Attach email (.eml)** above the thread, or just drag a `.eml` file onto the thread panel — useful when a client's message reached your own inbox instead (CC'd elsewhere, forwarded from a personal address, or you simply have the original sitting in Outlook). Druma reads the file, works out who sent it, and files it on the thread exactly like an automatic reply — it gets the same **Reply** button and counts toward **Awaiting our reply** the same way. Only `.eml` files up to 5 MB are accepted; a duplicate upload of the same message is recognised and not filed twice.
+3. **Forward it from your own mailbox.** Every company has its own forward address — shown with a copy button right on the Workbench (next to the banner at the top of the page) and on every thread's empty state, plus in **Settings → Company**. Forward any client email there and Druma reads the forwarded message, works out who the ORIGINAL sender was (from an attached original message, or from the "Forwarded message" block Gmail/Outlook/Apple Mail insert into the body), and matches it to an order the same way — by order number or your own reference in the text, or by recognising the original sender as one of that client's contacts. Only forwards from your own team's active accounts are accepted; anything else is silently dropped, never filed anywhere.
+4. **Anything that can't be matched** — from either the attach or the forward path — lands in the **Unmatched emails** queue below instead of being lost.
+
+Other thread behaviour:
+
+- **Long messages start collapsed.** A reply past a couple of sentences shows a **Show more** link rather than filling the pane; click it to read the whole thing.
+- **Every email row shows a From/To line and a source badge** — **Auto reply** (a client's own reply, captured automatically), **Uploaded** (attached by hand, as above), **Forwarded by `<name>`** (a teammate forwarded it, per point 3 above), or **Sent by `<name>`** (something a person on your team sent from the composer).
+- **Unverified sender.** An uploaded email whose sender address isn't a saved contact of the order's client shows an **Unverified sender** badge next to the source badge — Druma still files it (you attached it deliberately), this is just a heads-up that the sender hasn't been confirmed as that client's contact yet.
+- **Reply, right from the thread.** Any inbound client reply — automatic or uploaded — carries its own **Reply** button — it opens the same composer as **Notify client**, already scoped to that person's address with the subject pre-filled as "Re: …", so you can answer without hunting for their email address.
+- **Mark handled.** An inbound reply that doesn't need a written answer (a simple confirmation, for example) can be dismissed with **Mark handled** — it clears the order from **Awaiting our reply** (below) and records who handled it and when.
+
+The thread's own text is kept as the client-relationship record for as long as the order itself is kept — there is no separate, shorter retention window for it. The raw `.eml` FILE behind an upload is a separate, shorter-lived copy: Druma is proposing to delete the original file 2 years after upload while leaving the thread entry itself untouched, pending confirmation.
+
+### What the check-call fields mean
+
+| Field | Options / meaning |
+|---|---|
+| **Kind** | Check call · Note · Booking · Exception · Client notify — what type of touch this was. |
+| **Direction** | Inbound (client/site called you) · Outbound (you called them) · Internal (a note for your team). |
+| **Channel** | Phone · Email · SMS · Portal · System. |
+| **Contact** | Free-text name of who you spoke to, for your own reference. |
+| **Note** | What happened — required before you can log the entry. |
+
+### What Else the Detail Pane Shows
+
+Beyond the status stepper and stop breakdown, the detail pane surfaces everything a rep needs without leaving the Workbench:
+
+- **Cargo chips** — an **ADR** chip (with the dangerous-goods class, when set) and a **temperature range** chip appear alongside weight, pallets, and loading metres for cargo that carries them.
+- **Live position line** — while the order is in transit, a mini-map shows the truck's current position, with **Copy tracking link** and **Send tracking link by email** actions right next to it — no need to jump to the order detail page to hand the client a link.
+- **Distance remaining** — the remaining kilometres to delivery, computed from the same ETA data as the live map.
+- **View eCMR / POD** — a direct link to the signed eCMR or proof of delivery once one exists on the order.
+- **Client order history** — a panel listing this client's past orders with an on-time/late indicator on each, so a rep can immediately see whether a delay is a one-off or a pattern before they get on the phone.
+
+---
+
+## Notifying the Client
+
+The **Notify client** button opens a composer, not an instant send — so you always see exactly who receives an email, in what language, and what it says before you send it.
+
+
+  ### Open the composer
+    Click **Notify client** in the order detail header.
+  
+  ### Choose a mode
+    **Status update** sends Druma's branded shipment-status email — the delivery site, booked window, expected arrival, and current status, laid out as a table — with an optional intro message of your own on top. **Free text** sends only your own words, with no operational-details table at all; use it for anything that isn't really a status update. Free text requires both a subject and a message before you can send.
+  
+  ### Check the recipients
+    Every checkbox is a client contact flagged to receive operational/delivery email (or the client's primary contact, if none are flagged) — each one shows a language badge, because that contact receives the email written in their own language. Uncheck anyone who shouldn't get this particular message. If no contact is set up to receive notifications at all, the composer says so and links straight to that client's contacts.
+  
+  ### Decide on the tracking link
+    The **Include tracking link** toggle adds the client's portal link to the email — where they can see live status and download documents for this shipment. Turn it off for a message that shouldn't invite the client back into the portal.
+  
+  ### Read the preview
+    The preview below the form is rendered from the exact same template the real send uses — not a summary — so what you see is what the client gets. It groups by distinct wording: if every checked recipient is getting the identical email, you see one card; a different language or a different name in the greeting shows as its own card, each naming who it goes to.
+  
+  ### Send
+    Click **Send**. Druma emails every checked recipient in their own language and logs exactly what was sent — subject and message — as a **Client notify** entry in the conversation thread immediately below, so the audit trail always matches what actually went out. If the client replies, their answer lands right back in the same thread — see [The Conversation Thread](#the-conversation-thread) above.
+  
+
+
+---
+
+## Which Emails a Client Receives by Default
+
+Besides emails you send by hand, Druma sends clients automatic emails by category. You decide the default per **client group** and per **client**; each choice is a three-way setting:
+
+- **No rule** — this level has no opinion; the next level decides
+- **Send** — clients get emails of this category
+- **Don't send** — they don't
+
+The order of precedence is: a contact's own preference, then the client's rule, then the client group's rule, then the account default. Invoices, payment reminders and security emails are never affected — they always send.
+
+**For a whole group of clients:** go to **Settings → Client Rule Groups**, open the group wizard and use the **Client emails** step ("When should clients in this group be emailed?"). The review step reports how many email rules the group has.
+
+**For one client:** open the client under **Clients**, go to the **Billing** tab and find **Email defaults for this client**. Under each category with **No rule**, the card tells you what it falls back to — the group's rule or the account default — for example "No client rule — falls back to the "Retail" group: Send."
+
+Clients and their contacts can also set their own email preferences in the client portal, which take priority over group defaults.
+
+---
+
+## Filtering, Grouping, and Sorting the Order List
+
+The command bar above the list is deliberately one line — the everyday controls sit on it directly, and everything else lives behind **More filters**:
+
+- **Scope toggle** — **Active** (default), **All**, or **Historical**.
+- **Group** — the list defaults to Druma's own **Triage** grouping (see below); switch it to **None** for a flat, sortable list instead.
+- **Sort** — by Created, ETA, Delivery date, Status, **Next stop**, or **Check-call age** (the last two need each order's live signal data, so they're greyed out for a moment while that loads).
+- **Columns** — choose which of the table's fields are visible; by default the table shows Order #, Status, Client, Route, a combined **Signal** column, and one more — the rest (Assignment, ETA/next-stop breakdown, etc.) are opt-in, so the table doesn't need a horizontal scroll to read the columns that matter most.
+
+**More filters** holds: Status, Client, Client reference (client and reference accept partial matches), Loading/Unloading date presets (**Today**, **Tomorrow**, **This week**, applied against pickup and delivery dates independently), **Exceptions only**, **Unassigned** (no driver, no truck, no subcontractor/carrier yet), and **Stale check-call** (choose a threshold — **12h, 24h, 48h,** or **72h** — for how old the last check-call has to be to count).
+
+> **Note:** 
+Stale check-call only flags orders that are actually **moving** right now (assigned through offloading) — a Draft or Pending order with nothing logged yet isn't "stale", it just hasn't started.
+
+
+Click the **star** on an order row to pin it as a **CS priority** — pinned orders always sort to the top of the list, regardless of the active sort key or direction.
+
+### Triage grouping
+
+The default grouping sorts every order into one of five buckets, worst first:
+
+| Group | What lands here |
+|---|---|
+| **Needs action now** | The most urgent signals — an open exception or an escalation waiting on a reply |
+| **Late / at risk** | The ETA buffer against the delivery window has dropped to an hour or less, or has already been missed |
+| **Awaiting our reply** | A client emailed in and nobody has answered — see below |
+| **Awaiting check-call** | Moving, with no check-call logged inside your stale-check-call threshold |
+| **On track** | Everything else |
+
+Each order's row shows a compact **Signal** column (its at-risk/late state and check-call age at a glance) and a next-stop preview — the upcoming stop's name, city, and time window.
+
+The KPI bar above the list — **Results**, **In transit**, **Delivered**, **Exceptions**, **Awaiting our reply**, and (only when there's at least one) **Unmatched emails** — is clickable: click a tile to filter the list down to it, click it again to clear the filter. The **Delivered** tile reads a dash rather than a misleading zero while you're on the **Active** scope (which excludes delivered orders by design) — click it to switch to **All** scope filtered to Delivered.
+
+> **Note:** 
+An order is **Awaiting our reply** when its most recent client email is an inbound reply, and either nothing has gone out since it arrived or nobody has clicked **Mark handled** on it. Answering it — with **Reply** on the thread, or by sending a fresh **Notify client** message — or clicking **Mark handled** both clear it from this group.
+
+
+### Unmatched Emails
+
+Druma matches an inbound email to a client by comparing the sender's address, exactly, against that client's saved contacts (and the client's own general email) — never by domain, and never a guess. That strictness is deliberate: a looser match would risk filing one client's email onto a completely different client's record. An email that matches nothing lands in a company-wide **Unmatched emails** queue instead of being silently dropped.
+
+Click the **Unmatched emails** KPI tile (it only appears once there's at least one) to open the queue. For each email you can:
+
+- **File it under a client** — pick the client from the search box; ticking **Also save sender as a contact** (on by default) means the *next* email from that address matches automatically, so the queue drains instead of recurring forever.
+- **Attach it to a specific order**, optionally — type the order number in **Order # (optional)** before filing. Leave it blank to file the email onto the client's general timeline only, with no single order attached.
+- **Dismiss it** as "Not a client" if it's spam or unrelated to your business.
+
+The same queue also surfaces price-enquiry emails from addresses Druma doesn't recognise, with a **Reply** box to answer directly without ever creating an order or a client record for a lead that hasn't gone anywhere yet.
+
+---
+
+## Working the Exception Queue
+
+Every open order is automatically checked for two failure modes the moment its data changes — you don't have to open each one to find a problem:
+
+- **ETA after close** — the order's current ETA lands after the delivery site's opening hours for that day.
+- **Appointment missing** — a stop's site requires a booking, but no booking reference and no logged `booking` check-call exist for it yet.
+
+
+  ### Spot flagged orders
+    Flagged orders carry an amber exception badge in the order list, and the Workbench's **Exceptions** KPI shows how many distinct orders are currently affected. Toggle **Exceptions only** to see just those.
+  
+  ### Open the order and review the detail
+    The detail pane shows an amber **Exceptions** panel listing each triggered condition and the site it relates to. A predicted exception (from Druma's predictive-delay model) is marked with a **Predicted** badge and a severity level, separately from the rule-based ones described above.
+  
+  ### Resolve it
+    Depending on the exception: log a `booking` check-call once you've confirmed a slot, or update the site's booking reference for that client. For an ETA-after-close situation, call ahead to the site or notify the client so they can adjust.
+  
+  ### Confirm it clears
+    Exceptions are computed live from current data, not manually dismissed — once the underlying condition is fixed (a booking is logged, or the ETA moves back inside opening hours), the flag disappears on its own.
+  
+
+
+> **Note:** 
+Exceptions also feed the **Exceptions feed** widget on the Home Dashboard, so a proactive check doesn't require opening the CS section at all.
+
+
+---
+
+## Escalating to a Planner
+
+Some issues need a planner's decision, not a check-call — a truck reassignment, a client dispute over the price or terms, a driver who won't answer, missing paperwork. Rather than tracking these by phone or chat, escalate straight from the order.
+
+
+  ### Open the order and click Escalate
+    In the order detail pane, click **Escalate to planner**.
+  
+  ### Pick a reason
+    Choose from **Truck reassignment**, **Client dispute**, **Driver unreachable**, **Documentation**, or **Other**.
+  
+  ### Add a note (optional)
+    Give the planner the context they'll need — what you've already tried, what the client is asking for, and so on.
+  
+  ### Submit
+    Click **Escalate**. The escalation is logged in the order's check-call/communication timeline and an amber strip appears on the order — on the Planning Board and in the Orders detail pane too, so a planner sees it wherever they're already working, not only inside CS.
+  
+
+
+Once the planner has dealt with it, they (or you) click **Mark resolved** on the amber strip — it records who resolved it and when, and the strip clears.
+
+---
+
+## Sites — Where Opening Hours and Contacts Come From
+
+Manage the site catalogue from the **Sites** tab. Each site holds identity/address, a weekly opening-hours grid (with date-specific exceptions, e.g. a public holiday), appointment/booking settings, dock count and gate/access notes, vehicle restrictions, a contacts repeater, and per-client booking instructions (the same warehouse can require a different reference depending on whose cargo it is).
+
+Two buttons in the site editor's opening-hours section can fill in data for you — both require opening an existing site (not available while creating a new one):
+
+- **Suggest from history** — infers opening hours and typical dwell time from your own drivers' past arrival/departure times at that site. Always reviewable before you save; nothing is written automatically.
+- **Research the web** — asks Druma's AI to search the web for the site's published hours, contacts, and booking portal, citing the pages it used. It must be turned on first in **Settings → Automation → Customer service** (an admin/company-admin setting) — off by default.
+
+### What the site fields mean
+
+| Field | Meaning |
+|---|---|
+| **Type** | Warehouse, Factory, Distribution centre, Port, Terminal, Yard, Other. |
+| **Timezone** | The site's local timezone — used to evaluate opening hours correctly regardless of where the order was created. |
+| **Opening hours** | A per-weekday grid of open windows, with optional date-specific exceptions (closures/holidays). |
+| **Appointment required** | Whether a booking slot must be arranged before arrival; can be overridden per client. |
+| **Dock count / Gate instructions / Access notes** | Practical arrival info for drivers and planners. |
+| **Booking portal URL** | Link to the site's own booking system, if it has one. |
+| **Vehicle restrictions** | Flag-based limits (e.g. size/weight restrictions) recorded on the site. |
+| **Contacts** | Named booking/gatehouse/warehouse/security contacts with phone/email. |
+| **Per-client instructions** | Booking reference, customer code, and free-text instructions specific to one client at this site. |
+
+---
+
+## Customer Service on a Phone
+
+Customer-service users get their own mode in the Druma mobile app (open `/app/#/mobile`, or the installed Druma app). If your role gives you more than one mode, a **Choose your mode** screen lets you pick **Customer service**; you can switch at any time from **More**.
+
+The mode has three tabs:
+
+- **Triage** — your open orders grouped like the desktop Workbench: needs action, late or at risk, awaiting reply, awaiting check-call and on track (on track starts collapsed). The "stale check-call" threshold is the same preference as on desktop.
+- **Orders** — search by order number, reference or city (**Search order, reference or city...**). It shows the newest orders first; search to narrow down.
+- **Exceptions** — one card per order with its current and predicted exceptions.
+
+Tap an order to open the order sheet: status, route, **ETA**, truck and driver, **Truck position** with an **Open map** link, **Call driver** and **Call delivery contact** buttons, and the order's exceptions. From the sheet you can **Notify client** (the same composer as on desktop) and **Escalate** to a planner. Escalate is hidden for roles that may not escalate, and disabled while an escalation is already open for the order. If orders cannot be loaded, the screen says **Couldn't load orders** — it is a loading failure, not an all-clear.
+
+---
+
+
+  
+    Pick a site on a stop to autofill its address — the Workbench then pulls that site's details for the order.
+  
+  
+    Every order status the Workbench displays, and what triggers each transition.
+  
+  
+    The live map and driver chat the Workbench's live-position line and assignment card draw from.
+  
+  
+    Add the Exceptions feed widget to see CS exceptions without leaving the dashboard.
+  
+</CardGroup>
+
+---
+
+## Feedback & What's New
+
+
+## Overview
+
+The feedback window is a single screen: you write a report on the left, and on the right the activity pane has three tabs — **What's New**, **Mine** and **Team**. This page covers the **What's New** tab; sending reports, the duplicate check and the status of your reports are described in [Send feedback, see replies and what's new](/en/tools/feedback).
+
+---
+
+## What's New
+
+The **What's New** tab is a running list of what Druma has shipped or is currently building — filterable by area (Planning, Invoicing, Fleet & Drivers, eCMR & Compliance, and so on). Each entry shows a type badge (**Feature**, **Fix**, **Improvement**, **Security**, **Compliance**), a short title and description, and either the version it shipped in or **"In progress"** if it's still being built.
+
+> **Note:** 
+This list only shows what's actually been released or is currently being worked on for real — there's no roadmap, no estimate, and no sprint board behind it. It's a running changelog, not a planning tool.
+
+
+---
+
+
+  Your daily operational overview — a different surface from the release feed described here.
+
+
+---
+
+## Assignment Rules and Truck & Driver Rules
+
+
+Druma has two kinds of rules in **Settings → Rules**. Both are set up by company admins.
+
+| Rule type | What it does |
+|---|---|
+| **Assignment Rules** | Automatically tags an order with a department, resource group or planning group, based on the order's fields. |
+| **Truck & Driver Rules** | Shapes which trucks and drivers are suggested and auto-assigned for an order. |
+
+---
+
+## Assignment Rules
+
+An assignment rule reads **When** the order looks a certain way, and **Then assign** a department, resource group and/or planning group.
+
+### Adding a rule
+
+
+  ### Open Settings → Rules → Assignment Rules
+    Click **Add rule** and give it a **Rule label**, for example "Reefer orders → Reefer Fleet A".
+  
+  ### Choose who it applies to
+    Under **Applies to**, pick **Every order (company-wide)**, **One client**, **A client group** or **A site (any stop at it)**.
+  
+  ### Build the conditions under When
+    The condition builder can test order fields, stops (pickup or delivery, including the stop's local time of day and weekday), goods lines, and nested any/all groups. Leave it empty to match all orders. Values such as clients, zones and sites are picked by name, not by ID.
+  
+  ### Choose what to assign under Then assign
+    Pick the department, resource group and/or planning group. A field you leave empty stays unchanged.
+  
+  ### Save rule
+    Click **Save rule**. Use the toggle on the rule to switch it on or off.
+  
+
+
+You can also use **Describe a rule** to write the rule in your own words and let Druma draft it for you to review before it is created.
+
+### Which rule wins
+
+More specific rules are checked first: **Site rules**, then **Client rules**, then **Client group rules**, then **Company-wide rules**. Within one level, the order in the list decides. Use **Move up** and **Move down** to reorder rules within a level.
+
+The first matching rule that sets a given tag claims it. A rule with **Stop evaluating further rules once this one matches** also stops every less specific rule for the orders it matches. This is off by default for a client, group or site rule, because switching it on also silences company-wide rules for those orders.
+
+### How rules treat manual choices
+
+- A tag you set yourself on an order is **never overwritten** by a rule.
+- A tag a rule set earlier can be changed or cleared when the order is still **draft, virtual or pending** and the facts change: another rule now wins, a stop moves out of the zone, or the rule is switched off.
+- Once an order has moved further along, rules only fill tags that are still empty.
+
+### When rules run
+
+Rules apply however the order arrives: Add Order, the client portal, an import or the API. They also run again when an order's stops or goods lines change, so a zone rule works even though the stops are added after the order itself.
+
+> **Note:** 
+If you change a client's client group, existing orders are not re-evaluated immediately; they pick up the new group's rules the next time the order or its stops are edited.
+
+
+### Seeing a client's rules
+
+Open a client from **Clients** and go to the **Rules** tab. It lists the assignment rules scoped to that client or its client group (read-only), with **Manage assignment rules** to jump to Settings.
+
+---
+
+## Truck & Driver Rules
+
+Open **Settings → Rules → Truck & Driver Rules**. Use them to say things like "ADR loads need an ADR-skilled driver" or "this client prefers truck 12 for morning pickups". The rules feed the same matching that powers suggestions and Auto-planning; they never override legal blockers such as driving hours or cabotage.
+
+### The four effects
+
+| Effect | What it does |
+|---|---|
+| **Require** | Only trucks that match the selector can be suggested. Every other truck is removed for these orders. |
+| **Forbid** | Trucks that match the selector are removed for these orders and never auto-assigned. |
+| **Prefer** | Matching trucks score better and rank higher. Nothing is removed. |
+| **Avoid** | Matching trucks score worse and rank lower. Nothing is removed. |
+
+Require and Forbid need at least one entry in the selector. Prefer and Avoid have a **How strongly** slider from 0 to 100: a low value only decides between otherwise close trucks, a high value outranks almost any cost difference.
+
+### Creating a rule
+
+
+  ### Click Add rule
+    Name the rule, for example "ADR loads need an ADR driver".
+  
+  ### Set When the order matches
+    Use the same condition builder as assignment rules. Leave it empty to apply to every order in the scope.
+  
+  ### Choose the scope and the effect (Then)
+    Scope can be company-wide, a client group, a client or a site.
+  
+  ### Fill in These trucks and drivers
+    Pick any of: **Trucks**, **Drivers**, **Trailer types**, **Emission classes**, **Driver skills (any of)**, **Subcontractors**. A truck matches when it meets every list you filled in; within one list any one value is enough. For a team of two drivers, the skill counts if either driver holds it, but an ADR skill whose certificate expires before delivery does not count.
+  
+  ### Read In plain words and Heads-up before you save
+    Druma spells the rule out in a sentence and warns about conflicts: one rule requiring what another forbids, a Forbid with no selector, duplicates, and Prefer and Avoid cancelling each other.
+  
+  ### Save rule
+    New rules are created **Off**.
+  
+
+
+### Test before you turn it on
+
+Use **Simulate this rule** and choose a **Day**. Druma replays that day's open orders with and without your rule and tells you how many would get a different best truck, be left with no truck, or newly get one. It uses straight-line distances, saves nothing and costs no routing. When you switch the rule on, Druma asks you to confirm after showing a fresh simulation. You can also use **Describe a rule** to have Druma draft a truck and driver rule; it is always created Off.
+
+### Which level wins
+
+All rules that apply are evaluated. A truck removed by a Require or Forbid stays removed. For Prefer and Avoid, only the most specific level (site, then client, then client group, then company) counts for a given truck.
+
+### Seeing why a truck was suggested
+
+The Auto-matched popover on the [Planning Board](/en/planner/planning-board) and the review window of the Planning Assistant list every rule that fired, with its effect and score change.
+
+### Orders no truck can serve
+
+If your rules leave an order with no possible truck, [Auto-planning](/en/planner/auto-planning) shows it in a **Blocked by your rules** list so you can see which rule is responsible and adjust it or plan the order by hand.
+
+---
+
+## Q&A
+
+**Can I limit a rule to one client?** Yes, set the scope to One client. A client group or a site works too.
+
+**A rule is set but the order was not tagged. Why?** Check that the rule is switched on, that the order is in the rule's scope, that a manual tag was not already set, and that a more specific rule did not claim the tag first.
+
+**Does a Require rule force a truck onto the order?** No. It narrows the candidates; the best remaining truck is still chosen by the usual scoring, and Auto-planning still checks that there is a clear winner.
+
+**Can a Prefer rule beat driving-hours limits?** No. Rules never override legal blockers.
+
+**Does "Require a subcontractor" mean a subcontractor gets the order?** It keeps own trucks off the order. Own trucks never match a subcontractor selector.
+
+---
+
+## Pallet Statement Import
+
+
+Pallet pools such as CHEP and Paki bill from their own statement. Druma can compare that statement with your pallet ledger so you can see exactly where the two disagree. **Importing never books anything**: the statement lines are kept for comparison only and never become pallet movements.
+
+## Import a statement
+
+
+  ### Open the Pallets tab
+    Go to **Clients** (or **Subcontractors**), open the counterparty the statement is for, and open the **Pallets** tab. Scroll to **Provider statements** below the movement ledger.
+  
+  ### Choose the file
+    Click **Import statement** and drop a **CSV or XLSX** file (maximum 5 MB and 5,000 rows; the file needs a header row). Choose the **Provider** (**CHEP**, **Paki** or **Other provider**).
+  
+  ### Match your columns
+    Under **Match your columns**, map the file's columns to **Date**, **Pallet type**, **Quantity**, **Direction**, **Reference** and **Voucher number**. A column can be set to "(not in file)". If the file has no pallet type column, set **Pallet type for every row**. **Pallet type names** lets you map the provider's names onto Druma's pallet types. If the provider reports the quantities from its own point of view, tick **The statement shows the provider's side (reverse the signs)** so that pallets sent are positive and pallets returned are negative.
+  
+  ### Compare with ledger
+    Click **Compare with ledger**, review the preview, then **Import statement**. Rows that can't be read (bad date, quantity or pallet type) are skipped and counted.
+  
+
+
+Importing the same file again updates the result instead of duplicating it.
+
+## Reading the result
+
+Each statement line gets a **Result**:
+
+| Result | Meaning |
+|---|---|
+| **Matched** | Druma holds a movement with the same reference or voucher number (or the same date, pallet type and quantity) |
+| **Quantity differs** | A movement was found by reference or voucher number but the quantity is different. The **Difference** column shows statement minus Druma |
+| **Not in Druma** | No matching movement exists in your ledger |
+
+Use the filter chips (**All**, **Matched**, **Quantity differs**, **Not in Druma**) to focus on the differences. A movement is matched at most once, and movements that are already disputed are not matched.
+
+## Open a dispute from a line
+
+On a **Quantity differs** line, click **Open dispute**. This marks the Druma movement as **Disputed**: it is excluded from the balance, statements and charges until you resolve it (**Withdraw** or **Uphold**, see [Pallet Exchange Ledger](/en/planner/pallet-exchange)). A line that is **Not in Druma** has no movement to dispute; book a correction or an opening balance if the provider is right.
+
+> **Note:** 
+CHEP's own balance sync is not configured, so the supported route for CHEP and Paki is this statement import.
+
+
+---
+
+
+# Driver App
+
+## Installing the Driver App
+
+
+> **Note:** 
+The Android app is called **Druma** and serves every role: drivers, planners, dispatchers and customer service. Drivers sign in with phone number and PIN and land in Driver mode. Office colleagues sign in with email and get their own mode. See [The Druma Mobile App](/en/driver/mobile-app).
+
+
+## What Kind of App Is It?
+
+It depends on your phone:
+
+- **Android**: Druma isn't on Google Play yet — you install it by downloading the app file (APK) directly from a link inside Druma and opening it, the same way you'd install an app that isn't in a store. This is a temporary distribution method until Druma is published on Google Play.
+- **iPhone / iPad (iOS)**: Druma uses a **PWA (Progressive Web App)**. It looks and works like a regular app — it has an icon on your home screen and works when your signal is weak — but you install it directly from Safari, not the App Store.
+
+---
+
+## What You Need Before Installing
+
+- A smartphone (Android or iPhone/iPad)
+- Your phone number set on your driver profile, and a PIN — both set up by your dispatcher or fleet manager before you install the app
+
+Unlike most apps, you don't register or activate your own account. Your dispatcher sets you up first — see **Logging In: Phone Number + PIN** below — then you install the app and log in.
+
+---
+
+## Installing on Android
+
+
+  ### Open the Druma driver app in your browser
+    On your Android phone, open Chrome and navigate to the Druma driver app address your dispatcher gave you. It's the same address for every driver at your company.
+  
+  ### Tap Download on the install banner
+    A banner titled **"Get the Druma Driver app"** appears at the top of the screen, explaining that installing gives you reliable background location tracking even with the screen off. Tap **"Download"** on that banner.
+  
+  ### Open the downloaded file
+    Your phone downloads an app file (`.apk`). Open your notifications or your Downloads folder and tap it.
+  
+  ### Allow installs from this source
+    The first time you do this, Android will warn that installing apps from outside Google Play is normally blocked. Tap through to allow installs from this source — you only need to do this once.
+  
+  ### Install and open
+    Tap **"Install"**, wait for it to finish, then tap **"Open"** or find the Druma icon on your home screen.
+  
+
+
+> **Note:** 
+This direct-download install is a temporary step while Druma isn't yet listed on Google Play. It's a genuine, signed Druma app — not a security risk — but Android always shows this warning for any app installed outside a store, so don't be alarmed by it.
+
+
+> **Note:** 
+Make sure the Druma app is allowed to run in the background. Go to **Settings → Apps → Druma → Battery** and set it to Unrestricted (or turn off battery optimisation for the app).
+
+
+---
+
+## Installing on iOS (Safari)
+
+
+  ### Open Safari
+    You **must use Safari** on iPhone/iPad — not Chrome, not Firefox. iOS only allows PWA installation through Safari.
+  
+  ### Open the Druma driver app address
+    Navigate to the Druma driver app address your dispatcher gave you. It's the same address for every driver at your company — not a personal link — so you can bookmark it.
+  
+  ### Tap the Share button
+    At the bottom of the screen, tap the **Share** button — it looks like a box with an upward arrow.
+  
+  ### Scroll down and tap Add to Home Screen
+    In the share sheet that appears, scroll down to find **"Add to Home Screen"** and tap it.
+  
+  ### Tap Add
+    A preview shows the app name and icon. Tap **"Add"** in the top-right corner. The icon appears on your home screen.
+  
+
+
+
+> **Note:** 
+Make sure Safari notifications are enabled if your company uses push notifications. Go to **Settings → Safari → Notifications** and allow them.
+
+
+---
+
+## Logging In: Phone Number + PIN
+
+Druma drivers don't self-register with an email or SMS code. Instead, your dispatcher or fleet manager sets up your login for you, in **Fleet → Drivers**, before you ever open the app:
+
+
+  ### Your dispatcher sets your phone number
+    In your driver profile, they enter (or confirm) your phone number in international format, e.g. `+40712345678`.
+  
+  ### Your dispatcher generates a PIN for you
+    In the same profile, under **Phone + PIN login**, they click **Set PIN** — typing one in or clicking **Generate** for a random 6-digit code — and save it. They'll then tell you this PIN directly (in person or by a quick message).
+  
+  ### You log in
+    Tap the Druma icon on your home screen. On the login screen, enter your phone number and the 6-digit PIN you were given, then log in.
+  
+  ### Personalize your PIN
+    The first time you log in, Druma asks you to choose your own 6-digit PIN to replace the temporary one your dispatcher set. Enter it, confirm it, and you're done — from then on you log in with your phone number and your own PIN.
+  
+
+
+> **Warning:** 
+Make sure your dispatcher has the correct phone number on file for you — that's the number your PIN is linked to. If you can't log in, ask them to check the details in your driver profile (Fleet → Drivers).
+
+
+### Lost or stolen phone?
+
+Tell your dispatcher straight away. From your driver profile, under **Phone + PIN login**, they can click **Revoke device sessions** — this forces a fresh phone number + PIN login on every device, including the one that was lost.
+
+> **Note:** 
+Revoking sessions isn't instant: a device that's already logged in can stay signed in for up to about an hour afterwards, since its existing access token remains valid until it naturally expires. Treat a lost phone as urgent and revoke immediately, but know it's not an instant kill switch.
+
+
+---
+
+
+  
+    Learn how to update your order status throughout the delivery journey.
+  
+  
+    Understand how your location is (and isn't) tracked by Druma.
+  
+</CardGroup>
+
+---
+
+## Status Updates
+
+
+## Why Status Updates Matter
+
+Every time you tap a status update, this happens:
+
+1. Your dispatcher's dashboard refreshes with the update live — they don't need to press refresh or wait for a notification
+2. Your GPS position and the exact time are stamped to the order record
+3. If it's your very first tap of the trip ("En Route to Pickup"), the client may also get an automatic email — but only if your company has that setting turned on; the other taps in between don't email the client
+
+This means your dispatcher isn't calling you every hour to ask where you are, and there's a clean paper trail if anything is disputed later.
+
+<Frame caption="The driver app's Today view — status and hours for the active load.">
+  <img src="/images/driver/status-updates.png" alt="Driver app Today view with load card and status buttons" />
+</Frame>
+
+> **Note:** 
+For arrivals and departures specifically, Druma can also detect the change automatically from your GPS position and update the status for you — see [GPS Tracking](/en/driver/gps-tracking#automatic-arrival-departure-detection). When that happens you don't need to tap anything; just check the green banner is correct (or tap Undo if it's not). You still tap Loading and Unloading yourself, since those can't be detected from GPS alone.
+
+
+---
+
+## The Status Flow
+
+Status updates must be done in order — you can't skip from "En Route to Pickup" to "Delivered" without going through the steps in between. Here's the full sequence:
+
+### 1. En Route to Pickup
+Tap this when you've left your starting point and you're on the way to the loading address. This tells your dispatcher you're moving and gives the client a heads-up that their load is being collected.
+
+### 2. Arrived at Pickup
+Tap this the moment you arrive at the loading address — when you pull up, not after you've parked and sorted paperwork.
+
+**This is important:** the exact time you tap this starts the waiting time clock. If the loading takes longer than the free allowance, your company can charge the client — but only if your arrival time is accurately recorded. Tap it immediately on arrival.
+
+### 3. Loading
+Tap this when loading actually begins — the forklift is moving, the pallets are going on. This ends the waiting time clock for pickup.
+
+### 4. En Route to Delivery
+Tap this when the truck is loaded, the CMR is signed, and you're on the road heading to the delivery address. Your dispatcher sees this update live on their dashboard.
+
+### 5. Arrived at Delivery
+Tap this the moment you arrive at the delivery address. Same rule as Arrived at Pickup — tap it immediately. This starts the waiting time clock at delivery if applicable.
+
+### 6. Unloading
+Tap this when unloading begins. This ends the delivery waiting time clock.
+
+### 7. Delivered
+Tap this when the delivery is fully complete and you've left the site. The order closes out and your dispatcher sees the job is done.
+
+---
+
+## Order Detail: Now / Trip / Docs / Chat
+
+Opening an order shows four tabs, with a persistent bar pinned to the bottom of every one of them:
+
+- **Now** — your current stop, and a "Before you can continue" card listing anything blocking your next step (pre-trip checklist, required documents). Only real blockers appear there; the CMR signature row sits below the card, because an unsigned eCMR never stops you — see [Signing the eCMR](/en/driver/signing-ecmr)
+- **Trip** — the full route, all stops, cargo details, and compliance info (ADR, customs references, e-Transport, eFTI)
+- **Docs** — upload and review documents for this order
+- **Chat** — message your dispatcher directly about this order
+
+The bottom bar itself always shows two things: a **Next Step: <status>** button to advance, and a red **Report** button for delays, tolls, incidents, or anything stopping you from completing the order — see [Reporting Delays](/en/driver/reporting-delays).
+
+---
+
+## How to Update Your Status
+
+
+  ### Open your active order
+    From the Druma app home screen, tap the active order card. This opens the order detail screen on the **Now** tab.
+  
+  ### Check for anything blocking your next step
+    If the **Now** tab lists anything under "Before you can continue", resolve it first — complete the pre-trip checklist, or upload the required documents. When nothing is outstanding the card reads "Nothing blocking — you can continue".
+  
+  ### Tap Next Step on the bottom bar
+    The bar at the bottom of the screen always shows **Next Step: <status>**. Tap it to advance. A confirmation dialog appears showing what you're about to update.
+  
+  ### Confirm
+    Tap **Confirm**. The status updates immediately and your GPS position is captured.
+  
+
+
+
+---
+
+## What Gets Sent When You Tap
+
+Every status update automatically:
+
+- Updates your dispatcher's Druma dashboard live — they see it the moment they're looking at the order, without a push notification
+- Records your **GPS position** at that moment
+- Stamps the **exact time** of the update
+
+Your very first tap of the trip ("En Route to Pickup") can also trigger an automatic email to the client — but only if your company has that setting enabled. None of the other taps (Arrived at Pickup, Loading, En Route to Delivery, Arrived at Delivery, Unloading, Delivered) send a client email on their own.
+
+The GPS and timestamp are permanent — they form part of the order record and can be used as evidence if a client disputes timing.
+
+---
+
+## What If You Forget to Update?
+
+If you miss a status — say you forgot to tap "Arrived at Pickup" until after loading started — tap it as soon as you remember. The timestamp will reflect when you actually tapped it, not when you arrived.
+
+If the timing matters (for example, to accurately record waiting time), let your dispatcher know. They can adjust the timestamp manually from the web platform.
+
+> **Note:** 
+Your dispatcher can update statuses on your behalf from the Druma web platform. If your phone is dead, you're in a no-signal zone, or something went wrong, call them and they'll update the order from their end.
+
+
+---
+
+## Recording Pallets at a Stop
+
+When you finish a stop where pallets change hands, Druma asks you to record them. The prompt says: "Record the pallets exchanged at this stop. You can skip, but the office will see it as unconfirmed." Tap **Record pallets**.
+
+
+  ### Enter the numbers
+    **Pallets given** is what you handed over. **Pallets taken** is what you received. If the other side refused some of what you gave, enter it in **Refused by them** and pick a reason under **Why were pallets refused?** (for example No space, Exchange not agreed, Poor condition). If some of the pallets you took were damaged, enter them in **Of which damaged**. The screen shows what you planned and a summary of what goes on the pallet account (damaged and refused pallets are not credited or posted).
+  
+  ### Get the proof
+    Enter the **Name of the person signing** and have them sign on the screen under **Signature**. You can add a **Photo of the pallets** (JPEG, PNG, WebP or HEIC, max 5 MB).
+  
+  ### Tap Sign and post
+    You see "Pallets recorded - voucher PV-..." and a **Pallets recorded** chip appears on the stop. A PDF voucher is attached to the order, and the eCMR notes the pallets exchanged.
+  
+
+
+If you tap **Skip for now**, the stop shows **Pallets unconfirmed** and the office follows up; it never blocks you from moving on, and you can record the pallets later. A recorded voucher cannot be changed afterwards. With no signal, the voucher shows "Saved - will send when you are back online" and is sent automatically later.
+
+---
+
+## Ferry Crossings
+
+If your trip includes a ferry, the load shows a **FERRY CROSSING** card with the **Booking number** (tap to copy it, so you have it at the port), the operator, ports, **Departs**, **Check-in by** and the approximate crossing time. If the planner has not entered a booking number you see "No booking number yet - ask the planner".
+
+Two buttons track the crossing: tap **Boarded** when you drive on, and **Off the ferry** when you leave. The card then shows "On the ferry since ..." and "Off the ferry at ...". These taps don't change the order status, work offline, and also show your client "On ferry". The crossing time is included in the ETA.
+
+---
+
+## Multiple Deliveries (Groupage)
+
+If your order has multiple stops — a groupage run — you'll see each stop listed separately in the app. Update the status for each stop independently as you arrive, load, or deliver at each location. The overall order won't close until all stops are marked as Delivered.
+
+---
+
+
+  
+    How to report a delay and send an updated ETA to your dispatcher and client.
+  
+  
+    Complete the electronic CMR signing process at pickup and delivery.
+  
+</CardGroup>
+
+---
+
+## Signing the eCMR
+
+
+## What Is an eCMR?
+
+An eCMR is a digital CMR (Consignment Note) — the same document as a paper CMR, but signed electronically instead of on paper. When all three parties have signed, Druma builds and digitally seals the certified PDF — applying a PAdES Advanced Electronic Signature (AdES) that is legally equivalent to a signed paper CMR in countries that have ratified the e-CMR protocol. This is the Druma native provider, used by every company today. A small number of companies with a **legacy TransFollow configuration** (TransFollow can no longer be newly selected) still have the certified PDF issued through TransFollow instead.
+
+The advantage for you as a driver: no more chasing a paper signature from your own end, no lost documents, and no arguments about whether the CMR was signed correctly. Everything is timestamped and stored automatically.
+
+> **Note:** 
+Today, only **your own signature** as the driver happens on your phone. The shipper's and consignee's signatures are captured through Druma's web platform, not the driver app — see below for exactly how.
+
+
+---
+
+## Before You Start
+
+Before you sign, check:
+- You have the order open in the Druma app
+- The CMR details shown in the app match the physical load (shipper name, consignee, goods description, truck registration)
+- If anything looks wrong, **do not sign** — contact your dispatcher first
+
+---
+
+## The Three-Party Signing Process
+
+The eCMR requires three signatures:
+
+1. The **sender** (shipper) — signed by whoever at your company has access to Druma's web platform, not on your phone
+2. The **carrier/driver** (you) — signed on your phone, in the driver app
+3. The **consignee** — signed through a link or QR code that your dispatcher/planner generates from the web platform, not from your phone
+
+### Step 1: Shipper Signature (Not on Your Phone)
+
+This step doesn't happen in the driver app. Whoever at your company has access to Druma's web platform — typically your dispatcher or planner — opens the order there and taps **Sign as shipper**, then has the shipper draw their signature and type their name on that screen. This might happen before you even arrive at pickup, or on-site if a planner is there with a laptop or tablet.
+
+There's nothing for you to do for this step — you won't see a shipper-signing screen on your phone.
+
+### Step 2: You Sign
+
+On the order's **Now** tab — below the "Before you can continue" card, not inside it — a **Sign eCMR** row appears while your signature is still outstanding, marked *eCMR or paper CMR — either is valid*. Once you've signed, that row collapses into a simple **CMR signed** line.
+
+Signing is never a blocker: an outstanding signature does not stop you advancing the order's status, because a signed paper CMR is an equally valid original. See [Paper CMR Fallback](/en/ecmr/paper-cmr-fallback) for when to use paper instead.
+
+
+  ### Open your order and tap Sign eCMR
+    Tap the **Sign eCMR** row on the Now tab. It shows the current status of all three signatures (Shipper / Driver / Consignee).
+  
+  ### Confirm sender and consignee, if asked
+    On a loaded move that crosses a border, if the note would print the same company as both sender (box 1) and consignee (box 2), a warning appears asking you to check the names before signing. Tick **These party details are correct** to continue — if the names are wrong, call your dispatcher instead of signing. This checkbox blocks submission until it's ticked; it only appears on loaded, cross-border moves.
+  
+  ### Sign with your finger
+    Sign on the screen with your finger.
+  
+  ### Enter your printed name
+    Type your full name in the **Printed name** field.
+  
+  ### Tap Submit signature
+    Tap **Submit signature**. Your signature and a timestamp are locked in — you can't sign again for this order once it's submitted.
+  
+
+
+> **Note:** 
+If you signed in error (wrong order, wrong goods), contact your dispatcher immediately — they can void the eCMR from the web platform and start a new one.
+
+
+### Step 3: Consignee Signature (Not on Your Phone Either)
+
+This also isn't something you trigger from the driver app. From the order in Druma's web platform, your dispatcher or planner generates a **consignee signing link** (or a QR code, for the few companies still on a legacy TransFollow configuration) and shares it with the consignee — directly, or by having someone hand a phone/tablet to the consignee at delivery. The consignee opens it on that device, reviews the document, draws their signature, and enters their name — adding a note in the **Reservations** field (CMR box 24) if there's an issue like damage or a shortage.
+
+After the third signature is confirmed:
+- Druma builds and seals a **certified eCMR PDF** using the Druma native provider (or, for the few companies still on a legacy TransFollow configuration, through TransFollow)
+- The certified PDF is stored in the order automatically
+- Your dispatcher can see it immediately
+- The client portal shows the certified document (if enabled)
+
+---
+
+## If Someone Refuses to Sign
+
+Occasionally a shipper or consignee may refuse to sign electronically. Options:
+
+- **Use a paper CMR** — fall back to the traditional paper document and upload a scan later
+- **Note the refusal** — your dispatcher can record a "signed under reservation" or "refused signature" note on the order
+
+See the [Paper CMR Fallback](/en/ecmr/paper-cmr-fallback) guide for the full process when eCMR isn't possible.
+
+---
+
+
+  
+    How to scan and upload a paper CMR or proof of delivery from the app.
+  
+  
+    What to do when the eCMR process isn't possible and you need to use paper.
+  
+</CardGroup>
+
+---
+
+## Uploading Documents
+
+
+## Why Upload Documents?
+
+When you upload a document from the app, your dispatcher and the client can see it immediately — no WhatsApp photos, no emailing scans later, no documents getting lost. The file lives in the order and stays there permanently.
+
+This matters most for:
+- **Paper CMRs** — signed at pickup or delivery when eCMR wasn't used
+- **Proof of delivery** — signed delivery notes, warehouse receipts
+- **Weighbridge tickets** — if weight was verified at the loading point
+- **Delivery photos** — photographic proof of condition or placement
+- **Other paperwork** — customs stamps, ADR documents, temperature records
+
+> **Note:** 
+The exact list of document types is configured by your company's admin (Settings → Documents → Document Types), so it can vary — the types above are the typical defaults, and only enabled types show up when you upload.
+
+
+---
+
+## How to Upload a Document
+
+
+  ### Open your active order
+    From the app home screen, tap the order card to open it, then go to the **Docs** tab.
+  
+  ### Tap Upload Document
+    Tap **Upload Document**. You're given two choices: **Take Photo** (an auto-enhanced document scan) or **Upload File** (pick an existing photo or PDF already on your phone).
+  
+  ### Take the photo
+    If you chose Take Photo, your phone's normal camera opens. Take a single photo of the document, framing the page yourself — there's no live edge-detection or auto-capture, so hold it steady and make sure the whole page is in shot before you press the shutter.
+  
+  ### Review the enhanced photo
+    Druma runs the photo through an automatic document-enhancement pass to sharpen text and clean up the scan, falling back to a simple contrast boost if that enhancement doesn't succeed. It then shows you a preview — tap **Use Photo** if it's legible, or **Retake** to try again.
+  
+  ### Select the document type
+    Choose what type of document this is (the typical defaults are CMR, POD, Delivery Note, Weighbridge Ticket, and Other — see the note above on customisation). Choosing **Other** asks for a short free-text description.
+  
+  ### CMR: note any damage or reservations
+    If you chose **CMR**, you're asked whether there's any damage or reservation to note. Tap **No issues**, or **Damage / reservation noted** and add a short description before continuing.
+  
+  ### Multi-stop orders: choose the stop
+    If this order has more than one stop, you're asked which stop the document belongs to — or **General (no specific stop)** if it doesn't apply to one in particular.
+  
+  ### Paper CMR fallback: quick legibility check
+    If this order is running on the paper CMR fallback and you're uploading a CMR or POD photo, one more screen asks "Is the photo clear?" — check that signatures, stamps, and dates are readable, then tap **Looks good — upload** or **Retake photo**.
+  
+  ### Tap Upload
+    Confirm to upload. The document appears in the order's Docs tab, visible to your planner and (if enabled) the client.
+  
+
+
+
+---
+
+## Tips for Clean Scans
+
+A blurry or dark photo is almost as bad as no photo at all. There's no automatic edge-detection or cropping, and the automatic enhancement pass (with its contrast-boost fallback) can only do so much with a badly-framed or badly-lit shot — getting the framing and lighting right yourself still matters most. Here's how to get good results every time:
+
+- **Lay the document flat** on a hard surface — don't hold it in the air
+- **Good lighting** — daylight or a bright indoor light works best. Avoid shadows falling across the page
+- **Frame the whole page** — make sure all four edges and corners are visible before you press the shutter
+- **Hold steady** — a shaky photo blurs text more than the contrast enhancement can fix
+- **No glare** — if the document has a shiny surface (laminated, glossy paper), tilt it slightly to avoid reflections
+
+> **Note:** 
+If **Take Photo** doesn't produce a legible result in a difficult lighting situation, try **Upload File** instead and pick an existing photo you've taken with your phone's regular camera app (where you may have more manual control over exposure and focus).
+
+
+---
+
+## Uploading Multiple Pages
+
+Each photo or file is uploaded as its own separate document — there's no way to group several pages into a single document entry. If the document has more than one page (for example, a multi-page CMR or a delivery note with multiple sheets), repeat the upload process for each page and select the same document type each time. All the pages will show up in the order's Documents list, tagged with the same type, so your planner can see they belong together.
+
+---
+
+## CMR / POD Validation Status (Paper CMR Fallback Orders)
+
+If the order is running on the paper CMR fallback, each CMR or POD photo you upload gets a small status pill underneath it while Druma checks it automatically:
+
+| Status | Meaning |
+|---|---|
+| **Validating…** | Just uploaded — check in progress |
+| **Verified** | Looks good, no action needed |
+| **Awaiting planner review** | A borderline result — your planner will check it manually |
+| **Please retake photo** | Blurred, cropped, or otherwise unclear — take it again |
+| **Rejected — re-upload required** | Doesn't match what's expected — upload a new one |
+
+> **Note:** 
+If the automatic check can't run at all, the pill shows "Validation unavailable" — your planner reviews it manually instead. This status pill only appears on paper CMR fallback orders; it doesn't apply to documents on orders using the native or TransFollow eCMR flow.
+
+
+If you see **Please retake photo** or **Rejected**, re-upload following the same steps above.
+
+---
+
+## After Uploading
+
+Once uploaded:
+- The document appears instantly in the order's **Docs** tab in your app
+- Your planner sees it immediately in their Druma web platform
+- The client can see it in their client portal (if your company has this turned on)
+- You receive a small confirmation message in the app
+
+You can view your own uploads by staying on the Docs tab. You'll see each uploaded file with its type label and the upload timestamp.
+
+---
+
+## File Limits
+
+| Detail | Limit |
+|---|---|
+| Maximum file size | 10 MB |
+| Accepted formats | JPEG, PNG, WebP, HEIC, HEIF, and PDF |
+
+> **Note:** 
+If you're offline when you try to upload, the app queues the document on your phone and uploads it automatically as soon as you're back online or reopen the app — you don't need to redo anything. If a direct upload attempt fails for another reason (a bad connection mid-upload, for example), it stays queued and retries automatically rather than being lost.
+
+
+---
+
+
+  If your load uses electronic CMR, complete the digital signing process instead of uploading a paper scan.
+
+
+---
+
+## GPS Tracking
+
+
+## How GPS Works in Druma
+
+Tracking isn't tied to whether you're currently carrying goods. As long as you have a truck assigned to you — whether you're on an active load or just sitting with an assigned vehicle and nothing to haul yet — Druma tracks your location continuously in the background, once you've given location consent.
+
+| Situation | How tracking works |
+|---|---|
+| **Truck assigned to you** (loaded or not) | Continuous GPS tracking in the background |
+| **No truck currently assigned** | No background tracking |
+
+---
+
+## Continuous Tracking While a Truck Is Assigned
+
+From the moment a truck is assigned to you — whether or not you have an active load on it — Druma tracks your location continuously in the background. This isn't gated by your load status: a driver waiting with an assigned truck and no active order is tracked the same way as one mid-delivery.
+
+Your planner sees a live, moving pin on the Today View map. Your position updates in real time, not just when you tap a status button.
+
+**What's recorded while a truck is assigned to you:**
+- Your real-time GPS position
+- Your route, order-by-order
+- Timestamps throughout
+
+> **Note:** 
+Continuous background tracking uses more battery than an app that only checks location occasionally. Keep your phone charged or connected to your truck's power supply whenever you have a truck assigned.
+
+
+---
+
+## When No Truck Is Assigned
+
+If you don't currently have a truck assigned to you, Druma doesn't run background tracking. As soon as a truck is assigned, continuous tracking starts automatically (provided you've given location consent).
+
+---
+
+## What Your Planner Sees
+
+On the planner's Today View, each driver with an assigned truck appears as a live, moving pin on the map, updating in real time.
+
+---
+
+## Automatic Arrival & Departure Detection
+
+Druma can detect two status changes automatically from your GPS position, so you don't always have to remember to tap them the moment they happen.
+
+**Arrival detection** — when your GPS position enters a geofence around the pickup or delivery address (300 metres by default; your company can configure a different radius), Druma automatically advances your status to Arrived at Pickup or Arrived at Delivery and stamps the time and position, the same as if you'd tapped it yourself.
+
+**Departure detection** — if your company has this turned on (it's off by default), leaving the geofence and staying outside it for about 3 minutes automatically marks you as departed and advances the status.
+
+When either fires, a green banner appears at the top of the app — "Arrival detected" or "Departure detected" — naming the location. You have about 65 seconds to tap **Undo** if it's wrong (for example, you were only driving past, not actually stopping). After the undo window closes, the change is permanent, same as any status you tap yourself.
+
+> **Note:** 
+Automatic detection needs a reasonably accurate GPS fix (50 metres or better). If your signal is too weak, you'll see a "GPS accuracy low – manual status required" banner instead, and you'll need to tap the status yourself.
+
+
+Automatic detection only covers arrival and departure — you still tap Loading and Unloading yourself once the activity actually starts. See [Status Updates](/en/driver/status-updates) for the full flow.
+
+---
+
+## GPS Accuracy
+
+Druma uses your phone's built-in GPS chip for location. Typical accuracy:
+
+| Condition | Accuracy |
+|---|---|
+| Outdoors with clear sky | ~5–10 metres |
+| Urban areas (buildings around) | ~15–30 metres |
+| Covered loading bays, underground | Network-based fallback (less precise) |
+| No GPS signal at all | Network location (city-level accuracy) |
+
+> **Note:** 
+If your phone's GPS is switched off, Druma uses your mobile network location as a fallback. This is less precise. For best results — especially for arrival evidence and regulatory compliance — keep GPS turned on.
+
+
+---
+
+## Phone Settings for Continuous Tracking
+
+Because Druma tracks continuously whenever a truck is assigned to you, you need to allow background location access:
+
+**Android:**
+- Go to **Settings → Apps → Druma → Permissions → Location**
+- Set to **"Allow all the time"**
+- Go to **Settings → Apps → Druma → Battery** and set to **Unrestricted** (turn off battery optimisation)
+
+**iOS:**
+- Go to **Settings → Druma → Location**
+- Set to **"Always"**
+
+Without these settings, tracking may pause when your screen is off or the app is in the background.
+
+---
+
+## Location Permission
+
+When the app first needs your location, it will ask for permission:
+
+- **Android:** Grant **"Allow all the time"** — required for continuous tracking while a truck is assigned to you
+- **iOS:** Choose **"Always"** — required for continuous tracking while a truck is assigned to you
+
+"While Using App" is not enough — tracking would stop the moment your screen locks or you switch apps, even though a truck is still assigned to you. Granting "Always" ensures tracking works correctly from the moment a truck is assigned, without any interruption.
+
+---
+
+
+  Learn the full status flow and when each tap captures your position.
+
+
+---
+
+## Reporting Delays
+
+
+## When to Report a Delay
+
+Report a delay any time you know your arrival will be later than originally planned. This includes:
+
+- Heavy traffic or road closures
+- Long queues at a border crossing
+- Weather conditions slowing you down
+- A breakdown or mechanical issue
+- Loading at a previous stop taking longer than expected
+- Any other reason you'll arrive later than the scheduled time
+
+**Report it as soon as you know** — not when you finally arrive late. Clients appreciate early warnings far more than last-minute surprises. A 2-hour heads-up gives them time to rearrange their warehouse staff, reschedule other deliveries, or inform their own customer. An update when you're already late is just damage control.
+
+---
+
+## How to Report a Delay
+
+
+  ### Open your active order and tap Report
+    From the app home screen, tap the order card to open it, then tap the red **Report** button on the persistent bar at the bottom of the screen (next to the Next Step button).
+  
+  ### Tap Report Delay
+    A **Report a problem** sheet opens, listing Report Delay, Log toll, Report Incident, and — if the order is at a stage where it applies — Report failed collection or Refuse delivery. Tap **Report Delay**.
+  
+  ### Select a reason
+    Choose the reason that best describes the situation:
+    - **Breakdown** — mechanical failure, tyre, engine issue
+    - **Border queue** — customs queue, document check
+    - **Traffic congestion** — motorway congestion, road works, accidents
+    - **Weather conditions** — snow, ice, flooding, fog
+    - **Other** — anything not in the list above
+  
+  ### Add detail and a new ETA (both optional)
+    Optionally type a short note (up to 200 characters) describing the situation, and set a **New ETA** using the date/time picker if you have a revised estimate. You can also attach a quick photo or voice note for extra context.
+  
+  ### Tap Submit Delay Report
+    Tap **Submit Delay Report**. The report is sent immediately.
+  
+
+
+
+---
+
+## What Happens When You Send a Delay Report
+
+As soon as you tap Submit Delay Report:
+
+- Your **dispatcher receives an immediate push notification** with the reason (and your note, if you added one)
+- The delay is **logged on the order** with a timestamp — so there's a record of when you reported it
+
+> **Note:** 
+Whether the client is automatically emailed depends on a company setting, and it's **off by default**. If your company hasn't enabled automatic client notifications, your delay report reaches your dispatcher only — a planner then decides whether and how to inform the client, and can send a one-click "Notify client" email from the order on the planning board. If your company has enabled automatic notifications, the client also receives a professional, neutral email with the reason and your updated ETA (if you set one) at the same time your dispatcher is pushed the alert.
+
+
+---
+
+## Updating the Delay
+
+Delays change. What started as a 1-hour traffic jam might turn into 3 hours. Or you might clear the border faster than expected.
+
+If the situation changes, report the delay again with the new estimate. Each update logs separately on the order timeline, giving a full picture of how the journey developed.
+
+> **Note:** 
+There's no limit to how many delay updates you can send on one order. Update as often as the situation changes — your dispatcher sees each update immediately via push notification.
+
+
+---
+
+## Breakdown: What to Do
+
+If you have a breakdown, select **Breakdown** as the delay reason and send the report. Then:
+
+
+  ### Send the delay report first
+    Get the notification out to your dispatcher immediately so they know what's happening.
+  
+  ### Call your dispatcher directly
+    A breakdown needs a phone conversation, not just an app notification. Call your dispatcher right away so they can arrange roadside assistance, a replacement truck, or notify the client with more detail.
+  
+  ### Keep updating as the situation develops
+    As you get estimates from the breakdown recovery service, send updated delay reports with revised timings.
+  
+
+
+> **Warning:** 
+For breakdowns, always call your dispatcher directly in addition to sending the app report. The app notification gets the message logged and your dispatcher alerted, but the phone call is needed for the practical response — organising recovery, a replacement vehicle, or reloading arrangements, and for deciding whether and how to inform the client.
+
+
+---
+
+## Border Queue Delays
+
+Border queues can be unpredictable — what looks like 30 minutes from the back of the queue can turn into 3 hours. For border delays:
+
+- Report as soon as you join the queue
+- Select **Border queue** as the reason
+- Leave **New ETA** blank if you genuinely can't estimate yet, or set it once you can see the queue length
+- Send an update whenever your estimate changes
+- Send a final update when you're through
+
+This keeps your dispatcher informed throughout a long wait without you having to make phone calls from the queue.
+
+---
+
+
+  Continue with normal status updates once the delay is resolved and you're moving again.
+
+
+---
+
+## Pre-Trip Checklist
+
+
+## What Is the Pre-Trip Checklist?
+
+If your company has this enabled, Druma requires you to complete a safety checklist before you set off on a trip. This checklist confirms that the truck is roadworthy, the load is correctly secured, and all required documents are on board.
+
+There's no separate checklist button to find — the checklist opens automatically the first time you try to move a status from **Assigned** to **En Route to Pickup**, if you haven't completed it yet.
+
+> **Note:** 
+The checklist is per order, not session-wide: once you've completed (or skipped) it for the order you're departing on, it won't ask again for that same order. Opening or advancing a different order prompts the checklist again, even within the same app session.
+
+
+---
+
+## Who Sets Up the Checklist?
+
+Your company's **Admin or Planner** configures which items appear on the checklist, from the web platform. It's a single, company-wide list — every driver sees the same items, regardless of truck or trailer type.
+
+If you think an important item is missing, or an item doesn't apply to a particular load, contact your dispatcher — they can update the checklist items from Settings.
+
+---
+
+## Completing the Checklist
+
+
+  ### Go to the Status tab
+    From the bottom navigation in the app, tap **Status**.
+  
+  ### Tap En Route to Pickup
+    If your company requires a checklist and you haven't completed it yet, the checklist overlay opens automatically instead of updating your status.
+  
+  ### Work through each item
+    Read each item carefully and physically check it on the truck or load. When an item is confirmed, tap it to mark it as done. A tick appears next to it.
+  
+  ### Address any hard-blocked items
+    Some items are marked as **mandatory**. You cannot continue past the checklist until every mandatory item is ticked, whether you complete it in full or skip the rest. If there's a problem with a mandatory item (e.g., a tyre is low, a light is out), do not depart. Contact your dispatcher.
+  
+  ### Tap Complete & Continue (or Skip)
+    Tap **Complete & Continue** once every item — mandatory and optional — is ticked. If you need to move on without finishing every optional item, **Skip** is available as long as all mandatory items are ticked.
+  
+  ### Set your status to En Route
+    With the checklist out of the way, tap **En Route to Pickup** again on the Status tab to start your journey.
+  
+
+
+
+---
+
+## Types of Checklist Items
+
+**Hard-block (mandatory) items** — marked with a red icon or label. These are items your company considers non-negotiable for safety or legal compliance. Examples:
+- Tyres checked and pressures correct
+- All lights working
+- Load secured and straps checked
+- CMR and transport documents on board
+- ADR equipment present (for dangerous goods loads)
+
+If any hard-block item has a problem, the app prevents you from completing or skipping past the checklist. This is intentional — resolve the issue before setting off.
+
+**Soft (advisory) items** — items you should check but which won't block your departure. Examples:
+- Windscreen washer fluid topped up
+- Cab clean and tidy
+- Spare bulbs in the cab
+
+Soft items are best practice reminders. Tick them if they're fine, note them if they're not — but they won't stop you departing.
+
+> **Warning:** 
+If a mandatory item genuinely cannot be resolved (for example, a fault that needs a mechanic), do not attempt to override or skip it. Call your dispatcher. Departing with a known defect is your liability — and in some countries, the driver is personally responsible for roadworthiness at departure.
+
+
+---
+
+## What Happens After You Complete the Checklist
+
+Once you tap **Complete & Continue**:
+- The checklist is **time-stamped** with the exact time of completion
+- Your tick data for each individual item is saved — so if something is later questioned, there's a record of exactly what was checked
+
+If you use **Skip** instead (available once all mandatory items are ticked), you move on without saving that item-level detail — it's meant for when you genuinely need to proceed without finishing every optional item.
+
+---
+
+
+  
+    Once your checklist is complete, update your status to En Route to start the journey.
+  
+</CardGroup>
+
+---
+
+## Post-Trip Vehicle Inspection (DVIR)
+
+
+## Overview
+
+After a driver taps **Delivered**, Druma automatically presents a **Post-Trip Inspection** overlay. This is a Driver Vehicle Inspection Report (DVIR) — a structured walkthrough of the truck's condition at the end of each trip. It replaces informal verbal reports and gives your fleet manager a complete, timestamped record of every defect.
+
+> **Note:** 
+Post-trip inspection is only triggered for single-order trips. It does not appear at intermediate stops during groupage (multi-stop) runs.
+
+
+
+---
+
+## How the driver completes the inspection
+
+
+  ### The overlay appears automatically
+    Immediately after tapping **Delivered**, the full-screen Post-Trip Inspection overlay opens. The driver cannot dismiss it without taking an action — they must either complete it or explicitly skip it.
+  
+  ### Mark each item
+    Each checklist item has a tri-state toggle with three options:
+
+    | State | Colour | Meaning |
+    |---|---|---|
+    | **OK** | Green | No issues found |
+    | **Advisory** | Amber | Minor issue — can continue operating, planner notified |
+    | **Safety Critical** | Red | Serious defect — truck may be blocked from dispatch |
+
+    The driver taps through each item and selects the appropriate state. Items default to **OK** so the driver only needs to change items where a problem exists.
+  
+  ### Enter the odometer reading
+    A numeric input at the bottom of the overlay captures the current odometer reading in kilometres. This reading is stored against the inspection record.
+  
+  ### Add notes and photos for flagged items
+    Any item marked **Advisory** or **Safety Critical** expands to show a notes field and, for items where photos are enabled, a photo upload control. The driver can upload up to 3 photos per defect — from the device camera or file picker. Accepted formats: JPEG, PNG, WebP, HEIC, HEIF. Maximum 10 MB per file.
+
+    If your admin has turned on **Require photos for safety-critical defects**, a Safety Critical item with no photo attached blocks submission: an inline error appears under the photo area and the **Submit Inspection** button stays disabled until at least one photo is added. Items whose photo capture was disabled by the admin are exempt from this rule.
+  
+  ### Submit or skip
+    Tap **Submit Inspection** to record the results. If the driver cannot complete the inspection right away (e.g., they need to park and walk around the truck), they can tap **Skip Inspection** — this is recorded as a skipped inspection, not a pass. A **Complete Inspection** button then appears on the load detail for the delivered order, allowing the driver to return and fill it in later.
+  
+
+
+---
+
+## Defect severity levels
+
+### OK
+No action required. The item is logged as inspected and clear.
+
+### Advisory
+The defect is noted and the planner receives an alert. The truck is not blocked — it can continue to be assigned to orders. The advisory is visible in the order detail panel and in the Fleet → **Defects** tab.
+
+### Safety Critical
+A serious defect that may make the vehicle unsafe or non-compliant to operate.
+
+- The planner and fleet manager are notified immediately.
+- If the **Auto-flag truck for workshop on safety-critical** company toggle is enabled, the truck is automatically marked unavailable and disappears from the assignable list on the planning board until the defect is resolved via a work order.
+- The driver is shown a clear warning on submission explaining that the vehicle may be taken out of service.
+
+> **Warning:** 
+If the auto-block toggle is enabled, a safety-critical defect will remove the truck from dispatch immediately — even if there are future orders already assigned to it. Review the Fleet → Defects tab as soon as you receive a safety-critical alert.
+
+
+---
+
+## What planners see
+
+In the **order detail panel**, a **DVIR** section appears below the route information once an inspection has been submitted. It shows:
+
+- Inspection status: Completed, Skipped, or Pending
+- Submission timestamp and driver name
+- A list of each defect item with its severity badge (Advisory / Safety Critical)
+- Thumbnail previews of any uploaded photos, which open full-size on click
+
+If the inspection was skipped, the DVIR section shows a "Skipped" badge with the timestamp.
+
+---
+
+## Fleet manager: tracking open defects
+
+Go to **Fleet → Defects** to see all defects across your entire fleet. The page has three filter tabs:
+
+| Tab | What it shows |
+|---|---|
+| **Open** | Defects not yet linked to a completed or cancelled work order |
+| **Acknowledged** | Defects that a fleet manager has reviewed |
+| **All** | Full history |
+
+Each row shows the truck, defect item name, severity badge, date reported, and the driver who submitted it.
+
+For **Safety Critical** rows, a **Create Work Order** button is available directly on the row. Clicking it opens the work order form pre-filled with the defect description and severity — no copy-pasting required.
+
+
+---
+
+## Admin configuration
+
+Go to **Settings → Fleet & Equipment → Post-trip DVIR** to configure DVIR for your company.
+
+| Setting | Description |
+|---|---|
+| **Enable post-trip DVIR** | Turns the inspection overlay on or off for all drivers |
+| **Auto-flag truck for workshop on safety-critical** | Automatically blocks the truck from dispatch when a safety-critical defect is submitted |
+| **Require photos for safety-critical defects** | Blocks submission until at least one photo is attached to every Safety Critical item. Items whose photo capture the admin has disabled are exempt |
+| **Checklist items** | Add, edit, or delete the items that appear in the inspection overlay. Each item has a name and a default severity (Advisory / Safety Critical) |
+
+> **Note:** 
+Checklist items are company-wide. All drivers in your company see the same list. If you operate different vehicle types, use descriptive item names (e.g., "Reefer temperature unit — check seals") to keep the list meaningful for everyone.
+
+
+---
+
+
+  The pre-trip checklist runs before departure. Learn how drivers complete it and how admins configure hard and soft blocks.
+
+
+
+  How to create work orders from safety-critical defects and manage maintenance schedules across your fleet.
+
+
+---
+
+## The Druma Mobile App: Planner, Dispatcher, Customer Service and Driver Modes
+
+
+## One app, several modes
+
+The Druma mobile app (the Android app is simply called **Druma**; on a phone browser it opens at the same address) is a single app for everyone at your company. What you see depends on who is signed in. Each role gets a **mode** built for a phone:
+
+| Mode | Who it is for | Bottom tabs |
+|---|---|---|
+| **Driver** | Drivers | Your loads and your trip (see [Installing the app](/en/driver/installing-the-app) and [Status updates](/en/driver/status-updates)) |
+| **Planner** | Planners and key users | Problems, Trucks, Orders, More |
+| **Dispatcher** | Dispatchers and fleet managers | Fleet, Confirm, Chat, More |
+| **Customer service** | Customer service staff | Triage, Orders, Exceptions, More |
+
+Company admins get the three office modes (Planner, Dispatcher, Customer service) but not Driver, because an admin has no driver record.
+
+> **Note:** 
+The mobile modes are made for the things you do away from your desk: seeing what is going wrong, calling a driver, taking a suggested fix. Everything else is still in the full app. Open it from **More** in any office mode.
+
+
+---
+
+## Signing in on the app
+
+
+  ### Open the app
+    On a phone, open the Druma app. If you are signed out you get a **"How do you sign in?"** screen.
+  
+  ### Pick your sign-in type
+    Choose **Driver** (phone number and PIN) or **Office** (planner, dispatcher, customer service: sign in with email). Druma remembers your choice on this phone and opens that form directly next time. To switch, tap **Change sign-in type**. A driver form also has **Not a driver? Sign in with email**.
+  
+  ### Sign in
+    Office users can use email and password, Google or Microsoft sign-in, just like on the desktop. Drivers use their phone number and PIN.
+  
+
+
+> **Note:** 
+Office modes ask for the same two-factor (authenticator code) step as the desktop app, so signing in with Google or Microsoft never skips it. Driver mode uses phone and PIN only.
+
+
+### Choosing a mode
+
+- If your role maps to **one** mode, you go straight in.
+- If you have **several** (for example a planner who is also a dispatcher), the **Choose your mode** screen appears: "Pick how you want to use Druma on this phone. You can switch at any time." Druma remembers the last mode and reopens it next time.
+- To change mode later, open **More** and tap **Switch mode** (drivers: the **Switch mode** row on the Profile page).
+
+### Phone browser
+
+If you open the full Druma app in a phone browser, Druma offers the mobile app once (a dismissible banner). A narrow desktop window is never switched automatically. **Open full app** in the More tab always takes you to the full desktop-style app and keeps you there for the session.
+
+---
+
+## Planner mode
+
+Planner mode opens on **Problems**: what is going wrong right now, not a board to re-plan.
+
+### Problems tab
+
+One card per order, ranked by seriousness and then by minutes late. A card has one of these labels:
+
+- **Running late** (shows "N min late")
+- **No truck** (unassigned order)
+- **Delay reported** (the driver reported a delay)
+- **At risk** (predicted to be late)
+- **Needs attention** (another exception)
+
+Tiles at the top count **Late**, **No truck** and **At risk**. Tap a card for the order, pickup and delivery, truck, ETA, last position ping and the driver's remaining drive time, with **Call driver** and **Show position**.
+
+### Fixing a problem with one tap
+
+
+  ### Tap See fixes
+    On the problem's sheet, tap **See fixes**. The list shows suggestions Druma has already prepared (the same ones as on the Planning Board). Options include **Put on this truck**, **Rescue with this truck**, **Switch to a closer truck**, **Swap trucks with another load**, **Move the pickup, then assign** and **Move the pickup and swap loads**.
+  
+  ### Check what changes
+    For swaps, Druma checks the real route and shows **What changes** with the **New ETA** and whether it is **On time** or **Late**. **Confirm fix** stays disabled until that check finishes. A pickup move that still waits for the client's approval is shown but cannot be confirmed yet.
+  
+  ### Tap Confirm fix
+    You see "Fix applied" when it worked.
+  
+
+
+If there is no suggestion, the sheet says so; open the full app to plan that order by hand. Fixes that need extra checks (a cabotage acknowledgement, or a truck that must first drop its own trailer) are not done on the phone: you get a message to open the board from **More**. You can only apply fixes if your role may assign trucks on the board; otherwise you can review suggestions but not apply them. If the truck was taken in the meantime, you see "That truck is no longer free. Pick another fix."
+
+### Trucks and Orders tabs
+
+- **Trucks** shows how each truck is doing, with filters **All** and **Needs attention**, and a detail sheet with position age, route, ETA and a call link for the driver.
+- **Orders** lists open orders grouped by status with filter chips (**All**, **No truck**, **Assigned**, **On the road**, **Delivering**). Only the first batch of open orders is shown, and a notice tells you when the list is cut.
+
+---
+
+## Dispatcher mode
+
+- **Fleet** — the same ranked list as the Fleet Health page: every truck with what is wrong and how serious. Switch between **Mine** and **All**, search, and filter by severity. Tap a truck for its current order and route, ETA, last GPS position (with **Open map**), **Driving time left today**, **Call driver** (or "No phone on file") and a **Chat** shortcut to that driver.
+- **Confirm** — the dispatch confirmations page in phone layout. Confirming or declining works exactly like on the desktop, including who is allowed to confirm.
+- **Chat** — driver chat. The tab shows an unread badge.
+
+---
+
+## Customer service mode
+
+- **Triage** — open orders grouped by what needs you: needs action, late or at risk, awaiting a reply, awaiting a check call, on track (this last group starts collapsed).
+- **Orders** — search by order number, reference or city. Only the newest orders load first; search to narrow them down.
+- **Exceptions** — one card per order with its current and predicted exceptions.
+
+Tap any order for its route, ETA, truck and driver, truck position (**Open map**), **Call driver** and **Call delivery contact**. From there you can **Notify client** or **Escalate** to the planner, using the same forms as the desktop CS Workbench. Escalate is hidden for roles that may not escalate and is unavailable while an escalation is already open.
+
+> **Warning:** 
+If a list says "Couldn't load orders", that is a loading failure, not an all-clear. Reload before assuming nothing needs attention.
+
+
+---
+
+## Q&A
+
+**Does the app track my location?** Only Driver mode uses GPS. Planner, dispatcher and customer service modes never read the phone's location.
+
+**I am a planner and dispatcher. Which mode do I get?** You see the chooser, pick one, and can switch from **More** at any time.
+
+**Can I plan a whole day from the phone?** No. Use the full app and the [Planning Board](/en/planner/planning-board) for that. The phone is for solving what just went wrong.
+
+**Do push notifications work for office modes?** Not yet; native push notifications are for drivers.
+
+**I am offline. What happens?** The app reopens the last mode you used, so a driver can still open the driver app without signal.
+
+---
+
+
+# Client Portal
+
+## Tracking Shipments
+
+
+## What the Client Portal Is
+
+The client portal gives your customers a dedicated window into their shipments — without them needing to call or email you for updates. They can see exactly where their cargo is, when it is expected to arrive, and a full history of status events. You control the access; they just click a link.
+
+## Giving Clients Access
+
+There's a single access link per client — not separate account creation, and not multiple link types to choose between. From the **Clients** page, select the client and click **Generate portal link**. The link is valid for **90 days** from when it's generated; click **Resend link** at any point to re-send the same link, or **Revoke** to kill access immediately. Each link is scoped to that client's own orders only.
+
+<Frame caption="The client's Shipments list — status is a plain badge, not a live GPS map.">
+  <img src="/images/client-portal/tracking-shipments.png" alt="Client portal Shipments list" />
+</Frame>
+
+## Walkthrough: How a Client Tracks a Shipment
+
+
+  ### Client opens the portal link
+    The client clicks the link you sent them. There's no account to create or password to remember — but the link alone isn't quite enough either: the client enters their email address, Druma sends a 6-digit verification code to that address (valid for 10 minutes), and they enter it to confirm their identity before seeing any data. The code email contains only the code, no link. Wrong codes are limited: after 15 wrong attempts in a day, or 10 code emails requested in a day for the same address, sign-in for that address pauses for 24 hours, and asking for a new code does not lift it. The screen gives the same answer for a wrong, expired or locked code.
+  
+  ### Client lands on the Shipments list
+    The portal opens straight to the **Shipments** page — a table of the client's orders with reference, route, status badge, pickup date, and ETA for each. A search box lets them jump straight to an order by reference, origin, or destination.
+  
+  ### Client filters to find the right order
+    Filter tabs above the table — **All**, **Active**, **Delivered**, **Delayed**, **Cancelled** — narrow the list, each with a live count badge. This is the fastest way for a client with many shipments to find the one they're asking about.
+  
+  ### Client opens an order for details
+    Clicking a row slides in the order detail panel. It shows a four-step **status timeline** (Ordered → Dispatched → In Transit → Delivered), the full list of route stops with addresses and time windows, and a tracking card showing whether the shipment is currently en route, based on the order's status — not a live map or GPS pin.
+  
+  ### Client checks cargo, transport, and e-Transport info
+    Below the timeline, the panel shows cargo details (weight, pallets, volume), the assigned driver and truck/trailer plates, and — for shipments touching Romania — an e-Transport card where the client can view or submit the ANAF UIT code.
+  
+  ### Client downloads documents
+    The **Documents** section of the same panel lists the CMR/eCMR and Proof of Delivery for that order, plus any extra files you've uploaded. The client clicks **Download** to open each one. See [Downloading Documents](/en/client-portal/downloading-documents) for the full document workflow.
+  
+  ### Client reads handling instructions
+    A **Handling instructions for this shipment** card shows any standing instructions inherited from the client record (which apply to all their shipments) plus instructions added for this order specifically — each available in multiple languages and optionally with an attached file. The client can also add their own order-specific instruction with a title, language, and file.
+  
+
+
+> **Note:** 
+If this shipment is marked as crossing into a non-EU-customs country, a **Border-crossing customs docs** card also appears on the detail panel, letting the client upload their transit/customs references (MRN, T1, T2, TIR, EX1). Druma only stores these references for visibility — it doesn't file or process any customs paperwork.
+
+
+## What Your Client Sees
+
+Once they open the portal, clients land on their order list. Here is everything available to them:
+
+**Order list** — all active and recently completed orders for their company. Each row shows the order reference, route (origin → destination), current status badge (for example, *In Transit*, *Delivered*, *Waiting*), and ETA.
+
+**Tracking card** — a status card on the order detail view showing whether the shipment is currently en route, based on the order's current status. It is not an interactive map and does not plot a live GPS position — it updates when the order's status changes, for example when the driver marks the load as departed or arrived.
+
+**Status timeline** — click any order to open the detail view. The timeline is a simple four-step tracker — Ordered → Dispatched → In Transit → Delivered — showing which stage the order has reached. It doesn't list individual status events with timestamps or locations, just the current stage of these four.
+
+**ETA** — shown on both the order list and the order detail page. The ETA is calculated from the last known position and the planned delivery time. If the driver reports a delay, the ETA updates and the client sees a delay note.
+
+**Delay reports** — if a driver reports a delay, whether the client is automatically notified depends on a company setting that's off by default. When it's enabled, the client gets an entry in their **Notifications** panel with the reason. Otherwise, it's the planner's call whether and when to inform the client.
+
+
+## Filtering Orders
+
+Clients can filter their order list by:
+
+- **Date range** — useful for clients who ship frequently and want to find a specific week's deliveries
+- **Order status** — show only orders that are *In Transit*, *Delivered*, *Waiting*, and so on
+
+The filters sit at the top of the order list.
+
+## Quotes, Claims and Invoices
+
+Besides **Shipments** and **Documents**, the portal has three more pages. On each, a row click opens a details pane, and tabs with live counts narrow the list.
+
+| Page | What the client does |
+|---|---|
+| **Quotes** | Request a quote with **Request a Quote** (operator, origin, destination, dates, weight, volume, trailer type, ADR, notes). Open a quote to see the full cargo detail and price, then click **Accept** or **Decline** (a decline can carry an optional reason). Tabs: All, Pending, Accepted, Rejected, Expired. |
+| **Claims** | **File New Claim** for a shipment issue (order reference, claim type, subject, description). Tabs: All, Open, In Review, Resolved, Rejected. The pane shows the full description. |
+| **Invoices** | See the billing history with **Outstanding** and **Overdue** totals. Tabs: All, Pending, Paid, Overdue. **Download invoice** is on the row and in the pane. "Invoice link not yet available" means the invoice has no download link yet. |
+
+When a tab or search matches nothing, the page says, for example, "No quotes match your filter" instead of the first-time empty state. The links in quote emails (Accept / Reject) and the one-click feedback link open the matching portal page directly. The portal also has a video guides entry in the profile menu.
+
+## Mobile-Friendly
+
+The portal is fully responsive. Clients on a phone or tablet get the same information as on desktop — cards stack vertically, the timeline adapts, and buttons are touch-sized. No app download needed.
+
+## What Clients Cannot See
+
+The portal is intentionally limited to operational information:
+
+- **No pricing** — clients cannot see the agreed transport rate or any surcharges
+- **No invoice details** — invoices only appear in the Documents tab after you have sent them through Druma (see [Downloading Documents](/en/client-portal/downloading-documents))
+- **No other clients' data** — each portal link is scoped to one client company only
+
+> **Note:** 
+The client portal shows order status, not a live GPS position — the tracking card only updates when the order's status changes. Make sure your drivers tap statuses promptly (Departed, Arrived, Loaded, Unloaded) so clients see timely updates. It helps to brief new drivers on this during onboarding.
+
+
+**Ferry crossings.** If the trip includes a ferry, the shipment shows a **Ferry crossing** row (operator, ports, sailing time) and an **On ferry** chip while the truck is on board. Booking numbers and driver notes are never shown to the client.
+
+## Sharing a Shipment With Someone Else
+
+A client contact can give a colleague (or a partner) access without involving you.
+
+
+  ### Open the shipment and tap Share
+    In the portal, open the shipment and click **Share**. Enter the person's **Email address**.
+  
+  ### Choose what they can see
+    **This shipment only (read-only)** shows status, route, stops, ETA, timeline and delivery documents (CMR/POD). Prices, invoices, claims, driver details and client references are never shown. **The whole account, including prices and invoices** gives full access to every shipment, document and invoice, so it is limited to the client's **portal-primary contact** (and to you, the operator).
+  
+  ### Send invitation
+    The person opens the invitation, confirms their own email with a one-time code, and sees the **Shared shipment** page. Whole-account access ends after 90 days unless renewed. Use **Remove access** to end it immediately.
+  
+
+
+Someone who was given access cannot share further. An invitation can also be cut off at any time by whoever sent it, the portal-primary contact, or you.
+
+**As the operator**, open the client on the **Clients** page and look at the portal section (**Portal access**): it lists who has signed in, via **Emailed code** or **Invitation**, and lets you **Revoke** a person. Pick the client's **Portal-primary contact** there. Until one is set, only you can invite someone to the whole account (the page warns "No portal-primary contact is set"). You can also invite someone to the whole account yourself with **Invite to the whole account**.
+
+> **Warning:** 
+The portal link is valid for 90 days by default. If a client contact leaves the company or you want to cut off access sooner, go to the client's record on the **Clients** page and click **Revoke** — the link stops working immediately, and everyone currently signed in (including invited people) is signed out and has to confirm their email again. Click **Generate portal link** afterward if you want to issue a fresh one.
+
+To cut off one person instead, use **Revoke** next to their name in **Portal access**: only that person is signed out. Removing a contact, or changing a contact's email address, also ends the portal access that address had.
+
+
+---
+
+
+  How clients download eCMR, CMR scans, POD photos, and invoices from their portal.
+
+
+
+  Add contacts at a client company, set who gets which notifications, and give each person portal access.
+
+
+---
+
+## Downloading Documents
+
+
+## Overview
+
+Every document attached to your client's orders is available directly from their portal. This removes the back-and-forth of emailing PDFs on request — the client gets what they need, when they need it, without contacting you.
+
+<Frame caption="Client Portal — the top-level Documents page: a filterable card grid across all the client's orders.">
+  <img src="/images/client-portal/downloading-documents.png" alt="Client portal Documents page" />
+</Frame>
+
+Clients have two places to find documents: the top-level **Documents** page (all documents across every order, with filters), and a **Documents** section inside each shipment's own detail view (that order's documents only).
+
+## The Documents Page
+
+The portal's main navigation includes a **Documents** page — a card grid showing every document across all of the client's orders. Each card shows the document type, file name, the order number it belongs to, and the upload date, with a **Download** button on the card itself.
+
+Filter pills above the grid narrow the list to: **All**, **CMR**, **eCMR**, **POD**, **Invoice**, or **CO2**. This is the fastest way for a client to find, say, every invoice from the last few weeks without opening orders one by one.
+
+
+  ### Open the Documents page
+    In the portal navigation, click **Documents**.
+  
+  ### Filter, if needed
+    Click a filter pill (**CMR**, **eCMR**, **POD**, **Invoice**, **CO2**) to narrow the grid, or leave it on **All**.
+  
+  ### Download
+    Click the download icon on a document card to save the file to your device.
+  
+
+
+### Vehicle Documents
+
+Below the main document grid, a separate **Vehicle Documents** section lists compliance certificates for the trucks and trailers that have been used on the client's shipments (for example, insurance or roadworthiness certificates), each linked to the order it was used on. This section only appears once at least one such document exists.
+
+## Documents Inside a Shipment
+
+Opening an individual shipment (from the Shipments list) shows a single scrolling detail page — there's no separate Documents tab inside an order. A **Documents** section partway down that page lists only that order's own documents: fixed **CMR / eCMR** and **Proof of Delivery** slots (shown as "Not yet available" until uploaded), plus any extra files the driver or planner attached. Upload date isn't shown here — for that, use the top-level Documents page described above.
+
+## Document Types Available
+
+Depending on what has been uploaded or attached to an order, clients may see the following documents:
+
+| Document | What it is | Who uploads it |
+|---|---|---|
+| **Signed eCMR PDF** | Certified, legally valid electronic CMR | Generated automatically when the driver completes the eCMR flow |
+| **CMR scan** | Photo of the paper CMR document | Driver photographs the paper CMR in the driver app |
+| **POD photos** | Proof of Delivery photographs | Driver uploads at the delivery point |
+| **Other order documents** | Delivery notes, weighbridge tickets, or other paperwork attached during or after delivery | Driver or planner |
+| **Invoices** | The commercial invoice for the transport | Planner generates and sends through Druma |
+| **CO2 reports** | Emissions report for the shipment | Generated by Druma |
+| **Vehicle documents** | Compliance certificates for trucks/trailers used on the client's shipments | Fleet manager, via the Fleet module |
+
+> **Note:** 
+Documents only appear in the portal once they have been uploaded by the driver or attached by the planner. If a client says a document is missing, first check whether the driver has completed that step in the driver app, or whether you need to attach it manually from the order detail page in Druma.
+
+
+## Notes on Specific Document Types
+
+### Signed eCMR
+
+The signed eCMR PDF is legally valid and certified under the eCMR protocol. It is generated automatically once the driver completes the electronic signing process — no manual action needed from you. If a consignment used a paper CMR instead, look for the **CMR scan** document.
+
+### Invoices
+
+Invoices only appear in the portal after the planner has generated the invoice in Druma **and** clicked **Send** to deliver it to the client. An invoice that is still in Draft status is not visible to the client at all.
+
+> **Warning:** 
+If a client cannot find their invoice, check in **Invoicing** whether the invoice status is Draft or Sent. Draft invoices are not visible in the portal. Open the invoice and click **Send** to make it appear for the client.
+
+
+### POD Photos
+
+Proof of Delivery photos are uploaded by the driver at the delivery point. If a delivery is marked as completed but photos are missing, follow up with the driver — they may need to upload them retrospectively from the driver app.
+
+---
+
+
+  How clients access the portal and follow order status, maps, and ETAs.
+
+
+
+  How planners create and send invoices so they appear in the client portal.
+
+
+---
+
+## Managing Contacts
+
+
+## Why You Need Multiple Contacts
+
+Most of your clients have more than one person involved in their logistics. The logistics manager wants live status updates. The finance team needs invoices. The warehouse supervisor only cares about delivery confirmation. Sending everything to one email address is messy and creates noise.
+
+Druma lets you add as many contacts as needed per client. From the Clients page, you control the basics — who's the primary contact, who gets delivery notifications, who's the financial contact — and the client can fine-tune their own notification preferences (invoices, waiting charges, CO2 reports) from their own portal settings.
+
+<Frame caption="A client's Contacts tab — Role is a free-text field, not a fixed dropdown.">
+  <img src="/images/client-portal/managing-contacts.png" alt="Client Contacts tab" />
+</Frame>
+
+## Adding a Contact
+
+
+  ### Open the client record
+    Go to **Clients** in the main menu and click on the client you want to manage.
+  
+  ### Go to the Contacts tab
+    Inside the client record, click the **Contacts** tab. You will see any existing contacts listed here.
+  
+  ### Click Add Contact
+    Click the **Add Contact** button to open the contact form.
+  
+  ### Fill in the contact details
+    Complete the following fields:
+
+    - **Name** — full name of the person
+    - **Email** — where notifications and portal links will be sent
+    - **Phone** — optional, useful for your own reference when you need to call them
+    - **Role** — free text (e.g. "Logistics Manager", "Finance", "Warehouse") — there's no fixed list, type whatever fits
+  
+  ### Set notification preferences
+    From here, you can mark the contact as **Primary**, toggle **Delivery notifications**, and mark them as the **Financial dept** contact. See the next section for what each of these — and the finer-grained preferences the client can set themselves — actually control.
+  
+  ### Save the contact
+    Click **Save Contact**. The contact is added immediately and will start receiving notifications from that point forward.
+  
+
+
+## Notification Types
+
+Two different places control a contact's notifications:
+
+**From the Clients page, you (the operator) set:**
+
+| Setting | What it controls |
+|---|---|
+| **Primary** | Marks this as the client's main contact |
+| **Delivery notifications** | Whether this contact is included on delivery-related notifications |
+| **Financial dept** | Marks this as the finance/billing contact for the client |
+
+**From their own portal Settings, the client fine-tunes further per contact.** Each contact has a per-category grid for these emails, and an unticked box means that contact no longer receives that category:
+
+| Category | What it covers |
+|---|---|
+| **Order confirmation** | The confirmation after an order is created |
+| **Dispatch & delivery** | Dispatch and delivery emails |
+| **ETA & delay alerts** | ETA changes and delays |
+| **Proof of delivery** | POD / eCMR emails |
+| **Waiting charges** | Waiting-time notices |
+| **CO2 reports** | Emissions reports |
+| **Support updates** | Customer-service updates |
+| **Automated rule emails** | Emails sent by your automation rules |
+
+Each setting shows **Inherited** when it comes from the client or its client group default, and **Use default** returns a contact to that default. In the portal, saving shows "Email preferences updated". Invoices, payment reminders and security codes are always sent regardless of these settings.
+
+**Unsubscribe link.** Automated client emails carry a preferences link in the footer, and mail apps that support one-click unsubscribe use it too. A contact can open it without signing in, choose which categories they receive and click **Save preferences** ("Manage your email preferences"). The link keeps working for old emails. If a contact says they stopped getting an email, check these preferences first.
+
+**Portal-primary contact.** On a client's contacts you can mark one contact as the portal-primary contact. This is the only contact (besides you) who can give whole-account portal access to someone else.
+
+> **Note:** 
+Which emails go out, and when, is decided by your automation rules; these preferences only decide which contacts receive each category.
+
+
+## Portal Access Is Per Client, Not Per Contact
+
+Portal access isn't set up per contact — it's a single shared link for the whole client company. From the **Clients** page, click **Generate portal link** to create it, **Resend link** to re-send the existing one, or **Revoke** to kill access immediately. There's no separate link per contact.
+
+> **Note:** 
+The portal link is valid for 90 days from when it was generated. If it expires, go back to the Clients page and click **Resend link** (or generate a new one) to issue a fresh one.
+
+
+
+## Editing and Removing Contacts
+
+Both actions are on the **Contacts** tab:
+
+- **Edit a contact** — click the pencil icon next to the contact's name. You can update any field, including notification preferences.
+- **Remove a contact** — click the trash icon next to the contact. A confirmation prompt appears before the contact is deleted.
+
+> **Warning:** 
+Removing a contact stops all future notifications to that person immediately. Any portal access that person had through their email address ends too (the same happens when you change the contact's email address). The portal link itself is shared at the client level, so removing one contact doesn't lock out the others. If you need to add them back later, you will need to create the contact again from scratch.
+
+
+---
+
+
+  How clients access the portal and what they see once they are logged in.
+
+
+---
+
+
+# Carrier Portal
+
+## Carrier Portal Overview
+
+
+## Overview
+
+If an operator has subcontracted a load to your company, they'll send you a **carrier portal link** instead of asking you to install anything or create an account. Open the link in any browser — phone or desktop — and you land directly on a page built around that one transport order: pickup and delivery details, the cargo, your agreed price (if the operator chose to share it), and a set of simple actions to keep the operator updated as you carry the load.
+
+There's no password and no separate app. You open the link, enter your email address and confirm it with a 6-digit code we email you — see [Portal Access & Link Expiry](/en/carrier-portal/portal-access) for how that works and what to do if the link stops working.
+
+Everything you do in the portal — accepting the load, updating your status, uploading the CMR — shows up on the operator's side immediately. That's the point: it replaces phone calls and WhatsApp messages with a single, always-current page both sides can look at.
+
+---
+
+## What a carrier does, start to finish
+
+
+  ### Open the link
+    Click the link the operator sent you (usually by email). Enter your email address, tap **Send code**, then enter the code. You then land on the order. Colleagues can be invited to a load from the **Shared with** section.
+  
+  ### Review the order and accept or decline
+    Check the pickup/delivery addresses, cargo, and price, then click **Accept Order** or **Reject**. See [Accepting or Declining a Load](/en/carrier-portal/accepting-orders).
+  
+  ### Fill in vehicle and driver details
+    Enter the truck plate, trailer plate, driver name, and driver phone so the operator knows who's carrying the load.
+  
+  ### Update your status as you go
+    Tap through the status buttons — En Route to Loading, At Loading, Loaded, En Route to Delivery, and so on — as the journey progresses. You can also report an ETA, a delay, or a waiting time if something holds you up. See the Status rules note below for what's allowed.
+  
+  ### Upload the CMR before marking Delivered
+    Attach a photo or scan of the signed CMR (and POD if you have one). You can't mark the order **Delivered** until there's delivery evidence on file — see [Uploading the CMR & POD](/en/carrier-portal/uploading-pod).
+  
+  ### Done
+    Once you mark the order Delivered, the operator is notified immediately. The order stays visible on the same link if you need to check anything afterwards, until the link expires.
+  
+
+
+---
+
+### What you'll see on the page
+
+The portal is built from a handful of cards. Not every card appears on every order — some only show up once you've accepted, and some only apply to certain kinds of loads.
+
+| Card | What it's for |
+|---|---|
+| **Order summary** (sidebar on desktop, top of page on mobile) | Reference number, status, pickup/delivery addresses and time windows, cargo, agreed price, and route stops for multi-stop loads |
+| **Journey Timeline** | A visual checklist of the 8 status milestones from Confirmed through Delivered |
+| **Vehicle & Driver** | Where you enter the truck plate, trailer plate, driver name, and driver phone |
+| **Expected Arrival (ETA)** | Where you set or update your expected delivery date and time |
+| **Report a Delay** / **Report Waiting** | Quick forms to notify the operator if you're running late or stuck waiting at a stop (only shown once the order is active) |
+| **Update Your Status** | The grid of status buttons you tap as you progress through the journey |
+| **Upload Documents** | Where you attach the CMR, POD, delivery note, or your invoice |
+| **Terms & Conditions** | The operator's terms, if they've published any, with a download option |
+| **Compliance Documents On File** | A read-only list of documents (insurance, licences, permits) the operator already has on record for your company, with expiry status |
+
+---
+
+### Status rules
+
+> **Note:** 
+Status updates follow an enforced state machine, not a free-for-all grid of buttons:
+
+- **Forward skips are allowed** — you don't have to tap every milestone; jumping from En Route to Loading straight to Loaded, for example, is fine.
+- **Marking Delivered requires the load to have actually been picked up first** — either the status already reached Loaded, or a loading arrival time is on record. This is what stops an order being marked Delivered days before it was ever loaded.
+- **Backward corrections are limited to one step** — enough to fix a mis-tap, not enough to unwind a completed journey. Anything further back needs the operator.
+- **Delivered is final.** Once an order is marked Delivered, nothing moves it further, and reversing it is an operator action, not something you can do from the portal.
+- **Timestamps you enter (Actuals) are checked for chronology** — a delivery time can't be before a loading time, and none of them can be in the future.
+
+A status button that would break one of these rules is disabled with a tooltip explaining why, rather than letting you tap it and fail.
+
+
+---
+
+
+  
+    How to review and respond to a subcontracted order, and what happens after you accept or reject.
+  
+  
+    File types, size limits, and what happens to a document once you upload it.
+  
+  
+    How the 30-day link works and what to do when it expires.
+  
+  
+    What Druma tracks about your responsiveness and your invoices.
+  
+</CardGroup>
+
+---
+
+## Accepting or Declining a Load
+
+
+## Overview
+
+When an operator sends you a load through the carrier portal, the first thing you'll see is a banner asking you to review and respond — **Accept Order** or **Reject**. This is the operator's confirmation that you've actually taken the job, replacing the phone call or WhatsApp message that used to be the only record of it.
+
+Responding promptly matters: some operators run an automatic check that flags a load as overdue — or as "ghosted" if you opened the link but never responded — and reassigns it to another carrier. See [Freight Audit & SLA Basics](/en/carrier-portal/freight-audit-sla) for how that works. Either way, accepting or declining quickly keeps the load moving and keeps your standing with the operator clean.
+
+---
+
+
+  ### Open the link
+    The link the operator sent you asks you to confirm your email with a one-time code, then opens the order. See [Portal Access](/en/carrier-portal/portal-access).
+  
+  ### Review the order details
+    Check the reference number, pickup and delivery addresses and time windows, cargo description, agreed price (if shown), and any notes the operator left. See the field reference below for what each one means.
+  
+  ### Click Accept Order or Reject
+    Both buttons sit in the banner at the top of the page.
+  
+  ### If declining, enter a reason (optional)
+    A text box appears where you can explain why — for example, no available truck, or a scheduling conflict. This isn't required, but it helps the operator find you a different load or replan quickly. Click **Confirm Rejection** to submit.
+  
+  ### See the confirmation
+    Accepting turns the banner green with the acceptance date and time. Declining turns it red with your reason (if you gave one), and the rest of the page — status updates, uploads — is hidden, since you're no longer carrying this load.
+  
+
+
+> **Warning:** 
+Rejecting an order closes your access to it — the link stops working immediately afterward. If you rejected by mistake, contact the operator directly; they'll need to send you a fresh link if they still want you to carry the load.
+
+
+> **Note:** 
+If you've already accepted, clicking **Accept Order** again does nothing harmful — it's a no-op. There's no way to accidentally double-accept or undo an acceptance from your side; if you need to back out after accepting, contact the operator.
+
+
+---
+
+### What the order details show
+
+| Field | What it means |
+|---|---|
+| **Reference** | The operator's order number — use this if you need to call or email about the load |
+| **Status** | The current stage of the shipment (Confirmed, En Route, Delivered, etc.) |
+| **Pickup** | Pickup address, plus the date and time window if the operator set one |
+| **Delivery** | Delivery address, plus the date and time window if the operator set one |
+| **Cargo** | A description of the freight, with weight (kg) and volume (m³) when provided |
+| **Agreed Price** | The rate you're being paid for this load, shown in EUR or the operator's currency — only appears if the operator chose to include it on this order |
+| **Notes from operator** | Free-text instructions or context the operator added specifically for you |
+| **Route Stops** | The full sequence of pickup/delivery stops, shown only when the load has more than one stop |
+
+> **Note:** 
+Not every field appears on every order. Agreed Price and Notes, in particular, only show up if the operator included them — their absence doesn't mean anything is wrong.
+
+
+---
+
+## What happens after you respond
+
+- **The operator sees your response immediately** — no need to also call or email them.
+- **Accepting** sets the order's status to "Confirmed" (unless you're already further along) and unlocks the parts of the portal that move the order forward: vehicle & driver details, status updates, ETA, delay/waiting reports, and the Actuals timestamps. Once you're updating status, the portal enforces a state machine on what you can tap next — see [Carrier Portal Overview](/en/carrier-portal/overview) for the status rules.
+- **Declining** clears your access token for this order, so the operator has to issue a new link if they want to reassign it to you or offer you a different load.
+- If the operator has the acceptance-monitoring feature turned on, an unresponded load is flagged to them after a configured window (6 hours by default) — sooner still, after a shorter grace period (2 hours by default), if you opened the link but never clicked Accept or Reject. See [Freight Audit & SLA Basics](/en/carrier-portal/freight-audit-sla).
+
+> **Note:** 
+**Document uploads don't wait for acceptance.** The Upload Documents card is available as soon as you open the link, before you've accepted — by design, so an operator can request compliance paperwork (insurance, licences, etc.) upfront even on a load you haven't committed to yet. Accepting doesn't gate uploads; it gates the status/ETA/vehicle-and-driver side of the portal described above.
+
+
+---
+
+
+  
+    The full walkthrough of everything the portal offers, start to finish.
+  
+  
+    What to upload once the load is moving, and the CMR requirement before marking Delivered.
+  
+  
+    How the link works and what to do if it stops working.
+  
+  
+    What operators track about how quickly and reliably you respond.
+  
+</CardGroup>
+
+---
+
+## Uploading the CMR & POD
+
+
+## Overview
+
+The **Upload Documents** card on the portal page is where you attach the paperwork for a load — the signed CMR, a proof of delivery (POD), a delivery note, or your invoice. You can take a photo directly from your phone or attach an existing file; there's no separate app or scanner needed.
+
+One thing to know upfront: **you can't mark an order Delivered until there's delivery evidence on file.** Any ONE of the following satisfies it — they're alternatives, not a checklist you need to clear entirely:
+
+- A CMR you upload here through the portal
+- A native eCMR that's been signed (if the operator uses Druma's own eCMR instead of a paper CMR — see [What Is eCMR?](/en/ecmr/what-is-ecmr))
+- A CMR or POD already on file for the order from another source
+
+If none of these exist yet, both the Delivered status button and the delivery-timestamp fields under Actuals are blocked, with the message: *"Upload the CMR, or have the eCMR signed, before marking as delivered."*
+
+**Delivered also requires the load to have actually been picked up.** Either the status already reached Loaded, or a loading arrival timestamp is on record — this stops an order being marked Delivered before it was ever loaded. This check and the delivery-evidence check both apply whether you tap the Delivered status button directly or fill in delivery timestamps under Actuals — Actuals will auto-advance the status as far as the evidence allows and cap at "At Delivery" if the CMR/eCMR requirement isn't met yet.
+
+---
+
+
+  ### Open the Upload Documents card
+    It's further down the page, below the status buttons.
+  
+  ### Choose the document type
+    Use the dropdown in the drop zone to pick what you're uploading: CMR, POD (Proof of Delivery), Delivery Note, Carrier Invoice, or Other.
+  
+  ### Attach the file
+    Tap the drop zone to open your camera or file picker (or drag a file onto it from a desktop browser). You can select multiple files at once.
+  
+  ### Click Upload
+    The button shows how many files you've selected — e.g. "Upload 2 file(s)". Click it to send them.
+  
+  ### Check the upload appears in the list
+    Once uploaded, each document appears below with its filename and type. Use the eye icon to view it, or the trash icon to delete it if you made a mistake.
+  
+
+
+> **Note:** 
+You can only delete documents you uploaded yourself through this link. If the operator needs a document removed, they'll do it from their side.
+
+
+---
+
+### File requirements
+
+| Requirement | Limit |
+|---|---|
+| **Accepted file types** | JPEG, PNG, PDF |
+| **Maximum file size** | 10 MB per file |
+| **Multiple files** | Yes — select and upload several at once |
+
+Anything outside these limits is rejected before it uploads, with a message telling you what went wrong (wrong file type or file too large).
+
+---
+
+### What each document type means
+
+| Type | What to upload |
+|---|---|
+| **CMR** | Photo or scan of the signed CMR consignment note — one of the accepted forms of delivery evidence before you can mark the order Delivered (see above) |
+| **POD (Proof of Delivery)** | Signed delivery note, warehouse receipt, or other delivery evidence |
+| **Delivery Note** | A separate delivery note if your CMR and delivery note are different documents |
+| **Carrier Invoice** | Your invoice for this load — see [Freight Audit & SLA Basics](/en/carrier-portal/freight-audit-sla) for how the operator checks it against the agreed price |
+| **Other** | Anything else relevant to the order that doesn't fit the categories above |
+
+> **Note:** 
+Uploading a **Carrier Invoice** notifies the operator's team immediately so they can start matching it against the agreed rate — you don't need to also email it separately.
+
+
+---
+
+### If the operator uses AI-assisted CMR checking
+
+Some operators have automatic CMR validation turned on. If yours does, your uploaded CMR (or POD) gets checked automatically right after upload, and you'll see a small status banner:
+
+| Banner | Meaning |
+|---|---|
+| **Validating CMR with AI…** | The check is running — no action needed |
+| **CMR verified** | The document was read successfully and accepted |
+| **CMR awaiting planner review** | The system flagged something for a human to double-check; the operator will follow up if needed |
+| **Please retake the CMR photo** | The image was too unclear to read — upload a sharper photo |
+| **CMR rejected — please re-upload** | The document was rejected — check you uploaded the right file and try again |
+
+---
+
+## Compliance documents on file
+
+Below the upload area, you may also see a **Compliance Documents On File** card. This is different from the Upload Documents card — it's a **read-only** list of documents the operator has already registered for your company, such as insurance, transport licences, permits, or your VAT certificate. Each one shows a **Valid**, **Expiring soon**, or **Expired** badge based on its expiry date.
+
+You can't upload or replace these documents from the portal. If one is expiring or expired, contact the operator directly so they can update it in their records.
+
+---
+
+
+  
+    Review and respond to a subcontracted order before you start uploading documents.
+  
+  
+    The full walkthrough of everything the portal offers.
+  
+  
+    How the link works and what to do if it stops working before you finish uploading.
+  
+  
+    How the operator checks the invoice you upload against the agreed price.
+  
+</CardGroup>
+
+---
+
+## Portal Access, Email Code & Link Expiry
+
+
+## Overview
+
+The carrier portal needs two things: the **link** for the order and a **one-time code sent to your email**. There is no password and nothing to install.
+
+- The **link** only tells the portal which order you mean. On its own it does not open anything.
+- The **emailed code** proves it is really you. Only an address the operator has on file for your company can sign in.
+
+Each link is tied to **one order** with one operator. It never gives access to other loads, even from the same operator.
+
+---
+
+## Signing in
+
+
+  ### Open the link
+    The operator sends it to you, typically by email, when they subcontract a load to your company. It works on a phone or desktop browser.
+  
+  ### Request a code
+    You see the **Carrier Portal** sign-in screen with the operator's contact address. Enter your email address and tap **Send code**. The screen answers the same way whether or not the address is registered: "If this address is registered, a code is on its way."
+  
+  ### Enter the code
+    Type the 6-digit code from the email and tap **Verify**. If you did not receive one, use **Send a new code** after the countdown. Use **Use a different email** if you typed the wrong address.
+  
+  ### Work on the order
+    You stay signed in on that device, so you can come back to the same link during the load to update status, report a delay or upload the CMR.
+  
+
+
+**Didn't get a code?** The most common reason is that your email address is not on file with the operator. Ask them to add it as a contact on your company; they cannot send you in without one. The code email contains only the code, never a link.
+
+> **Note:** 
+Wrong codes are limited. Five wrong attempts lock a code for 15 minutes; after 15 wrong attempts in a day, sign-in is paused for 24 hours. Requesting a new code does not lift a lock.
+
+
+### How long you stay signed in
+
+A device stays signed in for up to 30 days, and is signed out after 14 days without use. If the operator removes or changes your contact address, the devices that used that address are signed out on the next action.
+
+---
+
+## Inviting a colleague to one order
+
+If you are the account holder (you signed in with the code), you can share a load with a colleague without asking the operator.
+
+
+  ### Open the Shared with section
+    On the order, find **Shared with**: "People you invite can follow this order. They confirm their own email address with a code."
+  
+  ### Enter the colleague's email and an access level
+    Choose **View only** or **View and update status**.
+  
+  ### Tap Invite
+    They receive an invitation, open it, and confirm their own address with their own code. The invitation is not a login by itself.
+  
+
+
+| Access level | What your colleague can do |
+|---|---|
+| **View only** | See the order. The agreed price, operator notes and driver name and phone are hidden. |
+| **View and update status** | Update status, ETA, delays, times and waiting, and upload or delete their own CMR/POD uploads. |
+
+Neither level can accept or decline the load, upload an invoice, change the driver or vehicle, upload compliance documents or invite anyone else. An order can have at most five active invitations, and one active invitation per email address. Use **Remove access** next to a person to end their access immediately. Invited people see a banner such as "You have view-only access to this order." Access ends automatically a week after the order is delivered.
+
+---
+
+## Link expiry
+
+By default, a carrier portal link stays valid for **30 days** from when it was generated. If you open an expired or invalid link, you land on **"This link is no longer valid"**: "It may have expired or been replaced. Ask the operator who sent it for a new link." You can tap **Copy link to send to operator** to send the dead link back so they can identify the order.
+
+> **Note:** 
+Declining a load also ends that link immediately. See [Accepting or Declining a Load](/en/carrier-portal/accepting-orders).
+
+
+**If your link has expired or stopped working**, contact the operator and ask for a fresh link. They can create one in a single step (see below).
+
+---
+
+## For operators: seeing and revoking carrier access
+
+In the order pane, **Carrier portal access** (and the Subcontractors page) shows the link status ("Link active until ..."), the **Signed-in devices** (person, **Access**, **Signed in via** Emailed code or Invitation, **Last seen**, **Expires**) and the **Invited people**. From there you can:
+
+- **Revoke** one device or invitation.
+- **Sign out all portal sessions** for the carrier.
+- **Revoke all and create a new link**: signs out every device of that carrier (including on their other orders), revokes everyone invited to this order, and creates a new link for the order (copied to your clipboard). The old link stops working. Send the new link to the carrier afterwards.
+- **Preview as carrier**: a read-only preview of what the carrier sees (the old "Open portal"). It does not sign you in as the carrier.
+- **Add contact email**: if the carrier has no email on file, the pane warns that nobody can sign in. Add a contact email so they can.
+
+> **Note:** 
+Re-saving the carrier on the order does not create a new link. Use **Revoke all and create a new link** instead.
+
+
+The transport order document, which contains the agreed rate, can only be opened by a signed-in account holder, not by an invited colleague.
+
+---
+
+## Security notes
+
+- **Keep the link and the email address safe.** Anyone with both the link and access to the mailbox can sign in.
+- **Don't forward the link** beyond people at your company who need to act on the load; invite them instead so they use their own address.
+- **If a link leaks**, tell the operator so they can revoke all access and create a new link.
+
+---
+
+
+  
+    The full walkthrough of everything the portal offers.
+  
+  
+    What happens the moment you sign in to a valid link.
+  
+  
+    Document requirements and the CMR gate before marking Delivered.
+  
+  
+    The operator-side view of how carrier links are created and managed.
+  
+</CardGroup>
+
+---
+
+## Freight Audit & SLA Basics
+
+
+## Overview
+
+Beyond the order details and status updates, some operators turn on two automatic checks in the background: one that watches how quickly and reliably you respond to loads, and one that compares your invoice against what was agreed. Neither is something you interact with directly in the portal — they're informational, running quietly on the operator's side — but knowing how they work helps you understand why an operator might follow up about a slow response or a mismatched invoice.
+
+Both are **optional per operator** — not every company you work with will have them switched on.
+
+---
+
+## A typical subcontracted load, start to finish
+
+
+  ### Assigned
+    The operator sends you the load through a carrier portal link. See [Portal Access & Link Expiry](/en/carrier-portal/portal-access).
+  
+  ### Accept or decline promptly
+    Review the order and respond with **Accept** or **Reject** — see [Accepting or Declining a Load](/en/carrier-portal/accepting-orders). If the operator has the acceptance monitor on, an unanswered load gets flagged to them after the configured acceptance window (6 hours by default), and even sooner — after a shorter grace period (2 hours by default) — if you opened the link but didn't respond. So respond quickly either way, even if the answer is no.
+  
+  ### Update status as you carry the load
+    Fill in your vehicle and driver details, update your ETA, and tap through the status milestones as you progress. Report a delay or a waiting period if something holds you up.
+  
+  ### Upload the CMR (and POD) before marking Delivered
+    This is a hard requirement — see [Uploading the CMR & POD](/en/carrier-portal/uploading-pod).
+  
+  ### Submit your invoice
+    Upload it through the same Upload Documents card, using the **Carrier Invoice** document type, matching the price you agreed to when you accepted the order.
+  
+  ### Get paid
+    If the operator has invoice auditing on, your invoice is automatically compared to the agreed amount. A close match clears without any back-and-forth; a mismatch means the operator's team reviews it and may reach out before approving payment.
+  
+
+
+---
+
+## What the responsiveness check looks at
+
+If an operator has this turned on, Druma classifies every subcontracted load you're offered into one of these states:
+
+| State | What it means |
+|---|---|
+| **Awaiting** | The load was just sent — you're still within the normal response window |
+| **Overdue (unaccepted)** | You haven't accepted or declined within the operator's configured acceptance window — **6 hours by default** |
+| **Viewed, no accept ("ghosting")** | You opened the link but never clicked Accept or Reject — flagged after a shorter grace period, **2 hours by default**, since the operator knows you saw it |
+| **Accepted** | You accepted — no further alert |
+| **Rejected** | You declined — no further alert |
+
+An "Overdue" or "Ghosting" flag doesn't do anything to your account automatically — but it does prompt the operator to reassign the load to someone else if you don't respond, so it's worth treating every link that lands in your inbox as time-sensitive.
+
+> **Note:** 
+The 6-hour acceptance window and the 2-hour post-view grace period are both configurable per operator — some companies run tighter or looser windows than the defaults above.
+
+
+---
+
+## What the invoice check looks at
+
+If an operator has invoice auditing on, your uploaded **Carrier Invoice** is automatically compared against the price you were shown when you accepted the load — the agreed rate plus anything you're legitimately owed on top (like a recorded waiting charge or an ADR/oversize surcharge), within a small tolerance for rounding.
+
+| Verdict | Meaning |
+|---|---|
+| **OK** | Your invoice matches the expected total within tolerance — clears without follow-up |
+| **Overcharge** | Your invoice is higher than expected |
+| **Underage** | Your invoice is lower than expected |
+| **Duplicate** | The invoice number and your VAT number match one already received — usually a re-send that landed twice |
+| **Review** | The system couldn't confirm the match automatically and a person needs to look at it |
+
+**To keep this smooth on your side:**
+- Submit **one invoice per order**, with a consistent invoice number you don't reuse across different loads.
+- If you're charging for anything beyond the base agreed rate — extra waiting time, a detour, an accessorial — make sure it's itemized clearly on the invoice, since the audit only automatically accounts for charges the operator recorded on the order (like a logged waiting charge).
+- If the operator flags something, expect a follow-up rather than a silent rejection — the audit is there to catch genuine mismatches and duplicates, not to hold up correct invoices.
+
+---
+
+
+  
+    The full walkthrough of everything the portal offers, start to finish.
+  
+  
+    How to respond quickly and what happens after you do.
+  
+  
+    Where to upload your invoice and what document types are supported.
+  
+  
+    How the link works across the life of a load.
+  
+</CardGroup>
+
+---
+
+
+# Invoicing & Accounting
+
+## Generating Invoices
+
+
+## Overview
+
+Invoices in Druma are always order-derived — there is no blank "New Invoice" form. Once an order is delivered, the fastest way to bill it is from **Finance → Uninvoiced**, which lists every delivered order that has no invoice yet.
+
+## Starting an Invoice
+
+**Finance → Uninvoiced (fastest route):**
+This page lists delivered orders with no invoice yet, sorted oldest first, with an age badge showing how many days each one has been sitting uninvoiced. Click **Create Invoice** on any row. Druma creates the invoice as a draft — with the invoice number already assigned — and opens it directly in the invoice editor.
+
+<Frame caption="The Invoices list — Payment Status (derived from due date/amount paid) is tracked separately from E-Invoice channel and E-Status.">
+  <img src="/images/invoicing/generating-invoices.png" alt="Invoices list with status and payment columns" />
+</Frame>
+
+> **Note:** 
+Each invoice covers exactly **one order** — there is no multi-order batch invoicing today. If a client wants several deliveries on one bill, invoice each order separately and send them together, or ask your accountant to combine them at export time.
+
+
+If an invoice was already auto-generated for an order (auto-invoicing, where configured) but is held for review, it appears in the **"Auto-invoice drafts awaiting release"** section at the top of the same Uninvoiced page instead of the main list — click **Release** to send it.
+
+## Step-by-Step: Creating an Invoice
+
+
+  ### Open the draft from Uninvoiced
+    Go to **Finance → Uninvoiced** and click **Create Invoice** on the order you want to bill. Druma creates the draft invoice and opens it in the editor.
+  
+  ### Review the line items
+    Druma auto-fills the line items from the order data. Review and adjust each one:
+
+    - **Transport fee** — pulled from the agreed price set when the order was created
+    - **Waiting charge** — auto-calculated if the driver logged waiting time beyond the free period
+    - **ADR surcharge** — added automatically if the order was flagged as ADR cargo, using your company's configured ADR surcharge rate (default €75 if you have not set one)
+    - **Fuel surcharge** — included if you have a fuel surcharge rule configured in Settings
+    - **Other surcharges** — add any custom line items as needed (toll reimbursement, ferry, extra stops)
+
+    You can edit any amount, add new lines, or remove lines that do not apply.
+  
+  ### Set the due date and VAT treatment
+    The due date is pre-filled from the payment terms on the client record — for example, net 30 means the due date is 30 days from creation. Override it manually if needed, and set the VAT treatment (Standard, Reverse Charge Art. 44, or Exempt) if it differs from the default.
+  
+  ### Save or Preview
+    Click **Save Draft** at any point while you keep editing. Click **Preview** to see exactly what the client will receive — verify the client name, VAT number, addresses, line items, totals, and your bank details before sending. Only draft invoices can be edited; once sent, the amounts are locked.
+  
+  ### Send the invoice
+    From the preview, choose how to deliver it:
+
+    - **Send Invoice** — emails the client's finance contact with the invoice attached, and moves the invoice from Draft to Sent.
+    - **Print / Save PDF** — opens the print dialog so you can save it as a PDF and send it yourself via your own email client, WhatsApp, or however you communicate with that client. This does not change the invoice status.
+  
+
+
+
+## Automatic Surcharge Lines (Order Extras)
+
+In addition to the main transport fee, Druma automatically adds surcharge lines to the invoice based on what happened during the order:
+
+| Surcharge | When it's added |
+|---|---|
+| **Waiting charge** | When the driver logged waiting time beyond the free period |
+| **Toll (pass-through)** | When driver-logged toll receipts exist and your rate card policy is pass-through for that country |
+| **Wasted journey fee** | When a wasted journey was recorded on the order |
+| **ADR surcharge** | When the order was flagged as ADR/hazardous cargo |
+
+These lines appear automatically in the invoice editor — no manual entry needed.
+
+**You can:**
+- **Exclude a line from the invoice** — click the **Exclude** toggle on the line row. The charge disappears from the invoice but remains on the order record for internal cost tracking.
+- **Restore excluded lines** — click **Restore hidden charges** at the bottom of the line items section to bring back any excluded auto-lines.
+- **Add custom lines** — use the **+ Add Line** button to add palette exchange fees, customs clearance charges, handling fees, or any other extra. Pick from your company's **extras catalog** or enter a custom description and amount.
+
+To manage the extras catalog (company-wide line item templates): **Settings → Pricing & Costing → Extras catalog**.
+
+## Invoice Numbering
+
+Invoice numbers are sequential and use a configurable prefix. The default format (with no custom pattern configured) is `{prefix}-{6-digit sequence}` — for example, `INV-000001`, `INV-000002`, `INV-000003`. A pattern with a year token (`{YYYY}`) is available if you configure a custom numbering pattern.
+
+To change the prefix or configure a custom numbering pattern (including a year token): **Settings** → **Branding & Formats** → **Invoice Numbering**.
+
+## Multi-Currency Invoices
+
+Druma supports invoicing in EUR, GBP, CHF, USD, RON, and PLN. Change the currency from the selector in the invoice editor — it defaults to the order's own currency. For any currency other than RON, Druma automatically fetches the exchange rate from the **BNR (Romanian National Bank)** for the invoice date and includes it on the PDF.
+
+This is important for Romanian accounting compliance and e-Factura submission — the RON equivalent of any foreign currency amount must appear on the invoice.
+
+> **Warning:** 
+Once an invoice is sent (status moves out of Draft), you cannot edit it directly. If you made a mistake — wrong amount, wrong client, wrong line item — you must create a credit note to reverse it, then issue a corrected invoice. This is a legal requirement in Romania. Do not attempt to delete or overwrite a sent invoice.
+
+
+---
+
+
+  How to reverse or partially correct a sent invoice using a credit note.
+
+
+
+  How Druma automatically submits invoices to ANAF's e-Factura system for Romanian clients.
+
+
+
+  Recording payments against invoices and tracking outstanding balances.
+
+
+---
+
+## Consolidated Invoicing
+
+
+Some clients do not want an invoice per load. A shipper running forty loads a month wants one monthly invoice with forty lines on it, and their accounts payable team will reject anything else. Consolidated invoicing bills those clients per period instead of per order.
+
+---
+
+## Setting a client's invoicing mode
+
+Open the client record and find **Invoicing → Invoicing mode**:
+
+| Mode | Behaviour |
+|---|---|
+| **Per order (default)** | One invoice per delivered load, as normal |
+| **Weekly** | Delivered loads accumulate and are billed once a week |
+| **Monthly** | Delivered loads accumulate and are billed once a month |
+
+Choosing Weekly or Monthly reveals the matching day setting:
+
+- **Invoice day (weekday)** for weekly clients — which day of the week the period closes
+- **Invoice day (day of month)** for monthly clients
+
+Druma pre-fills a sensible default the moment you switch to a consolidated mode, so a client can never sit in "weekly, no day chosen".
+
+---
+
+## Where accumulating loads live
+
+Delivered loads for a consolidated client do **not** appear as ordinary uninvoiced orders waiting to be actioned. They collect in their own section on **Finance → Uninvoiced**, headed **Accumulating for period invoicing**:
+
+> *These clients are billed weekly or monthly, not per order — delivered loads accumulate here by policy until the next period close.*
+
+This separation matters. Without it, a monthly client's loads look exactly like revenue you forgot to bill, and the uninvoiced KPIs read as a problem when nothing is wrong.
+
+---
+
+## Closing a period early
+
+Each accumulating client offers **Invoice period as one invoice**. Use it when you need the invoice before the scheduled close — a month-end cut-off, a client asking for it early, or a credit-limit situation.
+
+Otherwise nothing is needed: the period closes on its configured day and the invoice is created automatically.
+
+---
+
+## Auto-invoice drafts
+
+Where automatic invoicing is enabled, drafts are created but not sent. They wait under **Auto-invoice drafts awaiting release**, with the order, the client and when it was **Drafted**.
+
+**Release** issues and sends the invoice. Until you release it, nothing has reached the client — the KPI bar counts these separately as **Auto-invoice drafts held** so a stack of unreleased drafts cannot quietly become unbilled revenue.
+
+---
+
+## Reading the page
+
+The **Uninvoiced deliveries** page shows delivered orders with no issued invoice, with three KPIs:
+
+- **Uninvoiced orders** — the count
+- **Revenue exposure** — the agreed price of each uninvoiced order, summed
+- **Avg days uninvoiced** — the mean of *(today − delivered date)*
+
+Ageing buckets (**< 1 day**, **1–3 days**, **4–7 days**) show how long revenue has been sitting. A search box filters by order, invoice or client.
+
+> **Warning:** 
+The list shows the **first 500 results**. When you see *"Showing first 500 results — use filters to narrow down"*, the totals on screen cover only those 500 — narrow the filters before reading them as a company-wide figure.
+
+
+---
+
+## Related articles
+
+
+  
+    Creating and sending invoices from an order.
+  
+  
+    What happens once the invoice is out.
+  
+</CardGroup>
+
+---
+
+## Credit Notes
+
+
+## When You Need a Credit Note
+
+Once an invoice has been generated and sent, you cannot edit or delete it — that is a legal requirement in Romania. If something is wrong or needs to change, the correct process is to issue a credit note.
+
+Use a credit note when:
+
+- You invoiced the wrong amount (pricing error, miscalculated surcharge)
+- Goods were returned after delivery and a refund is agreed
+- You agreed to give the client a discount after the fact
+- The invoice was sent to the wrong client and needs to be cancelled
+- A waiting time charge was disputed and you are writing it off
+
+A credit note reduces the client's outstanding balance by the credited amount. It is a separate, numbered document that links back to the original invoice.
+
+## Creating a Credit Note
+
+
+  ### Open the original invoice
+    Go to **Finance** → **Invoices** and find the invoice you need to correct. Click on it to open the invoice detail page.
+  
+  ### Click Create Credit Note
+    Click the **Create Credit Note** button. Druma opens a short credit note form referencing the original invoice number and its total.
+  
+  ### Enter the amount
+    Set the **Amount** field to however much you are crediting, up to the original invoice's total (shown as the **Max**). Leave it at the full amount for a full credit note, or lower it for a partial credit note — there is no line-item editor, the credit note is a single amount that Druma prorates into subtotal and VAT automatically.
+  
+  ### Select a reason
+    Choose a **Reason** from the dropdown: Wrong Invoice (Void & Reissue), Price Adjustment, Cancellation, Duplicate Invoice, Quality Issue / Refund, or Other. Use the separate **Notes** field for any free-text detail (for example, "agreed rate was €850, not €950"). Both the reason and notes appear on the credit note PDF.
+  
+  ### Generate the credit note
+    Click **Create Credit Note**. If the reason is one of the voiding reasons (Wrong Invoice, Price Adjustment, Cancellation, or Duplicate) and the amount equals the full invoice total, Druma also voids the original invoice and offers a **Create corrected invoice draft** checkbox to start a replacement invoice pre-filled from the original. Druma assigns a sequential credit note number using the `CN-` prefix (for example, `CN-000001`). Credit note numbers are in their own separate series — they do not share a sequence with invoices.
+  
+  ### Send to the client
+    Click **Download PDF** to get the credit note file, then email it to the client's finance contact. Or use **Send by Email** to have Druma send it directly, pre-addressed to the finance contact on record.
+  
+
+
+
+## Full vs Partial Credit Notes
+
+**Full credit note:** enter an amount equal to the invoice's full total. Use this when you need to cancel an invoice completely — wrong client, completely wrong order, invoice sent in error. If the reason is a voiding reason, Druma marks the original invoice as voided and lets you spin up a corrected invoice draft in the same step.
+
+**Partial credit note:** enter an amount lower than the invoice total. Use this when only part of the invoice is wrong — for example, crediting just the ADR surcharge while leaving the transport fee untouched. Druma prorates the VAT and subtotal for you based on the amount entered; there is no per-line-item editing.
+
+## Credit Note Numbering
+
+Credit notes use the `CN-` prefix and their own sequential series (for example `CN-000001`, `CN-000002`, and so on — no year is included by default). This series is separate from your invoice numbers. A custom numbering pattern, including a year token, can be configured under **Settings** → **Branding & Formats** → **Invoice Numbering**.
+
+## Accounting Effect
+
+When a credit note is generated:
+
+- The client's outstanding balance is reduced by the credited amount
+- If the original invoice was fully paid, the credit note creates a credit balance on the client account that can be applied against future invoices
+- The credit note appears in all accounting exports (SAGA, WinMENTOR) alongside the original invoice
+
+> **Warning:** 
+Credit notes are legally required documents in Romania. You must never edit or delete a sent invoice. If you discover an error — even a small one — always follow the credit note process. ANAF e-Factura submissions also require the credit note to be submitted so the original invoice is formally corrected in the system.
+
+
+---
+
+
+  How to create invoices from delivered orders, including batch invoicing and multi-currency.
+
+
+
+  Recording payments against invoices and managing outstanding balances.
+
+
+---
+
+## e-Factura / ANAF Submission
+
+
+## What e-Factura Is
+
+e-Factura is Romania's mandatory electronic invoicing system, operated by ANAF (the Romanian National Tax Authority). Since 2024, all B2B transactions between Romanian VAT-registered companies must be reported to ANAF in UBL XML format — the standard electronic invoice format used across Europe.
+
+In plain terms: every invoice you issue to a Romanian company with a CIF (VAT registration number) must be sent to ANAF electronically, not just to your client. Druma handles this automatically after you generate the invoice.
+
+## How Druma Handles e-Factura
+
+You do not need to log into the ANAF portal, generate XML files, or do anything manually. Here is what happens automatically:
+
+1. You generate an invoice for a Romanian client that has a CIF on their client record
+2. Druma creates the UBL XML file in the correct ANAF format
+3. Druma submits the XML to ANAF via the SPV (Spatiul Privat Virtual) API
+4. ANAF returns a submission ID and, after processing, an acceptance or rejection status
+5. The invoice record in Druma updates to show the current e-Factura status
+
+## e-Factura Status Tracking
+
+Each invoice that requires e-Factura submission shows a status badge on the invoice detail page under the **e-Factura** tab:
+
+| Status | What it means |
+|---|---|
+| **Pending** | Waiting to be submitted (usually submits within a few minutes of invoice generation) |
+| **Submitted** | XML sent to ANAF — waiting for ANAF to process it |
+| **Accepted** | ANAF has validated and accepted the invoice |
+| **Rejected** | ANAF found an error — see the error code for details |
+
+> **Note:** 
+ANAF's system experiences downtime regularly, especially on weekday mornings and at month-end. If your invoice shows "Submitted" for more than a few hours, this is usually ANAF on their side, not an error in Druma. The retry queue handles this automatically.
+
+
+## Automatic Retry Queue
+
+If a submission fails because ANAF is unavailable, Druma retries automatically using exponential backoff, up to 3 attempts in total (the original attempt plus 2 retries):
+
+- First retry: roughly **1 hour** after the failure (±25% jitter)
+- Second retry: roughly **2 hours** after the first retry (±25% jitter)
+
+If the third attempt also fails, the invoice moves straight to **Failed** status — there is no further automatic retry after that. You can then trigger a **Manual Resubmit** from the e-Factura tab on the invoice page.
+
+## Viewing e-Factura Status
+
+
+  ### Open the invoice
+    Go to **Finance** → **Invoices** and click on the invoice you want to check.
+  
+  ### Click the e-Factura tab
+    The e-Factura tab shows the current status, the submission timestamp, the ANAF submission ID (once received), and any error messages.
+  
+  ### If rejected, read the error code
+    Rejection messages come from ANAF and include an error code and description. Common ones are listed below.
+  
+
+
+
+## Common Rejection Errors
+
+| Error | Likely cause | How to fix |
+|---|---|---|
+| **Invalid CIF** | The client's VAT number on their record is wrong or not VAT-registered | Go to **Clients** → edit the client → correct the CIF field |
+| **Invalid address format** | Street, city, or county field does not match ANAF's expected format | Edit the client's address — make sure County is set and uses the correct Romanian county name |
+| **Missing mandatory field** | A required XML field is empty | Check the invoice for missing client details — usually CIF, address, or client name |
+| **Duplicate invoice** | ANAF already has a submission with the same invoice number | This usually means a previous submission succeeded but Druma did not receive the confirmation — check the ANAF SPV portal directly |
+
+## Manual Resubmit
+
+If automatic retries fail or you have corrected an error and want to try again immediately:
+
+Go to **Finance** → **Invoices** → open the invoice → **e-Factura tab** → click **Resubmit to ANAF**. Druma sends the XML again immediately.
+
+## When e-Factura Does NOT Apply
+
+e-Factura submission is only required for Romanian VAT-registered clients. It does **not** apply to:
+
+- EU cross-border invoices (clients based outside Romania)
+- Clients without a Romanian CIF
+- Invoices to private individuals (non-business)
+
+For these invoices, Druma generates a standard PDF invoice without the UBL XML submission step. The e-Factura tab will not appear on those invoices.
+
+> **Warning:** 
+Make sure every Romanian B2B client in Druma has their correct CIF entered on the client record. Without a CIF, Druma cannot submit to e-Factura and you may be non-compliant. You can check and update CIF numbers under Clients → select the client → Details tab.
+
+
+---
+
+
+  How to create invoices in Druma, including multi-currency and batch invoicing.
+
+
+
+  How to export invoice data to Romanian accounting software for your accountant.
+
+
+---
+
+## SAGA & WinMENTOR Export
+
+
+## Overview
+
+SAGA C and WinMENTOR Classic are the two most common accounting software packages used by Romanian companies. Druma exports invoice and client data in the formats both packages expect, so your accountant can import directly without manual re-entry.
+
+<Frame caption="Finance → Export Builder — custom-profile exports; SAGA/WinMENTOR itself is a monthly emailed ZIP, not a button here.">
+  <img src="/images/invoicing/saga-export.png" alt="Export Builder page" />
+</Frame>
+
+## SAGA C Export
+
+SAGA uses DBF (dBase) files for data import. Druma generates a full export package, not just client and invoice data:
+
+- **CLI_\<date>.dbf** (Clienti) — client master data (name, CIF, address, payment terms)
+- **ART_\<date>.dbf** (Articole) — the service line item used on sales invoices, included by default
+- **IE_\<date>_\<date>.dbf** (Iesiri) — sales invoice data (invoice number, date, amounts, VAT, client reference)
+- **INT_\<date>.dbf** (Intrari) — purchase invoices, when the period includes subcontracted orders
+- **NC_\<date>_\<date>.xml** (Incasari) — payments recorded in the period (this one file is XML, not DBF)
+- **README.txt** — a plain-text summary of the export plus import instructions for your accountant
+
+### How to Export for SAGA
+
+
+  ### Go to the Export Builder
+    Click **Finance** in the main navigation menu, then open **Export Builder**.
+  
+  ### Open the Export menu
+    Click the **Export** button in the top-right area of the Export Builder screen.
+  
+  ### Select SAGA
+    Choose **SAGA C** from the export format options.
+  
+  ### Set the date range
+    Pick the start and end date for the invoices you want to export. Most accountants want a monthly export.
+  
+  ### Download the ZIP
+    Click **Download**. Druma creates a ZIP file containing the DBF files listed above (plus the Incasari XML and README.txt) and downloads it to your computer.
+  
+
+
+### Importing Into SAGA C
+
+
+  ### Open SAGA C on your accountant's computer
+    Log in to the company file you want to import into.
+  
+  ### Go to Import
+    In SAGA, navigate to **Import** → **Facturi furnizori / clienti** (depending on your setup).
+  
+  ### Select the DBF files
+    Browse to the ZIP you downloaded from Druma and select the relevant .dbf file.
+  
+  ### Verify field mapping
+    SAGA will show you a field mapping preview. Confirm the columns match the expected SAGA fields — they should align automatically with Druma's export.
+  
+  ### Confirm the import
+    Click **Import**. SAGA processes the records. Check the import log for any errors.
+  
+
+
+## WinMENTOR Classic Export
+
+WinMENTOR Classic does **not** use DBF files like SAGA — Druma exports it as pipe-delimited (`|`) plain-text files instead, matching WinMENTOR's "Import from text file" format:
+
+- **Iesiri_\<date>_\<date>.txt** — sales invoice data
+- **Clienti_\<date>.txt** — client master data for the clients invoiced in the period
+- **Articole_\<date>.txt** — the service line item used on sales invoices
+- **Incasari_\<date>_\<date>.txt** — payments recorded in the period (included only if there were any)
+- **README.txt** — import instructions for your accountant
+
+
+  ### Open the Export menu in Export Builder
+    Go to **Finance** → **Export Builder** → **Export**.
+  
+  ### Select WinMENTOR Classic
+    Choose **WinMENTOR Classic** from the format list. This produces the pipe-delimited `.txt` files above instead of SAGA's DBF files — do not use the SAGA option for WinMENTOR.
+  
+  ### Set the date range and download
+    Choose your date range and click **Download**.
+  
+
+
+Import the files into WinMENTOR using **Import/Export → Import din fisier text**, selecting the pipe (`|`) delimiter.
+
+## Automatic Monthly Export (SAGA and WinMENTOR Classic)
+
+Rather than a manual nightly download, Druma emails the export to your accountant automatically once a month:
+
+
+  ### Go to Settings
+    Navigate to **Settings** → **Automation** and find the **SAGA Export Config** section.
+  
+  ### Set the accountant's email and export day
+    Enter the **accountant email** (and an optional CC), then choose the **day of month** the export should run (1–28).
+  
+  ### Save
+    Click **Save SAGA config**. A background job checks daily at **06:00 UTC** whether today matches your configured day — when it does, Druma generates the export for the **previous calendar month** and emails it directly to your accountant, with no manual download step required.
+  
+
+
+> **Note:** 
+There is no in-app "Export History" list — each month's export arrives as an email with a secure download link to the ZIP, valid for **7 days**. If the link expires, or you need an out-of-cycle or custom-period export, use the manual **Export** flow above (or **Finance** → **Export Builder** for a custom column layout) instead.
+
+
+## Multi-Currency Invoices and BNR Exchange Rates
+
+For invoices in EUR, USD, GBP, CHF, or PLN, Druma includes the BNR (Romanian National Bank) exchange rate for the invoice date in the DBF/text export. This means your accountant's software has the RON-equivalent amounts immediately — no manual rate lookup needed.
+
+
+> **Warning:** 
+Always check with your accountant which export format they need — SAGA C or WinMENTOR Classic. Using the wrong format will produce import errors or silently incorrect data.
+
+
+---
+
+
+  How to configure all Druma integrations, including accounting software and API connections.
+
+
+
+  How to create invoices in Druma before exporting them to your accounting software.
+
+
+---
+
+## Payment Tracking
+
+
+## Overview
+
+Once an invoice is sent and the client pays, you record the payment in Druma so your outstanding balance stays accurate. Druma supports full payments, partial payments, and multiple payments against a single invoice — which is common when clients pay in instalments or send a payment that does not quite match the invoice amount.
+
+## Recording a Payment
+
+
+  ### Open the invoice
+    Go to **Finance** → **Invoices** and find the invoice you want to mark as paid. Click on it to open the invoice detail page.
+  
+  ### Click Record Payment
+    Click the **Record Payment** button near the top of the invoice page.
+  
+  ### Fill in the payment details
+    Complete the following fields:
+
+    - **Payment date** — the date the money arrived in your account (from your bank statement)
+    - **Amount received** — the exact amount you received
+    - **Payment method** — bank transfer, cash, card, or cheque
+    - **Bank reference number** — the reference shown on your bank statement for this transfer (helps with reconciliation later)
+    - **Notes** — optional, for anything else worth noting
+  
+  ### Save the payment
+    Click **Save Payment**. The invoice status updates immediately.
+  
+
+
+## Invoice Status Progression
+
+As payments are recorded, the invoice status changes automatically:
+
+| Status | What it means |
+|---|---|
+| **Unpaid** | No payment recorded yet |
+| **Partially Paid** | At least one payment recorded, but the total received is less than the invoice amount |
+| **Paid** | Total payments recorded equal the invoice amount |
+| **Overdue** | Unpaid or partially paid, and the due date has passed |
+| **Written Off** | Marked as uncollectable — removed from outstanding balance |
+| **Voided** | The invoice was cancelled (for example, via a full credit note) and carries no fiscal or outstanding-balance weight |
+
+## Partial Payments
+
+If a client pays part of the invoice — for example, they send 50% now and the rest next month — record the partial amount. The invoice moves to **Partially Paid** and Druma shows the remaining balance clearly on the invoice.
+
+When the second payment arrives, open the same invoice and click **Record Payment** again. Enter the new payment. You can record as many partial payments as needed. The full payment history is shown on the invoice detail page in chronological order.
+
+> **Note:** 
+Partial payments are also useful when a client pays a slightly different amount — for example, due to bank transfer fees deducted at source. Record what actually arrived and add a note explaining the difference.
+
+
+## Multiple Partial Payments Example
+
+A client owes you €4,200 for three invoices batched together. They pay in three parts over six weeks:
+
+1. 15 March — €2,000 received. Status: Partially Paid. Remaining: €2,200.
+2. 1 April — €1,500 received. Status: Partially Paid. Remaining: €700.
+3. 22 April — €700 received. Status: Paid. Balance: €0.
+
+All three payment records are visible on the invoice, each with its date and bank reference.
+
+
+## Writing Off an Invoice
+
+If a client will not pay — dispute unresolved, company has gone out of business, or the amount is too small to pursue — you can write it off.
+
+Open the invoice → click **Mark as Written Off** → enter a short reason (for example, "Client insolvent — debt unrecoverable" or "Disputed — written off per commercial agreement"). The invoice is removed from your outstanding balance and the reason is saved for your records.
+
+> **Warning:** 
+Writing off an invoice does not cancel it legally. The invoice remains in your records. For accounting purposes, consult your accountant about how to treat written-off amounts in your tax return — a credit note may be required in some cases.
+
+
+## Outstanding Balance Per Client
+
+To see a client's current position — outstanding balance, credit exposure, and open invoices: go to **Clients** → select the client → **Overview** tab. The Outstanding Balance figure is shown as a KPI tile at the top of the tab, alongside open invoices.
+
+## Statement of Account
+
+To give a client (or your own accountant) a clean summary of everything currently open on that account, generate a statement of account instead of exporting a raw payments list:
+
+Go to **Clients** → select the client → **Overview** tab → click **Statement of account**. Druma builds a self-contained HTML document listing all open invoices for that client, which opens in a new tab — print it or save it as a PDF from there.
+
+A statement of account can also be attached automatically to dunning reminder emails — see [Overdue Management](/en/invoicing/overdue-management) for how to enable that per dunning stage.
+
+---
+
+
+  Managing overdue invoices, sending payment reminders, and setting up auto-reminder schedules.
+
+
+
+  Automatically match bank payment emails to open invoices using Druma's email parsing feature.
+
+
+---
+
+## Overdue Management
+
+
+## Overview
+
+Chasing payments is one of the less enjoyable parts of running a freight company. Druma gives you a clear view of what is overdue, who owes how much, and tools to send reminders without manually writing emails each time. You can also set up automatic reminders so Druma does the chasing for you.
+
+## Viewing Overdue Invoices
+
+Go to **Finance** → **Overdue**. This shows all unpaid and partially paid invoices where the due date has passed. It is a snapshot of today, so it has no date range or comparison picker.
+
+<Frame caption="Finance → Overdue — the manual-send rate limit is 50/hour per user, not per company.">
+  <img src="/images/invoicing/overdue-management.png" alt="Overdue Management page" />
+</Frame>
+
+At the top you get KPI tiles (**Total Overdue**, **90+ Days** with its share of the overdue amount, **Clients overdue**, **Avg days overdue**) and two charts: **Overdue value by aging bucket** and **Top clients by overdue balance**. The amount per invoice is its total minus what has been paid. The charts show one currency (the dominant one); invoices in other currencies are listed in the table but not summed into the charts.
+
+**Click a bar** in either chart to filter the table to that bucket or client; click it again to clear. The **Aging bucket** and **Client** pickers do the same without the chart, and the filter chips plus **Clear all** show what is active.
+
+Each table row shows the invoice number, client, issue and due date, total, amount paid, **Days Overdue**, aging bucket and a **Dunning** column with the current stage badge (**Stage 1**–**Stage 3**, **Escalated**, **Paused**, **Exempt** or **Suppressed**). Click a row to open a side pane; **Open invoice** takes you to the full invoice.
+
+| Bucket | What it shows |
+|---|---|
+| **0–30d** | Recently overdue — likely just slow payment |
+| **31–60d** | Getting serious — needs a follow-up |
+| **61–90d** | Problem accounts — escalate |
+| **90d+** | High risk — consider legal or collection action |
+
+## Per-Client Outstanding Balance
+
+To see the full picture for a specific client — outstanding balance, credit exposure, and open invoices — go to **Clients** → select the client → **Overview** tab. The Outstanding Balance is shown as a KPI tile at the top of the tab.
+
+This is useful before a call with a client: you can see exactly what they owe and for how long.
+
+## Sending a Payment Reminder Now
+
+
+  ### Find the invoice
+    Go to **Finance** → **Overdue** and find the invoice (search, or click a chart bar to narrow the list).
+  
+  ### Open the Dunning actions menu
+    Click the **···** button at the end of the row and choose **Send reminder now…**.
+  
+  ### Pick the stage and send
+    Choose the **Stage** (1, 2, 3 or Final) and click **Send**. Druma emails the client's finance contact with that stage's template.
+  
+
+
+The same menu has **Pause 14 days** (pauses dunning for that invoice's client for 14 days) and **Skip next stage…** (asks for a **Reason**, then skips the next scheduled reminder).
+
+> **Note:** 
+The wording of the reminder emails comes from the dunning stage policies and the reminder templates in your Communication settings. See Dunning Schedule below.
+
+
+
+## Automatic Reminders
+
+If you do not want to manually send reminders every week, Druma can do it for you on a schedule — configured per stage under **Settings → Finance & Billing → Dunning**. See the next section for exactly how the schedule works and what each stage does.
+
+> **Warning:** 
+Automatic reminders go to the client's finance contact on record. Make sure each client has a finance contact set up with the correct email address before enabling any stage — otherwise reminders may go to the wrong person or not send at all. Check under Clients → Contacts.
+
+
+## Dunning Schedule — How Automatic Reminders Work
+
+Automatic reminders run on a **4-stage dunning schedule**, configured per company.
+
+- **Stage 1–3**: emails are sent to the client's finance contacts at configured intervals (for example, 7 days / 14 days / 30 days overdue). Each stage uses a separate email template so the tone can escalate appropriately from polite reminder to firm notice. From stage 2 onward, the reminder email can also include an informational EU late-payment interest line — see below.
+- **Stage 4**: no email is sent automatically. Instead, an escalation notification is sent to your planners and admins — this is a signal to take manual action (legal, factoring, a phone call). Stage 4 never emails the client without human sign-off. If **auto credit-stop** is enabled (see below), reaching stage 4 also puts the client on credit stop automatically.
+
+To configure the schedule, go to **Settings → Finance & Billing → Dunning**:
+
+- Set the **days offset** per stage (when each reminder fires relative to the due date)
+- Edit the **email subject and body** per stage, or use the default i18n templates
+- Optionally enable **Attach invoice PDF** and/or **Attach statement of account** per stage
+- Click **Preview** on any stage to run a **dry-run preview** and see the email before it goes live
+
+## Dunning Rules — Exceptions to the Schedule
+
+The stage policies apply to every overdue invoice. When you need an exception, add a **dunning rule** instead of switching a stage off for everyone. Go to **Settings → Finance & Billing → Dunning**; the **Dunning rules** section sits under the stage policies. With no rules, every overdue invoice follows the stage policies exactly as before.
+
+
+  ### Add a rule
+    Click **Add rule** (or **Describe with AI** and write the exception in your own words, for example "No reminder for RON invoices under 500"). Give it a **Rule name**.
+  
+  ### Choose when it applies
+    Pick the **Stage** (a single stage or **Every stage**) and **Applies to**: **Every client**, **One client** or **A client group**. Under **Only for invoices where**, add conditions on the invoice. When several rules match, the most specific scope wins.
+  
+  ### Choose what happens
+    Under **Then**, pick **Do not send this stage**, or **Change how it is sent**: set the **Days after the due date**, **attach the invoice PDF** or the **statement**, or add an **Internal copy (email)**. Anything you leave on **Keep the policy default** stays as the stage policy says. The **In plain words** box restates the rule so you can check it.
+  
+  ### Save, check, switch on
+    Click **Save rule**. A new rule is always saved **switched off**. Before you switch it on, Druma checks it against your open overdue invoices and shows how many it would apply to, and asks you to confirm. If that check fails, the rule is not switched on. You can also test a rule against a single invoice and look at its version history.
+  
+
+
+A rule can only make Druma do **less** than the stage policy (skip a reminder, send it later, add an attachment or internal copy); it can never make Druma contact a client the policy would not. A skipped stage is simply not sent; the next stage is still considered. An enabled rule is not edited in place: switch it off, change it, then check and switch it on again.
+
+### Automation rules
+
+The same pattern exists for the order automations (auto-invoicing, self-billing, carrier invoice audit). Under the master switches in **Settings → Automation**, the **Automation rules** section lets you add exceptions: for orders that match (by client, client group or a site), **skip** the automation or **hold** it for a person. For example, "never auto-send invoices for heavy loads". Rules are saved switched off, are checked against the last 30 days of orders before you switch them on, and can never turn an automation on that the master switch has off. The order's **Rules** section shows which rule fired.
+
+## Stage-4 Auto Credit-Stop
+
+By default, reaching stage 4 only notifies your team — it does not block the client. If you want Druma to act automatically instead of waiting for a human to review the escalation, enable **auto credit-stop** (an opt-in company setting). Once on, any client that reaches stage 4 of the dunning schedule is placed on credit stop automatically:
+
+- New orders for that client are blocked until the stop is lifted.
+- Admins and planners receive a notification that the client was auto-stopped.
+- The stop is **one-way** — Druma never lifts it automatically. A human has to remove the credit stop on the client record once the situation is resolved.
+
+## EU Late-Payment Interest
+
+Dunning reminders from stage 2 onward can include an informational late-payment interest line, based on Directive 2011/7/EU on combating late payment in commercial transactions. Druma calculates simple (non-compounding) interest on the overdue amount using a configurable annual percentage — set it under **Settings → Documents → Formats** (defaults to 8.0%, an approximation of the EU statutory floor).
+
+> **Note:** 
+This interest amount is shown in the reminder email as a nudge only — it is never added to the invoice total automatically. Whether and how to actually charge late-payment interest is a commercial and legal decision; consult your accountant before enforcing it.
+
+
+## Pausing and Exempting Clients
+
+Not every client should receive automated reminders. Druma gives you three levels of control:
+
+- **Pause reminders for a client**: go to **Clients** → open the client → set a **Pause reminders until** date. No dunning emails are sent to this client until that date passes. Useful after a client commits to a payment plan.
+- **Exempt a client permanently**: in the same client form, enable the **Dunning exempt** toggle. This client is never chased automatically — useful for key accounts where you prefer to manage the relationship manually.
+- **Suppress a single invoice**: in the invoice editor, enable the **Suppress dunning** toggle on the specific invoice. That invoice is skipped by the dunning schedule even if the client is not exempt. Useful for disputed invoices or invoices under credit note review.
+
+## Manual Send
+
+To send a reminder immediately, outside the automatic schedule:
+
+1. Go to **Finance → Overdue**
+2. Click **···** on the invoice's row and choose **Send reminder now…**
+3. Choose the stage and click **Send**
+
+This sends that stage's template right now, regardless of whether the scheduled send date has been reached.
+
+> **Note:** 
+Rate limit: 50 manual sends per hour per user. Each planner has their own allowance, so multiple team members can each send up to 50 reminders per hour. This prevents accidental bulk-sends to large client lists.
+
+
+## Payment Terms Per Client
+
+Different clients may have different payment terms — some pay on net 15, others on net 45. Druma stores the payment terms per client so the due date is calculated correctly on every invoice.
+
+To set or update a client's payment terms: **Clients** → select the client → **General** tab → **Payment Terms** field. Set it to the agreed number of days (for example, 30 for net 30). This overrides the default payment terms in your global settings.
+
+---
+
+
+  How to record payments against invoices and track outstanding balances per client.
+
+
+
+  How to create and send invoices from delivered orders in Druma.
+
+
+---
+
+## Bank Reconciliation
+
+
+## Overview
+
+Manually matching bank transfers to invoices is tedious and error-prone. Druma's bank reconciliation feature automates most of this by parsing the payment notification emails that Romanian banks send for every incoming transfer. You forward those emails to a special Druma inbox, and Druma does the matching.
+
+No bank API access required. No new software to install. Just email forwarding.
+
+<Frame caption="Finance → Reconciliation — CAMT.053, MT940, and CODA statement formats.">
+  <img src="/images/invoicing/bank-reconciliation.png" alt="Bank Reconciliation page" />
+</Frame>
+
+## How It Works
+
+When money arrives in your bank account, your bank sends you an automatic notification email. Druma can read these emails and extract the key details:
+
+- Amount received
+- Payer name
+- Payment reference number
+- Transfer date
+
+Druma then searches your open invoices for a match. If the amount and reference number align, the invoice is marked as paid automatically. If there is no clear match, the payment goes into a review queue for you to handle manually.
+
+## Supported Banks
+
+Druma has dedicated email parsers for these Romanian banks:
+
+- BRD – Groupe Société Générale
+- BCR – Banca Comercială Română
+- Raiffeisen Bank
+- UniCredit Bank
+- ING Bank
+
+For Belgian and other SEPA banks, a shared SEPA parser handles the common structured-communication format used by:
+
+- KBC
+- BNP Paribas Fortis
+- Belfius
+- ING Belgium
+- Argenta
+- Crelan
+
+If your bank is not on either list, a **generic fallback parser** still attempts to extract the amount, currency, and reference from the forwarded email — match rates are lower than with a dedicated parser, but many banks' plain-text notification emails parse successfully anyway.
+
+> **Note:** 
+If automatic parsing does not pick up a payment, it lands in the review queue rather than being lost — you can still link it to the right invoice manually, or record the payment directly via the Record Payment button on each invoice.
+
+
+## Setting Up Email Forwarding
+
+
+  ### Find your Druma reconciliation inbox address
+    Go to **Settings** → **Company**, and toggle on **Enable bank payment inbox**. Your unique Druma reconciliation email address is shown here — it looks something like `reconcile-yourcompany@inbox.druma.io`.
+  
+  ### Copy the email address
+    Copy the full address. You will need it in your email client or bank notification settings.
+  
+  ### Set up forwarding in your email client
+    In the email account where your bank sends payment notifications, create a forwarding rule:
+
+    - **Condition:** emails from your bank's notification address (for example, `notificari@brd.ro`)
+    - **Action:** forward to your Druma reconciliation address
+
+    The exact steps depend on your email provider. In Gmail, go to Settings → Filters and Blocked Addresses → Create a new filter. In Outlook, use Rules → New Rule.
+  
+  ### Test with a real payment
+    Wait for the next incoming payment. Once your bank sends the notification email, it will be forwarded to Druma automatically. Check **Finance** → **Reconciliation** within a few minutes to see if it was matched.
+  
+
+
+
+## Automatic Matching
+
+When a forwarded email arrives, Druma attempts to match it to an open invoice using:
+
+1. **Amount** — the received amount matches the invoice outstanding balance
+2. **Reference number** — the payment reference in the email matches an invoice number in Druma (clients are prompted to use the invoice number as their payment reference)
+
+If both match, the invoice is marked as **Paid** automatically. No action needed from you.
+
+## Unmatched Payments
+
+Some payments will not match automatically — for example, if the client did not include the invoice number in the transfer reference, or if the amount is slightly different. These appear in the review queue:
+
+Go to **Finance** → **Reconciliation** → **Unmatched Payments**. Each unmatched payment shows the amount, payer name, and reference. You can:
+
+- **Link to invoice** — search for the correct invoice and connect this payment to it
+- **Ignore** — mark the payment as unrelated to Druma invoices (for example, a payment for something outside Druma)
+
+Once you link a payment to an invoice, the invoice status updates just as if you had recorded the payment manually.
+
+## Deduplication
+
+If you accidentally forward the same notification email twice, Druma will not create a duplicate payment. It detects duplicates using the email's `Message-Id` header, not the bank reference number — so even if the reference field is blank or reused, the exact same email is never processed twice. The second email is silently ignored.
+
+> **Note:** 
+Encourage your clients to use the invoice number as their bank transfer reference. This single habit dramatically increases the automatic match rate — most payments will be reconciled without any manual work on your side.
+
+
+> **Warning:** 
+Bank notification emails sometimes contain confidential financial information. Make sure your Druma reconciliation inbox address is kept private — do not share it publicly. It is unique to your company and cannot be guessed, but treat it like a password.
+
+
+---
+
+
+  How to record payments manually, handle partial payments, and export payment data.
+
+
+---
+
+## Bank Statement Import
+
+
+## Overview
+
+Instead of recording payments one by one, you can upload your bank statement directly into Druma. Druma parses every credit transaction in the file, runs matching logic against your open invoices, and automatically applies any confident matches. Unmatched transactions drop into the Reconciliation queue for a quick manual review.
+
+This is the fastest way to reconcile a high volume of incoming payments at once — ideal at end of week or end of month.
+
+## Supported Formats and Banks
+
+Druma accepts three standard formats:
+
+| Format | Description |
+|--------|-------------|
+| **CAMT.053 XML** | ISO 20022 — exported by most EU banks via online banking |
+| **MT940 SWIFT** | SWIFT legacy format — still common for corporate banking APIs |
+| **CODA** | Fixed-width format used by Belgian banks |
+
+All three formats are supported by BRD, BCR, Raiffeisen Bank, UniCredit, and ING Romania, as well as the majority of EU banks — CODA specifically covers Belgian bank exports. Druma auto-detects the format on upload. If detection fails, select the correct format from the **Format** dropdown inside the import modal.
+
+**Maximum file size:** 10 MB per upload.
+
+> **Note:** 
+Re-uploading the same statement file is safe. Druma fingerprints each transaction and silently skips any duplicates — you will never double-record a payment.
+
+
+## How to Import a Statement
+
+
+  ### Open the import dialog
+    Go to **Finance** → **Reconciliation** → **Payments** tab. Click the **Import Statement** button in the top-right corner of the page.
+  
+  ### Select your file
+    Click **Choose file** and select your exported bank statement. Accepted extensions are `.xml` (CAMT.053), `.sta`/`.mt9`/`.txt` (MT940), and `.cod`/`.coda` (CODA). The file must be 10 MB or smaller.
+  
+  ### Confirm the format
+    Druma auto-detects the format and shows a label below the file name. If the label is wrong, open the **Format** dropdown and select the correct format manually before proceeding.
+  
+  ### Run the import
+    Click **Import**. Druma parses all credit transactions in the file and runs matching logic against every open invoice in your company. This typically completes in a few seconds.
+  
+  ### Review the result summary
+    When processing finishes, a summary modal displays the outcome. Review each category before closing — see the breakdown below.
+  
+
+
+
+## Understanding the Result Summary
+
+After every import, Druma shows a result summary with the following counters:
+
+| Field | What it means |
+|-------|---------------|
+| **Parsed** | Total credit transactions found in the file |
+| **Auto-matched** | Transactions matched to an invoice with high confidence — payment applied automatically |
+| **Need review** | Transactions where a potential match was found but confidence was below the threshold — appear in the Reconciliation queue |
+| **Duplicates skipped** | Transactions already recorded from a previous upload of the same file — ignored silently |
+| **Errors** | Transactions that could not be parsed (malformed rows, unsupported currency, missing reference) |
+
+A healthy import has a high **Auto-matched** count and a low **Need review** count. If you see many rows needing review, it usually means invoice references are not included in payment descriptions — ask clients to include their invoice number in the bank transfer reference field.
+
+
+## Matching Logic
+
+Druma matches each bank transaction to an invoice using the following signals, in order of priority:
+
+1. **Invoice number in transaction reference** — exact or partial (fuzzy-normalised) match against an open invoice number. A match on this signal alone is enough to apply the payment automatically — no other signal is required.
+2. **Amount match** — if no invoice number matches, Druma looks for an open invoice whose outstanding balance falls within your configured tolerance (default ±2%) of the transaction amount, **and** whose due date falls within ±30 days of the transaction date. This keeps a stray amount match from linking to an unrelated invoice months away.
+3. **Client name** — used only as a tie-breaker when the amount match above returns more than one candidate invoice; Druma narrows to the candidate whose client name appears in the transaction's sender name.
+
+An invoice-number match auto-applies the payment (fully or partially, depending on the amount). An **amount-only match is never auto-applied** — even when it uniquely identifies one invoice — it always lands in the Reconciliation queue for manual confirmation, since there's no reference proving it's genuinely that invoice's payment. No signal at all → queued as unmatched.
+
+## Handling Unmatched Transactions
+
+Any transaction that could not be confidently matched appears in the **Reconciliation** queue on the same **Payments** tab. Each row shows a **Statement** source badge (distinguishing it from transactions that arrived via email parsing, which show an **Email** badge).
+
+
+  ### Open the Reconciliation queue
+    Stay on **Finance** → **Reconciliation** → **Payments** tab. Unmatched rows appear below the summary with a **Pending** status.
+  
+  ### Expand the transaction
+    Click a row to expand it. Druma shows the full transaction details: date, amount, bank reference text, and any candidate invoices it considered.
+  
+  ### Match manually
+    Click **Match** next to the correct invoice. Druma applies the payment and moves the transaction to **Applied** status.
+  
+  ### Discard if not relevant
+    If the transaction is not a client payment (for example, an internal transfer or a bank fee), click **Discard**. The row moves to **Rejected** status and does not affect any invoice.
+  
+
+
+> **Warning:** 
+Discarding a transaction is a soft action — it only marks the row as rejected in Druma. It does not affect your actual bank account or accounting system. If you discard by mistake, contact support — there is currently no self-service undo for rejected reconciliation rows.
+
+
+## Tips for Higher Auto-Match Rates
+
+- **Ask clients to include the invoice number** in the payment reference field of their bank transfer. A reference like `INV-000047` gives Druma an exact match on the first signal.
+- **Keep client names consistent** between your client master and how clients identify themselves on bank transfers — Druma falls back to a client-name match only to disambiguate between multiple same-amount invoices, so a close match there can rescue an otherwise-ambiguous amount match.
+- **Use net payment terms** consistently. Payments that arrive with deducted fees (banking or factoring) fall within the ±2% tolerance for amounts under ~€5,000. For larger invoices, confirm with clients that they send the full amount.
+
+---
+
+
+  Record and track payments manually, or view the full payment history per invoice.
+
+
+
+  View aged debtors and send payment reminders for invoices past their due date.
+
+
+
+  Issue a credit note to reverse or partially correct a sent invoice.
+
+
+---
+
+## Supplier Invoices (Accounts Payable)
+
+
+## Overview
+
+The Accounts Payable (AP) module tracks every purchase invoice your company receives from external suppliers. This includes subcontractor carriers you forward loads to, fuel card providers (DKV, UTA, AS24), workshop and tyre suppliers, toll operators (ASFINAG, HU-GO), insurance companies, leasing companies, and any other business expense.
+
+Druma reduces manual entry through two mechanisms: **carrier subcontractors are automatically mirrored into your supplier list** (no double entry), and an **AI-powered email inbox** can extract and draft purchase invoices directly from supplier emails. What does not match automatically lands in a **Review Queue** for a quick human decision.
+
+## Supplier Master
+
+The supplier master is the registry of all companies you buy from. It is the foundation for invoice matching and aged creditor reporting.
+
+**Where:** Freight Forwarding → **Suppliers** tab
+
+Each supplier record contains:
+
+| Field | Description |
+|-------|-------------|
+| **Name** | Supplier company name |
+| **VAT number** | Used for matching against extracted invoice data |
+| **Email** | Supplier contact email — also used for sender whitelist matching |
+| **Supplier type** | Carrier / Fuel / Workshop / Toll / Insurance / Leasing / Other |
+| **Country** | Supplier country of registration |
+
+### Managing Suppliers
+
+- **Add a supplier:** Click **+ Add Supplier**, fill in the form, and save.
+- **Edit a supplier:** Click **Edit** on any supplier row to update its details.
+- **Delete a supplier:** Click **Delete**. Deletion is blocked if the supplier has linked purchase invoices.
+
+> **Note:** 
+Subcontractor carriers you add under the Subcontractors section are automatically mirrored into the Suppliers list with type **Carrier**. You do not need to add them again here. Changes to the subcontractor record (name, VAT, email) sync to the supplier record automatically.
+
+
+
+## Supplier Invoice Email Inbox
+
+Druma can receive supplier invoices by email, extract the key fields using AI, and either auto-create a draft purchase invoice or route the document to the Review Queue.
+
+### Setup
+
+
+  ### Open company settings
+    Go to **Settings** → **Company** and scroll to the **Supplier Invoice Email** section.
+  
+  ### Enable the inbox
+    Toggle **Enable supplier invoice inbox** on. Druma provisions a dedicated inbound email address for your company (for example, `invoices-acme@in.druma.io`). The address is shown immediately after enabling.
+  
+  ### Copy the email address
+    Click the copy icon next to the address. Share this address with your suppliers and ask them to send PDF invoices to it. You can also forward invoices from your own inbox to this address.
+  
+  ### Add sender addresses to the whitelist
+    In the **Sender Whitelist** section directly below, click **+ Add Sender** and enter each supplier's sending email address. Only whitelisted senders are processed — emails from unknown addresses are silently dropped as a spam and spoofing safeguard.
+  
+
+
+> **Warning:** 
+Keep the supplier invoice email address confidential. Do not publish it on your website or in external documents. Anyone who knows the address and is not on the whitelist is blocked, but the address itself should be treated as a private routing address.
+
+
+> **Note:** 
+This inbound path has recently had gateway routing issues that caused emails to this address to be silently rejected before reaching Druma at all. If suppliers report that their invoices never arrive, or nothing shows up in the Review Queue despite emails being sent, check with support that the routing issue has been fully resolved for your environment before assuming the sender or whitelist is at fault.
+
+
+### What Happens When an Invoice Arrives
+
+When a supplier sends a PDF (or image) to your inbox address from a whitelisted sender:
+
+1. Druma downloads the attachment and stores it securely.
+2. AI extracts: supplier name, VAT number, invoice number, invoice date, total amount, currency, and expense category (fuel / workshop / toll / insurance / leasing / other).
+3. Druma attempts to match the extracted data against your supplier master using VAT number and email address.
+
+The outcome depends on match confidence:
+
+| Outcome | What happens |
+|---------|-------------|
+| **High-confidence carrier invoice** | Routed to the carrier invoice queue (matched against a purchase invoice from a specific subcontracted order) |
+| **High-confidence supplier match** | Draft purchase invoice created automatically and linked to the supplier |
+| **Low confidence or unrecognised supplier** | Appears in the **Review Queue** for manual matching |
+
+> **Note:** 
+AI extraction reads the PDF text layer. Scanned images with low resolution or handwritten text may result in lower confidence scores and land in the Review Queue more often. Ask suppliers to send native PDF exports from their accounting software where possible.
+
+
+## Review Queue
+
+The Review Queue is where all invoices — both carrier invoices and general supplier invoices — that could not be automatically applied are held for a human decision.
+
+**Where:** Freight Forwarding → **Invoices** tab
+
+### Reading the Queue
+
+Each row in the queue shows:
+
+- **Source badge** — **Carrier** (from the carrier invoice inbox) or **Supplier** (from the supplier invoice inbox)
+- **Supplier name** — extracted by AI or matched from the supplier master
+- **Amount** and **Currency**
+- **Status** — Pending / Applied / Rejected
+- **Received date**
+
+Use the filter tabs at the top to switch between **Pending**, **Applied**, and **Rejected** views. You can also filter by supplier type to focus on a specific category (for example, show only Fuel invoices).
+
+### Processing a Queue Item
+
+
+  ### Expand the row
+    Click anywhere on a queue row to expand it. The expanded view shows all AI-extracted fields, the matched (or suggested) supplier, and the matched purchase invoice if one was found.
+  
+  ### Review the extracted data
+    Check the extracted supplier name, VAT number, invoice number, amount, and date against the PDF. Corrections cannot be made inline — if data is wrong, you will fix it after approving, on the purchase invoice record.
+  
+  ### Choose an action
+
+    | Action | When to use |
+    |--------|------------|
+    | **Approve** | Data looks correct and the match is right — creates or confirms the purchase invoice; the row moves to **Applied** and stays there after you reload |
+    | **Reject** | Invoice is not valid, a duplicate, or belongs to a different company — moves it to **Rejected** and out of the Pending list |
+    | **Re-assign** | The suggested purchase invoice is wrong — opens a search to pick the correct one |
+    | **View PDF** | Opens the original attached file in a new tab for manual verification |
+
+  
+
+
+
+## Aged Creditors Dashboard
+
+The Aged Creditors dashboard shows everything your company owes across all suppliers, grouped by how long the debt has been outstanding.
+
+**Where:** Analytics → **Aged Creditors** tab
+
+### Reading the Dashboard
+
+The page follows the standard report layout (see [Analytics Overview](/en/reports/analytics-overview)): KPI tiles at the top, two charts, then the supplier table.
+
+- **Total Outstanding** — sum of everything unpaid on purchase invoices, with the number of suppliers behind it.
+- **90+ days overdue** — how much of that is in the worst bucket, and its share of the total outstanding.
+- **Days Payable Outstanding (DPO)** — the average number of days it takes you to pay a purchase invoice: open payables ÷ purchase invoices billed in the last 12 months × 365. It covers purchase invoices only. Amounts in other currencies (for example RON) are converted to EUR at the BNR rate before the ratio is taken. It is the same figure as the DPO tile on the Finance dashboard.
+- **Charts** — **Outstanding by aging bucket** and **Outstanding by supplier type**. Click a bar to filter the table below to that bucket or supplier type; click it again to clear. The filter chips and **Clear all** above the table show what is active. You can also use the **Supplier type** and **Aging bucket** pickers instead of clicking a chart.
+
+Below that, a sortable table lists each supplier. Click a supplier row to open its side pane with the aging breakdown and the individual unpaid invoices.
+
+Aging buckets follow standard AP convention:
+
+| Bucket | Definition |
+|--------|-----------|
+| **Not due** | Not yet past the due date |
+| **0–30d** | Current — within standard payment terms |
+| **31–60d** | Slightly overdue |
+| **61–90d** | Overdue — follow up recommended |
+| **90d+** | Significantly overdue — escalate |
+
+> **Note:** 
+Aged Creditors is a snapshot of what you owe **as of today**, so it has no date range or comparison picker. The totals are computed over all your unpaid purchase invoices, not just the first 500. Invoices priced in a currency other than EUR are excluded from the figures, and the page shows a warning with how many were left out.
+
+
+### Exporting
+
+Click **Export CSV** to download the aged creditors report as a CSV file for AP reconciliation in your accounting system.
+
+
+---
+
+
+  Upload CAMT.053 or MT940 files to auto-match incoming payments against open invoices.
+
+
+
+  Record and track payments against sales invoices and view outstanding balances.
+
+
+
+  Monitor aged receivables and send payment reminders to overdue clients.
+
+
+---
+
+## KSeF — Polish e-Invoicing
+
+
+> **Warning:** 
+**Early access — no live production track record yet.** Druma's KSeF submission is complete and has been tested end to end on the KSeF Test sandbox, but it has not yet filed invoices for a real operator on Production. Rehearse in the **Demo** environment first (see below), and contact support promptly if anything looks off in your first production filings.
+
+
+## What is KSeF?
+
+KSeF (Krajowy System e-Faktur) is Poland's national structured e-invoicing system, operated by the Polish tax authority (KAS — Krajowa Administracja Skarbowa). Invoices are issued in the official **FA(3) XML** format; the KAS portal alone is not sufficient.
+
+<Frame caption="KSeF settings — connect your token or certificate, then watch submission status and UPO receipts per invoice.">
+  <img src="/images/invoicing/ksef-poland.png" alt="KSeF Polish e-invoicing settings and submission status in Druma" />
+</Frame>
+
+### Who must use it
+
+| Taxpayer | KSeF mandatory from |
+|---|---|
+| Large taxpayers | 1 February 2026 |
+| All other VAT payers | 1 April 2026 |
+
+No penalties apply until the end of 2026. Confirm your own situation with your accountant or the official [ksef.mf.gov.pl](https://ksef.mf.gov.pl) portal.
+
+KSeF only applies if your company has a **Polish VAT number** (`PL` followed by 10 digits, e.g. `PL1234567890`). Companies in Romania, Belgium or any other non-Polish country are not subject to it. Without a PL VAT number on the company record, the KSeF card stays inactive.
+
+## Environments
+
+You choose the environment when you connect. Each company has its own.
+
+| Environment | Use it for | Effect |
+|---|---|---|
+| **Test (sandbox)** | Trying the connection with fictional data. | Nothing is filed with the tax authority. |
+| **Demo (pre-production, real NIP)** | A dry run with your real NIP before going live. | Real-looking data, no legal effect. |
+| **Production** | Live invoicing. | Every invoice sent is a binding fiscal filing. |
+
+**Recommended path: Demo → Production.** Connect in Demo, send one real invoice from Druma, check that it shows up in the KSeF demo application, then reconnect with a production token or certificate. The Druma panel shows this as the **Go-live checklist**.
+
+> **Warning:** 
+A token or certificate only works in the environment it was created in. A Demo token will be refused on Production, and the other way round.
+
+
+## Getting your credential
+
+You can authenticate with either of two credentials. Both give the same access.
+
+### Option A — KSeF token (simplest)
+
+1. Log in to the KSeF application for your environment: [ap-demo.ksef.mf.gov.pl](https://ap-demo.ksef.mf.gov.pl) for Demo, [ap.ksef.mf.gov.pl](https://ap.ksef.mf.gov.pl) for Production.
+2. Generate a token for your company's NIP with the permissions **InvoiceWrite** and **InvoiceRead**.
+3. Copy it. KSeF shows it once.
+
+### Option B — KSeF certificate
+
+Use this if your company already manages KSeF certificates. Druma needs the certificate (`.pem` or `.crt`) and its private key as a **PKCS#8 PEM** (`.pem` or `.key`). If your certificate came as a `.p12` or `.pfx` file, convert it first:
+
+```bash
+openssl pkcs12 -in cert.p12 -out cert.pem -clcerts -nokeys
+openssl pkcs12 -in cert.p12 -out key.pem -nocerts
+```
+
+If the private key is encrypted, you will enter its passphrase when connecting. It is used once to unlock the key and is never stored.
+
+## Connecting KSeF
+
+
+  ### Open Settings → Integrations → KSeF
+    Open **Settings** from the top bar, choose **Integrations**, and find the KSeF card.
+  
+  ### Choose the environment
+    Pick **Demo (pre-production, real NIP)** for your first connection.
+  
+  ### Enter your NIP
+    Enter the 10-digit **Company NIP**, without the `PL` prefix.
+  
+  ### Choose Authentication
+    Select **KSeF token** and paste the token, or **KSeF certificate** and choose the certificate and private key files (plus the passphrase if the key is encrypted).
+  
+  ### Click Connect & test
+    Druma performs a real login against KSeF before saving anything. If it fails you get a specific message, for example that the credentials were rejected, the token is inactive or revoked, or KSeF could not be reached. Nothing is stored until the login succeeds.
+  
+
+
+Once connected the card shows **Connected to KSeF** with the environment, NIP and the result of the last test. Use **Test connection** at any time to re-check it.
+
+> **Note:** 
+If you connect a certificate that does not appear to belong to your NIP, Druma still connects but warns you, because KSeF may refuse to issue invoices with it.
+
+
+Only invoices sent after you connect are submitted. Invoices already in Druma are not filed retroactively.
+
+### Several billing entities
+
+If your company invoices through a Polish billing entity whose PL NIP differs from the company's, an **Issuer (NIP)** selector appears in the KSeF card (it stays hidden while every billing entity shares the company's NIP). The default is **Company (default)**; each entity is listed as name, NIP and **connected** or **not connected**. Choose an entity to connect its own KSeF credential: the **Issuer NIP** field is prefilled with the entity's NIP and is read-only. An invoice is then filed under the NIP of the entity that issues it, using that entity's credential and environment.
+
+### Disconnecting
+
+**Disconnect** deletes the stored token or certificate and stops new submissions immediately. Invoices already accepted keep their KSeF numbers.
+
+## What happens when you send an invoice
+
+For a company with KSeF connected, sending a client invoice (or a credit note) submits it to KSeF automatically:
+
+1. Druma builds the FA(3) XML from the invoice and stores exactly what it sends.
+2. Druma logs in with your credential and submits the invoice.
+3. KSeF answers asynchronously. Usually within seconds Druma receives the verdict.
+4. On acceptance, Druma stores the **KSeF number**, downloads the **UPO** and adds the **QR code** to the invoice.
+
+If you send the same invoice again, Druma resends the identical content, so KSeF recognises it as a duplicate and the invoice is never filed twice.
+
+Documents issued by your client (client self-billing) are never sent by Druma.
+
+### Statuses and what to do
+
+The status appears on the invoice under the **KSeF** section.
+
+| Status | Meaning | What to do |
+|---|---|---|
+| **Submitted** | Sent; waiting for KSeF's verdict. | Usually resolves in seconds. If it stays, use **Check KSeF status**; Druma also polls automatically. |
+| **Accepted** | KSeF issued a KSeF number. | Nothing. The UPO is available. |
+| **Rejected** | KSeF refused the content, so the invoice was **never filed**. KSeF's own explanation is shown on the invoice. | Fix the client or company master data (VAT number, address, name) or set the **KSeF VAT code (PL)** override, then **Retry KSeF**. Druma rebuilds the invoice from the current data. If **amounts or lines** are wrong, issue a credit note and a new invoice instead. |
+| **Error** | A technical problem (KSeF unreachable, rate limiting, content mismatch). | Druma retries automatically; you can also **Retry KSeF**. |
+| **Failed** | Automatic retries are exhausted. | Resolve the cause shown, then **Retry KSeF**. |
+| **Not applicable** | This document is not sent to KSeF (for example a document type KSeF does not take, a consolidated invoice with a line that has no order, or a billing entity whose VAT number differs from the one connected). | Send it by email, or fix the cause and retry. |
+
+> **Note:** 
+Automatic retries use a growing delay with random jitter. A background job checks for retryable invoices every 30 minutes.
+
+
+## KSeF number, UPO and QR code
+
+Once an invoice is **Accepted**, the invoice's KSeF section shows:
+
+- **KSeF number** — KSeF's official reference for the invoice.
+- **Verify in KSeF** — a link to KSeF's public verification page for this invoice.
+- **Download UPO** — the official receipt (Urzędowe Poświadczenie Odbioru) from KAS. Download it from the invoice, or from **Finance → Invoices**.
+
+The printed and PDF invoice also carries a **QR code** labelled with the KSeF number, so your client can verify it.
+
+> **Warning:** 
+The UPO is the legal proof that KAS received your invoice. Keep it for audits.
+
+
+### TEST and DEMO chip
+
+An invoice filed in the Test or Demo environment carries a **TEST** or **DEMO** chip and the notice *Filed in the KSeF test system. This is not a fiscal filing.* Such an invoice has **no legal effect**. Only production acceptances count, so they are the only ones that appear as a KSeF number in your accounting exports (see [JPK_V7M — Comarch ERP Optima](/en/integrations/jpk-optima)).
+
+## The KSeF VAT code (PL)
+
+Druma derives the FA(3) VAT code from the invoice's VAT treatment, the buyer's country and the VAT rate, so normally no action is needed. When the automatic choice is not right for a particular invoice, the invoice editor has a **KSeF VAT code (PL)** field (visible for Polish operators). Leave it on **Automatic**, or override it:
+
+| Choice in the field | KSeF code | Typical use |
+|---|---|---|
+| np II: intra-EU services (art. 28b) | `np II` | Services to a business customer in another EU country, such as a transport service. |
+| np I: outside Poland, non-EU | `np I` | Services outside Poland to a non-EU customer. |
+| 0% WDT: intra-EU supply of goods | `0 WDT` | Intra-community supply of goods. |
+| 0% export | `0 EX` | Export of goods outside the EU. |
+| 0% domestic (KR) | `0 KR` | 0% rate on a domestic supply. |
+| oo: domestic reverse charge | `oo` | Domestic reverse charge. |
+| zw: exempt | `zw` | VAT-exempt supply. |
+
+> **Note:** 
+Which code applies to a given transport lane is a tax question, and the rules are not always clear-cut. **Ask your accountant** which code to use, and set it as an override where Druma's automatic choice differs.
+
+
+## Foreign currency
+
+An invoice in a foreign currency with Polish VAT is filed with the VAT amount in PLN, converted at the **NBP rate from the last business day before the tax point**. If no NBP rate is available for that date, the submission is refused with a clear message and can be retried later.
+
+## Consolidated invoices
+
+A consolidated invoice that combines several orders is filed with a billing period running from the earliest to the latest delivery date among its lines. Every line must be linked to an order; otherwise Druma refuses the filing.
+
+## Credit notes
+
+A credit note is filed to KSeF as a correction of the original invoice. It references the original's KSeF number when it has one, and shows the original lines and the corrected lines with the differences. If the original was never filed in KSeF, the correction is filed without a KSeF number reference.
+
+## What is not supported
+
+- **Offline mode.** Druma files online only.
+- **Receiving purchase invoices** from KSeF. Druma submits your sales invoices; it does not fetch your suppliers' invoices.
+
+---
+
+
+  
+    Romania's equivalent mandatory e-invoicing system — how Druma submits to ANAF via the SPV API.
+  
+  
+    EU-wide electronic invoicing via the Peppol network — setup, sending, and status tracking.
+  
+</CardGroup>
+
+---
+
+
+# eCMR (Digital CMR)
+
+## What Is eCMR?
+
+
+## The CMR Consignment Note
+
+The CMR consignment note is the standard document used in **international road freight transport**. It records the agreement between the shipper (sender), the carrier (transport company), and the consignee (recipient) about what goods are being moved, from where, to where, under what conditions, and who is responsible during transit.
+
+Without a CMR note, an international road freight shipment lacks the legal proof of contract, proof of receipt, and insurance documentation required in almost every European country.
+
+The name comes from the **CMR Convention** — the Convention on the Contract for the International Carriage of Goods by Road, signed in Geneva in 1956 — which standardised the document across signatory countries.
+
+---
+
+## What eCMR Is
+
+eCMR is the **electronic version of the CMR consignment note**. Instead of a paper form filled in by hand and carried in the truck cab, eCMR is a digital document that:
+
+- Is created in Druma and issued entirely in-house (no third-party service required)
+- Is signed digitally by all three parties — the shipper signs via Druma's web app (typically a planner or dispatcher captures it, e.g. from a warehouse manager present at pickup); the driver signs separately on their own phone; the consignee signs via a share link or QR code on their own device at delivery
+- Is sealed with a **PAdES digital seal** — an Advanced Electronic Signature (AdES) under eIDAS — applied in-house after all three signatures are collected
+- Produces a legally valid certified PDF that can be presented to customs, clients, insurers, and courts
+
+The legal basis for eCMR is the **Additional Protocol to the CMR Convention on the Electronic Consignment Note**, adopted in Geneva in 2008 (the "e-CMR Protocol"). Countries that have ratified this protocol have agreed that a properly issued eCMR carries the same legal weight as a paper CMR note.
+
+---
+
+## Is eCMR Mandatory?
+
+**No.** eCMR is not legally mandatory anywhere in the European Union or in any ratifying country. It is an operator's choice.
+
+Any transport company can continue to use paper CMR notes for every shipment. Druma supports both: eCMR issued natively in-house for companies that want it, and paper CMR with document upload for those who do not.
+
+> **Note:** 
+Choosing to use eCMR for some orders and paper CMR for others is perfectly valid. The choice is made per order in Druma.
+
+
+---
+
+## Why Operators Choose eCMR Over Paper
+
+| Problem with paper CMR | How eCMR solves it |
+|---|---|
+| Documents lost or damaged in transit | Stored digitally — never lost |
+| Driver must carry paper in the cab | No paper required |
+| Shipper and consignee wait days for their copy | All parties receive the certified PDF immediately after delivery signatures |
+| Disputes about whether goods were received | Certified signatures with timestamps are legally admissible |
+| Archive boxes of old CMR notes for years | Digital archive included — searchable at any time |
+| Customs officers can't read handwriting | Clean, structured digital document |
+
+---
+
+## Who Signs an eCMR?
+
+Three parties must sign every eCMR document. Each signature is captured independently, on different devices:
+
+1. **Sender (shipper)** — signed via Druma's web app, in the order's Documents tab — typically by a planner or dispatcher, confirming the goods were handed over to the carrier in the described condition
+2. **Carrier / Driver** — signs on their own phone in the driver app, confirming receipt of the goods
+3. **Consignee** — signs at the delivery location via a **share link or QR code** on their own device — no Druma account required
+
+All three signatures must be completed before the certified PDF is issued. A partially signed eCMR has no legal finality — it is still in progress.
+
+---
+
+## How Druma Issues eCMR
+
+Druma issues eCMR documents **in-house by default** using the Druma native provider. No external service account or API key is required. When all three parties have signed, Druma builds the complete CMR PDF and applies a PAdES digital seal, producing a tamper-evident certified document retained in your Druma archive for 7 years after delivery (then permanently deleted — see [eCMR Legal Validity](/en/ecmr/ecmr-legal-validity)).
+
+TransFollow can no longer be newly selected by any company. It only continues to work as a legacy path for companies with a pre-existing TransFollow configuration — those companies keep functioning as before and silently migrate to Native the next time the integration is saved.
+
+> **Note:** 
+eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap, regardless of which provider you use.
+
+
+---
+
+## Next steps
+
+
+  
+    How Druma creates eCMR documents automatically and manually.
+  
+  
+    Step-by-step guide to collecting all three signatures.
+  
+  
+    The e-CMR Protocol, PAdES seal, and country coverage.
+  
+  
+    The native provider, and what happens to legacy TransFollow configurations.
+  
+</CardGroup>
+
+---
+
+## Creating an eCMR
+
+
+Druma creates eCMR documents **in-house using the native Druma provider** by default. No external service account is needed. The process is largely automatic for qualifying orders, but you can also trigger creation manually from the order detail page.
+
+> **Note:** 
+eCMR creation only happens for companies where Druma has opened native eCMR and the company has it enabled (Settings → Integrations → eCMR provider). While that screen says "eCMR is not available yet", no eCMRs are created and your loads use the standard paper CMR — see [eCMR Providers](/en/ecmr/ecmr-providers).
+
+
+---
+
+## When Druma Creates an eCMR Automatically
+
+Druma creates an eCMR automatically as soon as a road order is **dispatched** — the moment it's assigned a truck and its status moves to "Assigned." There is no comparison of pickup/delivery countries: every dispatched order that isn't subcontracted, and whose company runs the native eCMR provider, gets an eCMR issued as an unsigned draft. This means domestic orders get one too — it simply stays unsigned until you need it.
+
+Once issued, the eCMR document appears in the **Documents** tab of the order detail page, where you can view the sealed PDF via the **View eCMR** button once it's ready.
+
+> **Note:** 
+Subcontracted orders are skipped — the subcontractor issues their own CMR, so Druma can't sign on their behalf. Orders that already have an eCMR are never re-issued.
+
+**Empty shunt / repositioning moves are also skipped.** A shunt or repositioning order only gets an eCMR when the moved trailer is loaded — an empty move has no goods to consign, so there's nothing for a CMR to cover. Every other order type is issued one regardless of cargo, since a freight order carries cargo by definition.
+
+
+---
+
+## Creating an eCMR Manually
+
+For multi-leg (groupage) orders, each road leg gets its own eCMR. If a leg doesn't have one yet, open the order's **Cargo / Stops** tab and click **Create eCMR** next to that leg — there's no separate "eCMR tab": the button sits directly on the leg row.
+
+> **Note:** 
+When you mark a confirmed cross-border road leg complete, Druma also creates its eCMR automatically at that point if one doesn't already exist.
+
+
+---
+
+## Data Pre-filled from the Order
+
+Druma populates the eCMR fields from the order data you already entered. Here is what comes from where:
+
+| eCMR field | Source in Druma |
+|---|---|
+| Shipper (sender) name and address | Client record on the order |
+| Carrier name and address | Your company details |
+| Consignee name and address | Client record on the order (delivery address sourced from the delivery stop) |
+| Pickup address | Order pickup location |
+| Delivery address | Order delivery location |
+| Goods description | Cargo description field on the order |
+| Truck registration plate | Vehicle assigned to the order |
+| Driver name | Driver assigned to the order |
+| Special conditions (ADR) | Full ADR 5.4.1.1.1 dangerous-goods declaration — UN number, proper shipping name, class, packing group, and tunnel code, in that order (e.g. `UN 1203, PETROL, 3, II, (D/E)`) — built from the order's structured ADR fields |
+
+If any of this data is missing or incorrect on the order, fix the order first, then create the eCMR — there's no pre-fill preview step; the document is written immediately.
+
+> **Note:** 
+Box 9 is built from the order's structured ADR fields (UN number, proper shipping name, packing group, tunnel code), not from free text — an inspector reads the sequence positionally, so it follows the regulation's prescribed order rather than however a planner might type it. If the order also has a free-text ADR description, it's appended to the declaration as a trailing remark rather than replacing it. An order flagged ADR with no structured data at all still prints a bare `ADR` marker, so box 9 is never silently blank on a dangerous-goods consignment.
+
+
+---
+
+## Overriding the Consignor / Consignee (Boxes 1 & 2)
+
+Boxes 1 (consignor / sender) and 2 (consignee) default to the order's client — correct for a normal freight order, but not always right on a **loaded shunt or repositioning move**, where the client is often a haulier or 3PL moving someone else's goods and isn't actually a party to the carriage.
+
+To name the real parties, open the order's **Documents** tab and expand **CMR consignment details** — the same panel used for boxes 6, 8, 9, 14, 15, and 20. The **Consignor / sender** and **Consignee** fields there override boxes 1 and 2; leave either blank to keep using the client.
+
+> **Warning:** 
+On a loaded shunt or repositioning move that crosses a border, if neither override is set, Druma warns you that boxes 1 and 2 will both print the client's name — CMR Art. 6.1(b)/(c) requires the real consignor and consignee. The warning doesn't block you from creating the eCMR; it's there so you can catch it before the note is signed. As a last check, the driver is also asked to confirm the parties before signing in this same situation — see [The Signing Flow](/en/ecmr/signing-flow).
+
+
+---
+
+## Before You Confirm: What Cannot Be Changed
+
+> **Warning:** 
+Once an eCMR is issued for an order (or leg), Druma will not issue a second one for it — clicking Create eCMR again, or a leg-completion trigger firing again, simply returns the existing document instead of minting a new one. This is an idempotency safeguard, not a field lock: there's no restriction on editing the underlying order data itself.
+
+If you need to correct a registered eCMR, use the Paper CMR Fallback process and, if appropriate, create a new one.
+
+
+---
+
+## eCMR Provider: Native (TransFollow Is Legacy-Only)
+
+By default, Druma uses its **native eCMR provider** — no external account or API key required. In **Settings → Integrations → eCMR provider**, the only choices are **Native** and **Disabled** — TransFollow can no longer be selected, for a new company or an existing one. If your company has a pre-existing TransFollow configuration, it keeps working as before and silently converts to Native the next time the integration is saved.
+
+
+  What the native provider does, and what happens to legacy TransFollow configurations.
+
+
+---
+
+## Billing
+
+eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap. You can view usage statistics under **Settings → Billing → Usage**.
+
+---
+
+## Next steps
+
+
+  
+    How the shipper, driver, and consignee each sign, and on which device.
+  
+  
+    Background on eCMR, its legal basis, and how Druma issues it.
+  
+</CardGroup>
+
+---
+
+## eCMR Signing Flow
+
+
+An eCMR requires three signatures to be legally complete: the shipper, the driver/carrier, and the consignee. Here is how each step works in practice with the Druma native provider — note that the shipper and driver do **not** sign on the same device.
+
+---
+
+## Overview of the Three-Party Signing Process
+
+```
+Planner's web app (office / desktop)     Driver's phone         Consignee's own device
+─────────────────────────────────────    ──────────────────    ───────────────────────
+1. Shipper signs (Documents tab)          2. Driver signs        3. Consignee signs
+        ↓                                       ↓                       ↓
+                                    PAdES seal applied once all three are done
+                                          Certified PDF issued
+```
+
+The three signatures are independent of each other — there's no enforced sequence. Once all three exist, Druma builds the certified PDF and applies the PAdES seal.
+
+---
+
+## Step 1 — Shipper Signs (Planner's Web App)
+
+The shipper signature is captured in Druma's web app, not on the driver's phone. Whoever has the order open — typically a planner or dispatcher — captures it from the **Documents** tab of the order detail page.
+
+
+  ### Open the order's Documents tab
+    In Druma's web app, open the order and go to the **Documents** tab. The **Shipper / driver signatures** section shows the current status of all three parties.
+  
+  ### Click Sign as shipper
+    Click **Sign as shipper**. This opens a signature pad directly in the order detail pane.
+  
+  ### Draw the signature and confirm the name
+    Draw the signature and enter a printed name — it defaults to the name of whoever is logged in, but can be changed to reflect the actual signatory (e.g. a warehouse manager present at pickup, handing over the operator's device, or signing in person if the operator is on-site).
+  
+  ### Submit
+    Click **Submit signature**. The Shipper badge turns green and shows the signed date.
+  
+
+
+---
+
+## Step 2 — Driver Signs (Driver's Phone)
+
+The driver signs separately, on their own phone, at any point — there's no requirement for the shipper signature to exist first.
+
+
+  ### Driver opens Sign eCMR
+    In the driver app, the driver taps **Sign eCMR** on the order.
+  
+  ### Driver signs
+    The driver draws their signature, confirms their printed name, and taps **Submit signature**. The sheet shows read-only status badges for all three parties, but the driver can only submit their own.
+  
+
+
+> **Note:** 
+The driver app does not block progress on the shipper's signature status — the driver can move the order forward regardless of whether the shipper has signed yet.
+
+
+> **Warning:** 
+**Party-confirmation gate.** On a loaded shunt or repositioning move that crosses a border, if nobody has overridden the consignor/consignee in the **CMR consignment details** panel (see [Overriding the Consignor / Consignee](/en/ecmr/creating-ecmr)), the note would print the same company in both box 1 and box 2. In that specific case, the driver's signature sheet shows an extra checkbox asking them to confirm the sender and consignee are correct — they can't submit their signature until it's ticked. This doesn't appear on ordinary freight orders, only on this loaded/cross-border shunt scenario.
+
+
+---
+
+## Step 3 — Consignee Signs at Delivery
+
+The consignee signs on their **own device** via a share link or QR code. This link is generated and shown from the **planner's web app** (Documents tab of the order detail page) — not from the driver's phone.
+
+
+  ### Generate the consignee link
+    In Druma's web app, open the order's Documents tab and click **Consignee signing link** to generate a share link and QR code.
+  
+  ### Send it to the consignee
+    Copy the link and send it to the consignee (e.g. via WhatsApp, SMS, or email) ahead of or at delivery, or display the QR code if a planner happens to be present. No Druma account or app download is needed on their end.
+  
+  ### Consignee reviews the document
+    On their own device, the consignee sees a read-only view of the CMR — goods, addresses, weight, and any signatures already captured.
+  
+  ### Consignee signs (and optionally adds reservations)
+    The consignee draws their signature and enters their name. If there are any issues with the delivery — damage, shortage, or discrepancy — they can add a note in the **Reservations / observations** field (CMR box 24) before confirming.
+  
+  ### Certified PDF issued
+    Once all three signatures are complete, Druma builds the certified eCMR PDF and applies the **PAdES digital seal**. It's accessible via the **View eCMR** button in the order's Documents tab.
+  
+
+
+> **Note:** 
+The consignee share link expires after 30 days. If it expires before the consignee signs, generate a new one from the Documents tab.
+
+
+> **Note:** 
+If your company is still on a **legacy TransFollow** configuration (TransFollow can no longer be newly selected — see [eCMR Providers](/en/ecmr/ecmr-providers)), the consignee signing flow is TransFollow's own QR flow rather than the native share link described here.
+
+
+---
+
+## Accepting with Reservations (CMR Box 24)
+
+The consignee does not have to refuse delivery if goods arrive damaged or incomplete. The correct legal path is to **accept with reservations**: the consignee accepts the delivery but records their observations in CMR box 24. This protects the consignee's right to make a claim later under CMR Article 30.
+
+When a consignee adds reservations:
+
+- The remarks are stamped into the sealed PDF under box 24 ("Reservations and observations of the consignee"), making them part of the tamper-evident legal record.
+- The order detail page in Druma shows an **amber "Consignee reservations" banner** so your team is immediately aware.
+- The order still advances to Delivered — accepting with reservations is not the same as a refusal.
+
+> **Note:** 
+If the consignee refuses to sign at all, use the Paper CMR Fallback process instead. Refusal is a separate path from accepting with reservations.
+
+
+---
+
+## Tracking Signature Status
+
+At any time — before, during, or after the signing process — you can check which parties have signed:
+
+1. Open the order in Druma's web app
+2. Go to the **Documents** tab
+3. The **Shipper / driver signatures** section shows a badge for each of Shipper, Driver, and Consignee — green with a checkmark once signed, grey otherwise. Only the Shipper row shows a signed timestamp.
+
+Dispatchers in the office can monitor signature status in real time without calling the driver.
+
+---
+
+## What If a Signatory Is Unavailable?
+
+If the sender or consignee refuses to sign, is not present, or a technical problem prevents signing:
+
+
+  
+    What to do when eCMR isn't practical for a shipment.
+  
+  
+    How to upload a scanned paper CMR or other delivery document to an order.
+  
+</CardGroup>
+
+---
+
+## Paper CMR Fallback
+
+
+eCMR is not always possible. Consignees can refuse, phones run out of battery, internet connections fail, or the driver may simply encounter a situation where paper is the only practical option. In these cases, simply use a paper CMR for the shipment and attach the signed scan to the order in Druma.
+
+> **Note:** 
+Until Druma opens native eCMR for your company (Settings → Integrations → eCMR provider shows "eCMR is not available yet"), paper CMR with a scanned upload is the standard workflow for all your loads, not just a fallback.
+
+
+---
+
+## When to Fall Back to Paper CMR
+
+Use a paper CMR instead of eCMR when:
+
+- The consignee **refuses to sign digitally** — they have the right to insist on paper
+- **No internet connection** is available at pickup or delivery (the eCMR signing process requires connectivity)
+- The **driver's phone battery is dead** or the device is damaged
+- The **consignee insists on paper** for internal or company policy reasons
+- A **Druma system outage** (or, for companies still on a legacy TransFollow configuration, a TransFollow outage) prevents eCMR from functioning
+- Any other situation where completing the digital signing flow is not practical
+
+> **Note:** 
+Falling back to paper for one order has no effect on other orders. The decision is made per order, not per driver or per route.
+
+
+---
+
+## What's Actually Available Today
+
+> **Note:** 
+There is currently no dedicated "Switch to Paper CMR" button, reason dropdown, or status label anywhere in Druma. Marking an order as paper-CMR-fallback is a capability the backend supports, but no screen in the app exposes it yet. What follows describes what you can actually do today.
+
+
+If eCMR isn't practical for an order, simply don't complete the digital signing flow — there's nothing to "switch off." Instead, use a paper CMR for the shipment and attach the signed scan to the order:
+
+
+  ### Open the order documents
+    On the order detail page, go to the **Documents** tab.
+  
+  ### Upload the scan
+    Tap or click **Upload Document**, select **CMR** as the document type (there's no separate "Paper CMR" type), and attach the photo or PDF of the signed paper form.
+  
+  ### Save
+    The scanned CMR is now attached to the order and visible to dispatchers, clients (if you share via the client portal), and auditors.
+  
+
+
+If your company has enabled AI validation of uploaded paper CMRs for an order (`paper_cmr_fallback` flag), Druma automatically checks the scan against the order data and surfaces a validation card to the planner for approval — see the Documents tab for that status once uploaded.
+
+---
+
+## Related articles
+
+
+  Understand the legal basis for eCMR and when it applies.
+
+
+
+  How to attach scanned documents — including paper CMR — to any order.
+
+
+---
+
+## eCMR Legal Validity
+
+
+_Last updated: 10 July 2026._
+
+Understanding the legal basis for eCMR helps you know when you can rely on it with confidence, and when you should fall back to paper.
+
+---
+
+## The Legal Framework
+
+### CMR Convention 1956
+
+The **Convention on the Contract for the International Carriage of Goods by Road** (CMR), adopted in Geneva in 1956, is the foundational international treaty governing road freight contracts across Europe and beyond. It defines the rights and obligations of the shipper, carrier, and consignee, and establishes the consignment note (CMR note) as the key evidentiary document.
+
+The CMR Convention itself predates digital technology and refers to paper documents. To update it for the modern era, signatory states adopted an additional protocol.
+
+### e-CMR Protocol 2008
+
+The **Additional Protocol to the CMR Convention on the Electronic Consignment Note** — commonly called the e-CMR Protocol — was adopted in Geneva in 2008. It specifically provides that:
+
+- An electronic consignment note issued in accordance with the Protocol carries **the same legal status as a paper CMR note**
+- The electronic note must be authenticated by all three parties and secured against subsequent alteration
+- The document must be issued by a technically reliable system that guarantees integrity
+
+Countries that have ratified the e-CMR Protocol have incorporated these provisions into their domestic legal framework.
+
+### eIDAS Regulation (EU) 910/2014
+
+Druma's native eCMR provider applies a **PAdES digital seal** — a PDF Advanced Electronic Signature (PAdES) format producing an **Advanced Electronic Signature (AdES)** as defined in **eIDAS Regulation (EU) No 910/2014**. This seal:
+
+- Is applied to the completed CMR PDF after all three parties have signed
+- Cryptographically binds the document content to Druma's signing certificate
+- Produces a tamper-evident record: any modification to the PDF after sealing breaks the signature verification
+- Is applied entirely in-house — no third-party certification service is contacted at signing time
+
+The combination of the e-CMR Protocol (transport law) and the eIDAS AdES seal (electronic signature law) gives Druma-issued eCMRs their dual legal foundation.
+
+---
+
+## Which Countries Recognise eCMR?
+
+As of 2025, the e-CMR Protocol has been ratified by most EU member states plus several non-EU countries, including Switzerland, Belarus, and Georgia. The ratification list changes as new countries join.
+
+> **Note:** 
+Always check the current UNECE ratification status before relying on eCMR for a new route. The official list is maintained at [unece.org/transport/legal-instruments](https://unece.org/transport/legal-instruments). Search for "Additional Protocol to CMR."
+
+
+### Belgium: a different legal basis, not the Protocol
+
+> **Warning:** 
+**Belgium** — Druma's own operator base — has **signed but not ratified** the e-CMR Protocol, so the Protocol is not yet in force for Belgium in its own right. Belgian eCMR legal validity instead rests on the **Benelux eCMR Arrangement**, a separate pilot framework agreed between Belgium, the Netherlands, and Luxembourg, most recently extended by the Benelux Committee of Ministers to **9 July 2027**.
+
+In practice, this means an eCMR on a Belgium-origin leg is legally recognised today — but through the Benelux pilot, not the Protocol. That basis carries a tracked expiry date rather than the Protocol's indefinite ratification, so it is worth monitoring as 2027 approaches. (The Netherlands, by contrast, has ratified the Protocol individually and does not depend on the Benelux pilot.)
+
+
+### What the ratification status means in practice
+
+**Transport between two ratifying countries:** eCMR has full legal validity, equal to paper CMR. You do not need to carry a paper copy.
+
+**Transport involving a non-ratifying country:** The country may not recognise the eCMR as legally equivalent to paper. In this case, Druma recommends either:
+- Using a paper CMR for the entire journey, or
+- Carrying both the printed certified eCMR PDF and the original paper CMR
+
+When in doubt, consult your transport lawyer or freight association (ARR — Autoritatea Rutieră Română, or UNTRR) for guidance on specific country pairs.
+
+---
+
+## How the PAdES Seal Works
+
+When all three parties have signed, Druma:
+
+1. Builds the complete CMR PDF including all mandatory boxes (1–24), locked pickup signatures, consignee signature, and any reservations
+2. Applies the PAdES digital seal using Druma's signing certificate
+3. Stores the sealed PDF in the order archive
+
+The sealed PDF contains:
+- A unique, unalterable document number
+- Timestamp of each signature
+- Cryptographic hash of the document content bound to the seal
+- Druma's signing certificate details, readable by any standard PDF viewer
+
+This sealed PDF is what you present to enforcement authorities, insurers, courts, or clients — not just a simple export. Any standard PDF reader (Adobe Acrobat, etc.) can verify the seal has not been tampered with.
+
+### Signature profile: B-B and B-T
+
+A seal can be issued at two profiles, shown in **Settings → Integrations → eCMR → Test connection**.
+
+**PAdES-B-B** proves the document has not changed since it was sealed. It does *not* prove *when* it was sealed — the only date is one the signer asserts about itself. Once the signing certificate expires, a verifier can no longer establish that the seal was made while that certificate was valid, and validation degrades to "unknown".
+
+**PAdES-B-T** adds a timestamp issued by an independent time-stamping authority. The seal then stays verifiable after the signing certificate expires. Because eCMRs are retained for seven years (below) and can surface in a claim long after the transport, B-T is the profile to run in production.
+
+If the timestamping authority is unreachable at the moment of sealing, the eCMR is still sealed — at B-B — and the downgrade is recorded server-side. A delivery is never blocked by an unavailable authority.
+
+### What the certificate says about trust
+
+The seal's legal weight comes from being an **advanced electronic seal**, not from who issued the certificate. But what a reader *displays* depends on whether the certificate chains to a publicly trusted root:
+
+- A certificate issued by a public CA or an EU-qualified trust service provider shows a **green check**.
+- A **self-signed** certificate shows *"signature validity is unknown — the signer's certificate could not be verified"*.
+
+Both are legally valid advanced seals. The difference is presentation, not admissibility — but it is what an inspector or an insurer sees first. Operators who want the green check should install an organisation eSeal certificate; the document itself does not change.
+
+---
+
+## 7-Year Retention, Then Hard Deletion
+
+Druma retains sealed eCMR documents and their signatures for **7 years after the order's delivery date**, in line with the retention policy recommended in Druma's legal gap analysis (covering the Belgian 7-year floor, which exceeds Romania's 5-year requirement).
+
+> **Warning:** 
+This is not a soft archive — a yearly scheduled job **permanently and irreversibly deletes** the eCMR signature records and the sealed eCMR PDF for any order whose delivery was recorded more than 7 years ago. There is no recovery after this runs. If you need to retain a document indefinitely (e.g. for an ongoing legal dispute), export and store a copy outside Druma before the 7-year mark.
+
+
+To access an eCMR document (within the 7-year retention window):
+
+1. Open the order in Druma's web app
+2. Go to the **Documents** tab
+3. Click **View eCMR**
+
+There is no separate archiving action required from your side — retention and eventual deletion both happen automatically.
+
+---
+
+## Legal Admissibility
+
+A certified eCMR PDF sealed by Druma is admissible as evidence in:
+
+- **Commercial disputes** between shipper, carrier, and consignee
+- **Insurance claims** where proof of receipt or condition of goods is required
+- **Customs proceedings** in ratifying countries
+- **Court proceedings** in ratifying jurisdictions
+
+The cryptographic integrity of the document means it can be verified as unaltered since the time of signing. This is often stronger evidence than a paper CMR, which can be physically altered or disputed as to authenticity.
+
+---
+
+## eCMR Is Not Mandatory
+
+To be clear: **eCMR is optional everywhere.** No EU regulation or national law requires carriers to use eCMR. The e-CMR Protocol enables eCMR but does not mandate it.
+
+Carriers who continue to use paper CMR are fully compliant. The choice to use eCMR is a business decision based on efficiency, client preference, and the desire to eliminate paper from operations.
+
+---
+
+
+  
+    Introduction to eCMR, who signs, and how Druma issues it in-house.
+  
+  
+    What the native provider does, and what happens to legacy TransFollow configurations.
+  
+</CardGroup>
+
+---
+
+## eCMR Providers
+
+
+Druma issues eCMRs with its **native provider** — it issues and seals eCMRs entirely in-house at no per-document cost. In **Settings → Integrations → eCMR provider** (company admin access required), the only choices are **Native** and **Disabled**. **TransFollow** cannot be newly selected by any company; it exists only as a legacy path for companies that configured it before the native provider was introduced — see below.
+
+---
+
+## Availability: Druma opens native eCMR for your company
+
+Native eCMR is switched on by Druma, not by each company. Until Druma has opened it up, **Settings → Integrations → eCMR provider** shows **"eCMR is not available yet"** with the message that your loads use the standard manual CMR, and no company can turn eCMR on or issue eCMRs. Once Druma opens it, the **Native** / **Disabled** choice appears and the rest of this page applies. If you want to start using eCMR and still see the "not available yet" message, contact support@druma.io. In the meantime, use the paper CMR workflow in [Paper CMR Fallback](/en/ecmr/paper-cmr-fallback).
+
+---
+
+## Druma Native eCMR
+
+The Druma native provider issues CMR documents internally, collects signatures, builds the PDF, and applies a **PAdES digital seal** — an Advanced Electronic Signature (AdES) under eIDAS — without contacting any external service.
+
+### How it works
+
+- **No setup needed** — once Druma has opened native eCMR for your company, there is no API key or external account to enter; just choose **Native** in the eCMR provider settings if it is not already selected.
+- **Three-party signing, three separate devices:** the shipper signs via Druma's web app (typically captured by a planner or dispatcher in the order's Documents tab); the driver signs separately on their own phone; the consignee signs via a **share link or QR code** on their own device at delivery — no Druma account required for the consignee.
+- **Certified PDF:** once all three parties have signed, Druma builds the complete CMR PDF and applies the PAdES seal. The sealed document contains all mandatory CMR boxes (1–24), including the "subject to CMR" statement, place and date of issue, and any carrier reservations.
+- **Consignee reservations (box 24):** when signing, the consignee may add freetext observations (damage, shortage, discrepancy). These remarks are stamped into the sealed PDF and an amber "Consignee reservations" banner appears on the order in Druma.
+
+### Checking the provider is ready
+
+Go to **Settings → Integrations → eCMR provider** and click **Test connection** to verify that Druma's signing certificate is configured and the provider is ready.
+
+### Costs
+
+eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap.
+
+### Viewing and downloading eCMR documents
+
+Signed eCMR documents and signatures are retained in Druma for 7 years after the order's delivery date, then permanently deleted by a scheduled job — see [eCMR Legal Validity](/en/ecmr/ecmr-legal-validity) for the full retention policy.
+
+**Order detail page → Documents tab → View eCMR**
+
+From here you can:
+
+- View the sealed PDF in your browser
+- Download the signed PDF
+- Check signature status for all three parties — the Shipper row shows a signed date; Driver and Consignee show a signed/not-signed badge without a timestamp
+- Share a link to the document with your client (accessible without a Druma login)
+
+---
+
+## TransFollow (Legacy Only)
+
+TransFollow is a third-party eCMR platform Druma used to support as a selectable option. It is **no longer something you can newly select** — there is no TransFollow entry to pick, no API key field, no Mock Mode toggle, and no Test Connection button for it in Settings → Integrations.
+
+The only reason TransFollow still exists in Druma at all is to keep a small number of companies with a **pre-existing TransFollow configuration** functioning without disruption. If that applies to your company:
+
+- Your eCMR workflow keeps working exactly as it did — nothing breaks and no action is required.
+- The eCMR provider card in Settings → Integrations displays your configuration as **Native**.
+- The next time that integration is saved (even without changing anything), your company silently migrates to the true native provider.
+
+If you are setting up eCMR for the first time, or your company has never configured TransFollow, none of this applies to you — you are already on the native provider.
+
+> **Warning:** 
+There is no path to configure TransFollow for a company that isn't already on it. If you see references to TransFollow elsewhere, they describe this legacy continuity behaviour, not an option available in the product today.
+
+
+---
+
+## Country Coverage
+
+eCMR is legally valid in countries that have ratified the e-CMR protocol. As of 2025, this includes most EU member states plus Switzerland, Belarus, Georgia, and others. Check the current list at [unece.org](https://unece.org). For countries that have not ratified, paper CMR is still required — Druma can print a formatted CMR note for those shipments.
+
+---
+
+## Related articles
+
+
+  
+    An introduction to electronic CMR notes and when you need them.
+  
+  
+    The e-CMR Protocol, PAdES seal, and eIDAS AdES explained.
+  
+  
+    Step-by-step guide to issuing an eCMR on a Druma order.
+  
+  
+    How the shipper, driver, and consignee each sign, and on which device.
+  
+</CardGroup>
+
+---
+
+## eFTI Roadside Inspection (Authority Check)
+
+
+EU Regulation (EU) 2020/1056 on electronic freight transport information (**eFTI**) requires that from **9 July 2027**, EU member-state authorities must accept electronic freight transport information instead of demanding paper documents during roadside inspections. Druma is built to meet this requirement.
+
+---
+
+## What Is eFTI?
+
+The eFTI Regulation creates a legal framework for:
+
+- Carriers to store freight transport information digitally on a certified eFTI platform
+- Authorities (police, customs, inspectors) to access that information electronically at roadside inspections, instead of requiring the driver to produce physical paper documents
+- A standardised common data set for road transport information, mapped from the CMR consignment note fields
+
+Druma implements the **road transport / CMR subset** of the eFTI common data set, covering all mandatory consignment fields, party details, and eCMR status.
+
+<Frame caption="The roadside inspection card an officer sees after scanning the driver's QR code — consignment, parties and eCMR status, read-only.">
+  <img src="/images/ecmr/efti-roadside-inspection.png" alt="eFTI roadside inspection view showing consignment details, parties and eCMR status for an authority check" />
+</Frame>
+
+### The Common Data Set (CDS)
+
+Druma's compliance layer includes a **CDS (common data set) serialiser** that produces the **EU03 road/CMR data subset** defined by Commission Delegated Regulation (EU) 2024/2024 — the structured, machine-readable representation of a consignment (parties, locations, goods, signatures) that an eFTI platform is expected to produce. This runs alongside the human-readable inspector view described below, so the same shipment can be presented either as structured data or as an on-screen view depending on what the authority requests.
+
+---
+
+## What Drivers See
+
+Every order has a unique **eFTI identifier**. In the driver app, on the order detail screen, there is an **"Authority check (eFTI)"** card. It shows:
+
+- A **QR code** the driver can present at a roadside inspection
+- A copyable eFTI link (UIL — Druma's internal shorthand for **Unique Identifying Link**; Regulation (EU) 2020/1056 Art. 9(1)(e) calls this the "unique electronic identifying link")
+- A link to open the eCMR view on the driver's own device
+
+The driver does not need to do anything to activate this — the card is always present on assigned orders.
+
+> **Note:** 
+The driver never needs to navigate menus or search for the eFTI card. It is prominently displayed on the active order screen so it is immediately accessible when an inspector approaches the vehicle.
+
+
+---
+
+## What the Officer Sees
+
+The officer scans the QR code (or enters the UIL manually) and sees a **read-only, human-readable view** of the consignment:
+
+- Goods description
+- Parties: sender, carrier, consignee (names and addresses)
+- Pickup and delivery addresses
+- Truck and trailer registration
+- Signed eCMR status
+
+**No prices, rates, or financial data are shown.** The officer view is deliberately restricted to operational and compliance information — commercial terms remain private.
+
+The view auto-detects the officer's browser language on load, so it opens already in the language of the country they're inspecting in without anyone having to ask. A manual language picker sits in the header for the same 10 languages the rest of Druma supports (English, French, German, Romanian, Dutch, Bulgarian, Czech, Hungarian, Polish, Slovak), in case the browser's language doesn't match the officer's.
+
+Every access by an officer is recorded in a **tamper-evident operation log**. This log is part of the eFTI audit trail required under Art. 9 of the Regulation.
+
+> **Note:** 
+If the officer is instead handed the sealed eCMR PDF itself (printed, or opened via **View eCMR**), the box labels on it are **trilingual** — English plus the sender's and consignee's own language — so the document is readable without the inspector view even across a border, the same way a paper CMR traditionally prints its box labels in multiple languages.
+
+
+---
+
+## Certification Status
+
+> **Warning:** 
+Druma has built substantial **internal technical readiness** for eFTI — a CDS serialiser, a tamper-evident operation log, the UIL, and this roadside-inspector view. Druma is **not, however, a certified eFTI platform** under **Art. 10** of Regulation (EU) 2020/1056: certification requires assessment by an accredited conformity-assessment body (CAB), and as of mid-2026 no CAB has yet published eFTI scope to assess against — an industry-wide gap, not something specific to Druma. Until then, the inspector view is usable today as a courtesy and voluntary disclosure for companies that want to go paperless ahead of the 2027 deadline.
+
+The certified machine-to-machine authority interface (via EU Member State eFTI Gates) is separately pending the availability of live national Gates, which were not yet operational as of mid-2026. When CABs publish eFTI scope and national Gates come online, Druma will pursue certification and update this page.
+
+
+---
+
+## Timeline
+
+| Date | Event |
+|---|---|
+| 2020 | Regulation (EU) 2020/1056 adopted |
+| 9 July 2025 | eFTI platforms may begin voluntary operations |
+| 9 July 2027 | **Authorities must accept eFTI** — paper no longer required where eFTI is presented |
+| TBC | National eFTI Gates operational (country by country) |
+
+Druma has built the core technical readiness for the EU's 2027 eFTI mandate — the certification and formal accreditation process itself is still pending industry-wide (no certification body has yet published eFTI scope), so full compliance status will be confirmed as that process unfolds.
+
+---
+
+## Related articles
+
+
+  
+    The electronic CMR note that underpins the eFTI data set.
+  
+  
+    How the three-party eCMR signing process works in Druma.
+  
+  
+    The legal framework behind eCMR and the PAdES digital seal.
+  
+</CardGroup>
+
+---
+
+
+# Fleet Compliance
+
+## Fleet Documents
+
+
+Every truck in your fleet must carry a set of valid documents — legally required certificates that expire and must be renewed regularly. Missing or expired documents can ground a vehicle at a roadside check. Druma tracks all of them and alerts you before they expire.
+
+---
+
+## Document Types Tracked Per Vehicle
+
+Druma tracks the following document categories for each vehicle:
+
+| Document | Romanian name | Notes |
+|---|---|---|
+| Roadworthiness certificate (ITP) | ITP | Periodic technical inspection |
+| Third-party liability insurance (RCA) | RCA | Mandatory for all vehicles |
+| CMR cargo insurance | Asigurare CMR | Required for international transport |
+| Vehicle registration certificate | Talon / Carte de identitate a vehiculului | |
+| CEMT permit | Autorizație CEMT | Multilateral quota permit, separate from the domestic operating licence |
+| ADR certificate | Certificat ADR vehicul | Only if vehicle carries dangerous goods |
+| Tachograph calibration certificate | Certificat verificare tahograf | Required periodically by law |
+| ATP certificate | Certificat ATP | Reefer/temperature-controlled trailers only |
+| Other | — | Any document type that doesn't fit the categories above |
+
+> **Note:** 
+You can also add custom document types if your operation has documents that do not fit these categories — for example, cold chain calibration certificates or permit documents for oversized loads.
+
+
+---
+
+## Adding a Document to a Vehicle
+
+
+  ### Open Documents Overview
+    Go to **Fleet → Documents Overview** — this is a separate top-level Fleet page, not a tab on the vehicle detail view.
+  
+  ### Click Upload Document
+    Click **Upload Document**.
+  
+  ### Select the document type
+    Choose the document type from the dropdown (e.g., RCA, ITP, Tachograph Calibration).
+  
+  ### Enter the expiry date
+    Enter the expiry date from the document. This is the date Druma uses for all alert calculations.
+  
+  ### Upload the scan
+    Attach a PDF, JPG, or PNG scan of the document. Maximum file size: 20 MB per file.
+  
+  ### Save
+    Click **Save**. The document appears in the vehicle's document list with its expiry date and status.
+  
+
+
+
+---
+
+## Expiry Tracking and Alerts
+
+Badges (yellow warning / red expired) on the vehicle in the fleet list always reflect the true expiry status of each document, calculated daily. The proactive **notification** on top of those badges, however, is opt-in:
+
+| Time before expiry | Badge shown | Notification (if enabled) |
+|---|---|---|
+| 60 days | — | Warning notification sent |
+| 14 days | Yellow warning badge | Critical notification sent |
+| Expired | Red badge; vehicle blocked from new order assignments | Notification sent |
+
+> **Warning:** 
+The notification is gated behind **Settings → Automations & Features → Fleet document expiry alerts**, which is **off by default** for every company. Until you switch it on, Druma still shows the correct badges on the vehicle and fleet list, but nobody is proactively notified as a document approaches expiry — you have to notice it in the list. When enabled, in-app notifications go to users with the Fleet Manager, Company Admin, or Admin role (there is no separate email channel for this alert).
+
+
+> **Warning:** 
+A vehicle with an expired document **cannot be assigned to new orders** until the expired document is renewed and uploaded. Existing in-progress orders are not interrupted, but dispatchers will see a warning.
+
+
+If you renew a document, upload the new version immediately — Druma will clear the expired status as soon as the new expiry date is saved.
+
+---
+
+## Compliance Overview
+
+Instead of checking vehicles one by one, use the fleet-wide compliance view:
+
+1. Go to **Fleet → Documents Overview**
+2. See every vehicle and every document type in a single grid
+3. Filter the view by status: **Expired**, **Expiring Soon** (within 30 days), or **Up to Date**
+
+This view is designed for the fleet manager's morning check — a quick scan of the grid shows whether anything needs action today.
+
+
+---
+
+## File Format Requirements
+
+- **Accepted formats:** PDF, JPG, PNG
+- **Maximum file size:** 20 MB per document
+- **Recommended:** Scan at a resolution where the document text is clearly legible — at least 150 DPI for A4 documents
+
+If a roadside inspector or client asks for a document, you can download it directly from **Fleet → Documents Overview** and send it by email. Drivers can also view documents for their assigned vehicle in the Druma mobile app.
+
+---
+
+## Frequently Asked Questions
+
+**Can one document cover multiple vehicles?** No — each document must be uploaded separately to each vehicle it covers. The RCA policy may cover your entire fleet, but upload it to each vehicle individually so expiry tracking works per vehicle.
+
+**What if I have a document that is not on the list?** Use the custom document type option when uploading. Enter the document name manually.
+
+**Can drivers upload their own vehicle documents?** No — document management is restricted to Dispatcher, Fleet Manager, Admin, and Company Admin roles.
+
+---
+
+## Related articles
+
+
+  Tracking ADR certification for drivers and vehicles, and how ADR orders enforce compliance.
+
+
+
+  Adding vehicles, editing vehicle details, and managing your fleet list.
+
+
+---
+
+## ADR Certificates
+
+
+ADR is the European Agreement concerning the International Carriage of Dangerous Goods by Road. If your company transports hazardous materials — chemicals, flammables, gases, explosives, radioactive materials, or other regulated substances — both your drivers and your vehicles must hold valid ADR certificates. Druma tracks these certificates and enforces compliance automatically at the point of order assignment.
+
+---
+
+## What ADR Certification Covers
+
+### Driver ADR Certificate
+
+A driver ADR certificate proves the driver has completed approved ADR training and passed the required examination. ADR certificates are issued for specific classes of dangerous goods, and the driver's certificate must cover the class of goods being transported. Certificates are valid for five years and must be renewed.
+
+### Vehicle ADR Certificate
+
+Certain ADR classes — particularly Class 1 (explosives) and Class 7 (radioactive materials) — require the vehicle itself to be specially equipped and certified. The vehicle ADR certificate confirms the vehicle meets the equipment and construction standards for those classes.
+
+Not all ADR transport requires a vehicle certificate — for many classes, only the driver certificate is required along with the correct packaging and placards.
+
+---
+
+## Adding ADR Certification to a Driver
+
+
+  ### Open the driver record
+    Go to **Fleet → Drivers** and click the driver's name.
+  
+  ### Go to the Certificates tab
+    Click the **Certificates** tab on the driver detail page.
+  
+  ### Enter the ADR certificate
+    Under **ADR Certificate**, enter the certificate number in **ADR Certificate #** and set **ADR Expiry**. These are two plain fields — there is no separate "Add Certificate" flow and no selector for which ADR classes the certificate covers.
+  
+  ### Save
+    Click **Save**. The driver's row and record now show the ADR expiry status via the expiry badge.
+  
+
+
+> **Note:** 
+Druma does not currently store a certificate scan upload or a covered-classes list for the driver ADR certificate — only the certificate number and its expiry date.
+
+
+---
+
+## Adding ADR Certification to a Vehicle
+
+
+  ### Open the Documents Overview
+    Go to **Fleet → Documents Overview** — this is a separate top-level Fleet page, not a tab on the vehicle detail view.
+  
+  ### Upload ADR equipment certificate
+    Click **Upload Document**, select **ADR** as the document type, choose the vehicle, enter the expiry date, and upload the certificate scan.
+  
+  ### Save
+    The vehicle's ADR status is now tracked alongside its other fleet documents on the Documents Overview grid.
+  
+
+
+---
+
+## Order-Level ADR Enforcement
+
+When you create an order and flag it as an ADR shipment, Druma checks compliance automatically when you try to assign a driver and vehicle.
+
+
+  ### Flag the order as ADR
+    When creating or editing an order, toggle the **ADR** flag in the cargo details section and select the relevant ADR class.
+  
+  ### Assign a driver
+    When you select a driver for the order, Druma checks whether that driver holds the **ADR** skill tag (a simple yes/no flag on the driver's skill record, set independently of the ADR Certificate # / ADR Expiry fields). If the driver does not have the ADR skill tagged, the order shows a **Missing ADR documentation / non-capable resource** exception.
+  
+  ### Assign a vehicle
+    When you select a vehicle, Druma checks whether the vehicle's assigned **vehicle category** is flagged **ADR-capable** — again a simple yes/no flag on the category, not on the individual vehicle's certificate expiry. A vehicle with no category assigned is treated as unrestricted (not blocked).
+  
+
+
+> **Note:** 
+This check is a boolean capability flag, not an expiry or per-class check: it does not look at the driver's **ADR Certificate #** / **ADR Expiry** fields or the vehicle's uploaded ADR document at all, and it does not verify that the certificate covers the specific ADR class on the order. Keeping the driver's ADR skill tag and the truck's vehicle category up to date is what keeps this check meaningful — an expired ADR Expiry date alone will not block assignment.
+
+
+
+---
+
+## Planning-Board ADR Warnings
+
+Since 2026-07-30, the assignment flow also runs a second, **expiry-aware** check alongside the boolean capability check above. When you assign a driver, truck, or trailer to an ADR order, Druma compares the driver's **ADR Expiry**, the truck's ADR certificate expiry, and the trailer's ADR certificate expiry against the order's **delivery date** (falling back to the pickup date when no delivery date is set yet).
+
+If any of those certificates will have lapsed by the delivery date, Druma shows an amber **"ADR certificate expires before delivery"** warning chip. This appears everywhere an assignment is made or reviewed:
+
+- The **confirm assignment** sheet
+- **Drag-assign** on the planning board
+- **Auto-Plan** suggestions
+
+> **Note:** 
+This is a warning, not a block — the assignment still goes through even when the chip is shown. Treat it as a prompt to renew the certificate or choose a different resource before departure.
+
+
+Two related checks reinforce this warning elsewhere in the platform:
+
+- **Matching engines** — Auto-Plan and AI order matching penalise a non-ADR-capable vehicle category or a lapsed driver/vehicle ADR certificate in their scoring, so a compliant resource ranks above a non-compliant one when candidates are otherwise similar.
+- **Site-level restrictions** — if a pickup or delivery site is flagged as not accepting ADR cargo (**Customer Service → Sites**, restrictions), an ADR order routed through that site shows a warning on the order's readiness panel.
+
+---
+
+## ADR Surcharge
+
+Orders flagged as ADR automatically include an ADR surcharge as a line item on the invoice. Druma resolves the surcharge amount through a resolution chain:
+
+1. **Rate card** — the client's rate card has its own **ADR fee (€)** field (**Settings → Pricing & Costing → Cost profiles**). If set, this value is used.
+2. **Platform default** — if the rate card doesn't specify a value, Druma falls back to a platform-wide ADR surcharge default.
+3. **€75 built-in fallback** — if neither of the above is configured, Druma applies a **€75** flat fee.
+
+Set the ADR fee on the relevant rate card to price ADR surcharges per client or contract — that's the intended way to change the amount, not a per-order edit.
+
+> **Note:** 
+As a last resort, you can still edit the ADR surcharge line item on an individual order's Financials tab after the order is created — but prefer setting the rate card's ADR fee so the correct amount applies automatically to every future order under that rate card.
+
+
+---
+
+## Expiry Alerts
+
+ADR certificate expiry alerts run on two separate schedules depending on whether the certificate is on a driver or a vehicle:
+
+| Document | Critical | Warning |
+|---|---|---|
+| Driver ADR certificate (ADR Expiry field) | Within 7 days, or already expired | Within 30 days |
+| Vehicle ADR document (uploaded via Documents Overview) | Within 14 days, or already expired | Within 60 days |
+
+> **Warning:** 
+Driver document expiry alerts (which cover the ADR Expiry field) have no visible settings toggle and, for companies created since mid-2026, are not seeded with the enabling flag at all — in practice this notification currently does not fire for most companies. Vehicle document alerts are gated behind **Automations & Features → Fleet document expiry alerts**, which is **off by default** and must be switched on to receive expiry notifications. In both cases, expired/critical badges still display correctly on the driver and vehicle records — only the proactive notification is affected.
+
+
+Regardless of whether alerts are enabled, an expired ADR document does not by itself block an order assignment — the assignment check only looks at the driver's ADR skill tag and the vehicle's ADR-capable category flag (see above), not at these expiry dates. Keep expiry dates current for your own visibility, but don't rely on them to stop a non-compliant assignment.
+
+---
+
+## Related articles
+
+
+  Full guide to tracking all vehicle document types and the compliance overview.
+
+
+
+  How to create an order, flag ADR cargo, and assign drivers and vehicles.
+
+
+---
+
+## EU Driving Hours Rules
+
+
+EU Regulation 561/2006 sets the maximum driving times, mandatory break intervals, and minimum rest periods for professional drivers of commercial vehicles in Europe. Violating these rules results in fines for both the driver and the transport company. This page is a complete reference guide.
+
+> **Warning:** 
+Druma supplements your tachograph analysis process — it does not replace a dedicated tachograph analysis system. Always verify compliance using tachograph data from your vehicle units. Druma's hours tracking is based on manual planner entry or integration data and is a planning and monitoring aid, not a legal compliance system on its own.
+
+
+---
+
+## Daily Driving Limit
+
+- **Standard maximum:** 9 hours per day
+- **Extended maximum:** 10 hours per day — allowed **no more than twice per week**
+
+A "day" in the context of driving hours is the period between two daily rest periods, not a calendar day.
+
+---
+
+## Weekly Driving Limit
+
+- **Maximum per week:** 56 hours
+- **Maximum across any two consecutive weeks:** 90 hours
+
+This means that if a driver drives 56 hours in one week, they may drive a maximum of 34 hours in the following week (to stay within the 90-hour fortnightly cap).
+
+---
+
+## Mandatory Breaks
+
+After **4 hours 30 minutes** of driving, the driver must take a break of **at least 45 minutes**.
+
+This break can be taken in two parts, but only in a specific order:
+1. **First part:** at least 15 minutes
+2. **Second part:** at least 30 minutes
+
+The 30-minute part must come second. Reversing the order (30 minutes then 15 minutes) is not compliant.
+
+> **Note:** 
+During breaks, the driver must not perform other work. A break is rest — not loading, not paperwork, not driving a different vehicle.
+
+
+---
+
+## Daily Rest
+
+- **Standard daily rest:** minimum **11 consecutive hours**
+- **Reduced daily rest:** may be reduced to **9 hours**, but no more than **3 times per week**. Hours cut from reduced rest must be compensated before the end of the following week, attached to another rest period of at least 9 hours.
+
+**Split daily rest** is also permitted: the rest period can be split into two parts, with the first part being at least 3 hours and the second being at least 9 hours. The total must be at least 12 hours.
+
+---
+
+## Weekly Rest
+
+- **Regular weekly rest:** minimum **45 consecutive hours**
+- **Reduced weekly rest:** may be reduced to **24 consecutive hours**, but only once every two weeks. The reduction must be compensated before the end of the third week following the week in question, and the compensation must be attached to a rest period of at least 9 hours.
+
+Weekly rest must begin no later than **6 consecutive 24-hour periods** after the end of the last weekly rest period.
+
+> **Warning:** 
+Weekly rest taken in the vehicle is only permitted if the vehicle is stationary and has a suitable sleeper berth. Regular weekly rest (45 hours) may not be taken in the vehicle — this has been enforced strictly since 2020.
+
+
+---
+
+## Double Manning (Two Drivers)
+
+When two drivers are in the cab and can alternate driving:
+
+- Each driver may drive up to **10 hours per day** (effectively an extended daily limit applies from the start)
+- In the first hour after the start of a two-driver journey, the co-driver's presence is not mandatory
+- Each driver's individual daily and weekly rest requirements still apply in full
+- The 45-minute break requirement still applies to the driving driver
+
+Double manning extends operational hours by allowing one driver to rest while the other drives, but does not waive any individual rest entitlement.
+
+---
+
+## Quick Reference Table
+
+| Rule | Limit |
+|---|---|
+| Daily driving (standard) | 9 hours |
+| Daily driving (extended, max 2x/week) | 10 hours |
+| Weekly driving | 56 hours |
+| Fortnightly driving | 90 hours |
+| Break after 4h30m driving | 45 minutes (or 15+30 split) |
+| Daily rest (standard) | 11 consecutive hours |
+| Daily rest (reduced, max 3x/week) | 9 consecutive hours |
+| Weekly rest (regular) | 45 consecutive hours |
+| Weekly rest (reduced, max 1 per 2 weeks) | 24 consecutive hours |
+
+---
+
+## How Druma Tracks Driving Hours
+
+### Manual entry
+
+Planners can log driving hours for each driver from tachograph printouts:
+
+1. Go to **Dispatching → Compliance** and click a driver's row to open their detail panel.
+2. A row is only editable if that driver's data source is **manual** — the panel shows "Manually entered — you can update these values." Rows fed by a tachograph or telematics integration are read-only, marked "(telematics — read only)," and have no edit form.
+3. On a manual row, update **Remaining daily** (hours + minutes), **Program**, **Shift start**, **Daily ceiling** (9h or 10h), **10h extensions used this week**, and **Weekly driving hours used**.
+4. Click **Save**. Druma recalculates the remaining daily, weekly, and fortnightly totals from the values you entered.
+
+### Integration (VDO, Webfleet, Frotcom, Webeye/Eurowag, rFMS)
+
+If your fleet uses a connected tachograph telematics provider — VDO, Webfleet, Frotcom, Webeye/Eurowag, or any rFMS-capable truck brand (Scania, Volvo, DAF, MAN, Mercedes-Benz, IVECO, Renault) — and you have enabled the sync integration, driving time data flows into Druma automatically. Check **Settings → Integrations** for available tachograph integrations.
+
+### Alerts
+
+Weekly alerts are based on the **percentage of the 56-hour weekly driving ceiling remaining**, not a flat number of minutes:
+
+- **Amber (warning):** **35% or less** of the weekly driving ceiling remaining — roughly 36.4 hours used, about 65% of the weekly limit
+- **Red (critical):** **15% or less** remaining — roughly 47.6 hours used, about 85% of the weekly limit
+
+This gives a materially tighter early-warning window than a simple 80%/100% split, and the same percentage thresholds colour-grade the daily and fortnightly remaining-time columns too. Alerts appear on the driver's profile and in the dispatch view, so planners can avoid over-assigning hours.
+
+---
+
+## Related articles
+
+
+  How dispatchers view and manage driving hours from the Compliance tab under Dispatching.
+
+
+
+  Adding drivers, managing certifications, and driver profiles.
+
+
+---
+
+## CO2 Reporting
+
+
+Large shippers — retailers, manufacturers, logistics buyers — increasingly require their transport providers to report the carbon footprint of each shipment. Druma calculates CO2 emissions per order automatically and provides downloadable reports for client ESG disclosures.
+
+---
+
+## Calculation Methodology
+
+Druma follows the **GLEC Framework v4.0** (Global Logistics Emissions Council), which is also aligned with **ISO 14083** — the international standard for quantifying and reporting greenhouse gas emissions from transport chains (Tier 1 default-factor calculation). This is the methodology most large shippers and auditors recognise and accept.
+
+Unlike a pure distance-based estimate, the GLEC v4.0 Tier 1 method is **tonne-kilometre** based — it multiplies distance by the actual cargo weight, not just the vehicle type:
+
+```
+CO2e (kg) = Distance (km) × (Weight (kg) ÷ 1000) × Emission Factor (gCO2e/tonne-km) ÷ 1000
+```
+
+Weight is a required input to the formula: the same route driven empty and driven at full payload produces very different CO2e figures. Make sure the order's cargo weight is entered accurately — it directly affects the emissions calculation, not just billing.
+
+---
+
+## Emission Factors by Vehicle Class and Fuel Type
+
+The emission factor is looked up from a reference table (`co2_emission_factors`, GLEC v4.0 Europe defaults) keyed by **vehicle class** and **fuel type** — not by the truck's Euro emission standard, which is not consulted at all for this calculation. Vehicle class is derived automatically from the truck's payload/weight capacity:
+
+| Truck payload capacity | Vehicle class |
+|---|---|
+| Over 30,000 kg | Articulated HGV 34t (typical FTL truck) |
+| 15,000 – 30,000 kg | Rigid truck 16–26t |
+| Under 15,000 kg | Rigid truck 12–16t |
+
+| Vehicle class | Fuel type | Emission factor (gCO2e/tonne-km) |
+|---|---|---|
+| Articulated HGV 34t | Diesel | 62 |
+| Articulated HGV 34t | LNG | 54 |
+| Articulated HGV 34t | Electric | 25 |
+| Articulated HGV 34t | HVO | 12 |
+| Rigid 16–26t | Diesel | 91 |
+| Rigid 16–26t | Electric | 37 |
+| Rigid 12–16t | Diesel | 119 |
+| Rigid 12–16t | Electric | 48 |
+| Articulated HGV 40t (mega trailer) | Diesel | 55 |
+| Articulated HGV 40t (mega trailer) | LNG | 48 |
+| Articulated HGV 40t (mega trailer) | Electric | 22 |
+
+> **Note:** 
+If the truck has no fuel type set, Druma assumes diesel. If no exact vehicle-class/fuel-type factor is found, Druma falls back to the diesel factor for that same vehicle class — there is no "defaults to a specific Euro standard" behaviour, since Euro standard doesn't feature in this lookup at all.
+
+
+---
+
+## Where the Distance Comes From
+
+The distance used in the calculation is the **truck-optimised route distance** calculated by HERE Maps when the order is created. This is not the straight-line distance — it accounts for truck-permitted roads, weight restrictions, and height limits.
+
+If you manually override the distance on an order (for example, because the actual route differed from the calculated one), Druma uses the overridden distance for CO2 calculation.
+
+---
+
+## Per-Order CO2 Display
+
+Every completed order shows its CO2 figure in the order detail page, under the **Financials** or **Summary** section. You can see at a glance:
+
+- Route distance in km
+- Cargo weight used
+- Total kg CO2e for the order
+
+---
+
+## Monthly Fleet Total
+
+Druma aggregates all order CO2 figures to produce a monthly fleet total. To view it:
+
+1. Go to **Reports → CO2 Report**
+2. Set the date range (e.g., a calendar month or a custom period)
+3. The report shows:
+   - Total fleet CO2 for the period
+   - Per-truck breakdown (which vehicles are your highest emitters)
+   - Per-client breakdown (how much CO2 each client's shipments generated)
+
+
+---
+
+## Per-Client CO2 in the Client Portal
+
+Clients who have access to the Druma client portal can view the CO2 figure for each of their shipments directly. They do not need to ask you — it is visible on every completed order in their portal view.
+
+This is particularly useful for clients who need to report **Scope 3 emissions** (supply chain emissions) as part of their own ESG or sustainability reporting obligations under CSRD or similar frameworks.
+
+---
+
+## Exporting the CO2 Report
+
+The CO2 Report page does not have a "Download PDF" button. Instead, from **Reports → CO2 Report** (annual view) you can export in three formats:
+
+- **Annual XLSX** — a spreadsheet workbook of the year's per-order CO2 figures
+- **CSRD Data Package (.csv)** — a data export formatted for feeding into a CSRD / ESRS E1 Scope 3 disclosure
+- **iXBRL (.xhtml)** — an inline XBRL file for the ESRS E1 Scope 3 tag set, with an in-app disclaimer that it must be reviewed by your sustainability auditor before filing
+
+The monthly view instead offers a generic **print** and **export** action on the table, covering whichever columns and date range you currently have selected.
+
+> **Note:** 
+Separately, each client with completed orders automatically receives a monthly CO2 report by email — an HTML summary of their shipments' emissions for the previous month, generated and sent automatically on the 1st of each month. This is not something you trigger from the CO2 Report page; it runs in the background for every client with deliveries in that period.
+
+
+---
+
+## Why This Matters for Your Business
+
+Emissions reporting is no longer just for large carriers. The trend is moving downstream:
+
+- **CSRD** (EU Corporate Sustainability Reporting Directive) requires large companies to report Scope 3 emissions — which includes transport they buy
+- **Large retailers and manufacturers** pass this reporting requirement to their suppliers and service providers
+- **Tenders and RFQs** increasingly ask for documented CO2 methodology
+- **Green freight programmes** like SmartWay Europe and Clean Cargo give procurement preference to carriers with documented emissions data
+
+Having CO2 reports ready — with a recognised methodology (GLEC v4.0 / ISO 14083) — differentiates your company in competitive tenders.
+
+---
+
+## Related articles
+
+
+  Detailed guide to the CO2 Report filters, export options, and interpreting the data.
+
+
+
+  How to set vehicle payload capacity and fuel type — the fleet data that feeds CO2 calculations.
+
+
+---
+
+## e-Transport Romania
+
+
+e-Transport is Romania's mandatory electronic declaration and GPS tracking system for the road transport of goods, administered by ANAF (Agenția Națională de Administrare Fiscală). Druma automates the declaration process, generates UIT codes, and handles GPS position reporting — removing the manual burden and reducing the risk of fines.
+
+---
+
+## What Is e-Transport?
+
+e-Transport requires transport operators to:
+
+1. **Declare the transport** to ANAF before the truck moves, receiving a unique UIT code
+2. **Log GPS positions** at regular intervals during the transport
+3. **Carry the UIT code** in the truck (printed or visible on the driver's phone)
+
+The system allows ANAF and Poliția Rutieră to verify in real time that a transport has been declared, who is carrying the goods, and whether the truck is on the declared route.
+
+---
+
+## When e-Transport Applies
+
+e-Transport applies to the transport of goods **within Romania or in transit through Romania** when the cargo exceeds certain weight and value thresholds. These thresholds are set by ANAF and updated periodically by government ordinance.
+
+> **Warning:** 
+Always check the current ANAF thresholds before concluding that a shipment does not require e-Transport declaration. The rules have been updated several times since the system launched. The authoritative source is [mfinante.gov.ro](https://www.mfinante.gov.ro) and the ANAF e-Transport portal.
+
+
+Categories that have required declaration include: goods with fiscal risk (food, alcohol, tobacco, textiles, construction materials, electronics), goods above a value threshold, and all international transit through Romania above certain tonnage. Your accountant or transport legal advisor can confirm the current applicable categories for your cargo types.
+
+---
+
+## Who Declares: Your Client, or You?
+
+Under OUG 41/2022 Art. 8, the legal obligation to declare a transport to ANAF rests with the **Romanian trading party** — the Romanian-registered sender or recipient of the goods, never with the carrier as such. For most transport companies this means: **your client declares and provides you with the UIT code** (the carrier flow — Druma's default). Only if your company is itself the Romanian trading party — because you sell or move your own goods — do you declare yourself (the declarant flow, enabled per company in Settings → Integrations → ANAF e-Transport).
+
+### When to use which flow
+
+| Situation | Flow |
+|---|---|
+| Your company is the Romanian trading party (shipper or consignee) | **Declarant flow** — assign a truck and Druma auto-submits to ANAF |
+| You are a carrier and your Romanian client is the trading party | **Carrier flow** — client provides the UIT via portal or phone |
+| Subcontracted order (you forward to another carrier) | Neither — the subcontractor or their client handles declaration |
+
+---
+
+## How Druma Handles e-Transport
+
+### Carrier flow (the default): your client declares
+
+When your client holds the declaration obligation, Druma nudges the process along automatically so the UIT reaches you before the truck departs.
+
+
+  ### Confirmation email nudge
+    When Druma sends the order confirmation to the client, it detects that the route touches Romania and includes a prominent notice asking the client to enter the UIT code in their portal.
+  
+  ### Client portal entry
+    The client opens the shipment in the Druma client portal. An **e-Transport (Romania)** card explains the requirement and provides an input field. The client enters the UIT code received from ANAF — Druma validates the format (8–30 uppercase alphanumeric characters) before saving.
+  
+  ### Planner manual entry
+    If the client provides the UIT by phone or email, the planner can enter it directly on the order detail pane under the **cargo tab**. The same **e-Transport (Romania)** section shows an input field when no UIT is recorded and the order status allows editing.
+  
+  ### GPS transmission activates automatically
+    Once a UIT code is on file, Druma's GPS forwarding pipeline picks up the order and begins transmitting positions to ANAF — no additional action required from the planner.
+  
+  ### Driver sees the UIT code
+    The UIT code appears in the driver's Druma app on the active order screen, confirming to the driver that the declaration is in place before departure. If a road inspector asks, the driver shows the code on their phone or presents the printed order document.
+  
+
+
+### Declarant flow: your company declares
+
+Enable this only if your company is the Romanian trading party that legally declares to ANAF. Go to **Settings → Integrations → ANAF e-Transport** and enable the declarant setting.
+
+Once enabled:
+
+- When you create an order with a pickup or delivery stop in Romania, the order form shows a **Goods value (RON)** field. This value is required for the declaration. Saving without it shows a warning — you can still save and add the value later by editing the order.
+- When you assign a truck to the order, Druma checks whether the order is in scope: the goods value must be at or above the declaration threshold (default **10 000 RON**, configurable per company) and the order must not be subcontracted.
+- If all conditions are met, Druma **submits the declaration automatically** as soon as the truck assignment is saved, and stores the resulting UIT on the order.
+
+**If the declaration fails** — for example, due to a missing goods value, a stop address error, or a temporary ANAF API issue — the order detail page shows a **Declaration failed** warning. Fix the underlying data and retry using the **Declare / Retry e-Transport** option in the order's action menu.
+
+> **Note:** 
+Companies without the declarant setting enabled never see the Goods value (RON) prompt and will not trigger auto-declarations. The carrier flow is always available to both declarant and non-declarant companies for orders where the client holds the obligation.
+
+
+### Groupage runs: one UIT per leg, checked before departure
+
+A groupage trailer carries several consignments at once, and **each one is a separate transport with its own UIT obligation**. A run with twenty legs needs twenty codes — not one for the truck.
+
+Druma stores the UIT per leg, because each leg is its own order. What the groupage board adds is the run-level view, so you never have to open twenty orders to find the three that are still short a code.
+
+**On the run's Overview tab**, an **ANAF e-Transport** card shows how many of the run's in-scope legs already have a UIT — for example `UIT codes on file 17 / 20` — and lists the order numbers of the ones that do not. The card only counts legs that actually need a UIT, and it does not appear at all on runs where no leg is in scope, so operators working outside Romania never see it.
+
+**When you confirm the run**, Druma checks the same thing. If any in-scope leg is still without a UIT, confirming raises a warning that names the gap and the specific legs, and asks you to acknowledge it before the run is confirmed.
+
+> **Note:** 
+This is a warning, not a hard block — deliberately. Whether a leg needs a UIT is derived from the route and the goods value, and you may know something Druma does not: that a leg is out of scope, or that the client is sending the code within the hour. You can always confirm past the warning. It exists so the gap is never *invisible*, not to stop you working.
+
+
+Legs that never needed a UIT — no Romanian pickup or delivery, below the declaration threshold, or subcontracted so the carrier declares their own — are not counted as missing.
+
+---
+
+## GPS Position Logging
+
+e-Transport requires GPS positions to be transmitted to ANAF during active transport. Druma handles this automatically via the ANAF e-Transport API — separate from the driver's manual status updates. To avoid flooding ANAF's API with a position update on every GPS ping, Druma debounces outbound transmissions per order to **at most once every 5 minutes**, forwarding the most recent position at that cadence rather than every raw ping received from the driver's phone.
+
+**Important:** GPS logging only works when the driver has the Druma app **open on their phone** during transit. If the driver closes the app or the phone screen locks without the app running in the background, position logging may be interrupted.
+
+
+  ### Instruct drivers before departure
+    Before the truck departs, confirm with the driver that the Druma app is open and showing the active order. On Android, confirm the app has background location permission.
+  
+  ### App runs during transit
+    The app transmits GPS coordinates to Druma as it moves. Druma forwards a position to the ANAF e-Transport API at most once every 5 minutes per order.
+  
+  ### Transport completion
+    When the driver marks the order as delivered, GPS logging for that UIT code stops.
+  
+
+
+> **Note:** 
+GPS logging for e-Transport uses mobile data. Ensure drivers have an active SIM with data. On routes through areas with poor signal, Druma buffers positions and transmits them when connectivity is restored.
+
+
+---
+
+## What the Driver Needs to Do
+
+The driver's responsibilities for e-Transport compliance are minimal when using Druma:
+
+1. **Keep the app open** on their phone during transit
+2. **Show the UIT code** if asked by a road inspector (it is visible on the active order in the app)
+3. **Do not deviate significantly from the declared route** — major route deviations may require an amended declaration, which the dispatcher handles from the Druma web interface
+
+---
+
+## Penalties for Non-Compliance
+
+ANAF fines for e-Transport violations are significant — penalties apply to both the carrier and the beneficiary of the transport (the client or shipper). Common violations include:
+
+- Transporting goods without a valid UIT code
+- GPS position logging gaps during transport
+- Declared cargo not matching what is being transported
+
+Druma's automation eliminates the most common compliance failures: missing declarations and GPS logging gaps. However, the responsibility for accurate cargo information (weight, value, type) remains with the dispatcher entering order data.
+
+---
+
+## Related articles
+
+
+  
+    Romania's mandatory e-invoicing system, and how Druma submits invoices to ANAF automatically.
+  
+  
+    Vehicle document compliance, including the CEMT permit tracked for international transport.
+  
+  
+    Regulation 561/2006 driving limits and how Druma tracks them.
+  
+  
+    Vehicle and driver return obligations and IMI posting declarations.
+  
+</CardGroup>
+
+---
+
+## Workshop & Maintenance
+
+
+## Overview
+
+The Workshop module is where fleet managers and planners plan every maintenance job — from a routine oil change to a safety-critical repair — on bays, technicians, a mobile mechanic or an external garage. A planned job takes the vehicle off the road for the time it needs, and Druma checks first which rostered drivers and orders that would strand.
+
+Find it under **Fleet → Workshop**. One tab holds up to eight sub-tabs, depending on your permissions:
+
+| Sub-tab | What it is for |
+|---|---|
+| **Board** | The planning board: bays, technicians, mobile units and garages as rows, time on the horizontal axis. Plan, move and resize jobs here. |
+| **Jobs** | The list of every job with its status, resource, planned start and expected ready time. |
+| **Defects** | Defects reported by drivers (post-trip inspections). Each one can become a job with **Request job**. |
+| **Maintenance** | Recurring service schedules per vehicle. A due schedule becomes a job with **Plan service**. |
+| **Tyres** | Every tyre as an individual item: on the vehicles, in the inventory, its mount history and cost (see [Tyres](#tyres) and [Fleet Tyres](/en/fleet-compliance/tyres)). |
+| **Parts & stock** | The parts catalogue, stock locations and quantities, with the moving-average cost for people who may see costs (see [Parts and stock](#parts-and-stock)). |
+| **Purchasing** | Purchase orders, goods receipts and supplier invoices matched against what was ordered and received (see [Purchasing and invoice matching](#purchasing-and-invoice-matching)). |
+| **Costs** | What each job and each vehicle cost, per month, and the vehicle lifetime cost (see [Costs and the Truck P&L](#costs-and-the-truck-pl)). |
+
+**Parts & stock** and **Purchasing** need the *workshop:stock* and *workshop:purchase* permissions; **Costs** and every price in the module need *workshop:costs*. By default admins, company admins, fleet managers and key users hold all three. A technician or dispatcher never sees a price.
+
+<Frame caption="Fleet → Workshop → Jobs — every job with its status, resource and ready time.">
+  <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Workshop jobs list showing maintenance jobs by status and service type" />
+</Frame>
+
+> **Note:** 
+The old pages **Fleet → Work Orders**, **Defects**, **Maintenance** and **Tyres** moved into this tab. Old links and bookmarks still open the right sub-tab.
+
+
+---
+
+## Jobs and statuses
+
+A job is a maintenance task on one truck or trailer. It captures what is to be done, who does it, when, the parts and labour costs, and a checklist and photos.
+
+| Status | Meaning | Next actions |
+|---|---|---|
+| **Requested** | Asked for (by a planner, a defect or a due schedule) but not scheduled. Waits in the board's request inbox. Blocks nothing. | Plan it, Cancel |
+| **Planned** | Has a start and a ready time. **Blocks the vehicle** for that time. | Start Work, Unplan, Cancel |
+| **In progress** | The vehicle is in the workshop. | Waiting for parts, Mark Complete, Cancel |
+| **Waiting for parts** | Still in the workshop, work paused. | Resume work, Cancel |
+| **Done** | The work is finished (a truck job asks for the odometer reading). The vehicle is free again. Waits for sign-off. | Approve, Reopen |
+| **Approved** | Signed off. Final. | — |
+| **Cancelled** | Will not be done. A job that never started removes its block. | — |
+
+What you may do depends on your role: planning (requested, planned, cancel) needs *workshop:plan*, running work (start, waiting for parts, complete) needs *workshop:execute*, and **Approve** and the override described below need *workshop:approve*. Dispatchers can read the board but not change it.
+
+---
+
+## The planning board
+
+Rows are your resources grouped as **Bays**, **Technicians**, **Mobile units** and **External garages**, plus a **No resource yet** row. Add or edit resources with **Resources** in the toolbar.
+
+- **Zoom.** Day, Week or Month changes the grain of the time axis; **Today** and the date jump move around. Times are always read in your company's time zone.
+- **Request inbox.** On the left are the requested jobs, oldest first, each with a 14-day availability strip for its vehicle. Drag a card onto a resource row at the time you want to plan it.
+- **Move and resize.** Drag a planned bar to move it (also onto another resource), drag its edges to change start or end. A running job can only move its right edge — that is its expected ready time.
+- **Badges.** A clock means the job is running past its expected ready time; a warning triangle means the resource or the vehicle is double-booked; a shield means the job was saved with an override.
+
+On a phone the board is a read-only agenda for today and the next seven days.
+
+### New job
+
+Click **New job** (or **Request job** on a defect, **Plan service** on a maintenance schedule). Pick the vehicle, the service type, a title, and optionally a bay, technician or garage. Fill in **Planned start** and **Truck ready again at** (for a garage these read **Drop-off** and **Expected return**). Leave both empty to save the job as a request.
+
+---
+
+## The impact check and the blocking rule
+
+As soon as a job has a start and a ready time, the **Impact check** shows what it affects:
+
+- **Rostered drivers** who are on that vehicle on those days, each with a **Move to free truck** list, so you can put the driver on another truck in the same save.
+- **Orders** assigned to the vehicle in that period.
+- **Other jobs and blocks** already on the vehicle.
+- **Suggested slots** — up to three nearby times when the vehicle is free or idle, one click to apply.
+
+If a job clashes and nothing is moved, **Plan job** stays disabled. A user with the *approve* permission can keep the job anyway by giving a reason of at least 10 characters (the **override**); everyone else sees *An approver must sign this off*. Every override is stored with the job and shown on its bar.
+
+> **Warning:** 
+**A planned job blocks the vehicle for the calendar days it touches.** The roster and the planning board work in days and half days, so even a two-hour tyre change greys out that day on the roster. A job that only covers the morning (for example 08:00–12:00) blocks only the **morning** half; the afternoon stays free.
+
+
+A running job stays blocking until it is marked **Done**, even if its expected ready time has passed — the vehicle is physically in the workshop. Such a job is flagged as overrunning on the board.
+
+### Where the block shows
+
+- **Roster.** Days a vehicle is blocked are greyed out on **Fleet → Roster** and cannot be given a driver (an admin can override with a reason). The blocked-truck dialog names the cause *In the workshop*.
+- **Planning board.** The truck card shows a wrench badge: amber for a planned job, red when the truck is in the workshop, red with a ring when the job is overrunning. The tooltip shows the planned start or the expected ready time. Click-to-assign checks the order's pickup against the exact ready time, so a truck that is ready at 12:00 can still take a 14:00 loading the same day.
+- **Auto-plan and AI matching** skip or heavily penalise a truck inside its workshop window and score it normally again once it is back.
+
+---
+
+## Notifications
+
+When a job is saved that affects the roster, the right people are told:
+
+- **Planners and dispatchers** get a bell notification (and a push) *Workshop job blocks the roster* with the vehicle and the number of affected driver days and orders.
+- **Affected drivers** get *Your truck goes to the workshop* — in the bell and as a push that opens **Profile → My roster**, where the affected days show *Truck in workshop until …*. Dispatch tells them which truck to take.
+- **A technician** gets *Workshop job assigned to you* when a job is put on their resource.
+
+Push is sent within about 15 minutes. These three alerts are in-app and push only — never email — and cannot be switched off individually.
+
+---
+
+## Defects and maintenance schedules
+
+**Defects.** When a driver submits a post-trip inspection with a **Safety Critical** defect, it appears under **Defects**. Click **Request job** to open the job form pre-filled with the vehicle and the defect, then plan it on the board. If *Auto-create vehicle unavailability for safety-critical defects* is enabled in **Settings → Fleet & Equipment → Post-trip DVIR**, the truck is already blocked from the moment the defect is submitted. See [Post-Trip Vehicle Inspection (DVIR)](/en/fleet-compliance/post-trip-dvir).
+
+**Maintenance schedules.** Schedules track recurring intervals per vehicle (by km, by days or by engine hours), compute the **Next Due** date or km from the last service, and sort overdue items to the top. Kilometre schedules use the truck's current odometer. Click **Plan service** on a due schedule to turn it into a job, or let Druma file the request for you (see [Maintenance automation](#maintenance-automation)). Trailers have no odometer, so their km schedules show no due state.
+
+---
+
+## Technicians
+
+Technicians work from their phone or a shared tablet. Give each person an account with the **Mechanic** role (Settings → Users) and link it to their technician resource under **Resources** on the board. A mechanic sees only the workshop: no fleet, driver, client or cost data.
+
+### On the phone
+
+A mechanic who signs in lands in the **Workshop** mode of the mobile app with four tabs.
+
+| Tab | What it shows |
+|---|---|
+| **My jobs** | Jobs assigned to you or to the bay you work in, grouped as *Running now*, *Today*, *Next* and *Awaiting sign-off*. |
+| **Queue** | Open jobs nobody has taken yet. Starting one assigns it to you. |
+| **Board** | The same agenda as the desk board, read-only. |
+| **More** | Account actions such as sign out. |
+
+Open a job to see the job card:
+
+1. **Start** the timer. **Pause** and **Waiting for parts** stop it; starting a second job pauses the first.
+2. Tick the **Checklist** as you go.
+3. Add **Parts used**, **Photos** and **Notes**. With a parts catalogue, **Add from stock** searches the catalogue (or scans a barcode) and takes the part from your van or the default location; it shows how many are on hand but never a price. **Not in the catalogue? Add free text** keeps the old typed line.
+4. **Finish** and enter the **Odometer (km)** for a truck. Druma warns if it is lower than the last known reading. The job moves to *Done* and waits for sign-off.
+
+A job assigned to another technician can be read but not worked on. Without signal your taps are saved on the device and sync when the connection returns; a counter shows what is waiting. A technician is notified when a job is assigned to them and the notification opens the job card.
+
+The first time a new technician signs in they are asked to acknowledge the Privacy Notice.
+
+### Shared tablet
+
+A tablet in the bay lets technicians sign in with a PIN instead of a password.
+
+1. Go to **Fleet → Workshop → Workshop settings → Devices**, choose **Add a device**, pick **Shared tablet (PIN sign-in)**, name it and **Create and show code**. The 8-character code is valid for 15 minutes, works once and is shown only now.
+2. On the tablet open the address shown, enter the code and **Pair**. You do this once; the tablet stays paired for 180 days.
+3. Under **Technicians** set a 6-digit PIN for each technician with **Set PIN**. Only accounts whose *only* role is Mechanic can use the tablet. At first sign-in the technician chooses their own PIN.
+4. The technician taps their name, enters the PIN and works on the same screens as on the phone, in large type. After 90 seconds without a touch the tablet warns and then signs out (set the time under **Maintenance**, 30 to 900 seconds); **Switch technician** signs out at once.
+
+Repeated wrong PINs lock the technician for a few minutes, and a supervisor can reset the PIN or choose **Sign out everywhere**. **Revoke** on a device stops it immediately; to use that tablet again create a new device.
+
+### Wall screen
+
+A **Wall screen (read-only board)** shows today's board on a TV. Create it under **Devices**, open the address on the screen (it pairs itself) and use **Full screen**. It refreshes every minute and shows jobs, plates and resources only, never names, hours or costs. If you revoke it, the screen shows *This screen is not paired*.
+
+### Hours on the job
+
+Everything a technician times appears on the job in the desk view under **Time**: who worked, when, and the total. Once time is logged, the job's labour hours come from it. A user with the approve permission can correct a log, with a reason. Time records are personal data and are kept for 24 months.
+
+---
+
+## Parts and stock
+
+Under **Fleet → Workshop → Parts & stock** you keep a catalogue of the parts you use and where they are.
+
+- **Parts.** **New part** takes a SKU, a name, a category (tyre, oil, filter, brake, electrical, belt, fluid, body, consumable, tool, other), a unit, an optional barcode, a **Minimum stock** and a preferred supplier. A SKU is unique in your company.
+- **Locations.** **Stock locations** lists your warehouse, workshop and vans. A van can be linked to a mobile mechanic, so parts the mechanic picks on the phone come off that van. One location is the default.
+- **Moves.** Open a part to **Receive** stock (quantity, unit cost, currency), **Transfer** it between locations, run a **Stock-take** (type the counted quantity and a reason; Druma books the difference) or **Return** a quantity that came back from a job. Every change is a line in the part's movement history; nothing is edited or deleted.
+- **Status.** A part shows **OK**, **Low** (below its minimum; people with the stock permission get a bell notification once when it crosses) or **Negative**.
+- **Cost.** People with the costs permission also see the **Avg cost** and **Value** columns. The average is a moving average over the whole company: each receipt is weighed in by quantity; a transfer between locations changes nothing. A receipt into zero or negative stock starts the average again at the receipt's cost.
+
+### On a job
+
+On the desk, the job pane has an **Add from stock** link in the **Parts** section: search the catalogue, pick a quantity, add. The quantity comes off stock, the cost lands on the job and on the vehicle, and the line shows a lock: a stock line cannot be edited like free text, it leaves the job only by being removed, which returns the part to stock at its original cost. Technicians do the same on the phone.
+
+### Negative stock and the review list
+
+Stock may go **negative**: a mechanic is never blocked at the shelf because someone forgot to book a delivery. The movement is flagged and appears under **Parts & stock → Needs review**, together with any issue that had no known cost (it is booked at zero and flagged, so a planner can price it). You can switch negative stock off under **Workshop settings → Stock and costs**.
+
+---
+
+## Tyres
+
+Every tyre is its own item with a serial number, DOT code, brand, size, tread depth and cost. **Tyres** has two views.
+
+- **On vehicles.** The tyres currently mounted, with the serial, the kilometres run on this tyre, the latest tread and, with the costs permission, the cost per kilometre.
+- **Inventory.** Every tyre with its status — *In stock*, *Mounted*, *Removed*, *At retreader*, *Scrapped* — its location and retread count. **Receive a tyre** adds one (it needs a catalogue part of the category Tyres with serial tracking switched on) and, with the costs permission, its purchase cost.
+
+**Mounting and taking off happen from a job**, so the tyre's cost lands on a job: in the job pane open **Tyres → Mount tyre**, search or scan the serial, pick the axle and position and confirm; **Take tyre off** asks for a reason and where the tyre goes (kept as removed, sent for retreading, scrapped or back to a stock location). The cost of a tyre is booked when it is mounted; a tyre that goes back to a shelf reverses it. Opening a tyre shows its life: received, mounted on which plate and position at which kilometre, taken off, retreaded, scrapped.
+
+---
+
+## Purchasing and invoice matching
+
+**Fleet → Workshop → Purchasing** has three views: **Orders**, **Receipts** and **Invoices**.
+
+1. **Order.** **New purchase order**: pick the supplier and currency, add lines (a catalogue part or free text, quantity, unit price, VAT) and say where each line **Goes to**: stock, a job, a vehicle or an expense. **Save draft**, or **Send** to mark it sent (Druma does not email the supplier; **Print** gives you a sheet to send). Order numbers run PO-2026-0001, 0002, and so on.
+2. **Receive.** Open the order and press **Receive goods**: enter what arrived per line (it defaults to what is still to come), the location and the delivery-note number. A stock line goes into stock, a job line goes straight onto the job at the same cost, a vehicle or expense line moves no stock. Receiving in parts is fine; you cannot receive more than ordered beyond the quantity tolerance. **Close** an order when the rest will not come.
+3. **Invoice.** Supplier invoices that arrive on your supplier-invoice e-mail address are read by Druma: the lines, the VAT, the order number printed on the invoice and the truck's plate. Each gets a match chip:
+
+| Chip | Meaning |
+|---|---|
+| **Matched** | Every line agrees with what was ordered and received. |
+| **Variance** | Something differs: *Price differs from the order* (beyond your price tolerance), *More invoiced than received*, *More invoiced than ordered*, *A line was not ordered*, *VAT differs from the order*, *Lines do not add up to the invoice total*. The pane shows the signed difference in EUR. |
+| **No order** | No purchase order was found. Type the order number on the invoice under **Link to order**. |
+| **Accepted** | A person looked at the variance and accepted it with a note. |
+
+Matching only informs: it never blocks payment. **Accept with variance** records who accepted it and why.
+
+Foreign-currency invoices are converted with the National Bank of Romania rate of the invoice date. If there is no rate for a currency, Druma does not guess: the invoice is parked in the review queue instead of being booked at a wrong value, and the allocation dialog warns when a rate is missing or older than three business days.
+
+### Allocating an invoice
+
+**Allocate costs** on an invoice splits each line over **A job**, **A vehicle**, **Overhead** or **Stock (already counted)**. For a garage invoice Druma suggests the job at that garage with the matching reference. Allocations to a job, a vehicle or overhead enter the vehicle cost ledger at their net amount; a stock allocation is bookkeeping only, because the part's cost is recognised when it is issued, so nothing is counted twice.
+
+---
+
+## Costs and the Truck P&L
+
+**Fleet → Workshop → Costs** is a report page: tiles for the period's maintenance cost (with the change against the previous period), the cost versus budget, tyre cost and the parts share, a chart by category and three views.
+
+| View | What it shows |
+|---|---|
+| **Per vehicle** | One row per truck or trailer, one column per month, with the budget and the variance for the latest month. A month before the go-live month shows a *budget* badge. |
+| **Per job** | One row per job split into parts, labour, external garage and tyres. Click a job to open it. |
+| **Vehicle TCO** | The lifetime cost of one vehicle by category and per kilometre (or *km unknown*). |
+
+The totals are summed by the server over the whole period; a list is capped at 500 rows and says so. Costs are net of VAT unless you change **Costs in the ledger** under **Workshop settings → Stock and costs**. Labour is priced at each technician's hourly cost (**Technician hourly cost** in the same tab), or at the default labour rate when a technician has none.
+
+**Truck P&L.** Before this module a truck carried a flat maintenance and tyre budget in its standing cost. From the month set in **Actuals apply from** (by default the month the module went live, so history is not restated), the P&L replaces that budget slice with the real cost from the ledger and shows the difference to the budget. Each maintenance and tyres cell says **actual** or **budget**. Trailer costs stay on the trailer and are not added to a truck's P&L.
+
+---
+
+## Maintenance automation
+
+Druma keeps one odometer figure per truck and files service requests for you.
+
+- **Odometer sources.** The Maintenance page shows the reading, where it came from (manual, workshop, telematics, tachograph or fuel card), how old it is, and a flag when a reading looks wrong (an implausible jump) or is missing (*unknown km*). The finish odometer of a workshop job updates the truck.
+- **Automatic requests.** Every night, and whenever you press **Check now** under **Workshop settings → Maintenance**, Druma looks at each truck's schedules. A schedule that comes due within the lead time (by default 14 days, 1,500 km or 50 reefer hours) becomes a **Requested** job, and the other schedules of the same truck due within the bundle window (30 days, 3,000 km, 100 hours) join the same job so the truck goes to the workshop once. A schedule that an open job already covers is not filed again, and pressing **Check now** twice files nothing new.
+- **Settings.** The lead times, bundle windows, the plausible kilometres per day, the default labour rate and the on/off switch **File maintenance requests automatically** are under **Workshop settings → Maintenance**.
+
+Planners are notified when requests are filed; plan them from the request inbox like any other.
+
+---
+
+
+  
+    How drivers report defects at the end of a trip, severity levels, and how safety-critical defects reach the workshop.
+  
+  
+    Track ITP, insurance, CEMT, and ADR certificate expiry — with planning board warnings when documents are close to expiring.
+  
+  
+    Track tyre condition, tread depth, and replacement costs per vehicle.
+  
+  
+    Log accidents, damage events, and insurance claims for your fleet.
+  
+</CardGroup>
+
+---
+
+## Post-Trip Vehicle Inspection (DVIR)
+
+
+## Overview
+
+After a driver taps **Delivered**, Druma automatically presents a **Post-Trip Inspection** overlay on the driver app — a Driver Vehicle Inspection Report (DVIR) that walks through the truck's condition at the end of the trip. This page covers the fleet-manager side: configuring the checklist and reviewing the defects it produces. For the driver-facing flow in full detail, see [Post-Trip Inspection](/en/driver/post-trip-inspection).
+
+> **Note:** 
+Post-trip inspection is only triggered for single-order trips. It does not appear at intermediate stops during groupage (multi-stop) runs.
+
+
+---
+
+## How it works, in brief
+
+The driver marks each checklist item with a tri-state toggle — **OK**, **Advisory**, or **Safety Critical** — enters the current odometer reading, and attaches photos for any Safety Critical item (up to 3 photos per defect; JPEG, PNG, WebP, HEIC, or HEIF, max 10 MB each — PDF is not accepted for defect photos). The driver can submit immediately or tap **Skip Inspection** to complete it later from the order's load detail.
+
+| Severity | Meaning | Effect |
+|---|---|---|
+| **OK** | No issues found | No action |
+| **Advisory** | Minor issue, truck stays in service | Planner notified; visible in order detail and Fleet → Defects |
+| **Safety Critical** | Serious defect | Planner and fleet manager notified immediately; if auto-block is enabled, the truck is marked unavailable until resolved |
+
+---
+
+## Admin configuration
+
+Go to **Settings → Fleet & Equipment → Post-trip DVIR** to configure DVIR for your company.
+
+| Setting | Description |
+|---|---|
+| **Enable post-trip DVIR** | Turns the inspection overlay on or off for all drivers |
+| **Require photos for safety-critical items** | Makes uploading at least one photo mandatory before a safety-critical defect can be submitted |
+| **Auto-create vehicle unavailability for safety-critical defects** | Automatically blocks the truck from dispatch when a safety-critical defect is submitted |
+| **Checklist items** | Add, edit, or delete the items that appear in the inspection overlay. Each item has a name and a default severity (OK / Advisory / Safety Critical) |
+
+> **Note:** 
+Checklist items are company-wide and admin-configurable — there is no fixed, built-in list of categories. All drivers in your company see the same list. If you operate different vehicle types, use descriptive item names (e.g., "Reefer temperature unit — check seals") to keep the list meaningful for everyone.
+
+
+---
+
+## Viewing a single inspection
+
+In the **order detail panel**, a **DVIR** section appears below the route information once an inspection has been submitted. It shows:
+
+- Inspection status: Completed, Skipped, or Pending
+- Submission timestamp and driver name
+- The odometer reading captured by the driver
+- A list of each defect item with its severity badge (Advisory / Safety Critical)
+- Thumbnail previews of any uploaded photos, which open full-size on click
+
+If the inspection was skipped, the DVIR section shows a "Skipped" badge with the timestamp.
+
+---
+
+## Tracking open defects across the fleet
+
+Go to **Fleet → Defects** to see all defects across your entire fleet. The page has three filter tabs:
+
+| Tab | What it shows |
+|---|---|
+| **Open** | Defects not yet linked to a completed or cancelled work order |
+| **Acknowledged** | Defects that a fleet manager has reviewed |
+| **All** | Full history |
+
+Each row shows the truck, defect item name, severity badge, date reported, and the driver who submitted it.
+
+---
+
+## Creating a Work Order from a defect
+
+For **Safety Critical** rows in **Fleet → Defects**, a **Create Work Order** button is available directly on the row. Clicking it opens the work order form pre-filled with the truck that was inspected and linked to the originating defect ticket. Work orders don't have a severity field — choose the **Service Type** that matches the repair and add a description, then add line items and a scheduled date, then save. If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled, the truck stays blocked on the planning board until the linked work order is marked complete.
+
+> **Warning:** 
+If the auto-block toggle is enabled, a safety-critical defect removes the truck from dispatch immediately — even if there are future orders already assigned to it. Review Fleet → Defects as soon as you receive a safety-critical alert.
+
+
+See [Workshop & Maintenance](/en/fleet-compliance/workshop-maintenance) for the full work order workflow.
+
+---
+
+
+  
+    The full driver-facing flow: completing the checklist, uploading photos, and skipping/resuming an inspection.
+  
+  
+    Create and manage work orders from defect reports and routine maintenance schedules.
+  
+</CardGroup>
+
+---
+
+## Fleet Tyres
+
+
+## Overview
+
+The Fleet → Tyres page tracks tyre fitment, condition, and replacement history for each vehicle. It gives fleet managers visibility of tyre-related costs and wear cycles without relying on paper records.
+
+**Access:** Fleet → **Tyres** — a standalone top-level Fleet page, not a tab on the vehicle detail view.
+
+<Frame caption="Fleet → Tyres — freely-configurable tyre positions per vehicle, with tread-depth tracking.">
+  <img src="/images/fleet-compliance/tyres.png" alt="Fleet Tyres page" />
+</Frame>
+
+---
+
+## Tyre Records
+
+Tyre positions are freely added per vehicle — there is no fixed position scheme or cap on how many positions a vehicle can have; add exactly the positions that vehicle actually has. Each tyre record includes:
+
+| Field | Description |
+|---|---|
+| **Position** | Axle and side (e.g., Front Left, Drive Axle Right Inner) |
+| **Brand and model** | Tyre manufacturer and product name |
+| **Size** | Tyre size designation (e.g., 315/70 R22.5) |
+| **Serial number** | Tyre DOT code for traceability |
+| **Fitted date** | When this tyre was installed |
+| **Tread depth (mm)** | Current measured tread depth |
+| **Condition** | OK / Warning / Replace |
+| **Notes** | Free-text notes (damage, puncture history, etc.) |
+
+---
+
+## Adding a Tyre Record
+
+
+  ### Open Fleet → Tyres
+    Go to the standalone **Fleet → Tyres** page.
+  
+  ### Select the vehicle
+    Choose the vehicle you want to add a tyre record for.
+  
+  ### Click Add Tyre
+    Click **+ Add Tyre**. A form opens.
+  
+  ### Fill in the details
+    Select the position from the dropdown and fill in the brand, size, serial number, fitted date, tread depth, and condition.
+  
+  ### Save
+    Click **Save**. The tyre record appears in the position grid.
+  
+
+
+---
+
+## Tyre Condition Alerts
+
+Druma monitors tyre condition and alerts fleet managers automatically:
+
+| Condition | What triggers it | Alert |
+|---|---|---|
+| **Warning** | Condition set to Warning, or tread depth under 4 mm | Yellow indicator on the vehicle tile in the Fleet list |
+| **Replace** | Condition set to Replace, or tread depth under 2 mm | Red indicator on the vehicle tile |
+
+> **Warning:** 
+Tread depth below **2 mm** triggers an automatic **Replace** flag; below **4 mm** triggers **Warning**. Do not dispatch a vehicle with Replace-flagged tyres. These are in-app indicators only — there is currently no email alert for a Replace condition, so fleet managers need to check the Fleet list or the Tyres page directly.
+
+
+---
+
+## Updating Tyre Condition
+
+To update a tyre's condition after an inspection:
+
+1. Open **Fleet → Tyres** and select the vehicle
+2. Click **Edit** on the tyre row
+3. Update the **Tread depth** and/or **Condition** field
+4. Save
+
+This clears the alert once the tyre is replaced or the condition is corrected.
+
+---
+
+## Recording a Tyre Replacement
+
+When a tyre is physically replaced:
+
+1. Edit the existing tyre record for that position
+2. Set **Condition** to **Replaced**
+3. Enter the **Replacement cost (€)**
+4. Click **Save**
+
+Alternatively, click **+ Add Tyre** on the same position to add the new tyre (Druma will mark the old record as historical).
+
+The replacement cost rolls up into the vehicle's maintenance cost report — giving you a total cost-of-ownership view alongside fuel and workshop costs.
+
+---
+
+## Tyre History
+
+Druma keeps a history of all tyre records per position, including replaced tyres. To view the history for a specific position:
+
+1. Open **Fleet → Tyres** and select the vehicle
+2. Click on the position in the grid
+3. The history panel shows all tyres ever fitted to that position with their fitted dates, condition status, and replacement costs
+
+---
+
+
+  
+    Create work orders for tyre replacements and other maintenance jobs.
+  
+  
+    Track insurance, ITP, and other vehicle compliance documents alongside your tyre records.
+  
+</CardGroup>
+
+---
+
+## Fleet Incidents
+
+
+## Overview
+
+Fleet Incidents is a structured log of any accidents, damage events, or safety incidents involving your vehicles. Logging incidents in Druma creates a permanent record for insurance claims, legal defence, and internal safety analysis.
+
+Incidents are **reported by the driver from the driver app**, not created by a planner or fleet manager from the web app. The web-side **Fleet → Incidents** page is where planners and fleet managers review, filter, and manage incidents that drivers have already reported — there is no "+ New Incident" creation flow on the web side, and there is no per-vehicle Incidents tab on the truck detail view.
+
+<Frame caption="Fleet → Incidents — the review list for incidents drivers have reported from the driver app.">
+  <img src="/images/fleet-compliance/incidents.png" alt="Fleet Incidents review page" />
+</Frame>
+
+---
+
+## How a Driver Reports an Incident
+
+From the active order screen in the driver app, the driver taps **Report Incident** and works through a short step-by-step form:
+
+
+  ### Severity
+    Choose **Minor** (no injuries, minor damage), **Serious** (injuries or significant damage), or **Major** (serious injuries or total loss).
+  
+  ### Description
+    A free-text account of what happened (at least 5 characters).
+  
+  ### Location
+    Capture the current GPS position with one tap, and optionally add a free-text description of the location (street, motorway, landmark).
+  
+  ### Photos
+    Attach up to 5 photos of the damage. If the driver is offline, the text report can still be submitted and queued — photos are not saved offline and must be added once the driver reconnects.
+  
+  ### Witness (optional)
+    Witness name and phone/email, if there was one.
+  
+  ### Review & submit
+    A summary screen before submitting. A **Major** incident shows an in-app note that the fleet manager will be notified.
+  
+
+
+### Incident record fields
+
+| Field | Description |
+|---|---|
+| **Severity** | Minor / Serious / Major |
+| **Occurred at / Reported at** | When the incident happened vs. when it was submitted |
+| **Location** | GPS coordinates and/or free-text address |
+| **Description** | The driver's free-text account |
+| **Witness name / contact** | Optional |
+| **Photos** | Up to 5 images, viewable full-size from the incident detail pane |
+| **Voice memo** | The data model supports an attached audio recording, though the current driver-app flow does not yet include a step to record one |
+| **Status** | Reported / Under Review / Closed |
+| **Linked work order** | Optional link to a Fleet work order created to fix the damage |
+| **Insurance claim reference / status** | See below |
+
+There is no incident-type classification (collision/theft/vandalism/etc.), no third-party details section, no police-report-number field, and no separate injuries toggle — severity and the free-text description are how those situations are currently captured.
+
+---
+
+## Insurance Claim Tracking
+
+From the incident detail pane on **Fleet → Incidents**, you can track the linked insurance claim:
+
+| Field | Description |
+|---|---|
+| **Claim reference** | Your insurer's reference |
+| **Claim status** | No claim / Filed / In review / Settled / Rejected |
+
+Update the status as the claim progresses. There is no settlement-amount field on the incident record — track the financial outcome of a claim through your invoicing/finance workflow instead.
+
+---
+
+## Fleet-Wide Incidents View
+
+Go to **Fleet → Incidents** to see all incidents across the fleet in one list.
+
+Filter the view by:
+
+- Severity (Minor / Serious / Major)
+- Status (Reported / Under Review / Closed)
+- Date range
+- Free-text search (matches truck plate, driver name, or description)
+
+Click **Export to Excel** to download the filtered list for insurance reviews or safety audits.
+
+---
+
+## Using Incidents for Safety Analysis
+
+The fleet-wide view lets you identify patterns:
+
+- **Which vehicles** are involved in the most incidents
+- **Which drivers** have the highest incident rate
+- **Severity mix** — how many Minor vs. Serious vs. Major incidents your fleet logs
+- **Time patterns** — morning vs. evening, specific routes or countries
+
+Use these insights to target driver training, adjust routing, or flag vehicles that require closer monitoring.
+
+---
+
+
+  
+    Driver vehicle inspections that identify defects — a common source of damage incident records.
+  
+  
+    Track insurance policies alongside incident records.
+  
+</CardGroup>
+
+---
+
+## Driver Working Time (WTD)
+
+
+Directive 2002/15/EC (the Working Time Directive for mobile workers, commonly called the WTD) sets limits on **total working time** for professional drivers — not just driving time. Working time includes driving, loading, unloading, waiting at loading points, and administrative tasks. It is a separate legal instrument from EU Regulation 561/2006, which governs pure driving time and rest periods.
+
+> **Note:** 
+Druma's WTD monitoring is based on tachograph data synced from your connected telematics provider. If tachograph sync is not enabled, WTD columns will show as unavailable. WTD data is a monitoring aid — always verify compliance using the raw tachograph files for any formal audit response.
+
+
+<Frame caption="Working-time monitoring — weekly total against the 60-hour maximum and the 48-hour rolling average, worst-first.">
+  <img src="/images/fleet-compliance/driver-working-time.png" alt="Driver working time monitoring showing weekly totals against the 60-hour and 48-hour WTD limits" />
+</Frame>
+
+---
+
+## WTD Limits at a Glance
+
+| Rule | Limit |
+|---|---|
+| Maximum working time in any single week | 60 hours |
+| Average working time over the 17-week reference period | 48 hours |
+| Night work (if applicable) | 10 hours per 24-hour period |
+
+The 60-hour weekly maximum is an absolute ceiling. The 48-hour average is assessed over a rolling **17-week reference period** — a driver may exceed 48 hours in individual weeks provided the rolling average stays at or below 48 hours.
+
+---
+
+## How WTD Differs from Regulation 561/2006
+
+| | Directive 2002/15/EC (WTD) | Regulation 561/2006 (Driving Hours) |
+|---|---|---|
+| What it covers | All working time (driving + loading + waiting + admin) | Driving time only |
+| Daily limit | No daily working-time cap (night work rules apply instead) | 9h standard, 10h extended |
+| Weekly limit | 60 hours absolute; 48h average over 17 weeks | 56 hours |
+| Fortnightly limit | None (rolling 17-week average applies) | 90 hours |
+| Tracked by | Activity codes on tachograph | Tachograph driving mode |
+
+Both sets of rules apply simultaneously. A driver can be compliant with 561/2006 driving limits whilst in breach of the WTD weekly cap — for example, if total working time (including loading duties) pushes the week above 60 hours.
+
+---
+
+## Where to Find WTD Data in Druma
+
+Go to **Dispatching → Compliance**. The table shows one row per driver with the following columns:
+
+| Column | What it shows |
+|---|---|
+| **This week** | Total working minutes recorded so far this ISO week |
+| **This week status** | OK, Warning, or Breach — see threshold table below |
+| **17-week average** | Average weekly working hours over the last 17 ISO weeks |
+| **Average status** | OK, Warning, or Breach against the 48-hour rolling average |
+
+---
+
+## Warning and Breach Thresholds
+
+| Status | This week | 17-week average |
+|---|---|---|
+| **OK** | Under 54 hours | Under 43.2 hours |
+| **Warning** | 54 – 60 hours | 43.2 – 48 hours |
+| **Breach** | Over 60 hours | Over 48 hours |
+
+The Warning band triggers at 90% of each limit (54h = 90% of the 60h weekly ceiling; 43.2h = 90% of the 48h rolling average) — not at the halfway point of 48h. This gives a narrower early-warning window than a flat 80%-style threshold would.
+
+A **Breach** badge means a driver has exceeded a WTD legal limit. Repeated breaches are a significant audit risk and can result in penalties for both the driver and the transport company during roadside inspections or authority audits.
+
+The **Warning** band gives dispatchers early visibility before a driver is at legal risk. A driver in the Warning band for the weekly limit still has headroom up to 60 hours, but should not be assigned further work that same week without careful review of total working hours.
+
+---
+
+## Walkthrough: Reviewing WTD Records
+
+
+  ### Open Dispatching → Compliance
+    The table shows one row per driver, with the **WTD This Week** and **WTD 17-wk Avg** columns on the right showing the current totals and their OK / Warning / Breach badge.
+  
+  ### Scan for Warning and Breach badges
+    Red badges mean a legal limit has already been exceeded; amber badges mean a driver is approaching one. Use the **Compliant** and **At Risk** counters at the top of the page for a fleet-wide overview before drilling into individual drivers.
+  
+  ### Narrow the list if needed
+    Use the dispatcher filter or the search box to focus on a specific dispatcher's drivers or a specific driver by name.
+  
+  ### Open a driver's record
+    Click a row to open the driver detail panel. It shows the full breakdown — remaining working, daily, weekly, and fortnightly time — plus a **source** badge showing whether the figures come from a connected telematics/tachograph provider or were entered manually.
+  
+  ### Correct manually-entered records
+    For drivers without a connected telematics provider (source: **manual**), the panel is editable: adjust remaining daily hours, the working-time program (13h / 15h / 21h), shift start time, 10h extensions used, and weekly driving hours, then click **Save**. This is the only way to resolve a WTD figure that's wrong because the underlying manual entry was wrong.
+  
+  ### Act on a genuine breach
+    Druma does not let you dismiss or annotate a Breach badge — it is a computed status, not a manual flag. For drivers synced from telematics, the panel is read-only, so a genuine breach must be resolved operationally: adjust the driver's schedule going forward, and, for any formal audit response, verify against the raw tachograph files as noted above.
+  
+
+
+---
+
+## How Working Time Is Calculated
+
+Druma derives working time from the tachograph activity data synced from your telematics provider (Webfleet, Geotab, VDO, Scania/rFMS). The tachograph records four modes: driving, other work, availability, and rest. For WTD purposes, Druma counts **driving + other work** as working time.
+
+The 17-week reference window is a **rolling window** ending at the current ISO week. It updates weekly as new tachograph data arrives.
+
+> **Warning:** 
+If a driver uses a tachograph unit not connected to a Druma-integrated telematics provider, their working time will not appear in the WTD columns. You must maintain WTD records for these drivers separately and upload DDD/TGD files manually via the Tacho Archive so Druma can parse the activity data.
+
+
+---
+
+## Related articles
+
+
+  
+    Regulation 561/2006 driving time limits, break requirements, and rest periods.
+  
+  
+    Downloading and storing DDD/TGD files to meet the EU Reg 165/2014 retention requirement.
+  
+  
+    Vehicle and driver return obligations and IMI posting declarations.
+  
+  
+    Vehicle document compliance and expiry tracking.
+  
+</CardGroup>
+
+---
+
+## Tachograph Archive
+
+
+EU Regulation 165/2014 requires transport operators to download tachograph data from vehicle units and driver cards at defined intervals, and to retain that data for at least 12 months. Druma stores these files in the Tacho Archive so you can prove compliance during a roadside inspection or authority audit without maintaining a separate filing system.
+
+<Frame caption="The Tacho Archive — every vehicle-unit and driver-card download, with the next due date per source.">
+  <img src="/images/fleet-compliance/tacho-archive.png" alt="Tacho Archive listing tachograph downloads with due dates per vehicle and driver card" />
+</Frame>
+
+---
+
+## Download Frequency Requirements
+
+| File type | Required download frequency |
+|---|---|
+| Vehicle unit data (VU / `.ddd`) | At least every **90 days** |
+| Driver card data (DDC / `.tgd`) | At least every **28 days** |
+
+Missing a download deadline is a direct regulatory violation, regardless of whether the driver caused an infringement during the period. Inspectors check that the data was downloaded on time, not just that it was eventually retrieved.
+
+---
+
+## Where to Find the Tacho Archive
+
+Go to **Fleet → Tacho Archive**. The page lists all stored tachograph files sorted by upload date. Each row shows:
+
+- Driver or vehicle name
+- File type (VU or DDC)
+- Date range covered by the file
+- Days since last download
+- Status badge
+
+### Status Badges
+
+| Badge | Meaning |
+|---|---|
+| **OK** | Within the download deadline |
+| **Due soon** | Within 5 days of the deadline |
+| **Overdue** | Deadline has passed |
+
+Files marked **Overdue** require immediate action — download the file from the vehicle or driver card and upload it to clear the overdue status.
+
+---
+
+## Automatic Download
+
+For trucks connected via rFMS (the standardised OEM telematics interface), Druma pulls new DDD and TGD files automatically every night. No manual action is required for connected vehicles and drivers.
+
+Supported automatic download integrations:
+
+| Provider | Integration name | Status |
+|---|---|---|
+| Scania | rFMS | Live |
+| Volvo | rFMS | Beta |
+| DAF | rFMS | Beta |
+| MAN | rFMS | Beta |
+| Mercedes-Benz | rFMS | Beta |
+| IVECO | rFMS | Beta |
+| Renault | rFMS | Beta |
+| Webfleet | TachoShare | Not yet implemented — pending Webfleet partner account access |
+
+All seven OEMs implement the same open rFMS standard, so the connector code and file-parsing logic are shared across brands. Scania is confirmed working against live production accounts. The other six (Volvo, DAF, MAN, Mercedes-Benz, IVECO, Renault) use the identical rFMS interface and are expected to work the same way, but have not yet been confirmed against a live account of that brand — treat them as beta until validated at a pilot fleet.
+
+To enable automatic download, go to **Settings → Integrations** and connect your rFMS-supported OEM telematics provider. Once connected, Druma retrieves available files during the nightly sync window and updates the status badges accordingly.
+
+> **Note:** 
+Automatic download depends on the telematics provider making the file available remotely. Some older vehicle unit models or driver cards may not support remote retrieval — for these, manual upload is required. Webfleet TachoShare is on the roadmap but not yet live; connected Webfleet vehicles currently require manual upload. If you run a non-Scania rFMS brand and hit unexpected results, manual upload remains available as a fallback while the connector is validated.
+
+
+---
+
+## Manual Upload
+
+For vehicles and drivers not covered by an automatic integration, upload files directly from a tachograph download tool (e.g. VDO DLD, Stoneridge ST9764, DTCO Smart Download Key).
+
+
+  ### Open the Tacho Archive
+    Go to **Fleet → Tacho Archive**.
+  
+  ### Click Upload file
+    Click the **Upload file** button in the top-right corner.
+  
+  ### Select the driver or vehicle
+    Choose whether the file is a driver card file (DDC) or a vehicle unit file (VU), then select the driver or vehicle from the list.
+  
+  ### Choose the file
+    Select the `.ddd`, `.tgd`, `.v1b`, or `.c1b` file from your computer. Maximum file size is **10 MB**.
+  
+  ### Confirm upload
+    Click **Upload**. Druma parses the file header to extract the date range and stores the file in the archive. The overdue clock resets for the selected driver or vehicle.
+  
+
+
+> **Warning:** 
+Only `.ddd`, `.tgd`, `.v1b`, and `.c1b` files are accepted — `.v1b`/`.c1b` are the Generation 2 smart tachograph equivalents of `.ddd`/`.tgd`. Files exported in other formats (CSV, PDF) cannot be uploaded and do not satisfy the EU data retention requirement. Always retain the original binary file.
+
+
+---
+
+## Retention
+
+Druma retains all uploaded and automatically downloaded tachograph files for the legally required 12-month minimum. Files older than 12 months are subject to automated archival. Contact support if you need to retrieve files beyond the standard retention window.
+
+---
+
+## Related articles
+
+
+  
+    Regulation 561/2006 daily and weekly driving limits tracked from tachograph data.
+  
+  
+    Directive 2002/15/EC working time limits and how Druma monitors them.
+  
+  
+    Vehicle document compliance and expiry tracking.
+  
+  
+    Vehicle and driver return obligations and IMI posting declarations.
+  
+</CardGroup>
+
+---
+
+## Mobility Package Compliance
+
+
+The EU Mobility Package, in force since February 2022, introduced three binding obligations for cross-border road transport operators. Non-compliance is checked during roadside inspections and can result in fines in any EU member state where the truck is stopped.
+
+> **Note:** 
+Mobility Package tracking lives inside **Planning → Compliance**, on the **Drivers** and **Declarations** tabs — the same page that tracks cabotage exposure, merged into one page with three tabs (**Trucks · Drivers · Declarations**) so a truck's or driver's whole compliance picture is in one place. The vehicle-return clock described below actually shows on the **Trucks** tab, next to that truck's cabotage counter — see [Cabotage Tracking](/en/planner/cabotage-tracking).
+
+
+<Frame caption="Mobility Package tracking — vehicle and driver return clocks per unit, with the next due date and days remaining.">
+  <img src="/images/fleet-compliance/mobility-package.png" alt="Mobility Package compliance view showing vehicle 8-week and driver 4-week return clocks" />
+</Frame>
+
+---
+
+## The Three Rules
+
+| Regulation | Obligation | Deadline |
+|---|---|---|
+| **Regulation 2020/1055** | Vehicle must return to the operator's home country | At least every **8 weeks** |
+| **Regulation 2020/1054** | Driver must return home (or to a location of their choice) | At least every **4 weeks**, for the regular weekly rest |
+| **Directive 2020/1057** | Posting declarations must be submitted via IMI | Before the driver starts working in the host member state |
+
+> **Warning:** 
+Vehicle return means the vehicle physically crosses back into the country where the operating licence is held — not simply a brief stop in a border zone. Driver return means the driver takes their regular weekly rest (minimum 45 consecutive hours) at the chosen location, not a reduced rest. Both requirements are interpreted strictly.
+
+
+---
+
+## Where to Find the Mobility Package Dashboard
+
+Go to **Planning → Compliance** (`/operations/compliance`) and select the **Drivers** or **Declarations** tab — vehicle returns show on the **Trucks** tab alongside cabotage, since both are clocks kept per truck.
+
+---
+
+## Vehicle Returns
+
+The **Trucks** tab shows one row per truck, with its cabotage counter and its vehicle-return clock merged side by side. The vehicle-return part shows the last date the vehicle returned to the home country, the number of days elapsed since that return, and a status badge. Use **Filter → Risk** to narrow the list to trucks in a particular risk state across either clock.
+
+| Status | Condition |
+|---|---|
+| **OK** | Fewer than 6 weeks since last return |
+| **Warning** | 6–8 weeks since last return (14 days or less remaining before the 8-week deadline) |
+| **Overdue** | More than 8 weeks since last return |
+
+An **Overdue** vehicle must return to the home country immediately to restore compliance. Plan return legs proactively — as soon as a truck is flagged **Warning**, start scheduling a return run.
+
+> **Note:** 
+"Last return" is not derived from a live GPS feed or from any dedicated return-tracking event. It is inferred from **completed order stops**: the most recent loading or offloading stop, on a delivered or invoiced order, that falls in the company's base country (`companies.country`). This is a practical proxy, not a direct observation — a truck that physically drove through the base country without an order stop there (e.g. transiting empty, or a stop the driver didn't record) will not register as having returned. If your vehicles are not consistently picking up or dropping off in the base country as part of normal orders, log returns manually instead.
+
+
+---
+
+## Driver Returns
+
+The **Drivers** tab shows one row per driver with the last recorded return date, days elapsed, and a status badge.
+
+| Status | Condition |
+|---|---|
+| **OK** | Fewer than 3 weeks since last return |
+| **Warning** | 3–4 weeks since last return |
+| **Overdue** | More than 4 weeks since last return |
+
+Like vehicle returns, driver return data is not derived from tachograph rest-period data — Druma does not distinguish regular vs. reduced rest, or in-vehicle vs. proper-stop rest, for this purpose at all. It uses the same completed-order-stop proxy: the most recent loading or offloading stop, on a delivered or invoiced order for that driver, in the company's base country. There is also no separate "driver home country" field yet — the company's base country is used as the stand-in for the driver's home/operational centre.
+
+If your drivers' orders don't naturally route them through the base country, this proxy will under-detect qualifying returns — log returns manually by editing the driver record instead.
+
+---
+
+## IMI Posting Declarations
+
+The **Declarations** tab lists all active and historical posting declarations for drivers working in other EU member states. Each entry shows:
+
+- Driver name
+- Host country
+- Declaration start and end dates
+- IMI reference number (if entered)
+- Status badge
+
+| Status | Meaning |
+|---|---|
+| **Active** | Declaration is valid and current |
+| **Expiring** | Expires within 30 days — action required |
+| **Expired** | Past end date |
+| **Withdrawn** | Manually withdrawn |
+
+Declarations flagged **Expiring** are highlighted with an amber badge so you can renew or extend them before the expiry date.
+
+---
+
+## Creating a Posting Declaration
+
+
+  ### Open Declarations
+    Go to **Planning → Compliance** and select the **Declarations** tab.
+  
+  ### Click New declaration
+    Click the **New declaration** button.
+  
+  ### Fill in the details
+    Enter the driver, the host country where the driver is being posted, and the start and end dates of the posting period.
+  
+  ### Submit on the IMI portal
+    Druma does **not** submit directly to IMI — you must do that separately via the [IMI system](https://ec.europa.eu/imi-net/). Once you have submitted and received your IMI reference number, return to Druma to enter it.
+  
+  ### Add the IMI reference number
+    Edit the declaration in Druma and enter the IMI reference number. This links your Druma record to the official submission.
+  
+  ### Save
+    Click **Save**. Druma will track the expiry and flag the declaration as **Expiring** when the end date approaches.
+  
+
+
+> **Note:** 
+A posting declaration is required each time a driver works in a host member state, not once per driver. If a driver regularly runs into Germany, a new declaration is required for each posting period. Declarations cannot overlap for the same driver and host country.
+
+
+---
+
+## How Return Dates Are Tracked
+
+| Data type | Source |
+|---|---|
+| Vehicle return dates | Most recent completed order stop (loading or offloading, on a delivered/invoiced order) in the company's base country |
+| Driver return dates | Same completed-order-stop proxy, scoped to that driver's orders |
+| Manual override | Edit the driver or vehicle record directly |
+
+Because both trackers rely on order stops rather than a live position feed, they only see country presence through completed orders — not through GPS tracks or tachograph data. If your operation doesn't naturally route trucks/drivers through the base country as part of normal orders, log return dates manually to keep the status badges and countdown timers accurate.
+
+---
+
+## Related articles
+
+
+  
+    The Trucks tab of the same Compliance page — cabotage counters and cooldowns per vehicle.
+  
+  
+    Regulation 561/2006 driving limits — separate from but enforced alongside the Mobility Package.
+  
+  
+    Directive 2002/15/EC 60-hour and 48-hour average working time limits.
+  
+  
+    Storing DDD/TGD files to meet the Reg 165/2014 download-frequency requirement.
+  
+  
+    Vehicle document compliance and expiry tracking.
+  
+</CardGroup>
+
+---
+
+
+# Automation
+
+## Email Order Ingestion
+
+
+Instead of manually re-typing load orders that arrive by email, Druma can read them for you. Clients and brokers send their rate confirmations, load lists, or plain-text instructions to your unique Druma inbox address, and the AI extracts the key details into a draft order ready for your planner to check and confirm.
+
+## Your Druma Inbox Address
+
+Every company gets a unique inbox email address. Find yours from the **Orders** page — click the **Order inbox** button in the toolbar to reveal it (with a copy button). It isn't configured from a Settings page.
+
+Share this address with the clients and brokers you want to send orders from. You can also set it as a forwarding destination from your existing logistics inbox if you prefer to keep one primary address externally.
+
+## What the AI Extracts
+
+When an email arrives, Druma reads both the email body and any attachments. It attempts to extract:
+
+- Pickup address (street, city, country, postal code)
+- Delivery address
+- Requested pickup date and time window
+- Requested delivery date
+- Cargo description (goods type, weight, dimensions, pallets)
+- Reference numbers (client PO number, broker reference)
+- Price or rate if mentioned
+
+Supported attachment formats:
+
+- **PDF** — rate confirmations, CMR copies, load orders (every PDF is sent to the AI as a visual document, so scanned and text-based PDFs are read the same way; the plain text is also extracted in parallel and stored for the audit trail and re-parsing, but extraction itself always runs on the visual page)
+- **DOCX** (Word) — rate confirmations sent as Word documents
+- **Plain text (.txt)** and **plain email body** — unstructured text emails from brokers
+- **Images** (JPEG, PNG, WebP, HEIC/HEIF) — a photo of a printed order or rate confirmation is sent to the AI directly
+
+There is currently no Excel/CSV parsing — a spreadsheet attachment is not read by the extraction pipeline.
+
+
+## How Druma Fills In the Draft
+
+- **Client matching.** If the sender's email address exactly matches a contact of exactly one of your clients, that client is assigned automatically. A document whose company name (or legal name) exactly equals one client's name, with a matching city or country, is also assigned automatically. Matches based only on an email domain or a similar name are shown as suggestions for you to confirm.
+- **Client address.** If the email states the ordering company's VAT number, its address comes from the VAT registry (ANAF for Romania, VIES for other EU countries) rather than from a guess. If the lookup fails, the fields stay empty for you to type.
+- **Addresses and countries.** A loading or unloading address with no country of its own is placed using the client's country, then your company's country, so a Cluj address in Romania stays in Romania. A pin that would land in a different country than the one written on the order is rejected rather than shown wrongly. If you correct a stop's address, its map position is recalculated on save.
+- **Dates.** Druma knows today's date, so wording like "tomorrow" or "06.10." resolves to a real date. Dates in European notation are converted automatically.
+- **Several stops.** Every stop in the order is kept, including multi-drop orders with more than one unloading point.
+- **Rate requests.** An email that is only asking for a price (an RFQ), not placing a firm order, is recognised as such. "Please confirm availability" inside an otherwise firm order is not treated as an RFQ.
+
+---
+
+## Reviewing Draft Orders
+
+Extracted orders land in your **Orders** list with **Draft** status, not directly as active orders. This is intentional — you must review each draft before it enters your system. Emails that couldn't be auto-extracted (low confidence, an unrecognised sender, or a parsing failure) don't create a draft at all — they wait in a collapsible **"N emails pending extraction"** banner at the top of the Orders page instead. All incoming drafts — from email, the Outlook add-in, browser captures and client API orders — also show together under the **Intake** scope on the Orders page.
+
+
+  ### Open the Orders page
+    Draft orders show up in your normal order list with a "Draft" badge and an AI confidence score. Emails still awaiting extraction appear separately in the pending-extraction banner, where you can click **Extract** to try again or **Discard** to drop them.
+  
+  ### Check every field
+    Click the draft to open it. Verify the pickup and delivery addresses on the map, confirm the dates make sense, and check the cargo details. Correct anything the AI misread or missed.
+  
+  ### Assign truck and driver
+    Use the assignment panel on the right to pick an available vehicle and driver for this load.
+  
+  ### Confirm the order
+    Click **Confirm Order**. The draft moves into your active orders and the driver receives a notification.
+  
+
+
+> **Warning:** 
+AI extraction is not 100% accurate. Addresses written in unusual formats, scanned PDFs with low image quality, and emails mixing multiple languages all increase the chance of errors. Always verify the extracted fields before confirming.
+
+
+## Outlook Add-in — Send an Email to Druma
+
+If your team works in Outlook, the **Druma — Email to Order** add-in sends an email to Druma without leaving Outlook, and without waiting. Install it from **Settings → Integrations → Outlook add-in** (the **Install guide** there walks you through adding it in Outlook; your Microsoft 365 admin can also deploy it to the whole team). It needs Outlook on the web or a recent Outlook desktop version that can read attachments. See [Outlook Add-in](/en/integrations/outlook-add-in) for the full install steps, the three pane states and troubleshooting.
+
+
+  ### Open an email
+    Open the order email in Outlook and click **Druma → Email to Order** on the ribbon. The first time, click **Connect Druma** and sign in with your normal Druma account.
+  
+  ### Click Send to Druma
+    The pane says **Send this email to Druma**. Click **Send to Druma**. Druma reads the email and its attachments in the background, so you can move on to the next email right away.
+  
+  ### Check the result
+    The pane shows **Queued** while Druma works, and later:
+    - a draft order was created — **Linked to order**, with **Open in Druma** (opens your Orders filtered to drafts), or
+    - Druma was not confident enough to create an order — **In review queue**. A planner checks the email in the **Intake** scope of the Orders page.
+  
+
+
+Good to know:
+
+- The pane follows the email you select, so you can keep it pinned open and click through your inbox. An email already sent shows **Linked to order** or **In review queue** instead of a second send button.
+- Replies in the same conversation attach to the same order instead of creating duplicates.
+- Attachments the add-in cannot send (for example spreadsheets, Word .doc files, attached emails, files over 10 MB, or more than 10 files) are listed in a warning before you send — they are not silently dropped.
+- Prefer to edit before anything is created? Use the **Review before creating** link: Druma reads the email and shows the extracted fields so you can correct them, then you create the order yourself.
+- An email that does not look like a transport order, or that Druma reads with low confidence, goes to the review queue instead of becoming a draft.
+
+---
+
+## Whitelisting Senders
+
+Druma can restrict which senders are allowed to create draft orders, but there is currently **no in-app page** to manage that allow-list yourself. If your company has no allow-list entries configured, Druma processes email from **any** sender that reaches your inbox address. If you want inbound orders restricted to specific client/broker domains, contact support@druma.io to have entries added.
+
+> **Note:** 
+When an allow-list is configured and an email arrives from a sender that isn't on it, that email is queued in the pending-extraction banner (not processed automatically) and your planners are notified, rather than being silently discarded.
+
+
+## Tips for Better Extraction
+
+- Ask your brokers to send structured PDFs rather than scanned images where possible
+- Rate confirmations with clear section headers (Pickup, Delivery, Cargo) extract most accurately
+- If a specific broker's format consistently extracts poorly, contact support@druma.io — format-specific extraction rules can be added
+
+## Common Questions
+
+**What if an email has multiple loads?** If an email carries two or more PDF/DOCX order attachments, Druma extracts each one independently and creates a separate draft per attachment that's confirmed to be a real transport order (supporting documents like insurance certificates are attached to the first draft instead of spawning their own). This only applies to **multiple document attachments** — a single spreadsheet listing several loads is not split into multiple drafts, since spreadsheet parsing isn't supported.
+
+**Can I manually trigger re-extraction?** Only for an email still waiting in the pending-extraction banner — click **Extract** next to it. There's no re-extraction action on a draft that has already been created.
+
+**What happens to the original email?** It is stored and linked to the draft order. You can view it at any time from the order detail page.
+
+
+  
+    Learn how to create orders directly in Druma when you don't use email ingestion.
+  
+  
+    Manage broker relationships, rate confirmations, and commission tracking.
+  
+</CardGroup>
+
+---
+
+## Waiting Time Charge Alerts
+
+
+Waiting time is one of the most common sources of lost revenue in road freight. Drivers arrive on time, then sit for hours while the client loads or unloads — and the charge never makes it onto the invoice. Druma's waiting time alerts make sure every waiting hour is tracked, documented, and billed.
+
+## How the Clock Starts
+
+When a driver updates their status in the Druma driver app to **Arrived at Pickup** or **Arrived at Delivery**, the waiting clock starts automatically. The arrival is timestamped using the driver's GPS location, which is recorded and stored as evidence.
+
+No manual action from the planner is needed. Druma alerts your planners the moment the driver arrives — see below — and separately calculates the chargeable amount once the free period has elapsed.
+
+
+## What Happens When the Driver Arrives
+
+Druma alerts your planners **immediately** when a driver's status changes to Arrived at Pickup or Arrived at Delivery — it does not wait for the free period to run out first:
+
+1. Every planner/dispatcher on the company gets an **in-app notification**: "Driver arrived at pickup/delivery"
+2. A **client-facing in-app notification** is also queued, noting that waiting charges may apply after the free period
+3. The order's activity log records the arrival with the driver name, location, and the free-hours allowance that applies
+
+The free waiting period defaults to **2 hours** but comes from the truck cost profile (Settings → Pricing & Costing → Cost profiles, also called Rate Cards) — this determines when the arrival becomes chargeable, not when the alert fires.
+
+## Notifying the Client
+
+Druma can send the client a waiting-time email — either triggered by a planner, or automatically at escalation tiers as waiting continues. The automatic emails are **rules**: in **Settings → Rules**, a rule on the event for **Driver arrived, free waiting**, or on **Waiting charge notice 1, 2 or 3** (under **When something happens**), switches that email on, and chooses who receives it, with copies. If no rule exists for that event, no automatic email is sent. A waiting-charge rule also has **Show the hourly rate and the total charge** to hide the amounts. Your company's own waiting-time settings still apply on top of the rule. The email contains:
+
+- The driver's arrival time and, if loading/unloading has started, that timestamp too (plain text — no GPS coordinates or map link)
+- Free waiting time and chargeable waiting time so far, at your configured hourly rate
+- The total waiting charge calculated so far
+- A link to the driver's uploaded photo or voice note, if one was attached to the waiting event (valid for 1 hour)
+- On automatic escalation emails, one-click "Confirm receipt / Request callback / Request reschedule" links (valid 48 hours)
+
+> **Note:** 
+This email acts as a formal written notification, which is important if you need to support a waiting time claim under the transport contract.
+
+
+You can reword these emails in **Settings → Communication** (under **Delivery and tracking**: **Driver arrived, free waiting**, **Waiting charge notice**, **Waiting charge, still waiting**, **Waiting charge, final notice**) and preview them there — see [Client emails: wording, recipients and timing](/en/admin/client-email-templates). A manual notice sent by a planner is not a rule. Who receives it follows the rule's audience and each contact's **Waiting charges** email preference (see [Client email preferences](/en/admin/client-email-preferences)).
+
+## The Charge on the Invoice
+
+When you generate the invoice for the order, the waiting time charge is automatically added as a separate line item:
+
+- Description: "Waiting time charges" (a fixed label — it does not interpolate the location, date, or duration)
+- Rate: your configured hourly rate
+- Amount: waiting time is rounded to the nearest minute, and the resulting charge to 2 decimal places
+
+You can edit or remove this line item on the invoice before issuing it if you have agreed otherwise with the client.
+
+> **Note:** 
+Waiting can also be excluded from billing entirely, per client or per order — see [Turning off waiting billing](#turning-off-waiting-billing) below. When it's off, the waiting event is still logged, it just never becomes a charge.
+
+
+## Configuring Waiting Time Settings
+
+### Free hours and hourly rate
+
+The free waiting period and the hourly waiting rate resolve through a fallback chain, checked in this order:
+
+1. **Client** — a per-client override, if the client record has its own free-hours and/or rate set
+2. **Rate card** — the truck cost profile assigned to the order (Settings → Pricing & Costing → Cost profiles, own-fleet or subcontracted)
+3. **Company default** — a company-wide fallback
+4. **Platform default** — used only when none of the above is set
+
+Each field falls back independently — a client that overrides only the rate still inherits the company's free-hours, and vice versa. For most companies the rate-card level is enough: go to **Settings → Pricing & Costing → Cost profiles**, open the relevant cost profile, and set **Free waiting hours** and **Waiting rate €/h**. Set the fields on a client's own record only when that specific client has contractually different waiting terms.
+
+> **Warning:** 
+If you change a cost profile's waiting rate, it only affects waiting events recorded from that point on. Waiting charges already added to open invoices are not updated automatically.
+
+
+### Turning off waiting billing
+
+Not every client or order should turn waiting into a charge. Druma still logs the waiting event either way — arrival, free period, chargeable minutes are all recorded — it just won't generate a bill for it when this is off:
+
+- **Per client** — open the client's record and uncheck **Bill waiting hours for this client**. Every order for that client stops generating waiting charges (waiting time is still tracked).
+- **Per order** — on the Add Order screen, **Client tab**, set **Bill waiting hours** to **Inherit from client** (the default), **Always bill**, or **Never bill**. The order-level setting always wins over the client setting, in either direction, so you can bill one exceptional order for an otherwise opted-out client, or exempt a single order from an otherwise-billing client.
+- If neither is set anywhere, the company-wide default is to bill.
+
+## Late-Arrival Waiting Charges
+
+If your own truck arrives more than 30 minutes late to a pickup or delivery stop, and the order has a chargeable waiting charge that hasn't been sent to the client yet, Druma pauses that order's auto-invoicing rather than billing the client automatically — the driver's own lateness may have caused or extended the wait, so a planner should confirm the charge is fair first.
+
+- Paused orders appear in a **"Late-arrival waiting charges"** section on the **Finance → Waiting to bill** page, above the regular detention-charges queue.
+- For each one, a planner chooses **Include** (keep the waiting charge, resume auto-invoicing on the next hourly sweep) or **Drop** (remove the waiting charge from this invoice and resume auto-invoicing).
+- Orders with no late arrival, or where waiting billing is already off for that client/order, are never affected by this check.
+
+## Viewing Waiting History
+
+All waiting events are stored permanently on the order. To review them:
+
+- **Order detail page → Activity tab** — shows every status change with timestamp
+- **Analytics → Site Waiting** — waiting visits, total hours, average duration, and billable amounts grouped by the **site where the truck actually waited** (a wait at the delivery stop shows under the delivery city, not the order's pickup city) and by client, over a selectable timeframe (last 24 hours through last 12 months, or a custom range)
+
+This data is useful when negotiating contract terms. If a client consistently causes 3+ hours of waiting per delivery, you have the numbers to back a rate renegotiation.
+
+## Common Questions
+
+**What if the driver forgot to set "Arrived" status?** The planner can manually log an arrival time on the order — enter the actual time and a note explaining the manual entry. This time is used for the waiting calculation.
+
+**What if the client disputes the charge?** Share the order's activity log from Druma, which shows the recorded arrival and loading/unloading timestamps, plus the driver's uploaded photo or voice note if one was attached to the waiting event.
+
+
+  
+    How planners manage waiting time manually within the order workflow.
+  
+  
+    How waiting charges appear and can be edited on invoices.
+  
+</CardGroup>
+
+---
+
+## Nightly Data Quality Scan
+
+
+Bad data is expensive. A client missing a VAT number blocks your e-Factura submission. A delivered order sitting uninvoiced for a week is cash you haven't collected. An overdue invoice with no follow-up is a client relationship going stale. The nightly data quality scan finds these problems before they cost you.
+
+Every night, Druma runs nine automated checks across your entire dataset and writes the results to the **Data Quality** page under **Tools**.
+
+## The Nine Checks
+
+### 1. Missing VAT
+Clients used in a recent, non-draft order who have no VAT number recorded. Romanian e-Factura submission requires a valid VAT number for every client — if one is missing, invoices for that client can't be submitted to ANAF automatically.
+
+### 2. Invoice not submitted to ANAF
+Sent invoices with no e-Factura submission status recorded.
+
+### 3. Delivered, uninvoiced for 7+ days
+Orders marked delivered more than 7 days ago that still have no linked invoice. This is revenue you've earned but not yet billed.
+
+### 4. Stale draft order
+Draft orders that have sat untouched for more than 7 days — typically forgotten email-ingested orders a planner never confirmed or deleted.
+
+### 5. Client has no email
+Clients with no email address on file.
+
+### 6. Confirmed order, no agreed price
+Orders in **Confirmed** or **Assigned** status where the agreed price is still missing or zero.
+
+### 7. Invoice overdue 60+ days
+Unpaid invoices more than 60 days past their due date.
+
+### 8. Completed order, no invoice after 14 days
+Delivered orders still uninvoiced after 14 days — a longer-horizon version of check 3, flagged as informational rather than critical.
+
+### 9. Dormant client
+Clients with no orders in the last 90 days.
+
+## Viewing Results
+
+Go to **Tools → Data Quality**.
+
+The page shows:
+
+- A KPI bar with the total open issue count, plus counts by severity (Critical, Warning, Info)
+- A stacked bar chart of issues by severity over the last 30 days
+- A filterable table (Open / Resolved / Ignored / All) listing every issue with its entity type, reference, description, severity, suggested action, status, and creation date
+- **Resolve** and **Ignore** actions on each open issue
+
+> **Note:** 
+The data quality scan runs at **03:00 UTC** each night. Results shown on the page reflect the state of your data as of that time. Issues you fix during the day will clear on the next night's scan (once you also mark the issue **Resolved**, or it stops matching the underlying query).
+
+
+## Fixing Issues
+
+The Data Quality page tells you what's wrong and suggests an action, but it does not deep-link to the underlying record — use the reference shown (client name, order number, invoice number) to find it yourself in Clients, Operations, or Finance, fix the problem, then come back and click **Resolve**.
+
+Users allowed to correct data (Admin, Company Admin, Key User) also see a **Correct** button on issues linked to an order. It opens that order's Correction workspace in the [Key User Hub](/en/admin/key-user-hub). Open data-quality issues also appear in the Key User Hub **Inbox**.
+
+There is no bulk-fix tool — each issue is resolved individually. This is by design: data corrections should be deliberate.
+
+Clicking **Ignore** on an issue removes it from the **Open** filter without marking it resolved — use it for issues you've decided not to act on. Ignored and resolved issues are excluded from the next night's re-scan of open issues (each scan replaces the current set of open, non-ignored issues).
+
+
+  
+    See all available reports in Druma and how to schedule them for regular email delivery.
+  
+</CardGroup>
+
+---
+
+## Driver Assignment Notifications
+
+
+When a planner assigns a driver to an order, Druma takes care of telling the driver. Two automatic push notifications go out — one the evening before departure, one the morning of — so the driver has the job details at the right time without dispatch having to call.
+
+## When Notifications Are Sent
+
+Druma sends two notifications per order:
+
+| Notification | Timing | Message |
+|---|---|---|
+| Evening reminder | 18:00 UTC the day before pickup | "Reminder: pickup tomorrow" / "Tomorrow: 08:00–12:00 in [pickup city] → [delivery city]" |
+| Morning reminder | 06:00 UTC on the pickup day | "Today's pickup" / "Pickup today at 08:00–12:00 in [pickup city]" |
+
+Both times are **fixed UTC** — they are not adjusted for the driver's or the order's local timezone. The pickup-time placeholder shows the order's planned pickup window (e.g., "08:00–12:00", 24-hour clock), taken from the first loading stop. It renders as a literal em dash "—" only when that stop has no pickup time recorded.
+
+Both notifications are sent in the driver's configured language (the `language` field on their profile), falling back to English if not set. Druma supports all 10 platform languages, including Romanian, Bulgarian, Hungarian, Polish, Czech, and Slovak.
+
+## What the Driver Sees
+
+When the driver taps the notification, the Druma driver app opens directly to the order. They can see:
+
+- Full pickup address with a "Navigate" button (opens Google Maps or Waze)
+- Loading contact name and phone number
+- Requested loading time window
+- Full delivery address
+- Goods description, weight, and pallet count
+- Any notes your planner added for this specific order
+- CMR / eCMR documents when available
+
+
+The driver does not need to search for their order — the notification takes them straight to it.
+
+## Requirements for Notifications to Work
+
+Push notifications require the driver to have the Druma PWA installed on their phone and to have accepted browser notifications.
+
+**Android (Chrome):**
+When the driver first opens the Druma driver portal on Chrome, the browser automatically asks for notification permission. The driver taps Allow. No additional setup needed.
+
+**iOS (Safari):**
+iOS handles notifications differently. The driver must:
+1. Open the Druma driver portal in Safari
+2. Tap the Share button (the box with an arrow)
+3. Select **Add to Home Screen**
+4. Open the app from the home screen icon
+5. When prompted, tap Allow for notifications
+
+> **Note:** 
+On iOS, notification permission is only requested after the app is added to the home screen and opened from there. If a driver says they are not receiving notifications on iPhone, this is the most common cause — check whether they installed it from the home screen.
+
+
+## What If a Driver Has No Smartphone?
+
+Push notifications are a supplement to your existing dispatch process, not a replacement. If a driver does not have a smartphone capable of running the PWA — or simply is not comfortable with apps — the dispatcher should call them as usual.
+
+The assignment is still recorded in Druma regardless of whether the driver uses the app. The order, route, and documents are all stored and printable from the desktop.
+
+## Notifications for Multi-Stop Orders
+
+For orders with multiple pickup or delivery stops, Druma sends a single notification per order. The notification text references the first pickup city and the final delivery city. The driver sees all stops in the correct sequence when they open the order.
+
+
+  
+    How to add drivers, set their profiles, and manage documents.
+  
+  
+    Step-by-step guide for installing the Druma PWA on Android and iOS.
+  
+</CardGroup>
+
+---
+
+## Rules: automate tagging, blocking, checklists and emails
+
+
+Rules let Druma do routine decisions for you: send an order to the right department, block a confirmation when data is missing, build a checklist for the driver, or email a client when an order reaches a status. All of them live in one place.
+
+Go to **Settings → Rules**. This area is for **Admin** and **Company Admin** users.
+
+## The kinds of rules
+
+| Rule type | What it does |
+|---|---|
+| **Exception Rules** | Warns about, or blocks, an order before it is confirmed or assigned (for example an ADR order with no ADR class). |
+| **Assignment Rules** | Automatically sets an order's department, resource group or planning group. |
+| **Truck & Driver Rules** | Limits or ranks which trucks and drivers can be suggested for an order (for example "ADR loads need an ADR driver"). |
+| **Activity Duration Rules** | Sets how many minutes loading or unloading takes at a stop, for planning. |
+| **Task Templates** | Builds a checklist and runs actions (including sending an email) when an order or invoice reaches a status. See [Order Tasks & Workflow Templates](/en/planner/order-tasks). |
+| **Stop Action Templates** | Shows the driver a per-stop checklist (photos, notes, a call, tick-boxes). |
+| **Client Action Rules** | The same idea as task templates, but attached to a **Client Rule Group**, so it applies to one client, a group of clients or a site. |
+
+> **Note:** 
+Settings → Automations (the feature switches) is a separate page. The client-email switches that used to live there were replaced by rules — see [Client emails: wording, recipients and timing](/en/admin/client-email-templates).
+
+
+## Three ways to create a rule
+
+Every rules page offers the same three starting points.
+
+
+  ### Build it by hand
+    Click the add button on the page and use the condition builder. Conditions can be grouped ("all of these" / "any of these") and can look at the order, its stops, its goods lines, and the time or weekday of a pickup.
+  
+  ### Start from a template
+    Click **Start from a template**. Pick a ready-made rule, filter by scenario (dangerous goods, cold chain, lanes and countries, timing, customers, equipment, data quality, compliance), fill in your own department, group, client or country, and choose **Open in the builder** or **Refine with AI**. Examples: ADR cargo to the ADR department, temperature-controlled loads to the reefer group, lane into Romania from HU, PL, CZ, SK or BG, weekend loading, night pickups, missing CMR data (block), cabotage watch.
+  
+  ### Describe it with AI
+    Click **Describe with AI** and type what you want in your own words, for example "All ADR orders go to the ADR department". Romanian, Bulgarian, Hungarian, Polish and other languages work. Druma shows a **Suggested rule** read back in plain language, plus a **Parts I could not build** list for anything it could not turn into a rule. Ask for a change in the box below to refine it, then click **Create rule (switched off)**.
+  
+
+
+> **Warning:** 
+A rule made from a template or by AI is always created **switched off**. Nothing changes until you test it and turn it on yourself in the list.
+
+
+You can also ask **Ask Druma** (the in-app assistant) to draft a rule. It saves a draft you open with **Review in Rules**; you then test it and create it (switched off).
+
+## Read it back and test it before saving
+
+Rules can be hard to judge from the conditions alone, so Druma explains them.
+
+- **Plain-language readback.** A rule is shown as a sentence, with a **Technical** toggle if you prefer the expression form.
+- **Test against an order.** Click **Test against an order**, search an order number (or pick one from the last 30 days) and Druma tells you whether the rule matches, why (what the order has versus what the rule expects), and what it would change, for example "If saved, this rule would set 'Department' to ADR desk." It also tells you when the order is outside the rule's scope, when an earlier rule decides first, or when a value was set by hand and would stay as it is.
+- **Check the last 30 days.** **Check the last 30 days** shows how many recent orders the rule would have matched and changed, with examples. If it takes too long, narrow the conditions.
+- For exception rules the test says whether the rule would **block**, **warn** or **not flag** the order. For activity duration rules it shows the minutes per stop.
+
+Testing needs permission to manage settings.
+
+## Version history and restore
+
+Every create, edit and delete of an assignment, truck/driver, exception, client-action, stop-action or activity-duration rule is recorded (the latest 50 versions of each rule are kept).
+
+1. Open the rule and click **Version history**.
+2. Versions are listed newest first with who changed it, when, what changed (name, conditions, scope, what it does, switch, position) and a **Before** / **After** reading.
+3. Click **Restore**, then **Restore as new version**.
+
+A restored rule always comes back **switched off**, so nothing changes until you turn it on. A restore can be refused if a client, group or site the rule used no longer exists.
+
+## See which rules acted on an order
+
+Open an order and go to the **Rules** tab. It lists the automatic rules that acted on the order: what each one set (for example "Set Department to ADR desk"), which rule and version, and a **Why it matched** trace. Anything set by hand is never changed by a rule. Values that come from financial data are hidden if you do not have access to financials. Admins get an **Open assignment rules** link.
+
+## Common questions
+
+**Why did my rule not fire?** Open the order, go to the **Rules** tab, and use **Test against an order** on the rule. The answer is one of: conditions do not match, the order is outside the rule's client/group/site scope, an earlier rule decided first, the value was set by hand, or the order has not reached the rule's phase yet.
+
+**Can I undo a bad edit?** Yes: **Version history** → **Restore**. The restored rule is switched off until you enable it.
+
+**Does the AI turn rules on by itself?** No. The AI only proposes; you create the rule (switched off), test it and enable it.
+
+**Who can edit rules?** Admin and Company Admin.
+
+
+  
+    How the "Send email" rule action and the Communication editor work together.
+  
+  
+    Task templates in detail.
+  
+</CardGroup>
+
+---
+
+
+# Tools
+
+## Smart Import (AI Bulk Onboarding)
+
+
+## Overview
+
+Smart Import is an AI-powered onboarding tool that reads documents you already have — carrier fleet lists, driver licence files, client directories, insurance certificates — and turns them into structured Druma records. Instead of re-typing data from paperwork or reformatting spreadsheets to match an import template, you hand the raw document to Druma and review what the AI extracted before it goes into the database.
+
+Go to **Tools → Smart Import** to open it.
+
+> **Note:** 
+Smart Import uses Google Gemini to extract data. Files are processed server-side and are not stored permanently after extraction — only the structured records you choose to import are saved.
+
+
+
+---
+
+## When to use Smart Import vs. regular bulk import
+
+Druma has two bulk onboarding paths. Choose the right one for your situation:
+
+| Situation | Use |
+|---|---|
+| You have a PDF, scanned document, or image | **Smart Import** |
+| You have a photo of a document or handwritten list | **Smart Import** |
+| You received a fleet list from a carrier in Word or a non-standard Excel | **Smart Import** |
+| You're exporting from another TMS with a known CSV format | **Regular CSV bulk import** |
+| You have a clean spreadsheet that already matches Druma's column structure | **Regular CSV bulk import** |
+
+Smart Import handles documents that are too messy or unstructured for a direct CSV import. It will not replace a well-structured export — the regular import is faster when your data is already clean.
+
+---
+
+## Supported document types
+
+- **PDF** — fleet lists, carrier profiles, insurance certificates, driver dossiers
+- **Images** — JPEG, PNG, WebP, HEIC/HEIF — scans, phone photos, screenshots
+- **Excel** — `.xlsx` files in any layout (Smart Import reads content, not just standard templates)
+- **CSV** — comma- or semicolon-delimited files
+
+---
+
+## Step-by-step workflow
+
+
+  ### Open Smart Import
+    Go to **Tools → Smart Import**. You will see the upload zone and, below it, the category cards (empty on first visit).
+  
+  ### Upload your documents
+    Click **Upload Documents** or drag files directly onto the drop zone. You can upload multiple files at once — for example, a PDF fleet list and an image of an insurance certificate together.
+
+    > **Note:** 
+    Maximum file size is 20 MB per file. If a document is larger, split it into sections before uploading.
+    
+  
+  ### Wait for AI extraction
+    Druma sends each file to the AI extraction service. This typically takes a few seconds per file. A progress indicator shows the status for each document. Do not close the tab during extraction.
+  
+  ### Review the extraction results
+    When extraction is complete, the **Review Dashboard** appears. It shows six category cards across the top — **Company**, **Trucks**, **Trailers**, **Drivers**, **Clients**, **Insurance** — with a count of extracted records in each category.
+  
+  ### Open a category to review
+    Click any category card to see the extracted records in an editable table. Each row is one extracted record (one vehicle, one driver, one client, etc.).
+  
+  ### Edit any incorrect fields
+    Click any cell in the table to edit it inline. The AI is accurate on clearly printed text, but may misread handwriting, abbreviations, or non-standard formatting. Correct any errors before importing.
+  
+  ### Check confidence scores and duplicates
+    Review the confidence indicators and duplicate flags on each row — see the sections below for details.
+  
+  ### Import the category
+    When a category looks correct, click **Import [Category]** — for example, **Import Trucks** or **Import Clients**. Druma batch-inserts all non-skipped rows and confirms the count imported.
+  
+
+
+---
+
+## The Review Dashboard
+
+The Review Dashboard is the central workspace after extraction. It has two levels:
+
+**Category cards (top level)** — one card per data type found in your documents. Each card shows:
+- The category name
+- Number of records extracted
+- A summary warning if any records have Low confidence or Duplicate flags
+
+**Record table (drill-down)** — click a card to open the editable table for that category. The table shows one column per field (e.g., Plate, Brand, Payload, Year for Trucks; Plate, Trailer Type, Max Weight for Trailers), with confidence indicators and duplicate flags on each row.
+
+
+You can switch between categories freely — your edits are preserved until you import or close the session.
+
+---
+
+## Confidence scoring
+
+Every extracted field receives a confidence score based on how clearly the AI could read and interpret the source text. Scores are shown as colour-coded indicators on each cell:
+
+| Indicator | Meaning |
+|---|---|
+| Green — **High** | The AI is confident. The field was clearly printed or structured. |
+| Amber — **Medium** | The AI made a reasonable inference but the source was ambiguous (e.g., an abbreviation, a partially visible word). Review before importing. |
+| Red — **Low** | The AI could not extract a reliable value. The cell may contain a best guess or be empty. Always review Low fields manually. |
+
+> **Warning:** 
+Low-confidence fields are not blocked from import — you can import them as-is — but you are responsible for verifying their accuracy. Incorrect data (wrong licence plate, wrong VAT number) can cause problems downstream in invoicing, compliance, and carrier communications.
+
+
+To quickly find all Low-confidence fields across a category, look for the amber and red cell highlights in the table. There is no separate filter — scan column by column or row by row.
+
+---
+
+## Automatic clean-up and learning
+
+After the AI reads a document, Druma tidies predictable formatting problems before you review:
+
+- **VAT numbers** are written with the country prefix and no spaces.
+- **Licence plates** are trimmed and upper-cased (separators are kept).
+- **Dates** are read day-first, and numbers such as `12.500` are read as the number they are meant to be.
+- **ALL-CAPS names** (company, client, driver) are turned into normal capitalisation. Legal forms such as SRL, GmbH or Sp. z o.o. keep their usual form.
+- **Fuel types** are mapped to Druma's list (for example motorină or diesel).
+
+The extraction is also tied to a fixed structure, so a field such as year always comes back as a year. If a value cannot be repaired, Druma shows it untouched so you can see what the AI read and fix it.
+
+When you correct a value in the review table and import, Druma remembers the fix **for your company only**. If you make the same fix on three documents it becomes a learned rule. See [AI corrections and learned rules](/en/admin/ai-corrections) to review or delete them.
+
+---
+
+## Duplicate detection
+
+Before showing the Review Dashboard, Druma compares extracted records against your existing company data — but only for four of the six categories:
+
+- **Trucks**: matches on licence plate
+- **Trailers**: matches on licence plate
+- **Drivers**: matches on full name (case-insensitive)
+- **Clients**: matches on VAT number, falling back to name if no VAT number was extracted
+
+> **Note:** 
+There is no duplicate detection yet for Company or Insurance records — every extracted row in those categories is treated as new.
+
+
+Records that match existing data are flagged with a **Duplicate** badge on the row. You have two options for each duplicate:
+
+- **Skip** (default) — the row will not be imported. Use this when the existing record is already correct.
+- **Overwrite** — the import will update the existing record with the extracted data. Use this carefully — it replaces the stored values.
+
+Rows without a Duplicate flag are new records and will be inserted on import.
+
+---
+
+## After import
+
+Imported records appear immediately in the relevant module:
+
+- **Trucks** appear in **Fleet → Trucks**
+- **Trailers** appear in **Fleet → Trailers**
+- **Drivers** appear in **Fleet → Drivers**
+- **Clients** appear in **Clients**
+- **Company** doesn't create a new record — it updates your own company's profile fields (name, VAT, address, IBAN, and so on) directly. There's only ever one Company row to review, not a list.
+- **Insurance** data is attached to the matching vehicle by licence plate (rows that don't match an existing truck are skipped)
+
+There is no undo for an import. If incorrect data was imported, edit the records individually in their respective modules.
+
+---
+
+## Limitations
+
+Smart Import is designed for company profile, truck, trailer, driver, client, and insurance data. It does not handle:
+
+- **Orders** — use the order form or the inbound order email feature for order creation
+- **Invoices** — invoices are generated automatically from delivered orders or via the carrier invoice ingestion workflow
+- **Historical data migration** — for large historical datasets (thousands of records), contact support for an assisted migration
+
+Smart Import works best with documents that are primarily text-based. It can process handwriting in images but accuracy drops significantly compared to printed text.
+
+---
+
+## Practical example
+
+Your new subcontractor sends you a 3-page PDF listing their entire fleet — 12 vehicles with plate, type, max weight, and year. Instead of entering each one manually:
+
+1. Upload the PDF to **Tools → Smart Import**
+2. Wait a few seconds for extraction
+3. Click the **Trucks** card — 12 rows appear, most with High confidence
+4. Two rows have Medium confidence on a field — correct them inline
+5. One row is flagged as Duplicate (a truck you already added last week) — leave it as Skip
+6. Click **Import Trucks** — 11 new vehicles are added to your fleet instantly
+
+---
+
+
+  Manage trucks, trailers, and drivers — and verify imported fleet records here after a Smart Import.
+
+
+
+---
+
+## AI Chat Escalations
+
+
+## Overview
+
+Ask Druma is an AI assistant available to planners, drivers, and clients, with two tabs: **Docs** (answers questions from the documentation) and **Assistant** (answers questions about your own data, and — where entitled — takes action as an agent). **Escalation only applies to the Docs tab** — if the user has sent 6 messages in a Docs conversation, Ask Druma offers a **Request human help** button. This triggers an escalation — a live chat session that lands in **Tools → Live Sessions** for Druma staff to pick up. The Assistant tab never shows this button, regardless of how long the conversation runs.
+
+> **Note:** 
+This is different from [Messages](/en/planner/messages) — the everyday person-to-person and driver chat hub. Live Sessions is specifically the queue for AI conversations that Ask Druma's Docs tab couldn't resolve, and it's handled by Druma support staff, not your own company admins.
+
+
+<Frame caption="Tools → Live Sessions — escalated Ask Druma conversations waiting for a human to pick them up.">
+  <img src="/images/tools/chat-escalations.png" alt="Live Sessions queue showing escalated Ask Druma chat conversations" />
+</Frame>
+
+---
+
+## How escalation works
+
+1. **User sends 6 messages** in a Docs-tab conversation without a satisfactory answer.
+2. Ask Druma offers a **Request human help** button.
+3. The user taps it.
+4. A chat session is created (or, if the same user already has an open session, that existing one is reused rather than creating a duplicate).
+5. An email notification is sent to Druma's support address — not to your company's admins — with the AI conversation so far for context. The email contains no direct link into the app; it just tells support to open Live Sessions.
+6. The user is switched into live chat inside the same Ask Druma panel and waits for a reply.
+
+---
+
+## Live Sessions
+
+**Tools → Live Sessions** lists escalated conversations. The list is split by status:
+
+| Status | Meaning |
+|---|---|
+| Waiting | Escalated, not yet picked up by an agent |
+| Active | An agent has replied at least once |
+| Closed | Conversation ended |
+
+### Handling a session
+
+1. Open a **Waiting** session.
+2. Read the AI conversation history — every message the user sent and every AI response before the handoff.
+3. Type a reply in the reply box and send it. This moves the session to **Active** and the user sees the reply in real time on their side.
+4. Continue the conversation until the issue is resolved.
+5. Close the session when done.
+
+Updates appear in real time on both sides via Supabase Realtime — no need to refresh the page.
+
+---
+
+## Roles with access
+
+The **Tools** section in the sidebar is platform-admin-only — it isn't shown to company_admin, planner, or dispatcher roles at all. In practice, escalated sessions are seen and answered by Druma's own support staff, not by users inside your company.
+
+---
+
+## Notification email
+
+When a new escalation arrives, Druma sends an email to its support address (not to any user in your company). The email includes:
+
+- The user's name and email (as a reply-to)
+- The AI conversation up to that point
+- A note to open Live Sessions in the app to reply — no direct link is included
+
+> **Note:** 
+The escalation threshold is fixed at 6 user messages in the Docs tab. It cannot currently be changed per company, and it never triggers from the Assistant tab.
+
+
+
+  Ask Druma can also help with data extraction and import — see Smart Import.
+
+
+---
+
+## Truck Parking Map
+
+
+## Overview
+
+The Truck Parking Map layer adds verified truck parking locations to your Live Map. For each active truck, Druma calculates which parking areas are within a configurable detour distance of the truck's current route and shows them colour-coded by security level — so you can find a safe, legal rest stop in seconds rather than asking the driver to search on their phone.
+
+This matters for EU road transport compliance. Drivers operating under Regulation (EC) No 561/2006 must take mandatory 45-minute breaks after 4.5 hours of driving, and daily rest periods of at least 11 hours in a suitable facility. Having parking options visible on the dispatch map means you can plan rest stops proactively, especially on long international routes through areas you are less familiar with.
+
+Go to **Dispatching → Live Map** and enable the **Parking Layer** toggle to use this feature.
+
+
+---
+
+## Enabling the parking layer
+
+On the Live Map, the **Parking Layer** toggle is located in the map controls panel in the top-right corner of the map.
+
+- **Toggle on** — parking markers appear across the visible map area, filtered to the detour distance you have configured
+- **Toggle off** — all parking markers are hidden; truck and order overlays remain unchanged
+
+The parking layer state is not saved between sessions — you enable it when you need it.
+
+> **Note:** 
+Parking markers load based on the routes of trucks currently visible on the map. Scroll or zoom to a new area and markers update automatically. In dense parts of Western Europe (Germany, Netherlands, Belgium) there may be dozens of markers — use the filter panel to narrow down to relevant options.
+
+
+---
+
+## Reading parking markers
+
+Each marker on the map represents one truck parking location. Markers are colour-coded by security level:
+
+| Colour | Security level | Meaning |
+|---|---|---|
+| Green | **Certified** | Meets a recognised third-party security standard (see SSTPA below). The highest tier — suitable for high-value cargo. |
+| Blue | **Secured** | Fenced and monitored (CCTV and/or lighting), but not independently certified. |
+| Amber | **Basic** | Some measures in place, but not fenced/monitored to the Secured tier. Acceptable for short stops. |
+| Grey | **Unknown / unsecured** | No security data available, or known to have none. Not recommended for overnight rest with valuable cargo. |
+
+Locations that meet the EU Safe & Secure Truck Parking (SSTPA) standard carry a green **SSTPA** badge in the popup and on the marker — see Data Sources below.
+
+Click any marker to open the parking popup. The popup shows:
+
+- **Name** and full address
+- **Security level** badge (and the SSTPA badge, if certified)
+- **Capacity** — total spaces available at this location
+- **Amenities** — fuel, electricity, showers, food, toilets, WiFi (shown as icons)
+- **Detour** — estimated extra distance (km) and time (minutes) from the selected truck's route to reach this parking
+
+The detour calculation uses real driving distances on HGV-permitted roads, not straight-line distance — so a parking that is 3 km away on the map may show a 7-minute detour if the route requires a turn-around.
+
+---
+
+## Filtering parking results
+
+Click the **Filter** icon next to the Parking Layer toggle to open the filter panel. Filters apply immediately — the map updates without reloading.
+
+**Search radius**
+Limits markers to parking locations within a maximum driving distance from the active route. Options:
+- 10 km
+- 25 km
+- 50 km
+- 75 km
+- 100 km
+
+Start with 10 km for stops on busy motorway corridors where options are plentiful. Expand to 50–100 km on rural routes or in less-served areas.
+
+**Security level**
+- Any — show all parking regardless of security rating
+- Basic, Secured, or Certified — filter to that tier and above
+
+Use Certified when the truck is carrying high-value or temperature-controlled cargo.
+
+**Amenities**
+Tick the amenities your driver needs for the stop:
+- Toilets
+- Showers
+- Food
+- WiFi
+- Fuel
+- Electricity
+
+Only parking locations with **all** ticked amenities are shown. If you tick Showers and Food, a location must have both to appear. CCTV and Lighting can also be filtered on directly, alongside the security-level buttons.
+
+---
+
+## Finding parking for a specific truck
+
+
+  ### Select the truck on the Live Map
+    Click a truck marker on the Live Map. The truck is highlighted and its current route polyline appears on the map — a coloured line showing the planned path from current position to the delivery stop.
+  
+  ### Enable the Parking Layer
+    Click the **Parking Layer** toggle in the top-right controls. Markers appear filtered to your configured max detour distance from the truck's route.
+  
+  ### Apply filters if needed
+    Open the Filter panel and set your minimum security level and required amenities. Markers update immediately.
+  
+  ### Review the options
+    Click individual markers to see the popup with full details, capacity, and detour time. Markers closer to the truck's route (smaller detour) are preferred — there is no automatic sort on the map, but the detour figure in the popup lets you compare options quickly.
+  
+  ### Add it to the order (optional)
+    From the parking popup, click **Add to order** (labelled with the order's number, e.g. "Add to order #4821") to insert it as a stop on the truck's active order — see the section below for details.
+  
+
+
+---
+
+## Adding a parking stop to the order
+
+When you find a suitable parking location and a truck with an active order is selected, the parking popup shows an **Add to order** button labelled with the order's number. Clicking it is a single, immediate action — there is no propose/acknowledge step:
+
+1. Druma inserts an internal rest stop on the truck's active order right after its current position in the route, linked to the selected parking location, with a default 45-minute dwell
+2. The stop shows as **Stop assigned** in the popup immediately, with a **Cancel stop** option while it's still pending
+3. The driver sees the new stop on their route in the PWA as soon as it's added
+
+There's no separate driver acknowledgement stage — adding the stop from the map assigns it outright. If plans change, use **Cancel stop** from the same popup (only available before the driver has started that stop).
+
+> **Warning:** 
+Stops added via **Add to order** are included in ETA calculations. Adding a stop mid-route will extend the estimated delivery time. Check the updated ETA in the order detail panel after adding a stop and notify the client if the delay is significant.
+
+
+---
+
+## Parking data sources
+
+Druma combines three sources of parking data:
+
+**OpenStreetMap (OSM)**
+Public truck parking data contributed to OpenStreetMap and automatically ingested by Druma. Covers the majority of formal truck parking areas across Europe — motorway service areas, dedicated HGV parks, border crossing facilities. OSM data is refreshed periodically. Coverage is strongest in Western and Central Europe; Eastern Europe and remote areas may have gaps.
+
+**SSTPA-certified areas**
+Locations certified under the EU Safe & Secure Truck Parking Areas (SSTPA) standard — independently audited secure parking. These carry the **Certified** security level and a green **SSTPA** badge on the marker and in the popup, so you can spot them at a glance.
+
+**Company-uploaded parking**
+Parking locations added by your own company — trusted stops your drivers use regularly, private yards that accept overnight parking, partner facilities. Company-uploaded locations are only visible to users in your company. They appear on the map alongside the other sources with no visual distinction beyond the usual security-level colour — filtering works the same way.
+
+---
+
+## Adding your own parking locations
+
+Company parking locations are managed from the Live Map itself, not from Settings.
+
+**Manage Parkings modal:**
+On the **Live Map**, open **Manage Parkings**. It lists your company's parking locations with search, and lets you add, edit, delete, or promote each one. Click **+ Add Parking** and fill in:
+- Name
+- Address (with HERE address autocomplete)
+- Security level (Basic / Secured / Certified)
+- Capacity (number of spaces)
+- Amenities (tick all that apply, including CCTV and lighting)
+
+You can also bulk-import company parkings from a CSV/Excel file (a downloadable template is provided) from the same modal.
+
+**From the map:**
+Click **+ Add Parking** in the parking popup of an existing location (to add a nearby variant) or use the map context menu on an empty map area.
+
+Saved company parkings appear immediately on the Live Map for all users in your company.
+
+### Promoting a company parking to public
+
+If your company has added a well-documented parking location that would benefit all Druma users — for example, a large truck park that is not yet in OSM — an admin can share it.
+
+Open **Manage Parkings** on the Live Map and click **Promote to public** next to the location. After promotion, the location becomes visible to all Druma companies and is marked as community-contributed. This cannot be undone from the modal.
+
+---
+
+## EU driving hours context
+
+The parking layer is most useful when planning compliance with EU Regulation (EC) No 561/2006 rest requirements:
+
+| Requirement | Rule |
+|---|---|
+| Break after driving | 45-minute break after 4.5 hours continuous driving (can split as 15 + 30 min) |
+| Daily rest | Minimum 11 hours (reducible to 9 hours max 3 times per week) |
+| Weekly rest | Minimum 45 hours every two weeks (one can be reduced to 24 hours) |
+
+When you know a driver's departure time and destination, you can estimate when they will need a break and use the parking map to identify suitable locations before they need to stop — rather than reacting after the driver calls asking where to park.
+
+Druma's ETA engine accounts for mandatory EU break time in estimated arrival calculations. The parking layer gives you the ground-level information to match a break requirement to a concrete, safe location.
+
+---
+
+
+  The full Live Map reference — truck positions, route polylines, and real-time status overlays.
+
+
+
+  How to add, assign, and manage internal stops on an order — including rest stops added from the parking map.
+
+
+---
+
+## Send feedback, see replies and what's new
+
+
+The feedback window is one screen: you write a report on the left, and on the right you see **What's New**, your own reports (**Mine**) and your colleagues' reports (**Team**). Open it with the **Send feedback** option in the app.
+
+## Send a report
+
+
+  ### Choose a type
+    Pick **Bug**, **Suggestion** or **Question**. The hint under the box changes with the type (for a bug: list the steps, what you expected and what happened).
+  
+  ### Describe it
+    Write in the **Description** box. Press **Ctrl+Enter** to submit quickly.
+  
+  ### Add a screenshot (optional)
+    Click **Attach file**, drag an image into the window, or paste it with **Ctrl+V**. JPG or PNG, up to 5 MB. Use **Remove screenshot** to take it off.
+  
+  ### Submit
+    Click **Submit**. The report appears at the top of **Mine** and the form clears.
+  
+
+
+Your report is sent together with the page you were on and your role, so the team can find the screen. No other page data is sent.
+
+### Duplicate check
+
+While you type, Druma looks for **Similar reports from your team** and shows up to three, so you can check before sending a duplicate. On a phone, the **Activity** tab shows a badge and a line such as "1 similar report, see Activity".
+
+## The activity pane
+
+| Tab | What it shows |
+|---|---|
+| **What's New** | What Druma has shipped recently, with the version it shipped in. It opens first when something new has shipped since you last looked. |
+| **Mine** | Your reports with a status of **Open**, **In Review** or **Done** (or **Won't Fix**), the team's reply, and **Fixed in** when a fix shipped. |
+| **Team** | Reports from colleagues in your company. Only your company sees these. You see that the team replied, not the reply text. |
+
+On a phone, the window has a **Write feedback** / **Activity** switch.
+
+## Common questions
+
+**Who sees my feedback?** The Druma team, and (in **Team**) colleagues in your company. A reply to your report is visible to you in **Mine**.
+
+**Can I report something that is not a bug?** Yes: choose **Suggestion** and say which problem it solves for you, or **Question** and say what you are trying to do.
+
+**Where is the full list of recent releases?** In **What's New** inside this window, and on the [What's New](/en/planner/whats-new) page.
+
+---
+
+
+# Reports
+
+## Reports Overview
+
+
+There is no single top-level "Reports" menu in Druma. Reporting is spread across the app, close to the data it covers:
+
+- **Analytics** (left navigation) — operational and commercial performance tabs: Lane Profitability, Profit/km, Truck P&L, Empty KM, Driver Performance, Eco Score, Client Scorecard, Aged Creditors, and more.
+- **Finance** (left navigation) — money-focused pages: Invoices, Overdue, Reconciliation, Payroll, Fuel Tax, Capacity, Cash flow.
+- **Analytics → Reports** (`/analytics/reports`) — the **Report Builder**: build custom widget dashboards from templates (eleven chart types, period comparison, click-to-filter), and optionally schedule them for automatic email delivery. See [Report Builder](/en/reports/report-builder).
+
+See [Analytics Overview](/en/reports/analytics-overview) for the full map of every tab and what it tells you.
+
+> **Note:** 
+Reports are available on the desktop version of Druma only. The mobile driver app does not include reporting. Access requires Planner role or above (most Analytics/Finance pages follow normal module-flag access — no special role gate beyond that).
+
+
+<Frame caption="Analytics → Reports (Report Builder) — scheduled email delivery here is XLSX-only and opt-in.">
+  <img src="/images/reports/reports-overview.png" alt="Report Builder page" />
+</Frame>
+
+## Finding a Specific Report
+
+| You want to know... | Go to |
+|---|---|
+| Which lanes are profitable | Analytics → Lane Profitability |
+| Per-truck profit including standing cost | Analytics → Truck P&L ([guide](/en/reports/truck-pl)) |
+| Fleet CO₂ emissions | Analytics → CO2 |
+| What's overdue and who owes what | Finance → Overdue |
+| Upcoming cash position | Finance → Cash flow |
+| Data quality issues (missing VAT, uninvoiced orders, expired documents) | Tools → Data Quality *(platform-admin only)* |
+| Driver working-hours compliance | Dispatching → Compliance |
+| A custom dashboard you can schedule to email | Analytics → Reports (Report Builder) |
+
+> **Note:** 
+**Data Quality** moved under **Tools**, and that section is restricted to platform admins (Druma staff), not a company-level role — it is not something most operators will see in their own nav.
+
+
+## Filtering
+
+Most Analytics and Finance pages have a **filter bar** at the top: a **date range** (**Today**, **This week**, **This month**, **Last 30 days**, **QTD**, **YTD**, **Last 12 months**, or a custom range) and **Compare to** (**Previous period** or **Same period last year**), which adds change indicators to the KPI tiles. Clicking a chart bar filters the table below it. Many pages add filters relevant to that report, such as origin or destination country on Lane Profitability. See [Analytics Overview](/en/reports/analytics-overview) for details and [How Druma Calculates Key Metrics](/en/reports/metric-definitions) for what each KPI means.
+
+## Exporting
+
+Export formats vary per page — most table exports produce an **XLSX** file (via the **Export** button in the page toolbar), a handful still offer **CSV** (for example, the per-claim export on Fuel Tax Refund). Check the export button's label on the page you're using; it names the format it produces.
+
+## Scheduled Delivery (Report Builder dashboards)
+
+Scheduled email delivery in Druma is **not** a per-report feature — none of the Analytics or Finance pages above have their own schedule option. It's scoped to custom **Report Builder** dashboards: build one from **Analytics → Reports**, then use the **Scheduled Delivery** button on that dashboard.
+
+> **Note:** 
+This feature is off by default. A company_admin has to turn it on first, in **Settings → Automations & Features**, before any schedule will send.
+
+
+
+  ### Build a dashboard
+    Create and save a Report Builder dashboard with the widgets you want delivered.
+  
+  ### Open Scheduled Delivery
+    From the dashboard, open **Scheduled Delivery** and give the schedule a name.
+  
+  ### Set the cadence
+    Choose **Daily**, **Weekly** (pick a day of the week), or **Monthly** (pick a day of the month, 1–28 — capped so every month has that day). Set the hour (UTC) it should fire.
+  
+  ### Add recipients
+    Enter up to 20 email addresses. Recipients do not need to have a Druma account.
+  
+  ### Save
+    The dashboard is re-run and emailed as an **XLSX** attachment at each scheduled time — there is no PDF option yet. You can toggle a schedule on/off or run it immediately with **Run now** without waiting for the next scheduled time.
+  
+
+
+
+  
+    The full map of every Analytics and Finance reporting tab.
+  
+  
+    Understand which routes are profitable and which are costing you money once fuel and tolls are counted.
+  
+</CardGroup>
+
+---
+
+## Analytics Overview
+
+
+## Overview
+
+Druma's analytics are spread across three places, all scoped to your active company and calculated live from your data — there's no overnight batch job or data warehouse to wait for:
+
+- **Analytics** (left navigation) — the main analytics hub: dashboard, lane profitability, cost/margin per km, empty km, driver and eco performance, client and subcontractor scorecards, aged creditors, savings, and a dedicated **Reports** sub-tab for the Report Builder.
+- **Finance** (left navigation) — money-focused views: invoices, overdue collections (with payment-risk forecasting), reconciliation, payroll, and more.
+- Feature-specific analytics that live next to the feature they measure, such as **Groupage** lane fill-rate (inside Analytics, only visible if groupage is enabled) or the waiting-time report inside Analytics's **Site Waiting** tab.
+
+Most analytics pages share the same report layout: a **filter bar** (date range and comparison), a row of **KPI tiles**, one or two **charts**, then the **table**. Every KPI tile with a small help icon next to it explains exactly how that number is calculated; see also [How Druma Calculates Key Metrics](/en/reports/metric-definitions).
+
+<Frame caption="The Analytics dashboard — the shared shell every analytics page follows.">
+  <img src="/images/reports/analytics-overview.png" alt="Analytics dashboard overview" />
+</Frame>
+
+---
+
+## Finding the Report You Need
+
+
+  ### Open Analytics or Finance
+    Click **Analytics** in the left navigation for operational and commercial performance, or **Finance** for money/collections reporting.
+  
+  ### Pick the tab for what you want to know
+    Each section has its own row of tabs across the top — Dashboard, Lane Profitability, Profit/km, Driver Performance, and so on. See the table below for what each one covers.
+  
+  ### Set your date range and filters
+    Use the filter bar at the top of the page to pick a period and, where offered, a comparison. Most reports also support filtering by client, truck, driver, or lane.
+  
+  ### Export or drill in
+    Use each page's **Export** button (most produce an XLSX file; a few offer CSV), or click a chart bar / table row to see the individual orders or invoices behind the number.
+  
+
+
+> **Note:** 
+Scheduled email delivery is not a per-report feature — it only applies to custom **Report Builder** dashboards, and it's off by default until a company_admin enables it. See [Reports Overview](/en/reports/reports-overview) for how it actually works.
+
+
+---
+
+## Date range, comparison and click-to-filter
+
+The report pages share one filter bar.
+
+- **Date range:** pick a preset (**Today**, **This week**, **This month**, **Last 30 days**, **QTD**, **YTD**, **Last 12 months**) or a custom range. The range you choose carries over to the next report page you open. Reports that describe a moment in time rather than a period (Aged Creditors, Overdue, Eco Score) have no date range. **Truck P&L** works per calendar month and **CO2** has its own monthly/annual period.
+- **Compare to:** choose **No comparison**, **Previous period** or **Same period last year**. The KPI tiles then show a change versus that period ("vs previous period" / "vs last year"). For a month, quarter or year to date, "previous period" compares against the same number of elapsed days of the previous one. Rates such as margin % or on-time % change in **percentage points**, and for costs a fall is shown as good (green).
+- **Click a chart to filter the table:** click a bar, slice or point in a chart and the table and KPI tiles below filter to it ("Click a bar to filter the table"). Click again to clear. The dimension pickers, the filter chips (**Active filters**) and **Clear all** do the same without a mouse. Several selections in one dimension combine as "or"; different dimensions combine as "and".
+- **Shareable:** the filters live in the page address, so a link or a reload restores exactly the same view. **Views** also saves the date range, comparison and chart filters.
+- **Errors:** if a report can't load, you see an error panel with **Retry** and technical details, and the KPI tiles say the figures are unavailable. Druma never shows zeros or an empty table instead.
+- **Chart extras:** hover a chart for exact figures (a tooltip always equals the table cell), and use the download button to save a chart as a PNG.
+
+All totals on these pages are calculated over your full data, not just the rows visible in the table.
+
+---
+
+## What Each Report Tells You
+
+### Analytics section (`Analytics` in the left nav)
+
+| Report / tab | What it tells you |
+|---|---|
+| **Dashboard** | Your top-line KPIs at a glance: **Revenue vs Costs — Last 12 Months** (with a dashed previous-year overlay), **Margin % by month**, orders, **DSO (days)** and **OTIF**. Revenue and order trends compare the month so far with the same elapsed days last month. Click a month to open its orders. Set KPI threshold alerts (bell icon) to get a warning when margin %, on-time %, DSO, fuel consumption or a cost figure crosses a level you choose. |
+| **[Lane Profitability](/en/reports/lane-profitability)** | Revenue, costs and margin for every origin-destination pair you run, with a chart of best and worst lanes and a revenue-vs-margin scatter. The headline tile is **Weighted margin %** (total margin ÷ total revenue). |
+| **Profit/km** | Cost, margin and revenue per kilometre. A stacked chart shows the cost components (fuel, toll, driver, truck) per km with a revenue/km line above it; where the line sits above the stack, that km earns a margin. Each order is charged its full share of fixed cost. |
+| **[Truck P&L](/en/reports/truck-pl)** | Monthly profit and loss per truck, each charged its full standing cost on every day, even idle ones. Profit bridge chart, loss-making trucks highlighted, previous-month comparison. |
+| **[Empty KM](/en/planner/empty-km-gaps)** | Deadhead distance between a delivered order's drop-off and the next assigned pickup, colour-coded by size — shows exactly where a return-load search would pay off. |
+| **Site Waiting** | Aggregated loading/unloading waiting time across all sites and orders — total hours waited, average wait per event, and total billable amount. For the per-order charging mechanics, see [Waiting Time Charges](/en/planner/waiting-time). |
+| **Driver Performance** | Ranks drivers by margin generated per truck-day and by on-time delivery %, with the full cost breakdown behind each driver's number. |
+| **Eco Score** | A 0–100 (A–F) score per driver built from fuel efficiency vs. peer baseline (50% of the score), idle percentage (30%), and harsh-event rate (20%) — plus a fleet-wide CO₂ view and a client-facing CO₂ statement. |
+| **Client Scorecard** | Per-client revenue, margin %, on-time delivery, OTIF and **Avg days to pay** (the average over invoices that were actually paid), with a revenue-vs-margin scatter and top clients. Click a row for the client side pane. |
+| **Sub P&L** | Revenue, cost and margin for loads you've subcontracted out, per subcontractor, with margin-by-carrier bars and a revenue-vs-margin % scatter. Flags relationships that have stopped being profitable. |
+| **Carrier Comparison** | Margin next to on-time delivery per carrier, ranked side by side (the same figures Clients → Subcontractors shows one carrier at a time), with a margin-vs-on-time scatter. |
+| **Aged Creditors** | What you owe: outstanding supplier and carrier invoices by age bucket and supplier type, plus **Days Payable Outstanding**. A snapshot as of today. See [Supplier Invoices](/en/invoicing/supplier-invoices). |
+| **Savings** | Euro value of optimisation suggestions you accepted (**realised**), trended monthly. Modelled savings are shown separately and never added into the headline. |
+| **Groupage** *(if groupage is enabled)* | Fill-rate % against assigned trailer capacity and margin per run, grouped by groupage lane. |
+| **Reports** | The [Report Builder](/en/reports/report-builder): custom dashboards with eleven chart types, period comparison and scheduled email delivery. |
+
+### Finance section (`Finance` in the left nav)
+
+| Report / tab | What it tells you |
+|---|---|
+| **Overdue** | Unpaid client invoices grouped by aging bucket (0–30d / 31–60d / 61–90d / 90d+) with KPI tiles, two charts (by bucket and top clients) and dunning controls. Where payment forecasting is enabled, each invoice also shows a predicted pay date and a risk band. See [Overdue Management](/en/invoicing/overdue-management). |
+| **Reconciliation** | Matches bank/payment activity against invoices to flag what's been paid vs. still outstanding, with a monthly trend and status chart; the date range and comparison apply to the latest bank entries in the range. |
+| **Cash flow** | A forward-looking weekly timeline of expected client receipts vs. supplier payment outflows for the next 12 weeks, plus anything already overdue. A combo chart is the headline (click a week to open it); tiles show net for the next 4 weeks and overdue in/out. |
+| **Finance dashboard** | **Outstanding**, **Overdue** and at-risk cash, **Invoiced** and **Cash collected** over the chosen period (day or month grain), **DSO**, **DPO** and the **Cash Conversion Cycle**. Charts: invoiced vs collected, and open receivables by aging. |
+| **VAT reporting** | Pick a month and generate: country, customer and issue charts filter the Lines and Exceptions tables; tiles compare with the previous month's saved run. |
+
+> **Note:** 
+Quote conversion (win rate by quoted margin band) is no longer an Analytics tab. It is the **Quotes** section of **Sales → Reporting**.
+
+
+> **Note:** 
+DSO (days sales outstanding) is open client receivables ÷ the last 12 months of client sales × 365, in EUR, and reads the same on the Analytics dashboard and the Finance dashboard. The Client Scorecard's **Avg days to pay** is different: it only averages invoices that were actually paid. The Overdue report's payment forecast predicts when each open invoice will be paid. See [How Druma Calculates Key Metrics](/en/reports/metric-definitions).
+
+
+---
+
+
+  
+    Deep dive on the exportable reports (Lane Profitability, CO2, Data Quality, Invoice Aging, Driver Hours) and how scheduled dashboard delivery works.
+  
+  
+    Full guide to reading and filtering the lane profitability report.
+  
+  
+    Monthly fleet emissions data formatted for client ESG reporting.
+  
+  
+    Export sustainability data in the format required for CSRD disclosure.
+  
+</CardGroup>
+
+---
+
+## Capacity Contracts
+
+
+## What is a capacity contract?
+
+A capacity contract is a formal commitment to dedicate a specific truck to one client for a defined period. The client pays a fixed monthly fee, a per-km rate, or a combination of both — regardless of whether every day is fully utilised. Common in long-term shipper relationships where the client wants guaranteed capacity.
+
+Capacity Contracts is found under the **Finance** section, gated by the capacity module flag — it follows normal Finance-section access, with no additional role restriction.
+
+<Frame caption="Finance → Capacity — committed lane volume in EUR or RON.">
+  <img src="/images/reports/capacity-contracts.png" alt="Capacity Contracts page" />
+</Frame>
+
+---
+
+## Contract fields
+
+When creating or editing a contract, you fill in:
+
+| Field | Description |
+|---|---|
+| Truck | The truck being dedicated |
+| Client | The client receiving the dedicated capacity |
+| Rate per km | Revenue earned per loaded km (EUR or RON) |
+| Fixed monthly fee | Flat monthly amount, independent of utilisation |
+| Currency | EUR or RON |
+| Start date | When the contract becomes active |
+| End date | When the contract expires (leave blank for open-ended) |
+| Status | Active, Suspended, or Ended |
+| Notes | Internal notes — not visible to the client |
+
+---
+
+## Status lifecycle
+
+```
+Active → Suspended → Active   (temporary suspension, e.g. vehicle off-road)
+Active → Ended               (contract term completed or terminated)
+```
+
+You can reactivate a suspended contract. Once a contract is set to **Ended** it is read-only.
+
+---
+
+## KPI cards
+
+At the top of the page, two summary cards show the current position:
+
+- **Total contracted monthly revenue** — sum of all active fixed monthly fees
+- **Active contracts** — count of contracts currently in Active status
+
+---
+
+## Revenue chart
+
+A bar chart below the KPI cards breaks down contracted monthly revenue by client. This makes it easy to see which clients represent your guaranteed revenue base and spot any that are ending soon.
+
+---
+
+## Exporting
+
+Use **Export to Excel** to download all contracts with their fields as an **.xlsx** file, for use in your accounting system or for internal review.
+
+---
+
+> **Note:** 
+Capacity contract revenue does not automatically generate invoices. Use the Invoicing module to create invoices that reference a contract — reference the contract in the invoice notes for traceability.
+
+
+
+  Learn how to create invoices and reference contract arrangements.
+
+
+---
+
+## Driver Payroll
+
+
+## Overview
+
+Druma calculates driver pay from the operational data it already captures — kilometres driven, days worked, and waiting hours logged. There is no separate time-tracking system; the data flows from orders and status taps.
+
+Driver Payroll is found under the **Finance** section, gated by the payroll module flag — it follows normal Finance-section access, with no additional role restriction on viewing. Approving/finalizing a batch and adding adjustment lines each have their own narrower permission — see [Monthly Payroll Batches](#monthly-payroll-batches-automated) below.
+
+<Frame caption="Finance → Payroll — empty-km pay is a percentage of the loaded rate, not an independent rate.">
+  <img src="/images/reports/payroll.png" alt="Payroll page" />
+</Frame>
+
+---
+
+## Pay components
+
+Each payroll run calculates four components:
+
+| Component | Basis |
+|---|---|
+| **Km pay** | Loaded km × rate per km |
+| **Empty km pay** | Empty/deadhead km × rate per km × empty-km percentage (a configurable share of the loaded rate, not a separate empty-km rate — defaults to 100%, i.e. paid the same as loaded km) |
+| **Day pay** | Active working days × day rate |
+| **Waiting pay** | Total waiting hours × hourly waiting rate |
+
+The total is the sum of all four components in EUR.
+
+---
+
+Druma supports two ways to produce a payroll run: generate one manually whenever you need it, or let an opt-in monthly batch build one automatically for every driver and hold it for approval. Most companies use the automated batch day-to-day and fall back to a manual run for ad-hoc periods (a driver who started mid-month, a special pay-cycle correction, and so on).
+
+## Generating a Payroll Run (Manual)
+
+
+  ### Select driver and period
+    Choose the driver from the dropdown and set the start and end date for the period. Typical periods are a calendar month or a two-week pay cycle.
+  
+  ### Click Generate
+    Druma calculates all four pay components from the orders and waiting logs within the selected period.
+  
+  ### Review the breakdown
+    The result shows each component separately so you can verify the numbers before exporting.
+  
+  ### Export to CSV
+    Click **Export CSV** to download the payroll summary for use in your accounting or payroll system.
+  
+
+
+---
+
+## Monthly Payroll Batches (Automated)
+
+For companies that don't want to trigger a run by hand every month, Druma can build one batch automatically.
+
+> **Note:** 
+This is opt-in. Enable **Monthly payroll batch build** under **Settings → Automations & Features** — it is off by default. A human always reviews and approves the batch; drivers never see it until it is approved.
+
+
+**How it works:** once enabled, a daily job checks each company's **payroll cutoff day** (a configurable day of the month, defaulting to the **2nd**). When today matches that day, Druma computes gross pay — the same four components and math as the manual run above — for every active driver over the **previous calendar month**, and saves it as one held **draft** batch for the company. The batch build is idempotent: re-running it for a month that already has a batch is a no-op.
+
+### Batch status lifecycle
+
+```
+Draft (held) → Approved → Finalized
+```
+
+- **Draft** — freshly built, or still being reviewed. Individual driver runs inside the batch can still be adjusted.
+- **Approved** — reviewed and released. Drivers can now see their payslip in the driver app.
+- **Finalized** — permanently locked. No further adjustments are possible on any run in the batch.
+
+Approving and finalizing a batch is restricted to **admin** and **company_admin** roles — click **Approve batch** or **Finalize batch** from the Payroll page. Once a run is finalized it cannot be reopened.
+
+### Adding adjustments
+
+Before a batch is approved, authorized users can add **adjustment lines** to any individual driver's run — bonus, per diem, deduction, or other. This is available to **admin**, **company_admin**, and **fleet_manager** roles (a wider set than approve/finalize). Each adjustment shows in a calculation breakdown alongside the four standard pay components, so the final total is fully traceable. Adjustments can no longer be added once the run has moved out of Draft status.
+
+### What drivers see
+
+Drivers only ever see **approved** or **finalized** batches in their app — draft batches (including anything still being adjusted) are invisible to them. A finalized run is badged **Final** in the driver's payslip view, signalling it is locked and won't change further.
+
+---
+
+## Configuring rates
+
+Pay rates (rate per km, day rate, empty-km percentage, waiting hourly rate) are stored per driver — with a company-wide default rule that applies to any driver without one — in the underlying payroll rules table.
+
+> **Note:** 
+There is currently no in-app screen to view or edit these rates. Rates have to be set directly in the database (or seeded) until a Fleet → Drivers rates UI ships. If a driver has no rule and no company default exists, every component for that driver calculates as zero.
+
+
+---
+
+## Historical runs
+
+Every generated payroll run is stored and listed under the driver's record. Draft and approved runs can still be reviewed or re-exported; a **finalized** run is permanently locked and cannot be reopened or changed.
+
+---
+
+## Monthly totals chart
+
+A bar chart below the driver selector shows total monthly payroll amounts for the selected driver over the trailing 12 months. Useful for spotting seasonal patterns or months with unusually high waiting charges.
+
+---
+
+> **Note:** 
+Payroll figures in Druma are advisory — Druma does not integrate with payroll processors or tax authorities. The CSV export is intended for import into your payroll system or for manual review by an accountant.
+
+
+
+  Learn how waiting time is logged and how it feeds into payroll calculations.
+
+
+
+  Dead kilometres from wasted journeys also appear in driver payroll records.
+
+
+---
+
+## Fuel Tax Refund
+
+
+## What is the fuel tax refund?
+
+Several EU member states allow professional road transport operators to reclaim part of the excise duty paid on diesel. Druma supports two schemes:
+
+- **Belgium — Gasoil professionnel**: Belgian carriers can reclaim a portion of the excise duty on diesel used for professional transport. Claims are submitted quarterly to the SPF Finances.
+- **Romania — TICAD diesel refund**: Romanian carriers can reclaim a portion of accise duties on diesel used in international and national road transport. Claims are submitted to ANAF.
+
+Fuel Tax Refund is found under the **Finance** section, gated by the fuel tax module flag — it follows normal Finance-section access, with no additional role restriction.
+
+<Frame caption="Finance → Fuel Tax — Belgium and Romania schemes.">
+  <img src="/images/reports/fuel-tax-refund.png" alt="Fuel Tax Refund page" />
+</Frame>
+
+---
+
+## Prerequisites
+
+This report requires fuel card data to be imported first. Without fill records, there are no litres to calculate against.
+
+
+  Import fuel fills from DKV, UTA, AS24, and other providers.
+
+
+---
+
+## Generating a refund claim
+
+
+  ### Select country and period
+    Choose **Belgium** or **Romania** from the country dropdown, then set the claim period (typically a quarter for Belgium, a month or quarter for Romania).
+  
+  ### Click Generate
+    Druma pulls all fuel fill records for the period that are eligible under the selected scheme, calculates total eligible litres, and multiplies by the current refund rate for that country.
+  
+  ### Review the claim
+    The result shows eligible litres, refund rate per litre, and total refund amount in EUR. Review before submitting.
+  
+  ### Set status and reference
+    Change the status to **Submitted** and enter the government reference number you receive after submission. This links the Druma record to your official filing.
+  
+
+
+---
+
+## Claim status lifecycle
+
+```
+Draft → Submitted → Reimbursed
+                  → Rejected
+```
+
+- **Draft** — calculated but not yet submitted to the authority
+- **Submitted** — sent to SPF Finances (BE) or ANAF (RO); reference number recorded
+- **Reimbursed** — payment received; enter the reimbursement date
+- **Rejected** — claim was rejected; add a note with the reason for follow-up
+
+---
+
+## Refund amounts chart
+
+An area chart shows refund amounts by period over the trailing 12 months. Useful for spotting seasonal fuel consumption patterns and for cash flow planning.
+
+---
+
+## CSV export
+
+Click **Export CSV** to download the claim details — fill-by-fill breakdown, eligible litres, rate, and calculated refund — for submission or audit purposes.
+
+---
+
+> **Warning:** 
+Druma calculates eligible litres from your imported fuel card data. It is your responsibility to verify that all fills are correctly imported and that the refund rate matches the current published rate from the relevant tax authority before submitting a claim.
+
+
+---
+
+## Lane Profitability Report
+
+
+Many operators know their revenue per lane but not their actual margin once fuel, tolls, and driver costs are counted. The Lane Profitability report does the maths for every country-pair combination you operate, so you can see at a glance which lanes are working and which are eating into your profit.
+
+## Opening the Report
+
+Go to **Analytics → Lane Profitability**.
+
+The page opens on the **Last 12 months**. Change the date range in the filter bar at the top, and optionally set **Compare to** (**Previous period** or **Same period last year**) to see how the KPI tiles moved. A longer range, at least a full quarter, gives a more meaningful comparison.
+
+Above the table, two charts answer the page's question: **Best and worst lanes by margin %**, and **Revenue vs margin % per lane** (a scatter where bubble size is the number of orders; dashed lines mark the overall margin and the median lane revenue). Click a bar or bubble to filter the table to that lane.
+
+<Frame caption="Lane Profitability — margin per origin-destination pair; rows highlight red only when margin is negative, and the fixed 15% threshold drives the margin KPI tile's colour instead.">
+  <img src="/images/reports/lane-profitability.png" alt="Lane Profitability report" />
+</Frame>
+
+
+## What the Report Shows
+
+Each row in the table is one origin-destination pair. By default lanes are grouped by country; **Group lanes by** lets you group each side (origin and destination independently) by **country**, **postal zone**, **city** or your own postcode zones (set up in Settings → Postcode zones), and **Reset grouping** goes back. **Min orders** hides lanes with too few orders ("{n} below the min-orders floor"). For each lane you see:
+
+| Column | What It Means |
+|---|---|
+| **Origin / Destination** | The two ends of the lane at the grouping you chose |
+| **Revenue** | Total invoiced amount for orders on this lane in the period |
+| **Fuel** | Estimated: distance × average consumption × fuel price |
+| **Toll** | PTV toll data for the route |
+| **Driver** | Daily cost × trip days, based on the per-driver rate you configure |
+| **Truck** | The truck's standing cost share |
+| **Costs** | Sum of the cost columns |
+| **Margin %** | Margin as a percentage of revenue |
+| **Orders** | Number of completed orders on this lane in the period |
+| **Total KM** | Kilometres driven on this lane |
+| **Rev/KM** | Revenue per kilometre |
+| **Market Rate (€/km)** and **vs Market** | Filled after you click **Load benchmarks**: compares your Rev/KM with current market rates (up to 20 lanes per load) |
+
+Only EUR-priced orders are in these figures; a row shows an **excluded** badge with the number of orders left out because they are priced in another currency. A **Margin basis** switch (**Excluding pass-through tolls** or **Including tolls and toll recharges**) changes how tolls count in margin.
+
+Rows with a **negative margin** are highlighted in red — a lane actively losing money once fuel, tolls, and driver costs are counted. The headline margin tile (**Weighted margin %**, total margin ÷ total revenue across the lanes shown) is the same figure as the Margin tile; the 15% target only affects its colour: it shows green at or above 15%, amber below it. This 15% threshold is currently fixed — it is not yet configurable from Settings.
+
+## How Cost Estimates Work
+
+> **Note:** 
+Cost estimates in this report are approximations based on your configured parameters. They are useful for identifying relative performance between lanes, but actual costs may differ — especially for toll costs on routes with variable toll roads.
+
+
+**Fuel cost calculation:**
+Distance (from PTV routing) × fleet average consumption (litres/100km, set in Settings → Fleet → Default Consumption) × your fuel price (set in Settings → Fleet → Fuel Price, or imported from fuel card data if you use fuel card import).
+
+**Toll cost calculation:**
+PTV toll data for the route. Covers most European motorway toll systems. Less accurate for routes through countries with complex vignette systems.
+
+**Driver cost calculation:**
+Number of trip days × the daily cost rate you have set for each driver in their profile (Fleet → Drivers → [driver] → Daily Cost Rate). If no driver is assigned, Druma uses your global default driver daily cost.
+
+You can update all these inputs in Settings to improve accuracy. The report recalculates immediately when you save new values.
+
+## Identifying Unprofitable Lanes
+
+Sort the table by **Margin %** ascending — the worst-performing lanes rise to the top.
+
+Red rows are lanes with a negative margin — losing money outright. Common reasons:
+
+- **Long-distance lanes** — look profitable on revenue but have high fuel and driver costs
+- **Lanes with heavy tolls** — certain routes through France, Austria, or Switzerland have significantly higher tolls than alternatives
+- **Under-priced legacy clients** — rates agreed years ago that haven't been renegotiated
+- **Low-volume lanes** — fewer trips means fixed costs hit harder
+
+## Drilling Down Into a Lane
+
+Click any lane row to see the individual orders that make up that lane's numbers. You can see each order's revenue, estimated cost, and margin — and identify specific orders that are outliers (for example, a single order at a much lower rate than the rest).
+
+From the order list you can click through to the full order detail. Useful when investigating why a specific lane underperformed in a given month.
+
+## Filtering the Report
+
+Use the filters at the top of the page:
+
+- **Origin country** — filter to one or more specific origin countries
+- **Destination country** — filter to one or more specific destination countries
+- **Client** — see lane profitability for a single client
+- **Truck** — see which trucks are operating which lanes most profitably
+
+## Exporting
+
+Click **Export** to download the full report as an **.xlsx** spreadsheet. The export includes all columns and respects any filters you have applied.
+
+It opens directly in Excel — a good starting point for building your own pivot tables by client or by truck.
+
+> **Warning:** 
+Do not make pricing decisions based solely on this report without considering other factors: return loads, strategic client relationships, and seasonal volume variation all affect the real value of a lane.
+
+
+
+  
+    All available reports in Druma and how to schedule them.
+  
+  
+    Set up per-lane rate cards that feed into anomalous pricing detection and margin targets.
+  
+</CardGroup>
+
+---
+
+## CO2 Emissions Report
+
+
+Clients — particularly large retailers, manufacturers, and logistics companies — increasingly need CO2 emissions data from their transport suppliers for their own ESG and sustainability reports. Druma calculates your fleet's emissions automatically from your order and vehicle data and produces a report you can share directly with clients.
+
+## Opening the Report
+
+Go to **Analytics → CO2 Report**.
+
+By default you see the **Monthly** view — the most recent shipments with a calculated CO2 figure, newest first. Switch to **Annual (CSRD)** and pick a **year** to build a full-year dataset for sustainability exports. Optionally narrow either view to one client with the **Client** filter.
+
+<Frame caption="The Monthly CO2 Report — per-order distance, weight, and CO2 (kg), each row's Method showing the GLEC factor version used.">
+  <img src="/images/reports/co2-report.png" alt="Monthly CO2 report with emissions chart and per-order table" />
+</Frame>
+
+## What the Report Shows
+
+The page has two view modes, switched at the top: **Monthly** and **Annual (CSRD)**.
+
+### Monthly view
+
+A per-shipment table — one row per order, with distance, weight, calculated CO2, calculation method, client, and truck. Filter to a single client with the **Client** dropdown, and use the trend chart above the table to see total tCO2e by month. The KPI bar shows total CO2 for the period, average CO2 per order, and how many orders have a CO2 figure calculated.
+
+Above the table, a **monthly emissions** chart (click a month to filter the table to it) and an **intensity** chart (gCO2e per tonne-km, by lane or by truck; click a bar to filter) sit next to the KPI tiles. Lanes and trucks with fewer than 5 weighed orders are left out of the intensity chart because their figure would be unreliable. The CO2 page has its own period (monthly or annual), so it has no date-range picker.
+
+> **Note:** 
+The monthly view is capped at the first **500 rows** for a given filter (the reporting-page convention used across Druma). If a month is truncated, narrow your date range or client filter for a complete picture — a warning banner appears on the page when this happens.
+
+
+### Annual (CSRD) view
+
+The same per-shipment structure, extended with delivery date, full pickup/delivery addresses, and the truck's Euro standard column (for reference — the CO2 figure itself is not calculated from Euro standard, see below). This view is capped at 5,000 shipments per year; a truncation warning appears if the year has more.
+
+## Emissions Calculation Methodology
+
+Druma follows the **GLEC Framework v4.0** default emission factors, aligned with **ISO 14083** (Tier 1 method) — the international standard for quantifying and reporting greenhouse gas emissions from transport chains.
+
+CO2 per order is **not** based on the truck's Euro emission standard. It's based on the truck's **weight class** and **fuel type**:
+
+| Vehicle class | Fuel type | Emission factor (gCO2e / tonne-km) |
+|---|---|---|
+| Articulated HGV 32–34t (standard FTL truck) | Diesel | 62 |
+| Articulated HGV 32–34t | LNG | 54 |
+| Articulated HGV 32–34t | Electric | 25 |
+| Articulated HGV 32–34t | HVO | 12 |
+| Rigid truck 16–26t | Diesel | 91 |
+| Rigid truck 16–26t | Electric | 37 |
+| Rigid truck 12–16t | Diesel | 119 |
+| Rigid truck 12–16t | Electric | 48 |
+
+The vehicle class is derived automatically from the truck's recorded max payload/weight (over 30t → articulated 32–34t; over 15t → rigid 16–26t; otherwise rigid 12–16t). Fuel type comes from the truck record and defaults to diesel if not set; if no factor exists yet for an unusual fuel type on that class, Druma falls back to the diesel factor for the same class rather than leaving the order uncalculated.
+
+The formula (Well-to-Wheel, ISO 14083 Tier 1):
+
+```
+CO2e (kg) = distance (km) × [weight (kg) ÷ 1,000] × emission factor (gCO2e/tkm) ÷ 1,000
+```
+
+Distance comes from PTV truck routing (the same distance shown on the order). Weight is the order's recorded cargo weight; if an order has no weight recorded, Druma estimates half of the truck's max payload as a conservative average load.
+
+## Sharing CO2 Data with Clients
+
+Druma automatically emails a monthly CO2 summary to any client contact with **Receives CO2 reports** enabled (set per contact on the client's **Contacts** tab) — no manual export needed for that recipient.
+
+For anything beyond that automatic email — a full-year ESRS-aligned package, an ad-hoc share with a client's sustainability team, or your own internal record — switch to the **Annual (CSRD)** view and use the export buttons described in [CSRD Emissions Exports](/en/reports/csrd-exports): Annual XLSX, CSRD Data Package (CSV), and iXBRL. The Monthly view also has a generic print/export button for the visible table.
+
+### What Scope 3 Means
+
+Your clients record emissions from transport they outsource as **scope 3 emissions** (Category 4: Upstream Transportation, or Category 9: Downstream Transportation). The data you provide feeds directly into that calculation. Having this data ready saves your clients time and makes you a more attractive carrier.
+
+## How to Improve Your CO2 Score
+
+Because the calculation is driven by **fuel type** and **vehicle weight class**, not distance alone, the biggest lever is the truck itself. On the most common FTL class (articulated, 32–34t), switching from diesel (62 gCO2e/tkm) to HVO (12 gCO2e/tkm) or electric (25 gCO2e/tkm) cuts the factor by 81% or 60% respectively. For example, a 1,000 km run carrying 24t:
+
+- Diesel: 1,000 km × 24t × 62 gCO2e/tkm ÷ 1,000 = **1,488 kg CO2**
+- HVO on the same truck class: 1,000 km × 24t × 12 gCO2e/tkm ÷ 1,000 = **288 kg CO2** — a 1,200 kg (81%) reduction per trip
+
+Other improvements Druma can help you track:
+
+- **Route optimisation** — shorter routes from PTV truck routing mean lower total emissions
+- **Load consolidation** — fewer, fuller trips reduce total tonne-kilometres across the fleet
+- **Reducing empty running** — deadhead kilometres are CO2 with no revenue to offset them
+
+
+  
+    Export annual CO2 data in XLSX, CSRD-aligned CSV, and iXBRL formats for sustainability reporting and ESRS E1 compliance.
+  
+  
+    How truck fuel type and weight class feed the CO2 calculation, and what to check on your fleet records.
+  
+  
+    All available reports in Druma and how to schedule automated delivery.
+  
+</CardGroup>
+
+---
+
+## CSRD Emissions Exports
+
+
+## Overview
+
+Beyond the standard monthly CO2 Report, Druma supports three additional export formats designed for companies with Corporate Sustainability Reporting Directive (CSRD) obligations — or who supply emissions data to clients that have those obligations.
+
+All CSRD exports are available from the **CO2 Report** page:
+
+**Analytics → CO2 Report → Annual (CSRD)**
+
+---
+
+## Annual Mode
+
+By default, the CO2 Report shows the most recent shipments (Monthly view). Switch to **Annual (CSRD)** using the toggle at the top of the report page.
+
+In Annual mode:
+- A year picker appears
+- Shipments for the whole selected year are loaded (capped at 5,000 rows — narrow by client if a year is truncated)
+- All three export buttons — Annual XLSX, CSRD Data Package (.csv), and iXBRL — appear below the toggle
+
+> **Note:** 
+Most CSRD and ESG reporting submissions require a full calendar year of data. Switch to Annual mode before exporting for regulatory or client sustainability purposes.
+
+
+---
+
+## Export Types
+
+### 1. Annual XLSX
+
+The standard spreadsheet export. Best for sharing with procurement departments, sustainability teams, or ESG audit firms. Two sheets:
+
+**Shipments** — one row per order, columns: Order #, Pickup Date, Delivery Date, Pickup Address, Delivery Address, Distance (km), Weight (kg), CO2 (kg), Method, Euro Standard, Client, Truck.
+
+**Methodology** — company name and VAT, reporting year, and grand totals for the year (total shipments, total distance, total CO2 in kg and tonnes), plus a plain-text methodology note. There is no per-month, per-client, or per-Euro-standard breakdown tab — totals are fleet-wide for the year.
+
+**How to export:** Click **Annual XLSX** on the CO2 Report page (Annual mode).
+
+---
+
+### 2. CSRD Data Package (CSV)
+
+A flat CSV file with the same per-shipment data as the XLSX Shipments sheet, in machine-readable format — suitable for loading into ESG reporting software.
+
+Headers are plain snake_case field names, not ESRS taxonomy identifiers:
+
+`order_number, pickup_date, delivery_date, pickup_address, delivery_address, distance_km, weight_kg, co2_kg, co2_method, euro_standard`
+
+> **Note:** 
+There is no `fuel_type` column in this export today — fuel type is used internally to select the emission factor (see [CO2 Report](/en/reports/co2-report#emissions-calculation-methodology)) but is not currently exposed as its own CSV column.
+
+
+**How to export:** Click **CSRD Data Package (.csv)** on the CO2 Report page (Annual mode).
+
+---
+
+### 3. iXBRL Report (Beta)
+
+> **Note:** 
+iXBRL export is in beta. The output uses the **ESRS taxonomy** (European Sustainability Reporting Standards — `xbrl.efrag.org/taxonomy/esrs`), not ESEF (which is a separate, listed-company annual-report filing format). Validate the file against your designated auditor's requirements before submission to any regulatory body. Druma does not guarantee acceptance by any specific regulator at this stage.
+
+
+iXBRL (Inline eXtensible Business Reporting Language) tags the gross Scope 3, Category 9 (downstream transport) CO2 figure for the year against the ESRS E1 taxonomy, alongside a plain-language summary. It's meant as a component you (or your auditor) fold into a wider CSRD annual report — not a standalone regulatory filing.
+
+The exported file is an HTML document containing both human-readable tables and machine-tagged emissions data.
+
+**How to export:** Click **Export iXBRL (.xhtml)** on the CO2 Report page (Annual mode) — you'll be asked to confirm an auditor-review disclaimer first.
+
+---
+
+## Sharing with Clients
+
+If your clients need their own CSRD emissions data from you:
+
+1. Filter the CO2 Report to a specific client using the **Client** filter at the top of the page
+2. Switch to Annual mode and select the reporting year
+3. Export in your client's preferred format
+4. Attach to your client's sustainability team email or upload to their supplier portal
+
+> **Note:** 
+Clients whose contact record has **Receives CO2 reports** enabled already get a monthly CO2 summary by email automatically — see [CO2 Report](/en/reports/co2-report#sharing-co2-data-with-clients). The exports on this page are for anything beyond that: a full-year package, an ad-hoc share, or a client's own ESG reporting software.
+
+
+---
+
+## What Is Scope 3 Category 4?
+
+Your clients record emissions from transport they outsource as **Scope 3 Category 4** (Upstream Transportation) or **Category 9** (Downstream Transportation). The CO2 data you provide from Druma feeds directly into that calculation.
+
+Having annual CSRD-aligned emissions data ready — with a recognised methodology (GLEC Framework v4.0 / ISO 14083) — positions you as a preferred carrier in tenders and RFQs that ask for documented emissions methodology.
+
+---
+
+
+  
+    The Monthly and Annual (CSRD) views, and how CO2 is calculated per shipment — the foundation for all CSRD exports.
+  
+  
+    All available reports in Druma and how to schedule automated delivery.
+  
+</CardGroup>
+
+---
+
+## How Druma Calculates Key Metrics
+
+
+The same metric always uses the same definition, wherever it appears in Druma (Analytics dashboard, Finance dashboard, Client Scorecard, Driver Performance, Eco Score). Every KPI with a small help icon explains its own formula. This page collects the definitions in one place.
+
+## DSO and DPO (Days Sales / Payable Outstanding)
+
+- **DSO (days)** = open client receivables ÷ client sales billed in the last 12 months × 365. "Open" means unpaid, partially paid and overdue invoices of any age; a partial payment counts only its remaining balance. An invoice that is never paid still counts in full, so DSO reflects the real state of collections.
+- **DPO (days)** = open payables ÷ purchase invoices billed in the last 12 months × 365. It covers **purchase invoices only** (the invoices you owe suppliers and carriers). It appears as **Days Payable Outstanding** on the Aged Creditors page and as DPO on the Finance dashboard.
+- **Cash Conversion Cycle** (Finance dashboard) = DSO minus DPO.
+- Invoices in other currencies (for example RON) are **converted to EUR at the BNR rate before** the ratio is taken, so DSO is the same on the Analytics dashboard and the Finance dashboard.
+
+> **Note:** 
+Because DSO divides by trailing 12-month sales, a young or low-volume book can give a noisy figure. The tile shows how many invoices it is based on.
+
+
+### Related but different numbers
+
+| Label | What it is |
+|---|---|
+| **Avg days to pay** (Client Scorecard, Analytics dashboard "Avg Days to Pay") | Average days between issue date and payment, over invoices that **have actually been paid** (dashboard: paid in the last 90 days). An invoice that is never paid never enters this average, so it says nothing about collection risk by itself. Use DSO for the full picture. |
+| **Avg age of open invoices** (Finance dashboard) | Amount-weighted average age (issue date to today) of currently open client invoices. It is **not** DSO. |
+| **Predicted pay date / risk band** (Finance → Overdue, if the DSO payment forecast is on) | A forecast per open invoice from that client's own payment history. Clients whose history is good are labelled "Usually pays on time"; a red "Broke own forecast" label means that invoice is already past its own predicted pay date. |
+
+## OTIF (On Time In Full)
+
+OTIF is the share of deliveries that arrived **on time AND were confirmed complete and undamaged**, out of the deliveries whose condition is **known**. A delivery is "known" when a CMR document was uploaded and tagged to the delivery stop and the damage question was answered. Deliveries with no CMR discrepancy record are **excluded**, not counted as "in full". The **Coverage** figure next to OTIF shows what share of the month's deliveries is known; a low coverage means the OTIF % rests on a small sample. The Analytics dashboard splits deliveries into **On Time & In Full**, **Late**, **Short / Damaged** and **Unknown**. The **Client Scorecard** shows OTIF per client on the same basis.
+
+## Fuel consumption (L/100km)
+
+Litres per 100 km is **tank-to-tank** everywhere (Eco Score and Driver Performance agree): the litres of each fill divided by the odometer kilometres since the truck's previous fill. It shows "—" when there are fewer than two odometer-backed fills, under 100 km of history, or an implausible value. It is not computed from order kilometres.
+
+## Month-to-date trends
+
+Revenue and order counts on the Analytics dashboard compare the **month so far** with the **same number of elapsed days last month**, not with the full previous month. Early in the month a partial month is therefore compared with an equally short stretch of the last one. On **Truck P&L**, money and count changes are hidden while the month is still running for the same reason.
+
+## Margin
+
+- **Margin** = revenue minus costs; **Margin %** = margin ÷ revenue.
+- Totals and KPI tiles are **revenue-weighted**: total margin ÷ total revenue, not the average of the individual lane or client percentages. This is why the lane tile is called **Weighted margin %**.
+- Some pages have a **Margin basis** switch: **Excluding pass-through tolls** (default) or **Including tolls and toll recharges**.
+- Revenue and margin are reported in **EUR**. Orders priced in another currency are left out of the EUR totals and counted in an **excluded** badge on the row, so currencies are never mixed in one sum. A chart that blends currencies tells you to add "Currency" as a dimension.
+- **Profit/km** and **Cost/km** charge each order its full share of fixed cost (truck standing cost, driver pay, allowances) on top of fuel and tolls.
+
+## Savings
+
+The **Savings** headline counts **realised** savings only (decisions you accepted). **Modelled** savings are shown as a separate sub-line and are never added into the headline.
+
+## Negative money
+
+Negative amounts show the minus sign before the currency symbol (for example -€1,200).
+
+## Questions
+
+<AccordionGroup>
+  <Accordion title="Why do DSO and 'Avg days to pay' differ?">
+    DSO includes invoices that are still unpaid, however old; "Avg days to pay" only averages invoices that were paid. If collections get worse, DSO rises while "Avg days to pay" can stay flat.
+  </Accordion>
+  <Accordion title="Why does OTIF show a high % with low Coverage?">
+    OTIF only counts deliveries with a known condition. Upload and tag the CMR on each delivery stop to raise coverage and make the figure representative.
+  </Accordion>
+  <Accordion title="Why is my RON invoice missing from a report?">
+    Reports that total in EUR leave non-EUR orders out and tell you how many were excluded. DSO/DPO are the exception: they convert to EUR at the BNR rate.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Truck P&L
+
+
+**Analytics → Fleet & Operations → Truck P&L** shows the true monthly profit of each truck after fuel, toll, crew and standing cost. Use it to decide which trucks to keep, redeploy or sell.
+
+## What you see
+
+- **Month** picker: Truck P&L works per calendar month, not a free date range. Changes are shown **vs previous month**.
+- **KPI tiles**: **Fleet profit**, **Fleet profit %**, **Loss-making trucks**, **Avg utilisation**, **Delivered revenue** and **On the road, not yet delivered**.
+- **Profit bridge** chart: revenue minus every cost layer, ending on profit, for the whole fleet. Select trucks in the **Profit by truck** chart to bridge only those. Red bars in Profit by truck are loss-making trucks after standing cost.
+- **Table**: one row per truck with **Revenue**, **In transit**, **Fuel**, **Toll**, **Crew cost** (driver + co-driver + per-diem), **Standing cost**, **Profit**, **Profit %**, **Profit/km**, **Profit/day**, **Orders**, **Active days**, **Earning days** and **Utilisation %**. Click a row for the side pane; **Open truck** goes to the truck record.
+
+## How it is calculated
+
+- **Revenue** counts **delivered** orders only. Freight still on the road is shown separately (**In transit**, **On the road, not yet delivered**).
+- **Include freight in transit** is a switch: with it on, profit also includes freight on the road, because the cost of hauling it is already charged. **Profit/km** and **Profit/day** always stay on delivered work only.
+- **Standing cost** = day rate × days charged. Every active truck is charged its standing cost (lease, insurance, road tax, depreciation) for **every day it was owned**, including idle days, so an underused truck shows red even when its cost per km looks fine.
+- **Month still running:** standing cost is charged only for the days that have passed ("Standing cost is charged for 12 of 31 days"), and money and count changes vs the previous month are hidden, because a partial month would only read "shorter". Rates still show.
+- **Currencies:** only EUR-priced orders are in the revenue totals. A row with orders in another currency shows an **excluded** badge, and those orders still count in the order count.
+- **Access:** the page needs the financial permissions. Without them it shows "Not authorised" instead of figures.
+
+## Questions
+
+<AccordionGroup>
+  <Accordion title="Why does a truck that did not run show a loss?">
+    Standing cost is charged for every day of the month, whether or not the truck ran. That is the point of this page.
+  </Accordion>
+  <Accordion title="The page failed to load.">
+    A failed load shows an error panel with **Retry** and a technical-details section, never an empty table or zeros.
+  </Accordion>
+</AccordionGroup>
+
+See also [Analytics Overview](/en/reports/analytics-overview) and [How Druma Calculates Key Metrics](/en/reports/metric-definitions).
+
+---
+
+## Report Builder
+
+
+The Report Builder lets you assemble custom dashboards from widgets, share them with your team and have them emailed on a schedule. Go to **Analytics → Reports**.
+
+## Create a dashboard
+
+
+  ### Start from a template or from scratch
+    Under **My Dashboards**, click **New Dashboard**, or pick one of Druma's templates and click **Use this dashboard**: **Financial Summary**, **Operations Overview**, **Fleet Performance**, **Lane Profitability** and **Client Report**. A template is copied into your dashboards and you can change it freely.
+  
+  ### Add a widget
+    Open the dashboard and click **Add Widget**. The builder walks through: **1. Subject Area** (Orders, Invoices or Fleet), **2. Group By (Dimensions)**, **3. Measure**, **4. Aggregation**, **5. Filters**, **6. Chart Type**, **7. Widget Title**, with a **8. Live Preview** that updates as you go. Click **Save Widget**.
+  
+  ### Arrange it
+    Each widget has a **Width** (1, 2 or 3 columns) and a widget menu with **Edit**, **Duplicate**, **Refresh** and **Delete**. Use **Rename**, **Share with team** / **Unshare**, **Schedule** and **Delete dashboard** from the dashboard header.
+  
+
+
+## Chart types
+
+| Chart type | What it needs |
+|---|---|
+| **Bar** | Any dimension |
+| **Stacked bar** | Exactly two dimensions: the first is the x-axis, the second is the stack |
+| **Horizontal bar** | One non-date dimension (good for ranked lists) |
+| **Line** | A time dimension |
+| **Area** | A time dimension as the first dimension |
+| **Bar + line** (combo) | One dimension and a **Second Measure**, drawn as a line on the right-hand axis |
+| **Scatter** | One dimension, a **Second Measure** (vertical axis; the main measure is horizontal) and an optional **Bubble Size** measure |
+| **Funnel** | One non-date dimension (for example stages) |
+| **Pie** | A single dimension |
+| **Table** | Any selection |
+| **KPI card** | A single total; grouping is not used |
+
+A chart type that your selection can't draw is disabled, and hovering it tells you why (for example "Line requires a time dimension" or "Stacked bar needs exactly two dimensions"). You can't save a widget until its chart type is valid. In **Display Options** you can set number format (compact or full), legend, data labels, bar style (grouped or stacked), line style, chart height, axis start and label angle.
+
+## Compare to an earlier period
+
+On bar, line, area and KPI-card widgets with a single dimension, set **Compare** to **Previous period** or **Previous year**. Bar, line and area then draw a dashed comparison series; a KPI card shows the change versus that window (with the colour reversed for cost-like measures, so a cost that fell reads as good). Compare needs both a **From** and a **To** date in the widget's Filters ("Set both From and To in Filters to compare against an earlier window"). If the comparison can't be loaded, the widget still shows its main data.
+
+## Click a chart to filter the dashboard
+
+Click a bar, pie slice or funnel stage and every **other** widget on the dashboard is filtered to that value, where it has the same dimension. A chip ("Filtering the other widgets by …") shows what is active; click **Clear** to remove it. This filter is for exploring and is not saved with the dashboard. Date buckets can't be used to filter.
+
+## Numbers, export and limits
+
+- Tooltips and tables show **full-precision money**; only axis labels are abbreviated, so a tooltip matches the table cell.
+- Every chart has a **Download chart as PNG** button.
+- Charts show the top groups when there are many ("Showing the top N of M groups"), and a widget that hits its row limit says so ("Showing the first N rows").
+- A widget that blends currencies tells you to add "Currency" as a dimension to split it out.
+- The data comes from a nightly-refreshed reporting copy of your orders, invoices and fleet, so a widget shows a **Data as of** time.
+- If a widget fails to load, you see its own error instead of an empty chart.
+
+## Schedule a dashboard by email
+
+Use **Schedule** on a dashboard (**Scheduled Delivery**): name the schedule, choose **Daily**, **Weekly** or **Monthly**, set the **Hour (UTC)**, add recipient emails, then **Create schedule**. Recipients get the dashboard as an XLSX attachment. **Run now** sends it immediately. Scheduling must first be switched on by a company admin in **Settings → Automation**. See [Reports Overview](/en/reports/reports-overview).
+
+## Questions
+
+<AccordionGroup>
+  <Accordion title="Why is the Line chart button greyed out?">
+    Line needs a time dimension (such as month). Add one under Group By, or choose Bar.
+  </Accordion>
+  <Accordion title="Why does my bar chart not show a dashed comparison?">
+    Compare only works on single-dimension bar, line, area and KPI-card widgets, and needs both From and To dates set in the widget's Filters.
+  </Accordion>
+  <Accordion title="Can I see last year next to this year on a KPI card?">
+    Yes. Set Compare to **Previous year** on the KPI card (with From and To set); the card shows the signed change.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+
+# Integrations
+
+## TransFollow eCMR (Legacy)
+
+
+> **Note:** 
+**TransFollow is not a selectable eCMR provider.** The Druma native provider — issued and PAdES-sealed entirely in-house, no external account or API key required — is now the only real eCMR provider in Druma. In **Settings → Integrations → eCMR provider**, the only choices are **Native** and **Disabled**. If you are setting up eCMR for the first time, you do not need this page.
+
+
+---
+
+## Why This Page Still Exists
+
+A small number of companies configured TransFollow as their eCMR provider before the native provider was introduced. Those pre-existing configurations keep working — Druma has not switched anything off under them — but TransFollow can no longer be chosen by any company, new or existing.
+
+## What Happens on a Legacy Configuration
+
+If your company has a pre-existing `TransFollow` configuration:
+
+- Your eCMR workflow continues to function exactly as before. No action is required.
+- The eCMR provider card in Settings → Integrations displays your configuration as **Native**, not TransFollow.
+- The next time that integration is saved — even without changing anything — your company silently migrates to the true native provider. There is no separate migration step to run yourself.
+
+There is no API key field, Mock Mode toggle, or Test Connection button for TransFollow anywhere in the product. If your company has never used TransFollow, none of this applies — you are already on the native provider.
+
+---
+
+## Related articles
+
+
+  
+    The native Druma provider, and what happens to legacy TransFollow configurations.
+  
+  
+    An introduction to electronic CMR notes and when you need them.
+  
+  
+    Step-by-step guide to issuing an eCMR on a Druma order.
+  
+</CardGroup>
+
+---
+
+## HERE Maps Address Lookup
+
+
+Druma uses **HERE Maps** for one core function: finding and validating addresses as you type. Truck-safe routing, toll estimation, and live ETA are calculated by a different provider, **PTV**, described briefly at the end of this page. This integration works automatically in the background — no setup is required from operators or dispatchers.
+
+## No Setup Required
+
+HERE is configured at the Druma platform level. Unlike integrations such as TransFollow or SmartBill, there is no API key to enter and no settings to configure. Every Druma account has full access to HERE address lookup from day one.
+
+## Address Autocomplete
+
+When entering a pickup or delivery address on an order, start typing the street name or city and HERE suggests matching addresses in a dropdown. Select the correct address and all fields — street, number, city, postal code, and country — are populated automatically.
+
+This prevents address entry errors that cause driver navigation problems. An address confirmed through HERE autocomplete always has valid coordinates, so the driver's navigation app can route directly to it.
+
+> **Note:** 
+For rural or industrial addresses that do not appear in autocomplete, you can enter the address manually and then drag the map pin to the correct location. The coordinates are stored with the order and used for routing.
+
+
+## Reverse Geocoding
+
+HERE also converts a dropped map pin (latitude/longitude) back into a readable address — used, for example, when a planner drags a pin on the map to prefill a location's name and address.
+
+## Routing, Tolls, and ETA: Handled by PTV
+
+Truck-optimised routing (avoiding low bridges, weight restrictions, and other hazards heavy vehicles can't take), toll cost estimation across European toll systems, and live traffic-aware ETA are all calculated by the **PTV Developer Routing API**, not HERE.
+
+> **Note:** 
+PTV's vehicle profile now uses your truck's actual **permitted weight, Euro emission class, height, and axle count** wherever a specific truck is known — this covers the **Pricing Tool** and the planning board's remaining-km figure for a switch-truck order's assigned truck. Bulk candidate comparisons — AI truck-matching and other board-wide estimates that compare many trucks at once — deliberately keep the generic 40-tonne default profile, to bound the number of routing calls made per request.
+
+
+> **Warning:** 
+Toll cost estimates remain approximations regardless of provider. Actual tolls depend on the specific route taken, which axle configuration your truck is registered under in each country's toll system, and whether rates have changed since the last data update. Use these figures as a guide, not a precise invoice input.
+
+
+Keeping vehicle technical details up to date in **Fleet → Vehicles → [vehicle] → Technical Details** improves accuracy wherever a specific truck is known to the routing call — the **Pricing Tool** and the planning board's switch-truck remaining-km figure. Bulk comparisons (AI truck-matching, other board-wide estimates) use the generic 40-tonne profile by design, so a more detailed vehicle record won't change those figures.
+
+
+  
+    How to manage your vehicle records, including the weight and emission class used by the Pricing Tool's routing calls.
+  
+</CardGroup>
+
+---
+
+## Fuel Card Import
+
+
+Fuel is typically the largest variable cost in road freight. Druma lets you import transaction data from the major fuel card providers, linking each fill-up to the correct vehicle so your cost reports reflect real fuel spend rather than estimates.
+
+<Frame caption="Fleet → Fuel — plate matching is normalized, not exact.">
+  <img src="/images/integrations/fuel-card-import.png" alt="Fleet Fuel page" />
+</Frame>
+
+## Supported Providers
+
+Druma auto-detects the provider from the file's column headers and file name. Supported providers:
+
+- **DKV**
+- **UTA**
+- **AS24**
+- **Shell**
+- **TotalEnergies**
+- **BP**
+- **Circle K**
+- **Eurowag**
+- **WEG**
+- **MOL**
+- **E100**
+
+Any other CSV or XLSX file with standard column names (date, amount, liters, card/plate) is also accepted, even without a recognised provider match. If you use multiple cards across your fleet, you can import from each provider separately.
+
+## How to Import
+
+
+  ### Download your file from the provider
+    Log in to your fuel card provider's online portal and export the transaction history as CSV or XLSX. Each provider's portal is different, but this option is typically under Reports or Statements.
+  
+  ### Open Druma's fuel import
+    In Druma, go to **Fleet → Fuel** and click **Import Fuel**.
+  
+  ### Upload the file
+    Drop or select the CSV/XLSX file (max 5 MB). Druma detects the provider automatically from the file and shows a preview of the parsed rows — including any toll lines it finds mixed into the same statement.
+  
+  ### Review and confirm
+    Check the preview — rows without a matching vehicle are flagged and excluded from the import. Click **Import N rows** (showing the actual row count) to confirm.
+  
+
+
+## What Gets Imported
+
+For each transaction, Druma extracts:
+
+| Field | Source |
+|---|---|
+| Date (no time component) | Transaction date column from the file |
+| Vehicle | Matched by fuel card number, then by licence plate |
+| Fuel station name | Location field from the file |
+| Litres filled | Quantity field from the file |
+| Amount | Value field from the file — assumed EUR unless a currency column is present |
+| Transaction ID | Provider's unique transaction reference, used for duplicate detection |
+
+Manual single-entry fuel fills (via **Add Fill**) only accept an amount in EUR — there's no currency selector on that form. RON amounts are only converted automatically via the separate email/drop-folder auto-ingest path described below.
+
+## Matching Transactions to Vehicles
+
+Druma matches each transaction to a vehicle, first by **fuel card number**, then by **licence plate**. Both the card number and the plate are normalised before comparing — uppercased, with all spaces, hyphens, and other non-alphanumeric characters stripped — so "B 123 ABC" and "B123ABC" match the same vehicle.
+
+If a transaction still doesn't match any vehicle, it's flagged as **unmatched** in the preview and excluded from the import. Common reasons:
+
+- The vehicle was recently added and not yet in Druma
+- Neither the card number nor the plate on the transaction match any fleet record
+- A driver used their card in a hired or subcontracted vehicle
+
+## Duplicate Detection
+
+If you accidentally import the same file twice, Druma detects duplicates using a dedup key built from the transaction date, amount, liters, card, plate, and provider transaction ID — duplicates are skipped automatically at the database level. The success message only reports how many fuel fills (and toll lines) were imported; it does not report a separate duplicates-skipped count.
+
+> **Note:** 
+Always import the complete statement rather than a partial export. Partial imports can cause gaps in your fuel cost data that affect lane profitability calculations.
+
+
+## Automatic Import via Email
+
+In addition to manual upload, Druma can ingest fuel statements automatically from an inbound email address (with a scheduled sweep as a fallback), reusing the same parser as the manual import modal.
+
+This is self-service — no need to contact support to turn it on:
+
+
+  ### Enable the automation
+    An admin or company admin goes to **Settings → Automations & Features** and toggles on **Fuel-card statement auto-ingestion**.
+  
+  ### Get your inbound alias address
+    Druma auto-generates a per-company inbound email alias for fuel statements as soon as the toggle is on. The alias isn't yet shown anywhere in the UI — contact Druma support to get the exact address to forward statements to (or to have it added to a drop folder instead).
+  
+  ### Forward or drop statements
+    Forward fuel-card statements to that alias, or drop a CSV/XLSX into the fuel-imports folder. Druma parses each one with the same logic as the manual import, matches fills to trucks by plate, and queues anything unmatched (no plate match) or in a non-EUR currency for review.
+  
+
+
+## Reviewing Failed Auto-Ingest Rows
+
+Rows the automatic importer couldn't place — no matching plate, a non-EUR currency, or a row it couldn't parse — land in **Fleet → Fuel Exceptions** (only visible once the auto-ingest automation is enabled). Each row shows the reason, source (email or drop folder), and the raw values, and can be resolved once corrected. You can also upload a file directly from this page — its upload limit is **10 MB**, higher than the 5 MB cap on the manual **Import Fuel** wizard on the main Fleet → Fuel page.
+
+## Where Imported Fuel Data Appears
+
+After import, transactions appear in:
+
+- **Fleet → Fuel** — full transaction history across your fleet, filterable and searchable by plate, provider, and location
+- **Fleet → Fuel Exceptions** — rows the automatic importer couldn't place, for manual review
+- **Lane Profitability report** — imported fuel costs replace the estimated fuel calculation for orders where actual fuel data is available
+
+## Why CSV Import Instead of Live API?
+
+Fuel card providers across Europe have inconsistent and often restricted API access. Some provide APIs only to enterprise customers, others have country-specific portals that do not offer API access, and API formats vary considerably. CSV export is available universally across all providers and all account types, making it the most reliable approach for a mixed-fleet Romanian operator (ADR-016).
+
+
+  
+    How imported fuel costs feed into margin calculations per route.
+  
+  
+    Managing vehicle records, including licence plates used for fuel transaction matching.
+  
+</CardGroup>
+
+---
+
+## SAGA C and WinMENTOR Integration
+
+
+Most Romanian transport companies handle their accounting in SAGA C or WinMENTOR. Druma exports invoices from **Finance → Export Builder**, letting you move invoices from Druma into your accounting software without re-entering data manually.
+
+## SAGA C
+
+SAGA C is the most widely used accounting software for Romanian SMEs. Druma exports invoices in the DBF format that SAGA C expects, as a fixed, one-click package.
+
+### Exporting from Druma
+
+
+  ### Open Export Builder
+    In Druma, go to **Finance → Export Builder**.
+  
+  ### Select the period
+    For companies based in Romania, a **SAGA export (Romania)** panel appears at the top of the page. Pick the month you want to export — typically the current month or the previous month. All issued invoices in that period will be included.
+  
+  ### Download the ZIP file
+    Click **SAGA export (Romania)**. Depending on what's in the selected period, the file contains:
+    - `CLI_<date>.dbf` — client master data
+    - `ART_<date>.dbf` — the freight service line item (included by default on your first export only; auto-disabled afterwards, since SAGA only needs it once)
+    - `IE_<date>_<date>.dbf` — sales invoices (Iesiri) with VAT breakdown
+    - `INT_<date>.dbf` — purchase invoices (Intrari) for subcontracted orders, only present if the period has any
+    - `NC_<date>_<date>.xml` — payments (Incasari), only present if the period has any
+    - `README.txt` — import instructions in Romanian
+  
+
+
+This SAGA package is fixed — it isn't a custom profile and doesn't go through the column builder below. It's the same package the automatic monthly export (further down this page) emails to your accountant.
+
+### Importing into SAGA C
+
+
+  ### Open SAGA C
+    Log in to SAGA C for your company.
+  
+  ### Navigate to import
+    Go to **Utilitare → Import date**.
+  
+  ### Import the files in order
+    Import `CLI_*.dbf` (Clienti) first — only needed on the first export or when new clients appear. Then `ART_*.dbf` (Articole) if present, then `IE_*.dbf` (Iesiri/invoices), then `INT_*.dbf` (Intrari/purchase invoices) if present, then `NC_*.xml` (Incasari/payments) if present.
+  
+  ### Verify
+    Check the imported documents in **Documente → Iesiri** (invoices) and **Documente → Incasari** (payments).
+  
+
+
+### BNR Exchange Rates
+
+For invoices issued in currencies other than RON, Druma automatically includes the BNR (National Bank of Romania) exchange rate valid on the invoice date. This is embedded in the DBF file and imported into SAGA C automatically — no manual rate entry needed.
+
+## WinMENTOR
+
+There are two ways to export to WinMENTOR: a one-click preset for the standard import, or a customisable template for companies whose WinMENTOR install expects a different layout.
+
+### One-click WinMENTOR export
+
+
+  ### Open Export Builder
+    In Druma, go to **Finance → Export Builder**.
+  
+  ### Select the period
+    For Romanian companies, a **WinMENTOR export (.txt)** button appears next to the SAGA export panel, at the top of the page, using the same month picker.
+  
+  ### Download the ZIP file
+    Click **WinMENTOR export (.txt)**. The file contains:
+    - `Iesiri.txt` — sales invoices
+    - `Incasari.txt` — payments, only present if the period has any
+    - `README.txt` — step-by-step instructions for importing into WinMENTOR
+  
+
+
+### Custom layouts (template clone)
+
+If your WinMENTOR install expects a different column layout than the built-in export above, clone a **starting template** instead and adjust it to match.
+
+
+  ### Open Export Builder
+    In Druma, go to **Finance → Export Builder**.
+  
+  ### Clone the WinMENTOR template
+    Click **Clone WinMentor template**. This creates a new export profile pre-filled with WinMENTOR-typical settings: pipe (`|`) delimiter, Windows-1252 encoding, `DD.MM.YYYY` dates, and a starter column set — Numar, Data, Client, Suma, TVA, Total, Cod_TVA.
+  
+  ### Adjust the columns
+    Add, remove, or reorder columns from the sales-invoice field list, rename headers, and set a transform per column (date, number, uppercase, truncate, or a nominal-code lookup) to match what your WinMENTOR import expects. Give the profile a name and click **Save profile**.
+  
+  ### Preview, then run
+    Pick a period and click **Refresh preview** to check the output before committing. Click **Run export** to download the CSV/TXT file for that period.
+  
+
+
+Because this is a regular export profile, the same builder also works for any other CSV-based accounting package — WinMENTOR is just the pre-filled starting point, not a fixed format. Once saved, the profile appears alongside your other export profiles and can be re-run for any period going forward.
+
+## Automatic Monthly Export (SAGA C)
+
+Instead of manually exporting every period, you can have Druma email a SAGA export to your accountant automatically:
+
+**Settings → Automations → SAGA Export Config**
+
+Configure the **accountant email** (and optional CC), and a **day of month** to run on. A scheduled job checks daily and, on the configured day, exports the **previous full month** and emails the ZIP to the accountant with a summary of invoice/purchase/payment counts and any validation warnings.
+
+> **Note:** 
+Choose a day between **1 and 28**.
+
+
+> **Note:** 
+The email contains a download link to the ZIP that **expires after 7 days**. There is no in-app "Export History" list — each month's file is only reachable via that emailed link (or by re-running the manual export for the same period from Finance → Export Builder).
+
+
+
+  
+    How to generate invoices from completed orders in Druma.
+  
+  
+    Submitting invoices to ANAF electronically via the e-Factura system.
+  
+</CardGroup>
+
+---
+
+## JPK_V7M — Comarch ERP Optima (Poland)
+
+
+Druma produces **JPK_V7M(3)** — the Polish VAT records file (*część ewidencyjna*, sales side) defined by the Ministry of Finance and mandatory since 1 February 2026. Your accountant imports it in Comarch ERP Optima under **Rejestry VAT → Import do rej. VAT**.
+
+Because JPK is a legal standard rather than a vendor format, the same file also imports into enova365, Symfonia and every other Polish accounting package.
+
+> **Note:** 
+Amounts in a currency other than PLN are converted at the **NBP tabela A** rate from the last business day before the tax point, as art. 31a requires. The rate, its date and the table number are stored on the invoice, so a filing stays reproducible if anyone asks which table a figure came from.
+
+
+---
+
+## First, two settings
+
+**Settings → Integrations → JPK_V7M**. Two values cannot be derived from anything else Druma holds, and the export refuses to run without them rather than guessing:
+
+| Setting | Why it is required |
+|---|---|
+| **Tax office code (KodUrzedu)** | One of 400 enumerated codes. Nothing maps an address to one — it is assigned to you. A guess files against the wrong office. |
+| **Filing contact e-mail** | Goes in the file's `Podmiot1` block. Your operational inbox is usually not your bookkeeper, and putting the wrong person on a tax document is worse than asking. |
+
+You can also set the **tax point** (invoice issue date, or the linked order's delivery date) — for freight this is normally the day the service was performed.
+
+---
+
+## Three ways the file reaches Optima
+
+Optima cannot be written into from outside. On-premise, its Web API is a Windows service on your accountant's own network; Comarch's *Chmura Standard* forbids access to the database from the internet altogether, and *Chmura Enterprise* only serves software installed on that same server. So every route below runs **from your side outwards**.
+
+### 1. Download it
+
+**Finance → Export builder → JPK_V7M export (Poland)**. Pick a month, get the `.xml`. Nothing to configure beyond the two settings above.
+
+### 2. Have it e-mailed every month
+
+Switch on **E-mail the file every month** in the same settings panel and pick a day. Druma generates the closed month and sends your bookkeeper a download link valid for 7 days.
+
+The day is capped at the **25th**, because that is the JPK_V7M filing deadline for the previous month — a later day would deliver the file after the deadline it exists to meet. If the month is shorter than the day you picked (the 31st in February), it goes out on the last day rather than being skipped.
+
+If the file cannot be produced — a missing tax office code, say — the e-mail tells you why instead of simply never arriving.
+
+### 3. Let the accountant's computer fetch it
+
+A scheduled task on the machine that runs Optima can download the file itself over ordinary outbound HTTPS. No firewall change, no fixed address, no Comarch licence.
+
+Create an API key under **Settings → Integrations → API Keys** (Operator or Accountant scope), then schedule this monthly:
+
+```powershell
+$key = Get-Content "C:\ProgramData\Druma\api-key.txt"
+$dest = "D:\Optima\JPK\JPK_V7M_$(Get-Date -Format yyyy-MM).xml"
+
+Invoke-WebRequest `
+  -Headers @{ 'X-API-Key' = $key } `
+  -Uri "https://YOUR-PROJECT.supabase.co/functions/v1/public-api/jpk-v7m?period=previous" `
+  -OutFile $dest
+```
+
+The file lands in a folder your accountant imports from. See the [Public API](/en/integrations/public-api#jpk-v7m-poland) page for the endpoint's parameters.
+
+> **Tip:** 
+An **Accountant**-scope key can cover several companies. It then requires `&company_id=…` on each request — a VAT filing is per-taxpayer, and Druma will not guess which one you meant.
+
+
+---
+
+## Filing monthly, or importing continuously
+
+`?period=previous` gives you the closed month — the one you file.
+
+`?period=current` gives the month **in progress**. Optima's import reads the individual rows rather than the period label, so pulling the current month daily is a way to get invoices into the VAT register as they are issued, instead of once a month. Every response carries an `X-Partial-Period` header (`true`/`false`) so the two are never confused.
+
+> **Warning:** 
+**Test this before you automate it.** Whether Optima skips rows it has already booked on a repeat import, or creates them a second time, is Comarch's behaviour and not something Druma controls. Import the same month twice on a test database first. If it duplicates, use the monthly route instead.
+
+
+A partial month is never a file to *file* — only to feed a register.
+
+---
+
+## If Druma is not the system issuing your invoices
+
+The JPK export is deliberately blocked when **client invoicing is switched off** for your company, and answers `409`. With invoicing off, the invoices in Druma were issued somewhere else and ingested for tracking — exporting them would hand the issuing system back its own documents, and for a Polish operator that means a second copy of what Optima already collected from KSeF.
+
+In that setup the useful direction is the opposite one: the [Finance API](/en/integrations/finance-api) hands your accounting system the orders that are ready to invoice, and takes the issued invoice number back.
+
+---
+
+## KSeF
+
+From 1 April 2026, KSeF is mandatory for Polish VAT payers, and Optima's own KSeF module books sales invoices directly from it. Druma submits invoices to KSeF for operators who have it configured, which puts each document into Optima within minutes of being issued — no file, no scheduled task.
+
+JPK_V7M remains the monthly VAT *register* underneath that, and it carries each invoice's KSeF number so Optima matches rather than duplicates. Only **production** KSeF acceptances appear as `NrKSeF` in the JPK. An invoice filed in the KSeF Test or Demo environment has no legal effect, so it is treated as an invoice without a KSeF number (BFK).
+
+
+  
+    The endpoint the scheduled task calls, its parameters and its limits.
+  
+  
+    For when your accounting system issues the invoices, not Druma.
+  
+</CardGroup>
+
+---
+
+## SmartBill Integration
+
+
+SmartBill is a widely used Romanian cloud invoicing and accounting platform. The Druma-SmartBill integration pushes a copy of each invoice you send to SmartBill, so it also lives in your accounting system without manual re-entry.
+
+## What the Integration Does
+
+- Every invoice you **send** in Druma (not at generation/creation time) is pushed to SmartBill as a draft invoice, one-way
+- You review and issue the invoice from SmartBill as part of your normal accounting workflow
+- The invoice's SmartBill push status (pushed or error) is recorded on the Druma invoice — there's no ongoing two-way status sync back from SmartBill
+- Client and product data sent to SmartBill is explicitly marked "don't save" in the push payload — SmartBill does **not** create or update its own client/product records from this integration
+
+## Setting Up the Integration
+
+
+  ### Get your SmartBill API key
+    Log in at [smartbill.ro](https://smartbill.ro). Go to **Cont → Setări → API**. Generate a new API key (token). Copy it — SmartBill shows it once.
+  
+  ### Find your company CIF and invoice series
+    Your company CIF (Codul de Identificare Fiscală) is shown in your SmartBill account under company settings. You'll also need the **invoice series name** configured in SmartBill that you want pushed invoices to use.
+  
+  ### Enter credentials in Druma
+    Go to **Settings → Integrations → SmartBill**. Enter your SmartBill account **email**, **API token**, **CIF**, and **invoice series** — all four fields are required.
+  
+  ### Test the connection
+    Click **Test Connection**. Druma will authenticate with SmartBill and confirm the integration is active.
+  
+
+
+## How Invoice Pushing Works
+
+1. You generate the invoice in Druma with your sequential invoice number
+2. When you **send** the invoice (not at generation time), Druma pushes it to SmartBill as a draft, alongside any ANAF e-Factura or Peppol submission that also fires on send
+3. You open SmartBill, review the draft, and issue it (Emite factura)
+4. SmartBill assigns **its own invoice number** on issue — Druma's invoice number is not sent to SmartBill and is not reflected there; SmartBill's number is stored back on the Druma invoice for reference
+
+> **Note:** 
+SmartBill push status on the Druma invoice is a simple pushed/error flag, not a Draft/Issued/Paid tracker — Druma has no visibility into what happens to the invoice inside SmartBill after the push (there's no webhook connecting the two systems in that direction).
+
+
+## Important Limitations
+
+**Invoice management stays in SmartBill.** The integration is a one-way push at send time. Editing, cancelling, issuing, or crediting an invoice must be done in SmartBill directly — none of that syncs back to Druma.
+
+**You do not need SmartBill for ANAF e-Factura.** Druma submits invoices to ANAF directly using its own e-Factura integration, independent of SmartBill. You can use both integrations simultaneously without conflict.
+
+> **Note:** 
+If you currently use SmartBill for e-Factura submission, decide whether to continue doing that in SmartBill or switch to Druma's direct ANAF integration. Running both in parallel will cause duplicate submissions. Contact support@druma.io if you need guidance on migrating.
+
+
+## Troubleshooting
+
+**Push failed:**
+The Druma invoice records a `smartbill_error` detail on failure. Common causes: expired API token, SmartBill maintenance window, or a client record with a missing CUI/VAT number that SmartBill requires for company clients.
+
+**Invoice number conflict:**
+If a draft was manually created in SmartBill with the same series/number before the push, SmartBill will reject the duplicate. Delete the manual draft in SmartBill, then click **Retry SmartBill** on the invoice row's action menu in Druma.
+
+
+  
+    How to generate invoices from completed orders in Druma before they push to SmartBill.
+  
+  
+    Submitting invoices directly to ANAF from Druma without going through SmartBill.
+  
+</CardGroup>
+
+---
+
+## Public API
+
+
+The Druma Public API gives you **read-only** REST access to your orders — useful for a customer self-service portal, a BI/reporting tool, or internal tooling your team has built.
+
+---
+
+## API keys and scopes
+
+Company administrators issue their own keys from **Settings → Integrations → API Keys** — click **Create key**, name it (e.g. `QuickBooks export`), and pick a scope:
+
+| Scope | What it grants |
+|---|---|
+| **Operator (full read access)** | The read-only endpoints on this page, for your own company |
+| **Finance (billable export + invoice ingest)** | The [Finance API](/en/integrations/finance-api) only — pulling billable orders and posting issued invoices back |
+| **Accountant (multi-company read)** | Read access across the companies the key is issued for |
+
+> **Warning:** 
+The full key is shown **once**, at the moment you create it. Druma stores only a hash, so it can never be shown again — copy it into your target system straight away. If you lose it, revoke the key and issue a new one.
+
+
+Existing keys list their scope, a key prefix, and when they were last used (or **never**). **Revoke** takes a key out of service immediately — any system still using it stops working at once, so check *Last used* before revoking one you did not issue yourself.
+
+A scope is not a suggestion: calling a Finance API endpoint with an Operator key fails with `403`, and vice versa.
+
+## Authentication
+
+All API requests must include your API key in the `X-API-Key` header:
+
+```
+X-API-Key: YOUR_API_KEY
+```
+
+Requests without a valid key return a `401 Unauthorized` response. Bearer-token authentication (`Authorization: Bearer ...`) is **not** supported and also returns a 401.
+
+This API is **v1**: paths also work as `/public-api/v1/...`, and every response carries a `Druma-Api-Version` header. New fields may be added at any time, so ignore fields you do not know. See [API versioning](/en/integrations/api-versioning).
+
+## Available Endpoints
+
+The Public API is read-only — only `GET` requests are accepted. All responses are JSON. (Writing back into Druma is the [Finance API](/en/integrations/finance-api)'s job, on its own key.)
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/orders` | List orders (paginated, optional `status` filter) |
+| `GET` | `/orders/{id}` | Order detail |
+| `GET` | `/orders/{id}/location` | Current truck position and latest ETA |
+| `GET` | `/orders/{id}/documents` | Document list with time-limited signed download URLs |
+| `GET` | `/pallet-balances` | Pallet position per client and subcontractor (Operator keys only, see [Pallet API](/en/integrations/pallet-api-and-webhooks)) |
+| `GET` | `/pallet-movements` | The pallet ledger, paginated (Operator keys only) |
+| `GET` | `/pallet-vouchers/{id}` | One signed pallet voucher with lines and a 5-minute PDF link (Operator keys only) |
+| `GET` | `/jpk-v7m` | One month's Polish VAT records, as an XML file |
+
+Any other resource, or any non-GET method, returns a `404`/`405` error.
+
+Errors are always JSON in the shape `{ "error": "message" }` with the matching HTTP status (`400`, `401`, `403`, `404`, `405`, `429`, `500`). The full machine-readable reference (OpenAPI 3.1, every parameter and field) is under **API reference** in the navigation, file `openapi/public-api.v1.yaml`. The base URL is `https://YOUR-PROJECT.supabase.co/functions/v1`.
+
+### `GET /orders`
+
+```json
+{
+  "data": [
+    {
+      "id": "d100000a-0000-0000-0000-000000000085",
+      "order_number": "CCE-0085",
+      "status": "at_delivery",
+      "pickup_address": "Calea Florești 89, Cluj-Napoca, 400516, RO",
+      "delivery_address": "Str. Industriei 8, Brașov, 500001, RO",
+      "pickup_date": "2026-09-08",
+      "delivery_date": "2026-09-09",
+      "client_reference": "EMG-1002635",
+      "currency": "EUR",
+      "total_price": 522,
+      "created_at": "2026-09-04T09:00:00+00:00"
+    }
+  ],
+  "pagination": { "page": 1, "limit": 25, "total": 807, "total_pages": 33 }
+}
+```
+
+Paginate with `?page=` and `?limit=` (max 100), and filter with `?status=`. Results are ordered newest first and the ordering is total, so paging never repeats or skips a row.
+
+`total_price` is the order's agreed sell price, in the order's `currency`. It is `null` on an order that has not been priced yet.
+
+### `GET /orders/{id}`
+
+Adds the client, the assigned truck, free-text notes and a document count:
+
+```json
+{
+  "data": {
+    "id": "d100000a-0000-0000-0000-000000000085",
+    "order_number": "CCE-0085",
+    "status": "at_delivery",
+    "currency": "EUR",
+    "total_price": 522,
+    "notes": null,
+    "clients": { "name": "eMag România", "vat_number": "RO20056789" },
+    "trucks": { "plate_number": "CJ-430-CCE" },
+    "documents_count": 0,
+    "created_at": "2026-09-04T09:00:00+00:00",
+    "updated_at": "2026-09-09T14:08:38+00:00"
+  }
+}
+```
+
+`clients` and `trucks` are `null` when the order has none assigned.
+
+### `GET /orders/{id}/location`
+
+```json
+{
+  "data": {
+    "order_id": "d100000a-0000-0000-0000-000000000085",
+    "status": "at_delivery",
+    "position": {
+      "latitude": 45.64255,
+      "longitude": 25.58858,
+      "speed_kmh": 0,
+      "heading": 109,
+      "recorded_at": "2026-09-09T15:03:02+00:00",
+      "source": "pwa"
+    },
+    "eta": {
+      "estimated_arrival": "2026-09-09T12:34:04+00:00",
+      "calculated_at": "2026-09-09T12:34:04+00:00",
+      "distance_remaining_km": null
+    }
+  }
+}
+```
+
+`position` is `null` when no GPS has ever been received for the order, and `eta` is `null` until one has been calculated. Neither is an error — a just-created order legitimately has both.
+
+### `GET /jpk-v7m` (Poland)
+
+Returns one calendar month's **JPK_V7M(3)** as an XML file rather than JSON — the body *is* the file, so a scheduled task can write it straight to disk. See [JPK_V7M — Comarch ERP Optima](/en/integrations/jpk-optima) for what to do with it.
+
+| Parameter | Meaning |
+|---|---|
+| `period=previous` | The last closed month. This is the one you file. |
+| `period=current` | The month in progress — a **partial** register, for feeding an accounting system continuously. |
+| `year=` & `month=` | A specific month. An unfinished month additionally needs `partial=true`. |
+| `company_id=` | Required when the key covers more than one company. |
+
+| Response header | Meaning |
+|---|---|
+| `Content-Disposition` | `attachment; filename="JPK_V7M_2026-08.xml"` |
+| `X-Invoice-Count` | Number of sales rows in the file |
+| `X-Partial-Period` | `true` when the month is still open |
+| `X-Export-Warnings` | JSON array of anything omitted — an invoice with no NBP rate, for example |
+
+Read `X-Export-Warnings` before filing. A JPK that quietly lost a row still imports perfectly well.
+
+A month that has not finished is refused with `400` unless you ask for it explicitly, and the export is refused with `409` when client invoicing is switched off for the company — see the [JPK page](/en/integrations/jpk-optima#if-druma-is-not-the-system-issuing-your-invoices).
+
+## Rate Limits
+
+- **100 requests per minute** per API key
+- `/jpk-v7m` has a second, tighter budget of **12 requests per hour** on top of that. Each call reads a month of invoices, resolves exchange rates and writes back converted amounts, so it is sized for a scheduled job rather than a polling loop
+- If you exceed either limit, you receive a `429 Too Many Requests` response with a `Retry-After` header telling you how many seconds to wait
+- No other rate-limit headers are returned
+
+For higher limits, contact support@druma.io with your use case.
+
+
+  
+    Overview of all Druma integrations and how to manage them from the Settings panel.
+  
+  
+    Export billable orders to your ERP and post issued invoices back.
+  
+  
+    Polish VAT records: download, monthly e-mail, or a scheduled task that fetches the file.
+  
+</CardGroup>
+
+---
+
+## Finance API
+
+
+Some operators do not invoice from Druma at all — they invoice from an existing finance or ERP system and want Druma to stay the operational source of truth. The Finance API is the loop that makes that work: Druma tells your finance system what is ready to bill, and your finance system tells Druma what it actually invoiced.
+
+An order moves through four states across the two systems:
+
+**Uninvoiced → Ready to invoice (exported) → Invoiced (in your system) → Paid**
+
+> **Note:** 
+This is a separate API from the read-only [Public API](/en/integrations/public-api). The Public API answers "where is my shipment"; the Finance API is a billing hand-off with writes, idempotency and its own rate limits. A key issued for one does not work on the other.
+
+
+---
+
+## Before you start
+
+
+  ### Turn client invoicing off in Druma
+    The Finance API is for operators who invoice elsewhere. If you also issue invoices from Druma you will end up billing the same load twice.
+  
+  ### Issue a Finance-scoped API key
+    Go to **Settings → Integrations → API Keys**, click **Create key**, give it a name (e.g. `Netsuite export`) and choose the **Finance (billable export + invoice ingest)** scope.
+
+    Only a `finance` key works here. An `operator` or `accountant` key — even a perfectly valid one — is rejected with **403**. See [Public API](/en/integrations/public-api) for how keys and scopes work.
+  
+  ### Copy the key
+    The full key is shown **once**, at creation. Store it in your finance system's credential store; Druma keeps only a hash and can never show it to you again.
+  
+
+
+---
+
+## Authentication
+
+Every request carries the key in the `X-API-Key` header — the same header as the Public API:
+
+```
+X-API-Key: YOUR_FINANCE_KEY
+```
+
+The API is **v1**: the paths below also work as `/finance-api/v1/...`, and every response carries a `Druma-Api-Version` header. See [API versioning](/en/integrations/api-versioning). Limits: 120 requests per hour per key for `GET /billable` and `POST /billable/exported`, 300 per hour for `POST /invoices`.
+
+---
+
+## Endpoints
+
+| Method | Endpoint | What it does |
+|---|---|---|
+| `GET` | `/finance-api/billable` | Paginated list of orders that are ready to invoice |
+| `POST` | `/finance-api/billable/exported` | Stamp those orders as pulled, so the next `GET` does not return them again |
+| `POST` | `/finance-api/invoices` | Post an invoice you issued back into Druma |
+
+### The normal cycle
+
+
+  ### Pull what is billable
+    `GET /finance-api/billable` returns delivered orders with no issued invoice, paginated.
+  
+  ### Acknowledge what you took
+    `POST /finance-api/billable/exported` with the order ids you actually pulled. This is what stops the same order being handed to your ERP twice — until you acknowledge, Druma keeps offering it.
+  
+  ### Post the invoice back
+    Once your system has issued the invoice, `POST /finance-api/invoices` records it against the order in Druma. The order becomes **Invoiced**, drops off the uninvoiced list, and starts ageing for payment tracking like any other invoice.
+  
+
+
+### Errors you should expect to handle
+
+| Response | Meaning |
+|---|---|
+| `403` | The key is valid but is not a **Finance**-scoped key |
+| `409` | The `external_invoice_number` already exists with a different order set, amount or currency (`reason: duplicate_external_number`) |
+| `422` | Validation failed: an unknown order id, an order that is already invoiced, orders from more than one client, or a currency that does not match. The response has a `reason` and names the bad ids or fields |
+| `429` | Rate limit exceeded — wait and retry |
+
+Posting the exact same invoice again (same `external_invoice_number`, orders, amount and currency) is safe: it returns `200` with the existing `invoice_id` instead of `201`, and nothing changes.
+
+> **Warning:** 
+Druma does not guess. The ids you post back are ids Druma handed you minutes earlier from `GET /finance-api/billable`; if they do not match, you get a `422` naming them rather than a best-effort match against something else. Echo the ids back exactly as received.
+
+
+---
+
+## Related articles
+
+
+  
+    Read-only order access, API keys and scopes.
+  
+  
+    Invoicing from inside Druma instead.
+  
+</CardGroup>
+
+---
+
+## Peppol E-Invoicing (Belgium)
+
+
+Peppol (Pan-European Public Procurement On-Line) is the EU standard network for exchanging structured electronic invoices between businesses. In Belgium, sending invoices via Peppol is **mandatory for all KBO-registered companies** issuing B2B invoices as of January 2026.
+
+Druma connects to the Peppol network through an accredited Belgian **Peppol Access Point**. Druma holds and manages that Access Point contract at platform level — you never choose, contract, or configure an Access Point yourself, and Druma can change provider without any action on your side. Once configured, Druma detects which of your clients are reachable on Peppol and routes invoices to them automatically — you do not need to change how you create or send invoices.
+
+
+---
+
+## Who needs this
+
+You need the Peppol integration if:
+
+- Your company is registered in Belgium (has a KBO number), **and**
+- You issue invoices to other Belgian businesses
+
+If your company operates outside Belgium, or if your clients are consumers or foreign businesses, Peppol does not apply to you. Druma will continue to send invoices by email for all non-Peppol recipients regardless of whether the integration is active.
+
+> **Note:** 
+Belgian companies that do not activate this integration risk non-compliance penalties from January 2026 onward. The setup takes under five minutes.
+
+
+---
+
+## Setup
+
+
+  ### Open the Peppol card
+    Go to **Settings → Integrations**. Locate the **Peppol E-Invoicing** card. Its status will show **Not configured**.
+  
+  ### Click Configure
+    Click **Configure** on the card. A settings panel opens.
+  
+  ### Enter your KBO and VAT numbers
+    Enter your company's **KBO/CBE number** (10-digit Belgian company registration number) and **VAT number** (BE followed by 10 digits) in the respective fields.
+  
+  ### Register on the Peppol network
+    Click **Register on Peppol**. Druma submits your registration to the Access Point. This typically completes in a few seconds.
+  
+  ### Confirm activation
+    Once registration succeeds, the card shows a **Connected** badge. Your company is now a Peppol participant and can both send and receive structured invoices on the network.
+  
+
+
+> **Warning:** 
+Only **Admin** and **Company Admin** users can configure integrations. If you do not see the Configure button, ask your account administrator.
+
+
+---
+
+## How invoice routing works
+
+After activation, Druma adds a Peppol check whenever you send an invoice:
+
+1. Druma first checks whether the client's VAT number is Belgian (starts with `BE`) — this check happens **before any network call**, so non-Belgian clients never trigger a Peppol lookup at all.
+2. For Belgian clients, Druma looks up the recipient on the Peppol network via the Access Point. If found, the invoice is submitted electronically — **no extra steps required on your part**.
+3. Druma also sends the invoice by email, regardless of whether the Peppol submission succeeded — email is not a conditional fallback triggered only when Peppol fails. The one exception: if a client has explicitly opted out of receiving both channels (a separate per-client setting), email is skipped once Peppol delivery succeeds.
+
+You do not need to choose a delivery method per invoice. The routing is fully automatic.
+
+
+---
+
+## Tracking invoice status
+
+The invoices list includes a **Peppol** status column with the following states:
+
+| Status | Meaning |
+|---|---|
+| **Submitted** | Sent to the Access Point, awaiting delivery confirmation |
+| **Delivered** | Confirmed delivered to the recipient's Peppol inbox |
+| **Failed** | Delivery failed at the Access Point — see the error detail on the invoice row |
+| **Validation failed** | Druma's local preflight blocked the send before it reached the Access Point (e.g. an invalid KBO/VAT checksum) — no Access Point call was made |
+| **Not on network** | The client's VAT isn't a registered Peppol participant; the invoice was emailed as usual (shown as "→ Emailed") |
+
+There is no "Pending" status — an invoice is either not yet sent via Peppol (null), or in one of the five states above. Status updates for submitted invoices arrive automatically. Druma sweeps the Access Point for status changes on a schedule — that sweep is the authoritative source. An Access Point webhook may deliver the same update sooner, but it is only a speed-up: if it never arrives, the sweep still picks the status up.
+
+---
+
+## Handling failures
+
+If an invoice shows **Failed** or **Validation failed**:
+
+1. Hover over or click the status badge to read the error detail.
+2. Correct any issue indicated (for example, an invalid VAT number on the client record).
+3. Click **Retry Peppol** on the invoice row to retry the submission.
+
+> **Note:** 
+Peppol delivery failures do not affect the invoice's internal status in Druma. The invoice remains confirmed and will still appear in your accounting exports. The invoice is also sent by email regardless, so the client isn't left without a copy while you investigate.
+
+
+---
+
+## Manually triggering Peppol delivery
+
+For invoices where auto-send did not trigger — for example, invoices created before the integration was activated — you can manually submit via Peppol:
+
+1. Open the **Invoices** list.
+2. Find the invoice row and click the row action menu (**···**).
+3. Click **Submit now**.
+
+This is also useful after correcting a client's VAT number or KBO number.
+
+---
+
+## Related pages
+
+
+  Overview of all integrations available in Settings → Integrations.
+
+
+
+  How to send invoices by email and track delivery status.
+
+
+
+  Customise invoice numbering, logo, and colours on PDF invoices.
+
+
+---
+
+## Client API Integration (CAPI)
+
+
+The Client API Integration (CAPI) creates a direct data channel between a specific client and your Druma account. It has two independent halves:
+
+- **Inbound**: the client's system sends orders to Druma automatically. No manual order entry required.
+- **Outbound**: Druma pushes status events (departed, delivered, invoiced, and so on) to the client's system in real time.
+
+You can enable either half independently, or both together. Each client gets their own token and endpoint, so credentials are fully isolated.
+
+---
+
+## When to use this
+
+CAPI is appropriate when a client:
+
+- Has a WMS, ERP, or order management system that can make HTTP calls
+- Books shipments frequently and wants to avoid logging into your client portal to create orders
+- Needs automated delivery confirmation sent to their system for downstream workflows (warehouse booking, invoicing, stock updates)
+
+For clients who book occasionally or prefer the portal, CAPI adds unnecessary complexity. Use the standard client portal instead.
+
+---
+
+## Where to find the settings
+
+1. Go to **Clients** in the left navigation.
+2. Open the client record.
+3. Click the **API** tab.
+
+Both inbound and outbound settings are on this tab.
+
+---
+
+## Setting up a new inbound connection
+
+New connections go through a guided setup wizard — you don't hand-write a field-mapping table. Click **Set up API integration** on the API tab to start it.
+
+
+  ### Pick the channel
+    Choose how this client actually sends you orders: **API** (continue through this wizard), **Email ingestion** (handled by Druma's AI email intake instead — no mapping needed), or **Client portal** (they place orders themselves — no mapping needed). Only **API** continues to the next step.
+  
+  ### Paste a sample payload
+    Paste one real (or realistic) JSON payload the client would send. Not sure what to tell the client's IT team? Use **Send the client an integration pack** on this same step to email them the endpoint URL, a curl example, and plain-language setup instructions — no fixed schema required.
+  
+  ### Review the AI-proposed mapping
+    Druma's AI reads the sample and proposes a field mapping. If its confidence is **90% or higher** and the mapping is complete, it's applied automatically and the wizard skips straight to testing. Below that bar, you land on a mapping review screen — a live draft-order preview updates as you adjust the source path, target field, or transform for each row. Approve to continue, or reject and try a different sample.
+  
+  ### Test, then go live
+    Run **Validate without creating** against your sample to confirm nothing is missing, then click **Mark as tested**. Real orders the client's own system sends while you're still in setup show up here too — hidden from Planning, dashboards, and their portal until you go live. Once you're satisfied, click **Go live**.
+  
+
+
+> **Note:** 
+If another operator already has an approved mapping for a client with the same VAT number, Druma reuses that structure and skips the AI step entirely — this happens silently and just shows up as an unusually confident proposal.
+
+
+> **Note:** 
+The flat, hand-edited inbound field-mapping table from older CAPI setups is gone for **new** connections — everything now goes through the wizard's versioned mapping spec. Connections configured before this change keep working automatically on their existing field map; there's just no UI to hand-edit that flat map anymore.
+
+
+The client's system sends a `POST` request to the endpoint URL with the header `Authorization: Bearer <token>` and a JSON body. Druma creates the order in **Draft** status. A planner can review and confirm draft orders from the planning board.
+
+---
+
+## Connection status
+
+Each connection moves through a lifecycle, shown as a status pill on the API tab:
+
+| Status | Meaning |
+|---|---|
+| Draft | Created, setup not yet started |
+| Pack sent | The integration pack email has been sent to the client's contact |
+| Receiving | Sample/mapping step in progress |
+| Tested | Validated, not yet accepting real production traffic |
+| Live | Accepting real inbound orders / sending outbound events |
+| Failing | 3 consecutive rejected inbound payloads, or 3 consecutive dead-lettered outbound deliveries |
+| Disabled | Turned off (the "Connection active" toggle) |
+
+When a connection flips to **Failing**, Druma notifies your admin/company_admin users in-app so you can catch a broken integration before the client calls to ask why nothing arrived.
+
+---
+
+## Mapping drift and version history
+
+If a client's system silently renames or moves a field, Druma detects the mismatch against the active mapping and proposes a one-click update — approve it to activate a new mapping version immediately, or reject it and keep the current one. The API tab also keeps a version history of every mapping the connection has used, with **Roll back** available on any older version.
+
+---
+
+## Rotating or delivering a token
+
+- **First-time generation**: on the API tab, click **Generate token**. The full token is shown **once** — copy it immediately (a password manager works well). Only the first characters are shown afterwards as a reference.
+- **Via the integration pack**: when sending the pack, tick **Generate a fresh API token and email it separately** — the token always goes out in its own email, never bundled with the setup instructions, so a forwarded pack never carries a live credential. The token is also shown in the UI immediately in case that email bounces.
+- **Rotating**: click **Rotate token** to invalidate the old one and generate a new one. Requests using the old token are rejected with `401 Unauthorized` from the moment rotation completes.
+
+---
+
+## Outbound — Druma pushes events to the client
+
+
+  ### Enable outbound
+    On the API tab (manage view, once the connection has left the wizard), toggle on **Enable outbound webhook**.
+  
+  ### Enter the webhook URL
+    Paste the client's **Webhook URL** — the endpoint in their system that will receive events.
+  
+  ### Choose an authentication type
+    Select one of the four **Auth type** options:
+
+    - **None** — no authentication header (use only on trusted private networks)
+    - **Bearer token** — Druma adds `Authorization: Bearer <value>` to every request
+    - **Basic auth** — Druma adds an `Authorization: Basic` header with a base64-encoded username and password
+    - **HMAC-SHA256** — Druma signs each request body with a shared secret and sends the signature in the `X-Druma-Signature` header (`sha256=<hex>` of the raw body) and, for replay protection, `X-Druma-Signature-V2` (`t=<unix seconds>,v1=<hex>`, signed over `<t>.<body>`); the client verifies it before processing. See [API versioning](/en/integrations/api-versioning) for a verification example
+
+    Fill in the credentials for whichever type you choose. Leave a credential field blank to keep the currently saved value.
+  
+  ### Select events to send
+    Tick the events you want Druma to push:
+
+    - **Order created**
+    - **Status changed** — any status change (assigned, at pickup, in transit, and so on)
+    - **Order delivered**
+    - **Order delayed**
+    - **Order invoiced**
+  
+  ### Configure the outbound field map (optional)
+    If the client's system expects different field names in the payload, use the **Outbound field map** table to rename Druma's output fields before they are sent.
+  
+  ### Save
+    Click **Save settings**. Druma will begin delivering events for the selected triggers from this point forward.
+  
+
+
+> **Note:** 
+Clients can also configure their own outbound webhook — URL, auth, events, and credentials — from their own portal, without you touching this tab at all. See [Managing Contacts](/en/client-portal/managing-contacts) for how the client's own portal settings work.
+
+
+**Example — outbound field mapping:**
+
+| Druma field | Client field |
+|---|---|
+| `order_id` | `druma_ref` |
+| `status` | `shipment_status` |
+| `actual_delivery_at` | `actual_delivery_datetime` |
+
+Unmapped fields are passed through using Druma's default field names.
+
+`api_version` and `event_id` are reserved keys: do not use them as targets of the outbound field map. Druma adds them after the map is applied, so they always keep these names.
+
+Every event also carries `api_version` and `event_id` (stable across retries, use it to ignore duplicates), and the headers `X-Druma-Event-Id`, `X-Druma-Event-Type` and `X-Druma-Timestamp`. See [API versioning](/en/integrations/api-versioning).
+
+---
+
+## Testing and delivery log
+
+Once a connection is live (or failing), the API tab's **Testing & delivery log** section lets you re-validate a payload without creating an order, fire an ad-hoc test event at the outbound webhook, and browse the delivery log (status, attempts, HTTP response, timestamps) for every event Druma has tried to send.
+
+---
+
+## Activity timestamps
+
+When the API has been used, the tab shows:
+
+- **Last inbound** — timestamp of the most recent order received from the client
+- **Last outbound** — timestamp of the most recent event delivered to the client's webhook
+
+These timestamps are useful for confirming the integration is active and for diagnosing gaps in communication.
+
+---
+
+## Rate limits
+
+CAPI enforces several independent rolling one-hour limits:
+
+| Limit | Applies to |
+|---|---|
+| 200 calls/hour | Inbound order submissions, per connection |
+| 600 calls/hour | Outbound event dispatch, per connection |
+| 60 calls/hour | Settings/admin actions on the API tab, per planner |
+| 20 calls/hour | AI mapping-spec proposals (wizard + drift), per planner |
+
+Requests that exceed a limit receive a `429 Too Many Requests` response. If a client legitimately needs higher inbound/outbound throughput, contact Druma support.
+
+> **Warning:** 
+Do not share a client's bearer token with other clients or embed it in publicly accessible code. Each token grants full inbound order creation rights for that client's company scope.
+
+
+---
+
+## Related pages
+
+
+  The no-code alternative: let clients track shipments and download documents without any API integration.
+
+
+
+  Overview of all integrations available in Settings → Integrations.
+
+
+
+  How planners create and manage orders in Druma.
+
+
+---
+
+## Connect your AI (MCP)
+
+
+Druma runs a remote **MCP (Model Context Protocol)** server, so you can connect your own AI client — Claude Code, Claude Desktop, GitHub Copilot (agent mode), OpenAI Codex CLI, Gemini CLI, or Cursor — directly to your Druma data. Ask it about your orders, fleet, drivers and invoices in natural language, and — with an opt-in scope — let it **propose** truck assignments that you approve.
+
+> **Warning:** 
+The MCP connector is a feature-flagged capability and is off by default. Contact **support@druma.io** to enable it for your account.
+
+
+## How it stays safe
+
+- **Everything the AI can see respects your role and company** — it only ever has the access you already have in Druma. There is no way for it to read another company's data.
+- **It cannot change anything on its own.** The only action it can take is *proposing* a truck assignment; nothing is applied until you explicitly confirm it. There are no delete, bulk, or free-form database actions.
+- **Your token is secret.** Druma stores only a one-way hash of it — the full token is shown once, at creation, and never again.
+- Every request is rate-limited and logged for your administrators.
+
+## 1. Create a Personal Access Token
+
+1. Go to **Settings → Integrations → Connected AI (MCP)**.
+2. Under **Create a token**, give it a name (e.g. "Claude Code — laptop").
+3. Choose the **scopes**:
+   - `read` (always on) — read orders, fleet, drivers, invoices and KPIs.
+   - `write:planning` (optional) — additionally let the AI *propose* truck assignments. Even with this on, nothing is applied without your explicit confirmation.
+4. Pick an expiry (30 / 90 / 365 days) and click **Create token**.
+5. **Copy the token now** — it is shown only once. It looks like `druma_pat_…`.
+
+You can revoke any token at any time from the same screen; company administrators can revoke any token in the company.
+
+## 2. Your server URL
+
+```
+https://<your-project>.supabase.co/functions/v1/mcp-server
+```
+
+The exact URL for your account is shown on the **Settings → Integrations → Connected AI (MCP)** page with a copy button.
+
+## 3. Connect your client
+
+Replace `<url>` with your server URL and `<token>` with your Personal Access Token.
+
+<Tabs>
+  <Tab title="Claude Code">
+```bash
+claude mcp add --transport http druma <url> --header "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="VS Code (Copilot)">
+Create `.vscode/mcp.json`. Using an `input` keeps the token out of the committed file:
+```json
+{
+  "servers": {
+    "druma": {
+      "type": "http",
+      "url": "<url>",
+      "headers": { "Authorization": "Bearer ${input:druma_token}" }
+    }
+  },
+  "inputs": [
+    { "id": "druma_token", "type": "promptString", "description": "Druma token", "password": true }
+  ]
+}
+```
+  </Tab>
+  <Tab title="Codex CLI">
+Add to `~/.codex/config.toml`:
+```toml
+[mcp_servers.druma]
+url = "<url>"
+http_headers = { Authorization = "Bearer <token>" }
+```
+  </Tab>
+  <Tab title="Gemini CLI">
+Add to `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "httpUrl": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+  <Tab title="Cursor">
+Add to `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "druma": { "url": "<url>", "headers": { "Authorization": "Bearer <token>" } }
+  }
+}
+```
+  </Tab>
+</Tabs>
+
+## 4. What you can ask
+
+- "Which orders are unassigned for tomorrow?"
+- "Show me late orders this week and which trucks are free."
+- "What's my overdue receivables total by client?"
+- With `write:planning`: "Propose truck RO-123-ABC for order 4021." — the AI creates a proposal and shows you a summary; you then tell it to confirm, and only then is the assignment applied.
+
+## Web chat connectors (ChatGPT, claude.ai)
+
+Connecting the **web** chat apps at chatgpt.com or claude.ai (rather than a desktop/CLI client) requires OAuth and is **coming later**. For now, use one of the clients above.
+
+## Token rotation
+
+Prefer short-lived tokens. To rotate: create a new token, update your client's configuration, then revoke the old one. Revoke any token whose "Last used" is blank — it means nothing has ever connected with it.
+
+## Related
+
+If you'd rather chat with an AI **inside Druma** (using your own OpenAI, Anthropic, or Gemini key) instead of connecting an external client, see [Druma Copilot](/en/integrations/copilot).
+
+---
+
+## Druma Copilot (your own AI)
+
+
+Druma Copilot is an AI assistant built **into** Druma. Unlike [connecting an external client over MCP](/en/integrations/mcp-connect), Copilot lives inside the app's **Ask Druma** overlay — you just chat with it, no separate screen to navigate to. It uses **your own AI provider account** (Anthropic, OpenAI, or Google Gemini), so you control the model and the cost.
+
+> **Warning:** 
+Druma Copilot is a feature-flagged capability and is off by default. Contact **support@druma.io** to enable it for your account.
+
+
+<Frame caption="Settings → Integrations → Druma Copilot — a mandatory data-sharing consent checkbox gates Save.">
+  <img src="/images/integrations/copilot.png" alt="Copilot settings panel" />
+</Frame>
+
+## How it stays safe
+
+- **It can only do what you can.** Every question runs with your role and company scope — it cannot see another company's data.
+- **It never changes anything by itself.** When it wants to reassign an order to a truck, it shows you an **Approve / Reject** card. The change is applied only when you click **Approve**. There are no delete or bulk actions.
+- **Your API key is protected.** It is encrypted and used only on Druma's server when the Copilot calls your provider. It is never shown in the browser again after you save it, and never appears in logs.
+- **You pay your provider directly** for the AI usage — Druma does not mark it up.
+
+## 1. Add your provider key (administrators)
+
+1. Go to **Settings → Integrations → Druma Copilot**.
+2. Choose your **provider** — Anthropic (Claude), OpenAI, or Google Gemini.
+3. Optionally set a **model** (leave blank to use the provider's default).
+4. Paste your provider **API key**.
+5. Tick the **data-sharing consent** checkbox acknowledging that your order/fleet data will be sent to your chosen AI provider. It's unchecked by default — the **Save credentials** button stays disabled until you tick it, and the server also rejects a save without it.
+6. Click **Save credentials**, then **Test connection** to validate the key — a green *Validated* badge appears.
+
+After saving, the key is shown only as `••••` plus its last 4 characters. To change it, paste a new key and save again; to disconnect, click **Remove key**.
+
+## 2. Use the Copilot
+
+Open the **Ask Druma** panel (available from the header on every page) and switch to its **Assistant** tab. Ask things like:
+
+- "Which of tomorrow's orders still have no truck?"
+- "Summarise this week's late deliveries and why."
+- "Propose a truck for order 4021." → the Copilot shows a proposal card with the order, route and truck; click **Approve** to apply it or **Reject** to discard.
+
+Your conversations are saved as threads in the sidebar so you can pick them up later.
+
+## Who can use it
+
+- **Configuring the provider key:** company administrators only.
+- **Using the Ask Druma / Copilot panel:** planners, dispatchers and administrators.
+
+## Related
+
+To connect an external AI client (Claude Code, Copilot, Codex, Gemini CLI, Cursor) to your Druma data instead, see [Connect your AI (MCP)](/en/integrations/mcp-connect).
+
+---
+
+## WhatsApp Driver Channel
+
+
+## Overview
+
+Not every driver wants to install and keep open a dedicated app. Across Romania, Bulgaria, Hungary, Poland, Czechia, and Slovakia, WhatsApp is often the tool a subcontracted or owner-operator driver already uses every day — so Druma meets them there instead of forcing a second app on them.
+
+WhatsApp is not a separate messaging system bolted on the side. It is a second delivery channel for the same driver chat dispatchers already use: a driver's messages and photos arrive in the exact same thread as an in-app driver, and a dispatcher's reply is sent back over WhatsApp automatically when that driver is on the WhatsApp channel. There is nothing new for dispatchers to learn — see [Dispatching → Driver Chat Tab](/en/planner/dispatching#driver-chat-tab) for how the thread itself works.
+
+Each driver is set to **either** the Druma app **or** WhatsApp, never both — a driver who already reads the in-app chat for free shouldn't also trigger a paid WhatsApp message for the same update.
+
+---
+
+## Turning on WhatsApp for your company
+
+WhatsApp messaging is connected once per company, from the Integrations settings — the same place every other external connection (HERE, fuel cards, accounting exports) is configured.
+
+
+  ### Create a Meta App with the WhatsApp product
+    In a browser, go to [business.facebook.com](https://business.facebook.com) and create (or open) a Meta App, then add the **WhatsApp** product to it. Add a phone number under **WhatsApp → API Setup** — this is the number your drivers will message and receive messages from.
+  
+  ### Collect your credentials
+    On the app's **WhatsApp → API Setup** page, note the **Phone Number ID** and **WhatsApp Business Account (WABA) ID**. Under **App Settings → Basic**, note the **App Secret**. Generate a permanent system-user **Access Token** (not a temporary token — it must not expire). Choose any string of your own as a **Verify Token** — you'll reuse it in the next step.
+  
+  ### Open the WhatsApp card in Druma
+    Go to **Settings → Integrations** and open the **WhatsApp (driver channel)** card.
+  
+  ### Copy the webhook URL into Meta
+    Click the copy icon next to the **Webhook URL** field and paste it into your Meta App's **WhatsApp → Configuration → Webhook** settings, along with the same Verify Token you chose above. Meta uses this to confirm the URL belongs to you and to deliver incoming driver messages.
+  
+  ### Enter your credentials and save
+    Fill in the Phone Number ID, WABA ID, Access Token, App Secret, and Verify Token, leave **Active** on, and click **Save & connect**.
+  
+
+
+### What the fields mean
+
+| Field | What it is |
+|---|---|
+| **Webhook URL** | Druma's fixed inbound address — paste this into Meta, not the other way round. Read-only, generated automatically. |
+| **Phone Number ID** | Identifies which WhatsApp number Druma sends from and receives on. Found on the Meta App's WhatsApp → API Setup page. |
+| **WhatsApp Business Account ID (WABA ID)** | The Meta business account the phone number belongs to. Also on the API Setup page. |
+| **Access Token** | The permanent system-user token Druma uses to call the WhatsApp API on your behalf. Stored encrypted — re-enter it only when rotating. |
+| **App Secret** | Used to verify that inbound webhook calls genuinely come from Meta, not a spoofed request. Found under App Settings → Basic. |
+| **Verify Token** | Any string you choose. Must match exactly what you entered in Meta's webhook configuration. |
+| **Active** | Turns sending on or off without deleting your saved credentials. |
+
+Once connected, use **Disconnect** on the same card to remove the credentials entirely if you stop using WhatsApp.
+
+> **Note:** 
+This card only appears once your plan includes the driver-messaging feature. If you don't see it under Settings → Integrations, contact support.
+
+
+---
+
+## Switching a driver to WhatsApp
+
+Enabling the company connection does not move any drivers over automatically — each driver's channel is set individually, with their consent recorded.
+
+1. Go to **Fleet → Drivers** and open the driver's record.
+2. Under **Communication Channel**, set **Message Channel** to **WhatsApp only** (the default is **Druma app only**).
+3. Enter the driver's **WhatsApp Number** in international format (e.g. `+40712345678`).
+4. Tick the consent checkbox confirming the driver has agreed to receive Druma messages and share status updates/photos over WhatsApp — required the first time you switch a driver to WhatsApp, per GDPR data-processing rules. Once consent is on file, the driver's record shows the date it was given instead of the checkbox.
+5. Click **Save**.
+
+From this point, any message or automated notification Druma would normally push to that driver's app — order assigned, arrival, POD request, running-late reminder — is sent to their WhatsApp number instead.
+
+---
+
+## Message templates and why WhatsApp requires approval
+
+WhatsApp's Business API only allows free-form text while a conversation is "open" — for 24 hours after the driver's last reply. Once that window closes, only a **pre-approved message template** can reopen it; Meta reviews and approves template wording in advance so operators can't use WhatsApp to send unsolicited marketing. This is a WhatsApp platform rule, not a Druma limitation.
+
+Druma splits each notification into two parts so you rarely notice the distinction:
+
+- **In-app message** — the free-form wording sent while the conversation window is open. You can edit this freely per language, no approval needed.
+- **Reopen template** — the wording sent when the window is closed and Meta needs to approve it first, shown with a status badge (**Draft**, **Pending**, **Approved**, or **Rejected**).
+
+To review or edit templates, open **Settings → Integrations → WhatsApp (driver channel)** and scroll to **Message templates** (visible once WhatsApp is connected):
+
+1. Pick a **Template** (order assigned, ETA request, POD request, arrival, running late) and a **Language** — every template ships pre-filled in all 10 Druma languages.
+2. Edit the **in-app message** and click **Save in-app message** — takes effect immediately.
+3. Edit the **reopen template** and click **Submit for approval** — this sends the wording to Meta for review. The status badge updates to **Pending**, then **Approved** or **Rejected** (with a reason) once Meta responds.
+
+Until a reopen template is approved, Druma still delivers every message — it simply waits for the window to reopen (the driver's next reply) rather than sending a rejected or unapproved template.
+
+---
+
+## How driver replies reach dispatchers
+
+An inbound WhatsApp message — text, photo, document, or location — arrives in the same driver chat dispatchers already use, badged **Sent via WhatsApp** on the message bubble so it's clear which channel it came in on. See [Dispatching → Driver Chat Tab](/en/planner/dispatching#driver-chat-tab) for how to open a thread, reply, and attach files — the flow is identical regardless of which channel the driver is on. When a dispatcher replies from that thread to a WhatsApp driver, Druma sends it back over WhatsApp automatically; no extra step is needed.
+
+> **Note:** 
+Photo/document attachments sent **from** Druma **to** a WhatsApp driver are not yet supported — only text and templates go out over WhatsApp today. Attachments a WhatsApp driver sends **in** (POD photos, damage photos) work normally and land in the thread like any other message.
+
+
+---
+
+## When a driver doesn't reply right away
+
+If a driver is offline or the message conversation window has closed, Druma doesn't drop the message or fail silently. Automated notifications (like a POD request) are queued and flushed automatically every few minutes:
+
+- If the driver's conversation window is still open, every queued message goes out as free-form text — no extra cost.
+- If the window has closed, Druma sends exactly one approved template for that driver per cycle to reopen the conversation, and holds any remaining queued messages for the next cycle rather than sending (and paying for) several templates back to back.
+
+Every message is eventually delivered — nothing queued is ever silently discarded.
+
+---
+
+## Delivery retries
+
+If a WhatsApp send itself fails — a transient error from the WhatsApp API, not a closed conversation window — Druma retries it automatically: up to 3 attempts, with a 5-minute wait before the second attempt and a 15-minute wait before the third. Only after the third failed attempt is the message marked **Failed**.
+
+When a message is marked Failed, every planner-role staff member on the company gets an in-app notification, so a failed send is never silently discarded.
+
+---
+
+
+  
+    The Driver Chat tab where dispatchers read and reply to driver messages, WhatsApp or in-app.
+  
+  
+    Add drivers to Druma and manage their profile, including the communication channel.
+  
+  
+    The full Settings → Integrations page and how the other connections are configured.
+  
+  
+    The automatic order-assignment notifications that can be delivered over WhatsApp.
+  
+</CardGroup>
+
+---
+
+## Pallet API, Webhooks and Pallet Statements
+
+
+Your pallet ledger can be read by your own systems and shared with the counterparty.
+
+## Public API (read-only)
+
+Use an **Operator** API key (see [Public API](/en/integrations/public-api); other scopes get `403`) in the `X-API-Key` header:
+
+| Method | Path | Returns |
+|---|---|---|
+| `GET` | `/pallet-balances` | The pallet position per client and subcontractor, per pallet type |
+| `GET` | `/pallet-movements` | The pallet ledger, newest first, paginated |
+| `GET` | `/pallet-vouchers/{id}` | One signed pallet voucher with its lines and a short-lived (5-minute) PDF link |
+
+Filters: balances accept `counterparty_type`, `counterparty_id` (needs `counterparty_type`) and `pallet_type`; movements also accept `from`, `to`, `movement_type`, `provider`, `external_ref` and `order_id`, plus `page` and `limit`. Data is always scoped to your own company; a voucher from another company returns `404`. Movement rows never include internal notes, the user who created them or dispute reasons, and the internal fee-offset entries are not listed. Pallet endpoints are limited to 60 requests per minute per key.
+
+## Webhooks to a client
+
+A client with an outbound webhook configured (**Clients → client → API** tab, see [Client API](/en/integrations/client-api)) can receive two pallet events: **pallet.movement.created** (a movement is booked for that client) and **pallet.voucher.signed** (a pallet voucher is captured/signed). The payload has the same shape as the API rows. Pallet events are not tied to an order. Subcontractors have no webhooks, so their movements never fire an event. Select the events in the webhook's event picker. Like every webhook, deliveries carry `event_id` and `api_version` in the body and are signed with `X-Druma-Signature` (`sha256=<hex>` of the raw body) plus the timestamped `X-Druma-Signature-V2` when the webhook uses HMAC auth; see [API versioning](/en/integrations/api-versioning) for verification.
+
+## Client and carrier portals
+
+- **Client portal:** clients whose account has pallet data get a **Pallets** page showing their own position, movements and statements. It shows no notes, dispute reasons or fee amounts; fee offsets appear as "Adjustment".
+- **Carrier portal:** a subcontractor sees its own pallet account the same way.
+
+## E-mailed pallet statement
+
+On a client's or subcontractor's **Pallets** tab, click **Email statement**. Druma sends a branded PDF statement to the counterparty's contacts, in their language, and shows a **Last sent** chip. The recipient can answer with **Confirm** or **Dispute**: the chip then reads **Confirmed** or **Disputed**. A dispute from the counterparty only flags the statement; no movement is changed, and you resolve it from the ledger. If there is no balance or no contact with an email address, Druma tells you instead of sending. The wording of this email can be customised like other client emails in the Communication settings.
+
+See also [Pallet Exchange Ledger](/en/planner/pallet-exchange) and [Pallet Statement Import](/en/planner/pallet-statement-import).
+
+---
+
+## API versioning
+
+
+Druma's integration surface, the [Public API](/en/integrations/public-api), the [Finance API](/en/integrations/finance-api), the inbound [Client API](/en/integrations/client-api) and outbound webhooks, is **version 1 (v1)**.
+
+## The rules
+
+- **Additive changes happen inside v1, without notice.** New response fields, new endpoints, new webhook event types and new optional parameters can appear at any time. Your integration must **ignore fields it does not know**.
+- **Breaking changes ship as v2, alongside v1.** Removing or renaming a field, changing a field's type or meaning, or changing authentication or error behaviour is only ever done in a new major version.
+- **v1 stays available for at least 6 months** after v2 is released.
+- **Deprecations are announced three ways:** response headers, an email to your integration contact, and the [API changelog](/en/integrations/api-changelog).
+
+## Choosing a version
+
+Every request can name the version in the path, in a header, or both (they must agree):
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+The older unversioned paths (`/public-api/orders`) keep working and mean v1. When you name no version, the version your API key or integration is pinned to is used (v1 today). An unsupported version returns:
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## Response headers
+
+Every response from the Public API, the Finance API and the inbound Client API, including errors such as `401` and `429`, carries:
+
+```
+Druma-Api-Version: 1
+```
+
+Once something is deprecated, responses also carry the standard headers:
+
+| Header | Meaning |
+|---|---|
+| `Deprecation: @1798761600` | The Unix time at which it was deprecated (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | The date after which it may stop working (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | Where the migration guide is |
+
+If your client logs these headers, you will see a deprecation long before anything stops working.
+
+## Webhooks
+
+Every webhook body keeps all existing fields and adds:
+
+| Field | Meaning |
+|---|---|
+| `api_version` | `"1"` |
+| `event_id` | A unique id for this event. **It stays the same when Druma retries a delivery**, so use it to ignore duplicates. |
+
+Each delivery also carries these headers: `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (Unix seconds) and `Druma-Api-Version`.
+
+> **Note:** 
+`api_version` and `event_id` are **reserved** keys. Druma adds them after your outbound field map has been applied, so they always keep these names and the map can neither rename nor overwrite them. Do not use them as field-map targets.
+
+
+### Verifying signatures (HMAC-SHA256)
+
+With the **HMAC-SHA256** auth type, each delivery is signed with your shared secret in two headers:
+
+| Header | Value |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, HMAC-SHA256 of the raw body. Unchanged, kept for existing integrations. It carries no timestamp, so it cannot detect a replayed request. |
+| `X-Druma-Signature-V2` | `t=<unix seconds>,v1=<hex>`, HMAC-SHA256 of `"<t>.<raw body>"`. Because the timestamp is part of what is signed, you can reject old requests. **Use this one for new integrations.** |
+
+Verify against the **raw** request body, not a re-serialised copy. In Node:
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+Accept a delivery only if the signature verifies and its `event_id` has not been processed before. Return any `2xx` status to acknowledge; Druma retries other responses on a back-off schedule. The `X-Druma-Timestamp` header is refreshed on every attempt, so a retry is not rejected by the replay window.
+
+The V2 header is only sent with the **HMAC-SHA256** auth type. If you verify with the older `X-Druma-Signature` only, keep doing so; nothing about it changed.
+
+## API reference
+
+The machine-readable OpenAPI 3.1 reference for every endpoint lives under **API reference** in the navigation: [Public API](/en/integrations/public-api) (`openapi/public-api.v1.yaml`) and [Finance API](/en/integrations/finance-api) (`openapi/finance-api.v1.yaml`). Base URL: `https://YOUR-PROJECT.supabase.co/functions/v1`, then `/public-api/v1/...` or `/finance-api/v1/...`.
+
+---
+
+## API changelog
+
+
+Changes inside v1 are additive. Breaking changes and deprecations are listed here first. See [API versioning](/en/integrations/api-versioning) for the policy.
+
+## 2026-10-10
+
+**Added (v1, no action needed)**
+
+- **Version headers.** Every response from the Public API, Finance API and inbound Client API carries `Druma-Api-Version: 1`. You can also send `Druma-Api-Version: 1` on requests.
+- **`/v1/` paths.** `/public-api/v1/orders` and `/finance-api/v1/billable` now work. Existing unversioned paths are unchanged and mean v1.
+- **Webhook `event_id` and `api_version`.** Every webhook body gains these two fields. `event_id` is stable across retries, use it to deduplicate.
+- **Webhook headers.** `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` and `Druma-Api-Version` on every delivery.
+- **Timestamped signature.** HMAC deliveries add `X-Druma-Signature-V2: t=<unix>,v1=<hex>` for replay protection. `X-Druma-Signature` is unchanged.
+- **OpenAPI 3.1 reference** for the Public API and Finance API (`openapi/public-api.v1.yaml`, `openapi/finance-api.v1.yaml`).
+
+**Deprecated / removed:** nothing.
+
+---
+
+## Druma Capture (Chrome Extension)
+
+
+**Druma Capture** is a Chrome extension that lets you capture a load from a freight-exchange listing without copying and pasting anything. It reads the listing you are looking at and sends it to Druma, where it becomes a **draft order** for a planner to review.
+
+It does two things:
+
+- **Capture load** — turns the listing into a draft order.
+- **Save company** — saves the company that posted the listing, either as a client you already have or as a new CRM lead.
+
+## Where the button appears
+
+On these exchanges a floating **Druma Capture** button appears in the bottom-right corner of the page on its own:
+
+- Timocom
+- Trans.eu
+- Bursa de Transport
+
+**On any other website** the button is not shown until you ask for it. Either:
+
+- right-click the page and choose **Capture with Druma**, or
+- click the Druma Capture icon in the Chrome toolbar and choose **Capture from this page**.
+
+Druma does not need a ready-made setup for the site. The first time you capture from a site Druma has not seen before, it works out where the fields are on that page and remembers it for next time (see [What it learns per site](#what-it-learns-per-site)).
+
+## Set it up
+
+You need a Druma account with an operational role (planner, dispatcher, customer service, company admin or admin) and Google Chrome, or another Chromium-based browser that supports extensions (such as Edge or Brave).
+
+
+  ### Generate a token in Druma
+    Go to **Settings → Integrations → Browser Extension** and click **Generate extension token**. Give it a name, then copy the token straight away. It is shown only once. The token can only be used for capturing, nothing else.
+  
+  ### Download and unzip the extension
+    On the same page, click **Download druma-capture.zip** and unzip it to a folder on your computer. Keep that folder, because Chrome loads the extension from it.
+  
+  ### Load it in Chrome
+    Open `chrome://extensions`, turn on **Developer mode** (top-right), click **Load unpacked** and select the unzipped folder.
+  
+  ### Paste the token
+    Click the Druma Capture icon in the toolbar and open **Settings** (or right-click the icon and choose **Options**). Paste the token into **Personal access token**, leave **Environment** on **Production**, and click **Test connection**.
+  
+  ### Check the result
+    On success you see **Connected as** followed by your company name, and the token is saved in this browser only. The toolbar popup then shows **Connected**. If the test fails, nothing is saved. Fix the token and try again.
+  
+
+
+> **Note:** 
+Druma Capture is installed manually for now (it is not in the Chrome Web Store). The token is stored only in the browser where you pasted it. It is never synced to your other devices, so repeat the setup on each computer.
+
+
+## Capture a load
+
+
+  ### Open a listing
+    Open the load listing on the exchange.
+  
+  ### Open the menu
+    Click the floating **Druma Capture** button (or use the right-click or toolbar route on other sites).
+  
+  ### Click Capture load
+    A result card replaces the menu and shows the route, dates, weight, price and the client Druma matched. Click **Open order** to open the draft in a new tab. Nothing opens by itself.
+  
+  ### Review the draft in Druma
+    Check the stops, cargo and price, then confirm it like any other draft. A captured listing is never a live order until a planner confirms it.
+  
+
+
+Captured drafts also appear under the **Intake** scope on the **Orders** page, together with drafts from email and the Outlook add-in.
+
+**Duplicates.** If the same listing, or the same lane and date, was already captured in the last 7 days, the card shows a duplicate warning instead. Click **Open order** to see the existing draft, or **Capture anyway** if you really want a second one.
+
+## Save a company
+
+Choose **Save company** instead of **Capture load** to save the company behind the listing. The card tells you which happened:
+
+- **Already a client**, with a link to that client, or
+- **Lead saved**, with a link to the lead in your CRM.
+
+See [CRM](/en/planner/crm) for how leads are worked.
+
+## What it learns per site
+
+For each site you capture from, Druma keeps a field mapping (which label on the page means pickup, price, weight and so on). The first capture from a new site is read by AI and creates the mapping. Later captures use it, which is faster and more consistent. If a site changes its layout, Druma falls back to AI for that capture and may propose an updated mapping.
+
+In **Settings → Integrations → Browser Extension** you can see:
+
+- **Recent captures** — what was captured, with an outcome such as **Matched template**, **Partial match**, **AI extracted** or **Possible duplicate**.
+- **Approved templates** — the mappings in use per exchange.
+- **Pending approvals** — a proposed mapping that needs a human look, which only happens when Druma was not confident enough to apply it on its own. Click **Approve** or **Reject**.
+- Your tokens, with **Revoke** to switch one off.
+
+Approving a mapping only decides how fields are read. The order you capture is a draft either way.
+
+## Limits
+
+- It works on normal web pages (`http` and `https`). Chrome's own pages (`chrome://`), other extensions' pages, local files and `view-source:` pages cannot be captured, and you get a message instead.
+- It reads only the page you invoked it on. It does not watch the other sites you visit.
+- Only the visible listing content is read, up to a fixed amount of text per page, so very long pages may be cut off.
+- Captures are rate-limited per user. If you capture many listings in a row, wait a moment.
+
+## Troubleshooting
+
+**The floating button does not appear.**
+Automatic buttons only show on Timocom, Trans.eu and Bursa de Transport. On other sites use the right-click **Capture with Druma** or the popup's **Capture from this page**. Also check on `chrome://extensions` that the extension is enabled.
+
+**"Test connection" never succeeds.**
+Check that **Environment** is set to **Production** and that you pasted the whole token. A token from one environment does not work in another.
+
+**"Your token is invalid or expired."**
+The token was revoked, has expired or was never saved. Generate a new one under **Settings → Integrations → Browser Extension** and run **Test connection** again.
+
+**"Too many captures — wait a moment and try again."**
+You hit the per-user limit. Wait a moment and retry.
+
+**"Druma didn't respond in time."**
+Try again. The request stops waiting after 30 seconds rather than hanging.
+
+**Nothing happens when I right-click or use the toolbar on a page.**
+The page is probably one Chrome does not allow extensions on (see Limits). Try a normal web page.
+
+**The capture got the wrong fields.**
+Correct them on the draft order in Druma. If a site is consistently misread, you can **Reject** its mapping under **Pending approvals**, or tell support.
+
+**How do I stop a computer from capturing?**
+Click **Revoke** on its token in **Settings → Integrations → Browser Extension**. It stops working immediately on every machine that token was pasted into.
+
+
+  
+    Let Druma turn emailed orders into drafts too.
+  
+  
+    Send an email to Druma from inside Outlook.
+  
+</CardGroup>
+
+---
+
+## Outlook Add-in
+
+
+The **Druma — Email to Order** add-in puts a **Druma** button on the Outlook ribbon. Click it on an order email, click **Send to Druma**, and carry on. Druma reads the email and its attachments in the background and either creates a draft order or queues the email for a planner to check.
+
+It works the same way as the [order inbox address](/en/automation/email-order-ingestion), but starts from an email you already received.
+
+## Install it
+
+The add-in installs from Outlook or the Microsoft 365 admin center, not from Druma. Go to **Settings → Integrations → Outlook add-in** and click **Download manifest** (the small file Outlook needs), then follow the **Install guide** on the same card.
+
+
+  ### Download the Druma file
+    Click **Download manifest** to save it to your computer.
+  
+  ### Open Outlook and pick any email
+    Use outlook.office.com or Outlook on your computer.
+  
+  ### Find Get Add-ins
+    At the top of the email click the three dots (•••) and choose **Get Add-ins**.
+  
+  ### Add the file
+    Choose **My add-ins**, then **Add a custom add-in → Add from file...**, and pick the file you downloaded.
+  
+  ### Look for the Druma button
+    Open any email. The **Druma** button now shows, with **Email to Order** inside.
+  
+
+
+> **Note:** 
+Setting it up for a whole team? Ask whoever manages your Microsoft 365 account to install it once for everyone from **Microsoft 365 admin settings → Integrated apps**, using the same file. Each person then only has to connect (below).
+
+
+It needs Outlook on the web or a recent Outlook desktop version that can read attachments.
+
+## Send an email to Druma
+
+
+  ### Connect Druma (first time only)
+    Open an email and click **Druma → Email to Order**. Click **Connect Druma** and sign in with your normal Druma account.
+  
+  ### Click Send to Druma
+    The pane says **Send this email to Druma**. Click **Send to Druma**. You do not have to wait. You can move straight on to the next email.
+  
+  ### Check the result
+    The pane shows one of three states, described below.
+  
+
+
+### What the pane shows
+
+| State | What it means |
+|---|---|
+| **Queued** | Druma is reading the email and creating the order in the background. |
+| **Linked to order** | A draft order was created from this email (or an earlier email in the same conversation). **Open in Druma** opens your Orders filtered to drafts. |
+| **In review queue** | Druma was not confident enough to create an order. A planner checks the email in the **Intake** scope of the **Orders** page. |
+
+The pane follows the email you select, so you can keep it open and click through your inbox. An email you already sent shows **Linked to order** or **In review queue** instead of a second send button.
+
+## Review before creating
+
+If you want to edit before anything is created, use the **Review before creating** link instead. Druma reads the email and shows the extracted fields (client, stops, cargo, price) so you can correct them. When you are happy, click **Create order** and you create the order yourself.
+
+## What happens to the email
+
+- **Intake scope.** Drafts, and emails sent to review, show under the **Intake** scope on the **Orders** page, together with drafts from email, browser capture and the client API. Check each draft and confirm it before it becomes a live order.
+- **Client address.** If the email states the ordering company's VAT number, Druma fills the client address from the VAT registry (ANAF for Romania, VIES for other EU countries) instead of guessing. If the lookup fails, the fields stay empty for you to type.
+- **Replies.** Replies in the same conversation attach to the same order instead of creating duplicates.
+- **Rate requests.** An email that only asks for a price is shown as a rate request (RFQ), not a firm order.
+- **Not an order.** An email that does not look like a transport order, or that Druma reads with low confidence, goes to the review queue rather than becoming a draft.
+
+## Attachments
+
+Druma reads PDF, Word (.docx), text and image attachments. These cannot be sent, and the pane lists them in a warning before you send, so nothing is dropped silently:
+
+- spreadsheets and Word .doc files,
+- attached emails,
+- files over 10 MB,
+- more than 10 files.
+
+## Troubleshooting
+
+**I do not see the Druma button.**
+Check the add-in was added (**Get Add-ins → My add-ins**) and that you have an email open, not just the inbox list.
+
+**The pane asks me to connect.**
+Click **Connect Druma** and sign in with your Druma account.
+
+**"Could not send this email to Druma."**
+Try again. If it keeps failing, forward the email to your Druma order inbox address as a fallback (see [Email Order Ingestion](/en/automation/email-order-ingestion)).
+
+**The email went to the review queue.**
+Open **Orders → Intake**, find the email and check it. This is normal for emails Druma could not read with confidence, such as a very short message, a scan with poor quality, or an email that is not an order.
+
+**I sent it twice.**
+You cannot. An already-sent email shows its state instead of a send button, and replies attach to the same order.
+
+**Can everyone in the team use it?**
+Yes. Each person connects with their own Druma account, and drafts land in your company's Orders list.
+
+
+  
+    The order inbox address and how drafts are reviewed.
+  
+  
+    Capture loads from freight exchanges in your browser.
+  
+</CardGroup>
+
+---
+
+
+# Bulk Import
+
+## Importing Your Fleet
+
+
+Use bulk import to add all your vehicles at once — ideal when getting started or migrating from another system.
+
+## Download the template
+
+
+  ### Open Bulk Import
+    Go to **Fleet → Trucks** and click **Bulk Import** in the toolbar — this opens the import modal directly on the Trucks list page; there's no separate import page.
+  
+  ### Download the template and fill it in
+    Click **Download Template** — Druma generates an `.xlsx` file. Fill in one truck per row:
+
+    | Column | Required | Example |
+    |--------|----------|---------|
+    | Plate | Yes | B-123-ABC |
+    | Name | No | Truck 1 |
+    | Brand | No | Volvo |
+    | Model | No | FH |
+    | Year | No | 2020 |
+    | Euro class | No | euro6 |
+    | Fuel type | No | diesel |
+    | Trailer type | No | tautliner |
+  
+  ### Upload and review
+    Drop your filled-in file (CSV or XLSX, up to 5 MB) into the import modal. If your column headers match the template exactly, Druma maps them automatically; otherwise you'll map each column to the right field. A preview then shows the first 5 rows — rows missing a Plate are flagged in red.
+  
+  ### Confirm import
+    Click **Import**. Trucks are created immediately and appear in your fleet list. A result screen shows how many rows were created, skipped, or failed, with row-level error detail for anything that failed.
+  
+
+
+## Deduplication
+
+Druma checks each row's plate against your existing trucks (normalised to uppercase, whitespace trimmed). If a match is found, that row is **skipped** — it does not update the existing truck.
+
+> **Note:** 
+Bulk import only ever creates new truck records — it never updates an existing one, even if you re-import a file with a matching plate. To change details on a truck that already exists, edit it directly in Fleet → Trucks.
+
+
+There are no columns for trailer dimensions, weight, axle count, payload, daily cost, ADR expiry, or an active/inactive flag in this import — those are configured on the truck record itself after import (cost profile fields live on the [truck cost profile](/en/admin/rate-cards) in Settings → Pricing & Costing → Cost profiles, not on the truck record).
+
+## After importing
+
+Verify your fleet list, then add vehicle documents (insurance, ITP) for each truck.
+
+
+  
+    Add vehicles manually and manage individual vehicle settings.
+  
+  
+    Upload insurance, registration, and compliance documents for each vehicle.
+  
+</CardGroup>
+
+---
+
+## Importing Clients
+
+
+If you have an existing client list in Excel or another system, bulk import saves you from entering each client manually.
+
+## Download the template
+
+
+  ### Open Bulk Import
+    Go to **Clients** and click **Bulk Import** in the toolbar — this opens the import modal directly on the Clients list page; there's no separate import page.
+  
+  ### Download the template and fill it in
+    Click **Download Template** — Druma generates an `.xlsx` file. Fill in one client per row:
+
+    | Column | Required | Example |
+    |--------|----------|---------|
+    | Company name | Yes | Acme Logistics SRL |
+    | VAT number | No | RO12345678 |
+    | Legal name | No | Acme Logistics S.R.L. |
+    | Country | No | Romania |
+    | City | No | Bucharest |
+    | Email | No | billing@acme.ro |
+    | Phone | No | +40 21 000 0000 |
+    | Payment terms (days) | No | 30 |
+    | Currency | No | EUR |
+  
+  ### Upload and review
+    Drop your filled-in file (CSV or XLSX, up to 5 MB) into the import modal. If your column headers match the template exactly, Druma maps them automatically; otherwise you'll map each column to the right field. A preview then shows the first 5 rows — rows with a missing Company name are flagged in red.
+  
+  ### Confirm import
+    Click **Import**. Clients are created immediately and are available for use on orders right away. A result screen shows how many rows were created, skipped, or failed, with row-level error detail for anything that failed.
+  
+
+
+## Deduplication
+
+Druma checks each row's VAT number against your existing clients (normalised to uppercase, whitespace trimmed). If a match is found, that row is **skipped** — it does not update the existing client. Rows without a VAT number are never skipped on this basis and always create a new client.
+
+> **Note:** 
+Bulk import only ever creates new client records — it never updates an existing one, even if you re-import a file with a matching VAT number. To change details on a client that already exists, edit it directly in Druma.
+
+
+
+  
+    Bulk add your trucks in the same way.
+  
+  
+    Druma's AI-driven document upload for onboarding a driver roster.
+  
+</CardGroup>
+
+---
+
+## Importing Drivers
+
+
+Druma does not have a CSV-template bulk import for drivers. Instead, use **Smart Import** — an AI-powered tool that reads whatever driver documents you already have (a PDF roster, a scanned list, photos of licences, an oddly-formatted spreadsheet from your previous system) and turns them into driver records for you to review before saving.
+
+## Where to find it
+
+Go to **Tools → Smart Import**. It's a shared tool for onboarding company, fleet, driver, client, and insurance data — not a page scoped to Fleet → Drivers.
+
+## Workflow
+
+
+  ### Upload your driver documents
+    Click **Upload Documents** or drag files onto the drop zone. Supported formats: PDF, images (JPEG, PNG, WebP), DOCX, XLSX, and CSV, up to 20 MB per file and up to 20 files per session. HEIC/HEIF (the default iPhone photo format) is not supported — convert to JPEG first if that's what your photos are in.
+  
+  ### Wait for AI extraction
+    Druma sends each file to Gemini for extraction — a few seconds per file. Files are processed server-side and are not stored permanently after extraction; only the records you choose to import are saved.
+  
+  ### Open the Drivers category card
+    The Review Dashboard shows one card per data type found in your documents, including **Drivers** if any were detected. Click it to see the extracted rows in an editable table: full name, phone, email, licence number and expiry, ADR certificate and expiry, CPC number and expiry, tachograph card number, and language.
+  
+  ### Review confidence and duplicates
+    Each field has a colour-coded confidence indicator (green/amber/red) — always double-check amber and red fields. Rows are checked against your existing drivers by **full name (case-insensitive)** and flagged **New**, **Exists**, or **Update**, each with its own include/exclude checkbox (rows flagged **Exists** are excluded by default). There is no Overwrite option — if you leave an **Exists** or **Update** row included and import it, it creates a **second, separate driver record** rather than updating the one already on file. Exclude any row you don't want duplicated.
+  
+  ### Edit and import
+    Click any cell to correct it inline, then click **Import Drivers**. Full name is the only required field — rows missing it aren't imported.
+  
+
+
+> **Warning:** 
+There is no undo for an import. If incorrect data was imported, edit the driver records individually afterward.
+
+
+## Phone number and app login
+
+Smart Import creates the driver's profile record (name, phone, licence/CPC/ADR/tacho details) — it does not create their app login. After importing, go to **Fleet → Drivers**, open each driver's profile one at a time, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give each driver their PIN directly — they can personalize it the first time they log in.
+
+
+  Smart Import also handles company, fleet, client, and insurance documents in the same workflow.
+
+
+
+  Manage individual driver profiles and set up phone + PIN logins.
+
+
+---
+
+
+# Legal
+
+## Privacy Policy
+
+
+The full Privacy Policy for Druma is published on our website. It covers the data controller (WESLEY DATA CONSULTING S.R.L., Romania), legal bases for processing, sub-processors, your rights under GDPR, and the lead supervisory authority (Romanian ANSPDCP).
+
+[Read the full Privacy Policy →](https://druma.io/legal/privacy)
+
+
+  
+    Detailed breakdown of what data is stored and for how long.
+  
+  
+    How to export your data or request account deletion.
+  
+</CardGroup>
+
+---
+
+## Terms of Service
+
+
+The full Terms of Service for Druma are published on our website. They cover subscription terms, acceptable use, data ownership, limitation of liability, and governing law (Romanian law, courts of Bucharest).
+
+[Read the full Terms of Service →](https://druma.io/legal/tos)
+
+
+  How we handle your personal data under GDPR.
+
+
+---
+
+## GDPR Data Retention
+
+
+_Last updated: 10 July 2026._
+
+This page explains exactly what data Druma holds about your company, how long we keep it, and your rights to access or delete it.
+
+## Data retention periods
+
+| Data type | Retention period | Legal basis |
+|-----------|-----------------|-------------|
+| Company profile and settings | Duration of subscription + 90 days | Contract |
+| User accounts | Duration of subscription + 90 days | Contract |
+| Transport orders and shipment records | Duration of subscription + 90 days | Contract |
+| Client records | Duration of subscription + 90 days | Contract |
+| Driver records | Duration of subscription + 90 days | Contract |
+| Invoices and financial records | Archived at 3 years, hard-deleted at 10 years from invoice date | EU fiscal law / Romanian Accounting Law |
+| eCMR documents (signed) | Hard-deleted 7 years after the shipment's delivery date, via a standalone yearly purge — independent of your account status | Additional Protocol to the CMR Convention |
+| Audit logs | 12 months | Legitimate interests |
+| GPS position (live tracking) | Not retained — current position only, overwritten on each update | Contract |
+| GPS order-event stamps | Retained with the order (see order records above) | Contract |
+| GPS data forwarded to ANAF e-Transport | 30 days, then automatically purged | Legal requirement (Romania) |
+| Tachograph files (DDD/TGD) | Indefinite (12 months is the legal minimum, not a purge target) | EU Regulation 165/2014 |
+| Error and security logs | 90 days | Legitimate interests |
+
+> **Note:** 
+eCMR signatures and eCMR documents are hard-deleted automatically **7 years after the shipment's delivery date** by a yearly purge job — this runs regardless of whether your account is open or closed. Separately, if an individual user's account is deleted, any eCMR signature they created within the **last 3 years** is anonymised (not deleted) rather than removed immediately, so it survives — without personal data attached — until the 7-year cutoff above catches up with it.
+
+
+## GPS data: what we store
+
+Druma captures GPS position from the driver's device while a load is active, after the driver has granted location permission in the app. For **live tracking** (the position shown on the map), only the truck's current position is stored — each new ping overwrites the previous one, so no historical trail of past positions is kept.
+
+Separately, when a driver reports a status change, delay, or incident, a single GPS coordinate is captured and attached to that specific order event, becoming part of the order's own record (retained for as long as the order itself — see the table above). This is a one-off stamp on that event, not a continuous location log.
+
+We do **not**:
+
+- Track driver location outside of an active assigned trip
+- Keep a historical trail of live tracking positions
+- Share GPS data with any third party except as required for e-Transport reporting to ANAF, which uses a rolling 30-day buffer before deletion
+
+> **Note:** 
+A legacy append-only position table from an earlier version of driver chat still exists with a 90-day rolling purge, but nothing in the current app writes new rows to it — it's a dormant remnant, not an active historical GPS log.
+
+
+## Tachograph data: what we store
+
+Druma maintains a **Tacho Archive** that stores raw DDD (vehicle unit) and TGD (driver card) tachograph files — downloaded automatically via a connected telematics provider or uploaded manually — to meet EU Regulation 165/2014 download-frequency and retention requirements. Unlike operational data, tachograph files are **retained indefinitely**: 12 months is the legal minimum, not a purge target, since operators may need to produce them well beyond that floor for a roadside inspection or authority audit. See [Tachograph Archive](/en/fleet-compliance/tacho-archive) for details.
+
+## Audit log
+
+Every significant action in Druma (order created, invoice sent, user login, settings changed) is recorded in an audit log with timestamp, user, and action details. Audit logs are retained for 12 months and cannot be modified or deleted — they exist to protect both you and Druma in case of disputes.
+
+## After account cancellation
+
+When you cancel your subscription:
+
+1. Your account enters a **90-day grace period** — data is preserved and accessible.
+2. After 90 days, if your whole company account is deleted: order messages and internal notes are deleted immediately, orders **older than 3 years** are deleted, and clients, trucks, and trailers are deleted. Orders **less than 3 years old are not deleted at this step** — they, along with their linked invoices and eCMR signatures, continue to age out under the standalone retention rules below rather than being wiped on day 90.
+3. Invoices and financial records are archived at 3 years and hard-deleted at 10 years from the invoice date — this timeline runs independently of when you cancelled.
+4. eCMR signatures and documents are hard-deleted 7 years after the shipment's delivery date — also independent of your cancellation date.
+
+> **Note:** 
+If an individual team member's account is removed (rather than the whole company), a separate, narrower rule applies: orders and eCMR signatures they created within the last 3 years are anonymised (personal fields stripped, records kept for the business data), and invoices they created within the last 10 years are anonymised. Records outside those windows are deleted along with the user record.
+
+
+## Requesting data export
+
+You can request a full export of your company's data at any time:
+
+**Settings → Compliance → GDPR & Privacy → Request Export**
+
+Your data is packaged as a ZIP file (JSON and CSV formats) and delivered to your account email in about 15 minutes (processed by a background job that runs every 15 minutes). The export includes all orders, clients, drivers, invoices, and settings.
+
+## Requesting account deletion
+
+> **Warning:** 
+Account deletion is irreversible. Once the 90-day retention period passes, older operational data (orders past 3 years, plus clients/trucks/trailers) is permanently deleted; more recent orders, invoices, and eCMR data are anonymised or retained on their own legally-required timelines rather than deleted immediately — see "After account cancellation" above.
+
+
+To delete your account: **Settings → Compliance → GDPR & Privacy → Delete Account** → confirm by typing your company name.
+
+Alternatively, email privacy@druma.io from your account owner's email address.
+
+## Sub-processors and data locations
+
+| Provider | Data they process | Location |
+|----------|------------------|----------|
+| Supabase | Database (all data) | EU (Frankfurt) |
+| Cloudflare | CDN, DDoS protection, DNS, request logs | EU |
+| Resend | Transactional email content, and inbound email ingestion (order, invoice, payment emails) | EU |
+| Stripe | Billing and payment data | EU |
+| PTV Group | Route, distance, and ETA data (pickup/delivery coordinates) | EU |
+| HERE Technologies | Geocoding and address autocomplete | EU |
+| Google Vertex AI | Email and document AI extraction | europe-west1 (no model training) |
+| Google Cloud Translation | On-demand translation of UI/document content | Google Cloud |
+| Sentry | Error monitoring and crash reporting | EU |
+| Google Firebase Cloud Messaging | Driver app push notifications | Google Cloud |
+| WhatsApp Business Cloud API (Meta) | Driver messaging (only if enabled) | Meta (US/EU) |
+| Telematics providers (Webfleet, Geotab, Continental VDO, Frotcom, Webeye, Scania, Samsara) | GPS and tachograph data (only the connected provider) | Varies by provider |
+| Reefer telematics providers (Mapon, Orbcomm, Thermo King, Carrier Lynx Fleet) | Reefer temperature data (only the connected provider) | Varies by provider |
+| TransFollow | Legacy eCMR fallback only — native in-house Druma provider is the default | Netherlands |
+
+## Your rights under GDPR
+
+- **Right of access** — request a copy of your data (use the Export feature above)
+- **Right of rectification** — correct inaccurate data (edit directly in Druma, or contact support)
+- **Right of erasure** — request deletion (use the Delete Account feature above)
+- **Right to portability** — receive your data in machine-readable format (included in the Export)
+- **Right to object** — object to processing based on legitimate interests
+- **Right to restrict** — request limited processing in certain circumstances
+
+To exercise any right: privacy@druma.io. We respond within 30 days.
+
+
+  Full privacy policy including sub-processors and legal bases.
+
+
+
+  How to export data or delete your account from within Druma.
+
+
+---
+
