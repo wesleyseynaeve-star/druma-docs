@@ -1,83 +1,72 @@
 ---
 title: "Verejné API"
-description: "Použite verejné REST API Druma pre integráciu zákaziek, klientov a dát zákaziek do vašich interných systémov."
+description: "REST prístup len na čítanie k vašim zákazkám — prepojte Druma s vlastným ERP, klientskym portálom alebo reportovacími nástrojmi."
 icon: "code"
 ---
 
-## Prehľad
+Verejné API Druma poskytuje **prístup len na čítanie** (REST) k vašim zákazkám — vhodné pre samoobslužný portál klientov, BI/reportovací nástroj alebo interné nástroje.
 
-Druma poskytuje REST API, ktoré vám umožňuje programovo interagovať s vašimi dátami Druma. Použite ho pre:
-- Integráciu Druma s vašim ERP alebo WMS systémom
-- Automatické vytváranie zákaziek z externých zdrojov
-- Načítanie stavu zákazky a polohy pre interné dashboardy
+---
 
-## Základná URL
+## API kľúče a rozsahy
 
-```
-https://api.druma.io/v1/
-```
+Administrátori firmy vydávajú vlastné kľúče v **Nastavenia → Integrácie → API kľúče** — kliknite na **Vytvoriť kľúč**, pomenujte ho a vyberte rozsah:
+
+| Rozsah | Čo poskytuje |
+|---|---|
+| **Operator (plný prístup na čítanie)** | Koncové body len na čítanie z tejto stránky, pre vašu firmu |
+| **Finance (export na fakturáciu + import faktúr)** | Iba [Finance API](/sk/integrations/finance-api) |
+| **Accountant (čítanie viacerých firiem)** | Prístup na čítanie k firmám, pre ktoré bol kľúč vydaný |
+
+<Warning>
+Úplný kľúč sa zobrazí **len raz**, pri vytvorení. Druma ukladá iba hash, takže ho nemôže zobraziť znova — skopírujte si ho hneď. Ak ho stratíte, zrušte kľúč a vydajte nový.
+</Warning>
+
+Rozsah nie je odporúčanie: volanie koncového bodu Finance API kľúčom Operator vráti `403` — a naopak.
 
 ## Autentifikácia
 
-Všetky API požiadavky musia obsahovať API kľúč v hlavičke:
+Všetky požiadavky musia obsahovať váš API kľúč v hlavičke `X-API-Key`:
 
 ```
-Authorization: Bearer YOUR_API_KEY
+X-API-Key: YOUR_API_KEY
 ```
 
-Generujte API kľúče v **Nastavenia → Integrácie → Verejné API → Generovať kľúč**.
+Požiadavky bez platného kľúča vrátia `401 Unauthorized`. Autentifikácia tokenom Bearer (`Authorization: Bearer ...`) **nie je** podporovaná a tiež vráti 401.
 
-## Hlavné endpointy
+Základná URL: `https://iyegqyqnihupmhmrxfnx.supabase.co/functions/v1/public-api`
 
-| Endpoint | Metóda | Popis |
-|----------|--------|-------|
-| `/orders` | GET | Zoznam zákaziek s filtrovaním |
-| `/orders` | POST | Vytvorenie novej zákazky |
-| `/orders/{id}` | GET | Získanie detailov jednej zákazky |
-| `/orders/{id}/status` | GET | Aktuálny stav zákazky |
-| `/clients` | GET | Zoznam klientov |
-| `/fleet/vehicles` | GET | Zoznam vozidiel |
-| `/fleet/drivers` | GET | Zoznam vodičov |
+## Dostupné endpointy
 
-## Obmedzenie rýchlosti
+Verejné API je len na čítanie — akceptujú sa iba požiadavky `GET`. Všetky odpovede sú JSON.
 
-- **100 požiadaviek za minútu** pre štandardné API kľúče
-- Vráti HTTP 429 keď je limit prekročený
-- Záhlavie `X-RateLimit-Remaining` ukazuje zostatok
+| Metóda | Endpoint | Popis |
+|---|---|---|
+| `GET` | `/orders` | Zoznam zákaziek (stránkovaný, voliteľný filter `status`) |
+| `GET` | `/orders/{id}` | Detail zákazky |
+| `GET` | `/orders/{id}/location` | Aktuálna poloha nákladiaka a posledné ETA |
+| `GET` | `/orders/{id}/documents` | Dokumenty s podpísanými URL na stiahnutie |
+| `GET` | `/pallet-balances` | Paletová pozícia podľa klienta a dopravcu (iba kľúče Operator) |
+| `GET` | `/pallet-movements` | Paletový register, stránkovaný (iba kľúče Operator) |
+| `GET` | `/pallet-vouchers/{id}` | Podpísaný paletový poukaz (iba kľúče Operator) |
+| `GET` | `/jpk-v7m` | Poľské DPH záznamy za jeden mesiac ako XML súbor |
 
-## Príklad: Vytvorenie zákazky
-
-```json
-POST /v1/orders
-{
-  "client_id": "uuid-klienta",
-  "order_type": "own_truck",
-  "pickup": {
-    "address": "Str. Victoriei 1, București, România",
-    "date": "2025-03-15",
-    "time_from": "08:00",
-    "time_to": "10:00"
-  },
-  "delivery": {
-    "address": "Münchener Str. 5, München, Deutschland",
-    "date": "2025-03-16"
-  },
-  "cargo": {
-    "description": "Elektronika",
-    "weight_kg": 5000
-  },
-  "price_eur": 1200
-}
-```
-
-## Dokumentácia
-
-Kompletná referencia API s príkladmi požiadaviek a odpovedí je dostupná na:
-
-**docs.druma.io/api-reference**
+Každý iný zdroj alebo metóda iná ako GET vráti chybu `404`/`405`. Stránkovanie používa `?page=` a `?limit=` (max. 100).
 
 Toto API je **v1**: cesty fungujú aj ako `/public-api/v1/...` a každá odpoveď obsahuje hlavičku `Druma-Api-Version`. Nové polia sa môžu objaviť kedykoľvek, ignorujte preto polia, ktoré nepoznáte. Pozri [Verzovanie API](/sk/integrations/api-versioning). Úplná referencia OpenAPI je v navigácii v skupine **API reference**.
 
-<Card title="Integrácia klientského API" icon="plug" href="/en/integrations/client-api">
-  Ako dať konkrétnym klientom priamy API prístup pre odosielanie zákaziek.
-</Card>
+## Limity požiadaviek
+
+- **100 požiadaviek za minútu** na API kľúč
+- Ak limit prekročíte, dostanete `429 Too Many Requests` s hlavičkou `Retry-After`, ktorá udáva, koľko sekúnd počkať
+
+Pre vyššie limity napíšte na support@druma.io.
+
+<CardGroup cols={2}>
+  <Card title="Prehľad nastavenia integrácií" icon="plug" href="/sk/admin/integration-setup">
+    Prehľad všetkých integrácií Druma a ako ich spravovať v Nastaveniach.
+  </Card>
+  <Card title="Finance API" icon="arrow-right-arrow-left" href="/sk/integrations/finance-api">
+    Export zákaziek na fakturáciu do ERP a odosielanie vystavených faktúr späť.
+  </Card>
+</CardGroup>
