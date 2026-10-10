@@ -1,0 +1,95 @@
+---
+title: "API-versiebeheer"
+description: "Hoe Druma zijn publieke API van versies voorziet, wat zonder aankondiging kan wijzigen, en hoe u webhookhandtekeningen verifieert en gebeurtenissen ontdubbelt."
+icon: "code-branch"
+---
+
+Het integratieoppervlak van Druma — de [Public API](/nl/integrations/public-api), de [Finance API](/nl/integrations/finance-api), de inkomende [Client API](/nl/integrations/client-api) en uitgaande webhooks — is **versie 1 (v1)**.
+
+## De regels
+
+- **Additieve wijzigingen gebeuren binnen v1, zonder aankondiging.** Nieuwe responsvelden, endpoints, webhookgebeurtenistypen en optionele parameters kunnen op elk moment verschijnen. Uw integratie moet **onbekende velden negeren**.
+- **Brekende wijzigingen verschijnen als v2, naast v1.** Een veld verwijderen of hernoemen, of het type, de betekenis, de authenticatie of het foutgedrag wijzigen gebeurt alleen in een nieuwe hoofdversie.
+- **v1 blijft minstens 6 maanden beschikbaar** nadat v2 is uitgebracht.
+- **Uitfaseringen worden op drie manieren aangekondigd:** responsheaders, een e-mail aan uw integratiecontact en de [API-changelog](/nl/integrations/api-changelog).
+
+## Een versie kiezen
+
+Geef de versie op in het pad, in een header of in beide (ze moeten overeenkomen):
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+De oudere paden zonder versie (`/public-api/orders`) blijven werken en betekenen v1. Zonder opgegeven versie geldt de versie waaraan uw API-sleutel of integratie is vastgezet (nu v1). Een niet-ondersteunde versie geeft:
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## Responsheaders
+
+Elke respons van de Public API, de Finance API en de inkomende Client API, ook fouten zoals `401` en `429`, bevat:
+
+```
+Druma-Api-Version: 1
+```
+
+Zodra iets is uitgefaseerd, bevatten responsen ook de standaardheaders:
+
+| Header | Betekenis |
+|---|---|
+| `Deprecation: @1798761600` | Het Unix-tijdstip van uitfasering (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | De datum waarna het kan ophouden te werken (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | Waar de migratiegids staat |
+
+Als uw client deze headers logt, ziet u een uitfasering ruim voordat iets ophoudt te werken.
+
+## Webhooks
+
+Elke webhook-body behoudt alle bestaande velden en voegt toe:
+
+| Veld | Betekenis |
+|---|---|
+| `api_version` | De API-versie: `"1"` |
+| `event_id` | Een unieke id van deze gebeurtenis. **Blijft gelijk wanneer Druma de levering opnieuw probeert**, gebruik hem dus om duplicaten te negeren. |
+
+Elke levering bevat ook de headers `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (Unix-seconden) en `Druma-Api-Version`.
+
+<Note>
+`api_version` en `event_id` zijn **gereserveerde** sleutels. Druma voegt ze toe nadat uw uitgaande veldmapping is toegepast, zodat ze altijd deze namen houden en de mapping ze niet kan hernoemen of overschrijven. Gebruik ze niet als doel van de mapping.
+</Note>
+
+### Handtekeningen verifiëren (HMAC-SHA256)
+
+Met het authenticatietype **HMAC-SHA256** wordt elke levering met uw gedeelde geheim ondertekend in twee headers:
+
+| Header | Waarde |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, HMAC-SHA256 van de ruwe body. Ongewijzigd, behouden voor bestaande integraties. Er zit geen tijdstempel in, dus een herhaald verzoek wordt niet herkend. |
+| `X-Druma-Signature-V2` | `t=<unix-seconden>,v1=<hex>`, HMAC-SHA256 van `"<t>.<ruwe body>"`. De tijdstempel maakt deel uit van wat wordt ondertekend, zodat u oude verzoeken kunt weigeren. **Gebruik deze voor nieuwe integraties.** |
+
+Verifieer tegen de **ruwe** request-body, niet tegen een opnieuw geserialiseerde kopie. In Node:
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+Accepteer een levering alleen als de handtekening klopt en de `event_id` nog niet is verwerkt. Bevestig met een willekeurige `2xx`-status; andere responsen worden herhaald volgens een schema met oplopende wachttijd. `X-Druma-Timestamp` wordt bij elke poging vernieuwd, dus een herhaling wordt niet door het replay-venster geweigerd. De V2-header wordt alleen verstuurd bij het authenticatietype **HMAC-SHA256**.
+
+## API-referentie
+
+De OpenAPI 3.1-referentie van elk endpoint staat in de navigatie onder **API reference** (Public API en Finance API). Basis-URL: `https://YOUR-PROJECT.supabase.co/functions/v1`, daarna `/public-api/v1/...` of `/finance-api/v1/...`.

@@ -1,0 +1,95 @@
+---
+title: "Versionnement de l'API"
+description: "Comment Druma versionne son API publique, ce qui peut changer sans préavis, et comment vérifier les signatures des webhooks et dédupliquer les événements."
+icon: "code-branch"
+---
+
+La surface d'intégration de Druma — l'[API publique](/fr/integrations/public-api), la [Finance API](/fr/integrations/finance-api), la [Client API](/fr/integrations/client-api) entrante et les webhooks sortants — est en **version 1 (v1)**.
+
+## Les règles
+
+- **Les changements additifs arrivent dans v1, sans préavis.** De nouveaux champs de réponse, endpoints, types d'événements webhook et paramètres optionnels peuvent apparaître à tout moment. Votre intégration doit **ignorer les champs qu'elle ne connaît pas**.
+- **Les changements incompatibles sortent en v2, en parallèle de v1.** Supprimer ou renommer un champ, ou changer son type, son sens, l'authentification ou le comportement en cas d'erreur, ne se fait que dans une nouvelle version majeure.
+- **v1 reste disponible au moins 6 mois** après la sortie de v2.
+- **Les dépréciations sont annoncées de trois façons :** en-têtes de réponse, e-mail au contact de votre intégration et [journal des modifications de l'API](/fr/integrations/api-changelog).
+
+## Choisir une version
+
+Indiquez la version dans le chemin, dans un en-tête, ou les deux (ils doivent concorder) :
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+Les anciens chemins sans version (`/public-api/orders`) continuent de fonctionner et signifient v1. Sans version indiquée, c'est la version à laquelle votre clé API ou votre intégration est liée qui s'applique (v1 aujourd'hui). Une version non prise en charge renvoie :
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## En-têtes de réponse
+
+Chaque réponse de l'API publique, de la Finance API et de la Client API entrante, y compris les erreurs comme `401` et `429`, contient :
+
+```
+Druma-Api-Version: 1
+```
+
+Dès qu'un élément est déprécié, les réponses contiennent aussi les en-têtes standard :
+
+| En-tête | Signification |
+|---|---|
+| `Deprecation: @1798761600` | L'heure Unix de la dépréciation (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | La date après laquelle cela peut cesser de fonctionner (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | L'emplacement du guide de migration |
+
+Si votre client journalise ces en-têtes, vous verrez une dépréciation bien avant que quoi que ce soit ne cesse de fonctionner.
+
+## Webhooks
+
+Chaque corps de webhook conserve tous les champs existants et ajoute :
+
+| Champ | Signification |
+|---|---|
+| `api_version` | La version de l'API: `"1"` |
+| `event_id` | Un identifiant unique de cet événement. **Il reste identique quand Druma retente l'envoi**, utilisez-le donc pour ignorer les doublons. |
+
+Chaque envoi contient aussi les en-têtes `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (secondes Unix) et `Druma-Api-Version`.
+
+<Note>
+`api_version` et `event_id` sont des clés **réservées**. Druma les ajoute après l'application de votre correspondance de champs sortante : elles gardent donc toujours ces noms et la correspondance ne peut ni les renommer ni les écraser. Ne les utilisez pas comme cibles de correspondance.
+</Note>
+
+### Vérifier les signatures (HMAC-SHA256)
+
+Avec le type d'authentification **HMAC-SHA256**, chaque envoi est signé avec votre secret partagé dans deux en-têtes :
+
+| En-tête | Valeur |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, HMAC-SHA256 du corps brut. Inchangé, conservé pour les intégrations existantes. Sans horodatage, il ne peut pas détecter une requête rejouée. |
+| `X-Druma-Signature-V2` | `t=<secondes unix>,v1=<hex>`, HMAC-SHA256 de `"<t>.<corps brut>"`. L'horodatage fait partie de ce qui est signé : vous pouvez donc rejeter les anciennes requêtes. **À utiliser pour les nouvelles intégrations.** |
+
+Vérifiez sur le corps **brut** de la requête, pas sur une copie re-sérialisée. En Node :
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+N'acceptez un envoi que si la signature est valide et que son `event_id` n'a pas déjà été traité. Répondez par un statut `2xx` pour accuser réception ; les autres réponses sont retentées selon un calendrier à délais croissants. `X-Druma-Timestamp` est rafraîchi à chaque tentative, une nouvelle tentative n'est donc pas rejetée par la fenêtre anti-rejeu. L'en-tête V2 n'est envoyé qu'avec le type d'authentification **HMAC-SHA256**.
+
+## Référence de l'API
+
+La référence OpenAPI 3.1 de chaque endpoint se trouve dans le groupe **API reference** de la navigation (API publique et Finance API). URL de base : `https://YOUR-PROJECT.supabase.co/functions/v1`, puis `/public-api/v1/...` ou `/finance-api/v1/...`.

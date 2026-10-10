@@ -71,13 +71,17 @@ X-API-Key: VÁŠ_FINANCE_KĽÚČ
 | Odpoveď | Význam |
 |---|---|
 | `403` | Kľúč je platný, ale nejde o kľúč s rozsahom **Finance** |
-| `409` | Táto faktúra už bola spracovaná — požiadavka bola duplicitná, a nič sa nezmenilo |
-| `422` | Jedna alebo viac hodnôt `order_id` nie je rozpoznaná. Odpoveď menuje chybné ID |
+| `409` | `external_invoice_number` už existuje s inou sadou zákaziek, sumou alebo menou (`reason: duplicate_external_number`) |
+| `422` | Overenie zlyhalo: neznáme ID zákazky, zákazka už vyfakturovaná, zákazky viacerých klientov alebo nezodpovedajúca mena. Odpoveď obsahuje `reason` a uvádza chybné ID alebo polia |
 | `429` | Prekročený limit rýchlosti — počkajte a skúste znova |
+
+Opätovné odoslanie úplne rovnakej faktúry (rovnaké `external_invoice_number`, zákazky, suma a mena) je bezpečné: vráti `200` s existujúcim `invoice_id` namiesto `201` a nič sa nezmení.
 
 <Warning>
 Druma nehádže. ID, ktoré zapisujete späť, sú ID, ktoré vám Druma dala pred chvíľou z `GET /finance-api/billable`; ak sa nezhodujú, dostanete `422`, ktorý ich menuje, namiesto priradenia k niečomu inému s najlepším úsilím. Vráťte ID presne tak, ako ste ich dostali.
 </Warning>
+
+API je **v1**: nižšie uvedené cesty fungujú aj ako `/finance-api/v1/...` a každá odpoveď obsahuje hlavičku `Druma-Api-Version`. Pozri [Verzovanie API](/sk/integrations/api-versioning). Limity: 120 požiadaviek za hodinu na kľúč pre `GET /billable` a `POST /billable/exported`, 300 za hodinu pre `POST /invoices`. Úplná referencia OpenAPI je v skupine **API reference**.
 
 ---
 

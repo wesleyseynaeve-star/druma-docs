@@ -1,0 +1,95 @@
+---
+title: "Verzování API"
+description: "Jak Druma verzuje své veřejné API, co se může změnit bez upozornění a jak ověřovat podpisy webhooků a odstraňovat duplicitní události."
+icon: "code-branch"
+---
+
+Integrační rozhraní Druma — [Veřejné API](/cs/integrations/public-api), [Finance API](/cs/integrations/finance-api), příchozí [Client API](/cs/integrations/client-api) a odchozí webhooky — je ve **verzi 1 (v1)**.
+
+## Pravidla
+
+- **Aditivní změny přicházejí do v1 bez upozornění.** Nová pole odpovědí, endpointy, typy událostí webhooků a volitelné parametry se mohou objevit kdykoli. Vaše integrace musí **ignorovat pole, která nezná**.
+- **Zásadní změny vycházejí jako v2, vedle v1.** Odstranění nebo přejmenování pole, změna jeho typu, významu, ověřování nebo chování při chybách se dělá jen v nové hlavní verzi.
+- **v1 zůstane dostupná nejméně 6 měsíců** po vydání v2.
+- **Vyřazení se oznamují třemi způsoby:** hlavičkami odpovědí, e-mailem kontaktu vaší integrace a v [seznamu změn API](/cs/integrations/api-changelog).
+
+## Výběr verze
+
+Verzi uveďte v cestě, v hlavičce, nebo v obojím (musí se shodovat):
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+Starší cesty bez verze (`/public-api/orders`) dál fungují a znamenají v1. Pokud verzi neuvedete, použije se verze, ke které je přiřazen váš API klíč nebo integrace (dnes v1). Nepodporovaná verze vrátí:
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## Hlavičky odpovědí
+
+Každá odpověď Veřejného API, Finance API a příchozího Client API, včetně chyb jako `401` a `429`, obsahuje:
+
+```
+Druma-Api-Version: 1
+```
+
+Jakmile je něco vyřazeno, odpovědi obsahují také standardní hlavičky:
+
+| Hlavička | Význam |
+|---|---|
+| `Deprecation: @1798761600` | Unixový čas vyřazení (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | Datum, po kterém může přestat fungovat (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | Kde je návod k migraci |
+
+Pokud váš klient tyto hlavičky loguje, uvidíte vyřazení dlouho předtím, než něco přestane fungovat.
+
+## Webhooky
+
+Tělo každého webhooku zachovává všechna stávající pole a přidává:
+
+| Pole | Význam |
+|---|---|
+| `api_version` | Verze API: `"1"` |
+| `event_id` | Jedinečné ID této události. **Zůstává stejné, když Druma doručení opakuje**, použijte je proto k ignorování duplicit. |
+
+Každé doručení obsahuje také hlavičky `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (unixové sekundy) a `Druma-Api-Version`.
+
+<Note>
+`api_version` a `event_id` jsou **rezervované** klíče. Druma je přidává po použití vašeho odchozího mapování polí, takže si vždy zachovají tyto názvy a mapování je nemůže přejmenovat ani přepsat. Nepoužívejte je jako cíle mapování.
+</Note>
+
+### Ověřování podpisů (HMAC-SHA256)
+
+S typem ověřování **HMAC-SHA256** je každé doručení podepsáno vaším sdíleným tajemstvím ve dvou hlavičkách:
+
+| Hlavička | Hodnota |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, HMAC-SHA256 surového těla. Beze změny, zachováno pro stávající integrace. Neobsahuje časové razítko, takže nezjistí opakovaný požadavek. |
+| `X-Druma-Signature-V2` | `t=<unixové sekundy>,v1=<hex>`, HMAC-SHA256 řetězce `"<t>.<surové tělo>"`. Časové razítko je součástí podepsaného obsahu, takže můžete odmítat staré požadavky. **Používejte ho pro nové integrace.** |
+
+Ověřujte vůči **surovému** tělu požadavku, ne znovu serializované kopii. V Node:
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+Doručení přijměte, jen když se podpis ověří a jeho `event_id` ještě nebylo zpracováno. Potvrďte libovolným stavem `2xx`; ostatní odpovědi se opakují podle rozvrhu s rostoucími prodlevami. `X-Druma-Timestamp` se při každém pokusu obnoví, takže opakování neodmítne okno proti přehrání. Hlavička V2 se posílá jen u typu ověřování **HMAC-SHA256**.
+
+## Reference API
+
+Reference OpenAPI 3.1 všech endpointů je v navigaci ve skupině **API reference** (Veřejné API a Finance API). Základní URL: `https://YOUR-PROJECT.supabase.co/functions/v1`, dále `/public-api/v1/...` nebo `/finance-api/v1/...`.

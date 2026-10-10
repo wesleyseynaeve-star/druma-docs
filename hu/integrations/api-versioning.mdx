@@ -1,0 +1,95 @@
+---
+title: "API-verziókezelés"
+description: "Hogyan verziózza a Druma a nyilvános API-ját, mi változhat előzetes értesítés nélkül, és hogyan ellenőrizd a webhook-aláírásokat és szűrd ki az ismétlődő eseményeket."
+icon: "code-branch"
+---
+
+A Druma integrációs felülete — a [nyilvános API](/hu/integrations/public-api), a [Finance API](/hu/integrations/finance-api), a bejövő [Client API](/hu/integrations/client-api) és a kimenő webhookok — **az 1-es verzió (v1)**.
+
+## A szabályok
+
+- **A bővítő jellegű változások a v1-en belül, előzetes értesítés nélkül érkeznek.** Új válaszmezők, végpontok, webhook-eseménytípusok és opcionális paraméterek bármikor megjelenhetnek. Az integrációdnak **figyelmen kívül kell hagynia az ismeretlen mezőket**.
+- **A visszafelé nem kompatibilis változások v2-ként jelennek meg, a v1 mellett.** Mező eltávolítása vagy átnevezése, illetve a típus, a jelentés, a hitelesítés vagy a hibakezelés megváltoztatása csak új főverzióban történik.
+- **A v1 legalább 6 hónapig elérhető marad** a v2 megjelenése után.
+- **A kivezetéseket három módon jelezzük:** válaszfejlécekkel, e-mailben az integrációd kapcsolattartójának, és az [API-változásnaplóban](/hu/integrations/api-changelog).
+
+## Verzió kiválasztása
+
+A verziót megadhatod az útvonalban, egy fejlécben vagy mindkettőben (egyezniük kell):
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+A régebbi, verzió nélküli útvonalak (`/public-api/orders`) tovább működnek, és v1-et jelentenek. Ha nem adsz meg verziót, az API-kulcsodhoz vagy integrációdhoz rögzített verzió érvényes (ma v1). Nem támogatott verzió esetén a válasz:
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## Válaszfejlécek
+
+A nyilvános API, a Finance API és a bejövő Client API minden válasza, a hibákat (pl. `401`, `429`) is beleértve, tartalmazza:
+
+```
+Druma-Api-Version: 1
+```
+
+Amint valami kivezetésre kerül, a válaszok a szabványos fejléceket is tartalmazzák:
+
+| Fejléc | Jelentés |
+|---|---|
+| `Deprecation: @1798761600` | A kivezetés Unix-ideje (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | A dátum, amely után leállhat (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | Hol található az áttérési útmutató |
+
+Ha a kliensed naplózza ezeket a fejléceket, a kivezetést jóval azelőtt látod, hogy bármi leállna.
+
+## Webhookok
+
+Minden webhook-törzs megtartja az összes meglévő mezőt, és kiegészül:
+
+| Mező | Jelentés |
+|---|---|
+| `api_version` | Az API verziója: `"1"` |
+| `event_id` | Az esemény egyedi azonosítója. **Ugyanaz marad, amikor a Druma újrapróbálja a kézbesítést**, ezért használd az ismétlődések figyelmen kívül hagyására. |
+
+Minden kézbesítés tartalmazza az `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (Unix-másodpercek) és `Druma-Api-Version` fejléceket is.
+
+<Note>
+Az `api_version` és az `event_id` **fenntartott** kulcsok. A Druma a kimenő mezőleképezésed alkalmazása után adja hozzá őket, így mindig megtartják a nevüket, és a leképezés nem nevezheti át vagy írhatja felül őket. Ne használd őket leképezési célként.
+</Note>
+
+### Aláírások ellenőrzése (HMAC-SHA256)
+
+A **HMAC-SHA256** hitelesítési típussal minden kézbesítést a közös titkoddal írunk alá, két fejlécben:
+
+| Fejléc | Érték |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, a nyers törzs HMAC-SHA256 értéke. Változatlan, a meglévő integrációk miatt megmaradt. Nincs benne időbélyeg, ezért nem észleli az újrajátszott kérést. |
+| `X-Druma-Signature-V2` | `t=<unix másodperc>,v1=<hex>`, a `"<t>.<nyers törzs>"` HMAC-SHA256 értéke. Az időbélyeg az aláírt tartalom része, így elutasíthatod a régi kéréseket. **Új integrációkhoz ezt használd.** |
+
+A **nyers** kérés-törzset ellenőrizd, ne egy újraszerializált másolatot. Node-ban:
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+Csak akkor fogadj el egy kézbesítést, ha az aláírás érvényes és az `event_id`-t még nem dolgoztad fel. Bármely `2xx` státusszal nyugtázhatsz; a többi választ növekvő késleltetésű ütemezés szerint újrapróbáljuk. Az `X-Druma-Timestamp` minden kísérletnél frissül, így az újrapróbálkozást nem utasítja el az újrajátszás elleni időablak. A V2 fejléc csak **HMAC-SHA256** hitelesítési típusnál kerül elküldésre.
+
+## API-referencia
+
+Minden végpont OpenAPI 3.1 referenciája a navigációban az **API reference** csoportban található (nyilvános API és Finance API). Alap-URL: `https://YOUR-PROJECT.supabase.co/functions/v1`, majd `/public-api/v1/...` vagy `/finance-api/v1/...`.

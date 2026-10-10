@@ -75,7 +75,7 @@ Das System des Kunden sendet eine `POST`-Anfrage an die Endpunkt-URL mit dem Hea
     - **Keine** — kein Authentifizierungsheader (nur in vertrauenswürdigen privaten Netzwerken verwenden)
     - **Bearer-Token** — Druma fügt jeder Anfrage `Authorization: Bearer <Wert>` hinzu
     - **Basic Auth** — Druma fügt einen `Authorization: Basic`-Header mit base64-kodiertem Benutzernamen und Passwort hinzu
-    - **HMAC-Signatur** — Druma signiert jeden Anfrage-Body mit einem gemeinsamen Geheimnis und fügt die Signatur in einem Header hinzu; der Kunde verifiziert sie vor der Verarbeitung
+    - **HMAC-Signatur** — Druma signiert den Body jeder Anfrage mit einem gemeinsamen Geheimnis und sendet die Signatur im Header `X-Druma-Signature` (`sha256=<hex>` des rohen Bodys) sowie, als Replay-Schutz, in `X-Druma-Signature-V2` (`t=<Unix-Sekunden>,v1=<hex>`, signiert über `<t>.<Body>`); der Kunde prüft sie vor der Verarbeitung. Ein Prüfbeispiel steht unter [API-Versionierung](/de/integrations/api-versioning)
 
     Füllen Sie die Zugangsdaten für den gewählten Typ aus.
   </Step>
@@ -156,6 +156,8 @@ Benötigt ein Kunde legitim höheren Durchsatz, kontaktieren Sie den Druma-Suppo
 <Warning>
 Teilen Sie das Bearer-Token eines Kunden nicht mit anderen Kunden und betten Sie es nicht in öffentlich zugänglichen Code ein. Jedes Token gewährt volle eingehende Auftragserstellungsrechte für den Unternehmensbereich dieses Kunden.
 </Warning>
+
+Jedes Ereignis enthält außerdem `api_version` und `event_id` (bei Wiederholungen gleich, zum Ignorieren von Duplikaten) sowie die Header `X-Druma-Event-Id`, `X-Druma-Event-Type` und `X-Druma-Timestamp`. `api_version` und `event_id` sind reservierte Schlüssel: Verwenden Sie sie nicht als Ziele der ausgehenden Feldzuordnung. Siehe [API-Versionierung](/de/integrations/api-versioning).
 
 ---
 

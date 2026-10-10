@@ -75,7 +75,7 @@ Orders aangemaakt via CAPI komen binnen als concepten. Ze verschijnen niet als t
     - **Geen** — geen authenticatieheader (gebruik alleen op vertrouwde private netwerken)
     - **Bearer-token** — Druma voegt `Authorization: Bearer <waarde>` toe aan elk verzoek
     - **Basic auth** — Druma voegt een `Authorization: Basic`-header toe met een base64-gecodeerde gebruikersnaam en wachtwoord
-    - **HMAC-handtekening** — Druma ondertekent elke request body met een gedeeld geheim en voegt de handtekening toe in een header; de klant verifieert deze voor verwerking
+    - **HMAC-handtekening** — Druma ondertekent de body van elk verzoek met een gedeeld geheim en stuurt de handtekening in de header `X-Druma-Signature` (`sha256=<hex>` van de ruwe body) en, tegen replay, in `X-Druma-Signature-V2` (`t=<unix-seconden>,v1=<hex>`, ondertekend over `<t>.<body>`); de klant verifieert deze voor verwerking. Een verificatievoorbeeld staat onder [API-versiebeheer](/nl/integrations/api-versioning)
 
     Vul de inloggegevens in voor het gekozen type.
   </Step>
@@ -156,6 +156,8 @@ Heeft een klant legitiem een hogere doorvoer nodig, neem dan contact op met Drum
 <Warning>
 Deel het bearer-token van een klant niet met andere klanten en integreer het niet in publiek toegankelijke code. Elk token geeft volledige rechten om orders aan te maken binnen de bedrijfsscope van die klant.
 </Warning>
+
+Elke gebeurtenis bevat ook `api_version` en `event_id` (gelijk bij herhalingen, om duplicaten te negeren) en de headers `X-Druma-Event-Id`, `X-Druma-Event-Type` en `X-Druma-Timestamp`. `api_version` en `event_id` zijn gereserveerde sleutels: gebruik ze niet als doel van de uitgaande veldmapping. Zie [API-versiebeheer](/nl/integrations/api-versioning).
 
 ---
 

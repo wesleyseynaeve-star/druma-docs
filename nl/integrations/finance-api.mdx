@@ -71,13 +71,17 @@ X-API-Key: UW_FINANCE_SLEUTEL
 | Respons | Betekenis |
 |---|---|
 | `403` | De sleutel is geldig, maar heeft niet de scope **Finance** |
-| `409` | Deze factuur is al ingelezen — het verzoek was een duplicaat en er is niets gewijzigd |
-| `422` | Een of meer `order_id`-waarden worden niet herkend. De respons noemt de foutieve id's |
+| `409` | Het `external_invoice_number` bestaat al met een andere set orders, een ander bedrag of een andere valuta (`reason: duplicate_external_number`) |
+| `422` | Validatie mislukt: onbekende order-id, order al gefactureerd, orders van meer dan één klant of een afwijkende valuta. De respons bevat een `reason` en noemt de foute id's of velden |
 | `429` | Rate limit overschreden — wacht en probeer opnieuw |
+
+Exact dezelfde factuur opnieuw posten (zelfde `external_invoice_number`, orders, bedrag en valuta) is veilig: het antwoord is `200` met de bestaande `invoice_id` in plaats van `201`, en er verandert niets.
 
 <Warning>
 Druma gokt niet. De id's die u terugstuurt zijn id's die Druma u enkele minuten eerder heeft gegeven via `GET /finance-api/billable`; komen ze niet overeen, dan krijgt u een `422` die ze bij naam noemt in plaats van een poging tot koppeling aan iets anders. Stuur de id's exact terug zoals ontvangen.
 </Warning>
+
+De API is **v1**: de onderstaande paden werken ook als `/finance-api/v1/...`, en elke respons bevat een `Druma-Api-Version`-header. Zie [API-versiebeheer](/nl/integrations/api-versioning). Limieten: 120 verzoeken per uur per sleutel voor `GET /billable` en `POST /billable/exported`, 300 per uur voor `POST /invoices`. De volledige OpenAPI-referentie staat onder **API reference**.
 
 ---
 

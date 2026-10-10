@@ -75,7 +75,7 @@ Zlecenia utworzone przez CAPI przychodzą jako wersje robocze. Nie pojawiają si
     - **Brak** — brak nagłówka uwierzytelniania (używaj tylko w zaufanych sieciach prywatnych)
     - **Token Bearer** — Druma dodaje `Authorization: Bearer <wartość>` do każdego żądania
     - **Uwierzytelnianie podstawowe** — Druma dodaje nagłówek `Authorization: Basic` z zakodowaną w base64 nazwą użytkownika i hasłem
-    - **Podpis HMAC** — Druma podpisuje każdą treść żądania wspólnym sekretem i dołącza podpis w nagłówku; klient weryfikuje go przed przetworzeniem
+    - **Podpis HMAC** — Druma podpisuje treść każdego żądania wspólnym sekretem i wysyła podpis w nagłówku `X-Druma-Signature` (`sha256=<hex>` surowego ciała) oraz, dla ochrony przed powtórką, w `X-Druma-Signature-V2` (`t=<sekundy unix>,v1=<hex>`, podpis z `<t>.<ciało>`); klient weryfikuje go przed przetworzeniem. Przykład weryfikacji w [Wersjonowaniu API](/pl/integrations/api-versioning)
 
     Wypełnij dane uwierzytelniające dla wybranego typu.
   </Step>
@@ -158,6 +158,8 @@ Nie udostępniaj tokenu Bearer klienta innym klientom ani nie osadzaj go w publi
 </Warning>
 
 ---
+
+Każde zdarzenie zawiera też `api_version` i `event_id` (stały przy ponowieniach, służy do ignorowania duplikatów) oraz nagłówki `X-Druma-Event-Id`, `X-Druma-Event-Type` i `X-Druma-Timestamp`. `api_version` i `event_id` to zastrzeżone klucze: nie używaj ich jako celów wychodzącej mapy pól. Zobacz [Wersjonowanie API](/pl/integrations/api-versioning).
 
 <Card title="Portal klienta" icon="users" href="/pl/client-portal/tracking-shipments">
   Alternatywa bez kodu: pozwól klientom śledzić przesyłki i pobierać dokumenty bez integracji API.

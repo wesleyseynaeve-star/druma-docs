@@ -71,13 +71,17 @@ X-API-Key: IHR_FINANCE_SCHLÜSSEL
 | Antwort | Bedeutung |
 |---|---|
 | `403` | Der Schlüssel ist gültig, ist aber kein **Finance**-bereichter Schlüssel |
-| `409` | Diese Rechnung wurde bereits erfasst — die Anfrage war ein Duplikat, und nichts hat sich geändert |
-| `422` | Ein oder mehrere `order_id`-Werte werden nicht erkannt. Die Antwort nennt die fehlerhaften IDs |
+| `409` | Die `external_invoice_number` existiert bereits mit anderer Auftragsmenge, anderem Betrag oder anderer Währung (`reason: duplicate_external_number`) |
+| `422` | Validierung fehlgeschlagen: unbekannte Auftrags-ID, bereits fakturierter Auftrag, Aufträge mehrerer Kunden oder abweichende Währung. Die Antwort enthält `reason` und nennt die fehlerhaften IDs oder Felder |
 | `429` | Ratenlimit überschritten — warten und erneut versuchen |
+
+Dieselbe Rechnung erneut zu senden (gleiche `external_invoice_number`, Aufträge, Betrag und Währung) ist unbedenklich: Sie liefert `200` mit der vorhandenen `invoice_id` statt `201`, und nichts ändert sich.
 
 <Warning>
 Druma rät nicht. Die IDs, die Sie zurückbuchen, sind IDs, die Druma Ihnen Minuten zuvor von `GET /finance-api/billable` gegeben hat; stimmen sie nicht überein, erhalten Sie ein `422`, das sie benennt, statt einer Best-Effort-Zuordnung zu etwas anderem. Geben Sie die IDs exakt so zurück, wie empfangen.
 </Warning>
+
+Die API ist **v1**: Die folgenden Pfade funktionieren auch als `/finance-api/v1/...`, und jede Antwort enthält einen `Druma-Api-Version`-Header. Siehe [API-Versionierung](/de/integrations/api-versioning). Limits: 120 Anfragen pro Stunde und Schlüssel für `GET /billable` und `POST /billable/exported`, 300 pro Stunde für `POST /invoices`. Die vollständige OpenAPI-Referenz steht unter **API reference**.
 
 ---
 

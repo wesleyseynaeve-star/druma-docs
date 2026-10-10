@@ -1,0 +1,95 @@
+---
+title: "Wersjonowanie API"
+description: "Jak Druma wersjonuje swoje publiczne API, co może się zmienić bez uprzedzenia oraz jak weryfikować podpisy webhooków i usuwać duplikaty zdarzeń."
+icon: "code-branch"
+---
+
+Powierzchnia integracji Druma — [Publiczne API](/pl/integrations/public-api), [Finance API](/pl/integrations/finance-api), przychodzące [Client API](/pl/integrations/client-api) oraz webhooki wychodzące — działa w **wersji 1 (v1)**.
+
+## Zasady
+
+- **Zmiany addytywne trafiają do v1 bez uprzedzenia.** Nowe pola odpowiedzi, endpointy, typy zdarzeń webhooków i opcjonalne parametry mogą pojawić się w każdej chwili. Twoja integracja musi **ignorować nieznane pola**.
+- **Zmiany łamiące kompatybilność pojawiają się jako v2, obok v1.** Usunięcie lub zmiana nazwy pola, zmiana jego typu, znaczenia, uwierzytelniania lub obsługi błędów następuje wyłącznie w nowej wersji głównej.
+- **v1 pozostaje dostępne co najmniej 6 miesięcy** po wydaniu v2.
+- **Wycofania są ogłaszane na trzy sposoby:** nagłówkami odpowiedzi, e-mailem do osoby kontaktowej integracji oraz w [dzienniku zmian API](/pl/integrations/api-changelog).
+
+## Wybór wersji
+
+Wersję możesz podać w ścieżce, w nagłówku lub w obu miejscach (muszą się zgadzać):
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+Starsze ścieżki bez wersji (`/public-api/orders`) nadal działają i oznaczają v1. Gdy nie podasz wersji, używana jest wersja przypisana do Twojego klucza API lub integracji (obecnie v1). Nieobsługiwana wersja zwraca:
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## Nagłówki odpowiedzi
+
+Każda odpowiedź Publicznego API, Finance API i przychodzącego Client API, także błędy takie jak `401` i `429`, zawiera:
+
+```
+Druma-Api-Version: 1
+```
+
+Gdy coś zostanie wycofane, odpowiedzi zawierają także standardowe nagłówki:
+
+| Nagłówek | Znaczenie |
+|---|---|
+| `Deprecation: @1798761600` | Czas Unix, w którym wycofano (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | Data, po której może przestać działać (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | Gdzie znaleźć instrukcję migracji |
+
+Jeśli Twój klient loguje te nagłówki, zobaczysz wycofanie na długo przed tym, zanim coś przestanie działać.
+
+## Webhooki
+
+Każde ciało webhooka zachowuje wszystkie dotychczasowe pola i dodaje:
+
+| Pole | Znaczenie |
+|---|---|
+| `api_version` | Wersja API: `"1"` |
+| `event_id` | Unikalny identyfikator zdarzenia. **Pozostaje taki sam przy ponownej próbie dostarczenia**, więc użyj go do ignorowania duplikatów. |
+
+Każda dostawa zawiera też nagłówki `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (sekundy Unix) i `Druma-Api-Version`.
+
+<Note>
+`api_version` i `event_id` to **zastrzeżone** klucze. Druma dodaje je po zastosowaniu Twojej wychodzącej mapy pól, więc zawsze zachowują te nazwy, a mapa nie może ich zmienić ani nadpisać. Nie używaj ich jako celów mapowania.
+</Note>
+
+### Weryfikacja podpisów (HMAC-SHA256)
+
+Przy typie uwierzytelniania **HMAC-SHA256** każda dostawa jest podpisana Twoim wspólnym sekretem w dwóch nagłówkach:
+
+| Nagłówek | Wartość |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, HMAC-SHA256 surowego ciała. Bez zmian, zachowany dla istniejących integracji. Nie zawiera znacznika czasu, więc nie wykryje ponownie odtworzonego żądania. |
+| `X-Druma-Signature-V2` | `t=<sekundy unix>,v1=<hex>`, HMAC-SHA256 ciągu `"<t>.<surowe ciało>"`. Znacznik czasu jest częścią podpisu, więc możesz odrzucać stare żądania. **Używaj go w nowych integracjach.** |
+
+Weryfikuj względem **surowego** ciała żądania, a nie ponownie zserializowanej kopii. W Node:
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+Przyjmij dostawę tylko wtedy, gdy podpis jest poprawny, a jej `event_id` nie był jeszcze przetworzony. Potwierdź dowolnym statusem `2xx`; inne odpowiedzi są ponawiane według harmonogramu z narastającym opóźnieniem. `X-Druma-Timestamp` jest odświeżany przy każdej próbie, więc ponowienie nie zostanie odrzucone przez okno ochrony przed powtórką. Nagłówek V2 jest wysyłany tylko przy uwierzytelnianiu **HMAC-SHA256**.
+
+## Dokumentacja API
+
+Dokumentacja OpenAPI 3.1 wszystkich endpointów znajduje się w grupie **API reference** w nawigacji (Publiczne API i Finance API). Adres bazowy: `https://YOUR-PROJECT.supabase.co/functions/v1`, następnie `/public-api/v1/...` lub `/finance-api/v1/...`.

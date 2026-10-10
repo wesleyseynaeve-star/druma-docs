@@ -71,13 +71,17 @@ X-API-Key: A_TE_FINANCE_KULCSOD
 | Válasz | Jelentés |
 |---|---|
 | `403` | A kulcs érvényes, de nem **Finance** hatókörű kulcs |
-| `409` | Ezt a számlát már befogadták — a kérés duplikátum volt, és semmi sem változott |
-| `422` | Egy vagy több `order_id` érték nem felismert. A válasz megnevezi a hibás azonosítókat |
+| `409` | Az `external_invoice_number` már létezik más megrendeléshalmazzal, összeggel vagy pénznemmel (`reason: duplicate_external_number`) |
+| `422` | Az érvényesítés sikertelen: ismeretlen megrendelés-azonosító, már kiszámlázott megrendelés, több ügyfél megrendelései vagy eltérő pénznem. A válasz tartalmaz egy `reason` mezőt, és megnevezi a hibás azonosítókat vagy mezőket |
 | `429` | Túllépted a sebességkorlátot — várj és próbáld újra |
+
+Pontosan ugyanazon számla újbóli beküldése (azonos `external_invoice_number`, megrendelések, összeg és pénznem) biztonságos: `201` helyett `200` a válasz a meglévő `invoice_id`-val, és semmi sem változik.
 
 <Warning>
 A Druma nem találgat. Az azonosítók, amelyeket visszaküldesz, olyan azonosítók, amelyeket a Druma perceken belül adott neked a `GET /finance-api/billable`-ból; ha nem egyeznek, egy `422`-t kapsz, amely megnevezi őket, ahelyett hogy legjobb tudása szerint máshoz párosítaná. Küldd vissza az azonosítókat pontosan úgy, ahogy megkaptad.
 </Warning>
+
+Az API **v1**: az alábbi útvonalak `/finance-api/v1/...` alakban is működnek, és minden válasz tartalmaz `Druma-Api-Version` fejlécet. Lásd az [API-verziókezelést](/hu/integrations/api-versioning). Korlátok: kulcsonként óránként 120 kérés a `GET /billable` és a `POST /billable/exported` végpontra, óránként 300 a `POST /invoices` végpontra. A teljes OpenAPI-referencia az **API reference** csoportban található.
 
 ---
 

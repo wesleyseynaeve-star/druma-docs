@@ -1,0 +1,20 @@
+---
+title: "Dziennik zmian API"
+description: "Chronologiczna lista zmian w publicznym API Druma, Finance API, Client API i webhookach."
+icon: "clock-rotate-left"
+---
+
+Zmiany w obrębie v1 są addytywne. Zmiany łamiące i wycofania są tu ogłaszane jako pierwsze. Zasady opisuje [Wersjonowanie API](/pl/integrations/api-versioning).
+
+## 2026-10-10
+
+**Dodano (v1, bez konieczności działania)**
+
+- **Nagłówki wersji.** Każda odpowiedź Publicznego API, Finance API i przychodzącego Client API zawiera `Druma-Api-Version: 1`. Możesz też wysyłać ten nagłówek w żądaniach.
+- **Ścieżki `/v1/`.** Działają teraz `/public-api/v1/orders` i `/finance-api/v1/billable`. Dotychczasowe ścieżki bez wersji są bez zmian i oznaczają v1.
+- **`event_id` i `api_version` w webhookach.** Każde ciało webhooka zyskuje te dwa pola. `event_id` jest stały przy ponowieniach, użyj go do deduplikacji.
+- **Nagłówki webhooków.** `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` i `Druma-Api-Version` przy każdej dostawie.
+- **Podpis ze znacznikiem czasu.** Dostawy HMAC dodają `X-Druma-Signature-V2: t=<unix>,v1=<hex>` jako ochronę przed powtórką. `X-Druma-Signature` bez zmian.
+- **Dokumentacja OpenAPI 3.1** dla Publicznego API i Finance API.
+
+**Wycofane / usunięte:** nic.

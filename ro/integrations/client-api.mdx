@@ -113,7 +113,7 @@ Dacă sistemul clientului redenumește sau mută silențios un câmp, Druma dete
     - **Niciuna** — fără header de autentificare (folosește doar pe rețele private de încredere)
     - **Token Bearer** — Druma adaugă `Authorization: Bearer <valoare>` la fiecare cerere
     - **Autentificare de bază (Basic auth)** — Druma adaugă un header `Authorization: Basic`, cu un utilizator și parolă codate base64
-    - **HMAC-SHA256** — Druma semnează corpul fiecărei cereri cu un secret partajat și include semnătura într-un header; clientul o verifică înainte de procesare
+    - **HMAC-SHA256** — Druma semnează corpul fiecărei cereri cu un secret partajat și trimite semnătura în antetul `X-Druma-Signature` (`sha256=<hex>` al corpului brut) și, pentru protecție anti-reluare, în `X-Druma-Signature-V2` (`t=<secunde unix>,v1=<hex>`, semnat peste `<t>.<corp>`); clientul o verifică înainte de procesare. Exemplu de verificare în [Versionarea API](/ro/integrations/api-versioning)
 
     Completează credențialele pentru tipul ales. Lasă un câmp de credențiale gol, ca să păstrezi valoarea salvată curent.
   </Step>
@@ -183,6 +183,8 @@ Cererile care depășesc o limită primesc un răspuns `429 Too Many Requests`. 
 <Warning>
 Nu distribui token-ul bearer al unui client altor clienți și nu îl încorpora în cod accesibil public. Fiecare token acordă drepturi complete de creare a comenzilor de intrare, pentru domeniul de companie al acelui client.
 </Warning>
+
+Fiecare eveniment conține și `api_version` și `event_id` (stabil la reîncercări, folosit pentru a ignora duplicatele), plus antetele `X-Druma-Event-Id`, `X-Druma-Event-Type` și `X-Druma-Timestamp`. `api_version` și `event_id` sunt chei rezervate: nu le folosi ca ținte în harta de câmpuri de ieșire. Vezi [Versionarea API](/ro/integrations/api-versioning).
 
 ---
 

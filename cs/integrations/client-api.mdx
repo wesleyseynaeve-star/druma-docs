@@ -75,7 +75,7 @@ Objednávky vytvořené přes CAPI přicházejí jako návrhy. Na tabuli se nezo
     - **Žádná** — bez autentizační hlavičky (používejte pouze na důvěryhodných privátních sítích)
     - **Bearer token** — Druma přidá `Authorization: Bearer <hodnota>` ke každému požadavku
     - **Basic auth** — Druma přidá hlavičku `Authorization: Basic` s uživatelským jménem a heslem zakódovanými v base64
-    - **Podpis HMAC** — Druma podepíše tělo každého požadavku sdíleným tajným klíčem a zahrne podpis do hlavičky; klient ho před zpracováním ověří
+    - **Podpis HMAC** — Druma podepisuje tělo každého požadavku sdíleným tajným klíčem a podpis posílá v hlavičce `X-Druma-Signature` (`sha256=<hex>` surového těla) a pro ochranu proti přehrání v `X-Druma-Signature-V2` (`t=<unixové sekundy>,v1=<hex>`, podpis přes `<t>.<tělo>`); klient ho před zpracováním ověří. Příklad ověření viz [Verzování API](/cs/integrations/api-versioning)
 
     Vyplňte přihlašovací údaje pro zvolený typ.
   </Step>
@@ -156,6 +156,8 @@ Pokud klient legitimně potřebuje vyšší propustnost, kontaktujte podporu Dru
 <Warning>
 Nesdílejte bearer token klienta s jinými klienty ani ho nevkládejte do veřejně přístupného kódu. Každý token uděluje plná práva vytváření příchozích objednávek v rozsahu společnosti daného klienta.
 </Warning>
+
+Každá událost obsahuje také `api_version` a `event_id` (stabilní při opakováních, slouží k ignorování duplicit) a hlavičky `X-Druma-Event-Id`, `X-Druma-Event-Type` a `X-Druma-Timestamp`. `api_version` a `event_id` jsou rezervované klíče: nepoužívejte je jako cíle odchozího mapování polí. Viz [Verzování API](/cs/integrations/api-versioning).
 
 ---
 

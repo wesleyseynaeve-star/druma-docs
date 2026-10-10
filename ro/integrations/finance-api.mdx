@@ -71,13 +71,17 @@ X-API-Key: CHEIA_TA_FINANCE
 | Răspuns | Semnificație |
 |---|---|
 | `403` | Cheia este validă, dar nu are domeniul **Finance** |
-| `409` | Factura a fost deja preluată — cererea a fost un duplicat și nu s-a schimbat nimic |
-| `422` | Una sau mai multe valori `order_id` nu sunt recunoscute. Răspunsul numește id-urile greșite |
+| `409` | `external_invoice_number` există deja cu un alt set de comenzi, o altă sumă sau altă monedă (`reason: duplicate_external_number`) |
+| `422` | Validare eșuată: ID de comandă necunoscut, comandă deja facturată, comenzi de la mai mulți clienți sau monedă neconcordantă. Răspunsul conține `reason` și numește ID-urile sau câmpurile greșite |
 | `429` | Limită de rată depășită — așteaptă și reîncearcă |
+
+Trimiterea din nou a exact aceleiași facturi (același `external_invoice_number`, aceleași comenzi, sumă și monedă) este sigură: returnează `200` cu `invoice_id` existent în loc de `201`, iar nimic nu se schimbă.
 
 <Warning>
 Druma nu ghicește. Id-urile pe care le trimiți înapoi sunt id-uri pe care Druma ți le-a dat cu câteva minute înainte prin `GET /finance-api/billable`; dacă nu se potrivesc, primești un `422` care le numește, în loc de o potrivire aproximativă cu altceva. Trimite id-urile exact așa cum le-ai primit.
 </Warning>
+
+API-ul este **v1**: căile de mai jos funcționează și ca `/finance-api/v1/...`, iar fiecare răspuns conține antetul `Druma-Api-Version`. Vezi [Versionarea API](/ro/integrations/api-versioning). Limite: 120 de cereri pe oră per cheie pentru `GET /billable` și `POST /billable/exported`, 300 pe oră pentru `POST /invoices`. Referința OpenAPI completă este în grupul **API reference**.
 
 ---
 

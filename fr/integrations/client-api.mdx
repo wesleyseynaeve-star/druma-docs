@@ -75,7 +75,7 @@ Les commandes créées via CAPI arrivent en tant que brouillons. Elles n'apparai
     - **Aucune** — pas d'en-tête d'authentification (à utiliser uniquement sur des réseaux privés de confiance)
     - **Jeton Bearer** — Druma ajoute `Authorization: Bearer <valeur>` à chaque requête
     - **Auth basique** — Druma ajoute un en-tête `Authorization: Basic` avec un nom d'utilisateur et mot de passe encodés en base64
-    - **Signature HMAC** — Druma signe le corps de chaque requête avec un secret partagé et inclut la signature dans un en-tête ; le client la vérifie avant traitement
+    - **Signature HMAC** — Druma signe le corps de chaque requête avec un secret partagé et envoie la signature dans l'en-tête `X-Druma-Signature` (`sha256=<hex>` du corps brut) et, contre le rejeu, dans `X-Druma-Signature-V2` (`t=<secondes unix>,v1=<hex>`, signé sur `<t>.<corps>`) ; le client la vérifie avant traitement. Exemple de vérification dans [Versionnement de l'API](/fr/integrations/api-versioning)
 
     Renseignez les identifiants pour le type choisi.
   </Step>
@@ -156,6 +156,8 @@ Si un client a légitimement besoin d'un débit plus élevé, contactez le suppo
 <Warning>
 Ne partagez pas le jeton Bearer d'un client avec d'autres clients et ne l'intégrez pas dans du code accessible publiquement. Chaque jeton accorde des droits complets de création de commande entrante pour le périmètre entreprise de ce client.
 </Warning>
+
+Chaque événement contient aussi `api_version` et `event_id` (stable entre les tentatives, pour ignorer les doublons) ainsi que les en-têtes `X-Druma-Event-Id`, `X-Druma-Event-Type` et `X-Druma-Timestamp`. `api_version` et `event_id` sont des clés réservées : ne les utilisez pas comme cibles de la correspondance de champs sortante. Voir [Versionnement de l'API](/fr/integrations/api-versioning).
 
 ---
 

@@ -1,0 +1,95 @@
+---
+title: "Versionarea API"
+description: "Cum versionează Druma API-ul public, ce se poate schimba fără notificare și cum verifici semnăturile webhook-urilor și elimini evenimentele duplicate."
+icon: "code-branch"
+---
+
+Suprafața de integrare Druma — [API-ul public](/ro/integrations/public-api), [Finance API](/ro/integrations/finance-api), [Client API](/ro/integrations/client-api) de intrare și webhook-urile de ieșire — este **versiunea 1 (v1)**.
+
+## Regulile
+
+- **Modificările aditive apar în v1, fără notificare.** Câmpuri noi în răspunsuri, endpoint-uri, tipuri de evenimente webhook și parametri opționali pot apărea oricând. Integrarea ta trebuie să **ignore câmpurile pe care nu le cunoaște**.
+- **Modificările care strică compatibilitatea apar ca v2, alături de v1.** Eliminarea sau redenumirea unui câmp, schimbarea tipului, a sensului, a autentificării sau a comportamentului la erori se fac doar într-o versiune majoră nouă.
+- **v1 rămâne disponibilă cel puțin 6 luni** după lansarea v2.
+- **Retragerile sunt anunțate în trei moduri:** antete de răspuns, un e-mail către persoana de contact a integrării și [jurnalul de modificări API](/ro/integrations/api-changelog).
+
+## Alegerea versiunii
+
+Poți indica versiunea în cale, într-un antet sau în ambele (trebuie să coincidă):
+
+```
+GET /public-api/v1/orders
+Druma-Api-Version: 1
+```
+
+Căile mai vechi, fără versiune (`/public-api/orders`), continuă să funcționeze și înseamnă v1. Dacă nu indici nicio versiune, se folosește versiunea la care este fixată cheia API sau integrarea (astăzi v1). O versiune neacceptată returnează:
+
+```json
+{ "error": "unsupported_api_version", "supported": ["1"], "requested": "2" }
+```
+
+## Antete de răspuns
+
+Fiecare răspuns al API-ului public, al Finance API și al Client API de intrare, inclusiv erorile precum `401` și `429`, conține:
+
+```
+Druma-Api-Version: 1
+```
+
+Odată ce ceva este retras, răspunsurile conțin și antetele standard:
+
+| Antet | Semnificație |
+|---|---|
+| `Deprecation: @1798761600` | Momentul Unix al retragerii (RFC 9745) |
+| `Sunset: Thu, 01 Jul 2027 00:00:00 GMT` | Data după care poate înceta să funcționeze (RFC 8594) |
+| `Link: <https://docs.druma.io/...>; rel="deprecation"` | Unde găsești ghidul de migrare |
+
+Dacă clientul tău înregistrează aceste antete, vei vedea o retragere cu mult înainte ca ceva să înceteze să funcționeze.
+
+## Webhook-uri
+
+Corpul fiecărui webhook păstrează toate câmpurile existente și adaugă:
+
+| Câmp | Semnificație |
+|---|---|
+| `api_version` | Versiunea API: `"1"` |
+| `event_id` | Un identificator unic al evenimentului. **Rămâne același când Druma reîncearcă livrarea**, deci folosește-l pentru a ignora duplicatele. |
+
+Fiecare livrare conține și antetele `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` (secunde Unix) și `Druma-Api-Version`.
+
+<Note>
+`api_version` și `event_id` sunt chei **rezervate**. Druma le adaugă după aplicarea hărții tale de câmpuri de ieșire, deci își păstrează mereu numele, iar harta nu le poate redenumi sau suprascrie. Nu le folosi ca ținte în hartă.
+</Note>
+
+### Verificarea semnăturilor (HMAC-SHA256)
+
+Cu tipul de autentificare **HMAC-SHA256**, fiecare livrare este semnată cu secretul tău partajat în două antete:
+
+| Antet | Valoare |
+|---|---|
+| `X-Druma-Signature` | `sha256=<hex>`, HMAC-SHA256 al corpului brut. Neschimbat, păstrat pentru integrările existente. Nu are marcaj temporal, deci nu poate detecta o cerere reluată. |
+| `X-Druma-Signature-V2` | `t=<secunde unix>,v1=<hex>`, HMAC-SHA256 al șirului `"<t>.<corpul brut>"`. Marcajul temporal face parte din ce se semnează, deci poți respinge cererile vechi. **Folosește-l pentru integrările noi.** |
+
+Verifică pe corpul **brut** al cererii, nu pe o copie re-serializată. În Node:
+
+```js
+import crypto from 'node:crypto';
+
+export function verifyDrumaWebhook(rawBody, headers, secret, toleranceSeconds = 300) {
+  const header = headers['x-druma-signature-v2'] ?? '';
+  const parts = Object.fromEntries(header.split(',').map((p) => p.split('=')));
+  const t = Number(parts.t);
+  if (!Number.isFinite(t) || !parts.v1) return false;
+  if (Math.abs(Date.now() / 1000 - t) > toleranceSeconds) return false;
+  const expected = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+Acceptă o livrare doar dacă semnătura se verifică și `event_id` nu a mai fost procesat. Confirmă cu orice status `2xx`; celelalte răspunsuri sunt reîncercate după un program cu pauze crescătoare. `X-Druma-Timestamp` se reîmprospătează la fiecare încercare, deci o reîncercare nu este respinsă de fereastra anti-reluare. Antetul V2 se trimite doar cu tipul de autentificare **HMAC-SHA256**.
+
+## Referința API
+
+Referința OpenAPI 3.1 pentru fiecare endpoint se află în grupul **API reference** din navigare (API-ul public și Finance API). URL de bază: `https://YOUR-PROJECT.supabase.co/functions/v1`, apoi `/public-api/v1/...` sau `/finance-api/v1/...`.

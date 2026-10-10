@@ -1,0 +1,20 @@
+---
+title: "Jurnalul de modificări API"
+description: "Listă datată a modificărilor API-ului public Druma, Finance API, Client API și webhook-urilor."
+icon: "clock-rotate-left"
+---
+
+Modificările din v1 sunt aditive. Modificările incompatibile și retragerile sunt listate aici mai întâi. Politica este descrisă în [Versionarea API](/ro/integrations/api-versioning).
+
+## 2026-10-10
+
+**Adăugat (v1, nu trebuie să faci nimic)**
+
+- **Antete de versiune.** Fiecare răspuns al API-ului public, al Finance API și al Client API de intrare conține `Druma-Api-Version: 1`. Îl poți trimite și în cereri.
+- **Căi `/v1/`.** `/public-api/v1/orders` și `/finance-api/v1/billable` funcționează acum. Căile existente fără versiune sunt neschimbate și înseamnă v1.
+- **`event_id` și `api_version` în webhook-uri.** Corpul fiecărui webhook primește aceste două câmpuri. `event_id` este stabil la reîncercări, folosește-l pentru deduplicare.
+- **Antete webhook.** `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` și `Druma-Api-Version` la fiecare livrare.
+- **Semnătură cu marcaj temporal.** Livrările HMAC adaugă `X-Druma-Signature-V2: t=<unix>,v1=<hex>` pentru protecție anti-reluare. `X-Druma-Signature` este neschimbat.
+- **Referință OpenAPI 3.1** pentru API-ul public și Finance API.
+
+**Retras / eliminat:** nimic.

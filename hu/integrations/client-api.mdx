@@ -75,7 +75,7 @@ A CAPI-n keresztül létrehozott rendelések vázlatként érkeznek. Nem jelenne
     - **Nincs** — nincs hitelesítési fejléc (csak megbízható, privát hálózatokon használd)
     - **Bearer token** — a Druma hozzáadja az `Authorization: Bearer <érték>` fejlécet minden kéréshez
     - **Basic auth** — a Druma hozzáad egy `Authorization: Basic` fejlécet base64-kódolt felhasználónévvel és jelszóval
-    - **HMAC-aláírás** — a Druma aláírja minden kérés törzsét egy közös titkos kulccsal, és tartalmazza az aláírást egy fejlécben; az ügyfél feldolgozás előtt ellenőrzi
+    - **HMAC-aláírás** — a Druma minden kérés törzsét közös titkos kulccsal írja alá, és az aláírást az `X-Druma-Signature` fejlécben (`sha256=<hex>` a nyers törzsről), az újrajátszás elleni védelemhez pedig az `X-Druma-Signature-V2` fejlécben (`t=<unix másodperc>,v1=<hex>`, a `<t>.<törzs>` értékre aláírva) küldi; az ügyfél feldolgozás előtt ellenőrzi. Ellenőrzési példa: [API-verziókezelés](/hu/integrations/api-versioning)
 
     Töltsd ki a hitelesítő adatokat a választott típushoz.
   </Step>
@@ -156,6 +156,8 @@ Ha egy ügyfélnek jogosan nagyobb átviteli sebességre van szüksége, vedd fe
 <Warning>
 Ne oszd meg egy ügyfél bearer tokenjét más ügyfelekkel, és ne ágyazd be nyilvánosan elérhető kódba. Minden token teljes bejövő rendelés-létrehozási jogot ad az adott ügyfél cégének hatókörében.
 </Warning>
+
+Minden esemény tartalmazza az `api_version` és az `event_id` mezőt is (újrapróbálkozásnál állandó, az ismétlődések kiszűrésére), valamint az `X-Druma-Event-Id`, `X-Druma-Event-Type` és `X-Druma-Timestamp` fejléceket. Az `api_version` és az `event_id` fenntartott kulcsok: ne használd őket a kimenő mezőleképezés céljaként. Lásd az [API-verziókezelést](/hu/integrations/api-versioning).
 
 ---
 

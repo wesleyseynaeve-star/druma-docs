@@ -71,13 +71,17 @@ X-API-Key: VOTRE_CLE_FINANCE
 | Réponse | Signification |
 |---|---|
 | `403` | La clé est valide mais n'est pas une clé à portée **Finance** |
-| `409` | Cette facture a déjà été ingérée — la requête était un doublon, et rien n'a changé |
-| `422` | Une ou plusieurs valeurs `order_id` ne sont pas reconnues. La réponse nomme les identifiants incorrects |
+| `409` | Le `external_invoice_number` existe déjà avec un autre jeu de commandes, montant ou devise (`reason: duplicate_external_number`) |
+| `422` | Validation échouée : identifiant de commande inconnu, commande déjà facturée, commandes de plusieurs clients ou devise non concordante. La réponse contient un `reason` et nomme les identifiants ou champs en cause |
 | `429` | Limite de débit dépassée — attendez et réessayez |
+
+Renvoyer exactement la même facture (même `external_invoice_number`, mêmes commandes, montant et devise) est sans risque : la réponse est `200` avec le `invoice_id` existant au lieu de `201`, et rien ne change.
 
 <Warning>
 Druma ne devine pas. Les identifiants que vous republiez sont des identifiants que Druma vous a donnés quelques minutes plus tôt depuis `GET /finance-api/billable` ; s'ils ne correspondent pas, vous obtenez un `422` qui les nomme plutôt qu'une correspondance au mieux avec autre chose. Renvoyez les identifiants exactement tels que reçus.
 </Warning>
+
+L'API est en **v1** : les chemins ci-dessous fonctionnent aussi sous la forme `/finance-api/v1/...`, et chaque réponse contient un en-tête `Druma-Api-Version`. Voir [Versionnement de l'API](/fr/integrations/api-versioning). Limites : 120 requêtes par heure et par clé pour `GET /billable` et `POST /billable/exported`, 300 par heure pour `POST /invoices`. La référence OpenAPI complète se trouve dans le groupe **API reference**.
 
 ---
 

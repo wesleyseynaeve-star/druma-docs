@@ -1,0 +1,20 @@
+---
+title: "API-változásnapló"
+description: "A Druma nyilvános API-jának, a Finance API-nak, a Client API-nak és a webhookoknak a változásai dátum szerint."
+icon: "clock-rotate-left"
+---
+
+A v1-en belüli változások bővítő jellegűek. A visszafelé nem kompatibilis változások és kivezetések itt szerepelnek először. A szabályzatot az [API-verziókezelés](/hu/integrations/api-versioning) írja le.
+
+## 2026-10-10
+
+**Hozzáadva (v1, nincs teendő)**
+
+- **Verziófejlécek.** A nyilvános API, a Finance API és a bejövő Client API minden válasza tartalmazza a `Druma-Api-Version: 1` fejlécet. A kéréseidben is elküldheted.
+- **`/v1/` útvonalak.** A `/public-api/v1/orders` és a `/finance-api/v1/billable` mostantól működik. A meglévő, verzió nélküli útvonalak változatlanok, és v1-et jelentenek.
+- **Webhook `event_id` és `api_version`.** Minden webhook-törzs megkapja ezt a két mezőt. Az `event_id` az újrapróbálkozásoknál állandó, használd a deduplikáláshoz.
+- **Webhook-fejlécek.** `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` és `Druma-Api-Version` minden kézbesítésen.
+- **Időbélyeges aláírás.** A HMAC-kézbesítések az újrajátszás ellen hozzáadják az `X-Druma-Signature-V2: t=<unix>,v1=<hex>` fejlécet. Az `X-Druma-Signature` változatlan.
+- **OpenAPI 3.1 referencia** a nyilvános API-hoz és a Finance API-hoz.
+
+**Kivezetve / eltávolítva:** nincs.

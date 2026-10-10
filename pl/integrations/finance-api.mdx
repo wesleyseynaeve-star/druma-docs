@@ -71,13 +71,17 @@ X-API-Key: TWÓJ_KLUCZ_FINANCE
 | Odpowiedź | Znaczenie |
 |---|---|
 | `403` | Klucz jest poprawny, ale nie ma zakresu **Finance** |
-| `409` | Ta faktura została już zaimportowana — żądanie było duplikatem i nic się nie zmieniło |
-| `422` | Jedna lub więcej wartości `order_id` nie została rozpoznana. Odpowiedź wymienia błędne identyfikatory |
+| `409` | Numer `external_invoice_number` już istnieje z innym zestawem zleceń, kwotą lub walutą (`reason: duplicate_external_number`) |
+| `422` | Walidacja nie powiodła się: nieznany identyfikator zlecenia, zlecenie już zafakturowane, zlecenia różnych klientów lub niezgodna waluta. Odpowiedź zawiera `reason` i wymienia błędne identyfikatory lub pola |
 | `429` | Przekroczono limit zapytań — odczekaj i ponów |
+
+Ponowne wysłanie dokładnie tej samej faktury (ten sam `external_invoice_number`, zlecenia, kwota i waluta) jest bezpieczne: zwraca `200` z istniejącym `invoice_id` zamiast `201` i nic się nie zmienia.
 
 <Warning>
 Druma nie zgaduje. Identyfikatory, które odsyłasz, to identyfikatory, które Druma przekazała Ci kilka minut wcześniej przez `GET /finance-api/billable`; jeśli się nie zgadzają, otrzymasz `422` z ich wymienieniem, a nie próbę dopasowania do czegoś innego. Odsyłaj identyfikatory dokładnie w takiej postaci, w jakiej je otrzymałeś.
 </Warning>
+
+API działa w **wersji v1**: poniższe ścieżki działają także jako `/finance-api/v1/...`, a każda odpowiedź zawiera nagłówek `Druma-Api-Version`. Zobacz [Wersjonowanie API](/pl/integrations/api-versioning). Limity: 120 żądań na godzinę na klucz dla `GET /billable` i `POST /billable/exported`, 300 na godzinę dla `POST /invoices`. Pełna dokumentacja OpenAPI znajduje się w grupie **API reference**.
 
 ---
 

@@ -1,0 +1,20 @@
+---
+title: "Zoznam zmien API"
+description: "Datovaný zoznam zmien verejného API Druma, Finance API, Client API a webhookov."
+icon: "clock-rotate-left"
+---
+
+Zmeny vo v1 sú aditívne. Zásadné zmeny a vyradenia sa uvádzajú najprv tu. Pravidlá popisuje [Verzovanie API](/sk/integrations/api-versioning).
+
+## 2026-10-10
+
+**Pridané (v1, netreba nič robiť)**
+
+- **Hlavičky verzie.** Každá odpoveď Verejného API, Finance API a prichádzajúceho Client API obsahuje `Druma-Api-Version: 1`. Môžete ju posielať aj v požiadavkách.
+- **Cesty `/v1/`.** `/public-api/v1/orders` a `/finance-api/v1/billable` teraz fungujú. Existujúce cesty bez verzie ostávajú bez zmeny a znamenajú v1.
+- **`event_id` a `api_version` vo webhookoch.** Telo každého webhooku získava tieto dve polia. `event_id` je pri opakovaniach stabilné, použite ho na deduplikáciu.
+- **Hlavičky webhookov.** `X-Druma-Event-Id`, `X-Druma-Event-Type`, `X-Druma-Timestamp` a `Druma-Api-Version` pri každom doručení.
+- **Podpis s časovou pečiatkou.** Doručenia HMAC pridávajú `X-Druma-Signature-V2: t=<unix>,v1=<hex>` ako ochranu proti prehraniu. `X-Druma-Signature` je bez zmeny.
+- **Referencia OpenAPI 3.1** pre Verejné API a Finance API.
+
+**Vyradené / odstránené:** nič.
