@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-10 15:17 UTC
+Generated: 2026-10-12 19:38 UTC
 
 ---
 
@@ -947,7 +947,7 @@ Key User is not a column in the table below — its permissions sit between Admi
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Orders | Full | Full | Full | Partial | None | Full | Own records only | Own records only |
 | Planning Board | Full | Full | Full | Partial | Partial | Partial | None | None |
-| Fleet | Full | Full | Partial | Read only | Full | None | None | None |
+| Fleet | Full | Full | Partial | Read only | Partial | None | None | None |
 | Compliance | Full | Full | Full | Full | Read only | None | None | None |
 | Clients | Full | Full | Full | Partial | None | Full | None | None |
 | Margin & Finance | Full | Full | Full | None | None | Partial | None | None |
