@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-14 07:57 UTC
+Generated: 2026-10-14 08:45 UTC
 
 ---
 
@@ -955,7 +955,7 @@ Key User is not a column in the table below — its permissions sit between Admi
 | Pricing | Full | Full | Full | None | Full | None | None | None |
 | Freight Exchange | Full | Full | Full | None | None | None | None | None |
 | Payroll | Full | Full | None | None | Partial | None | None | None |
-| Reports | Full | Full | Full | None | None | Full | None | None |
+| Reports | Full | Full | Full | Full | Full | Full | None | None |
 | Users | Full | Full | Read only | Read only | Read only | Partial | None | None |
 | Settings | Full | Full | None | None | None | None | None | None |
 | Driver App | None | None | None | None | None | None | Full | None |
