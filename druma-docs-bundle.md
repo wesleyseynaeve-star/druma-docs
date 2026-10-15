@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-15 09:29 UTC
+Generated: 2026-10-15 19:09 UTC
 
 ---
 
@@ -954,7 +954,6 @@ Key User is not a column in the table below — its permissions sit between Admi
 | Invoicing | Full | Full | Full | None | None | Full | None | None |
 | Pricing | Full | Full | Full | None | Full | None | None | None |
 | Freight Exchange | Full | Full | Full | None | None | None | None | None |
-| Payroll | Full | Full | None | None | Partial | None | None | None |
 | Reports | Full | Full | Full | Full | Full | Full | None | None |
 | Users | Full | Full | Read only | Read only | Read only | Partial | None | None |
 | Settings | Full | Full | None | None | None | None | None | None |
@@ -2321,7 +2320,7 @@ Fuel and toll statements name the plate a vehicle carried on the day. In **Fleet
 
 ## Finance
 
-**Finance** holds reversals, never rewrites: **Expenses** (reopen a decision so it can be decided again), **Payments** (reverse a wrong allocation; a payment made from a client's credit balance shows a **Credit balance** badge and uses **Reverse credit offset** instead, which restores the invoice balance and gives the credit back to the client, with no currency conversion), **Write-offs** (reverse one made in error), **e-Transport UIT** (fix a UIT the client provided; a UIT Druma filed cannot be changed) and **Credit & re-issue** (create a draft credit note and a draft replacement invoice, which you edit and send in the normal invoice flow; nothing is sent automatically). For an invoice that covers a single order, **Re-issue to** can be **Another client**, which moves the order to the **New client**, so it leaves the old client's portal and appears in the new one. It warns about a differing currency or VAT position, an already-paid or already-submitted invoice, and a client over its credit limit, and a client on credit stop cannot be chosen until the stop is lifted. Client credit status and outstanding balances are counted in EUR, invoice by invoice. Payroll is not reopened by any of these.
+**Finance** holds reversals, never rewrites: **Expenses** (reopen a decision so it can be decided again), **Payments** (reverse a wrong allocation; a payment made from a client's credit balance shows a **Credit balance** badge and uses **Reverse credit offset** instead, which restores the invoice balance and gives the credit back to the client, with no currency conversion), **Write-offs** (reverse one made in error), **e-Transport UIT** (fix a UIT the client provided; a UIT Druma filed cannot be changed) and **Credit & re-issue** (create a draft credit note and a draft replacement invoice, which you edit and send in the normal invoice flow; nothing is sent automatically). For an invoice that covers a single order, **Re-issue to** can be **Another client**, which moves the order to the **New client**, so it leaves the old client's portal and appears in the new one. It warns about a differing currency or VAT position, an already-paid or already-submitted invoice, and a client over its credit limit, and a client on credit stop cannot be chosen until the stop is lifted. Client credit status and outstanding balances are counted in EUR, invoice by invoice.
 
 ## Ledger and reverting
 
@@ -3069,7 +3068,7 @@ You can declare a wasted journey from any of these statuses: **Departed, At Pick
 The planner must provide a reason code, the driver's current location, dead kilometres driven, and optionally flag the order for client charging.
 
 > **Warning:** 
-Declaring a wasted journey **cannot be undone**. The order moves permanently to Wasted Journey status, and the reason, driver location, dead kilometres, and (if toggled) a client charge amount are recorded directly on the order for later invoicing — no separate payroll or charge record is generated automatically.
+Declaring a wasted journey **cannot be undone**. The order moves permanently to Wasted Journey status, and the reason, driver location, dead kilometres, and (if toggled) a client charge amount are recorded directly on the order for later invoicing — no separate charge record is generated automatically.
 
 
 See [Wasted Journey](/en/planner/wasted-journey) for the full guide.
@@ -6095,7 +6094,7 @@ Once an order is marked as a wasted journey:
 3. **The event is recorded on the order** — the reason code, who cancelled (client, own decision, or force majeure), dead kilometres, the driver's location (Own Truck orders), a carrier cancellation fee (subcontracted orders), and (if you toggled "Charge client") a client invoice amount are all saved directly on the order record.
 
 > **Note:** 
-Declaring a wasted journey does not automatically generate a separate payroll entry or a standalone charge record. What's recorded lives on the order itself — use that information manually for driver payroll and, if you toggled "Charge client", when building the client invoice.
+Declaring a wasted journey does not automatically generate a standalone charge record. What's recorded lives on the order itself — use that information, if you toggled "Charge client", when building the client invoice.
 
 
 ---
@@ -14716,7 +14715,7 @@ On a phone, the window has a **Write feedback** / **Activity** switch.
 There is no single top-level "Reports" menu in Druma. Reporting is spread across the app, close to the data it covers:
 
 - **Analytics** (left navigation) — operational and commercial performance tabs: Lane Profitability, Profit/km, Truck P&L, Empty KM, Driver Performance, Eco Score, Client Scorecard, Aged Creditors, and more.
-- **Finance** (left navigation) — money-focused pages: Invoices, Overdue, Reconciliation, Payroll, Fuel Tax, Capacity, Cash flow.
+- **Finance** (left navigation) — money-focused pages: Invoices, Overdue, Reconciliation, Fuel Tax, Capacity, Cash flow.
 - **Analytics → Reports** (`/analytics/reports`) — the **Report Builder**: build custom widget dashboards from templates (eleven chart types, period comparison, click-to-filter), and optionally schedule them for automatic email delivery. See [Report Builder](/en/reports/report-builder).
 
 See [Analytics Overview](/en/reports/analytics-overview) for the full map of every tab and what it tells you.
@@ -14799,7 +14798,7 @@ This feature is off by default. A company_admin has to turn it on first, in **Se
 Druma's analytics are spread across three places, all scoped to your active company and calculated live from your data — there's no overnight batch job or data warehouse to wait for:
 
 - **Analytics** (left navigation) — the main analytics hub: dashboard, lane profitability, cost/margin per km, empty km, driver and eco performance, client and subcontractor scorecards, aged creditors, savings, and a dedicated **Reports** sub-tab for the Report Builder.
-- **Finance** (left navigation) — money-focused views: invoices, overdue collections (with payment-risk forecasting), reconciliation, payroll, and more.
+- **Finance** (left navigation) — money-focused views: invoices, overdue collections (with payment-risk forecasting), reconciliation, and more.
 - Feature-specific analytics that live next to the feature they measure, such as **Groupage** lane fill-rate (inside Analytics, only visible if groupage is enabled) or the waiting-time report inside Analytics's **Site Waiting** tab.
 
 Most analytics pages share the same report layout: a **filter bar** (date range and comparison), a row of **KPI tiles**, one or two **charts**, then the **table**. Every KPI tile with a small help icon next to it explains exactly how that number is calculated; see also [How Druma Calculates Key Metrics](/en/reports/metric-definitions).
@@ -14978,125 +14977,6 @@ Capacity contract revenue does not automatically generate invoices. Use the Invo
 
 
   Learn how to create invoices and reference contract arrangements.
-
-
----
-
-## Driver Payroll
-
-
-## Overview
-
-Druma calculates driver pay from the operational data it already captures — kilometres driven, days worked, and waiting hours logged. There is no separate time-tracking system; the data flows from orders and status taps.
-
-Driver Payroll is found under the **Finance** section, gated by the payroll module flag — it follows normal Finance-section access, with no additional role restriction on viewing. Approving/finalizing a batch and adding adjustment lines each have their own narrower permission — see [Monthly Payroll Batches](#monthly-payroll-batches-automated) below.
-
-<Frame caption="Finance → Payroll — empty-km pay is a percentage of the loaded rate, not an independent rate.">
-  <img src="/images/reports/payroll.png" alt="Payroll page" />
-</Frame>
-
----
-
-## Pay components
-
-Each payroll run calculates four components:
-
-| Component | Basis |
-|---|---|
-| **Km pay** | Loaded km × rate per km |
-| **Empty km pay** | Empty/deadhead km × rate per km × empty-km percentage (a configurable share of the loaded rate, not a separate empty-km rate — defaults to 100%, i.e. paid the same as loaded km) |
-| **Day pay** | Active working days × day rate |
-| **Waiting pay** | Total waiting hours × hourly waiting rate |
-
-The total is the sum of all four components in EUR.
-
----
-
-Druma supports two ways to produce a payroll run: generate one manually whenever you need it, or let an opt-in monthly batch build one automatically for every driver and hold it for approval. Most companies use the automated batch day-to-day and fall back to a manual run for ad-hoc periods (a driver who started mid-month, a special pay-cycle correction, and so on).
-
-## Generating a Payroll Run (Manual)
-
-
-  ### Select driver and period
-    Choose the driver from the dropdown and set the start and end date for the period. Typical periods are a calendar month or a two-week pay cycle.
-  
-  ### Click Generate
-    Druma calculates all four pay components from the orders and waiting logs within the selected period.
-  
-  ### Review the breakdown
-    The result shows each component separately so you can verify the numbers before exporting.
-  
-  ### Export to CSV
-    Click **Export CSV** to download the payroll summary for use in your accounting or payroll system.
-  
-
-
----
-
-## Monthly Payroll Batches (Automated)
-
-For companies that don't want to trigger a run by hand every month, Druma can build one batch automatically.
-
-> **Note:** 
-This is opt-in. Enable **Monthly payroll batch build** under **Settings → Automations & Features** — it is off by default. A human always reviews and approves the batch; drivers never see it until it is approved.
-
-
-**How it works:** once enabled, a daily job checks each company's **payroll cutoff day** (a configurable day of the month, defaulting to the **2nd**). When today matches that day, Druma computes gross pay — the same four components and math as the manual run above — for every active driver over the **previous calendar month**, and saves it as one held **draft** batch for the company. The batch build is idempotent: re-running it for a month that already has a batch is a no-op.
-
-### Batch status lifecycle
-
-```
-Draft (held) → Approved → Finalized
-```
-
-- **Draft** — freshly built, or still being reviewed. Individual driver runs inside the batch can still be adjusted.
-- **Approved** — reviewed and released. Drivers can now see their payslip in the driver app.
-- **Finalized** — permanently locked. No further adjustments are possible on any run in the batch.
-
-Approving and finalizing a batch is restricted to **admin** and **company_admin** roles — click **Approve batch** or **Finalize batch** from the Payroll page. Once a run is finalized it cannot be reopened.
-
-### Adding adjustments
-
-Before a batch is approved, authorized users can add **adjustment lines** to any individual driver's run — bonus, per diem, deduction, or other. This is available to **admin**, **company_admin**, and **fleet_manager** roles (a wider set than approve/finalize). Each adjustment shows in a calculation breakdown alongside the four standard pay components, so the final total is fully traceable. Adjustments can no longer be added once the run has moved out of Draft status.
-
-### What drivers see
-
-Drivers only ever see **approved** or **finalized** batches in their app — draft batches (including anything still being adjusted) are invisible to them. A finalized run is badged **Final** in the driver's payslip view, signalling it is locked and won't change further.
-
----
-
-## Configuring rates
-
-Pay rates (rate per km, day rate, empty-km percentage, waiting hourly rate) are stored per driver — with a company-wide default rule that applies to any driver without one — in the underlying payroll rules table.
-
-> **Note:** 
-There is currently no in-app screen to view or edit these rates. Rates have to be set directly in the database (or seeded) until a Drivers rates UI ships. If a driver has no rule and no company default exists, every component for that driver calculates as zero.
-
-
----
-
-## Historical runs
-
-Every generated payroll run is stored and listed under the driver's record. Draft and approved runs can still be reviewed or re-exported; a **finalized** run is permanently locked and cannot be reopened or changed.
-
----
-
-## Monthly totals chart
-
-A bar chart below the driver selector shows total monthly payroll amounts for the selected driver over the trailing 12 months. Useful for spotting seasonal patterns or months with unusually high waiting charges.
-
----
-
-> **Note:** 
-Payroll figures in Druma are advisory — Druma does not integrate with payroll processors or tax authorities. The CSV export is intended for import into your payroll system or for manual review by an accountant.
-
-
-
-  Learn how waiting time is logged and how it feeds into payroll calculations.
-
-
-
-  Dead kilometres from wasted journeys also appear in driver payroll records.
 
 
 ---
