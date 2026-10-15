@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-14 08:45 UTC
+Generated: 2026-10-15 09:29 UTC
 
 ---
 
@@ -156,7 +156,7 @@ The first time you log in, Druma opens a **guided setup wizard** at `/welcome` t
   
 
   ### Add your drivers
-    Go to **Fleet → Drivers** and click **Add Driver**.
+    Go to **Drivers** and click **Add Driver**.
 
     For each driver, enter:
     - **Full name**
@@ -195,7 +195,7 @@ The first time you log in, Druma opens a **guided setup wizard** at `/welcome` t
   
 
   ### Set up your driver's phone + PIN login
-    Go back to **Fleet → Drivers** and open the driver's profile you created in Step 3.
+    Go back to **Drivers** and open the driver's profile you created in Step 3.
 
     Under **Phone + PIN login**, click **Set PIN** — type one in yourself, or click **Generate** for a random 6-digit code — then click **Save PIN**. Tell your driver this PIN directly (in person or by a quick message).
 
@@ -542,10 +542,10 @@ Drivers never log into the Druma web application. Instead, they log in to the dr
 - Upload photos of cargo and delivery proof
 - Sign eCMR documents digitally
 
-You manage drivers through **Fleet → Drivers**. Druma's pricing is based on your truck count — drivers and office users are always unlimited and free, so the "Driver" role never adds to your bill.
+You manage drivers through **Drivers**. Druma's pricing is based on your truck count — drivers and office users are always unlimited and free, so the "Driver" role never adds to your bill.
 
 > **Warning:** 
-Drivers do not need an invitation email. Do not try to invite them through Settings → Users. Instead, go to Fleet → Drivers, open the driver's profile, set their phone number, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give the driver this PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
+Drivers do not need an invitation email. Do not try to invite them through Settings → Users. Instead, go to Drivers, open the driver's profile, set their phone number, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give the driver this PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
 
 
 ---
@@ -646,7 +646,7 @@ On the sign-in page choose the password-reset option and enter your email. Druma
 
 ## Drivers
 
-Drivers never receive an invitation email and never see the screens above. Whoever manages your fleet sets you up directly in **Fleet → Drivers** with a phone number and a PIN, then gives you that PIN in person or by message. Open the Druma driver app, enter your phone number and PIN, and on this first login you'll be asked to personalize the PIN — choose your own 6-digit code to replace the one you were given. You'll see the same privacy notice acknowledgement as office users, with wording specific to driver GPS/tacho monitoring rather than account data.
+Drivers never receive an invitation email and never see the screens above. Whoever manages your fleet sets you up directly in **Drivers** with a phone number and a PIN, then gives you that PIN in person or by message. Open the Druma driver app, enter your phone number and PIN, and on this first login you'll be asked to personalize the PIN — choose your own 6-digit code to replace the one you were given. You'll see the same privacy notice acknowledgement as office users, with wording specific to driver GPS/tacho monitoring rather than account data.
 
 
   Getting the app on your phone and signing in for the first time.
@@ -1101,7 +1101,7 @@ Customer Service users cannot:
 
 ### Driver
 
-The Driver role is different from all others — **drivers never access the Druma web platform**. Instead, they log in to the Druma Driver App on their smartphone using a **phone number and PIN** that you set up for them in Fleet → Drivers.
+The Driver role is different from all others — **drivers never access the Druma web platform**. Instead, they log in to the Druma Driver App on their smartphone using a **phone number and PIN** that you set up for them in Drivers.
 
 Through the driver app, a driver can:
 - See their assigned orders for the day and upcoming days
@@ -1113,7 +1113,7 @@ Through the driver app, a driver can:
 Drivers cannot see any other driver's orders, client financials, or company settings.
 
 > **Warning:** 
-Do not try to invite drivers through Settings → Users. Drivers do not need an invitation email. Go to Fleet → Drivers, open the driver's profile, set their phone number, and generate a PIN under **Phone + PIN login**. Give the driver this PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
+Do not try to invite drivers through Settings → Users. Drivers do not need an invitation email. Go to Drivers, open the driver's profile, set their phone number, and generate a PIN under **Phone + PIN login**. Give the driver this PIN directly — they'll personalize it (choose their own PIN) the first time they log in.
 
 
 *Real-world example: Gheorghe is a long-haul driver. He opens the Druma app on his phone each morning to see his order details, updates his status at each stop, and signs the eCMR digitally at the delivery point.*
@@ -4147,7 +4147,7 @@ If the truck is currently carrying a linked trailer, the Reposition modal also l
 
 ## Driver roster
 
-**Fleet → Roster** is where you plan which driver is on which truck, day by day. It replaces the spreadsheet calendar many operators keep: one row per driver, one column per day, and each cell holds either a truck or a code such as vacation, sick leave, weekly rest at base or standby.
+**Drivers → Roster** is where you plan which driver is on which truck, day by day. It replaces the spreadsheet calendar many operators keep: one row per driver, one column per day, and each cell holds either a truck or a code such as vacation, sick leave, weekly rest at base or standby.
 
 - **Fast entry.** Drag over a block of cells, type a truck number (for example `197`) or a code (for example `UW`) and press Enter. Add `a` or `p` for a morning or afternoon half day. You can also pick a code or truck in the palette and paint cells, copy and paste, fill right, undo, or apply a repeating rotation (for example three weeks on a truck, one week at home).
 - **Two views.** *Drivers* shows each driver's plan. *Trucks* shows who drives each truck, the truck's history, and the days it has no driver.
@@ -4429,9 +4429,9 @@ Your drivers are the people who actually update orders in the field. To do that,
 
 Managing drivers in Druma means: adding their details, sharing the app link with them, and keeping their licence and document records up to date.
 
-Go to **Fleet → Drivers** to manage your drivers.
+Go to **Drivers** to manage your drivers.
 
-<Frame caption="Fleet → Drivers — licence, certificates, compatibility, and pay all live on the driver's profile.">
+<Frame caption="Drivers — licence, certificates, compatibility, and pay all live on the driver's profile.">
   <img src="/images/planner/driver-management.png" alt="Fleet Drivers page listing drivers" />
 </Frame>
 
@@ -4479,7 +4479,7 @@ Once you've saved a driver, they need a PIN before they can log in — the drive
 
 
   ### Open the driver's profile
-    Go to Fleet → Drivers and click the driver's name.
+    Go to Drivers and click the driver's name.
   
   ### Set a PIN
     Find the **Phone + PIN login** section and click **Set PIN** — type one in yourself, or click **Generate** for a random 6-digit code — then click **Save PIN**.
@@ -4532,7 +4532,7 @@ Druma tracks five expiry-dated driver documents, each showing an **Expiring soon
 
 
   ### Open the driver profile
-    Go to Fleet → Drivers and click the driver's name.
+    Go to Drivers and click the driver's name.
   
   ### Go to the relevant tab
     **Licence** for the driving licence and CPC, or **Certificates** for ADR, medical, and tacho card.
@@ -4550,7 +4550,7 @@ A document is flagged **Expiring soon** within 30 days of its expiry date, and *
 
 ## Driver Performance Scoring
 
-Go to **Fleet → Performance** for a per-driver scorecard blending five signals Druma already holds — on-time delivery, fuel economy, idling, incidents, and EU 561/2006 + working-time compliance — into a single 0–100 score. It's opt-in: turn on **Driver scoring** in Settings if the page shows a prompt instead of a table.
+Go to **Drivers → Performance** for a per-driver scorecard blending five signals Druma already holds — on-time delivery, fuel economy, idling, incidents, and EU 561/2006 + working-time compliance — into a single 0–100 score. It's opt-in: turn on **Driver scoring** in Settings if the page shows a prompt instead of a table.
 
 Each driver's row shows their score, a per-component breakdown, and a monthly trend chart built from a snapshot taken automatically at the start of each month. A signal Druma doesn't have enough data for (for example, no telematics idle source) is **excluded, not scored as zero** — the remaining components are reweighted so a missing signal never unfairly drags the score down. A driver with too few data points for a reliable score is marked low-confidence rather than given a number that looks more certain than it is.
 
@@ -7482,7 +7482,7 @@ For any order carried on a connected reefer trailer, you can generate a one-page
 Reefer trailers also get two compliance extras once the flag is on:
 
 - **ATP certificate tracking** — in **Fleet → Fleet Documents**, the document type dropdown gains an **ATP** option; pick the trailer and its ATP class (A/B/C/D/F/IN/IR per the ATP Agreement). The certificate then shows on the trailer's Compliance tab with an expiry badge, and surfaces in the dashboard's expiry-alerts widget like any other fleet document.
-- **Reefer maintenance scheduling** — in **Fleet → Maintenance**, a **Reefer Units** tab tracks service intervals in **engine hours** rather than kilometres (filter service, full service, ATP inspection), using each trailer's current reefer engine hours.
+- **Reefer maintenance scheduling** — in **Workshop → Maintenance**, a **Reefer Units** tab tracks service intervals in **engine hours** rather than kilometres (filter service, full service, ATP inspection), using each trailer's current reefer engine hours.
 
 ---
 
@@ -8081,7 +8081,7 @@ Make sure Safari notifications are enabled if your company uses push notificatio
 
 ## Logging In: Phone Number + PIN
 
-Druma drivers don't self-register with an email or SMS code. Instead, your dispatcher or fleet manager sets up your login for you, in **Fleet → Drivers**, before you ever open the app:
+Druma drivers don't self-register with an email or SMS code. Instead, your dispatcher or fleet manager sets up your login for you, in **Drivers**, before you ever open the app:
 
 
   ### Your dispatcher sets your phone number
@@ -8099,7 +8099,7 @@ Druma drivers don't self-register with an email or SMS code. Instead, your dispa
 
 
 > **Warning:** 
-Make sure your dispatcher has the correct phone number on file for you — that's the number your PIN is linked to. If you can't log in, ask them to check the details in your driver profile (Fleet → Drivers).
+Make sure your dispatcher has the correct phone number on file for you — that's the number your PIN is linked to. If you can't log in, ask them to check the details in your driver profile (Drivers).
 
 
 ### Lost or stolen phone?
@@ -8875,7 +8875,7 @@ Post-trip inspection is only triggered for single-order trips. It does not appea
 No action required. The item is logged as inspected and clear.
 
 ### Advisory
-The defect is noted and the planner receives an alert. The truck is not blocked — it can continue to be assigned to orders. The advisory is visible in the order detail panel and in the Fleet → **Defects** tab.
+The defect is noted and the planner receives an alert. The truck is not blocked — it can continue to be assigned to orders. The advisory is visible in the order detail panel and in the Workshop → **Defects** tab.
 
 ### Safety Critical
 A serious defect that may make the vehicle unsafe or non-compliant to operate.
@@ -8885,7 +8885,7 @@ A serious defect that may make the vehicle unsafe or non-compliant to operate.
 - The driver is shown a clear warning on submission explaining that the vehicle may be taken out of service.
 
 > **Warning:** 
-If the auto-block toggle is enabled, a safety-critical defect will remove the truck from dispatch immediately — even if there are future orders already assigned to it. Review the Fleet → Defects tab as soon as you receive a safety-critical alert.
+If the auto-block toggle is enabled, a safety-critical defect will remove the truck from dispatch immediately — even if there are future orders already assigned to it. Review the Workshop → Defects tab as soon as you receive a safety-critical alert.
 
 
 ---
@@ -8905,7 +8905,7 @@ If the inspection was skipped, the DVIR section shows a "Skipped" badge with the
 
 ## Fleet manager: tracking open defects
 
-Go to **Fleet → Defects** to see all defects across your entire fleet. The page has three filter tabs:
+Go to **Workshop → Defects** to see all defects across your entire fleet. The page has three filter tabs:
 
 | Tab | What it shows |
 |---|---|
@@ -12028,6 +12028,9 @@ Druma has built the core technical readiness for the EU's 2027 eFTI mandate — 
 
 Every truck in your fleet must carry a set of valid documents — legally required certificates that expire and must be renewed regularly. Missing or expired documents can ground a vehicle at a roadside check. Druma tracks all of them and alerts you before they expire.
 
+
+**Note:** the Fleet documents page covers trucks and trailers only. Driver documents (licence, CPC, tachograph card, ADR certificate) are tracked under **Drivers → Documents**.
+
 ---
 
 ## Document Types Tracked Per Vehicle
@@ -12150,6 +12153,9 @@ If a roadside inspector or client asks for a document, you can download it direc
 
 ADR is the European Agreement concerning the International Carriage of Dangerous Goods by Road. If your company transports hazardous materials — chemicals, flammables, gases, explosives, radioactive materials, or other regulated substances — both your drivers and your vehicles must hold valid ADR certificates. Druma tracks these certificates and enforces compliance automatically at the point of order assignment.
 
+
+**Note:** the Fleet documents page covers trucks and trailers only. Driver documents (licence, CPC, tachograph card, ADR certificate) are tracked under **Drivers → Documents**.
+
 ---
 
 ## What ADR Certification Covers
@@ -12170,7 +12176,7 @@ Not all ADR transport requires a vehicle certificate — for many classes, only 
 
 
   ### Open the driver record
-    Go to **Fleet → Drivers** and click the driver's name.
+    Go to **Drivers** and click the driver's name.
   
   ### Go to the Certificates tab
     Click the **Certificates** tab on the driver detail page.
@@ -12735,7 +12741,7 @@ Druma's automation eliminates the most common compliance failures: missing decla
 
 The Workshop module is where fleet managers and planners plan every maintenance job — from a routine oil change to a safety-critical repair — on bays, technicians, a mobile mechanic or an external garage. A planned job takes the vehicle off the road for the time it needs, and Druma checks first which rostered drivers and orders that would strand.
 
-Find it under **Fleet → Workshop**. One tab holds up to eight sub-tabs, depending on your permissions:
+Find it under **Workshop**. This top-level section has these tabs, depending on your permissions:
 
 | Sub-tab | What it is for |
 |---|---|
@@ -12743,19 +12749,19 @@ Find it under **Fleet → Workshop**. One tab holds up to eight sub-tabs, depend
 | **Jobs** | The list of every job with its status, resource, planned start and expected ready time. |
 | **Defects** | Defects reported by drivers (post-trip inspections). Each one can become a job with **Request job**. |
 | **Maintenance** | Recurring service schedules per vehicle. A due schedule becomes a job with **Plan service**. |
-| **Tyres** | Every tyre as an individual item: on the vehicles, in the inventory, its mount history and cost (see [Tyres](#tyres) and [Fleet Tyres](/en/fleet-compliance/tyres)). |
+| **Tyres** | Every tyre as an individual item: on the vehicles, in the inventory, its mount history and cost (see [Tyres](#tyres) and [Tyres](/en/fleet-compliance/tyres)). |
 | **Parts & stock** | The parts catalogue, stock locations and quantities, with the moving-average cost for people who may see costs (see [Parts and stock](#parts-and-stock)). |
 | **Purchasing** | Purchase orders, goods receipts and supplier invoices matched against what was ordered and received (see [Purchasing and invoice matching](#purchasing-and-invoice-matching)). |
 | **Costs** | What each job and each vehicle cost, per month, and the vehicle lifetime cost (see [Costs and the Truck P&L](#costs-and-the-truck-pl)). |
 
 **Parts & stock** and **Purchasing** need the *workshop:stock* and *workshop:purchase* permissions; **Costs** and every price in the module need *workshop:costs*. By default admins, company admins, fleet managers and key users hold all three. A technician or dispatcher never sees a price.
 
-<Frame caption="Fleet → Workshop → Jobs — every job with its status, resource and ready time.">
+<Frame caption="Workshop → Jobs — every job with its status, resource and ready time.">
   <img src="/images/fleet-compliance/workshop-maintenance.png" alt="Workshop jobs list showing maintenance jobs by status and service type" />
 </Frame>
 
 > **Note:** 
-The old pages **Fleet → Work Orders**, **Defects**, **Maintenance** and **Tyres** moved into this tab. Old links and bookmarks still open the right sub-tab.
+The old pages **Workshop → Work Orders**, **Defects**, **Maintenance** and **Tyres** moved into this section. Old links and bookmarks still open the right sub-tab.
 
 
 ---
@@ -12814,7 +12820,7 @@ A running job stays blocking until it is marked **Done**, even if its expected r
 
 ### Where the block shows
 
-- **Roster.** Days a vehicle is blocked are greyed out on **Fleet → Roster** and cannot be given a driver (an admin can override with a reason). The blocked-truck dialog names the cause *In the workshop*.
+- **Roster.** Days a vehicle is blocked are greyed out on **Drivers → Roster** and cannot be given a driver (an admin can override with a reason). The blocked-truck dialog names the cause *In the workshop*.
 - **Planning board.** The truck card shows a wrench badge: amber for a planned job, red when the truck is in the workshop, red with a ring when the job is overrunning. The tooltip shows the planned start or the expected ready time. Click-to-assign checks the order's pickup against the exact ready time, so a truck that is ready at 12:00 can still take a 14:00 loading the same day.
 - **Auto-plan and AI matching** skip or heavily penalise a truck inside its workshop window and score it normally again once it is back.
 
@@ -12870,7 +12876,7 @@ The first time a new technician signs in they are asked to acknowledge the Priva
 
 A tablet in the bay lets technicians sign in with a PIN instead of a password.
 
-1. Go to **Fleet → Workshop → Workshop settings → Devices**, choose **Add a device**, pick **Shared tablet (PIN sign-in)**, name it and **Create and show code**. The 8-character code is valid for 15 minutes, works once and is shown only now.
+1. Go to **Workshop → Settings → Devices**, choose **Add a device**, pick **Shared tablet (PIN sign-in)**, name it and **Create and show code**. The 8-character code is valid for 15 minutes, works once and is shown only now.
 2. On the tablet open the address shown, enter the code and **Pair**. You do this once; the tablet stays paired for 180 days.
 3. Under **Technicians** set a 6-digit PIN for each technician with **Set PIN**. Only accounts whose *only* role is Mechanic can use the tablet. At first sign-in the technician chooses their own PIN.
 4. The technician taps their name, enters the PIN and works on the same screens as on the phone, in large type. After 90 seconds without a touch the tablet warns and then signs out (set the time under **Maintenance**, 30 to 900 seconds); **Switch technician** signs out at once.
@@ -12889,7 +12895,7 @@ Everything a technician times appears on the job in the desk view under **Time**
 
 ## Parts and stock
 
-Under **Fleet → Workshop → Parts & stock** you keep a catalogue of the parts you use and where they are.
+Under **Workshop → Parts & stock** you keep a catalogue of the parts you use and where they are.
 
 - **Parts.** **New part** takes a SKU, a name, a category (tyre, oil, filter, brake, electrical, belt, fluid, body, consumable, tool, other), a unit, an optional barcode, a **Minimum stock** and a preferred supplier. A SKU is unique in your company.
 - **Locations.** **Stock locations** lists your warehouse, workshop and vans. A van can be linked to a mobile mechanic, so parts the mechanic picks on the phone come off that van. One location is the default.
@@ -12920,7 +12926,7 @@ Every tyre is its own item with a serial number, DOT code, brand, size, tread de
 
 ## Purchasing and invoice matching
 
-**Fleet → Workshop → Purchasing** has three views: **Orders**, **Receipts** and **Invoices**.
+**Workshop → Purchasing** has three views: **Orders**, **Receipts** and **Invoices**.
 
 1. **Order.** **New purchase order**: pick the supplier and currency, add lines (a catalogue part or free text, quantity, unit price, VAT) and say where each line **Goes to**: stock, a job, a vehicle or an expense. **Save draft**, or **Send** to mark it sent (Druma does not email the supplier; **Print** gives you a sheet to send). Order numbers run PO-2026-0001, 0002, and so on.
 2. **Receive.** Open the order and press **Receive goods**: enter what arrived per line (it defaults to what is still to come), the location and the delivery-note number. A stock line goes into stock, a job line goes straight onto the job at the same cost, a vehicle or expense line moves no stock. Receiving in parts is fine; you cannot receive more than ordered beyond the quantity tolerance. **Close** an order when the rest will not come.
@@ -12945,7 +12951,7 @@ Foreign-currency invoices are converted with the National Bank of Romania rate o
 
 ## Costs and the Truck P&L
 
-**Fleet → Workshop → Costs** is a report page: tiles for the period's maintenance cost (with the change against the previous period), the cost versus budget, tyre cost and the parts share, a chart by category and three views.
+**Workshop → Costs** is a report page: tiles for the period's maintenance cost (with the change against the previous period), the cost versus budget, tyre cost and the parts share, a chart by category and three views.
 
 | View | What it shows |
 |---|---|
@@ -13008,7 +13014,7 @@ The driver marks each checklist item with a tri-state toggle — **OK**, **Advis
 | Severity | Meaning | Effect |
 |---|---|---|
 | **OK** | No issues found | No action |
-| **Advisory** | Minor issue, truck stays in service | Planner notified; visible in order detail and Fleet → Defects |
+| **Advisory** | Minor issue, truck stays in service | Planner notified; visible in order detail and Workshop → Defects |
 | **Safety Critical** | Serious defect | Planner and fleet manager notified immediately; if auto-block is enabled, the truck is marked unavailable until resolved |
 
 ---
@@ -13046,7 +13052,7 @@ If the inspection was skipped, the DVIR section shows a "Skipped" badge with the
 
 ## Tracking open defects across the fleet
 
-Go to **Fleet → Defects** to see all defects across your entire fleet. The page has three filter tabs:
+Go to **Workshop → Defects** to see all defects across your entire fleet. The page has three filter tabs:
 
 | Tab | What it shows |
 |---|---|
@@ -13060,10 +13066,10 @@ Each row shows the truck, defect item name, severity badge, date reported, and t
 
 ## Creating a Work Order from a defect
 
-For **Safety Critical** rows in **Fleet → Defects**, a **Create Work Order** button is available directly on the row. Clicking it opens the work order form pre-filled with the truck that was inspected and linked to the originating defect ticket. Work orders don't have a severity field — choose the **Service Type** that matches the repair and add a description, then add line items and a scheduled date, then save. If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled, the truck stays blocked on the planning board until the linked work order is marked complete.
+For **Safety Critical** rows in **Workshop → Defects**, a **Create Work Order** button is available directly on the row. Clicking it opens the work order form pre-filled with the truck that was inspected and linked to the originating defect ticket. Work orders don't have a severity field — choose the **Service Type** that matches the repair and add a description, then add line items and a scheduled date, then save. If the **Auto-create vehicle unavailability for safety-critical defects** toggle is enabled, the truck stays blocked on the planning board until the linked work order is marked complete.
 
 > **Warning:** 
-If the auto-block toggle is enabled, a safety-critical defect removes the truck from dispatch immediately — even if there are future orders already assigned to it. Review Fleet → Defects as soon as you receive a safety-critical alert.
+If the auto-block toggle is enabled, a safety-critical defect removes the truck from dispatch immediately — even if there are future orders already assigned to it. Review Workshop → Defects as soon as you receive a safety-critical alert.
 
 
 See [Workshop & Maintenance](/en/fleet-compliance/workshop-maintenance) for the full work order workflow.
@@ -13081,17 +13087,17 @@ See [Workshop & Maintenance](/en/fleet-compliance/workshop-maintenance) for the 
 
 ---
 
-## Fleet Tyres
+## Tyres
 
 
 ## Overview
 
-The Fleet → Tyres page tracks tyre fitment, condition, and replacement history for each vehicle. It gives fleet managers visibility of tyre-related costs and wear cycles without relying on paper records.
+The Workshop → Tyres page tracks tyre fitment, condition, and replacement history for each vehicle. It gives fleet managers visibility of tyre-related costs and wear cycles without relying on paper records.
 
-**Access:** Fleet → **Tyres** — a standalone top-level Fleet page, not a tab on the vehicle detail view.
+**Access:** Workshop → **Tyres** — a tab in the Workshop section, not a tab on the vehicle detail view.
 
-<Frame caption="Fleet → Tyres — freely-configurable tyre positions per vehicle, with tread-depth tracking.">
-  <img src="/images/fleet-compliance/tyres.png" alt="Fleet Tyres page" />
+<Frame caption="Workshop → Tyres — freely-configurable tyre positions per vehicle, with tread-depth tracking.">
+  <img src="/images/fleet-compliance/tyres.png" alt="Tyres page" />
 </Frame>
 
 ---
@@ -13116,8 +13122,8 @@ Tyre positions are freely added per vehicle — there is no fixed position schem
 ## Adding a Tyre Record
 
 
-  ### Open Fleet → Tyres
-    Go to the standalone **Fleet → Tyres** page.
+  ### Open Workshop → Tyres
+    Go to the standalone **Workshop → Tyres** page.
   
   ### Select the vehicle
     Choose the vehicle you want to add a tyre record for.
@@ -13154,7 +13160,7 @@ Tread depth below **2 mm** triggers an automatic **Replace** flag; below **4 mm*
 
 To update a tyre's condition after an inspection:
 
-1. Open **Fleet → Tyres** and select the vehicle
+1. Open **Workshop → Tyres** and select the vehicle
 2. Click **Edit** on the tyre row
 3. Update the **Tread depth** and/or **Condition** field
 4. Save
@@ -13182,7 +13188,7 @@ The replacement cost rolls up into the vehicle's maintenance cost report — giv
 
 Druma keeps a history of all tyre records per position, including replaced tyres. To view the history for a specific position:
 
-1. Open **Fleet → Tyres** and select the vehicle
+1. Open **Workshop → Tyres** and select the vehicle
 2. Click on the position in the grid
 3. The history panel shows all tyres ever fitted to that position with their fitted dates, condition status, and replacement costs
 
@@ -13206,9 +13212,9 @@ Druma keeps a history of all tyre records per position, including replaced tyres
 
 Fleet Incidents is a structured log of any accidents, damage events, or safety incidents involving your vehicles. Logging incidents in Druma creates a permanent record for insurance claims, legal defence, and internal safety analysis.
 
-Incidents are **reported by the driver from the driver app**, not created by a planner or fleet manager from the web app. The web-side **Fleet → Incidents** page is where planners and fleet managers review, filter, and manage incidents that drivers have already reported — there is no "+ New Incident" creation flow on the web side, and there is no per-vehicle Incidents tab on the truck detail view.
+Incidents are **reported by the driver from the driver app**, not created by a planner or fleet manager from the web app. The web-side **Workshop → Damage** page is where planners and fleet managers review, filter, and manage incidents that drivers have already reported — there is no "+ New Incident" creation flow on the web side, and there is no per-vehicle Incidents tab on the truck detail view. Vehicle damage is reviewed under **Workshop → Damage**; damage to goods is handled as a client claim under **Clients → Claims**.
 
-<Frame caption="Fleet → Incidents — the review list for incidents drivers have reported from the driver app.">
+<Frame caption="Workshop → Damage — the review list for incidents drivers have reported from the driver app.">
   <img src="/images/fleet-compliance/incidents.png" alt="Fleet Incidents review page" />
 </Frame>
 
@@ -13260,7 +13266,7 @@ There is no incident-type classification (collision/theft/vandalism/etc.), no th
 
 ## Insurance Claim Tracking
 
-From the incident detail pane on **Fleet → Incidents**, you can track the linked insurance claim:
+From the incident detail pane on **Workshop → Damage**, you can track the linked insurance claim:
 
 | Field | Description |
 |---|---|
@@ -13273,7 +13279,7 @@ Update the status as the claim progresses. There is no settlement-amount field o
 
 ## Fleet-Wide Incidents View
 
-Go to **Fleet → Incidents** to see all incidents across the fleet in one list.
+Go to **Workshop → Damage** to see all incidents across the fleet in one list.
 
 Filter the view by:
 
@@ -13460,7 +13466,7 @@ Missing a download deadline is a direct regulatory violation, regardless of whet
 
 ## Where to Find the Tacho Archive
 
-Go to **Fleet → Tacho Archive**. The page lists all stored tachograph files sorted by upload date. Each row shows:
+Go to **Drivers → Tacho Archive**. The page lists all stored tachograph files sorted by upload date. Each row shows:
 
 - Driver or vehicle name
 - File type (VU or DDC)
@@ -13513,7 +13519,7 @@ For vehicles and drivers not covered by an automatic integration, upload files d
 
 
   ### Open the Tacho Archive
-    Go to **Fleet → Tacho Archive**.
+    Go to **Drivers → Tacho Archive**.
   
   ### Click Upload file
     Click the **Upload file** button in the top-right corner.
@@ -14345,7 +14351,7 @@ Imported records appear immediately in the relevant module:
 
 - **Trucks** appear in **Fleet → Trucks**
 - **Trailers** appear in **Fleet → Trailers**
-- **Drivers** appear in **Fleet → Drivers**
+- **Drivers** appear in **Drivers**
 - **Clients** appear in **Clients**
 - **Company** doesn't create a new record — it updates your own company's profile fields (name, VAT, address, IBAN, and so on) directly. There's only ever one Company row to review, not a list.
 - **Insurance** data is attached to the matching vehicle by licence plate (rows that don't match an existing truck are skipped)
@@ -15064,7 +15070,7 @@ Drivers only ever see **approved** or **finalized** batches in their app — dra
 Pay rates (rate per km, day rate, empty-km percentage, waiting hourly rate) are stored per driver — with a company-wide default rule that applies to any driver without one — in the underlying payroll rules table.
 
 > **Note:** 
-There is currently no in-app screen to view or edit these rates. Rates have to be set directly in the database (or seeded) until a Fleet → Drivers rates UI ships. If a driver has no rule and no company default exists, every component for that driver calculates as zero.
+There is currently no in-app screen to view or edit these rates. Rates have to be set directly in the database (or seeded) until a Drivers rates UI ships. If a driver has no rule and no company default exists, every component for that driver calculates as zero.
 
 
 ---
@@ -15228,7 +15234,7 @@ Distance (from PTV routing) × fleet average consumption (litres/100km, set in S
 PTV toll data for the route. Covers most European motorway toll systems. Less accurate for routes through countries with complex vignette systems.
 
 **Driver cost calculation:**
-Number of trip days × the daily cost rate you have set for each driver in their profile (Fleet → Drivers → [driver] → Daily Cost Rate). If no driver is assigned, Druma uses your global default driver daily cost.
+Number of trip days × the daily cost rate you have set for each driver in their profile (Drivers → [driver] → Daily Cost Rate). If no driver is assigned, Druma uses your global default driver daily cost.
 
 You can update all these inputs in Settings to improve accuracy. The report recalculates immediately when you save new values.
 
@@ -16995,7 +17001,7 @@ This card only appears once your plan includes the driver-messaging feature. If 
 
 Enabling the company connection does not move any drivers over automatically — each driver's channel is set individually, with their consent recorded.
 
-1. Go to **Fleet → Drivers** and open the driver's record.
+1. Go to **Drivers** and open the driver's record.
 2. Under **Communication Channel**, set **Message Channel** to **WhatsApp only** (the default is **Druma app only**).
 3. Enter the driver's **WhatsApp Number** in international format (e.g. `+40712345678`).
 4. Tick the consent checkbox confirming the driver has agreed to receive Druma messages and share status updates/photos over WhatsApp — required the first time you switch a driver to WhatsApp, per GDPR data-processing rules. Once consent is on file, the driver's record shows the date it was given instead of the checkbox.
@@ -17591,7 +17597,7 @@ Druma does not have a CSV-template bulk import for drivers. Instead, use **Smart
 
 ## Where to find it
 
-Go to **Tools → Smart Import**. It's a shared tool for onboarding company, fleet, driver, client, and insurance data — not a page scoped to Fleet → Drivers.
+Go to **Tools → Smart Import**. It's a shared tool for onboarding company, fleet, driver, client, and insurance data — not a page scoped to Drivers.
 
 ## Workflow
 
@@ -17619,7 +17625,7 @@ There is no undo for an import. If incorrect data was imported, edit the driver 
 
 ## Phone number and app login
 
-Smart Import creates the driver's profile record (name, phone, licence/CPC/ADR/tacho details) — it does not create their app login. After importing, go to **Fleet → Drivers**, open each driver's profile one at a time, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give each driver their PIN directly — they can personalize it the first time they log in.
+Smart Import creates the driver's profile record (name, phone, licence/CPC/ADR/tacho details) — it does not create their app login. After importing, go to **Drivers**, open each driver's profile one at a time, and under **Phone + PIN login** click **Set PIN** (or **Generate** for a random 6-digit code), then **Save PIN**. Give each driver their PIN directly — they can personalize it the first time they log in.
 
 
   Smart Import also handles company, fleet, client, and insurance documents in the same workflow.
