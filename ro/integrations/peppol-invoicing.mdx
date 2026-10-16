@@ -1,12 +1,16 @@
 ---
 title: "Facturare electronică Peppol (Belgia)"
-description: "Conectează Druma la rețeaua Peppol și trimite automat facturi către clienții belgieni — fără pași manuali."
+description: "Trimite facturi către clienții tăi belgieni prin rețeaua Peppol, direct din Druma."
 icon: "file-check-2"
 ---
 
 Peppol (Pan-European Public Procurement On-Line) este rețeaua standard UE pentru schimbul de facturi electronice structurate între companii. În Belgia, trimiterea facturilor prin Peppol este **obligatorie pentru toate companiile înregistrate KBO** care emit facturi B2B, începând din ianuarie 2026.
 
-Druma se conectează la rețeaua Peppol printr-un **Punct de Acces Peppol** belgian acreditat. Druma deține și administrează acel contract la nivel de platformă — tu nu alegi, nu contractezi și nu configurezi niciodată un Punct de Acces, iar Druma poate schimba furnizorul fără nicio acțiune din partea ta. Odată configurată, Druma detectează care dintre clienții tăi sunt accesibili pe Peppol și trimite facturile către ei automat — nu trebuie să schimbi modul în care creezi sau trimiți facturi.
+Druma se conectează la rețeaua Peppol printr-un **Punct de Acces Peppol** belgian acreditat. Druma deține și administrează acel contract la nivel de platformă — tu nu alegi, nu contractezi și nu configurezi niciodată un Punct de Acces, iar Druma poate schimba furnizorul fără nicio acțiune din partea ta.
+
+<Note>
+Peppol în Druma este **doar pentru trimitere**. Druma transmite facturile tale de vânzare; nu primește facturi de la furnizorii tăi. Primirea facturilor de la furnizori prin Peppol este gestionată de software-ul tău de contabilitate.
+</Note>
 
 ---
 
@@ -14,10 +18,10 @@ Druma se conectează la rețeaua Peppol printr-un **Punct de Acces Peppol** belg
 
 Ai nevoie de integrarea Peppol dacă:
 
-- Compania ta este înregistrată în Belgia (are un număr KBO), **și**
-- Emiți facturi către alte companii belgiene
+- compania ta este înregistrată în Belgia (are un număr KBO), **și**
+- emiți facturi către alte companii belgiene.
 
-Dacă compania ta operează în afara Belgiei, sau dacă clienții tăi sunt consumatori sau companii străine, Peppol nu se aplică pentru tine. Druma va continua să trimită facturi prin email pentru toți destinatarii non-Peppol, indiferent dacă integrarea este activă.
+Trimiterea prin Peppol se aplică **doar clienților cu număr de TVA belgian** (care începe cu `BE`). Dacă compania ta operează în afara Belgiei, sau dacă clienții tăi sunt consumatori sau companii străine, Peppol nu se aplică pentru tine. Druma continuă să trimită facturile prin email către toți ceilalți destinatari.
 
 <Note>
 Companiile belgiene care nu activează această integrare riscă penalități de neconformitate, începând din ianuarie 2026. Configurarea durează sub cinci minute.
@@ -29,19 +33,25 @@ Companiile belgiene care nu activează această integrare riscă penalități de
 
 <Steps>
   <Step title="Deschide cardul Peppol">
-    Mergi la **Setări → Integrări**. Găsește cardul **Facturare electronică Peppol**. Statusul său va arăta **Neconfigurat**.
+    Mergi la **Setări → Integrări**. Găsește cardul **Peppol Facturarea electronică**. Statusul său va arăta **Neconfigurat**.
   </Step>
   <Step title="Apasă Configurează">
     Apasă **Configurează** pe card. Se deschide un panou de setări.
   </Step>
   <Step title="Introdu numărul KBO și numărul de TVA">
-    Introdu **numărul KBO** al companiei tale (numărul de înregistrare belgian pe 10 cifre) și **numărul de TVA** (BE urmat de 10 cifre) în câmpurile respective.
+    Introdu **numărul KBO/CBE** al companiei tale (numărul de întreprindere belgian) și **numărul de TVA** (BE urmat de 10 cifre) în câmpurile respective.
   </Step>
   <Step title="Înregistrează-te în rețeaua Peppol">
-    Apasă **Înregistrează-te în Peppol**. Druma trimite înregistrarea ta către Punctul de Acces. De regulă se finalizează în câteva secunde.
+    Apasă **Înregistrare pe Peppol**. Druma trimite înregistrarea către Punctul de Acces.
+  </Step>
+  <Step title="Finalizează verificarea identității">
+    Înregistrarea singură nu permite trimiterea. După înregistrare, cardul arată o etichetă **Verificare necesară**, iar **facturile nu pot fi trimise până când verificarea nu este finalizată**. Apasă **Finalizați verificarea** pe card și urmează linkul Punctului de Acces pentru a verifica identitatea companiei tale. Dacă cardul nu arată niciun link de verificare, apasă **Reînregistrare** pentru a solicita unul nou.
   </Step>
   <Step title="Confirmă activarea">
-    Odată ce înregistrarea reușește, cardul arată o etichetă **Conectat**. Compania ta este acum un participant Peppol și poate atât trimite, cât și primi facturi structurate pe rețea.
+    Odată ce verificarea este încheiată, eticheta dispare, iar cardul arată **Conectat**. Compania ta poate acum trimite facturi în rețea.
+  </Step>
+  <Step title="Alege trimiterea automată sau manuală">
+    Sub card, comutatorul **Trimite automat prin Peppol Facturarea electronică** decide dacă facturile sunt transmise imediat ce sunt trimise. Dezactivează-l pentru a le transmite manual (vezi mai jos). Setarea se aplică de acum înainte.
   </Step>
 </Steps>
 
@@ -51,51 +61,68 @@ Doar utilizatorii **Admin** și **Company Admin** pot configura integrări. Dac�
 
 ---
 
-## Cum funcționează rutarea facturilor
+## Cum funcționează livrarea facturilor
 
-După activare, Druma adaugă o verificare Peppol de fiecare dată când trimiți o factură:
+Când trimiți o factură unui client cu număr de TVA belgian și transmiterea automată este activă, Druma o transmite Punctului de Acces. Nu trebuie să alegi o metodă de livrare pentru fiecare factură.
 
-1. Druma verifică mai întâi dacă numărul de TVA al clientului este belgian (începe cu `BE`) — această verificare se întâmplă **înainte de orice apel de rețea**, deci clienții non-belgieni nu declanșează niciodată o căutare Peppol.
-2. Pentru clienții belgieni, Druma caută destinatarul pe rețeaua Peppol prin Punctul de Acces. Dacă este găsit, factura este trimisă electronic — **fără pași suplimentari din partea ta**.
-3. Druma trimite și factura prin email, indiferent dacă trimiterea Peppol a reușit — email-ul nu este o rezervă condiționată, declanșată doar când Peppol eșuează. Singura excepție: dacă un client a renunțat explicit la a primi ambele canale (o setare separată, per client), email-ul este sărit odată ce livrarea Peppol reușește.
+1. Druma verifică mai întâi dacă numărul de TVA al clientului este belgian (începe cu `BE`). Clienții non-belgieni nu declanșează niciodată o transmitere prin Peppol.
+2. Druma verifică factura local și o transmite Punctului de Acces. Factura arată **Trimisă**.
+3. Rezultatul livrării sosește ulterior. Druma verifică statusul facturilor transmise aproximativ la fiecare 10 minute și trece factura la **Livrată**, **Eșuată** sau **Nu este în rețea**.
 
-Nu trebuie să alegi o metodă de livrare per factură. Rutarea este complet automată.
+Facturile consolidate (cu mai multe comenzi) sunt trimise prin Peppol ca orice altă factură.
+
+### Ce conține fiecare factură Peppol
+
+- **Referința cumpărătorului** — referința clientului de pe comandă; dacă nu există, numărul comenzii; dacă nu există comandă, numărul facturii. Nu este niciodată goală, deoarece departamentul de plăți al clientului rutează factura după ea.
+- **Referința comenzii** — referința/referințele clientului din comanda/comenzile respective, dacă există.
+- **Moneda** — moneda facturii.
+- **Comunicarea structurată (OGM)** — adăugată ca referință de plată atunci când compania ta are un IBAN setat.
+
+Pe o factură consolidată, aceste referințe sunt colectate din toate comenzile de pe factură.
+
+### Copia pe email și soluția de rezervă
+
+Implicit, clientul primește factura și prin email, pe lângă Peppol. Un client poate fi setat să nu primească copia pe email (setarea clientului **Trimite factura și prin e-mail după o livrare Peppol reușită**, debifată).
+
+Pentru un astfel de client, Druma nu îl lasă niciodată fără factură. Dacă livrarea prin Peppol eșuează sau clientul nu este în rețea, Druma trimite factura prin email **o singură dată**. Dacă clientul nu are adresă de email, planificatorii primesc o notificare ca să trimită factura manual.
 
 ---
 
-## Urmărirea statusului facturii
+## Urmărirea statusului facturilor
 
-Lista de facturi include o coloană de status **Peppol**, cu următoarele stări:
+Lista de facturi include o coloană de status **Peppol** cu următoarele stări:
 
 | Status | Semnificație |
 |---|---|
 | **Trimisă** | Trimisă către Punctul de Acces, în așteptarea confirmării de livrare |
 | **Livrată** | Confirmată ca livrată la inbox-ul Peppol al destinatarului |
 | **Eșuată** | Livrarea a eșuat la Punctul de Acces — vezi detaliul erorii pe rândul facturii |
-| **Validare eșuată** | Verificarea prealabilă locală a Druma a blocat trimiterea înainte să ajungă la Punctul de Acces (de ex. o sumă de control KBO/TVA invalidă) — nu s-a făcut niciun apel la Punctul de Acces |
-| **Nu este în rețea** | TVA-ul clientului nu este un participant Peppol înregistrat; factura a fost trimisă prin email ca de obicei (afișat ca "→ Trimisă prin email") |
+| **Validare eșuată** | Verificarea locală a Druma a blocat trimiterea înainte să ajungă la Punctul de Acces (de ex. o sumă de control KBO/TVA invalidă) — nu s-a făcut niciun apel la Punctul de Acces |
+| **Nu este în rețea** | Numărul de TVA al clientului nu este un participant Peppol înregistrat. Druma trimite factura prin email în schimb (afișat ca „→ Trimisă prin email”) |
 
-Nu există un status "În așteptare" — o factură fie nu este încă trimisă prin Peppol (null), fie se află în una din cele cinci stări de mai sus. Actualizările de status pentru facturile trimise ajung automat. Druma interoghează periodic Punctul de Acces pentru schimbări de status — acea verificare este sursa autoritativă. Un webhook de la Punctul de Acces poate livra aceeași actualizare mai devreme, dar este doar o accelerare: dacă nu sosește, verificarea programată preia oricum statusul.
+Nu există status „În așteptare” — o factură fie nu a fost încă trimisă prin Peppol, fie se află într-una dintre cele cinci stări de mai sus. Actualizările de status pentru facturile transmise sosesc prin verificarea de status care rulează aproximativ la fiecare 10 minute; o notificare a Punctului de Acces poate aduce aceeași actualizare mai devreme, dar dacă nu sosește niciodată, verificarea de status o preia oricum.
+
+Facturile pe care versiunile mai vechi de Druma le-au marcat „nu se aplică” pentru Peppol (de exemplu facturile consolidate) pot fi acum transmise cu **Reîncearcă Peppol**.
 
 ---
 
-## Gestionarea eșecurilor
+## Gestionarea erorilor
 
 Dacă o factură arată **Eșuată** sau **Validare eșuată**:
 
-1. Treci cu mouse-ul peste sau apasă eticheta de status ca să citești detaliul erorii.
-2. Corectează orice problemă indicată (de exemplu, un număr de TVA invalid pe înregistrarea clientului).
+1. Plimbă cursorul peste insigna de status sau apas-o pentru a citi detaliul erorii.
+2. Corectează problema indicată (de exemplu un număr de TVA invalid în fișa clientului).
 3. Apasă **Reîncearcă Peppol** pe rândul facturii, pentru a retrimite.
 
 <Note>
-Eșecurile de livrare Peppol nu afectează statusul intern al facturii în Druma. Factura rămâne confirmată și va apărea în continuare în exporturile tale contabile. Factura este de asemenea trimisă prin email indiferent, deci clientul nu rămâne fără o copie cât timp investighezi.
+Eșecurile de livrare Peppol nu afectează statusul intern al facturii în Druma. Factura rămâne confirmată și apare în continuare în exporturile tale contabile.
 </Note>
 
 ---
 
-## Declanșarea manuală a livrării Peppol
+## Declanșarea manuală a livrării prin Peppol
 
-Pentru facturile unde trimiterea automată nu s-a declanșat — de exemplu, facturi create înainte ca integrarea să fie activată — poți trimite manual prin Peppol:
+Pentru facturile la care transmiterea automată nu s-a declanșat — de exemplu facturi create înainte de activarea integrării, sau când comutatorul automat este oprit — le poți transmite manual prin Peppol:
 
 1. Deschide lista **Facturi**.
 2. Găsește rândul facturii și apasă meniul de acțiuni al rândului (**···**).
