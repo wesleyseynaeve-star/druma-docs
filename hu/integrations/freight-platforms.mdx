@@ -1,0 +1,65 @@
+---
+title: "Fuvarplatformok (Transporeon, Shiptify)"
+description: "Fogadjon rakományokat a Transporeonról és a Shiptifyról megrendelésként a Drumában, küldje vissza az állapotot, és a POD-ot küldés előtt maga hagyja jóvá."
+icon: "truck-fast"
+---
+
+A Transporeon és a Shiptify feladói oldali fuvarplatformok. Ha az egyiket összeköti, a rakományai megrendelésként érkeznek a Drumába, és a Druma visszajelzi a haladást, mindez ugyanazon a folyamaton keresztül. Mindkettőt a Druma kapcsolja be a cége számára, majd a **Beállítások → Integrációk** alatt kell beállítani.
+
+---
+
+## Mi történik egy rakománnyal
+
+<Steps>
+  <Step title="A rakomány megérkezik">
+    A Druma először eltárolja a platform üzenetét, majd **rakományonként egy megrendelést** hoz létre az összes megállóval, hivatkozással és áruval. Egy rakományból sosem lesz két megrendelés, akárhányszor ismétli is a platform.
+  </Step>
+  <Step title="A megrendelés piszkozatként indul">
+    Alapértelmezetten a megrendelés **Piszkozat**, amelyet egy diszpécser átnéz. Az integráció beállításaiban választhatja, hogy **Függőben** állapotban jöjjön létre, ha minden szükséges adat megvan. Az ügyfél párosítása a platform saját fiókazonosítója, pontos adószám vagy az Ön által megerősített kapcsolat alapján történik — soha nem pusztán név alapján.
+  </Step>
+  <Step title="A platform módosítja a rakományt">
+    A **piszkozat** módosítását a rendszer elvégzi Ön helyett, és feljegyzi a megrendelés előzményeiben. Egy már tervezett vagy folyamatban lévő megrendelés módosítása **visszatartásra** kerül: a diszpécser feladatot és értesítést kap, és a megrendelésből alkalmazza vagy elveti. Egy **lezárt** megrendelés (kézbesített, lemondott, számlázott) módosítását a rendszer soha nem írja be; egy Key User tétel megmutatja, mit kért a platform. Az ár a megrendelés létrehozásakor dől el, és utána soha nem íródik felül.
+  </Step>
+  <Step title="Az állapot visszamegy">
+    A megérkezéseket, elindulásokat, a kézbesítést és a késéseket a rendszer visszaküldi a platformnak. Az állapotkódokat feladónként egyeztetik: minden Druma-eseményt egyszer rendel hozzá a platform kódjához az integráció **állapottérképén**; a hozzárendelés nélküli esemény visszatartásra kerül, nem kerül elküldésre, amíg nem ad hozzá egyet.
+  </Step>
+  <Step title="Ön hagyja jóvá a POD-ot">
+    A POD vagy CMR **sosem megy el magától**. Ha feltöltenek egyet, a megrendelés ellenőrzésre várónak mutatja; a diszpécser kijelöli a dokumentumokat és jóváhagyja, és csak ezután kerülnek elküldésre. Az elutasítás semmit nem küld.
+  </Step>
+</Steps>
+
+---
+
+## Transporeon
+
+- **Összekötés**: válassza a **Teszt** vagy az **Éles** környezetet, adja meg a Carrier Interface hitelesítő adatait (OAuth2 client credentials vagy Basic), és adja át a Transporeonnak a panelen látható **push-címet és tokent**. A Druma rövid időközönként maga is lekérdez, így az elmaradt push pótlódik.
+- **Válasz a megrendelésből**: fuvar elfogadása vagy elutasítása (indokkal), módosítás kérése vagy visszavonása, ajánlat tétele vagy visszavonása. Minden művelet sorba kerül és újrapróbálódik, az állapotot a megrendelésen látja.
+- **Opcionális GPS-megosztás**: ha bekapcsolja, egy aktív Transporeon-fuvaron lévő jármű rendszáma és pozíciója megosztásra kerül a Transporeon Visibility felé. Csak az ezeken a fuvarokon lévő járművek; a fuvar végével megszűnik.
+
+## Shiptify
+
+- **Összekötés**: válassza a **Teszt** vagy az **Éles** környezetet, adja meg az API-kulcsot (és az opcionális aláírókulcsot), és adja át a Shiptifynak a panelen látható **webhook-címet és tokent**. A **Kapcsolat tesztelése** ellenőrzi a kulcsot, és kilistázza az aktív feladóit.
+- **Nincs elfogadás vagy elutasítás**: a fuvarozó csak megerősítés után kap szállítmányt, így a Shiptify-rakomány elfogadott rakomány.
+- **Beállítások**: mely visszaigazolások menjenek (felvétel, kézbesítés, átütemezés késéskor, követési pontok), letöltse-e a feladó dokumentumait, és küldjön-e vontató- és pótkocsi-rendszámot (alapértelmezetten ki).
+
+---
+
+## Ha valami nem sikerül
+
+Az az üzenet, amelyet nem sikerült feldolgozni, az integráció listáján marad az okkal együtt. Szüntesse meg az okot (például kösse össze az ügyfelet), és használja az **Újralejátszás** gombot. A sikertelen kimenő hívások növekvő szünetekkel újrapróbálódnak, és ismételt kudarc után véglegesen sikertelenként jelennek meg **Újrapróbálás** gombbal. Demó- vagy érdeklődő cég megrendeléseit a rendszer soha nem küldi platformnak.
+
+<Note>
+A Druma soha nem küld sofőr nevet vagy telefonszámot platformnak, és az a platformbeállítás, amelyet a Druma saját szabályai tiltanak (például lezárt megrendelésbe írás), nem kapcsolható be.
+</Note>
+
+---
+
+## Kapcsolódó oldalak
+
+<Card title="Client API integráció (CAPI)" icon="plug" href="/hu/integrations/client-api">
+  Azoknak az ügyfeleknek, akik saját ERP-jükből, TMS-ükből vagy EDI-rendszerükből küldenek megrendeléseket.
+</Card>
+
+<Card title="Integrációk beállítása" icon="plug" href="/hu/admin/integration-setup">
+  Az összes, a Beállítások → Integrációk alatt elérhető integráció áttekintése.
+</Card>

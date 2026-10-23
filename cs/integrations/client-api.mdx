@@ -161,6 +161,94 @@ Každá událost obsahuje také `api_version` a `event_id` (stabilní při opako
 
 ---
 
+## Formáty, které může klient posílat
+
+Systém klienta nemusí mluvit JSON. Druma čte tyto příchozí formáty a všechny převádí na stejnou zakázku:
+
+| Formát | Typický odesílatel | Poznámky |
+|---|---|---|
+| **JSON** | Moderní ERP / TMS | Výchozí. |
+| **XML** | SAP IDoc (například IDoc zásilky nebo dodávky) | Prosté XML bez `DOCTYPE`. Jeden IDoc na požadavek. |
+| **EDIFACT** | Odesílatelé na EDI (například přepravní pokyny IFTMIN) | Jedna zpráva na požadavek. |
+| **CSV** | Odesílatelé, kteří umí exportovat jen tabulku | `Content-Type: text/csv`, nebo připnutí spojení na CSV. UTF-8 nebo windows-1250, oddělovač `,` `;` nebo tabulátor, nejvýše 500 řádků a 200 sloupců. **Jeden soubor je jedna zakázka**: řádky se stávají zastávkami. |
+
+Druma pozná JSON, XML a EDIFACT podle obsahu. CSV se nikdy neuhaduje: připněte formát spojení na **CSV**, nebo nechte klienta posílat `Content-Type: text/csv`. Tělo požadavku je omezeno na 256 KB. Požadavek s více než jednou zprávou (několik IDocs, několik segmentů `UNH` nebo CSV s několika různými čísly zakázek) je odmítnut s `422` a `{"error":"multi_message_not_supported"}`.
+
+<Note>
+Hotová mapování pro známé formáty (SAP IDoc, EDIFACT IFTMIN, nákladní zakázky SAP, zakázky Trans.eu) jsou postavena na veřejně publikovaných ukázkových zprávách. Jsou označena **Postaveno na veřejné ukázce**, dokud je nepotvrdí skutečná zpráva vašeho klienta (**Ověřeno zprávou klienta**). Dokud je spojení ještě v nastavení, Druma takové mapování použije bez kroku AI; před ostrým spuštěním ho stejně otestujete vlastní zprávou klienta. Pokud žádné hotové mapování nesedí, AI jedno navrhne jako dosud.
+</Note>
+
+### Doplňky průvodce
+
+- **Připnutí formátu** — vynutí parser JSON, XML, EDIFACT nebo CSV, když klient vždy posílá jeden formát.
+- **Štítek známého formátu** — ukazuje, které hotové mapování se používá, a jeho revizi. Spojení zůstává na revizi, se kterou bylo schváleno; když existuje novější revize, zobrazí se výzva **Aktualizovat mapování** a nic se nezmění, dokud neklepnete. Předchozí mapování zůstává v historii verzí pro návrat.
+- **Protokol zpráv** — posledních 50 skutečných zpráv s formátem, výsledkem, zda byla zopakována, klíčem idempotence, délkou zpracování a tím, co chybělo; s filtry vytvořeno, vytvořeno AI, odmítnuto a zopakováno.
+
+---
+
+## Stejná zpráva odeslaná dvakrát (idempotence)
+
+Systémy klientů opakují požadavky. Aby bylo opakování bezpečné, klient přidá hlavičku `Idempotency-Key` (nejvýše 255 znaků). Pokud formát už nese jedinečné ID zprávy, může ho Druma použít místo toho (mapování ho může číst jako klíč idempotence). **Bez klíče není žádná deduplikace.**
+
+| Situace | Odpověď Druma |
+|---|---|
+| První požadavek s novým klíčem | `200`, zakázka je vytvořena |
+| Stejný klíč, stejné tělo, první požadavek skončil | `200` s původním `order_id` a `order_number`, aktuálním `status` zakázky a hlavičkou odpovědi `Idempotent-Replayed: true`. Žádná druhá zakázka. |
+| Stejný klíč, zatímco první požadavek ještě běží | `409` `{"error":"in_progress"}` s `Retry-After: 5`. Zkuste později se stejným klíčem. |
+| Stejný klíč, jiné tělo | `422` `{"error":"idempotency_key_reused"}`. Jeden klíč patří jedné zprávě. |
+
+Klíče se pamatují 90 dní. Požadavek odmítnutý s `422` po sobě klíč nezanechá, takže stejný klíč lze po opravě dat použít znovu.
+
+Odpověď `200` příchozího API nově obsahuje i pole `outcome` (například `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Berte ho jako otevřený seznam: mohou přibýt nové hodnoty. `status` může být `pending` místo `draft`, pokud jste pro toto spojení v Nastavení → Integrace zapnuli přeskočení konceptu.
+
+---
+
+## Nahrazení a zrušení zakázky
+
+Pokud mapování čte `message_function` (`original`, `replace` nebo `cancel`; prázdné znamená `original`) a vlastní ID zakázky klienta jako `external_id`, pozdější zpráva změní zakázku, kterou vytvořila, místo aby vytvořila druhou.
+
+- **Nahrazení nebo zrušení, dokud je zakázka koncept**: koncept se změní (nebo zruší) přímo.
+- **Zakázka už za konceptem** (naplánovaná, na cestě): nic se automaticky nemění. Změna se **podrží** pro plánovače, který dostane úkol a upozornění a ze zakázky ji použije nebo zamítne.
+- **Po odmítnutí nákladu nebo u uzavřené zakázky** (zrušená, doručená, vyfakturovaná): zpráva se ignoruje a provozovatel je informován.
+- Zpráva starší než poslední zpracovaná pro stejné `external_id` se ignoruje jako zastaralá; identické zopakování odpoví `unchanged`.
+- Neznámé `external_id` odpoví `200` s `outcome: not_found`; nahrazení ani zrušení nikdy nevytvoří zakázku. Nahrazení a zrušení vyžadují `external_id`, jinak je odpověď `422` `{"error":"external_id_required"}`.
+
+---
+
+## Odchozí ve formátu klienta
+
+Ve výchozím stavu Druma posílá své standardní JSON tělo události. Pro klienty na SAP, S/4HANA nebo EDI můžete spojení přepnout na **vlastní odchozí formát** v panelu **Odchozí mapování** na kartě API:
+
+1. **Vyberte hotovou předvolbu** (EDIFACT IFTSTA D.01B nebo D.96A, stav zásilky SAP IDoc, události zakázky S/4HANA / Transportation Management v JSON) **nebo vložte zprávu, kterou klient očekává**, a nechte AI navrhnout mapování. Předvolby jsou postaveny na veřejných ukázkách a jsou označeny jako neověřené, dokud je klient nepotvrdí.
+2. **Vyplňte strany** (identifikátory odesílatele a příjemce) — jsou vždy vaše, nikdy odhadnuté.
+3. **Vyplňte tabulku stavů**: jeden řádek na událost Druma s kódem a kvalifikátorem stavu klienta. **Událost bez řádku se neposílá** (zobrazí se jako *přeskočeno*, nic se neopakuje).
+4. **Náhled** se skutečnou zakázkou tohoto klienta — nic se neodešle ani neuloží.
+5. Uložte. **Použít standardní webhook** vás kdykoli vrátí k prostému JSON tělu.
+
+Podpis (HMAC) pokrývá přesně odeslané bajty. Mapování může používat jen pevnou sadu polí zakázky, zastávky, registrační značky, POD a referencí: jména řidičů, telefonní čísla, polohy a ceny přes něj Druma nikdy neopustí.
+
+### Další události (na vyžádání)
+
+Zaškrtněte je v **Vyberte události k odeslání**. Pro existující spojení se nikdy nezapnou samy.
+
+- **Události zastávky** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading`: první zaznamenaný příjezd nebo odjezd z nakládací či vykládací zastávky.
+- **Zakázka odmítnuta** — `order.declined`: odmítli jste příchozí náklad; tělo nese kód důvodu (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) a volitelný komentář.
+- **POD nahrán** — `order.pod_uploaded`: odesílá se **až po schválení dokumentů plánovačem**. Na zakázce ho **Schválit POD a informovat klienta** odešle jednou na zakázku; fotka nahraná řidičem ho nikdy nespustí.
+
+Každá událost zakázky a zastávky také vrací **reference** klienta (například číslo dodávky SAP, které poslal), v objektu `references` — jen reference označené jako viditelné pro klienta. Klíč chybí, když zakázka žádné nemá.
+
+### OAuth2 client credentials
+
+Pro brány vyžadující token (SAP BTP, Azure AD, Keycloak) zvolte typ ověření **OAuth2 (client credentials)** a zadejte URL tokenu (https, veřejný hostitel), ID a tajný klíč klienta a volitelně scope, audience a způsob ověření klienta (hlavička HTTP Basic nebo tělo požadavku). Druma získá přístupový token, drží ho jen v paměti do krátce před vypršením, při `401` jednou zopakuje s novým tokenem a nikdy ho neukládá. Přihlašovací údaje jsou v trezoru, jen pro zápis (prázdné pole ponechá uloženou hodnotu) a nikdy se znovu nezobrazí.
+
+---
+
+## Nákladní platformy
+
+Zakázky z Transporeon a Shiptify toto API nepoužívají: viz [Nákladní platformy](/cs/integrations/freight-platforms).
+
+---
+
 ## Související stránky
 
 <Card title="Portál pro klienty" icon="users" href="/cs/client-portal/tracking-shipments">

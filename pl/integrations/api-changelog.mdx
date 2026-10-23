@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Zmiany w obrębie v1 są addytywne. Zmiany łamiące i wycofania są tu ogłaszane jako pierwsze. Zasady opisuje [Wersjonowanie API](/pl/integrations/api-versioning).
 
+## 2026-10-23
+
+**Dodano (v1, nie wymaga działań)**
+
+- **Idempotentne przyjmowanie.** `inbound-client-api` akceptuje opcjonalny nagłówek `Idempotency-Key`. Powtórzenie zakończonego klucza zwraca `200` z oryginalnym zleceniem i nagłówkiem `Idempotent-Replayed: true`; powtórzenie, gdy pierwsze żądanie jeszcze trwa, zwraca `409` `{"error":"in_progress"}` z `Retry-After: 5`; ten sam klucz z inną treścią zwraca `422` `{"error":"idempotency_key_reused"}`. Bez klucza, jak dotąd, nie ma deduplikacji.
+- **`outcome` w przychodzącym `200`.** Addytywny ciąg znaków (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Traktuj go jako otwartą listę. `status` w odpowiedzi na utworzenie może mieć wartość `pending`, gdy operator włączy pomijanie wersji roboczej dla połączenia.
+- **Zastępowanie i anulowanie.** Mapowanie czytające `message_function` i `external_id` zamienia późniejszą wiadomość w zmianę utworzonego zlecenia. Nowe kody `422`: `external_id_required`, `unknown_message_function`.
+- **Więcej formatów żądań.** XML (SAP IDoc), EDIFACT i `text/csv` obok JSON; jedna wiadomość na żądanie (inaczej `422` `{"error":"multi_message_not_supported"}`).
+- **Nowe opcjonalne zdarzenia webhooka.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` i `order.pod_uploaded` (wysyłane dopiero po zatwierdzeniu POD przez planistę). Dostarczane tylko połączeniom, które je wymieniają; żadne istniejące połączenie się nie zmienia.
+- **`references` w zdarzeniach zlecenia i przystanku.** Jeden opcjonalny obiekt `{ "<key>": "<value>" }` z własnymi referencjami klienta, które operator oznaczył jako widoczne dla klienta. Brak, gdy zlecenie nie ma żadnej.
+- **Mapowanie wychodzące.** Połączenie może wysyłać XML, EDIFACT lub JSON w układzie klienta z jego kodami statusów; zdarzenie bez przypisanego statusu jest pomijane (nie wysyłane, nie ponawiane). Bez mapowania wychodzącego treść jest bajt w bajt taka sama jak wcześniej.
+- **OAuth2 client credentials** jako typ uwierzytelniania wychodzącego, obok bearer, basic, HMAC i none.
+
+**Wycofane / usunięte:** nic.
+
 ## 2026-10-10
 
 **Dodano (v1, bez konieczności działania)**

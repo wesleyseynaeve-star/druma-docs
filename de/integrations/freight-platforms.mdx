@@ -1,0 +1,65 @@
+---
+title: "Frachtplattformen (Transporeon, Shiptify)"
+description: "Empfangen Sie Ladungen von Transporeon und Shiptify als Aufträge in Druma, melden Sie den Status zurück und geben Sie den POD selbst frei, bevor er rausgeht."
+icon: "truck-fast"
+---
+
+Transporeon und Shiptify sind Frachtplattformen auf der Verladerseite. Verbinden Sie eine, kommen ihre Ladungen als Aufträge in Druma an, und Druma meldet den Fortschritt zurück, alles über denselben Ablauf. Beide werden von Druma für Ihr Unternehmen freigeschaltet und dann unter **Einstellungen → Integrationen** eingerichtet.
+
+---
+
+## Was mit einer Ladung geschieht
+
+<Steps>
+  <Step title="Die Ladung trifft ein">
+    Druma speichert zuerst die Nachricht der Plattform und legt dann **einen Auftrag pro Ladung** mit allen Stopps, Referenzen und der Ware an. Aus einer Ladung werden nie zwei Aufträge, egal wie oft die Plattform sie wiederholt.
+  </Step>
+  <Step title="Der Auftrag startet als Entwurf">
+    Standardmäßig ist der Auftrag ein **Entwurf**, den ein Disponent prüft. In den Einstellungen der Integration können Sie wählen, ihn als **Ausstehend** anzulegen, wenn alles Nötige vorhanden ist. Der Kunde wird über die plattformeigene Konto-ID, eine exakte USt-IdNr. oder eine von Ihnen bestätigte Verknüpfung zugeordnet — nie allein über den Namen.
+  </Step>
+  <Step title="Die Plattform ändert die Ladung">
+    Eine Änderung an einem **Entwurf** wird für Sie übernommen und im Auftragsverlauf vermerkt. Eine Änderung an einem bereits geplanten oder laufenden Auftrag wird **zurückgestellt**: Der Disponent erhält eine Aufgabe und eine Benachrichtigung und übernimmt oder verwirft sie am Auftrag. Eine Änderung an einem **abgeschlossenen** Auftrag (geliefert, storniert, fakturiert) wird nie geschrieben; ein Key-User-Eintrag zeigt, was die Plattform wollte. Der Preis wird bei der Anlage des Auftrags gesetzt und danach nie überschrieben.
+  </Step>
+  <Step title="Der Status geht zurück">
+    Ankünfte, Abfahrten, Lieferung und Verspätungen werden an die Plattform zurückgemeldet. Statuscodes werden je Verlader vereinbart; Sie ordnen jedes Druma-Ereignis einmal in der **Statuszuordnung** der Integration dem Code der Plattform zu; ein Ereignis ohne Zuordnung wird zurückgehalten, nicht gesendet, bis Sie eine hinzufügen.
+  </Step>
+  <Step title="Sie geben den POD frei">
+    Ein POD oder CMR wird **nie von selbst gesendet**. Wird einer hochgeladen, zeigt der Auftrag ihn als zur Prüfung offen; ein Disponent wählt die Dokumente aus und gibt frei, erst dann werden sie gesendet. Ablehnen sendet nichts.
+  </Step>
+</Steps>
+
+---
+
+## Transporeon
+
+- **Verbinden**: **Test** oder **Produktion** wählen, die Carrier-Interface-Zugangsdaten eingeben (OAuth2 client credentials oder Basic) und Transporeon die im Panel angezeigte **Push-Adresse und das Token** geben. Druma fragt zusätzlich in kurzen Abständen ab, ein verpasster Push wird also nachgeholt.
+- **Vom Auftrag aus antworten**: Transport annehmen oder ablehnen (mit Grund), Änderung anfordern oder widerrufen, Angebot abgeben oder zurückziehen. Jede Aktion wird eingereiht und wiederholt, der Zustand ist am Auftrag sichtbar.
+- **Optionale GPS-Freigabe**: Wenn Sie sie einschalten, werden Kennzeichen und Position des Lkw auf einem aktiven Transporeon-Transport an Transporeon Visibility weitergegeben. Nur Fahrzeuge auf diesen Transporten; sie endet mit dem Transport.
+
+## Shiptify
+
+- **Verbinden**: **Test** oder **Produktion** wählen, den API-Schlüssel (und optional den Signaturschlüssel) eingeben und Shiptify die im Panel angezeigte **Webhook-Adresse und das Token** geben. **Verbindung testen** prüft den Schlüssel und listet Ihre aktiven Verlader.
+- **Kein Annehmen oder Ablehnen**: Ein Frachtführer erhält eine Sendung erst nach der Bestätigung, eine Shiptify-Ladung ist also eine angenommene Ladung.
+- **Optionen**: welche Bestätigungen gesendet werden (Abholung, Lieferung, Umplanung bei Verspätung, Trackingpunkte), ob Dokumente des Verladers heruntergeladen werden und ob Kennzeichen von Lkw und Anhänger gesendet werden (standardmäßig aus).
+
+---
+
+## Wenn etwas fehlschlägt
+
+Eine Nachricht, die nicht verarbeitet werden konnte, bleibt mit dem Grund in der Liste der Integration. Beheben Sie die Ursache (zum Beispiel den Kunden verknüpfen) und nutzen Sie **Wiederholen**. Fehlgeschlagene ausgehende Aufrufe werden mit wachsenden Pausen wiederholt und nach wiederholtem Scheitern als endgültig fehlgeschlagen angezeigt, mit einer Schaltfläche **Erneut versuchen**. Aufträge eines Demo- oder Interessentenunternehmens werden nie an eine Plattform gesendet.
+
+<Note>
+Druma sendet nie Namen oder Telefonnummer eines Fahrers an eine Plattform, und eine Plattformeinstellung, die Drumas eigene Regeln verbieten (zum Beispiel das Schreiben in einen abgeschlossenen Auftrag), lässt sich nicht aktivieren.
+</Note>
+
+---
+
+## Verwandte Seiten
+
+<Card title="Client-API-Integration (CAPI)" icon="plug" href="/de/integrations/client-api">
+  Für Kunden, die Aufträge aus ihrem eigenen ERP, TMS oder EDI-System senden.
+</Card>
+
+<Card title="Integrationen einrichten" icon="plug" href="/de/admin/integration-setup">
+  Überblick über alle Integrationen unter Einstellungen → Integrationen.
+</Card>

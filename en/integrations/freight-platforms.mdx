@@ -1,0 +1,65 @@
+---
+title: "Freight platforms (Transporeon, Shiptify)"
+description: "Receive loads from Transporeon and Shiptify as orders in Druma, send status back, and approve the POD yourself before it leaves."
+icon: "truck-fast"
+---
+
+Transporeon and Shiptify are shipper-side freight platforms. When you connect one, its loads arrive in Druma as orders and Druma reports progress back, all through the same flow. Both are switched on for your company by Druma, then set up under **Settings → Integrations**.
+
+---
+
+## What happens to a load
+
+<Steps>
+  <Step title="The load arrives">
+    Druma stores the platform's message first, then creates **one order per load** with all its stops, references and goods. A load is never turned into two orders, however often the platform repeats it.
+  </Step>
+  <Step title="The order starts as a draft">
+    By default the order is a **Draft** for a planner to review. In the integration's settings you can choose to create it as **Pending** when everything needed is present. The client is matched on the platform's own account id, an exact VAT number or a link you confirmed — never on a name alone.
+  </Step>
+  <Step title="The platform changes the load">
+    A change to a **draft** is applied for you and noted in the order history. A change to an order that is already planned or running is **parked**: the planner gets a task and a bell and applies or rejects it from the order. A change to a **closed** order (delivered, cancelled, invoiced) is never written; a Key User item tells you what the platform asked for. The price is set when the order is created and is never rewritten afterwards.
+  </Step>
+  <Step title="Status goes back">
+    Arrivals, departures, delivery and delays are sent back to the platform. Status codes are agreed per shipper, so you map each Druma event to the platform's code once in the integration's **status map**; an event with no mapping is held, not sent, until you add one.
+  </Step>
+  <Step title="You approve the POD">
+    A POD or CMR is **never sent on its own**. When one is uploaded the order shows it as waiting for review; a planner ticks the documents and approves, and only then are they sent. Rejecting sends nothing.
+  </Step>
+</Steps>
+
+---
+
+## Transporeon
+
+- **Connect**: choose **Test** or **Production**, enter the Carrier Interface credentials (OAuth2 client credentials, or Basic), and give Transporeon the **push address and token** shown in the panel. Druma also pulls on a short schedule, so a missed push is caught up.
+- **Answer from the order**: accept or decline a transport (with a reason), request or revoke a change, place or withdraw an offer. Each action is queued and retried, and you can see the state on the order.
+- **Optional GPS sharing**: if you switch it on, the licence plate and position of the truck on an active Transporeon transport is shared with Transporeon Visibility. Only vehicles on those transports; it stops when the transport ends.
+
+## Shiptify
+
+- **Connect**: choose **Test** or **Production**, enter the API key (and the optional signing key), and give Shiptify the **webhook address and token** shown in the panel. **Test connection** checks the key and lists your active shippers.
+- **No accept or refuse**: a carrier only receives a shipment once it is confirmed, so a Shiptify load is an accepted load.
+- **Options**: which confirmations to send (pickup, delivery, replan on delay, tracking points), whether to download the shipper's documents, and whether to send truck and trailer plates (off by default).
+
+---
+
+## When something fails
+
+A message that could not be processed stays in the integration's list with the reason. Fix the cause (for example link the client) and use **Replay**. Outgoing calls that fail are retried with growing pauses and shown as dead after repeated failures, with a **Retry** button. Orders from a demo or prospect company are never sent to a platform.
+
+<Note>
+Druma never sends a driver's name or phone number to a platform, and a platform setting that Druma's own rules forbid (for example writing to a closed order) cannot be switched on.
+</Note>
+
+---
+
+## Related pages
+
+<Card title="Client API Integration (CAPI)" icon="plug" href="/en/integrations/client-api">
+  For clients that send orders from their own ERP, TMS or EDI system.
+</Card>
+
+<Card title="Integration Setup" icon="plug" href="/en/admin/integration-setup">
+  Overview of all integrations available in Settings → Integrations.
+</Card>

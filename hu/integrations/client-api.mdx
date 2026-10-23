@@ -161,6 +161,94 @@ Minden esemény tartalmazza az `api_version` és az `event_id` mezőt is (újrap
 
 ---
 
+## Az ügyfél által küldhető formátumok
+
+Az ügyfél rendszerének nem kell JSON-t beszélnie. A Druma ezeket a bejövő formátumokat olvassa, és mindet ugyanazzá a megrendeléssé alakítja:
+
+| Formátum | Tipikus feladó | Megjegyzések |
+|---|---|---|
+| **JSON** | Modern ERP / TMS | Az alapértelmezett. |
+| **XML** | SAP IDoc (például szállítmány- vagy szállítási IDoc) | Egyszerű XML `DOCTYPE` nélkül. Kérésenként egy IDoc. |
+| **EDIFACT** | EDI-t használó feladók (például IFTMIN fuvarutasítás) | Kérésenként egy üzenet. |
+| **CSV** | Feladók, akik csak táblázatot tudnak exportálni | `Content-Type: text/csv`, vagy a kapcsolat rögzítése CSV-re. UTF-8 vagy windows-1250, elválasztó `,` `;` vagy tabulátor, legfeljebb 500 sor és 200 oszlop. **Egy fájl egy megrendelés**: a sorokból megállók lesznek. |
+
+A Druma a tartalom alapján ismeri fel a JSON-t, az XML-t és az EDIFACT-ot. A CSV-t soha nem találgatja: rögzítse a kapcsolat formátumát **CSV**-re, vagy kérje, hogy az ügyfél `Content-Type: text/csv` fejléccel küldjön. A kérés törzse legfeljebb 256 KB lehet. Az egynél több üzenetet tartalmazó kérést (több IDoc, több `UNH` szegmens, vagy több különböző megrendelésszámot tartalmazó CSV) a rendszer `422` kóddal és `{"error":"multi_message_not_supported"}` válasszal elutasítja.
+
+<Note>
+Az ismert formátumokhoz (SAP IDoc, EDIFACT IFTMIN, SAP fuvarmegrendelések, Trans.eu megrendelések) készült kész leképezések nyilvánosan közzétett mintaüzenetekre épülnek. Addig **Nyilvános mintából épített** címkét viselnek, amíg az ügyfél egy valódi üzenete nem igazolja őket (**Ügyfélüzenettel ellenőrizve**). Amíg a kapcsolat még beállítás alatt áll, a Druma AI-lépés nélkül alkalmaz ilyen leképezést; élesítés előtt ettől függetlenül az ügyfél saját üzenetével tesztelje. Ha egyetlen kész leképezés sem illik, az AI a megszokott módon javasol egyet.
+</Note>
+
+### A varázsló kiegészítései
+
+- **Formátumrögzítés** — kényszerítse az értelmezőt JSON, XML, EDIFACT vagy CSV formátumra, ha az ügyfél mindig egyféle formátumot küld.
+- **Ismert formátum jelzés** — megmutatja, melyik kész leképezés van használatban, és annak revízióját. A kapcsolat azon a revízión marad, amellyel jóváhagyták; ha újabb revízió létezik, megjelenik a **Leképezés frissítése** felkínálás, és semmi sem változik, amíg nem kattint. Az előző leképezés a verziótörténetben marad a visszaállításhoz.
+- **Üzenetnapló** — az utolsó 50 valódi üzenet formátummal, eredménnyel, ismétlés jelzéssel, idempotencia-kulccsal, időtartammal és a hiányzó adatokkal; szűrhető: létrehozott, AI által létrehozott, elutasított és ismételt.
+
+---
+
+## Ugyanaz az üzenet kétszer (idempotencia)
+
+Az ügyfélrendszerek újrapróbálkoznak. Hogy az újrapróbálás biztonságos legyen, az ügyfél `Idempotency-Key` fejlécet ad hozzá (legfeljebb 255 karakter). Ha a formátum már hordoz egyedi üzenetazonosítót, a Druma használhatja azt (a leképezés idempotencia-kulcsként olvashatja). **Kulcs nélkül nincs duplikátumszűrés.**
+
+| Helyzet | A Druma válasza |
+|---|---|
+| Első kérés új kulccsal | `200`, a megrendelés létrejön |
+| Ugyanaz a kulcs, ugyanaz a törzs, az első kérés lezárult | `200` az eredeti `order_id`-val és `order_number`-rel, a megrendelés aktuális `status` értékével és a `Idempotent-Replayed: true` válaszfejléccel. Nincs második megrendelés. |
+| Ugyanaz a kulcs, amíg az első kérés még fut | `409` `{"error":"in_progress"}` `Retry-After: 5` fejléccel. Próbálja újra később ugyanazzal a kulccsal. |
+| Ugyanaz a kulcs, más törzs | `422` `{"error":"idempotency_key_reused"}`. Egy kulcs egy üzenetet nevez meg. |
+
+A kulcsokat 90 napig őrzi meg a rendszer. A `422`-vel elutasított kérés nem hagy kulcsot maga után, így ugyanaz a kulcs az adatok javítása után újra használható.
+
+A bejövő API `200` válasza mostantól `outcome` mezőt is tartalmaz (például `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Kezelje nyitott listaként: új értékek jelenhetnek meg. A `status` `pending` lehet `draft` helyett, ha ehhez a kapcsolathoz a Beállítások → Integrációk alatt bekapcsolta a piszkozat kihagyását.
+
+---
+
+## Megrendelés cseréje és lemondása
+
+Ha a leképezés `message_function` értéket (`original`, `replace` vagy `cancel`; üres jelentése `original`) és az ügyfél saját megrendelésazonosítóját `external_id`-ként olvassa, egy későbbi üzenet a már létrehozott megrendelést módosítja, ahelyett hogy másodikat hozna létre.
+
+- **Csere vagy lemondás, amíg a megrendelés még piszkozat**: a piszkozat helyben módosul (vagy lemondásra kerül).
+- **Már a piszkozaton túl lévő megrendelés** (tervezett, úton): semmi nem változik automatikusan. A módosítás **visszatartásra** kerül egy diszpécser számára, aki feladatot és értesítést kap, és a megrendelésből alkalmazza vagy elveti.
+- **A rakomány elutasítása után, vagy lezárt megrendelésnél** (lemondott, kézbesített, számlázott): az üzenetet figyelmen kívül hagyja a rendszer, és az üzemeltető értesítést kap.
+- Az ugyanahhoz az `external_id`-hoz utoljára kezeltnél régebbi üzenetet elavultként figyelmen kívül hagyja a rendszer; az azonos újraküldés `unchanged` választ kap.
+- Ismeretlen `external_id` `200` választ ad `outcome: not_found` értékkel; csere vagy lemondás sosem hoz létre megrendelést. A cseréhez és a lemondáshoz kell az `external_id`, különben a válasz `422` `{"error":"external_id_required"}`.
+
+---
+
+## Kimenő üzenetek az ügyfél saját formátumában
+
+Alapértelmezetten a Druma a szabványos JSON eseménytörzset küldi. SAP-t, S/4HANA-t vagy EDI-t használó ügyfeleknél az API fül **Kimenő leképezés** paneljén átállíthatja a kapcsolatot **egyéni kimenő formátumra**:
+
+1. **Válasszon kész sablont** (EDIFACT IFTSTA D.01B vagy D.96A, SAP IDoc szállítmányállapot, S/4HANA / Transportation Management megrendelés-események JSON-ban) **vagy illessze be az ügyfél által várt üzenetet**, és hagyja, hogy az AI javasoljon leképezést. A sablonok nyilvános mintákra épülnek, és ellenőrizetlennek számítanak, amíg egy ügyfél nem igazolja őket.
+2. **Töltse ki a feleket** (a feladó és a címzett azonosítói) — ezek mindig az Öné, soha nem találgatottak.
+3. **Töltse ki az állapottáblát**: Druma-eseményenként egy sor az ügyfél állapotkódjával és minősítőjével. **A sor nélküli eseményt nem küldi el a rendszer** (*kihagyva* jelzéssel jelenik meg, semmi sem kerül újrapróbálásra).
+4. **Előnézet** az adott ügyfél egy valódi megrendelésével — semmi nem kerül elküldésre vagy tárolásra.
+5. Mentés. A **Szabványos webhook használata** bármikor visszaviszi az egyszerű JSON törzsre.
+
+Az aláírás (HMAC) pontosan az elküldött bájtokat fedi le. A leképezés csak a megrendelés, megálló, rendszám, POD és hivatkozás mezők rögzített készletét használhatja: sofőrnevek, telefonszámok, pozíciók és árak ezen keresztül soha nem hagyják el a Drumát.
+
+### További események (opcionális)
+
+Jelölje be őket a **Küldendő események kiválasztása** résznél. Meglévő kapcsolatnál soha nem kapcsolódnak be maguktól.
+
+- **Megálló-események** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading`: egy fel- vagy lerakodási megálló első rögzített megérkezése vagy elindulása.
+- **Megrendelés elutasítva** — `order.declined`: elutasított egy bejövő rakományt; a törzs tartalmazza az ok kódját (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) és egy opcionális megjegyzést.
+- **POD feltöltve** — `order.pod_uploaded`: **csak azután küldi a rendszer, hogy egy diszpécser jóváhagyta a dokumentumokat**. A megrendelésen a **POD jóváhagyása és az ügyfél értesítése** egyszer küldi el megrendelésenként; egy sofőr által feltöltött fotó sosem váltja ki.
+
+Minden megrendelés- és megálló-esemény visszaküldi az ügyfél **hivatkozásait** is (például a SAP szállítási számot, amelyet küldött) egy `references` objektumban — csak az ügyfél számára láthatónak jelölt hivatkozásokat. A kulcs hiányzik, ha a megrendelésnek nincs ilyen.
+
+### OAuth2 client credentials
+
+Tokent igénylő átjáróknál (SAP BTP, Azure AD, Keycloak) válassza a **OAuth2 (client credentials)** hitelesítési típust, és adja meg a token URL-t (https, nyilvános gazda), a kliensazonosítót és a kliens titkát, opcionálisan a scope-ot, az audience-t és a kliens hitelesítési módját (HTTP Basic fejléc vagy a kérés törzse). A Druma hozzáférési tokent kér, azt csak a memóriában tartja röviddel a lejárat előtti időpontig, `401` esetén egyszer újrapróbálja friss tokennel, és soha nem tárolja. A hitelesítő adatok a széfben vannak, csak írhatók (az üres mező megtartja a mentett értéket), és soha többé nem jelennek meg.
+
+---
+
+## Fuvarplatformok
+
+A Transporeon és a Shiptify megrendelései nem ezt az API-t használják: lásd [Fuvarplatformok](/hu/integrations/freight-platforms).
+
+---
+
 ## Kapcsolódó oldalak
 
 <Card title="Ügyfélportál" icon="users" href="/en/clients/client-portal">

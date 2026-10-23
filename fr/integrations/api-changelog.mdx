@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Les changements dans v1 sont additifs. Les changements incompatibles et les dépréciations sont d'abord listés ici. La politique est décrite dans [Versionnement de l'API](/fr/integrations/api-versioning).
 
+## 2026-10-23
+
+**Ajouté (v1, aucune action requise)**
+
+- **Entrée idempotente.** `inbound-client-api` accepte un en-tête facultatif `Idempotency-Key`. La répétition d'une clé terminée répond `200` avec la commande d'origine et l'en-tête `Idempotent-Replayed: true` ; la répétition alors que la première requête est encore en cours répond `409` `{"error":"in_progress"}` avec `Retry-After: 5` ; la même clé avec un corps différent répond `422` `{"error":"idempotency_key_reused"}`. Sans clé, pas de dédoublonnage, comme avant.
+- **`outcome` dans le `200` entrant.** Une chaîne additive (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Traitez-la comme une liste ouverte. Le `status` de la réponse de création peut valoir `pending` quand l'opérateur active le passage direct sans brouillon pour la connexion.
+- **Remplacement et annulation.** Un mapping qui lit `message_function` et `external_id` transforme un message ultérieur en modification de la commande qu'il a créée. Nouveaux codes `422` : `external_id_required`, `unknown_message_function`.
+- **Plus de formats de requête.** XML (SAP IDoc), EDIFACT et `text/csv` en plus du JSON ; un message par requête (sinon `422` `{"error":"multi_message_not_supported"}`).
+- **Nouveaux événements webhook sur option.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` et `order.pod_uploaded` (envoyé uniquement après l'approbation du POD par un planificateur). Livrés uniquement aux connexions qui les listent ; aucune connexion existante ne change.
+- **`references` sur les événements de commande et d'arrêt.** Un objet facultatif `{ "<key>": "<value>" }` avec les références propres au client que l'opérateur a marquées visibles pour le client. Absent quand la commande n'en a aucune.
+- **Mapping sortant.** Une connexion peut envoyer du XML, de l'EDIFACT ou du JSON dans la structure du client avec ses propres codes de statut ; un événement sans statut associé est ignoré (ni envoyé ni réessayé). Sans mapping sortant, le corps est identique à l'octet près à celui d'avant.
+- **OAuth2 client credentials** comme type d'authentification sortante, à côté de bearer, basic, HMAC et none.
+
+**Déprécié / supprimé :** rien.
+
 ## 2026-10-10
 
 **Ajouté (v1, aucune action requise)**

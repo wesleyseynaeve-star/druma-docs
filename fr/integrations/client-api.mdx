@@ -161,6 +161,94 @@ Chaque événement contient aussi `api_version` et `event_id` (stable entre les 
 
 ---
 
+## Formats que le client peut envoyer
+
+Le système d'un client n'a pas besoin de parler JSON. Druma lit ces formats entrants et les transforme tous en la même commande :
+
+| Format | Expéditeur typique | Remarques |
+|---|---|---|
+| **JSON** | ERP / TMS moderne | Le format par défaut. |
+| **XML** | SAP IDoc (par exemple IDoc d'expédition ou de livraison) | XML simple, sans `DOCTYPE`. Un seul IDoc par requête. |
+| **EDIFACT** | Chargeurs sur EDI (par exemple instructions de transport IFTMIN) | Un seul message par requête. |
+| **CSV** | Chargeurs qui ne savent exporter qu'un tableur | `Content-Type: text/csv`, ou connexion fixée sur CSV. UTF-8 ou windows-1250, séparateur `,` `;` ou tabulation, jusqu'à 500 lignes et 200 colonnes. **Un fichier est une commande** : les lignes deviennent des arrêts. |
+
+Druma reconnaît JSON, XML et EDIFACT d'après le contenu. Le CSV n'est jamais deviné : fixez le format sur **CSV** dans la connexion, ou demandez au client d'envoyer `Content-Type: text/csv`. Le corps de la requête est limité à 256 Ko. Une requête qui contient plus d'un message (plusieurs IDoc, plusieurs segments `UNH`, ou un CSV avec plusieurs numéros de commande différents) est refusée avec `422` et `{"error":"multi_message_not_supported"}`.
+
+<Note>
+Les mappings prêts à l'emploi pour les formats connus (SAP IDoc, EDIFACT IFTMIN, ordres de fret SAP, commandes Trans.eu) sont construits à partir de messages d'exemple publiés publiquement. Ils sont libellés **Construit à partir d'un exemple public** tant qu'un vrai message de votre client ne les a pas confirmés (**Vérifié avec un message client**). Tant qu'une connexion est en configuration, Druma applique un tel mapping sans étape d'IA ; vous le testez quand même avec le message du client avant la mise en production. Si aucun mapping prêt à l'emploi ne correspond, l'IA en propose un comme avant.
+</Note>
+
+### Ajouts à l'assistant
+
+- **Format fixé** — forcez l'analyseur sur JSON, XML, EDIFACT ou CSV quand le client envoie toujours le même format.
+- **Pastille de format connu** — indique quel mapping prêt à l'emploi est utilisé et sa révision. Une connexion reste sur la révision avec laquelle elle a été approuvée ; quand une révision plus récente existe, vous voyez une invite **Mettre à jour le mapping**, et rien ne change tant que vous ne cliquez pas. L'ancien mapping reste dans l'historique des versions pour un retour arrière.
+- **Journal des messages** — les 50 derniers messages réels avec format, résultat, rejoué ou non, clé d'idempotence, durée et ce qui manquait, filtrables par créés, créés par l'IA, rejetés et rejoués.
+
+---
+
+## Envoyer deux fois le même message (idempotence)
+
+Les systèmes clients réessaient. Pour qu'un nouvel essai soit sans risque, le client ajoute un en-tête `Idempotency-Key` (255 caractères au maximum). Si le format porte déjà un identifiant de message unique, Druma peut l'utiliser à la place (un mapping peut le lire comme clé d'idempotence). **Sans clé, il n'y a pas de dédoublonnage.**
+
+| Situation | Réponse de Druma |
+|---|---|
+| Première requête avec une nouvelle clé | `200`, la commande est créée |
+| Même clé, même corps, première requête terminée | `200` avec les `order_id` et `order_number` d'origine, le `status` actuel de la commande et l'en-tête de réponse `Idempotent-Replayed: true`. Aucune seconde commande. |
+| Même clé alors que la première requête est encore en cours | `409` `{"error":"in_progress"}` avec `Retry-After: 5`. Réessayez plus tard avec la même clé. |
+| Même clé, corps différent | `422` `{"error":"idempotency_key_reused"}`. Une clé désigne un seul message. |
+
+Les clés sont conservées 90 jours. Une requête rejetée avec `422` ne laisse aucune clé, la même clé peut donc être réutilisée après correction des données.
+
+La réponse `200` de l'API entrante contient désormais aussi un champ `outcome` (par exemple `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Traitez-le comme une liste ouverte : de nouvelles valeurs peuvent apparaître. `status` peut valoir `pending` au lieu de `draft` quand vous avez activé le passage direct sans brouillon pour cette connexion dans Paramètres → Intégrations.
+
+---
+
+## Remplacer et annuler une commande
+
+Quand le mapping lit un `message_function` (`original`, `replace` ou `cancel` ; vide signifie `original`) et l'identifiant propre au client pour la commande comme `external_id`, un message ultérieur modifie la commande qu'il a créée au lieu d'en créer une seconde.
+
+- **Remplacement ou annulation tant que la commande est un brouillon** : le brouillon est modifié (ou annulé) sur place.
+- **Commande déjà au-delà du brouillon** (planifiée, en route) : rien n'est modifié automatiquement. La modification est **mise en attente** pour un planificateur, qui reçoit une tâche et une notification et l'applique ou la rejette depuis la commande.
+- **Après un refus du chargement, ou sur une commande clôturée** (annulée, livrée, facturée) : le message est ignoré et l'opérateur en est informé.
+- Un message plus ancien que le dernier traité pour le même `external_id` est ignoré comme périmé ; un nouvel essai identique répond `unchanged`.
+- Un `external_id` inconnu répond `200` avec `outcome: not_found` ; un remplacement ou une annulation ne crée jamais de commande. Un remplacement ou une annulation exige l'`external_id`, sinon la réponse est `422` `{"error":"external_id_required"}`.
+
+---
+
+## Sortie dans le format propre au client
+
+Par défaut, Druma envoie son corps d'événement JSON standard. Pour les clients sur SAP, S/4HANA ou EDI, vous pouvez basculer une connexion sur un **format de sortie personnalisé** dans le panneau **Mapping sortant** de l'onglet API :
+
+1. **Choisissez un modèle prêt à l'emploi** (EDIFACT IFTSTA D.01B ou D.96A, statut d'expédition SAP IDoc, événements de commande S/4HANA / Transportation Management en JSON) **ou collez le message qu'attend le client** et laissez l'IA proposer le mapping. Les modèles sont construits à partir d'exemples publics et marqués non vérifiés tant qu'un client ne les a pas confirmés.
+2. **Renseignez les parties** (identifiants de l'expéditeur et du destinataire) — elles sont toujours les vôtres, jamais devinées.
+3. **Renseignez la table des statuts** : une ligne par événement Druma avec le code et le qualificatif de statut du client. **Un événement sans ligne n'est pas envoyé** (il apparaît comme *ignoré*, rien n'est réessayé).
+4. **Prévisualisez** avec une vraie commande de ce client — rien n'est envoyé ni enregistré.
+5. Enregistrez. **Utiliser le webhook standard** ramène à tout moment au corps JSON simple.
+
+La signature (HMAC) couvre exactement les octets envoyés. Un mapping ne peut utiliser qu'un ensemble fixe de champs de commande, d'arrêt, de plaque d'immatriculation, de POD et de références : noms de chauffeurs, numéros de téléphone, positions et prix ne quittent jamais Druma par ce biais.
+
+### Autres événements (sur option)
+
+Cochez-les dans **Sélectionner les événements à envoyer**. Ils ne sont jamais activés d'eux-mêmes sur une connexion existante.
+
+- **Événements d'arrêt** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` : la première arrivée ou le premier départ enregistré à un arrêt de chargement ou de déchargement.
+- **Commande refusée** — `order.declined` : vous avez refusé un chargement entrant ; le corps contient le code du motif (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) et un commentaire facultatif.
+- **POD téléversé** — `order.pod_uploaded` : envoyé **uniquement après l'approbation des documents par un planificateur**. Sur la commande, **Approuver le POD et prévenir le client** l'envoie une fois par commande ; une photo téléversée par un chauffeur ne le déclenche jamais.
+
+Chaque événement de commande et d'arrêt renvoie aussi les **références** du client (par exemple le numéro de livraison SAP qu'il a envoyé), dans un objet `references` — uniquement les références marquées visibles pour le client. La clé est absente quand la commande n'en a aucune.
+
+### OAuth2 client credentials
+
+Pour les passerelles qui exigent un jeton (SAP BTP, Azure AD, Keycloak), choisissez le type d'authentification **OAuth2 (client credentials)** et saisissez l'URL du jeton (https, hôte public), l'identifiant et le secret client, et éventuellement scope, audience et le mode d'authentification du client (en-tête HTTP Basic ou corps de la requête). Druma obtient un jeton d'accès, ne le garde qu'en mémoire jusqu'à peu avant son expiration, réessaie une fois avec un jeton neuf après un `401` et ne le stocke jamais. Les identifiants sont conservés dans le coffre-fort, en écriture seule (un champ vide conserve la valeur enregistrée) et ne sont plus jamais affichés.
+
+---
+
+## Plateformes de fret
+
+Les commandes de Transporeon et de Shiptify n'utilisent pas cette API : voir [Plateformes de fret](/fr/integrations/freight-platforms).
+
+---
+
 ## Pages associées
 
 <Card title="Portail client" icon="users" href="/fr/client-portal/tracking-shipments">

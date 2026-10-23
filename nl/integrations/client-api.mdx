@@ -161,6 +161,94 @@ Elke gebeurtenis bevat ook `api_version` en `event_id` (gelijk bij herhalingen, 
 
 ---
 
+## Formaten die de klant kan sturen
+
+Het systeem van een klant hoeft geen JSON te spreken. Druma leest deze inkomende formaten en zet ze allemaal om in dezelfde order:
+
+| Formaat | Typische afzender | Opmerkingen |
+|---|---|---|
+| **JSON** | Modern ERP / TMS | De standaard. |
+| **XML** | SAP IDoc (bijvoorbeeld zendings- of leverings-IDocs) | Gewone XML zonder `DOCTYPE`. Eén IDoc per verzoek. |
+| **EDIFACT** | Verladers op EDI (bijvoorbeeld transportopdrachten IFTMIN) | Eén bericht per verzoek. |
+| **CSV** | Verladers die alleen een spreadsheet kunnen exporteren | `Content-Type: text/csv`, of zet de verbinding vast op CSV. UTF-8 of windows-1250, scheidingsteken `,` `;` of tab, tot 500 rijen en 200 kolommen. **Eén bestand is één order**: rijen worden stops. |
+
+Druma herkent JSON, XML en EDIFACT aan de inhoud. CSV wordt nooit geraden: zet het formaat van de verbinding vast op **CSV** of laat de klant `Content-Type: text/csv` sturen. De body van het verzoek is beperkt tot 256 KB. Een verzoek met meer dan één bericht (meerdere IDocs, meerdere `UNH`-segmenten of een CSV met meerdere verschillende ordernummers) wordt geweigerd met `422` en `{"error":"multi_message_not_supported"}`.
+
+<Note>
+Kant-en-klare mappings voor bekende formaten (SAP IDoc, EDIFACT IFTMIN, SAP-vrachtopdrachten, Trans.eu-orders) zijn gebouwd uit openbaar gepubliceerde voorbeeldberichten. Ze zijn gelabeld **Gebouwd op een openbaar voorbeeld** tot een echt bericht van uw klant ze bevestigt (**Geverifieerd met een klantbericht**). Zolang een verbinding nog in de opzet zit, past Druma zo'n mapping toe zonder AI-stap; u test hem vóór livegang wel met het eigen bericht van de klant. Past er geen kant-en-klare mapping, dan stelt de AI er zoals voorheen een voor.
+</Note>
+
+### Aanvullingen in de wizard
+
+- **Formaat vastzetten** — dwing de parser af op JSON, XML, EDIFACT of CSV als de klant altijd één formaat stuurt.
+- **Chip voor bekend formaat** — toont welke kant-en-klare mapping wordt gebruikt en de revisie ervan. Een verbinding blijft op de revisie waarmee ze is goedgekeurd; bestaat er een nieuwere revisie, dan krijgt u de melding **Mapping bijwerken** en verandert er niets totdat u klikt. De vorige mapping blijft in de versiegeschiedenis om terug te kunnen draaien.
+- **Berichtenlog** — de laatste 50 echte berichten met formaat, resultaat, herhaald of niet, idempotentiesleutel, duur en wat er ontbrak, te filteren op aangemaakt, door AI aangemaakt, geweigerd en herhaald.
+
+---
+
+## Hetzelfde bericht twee keer sturen (idempotentie)
+
+Klantsystemen proberen opnieuw. Om een herhaling veilig te maken voegt de klant een `Idempotency-Key`-header toe (maximaal 255 tekens). Bevat het formaat al een unieke bericht-id, dan kan Druma die gebruiken (een mapping kan hem als idempotentiesleutel lezen). **Zonder sleutel is er geen ontdubbeling.**
+
+| Situatie | Antwoord van Druma |
+|---|---|
+| Eerste verzoek met een nieuwe sleutel | `200`, de order wordt aangemaakt |
+| Dezelfde sleutel, dezelfde body, eerste verzoek klaar | `200` met de oorspronkelijke `order_id` en `order_number`, de huidige `status` van de order en de antwoordheader `Idempotent-Replayed: true`. Geen tweede order. |
+| Dezelfde sleutel terwijl het eerste verzoek nog loopt | `409` `{"error":"in_progress"}` met `Retry-After: 5`. Probeer later opnieuw met dezelfde sleutel. |
+| Dezelfde sleutel, andere body | `422` `{"error":"idempotency_key_reused"}`. Eén sleutel hoort bij één bericht. |
+
+Sleutels worden 90 dagen onthouden. Een met `422` geweigerd verzoek laat geen sleutel achter, dus dezelfde sleutel kan na het herstellen van de gegevens opnieuw worden gebruikt.
+
+Het `200`-antwoord van de inkomende API bevat nu ook een veld `outcome` (bijvoorbeeld `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Behandel het als een open lijst: er kunnen waarden bijkomen. `status` kan `pending` zijn in plaats van `draft` als u voor deze verbinding onder Instellingen → Integraties het overslaan van de conceptfase hebt ingeschakeld.
+
+---
+
+## Een order vervangen en annuleren
+
+Leest de mapping een `message_function` (`original`, `replace` of `cancel`; leeg betekent `original`) en de eigen order-id van de klant als `external_id`, dan wijzigt een later bericht de order die het heeft gemaakt, in plaats van een tweede aan te maken.
+
+- **Vervangen of annuleren zolang de order nog een concept is**: het concept wordt ter plekke gewijzigd (of geannuleerd).
+- **Order voorbij het concept** (gepland, onderweg): er wordt niets automatisch gewijzigd. De wijziging wordt **vastgehouden** voor een planner, die een taak en een melding krijgt en haar vanuit de order toepast of afwijst.
+- **Na uw weigering van de lading, of bij een gesloten order** (geannuleerd, geleverd, gefactureerd): het bericht wordt genegeerd en de operator wordt op de hoogte gebracht.
+- Een bericht dat ouder is dan het laatst verwerkte voor dezelfde `external_id` wordt als verouderd genegeerd; een identieke herhaling antwoordt `unchanged`.
+- Een onbekende `external_id` antwoordt `200` met `outcome: not_found`; vervangen of annuleren maakt nooit een order aan. Vervangen of annuleren vereist de `external_id`, anders is het antwoord `422` `{"error":"external_id_required"}`.
+
+---
+
+## Uitgaand in het eigen formaat van de klant
+
+Standaard stuurt Druma zijn standaard JSON-gebeurtenisbody. Voor klanten op SAP, S/4HANA of EDI kunt u een verbinding omzetten naar een **eigen uitgaand formaat** in het paneel **Uitgaande mapping** op het tabblad API:
+
+1. **Kies een kant-en-klare voorinstelling** (EDIFACT IFTSTA D.01B of D.96A, SAP IDoc-zendingsstatus, S/4HANA / Transportation Management-orderevents in JSON) **of plak het bericht dat de klant verwacht** en laat de AI de mapping voorstellen. Voorinstellingen zijn gebouwd uit openbare voorbeelden en gelden als niet-geverifieerd tot een klant ze bevestigt.
+2. **Vul de partijen in** (identificaties van afzender en ontvanger) — die zijn altijd van u, nooit geraden.
+3. **Vul de statustabel in**: één rij per Druma-gebeurtenis met de statuscode en qualifier van de klant. **Een gebeurtenis zonder rij wordt niet verstuurd** (ze verschijnt als *overgeslagen*, er wordt niets herhaald).
+4. **Voorbeeld** met een echte order van die klant — er wordt niets verstuurd of opgeslagen.
+5. Opslaan. **Standaard webhook gebruiken** brengt u op elk moment terug naar de gewone JSON-body.
+
+De handtekening (HMAC) dekt exact de verstuurde bytes. Een mapping kan alleen een vaste set order-, stop-, kenteken-, POD- en referentievelden gebruiken: namen van chauffeurs, telefoonnummers, posities en prijzen verlaten Druma hierdoor nooit.
+
+### Meer gebeurtenissen (op aanvraag)
+
+Vink ze aan bij **Te versturen gebeurtenissen selecteren**. Ze worden nooit uit zichzelf ingeschakeld voor een bestaande verbinding.
+
+- **Stopgebeurtenissen** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading`: de eerste geregistreerde aankomst of vertrek van een laad- of losstop.
+- **Order geweigerd** — `order.declined`: u hebt een binnenkomende lading geweigerd; de body bevat de redencode (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) en een optionele opmerking.
+- **POD geüpload** — `order.pod_uploaded`: wordt **pas verstuurd nadat een planner de documenten heeft goedgekeurd**. Op de order verstuurt **POD goedkeuren en klant informeren** het één keer per order; een foto die een chauffeur uploadt, activeert het nooit.
+
+Elke order- en stopgebeurtenis stuurt ook de **referenties** van de klant terug (bijvoorbeeld het SAP-leveringsnummer dat hij stuurde), in een object `references` — alleen referenties die als zichtbaar voor de klant zijn gemarkeerd. De sleutel ontbreekt als de order er geen heeft.
+
+### OAuth2 client credentials
+
+Kies voor gateways die een token vereisen (SAP BTP, Azure AD, Keycloak) het authenticatietype **OAuth2 (client credentials)** en voer de token-URL (https, openbare host), client-id en client-secret in, en eventueel scope, audience en hoe de client zich authenticeert (HTTP Basic-header of body van het verzoek). Druma haalt een toegangstoken op, bewaart het alleen in het geheugen tot kort voor het verloopt, probeert bij een `401` één keer opnieuw met een nieuw token en slaat het nooit op. De inloggegevens staan in de kluis, zijn alleen schrijfbaar (een leeg veld behoudt de opgeslagen waarde) en worden nooit meer getoond.
+
+---
+
+## Vrachtplatforms
+
+Orders van Transporeon en Shiptify gebruiken deze API niet: zie [Vrachtplatforms](/nl/integrations/freight-platforms).
+
+---
+
 ## Gerelateerde pagina's
 
 <Card title="Klantportaal" icon="users" href="/nl/client-portal/tracking-shipments">

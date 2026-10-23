@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 A v1-en belüli változások bővítő jellegűek. A visszafelé nem kompatibilis változások és kivezetések itt szerepelnek először. A szabályzatot az [API-verziókezelés](/hu/integrations/api-versioning) írja le.
 
+## 2026-10-23
+
+**Hozzáadva (v1, nincs teendő)**
+
+- **Idempotens bejövő forgalom.** Az `inbound-client-api` elfogad egy opcionális `Idempotency-Key` fejlécet. Egy lezárt kulcs ismétlése `200` választ ad az eredeti megrendeléssel és az `Idempotent-Replayed: true` fejléccel; ismétlés, amíg az első kérés még fut, `409` `{"error":"in_progress"}` választ ad `Retry-After: 5` fejléccel; ugyanaz a kulcs más törzzsel `422` `{"error":"idempotency_key_reused"}` választ ad. Kulcs nélkül, mint eddig, nincs duplikátumszűrés.
+- **`outcome` a bejövő `200` válaszban.** Additív karakterlánc (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Kezelje nyitott listaként. A létrehozási válasz `status` értéke `pending` lehet, ha az üzemeltető a kapcsolathoz bekapcsolja a piszkozat kihagyását.
+- **Csere és lemondás.** A `message_function` és `external_id` értéket olvasó leképezés egy későbbi üzenetet a létrehozott megrendelés módosításává tesz. Új `422` kódok: `external_id_required`, `unknown_message_function`.
+- **További kérésformátumok.** XML (SAP IDoc), EDIFACT és `text/csv` a JSON mellett; kérésenként egy üzenet (különben `422` `{"error":"multi_message_not_supported"}`).
+- **Új, opcionális webhook-események.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` és `order.pod_uploaded` (csak azután megy, hogy egy diszpécser jóváhagyta a POD-ot). Csak azokhoz a kapcsolatokhoz kerülnek kézbesítésre, amelyek felsorolják őket; egyetlen meglévő kapcsolat sem változik.
+- **`references` a megrendelés- és megálló-eseményeken.** Egy opcionális `{ "<key>": "<value>" }` objektum az ügyfél saját hivatkozásaival, amelyeket az üzemeltető az ügyfél számára láthatónak jelölt. Hiányzik, ha a megrendelésnek nincs ilyen.
+- **Kimenő leképezés.** Egy kapcsolat XML-t, EDIFACT-ot vagy JSON-t küldhet az ügyfél elrendezésében, annak állapotkódjaival; a hozzárendelt állapot nélküli esemény kimarad (nem kerül elküldésre, nem próbálkozik újra). Kimenő leképezés nélkül a törzs bájtra azonos a korábbival.
+- **OAuth2 client credentials** kimenő hitelesítési típusként a bearer, basic, HMAC és none mellett.
+
+**Elavult / eltávolított:** semmi.
+
 ## 2026-10-10
 
 **Hozzáadva (v1, nincs teendő)**

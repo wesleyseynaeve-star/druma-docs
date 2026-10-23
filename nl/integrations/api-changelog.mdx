@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Wijzigingen binnen v1 zijn additief. Brekende wijzigingen en uitfaseringen staan hier als eerste. Het beleid staat onder [API-versiebeheer](/nl/integrations/api-versioning).
 
+## 2026-10-23
+
+**Toegevoegd (v1, geen actie nodig)**
+
+- **Idempotente invoer.** `inbound-client-api` accepteert een optionele header `Idempotency-Key`. Een herhaling van een afgeronde sleutel antwoordt `200` met de oorspronkelijke order en de header `Idempotent-Replayed: true`; een herhaling terwijl het eerste verzoek nog loopt antwoordt `409` `{"error":"in_progress"}` met `Retry-After: 5`; dezelfde sleutel met een andere body antwoordt `422` `{"error":"idempotency_key_reused"}`. Zonder sleutel is er zoals voorheen geen ontdubbeling.
+- **`outcome` in de inkomende `200`.** Een additieve string (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Behandel het als een open lijst. De `status` van het aanmaakantwoord kan `pending` zijn wanneer de operator het overslaan van de conceptfase voor de verbinding inschakelt.
+- **Vervangen en annuleren.** Een mapping die `message_function` en `external_id` leest, maakt van een later bericht een wijziging van de aangemaakte order. Nieuwe `422`-codes: `external_id_required`, `unknown_message_function`.
+- **Meer verzoekformaten.** XML (SAP IDoc), EDIFACT en `text/csv` naast JSON; één bericht per verzoek (anders `422` `{"error":"multi_message_not_supported"}`).
+- **Nieuwe optionele webhook-events.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` en `order.pod_uploaded` (pas verstuurd nadat een planner de POD goedkeurt). Alleen bezorgd aan verbindingen die ze vermelden; geen bestaande verbinding verandert.
+- **`references` bij order- en stop-events.** Eén optioneel object `{ "<key>": "<value>" }` met de eigen referenties van de klant die de operator als zichtbaar voor de klant heeft gemarkeerd. Afwezig als de order er geen heeft.
+- **Uitgaande mapping.** Een verbinding kan XML, EDIFACT of JSON sturen in de opmaak van de klant met zijn statuscodes; een event zonder gekoppelde status wordt overgeslagen (niet verstuurd, niet herhaald). Zonder uitgaande mapping is de body byte-voor-byte gelijk aan die van voorheen.
+- **OAuth2 client credentials** als uitgaand authenticatietype, naast bearer, basic, HMAC en none.
+
+**Verouderd / verwijderd:** niets.
+
 ## 2026-10-10
 
 **Toegevoegd (v1, geen actie nodig)**
