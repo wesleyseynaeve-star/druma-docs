@@ -769,6 +769,19 @@ Rejestr klientów i brokerów.
 
 **Gdzie jest egzekwowane.** Client and claims screens ask for it; create_client_checked, set_client_vetting_override, create_cargo_claim_draft and the write policies on client_claims, client_claim_internal, client_loading_mode_rules and client_preload_profiles check it. Writing the clients table itself needs the database key commercial:manage.
 
+### Scalanie zduplikowanych klientów
+
+`clients:merge`
+
+- **Domyślnie mają je:** Administrator, Administrator firmy, Kluczowy użytkownik
+- **W kreatorze ról:** Można zaznaczyć
+- **Egzekwowane w:** Ekrany aplikacji i baza danych
+- **Wymaga także:** `clients:read`, `clients:manage`
+
+**Co daje.** Merge duplicate client records of the same legal entity into one surviving client (Clients list: select 2 to 20, Merge), and undo a merge within 30 days.
+
+**Gdzie jest egzekwowane.** The Merge action asks for it; the RPCs client_merge, client_merge_undo and client_merge_history check it in the database, and client_merge is the only writer of the move log. A different VAT number, issued invoices on the duplicate, an open credit balance and several other conditions refuse a merge outright; the rest need an explicit acknowledgement.
+
 ### Oznaczanie komunikacji z klientami jako obsłużonej
 
 `communications:handle`
