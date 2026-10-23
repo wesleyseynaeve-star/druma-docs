@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-23 09:41 UTC
+Generated: 2026-10-23 09:44 UTC
 
 ---
 
@@ -12757,7 +12757,7 @@ Druma issues eCMR documents **in-house by default** using the Druma native provi
 TransFollow can no longer be newly selected by any company. It only continues to work as a legacy path for companies with a pre-existing TransFollow configuration — those companies keep functioning as before and silently migrate to Native the next time the integration is saved.
 
 > **Note:** 
-eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap, regardless of which provider you use.
+eCMR is part of the platform, regardless of which provider you use. Whether a fee per eCMR applies is agreed in writing in **Annex 2 of your Order Form** when the eCMR module is enabled for your company; none applies until then.
 
 
 ---
@@ -12874,7 +12874,7 @@ By default, Druma uses its **native eCMR provider** — no external account or A
 
 ## Billing
 
-eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap. You can view usage statistics under **Settings → Billing → Usage**.
+eCMR is part of the platform. Whether a fee per eCMR applies is agreed in writing in **Annex 2 of your Order Form** when the eCMR module is enabled for your company; none applies until then. The app shows no price and no usage meter.
 
 ---
 
@@ -13254,7 +13254,7 @@ Carriers who continue to use paper CMR are fully compliant. The choice to use eC
 ## eCMR Providers
 
 
-Druma issues eCMRs with its **native provider** — it issues and seals eCMRs entirely in-house at no per-document cost. In **Settings → Integrations → eCMR provider** (company admin access required), the only choices are **Native** and **Disabled**. **TransFollow** cannot be newly selected by any company; it exists only as a legacy path for companies that configured it before the native provider was introduced — see below.
+Druma issues eCMRs with its **native provider** — it issues and seals eCMRs entirely in-house. In **Settings → Integrations → eCMR provider** (company admin access required), the only choices are **Native** and **Disabled**. **TransFollow** cannot be newly selected by any company; it exists only as a legacy path for companies that configured it before the native provider was introduced — see below.
 
 ---
 
@@ -13281,7 +13281,7 @@ Go to **Settings → Integrations → eCMR provider** and click **Test connectio
 
 ### Costs
 
-eCMR is included in your Druma subscription at no extra cost — there is no per-document charge and no usage cap.
+eCMR is part of the platform. Whether a fee per eCMR applies is agreed in writing in **Annex 2 of your Order Form** when the eCMR module is enabled for your company; none applies until then.
 
 ### Viewing and downloading eCMR documents
 
