@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-23 11:19 UTC
+Generated: 2026-10-23 16:29 UTC
 
 ---
 
@@ -954,7 +954,7 @@ For every permission, exactly what it grants, where it is enforced and which rol
 | Invoicing | Full | Full | Full | Full | None | None | Full | None | None | None | None | None | None |
 | Pricing | Full | Full | Full | Full | None | Full | None | None | None | None | Partial | None | None |
 | Freight Exchange | Full | Full | Full | Full | None | None | None | None | None | None | None | None | None |
-| Reports | Full | Full | Full | Full | Full | Full | Full | None | None | Full | Full | None | None |
+| Reports | Full | Full | Full | Read only | Read only | Read only | Read only | None | None | Full | Read only | None | None |
 | Users | Full | Full | Read only | Read only | Read only | Read only | Partial | None | None | None | None | None | None |
 | Settings | Full | Full | Partial | None | None | None | None | None | None | None | None | None | None |
 | Driver App | None | None | None | None | None | None | None | None | None | None | None | Full | None |
@@ -2282,6 +2282,19 @@ Company reports and analytics exports.
 **What it grants.** Use the reporting tools: Analytics pages, the report builder, AI Reports, saved views and schedules, annotations, and Ask Druma KPI tools. Cost and margin figures still need orders:financials and finance:read; named-driver data needs the database key reports:driver_data.
 
 **Where it is enforced.** Analytics routes ask for it; the report builder gate (reporting-query), report_saved_views, report_schedules, report_row_annotations, kpi_* alert tables and the analytics and Ask Druma RPCs check it.
+
+### Manage report page layouts
+
+`reports:layout_manage`
+
+- **Held by default:** Admin, Company Admin, Key User, Reporting
+- **In the role builder:** Can be ticked
+- **Enforced in:** App screens and database
+- **Also needs:** `reports:read`
+
+**What it grants.** Save and reset the company default layout of report pages.
+
+**Where it is enforced.** The report layout bar asks for it; the report_page_layout_save and report_page_layout_reset RPCs check it for the company scope.
 
 ### Report on all rows (trucks, clients, waiting)
 
