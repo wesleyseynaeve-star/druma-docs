@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-23 09:45 UTC
+Generated: 2026-10-23 10:48 UTC
 
 ---
 
@@ -2673,6 +2673,18 @@ These permissions name a row-level security role-set in the database. Unless mar
 **What it grants.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
 
 **Where it is enforced.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
+
+### capi_library:manage
+
+`capi_library:manage`
+
+- **Held by default:** Admin
+- **In the role builder:** Not selectable
+- **Enforced in:** Database and server functions
+
+**What it grants.** Druma staff only: edit the shared known-format library that recognises client order messages (SAP IDoc, EDIFACT, JSON freight orders), publish revisions and mark them verified.
+
+**Where it is enforced.** The capi_library_* functions and the capi-library-admin Edge Function check it; the library tables have no tenant policy. Held by the platform admin alone, never grantable by a company admin.
 
 ---
 
