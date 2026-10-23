@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-23 16:29 UTC
+Generated: 2026-10-23 17:41 UTC
 
 ---
 
@@ -17990,7 +17990,7 @@ If another operator already has an approved mapping for a client with the same V
 The flat, hand-edited inbound field-mapping table from older CAPI setups is gone for **new** connections — everything now goes through the wizard's versioned mapping spec. Connections configured before this change keep working automatically on their existing field map; there's just no UI to hand-edit that flat map anymore.
 
 
-The client's system sends a `POST` request to the endpoint URL with the header `Authorization: Bearer <token>` and a JSON body. Druma creates the order in **Draft** status. A planner can review and confirm draft orders from the planning board.
+The client's system sends a `POST` request to the endpoint URL with the header `Authorization: Bearer <token>` and a JSON body. Druma creates the order in **Draft** status (or **Pending**, if you turned on skip-draft for this connection in Settings → Integrations and the order is complete). A planner can review and confirm draft orders from the planning board. The same `POST` can also carry XML, EDIFACT or CSV, can be repeated safely with an `Idempotency-Key` header, and can replace or cancel an earlier order: see [Formats the client can send](#formats-the-client-can-send), [Sending the same message twice](#sending-the-same-message-twice-idempotency) and [Replacing and cancelling an order](#replacing-and-cancelling-an-order).
 
 ---
 
@@ -18036,11 +18036,12 @@ If a client's system silently renames or moves a field, Druma detects the mismat
     Paste the client's **Webhook URL** — the endpoint in their system that will receive events.
   
   ### Choose an authentication type
-    Select one of the four **Auth type** options:
+    Select one of the five **Auth type** options:
 
     - **None** — no authentication header (use only on trusted private networks)
     - **Bearer token** — Druma adds `Authorization: Bearer <value>` to every request
     - **Basic auth** — Druma adds an `Authorization: Basic` header with a base64-encoded username and password
+    - **OAuth2 (client credentials)** — Druma fetches a short-lived access token from the client's own token endpoint and sends it as `Authorization: Bearer <token>`; see [OAuth2 client credentials](#oauth2-client-credentials)
     - **HMAC-SHA256** — Druma signs each request body with a shared secret and sends the signature in the `X-Druma-Signature` header (`sha256=<hex>` of the raw body) and, for replay protection, `X-Druma-Signature-V2` (`t=<unix seconds>,v1=<hex>`, signed over `<t>.<body>`); the client verifies it before processing. See [API versioning](/en/integrations/api-versioning) for a verification example
 
     Fill in the credentials for whichever type you choose. Leave a credential field blank to keep the currently saved value.
@@ -18053,6 +18054,7 @@ If a client's system silently renames or moves a field, Druma detects the mismat
     - **Order delivered**
     - **Order delayed**
     - **Order invoiced**
+    - Opt-in extras: stop arrived / departed, order refused, POD uploaded (see [More events](#more-events-opt-in))
   
   ### Configure the outbound field map (optional)
     If the client's system expects different field names in the payload, use the **Outbound field map** table to rename Druma's output fields before they are sent.
@@ -18118,6 +18120,94 @@ Do not share a client's bearer token with other clients or embed it in publicly 
 
 ---
 
+## Formats the client can send
+
+A client system does not have to speak JSON. Druma reads these inbound formats and maps all of them into the same order:
+
+| Format | Typical sender | Notes |
+|---|---|---|
+| **JSON** | Modern ERP / TMS | The default. |
+| **XML** | SAP IDoc (for example shipment or delivery IDocs) | Plain XML without a `DOCTYPE`. One IDoc per request. |
+| **EDIFACT** | Shippers on EDI (for example IFTMIN transport instructions) | One message per request. |
+| **CSV** | Shippers that can only export a spreadsheet | `Content-Type: text/csv`, or pin the connection to CSV. UTF-8 or windows-1250, delimiter `,` `;` or tab, up to 500 rows and 200 columns. **One file is one order**: rows become stops. |
+
+Druma recognises JSON, XML and EDIFACT from the content. CSV is never guessed: pin the format to **CSV** on the connection, or have the client send `Content-Type: text/csv`. The request body is limited to 256 KB. A request that carries more than one message (several IDocs, several `UNH` segments, or a CSV with several different order numbers) is refused with `422` and `{"error":"multi_message_not_supported"}`.
+
+> **Note:** 
+Ready-made mappings for well-known formats (SAP IDoc, EDIFACT IFTMIN, SAP freight orders, Trans.eu orders) are built from publicly published sample messages. They are labelled **Built from a public sample** until a real message from your client confirms them (**Verified with a customer message**). While a connection is still in setup, Druma applies such a mapping without an AI step; you still test it with the client's own message before going live. If no ready-made mapping matches, the AI proposes one as before.
+
+
+### Wizard additions
+
+- **Format pin** — force the parser to JSON, XML, EDIFACT or CSV when the client always sends one format.
+- **Known-format chip** — shows which ready-made mapping is in use and its revision. A connection stays on the revision it was approved with; when a newer revision exists you get an **Update mapping** prompt, and nothing changes until you click it. The previous mapping stays in the version history for roll-back.
+- **Message log** — the last 50 real messages with format, outcome, replayed or not, idempotency key, duration and what was missing, filterable by created, created by AI, rejected and replayed.
+
+---
+
+## Sending the same message twice (idempotency)
+
+Client systems retry. To make a retry safe, the client adds an `Idempotency-Key` header (up to 255 characters). If the format already carries a unique message id, Druma can use that instead (a mapping can read it as the idempotency key). **Without a key there is no de-duplication.**
+
+| Situation | Druma answers |
+|---|---|
+| First request with a new key | `200`, the order is created |
+| Same key again, same body, first request finished | `200` with the original `order_id` and `order_number`, the order's current `status`, and the response header `Idempotent-Replayed: true`. No second order. |
+| Same key again while the first request is still being processed | `409` `{"error":"in_progress"}` with `Retry-After: 5`. Retry later with the same key. |
+| Same key, different body | `422` `{"error":"idempotency_key_reused"}`. One key names one message. |
+
+Keys are remembered for 90 days. A request that was rejected with `422` leaves no key behind, so the same key can be used again after fixing the payload.
+
+The `200` response of the inbound API now also contains an `outcome` field (for example `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Treat it as an open list: new values may be added. `status` can be `pending` instead of `draft` when you have turned on skip-draft for this connection in Settings → Integrations.
+
+---
+
+## Replacing and cancelling an order
+
+When the mapping reads a `message_function` (`original`, `replace` or `cancel`; empty means `original`) and the client's own order id as `external_id`, a later message changes the order it made instead of creating a second one.
+
+- **Replace or cancel while the order is still a draft**: the draft is changed (or cancelled) in place.
+- **Order already past draft** (planned, on the road): nothing is changed automatically. The change is **parked** for a planner, who gets a task and a bell and applies or dismisses it from the order.
+- **After you refused the load, or on a closed order** (cancelled, delivered, invoiced): the message is ignored and the operator is told.
+- A message older than the last one already handled for the same `external_id` is ignored as stale; an identical retry answers `unchanged`.
+- An unknown `external_id` answers `200` with `outcome: not_found`; a replace or cancel never creates an order. A replace or cancel needs the `external_id`, otherwise the answer is `422` `{"error":"external_id_required"}`.
+
+---
+
+## Outbound in the client's own format
+
+By default Druma posts its standard JSON event body. For clients on SAP, S/4HANA or EDI you can switch a connection to a **custom outbound format** in the **Outbound mapping** panel of the API tab:
+
+1. **Pick a ready-made preset** (EDIFACT IFTSTA D.01B or D.96A, SAP IDoc shipment status, S/4HANA / Transportation Management order events JSON) **or paste the message the client expects** and let the AI propose the mapping. Presets are built from public samples and are marked unverified until a client confirms them.
+2. **Fill in the parties** (sender and receiver identifiers) — these are always yours, never guessed.
+3. **Fill in the status table**: one row per Druma event with the client's status code and qualifier. **An event without a row is not sent** (it shows as *skipped*, nothing is retried).
+4. **Preview** with a real order of that client — nothing is sent or stored.
+5. Save. **Use standard webhook** returns to the plain JSON body at any time.
+
+The signature (HMAC) covers the exact bytes sent. A mapping can only use a fixed set of order, stop, vehicle-plate, POD and reference fields: driver names, phone numbers, positions and prices never leave Druma through it.
+
+### More events (opt-in)
+
+Tick these in **Select events to send**. They are never switched on for an existing connection by themselves.
+
+- **Stop events** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading`: the first recorded arrival or departure of a loading or offloading stop.
+- **Order refused** — `order.declined`: you refused an inbound load; the body carries the reason code (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) and an optional comment.
+- **POD uploaded** — `order.pod_uploaded`: sent **only after a planner approves the documents**. On the order, **Approve POD and notify client** sends it once per order; a driver uploading a photo never triggers it.
+
+Every order and stop event also carries the client's **references** back (for example the SAP delivery number the client sent in), in a `references` object — only references marked visible to the client. The key is absent when the order has none.
+
+### OAuth2 client credentials
+
+For gateways that need a token (SAP BTP, Azure AD, Keycloak), choose the auth type **OAuth2 (client credentials)** and enter the token URL (https, public host), client id and client secret, and optionally scope, audience and how the client authenticates (HTTP Basic header or request body). Druma fetches an access token, keeps it only in memory until shortly before it expires, retries once with a fresh token on a `401`, and never stores it. The credentials are kept in the vault, are write-only (a blank field keeps the saved value) and are never shown again.
+
+---
+
+## Freight platforms
+
+Orders from Transporeon and Shiptify do not use this API: see [Freight platforms](/en/integrations/freight-platforms).
+
+---
+
 ## Related pages
 
 
@@ -18130,6 +18220,73 @@ Do not share a client's bearer token with other clients or embed it in publicly 
 
 
   How planners create and manage orders in Druma.
+
+
+---
+
+## Freight platforms (Transporeon, Shiptify)
+
+
+Transporeon and Shiptify are shipper-side freight platforms. When you connect one, its loads arrive in Druma as orders and Druma reports progress back, all through the same flow. Both are switched on for your company by Druma, then set up under **Settings → Integrations**.
+
+---
+
+## What happens to a load
+
+
+  ### The load arrives
+    Druma stores the platform's message first, then creates **one order per load** with all its stops, references and goods. A load is never turned into two orders, however often the platform repeats it.
+  
+  ### The order starts as a draft
+    By default the order is a **Draft** for a planner to review. In the integration's settings you can choose to create it as **Pending** when everything needed is present. The client is matched on the platform's own account id, an exact VAT number or a link you confirmed — never on a name alone.
+  
+  ### The platform changes the load
+    A change to a **draft** is applied for you and noted in the order history. A change to an order that is already planned or running is **parked**: the planner gets a task and a bell and applies or rejects it from the order. A change to a **closed** order (delivered, cancelled, invoiced) is never written; a Key User item tells you what the platform asked for. The price is set when the order is created and is never rewritten afterwards.
+  
+  ### Status goes back
+    Arrivals, departures, delivery and delays are sent back to the platform. Status codes are agreed per shipper, so you map each Druma event to the platform's code once in the integration's **status map**; an event with no mapping is held, not sent, until you add one.
+  
+  ### You approve the POD
+    A POD or CMR is **never sent on its own**. When one is uploaded the order shows it as waiting for review; a planner ticks the documents and approves, and only then are they sent. Rejecting sends nothing.
+  
+
+
+---
+
+## Transporeon
+
+- **Connect**: choose **Test** or **Production**, enter the Carrier Interface credentials (OAuth2 client credentials, or Basic), and give Transporeon the **push address and token** shown in the panel. Druma also pulls on a short schedule, so a missed push is caught up.
+- **Answer from the order**: accept or decline a transport (with a reason), request or revoke a change, place or withdraw an offer. Each action is queued and retried, and you can see the state on the order.
+- **Optional GPS sharing**: if you switch it on, the licence plate and position of the truck on an active Transporeon transport is shared with Transporeon Visibility. Only vehicles on those transports; it stops when the transport ends.
+
+## Shiptify
+
+- **Connect**: choose **Test** or **Production**, enter the API key (and the optional signing key), and give Shiptify the **webhook address and token** shown in the panel. **Test connection** checks the key and lists your active shippers.
+- **No accept or refuse**: a carrier only receives a shipment once it is confirmed, so a Shiptify load is an accepted load.
+- **Options**: which confirmations to send (pickup, delivery, replan on delay, tracking points), whether to download the shipper's documents, and whether to send truck and trailer plates (off by default).
+
+---
+
+## When something fails
+
+A message that could not be processed stays in the integration's list with the reason. Fix the cause (for example link the client) and use **Replay**. Outgoing calls that fail are retried with growing pauses and shown as dead after repeated failures, with a **Retry** button. Orders from a demo or prospect company are never sent to a platform.
+
+Druma keeps the platform's raw messages and the record of what it sent back for **30 days**; only messages that are finished (processed, ignored or failed) and calls that are sent, dead or skipped are removed. Anything still waiting or being retried is kept. The orders themselves are not affected.
+
+> **Note:** 
+Druma never sends a driver's name or phone number to a platform, and a platform setting that Druma's own rules forbid (for example writing to a closed order) cannot be switched on.
+
+
+---
+
+## Related pages
+
+
+  For clients that send orders from their own ERP, TMS or EDI system.
+
+
+
+  Overview of all integrations available in Settings → Integrations.
 
 
 ---
@@ -18569,6 +18726,21 @@ The machine-readable OpenAPI 3.1 reference for every endpoint lives under **API 
 
 
 Changes inside v1 are additive. Breaking changes and deprecations are listed here first. See [API versioning](/en/integrations/api-versioning) for the policy.
+
+## 2026-10-23
+
+**Added (v1, no action needed)**
+
+- **Idempotent inbound.** `inbound-client-api` accepts an optional `Idempotency-Key` header. A repeat of a finished key answers `200` with the original order and the header `Idempotent-Replayed: true`; a repeat while the first request is still running answers `409` `{"error":"in_progress"}` with `Retry-After: 5`; the same key with a different body answers `422` `{"error":"idempotency_key_reused"}`. No key means no de-duplication, as before.
+- **`outcome` on the inbound `200`.** An additive string (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Treat it as an open list. The create response `status` can be `pending` when the operator enables skip-draft for the connection.
+- **Replace and cancel.** A mapping that reads `message_function` and `external_id` turns a later message into a change to the order it made. New `422` codes: `external_id_required`, `unknown_message_function`.
+- **More request formats.** XML (SAP IDoc), EDIFACT and `text/csv` in addition to JSON; one message per request (`422` `{"error":"multi_message_not_supported"}` otherwise).
+- **New opt-in webhook events.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` and `order.pod_uploaded` (sent only after a planner approves the POD). Delivered only to connections that list them; no existing connection changes.
+- **`references` on order and stop events.** One optional object `{ "<key>": "<value>" }` with the client's own references that the operator marked visible to the client. Absent when the order has none.
+- **Outbound mapping.** A connection can send XML, EDIFACT or JSON in the client's own layout with its own status codes; an event with no mapped status is skipped (not sent, not retried). Without an outbound mapping the body is byte-identical to before.
+- **OAuth2 client credentials** as an outbound authentication type, next to bearer, basic, HMAC and none.
+
+**Deprecated / removed:** nothing.
 
 ## 2026-10-10
 
