@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-23 06:28 UTC
+Generated: 2026-10-23 09:39 UTC
 
 ---
 
@@ -85,7 +85,7 @@ You can assign multiple roles to one person if needed.
 
 ## Try it free for 30 days
 
-Druma is invite-only while it onboards its first operators — there's no self-service sign-up. [Tell us about your fleet](https://druma.io/contact?intent=access) and Druma sets your company up with a **30-day free trial**, usually within one business day. No credit card is required, and you get full access to all features from day one. At the end of the trial, you choose a plan based on your fleet size (how many active trucks you run) — users and drivers are always unlimited and free.
+Druma is invite-only while it onboards its first operators — there's no self-service sign-up. [Tell us about your fleet](https://druma.io/contact?intent=access) and Druma sets your company up with a **30-day free trial**, usually within one business day. No credit card is required, and you get full access to every core module from day one. At the end of the trial, you choose a plan based on your fleet size (how many active trucks you run) — users and drivers are always unlimited and free.
 
 > **Note:** 
 You do not need to enter payment details to start your trial. Request access, have a quick chat with Druma, and you have 30 days to explore everything Druma has to offer.
@@ -111,7 +111,7 @@ You do not need to enter payment details to start your trial. Request access, ha
 Druma is invite-only while it onboards its first operators — [request access](https://druma.io/contact?intent=access) and Druma sets up your company and starts your 30-day trial after a quick chat, usually within one business day. This guide is for the person Druma set that company up for — you'll have the **Company Admin** role by default. Work through these steps in order. The whole process takes about 20–30 minutes if you have your company details and vehicle information to hand.
 
 > **Note:** 
-No credit card is needed for your 30-day trial. You have full access to every feature from day one, so take your time getting set up. See [First login](/en/getting-started/first-login) if this is the first time you or a teammate is opening Druma.
+No credit card is needed for your 30-day trial. You have full access to every core module from day one, so take your time getting set up. See [First login](/en/getting-started/first-login) if this is the first time you or a teammate is opening Druma.
 
 
 
@@ -3270,7 +3270,7 @@ For current prices, see [druma.io/pricing](https://druma.io/pricing) or contact 
 
 ## Free trial
 
-Druma is invite-only while it onboards its first operators — there is no self-service sign-up form. [Tell us about your fleet](https://druma.io/contact?intent=access) and Druma sets your company up with a **30-day trial**, usually within one business day. No credit card is needed to start, and every feature is fully available during the trial. Billing only begins once you choose to continue after the trial.
+Druma is invite-only while it onboards its first operators — there is no self-service sign-up form. [Tell us about your fleet](https://druma.io/contact?intent=access) and Druma sets your company up with a **30-day trial**, usually within one business day. No credit card is needed to start, and every core module is fully available during the trial. Billing only begins once you choose to continue after the trial.
 
 ---
 
@@ -3284,7 +3284,7 @@ Your company is billed under one of two archetypes, set on your account by Druma
     - A **base fee set by your fleet-size band**.
     - A **per-active-truck fee from that same band**. Parked trucks are always free; billing starts from **1 active truck**. Your active-truck count picks one band, and both the base and every truck bill at that band's rate.
 
-    That's the whole bill. There is **no usage meter, no AI allowance to track, no € cap, no overage charge, and no annual price-indexation line** — document extraction, eCMR sealing, Ask Druma, and every other AI-assisted feature are included at no extra charge, however much you use them. This is a deliberate product decision, not a temporary simplification: Druma doesn't charge extra for anything on the asset-haulier side.
+    That's the whole subscription bill. There is **no usage meter, no AI allowance to track, no € cap, no overage charge, no per-seat fee and no annual price-indexation line** — document extraction, Ask Druma and the other core modules are included however much you use them. Anything charged outside the subscription is agreed in writing in **Annex 2 of your Order Form**: a fee per eCMR if you enable eCMR, AI that Druma provides and operates at your request, third-party costs of an integration you ask for, and optional paid modules (today only **AI Reports**, at a flat monthly price with no usage meter). None of these is a usage bar or cap in the app.
 
     The only thing that varies your bill mid-term is your **active truck count** — park a truck and it drops off the next invoice; activate one and it's added. A mid-cycle change is reconciled as a single correction line on your next invoice (priced at the rate you're already on), not a running meter.
 
