@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-23 17:41 UTC
+Generated: 2026-10-23 21:57 UTC
 
 ---
 
@@ -949,7 +949,7 @@ For every permission, exactly what it grants, where it is enforced and which rol
 | Planning Board | Full | Full | Full | Full | Partial | Partial | Partial | Partial | Partial | Partial | Partial | None | None |
 | Fleet | Full | Full | Partial | Partial | Read only | Partial | None | Partial | Partial | Partial | None | None | None |
 | Compliance | Full | Full | Full | Full | Full | Read only | None | None | None | Read only | None | None | None |
-| Clients | Full | Full | Full | Full | Partial | None | Full | None | None | Read only | Full | None | None |
+| Clients | Full | Full | Full | Partial | Partial | None | Partial | None | None | Read only | Partial | None | None |
 | Margin & Finance | Full | Full | Full | Full | None | None | Partial | None | None | Full | Partial | None | None |
 | Invoicing | Full | Full | Full | Full | None | None | Full | None | None | None | None | None | None |
 | Pricing | Full | Full | Full | Full | None | Full | None | None | None | None | Partial | None | None |
@@ -2067,6 +2067,19 @@ The client and broker registry.
 **What it grants.** Create and edit clients, record cargo claims (and attach media), set a client vetting override, manage loading-mode rules and preload profiles.
 
 **Where it is enforced.** Client and claims screens ask for it; create_client_checked, set_client_vetting_override, create_cargo_claim_draft and the write policies on client_claims, client_claim_internal, client_loading_mode_rules and client_preload_profiles check it. Writing the clients table itself needs the database key commercial:manage.
+
+### Merge duplicate clients
+
+`clients:merge`
+
+- **Held by default:** Admin, Company Admin, Key User
+- **In the role builder:** Can be ticked
+- **Enforced in:** App screens and database
+- **Also needs:** `clients:read`, `clients:manage`
+
+**What it grants.** Merge duplicate client records of the same legal entity into one surviving client (Clients list: select 2 to 20, Merge), and undo a merge within 30 days.
+
+**Where it is enforced.** The Merge action asks for it; the RPCs client_merge, client_merge_undo and client_merge_history check it in the database, and client_merge is the only writer of the move log. A different VAT number, issued invoices on the duplicate, an open credit balance and several other conditions refuse a merge outright; the rest need an explicit acknowledgement.
 
 ### Mark client communications as handled
 
