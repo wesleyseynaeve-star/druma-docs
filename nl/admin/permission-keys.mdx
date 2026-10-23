@@ -41,7 +41,7 @@ Bestellingen aanmaken, bewerken en verwijderen, plus notities en prijsvelden.
 
 **Wat ze toestaat.** Create new orders: the New order action, copying an order, creating several orders from a spec, scanning an order document, and creating orders from templates (including scheduled template runs).
 
-**Waar ze wordt afgedwongen.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder cannot grant: a custom role holding orders:create but not commercial:manage is stopped at that insert.
+**Waar ze wordt afgedwongen.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder offers as a database permission: a custom role holding orders:create but not commercial:manage is stopped at that insert.
 
 ### Bestellingen bewerken
 
@@ -54,19 +54,20 @@ Bestellingen aanmaken, bewerken en verwijderen, plus notities en prijsvelden.
 
 **Wat ze toestaat.** Change existing orders in the places the app lets you edit them: order drawers, subcontracting and carrier assignment, groupage and forwarding panels, VAT and extras, cancelling a sold or subcontracted order, resolving eCMR exceptions and automation jobs, handling client delay notices, approving or rejecting platform proof-of-delivery, e-Transport vehicle change and GPS pause actions.
 
-**Waar ze wordt afgedwongen.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (not selectable in the role builder): a custom role needs both.
+**Waar ze wordt afgedwongen.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (a database permission the role builder offers): a custom role needs both.
 
 ### Bestellingen verwijderen
 
 `orders:delete`
 
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice, Verkoop
 - **In de rolbouwer:** Kan worden aangevinkt
-- **Afgedwongen in:** Wordt momenteel nergens afgedwongen
+- **Afgedwongen in:** Appschermen en database
+- **Vereist ook:** `orders:read`, `commercial:manage`
 
-**Wat ze toestaat.** Intended to allow deleting orders.
+**Wat ze toestaat.** Move an order into the deleted state: the Delete / Discard buttons on the order list, the intake workbench (single and bulk) and the planning board, and the clean-up of a placeholder order after linking or saving.
 
-**Waar ze wordt afgedwongen.** None today. No screen, RPC, policy or Edge Function reads this key. Deleting an order is decided by the database key commercial:manage (the orders DELETE policy). Granting orders:delete to a custom role changes nothing.
+**Waar ze wordt afgedwongen.** Screens hide the delete controls without it. In the database the trigger trg_orders_soft_delete_needs_permission refuses an authenticated user who sets orders.deleted_at without it (42501 order_delete_needs_permission); the orders DELETE policy needs it together with commercial:manage. System paths (correction reverts, cron, service role, other SECURITY DEFINER functions) are not affected. Restoring a deleted order stays under the normal update rule.
 
 ### Notitie toevoegen aan bestelling
 
@@ -202,6 +203,18 @@ Bestellingen aanmaken, bewerken en verwijderen, plus notities en prijsvelden.
 
 **Waar ze wordt afgedwongen.** Database only, and only as a recipient rule: the escalation notification is sent to users holding this key (company_users_with_permission). It is not a screen or write gate.
 
+### Orders, klanten, offertes en onderaannemers schrijven
+
+`commercial:manage`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice, Verkoop
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
+
+**Waar ze wordt afgedwongen.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder offers it as a database permission (DRUMA-1595): a custom role needs it, in addition to orders:create, orders:edit or clients:manage, to write these tables.
+
 ## Planbord
 
 Het planbord en de live kaart om bestellingen aan vrachtwagens toe te wijzen.
@@ -222,13 +235,14 @@ Het planbord en de live kaart om bestellingen aan vrachtwagens toe te wijzen.
 
 `map:read`
 
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Dispatcher
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Dispatcher, Wagenparkbeheerder, Klantenservice, Monteur, Resourceplanner, Rapportage, Verkoop
 - **In de rolbouwer:** Kan worden aangevinkt
-- **Afgedwongen in:** Wordt momenteel nergens afgedwongen
+- **Afgedwongen in:** Appschermen en database
+- **Vereist ook:** `orders:read`, `fleet:operate`
 
-**Wat ze toestaat.** Intended to allow viewing the live map.
+**Wat ze toestaat.** Opens the Live Map under Dispatching, and every in-app "open on map" link. Without it the Live Map menu entry is hidden and the route shows a no-access page.
 
-**Waar ze wordt afgedwongen.** None today. No screen, policy or function reads this key; the Live Map opens under the dispatching section and its data is gated by other keys (vehicle positions follow fleet:read / fleet:operate). Granting map:read changes nothing.
+**Waar ze wordt afgedwongen.** The Dispatching navigation, the Live Map route and the map links ask for it. The database requires it for the live_map company snapshot, together with orders:read and fleet:operate; the underlying tables stay governed by orders:read and the fleet keys.
 
 ### Bestellingen toewijzen op het bord
 
@@ -638,6 +652,42 @@ Vrachtwagens, aanhangers en vlootgegevens.
 
 **Waar ze wordt afgedwongen.** The technicians tab references it; the workshop-device Edge Function and _workshop_kiosk_only_user check it. Not grantable to a custom role by a company admin: a kiosk session is a real login on a shared device.
 
+### De vloot dagelijks beheren
+
+`fleet:operate`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Dispatcher, Wagenparkbeheerder
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Appschermen en database
+
+**Wat ze toestaat.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
+
+**Waar ze wordt afgedwongen.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Selectable in the role builder (database permission).
+
+### Loonprofielen van chauffeurs en bandengegevens schrijven
+
+`costs:manage`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Wagenparkbeheerder
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Write driver wage and allowance profiles and tyre records; read driver expenses.
+
+**Waar ze wordt afgedwongen.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Selectable in the role builder (database permission).
+
+### Vloot- en chauffeursdocumenten beheren
+
+`documents:manage`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Wagenparkbeheerder, Klantenservice
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
+
+**Waar ze wordt afgedwongen.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Selectable in the role builder (database permission).
+
 ## Naleving
 
 Zicht op rijtijden en beslissingen over CMR-multimodale validatie.
@@ -665,6 +715,18 @@ Zicht op rijtijden en beslissingen over CMR-multimodale validatie.
 **Wat ze toestaat.** Decide a CMR multimodal validation (accept or reject a flagged validation).
 
 **Waar ze wordt afgedwongen.** The decision screen asks for it; the policies on cmr_validation_log (SELECT and UPDATE) check it.
+
+### eCMR vanaf kantoor ondertekenen
+
+`ecmr:sign_office`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
+
+**Waar ze wordt afgedwongen.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Selectable in the role builder (database permission).
 
 ## Klanten
 
@@ -865,6 +927,18 @@ Kostenprofielen en instellingen voor trajectprijzen.
 
 **Waar ze wordt afgedwongen.** The Sales price-list screens ask for it; the write policies on price_list_charges, lane_price_cards and rate_card_lanes, _price_card_assert_manage and the price-sheet-pdf Edge Function check it.
 
+### Trucks, opleggers en brandstofgegevens schrijven
+
+`rates:manage`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Wagenparkbeheerder
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
+
+**Waar ze wordt afgedwongen.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Selectable in the role builder (database permission): a custom role needs it to write trucks or trailers.
+
 ## Vrachtenbeurs
 
 Live vrachten zoeken op de vrachtbeurzen (Trans.eu, TIMOCOM) en er aanbiedingen op sturen.
@@ -909,6 +983,54 @@ Bedrijfsrapporten en analyse-exports.
 **Wat ze toestaat.** Use the reporting tools: Analytics pages, the report builder, AI Reports, saved views and schedules, annotations, and Ask Druma KPI tools. Cost and margin figures still need orders:financials and finance:read; named-driver data needs the database key reports:driver_data.
 
 **Waar ze wordt afgedwongen.** Analytics routes ask for it; the report builder gate (reporting-query), report_saved_views, report_schedules, report_row_annotations, kpi_* alert tables and the analytics and Ask Druma RPCs check it.
+
+### Rapporteren over alle rijen (trucks, klanten, wachttijden)
+
+`reports:read_all_rows`
+
+- **Standaard toegekend aan:** Beheerder, Rapportage
+- **In de rolbouwer:** Niet selecteerbaar
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
+
+**Waar ze wordt afgedwongen.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it, because a company admin does not hold it.
+
+### Rapporteren over chauffeurs op naam
+
+`reports:driver_data`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Wagenparkbeheerder, Rapportage
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
+
+**Waar ze wordt afgedwongen.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. A company admin holds it and so may grant it to a custom role.
+
+### Verkooprapportage (offertes en deals)
+
+`reports:sales_data`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice, Rapportage, Verkoop
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
+
+**Waar ze wordt afgedwongen.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
+
+### Rapportage over claims
+
+`reports:claims_data`
+
+- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice, Rapportage
+- **In de rolbouwer:** Kan worden aangevinkt
+- **Afgedwongen in:** Database en serverfuncties
+
+**Wat ze toestaat.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
+
+**Waar ze wordt afgedwongen.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
 
 ## Gebruikers
 
@@ -1254,126 +1376,6 @@ Het klantenportaal: zendingen, tracking, documenten en CO2-rapporten.
 ## Machtigingen op databaseniveau
 
 Deze machtigingen benoemen een rollenset voor beveiliging op rijniveau in de database. Tenzij als selecteerbaar gemarkeerd kunnen ze niet aan een aangepaste rol worden gegeven; een aangepaste rol zonder deze machtigingen kan de beschermde tabellen niet schrijven, ook niet met de bijbehorende app-machtiging aangevinkt.
-
-### commercial:manage
-
-`commercial:manage`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice, Verkoop
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
-
-**Waar ze wordt afgedwongen.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder cannot grant it: custom roles cannot hold it, so a custom role cannot write these tables even with orders:create, orders:edit or clients:manage ticked.
-
-### ecmr:sign_office
-
-`ecmr:sign_office`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
-
-**Waar ze wordt afgedwongen.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Not selectable in the role builder.
-
-### rates:manage
-
-`rates:manage`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Wagenparkbeheerder
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
-
-**Waar ze wordt afgedwongen.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Not selectable in the role builder, so a custom role cannot write trucks or trailers.
-
-### costs:manage
-
-`costs:manage`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Wagenparkbeheerder
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Write driver wage and allowance profiles and tyre records; read driver expenses.
-
-**Waar ze wordt afgedwongen.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Not selectable in the role builder.
-
-### fleet:operate
-
-`fleet:operate`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Dispatcher, Wagenparkbeheerder
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Appschermen en database
-
-**Wat ze toestaat.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
-
-**Waar ze wordt afgedwongen.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Not selectable in the role builder.
-
-### documents:manage
-
-`documents:manage`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Wagenparkbeheerder, Klantenservice
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
-
-**Waar ze wordt afgedwongen.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Not selectable in the role builder.
-
-### reports:read_all_rows
-
-`reports:read_all_rows`
-
-- **Standaard toegekend aan:** Beheerder, Rapportage
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
-
-**Waar ze wordt afgedwongen.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it.
-
-### reports:driver_data
-
-`reports:driver_data`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Wagenparkbeheerder, Rapportage
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
-
-**Waar ze wordt afgedwongen.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. Not grantable by a company admin.
-
-### reports:sales_data
-
-`reports:sales_data`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice, Rapportage, Verkoop
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
-
-**Waar ze wordt afgedwongen.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
-
-### reports:claims_data
-
-`reports:claims_data`
-
-- **Standaard toegekend aan:** Beheerder, Bedrijfsbeheerder, Key user, Planner, Klantenservice, Rapportage
-- **In de rolbouwer:** Niet selecteerbaar
-- **Afgedwongen in:** Database en serverfuncties
-
-**Wat ze toestaat.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
-
-**Waar ze wordt afgedwongen.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
 
 ### capi_library:manage
 

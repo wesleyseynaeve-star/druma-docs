@@ -41,7 +41,7 @@ Créer, modifier et supprimer des commandes, ainsi que les notes et les champs d
 
 **Ce qu'elle accorde.** Create new orders: the New order action, copying an order, creating several orders from a spec, scanning an order document, and creating orders from templates (including scheduled template runs).
 
-**Où elle est appliquée.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder cannot grant: a custom role holding orders:create but not commercial:manage is stopped at that insert.
+**Où elle est appliquée.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder offers as a database permission: a custom role holding orders:create but not commercial:manage is stopped at that insert.
 
 ### Modifier des commandes
 
@@ -54,19 +54,20 @@ Créer, modifier et supprimer des commandes, ainsi que les notes et les champs d
 
 **Ce qu'elle accorde.** Change existing orders in the places the app lets you edit them: order drawers, subcontracting and carrier assignment, groupage and forwarding panels, VAT and extras, cancelling a sold or subcontracted order, resolving eCMR exceptions and automation jobs, handling client delay notices, approving or rejecting platform proof-of-delivery, e-Transport vehicle change and GPS pause actions.
 
-**Où elle est appliquée.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (not selectable in the role builder): a custom role needs both.
+**Où elle est appliquée.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (a database permission the role builder offers): a custom role needs both.
 
 ### Supprimer des commandes
 
 `orders:delete`
 
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client, Commercial
 - **Dans le créateur de rôles:** Peut être cochée
-- **Appliquée dans:** Rien ne l'applique aujourd'hui
+- **Appliquée dans:** Écrans de l'application et base de données
+- **Nécessite aussi:** `orders:read`, `commercial:manage`
 
-**Ce qu'elle accorde.** Intended to allow deleting orders.
+**Ce qu'elle accorde.** Move an order into the deleted state: the Delete / Discard buttons on the order list, the intake workbench (single and bulk) and the planning board, and the clean-up of a placeholder order after linking or saving.
 
-**Où elle est appliquée.** None today. No screen, RPC, policy or Edge Function reads this key. Deleting an order is decided by the database key commercial:manage (the orders DELETE policy). Granting orders:delete to a custom role changes nothing.
+**Où elle est appliquée.** Screens hide the delete controls without it. In the database the trigger trg_orders_soft_delete_needs_permission refuses an authenticated user who sets orders.deleted_at without it (42501 order_delete_needs_permission); the orders DELETE policy needs it together with commercial:manage. System paths (correction reverts, cron, service role, other SECURITY DEFINER functions) are not affected. Restoring a deleted order stays under the normal update rule.
 
 ### Ajouter des notes de commande
 
@@ -202,6 +203,18 @@ Créer, modifier et supprimer des commandes, ainsi que les notes et les champs d
 
 **Où elle est appliquée.** Database only, and only as a recipient rule: the escalation notification is sent to users holding this key (company_users_with_permission). It is not a screen or write gate.
 
+### Écrire commandes, clients, devis et sous-traitants
+
+`commercial:manage`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client, Commercial
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
+
+**Où elle est appliquée.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder offers it as a database permission (DRUMA-1595): a custom role needs it, in addition to orders:create, orders:edit or clients:manage, to write these tables.
+
 ## Tableau de planification
 
 Le tableau de planification et la carte en direct utilisés pour affecter les commandes aux camions.
@@ -222,13 +235,14 @@ Le tableau de planification et la carte en direct utilisés pour affecter les co
 
 `map:read`
 
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Dispatcheur
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Dispatcheur, Responsable de flotte, Service client, Mécanicien, Planificateur des ressources, Reporting, Commercial
 - **Dans le créateur de rôles:** Peut être cochée
-- **Appliquée dans:** Rien ne l'applique aujourd'hui
+- **Appliquée dans:** Écrans de l'application et base de données
+- **Nécessite aussi:** `orders:read`, `fleet:operate`
 
-**Ce qu'elle accorde.** Intended to allow viewing the live map.
+**Ce qu'elle accorde.** Opens the Live Map under Dispatching, and every in-app "open on map" link. Without it the Live Map menu entry is hidden and the route shows a no-access page.
 
-**Où elle est appliquée.** None today. No screen, policy or function reads this key; the Live Map opens under the dispatching section and its data is gated by other keys (vehicle positions follow fleet:read / fleet:operate). Granting map:read changes nothing.
+**Où elle est appliquée.** The Dispatching navigation, the Live Map route and the map links ask for it. The database requires it for the live_map company snapshot, together with orders:read and fleet:operate; the underlying tables stay governed by orders:read and the fleet keys.
 
 ### Affecter des commandes sur le tableau
 
@@ -638,6 +652,42 @@ Camions, remorques et fiches de flotte.
 
 **Où elle est appliquée.** The technicians tab references it; the workshop-device Edge Function and _workshop_kiosk_only_user check it. Not grantable to a custom role by a company admin: a kiosk session is a real login on a shared device.
 
+### Exploiter la flotte au quotidien
+
+`fleet:operate`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Dispatcheur, Responsable de flotte
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Écrans de l'application et base de données
+
+**Ce qu'elle accorde.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
+
+**Où elle est appliquée.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Selectable in the role builder (database permission).
+
+### Écrire les profils de rémunération des conducteurs et les pneus
+
+`costs:manage`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Responsable de flotte
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Write driver wage and allowance profiles and tyre records; read driver expenses.
+
+**Où elle est appliquée.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Selectable in the role builder (database permission).
+
+### Gérer les documents de la flotte et des conducteurs
+
+`documents:manage`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Responsable de flotte, Service client
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
+
+**Où elle est appliquée.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Selectable in the role builder (database permission).
+
 ## Conformité
 
 Visibilité des temps de conduite et décisions de validation CMR multimodal.
@@ -665,6 +715,18 @@ Visibilité des temps de conduite et décisions de validation CMR multimodal.
 **Ce qu'elle accorde.** Decide a CMR multimodal validation (accept or reject a flagged validation).
 
 **Où elle est appliquée.** The decision screen asks for it; the policies on cmr_validation_log (SELECT and UPDATE) check it.
+
+### Signer les eCMR depuis le bureau
+
+`ecmr:sign_office`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
+
+**Où elle est appliquée.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Selectable in the role builder (database permission).
 
 ## Clients
 
@@ -865,6 +927,18 @@ Profils de coûts et paramètres des prix par trajet.
 
 **Où elle est appliquée.** The Sales price-list screens ask for it; the write policies on price_list_charges, lane_price_cards and rate_card_lanes, _price_card_assert_manage and the price-sheet-pdf Edge Function check it.
 
+### Écrire camions, remorques et données carburant
+
+`rates:manage`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Responsable de flotte
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
+
+**Où elle est appliquée.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Selectable in the role builder (database permission): a custom role needs it to write trucks or trailers.
+
 ## Bourse de fret
 
 Rechercher des charges en direct sur les bourses de fret (Trans.eu, TIMOCOM) et y envoyer des offres.
@@ -909,6 +983,54 @@ Rapports de l'entreprise et exports analytiques.
 **Ce qu'elle accorde.** Use the reporting tools: Analytics pages, the report builder, AI Reports, saved views and schedules, annotations, and Ask Druma KPI tools. Cost and margin figures still need orders:financials and finance:read; named-driver data needs the database key reports:driver_data.
 
 **Où elle est appliquée.** Analytics routes ask for it; the report builder gate (reporting-query), report_saved_views, report_schedules, report_row_annotations, kpi_* alert tables and the analytics and Ask Druma RPCs check it.
+
+### Analyser toutes les lignes (camions, clients, attentes)
+
+`reports:read_all_rows`
+
+- **Détenue par défaut:** Admin, Reporting
+- **Dans le créateur de rôles:** Non sélectionnable
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
+
+**Où elle est appliquée.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it, because a company admin does not hold it.
+
+### Analyser les conducteurs nominativement
+
+`reports:driver_data`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Responsable de flotte, Reporting
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
+
+**Où elle est appliquée.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. A company admin holds it and so may grant it to a custom role.
+
+### Rapports commerciaux (devis et affaires)
+
+`reports:sales_data`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client, Reporting, Commercial
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
+
+**Où elle est appliquée.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
+
+### Rapports sur les réclamations
+
+`reports:claims_data`
+
+- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client, Reporting
+- **Dans le créateur de rôles:** Peut être cochée
+- **Appliquée dans:** Base de données et fonctions serveur
+
+**Ce qu'elle accorde.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
+
+**Où elle est appliquée.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
 
 ## Utilisateurs
 
@@ -1254,126 +1376,6 @@ Le portail client : expéditions, suivi, documents et rapports CO2.
 ## Permissions de niveau base de données
 
 Ces permissions nomment un ensemble de rôles de sécurité au niveau des lignes dans la base de données. Sauf mention « sélectionnable », elles ne peuvent pas être données à un rôle personnalisé : un rôle personnalisé qui ne les a pas ne peut pas écrire dans les tables qu'elles protègent, même avec la permission d'application correspondante cochée.
-
-### commercial:manage
-
-`commercial:manage`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client, Commercial
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
-
-**Où elle est appliquée.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder cannot grant it: custom roles cannot hold it, so a custom role cannot write these tables even with orders:create, orders:edit or clients:manage ticked.
-
-### ecmr:sign_office
-
-`ecmr:sign_office`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
-
-**Où elle est appliquée.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Not selectable in the role builder.
-
-### rates:manage
-
-`rates:manage`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Responsable de flotte
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
-
-**Où elle est appliquée.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Not selectable in the role builder, so a custom role cannot write trucks or trailers.
-
-### costs:manage
-
-`costs:manage`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Responsable de flotte
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Write driver wage and allowance profiles and tyre records; read driver expenses.
-
-**Où elle est appliquée.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Not selectable in the role builder.
-
-### fleet:operate
-
-`fleet:operate`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Dispatcheur, Responsable de flotte
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Écrans de l'application et base de données
-
-**Ce qu'elle accorde.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
-
-**Où elle est appliquée.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Not selectable in the role builder.
-
-### documents:manage
-
-`documents:manage`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Responsable de flotte, Service client
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
-
-**Où elle est appliquée.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Not selectable in the role builder.
-
-### reports:read_all_rows
-
-`reports:read_all_rows`
-
-- **Détenue par défaut:** Admin, Reporting
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
-
-**Où elle est appliquée.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it.
-
-### reports:driver_data
-
-`reports:driver_data`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Responsable de flotte, Reporting
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
-
-**Où elle est appliquée.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. Not grantable by a company admin.
-
-### reports:sales_data
-
-`reports:sales_data`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client, Reporting, Commercial
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
-
-**Où elle est appliquée.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
-
-### reports:claims_data
-
-`reports:claims_data`
-
-- **Détenue par défaut:** Admin, Admin entreprise, Utilisateur cle, Planificateur, Service client, Reporting
-- **Dans le créateur de rôles:** Non sélectionnable
-- **Appliquée dans:** Base de données et fonctions serveur
-
-**Ce qu'elle accorde.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
-
-**Où elle est appliquée.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
 
 ### capi_library:manage
 

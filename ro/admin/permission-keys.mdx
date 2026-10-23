@@ -41,7 +41,7 @@ Creare, editare și ștergere comenzi, plus notele comenzii și câmpurile de pr
 
 **Ce acordă.** Create new orders: the New order action, copying an order, creating several orders from a spec, scanning an order document, and creating orders from templates (including scheduled template runs).
 
-**Unde este aplicată.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder cannot grant: a custom role holding orders:create but not commercial:manage is stopped at that insert.
+**Unde este aplicată.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder offers as a database permission: a custom role holding orders:create but not commercial:manage is stopped at that insert.
 
 ### Editare comenzi
 
@@ -54,19 +54,20 @@ Creare, editare și ștergere comenzi, plus notele comenzii și câmpurile de pr
 
 **Ce acordă.** Change existing orders in the places the app lets you edit them: order drawers, subcontracting and carrier assignment, groupage and forwarding panels, VAT and extras, cancelling a sold or subcontracted order, resolving eCMR exceptions and automation jobs, handling client delay notices, approving or rejecting platform proof-of-delivery, e-Transport vehicle change and GPS pause actions.
 
-**Unde este aplicată.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (not selectable in the role builder): a custom role needs both.
+**Unde este aplicată.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (a database permission the role builder offers): a custom role needs both.
 
 ### Ștergere comenzi
 
 `orders:delete`
 
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți, Vânzări
 - **În editorul de roluri:** Poate fi bifată
-- **Aplicată în:** Nimic nu o aplică în prezent
+- **Aplicată în:** Ecranele aplicației și baza de date
+- **Necesită și:** `orders:read`, `commercial:manage`
 
-**Ce acordă.** Intended to allow deleting orders.
+**Ce acordă.** Move an order into the deleted state: the Delete / Discard buttons on the order list, the intake workbench (single and bulk) and the planning board, and the clean-up of a placeholder order after linking or saving.
 
-**Unde este aplicată.** None today. No screen, RPC, policy or Edge Function reads this key. Deleting an order is decided by the database key commercial:manage (the orders DELETE policy). Granting orders:delete to a custom role changes nothing.
+**Unde este aplicată.** Screens hide the delete controls without it. In the database the trigger trg_orders_soft_delete_needs_permission refuses an authenticated user who sets orders.deleted_at without it (42501 order_delete_needs_permission); the orders DELETE policy needs it together with commercial:manage. System paths (correction reverts, cron, service role, other SECURITY DEFINER functions) are not affected. Restoring a deleted order stays under the normal update rule.
 
 ### Adăugare notă comandă
 
@@ -202,6 +203,18 @@ Creare, editare și ștergere comenzi, plus notele comenzii și câmpurile de pr
 
 **Unde este aplicată.** Database only, and only as a recipient rule: the escalation notification is sent to users holding this key (company_users_with_permission). It is not a screen or write gate.
 
+### Scriere comenzi, clienți, oferte și subcontractori
+
+`commercial:manage`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți, Vânzări
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
+
+**Unde este aplicată.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder offers it as a database permission (DRUMA-1595): a custom role needs it, in addition to orders:create, orders:edit or clients:manage, to write these tables.
+
 ## Panou de planificare
 
 Panoul de planificare și harta live folosite pentru a atribui comenzi camioanelor.
@@ -222,13 +235,14 @@ Panoul de planificare și harta live folosite pentru a atribui comenzi camioanel
 
 `map:read`
 
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Dispecer
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Dispecer, Manager flotă, Relații clienți, Mecanic, Planificator de resurse, Raportare, Vânzări
 - **În editorul de roluri:** Poate fi bifată
-- **Aplicată în:** Nimic nu o aplică în prezent
+- **Aplicată în:** Ecranele aplicației și baza de date
+- **Necesită și:** `orders:read`, `fleet:operate`
 
-**Ce acordă.** Intended to allow viewing the live map.
+**Ce acordă.** Opens the Live Map under Dispatching, and every in-app "open on map" link. Without it the Live Map menu entry is hidden and the route shows a no-access page.
 
-**Unde este aplicată.** None today. No screen, policy or function reads this key; the Live Map opens under the dispatching section and its data is gated by other keys (vehicle positions follow fleet:read / fleet:operate). Granting map:read changes nothing.
+**Unde este aplicată.** The Dispatching navigation, the Live Map route and the map links ask for it. The database requires it for the live_map company snapshot, together with orders:read and fleet:operate; the underlying tables stay governed by orders:read and the fleet keys.
 
 ### Atribuire comenzi pe panou
 
@@ -638,6 +652,42 @@ Camioane, remorci și fișele flotei.
 
 **Unde este aplicată.** The technicians tab references it; the workshop-device Edge Function and _workshop_kiosk_only_user check it. Not grantable to a custom role by a company admin: a kiosk session is a real login on a shared device.
 
+### Operare zilnică a flotei
+
+`fleet:operate`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Dispecer, Manager flotă
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Ecranele aplicației și baza de date
+
+**Ce acordă.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
+
+**Unde este aplicată.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Selectable in the role builder (database permission).
+
+### Scriere profiluri de salarizare ale șoferilor și date despre anvelope
+
+`costs:manage`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Manager flotă
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Write driver wage and allowance profiles and tyre records; read driver expenses.
+
+**Unde este aplicată.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Selectable in the role builder (database permission).
+
+### Gestionare documente ale flotei și ale șoferilor
+
+`documents:manage`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Manager flotă, Relații clienți
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
+
+**Unde este aplicată.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Selectable in the role builder (database permission).
+
 ## Conformitate
 
 Vizibilitatea orelor de conducere și deciziile de validare CMR multimodal.
@@ -665,6 +715,18 @@ Vizibilitatea orelor de conducere și deciziile de validare CMR multimodal.
 **Ce acordă.** Decide a CMR multimodal validation (accept or reject a flagged validation).
 
 **Unde este aplicată.** The decision screen asks for it; the policies on cmr_validation_log (SELECT and UPDATE) check it.
+
+### Semnare eCMR din birou
+
+`ecmr:sign_office`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
+
+**Unde este aplicată.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Selectable in the role builder (database permission).
 
 ## Clienți
 
@@ -865,6 +927,18 @@ Profiluri de cost și setările prețurilor pe rute.
 
 **Unde este aplicată.** The Sales price-list screens ask for it; the write policies on price_list_charges, lane_price_cards and rate_card_lanes, _price_card_assert_manage and the price-sheet-pdf Edge Function check it.
 
+### Scriere camioane, remorci și date despre combustibil
+
+`rates:manage`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Manager flotă
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
+
+**Unde este aplicată.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Selectable in the role builder (database permission): a custom role needs it to write trucks or trailers.
+
 ## Bursă de transport
 
 Căutarea încărcăturilor live în bursele de transport (Trans.eu, TIMOCOM) și trimiterea de oferte.
@@ -909,6 +983,54 @@ Rapoartele companiei și exporturile de analize.
 **Ce acordă.** Use the reporting tools: Analytics pages, the report builder, AI Reports, saved views and schedules, annotations, and Ask Druma KPI tools. Cost and margin figures still need orders:financials and finance:read; named-driver data needs the database key reports:driver_data.
 
 **Unde este aplicată.** Analytics routes ask for it; the report builder gate (reporting-query), report_saved_views, report_schedules, report_row_annotations, kpi_* alert tables and the analytics and Ask Druma RPCs check it.
+
+### Raportare pe toate rândurile (camioane, clienți, așteptări)
+
+`reports:read_all_rows`
+
+- **Deținută implicit:** Admin, Raportare
+- **În editorul de roluri:** Nu poate fi selectată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
+
+**Unde este aplicată.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it, because a company admin does not hold it.
+
+### Raportare pe șoferi nominali
+
+`reports:driver_data`
+
+- **Deținută implicit:** Admin, Admin companie, Manager flotă, Raportare
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
+
+**Unde este aplicată.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. A company admin holds it and so may grant it to a custom role.
+
+### Raportare vânzări (oferte și tranzacții)
+
+`reports:sales_data`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți, Raportare, Vânzări
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
+
+**Unde este aplicată.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
+
+### Raportare reclamații
+
+`reports:claims_data`
+
+- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți, Raportare
+- **În editorul de roluri:** Poate fi bifată
+- **Aplicată în:** Baza de date și funcțiile de server
+
+**Ce acordă.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
+
+**Unde este aplicată.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
 
 ## Utilizatori
 
@@ -1254,126 +1376,6 @@ Portalul pentru clienți: expedieri, urmărire, documente și rapoarte CO2.
 ## Permisiuni la nivel de bază de date
 
 Aceste permisiuni denumesc un set de roluri pentru securitatea la nivel de rând din baza de date. Dacă nu sunt marcate ca selectabile, nu pot fi date unui rol personalizat, deci un rol personalizat fără ele nu poate scrie în tabelele pe care le protejează, chiar dacă permisiunea corespunzătoare din aplicație este bifată.
-
-### commercial:manage
-
-`commercial:manage`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți, Vânzări
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
-
-**Unde este aplicată.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder cannot grant it: custom roles cannot hold it, so a custom role cannot write these tables even with orders:create, orders:edit or clients:manage ticked.
-
-### ecmr:sign_office
-
-`ecmr:sign_office`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
-
-**Unde este aplicată.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Not selectable in the role builder.
-
-### rates:manage
-
-`rates:manage`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Manager flotă
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
-
-**Unde este aplicată.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Not selectable in the role builder, so a custom role cannot write trucks or trailers.
-
-### costs:manage
-
-`costs:manage`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Manager flotă
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Write driver wage and allowance profiles and tyre records; read driver expenses.
-
-**Unde este aplicată.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Not selectable in the role builder.
-
-### fleet:operate
-
-`fleet:operate`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Dispecer, Manager flotă
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Ecranele aplicației și baza de date
-
-**Ce acordă.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
-
-**Unde este aplicată.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Not selectable in the role builder.
-
-### documents:manage
-
-`documents:manage`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Manager flotă, Relații clienți
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
-
-**Unde este aplicată.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Not selectable in the role builder.
-
-### reports:read_all_rows
-
-`reports:read_all_rows`
-
-- **Deținută implicit:** Admin, Raportare
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
-
-**Unde este aplicată.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it.
-
-### reports:driver_data
-
-`reports:driver_data`
-
-- **Deținută implicit:** Admin, Admin companie, Manager flotă, Raportare
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
-
-**Unde este aplicată.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. Not grantable by a company admin.
-
-### reports:sales_data
-
-`reports:sales_data`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți, Raportare, Vânzări
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
-
-**Unde este aplicată.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
-
-### reports:claims_data
-
-`reports:claims_data`
-
-- **Deținută implicit:** Admin, Admin companie, Utilizator cheie, Planificator, Relații clienți, Raportare
-- **În editorul de roluri:** Nu poate fi selectată
-- **Aplicată în:** Baza de date și funcțiile de server
-
-**Ce acordă.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
-
-**Unde este aplicată.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
 
 ### capi_library:manage
 
