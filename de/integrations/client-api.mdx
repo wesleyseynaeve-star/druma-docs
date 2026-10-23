@@ -161,6 +161,94 @@ Jedes Ereignis enthält außerdem `api_version` und `event_id` (bei Wiederholung
 
 ---
 
+## Formate, die der Kunde senden kann
+
+Das System eines Kunden muss kein JSON sprechen. Druma liest diese eingehenden Formate und wandelt alle in denselben Auftrag um:
+
+| Format | Typischer Absender | Hinweise |
+|---|---|---|
+| **JSON** | Modernes ERP / TMS | Der Standard. |
+| **XML** | SAP IDoc (zum Beispiel Sendungs- oder Lieferungs-IDocs) | Einfaches XML ohne `DOCTYPE`. Ein IDoc pro Anfrage. |
+| **EDIFACT** | Verlader mit EDI (zum Beispiel Transportaufträge IFTMIN) | Eine Nachricht pro Anfrage. |
+| **CSV** | Verlader, die nur eine Tabelle exportieren können | `Content-Type: text/csv` oder die Verbindung auf CSV festlegen. UTF-8 oder windows-1250, Trennzeichen `,` `;` oder Tabulator, bis zu 500 Zeilen und 200 Spalten. **Eine Datei ist ein Auftrag**: Zeilen werden zu Stopps. |
+
+Druma erkennt JSON, XML und EDIFACT am Inhalt. CSV wird nie erraten: Legen Sie das Format der Verbindung auf **CSV** fest oder lassen Sie den Kunden `Content-Type: text/csv` senden. Der Anfragetext ist auf 256 KB begrenzt. Eine Anfrage mit mehr als einer Nachricht (mehrere IDocs, mehrere `UNH`-Segmente oder ein CSV mit mehreren verschiedenen Auftragsnummern) wird mit `422` und `{"error":"multi_message_not_supported"}` abgelehnt.
+
+<Note>
+Vorgefertigte Zuordnungen für bekannte Formate (SAP IDoc, EDIFACT IFTMIN, SAP-Frachtaufträge, Trans.eu-Aufträge) basieren auf öffentlich veröffentlichten Beispielnachrichten. Sie sind mit **Aus öffentlichem Beispiel erstellt** gekennzeichnet, bis eine echte Nachricht Ihres Kunden sie bestätigt (**Mit Kundennachricht verifiziert**). Solange eine Verbindung noch in der Einrichtung ist, wendet Druma eine solche Zuordnung ohne KI-Schritt an; Sie testen sie vor dem Livegang trotzdem mit der Nachricht des Kunden. Passt keine vorgefertigte Zuordnung, schlägt die KI wie bisher eine vor.
+</Note>
+
+### Ergänzungen im Assistenten
+
+- **Formatfixierung** — erzwingt den Parser auf JSON, XML, EDIFACT oder CSV, wenn der Kunde immer ein Format sendet.
+- **Chip für bekanntes Format** — zeigt, welche vorgefertigte Zuordnung verwendet wird, und ihre Revision. Eine Verbindung bleibt auf der Revision, mit der sie freigegeben wurde; gibt es eine neuere Revision, erscheint die Aufforderung **Zuordnung aktualisieren**, und nichts ändert sich, bevor Sie klicken. Die vorherige Zuordnung bleibt im Versionsverlauf für ein Zurücksetzen.
+- **Nachrichtenprotokoll** — die letzten 50 echten Nachrichten mit Format, Ergebnis, wiederholt oder nicht, Idempotenzschlüssel, Dauer und dem, was fehlte; filterbar nach erstellt, von KI erstellt, abgelehnt und wiederholt.
+
+---
+
+## Dieselbe Nachricht zweimal senden (Idempotenz)
+
+Kundensysteme wiederholen Anfragen. Damit eine Wiederholung sicher ist, fügt der Kunde den Header `Idempotency-Key` hinzu (bis zu 255 Zeichen). Trägt das Format bereits eine eindeutige Nachrichten-ID, kann Druma diese stattdessen verwenden (eine Zuordnung kann sie als Idempotenzschlüssel lesen). **Ohne Schlüssel gibt es keine Duplikaterkennung.**
+
+| Situation | Antwort von Druma |
+|---|---|
+| Erste Anfrage mit neuem Schlüssel | `200`, der Auftrag wird angelegt |
+| Derselbe Schlüssel, derselbe Inhalt, erste Anfrage abgeschlossen | `200` mit dem ursprünglichen `order_id` und `order_number`, dem aktuellen `status` des Auftrags und dem Antwort-Header `Idempotent-Replayed: true`. Kein zweiter Auftrag. |
+| Derselbe Schlüssel, während die erste Anfrage noch läuft | `409` `{"error":"in_progress"}` mit `Retry-After: 5`. Später mit demselben Schlüssel erneut versuchen. |
+| Derselbe Schlüssel, anderer Inhalt | `422` `{"error":"idempotency_key_reused"}`. Ein Schlüssel bezeichnet genau eine Nachricht. |
+
+Schlüssel werden 90 Tage gemerkt. Eine mit `422` abgelehnte Anfrage hinterlässt keinen Schlüssel, derselbe Schlüssel kann also nach der Korrektur der Daten erneut verwendet werden.
+
+Die `200`-Antwort der eingehenden API enthält jetzt auch das Feld `outcome` (zum Beispiel `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Behandeln Sie es als offene Liste: Es können neue Werte hinzukommen. `status` kann `pending` statt `draft` sein, wenn Sie für diese Verbindung unter Einstellungen → Integrationen das Überspringen des Entwurfs aktiviert haben.
+
+---
+
+## Einen Auftrag ersetzen und stornieren
+
+Liest die Zuordnung eine `message_function` (`original`, `replace` oder `cancel`; leer bedeutet `original`) und die eigene Auftrags-ID des Kunden als `external_id`, ändert eine spätere Nachricht den von ihr angelegten Auftrag, statt einen zweiten zu erzeugen.
+
+- **Ersetzen oder Stornieren, solange der Auftrag noch ein Entwurf ist**: Der Entwurf wird direkt geändert (oder storniert).
+- **Auftrag bereits über den Entwurf hinaus** (geplant, unterwegs): Es wird nichts automatisch geändert. Die Änderung wird für einen Disponenten **zurückgestellt**, der eine Aufgabe und eine Benachrichtigung erhält und sie am Auftrag übernimmt oder verwirft.
+- **Nach Ablehnung der Ladung oder bei einem abgeschlossenen Auftrag** (storniert, geliefert, fakturiert): Die Nachricht wird ignoriert und der Betreiber informiert.
+- Eine Nachricht, die älter ist als die zuletzt verarbeitete für dieselbe `external_id`, wird als veraltet ignoriert; eine identische Wiederholung antwortet `unchanged`.
+- Eine unbekannte `external_id` antwortet `200` mit `outcome: not_found`; ein Ersetzen oder Stornieren legt nie einen Auftrag an. Ersetzen und Stornieren benötigen die `external_id`, sonst lautet die Antwort `422` `{"error":"external_id_required"}`.
+
+---
+
+## Ausgehend im eigenen Format des Kunden
+
+Standardmäßig sendet Druma seinen Standard-Ereignistext als JSON. Für Kunden mit SAP, S/4HANA oder EDI können Sie eine Verbindung im Bereich **Ausgehende Zuordnung** des API-Tabs auf ein **eigenes Ausgangsformat** umstellen:
+
+1. **Wählen Sie eine Vorlage** (EDIFACT IFTSTA D.01B oder D.96A, SAP-IDoc-Sendungsstatus, S/4HANA-/Transportation-Management-Auftragsereignisse als JSON) **oder fügen Sie die vom Kunden erwartete Nachricht ein** und lassen Sie die KI die Zuordnung vorschlagen. Vorlagen basieren auf öffentlichen Beispielen und gelten als nicht verifiziert, bis ein Kunde sie bestätigt.
+2. **Tragen Sie die Parteien ein** (Kennungen von Absender und Empfänger) — sie sind immer Ihre eigenen, nie geraten.
+3. **Füllen Sie die Statustabelle**: eine Zeile je Druma-Ereignis mit Statuscode und Qualifier des Kunden. **Ein Ereignis ohne Zeile wird nicht gesendet** (es erscheint als *übersprungen*, nichts wird wiederholt).
+4. **Vorschau** mit einem echten Auftrag dieses Kunden — es wird nichts gesendet oder gespeichert.
+5. Speichern. **Standard-Webhook verwenden** bringt Sie jederzeit zum einfachen JSON-Text zurück.
+
+Die Signatur (HMAC) deckt genau die gesendeten Bytes ab. Eine Zuordnung kann nur einen festen Satz an Auftrags-, Stopp-, Kennzeichen-, POD- und Referenzfeldern nutzen: Fahrernamen, Telefonnummern, Positionen und Preise verlassen Druma dadurch nie.
+
+### Weitere Ereignisse (optional)
+
+Haken Sie sie unter **Zu sendende Ereignisse auswählen** an. Sie werden für eine bestehende Verbindung nie von selbst aktiviert.
+
+- **Stopp-Ereignisse** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading`: die erste erfasste Ankunft oder Abfahrt an einem Be- oder Entladestopp.
+- **Auftrag abgelehnt** — `order.declined`: Sie haben eine eingehende Ladung abgelehnt; der Text enthält den Grundcode (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) und einen optionalen Kommentar.
+- **POD hochgeladen** — `order.pod_uploaded`: wird **erst gesendet, nachdem ein Disponent die Dokumente freigegeben hat**. Am Auftrag sendet **POD freigeben und Kunden benachrichtigen** es einmal pro Auftrag; ein von einem Fahrer hochgeladenes Foto löst es nie aus.
+
+Jedes Auftrags- und Stopp-Ereignis liefert außerdem die **Referenzen** des Kunden zurück (zum Beispiel die SAP-Liefernummer, die er gesendet hat), in einem Objekt `references` — nur Referenzen, die für den Kunden sichtbar markiert sind. Der Schlüssel fehlt, wenn der Auftrag keine hat.
+
+### OAuth2 client credentials
+
+Für Gateways, die ein Token verlangen (SAP BTP, Azure AD, Keycloak), wählen Sie den Authentifizierungstyp **OAuth2 (client credentials)** und geben Token-URL (https, öffentlicher Host), Client-ID und Client-Secret ein, optional Scope, Audience und die Client-Authentifizierung (HTTP-Basic-Header oder Anfragetext). Druma holt ein Zugriffstoken, hält es nur im Arbeitsspeicher bis kurz vor Ablauf, wiederholt bei `401` einmal mit einem frischen Token und speichert es nie. Die Zugangsdaten liegen im Tresor, sind nur schreibbar (ein leeres Feld behält den gespeicherten Wert) und werden nie wieder angezeigt.
+
+---
+
+## Frachtplattformen
+
+Aufträge von Transporeon und Shiptify nutzen diese API nicht: siehe [Frachtplattformen](/de/integrations/freight-platforms).
+
+---
+
 ## Verwandte Seiten
 
 <Card title="Kundenportal" icon="users" href="/de/client-portal/tracking-shipments">

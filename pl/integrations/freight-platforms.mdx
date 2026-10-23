@@ -1,0 +1,67 @@
+---
+title: "Platformy frachtowe (Transporeon, Shiptify)"
+description: "Odbieraj ładunki z Transporeon i Shiptify jako zlecenia w Druma, odsyłaj status i sam zatwierdzaj POD, zanim zostanie wysłany."
+icon: "truck-fast"
+---
+
+Transporeon i Shiptify to platformy frachtowe po stronie załadowcy. Gdy podłączysz jedną z nich, jej ładunki trafiają do Druma jako zlecenia, a Druma odsyła postęp, wszystko tym samym przepływem. Obie są włączane dla Twojej firmy przez Druma, a potem konfigurowane w **Ustawienia → Integracje**.
+
+---
+
+## Co dzieje się z ładunkiem
+
+<Steps>
+  <Step title="Ładunek przychodzi">
+    Druma najpierw zapisuje wiadomość platformy, a potem tworzy **jedno zlecenie na ładunek** ze wszystkimi przystankami, referencjami i towarem. Ładunek nigdy nie staje się dwoma zleceniami, choćby platforma powtarzała go wielokrotnie.
+  </Step>
+  <Step title="Zlecenie zaczyna jako wersja robocza">
+    Domyślnie zlecenie jest **wersją roboczą** do przejrzenia przez planistę. W ustawieniach integracji możesz wybrać tworzenie go jako **Oczekujące**, gdy jest wszystko, co potrzebne. Klient jest dopasowywany po własnym identyfikatorze konta w platformie, dokładnym numerze VAT lub powiązaniu, które potwierdziłeś — nigdy samą nazwą.
+  </Step>
+  <Step title="Platforma zmienia ładunek">
+    Zmiana **wersji roboczej** jest stosowana za Ciebie i odnotowana w historii zlecenia. Zmiana zlecenia już zaplanowanego lub realizowanego jest **wstrzymywana**: planista dostaje zadanie i powiadomienie i stosuje ją lub odrzuca ze zlecenia. Zmiana **zamkniętego** zlecenia (dostarczonego, anulowanego, zafakturowanego) nigdy nie jest zapisywana; pozycja Key User mówi, o co prosiła platforma. Cena jest ustalana przy tworzeniu zlecenia i potem nigdy nie jest nadpisywana.
+  </Step>
+  <Step title="Status wraca">
+    Przyjazdy, wyjazdy, dostawa i opóźnienia są odsyłane do platformy. Kody statusów ustala się osobno dla każdego załadowcy: raz przypisujesz każde zdarzenie Druma do kodu platformy w **mapie statusów** integracji; zdarzenie bez przypisania jest wstrzymywane, a nie wysyłane, dopóki go nie dodasz.
+  </Step>
+  <Step title="Zatwierdzasz POD">
+    POD lub CMR **nigdy nie jest wysyłany sam**. Gdy zostanie przesłany, zlecenie pokazuje go jako oczekujący na weryfikację; planista zaznacza dokumenty i zatwierdza, dopiero wtedy są wysyłane. Odrzucenie niczego nie wysyła.
+  </Step>
+</Steps>
+
+---
+
+## Transporeon
+
+- **Połączenie**: wybierz **Test** lub **Produkcja**, wpisz dane Carrier Interface (OAuth2 client credentials lub Basic) i podaj Transporeon **adres push i token** pokazane w panelu. Druma dodatkowo odpytuje w krótkich odstępach, więc pominięty push zostaje nadrobiony.
+- **Odpowiedź ze zlecenia**: przyjęcie lub odrzucenie transportu (z powodem), prośba o zmianę lub jej cofnięcie, złożenie lub wycofanie oferty. Każda akcja trafia do kolejki i jest ponawiana, a stan widać na zleceniu.
+- **Opcjonalne udostępnianie GPS**: po włączeniu numer rejestracyjny i pozycja ciężarówki na aktywnym transporcie Transporeon są udostępniane Transporeon Visibility. Tylko pojazdy na tych transportach; kończy się razem z transportem.
+
+## Shiptify
+
+- **Połączenie**: wybierz **Test** lub **Produkcja**, wpisz klucz API (i opcjonalny klucz podpisu) i podaj Shiptify **adres webhooka i token** pokazane w panelu. **Testuj połączenie** sprawdza klucz i wyświetla Twoich aktywnych załadowców.
+- **Bez przyjmowania i odrzucania**: przewoźnik otrzymuje przesyłkę dopiero po jej potwierdzeniu, więc ładunek Shiptify jest ładunkiem przyjętym.
+- **Opcje**: które potwierdzenia wysyłać (odbiór, dostawa, przeplanowanie przy opóźnieniu, punkty śledzenia), czy pobierać dokumenty załadowcy i czy wysyłać numery rejestracyjne ciężarówki i naczepy (domyślnie wyłączone).
+
+---
+
+## Gdy coś zawiedzie
+
+Wiadomość, której nie dało się przetworzyć, zostaje na liście integracji z powodem. Usuń przyczynę (na przykład powiąż klienta) i użyj **Odtwórz ponownie**. Nieudane wywołania wychodzące są ponawiane z rosnącymi przerwami i po wielokrotnych porażkach pokazywane jako ostatecznie nieudane, z przyciskiem **Ponów**. Zlecenia firmy demo lub potencjalnego klienta nigdy nie są wysyłane do platformy.
+
+Druma przechowuje surowe wiadomości platformy i zapis tego, co odesłała, przez **30 dni**; usuwane są tylko zakończone wiadomości (przetworzone, zignorowane lub nieudane) oraz wywołania wysłane, ostatecznie nieudane lub pominięte. Wszystko, co jeszcze czeka lub jest ponawiane, zostaje. Same zlecenia nie są naruszane.
+
+<Note>
+Druma nigdy nie wysyła do platformy imienia ani telefonu kierowcy, a ustawienia platformy, które zabraniają własne reguły Druma (na przykład zapis do zamkniętego zlecenia), nie da się włączyć.
+</Note>
+
+---
+
+## Powiązane strony
+
+<Card title="Integracja Client API (CAPI)" icon="plug" href="/pl/integrations/client-api">
+  Dla klientów wysyłających zlecenia z własnego ERP, TMS lub systemu EDI.
+</Card>
+
+<Card title="Konfiguracja integracji" icon="plug" href="/pl/admin/integration-setup">
+  Przegląd wszystkich integracji dostępnych w Ustawienia → Integracje.
+</Card>

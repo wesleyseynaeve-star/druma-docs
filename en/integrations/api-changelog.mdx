@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Changes inside v1 are additive. Breaking changes and deprecations are listed here first. See [API versioning](/en/integrations/api-versioning) for the policy.
 
+## 2026-10-23
+
+**Added (v1, no action needed)**
+
+- **Idempotent inbound.** `inbound-client-api` accepts an optional `Idempotency-Key` header. A repeat of a finished key answers `200` with the original order and the header `Idempotent-Replayed: true`; a repeat while the first request is still running answers `409` `{"error":"in_progress"}` with `Retry-After: 5`; the same key with a different body answers `422` `{"error":"idempotency_key_reused"}`. No key means no de-duplication, as before.
+- **`outcome` on the inbound `200`.** An additive string (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Treat it as an open list. The create response `status` can be `pending` when the operator enables skip-draft for the connection.
+- **Replace and cancel.** A mapping that reads `message_function` and `external_id` turns a later message into a change to the order it made. New `422` codes: `external_id_required`, `unknown_message_function`.
+- **More request formats.** XML (SAP IDoc), EDIFACT and `text/csv` in addition to JSON; one message per request (`422` `{"error":"multi_message_not_supported"}` otherwise).
+- **New opt-in webhook events.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` and `order.pod_uploaded` (sent only after a planner approves the POD). Delivered only to connections that list them; no existing connection changes.
+- **`references` on order and stop events.** One optional object `{ "<key>": "<value>" }` with the client's own references that the operator marked visible to the client. Absent when the order has none.
+- **Outbound mapping.** A connection can send XML, EDIFACT or JSON in the client's own layout with its own status codes; an event with no mapped status is skipped (not sent, not retried). Without an outbound mapping the body is byte-identical to before.
+- **OAuth2 client credentials** as an outbound authentication type, next to bearer, basic, HMAC and none.
+
+**Deprecated / removed:** nothing.
+
 ## 2026-10-10
 
 **Added (v1, no action needed)**

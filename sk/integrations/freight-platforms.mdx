@@ -1,0 +1,67 @@
+---
+title: "Nákladné platformy (Transporeon, Shiptify)"
+description: "Prijímajte náklady z Transporeon a Shiptify ako zákazky v Druma, posielajte späť stav a POD si pred odoslaním schvaľte sami."
+icon: "truck-fast"
+---
+
+Transporeon a Shiptify sú nákladné platformy na strane odosielateľa. Keď jednu pripojíte, jej náklady prídu do Druma ako zákazky a Druma posiela späť priebeh, všetko rovnakým tokom. Obe zapína pre vašu firmu Druma a potom sa nastavujú v **Nastavenia → Integrácie**.
+
+---
+
+## Čo sa s nákladom deje
+
+<Steps>
+  <Step title="Náklad dorazí">
+    Druma najprv uloží správu platformy a potom vytvorí **jednu zákazku na náklad** so všetkými zastávkami, referenciami a tovarom. Náklad sa nikdy nestane dvoma zákazkami, nech ho platforma opakuje koľkokrát chce.
+  </Step>
+  <Step title="Zákazka začína ako koncept">
+    V predvolenom stave je zákazka **Koncept**, ktorý skontroluje plánovač. V nastaveniach integrácie môžete zvoliť, aby sa vytvárala ako **Čakajúca**, keď je k dispozícii všetko potrebné. Klient sa priraďuje podľa vlastného ID účtu na platforme, presného IČ DPH alebo väzby, ktorú ste potvrdili — nikdy len podľa názvu.
+  </Step>
+  <Step title="Platforma zmení náklad">
+    Zmena **konceptu** sa použije za vás a zapíše sa do histórie zákazky. Zmena zákazky, ktorá je už naplánovaná alebo prebieha, sa **podrží**: plánovač dostane úlohu a upozornenie a zo zákazky ju použije alebo zamietne. Zmena **uzavretej** zákazky (doručenej, zrušenej, vyfakturovanej) sa nikdy nezapíše; položka pre Key User vám povie, čo platforma chcela. Cena sa určí pri vytvorení zákazky a potom sa nikdy neprepisuje.
+  </Step>
+  <Step title="Stav sa vracia">
+    Príchody, odchody, doručenie a meškania sa posielajú späť platforme. Kódy stavov sa dohodnú pre každého odosielateľa: každú udalosť Druma priradíte ku kódu platformy raz v **mape stavov** integrácie; udalosť bez priradenia sa podrží a neodošle, kým ho nepridáte.
+  </Step>
+  <Step title="POD schvaľujete vy">
+    POD alebo CMR sa **nikdy neodošle sám**. Keď je jeden nahraný, zákazka ho ukáže ako čakajúci na kontrolu; plánovač zaškrtne dokumenty a schváli, a až potom sa odošlú. Zamietnutie nič neodošle.
+  </Step>
+</Steps>
+
+---
+
+## Transporeon
+
+- **Pripojenie**: zvoľte **Test** alebo **Produkcia**, zadajte prihlasovacie údaje Carrier Interface (OAuth2 client credentials alebo Basic) a odovzdajte Transporeon **adresu pre push a token** zobrazené v paneli. Druma navyše dopytuje v krátkych intervaloch, takže zmeškaný push sa dobehne.
+- **Odpoveď zo zákazky**: prijať alebo odmietnuť prepravu (s dôvodom), požiadať o zmenu alebo ju odvolať, podať alebo stiahnuť ponuku. Každá akcia sa zaradí do frontu a opakuje sa, stav vidíte na zákazke.
+- **Voliteľné zdieľanie GPS**: ak ho zapnete, evidenčné číslo a poloha vozidla na aktívnej preprave Transporeon sa zdieľa s Transporeon Visibility. Len vozidlá na týchto prepravách; končí s prepravou.
+
+## Shiptify
+
+- **Pripojenie**: zvoľte **Test** alebo **Produkcia**, zadajte kľúč API (a voliteľný podpisový kľúč) a odovzdajte Shiptify **adresu webhooku a token** zobrazené v paneli. **Otestovať pripojenie** overí kľúč a vypíše vašich aktívnych odosielateľov.
+- **Bez prijatia a odmietnutia**: dopravca dostane zásielku až po jej potvrdení, takže náklad zo Shiptify je prijatý náklad.
+- **Voľby**: ktoré potvrdenia sa posielajú (vyzdvihnutie, doručenie, preplánovanie pri meškaní, body sledovania), či sa sťahujú dokumenty odosielateľa a či sa posielajú značky ťahača a návesu (predvolene vypnuté).
+
+---
+
+## Keď niečo zlyhá
+
+Správa, ktorú sa nepodarilo spracovať, zostane v zozname integrácie s dôvodom. Odstráňte príčinu (napríklad prepojte klienta) a použite **Prehrať znova**. Neúspešné odchádzajúce volania sa opakujú s rastúcimi prestávkami a po opakovaných zlyhaniach sa zobrazia ako definitívne zlyhané, s tlačidlom **Skúsiť znova**. Zákazky demo alebo prospektovej firmy sa platforme nikdy neposielajú.
+
+Druma uchováva surové správy platformy a záznam o tom, čo poslala späť, **30 dní**; odstraňujú sa len dokončené správy (spracované, ignorované alebo neúspešné) a volania odoslané, definitívne zlyhané alebo preskočené. Všetko, čo ešte čaká alebo sa opakuje, zostáva. Samotných zákaziek sa to netýka.
+
+<Note>
+Druma platforme nikdy neposiela meno ani telefón vodiča a nastavenie platformy, ktoré vlastné pravidlá Druma zakazujú (napríklad zápis do uzavretej zákazky), nemožno zapnúť.
+</Note>
+
+---
+
+## Súvisiace stránky
+
+<Card title="Integrácia Client API (CAPI)" icon="plug" href="/sk/integrations/client-api">
+  Pre klientov, ktorí posielajú zákazky z vlastného ERP, TMS alebo systému EDI.
+</Card>
+
+<Card title="Nastavenie integrácií" icon="plug" href="/sk/admin/integration-setup">
+  Prehľad všetkých integrácií dostupných v Nastavenia → Integrácie.
+</Card>

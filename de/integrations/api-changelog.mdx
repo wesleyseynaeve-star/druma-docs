@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Änderungen innerhalb von v1 sind additiv. Breaking Changes und Abkündigungen werden hier zuerst aufgeführt. Die Richtlinie steht unter [API-Versionierung](/de/integrations/api-versioning).
 
+## 2026-10-23
+
+**Hinzugefügt (v1, keine Aktion nötig)**
+
+- **Idempotenter Eingang.** `inbound-client-api` akzeptiert einen optionalen Header `Idempotency-Key`. Die Wiederholung eines abgeschlossenen Schlüssels antwortet `200` mit dem ursprünglichen Auftrag und dem Header `Idempotent-Replayed: true`; eine Wiederholung, während die erste Anfrage noch läuft, antwortet `409` `{"error":"in_progress"}` mit `Retry-After: 5`; derselbe Schlüssel mit anderem Inhalt antwortet `422` `{"error":"idempotency_key_reused"}`. Ohne Schlüssel gibt es wie bisher keine Duplikaterkennung.
+- **`outcome` im eingehenden `200`.** Ein additiver String (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Als offene Liste behandeln. Der `status` der Anlageantwort kann `pending` sein, wenn der Betreiber das Überspringen des Entwurfs für die Verbindung aktiviert.
+- **Ersetzen und Stornieren.** Eine Zuordnung, die `message_function` und `external_id` liest, macht aus einer späteren Nachricht eine Änderung des angelegten Auftrags. Neue `422`-Codes: `external_id_required`, `unknown_message_function`.
+- **Weitere Anfrageformate.** XML (SAP IDoc), EDIFACT und `text/csv` zusätzlich zu JSON; eine Nachricht pro Anfrage (sonst `422` `{"error":"multi_message_not_supported"}`).
+- **Neue optionale Webhook-Ereignisse.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` und `order.pod_uploaded` (wird erst nach Freigabe des POD durch einen Disponenten gesendet). Nur an Verbindungen zugestellt, die sie auflisten; keine bestehende Verbindung ändert sich.
+- **`references` bei Auftrags- und Stopp-Ereignissen.** Ein optionales Objekt `{ "<key>": "<value>" }` mit den eigenen Referenzen des Kunden, die der Betreiber für den Kunden sichtbar markiert hat. Fehlt, wenn der Auftrag keine hat.
+- **Ausgehende Zuordnung.** Eine Verbindung kann XML, EDIFACT oder JSON im Layout des Kunden mit dessen Statuscodes senden; ein Ereignis ohne zugeordneten Status wird übersprungen (nicht gesendet, nicht wiederholt). Ohne ausgehende Zuordnung ist der Text byte-identisch mit dem bisherigen.
+- **OAuth2 client credentials** als ausgehender Authentifizierungstyp neben bearer, basic, HMAC und none.
+
+**Veraltet / entfernt:** nichts.
+
 ## 2026-10-10
 
 **Hinzugefügt (v1, kein Handlungsbedarf)**

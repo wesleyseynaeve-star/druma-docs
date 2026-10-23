@@ -1,0 +1,67 @@
+---
+title: "Platforme de transport (Transporeon, Shiptify)"
+description: "Primește încărcături de la Transporeon și Shiptify ca comenzi în Druma, trimite statusul înapoi și aprobă tu POD-ul înainte să plece."
+icon: "truck-fast"
+---
+
+Transporeon și Shiptify sunt platforme de transport din partea expeditorului. Când conectezi una, încărcăturile ei ajung în Druma ca comenzi, iar Druma raportează progresul înapoi, totul prin același flux. Ambele sunt activate pentru compania ta de Druma, apoi configurate la **Setări → Integrări**.
+
+---
+
+## Ce se întâmplă cu o încărcătură
+
+<Steps>
+  <Step title="Încărcătura ajunge">
+    Druma stochează mai întâi mesajul platformei, apoi creează **o comandă pe încărcătură**, cu toate opririle, referințele și marfa. O încărcătură nu devine niciodată două comenzi, oricât de des o repetă platforma.
+  </Step>
+  <Step title="Comanda începe ca ciornă">
+    Implicit, comanda este o **Ciornă** pe care o verifică un planificator. În setările integrării poți alege să fie creată ca **În așteptare** când există tot ce este necesar. Clientul este potrivit după id-ul propriu al contului din platformă, un cod de TVA exact sau o legătură pe care ai confirmat-o — niciodată doar după nume.
+  </Step>
+  <Step title="Platforma modifică încărcătura">
+    O modificare a unei **ciorne** se aplică de la sine și se notează în istoricul comenzii. O modificare a unei comenzi deja planificate sau în desfășurare este **pusă în așteptare**: planificatorul primește o sarcină și o notificare și o aplică sau o respinge din comandă. O modificare a unei comenzi **închise** (livrată, anulată, facturată) nu se scrie niciodată; un element Key User te informează ce a cerut platforma. Prețul se stabilește la crearea comenzii și nu se mai rescrie ulterior.
+  </Step>
+  <Step title="Statusul pleacă înapoi">
+    Sosirile, plecările, livrarea și întârzierile sunt trimise înapoi platformei. Codurile de status se convin per expeditor, deci mapezi o dată fiecare eveniment Druma la codul platformei în **harta de statusuri** a integrării; un eveniment fără mapare este reținut, nu trimis, până adaugi una.
+  </Step>
+  <Step title="Aprobi POD-ul">
+    Un POD sau CMR **nu este trimis niciodată de la sine**. Când unul este încărcat, comanda îl arată ca fiind în așteptarea verificării; un planificator bifează documentele și aprobă, abia apoi sunt trimise. Respingerea nu trimite nimic.
+  </Step>
+</Steps>
+
+---
+
+## Transporeon
+
+- **Conectare**: alege **Test** sau **Producție**, introdu credențialele Carrier Interface (OAuth2 client credentials sau Basic) și dă-i Transporeon **adresa de push și tokenul** afișate în panou. Druma interoghează și periodic, deci un push ratat este recuperat.
+- **Răspunde din comandă**: acceptă sau refuză un transport (cu motiv), cere sau retrage o modificare, plasează sau retrage o ofertă. Fiecare acțiune este pusă în coadă și reîncercată, iar starea se vede pe comandă.
+- **Partajare GPS opțională**: dacă o activezi, numărul de înmatriculare și poziția camionului de pe un transport Transporeon activ sunt partajate cu Transporeon Visibility. Doar vehiculele de pe acele transporturi; se oprește când transportul se termină.
+
+## Shiptify
+
+- **Conectare**: alege **Test** sau **Producție**, introdu cheia API (și cheia de semnare opțională) și dă-i Shiptify **adresa webhook și tokenul** afișate în panou. **Testează conexiunea** verifică cheia și listează expeditorii tăi activi.
+- **Fără acceptare sau refuz**: un transportator primește o expediție doar după ce este confirmată, deci o încărcătură Shiptify este o încărcătură acceptată.
+- **Opțiuni**: ce confirmări se trimit (ridicare, livrare, replanificare la întârziere, puncte de urmărire), dacă se descarcă documentele expeditorului și dacă se trimit numerele camionului și remorcii (dezactivat implicit).
+
+---
+
+## Când ceva eșuează
+
+Un mesaj care nu a putut fi procesat rămâne în lista integrării, cu motivul. Remediază cauza (de exemplu leagă clientul) și folosește **Reia**. Apelurile de ieșire eșuate sunt reîncercate cu pauze tot mai lungi și apar ca definitiv eșuate după eșecuri repetate, cu un buton **Reîncearcă**. Comenzile unei companii demo sau prospect nu sunt trimise niciodată unei platforme.
+
+Druma păstrează mesajele brute ale platformei și evidența a ceea ce a trimis înapoi timp de **30 de zile**; sunt șterse doar mesajele încheiate (procesate, ignorate sau eșuate) și apelurile trimise, definitiv eșuate sau omise. Tot ce așteaptă sau este reîncercat se păstrează. Comenzile în sine nu sunt afectate.
+
+<Note>
+Druma nu trimite niciodată unei platforme numele sau telefonul unui șofer, iar o setare a platformei pe care regulile proprii ale Druma o interzic (de exemplu scrierea într-o comandă închisă) nu poate fi activată.
+</Note>
+
+---
+
+## Pagini asociate
+
+<Card title="Integrarea API Client (CAPI)" icon="plug" href="/ro/integrations/client-api">
+  Pentru clienții care trimit comenzi din propriul ERP, TMS sau sistem EDI.
+</Card>
+
+<Card title="Configurarea integrărilor" icon="plug" href="/ro/admin/integration-setup">
+  Prezentare generală a tuturor integrărilor disponibile în Setări → Integrări.
+</Card>

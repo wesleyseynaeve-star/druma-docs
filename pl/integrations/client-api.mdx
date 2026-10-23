@@ -147,6 +147,94 @@ Te znaczniki czasu są przydatne do potwierdzenia, że integracja jest aktywna i
 
 ---
 
+## Formaty, które może wysyłać klient
+
+System klienta nie musi mówić w JSON. Druma czyta te formaty przychodzące i zamienia je wszystkie w to samo zlecenie:
+
+| Format | Typowy nadawca | Uwagi |
+|---|---|---|
+| **JSON** | Nowoczesny ERP / TMS | Domyślny. |
+| **XML** | SAP IDoc (na przykład IDoc przesyłki lub dostawy) | Zwykły XML bez `DOCTYPE`. Jeden IDoc na żądanie. |
+| **EDIFACT** | Załadowcy na EDI (na przykład zlecenia transportowe IFTMIN) | Jedna wiadomość na żądanie. |
+| **CSV** | Załadowcy, którzy potrafią wyeksportować tylko arkusz | `Content-Type: text/csv` albo przypięcie połączenia do CSV. UTF-8 lub windows-1250, separator `,` `;` lub tabulator, do 500 wierszy i 200 kolumn. **Jeden plik to jedno zlecenie**: wiersze stają się przystankami. |
+
+Druma rozpoznaje JSON, XML i EDIFACT po treści. CSV nigdy nie jest zgadywany: przypnij format połączenia do **CSV** albo poproś klienta o wysyłanie `Content-Type: text/csv`. Treść żądania jest ograniczona do 256 KB. Żądanie zawierające więcej niż jedną wiadomość (kilka IDoców, kilka segmentów `UNH` lub CSV z kilkoma różnymi numerami zleceń) jest odrzucane z kodem `422` i `{"error":"multi_message_not_supported"}`.
+
+<Note>
+Gotowe mapowania dla znanych formatów (SAP IDoc, EDIFACT IFTMIN, zlecenia frachtowe SAP, zlecenia Trans.eu) powstały na podstawie publicznie dostępnych przykładowych wiadomości. Są oznaczone jako **Zbudowane na publicznym przykładzie**, dopóki prawdziwa wiadomość klienta ich nie potwierdzi (**Zweryfikowane wiadomością klienta**). Dopóki połączenie jest w konfiguracji, Druma stosuje takie mapowanie bez kroku AI; i tak testujesz je własną wiadomością klienta przed uruchomieniem. Jeśli żadne gotowe mapowanie nie pasuje, AI proponuje je jak dotąd.
+</Note>
+
+### Dodatki w kreatorze
+
+- **Przypięcie formatu** — wymuś parser JSON, XML, EDIFACT lub CSV, gdy klient zawsze wysyła jeden format.
+- **Znacznik znanego formatu** — pokazuje, które gotowe mapowanie jest używane, i jego rewizję. Połączenie zostaje przy rewizji, z którą zostało zatwierdzone; gdy istnieje nowsza rewizja, pojawia się propozycja **Zaktualizuj mapowanie** i nic się nie zmienia, dopóki nie klikniesz. Poprzednie mapowanie zostaje w historii wersji do przywrócenia.
+- **Dziennik wiadomości** — ostatnie 50 prawdziwych wiadomości z formatem, wynikiem, informacją czy powtórzona, kluczem idempotentności, czasem trwania i tym, czego brakowało; z filtrami: utworzone, utworzone przez AI, odrzucone, powtórzone.
+
+---
+
+## Ta sama wiadomość wysłana dwa razy (idempotentność)
+
+Systemy klientów ponawiają żądania. Aby ponowienie było bezpieczne, klient dodaje nagłówek `Idempotency-Key` (do 255 znaków). Jeśli format niesie już unikalny identyfikator wiadomości, Druma może użyć go zamiast tego (mapowanie może go czytać jako klucz idempotentności). **Bez klucza nie ma deduplikacji.**
+
+| Sytuacja | Odpowiedź Druma |
+|---|---|
+| Pierwsze żądanie z nowym kluczem | `200`, zlecenie zostaje utworzone |
+| Ten sam klucz, ta sama treść, pierwsze żądanie zakończone | `200` z oryginalnymi `order_id` i `order_number`, bieżącym `status` zlecenia i nagłówkiem odpowiedzi `Idempotent-Replayed: true`. Brak drugiego zlecenia. |
+| Ten sam klucz, gdy pierwsze żądanie jest jeszcze przetwarzane | `409` `{"error":"in_progress"}` z `Retry-After: 5`. Spróbuj później z tym samym kluczem. |
+| Ten sam klucz, inna treść | `422` `{"error":"idempotency_key_reused"}`. Jeden klucz oznacza jedną wiadomość. |
+
+Klucze są pamiętane przez 90 dni. Żądanie odrzucone z `422` nie zostawia klucza, więc ten sam klucz można użyć ponownie po poprawieniu danych.
+
+Odpowiedź `200` przychodzącego API zawiera teraz także pole `outcome` (na przykład `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Traktuj je jako otwartą listę: mogą pojawić się nowe wartości. `status` może mieć wartość `pending` zamiast `draft`, gdy dla tego połączenia włączono pomijanie wersji roboczej w Ustawienia → Integracje.
+
+---
+
+## Zastępowanie i anulowanie zlecenia
+
+Gdy mapowanie czyta `message_function` (`original`, `replace` lub `cancel`; puste oznacza `original`) oraz własny identyfikator zlecenia klienta jako `external_id`, późniejsza wiadomość zmienia zlecenie, które utworzyła, zamiast tworzyć drugie.
+
+- **Zastąpienie lub anulowanie, dopóki zlecenie jest wersją roboczą**: wersja robocza jest zmieniana (lub anulowana) na miejscu.
+- **Zlecenie już po etapie wersji roboczej** (zaplanowane, w drodze): nic nie jest zmieniane automatycznie. Zmiana zostaje **wstrzymana** dla planisty, który dostaje zadanie i powiadomienie i stosuje ją lub odrzuca ze zlecenia.
+- **Po odmowie przyjęcia ładunku lub dla zamkniętego zlecenia** (anulowane, dostarczone, zafakturowane): wiadomość jest ignorowana, a operator zostaje poinformowany.
+- Wiadomość starsza niż ostatnia obsłużona dla tego samego `external_id` jest ignorowana jako przestarzała; identyczne ponowienie odpowiada `unchanged`.
+- Nieznany `external_id` odpowiada `200` z `outcome: not_found`; zastąpienie ani anulowanie nigdy nie tworzy zlecenia. Zastąpienie i anulowanie wymagają `external_id`, inaczej odpowiedź to `422` `{"error":"external_id_required"}`.
+
+---
+
+## Wysyłka w formacie klienta
+
+Domyślnie Druma wysyła standardową treść zdarzenia w JSON. Dla klientów na SAP, S/4HANA lub EDI możesz przełączyć połączenie na **własny format wychodzący** w panelu **Mapowanie wychodzące** na karcie API:
+
+1. **Wybierz gotowy szablon** (EDIFACT IFTSTA D.01B lub D.96A, status przesyłki SAP IDoc, zdarzenia zlecenia S/4HANA / Transportation Management w JSON) **albo wklej wiadomość, której oczekuje klient**, i pozwól AI zaproponować mapowanie. Szablony powstały na publicznych przykładach i są oznaczone jako niezweryfikowane, dopóki klient ich nie potwierdzi.
+2. **Uzupełnij strony** (identyfikatory nadawcy i odbiorcy) — zawsze są Twoje, nigdy zgadywane.
+3. **Uzupełnij tabelę statusów**: jeden wiersz na zdarzenie Druma z kodem i kwalifikatorem statusu klienta. **Zdarzenie bez wiersza nie jest wysyłane** (pojawia się jako *pominięte*, nic nie jest ponawiane).
+4. **Podgląd** na prawdziwym zleceniu tego klienta — nic nie jest wysyłane ani zapisywane.
+5. Zapisz. **Użyj standardowego webhooka** w każdej chwili przywraca zwykłą treść JSON.
+
+Podpis (HMAC) obejmuje dokładnie wysłane bajty. Mapowanie może używać tylko stałego zestawu pól zlecenia, przystanku, numeru rejestracyjnego, POD i referencji: imiona kierowców, numery telefonów, pozycje i ceny nigdy nie opuszczają przez nie Druma.
+
+### Więcej zdarzeń (opcjonalnie)
+
+Zaznacz je w **Wybierz zdarzenia do wysyłania**. Nigdy nie są włączane same dla istniejącego połączenia.
+
+- **Zdarzenia przystanku** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading`: pierwszy zarejestrowany przyjazd lub wyjazd z przystanku załadunku albo rozładunku.
+- **Zlecenie odrzucone** — `order.declined`: odmówiono przyjęcia ładunku; treść zawiera kod powodu (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) i opcjonalny komentarz.
+- **POD przesłany** — `order.pod_uploaded`: wysyłany **dopiero po zatwierdzeniu dokumentów przez planistę**. Na zleceniu **Zatwierdź POD i powiadom klienta** wysyła go raz na zlecenie; zdjęcie przesłane przez kierowcę nigdy go nie wyzwala.
+
+Każde zdarzenie zlecenia i przystanku odsyła też **referencje** klienta (na przykład numer dostawy SAP, który przysłał), w obiekcie `references` — tylko referencje oznaczone jako widoczne dla klienta. Klucza brak, gdy zlecenie nie ma żadnej.
+
+### OAuth2 client credentials
+
+Dla bramek wymagających tokenu (SAP BTP, Azure AD, Keycloak) wybierz typ uwierzytelniania **OAuth2 (client credentials)** i podaj adres URL tokenu (https, host publiczny), identyfikator i sekret klienta oraz opcjonalnie scope, audience i sposób uwierzytelniania klienta (nagłówek HTTP Basic lub treść żądania). Druma pobiera token dostępu, trzyma go tylko w pamięci do chwili tuż przed wygaśnięciem, przy `401` ponawia raz ze świeżym tokenem i nigdy go nie zapisuje. Dane dostępowe są w sejfie, tylko do zapisu (puste pole zachowuje zapisaną wartość) i nigdy więcej nie są pokazywane.
+
+---
+
+## Platformy frachtowe
+
+Zlecenia z Transporeon i Shiptify nie korzystają z tego API: zobacz [Platformy frachtowe](/pl/integrations/freight-platforms).
+
+---
+
 ## Limity zapytań
 
 Druma egzekwuje limit **200 wywołań API na godzinę per konfigurację klienta**. Żądania przekraczające ten limit otrzymują odpowiedź `429 Too Many Requests`. Limit resetuje się w kroczącym jednogodzinnym oknie.

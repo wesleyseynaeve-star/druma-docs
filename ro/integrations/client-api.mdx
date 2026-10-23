@@ -188,6 +188,94 @@ Fiecare eveniment conține și `api_version` și `event_id` (stabil la reîncerc
 
 ---
 
+## Formatele pe care le poate trimite clientul
+
+Sistemul unui client nu trebuie să vorbească JSON. Druma citește aceste formate de intrare și le transformă pe toate în aceeași comandă:
+
+| Format | Expeditor tipic | Observații |
+|---|---|---|
+| **JSON** | ERP / TMS modern | Formatul implicit. |
+| **XML** | SAP IDoc (de exemplu IDoc-uri de expediție sau de livrare) | XML simplu, fără `DOCTYPE`. Un singur IDoc per cerere. |
+| **EDIFACT** | Expeditori pe EDI (de exemplu instrucțiuni de transport IFTMIN) | Un singur mesaj per cerere. |
+| **CSV** | Expeditori care pot exporta doar o foaie de calcul | `Content-Type: text/csv` sau conexiunea fixată pe CSV. UTF-8 sau windows-1250, delimitator `,` `;` sau tab, cel mult 500 de rânduri și 200 de coloane. **Un fișier este o comandă**: rândurile devin opriri. |
+
+Druma recunoaște JSON, XML și EDIFACT după conținut. CSV nu este niciodată ghicit: fixează formatul pe **CSV** în conexiune sau cere clientului să trimită `Content-Type: text/csv`. Corpul cererii este limitat la 256 KB. O cerere care conține mai multe mesaje (mai multe IDoc-uri, mai multe segmente `UNH` sau un CSV cu mai multe numere de comandă diferite) este refuzată cu `422` și `{"error":"multi_message_not_supported"}`.
+
+<Note>
+Mapările gata făcute pentru formate cunoscute (SAP IDoc, EDIFACT IFTMIN, comenzi de transport SAP, comenzi Trans.eu) sunt construite din mesaje-exemplu publicate public. Ele sunt marcate **Construit dintr-un exemplu public** până când un mesaj real al clientului le confirmă (**Verificat cu un mesaj al clientului**). Cât timp o conexiune este încă în configurare, Druma aplică o astfel de mapare fără pasul AI; o testezi oricum cu mesajul real al clientului înainte de a trece în producție. Dacă nu se potrivește nicio mapare gata făcută, AI-ul propune una, ca până acum.
+</Note>
+
+### Completări în wizard
+
+- **Fixarea formatului** — forțează parserul pe JSON, XML, EDIFACT sau CSV când clientul trimite mereu același format.
+- **Eticheta formatului cunoscut** — arată ce mapare gata făcută se folosește și ce revizie. O conexiune rămâne pe revizia cu care a fost aprobată; când există o revizie mai nouă primești propunerea **Actualizează maparea**, iar nimic nu se schimbă până nu apeși. Maparea anterioară rămâne în istoricul versiunilor pentru revenire.
+- **Jurnalul de mesaje** — ultimele 50 de mesaje reale, cu format, rezultat, dacă a fost reluat, cheia de idempotență, durata și ce lipsea, filtrabile după create, create de AI, respinse și reluate.
+
+---
+
+## Același mesaj trimis de două ori (idempotență)
+
+Sistemele clienților reîncearcă. Ca o reîncercare să fie sigură, clientul adaugă antetul `Idempotency-Key` (cel mult 255 de caractere). Dacă formatul conține deja un id unic de mesaj, Druma îl poate folosi în loc (o mapare îl poate citi drept cheie de idempotență). **Fără cheie nu există deduplicare.**
+
+| Situație | Răspunsul Druma |
+|---|---|
+| Prima cerere cu o cheie nouă | `200`, comanda este creată |
+| Aceeași cheie, același corp, prima cerere s-a terminat | `200` cu `order_id` și `order_number` originale, `status` curent al comenzii și antetul de răspuns `Idempotent-Replayed: true`. Nu se creează o a doua comandă. |
+| Aceeași cheie cât timp prima cerere încă se procesează | `409` `{"error":"in_progress"}` cu `Retry-After: 5`. Reîncearcă mai târziu cu aceeași cheie. |
+| Aceeași cheie, alt corp | `422` `{"error":"idempotency_key_reused"}`. O cheie identifică un singur mesaj. |
+
+Cheile sunt ținute minte 90 de zile. O cerere respinsă cu `422` nu lasă nicio cheie în urmă, deci aceeași cheie poate fi refolosită după corectarea datelor.
+
+Răspunsul `200` al API-ului de intrare conține acum și câmpul `outcome` (de exemplu `created`, `applied_draft`, `parked`, `cancelled_draft`, `ignored_terminal`, `ignored_stale`, `unchanged`, `duplicate_external_id`, `not_found`). Tratează-l ca pe o listă deschisă: pot apărea valori noi. `status` poate fi `pending` în loc de `draft` când ai activat omiterea ciornei pentru această conexiune în Setări → Integrări.
+
+---
+
+## Înlocuirea și anularea unei comenzi
+
+Când maparea citește un `message_function` (`original`, `replace` sau `cancel`; gol înseamnă `original`) și id-ul propriu al clientului pentru comandă ca `external_id`, un mesaj ulterior modifică comanda pe care a creat-o, în loc să creeze o a doua.
+
+- **Înlocuire sau anulare cât comanda este încă ciornă**: ciorna este modificată (sau anulată) pe loc.
+- **Comandă care a trecut de ciornă** (planificată, pe drum): nu se modifică nimic automat. Modificarea este **pusă în așteptare** pentru un planificator, care primește o sarcină și o notificare și o aplică sau o respinge din comandă.
+- **După ce ai refuzat încărcătura sau pe o comandă închisă** (anulată, livrată, facturată): mesajul este ignorat și operatorul este înștiințat.
+- Un mesaj mai vechi decât ultimul tratat pentru același `external_id` este ignorat ca depășit; o reîncercare identică răspunde `unchanged`.
+- Un `external_id` necunoscut răspunde `200` cu `outcome: not_found`; o înlocuire sau o anulare nu creează niciodată o comandă. Înlocuirea sau anularea cer `external_id`, altfel răspunsul este `422` `{"error":"external_id_required"}`.
+
+---
+
+## Ieșire în formatul propriu al clientului
+
+Implicit, Druma trimite corpul standard de eveniment în JSON. Pentru clienții pe SAP, S/4HANA sau EDI poți trece o conexiune pe un **format de ieșire personalizat**, în panoul **Mapare de ieșire** din tabul API:
+
+1. **Alege un preset gata făcut** (EDIFACT IFTSTA D.01B sau D.96A, status de expediție SAP IDoc, evenimente de comandă S/4HANA / Transportation Management în JSON) **sau lipește mesajul pe care îl așteaptă clientul** și lasă AI-ul să propună maparea. Preseturile sunt construite din exemple publice și sunt marcate neverificate până când un client le confirmă.
+2. **Completează părțile** (identificatorii expeditorului și ai destinatarului) — sunt întotdeauna ale tale, niciodată ghicite.
+3. **Completează tabelul de statusuri**: un rând pentru fiecare eveniment Druma, cu codul și calificatorul de status ale clientului. **Un eveniment fără rând nu se trimite** (apare ca *omis*, nu se reîncearcă nimic).
+4. **Previzualizează** cu o comandă reală a acelui client — nu se trimite și nu se stochează nimic.
+5. Salvează. **Folosește webhook-ul standard** te readuce oricând la corpul JSON simplu.
+
+Semnătura (HMAC) acoperă exact octeții trimiși. O mapare poate folosi doar un set fix de câmpuri de comandă, oprire, număr de înmatriculare, POD și referințe: numele șoferilor, numerele de telefon, pozițiile și prețurile nu părăsesc Druma prin ea.
+
+### Mai multe evenimente (la cerere)
+
+Bifează-le la **Selectează evenimentele de trimis**. Nu sunt activate niciodată de la sine pentru o conexiune existentă.
+
+- **Evenimente de oprire** — `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading`: prima sosire sau plecare înregistrată la o oprire de încărcare sau descărcare.
+- **Comandă refuzată** — `order.declined`: ai refuzat o încărcătură primită; corpul conține codul motivului (`capacity`, `price`, `lane`, `timing`, `equipment`, `other`) și un comentariu opțional.
+- **POD încărcat** — `order.pod_uploaded`: trimis **doar după ce un planificator aprobă documentele**. Pe comandă, **Aprobă POD și anunță clientul** îl trimite o dată per comandă; o fotografie încărcată de un șofer nu îl declanșează niciodată.
+
+Fiecare eveniment de comandă și de oprire trimite înapoi și **referințele** clientului (de exemplu numărul de livrare SAP pe care l-a trimis), într-un obiect `references` — doar referințele marcate ca vizibile clientului. Cheia lipsește când comanda nu are niciuna.
+
+### OAuth2 client credentials
+
+Pentru gateway-urile care cer un token (SAP BTP, Azure AD, Keycloak), alege tipul de autentificare **OAuth2 (client credentials)** și introdu URL-ul de token (https, gazdă publică), id-ul și secretul clientului și, opțional, scope, audience și modul de autentificare al clientului (antet HTTP Basic sau corpul cererii). Druma obține un token de acces, îl ține doar în memorie până puțin înainte de expirare, reîncearcă o dată cu un token nou la un `401` și nu îl stochează niciodată. Credențialele sunt păstrate în seif, se pot doar scrie (un câmp gol păstrează valoarea salvată) și nu mai sunt afișate vreodată.
+
+---
+
+## Platforme de transport
+
+Comenzile de la Transporeon și Shiptify nu folosesc acest API: vezi [Platforme de transport](/ro/integrations/freight-platforms).
+
+---
+
 ## Pagini asociate
 
 <Card title="Portal client" icon="users" href="/ro/client-portal/tracking-shipments">

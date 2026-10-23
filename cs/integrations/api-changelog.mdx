@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Změny uvnitř v1 jsou aditivní. Zásadní změny a vyřazení se uvádějí nejdříve zde. Pravidla popisuje [Verzování API](/cs/integrations/api-versioning).
 
+## 2026-10-23
+
+**Přidáno (v1, není třeba nic dělat)**
+
+- **Idempotentní příjem.** `inbound-client-api` přijímá volitelnou hlavičku `Idempotency-Key`. Zopakování dokončeného klíče odpoví `200` s původní zakázkou a hlavičkou `Idempotent-Replayed: true`; zopakování, zatímco první požadavek ještě běží, odpoví `409` `{"error":"in_progress"}` s `Retry-After: 5`; stejný klíč s jiným tělem odpoví `422` `{"error":"idempotency_key_reused"}`. Bez klíče, jako dosud, není žádná deduplikace.
+- **`outcome` v příchozím `200`.** Aditivní řetězec (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Berte ho jako otevřený seznam. `status` v odpovědi na vytvoření může být `pending`, když provozovatel pro spojení zapne přeskočení konceptu.
+- **Nahrazení a zrušení.** Mapování čtoucí `message_function` a `external_id` změní pozdější zprávu na změnu vytvořené zakázky. Nové kódy `422`: `external_id_required`, `unknown_message_function`.
+- **Další formáty požadavků.** XML (SAP IDoc), EDIFACT a `text/csv` vedle JSON; jedna zpráva na požadavek (jinak `422` `{"error":"multi_message_not_supported"}`).
+- **Nové volitelné události webhooku.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` a `order.pod_uploaded` (odesílá se až po schválení POD plánovačem). Doručují se jen spojením, která je uvádějí; žádné existující spojení se nemění.
+- **`references` u událostí zakázky a zastávky.** Jeden volitelný objekt `{ "<key>": "<value>" }` s vlastními referencemi klienta, které provozovatel označil jako viditelné pro klienta. Chybí, když zakázka žádné nemá.
+- **Odchozí mapování.** Spojení může posílat XML, EDIFACT nebo JSON v rozvržení klienta s jeho kódy stavů; událost bez přiřazeného stavu se přeskočí (neodešle se, neopakuje). Bez odchozího mapování je tělo bajt po bajtu stejné jako dříve.
+- **OAuth2 client credentials** jako typ odchozího ověření vedle bearer, basic, HMAC a none.
+
+**Zastaralé / odstraněné:** nic.
+
 ## 2026-10-10
 
 **Přidáno (v1, není třeba nic dělat)**

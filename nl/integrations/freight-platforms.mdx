@@ -1,0 +1,67 @@
+---
+title: "Vrachtplatforms (Transporeon, Shiptify)"
+description: "Ontvang ladingen van Transporeon en Shiptify als orders in Druma, stuur de status terug en keur de POD zelf goed voordat hij vertrekt."
+icon: "truck-fast"
+---
+
+Transporeon en Shiptify zijn vrachtplatforms aan de kant van de verlader. Koppelt u er een, dan komen de ladingen als orders in Druma binnen en meldt Druma de voortgang terug, allemaal via dezelfde flow. Beide worden door Druma voor uw bedrijf ingeschakeld en daarna ingesteld onder **Instellingen → Integraties**.
+
+---
+
+## Wat er met een lading gebeurt
+
+<Steps>
+  <Step title="De lading komt binnen">
+    Druma slaat eerst het bericht van het platform op en maakt dan **één order per lading** aan, met alle stops, referenties en goederen. Een lading wordt nooit twee orders, hoe vaak het platform haar ook herhaalt.
+  </Step>
+  <Step title="De order start als concept">
+    Standaard is de order een **Concept** dat een planner nakijkt. In de instellingen van de integratie kunt u kiezen om haar als **In behandeling** aan te maken wanneer alles wat nodig is aanwezig is. De klant wordt gekoppeld via de eigen account-id van het platform, een exact btw-nummer of een koppeling die u hebt bevestigd — nooit alleen op naam.
+  </Step>
+  <Step title="Het platform wijzigt de lading">
+    Een wijziging van een **concept** wordt voor u toegepast en genoteerd in de orderhistorie. Een wijziging van een order die al gepland is of loopt, wordt **vastgehouden**: de planner krijgt een taak en een melding en past haar vanuit de order toe of wijst haar af. Een wijziging van een **gesloten** order (geleverd, geannuleerd, gefactureerd) wordt nooit geschreven; een Key User-item laat zien wat het platform vroeg. De prijs wordt bij het aanmaken van de order vastgelegd en daarna nooit overschreven.
+  </Step>
+  <Step title="De status gaat terug">
+    Aankomsten, vertrekken, levering en vertragingen worden teruggestuurd naar het platform. Statuscodes worden per verlader afgesproken: u koppelt elke Druma-gebeurtenis één keer aan de code van het platform in de **statuskoppeling** van de integratie; een gebeurtenis zonder koppeling wordt vastgehouden, niet verstuurd, totdat u er een toevoegt.
+  </Step>
+  <Step title="U keurt de POD goed">
+    Een POD of CMR wordt **nooit uit zichzelf verstuurd**. Wordt er een geüpload, dan toont de order hem als wachtend op controle; een planner vinkt de documenten aan en keurt goed, en pas dan worden ze verstuurd. Afwijzen verstuurt niets.
+  </Step>
+</Steps>
+
+---
+
+## Transporeon
+
+- **Koppelen**: kies **Test** of **Productie**, voer de Carrier Interface-inloggegevens in (OAuth2 client credentials of Basic) en geef Transporeon het **push-adres en token** dat in het paneel staat. Druma haalt ook op korte termijn zelf op, dus een gemiste push wordt ingehaald.
+- **Antwoorden vanuit de order**: een transport accepteren of weigeren (met reden), een wijziging aanvragen of intrekken, een bod plaatsen of intrekken. Elke actie wordt in de wachtrij gezet en herhaald, en de status ziet u op de order.
+- **Optioneel GPS delen**: schakelt u dit in, dan worden het kenteken en de positie van de vrachtwagen op een actief Transporeon-transport gedeeld met Transporeon Visibility. Alleen voertuigen op die transporten; het stopt wanneer het transport eindigt.
+
+## Shiptify
+
+- **Koppelen**: kies **Test** of **Productie**, voer de API-sleutel (en optioneel de ondertekeningssleutel) in en geef Shiptify het **webhook-adres en token** dat in het paneel staat. **Verbinding testen** controleert de sleutel en toont uw actieve verladers.
+- **Geen accepteren of weigeren**: een vervoerder ontvangt een zending pas als die bevestigd is, dus een Shiptify-lading is een geaccepteerde lading.
+- **Opties**: welke bevestigingen worden verstuurd (ophalen, levering, herplannen bij vertraging, trackingpunten), of documenten van de verlader worden gedownload en of de kentekens van vrachtwagen en oplegger worden verstuurd (standaard uit).
+
+---
+
+## Als er iets misgaat
+
+Een bericht dat niet verwerkt kon worden, blijft met de reden in de lijst van de integratie staan. Los de oorzaak op (koppel bijvoorbeeld de klant) en gebruik **Opnieuw afspelen**. Mislukte uitgaande aanroepen worden met oplopende pauzes herhaald en na herhaald falen als definitief mislukt getoond, met een knop **Opnieuw proberen**. Orders van een demo- of prospectbedrijf worden nooit naar een platform gestuurd.
+
+Druma bewaart de ruwe berichten van het platform en het overzicht van wat het terugstuurde **30 dagen**; alleen afgeronde berichten (verwerkt, genegeerd of mislukt) en aanroepen die verstuurd, definitief mislukt of overgeslagen zijn, worden verwijderd. Alles wat nog wacht of opnieuw wordt geprobeerd, blijft bewaard. De orders zelf worden niet geraakt.
+
+<Note>
+Druma stuurt nooit de naam of het telefoonnummer van een chauffeur naar een platform, en een platforminstelling die de eigen regels van Druma verbieden (bijvoorbeeld schrijven naar een gesloten order) kan niet worden ingeschakeld.
+</Note>
+
+---
+
+## Gerelateerde pagina's
+
+<Card title="Client API-integratie (CAPI)" icon="plug" href="/nl/integrations/client-api">
+  Voor klanten die orders sturen vanuit hun eigen ERP, TMS of EDI-systeem.
+</Card>
+
+<Card title="Integraties instellen" icon="plug" href="/nl/admin/integration-setup">
+  Overzicht van alle integraties onder Instellingen → Integraties.
+</Card>

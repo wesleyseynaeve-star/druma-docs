@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Modificările din v1 sunt aditive. Modificările incompatibile și retragerile sunt listate aici mai întâi. Politica este descrisă în [Versionarea API](/ro/integrations/api-versioning).
 
+## 2026-10-23
+
+**Adăugat (v1, nu necesită acțiune)**
+
+- **Intrare idempotentă.** `inbound-client-api` acceptă un antet opțional `Idempotency-Key`. Repetarea unei chei încheiate răspunde `200` cu comanda originală și antetul `Idempotent-Replayed: true`; repetarea cât prima cerere încă rulează răspunde `409` `{"error":"in_progress"}` cu `Retry-After: 5`; aceeași cheie cu alt corp răspunde `422` `{"error":"idempotency_key_reused"}`. Fără cheie nu există deduplicare, ca înainte.
+- **`outcome` în `200`-ul de intrare.** Un șir aditiv (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Tratează-l ca pe o listă deschisă. `status` din răspunsul de creare poate fi `pending` când operatorul activează omiterea ciornei pentru conexiune.
+- **Înlocuire și anulare.** O mapare care citește `message_function` și `external_id` transformă un mesaj ulterior într-o modificare a comenzii create. Coduri `422` noi: `external_id_required`, `unknown_message_function`.
+- **Mai multe formate de cerere.** XML (SAP IDoc), EDIFACT și `text/csv`, pe lângă JSON; un mesaj per cerere (altfel `422` `{"error":"multi_message_not_supported"}`).
+- **Evenimente webhook noi, la cerere.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` și `order.pod_uploaded` (trimis doar după ce un planificator aprobă POD-ul). Livrate doar conexiunilor care le listează; nicio conexiune existentă nu se schimbă.
+- **`references` pe evenimentele de comandă și de oprire.** Un obiect opțional `{ "<key>": "<value>" }` cu referințele proprii ale clientului pe care operatorul le-a marcat vizibile clientului. Lipsește când comanda nu are niciuna.
+- **Mapare de ieșire.** O conexiune poate trimite XML, EDIFACT sau JSON în structura clientului, cu codurile lui de status; un eveniment fără status mapat este omis (nu se trimite, nu se reîncearcă). Fără mapare de ieșire corpul este identic octet cu octet cu cel de dinainte.
+- **OAuth2 client credentials** ca tip de autentificare pentru ieșire, pe lângă bearer, basic, HMAC și none.
+
+**Depreciat / eliminat:** nimic.
+
 ## 2026-10-10
 
 **Adăugat (v1, nu trebuie să faci nimic)**

@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Zmeny vo v1 sú aditívne. Zásadné zmeny a vyradenia sa uvádzajú najprv tu. Pravidlá popisuje [Verzovanie API](/sk/integrations/api-versioning).
 
+## 2026-10-23
+
+**Pridané (v1, netreba nič robiť)**
+
+- **Idempotentný príjem.** `inbound-client-api` prijíma voliteľnú hlavičku `Idempotency-Key`. Zopakovanie dokončeného kľúča odpovie `200` s pôvodnou zákazkou a hlavičkou `Idempotent-Replayed: true`; zopakovanie, kým prvá požiadavka ešte beží, odpovie `409` `{"error":"in_progress"}` s `Retry-After: 5`; rovnaký kľúč s iným telom odpovie `422` `{"error":"idempotency_key_reused"}`. Bez kľúča, ako doteraz, nie je žiadna deduplikácia.
+- **`outcome` v prichádzajúcom `200`.** Aditívny reťazec (`created`, `applied_draft`, `parked`, `cancelled_draft`, `cancel_parked`, `ignored_terminal`, `ignored_stale`, `unchanged`, `ignored_pending_cancel`, `duplicate_external_id`, `not_found`). Berte ho ako otvorený zoznam. `status` v odpovedi na vytvorenie môže byť `pending`, keď prevádzkovateľ pre spojenie zapne preskočenie konceptu.
+- **Nahradenie a zrušenie.** Mapovanie čítajúce `message_function` a `external_id` zmení neskoršiu správu na zmenu vytvorenej zákazky. Nové kódy `422`: `external_id_required`, `unknown_message_function`.
+- **Ďalšie formáty požiadaviek.** XML (SAP IDoc), EDIFACT a `text/csv` popri JSON; jedna správa na požiadavku (inak `422` `{"error":"multi_message_not_supported"}`).
+- **Nové voliteľné udalosti webhooku.** `order.declined`, `stop.arrived.loading`, `stop.departed.loading`, `stop.arrived.offloading`, `stop.departed.offloading` a `order.pod_uploaded` (odosiela sa až po schválení POD plánovačom). Doručujú sa len spojeniam, ktoré ich uvádzajú; žiadne existujúce spojenie sa nemení.
+- **`references` pri udalostiach zákazky a zastávky.** Jeden voliteľný objekt `{ "<key>": "<value>" }` s vlastnými referenciami klienta, ktoré prevádzkovateľ označil ako viditeľné pre klienta. Chýba, keď zákazka žiadne nemá.
+- **Odchádzajúce mapovanie.** Spojenie môže posielať XML, EDIFACT alebo JSON v rozložení klienta s jeho kódmi stavov; udalosť bez priradeného stavu sa preskočí (neodošle sa, neopakuje). Bez odchádzajúceho mapovania je telo bajt po bajte rovnaké ako predtým.
+- **OAuth2 client credentials** ako typ odchádzajúceho overenia popri bearer, basic, HMAC a none.
+
+**Zastarané / odstránené:** nič.
+
 ## 2026-10-10
 
 **Pridané (v1, netreba nič robiť)**
