@@ -41,7 +41,7 @@ Megrendelések létrehozása, szerkesztése és törlése, valamint a megjegyzé
 
 **Mit biztosít.** Create new orders: the New order action, copying an order, creating several orders from a spec, scanning an order document, and creating orders from templates (including scheduled template runs).
 
-**Hol érvényesül.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder cannot grant: a custom role holding orders:create but not commercial:manage is stopped at that insert.
+**Hol érvényesül.** Both, but in two layers. The screens and the RPCs/Edge Functions behind them (next_order_number, copy_order, create_orders_from_spec, instantiate_order_template, document-scan, order-template-scheduler) check this key. The INSERT into the orders table itself is checked against the database key commercial:manage, which the role builder offers as a database permission: a custom role holding orders:create but not commercial:manage is stopped at that insert.
 
 ### Megrendelések szerkesztése
 
@@ -54,19 +54,20 @@ Megrendelések létrehozása, szerkesztése és törlése, valamint a megjegyzé
 
 **Mit biztosít.** Change existing orders in the places the app lets you edit them: order drawers, subcontracting and carrier assignment, groupage and forwarding panels, VAT and extras, cancelling a sold or subcontracted order, resolving eCMR exceptions and automation jobs, handling client delay notices, approving or rejecting platform proof-of-delivery, e-Transport vehicle change and GPS pause actions.
 
-**Hol érvényesül.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (not selectable in the role builder): a custom role needs both.
+**Hol érvényesül.** Screens ask for it, and about fifty RPCs check it (cancel_subcontractor, cancel_sell_order, dissolve_groupage, set_preloaded_trailer, resolve_ecmr_exception, approve_transporeon_pod, write_off_remainder and others), as do the transporeon-api, inbound-order-email and client-api-admin Edge Functions. The UPDATE on the orders row itself is checked against commercial:manage (a database permission the role builder offers): a custom role needs both.
 
 ### Megrendelések törlése
 
 `orders:delete`
 
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat, Értékesítés
 - **A szerepkör-szerkesztőben:** Kipipálható
-- **Érvényesítés helye:** Jelenleg semmi sem érvényesíti
+- **Érvényesítés helye:** Alkalmazás képernyői és adatbázis
+- **Emellett szükséges:** `orders:read`, `commercial:manage`
 
-**Mit biztosít.** Intended to allow deleting orders.
+**Mit biztosít.** Move an order into the deleted state: the Delete / Discard buttons on the order list, the intake workbench (single and bulk) and the planning board, and the clean-up of a placeholder order after linking or saving.
 
-**Hol érvényesül.** None today. No screen, RPC, policy or Edge Function reads this key. Deleting an order is decided by the database key commercial:manage (the orders DELETE policy). Granting orders:delete to a custom role changes nothing.
+**Hol érvényesül.** Screens hide the delete controls without it. In the database the trigger trg_orders_soft_delete_needs_permission refuses an authenticated user who sets orders.deleted_at without it (42501 order_delete_needs_permission); the orders DELETE policy needs it together with commercial:manage. System paths (correction reverts, cron, service role, other SECURITY DEFINER functions) are not affected. Restoring a deleted order stays under the normal update rule.
 
 ### Megrendeléshez megjegyzés hozzáadása
 
@@ -202,6 +203,18 @@ Megrendelések létrehozása, szerkesztése és törlése, valamint a megjegyzé
 
 **Hol érvényesül.** Database only, and only as a recipient rule: the escalation notification is sent to users holding this key (company_users_with_permission). It is not a screen or write gate.
 
+### Megrendelések, ügyfelek, ajánlatok és alvállalkozók írása
+
+`commercial:manage`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat, Értékesítés
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
+
+**Hol érvényesül.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder offers it as a database permission (DRUMA-1595): a custom role needs it, in addition to orders:create, orders:edit or clients:manage, to write these tables.
+
 ## Tervezőtábla
 
 A tervezőtábla és az élő térkép, amellyel megrendeléseket rendelnek kamionokhoz.
@@ -222,13 +235,14 @@ A tervezőtábla és az élő térkép, amellyel megrendeléseket rendelnek kami
 
 `map:read`
 
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Diszpécser
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Diszpécser, Flottaüzemeltető, Ügyfélszolgálat, Szerelő, Erőforrás-tervező, Riportolás, Értékesítés
 - **A szerepkör-szerkesztőben:** Kipipálható
-- **Érvényesítés helye:** Jelenleg semmi sem érvényesíti
+- **Érvényesítés helye:** Alkalmazás képernyői és adatbázis
+- **Emellett szükséges:** `orders:read`, `fleet:operate`
 
-**Mit biztosít.** Intended to allow viewing the live map.
+**Mit biztosít.** Opens the Live Map under Dispatching, and every in-app "open on map" link. Without it the Live Map menu entry is hidden and the route shows a no-access page.
 
-**Hol érvényesül.** None today. No screen, policy or function reads this key; the Live Map opens under the dispatching section and its data is gated by other keys (vehicle positions follow fleet:read / fleet:operate). Granting map:read changes nothing.
+**Hol érvényesül.** The Dispatching navigation, the Live Map route and the map links ask for it. The database requires it for the live_map company snapshot, together with orders:read and fleet:operate; the underlying tables stay governed by orders:read and the fleet keys.
 
 ### Megrendelések hozzárendelése a táblán
 
@@ -638,6 +652,42 @@ Kamionok, pótkocsik és járműpark-nyilvántartás.
 
 **Hol érvényesül.** The technicians tab references it; the workshop-device Edge Function and _workshop_kiosk_only_user check it. Not grantable to a custom role by a company admin: a kiosk session is a real login on a shared device.
 
+### A flotta napi üzemeltetése
+
+`fleet:operate`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Diszpécser, Flottaüzemeltető
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Alkalmazás képernyői és adatbázis
+
+**Mit biztosít.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
+
+**Hol érvényesül.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Selectable in the role builder (database permission).
+
+### Sofőrök bérprofiljainak és gumiabroncs-adatok írása
+
+`costs:manage`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Flottaüzemeltető
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Write driver wage and allowance profiles and tyre records; read driver expenses.
+
+**Hol érvényesül.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Selectable in the role builder (database permission).
+
+### Flotta- és sofőrdokumentumok kezelése
+
+`documents:manage`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Flottaüzemeltető, Ügyfélszolgálat
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
+
+**Hol érvényesül.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Selectable in the role builder (database permission).
+
 ## Megfelelőség
 
 A vezetési idők láthatósága és a CMR multimodális validálási döntések.
@@ -665,6 +715,18 @@ A vezetési idők láthatósága és a CMR multimodális validálási döntések
 **Mit biztosít.** Decide a CMR multimodal validation (accept or reject a flagged validation).
 
 **Hol érvényesül.** The decision screen asks for it; the policies on cmr_validation_log (SELECT and UPDATE) check it.
+
+### eCMR aláírása az irodából
+
+`ecmr:sign_office`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
+
+**Hol érvényesül.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Selectable in the role builder (database permission).
 
 ## Ügyfelek
 
@@ -865,6 +927,18 @@ Költségprofilok és viszonylatár-beállítások.
 
 **Hol érvényesül.** The Sales price-list screens ask for it; the write policies on price_list_charges, lane_price_cards and rate_card_lanes, _price_card_assert_manage and the price-sheet-pdf Edge Function check it.
 
+### Járművek, pótkocsik és üzemanyagadatok írása
+
+`rates:manage`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Flottaüzemeltető
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
+
+**Hol érvényesül.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Selectable in the role builder (database permission): a custom role needs it to write trucks or trailers.
+
 ## Fuvarbörze
 
 Élő fuvarok keresése a fuvarbörzéken (Trans.eu, TIMOCOM) és ajánlatok küldése rájuk.
@@ -909,6 +983,54 @@ Vállalati jelentések és elemzési exportok.
 **Mit biztosít.** Use the reporting tools: Analytics pages, the report builder, AI Reports, saved views and schedules, annotations, and Ask Druma KPI tools. Cost and margin figures still need orders:financials and finance:read; named-driver data needs the database key reports:driver_data.
 
 **Hol érvényesül.** Analytics routes ask for it; the report builder gate (reporting-query), report_saved_views, report_schedules, report_row_annotations, kpi_* alert tables and the analytics and Ask Druma RPCs check it.
+
+### Jelentés minden sorról (járművek, ügyfelek, várakozás)
+
+`reports:read_all_rows`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Riportolás
+- **A szerepkör-szerkesztőben:** Nem választható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
+
+**Hol érvényesül.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it, because a company admin does not hold it.
+
+### Jelentés név szerint megjelölt sofőrökről
+
+`reports:driver_data`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Flottaüzemeltető, Riportolás
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
+
+**Hol érvényesül.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. A company admin holds it and so may grant it to a custom role.
+
+### Értékesítési jelentések (ajánlatok és üzletek)
+
+`reports:sales_data`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat, Riportolás, Értékesítés
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
+
+**Hol érvényesül.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
+
+### Reklamációs jelentések
+
+`reports:claims_data`
+
+- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat, Riportolás
+- **A szerepkör-szerkesztőben:** Kipipálható
+- **Érvényesítés helye:** Adatbázis és szerverfunkciók
+
+**Mit biztosít.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
+
+**Hol érvényesül.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. A company admin holds it and so may grant it to a custom role.
 
 ## Felhasználók
 
@@ -1254,126 +1376,6 @@ Az ügyfélportál: küldemények, nyomkövetés, dokumentumok és CO2-jelentés
 ## Adatbázis-szintű jogosultságok
 
 Ezek a jogosultságok az adatbázis sorszintű biztonságához tartozó szerepkör-halmazt neveznek meg. Ha nincsenek választhatóként jelölve, nem adhatók egyéni szerepkörnek, így az ezek nélküli egyéni szerepkör nem írhatja az általuk védett táblákat, még a megfelelő alkalmazásjogosultság kipipálásával sem.
-
-### commercial:manage
-
-`commercial:manage`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat, Értékesítés
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** The commercial write set: create, edit and delete orders (with legs, stops, extras and goods), clients and their contacts, quotes, tenders, subcontractors and their documents, CRM contacts and deals, capacity contracts, client instructions, groupage orders and handling units; read price lists and rate cards.
-
-**Hol érvényesül.** Database only (policies on dozens of tables, notably the INSERT/UPDATE/DELETE policies of orders, clients, quotes, tenders and subcontractors, and several RPCs and Edge Functions such as client-portal-token). The role builder cannot grant it: custom roles cannot hold it, so a custom role cannot write these tables even with orders:create, orders:edit or clients:manage ticked.
-
-### ecmr:sign_office
-
-`ecmr:sign_office`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Sign an eCMR from the office on behalf of any party (carrier, sender or consignee).
-
-**Hol érvényesül.** Edge Function. The eCMR signature access check (_shared/ecmr-signature-access.ts) uses it for the office arm. It is the commercial:manage set minus sales, so a sales seat cannot sign eCMRs. Not selectable in the role builder.
-
-### rates:manage
-
-`rates:manage`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Flottaüzemeltető
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Write the fleet master data: create, edit and delete trucks and trailers, truck cost components, fuel bills and fuel imports, vehicle unavailability, maintenance schedules, capability values, fuel anomaly settings; resolve fuel-import exceptions and set a trailer parking.
-
-**Hol érvényesül.** Database only (the INSERT/UPDATE/DELETE policies of trucks and trailers, fuel_fills, fuel_import_*, maintenance_schedules and others; RPCs set_trailer_parking, upsert_maintenance_schedule, import_trucks_from_telematics). Not selectable in the role builder, so a custom role cannot write trucks or trailers.
-
-### costs:manage
-
-`costs:manage`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Flottaüzemeltető
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Write driver wage and allowance profiles and tyre records; read driver expenses.
-
-**Hol érvényesül.** Database only (policies on driver_pay_profiles, tyre_inspections, tyre_positions, driver_expenses). Kept apart from rates:manage so the planner does not gain write on driver pay. Not selectable in the role builder.
-
-### fleet:operate
-
-`fleet:operate`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Diszpécser, Flottaüzemeltető
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Alkalmazás képernyői és adatbázis
-
-**Mit biztosít.** Operate the fleet day to day: read trucks and telematics mappings, fleet documents and registrations; upload tacho files; add, reorder and complete legs, update leg status, set truck telematics mapping, resolve waiting-late reviews; run coverage and trucks-without-reload views; plan with auto-plan and rescue-plan.
-
-**Hol érvényesül.** Database, and hub and coverage screens ask for the same key. Policies on trucks (SELECT), fleet_documents, tacho_files, toll_receipts, defect_tickets, order_fleet_documents and others; RPCs add_leg, complete_leg, update_leg_status, set_truck_telematics_mapping, coverage_trucks_without_reload; Edge Functions auto-plan, rescue-plan, tacho-manual-entry, detention-auto-bill and others. Not selectable in the role builder.
-
-### documents:manage
-
-`documents:manage`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Flottaüzemeltető, Ügyfélszolgálat
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Manage fleet and driver documents: create, edit and delete fleet documents and their history, upload to the document inbox, attach fleet documents to orders; read document alert state.
-
-**Hol érvényesül.** Database only (policies on fleet_documents, fleet_document_history, document_inbox, order_fleet_documents, storage objects, and the doc alert state tables). Not selectable in the role builder.
-
-### reports:read_all_rows
-
-`reports:read_all_rows`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Riportolás
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Widen row access so the read-only reporting seat can feed the Report Builder from tables whose ordinary SELECT needs a write-tier key: all trucks, clients and waiting logs, and driver names.
-
-**Hol érvényesül.** Database (the extra SELECT policies on trucks, clients and waiting_logs, plus reporting_driver_names and analytics_waiting_by_site) and the reporting gate. Minted for the reporting seat alone; the grant ceiling prevents a company admin from granting it.
-
-### reports:driver_data
-
-`reports:driver_data`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Flottaüzemeltető, Riportolás
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Personal data about NAMED drivers in reporting: the Drivers builder subject and any driver dimension, Driver Performance, eco and score tables, per-driver fuel figures and Ask Druma driver jobs. Scheduled report e-mails never carry it.
-
-**Hol érvényesül.** Database and the reporting gate (reporting-query, report-scheduled-delivery, semantic registry), plus the Driver Performance RPCs (driver_score_metrics, analytics_driver_perf_extras, analytics_fuel_eco_latest...) and the score-table policies. The report builder UI reads it only to hide options. Not grantable by a company admin.
-
-### reports:sales_data
-
-`reports:sales_data`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat, Riportolás, Értékesítés
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Sales reporting: the Quotes and Deals builder subjects, quote conversion and sales deal summaries, and the Ask Druma sales summary.
-
-**Hol érvényesül.** Database and the reporting gate: analytics_quote_conversion_summary, sales_deal_summary, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
-
-### reports:claims_data
-
-`reports:claims_data`
-
-- **Alapértelmezetten ezek rendelkeznek vele:** Adminisztrátor, Vállalati adminisztrátor, Kulcsfelhasználó, Tervező, Ügyfélszolgálat, Riportolás
-- **A szerepkör-szerkesztőben:** Nem választható
-- **Érvényesítés helye:** Adatbázis és szerverfunkciók
-
-**Mit biztosít.** Claim details in reporting: the Claims builder subject, claim columns of the incident claim counts and the Ask Druma claims summary.
-
-**Hol érvényesül.** Database and the reporting gate: fleet_incident_claim_counts, the semantic registry and the Ask Druma tool check it. Not grantable by a company admin.
 
 ### capi_library:manage
 
