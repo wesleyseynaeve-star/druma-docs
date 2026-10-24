@@ -1008,6 +1008,19 @@ Company reports and analytics exports.
 
 **Where it is enforced.** The report layout bar asks for it; the report_page_layout_save and report_page_layout_reset RPCs check it for the company scope.
 
+### Share reports with groups
+
+`reports:share_groups`
+
+- **Held by default:** Admin, Company Admin, Key User, Reporting
+- **In the role builder:** Can be ticked
+- **Enforced in:** App screens and database
+- **Also needs:** `reports:read`
+
+**What it grants.** Create report groups, choose their members, and publish frozen read-only snapshots of a report to them. Members only need reports:read to open what was shared with them. Widgets with named-driver, salesperson or claims data are never put in a snapshot.
+
+**Where it is enforced.** The sharing dialog asks for it; the report_group_upsert, report_group_delete and report_group_set_members RPCs and the report-snapshot-publish Edge Function check it. Snapshots are built with the rights of the user who publishes through the single reporting gate.
+
 ### Report on all rows (trucks, clients, waiting)
 
 `reports:read_all_rows`
