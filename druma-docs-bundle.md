@@ -4,7 +4,7 @@
 > Source: https://github.com/wesleyseynaeve-star/druma-docs
 > Do not edit manually — run `scripts/bundle-docs.sh` to regenerate.
 
-Generated: 2026-10-24 10:34 UTC
+Generated: 2026-10-24 10:40 UTC
 
 ---
 
@@ -16280,7 +16280,7 @@ Druma's analytics are spread across three places, all scoped to your active comp
 - **Finance** (left navigation) — money-focused views: invoices, overdue collections (with payment-risk forecasting), reconciliation, and more.
 - Feature-specific analytics that live next to the feature they measure, such as **Groupage** lane fill-rate (inside Analytics, only visible if groupage is enabled) or the waiting-time report inside Analytics's **Site Waiting** tab.
 
-Most analytics pages share the same report layout: a **filter bar** (date range and comparison), a row of **KPI tiles**, one or two **charts**, then the **table**. Every KPI tile with a small help icon next to it explains exactly how that number is calculated; see also [How Druma Calculates Key Metrics](/en/reports/metric-definitions).
+Most analytics pages share the same report layout: a **filter bar** (date range and comparison), a row of **KPI tiles**, one or two **charts**, then the **table**. Pick reports from the [report tree](#finding-reports-in-the-report-tree) on the left, and [rearrange the tiles and charts](#rearranging-a-report-page) to suit you. Every KPI tile with a small help icon next to it explains exactly how that number is calculated; see also [How Druma Calculates Key Metrics](/en/reports/metric-definitions).
 
 <Frame caption="The Analytics dashboard — the shared shell every analytics page follows.">
   <img src="/images/reports/analytics-overview.png" alt="Analytics dashboard overview" />
@@ -16323,6 +16323,73 @@ The report pages share one filter bar.
 - **Chart extras:** hover a chart for exact figures (a tooltip always equals the table cell), and use the download button to save a chart as a PNG.
 
 All totals on these pages are calculated over your full data, not just the rows visible in the table.
+
+---
+
+## Finding reports in the report tree
+
+The list of reports sits in a panel on the left of every Analytics page. It replaces the old row of tabs across the top. On a desktop it is open by default and remembers if you collapse it (**Collapse** / **Expand**); on a phone it is folded behind a button (**Show report list** / **Hide report list**).
+
+Type in **Search reports** to search by name and description (for AI reports, also by the question that was asked). The search covers all your saved reports, not only the ones loaded on screen; use **Load more** to page through a long list.
+
+| Section | What it holds |
+|---|---|
+| **Druma reports** | The built-in reports, grouped (for example **Overview**). The same for everyone. |
+| **Pinned** | Reports you pinned with **Pin** (and removed with **Unpin**). |
+| **Recent** | The last 20 reports you opened. |
+| **My folders** | Your private folders. Only you see them. |
+| **Shared folders** | Folders everyone in your company can open. |
+| **Unfiled** | Saved reports that are in no folder. |
+| **By subject** | Your saved reports grouped by what they measure. |
+| **Shared with my groups** | Snapshots published to a report group you belong to. See [Report Groups and Snapshots](/en/reports/report-groups-snapshots). |
+
+Saved reports are your **Builder** dashboards and your **AI** reports, each marked with a badge. A report that needs data you do not have access to still appears, with a **Locked** badge ("Not available on your plan or role"). The lock is only a label: figures are always calculated with your own access.
+
+### Folders
+
+- Use **New folder** to create one, and **New subfolder** inside it. Folders go two levels deep at most ("Folders cannot be nested any deeper").
+- Choose **Who can see this folder**: **Only me** or **Everyone in my company**. Creating, renaming or deleting a shared folder needs the permission to manage settings; without it you see "You do not have permission to manage shared folders."
+- Move a report with **Move to folder** or **Move to Unfiled** in its row menu, or by dragging it onto a folder (desktop only; on a phone use the menu). You can also pick a folder when you save a report (**Save to folder**).
+- **Moving a report into a shared folder shares it.** Druma asks you to confirm first: "Everyone in your company who can open the folder will see it." A colleague's report can only be moved into a shared folder, never into a private one.
+- Deleting a folder does not delete its reports: they move to **Unfiled**.
+- Give a report a **Description** ("What does this report show?") when you save it, when you rename it, or later with **Edit description** in its row menu. The owner can edit it; for a report in a shared folder, so can someone with the manage-settings permission. Descriptions are searchable.
+
+> **Note:** 
+When someone leaves the company, the reports they shared in shared folders are reassigned so nothing disappears. Their private reports are parked for 90 days and then removed.
+
+
+---
+
+## Rearranging a report page
+
+Every standard report page lets you decide which KPI tiles and charts you see, in what order and how wide. This works on a desktop screen only: on a phone there is no edit mode, and the page simply follows your saved order, stacked.
+
+
+  ### Click Customise layout
+    The button is in the page's filter area. The page enters edit mode.
+  
+  ### Drag, resize and hide
+    Drag a widget by its handle (**Drag to reorder**) to move it. Pick a **Width** for a chart or the summary: **Third**, **Half** or **Full** of the row. **Hide** removes a tile or chart from the page; hidden widgets collect in the **Hidden widgets** tray, where **Show** brings them back. Clicking a chart still filters the table while you edit.
+  
+  ### Click Done
+    Each change saves by itself a moment after you make it. If a save fails you see "Could not save the layout" and the page returns to the previous arrangement.
+  
+
+
+What you cannot change: the filter bar and the table are always shown, and the table always comes last. At least one KPI figure has to stay visible ("At least one figure must stay visible"). On some pages the **Summary** cannot be hidden. A hidden KPI is still listed in the metrics drawer, so its definition stays one click away.
+
+### Your layout and the company default
+
+- **Your layout** is personal: only you see it.
+- **Company default** is the arrangement everyone without a personal layout starts from. A user with the **Manage report page layouts** permission (by default admin, company admin, key user and reporting) sees **Save as company default** in edit mode. Saving it also clears your own personal layout for that page, so you immediately see what you saved.
+- The page tells you which one you are looking at: **Your layout** or **Company default**.
+- **Reset my layout** removes your personal arrangement and returns you to the company default (or Druma's own arrangement if there is none). **Reset company default** (only with the permission) removes the company default for everybody.
+
+If Druma later adds a new chart to a page, it appears next to its neighbours in your layout; your arrangement is never lost.
+
+### AI reports
+
+A saved AI report can be rearranged in place the same way: open it and use **Customise layout** (desktop only, not while a draft is shown). Move blocks and pick a **Third**, **Half** or **Full** width; blocks cannot be hidden. Only the owner, or an administrator with the manage-settings permission, can do this. Rearranging does not change what the report says, so up-to-date insights stay up to date.
 
 ---
 
@@ -16371,6 +16438,9 @@ DSO (days sales outstanding) is open client receivables ÷ the last 12 months of
 
   
     Deep dive on the exportable reports (Lane Profitability, CO2, Data Quality, Invoice Aging, Driver Hours) and how scheduled dashboard delivery works.
+  
+  
+    Share a frozen, read-only copy of a report with a group of colleagues.
   
   
     Full guide to reading and filtering the lane profitability report.
@@ -17022,6 +17092,87 @@ Use **Schedule** on a dashboard (**Scheduled Delivery**): name the schedule, cho
     Yes. Set Compare to **Previous year** on the KPI card (with From and To set); the card shows the signed change.
   </Accordion>
 </AccordionGroup>
+
+---
+
+## Report Groups and Snapshots
+
+
+A **snapshot** is a frozen, dated, read-only copy of a report. You publish it to one or more **report groups**, and the people in those groups see the figures as published, without needing access to the data behind them. It suits teams that only need to look at a few numbers: you do not have to widen anyone's permissions, and the copy never pretends to be live because it always shows its date.
+
+## Who can do what
+
+- **Create groups and publish snapshots:** users with the **Share report groups** permission (by default admin, company admin, key user and reporting). It can also be granted to a custom role.
+- **Open a snapshot:** members of a group it is shared with, who also have permission to read reports. They need no access to the underlying data.
+
+## Create a report group
+
+
+  ### Open Reporting groups
+    In the report tree on the left, click **Manage groups**. The **Reporting groups** page has two tabs: **Groups** and **Published snapshots**.
+  
+  ### Create the group
+    Type a name in **Group name** (for example "Dispatch team") and click **Create group**.
+  
+  ### Add its people
+    Click **Members**, search under **Search people by name or email**, click **Add**, then **Save members**. Only active users of your company can be members. Someone who leaves the company is removed from every group.
+  
+
+
+Deleting a group means snapshots shared only with that group are no longer visible to anyone.
+
+## Publish a snapshot
+
+Open a Report Builder dashboard or an AI report and choose **Share as snapshot** (it is also in a saved report's row menu in the tree).
+
+1. Choose the groups to share with and a refresh cadence: **Refreshed by hand**, **Refreshed every night** or **Refreshed every week**.
+2. Click **Review**. Druma checks the report and shows a preview: what will be shared, what is **Left out** and why, and **People who will see it**.
+3. Read the warning: **Members will see these figures even without access to the underlying data.** Then click **Share snapshot**.
+
+### What is always left out
+
+Some content is never shared in a snapshot, whoever publishes it:
+
+- Driver data, or a widget broken down by driver.
+- Quotes and deals, or a widget broken down by salesperson.
+- Client claims data.
+- A widget that is only readable with access to every row of the company.
+
+These widgets appear as "Not included in this snapshot". A widget you cannot read yourself is shared as restricted, without figures. If every widget is left out or restricted, nothing can be published.
+
+For AI reports, the question text is not copied. The AI insights are kept only when nothing was left out for a driver or salesperson breakdown and no widget is restricted to all-rows access; otherwise they are all dropped.
+
+### Size
+
+A widget keeps at most its **top 500 rows**. Members see "Top 500 rows only" when rows were cut. If the report is too large to run, narrow it with a filter or a shorter period and try again.
+
+## Reading a snapshot
+
+Members find snapshots under **Shared with my groups** in the report tree. Each shows an **Up to date** or **Stale** chip. The page carries a banner such as "Snapshot as of ..., frozen" and the publisher's name. The figures were calculated with the publisher's access on that date. There is no export, and members cannot change filters or run new queries. People who can manage the report groups and read the source report also see **Open live report**.
+
+## Keeping a snapshot fresh
+
+- **Refresh now** (on the **Published snapshots** tab) refreshes it by hand.
+- Nightly and weekly refreshes run automatically.
+- Every refresh runs with the **publisher's** access. If the publisher can no longer refresh it (they left, lost the permission, or can no longer see the source report, or the source was deleted), the snapshot becomes **Stale**. A stale snapshot **stays readable** as published, with a banner saying it is no longer being refreshed, until it is withdrawn.
+- If only some figures cannot be refreshed, the old figures are kept and marked "Could not be refreshed, showing the older figures."
+
+## Withdraw a snapshot
+
+The publisher or a manager clicks **Withdraw** on the **Published snapshots** tab. Members can no longer open it. People who already saw the figures keep what they saw. Publishing again creates a new snapshot.
+
+## Retention
+
+A snapshot is deleted automatically 13 months after it was published. Each time a snapshot is opened, who and when is logged (never the figures), also kept for 13 months.
+
+
+  
+    The report tree, folders and how to rearrange a report page.
+  
+  
+    Build the dashboards you share as snapshots.
+  
+</CardGroup>
 
 ---
 
